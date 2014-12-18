@@ -1,0 +1,30 @@
+/* 
+  Localizable.strings
+  Live2BenchNative
+
+  Created by dev on 2014-11-12.
+  Copyright (c) 2014 DEV. All rights reserved.
+*/
+
+// Custom Tab Bar
+"Welcome"       =   "Welcome";
+"Calendar"      =   "Calendar";
+"Live2Bench"    =   "Live2Bench";
+"Clip View"     =   "Clip View";
+"List View"     =   "List View";
+"My Clip"       =   "My Clip";
+
+// Alerts
+
+// Progress bars
+
+// Settings popup
+
+// Welcome Tab
+// Calendar Tab
+"Please select the team you want to tag:" = "Please select the team you want to tag:";
+
+// Live2Bench Tab
+// Clip View Tab
+// List View Tab
+// My Clip Tab

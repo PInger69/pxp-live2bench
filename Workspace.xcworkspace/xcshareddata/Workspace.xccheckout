@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>0502F221-982C-4436-8705-0DA26909CF35</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Workspace</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>32D0DDB1-FC1F-43F9-8E29-65E1E7ADDB38</key>
+		<string>ssh://devServer/home/git/pxp-live2BenchNative.git</string>
+		<key>C84059A1-64D4-4CCA-B1B7-1E6E7E6DA250</key>
+		<string>richard@devServer/home/git/pxp-GoogleLive2Bench.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Workspace.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>32D0DDB1-FC1F-43F9-8E29-65E1E7ADDB38</key>
+		<string>../FBTraining</string>
+		<key>C84059A1-64D4-4CCA-B1B7-1E6E7E6DA250</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>richard@devServer/home/git/pxp-GoogleLive2Bench.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C84059A1-64D4-4CCA-B1B7-1E6E7E6DA250</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>32D0DDB1-FC1F-43F9-8E29-65E1E7ADDB38</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FBTraining</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C84059A1-64D4-4CCA-B1B7-1E6E7E6DA250</string>
+			<key>IDESourceControlWCCName</key>
+			<string>live2BenchThis</string>
+		</dict>
+	</array>
+</dict>
+</plist>

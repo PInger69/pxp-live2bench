@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3D6BEFF6-4214-4DFD-8689-EA14ED7BC69E</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Live2BenchNative</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>28AE6985-6A76-4817-8E6B-64BD16591ECA</key>
+		<string>ssh://devServer/home/git/pxp-live2BenchNative.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Live2BenchNative.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>28AE6985-6A76-4817-8E6B-64BD16591ECA</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://devServer/home/git/pxp-live2BenchNative.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>28AE6985-6A76-4817-8E6B-64BD16591ECA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>28AE6985-6A76-4817-8E6B-64BD16591ECA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FBTraining</string>
+		</dict>
+	</array>
+</dict>
+</plist>
