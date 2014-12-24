@@ -14,6 +14,7 @@
 
 #import "FullScreenViewController.h"
 #import "VideoPlayer.h"
+#import "TeleViewController.h"
 #import "Slomo.h"
 #import "SeekButton.h"
 #import "CustomButton.h"
@@ -25,18 +26,23 @@
 
 
 
-@property (nonatomic,assign) int    mode;
+@property (nonatomic,assign) int                mode;
 
 
-@property (weak,  nonatomic) VideoPlayer   * player;
-@property (strong,nonatomic) SeekButton    * seekForward;
-@property (strong,nonatomic) SeekButton    * seekBackward;
-@property (strong,nonatomic) Slomo         * slomo;
-@property (strong,nonatomic) CustomButton  * teleButton;
-@property (strong,nonatomic) LiveButton    * liveButton;
-@property (strong,nonatomic) NSString      * context;
-@property (assign,nonatomic) BOOL          enable;
-@property (strong,nonatomic) UILabel       * tagEventName;
-@property (strong,nonatomic) BorderButton  * continuePlay;
+@property (weak,  nonatomic) VideoPlayer        * player;
+@property (strong,nonatomic) SeekButton         * seekForward;
+@property (strong,nonatomic) SeekButton         * seekBackward;
+@property (strong,nonatomic) Slomo              * slomo;
+@property (strong,nonatomic) CustomButton       * teleButton;
+@property (strong,nonatomic) LiveButton         * liveButton;
+@property (strong,nonatomic) NSString           * context;
+@property (assign,nonatomic) BOOL               enable;
+@property (strong,nonatomic) UILabel            * tagEventName;
+@property (strong,nonatomic) BorderButton       * continuePlay;
+@property (strong,nonatomic) CustomButton       * startRangeModifierButton;         //extends duration button (old start time - 5)
+@property (strong,nonatomic) CustomButton       * endRangeModifierButton;           //extends duration button (old end time + 5)
 
+@property (strong,nonatomic) BorderButton       * saveTeleButton;
+@property (strong,nonatomic) BorderButton       * clearTeleButton;
+@property (strong,nonatomic) TeleViewController * teleViewController;
 @end

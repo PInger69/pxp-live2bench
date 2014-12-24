@@ -10,8 +10,8 @@
 
 @interface LiveIndicatorLight : UIImageView
 
-
-
 -(id)initWithFrame:(CGRect)frame;
+
+
 
 @end

@@ -25,6 +25,7 @@
     NSMutableArray      * _alternativeFeeds; // array for strings
     NSMutableDictionary * _buttonToFeedDict;
     CGSize              _buttonSize;
+    BOOL                _secondarySelected;
 }
 
 @synthesize primaryPosition     = _primaryPosition;
@@ -40,6 +41,7 @@
         _secondaryPosition   = -1;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
         _buttonSize          = CGSizeMake(frame.size.width, frame.size.height);
+        _secondarySelected   = NO;
     }
     return self;
 
@@ -53,28 +55,12 @@
         _encoderManager     = encoderManager;
         _buttonArray        = [[NSMutableArray alloc]init];
         _primaryPosition    = 0;
-        _secondaryPosition  = 0;
+        _secondaryPosition  = -1;
         _buttonToFeedDict   = [[NSMutableDictionary alloc]init];
         _buttonSize         = CGSizeMake(frame.size.width, frame.size.height);
-//        //        _videoPlayer        = videoPlayer;
-//        //        _pips               = _videoPlayer.pips;
-//        _buttonArray        = [[NSMutableArray alloc]init];
-//        self.layer.borderColor = [[UIColor whiteColor]CGColor];
-//        self.layer.borderWidth = 1;
-//        
-//        
-//        
-//        Pip * item = videoPlayer;
-//        [item addObserver:self forKeyPath:@"avPlayer" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:primaryContext];
-//        //        for (id object in _pips) {
-//        //            Pip * item = object;
-//        //            [item addObserver:self forKeyPath:@"avPlayer" options:0 context:secondaryContext];
-//        //        }
-//        
-//        [self addObserver:_encoderManager forKeyPath:FEEDS options:0 context:nil];
-        
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:encoderManager];
-
+         _secondarySelected   = NO;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:encoderManager];
     }
     return self;
 }
@@ -82,7 +68,8 @@
 
 -(void)onEncoderCountChange:(NSNotification*)note
 {
-    [self buildButtonsWithData:[_encoderManager.feeds copy]];
+    [self buildButtonsWithData:_encoderManager.feeds];
+//    [self buildButtonsWithData:[_encoderManager.feeds copy]];
 }
 
 
@@ -96,7 +83,9 @@
  */
 -(void)buildButtonsWithData:(NSDictionary*)aList
 {
-    
+    if ([aList isKindOfClass:[NSArray class]]){
+        return; // messy clean up later
+    }
     NSLog(@"Feed switch error on encoder change count");
 
     // Clean up previous buttons
@@ -160,25 +149,48 @@
 {
     UIButton * button = sender;
     NSUInteger tagPic = button.tag;
+
+    if (tagPic == _primaryPosition) return;
     
     [_buttonArray enumerateObjectsUsingBlock:^(UIButton *obj, NSUInteger idx, BOOL *stop) {
         [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
         obj.layer.borderColor = [DESELECT_COLOR CGColor];
+        
     }];
     
-    if ( tagPic != _secondaryPosition && tagPic != _primaryPosition){
-        self.secondaryPosition  = tagPic;
-//        _alternativeFeeds            = button.accessibilityValue;// to be solved
-    } else if (tagPic == _secondaryPosition && tagPic != _primaryPosition) {
-        self.primaryPosition    = tagPic;
-        _primaryFeed            = button.accessibilityValue;//This is to save the primarty feed selection on ecoder changes
-    } else if (tagPic != _secondaryPosition && tagPic == _primaryPosition) {
-        self.primaryPosition    = tagPic;
-        _primaryFeed            = button.accessibilityValue;
-    }
-
-    [self colorize: [_buttonArray objectAtIndex:_secondaryPosition] color:SECONDARY_COLOR];
     [self colorize: [_buttonArray objectAtIndex:_primaryPosition] color:PRIMARY_COLOR];
+    
+    
+    if ( tagPic != _secondaryPosition && tagPic != _primaryPosition){
+        _secondarySelected = YES;
+        self.secondaryPosition  = tagPic;
+        [self colorize: [_buttonArray objectAtIndex:_secondaryPosition] color:SECONDARY_COLOR];
+       
+    } else if (tagPic == _secondaryPosition && !_secondarySelected) {
+        _secondarySelected = YES;
+        self.secondaryPosition = _secondaryPosition;
+        [self colorize: [_buttonArray objectAtIndex:_secondaryPosition] color:SECONDARY_COLOR];
+    } else if (tagPic == _secondaryPosition && _secondarySelected) {
+        _secondarySelected = NO;
+        self.secondaryPosition = _secondaryPosition;
+    }
+    
+    
+    
+    
+//    if ( tagPic != _secondaryPosition && tagPic != _primaryPosition){
+//        self.secondaryPosition  = tagPic;
+////        _alternativeFeeds            = button.accessibilityValue;// to be solved
+//    } else if (tagPic == _secondaryPosition && tagPic != _primaryPosition) {
+//        self.primaryPosition    = tagPic;
+//        _primaryFeed            = button.accessibilityValue;//This is to save the primarty feed selection on ecoder changes
+//    } else if (tagPic != _secondaryPosition && tagPic == _primaryPosition) {
+//        self.primaryPosition    = tagPic;
+//        _primaryFeed            = button.accessibilityValue;
+//    }
+
+//    [self colorize: [_buttonArray objectAtIndex:_secondaryPosition] color:SECONDARY_COLOR];
+
     _primaryFeed = ((UIButton*)[_buttonArray objectAtIndex:_primaryPosition]).accessibilityValue;
 }
 
@@ -198,6 +210,30 @@
 {
     [button setTitleColor:col  forState:UIControlStateNormal];
      button.layer.borderColor = [col CGColor];
+}
+
+-(Feed*)primaryFeed
+{
+    NSString * key = ((UIButton*)[_buttonArray objectAtIndex:_primaryPosition]).accessibilityValue;
+    return [_buttonToFeedDict objectForKey:key];
+}
+
+-(Feed*)secondaryFeed
+{
+    NSString * key = ((UIButton*)[_buttonArray objectAtIndex:_secondaryPosition]).accessibilityValue;
+    return [_buttonToFeedDict objectForKey:key];
+}
+
+-(void)deselectByIndex:(NSUInteger)index
+{
+    UIButton *obj =[_buttonArray objectAtIndex:index];
+   [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
+    obj.layer.borderColor = [DESELECT_COLOR CGColor];
+}
+
+-(BOOL)secondarySelected
+{
+    return _secondarySelected;
 }
 
 @end

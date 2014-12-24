@@ -57,8 +57,8 @@ static void * feedContext  = &feedContext;
 @synthesize richVideoControlBar;
 @synthesize feed = _feed;
 @synthesize context = _context;
-
-
+@synthesize liveIndicatorLight = _liveIndicatorLight;
+@synthesize rate    = _rate;
 /**
  *  initialize video player with the given frame as well at build the playerLayer, added the control slider and sets the guestures.
  *
@@ -105,6 +105,12 @@ static void * feedContext  = &feedContext;
     
     // this is so we know what Video Player belongs to what
     _context = @"";
+    
+    _rate = 0;
+    _liveIndicatorLight =  [[LiveIndicatorLight alloc]initWithFrame:CGRectMake(playerFrame.size.width-32, 0, 32, 32)];
+    
+    [self.view addSubview:_liveIndicatorLight];
+
 }
 
 
@@ -438,11 +444,11 @@ static void * feedContext  = &feedContext;
                [self exitFullScreen];
             }
             */
-            
-            if (pinchGesture.scale >1 ) {
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context}];
-            }else if (pinchGesture.scale < 1 ){
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context}];
+
+            if (pinchGesture.scale >1) {
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
+            }else if (pinchGesture.scale < 1){
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
     }
@@ -665,7 +671,7 @@ int seekAttempts = 0;
     }
     
     [avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, 600) completionHandler:^(BOOL finished) {
-//        if (globals.PLAYBACK_SPEED > 0) {
+//        if (_rate > 0) {
 //            [self play];
 //        }
         if (isReseeking) {
@@ -758,44 +764,45 @@ int seekAttempts = 0;
 
 //pause video for buffering
 -(void)prepareToPlay{
-    [avPlayer setRate:globals.PLAYBACK_SPEED];
+    [avPlayer setRate:_rate];
     [avPlayer pause];
 }
 
 
 //play video with the right playback rate
 -(void)play{
-    self.status = PS_Play;
+   
     //if the globals playback speed is 0, set it to 1, then play the video with normal speed
-    if (globals.PLAYBACK_SPEED == 0.0) {
-        globals.PLAYBACK_SPEED = 1.0;
+    if (_rate == 0.0) {
+        _rate = 1.0;
     }
-    [avPlayer setRate:globals.PLAYBACK_SPEED];
+    [avPlayer setRate:_rate];
     
     self.richVideoControlBar.playButton.selected = FALSE;
-    return;
-    switch (avPlayer.currentItem.status) {
-        case AVPlayerStatusUnknown:
-            NSLog(@"AVPlayerStatusUnknown");
-            break;
-        case AVPlayerStatusReadyToPlay:
-            NSLog(@"AVPlayerStatusReadyToPlay");
-            break;
-        case AVPlayerStatusFailed:
-            NSLog(@"AVPlayerStatusFailed");
-            break;
-        default:
-            break;
-    }
-    
+
+//    switch (avPlayer.currentItem.status) {
+//        case AVPlayerStatusUnknown:
+//            NSLog(@"AVPlayerStatusUnknown");
+//            break;
+//        case AVPlayerStatusReadyToPlay:
+//            NSLog(@"AVPlayerStatusReadyToPlay");
+//            break;
+//        case AVPlayerStatusFailed:
+//            NSLog(@"AVPlayerStatusFailed");
+//            break;
+//        default:
+//            break;
+//    }
+     self.status = PS_Play;
 }
 
 
 //pause video control
 -(void)pause{
-    self.status = PS_Paused;
+    
     [avPlayer pause];
     self.richVideoControlBar.playButton.selected = TRUE;
+    self.status = PS_Paused;
 }
 
 
@@ -1185,15 +1192,15 @@ int seekAttempts = 0;
     BOOL isSlow = NO;
     
     // this will compensate for playRate
-    if (globals.PLAYBACK_SPEED>=1.0) {
-        globals.PLAYBACK_SPEED = 1;
-    }else if (globals.PLAYBACK_SPEED<1) {
-        globals.PLAYBACK_SPEED = .5;
+    if (_rate>=1.0) {
+        _rate = 1;
+    }else if (_rate<1) {
+        _rate = .5;
     }
     
-    globals.PLAYBACK_SPEED = (globals.PLAYBACK_SPEED==1.0f)?0.5f:1.0f;
+    _rate = (_rate==1.0f)?0.5f:1.0f;
 
-    if (globals.PLAYBACK_SPEED ==1.0f) isSlow = YES;
+    if (_rate ==1.0f) isSlow = YES;
     
     [self play];
     return isSlow;
@@ -1237,7 +1244,38 @@ int seekAttempts = 0;
 
 
 
-
+/**
+ *  This is to be used with seeker button class or anything that as a "speed" double propertie
+ *
+ *  @param sender seeker button
+ */
+-(void)seekWithSeekerButton:(id)sender
+{
+    double currentTime  = [self currentTimeInSeconds];
+    double seekAmount = 0;
+    if ([sender respondsToSelector:@selector(speed)]){
+        seekAmount  = (double)[sender speed];
+    } else {
+        NSLog(@"\tSpeed Not found on sender");
+        return;
+    }
+    
+    if (globals.IS_LOOP_MODE){
+        if(currentTime+seekAmount >= globals.HOME_END_TIME || currentTime+seekAmount <= globals.HOME_START_TIME-1.0) {
+            [self setTime: globals.HOME_START_TIME];
+        } else {
+            [self seekBy:seekAmount];
+        }
+    } else {
+        if (currentTime+seekAmount > self.duration) {
+            [self goToLive];
+        } else {
+            [self seekBy:seekAmount];
+        }
+    }
+    
+    
+}
 
 // Debugging
 -(BOOL)seekTo:(float)seekTime
@@ -1258,10 +1296,10 @@ int seekAttempts = 0;
     BOOL isSlow = NO;
     
     // this will compensate for playRate
-    if (globals.PLAYBACK_SPEED>1.0) {
+    if (_rate>1.0) {
         isSlow = NO;
         self.status = PS_Play;
-    } else if (globals.PLAYBACK_SPEED < 1) {
+    } else if (_rate < 1) {
         isSlow = YES;
         self.status = PS_Slomo;
     }
@@ -1290,6 +1328,7 @@ int seekAttempts = 0;
     _live = live;
     
     if (live){
+        [_liveIndicatorLight setHidden:NO];
         [self.richVideoControlBar.rightTimeLabel setText:@"live"];
         self.richVideoControlBar.timeSlider.maximumValue = duration;
         self.richVideoControlBar.timeSlider.value =         self.richVideoControlBar.timeSlider.maximumValue;
@@ -1299,7 +1338,7 @@ int seekAttempts = 0;
         self.status = PS_Live;
     } else {
 //        NSLog(@"not live");
-        
+        [_liveIndicatorLight setHidden:YES];
     }
 }
 
@@ -1309,7 +1348,13 @@ int seekAttempts = 0;
 // This will show what the hell the player is doing
 -(void)setStatus:(playerStatus)status
 {
+    if (_currentStatus == status) return;
+    
     [self willChangeValueForKey:@"status"];
+    _currentStatus = status;
+    [self didChangeValueForKey:@"status"];
+    
+    return;
     switch (status) {
         case PS_Offline:
             statusLabel.text = @"Offline";
@@ -1340,19 +1385,18 @@ int seekAttempts = 0;
             break;
     }
     
-    _currentStatus = status;
-    [self didChangeValueForKey:@"status"];
+
 }
 
 -(playerStatus)status
 {
     
-    if (avPlayer.rate == 0.0f && _currentStatus !=PS_Paused)
-    {
-
-        _currentStatus = PS_Paused;
-
-    }
+//    if (avPlayer.rate == 0.0f && _currentStatus !=PS_Paused)
+//    {
+//
+//        _currentStatus = PS_Paused;
+//
+//    }
     
     return _currentStatus;
 }
@@ -1382,7 +1426,7 @@ int seekAttempts = 0;
     _feed = feed;
     [_feed addObserver:self forKeyPath:@"quality" options:NSKeyValueObservingOptionNew context:feedContext];
     [self didChangeValueForKey:@"feed"];
-    [self setPlayerWithURL:[_feed path]];
+//    [self setPlayerWithURL:[_feed path]];
 }
 
 -(void)onQualityChange:(int)quality
@@ -1391,6 +1435,40 @@ int seekAttempts = 0;
     [self setPlayerWithURL:[_feed path]];
     [self seekTo:cTime];
 }
+
+
+-(void)playFeed:(Feed*)feed
+{
+    self.feed = feed;
+
+    
+    if (playerItem !=nil){
+        @try {
+            [playerItem removeObserver:self forKeyPath:@"status"];
+        }
+        @catch (NSException *exception) {}
+    }
+    
+    
+    playerItem  = [[AVPlayerItem alloc] initWithURL:[feed path]];
+    avPlayer    = [AVPlayer playerWithPlayerItem:playerItem];
+    
+
+    [playerLayer setPlayer:avPlayer];
+
+    
+   
+    
+    [avPlayer.currentItem addObserver:self forKeyPath:@"status" options:0 context:nil];
+    
+    [self addPlayerItemTimeObserver];
+    [self addItemEndObserverForPlayerItem];
+    [self play];
+    _antiFreeze = [[VideoPlayerFreezeTimer alloc]initWithVideoPlayer:self];
+ [avPlayer setRate:1];
+
+}
+
 
 ///////////////////// END OF NEW FEED METHODS ///////////////////////////
 

@@ -128,24 +128,16 @@
 		AA83593C19B10B71009B3ABC /* LBCloudPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83593719B10B71009B3ABC /* LBCloudPlayerView.m */; };
 		AA83593D19B10B71009B3ABC /* plusIcon-32.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83593819B10B71009B3ABC /* plusIcon-32.png */; };
 		AA83593E19B10B71009B3ABC /* minusIcon-32.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83593919B10B71009B3ABC /* minusIcon-32.png */; };
-		AA83594B19B10BBC009B3ABC /* GDFileUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83594219B10BBC009B3ABC /* GDFileUploader.m */; };
-		AA83594C19B10BBC009B3ABC /* GDContentsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83594419B10BBC009B3ABC /* GDContentsNavigationController.m */; };
-		AA83594D19B10BBC009B3ABC /* GDContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83594619B10BBC009B3ABC /* GDContentsViewController.m */; };
-		AA83594E19B10BBC009B3ABC /* GDContentsTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83594819B10BBC009B3ABC /* GDContentsTableCell.m */; };
-		AA83594F19B10BBC009B3ABC /* GDTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83594A19B10BBC009B3ABC /* GDTestViewController.m */; };
 		AA83595919B10C1B009B3ABC /* DPBFileUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83595219B10C1B009B3ABC /* DPBFileUploader.m */; };
 		AA83595A19B10C1B009B3ABC /* DPBContentNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83595419B10C1B009B3ABC /* DPBContentNavigationController.m */; };
 		AA83595B19B10C1B009B3ABC /* DPBContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83595619B10C1B009B3ABC /* DPBContentViewController.m */; };
 		AA83595C19B10C1B009B3ABC /* HNBorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83595819B10C1B009B3ABC /* HNBorderButton.m */; };
 		AA83596119B10D28009B3ABC /* swipeTrashIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83595F19B10D28009B3ABC /* swipeTrashIcon.png */; };
 		AA83596219B10D28009B3ABC /* swipeShareIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83596019B10D28009B3ABC /* swipeShareIcon.png */; };
-		AA83596619B10D63009B3ABC /* GTLDrive_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83596319B10D63009B3ABC /* GTLDrive_Sources.m */; };
-		AA83596719B10D63009B3ABC /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA83596519B10D63009B3ABC /* GTMOAuth2ViewTouch.xib */; };
 		AA83596D19B115D2009B3ABC /* ExportPlayersPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83596A19B115D2009B3ABC /* ExportPlayersPopoverController.m */; };
 		AA83596E19B115D2009B3ABC /* ExportPlayersSync.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83596C19B115D2009B3ABC /* ExportPlayersSync.m */; };
 		AA83597319B116C5009B3ABC /* JPFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83597019B116C5009B3ABC /* JPFont.m */; };
 		AA83597419B116C5009B3ABC /* JPStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83597219B116C5009B3ABC /* JPStyle.m */; };
-		AA83598119B11D3C009B3ABC /* libGTLTouchStaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA83598019B11D3C009B3ABC /* libGTLTouchStaticLib.a */; };
 		AAFCA6FE195B84B000D0F0E6 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA6FC195B84B000D0F0E6 /* share.png */; };
 		AAFCA6FF195B84B000D0F0E6 /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA6FD195B84B000D0F0E6 /* share@2x.png */; };
 		AAFCA702195B84DE00D0F0E6 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA700195B84DE00D0F0E6 /* trash.png */; };
@@ -860,16 +852,6 @@
 		AA83593719B10B71009B3ABC /* LBCloudPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBCloudPlayerView.m; sourceTree = "<group>"; };
 		AA83593819B10B71009B3ABC /* plusIcon-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "plusIcon-32.png"; sourceTree = "<group>"; };
 		AA83593919B10B71009B3ABC /* minusIcon-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "minusIcon-32.png"; sourceTree = "<group>"; };
-		AA83594119B10BBC009B3ABC /* GDFileUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDFileUploader.h; sourceTree = "<group>"; };
-		AA83594219B10BBC009B3ABC /* GDFileUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDFileUploader.m; sourceTree = "<group>"; };
-		AA83594319B10BBC009B3ABC /* GDContentsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDContentsNavigationController.h; sourceTree = "<group>"; };
-		AA83594419B10BBC009B3ABC /* GDContentsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDContentsNavigationController.m; sourceTree = "<group>"; };
-		AA83594519B10BBC009B3ABC /* GDContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDContentsViewController.h; sourceTree = "<group>"; };
-		AA83594619B10BBC009B3ABC /* GDContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDContentsViewController.m; sourceTree = "<group>"; };
-		AA83594719B10BBC009B3ABC /* GDContentsTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDContentsTableCell.h; sourceTree = "<group>"; };
-		AA83594819B10BBC009B3ABC /* GDContentsTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDContentsTableCell.m; sourceTree = "<group>"; };
-		AA83594919B10BBC009B3ABC /* GDTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTestViewController.h; sourceTree = "<group>"; };
-		AA83594A19B10BBC009B3ABC /* GDTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDTestViewController.m; sourceTree = "<group>"; };
 		AA83595119B10C1B009B3ABC /* DPBFileUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DPBFileUploader.h; sourceTree = "<group>"; };
 		AA83595219B10C1B009B3ABC /* DPBFileUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DPBFileUploader.m; sourceTree = "<group>"; };
 		AA83595319B10C1B009B3ABC /* DPBContentNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DPBContentNavigationController.h; sourceTree = "<group>"; };
@@ -880,9 +862,6 @@
 		AA83595819B10C1B009B3ABC /* HNBorderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HNBorderButton.m; sourceTree = "<group>"; };
 		AA83595F19B10D28009B3ABC /* swipeTrashIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = swipeTrashIcon.png; sourceTree = "<group>"; };
 		AA83596019B10D28009B3ABC /* swipeShareIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = swipeShareIcon.png; sourceTree = "<group>"; };
-		AA83596319B10D63009B3ABC /* GTLDrive_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDrive_Sources.m; sourceTree = "<group>"; };
-		AA83596419B10D63009B3ABC /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
-		AA83596519B10D63009B3ABC /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
 		AA83596919B115D2009B3ABC /* ExportPlayersPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPlayersPopoverController.h; sourceTree = "<group>"; };
 		AA83596A19B115D2009B3ABC /* ExportPlayersPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExportPlayersPopoverController.m; sourceTree = "<group>"; };
 		AA83596B19B115D2009B3ABC /* ExportPlayersSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPlayersSync.h; sourceTree = "<group>"; };
@@ -891,11 +870,6 @@
 		AA83597019B116C5009B3ABC /* JPFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPFont.m; sourceTree = "<group>"; };
 		AA83597119B116C5009B3ABC /* JPStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPStyle.h; sourceTree = "<group>"; };
 		AA83597219B116C5009B3ABC /* JPStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPStyle.m; sourceTree = "<group>"; };
-		AA83597619B11B13009B3ABC /* libGTLTouchStaticLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGTLTouchStaticLib.a; path = "../google-api-objectivec-client-read-only copy/Source/build/Debug-iphoneos/libGTLTouchStaticLib.a"; sourceTree = "<group>"; };
-		AA83597819B11B24009B3ABC /* GTL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GTL.framework; path = "../google-api-objectivec-client-read-only copy/Source/build/Debug/GTL.framework"; sourceTree = "<group>"; };
-		AA83597C19B11C5C009B3ABC /* libGTLTouchStaticLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGTLTouchStaticLib.a; path = "../google-api-objectivec-client-read-only copy/Source/build/Debug-iphoneos/libGTLTouchStaticLib.a"; sourceTree = "<group>"; };
-		AA83597E19B11D04009B3ABC /* GTL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GTL.framework; path = "../google-api-objectivec-client-read-only copy/Source/build/Debug/GTL.framework"; sourceTree = "<group>"; };
-		AA83598019B11D3C009B3ABC /* libGTLTouchStaticLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGTLTouchStaticLib.a; path = "../google-api-objectivec-client-read-only/Source/build/Debug-iphoneos/libGTLTouchStaticLib.a"; sourceTree = "<group>"; };
 		AAFCA6FC195B84B000D0F0E6 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
 		AAFCA6FD195B84B000D0F0E6 /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		AAFCA700195B84DE00D0F0E6 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash.png; sourceTree = "<group>"; };
@@ -1053,8 +1027,8 @@
 		D727798F1A30C8120034DD66 /* CloudEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CloudEncoder.m; path = EncoderClasses/CloudEncoder.m; sourceTree = "<group>"; };
 		D72779911A30F0D50034DD66 /* EncoderCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderCommand.h; path = EncoderClasses/EncoderCommand.h; sourceTree = "<group>"; };
 		D72779921A30F0D50034DD66 /* EncoderCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderCommand.m; path = EncoderClasses/EncoderCommand.m; sourceTree = "<group>"; };
-		D727799A1A3240A00034DD66 /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveIndicatorLight.h; path = Live2BenchNative/VideoPlayerClasses/LiveIndicatorLight.h; sourceTree = "<group>"; };
-		D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveIndicatorLight.m; path = Live2BenchNative/VideoPlayerClasses/LiveIndicatorLight.m; sourceTree = "<group>"; };
+		D727799A1A3240A00034DD66 /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveIndicatorLight.h; path = "../../../Documents/pxp-live2bench/FBTraining/Live2BenchNative/VideoPlayerClasses/LiveIndicatorLight.h"; sourceTree = "<group>"; };
+		D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveIndicatorLight.m; path = "../../../Documents/pxp-live2bench/FBTraining/Live2BenchNative/VideoPlayerClasses/LiveIndicatorLight.m"; sourceTree = "<group>"; };
 		D72779A31A32605B0034DD66 /* BottomViewControllerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BottomViewControllerBase.h; path = Live2BenchNative/Live2BenchTab/BottomViewClasses/BottomViewControllerBase.h; sourceTree = "<group>"; };
 		D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BottomViewControllerBase.m; path = Live2BenchNative/Live2BenchTab/BottomViewClasses/BottomViewControllerBase.m; sourceTree = "<group>"; };
 		D72779A61A3609620034DD66 /* ListPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ListPopoverController.h; path = Live2BenchNative/GeneralUIClasses/ListPopoverController.h; sourceTree = "<group>"; };
@@ -1595,7 +1569,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA83598119B11D3C009B3ABC /* libGTLTouchStaticLib.a in Frameworks */,
 				AA0FED2919587D6A001D25EB /* Foundation.framework in Frameworks */,
 				BD3105031835920A0094AE6D /* Security.framework in Frameworks */,
 				D737F5CC17F0E3820053081F /* libKal.a in Frameworks */,
@@ -1897,9 +1870,7 @@
 		AA83593F19B10B77009B3ABC /* Social Integration */ = {
 			isa = PBXGroup;
 			children = (
-				AA83596819B10D68009B3ABC /* Imported Classes (GD) */,
 				AA83594019B10B9D009B3ABC /* Shared */,
-				AA83595019B10BC0009B3ABC /* Google Drive Integration */,
 				AA83595E19B10C5C009B3ABC /* Dropbox Integration */,
 				AA83593119B10B49009B3ABC /* MIME Type Icons */,
 			);
@@ -1917,23 +1888,6 @@
 				AA83593719B10B71009B3ABC /* LBCloudPlayerView.m */,
 			);
 			name = Shared;
-			sourceTree = "<group>";
-		};
-		AA83595019B10BC0009B3ABC /* Google Drive Integration */ = {
-			isa = PBXGroup;
-			children = (
-				AA83594119B10BBC009B3ABC /* GDFileUploader.h */,
-				AA83594219B10BBC009B3ABC /* GDFileUploader.m */,
-				AA83594319B10BBC009B3ABC /* GDContentsNavigationController.h */,
-				AA83594419B10BBC009B3ABC /* GDContentsNavigationController.m */,
-				AA83594519B10BBC009B3ABC /* GDContentsViewController.h */,
-				AA83594619B10BBC009B3ABC /* GDContentsViewController.m */,
-				AA83594719B10BBC009B3ABC /* GDContentsTableCell.h */,
-				AA83594819B10BBC009B3ABC /* GDContentsTableCell.m */,
-				AA83594919B10BBC009B3ABC /* GDTestViewController.h */,
-				AA83594A19B10BBC009B3ABC /* GDTestViewController.m */,
-			);
-			name = "Google Drive Integration";
 			sourceTree = "<group>";
 		};
 		AA83595D19B10C38009B3ABC /* HNBorderButton */ = {
@@ -1957,16 +1911,6 @@
 				AA83595619B10C1B009B3ABC /* DPBContentViewController.m */,
 			);
 			name = "Dropbox Integration";
-			sourceTree = "<group>";
-		};
-		AA83596819B10D68009B3ABC /* Imported Classes (GD) */ = {
-			isa = PBXGroup;
-			children = (
-				AA83596319B10D63009B3ABC /* GTLDrive_Sources.m */,
-				AA83596419B10D63009B3ABC /* GTLDrive.h */,
-				AA83596519B10D63009B3ABC /* GTMOAuth2ViewTouch.xib */,
-			);
-			name = "Imported Classes (GD)";
 			sourceTree = "<group>";
 		};
 		AAE50A0F1964A190000C6899 /* Images */ = {
@@ -2558,8 +2502,6 @@
 				D72779A71A3609620034DD66 /* ListPopoverController.m */,
 				D72779A31A32605B0034DD66 /* BottomViewControllerBase.h */,
 				D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */,
-				D727799A1A3240A00034DD66 /* LiveIndicatorLight.h */,
-				D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */,
 				D727798B1A30C5870034DD66 /* UserCenter.h */,
 				D727798C1A30C5870034DD66 /* UserCenter.m */,
 				D72779881A2FBEBE0034DD66 /* LiveButton.h */,
@@ -2633,11 +2575,6 @@
 		D7A9394216ADA65E006CBAB2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AA83598019B11D3C009B3ABC /* libGTLTouchStaticLib.a */,
-				AA83597E19B11D04009B3ABC /* GTL.framework */,
-				AA83597C19B11C5C009B3ABC /* libGTLTouchStaticLib.a */,
-				AA83597819B11B24009B3ABC /* GTL.framework */,
-				AA83597619B11B13009B3ABC /* libGTLTouchStaticLib.a */,
 				BD3105021835920A0094AE6D /* Security.framework */,
 				BDD2D2ED17ECB1F5004D5D9A /* Accelerate.framework */,
 				D7A0681B16B041F0002A2892 /* QuartzCore.framework */,
@@ -3085,6 +3022,8 @@
 		D7B523581760CEFE00BF92EB /* VideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D727799A1A3240A00034DD66 /* LiveIndicatorLight.h */,
+				D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */,
 				D719869819C8BA6E00122CAA /* VideoControlBar.h */,
 				D719869919C8BA6E00122CAA /* VideoControlBar.m */,
 				D79046AA18F48FD300A58B28 /* VideoPlayer.h */,
@@ -3606,7 +3545,6 @@
 				BD3104FF183590A80094AE6D /* dropboxicoSel@2x.png in Resources */,
 				D786C21317ECFAE00042DD96 /* redSelect@2x.png in Resources */,
 				D71B46D8170F692B00D402B5 /* EncoderStop@2x.png in Resources */,
-				AA83596719B10D63009B3ABC /* GTMOAuth2ViewTouch.xib in Resources */,
 				D78F68D218073DC70096C793 /* OrangeSettingsButtonSelect@2x.png in Resources */,
 				D7DFD4951827F3F600D98BE7 /* red_bar.png in Resources */,
 				AA8358F119B10AE5009B3ABC /* exportIcon.png in Resources */,
@@ -3848,7 +3786,6 @@
 				AA0FED2C19589951001D25EB /* ClipSharePopoverViewController.m in Sources */,
 				AA83591A19B10B33009B3ABC /* NSString+LBConvenience.m in Sources */,
 				D72779901A30C8120034DD66 /* CloudEncoder.m in Sources */,
-				AA83594C19B10BBC009B3ABC /* GDContentsNavigationController.m in Sources */,
 				D7581F2C196461ED0029C5DD /* drawXYZ.m in Sources */,
 				D79046AC18F48FD300A58B28 /* VideoPlayer.m in Sources */,
 				AA8358B119B109D7009B3ABC /* DurationTableViewCell.m in Sources */,
@@ -3885,9 +3822,7 @@
 				D7A9399216ADA933006CBAB2 /* CustomTabBar.m in Sources */,
 				D738306A19911EEC0053F0A1 /* FilterButtonBlockView.m in Sources */,
 				D719869A19C8BA6E00122CAA /* VideoControlBar.m in Sources */,
-				AA83596619B10D63009B3ABC /* GTLDrive_Sources.m in Sources */,
 				AA83590219B10B07009B3ABC /* SelectPDFTableViewController.m in Sources */,
-				AA83594D19B10BBC009B3ABC /* GDContentsViewController.m in Sources */,
 				AA8358A619B1099D009B3ABC /* ClipImageDownloader.m in Sources */,
 				D72779AB1A37498E0034DD66 /* CalendarTableCell.m in Sources */,
 				D7DB750417E8F419009C402F /* PopoverButton.m in Sources */,
@@ -3904,7 +3839,6 @@
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
 				D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */,
 				D7F6973B1811C7E8003EDDDB /* ListViewCell.m in Sources */,
-				AA83594B19B10BBC009B3ABC /* GDFileUploader.m in Sources */,
 				D7A188BF19FFE6A200513909 /* FeedSwitchView.m in Sources */,
 				D727798D1A30C5870034DD66 /* UserCenter.m in Sources */,
 				D738304E198A94D60053F0A1 /* FilterTab.m in Sources */,
@@ -3974,7 +3908,6 @@
 				D738305A198AC9A30053F0A1 /* MyClipFilterViewController.m in Sources */,
 				D786C20117ECA00E0042DD96 /* CustomLabel.m in Sources */,
 				D7A7B61816D3C852000D3A84 /* TeleViewController.m in Sources */,
-				AA83594E19B10BBC009B3ABC /* GDContentsTableCell.m in Sources */,
 				BD9BC31117EB480A001B67DE /* SpinnerView.m in Sources */,
 				D7383078199417CB0053F0A1 /* DurationView.m in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
@@ -4002,7 +3935,6 @@
 				D72708A51A1BA4B30086BCB8 /* Feed.m in Sources */,
 				AA8358B919B10A22009B3ABC /* UIColor+RGBValues.m in Sources */,
 				D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */,
-				AA83594F19B10BBC009B3ABC /* GDTestViewController.m in Sources */,
 				947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */,
 				D75CD0A917CBF25500DD24E8 /* HockeyBottomViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,

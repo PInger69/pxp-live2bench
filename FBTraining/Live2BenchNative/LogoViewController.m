@@ -8,8 +8,8 @@
 
 #import "LogoViewController.h"
 #import "UserSettings.h"
-#import "GDContentsNavigationController.h"
-#import "GDContentsViewController.h"
+//#import "GDContentsNavigationController.h"
+//#import "GDContentsViewController.h"
 #import "DPBContentNavigationController.h"
 #import "DPBContentViewController.h"
 #import "CustomAlertView.h"
@@ -445,10 +445,10 @@ ScreenController * screenTest;
 
 - (void)showGoogleDrive
 {
-    GDContentsViewController* contentsController = [[GDContentsViewController alloc] initWithNibName:nil bundle:nil];
-    GDContentsNavigationController* navController = [[GDContentsNavigationController alloc] initWithRootViewController:contentsController];
-    navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:navController animated:YES completion:nil];
+//    GDContentsViewController* contentsController = [[GDContentsViewController alloc] initWithNibName:nil bundle:nil];
+//    GDContentsNavigationController* navController = [[GDContentsNavigationController alloc] initWithRootViewController:contentsController];
+//    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+//    [self presentViewController:navController animated:YES completion:nil];
 }
 
 

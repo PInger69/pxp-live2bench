@@ -31,7 +31,8 @@ static void * vpStatusContext  = &vpStatusContext;
 
 @implementation PipViewController
 {
-    NSMutableArray *_gesturePool;
+    NSMutableArray  * _gesturePool;
+    EncoderManager  * _encoderManager;
 }
 
 
@@ -49,14 +50,15 @@ static void * vpStatusContext  = &vpStatusContext;
  *
  *  @return
  */
--(id)initWithVideoPlayer:(VideoPlayer *)aVideoPlayer pip:(Pip*)aPip f:(FeedSwitchView *)f
+-(id)initWithVideoPlayer:(VideoPlayer *)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager
 {
     self = [super init];
     if (self) {
         
         self.videoPlayer                    = aVideoPlayer;
-        _selectPip                          = aPip;
+        _encoderManager                    = encoderManager;
        // _selectPip.selected                 = YES;
+        _selectPip.hidden                   = YES;
         self.pips                           = [[NSMutableArray alloc]init];
         _gesturePool                        = [[NSMutableArray alloc]init];
         
@@ -69,8 +71,13 @@ static void * vpStatusContext  = &vpStatusContext;
         [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:vpStatusContext];
         
         
+
+       
         
-        [self addPip:_selectPip];
+        // hides all added pips
+        for (Pip * pip in self.pips) {
+            [pip setHidden:YES];
+        }
     }
     return self;
 
@@ -81,25 +88,8 @@ static void * vpStatusContext  = &vpStatusContext;
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     
-    
     if (context == changeContextSec || context == changeContextPri) {
-        _selectPip.hidden = (self.feedSwitchView.secondaryPosition == self.feedSwitchView.primaryPosition)? YES:NO ;
-        NSUInteger  arryPos     = [[change objectForKey:@"new"]intValue];
-        UIButton    * button    = [self.feedSwitchView.buttonArray objectAtIndex:arryPos];
-       // NSURL       * url       = [NSURL URLWithString:button.accessibilityValue];
-        Feed        * feed      = [self.feedSwitchView feedFromKey:button.accessibilityValue];
-        
-        if (context == changeContextSec){
-            CMTime prevTime = _selectPip.avPlayer.currentTime;
-//            [self.pip playerURL:url];
-            [_selectPip playWithFeed:feed];
-//            self.pip playQualityURL:<#(NSDictionary *)#>
-//            [self.pip.avPlayer seekToTime:prevTime];
-        
-        } else { //Secondary is already runing what ever till be sent over to primary so swap first before to cutback on loading
-            [Pip swapPip:_selectPip with:self.videoPlayer];
-            [self.feedSwitchView swap];
-        }
+     [self observerMethodForSwitchForKeyPath:keyPath ofObject:object change:change context:context];
     }
     
     if(context == vpStatusContext) {
@@ -108,30 +98,76 @@ static void * vpStatusContext  = &vpStatusContext;
     
 }
 
+-(void)observerMethodForSwitchForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+//    _selectPip.hidden = (self.feedSwitchView.secondaryPosition == self.feedSwitchView.primaryPosition)? YES:NO ;
+   
+    
+    
+    if (context == changeContextSec){
+        FeedSwitchView * fsv = object;
+        NSUInteger  arryPos     = [[change objectForKey:@"new"]intValue];
+        UIButton    * button    = [self.feedSwitchView.buttonArray objectAtIndex:arryPos];
+        Feed        * feed      = [self.feedSwitchView feedFromKey:button.accessibilityValue];
+        CMTime      prevTime    = self.videoPlayer.avPlayer.currentTime;
+        
+        
+        if ([fsv secondarySelected]){
+            _selectPip.hidden = NO;
+            [_selectPip playWithFeed:feed];
+            [_selectPip seekTo:prevTime];
+            
+        } else {
+            _selectPip.hidden = YES;
+        }
+    } else { //Secondary is already runing what ever till be sent over to primary so swap first before to cutback on loading
+        [self swapVideoPlayer:self.videoPlayer withPip:_selectPip];
+        [self.feedSwitchView swap];
+    }
+
+
+
+}
+
 
 -(void)observerMethodForVideoPlayerForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    playerStatus oldStatus = [change objectForKey:@"old"];
-    playerStatus newStatus = [change objectForKey:@"new"];
+    playerStatus oldStatus = [[change objectForKey:@"old"]intValue];
+    playerStatus newStatus = [[change objectForKey:@"new"]intValue];
     if (oldStatus == newStatus) return;
     switch (newStatus) {
-        case PS_Paused:
-            [_selectPip pause];
+        case PS_Paused: // PAUSE ALL PIPS
+            
+            [self.pips makeObjectsPerformSelector:@selector(pause)];
+//            [_selectPip pause];
             break;
-        case PS_Slomo:
-            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
+        case PS_Slomo: // SLOW MO
+            for (Pip * pip in self.pips) {
+                [pip playRate:self.videoPlayer.avPlayer.rate];
+
+            }
+//            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
             break;
         case PS_Play:
-            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
-            [_selectPip play];
+            for (Pip * pip in self.pips) {
+                [pip playRate:self.videoPlayer.avPlayer.rate];
+                [pip play];
+            }
+//            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
+//            [_selectPip play];
             break;
         default:
-            [_selectPip pause];
+            [self.pips makeObjectsPerformSelector:@selector(pause)];
             break;
     }
 
     NSLog(@"watching player");
 }
+
+
+
+
+
 
 - (void)doubleTapPip:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateRecognized) {
@@ -155,12 +191,32 @@ static void * vpStatusContext  = &vpStatusContext;
         [_selectPip.superview addSubview:_selectPip];
 
     }
+    [self swapVideoPlayer:self.videoPlayer withPip:_selectPip];
+    [self.feedSwitchView swap];
+    
 }
 
 
 
 -(void)swapVideoPlayer:(VideoPlayer*)aVideoPlayer withPip:(Pip*)aPip
 {
+    
+    VideoPlayer * vid   = aVideoPlayer;
+    Pip * p             = aPip;
+    
+    Feed *vpFeed        = vid.feed;
+    CMTime playerTime   = vid.avPlayer.currentTime;
+    
+    Feed *pipFeed       = p.feed;
+    
+    [vid playFeed:pipFeed];
+    [vid.avPlayer seekToTime:playerTime];
+    
+    [aPip playWithFeed:vpFeed];
+    [aPip seekTo:playerTime];
+
+
+    
 // get VideoPlayers Feed
 // get players position
 // get Pips Feed
@@ -179,6 +235,7 @@ static void * vpStatusContext  = &vpStatusContext;
 {
     if ([self.pips containsObject:aPip]) return;
     
+    if (!_selectPip) _selectPip= aPip;
 
     UITapGestureRecognizer *tap2Times   = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapPip:)];
     tap2Times.numberOfTapsRequired      = 2;
@@ -205,12 +262,17 @@ static void * vpStatusContext  = &vpStatusContext;
 }
 
 
-
+-(void)syncToPlayer
+{
+    for (Pip * pp in self.pips) {
+        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
+    }
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
 }
 
 - (void)didReceiveMemoryWarning

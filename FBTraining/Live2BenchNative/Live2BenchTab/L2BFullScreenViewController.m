@@ -20,19 +20,24 @@
 
 
 
-@synthesize seekForward     = _seekForward;
-@synthesize seekBackward    = _seekBackward;
-@synthesize slomo           = _slomo ;
-@synthesize teleButton      = _teleButton;
-@synthesize mode            = _mode;
-@synthesize liveButton      = _liveButton;
-@synthesize tagEventName    =_tagEventName;
-@synthesize continuePlay    =_continuePlay;
-
+@synthesize seekForward                 = _seekForward;
+@synthesize seekBackward                = _seekBackward;
+@synthesize slomo                       = _slomo ;
+@synthesize teleButton                  = _teleButton;
+@synthesize mode                        = _mode;
+@synthesize liveButton                  = _liveButton;
+@synthesize tagEventName                =_tagEventName;
+@synthesize continuePlay                =_continuePlay;
+@synthesize startRangeModifierButton    = _startRangeModifierButton;
+@synthesize endRangeModifierButton      = _endRangeModifierButton;
+@synthesize saveTeleButton              = _saveTeleButton;
+@synthesize clearTeleButton             = _clearTeleButton;
+@synthesize teleViewController          = _teleViewController;
 
 -(id)initWithVideoPlayer:(VideoPlayer *)videoPlayer
 {
-    controlOffsetY  = 585.0f;
+    
+    controlOffsetY  = 700.0f;
     self            = [super initWithVideoPlayer:videoPlayer];
     if (self){
         self.mode   = L2B_FULLSCREEN_MODE_DISABLE;
@@ -41,13 +46,17 @@
 }
 
 -(void)buildAddSubview:(VideoPlayer *)player {
-    _seekForward     = [self _makeSeekButton:SEEK_DIRECTION_LEFT targetVideoPlayer:player];
-    _seekBackward    = [self _makeSeekButton:SEEK_DIRECTION_RIGHT targetVideoPlayer:player];
-    _slomo           = [self _makeSlomo:player];
-    _teleButton      = [self _makeTeleButton];
-    _liveButton      = [self _makeLiveButton];
-    _tagEventName    = [self _makeTagEventName];
-    _continuePlay    = [self _makeContinueButton];
+    _seekForward                = [self _makeSeekButton:SEEK_DIRECTION_RIGHT targetVideoPlayer:player];
+    _seekBackward               = [self _makeSeekButton:SEEK_DIRECTION_LEFT targetVideoPlayer:player];
+    _slomo                      = [self _makeSlomo:player];
+    _teleButton                 = [self _makeTeleButton];
+    _liveButton                 = [self _makeLiveButton];
+    _tagEventName               = [self _makeTagEventName];
+    _continuePlay               = [self _makeContinueButton];
+    _startRangeModifierButton   = [self _makeStartRange];
+    _endRangeModifierButton     = [self _makeEndRange];
+    _saveTeleButton             = [self _makeTeleSaveButton];
+    _clearTeleButton            = [self _makeTeleClearButton];
     
     
     [self.view addSubview:_seekForward];
@@ -56,16 +65,28 @@
     [self.view addSubview:_teleButton];
     [self.view addSubview:_liveButton];
     [self.view addSubview:_continuePlay];
+    [self.view addSubview:_tagEventName];
+    [self.view addSubview:_startRangeModifierButton];
+    [self.view addSubview:_endRangeModifierButton];
+    [self.view addSubview:_saveTeleButton];
+    [self.view addSubview:_clearTeleButton];
+    
+    
     
     liveElements    = @[_seekForward, _seekBackward, _slomo, _teleButton];
-    
-    clipElements    = @[_liveButton,_tagEventName,_continuePlay];
-    teleElements    = @[];
+    clipElements    = @[_seekForward, _seekBackward, _slomo, _teleButton,_liveButton,_tagEventName,_continuePlay,_startRangeModifierButton,_endRangeModifierButton];
+    teleElements    = @[_saveTeleButton,_clearTeleButton];
     
     activeElements  = [@[]              arrayByAddingObjectsFromArray:liveElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:clipElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:teleElements];
    // [self _revealThese:@[]];
+    
+    
+    
+    // Tele init
+//    _teleViewController
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -104,16 +125,9 @@
 }
 
 
-/**
- *  Makes Slomo button
- *
- *  @param vp target video player
- *
- *  @return instance
- */
 -(Slomo*)_makeSlomo:(VideoPlayer*)vp
 {
-    Slomo *  btn = [[Slomo alloc]initWithFrame:CGRectMake(80, controlOffsetY, 65, 50)];
+    Slomo *  btn = [[Slomo alloc]initWithFrame:CGRectMake(75, controlOffsetY, 65, 50)];
     [btn addTarget:vp action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
     return btn;
 }
@@ -122,7 +136,7 @@
 {
     BorderButton * btn       = [[BorderButton alloc]init];
     btn = [BorderButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(10,controlOffsetY, 130, 30)];
+    [btn setFrame:CGRectMake( (CGRectGetMidX(screenBounds)-(130/2))-180 ,controlOffsetY+10, 130, 30)];
     [btn setContentMode:UIViewContentModeScaleAspectFill];
     [btn setBackgroundImage:[UIImage imageNamed:@"continue_unselected.png"] forState:UIControlStateNormal];
     [btn setBackgroundImage:[UIImage imageNamed:@"continue.png"] forState:UIControlStateSelected];
@@ -137,60 +151,74 @@
 -(CustomButton *)_makeTeleButton
 {
     CustomButton * btn       = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:          CGRectMake(939.0f, controlOffsetY, 64.0f, 64.0f)];
+    [btn setFrame:          CGRectMake(CGRectGetMaxX(screenBounds)-5.0f-64.0f, controlOffsetY-150, 64.0f, 64.0f)];
     [btn setContentMode:    UIViewContentModeScaleAspectFill];
     [btn setImage:          [UIImage imageNamed:@"teleButton"] forState:UIControlStateNormal];
     [btn setImage:          [UIImage imageNamed:@"teleButtonSelect"] forState:UIControlStateHighlighted];
-    //btn.transform         =CGAffineTransformMakeRotation(M_PI/2);
-    [btn addTarget:self action:@selector(initTele:) forControlEvents:UIControlEventTouchUpInside];
     
     return btn;
 }
 
 -(LiveButton *)_makeLiveButton
 {
-    LiveButton * button = [[LiveButton alloc]initWithFrame:CGRectMake(500,controlOffsetY, 40 + 90, 30)];
-    
-/*
- liveButtoninFullScreen = [BorderButton buttonWithType:UIButtonTypeCustom];
- [liveButtoninFullScreen setFrame:CGRectMake(screenRect.size.height/2.0+150,screenRect.size.width- CONTROL_SPACER_Y-10, LITTLE_ICON_DIMENSIONS + 90, LITTLE_ICON_DIMENSIONS-10)];
- [liveButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
- [liveButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"gotolive"] forState:UIControlStateNormal];
- [liveButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"gotoliveSelect"] forState:UIControlStateHighlighted];
- [liveButtoninFullScreen setTitle:@"Live" forState:UIControlStateNormal];
- //[liveButtoninFullScreen changeBackgroundColor:[UIColor whiteColor] :0.8];
- [liveButtoninFullScreen addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
- */
+    LiveButton * button = [[LiveButton alloc]initWithFrame:CGRectMake( (CGRectGetMidX(screenBounds)-(130/2))+180 ,controlOffsetY+10, 130, 30)];
     
     return button;
 }
 
+-(CustomButton *)_makeStartRange
+{
+    CustomButton * btn       = [CustomButton buttonWithType:UIButtonTypeCustom];
+    [btn setContentMode:UIViewContentModeScaleAspectFill];
+    [btn setTag:0];
+//    NSString *accesibilityString = startRangeModifierButton.accessibilityValue;
+//    NSString *imageName;
+//    if ([accesibilityString isEqualToString:@"extend"]) {
+//        imageName = @"extendstartsec";
+//    }else{
+//        imageName = @"subtractstartsec";
+//    }
+    [btn setImage:[UIImage imageNamed: @"extendstartsec"] forState:UIControlStateNormal];
 
+    btn.frame = CGRectMake(20,controlOffsetY-5 ,65 ,65);
+    [btn setAccessibilityValue:@"extend"];
+    
+    return btn;
+}
 
-/**
- *  Makes Direction seek button
- *
- *  @param dir forward or backward
- *  @param vp  target video player
- *
- *  @return instance
- */
+-(CustomButton *)_makeEndRange
+{
+    CustomButton * btn       = [CustomButton buttonWithType:UIButtonTypeCustom];
+    [btn setContentMode:UIViewContentModeScaleAspectFill];
+    [btn setTag:1];
+//    accesibilityString = endRangeModifierButton.accessibilityValue;
+//    if ([accesibilityString isEqualToString:@"extend"]) {
+//        imageName = @"extendendsec";
+//    }else{
+//        imageName = @"subtractendsec";
+//    }
+    [btn setImage:[UIImage imageNamed: @"extendendsec"] forState:UIControlStateNormal];
+    
+    btn.frame = CGRectMake(CGRectGetMaxX(screenBounds)-20.0f-65,controlOffsetY-5 ,65 ,65);
+    [btn setAccessibilityValue:@"extend"];
+    return btn;
+}
+
 -(SeekButton*)_makeSeekButton:(Direction)dir targetVideoPlayer:(VideoPlayer*)vp
 {
     SeekButton  * btn;
     switch ( dir ) {
         case SEEK_DIRECTION_LEFT:
-            btn = [SeekButton makeFullScreenBackwardAt:CGPointMake(0, controlOffsetY)];
+            btn = [SeekButton makeFullScreenBackwardAt:CGPointMake(0, controlOffsetY-10)];
             break;
             
         default: ///SEEK_DIRECTION_RIGHT
-            btn = [SeekButton makeFullScreenForwardAt:CGPointMake(0, controlOffsetY)];
+            btn = [SeekButton makeFullScreenForwardAt:CGPointMake(0, controlOffsetY-10)];
             break;
     }
     [btn onPressSeekPerformSelector: @selector(seekWithSeekerButton:) addTarget:vp];
     return btn;
 }
-
 
 -(UILabel*)_makeTagEventName
 {
@@ -199,17 +227,35 @@
     label.layer.borderWidth = 1;
     label.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
     [label setTextColor:PRIMARY_APP_COLOR];
-    [label setText:@""];
+    [label setText:@"None"];
     [label setFont:[UIFont boldFontOfSize:20.f]];
     [label setTextAlignment:NSTextAlignmentCenter];
     label.alpha = 1.0f;
-    label.frame = CGRectMake(500,controlOffsetY,165 ,50);
+    label.frame = CGRectMake( CGRectGetMidX(screenBounds) - (165/2) ,controlOffsetY,165 ,50);
     
-
+    
     return label;
 }
 
+-(BorderButton *)_makeTeleSaveButton
+{
+    BorderButton * btn       = [[BorderButton alloc]init];
+    btn = [BorderButton buttonWithType:UIButtonTypeCustom];
+    [btn setFrame:CGRectMake(377.0f, 700.0f, 123.0f, 33.0f)];
+    [btn setTitle:NSLocalizedString(@"Save",nil) forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(_saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+    return btn;
+}
 
+-(BorderButton *)_makeTeleClearButton
+{
+    BorderButton * btn       = [[BorderButton alloc]init];
+    btn = [BorderButton buttonWithType:UIButtonTypeCustom];
+    [btn setFrame:CGRectMake(500, 700.0f,123.0f, 33.0f)];
+    [btn setTitle:NSLocalizedString(@"Close",nil) forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(_clearButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+    return btn;
+}
 
 -(void)setMode:(int)mode
 {
@@ -251,6 +297,20 @@
     for (UIView * v in list) {
         [v setHidden:NO];
     }
+}
+
+
+
+//save button clicked, send notification to the teleview controller
+-(void)_saveButtonClicked
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SAVE_TELE object:nil];
+}
+
+//clear button clicked, send notification to the teleview controller
+-(void)_clearButtonClicked
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLEAR_TELE object:nil];
 }
 
 

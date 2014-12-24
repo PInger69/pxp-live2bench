@@ -101,6 +101,8 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 // VideoPlayer
 #define NOTIF_FULLSCREEN                    @"fullScreen"
 #define NOTIF_SMALLSCREEN                   @"smallScreen"
+#define NOTIF_SAVE_TELE                     @"Save Tele"
+#define NOTIF_CLEAR_TELE                    @"Clear Tele"
 
 
 /**

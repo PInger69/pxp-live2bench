@@ -222,9 +222,10 @@
     id                          _userDataObserver;
     id                          _masterLostObserver;
     id                          _masterFoundObserver;
+    id                          _encoderReadyObserver;
 }
 
-
+@synthesize hasLive                 = _hasLive;
 @synthesize searchForEncoders       = _searchForEncoders;
 @synthesize feeds                   = _feeds;
 @synthesize currentEvent            = _currentEvent;
@@ -233,6 +234,7 @@
 @synthesize allEvents               = _allEvents;
 @synthesize authenticatedEncoders   = _authenticatedEncoders;
 @synthesize openDurationTags        = _openDurationTags;
+@synthesize liveEventName           = _liveEventName;
 
 #pragma mark - Encoder Manager Methods
 
@@ -267,7 +269,7 @@
         _currentEventType       = SPORT_HOCKEY;
         _searchForEncoders      = YES;
         encoderSync             = [[EncoderDataSync alloc]init];
-        
+        _hasLive                = NO; // default before checking
         
         // setup observers
   
@@ -290,7 +292,12 @@
             }];
         }];
         
-
+        _encoderReadyObserver     = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_THIS_ENCODER_IS_READY    object:nil queue:nil usingBlock:^(NSNotification *note) {
+            
+            self.currentEvent = self.liveEventName;
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+        }];
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting) name:NOTIF_TAG_POSTED object:nil];
  
@@ -383,16 +390,18 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    
+    
     Encoder * encoder = object;
     if (context == authenticatContext){
         
         if (encoder.authenticated  && ![_authenticatedEncoders containsObject:encoder]) {
             [_authenticatedEncoders addObject:encoder];
             [encoder buildEncoderRequest]; // its authenticated... now collect all data from the encoder
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+         //   [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }
     }  else if (context == statusContext){
-        
+        NSLog(@"status !!!!!");
         switch (encoder.status) {
             case ENCODER_STATUS_UNKNOWN: // Disconnected
                 [self unRegisterEncoder:encoder];
@@ -400,6 +409,35 @@ static void * builtContext          = &builtContext; // depricated?
             default:
                 break;
         }
+        
+
+        // check all Encoders for live
+
+        
+        self.hasLive = _masterEncoder.status& (ENCODER_STATUS_LIVE | ENCODER_STATUS_PAUSED | ENCODER_STATUS_START);
+        if(self.hasLive){
+            self.liveEventName = _masterEncoder.liveEventName;
+        }
+        
+
+//        for (Encoder * enc in _authenticatedEncoders) {
+//            if (enc.status & (ENCODER_STATUS_LIVE | ENCODER_STATUS_PAUSED | ENCODER_STATUS_START))
+//            {
+//               
+//                live        = YES;
+//                liveName    = (enc.liveEventName)?enc.liveEventName:nil;
+//            }
+//            
+//        }
+
+
+//        // this is the ask to be live message
+//        if (live) {
+//             self.currentEvent = @"live";
+//        } else {
+//            self.currentEvent = @"live";
+//        }
+        
     }
 
 }
@@ -839,19 +877,21 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@"Encoder Manager - Event: %@\n Type:%@\n Encoders:\n",_currentEventType,_currentEvent];
+    NSString * txt = [NSString stringWithFormat:@"Encoder Manager - Type: %@\n Event:%@\n Encoders:\n",_currentEventType,_currentEvent];
     
     for (Encoder * enc in _authenticatedEncoders)
     {
         NSString * encoderStats = [NSString stringWithFormat:@"\t%@",enc.name];
         NSString * socialStatus;
+        NSString * encoderStatus = [Utility encoderStatusToString:enc.status];
         encoderStats = [NSString stringWithFormat:@"%@%*c - ",encoderStats, 16 - encoderStats.length, ' '];
         if ([enc isKindOfClass:[LocalEncoder class]]){
             socialStatus = @"Django";
         } else{
             socialStatus = (enc.isMaster)?@"Master":@"Slave";
         }
-        encoderStats = [NSString stringWithFormat:@"%@%@",encoderStats, socialStatus];
+        
+        encoderStats = [NSString stringWithFormat:@"%@ %@   %@",encoderStats, socialStatus,encoderStatus];
 
         txt = [NSString stringWithFormat:@"%@%@\n",txt,encoderStats];
     }   

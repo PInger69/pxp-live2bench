@@ -22,7 +22,7 @@
 #import "MyClipFilterViewController.h"
 #import "TagPopOverContent.h"
 #import "SVStatusHUD.h"
-#import "GDFileUploader.h"
+//#import "GDFileUploader.h"
 #import "DPBFileUploader.h"
 #import "NSObject+LBCloudConvenience.h"
 #import "CustomAlertView.h"
@@ -2090,15 +2090,15 @@ int viewWillAppearCalled;
         isEditingClips = NO;
         return;
     }
-    
-    if(!_GDUploader)
-    {
-        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
-        _GDUploader.delegate = self;
-    }
-    
-    _GDUploader.exepectedFileNumber = selectedCellArr.count;
-    
+//    
+//    if(!_GDUploader)
+//    {
+//        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
+//        _GDUploader.delegate = self;
+//    }
+//    
+//    _GDUploader.exepectedFileNumber = selectedCellArr.count;
+//    
     for (NSNumber* rowNum in selectedCellArr) {
         
         NSDictionary *dict = [self.tagsToDisplay objectAtIndex:[rowNum integerValue]];
@@ -2115,7 +2115,7 @@ int viewWillAppearCalled;
         
         NSString* fileName = [self cloudFileNameWithTag:tag];
         
-        [_GDUploader uploadFileWithName:fileName data:fileData MIMEType:mimeType];
+//        [_GDUploader uploadFileWithName:fileName data:fileData MIMEType:mimeType];
         
     }
 }
@@ -2530,17 +2530,17 @@ int viewWillAppearCalled;
     
     NSArray* methodStrings = @[@"None", @"Facebook", @"Twitter"];
     
-    if(!_GDUploader)
-    {
-        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
-        _GDUploader.delegate = self;
-    }
-    
-    if(![_GDUploader isAuthorized])
-    {
-        [[[UIAlertView alloc] initWithTitle:@"Cannot Share" message:[NSString stringWithFormat:@"You must also be linked to Google Drive in order to share the video link(s) on %@",methodStrings[service]] delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles: nil] show];
-        return;
-    }
+//    if(!_GDUploader)
+//    {
+//        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
+//        _GDUploader.delegate = self;
+//    }
+//    
+//    if(![_GDUploader isAuthorized])
+//    {
+//        [[[UIAlertView alloc] initWithTitle:@"Cannot Share" message:[NSString stringWithFormat:@"You must also be linked to Google Drive in order to share the video link(s) on %@",methodStrings[service]] delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles: nil] show];
+//        return;
+//    }
     
     _currentSharingMethod = service;
     [self uploadToGoogleDrive];
@@ -2566,13 +2566,13 @@ int viewWillAppearCalled;
     
     NSMutableString* description = [NSMutableString stringWithString:@"Checkout These Tagged Clips: \n"];
     
-    for(GTLDriveFile* file in uploader.uploadedGTLFiles)
-    {
-        NSString* videoLink = file.embedLink;
-        [description appendString:file.title];
-        [viewController addURL:[NSURL URLWithString:videoLink]];
-    }
-    
+//    for(GTLDriveFile* file in uploader.uploadedGTLFiles)
+//    {
+//        NSString* videoLink = file.embedLink;
+//        [description appendString:file.title];
+//        [viewController addURL:[NSURL URLWithString:videoLink]];
+//    }
+//    
     [viewController setInitialText: description];
     
     [self presentViewController:viewController animated:YES completion:nil];

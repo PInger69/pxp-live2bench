@@ -19,8 +19,10 @@
 
 @interface FullScreenViewController ()
 {
-    id      observerCloseFullScreen;
-    id      observerOpenFullScreen;
+    id                  observerCloseFullScreen;
+    id                  observerOpenFullScreen;
+    NSDictionary        * smallScreenFramesParts;
+    NSDictionary        * fullScreenFramesParts;
 }
 
 
@@ -28,9 +30,10 @@
 
 @implementation FullScreenViewController
 
-@synthesize player  = _player;
-@synthesize enable  = _enable;
-@synthesize context = _context;
+@synthesize player   = _player;
+@synthesize enable   = _enable;
+@synthesize context  = _context;
+@synthesize animated = _animated;
 
 -(id)initWithVideoPlayer:(VideoPlayer *) videoPlayer
 {
@@ -40,6 +43,7 @@
         // getting all videoPlayer data
         _player          = videoPlayer;
         _enable          = NO;
+        _animated        = YES;
         screenBounds     = CGRectMake(0, 0, 1024, 768);
 
        
@@ -53,20 +57,29 @@
         
         
         observerCloseFullScreen = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SMALLSCREEN object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if ([[note.userInfo objectForKey:@"context"] isEqualToString:_context]){
-                self.enable = NO;
+            if ([[note.userInfo objectForKey:@"context"] isEqualToString:_context] && _enable ){
+                if ([note.userInfo objectForKey:@"animated"]){
+                    _animated = [[note.userInfo objectForKey:@"animated"]boolValue];
+                }
+                [self setEnable:NO];
             }
         }];
         
         observerOpenFullScreen  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_FULLSCREEN object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if ([[note.userInfo objectForKey:@"context"] isEqualToString:_context]){
-                self.enable = YES;
+            if ([[note.userInfo objectForKey:@"context"] isEqualToString:_context] && !_enable){
+                if ([note.userInfo objectForKey:@"animated"]){
+                    _animated = [[note.userInfo objectForKey:@"animated"]boolValue];
+                }
+                [self setEnable:YES];
             }
         }];
-
+        
+       
     }
     return self;
 }
+
+
 
 /**
  *  This is meant to be overriden to allow for customization
@@ -76,9 +89,35 @@
 }
 
 
--(void)moveVideoToFullScreen
+-(void)moveVideoToFullScreen:(BOOL)animated
 {
     if (_player.view.superview == self.view) return;
+    
+    if (!smallScreenFramesParts){
+        smallScreenFramesParts = @{
+                                   @"light" : [NSValue valueWithCGRect:_player.liveIndicatorLight.frame],
+                                   @"bar"   : [NSValue valueWithCGRect:_player.richVideoControlBar.frame],
+                                   @"slide" : [NSValue valueWithCGRect:_player.richVideoControlBar.timeSlider.frame]
+                                   //@"status" : [NSValue valueWithCGRect:_player.liveIndicatorLight.frame]
+                                   };
+        fullScreenFramesParts = @{
+                                   @"light" : [NSValue valueWithCGRect:CGRectMake(screenBounds.size.width-32,
+                                                                                  60,
+                                                                                  _player.liveIndicatorLight.frame.size.width,
+                                                                                  _player.liveIndicatorLight.frame.size.height)],
+                                   
+                                   @"bar"   : [NSValue valueWithCGRect:CGRectMake(0,
+                                                                                  640,
+                                                                                  screenBounds.size.width,
+                                                                                  _player.richVideoControlBar.frame.size.height)],
+                                   @"slide" : [NSValue valueWithCGRect:CGRectMake(0,
+                                                                                  0,
+                                                                                  screenBounds.size.width-200,
+                                                                                  _player.richVideoControlBar.timeSlider.frame.size.height)]
+                                   //@"status" : [NSValue valueWithCGRect:_player.liveIndicatorLight.frame],
+                                   };
+    }
+    
     
 
     prevView                = (_player.view.superview)?_player.view.superview:nil;
@@ -90,33 +129,45 @@
     [_player.playerLayer removeAllAnimations];
    // setting to external screen
     
-    [UIView beginAnimations:@"scaleAnimation" context:nil];
-    [UIView setAnimationDuration:0.22];
-    _player.view.frame              = screenBounds;
-    _player.view.bounds             = screenBounds;
-    _player.playerLayer.frame       = screenBounds;
-    _player.playerLayer.bounds      = screenBounds;
-    [UIView commitAnimations];
-
+    if (animated){
+        [UIView beginAnimations:@"scaleAnimation" context:nil];
+        [UIView setAnimationDuration:0.22];
+    }
+    _player.view.frame                              = screenBounds;
+    _player.view.bounds                             = screenBounds;
+    _player.playerLayer.frame                       = screenBounds;
+    _player.playerLayer.bounds                      = screenBounds;
+    _player.liveIndicatorLight.frame                = [((NSValue *)[fullScreenFramesParts objectForKey:@"light"]) CGRectValue];
+    _player.richVideoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
+    _player.richVideoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+    if (animated){
+        [UIView commitAnimations];
+    }
     [self.view insertSubview:_player.view atIndex:0];
     
 }
 
--(void)returnVideoToPreviousViewFromFullScreen
+-(void)returnVideoToPreviousViewFromFullScreen:(BOOL)animated
 {
     if (_player.view.superview == prevView || prevView == nil) return;
     
-    
     [prevView insertSubview:_player.view atIndex:prevDispayIndex];
     [_player.playerLayer removeAllAnimations];
-
-    [UIView beginAnimations:@"scaleAnimation" context:nil];
-    [UIView setAnimationDuration:0.22];
+    if (animated){
+        [UIView beginAnimations:@"scaleAnimation" context:nil];
+        [UIView setAnimationDuration:0.22];
+    }
     _player.view.frame              = prevPlayerViewRect;
     _player.view.bounds             = prevPlayerViewBounds;
     _player.playerLayer.frame       = prevPlayerLayerRect;
     _player.playerLayer.bounds      = prevPlayerLayerBounds;
-    [UIView commitAnimations];
+    _player.liveIndicatorLight.frame                = [((NSValue *)[smallScreenFramesParts objectForKey:@"light"]) CGRectValue];
+    _player.richVideoControlBar.frame               = [((NSValue *)[smallScreenFramesParts objectForKey:@"bar"]) CGRectValue];
+    _player.richVideoControlBar.timeSlider.frame    = [((NSValue *)[smallScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+    if (animated){
+        [UIView commitAnimations];
+    }
+    
     prevView                        = nil;
     [_player.view addSubview:_player.richVideoControlBar];
 }
@@ -129,18 +180,19 @@
 {
     if (enable == _enable) return;
     
-    [self willChangeValueForKey:@"enable"];
+   
     if (_enable && !enable){
         // to false
         [self.view setHidden:YES];
         [self viewDidDisappear:NO];
-        [self returnVideoToPreviousViewFromFullScreen];
+        [self returnVideoToPreviousViewFromFullScreen:_animated];
     } else if (!_enable && enable){
         // to true
         [self.view setHidden:NO];
         [self viewDidAppear:NO];
-        [self moveVideoToFullScreen];
+        [self moveVideoToFullScreen:_animated];
     }
+    [self willChangeValueForKey:@"enable"];
     _enable = enable;
     [self didChangeValueForKey:@"enable"];
 }

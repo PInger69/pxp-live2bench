@@ -84,7 +84,13 @@
 
 @implementation Encoder
 {
-
+    // Ready Flags
+  
+    BOOL isTeamsGet;
+    BOOL isAuthenticate;
+    BOOL isVersion;
+    BOOL isBuild;
+    BOOL isReady;
 }
 
 
@@ -106,7 +112,7 @@
 @synthesize feeds           = _feeds;
 @synthesize isMaster        = _isMaster;
 @synthesize allEventData    = _allEventData;
-
+@synthesize liveEventName   = _liveEventName;
 
 @synthesize teams           = _teams;
 @synthesize playerData      = _playerData;
@@ -128,6 +134,11 @@
         version         = @"?";
         statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self];
         _isMaster       = NO;
+        isTeamsGet      = NO;
+        isAuthenticate  = NO;
+        isVersion       = NO;
+        isBuild         = NO;
+        isReady         = NO;
     }
     return self;
 }
@@ -471,6 +482,12 @@
         [self teamsResponse:finishedData];
     }
    
+    
+    if (isAuthenticate && isVersion && isBuild && isTeamsGet && !isReady){
+        isReady = YES;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
+    }
+    
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:@{@"responce":finishedData}];
     
     
@@ -568,7 +585,7 @@
     //    authenticated = YES else NO
     // Should there be a notif for when its complete
 
-    
+    isAuthenticate = YES;
 }
 
 
@@ -596,6 +613,7 @@
 
         }
     }
+    isVersion = YES;
 }
 
 /**
@@ -625,7 +643,7 @@
             self.league     = [results objectForKey:@"leagues"];
         }
     }
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
+    isTeamsGet = YES;
 }
 
 /**
@@ -639,6 +657,7 @@
     
     if(NSClassFromString(@"NSJSONSerialization"))
     {
+        _liveEventName = nil;
         NSError *error = nil;
         id object = [NSJSONSerialization
                      JSONObjectWithData:data
@@ -665,27 +684,40 @@
                         [dataPool addObject:dict];
                     }
                     
-                    if ([dict objectForKey:@"live"]){
+                    if ([dict objectForKey:@"live_2"]){
+                        
+                        NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
+                        
+                        for (id key in dict[@"live_2"])
+                        {
+                            NSDictionary * qualities = [((NSDictionary *)dict[@"live_2"]) objectForKey:key];
+                            [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+                        }
+                        
+                        self.feeds = [collect copy];
+
+                        self.event = [dict objectForKey:@"name"]; // LIVE
+                    } else if ([dict objectForKey:@"live"]) { // this is for the new encoder version
                         /////
-                        self.event = @"live";
+                        self.event = [dict objectForKey:@"name"];
                         if ([dict[@"live"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
                             
                             // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
                             // this creates a feed object from just a string with it  source named s1
                             Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
-                            _feeds = @{ @"s1":theFeed};
+                            self.feeds = @{ @"s1":theFeed};
                             
                         }  else if ([dict[@"live"] isKindOfClass:[NSDictionary class]]){
-                            NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-                            
-                            for (id key in dict[@"live"])
-                            {
-                                if ([key isEqualToString:@"url"])continue;
-                                NSDictionary * qualities = [((NSDictionary *)dict[@"live"]) objectForKey:key];
-                                [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
-                            }
-                            
-                            _feeds = [collect copy];
+                            //                            NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
+                            //
+                            //                            for (id key in dict[@"live"])
+                            //                            {
+                            //                                if ([key isEqualToString:@"url"])continue;
+                            //                                NSDictionary * qualities = [((NSDictionary *)dict[@"live"]) objectForKey:key];
+                            //                                [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+                            //                            }
+                            //
+                            //                            _feeds = [collect copy];
                             
                             
                         } else {
@@ -693,7 +725,7 @@
                         }
                         
 
-                        
+                    
                     }
                     
                     
@@ -710,9 +742,10 @@
             self.allEventData   = [dataPool copy];
             
             if (_feeds == nil) _feeds     = @{};
+            
         }
     }
-
+    isBuild = YES;
 }
 
 

@@ -11,7 +11,7 @@
 #import <AVFoundation/AVPlayerItem.h>
 #import "Feed.h"
 
-@interface Pip : UIView <NSCopying> //So it can be used as a key in a Dict
+@interface Pip : UIView  //So it can be used as a key in a Dict
 
 
 @property (nonatomic, strong)           AVPlayer           * avPlayer;
@@ -32,7 +32,6 @@
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip;
 
 -(void)playerURL:(NSURL *)url;
-//-(void)playQualityURL:(NSDictionary *)urls;
 -(void)playPlayerItem:(AVPlayerItem *) avpi;
 -(void)playWithFeed:(Feed*)aFeed;
 -(void)prepareWithFeed:(Feed*)aFeed;
@@ -42,5 +41,5 @@
 -(void)seekTo:(CMTime)time;
 -(void)playRate:(float)rate;
 -(CMTime)currentTimePosition;
-//- (id)copyWithZone:(NSZone *)zone;
+
 @end

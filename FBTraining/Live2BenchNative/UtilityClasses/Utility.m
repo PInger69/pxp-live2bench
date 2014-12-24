@@ -218,6 +218,24 @@
                            alpha:1.0f];
 }
 
++(NSString*)encoderStatusToString:(int)status
+{
+    if (status ==0) return @"ENCODER_STATUS_UNKNOWN";
+    NSString * result = @"";
+
+    if (1<<0 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_INIT"];            //encoder is initializing (pxpservice just started)
+    if (1<<1 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_CAM_LOADING"];     //the camera is initializing (searching for teradek cube's or matrox monarch's)
+    if (1<<2 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_READY"];           //encoder is ready to start an event
+    if (1<<3 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_LIVE"];            //there is a live event
+    if (1<<4 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_SHUTDOWN"];        //encoder is shutting down
+    if (1<<5 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_PAUSED"];          //the live event is paused
+    if (1<<6 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_STOP"];            //live event is stopping
+    if (1<<7 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_START"];           //live event starting
+    if (1<<8 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_NOCAM"];            //no camera found
+    if (1<<10 & status)      result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_LOCAL"];            //no camera found
+
+    return result;
+}
 
 
 @end

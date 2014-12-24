@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GTLDrive.h"
+//#import "GTLDrive.h"
 
 @interface NSObject (LBCloudConvenience)
 
 
-- (GTLDriveFileThumbnail*)GTLThumbnailWithMIMEType: (NSString*)mimeType;
+//- (GTLDriveFileThumbnail*)GTLThumbnailWithMIMEType: (NSString*)mimeType;
 
 - (UIImage*)imageWithMIMEType: (NSString*)mimeType;
 - (UIImage*)imageWithTypeString: (NSString*)type;

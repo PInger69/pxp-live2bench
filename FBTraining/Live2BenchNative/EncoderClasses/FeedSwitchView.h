@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "EncoderManager.h"
-#import "VideoPlayer.h"
 #import "Pip.h"
 
 @interface FeedSwitchView : UIView
@@ -28,5 +27,10 @@
 -(void)swap;
 
 -(Feed*)feedFromKey:(NSString*)key;
+
+-(Feed*)primaryFeed;
+-(Feed*)secondaryFeed;
+-(void)deselectByIndex:(NSUInteger)index;
+-(BOOL)secondarySelected;
 
 @end

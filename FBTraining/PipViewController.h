@@ -10,6 +10,7 @@
 #import "Pip.h"
 #import "FeedSwitchView.h"
 #import "VideoPlayer.h"
+#import "EncoderManager.h"
 
 @interface PipViewController : UIViewController
 
@@ -19,11 +20,12 @@
 @property (nonatomic,strong) VideoPlayer    * videoPlayer;
 @property (nonatomic,strong) NSMutableArray * pips;// for when you have more then one pip
 
-//-(id)initWithVideoPlayer:(Pip *)videoPlayer;
--(id)initWithVideoPlayer:(VideoPlayer *)aVideoPlayer pip:(Pip*)aPip f:(FeedSwitchView *)f;
+
+-(id)initWithVideoPlayer:(VideoPlayer *)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager;
 //-(id)initWithPip:(Pip *)aMainPip pip:(Pip*)aPip f:(FeedSwitchView *)f;
 -(void)addPip:(Pip*)aPip;
 -(void)removePip:(Pip *)aPip;
 -(void)swapVideoPlayer:(VideoPlayer*)aVideoPlayer withPip:(Pip*)aPip;
+-(void)syncToPlayer;
 
 @end

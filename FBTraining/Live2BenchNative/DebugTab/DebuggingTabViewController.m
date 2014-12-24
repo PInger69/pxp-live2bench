@@ -28,7 +28,7 @@
     Pip    * pip2;
     UIView * rectOutline;
     
-    __weak EncoderManager       * EM;
+    EncoderManager       * EM;
     FeedSwitchView              * feedSwitch ;
     PipViewController           * pipController;
     BitrateMonitor              * testRate;
@@ -51,9 +51,11 @@
 {
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
+        
+        EM = _appDel.encoderManager;
         [self setMainSectionTab:@"DEBUG" imageName:@""];
         [self.view setBackgroundColor:[UIColor lightGrayColor]];
-        EM = _appDel.encoderManager;
+        
         
         rectOutline = [[UIView alloc]initWithFrame:CGRectMake(100, 100, 10, 10)];
         rectOutline.layer.borderColor = [[UIColor redColor]CGColor];
@@ -74,20 +76,21 @@
     
     pip             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
     pip.isDragAble  =YES;
+    pip.hidden = YES;
     pip.dragBounds  = videoPlayer.playerLayer.frame;
 
    // [self.view addSubview:pip];
    [videoPlayer.view addSubview:pip];
     
     feedSwitch = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 80, 100, 100) encoderManager:EM];
-    [feedSwitch buildButtonsWithData:@{
-                                       @"F1":[[Feed alloc]initWithURLString:@"http://192.168.3.100:80/events/live/video/list.m3u8" quality:0],
-                                       @"F2":[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/2014-11-28_11-41-38_7e302f17b954d23b0a1ed1e1d21f3532233febdb_local/video/list.m3u8" quality:0],
-//                                       @"F3":[[Feed alloc]initWithURLString:@"http://192.168.3.100:80/events/2014-09-11_15-08-31_796a5299fad628f2670afeda035d42674ad9f559_local/video/list.m3u8" quality:0]
-                                       }];
+//    [feedSwitch buildButtonsWithData:@{
+//                                       @"F1":[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_00.m3u8" quality:0],
+//                                       @"F2":[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]
+//                                       }];
     
    [videoPlayer.view addSubview:feedSwitch];
-    pipController = [[PipViewController alloc]initWithVideoPlayer:videoPlayer pip:pip f:feedSwitch];
+    pipController = [[PipViewController alloc]initWithVideoPlayer:videoPlayer f:feedSwitch encoderManager:EM];
+    [pipController addPip:pip];
     videoPlayer.context = @"debug";
 
 
@@ -96,40 +99,20 @@
     [self.view addSubview:fullScreen.view];
 
 
-//    
-//    pip2 = [[Pip alloc]initWithFrame:CGRectMake(200, 200, 200, 150)];
-//    [pip2 playerURL:[NSURL URLWithString:@"http://192.168.3.100:80/events/2014-09-11_15-08-31_796a5299fad628f2670afeda035d42674ad9f559_local/video/list.m3u8"]];
-//    pip2.isDragAble = YES;
-//    pip2.muted      = YES;
-//    pip2.dragBounds = videoPlayer.playerLayer.frame;
-//    [videoPlayer.view addSubview:pip2];
-//
-//    [pipController addPip:pip2];
-//    
-//    
-//    Pip * pip3 = [[Pip alloc]initWithFrame:CGRectMake(100, 100, 200, 150)];
-//    [pip3 playerURL:[NSURL URLWithString:@"http://192.168.3.100:80/events/2014-09-11_15-08-31_796a5299fad628f2670afeda035d42674ad9f559_local/video/list.m3u8"]];
-//    pip3.isDragAble = YES;
-//    pip3.muted      = YES;
-//    pip3.dragBounds = videoPlayer.playerLayer.frame;
-//    [videoPlayer.view addSubview:pip3];
-//    
-//    [pipController addPip:pip3];
-    
-    
-//    [self.view addSubview:rectOutline];
-
-   // [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(delayedCall:) name:NOTIF_ENCODER_AUTHENTICATED object:nil];
-//    brViewController = [[BitRateViewController alloc]initWithEncoderManager:EM];
-//    [self.view addSubview:brViewController.view];
-    
-    
-
-    
-
-
+    [videoPlayer playFeed:[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]];
     [super viewDidLoad];
-
+    [pipController viewDidLoad];
+    
+    
+    
+    
+//    
+//    pip2             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
+//    pip2.isDragAble  =YES;
+//    pip2.dragBounds  = videoPlayer.playerLayer.frame;
+//     [self.view addSubview:pip2];
+//
+//    [pip2 playWithFeed:[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]];
 }
 
 
@@ -177,46 +160,25 @@
 }
 
 
--(void)handleSingleTap
-{
-
-}
-
-
-- (void)handleTapGesture2:(UITapGestureRecognizer *)sender {
-    if (sender.state == UIGestureRecognizerStateRecognized) {
-        // handling code
-        NSLog(@"TAP2");
-        [Pip swapPip:pip with:pip2];
-        [feedSwitch swap];
-    }
-}
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
-    
 
-    
-    
     [super viewWillAppear:animated];
-
-
-
 }
 
 
 -(void)viewDidAppear:(BOOL)animated
 {
     
-    NSString * myPath = @"http://192.168.3.100:80/events/live/video/list.m3u8";
-//    [pip playerURL:[NSURL URLWithString:myPath]];
+    
     NSLog(@"DEBUG APPEAR!");
 
     [self performSelector:@selector(delayed) withObject:nil afterDelay:10];
     [super viewDidAppear:animated];
-    [videoPlayer setPlayerWithURL:[NSURL URLWithString:myPath]];
     
+    EM.currentEvent = EM.liveEventName;
+    [videoPlayer playFeed:feedSwitch.primaryFeed];
 }
 
 - (void)didReceiveMemoryWarning

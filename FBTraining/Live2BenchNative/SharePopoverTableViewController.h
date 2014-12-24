@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
-#import "GDFileUploader.h"
+//#import "GDFileUploader.h"
 
 @protocol JPSharePopoverDelegate;
 @class JPGraphPDFGenerator, ZoneGraphPDFViewController, DPBFileUploader, GDFileUploader;
-@interface SharePopoverTableViewController : UITableViewController <MFMailComposeViewControllerDelegate, GDFileUploaderDelegate>
+@interface SharePopoverTableViewController : UITableViewController <MFMailComposeViewControllerDelegate>
 {
     JPGraphPDFGenerator* graphGen;
     

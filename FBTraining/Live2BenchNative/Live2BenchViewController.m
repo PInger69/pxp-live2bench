@@ -85,33 +85,24 @@
 
 
 @synthesize tagMarker;
-//@synthesize tagSetView;//888
-//@synthesize tagEventName;//888
 @synthesize playbackRateBackButton;
 @synthesize playbackRateForwardButton;
-//@synthesize currentSeekBackButton;
-//@synthesize currentSeekForwardButton;
 @synthesize teleViewController=_teleViewController;
 @synthesize teleButton;
 @synthesize currentEventName =_currentEventName;
 @synthesize currentPlayingEventMarker=_currentPlayingEventMarker;
 @synthesize accountInfo;
-@synthesize startRangeModifierButton,endRangeModifierButton;
+//@synthesize startRangeModifierButton,endRangeModifierButton;
 @synthesize leftSideButtons=_leftSideButtons;
 @synthesize rightSideButtons=_rightSideButtons;
 @synthesize playerCollectionViewController;
 @synthesize footballTrainingCollectionViewController;
-@synthesize continuePlayButton,timeLabel,fullscreenOverlayCreated,currentPlayBackTime;
+@synthesize continuePlayButton,fullscreenOverlayCreated,currentPlayBackTime;
 @synthesize videoPlaybackFailedAlertView;
-
 @synthesize poorSignalCounter;
 @synthesize switchToLiveEvent;
 @synthesize spinnerViewCounter;
 @synthesize spinnerView;
-//@synthesize seekBackControlView;
-//@synthesize seekForwardControlView;
-
-
 @synthesize tagMarkerLeadObjDict;
 @synthesize updateTagmarkerCounter;
 @synthesize durationTagLabel;
@@ -123,20 +114,13 @@
 
 
 // FULL SCREEN
-//@synthesize seekBackControlViewinFullScreen;
-//@synthesize seekForwardControlViewinFullScreen;
 @synthesize enterFullScreen;
 
 
 
-
-// TELE
-@synthesize saveTeleButton;
-@synthesize clearTeleButton;
-
 int loginIndex = 0; //indicate it is the first time go to first view or not
 int tagsinQueueInOfflineMode = 0;
-BOOL delaySlowMo = YES;
+
 
 // Context
 static void * eventTypeContext = &eventTypeContext;
@@ -289,7 +273,7 @@ static void * eventTypeContext = &eventTypeContext;
     [uController startEncoderStatusTimer];
     
 
-
+         self.videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
    
     
     // side tags
@@ -297,13 +281,34 @@ static void * eventTypeContext = &eventTypeContext;
     [self addChildViewController:_tagButtonController];
     [_tagButtonController didMoveToParentViewController:self];
     
+    
+    // Richard
+    
+    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:videoPlayer];
+    [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_videoBarViewController.view];
+
+    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:videoPlayer];
+    _fullscreenViewController.context = @"Live2Bench Tab";
+    [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
+    [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
+    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
+    
+
+    videoPlayer.context = _fullscreenViewController.context;
+    
+    // so get buttons are connected to full screen
+    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+
     [super viewWillAppear:animated];
-    delaySlowMo                 = YES;
+
+
     //spinnerViewCounter: used to time out spinner view
     //if the video player is not playing properly, add spinnerView and increase spinnerViewCounter
     //if spinnerViewCounter > 10, remove the spinner view
@@ -350,31 +355,15 @@ static void * eventTypeContext = &eventTypeContext;
     // maybe this should be part of the videoplayer
      if(![self.view.subviews containsObject:self.videoPlayer.view])
      {
-         //initial recordbutton and videoplayer
-         recordButton = [[UIImageView alloc] initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH - 32, 0, 32, 32)];
-         [recordButton setContentMode:UIViewContentModeScaleAspectFit];
-         [recordButton setAlpha:0.0];
-         [recordButton setHidden:TRUE];
-         recordButton.opaque = NO;
 
-         UIBezierPath *        myFirstShape = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(5, 5, 20, 20)];
-
-         CAShapeLayer* shapeLayer;
-         shapeLayer = [[CAShapeLayer alloc] initWithLayer:recordButton.layer];
-         shapeLayer.lineWidth = 1.0;
-         shapeLayer.fillColor = [UIColor greenColor].CGColor;
-         
-         [recordButton.layer addSublayer:shapeLayer];
-         
-         shapeLayer.path = myFirstShape.CGPath;
 
          self.videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
          self.videoPlayer.antiFreeze.enable = YES;   //RICHARD
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
 
          [self.view addSubview:self.videoPlayer.view];
-         [self.videoPlayer.view addSubview:recordButton];
-
+        [_videoBarViewController viewDidAppear:animated];
+         
         [videoPlayer play];
 
          
@@ -433,7 +422,6 @@ static void * eventTypeContext = &eventTypeContext;
     }
     
     [self.view bringSubviewToFront:self.playerCollectionViewController.view];
-    [self.view bringSubviewToFront:recordButton];
     
     //playback old event
     if( globals.IS_PAST_EVENT)
@@ -448,13 +436,6 @@ static void * eventTypeContext = &eventTypeContext;
         [self.leftSideButtons setAlpha:0.6f];
         [self.rightSideButtons setUserInteractionEnabled:FALSE];
         [self.rightSideButtons setAlpha:0.6f];
-
-//        [currentSeekBackButton setHidden:TRUE];
-//        [currentSeekForwardButton setHidden:TRUE];
-        
-        [startRangeModifierButton setHidden:TRUE];
-        [endRangeModifierButton setHidden:TRUE];
-
         
         if([_eventType isEqualToString:@"hockey"]){
             [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
@@ -541,52 +522,15 @@ static void * eventTypeContext = &eventTypeContext;
 
     //used to alert the video palying back successfully or not
     poorSignalCounter = 0;
-    
-    //hide seek back&forward control views
-//    [seekBackControlView setHidden:TRUE];
-//    [seekForwardControlView setHidden:TRUE];
-//    [seekBackControlViewinFullScreen setHidden:TRUE];
-//    [seekForwardControlViewinFullScreen setHidden:TRUE];
-    
-    //update seek back&forward buttons
-    /*
-    if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackQuarterSecond:)) {
-        [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackquartersec.png"] forState:UIControlStateNormal];
-    }else if(globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackOneSecond:)){
-        [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackonesec.png"] forState:UIControlStateNormal];
-    }else {
-        [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackfivesecs.png"] forState:UIControlStateNormal];
-        globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-    }
-    [currentSeekBackButton addTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-    
-    if (globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardQuarterSecond:)) {
-        [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardquartersec.png"] forState:UIControlStateNormal];
-    }else if(globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardOneSecond:)){
-        [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardonesec.png"] forState:UIControlStateNormal];
-    }else {
-        [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardfivesecs.png"] forState:UIControlStateNormal];
-        globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-    }
-    [currentSeekForwardButton addTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-    */
-     
+
     if (globals.UNCLOSED_EVENT || [_eventType isEqualToString:@"football training"]) {
         [self highlightDurationTag];
     }
     
   
 
-    // Richard
+
     
-    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:videoPlayer];
-    [_videoBarViewController.startRangeModifierButton addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [_videoBarViewController.endRangeModifierButton addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    
-    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:videoPlayer];
-    _fullscreenViewController.context = @"Live2Bench Tab";
-    [self.view addSubview:_fullscreenViewController.view];
-    videoPlayer.context = _fullscreenViewController.context;
 }
 
 
@@ -595,9 +539,10 @@ static void * eventTypeContext = &eventTypeContext;
 {
     [super viewDidAppear:animated];
     
-    [self.view addSubview:_videoBarViewController.view];
-    [_videoBarViewController viewDidAppear:animated];
 
+//    [_videoBarViewController viewDidAppear:animated];
+   // [_fullscreenViewController viewDidAppear:animated];
+    [self.view addSubview:_fullscreenViewController.view];
 }
 //update full screen buttons when enter fullscreen or exit fullscreen
 -(void)updateFullScreenOverlay
@@ -611,10 +556,6 @@ static void * eventTypeContext = &eventTypeContext;
             [telestrationOverlay setFrame:CGRectMake(0, videoPlayer.view.bounds.origin.y + 15, videoPlayer.view.bounds.size.width, videoPlayer.view.bounds.size.height - 15)];
             [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFit];
         }
-        
-        [recordButton setFrame:CGRectMake(videoPlayer.view.frame.size.width-35,55, 32, 32)];
-        [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:recordButton];
-        
         fullscreenOverlayCreated = TRUE;
         
     }else if(!videoPlayer.isFullScreen && fullscreenOverlayCreated){
@@ -649,39 +590,6 @@ static void * eventTypeContext = &eventTypeContext;
         [self.view bringSubviewToFront:self.playerCollectionViewController.view];
 
         fullscreenOverlayCreated = FALSE;
-        [recordButton setFrame: CGRectMake(MEDIA_PLAYER_WIDTH - 32.0f, 0.0f, 32.0f, 32.0f)];
-        [self.videoPlayer.view addSubview:recordButton];
-        [self.videoPlayer.view bringSubviewToFront:recordButton];
-
-        /*
-        [self.view bringSubviewToFront:seekBackControlView];
-        [self.view bringSubviewToFront:seekForwardControlView];
-        [seekBackControlView setHidden:TRUE];
-        [seekForwardControlView setHidden:TRUE];
-        [seekBackControlViewinFullScreen setHidden:TRUE];
-        [seekForwardControlViewinFullScreen setHidden:TRUE];
-       
-        if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackQuarterSecond:)) {
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackquartersec.png"] forState:UIControlStateNormal];
-        }else if(globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackOneSecond:)){
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackonesec.png"] forState:UIControlStateNormal];
-        }else {
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackfivesecs.png"] forState:UIControlStateNormal];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-        }
-        [currentSeekBackButton addTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-        
-        if (globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardQuarterSecond:)) {
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardquartersec.png"] forState:UIControlStateNormal];
-        }else if(globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardOneSecond:)){
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardonesec.png"] forState:UIControlStateNormal];
-        }else {
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardfivesecs.png"] forState:UIControlStateNormal];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-        }
-        [currentSeekForwardButton addTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-        */
-        
         
         //if the user opens a duration tag in fullscreen mode, when back to normal mode, we need to highlight the button with the selected event name
         if (swipedOutButton && isDurationTagEnabled && swipedOutButton.selected){
@@ -702,7 +610,6 @@ static void * eventTypeContext = &eventTypeContext;
 - (void)removeLiveSpinner
 {
     [spinnerView removeSpinner];
-    
 }
 
 ///we are going to update the global variable every second if the stored value is less then the current duration.
@@ -800,7 +707,6 @@ static void * eventTypeContext = &eventTypeContext;
             }
         }
         
-        NSString *playerStatus;
         if ((int)[[[videoPlayer avPlayer]currentItem]status] == 0) {
             
             //playerStatus = @"avplayerUnknown";
@@ -813,10 +719,6 @@ static void * eventTypeContext = &eventTypeContext;
                 //reset video player every 10 seconds for 6 times
                 if (poorSignalCounter > 0 && poorSignalCounter%10 == 0) {
                     
-//                    //for testing
-//                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:[NSString stringWithFormat:@"reset video player in live2bench view, status unknown; poorSignalCounter: %d",poorSignalCounter] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//                    [alert show];
-
                     [videoPlayer resetAvplayer];
                     //go to live after 3 seconds delay
                     [videoPlayer performSelector:@selector(goToLive) withObject:nil afterDelay:5];
@@ -873,15 +775,6 @@ static void * eventTypeContext = &eventTypeContext;
             [self.overlayRightViewController.view setAlpha:0.6];
         }
         
-        [recordButton setHidden:TRUE];
-//        [liveButtoninFullScreen setEnabled:FALSE];
-  /*
-        [currentSeekBackButton setHidden:TRUE];
-        [currentSeekForwardButton setHidden:TRUE];
-    */
-        [startRangeModifierButton setHidden:TRUE];
-        [endRangeModifierButton setHidden:TRUE];
-        
         if([_eventType isEqualToString:@"hockey"]){
             [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
             [self.hockeyBottomViewController.view setAlpha:0.6];
@@ -910,13 +803,7 @@ static void * eventTypeContext = &eventTypeContext;
     
             spinnerView = nil;
         }
-        
-        /*
-        if (!globals.IS_LOOP_MODE) {
-            [currentSeekBackButton setHidden:FALSE];
-            [currentSeekForwardButton setHidden:FALSE];
-        }
-        */
+
         
         [self.leftSideButtons setUserInteractionEnabled:TRUE];
         [self.leftSideButtons setAlpha:1.0];
@@ -931,13 +818,7 @@ static void * eventTypeContext = &eventTypeContext;
             [self.overlayRightViewController.view setAlpha:1.0];
         }
         
-        if(![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]) // if it isn't a live game playing right now then we don't want to show the record button
-        {
-            [recordButton setHidden:TRUE];
-        }else{
-            [recordButton setHidden:FALSE];
-        }
-        
+
             if([_eventType isEqualToString:@"hockey"]){
                 [self.hockeyBottomViewController.view setUserInteractionEnabled:TRUE];
                 [self.hockeyBottomViewController.view setAlpha:1.0];
@@ -965,10 +846,8 @@ static void * eventTypeContext = &eventTypeContext;
     //enable live button if the current encoder status is @"live", otherwise disable it
     if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || [globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) {
         _liveButton.enabled = YES;
-//        [liveButtoninFullScreen setEnabled:TRUE];
     }else{
          _liveButton.enabled = NO;
-//        [liveButtoninFullScreen setEnabled:FALSE];
     }
     
     if ([globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){ 
@@ -978,15 +857,6 @@ static void * eventTypeContext = &eventTypeContext;
     }else{
         //show record button if playing live game
         if ([globals.EVENT_NAME isEqualToString:@"live"]){
-            recordButton.alpha = 1.0f;
-            [UIImageView animateWithDuration:0.5f
-                                       delay:0.0
-                                     options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
-                                  animations:^{
-                                      recordButton.alpha = 0.0f;
-                                  }
-                                  completion:^(BOOL finished){
-                                  }];
             [self.hockeyBottomViewController.view setHidden:FALSE];
             [self.soccerBottomViewController.view setHidden:FALSE];
         }
@@ -1022,9 +892,7 @@ static void * eventTypeContext = &eventTypeContext;
     if(globals.NEW_TAGS_FROM_SYNC.count>0)
     {
         NSString *color;
-       // NSString *startTime;
         float tagTime;
-        NSString *tagName;
         UIColor *tagColour;
         
         NSMutableDictionary *UIColourDict;
@@ -1042,10 +910,8 @@ static void * eventTypeContext = &eventTypeContext;
                 }
                 
                 tagColour = [UIColourDict objectForKey:color];
-                //startTime = [oneTag objectForKey:@"starttime"];
-                //tagName = [oneTag objectForKey:@"name"];
                 tagTime = [[oneTag objectForKey:@"time"] floatValue];
-                [self markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
+//                [self markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
                 //[self markTag:tagTime name:tagName colour:tagColour tagID: [[oneTag objectForKey:@"id"] doubleValue]];
             }
         }
@@ -1069,67 +935,16 @@ static void * eventTypeContext = &eventTypeContext;
         [_videoBarViewController.tagMarkerController createTagMarkers];
     }
     [self.view setNeedsDisplay];
-    
-    /*
-    if (tagMarkerLeadObjDict.count < 1 ) {
-        //if just start playing back an old event, the duration of the video might be 0. In this case no tag markers will be created.
-        //Here, we check if there is no tag markers but there is tags for the current event, call the createTagMarkers method to generate all the tag markers
-        if (globals.CURRENT_EVENT_THUMBNAILS.count > 0) {
-            [self cleanTagMarkers];
-            [self createTagMarkers];
-        }
-        
-    }else{
-        updateTagmarkerCounter++;
-        //if the user stays in the live2bench view for more than half a minute, recreate of all the lead tagmarker views;
-        //else just update the positions of the tagmarkers;
-        if (updateTagmarkerCounter > 30) {
-            //clean tag markers
-            [self cleanTagMarkers];
-            //recreate tag markers
-            [self createTagMarkers];
-            updateTagmarkerCounter = 0;
-        }else{
-            //update tagmarker position
-            float liveTime = MAX(globals.PLAYABLE_DURATION, videoPlayer.duration);
-            
-            if (liveTime > 0) {
-                NSArray *tempArr = [tagMarkerLeadObjDict allKeys];
-                //update the lead tagmarkers according to the current video duration
-                for(NSString *leadXValue in tempArr){
-                    NSMutableDictionary *leadDict = [[tagMarkerLeadObjDict objectForKey:leadXValue] mutableCopy];
-                    float newXValue = [self xValueForTime:[[leadDict objectForKey:@"leadTime"]doubleValue] atLiveTime:liveTime];
-                    if(newXValue > self.tagSetView.frame.size.width)
-                    {
-                        newXValue = self.tagSetView.frame.size.width;
-                    }
-                    TagMarker *lead = [leadDict objectForKey:@"lead"];
-                    lead.xValue = newXValue;
-                    CGRect oldLeadMarkerFrame = lead.markerView.frame;
-                    [lead.markerView setFrame:CGRectMake(newXValue, oldLeadMarkerFrame.origin.y, oldLeadMarkerFrame.size.width, oldLeadMarkerFrame.size.height)];
-                    
-                    //if the xValue changed, update the lead tagmarker dictionary: tagMarkerLeadObjDict
-                    if ([leadXValue floatValue] != newXValue) {
-                        [tagMarkerLeadObjDict removeObjectForKey:leadXValue];
-                        [tagMarkerLeadObjDict setObject:leadDict forKey:[NSString stringWithFormat:@"%f",newXValue]];
-                    }
-                }
-            }
-       
-        }
-    }
-  *///888
+
     //if a tag is playing currently, update the position of the currentPlayingEventMarker(small orange triangle) according to the lead tagmarker's position
     if (globals.IS_LOOP_MODE) {
         
         //NOTE: [NSString stringWithFormat:@"%@",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] is very important for a key value of a dictionary, otherwise currentPlayingTagMarker will be nil value
-                TagMarker *currentPlayingTagMarker = [globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%@",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]]];
-                CGRect oldFrame = self.currentPlayingEventMarker.frame;
-                [self.currentPlayingEventMarker setFrame:CGRectMake(currentPlayingTagMarker.leadTag.xValue -7, oldFrame.origin.y,oldFrame.size.width, oldFrame.size.height)];
-                self.currentPlayingEventMarker.hidden = FALSE;
-//                break;
-//            }
-//        }
+        TagMarker *currentPlayingTagMarker = [globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%@",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]]];
+        CGRect oldFrame = self.currentPlayingEventMarker.frame;
+        [self.currentPlayingEventMarker setFrame:CGRectMake(currentPlayingTagMarker.leadTag.xValue -7, oldFrame.origin.y,oldFrame.size.width, oldFrame.size.height)];
+        self.currentPlayingEventMarker.hidden = FALSE;
+
     }
   
     // Richard
@@ -1137,98 +952,6 @@ static void * eventTypeContext = &eventTypeContext;
     
     
 }
-
-/*
-//clean all the old tag markers
--(void)cleanTagMarkers{
-    
-//    for(UIView *markerView in self.tagSetView.subviews){
-//        if ([markerView.accessibilityLabel isEqualToString:@"marker"]) {
-//            [markerView removeFromSuperview];
-//        }
-//    }
-    
-    [globals.TAG_MARKER_OBJ_DICT removeAllObjects];
-    [tagMarkerLeadObjDict removeAllObjects];
-    
-}
-*///888
-
-
-/*
-//create tag markers for all the tags
--(void)createTagMarkers
-{
-    isCreatingAllTagMarkers = TRUE;
-        
-    NSString *color;
-    float tagTime;
-    NSMutableDictionary *UIColourDict;
-    UIColor *tagColour;
-    for(NSMutableDictionary *oneTag in [globals.CURRENT_EVENT_THUMBNAILS allValues]){
-        //if the tag was deleted(type == 3) or type == 8 , don't create marker
-        if ([oneTag objectForKey:@"time"] && [[oneTag objectForKey:@"type"]integerValue]!=3 && [[oneTag objectForKey:@"type"]integerValue]!=8 && [[oneTag objectForKey:@"type"]integerValue]!=18 && [[oneTag objectForKey:@"type"]integerValue]!=22 && !([[oneTag objectForKey:@"type"]integerValue]&1)) {
-            color = [oneTag objectForKey:@"colour"];
-            
-            if ([UIColourDict count] == 0){
-                tagColour = [uController colorWithHexString:color];
-                UIColourDict = [NSMutableDictionary dictionaryWithObject:tagColour forKey:color];
-            } else {
-                if (![UIColourDict objectForKey:color]){
-                    tagColour = [uController colorWithHexString:color];
-                    [UIColourDict setObject:tagColour forKey:color];
-                }
-            }
-            
-            tagColour = [UIColourDict objectForKey:color];
-            tagTime = [[oneTag objectForKey:@"time"] floatValue];
-        
-            //create tag marker for this tag
-            [self markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
-        }
-    }
-
-    //NSLog(@"tagMarkerLeadObjDict: %@, videoplayer.duration: %f",tagMarkerLeadObjDict,videoPlayer.duration);
-    //go through all the tag marker leads and create all the tag maker views
-    [self createAllTagmarkerViews];
-
-}
-*///888
- 
-/*
-//create tag marker views for all the tags
--(void)createAllTagmarkerViews{
-    //NSLog(@"create all tag marker views!");
-    //create the tag marker view for each lead tagmarker in the dictionary: tagMarkerLeadObjDict
-    for(NSMutableDictionary *leadDict in [tagMarkerLeadObjDict allValues]){
-        //NSLog(@"creating tagmarker view for lead tag!!!!!!!");
-        TagMarker *mark = [leadDict objectForKey:@"lead"];
-        if (mark.markerView) {
-            [mark.markerView removeFromSuperview];
-            mark.markerView = nil;
-        }
-        mark.markerView = [[UIView alloc]initWithFrame:CGRectMake(mark.xValue, 0.0f, 5.0f, 40.0f)];
-        [mark.markerView setAccessibilityLabel:@"marker"];
-        //mark.marker.frame = CGRectMake(mark.xValue, 0.0f, 5.0f, 40.0f);
-//        [self.tagSetView insertSubview:mark.markerView belowSubview:self.tagEventName];
-        int numMarks = [[leadDict objectForKey:@"colorArr"]count];
-        NSArray *tempColorArr = [leadDict objectForKey:@"colorArr"];
-        //create subviews according to the color array saved in the lead dictionary
-        if (numMarks != 1){
-            for (int i = 0; i < numMarks; i++)
-            {
-                UIView *colorView = [[UIView alloc]initWithFrame:CGRectMake(0, i*(40.0f/numMarks), 5.0f, 40.0f/numMarks)];
-                [colorView setBackgroundColor:[tempColorArr objectAtIndex:i]];
-                [mark.markerView addSubview:colorView];
-            }
-        }else{
-            [mark.markerView setBackgroundColor:mark.color];
-        }
-    }
-
-    isCreatingAllTagMarkers = FALSE;
-}
-*///888
 
 //looping tag
 - (void)handleThumbnailLoop
@@ -1328,8 +1051,7 @@ static void * eventTypeContext = &eventTypeContext;
                 sleep(1);
                 [self.videoPlayer prepareToPlay];
                 [self.videoPlayer play];
-//                self.videoPlayer.isLoopMode = TRUE;
-                
+
             }
             if(self.videoPlayer.avPlayer.rate > 0)
             {
@@ -1350,17 +1072,9 @@ static void * eventTypeContext = &eventTypeContext;
         loopTagObserver = nil;
     }
     
-    
-    
     globals.IS_PLAYBACK_TELE = FALSE;
     globals.IS_TAG_PLAYBACK = FALSE;
-//    [self.tagEventName setHidden:TRUE];//888
     [self.currentPlayingEventMarker setHidden:TRUE];
-    [self.startRangeModifierButton setHidden:TRUE];
-    [self.endRangeModifierButton setHidden:TRUE];
-//    [self.currentSeekBackButton setHidden:FALSE];
-//    [self.currentSeekForwardButton setHidden:FALSE];
-//    [slowMoButtoninFullScreen setHidden:FALSE];
     [self.continuePlayButton setHidden:TRUE];
     //remove the telestration overlay
     if(telestrationOverlay)
@@ -1370,9 +1084,6 @@ static void * eventTypeContext = &eventTypeContext;
     }
     //if is in fullscreen, remove buttons for loop mode and create buttons for normal mode
     if (videoPlayer.isFullScreen && globals.IS_LOOP_MODE) {
-        [startRangeModifierButtoninFullScreen setHidden:TRUE];
-        [endRangeModifierButtoninFullScreen setHidden:TRUE];
-/*TO DELETE        [continuePlayButtoninFullScreen setHidden:TRUE];*/
         [self removeFullScreenOverlayButtonsinLoopMode];
         [self createFullScreenOverlayButtons];
     }
@@ -1433,6 +1144,11 @@ static void * eventTypeContext = &eventTypeContext;
     [self cleanTagMarkers];
      *///888
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
+    
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":videoPlayer.context,@"animated":[NSNumber numberWithBool:NO]}];
+    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -1528,14 +1244,7 @@ static void * eventTypeContext = &eventTypeContext;
             [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:TRUE];
             [self.soccerBottomViewController.periodSegmentedControl setAlpha:1.0];
         }
-/*TO DELETE
-        [liveButtoninFullScreen setAlpha:1.0];
-        [liveButtoninFullScreen setUserInteractionEnabled:TRUE];
- 
 
-        [continuePlayButtoninFullScreen setAlpha:1.0];
-        [continuePlayButtoninFullScreen  setUserInteractionEnabled:TRUE];
-    */
         [teleButton setUserInteractionEnabled:TRUE];
         [teleButton setAlpha:1.0];
         [self.overlayLeftViewController.view setUserInteractionEnabled:TRUE];
@@ -1636,375 +1345,6 @@ static void * eventTypeContext = &eventTypeContext;
 }
 */
  
-/*
--(void)hideSeekControlView:(id)sender{
-    
-    seekBackControlView.hidden = TRUE;
-    seekForwardControlView.hidden = TRUE;
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-
-}
-*/
-#pragma mark - SEEK OLD START
-/*
-//scrub backwards by 0.25 second
--(void)seekBackQuarterSecond:(id)sender{
-     CustomButton *button = (CustomButton*)sender;
-    
-    if (globals.CURRENT_SEEK_BACK_ACTION != @selector(seekBackQuarterSecond:)) {
-        if ( ![button.accessibilityLabel isEqual:@"fullscreen"]) {
-            [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackquartersec.png"] forState:UIControlStateNormal];
-            [currentSeekBackButton addTarget:self action:@selector(seekBackQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackQuarterSecond:);
-            
-            [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardquartersec.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButton addTarget:self action:@selector(seekForwardQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardQuarterSecond:);
-        }else{
-            [currentSeekBackButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackquarterseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekBackButtoninFullScreen addTarget:self action:@selector(seekBackQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackQuarterSecond:);
-            
-            [currentSeekForwardButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardquarterseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButtoninFullScreen addTarget:self action:@selector(seekForwardQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardQuarterSecond:);
-        }
-       
-    }
-    
-    seekBackControlView.hidden = TRUE;
-    seekForwardControlView.hidden = TRUE;
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-    
-    double currentTime = [videoPlayer currentTimeInSeconds];
-    
-    if (globals.IS_LOOP_MODE){
-        //In loop mode
-        //if (currentTime-5) is smaller than the tag's start time, just seek to the tag's start time;
-        //else seek back 5 secs
-        if(currentTime-0.25 <= globals.HOME_START_TIME-1.0) {
-            [videoPlayer setTime: globals.HOME_START_TIME];
-        }else{
-            [videoPlayer seekBack:0.25];
-        }
-    }else{
-        //In normal mode
-        //if (currentTime-5) smaller or equal to 0, seek to zero
-        //else seek back 5 secs
-        if (currentTime-0.25 > 0) {
-            [videoPlayer seekBack:0.25];
-        }else{
-            [videoPlayer setTime:0];
-        }
-        
-    }
-
-}
-
-//scrub backwards by 1 second
--(void)seekBackOneSecond:(id)sender{
-    CustomButton *button = (CustomButton*)sender;
-    if (globals.CURRENT_SEEK_BACK_ACTION != @selector(seekBackOneSecond:)) {
-        if ( ![button.accessibilityLabel isEqual:@"fullscreen"]) {
-            [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackonesec.png"] forState:UIControlStateNormal];
-            [currentSeekBackButton addTarget:self action:@selector(seekBackOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackOneSecond:);
-            
-            [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardonesec.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButton addTarget:self action:@selector(seekForwardOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardOneSecond:);
-        }else{
-            [currentSeekBackButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackoneseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekBackButtoninFullScreen addTarget:self action:@selector(seekBackOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackOneSecond:);
-            
-            [currentSeekForwardButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardoneseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButtoninFullScreen addTarget:self action:@selector(seekForwardOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardOneSecond:);
-        }
-    }
-    seekBackControlView.hidden = TRUE;
-    seekForwardControlView.hidden = TRUE;
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-    
-    double currentTime = [videoPlayer currentTimeInSeconds];
-    
-    if (globals.IS_LOOP_MODE){
-        //In loop mode
-        //if (currentTime-5) is smaller than the tag's start time, just seek to the tag's start time;
-        //else seek back 5 secs
-        if(currentTime-1 <= globals.HOME_START_TIME-1.0) {
-            [videoPlayer setTime: globals.HOME_START_TIME];
-        }else{
-            [videoPlayer seekBack:1.0];
-        }
-    }else{
-        //In normal mode
-        //if (currentTime-5) smaller or equal to 0, seek to zero
-        //else seek back 5 secs
-        if (currentTime-1 > 0) {
-            [videoPlayer seekBack:1.0];
-        }else{
-            [videoPlayer setTime:0];
-        }
-        
-    }
-
-}
-
-//scrub backwards by 5 seconds
-- (void)seekBackFiveSeconds:(id)sender
-{
-    CustomButton *button = (CustomButton*)sender;
-    
-    if (globals.CURRENT_SEEK_BACK_ACTION != @selector(seekBackFiveSeconds:)) {
-         if ( ![button.accessibilityLabel isEqual:@"fullscreen"]) {
-             [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-             [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackfivesecs.png"] forState:UIControlStateNormal];
-             [currentSeekBackButton addTarget:self action:@selector(seekBackFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-             globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-             
-             [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-             [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardfivesecs.png"] forState:UIControlStateNormal];
-             [currentSeekForwardButton addTarget:self action:@selector(seekForwardFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-             globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-
-         }else{
-             [currentSeekBackButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-             [currentSeekBackButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackfivesecslarge.png"] forState:UIControlStateNormal];
-             [currentSeekBackButtoninFullScreen addTarget:self action:@selector(seekBackFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-             globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-             
-             [currentSeekForwardButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-             [currentSeekForwardButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardfivesecslarge.png"] forState:UIControlStateNormal];
-             [currentSeekForwardButtoninFullScreen addTarget:self action:@selector(seekForwardFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-             globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-         }
-    }
-
-    seekBackControlView.hidden = TRUE;
-    seekForwardControlView.hidden = TRUE;
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-    
-    double currentTime = [videoPlayer currentTimeInSeconds];
-    
-    if (globals.IS_LOOP_MODE){
-        //In loop mode
-        //if (currentTime-5) is smaller than the tag's start time, just seek to the tag's start time;
-        //else seek back 5 secs
-        if(currentTime-5 <= globals.HOME_START_TIME-1.0) {
-            [videoPlayer setTime: globals.HOME_START_TIME];
-        }else{
-            [videoPlayer seekBack:5.0];
-        }
-    }else{
-        //In normal mode
-        //if (currentTime-5) smaller or equal to 0, seek to zero
-        //else seek back 5 secs
-        if (currentTime-5 > 0) {
-            [videoPlayer seekBack:5.0];
-        }else{
-            [videoPlayer setTime:0];
-        }
-        
-    }
-}
-
-//scrub backwards by 0.25 second
--(void)seekForwardQuarterSecond:(id)sender{
-    
-    CustomButton *button = (CustomButton*)sender;
-    if (globals.CURRENT_SEEK_FORWARD_ACTION != @selector(seekForwardQuarterSecond:)) {
-        if ( ![button.accessibilityLabel isEqual:@"fullscreen"]) {
-            [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardquartersec.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButton addTarget:self action:@selector(seekForwardQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardQuarterSecond:);
-            
-            [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackquartersec.png"] forState:UIControlStateNormal];
-            [currentSeekBackButton addTarget:self action:@selector(seekBackQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackQuarterSecond:);
-
-        }else{
-            [currentSeekForwardButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardquarterseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButtoninFullScreen addTarget:self action:@selector(seekForwardQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardQuarterSecond:);
-            
-            [currentSeekBackButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackquarterseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekBackButtoninFullScreen addTarget:self action:@selector(seekBackQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackQuarterSecond:);
-
-        }
-        
-    }
-
-    seekBackControlView.hidden = TRUE;
-    seekForwardControlView.hidden = TRUE;
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-    
-    double currentTime = [videoPlayer currentTimeInSeconds];
-    if (globals.IS_LOOP_MODE){
-        //In loop mode
-        //if (currentTime+0.25) is greater than the tag's end time, just seek to the tag's end time;
-        //else seek forward 0.25 sec
-        if(currentTime+0.25 >=globals.HOME_END_TIME) {
-            [videoPlayer setTime: globals.HOME_START_TIME];
-        }else{
-            [videoPlayer seekForward:0.25];
-        }
-    }else{
-        //In normal mode
-        //if (currentTime+0.25) greater or equal to the seekable duration,go to live
-        //else seek forward 0.25 sec
-        if (currentTime+0.25 < videoPlayer.duration) {
-            [videoPlayer seekForward:0.25];
-        }else{
-            [videoPlayer goToLive];
-        }
-        
-        
-    }
-    
-}
-
-//scrub backwards by 1 second
--(void)seekForwardOneSecond:(id)sender{
-    
-    CustomButton *button = (CustomButton*)sender;
-    
-    if (globals.CURRENT_SEEK_FORWARD_ACTION != @selector(seekForwardOneSecond:)) {
-        if ( ![button.accessibilityLabel isEqual:@"fullscreen"]) {
-            [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardonesec.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButton addTarget:self action:@selector(seekForwardOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardOneSecond:);
-            
-            [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackonesec.png"] forState:UIControlStateNormal];
-            [currentSeekBackButton addTarget:self action:@selector(seekBackOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackOneSecond:);
-
-        }else{
-            [currentSeekForwardButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardoneseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButtoninFullScreen addTarget:self action:@selector(seekForwardOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardOneSecond:);
-            
-            [currentSeekBackButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackoneseclarge.png"] forState:UIControlStateNormal];
-            [currentSeekBackButtoninFullScreen addTarget:self action:@selector(seekBackOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackOneSecond:);
-        }
-    }
-
-    
-    seekBackControlView.hidden = TRUE;
-    seekForwardControlView.hidden = TRUE;
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-    
-    double currentTime = [videoPlayer currentTimeInSeconds];
-    if (globals.IS_LOOP_MODE){
-        //In loop mode
-        //if (currentTime+1) is greater than the tag's end time, just seek to the tag's end time;
-        //else seek forward 1 sec
-        if(currentTime+1 >=globals.HOME_END_TIME) {
-            [videoPlayer setTime: globals.HOME_START_TIME];
-        }else{
-            [videoPlayer seekForward:1.0];
-        }
-    }else{
-        //In normal mode
-        //if (currentTime+1) greater or equal to the seekable duration,go to live
-        //else seek forward 1 sec
-        if (currentTime+1 < videoPlayer.duration) {
-            [videoPlayer seekForward:1.0];
-        }else{
-            [videoPlayer goToLive];
-        }
-        
-        
-    }
-
-}
-
-
-//scrub forward by 5 seconds
-- (void)seekForwardFiveSeconds:(id)sender
-{
-    CustomButton *button = (CustomButton*)sender;
-    
-    if (globals.CURRENT_SEEK_FORWARD_ACTION != @selector(seekForwardFiveSeconds:)) {
-        if ( ![button.accessibilityLabel isEqual:@"fullscreen"]) {
-            [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardfivesecs.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButton addTarget:self action:@selector(seekForwardFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-            
-            [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackfivesecs.png"] forState:UIControlStateNormal];
-            [currentSeekBackButton addTarget:self action:@selector(seekBackFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-            
-        }else{
-            [currentSeekForwardButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekForwardButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardfivesecslarge.png"] forState:UIControlStateNormal];
-            [currentSeekForwardButtoninFullScreen addTarget:self action:@selector(seekForwardFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-            
-            [currentSeekBackButtoninFullScreen removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-            [currentSeekBackButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackfivesecslarge.png"] forState:UIControlStateNormal];
-            [currentSeekBackButtoninFullScreen addTarget:self action:@selector(seekBackFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-            globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-        }
-    }
-    seekBackControlView.hidden = TRUE;
-    seekForwardControlView.hidden = TRUE;
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-    
-    double currentTime = [videoPlayer currentTimeInSeconds];
-    if (globals.IS_LOOP_MODE){
-        //In loop mode
-        //if (currentTime+5) is greater than the tag's end time, just seek to the tag's end time;
-        //else seek forward 5 secs
-        if(currentTime+5 >=globals.HOME_END_TIME) {
-            [videoPlayer setTime: globals.HOME_START_TIME];
-        }else{
-            [videoPlayer seekForward:5.0];
-        }
-    }else{
-        //In normal mode
-        //if (currentTime+5) greater or equal to the seekable duration,go to live
-        //else seek forward 5 secs
-        if (currentTime+5 < videoPlayer.duration) {
-            [videoPlayer seekForward:5.0];
-        }else{
-            [videoPlayer goToLive];
-        }
-            
-        
-    }
-}
-*///888
-#pragma mark - SEEK OLD END
-
 
 //get all the tagnames from TagButtons.plist file
 // DEPRICATED Recieved from encoder manager
@@ -2754,7 +2094,7 @@ static void * eventTypeContext = &eventTypeContext;
                 
                 [dict setObject:imagePath forKey:@"url"];
                 //create tagmarker
-                [self markTagAtTime:[tagTime floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//                [self markTagAtTime:[tagTime floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
                 //[self markTag:[tagTime floatValue] name:button.titleLabel.text colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID: [[@"temp_" stringByAppendingString:tagTime] doubleValue]];
                 //save the thumbnail image in local storage. This is running in the background thread
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
@@ -2835,10 +2175,7 @@ static void * eventTypeContext = &eventTypeContext;
                             id tagId = [globals.OPENED_DURATION_TAGS objectForKey:button.titleLabel.text];
                             [dict setObject:tagId forKey:@"id"];
                             [globals.OPENED_DURATION_TAGS removeObjectForKey:button.titleLabel.text];
-                            
-                            
-                            
-                            
+                 
                             if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
                                 
                                 NSString * catName = [NSString stringWithFormat:@"%@",button.titleLabel.text];
@@ -2846,11 +2183,7 @@ static void * eventTypeContext = &eventTypeContext;
                                 [dict setObject:catName forKey:@"period"];
                                 
                             }
-                            
-                            
-                            
-                            
-                            
+
                             
                             [globals.ARRAY_OF_TAGSET addObject:dict];
                         }else{
@@ -3055,12 +2388,7 @@ static void * eventTypeContext = &eventTypeContext;
         //create new tags
         url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
     }
-//    
-//    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:[NSString stringWithFormat:@"Selected players: %@",[dict objectForKey:@"player"]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//    [alert show];
-//    
-//    //NSLog(@"sendTagInformationToServer  url: %@, dict : %@",url,dict);
-    //NSLog(@"live2bench view sendTagInformationToServer url %@",url);
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
         
@@ -3104,28 +2432,16 @@ static void * eventTypeContext = &eventTypeContext;
         
         UIView *rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
         
-        saveTeleButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-        [saveTeleButton setFrame:CGRectMake(377.0f, 700.0f, 123.0f, 33.0f)];
-        [saveTeleButton setTitle:@"Save" forState:UIControlStateNormal];
-        [saveTeleButton addTarget:self action:@selector(saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-        [rootView addSubview:saveTeleButton];
-        
-        clearTeleButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-        [clearTeleButton setFrame:CGRectMake(CGRectGetMaxX(saveTeleButton.frame) + 15.0f, saveTeleButton.frame.origin.y, saveTeleButton.frame.size.width, saveTeleButton.frame.size.height)];
-        [clearTeleButton setTitle:@"Close" forState:UIControlStateNormal];
-        [clearTeleButton addTarget:self action:@selector(clearButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-        [rootView addSubview:clearTeleButton];
+
         
         
         //add televiewcontroller
         self.teleViewController= [[TeleViewController alloc] initWithController:self];
         [self.teleViewController.view setFrame:CGRectMake(0, 55, self.view.frame.size.width,self.view.frame.size.width * 9/16 + 10)];
-        self.teleViewController.clearButton = clearTeleButton;
+//        self.teleViewController.clearButton = clearTeleButton;
         [teleButton setHidden:TRUE];
         [rootView addSubview:self.teleViewController.view];
-        
-        [rootView bringSubviewToFront:saveTeleButton];
-        [rootView bringSubviewToFront:clearTeleButton];
+
 
         
         NSURL *videoURL = globals.VIDEO_PLAYER_LIVE2BENCH.videoURL;
@@ -3162,24 +2478,11 @@ static void * eventTypeContext = &eventTypeContext;
     
 }
 
-//save button clicked, send notification to the teleview controller
--(void)saveButtonClicked{
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"Save Tele" object:nil];
-}
-
-//clear button clicked, send notification to the teleview controller
--(void)clearButtonClicked{
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"Clear Tele" object:nil];
-}
-
 -(int)roundValue:(float)numberToRound{
     numberToRound = numberToRound;
     if (videoPlayer.duration - numberToRound < 2) {
         return (int)numberToRound;
     }
-    
     return  (int)(numberToRound + 0.5);
     
 }
@@ -3189,170 +2492,6 @@ static void * eventTypeContext = &eventTypeContext;
 {
     //initalize overlay items
     self.overlayItems = [[NSMutableArray alloc] init];
-    
-/*
-    //tagSetView is the tagMaker bar under video view, but marking area is x:[126,595]
-    if(!self.tagSetView){
-       self.tagSetView = [[UIView alloc]init];
-    }
-    [self.tagSetView setFrame:CGRectMake(videoPlayer.view.frame.origin.x,videoPlayer.view.frame.size.height+videoPlayer.view.frame.origin.y, videoPlayer.view.frame.size.width+1, 40)];
- //   [self.tagSetView setBackgroundColor:[UIColor colorWithWhite:0.9f alpha:1.0f]];
-    [self.tagSetView setUserInteractionEnabled:TRUE];
-    [self.tagSetView setClipsToBounds:FALSE];
-    [self.view insertSubview:self.tagSetView belowSubview:self.playerCollectionViewController.view];
- 
-    
-    self.tagEventName = [[UILabel alloc] initWithFrame:CGRectMake((self.tagSetView.frame.size.width/2)-75, 1, 150, self.tagSetView.frame.size.height-2)];
-    [self.tagEventName setBackgroundColor:[UIColor colorWithWhite:1.0f alpha:0.9f]];
-    self.tagEventName.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
-    self.tagEventName.layer.borderWidth = 1;
-    [self.tagEventName setTextColor:PRIMARY_APP_COLOR];
-    [self.tagEventName setText:@"Event Name"];
-    [self.tagEventName setTextAlignment:NSTextAlignmentCenter];
-    [self.tagEventName setAlpha:1.0f];
-    [self.tagEventName setHidden:TRUE]; //the label won't show up in live mode
-    [self.tagSetView addSubview:self.tagEventName];
- 
-    //add little orange triangle to show user which tag they are playing
-    self.currentPlayingEventMarker = [[UIView alloc]initWithFrame:CGRectMake(self.tagSetView.frame.size.width/2, self.tagSetView.frame.size.height, 20, 20)];
-    [self.currentPlayingEventMarker setBackgroundColor:[UIColor clearColor]];
-    UIImageView *markerImage = [[UIImageView alloc]initWithFrame:self.currentPlayingEventMarker.bounds];
-    [markerImage setImage:[UIImage imageNamed:@"ortri.png"]];
-    [self.currentPlayingEventMarker addSubview:markerImage];
-    [self.currentPlayingEventMarker setHidden:TRUE];
-    [self.tagSetView addSubview:self.currentPlayingEventMarker];
-
-
-    
-    //add go back five seconds button
-    currentSeekBackButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [currentSeekBackButton setFrame:CGRectMake(tagSetView.frame.origin.x,PADDING + videoPlayer.view.frame.size.height + 98, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS-5)];
-    [currentSeekBackButton setContentMode:UIViewContentModeScaleAspectFill];
-    UIImage *backButtonImage;
-    if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackQuarterSecond:)) {
-        backButtonImage = [UIImage imageNamed:@"seekbackquartersec.png"];
-    }else if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackOneSecond:)){
-        backButtonImage = [UIImage imageNamed:@"seekbackonesec.png"];
-    }else{
-        backButtonImage = [UIImage imageNamed:@"seekbackfivesecs.png"];
-        globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-    }
-    [currentSeekBackButton setImage:backButtonImage forState:UIControlStateNormal];
-    [currentSeekBackButton addTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //[currentSeekBackButton addTarget:self action:@selector(swipeOutSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [self.view insertSubview:currentSeekBackButton aboveSubview:tagSetView];
-    
- 
-    
-    
-    //hide them for current build 1.1.7
-    UILongPressGestureRecognizer *seekBackLongpressgesture = [[UILongPressGestureRecognizer alloc]
-                                                      initWithTarget:self action:@selector(handleLongPress:)];
-    seekBackLongpressgesture.minimumPressDuration = 0.5; //seconds
-    seekBackLongpressgesture.delegate = self;
-    [currentSeekBackButton addGestureRecognizer:seekBackLongpressgesture];
-    
-    //uiview contains three seek back modes: go back 5s, 1s, 0.25s
-    seekBackControlView = [[UIView alloc]initWithFrame:CGRectMake(tagSetView.frame.origin.x, currentSeekBackButton.frame.origin.y - 160,LITTLE_ICON_DIMENSIONS,4.5*currentSeekBackButton.frame.size.height)];
-    [seekBackControlView setBackgroundColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3]];
-    seekBackControlView.hidden = TRUE;
-    [self.view insertSubview:seekBackControlView aboveSubview:self.videoPlayer.view];
- 
-    //go back 0.25s
-    CustomButton *backQuarterSecButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backQuarterSecButton setFrame:CGRectMake(0, 10, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS)];
-    [backQuarterSecButton setContentMode:UIViewContentModeScaleAspectFill];
-    [backQuarterSecButton setImage:[UIImage imageNamed:@"seekbackquartersec.png"] forState:UIControlStateNormal];
-    [backQuarterSecButton addTarget:self action:@selector(seekBackQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [backQuarterSecButton addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlView addSubview:backQuarterSecButton];
-    
-    //go back 1 s
-    CustomButton *backOneSecButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backOneSecButton setFrame:CGRectMake(0, backQuarterSecButton.frame.origin.y + backQuarterSecButton.frame.size.height + 10, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS)];
-    [backOneSecButton setContentMode:UIViewContentModeScaleAspectFill];
-    [backOneSecButton setImage:[UIImage imageNamed:@"seekbackonesec.png"] forState:UIControlStateNormal];
-    [backOneSecButton addTarget:self action:@selector(seekBackOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [backOneSecButton addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlView addSubview:backOneSecButton];
-    
-    //go back 5 s
-    CustomButton *backFiveSecsButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backFiveSecsButton setFrame:CGRectMake(0, backOneSecButton.frame.origin.y + backOneSecButton.frame.size.height + 10, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS)];
-    [backFiveSecsButton setContentMode:UIViewContentModeScaleAspectFill];
-    [backFiveSecsButton setImage:[UIImage imageNamed:@"seekbackfivesecs.png"] forState:UIControlStateNormal];
-    [backFiveSecsButton addTarget:self action:@selector(seekBackFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-    [backFiveSecsButton addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlView addSubview:backFiveSecsButton];
-    
- 
-    //add go forward 5 seconds button
-    currentSeekForwardButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [currentSeekForwardButton setFrame:CGRectMake(MEDIA_PLAYER_WIDTH + 115,PADDING + videoPlayer.view.frame.size.height + 98, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS-5)];
-    [currentSeekForwardButton setContentMode:UIViewContentModeScaleAspectFill];
-    UIImage *forwardButtonImage;
-    if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackQuarterSecond:)) {
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardquartersec.png"];
-        globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardQuarterSecond:);
-    }else if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackOneSecond:)){
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardonesec.png"];
-        globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardOneSecond:);
-    }else{
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardfivesecs.png"];
-        globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-    }
-
-    [currentSeekForwardButton setImage:forwardButtonImage forState:UIControlStateNormal];
-    [currentSeekForwardButton addTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //[currentSeekForwardButton addTarget:self action:@selector(swipeOutSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [self.view insertSubview:currentSeekForwardButton aboveSubview:tagSetView];
-    //hide them for current build 1.1.7
-    UILongPressGestureRecognizer *seekForwardLongpressgesture = [[UILongPressGestureRecognizer alloc]
-                                                      initWithTarget:self action:@selector(handleLongPress:)];
-    seekForwardLongpressgesture.minimumPressDuration = 0.5; //seconds
-    seekForwardLongpressgesture.delegate = self;
-    [currentSeekForwardButton addGestureRecognizer:seekForwardLongpressgesture];
- 
-    
-    //uiview contains three seek back modes: go back 5s, 1s, 0.25s
-    seekForwardControlView = [[UIView alloc]initWithFrame:CGRectMake(tagSetView.frame.origin.x + tagSetView.frame.size.width - LITTLE_ICON_DIMENSIONS , seekBackControlView.frame.origin.y,seekBackControlView.frame.size.width,seekBackControlView.frame.size.height)];
-    [seekForwardControlView setBackgroundColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3]];
-    seekForwardControlView.hidden = TRUE;
-    [self.view insertSubview:seekForwardControlView aboveSubview:self.videoPlayer.view];
-    
-    //go back 0.25s
-    CustomButton *forwardQuarterSecButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardQuarterSecButton setFrame:CGRectMake(0, 10, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS)];
-    [forwardQuarterSecButton setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardQuarterSecButton setImage:[UIImage imageNamed:@"seekforwardquartersec.png"] forState:UIControlStateNormal];
-    [forwardQuarterSecButton addTarget:self action:@selector(seekForwardQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [forwardQuarterSecButton addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlView addSubview:forwardQuarterSecButton];
-    
-    //go back 1 s
-    CustomButton *forwardOneSecButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardOneSecButton setFrame:CGRectMake(0, backQuarterSecButton.frame.origin.y + backQuarterSecButton.frame.size.height + 10, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS)];
-    [forwardOneSecButton setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardOneSecButton setImage:[UIImage imageNamed:@"seekforwardonesec.png"] forState:UIControlStateNormal];
-    [forwardOneSecButton addTarget:self action:@selector(seekForwardOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [forwardOneSecButton addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlView addSubview:forwardOneSecButton];
-    
-    //go back 5 s
-    CustomButton *forwardFiveSecsButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardFiveSecsButton setFrame:CGRectMake(0, backOneSecButton.frame.origin.y + backOneSecButton.frame.size.height + 10, LITTLE_ICON_DIMENSIONS, LITTLE_ICON_DIMENSIONS)];
-    [forwardFiveSecsButton setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardFiveSecsButton setImage:[UIImage imageNamed:@"seekforwardfivesecs.png"] forState:UIControlStateNormal];
-    [forwardFiveSecsButton addTarget:self action:@selector(seekForwardFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-    [forwardFiveSecsButton addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlView addSubview:forwardFiveSecsButton];
-   
-    [slowMoButton addTarget:self action:@selector(slowMoController:) forControlEvents:UIControlEventTouchUpInside];
-
-    [self.view insertSubview:slowMoButton aboveSubview:tagSetView];
-     *///888
-    
-    
     
     UILongPressGestureRecognizer *modifiedTagDurationByStartTimeLongpressgesture = [[UILongPressGestureRecognizer alloc]
                                                                                   initWithTarget:self action:@selector(changeDurationModifierButtonIcon:)];
@@ -3400,8 +2539,7 @@ static void * eventTypeContext = &eventTypeContext;
     [viewTeleButton setFrame:CGRectMake(self.rightSideButtons.frame.origin.x,currentEventTitle.frame.origin.y -10, 130, LITTLE_ICON_DIMENSIONS - 5)];
     [viewTeleButton setTitle:@"View Tele" forState:UIControlStateNormal];
     [viewTeleButton addTarget:self action:@selector(viewTele:) forControlEvents:UIControlEventTouchUpInside];
-    //viewtelebutton only for medical use
-    //[self.view addSubview:viewTeleButton];
+
     if (!globals.LATEST_TELE) {
         viewTeleButton.hidden = TRUE;
     }
@@ -3713,28 +2851,17 @@ static void * eventTypeContext = &eventTypeContext;
     currentPlayingTag = [tag mutableCopy];
     //set tagEventName label text to be the current tag name
     [self setCurrentEventName:[tag objectForKey:@"name"]];
-//    [self.tagEventName setHidden:FALSE];
-//    [self.tagEventName setText:self.currentEventName];
     
     [_videoBarViewController setTagName:self.currentEventName];
-    
-    //display the buttons which used to seek back/forward 5 secs
-/*
-    [self.currentSeekBackButton setHidden:TRUE];
-    [self.currentSeekForwardButton setHidden:TRUE];
-  *///888
+    _fullscreenViewController.tagEventName.text = self.currentEventName;
+
      globals.IS_LOOP_MODE = TRUE;
-    //NSLog(@"****************************************************current playing tag: %@",tag);
     
     //telestration type = 4
     if([[tag objectForKey:@"type"] intValue]==4)
     {
         //pause video
         [videoPlayer pause];
-        
-        [self.startRangeModifierButton setHidden:TRUE];
-        [self.endRangeModifierButton setHidden:TRUE];
-//        [slowMoButton setHidden:TRUE];//888
         globals.IS_PLAYBACK_TELE = TRUE;
         
         //NSLog(@"starttime %f, globals.HOME_START_TIME %f",videoPlayer.startTime, globals.HOME_START_TIME);
@@ -3760,10 +2887,6 @@ static void * eventTypeContext = &eventTypeContext;
 
         return;
     }else{
-        
-        [self.startRangeModifierButton setHidden:FALSE];
-        [self.endRangeModifierButton setHidden:FALSE];
-//        [slowMoButton setHidden:FALSE];//888
         globals.IS_PLAYBACK_TELE = FALSE;
         
         //get the tag's start time
@@ -3780,15 +2903,7 @@ static void * eventTypeContext = &eventTypeContext;
         if (globals.HOME_END_TIME>videoPlayer.durationInSeconds){
             globals.HOME_END_TIME=videoPlayer.durationInSeconds;
         }
-        
-//        if (globals.PLAYBACK_SPEED > 0) {
-//            //videoPlayer.avPlayer.rate = globals.PLAYBACK_SPEED;
-//             [self.videoPlayer setRate:globals.PLAYBACK_SPEED];
-//        }else{
-            [videoPlayer play];
-            
-//        }
-
+       [videoPlayer play];
        //remove the old observer before add the new one
         if (loopTagObserver) {
             [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
@@ -3902,6 +3017,8 @@ static void * eventTypeContext = &eventTypeContext;
  The gesture recognizer transitions to the Change state whenever a finger moves, and it ends (UIGestureRecognizerStateEnded) when any of the fingers are lifted.
  */
 -(void)changeDurationModifierButtonIcon:(UILongPressGestureRecognizer *)gestureRecognizer{
+   
+    /* WHAT DOES THIS DO?
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         //NSLog(@"begain");
         CustomButton *button = (CustomButton*)gestureRecognizer.view;
@@ -3929,6 +3046,7 @@ static void * eventTypeContext = &eventTypeContext;
     }else if(gestureRecognizer.state == UIGestureRecognizerStateEnded){
         //NSLog(@"ended");
     }
+     *?
 }
 
 
@@ -4009,7 +3127,6 @@ static void * eventTypeContext = &eventTypeContext;
         
         NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
         
-        // NSLog(@"startRangeBeenModified; url: %@",url);
         NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:nil],self, nil];
         NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
         NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
@@ -4135,19 +3252,7 @@ static void * eventTypeContext = &eventTypeContext;
     [self.videoPlayer pause];
 }
 
-//This method will be called if the slowMoButton is press
-//This control will change the current playing speed
--(void)slowMoController:(id)sender
-{
-    //[videoPlayer.avPlayer play];
-    CustomButton *button = (CustomButton *)sender;
-    //set the playback rate appropriately (if it was 1, set it to slow mo)
-    globals.PLAYBACK_SPEED = (globals.PLAYBACK_SPEED==1.0f)?0.5f:1.0f;
-    [self.videoPlayer play];
-    //set the image of the slow mo button as well
-    NSString *buttonName = (globals.PLAYBACK_SPEED ==1.0f)?@"normalsp.png":@"slowmo.png";
-    [button setImage:[UIImage imageNamed:buttonName] forState:UIControlStateNormal];
-}
+
 
 -(void)playbackRateButtonDown:(id)sender{
     isModifyingPlaybackRate = YES;
@@ -4345,139 +3450,10 @@ static void * eventTypeContext = &eventTypeContext;
     }
 }
 
-/*
-//adjust tagmarkers according to x pixel difference of all the tag markers and colours
-//@tagMarkerLeadObjDict: is a dictionary of dictionaries. The key value is the lead tagmarker's xValue, the object value is a dictionary
-//which contains an object:lead tagmarker and array of different colours of all the tag markers which follow the lead tagmarker
-- (void)adjustTagFrames:(float)xValue color:(UIColor *)color tMarker:(TagMarker *)tMarker {
-    
-    if (!tagMarkerLeadObjDict) {
-        tagMarkerLeadObjDict = [[NSMutableDictionary alloc]init];
-    }
-    NSMutableDictionary *markerDict;
-    for(NSString *leadXValue in [tagMarkerLeadObjDict allKeys]){
-        //if the pixel difference of tMarker's xValue and the leadXValue is smaller or equal to 7, tMarker will follow the current lead tagmarker
-        if (fabs([leadXValue floatValue] - xValue) <= 7) {
-            tMarker.leadTag = [[tagMarkerLeadObjDict objectForKey:leadXValue] objectForKey:@"lead"];
-            if (![[[tagMarkerLeadObjDict objectForKey:leadXValue] objectForKey:@"colorArr"] containsObject:color]) {
-                [[[tagMarkerLeadObjDict objectForKey:leadXValue] objectForKey:@"colorArr"] addObject:color];
-            }
-            //get the lead marker for current tag
-            markerDict = [tagMarkerLeadObjDict objectForKey:leadXValue];
-            break;
-        }
-    }
-    
-    //if tMarker is not close to any of the existing lead tagmarkers, set itself as its lead tagmarker and added it the "tagMarkerLeadObjDict" dictionary
-    if (!tMarker.leadTag) {
-        tMarker.leadTag = tMarker;
-        markerDict = [[NSMutableDictionary alloc]init];
-        [markerDict setObject:[[NSMutableArray alloc]initWithObjects:color, nil] forKey:@"colorArr"];
-        //TagMarker *lead = tMarker;
-        [markerDict setObject:tMarker forKey:@"lead"];
-        [markerDict setObject:[NSString stringWithFormat:@"%f",tMarker.tagTime] forKey:@"leadTime"];
-        [tagMarkerLeadObjDict setObject:markerDict forKey:[NSString stringWithFormat:@"%f",tMarker.xValue]];
-    }
-    
-    //If the createTagMarkers method is called, just return. Will create all the tag marker views after pass all the tags to tagMarkerLeadObjDict.
-    if (isCreatingAllTagMarkers) {
-        return;
-    }
-    
-    //create the tag marker view for each lead tagmarker in the dictionary: tagMarkerLeadObjDict
-    //for(NSMutableDictionary *leadDict in [tagMarkerLeadObjDict allValues]){
-    
-    
-    //NSLog(@"Create tag marker for a new tag!");
-    //create the tagmarker view for the current new generated tag
-    TagMarker *mark = [markerDict objectForKey:@"lead"];
-
-    [mark.markerView setFrame:CGRectMake(mark.xValue, 0.0f, 5.0f, 40.0f)];
-    [mark.markerView setAccessibilityLabel:@"marker"];
-    //mark.marker.frame = CGRectMake(mark.xValue, 0.0f, 5.0f, 40.0f);
-    [self.tagSetView insertSubview:mark.markerView belowSubview:self.tagEventName];
-    int numMarks = [[markerDict objectForKey:@"colorArr"]count];
-    NSArray *tempColorArr = [markerDict objectForKey:@"colorArr"];
-    //create subviews according to the color array saved in the lead dictionary
-     if (numMarks != 1){
-        
-        //add new subviews for the marker view according to the colour
-        for (int i = 0; i < numMarks; i++)
-        {
-            UIView *colorView = [[UIView alloc]initWithFrame:CGRectMake(0, i*(40.0f/numMarks), 5.0f, 40.0f/numMarks)];
-            [colorView setBackgroundColor:[tempColorArr objectAtIndex:i]];
-            [mark.markerView addSubview:colorView];
-        }
-    }else{
-        [mark.markerView setBackgroundColor:mark.color];
-    }
-    
-    
-}
-*///888
-
-
-/*
-//generate TagMarker object when we receive a new tag from syncme callback
--(TagMarker*)markTagAtTime:(float)time colour:(UIColor*)color tagID:(NSString*)tagID{
-    double liveTime = MAX(globals.PLAYABLE_DURATION, self.videoPlayer.duration);
-    
-    //NSLog(@"videoPlayer: %@,self.videoPlayer.duration: %f, globals.PLAYABLE_DURATION: %f, time: %f",videoPlayer,self.videoPlayer.duration,globals.PLAYABLE_DURATION,time);
-    if(liveTime < 1 || time > liveTime){
-        return nil;
-    }
-    float xValue = [self xValueForTime:time atLiveTime:liveTime];
-    //make sure the marker is in the right range
-    if(xValue > 596.f)
-    {
-        xValue= 596.f;
-    }
-    
-    TagMarker *tMarker = [[TagMarker alloc] initWithXValue:xValue tagColour:color tagTime:time tagId:tagID];//initWithXValue:xValue name:name time:time tagId:tagID];
-
-    tMarker.markerView = [[UIView alloc] init];
-    //tMarker.marker.backgroundColor = color;
-    //[tMarker.marker setAccessibilityIdentifier:@"tagMarker"];
-
-    [globals.TAG_MARKER_OBJ_DICT setObject:tMarker forKey:tagID];
-    [self adjustTagFrames:xValue color:color tMarker:tMarker];
-   
-    return tMarker;
-}
-*///888
-
-/*
-- (double)xValueForTime:(double)time atLiveTime:(double)liveTime{
-    return (time/liveTime)*470 + 126.0f;
-}
-*///888
-
-
-
-
 //This method will be called when the user pinch the player view to fullscreen
 -(void)willEnterFullscreen
 {
-//    CGRect tempFrame = self.leftSideButtons.frame;
-//
-//    //if x value of leftsidebuttons view is 0, that means it was in normal view; otherwise it is already in fullscreen view, then do not shift the left-side-buttons view and right-side-buttons view again
-//    if (self.leftSideButtons.frame.origin.x == 0) {
-//        
-//        //shift left side buttons view outside of the screen to hide it
-//        //animateleft
-//        [UIView animateWithDuration:0.3
-//                         animations:^{[self.leftSideButtons setFrame:CGRectMake(tempFrame.origin.x-tempFrame.size.width, tempFrame.origin.y, tempFrame.size.width, tempFrame.size.height)];}
-//                         completion:^(BOOL finished){}];
-//        
-//        //shift right side buttons view outside of the screen to hide it
-//        tempFrame = self.rightSideButtons.frame;
-//        //animatelright
-//        [UIView animateWithDuration:0.3
-//                         animations:^{[self.rightSideButtons setFrame:CGRectMake(tempFrame.origin.x+tempFrame.size.width, tempFrame.origin.y, tempFrame.size.width, tempFrame.size.height)];}
-//                         completion:^(BOOL finished){}];
-//
-//    }
-//       
+
 ///going to bring the tabbar controller to the front now, we want to have access to it at all times, including fullscreen mode
     UIView *fullScreenView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
     
@@ -4491,15 +3467,6 @@ static void * eventTypeContext = &eventTypeContext;
         }
     }
 
-    
-    /*
-    if(globals.PLAYBACK_SPEED == 1.0f)
-    {
-        [slowMoButtoninFullScreen setImage:[UIImage imageNamed:@"normalsp.png"] forState:UIControlStateNormal];
-    }else{
-        [slowMoButtoninFullScreen setImage:[UIImage imageNamed:@"slowmo.png"] forState:UIControlStateNormal];
-    }
-    */
     if(globals.IS_IN_LIST_VIEW  == FALSE && globals.IS_IN_BOOKMARK_VIEW ==FALSE){
         if(globals.IS_LOOP_MODE == FALSE){
             [self createFullScreenOverlayButtons];
@@ -4507,22 +3474,8 @@ static void * eventTypeContext = &eventTypeContext;
             [self createFullScreenOverlayButtonsinLoopMode];
             if ([[currentPlayingTag objectForKey:@"name"] isEqualToString:@"telestration"]) {
                 //IS_VIEW_TELE = TRUE;
-                [startRangeModifierButtoninFullScreen setHidden:TRUE];
-                [endRangeModifierButtoninFullScreen setHidden:TRUE];
-//                [slowMoButtoninFullScreen setHidden:TRUE];
-//                [currentSeekBackButtoninFullScreen setHidden:TRUE];
-//                [currentSeekForwardButtoninFullScreen setHidden:TRUE];
-//                [seekBackControlView setHidden:TRUE];
-//                [seekForwardControlView setHidden:TRUE];
                 globals.IS_PLAYBACK_TELE = TRUE;
             }else{
-                [startRangeModifierButtoninFullScreen setHidden:FALSE];
-                [endRangeModifierButtoninFullScreen setHidden:FALSE];
-//                [slowMoButtoninFullScreen setHidden:FALSE];
-//                [currentSeekBackButtoninFullScreen setHidden:FALSE];
-//                [currentSeekForwardButtoninFullScreen setHidden:FALSE];
-//                [seekBackControlView setHidden:FALSE];
-//                [seekForwardControlView setHidden:FALSE];
                 globals.IS_PLAYBACK_TELE = FALSE;
             }
         }
@@ -4541,347 +3494,113 @@ static void * eventTypeContext = &eventTypeContext;
                          completion:^(BOOL finished){ [view removeFromSuperview]; }];
         [view removeFromSuperview];
     }
-//    //shift left side buttons back to original position in normal screen
-//    CGRect tempFrame = self.leftSideButtons.frame;
-//    //animateleft
-//    [UIView animateWithDuration:0.3
-//                     animations:^{[self.leftSideButtons setFrame:CGRectMake(tempFrame.origin.x+tempFrame.size.width, tempFrame.origin.y, tempFrame.size.width, tempFrame.size.height)];}
-//                     completion:^(BOOL finished){}];
-//    //shift right side buttons back to original position in normal screen
-//    tempFrame = self.rightSideButtons.frame;
-//    //animateright
-//    [UIView animateWithDuration:0.3
-//                     animations:^{[self.rightSideButtons setFrame:CGRectMake(tempFrame.origin.x-tempFrame.size.width, tempFrame.origin.y, tempFrame.size.width, tempFrame.size.height)];}
-//                     completion:^(BOOL finished){}];
 
-    
     //if was in loop mode, remove all the control buttons in fullscreen
     if(globals.IS_LOOP_MODE){
         [self removeFullScreenOverlayButtonsinLoopMode];
         
         //Set the startRangeModifierButton's icon according to the startRangeModifierButtoninFullScreen's accessibilityValue
         //Make sure when switching between fullscreen and normal screen,the buttons' icons and controls are synced
-        NSString *accesibilityString = startRangeModifierButtoninFullScreen.accessibilityValue;
-        NSString *imageName;
-        if ([accesibilityString isEqualToString:@"extend"]) {
-            imageName = @"extendstartsec";
-        }else{
-            imageName = @"subtractstartsec";
-        }
-        [startRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        [startRangeModifierButton setAccessibilityValue:accesibilityString];
-        
-        //set the endRangeModifierButton's icon according to the endRangeModifierButtoninFullScreen's accessibilityValue
-        //Make sure when switching between fullscreen and normal screen,the buttons' icons and controls are synced
-        accesibilityString = endRangeModifierButtoninFullScreen.accessibilityValue;
-        if ([accesibilityString isEqualToString:@"extend"]) {
-            imageName = @"extendendsec";
-        }else{
-            imageName = @"subtractendsec";
-        }
-        [endRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        [endRangeModifierButton setAccessibilityValue:accesibilityString];
-
+//        NSString *accesibilityString = startRangeModifierButtoninFullScreen.accessibilityValue;
+//        NSString *imageName;
+//        if ([accesibilityString isEqualToString:@"extend"]) {
+//            imageName = @"extendstartsec";
+//        }else{
+//            imageName = @"subtractstartsec";
+//        }
+//        [startRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+//        [startRangeModifierButton setAccessibilityValue:accesibilityString];
+//        
+//        //set the endRangeModifierButton's icon according to the endRangeModifierButtoninFullScreen's accessibilityValue
+//        //Make sure when switching between fullscreen and normal screen,the buttons' icons and controls are synced
+//        accesibilityString = endRangeModifierButtoninFullScreen.accessibilityValue;
+//        if ([accesibilityString isEqualToString:@"extend"]) {
+//            imageName = @"extendendsec";
+//        }else{
+//            imageName = @"subtractendsec";
+//        }
+//        [endRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+//        [endRangeModifierButton setAccessibilityValue:accesibilityString];
 
     }
-    /*
-    if(globals.PLAYBACK_SPEED == 1.0f)
-    {
-        [slowMoButton setImage:[UIImage imageNamed:@"normalsp.png"] forState:UIControlStateNormal];
-    }else{
-        [slowMoButton setImage:[UIImage imageNamed:@"slowmo.png"] forState:UIControlStateNormal];
-    }
-    *///888
 }
 
 -(void)createFullScreenOverlayButtonsinLoopMode
 {
     
-    //5s duration extension button
-    startRangeModifierButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [startRangeModifierButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [startRangeModifierButtoninFullScreen setTag:0];
-    NSString *accesibilityString = startRangeModifierButton.accessibilityValue;
-    NSString *imageName;
-    if ([accesibilityString isEqualToString:@"extend"]) {
-        imageName = @"extendstartsec";
-    }else{
-        imageName = @"subtractstartsec";
-    }
-    [startRangeModifierButtoninFullScreen setImage:[UIImage imageNamed: imageName] forState:UIControlStateNormal];
-    [startRangeModifierButtoninFullScreen addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    startRangeModifierButtoninFullScreen.frame = CGRectMake(2*CONTROL_SPACER_X-20,screenRect.size.width - 2*CONTROL_SPACER_Y+25 ,65 ,65);
-    [startRangeModifierButtoninFullScreen setAccessibilityValue:accesibilityString];
-    
-    //added long press gesture to switch icons between extension icon and substraction icon
-    UILongPressGestureRecognizer *modifiedTagDurationByStartTimeLongpressgesture = [[UILongPressGestureRecognizer alloc]
-                                                                                  initWithTarget:self action:@selector(changeDurationModifierButtonIcon:)];
-    modifiedTagDurationByStartTimeLongpressgesture.minimumPressDuration = 0.5; //seconds
-    modifiedTagDurationByStartTimeLongpressgesture.delegate = self;
-    [startRangeModifierButtoninFullScreen addGestureRecognizer:modifiedTagDurationByStartTimeLongpressgesture];
-    
-    //5s duration extension button
-    endRangeModifierButtoninFullScreen= [CustomButton buttonWithType:UIButtonTypeCustom];
-    [endRangeModifierButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [endRangeModifierButtoninFullScreen setTag:1];
-    
-    accesibilityString = endRangeModifierButton.accessibilityValue;
-    if ([accesibilityString isEqualToString:@"extend"]) {
-        imageName = @"extendendsec";
-    }else{
-        imageName = @"subtractendsec";
-    }
-
-    [endRangeModifierButtoninFullScreen setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-    [endRangeModifierButtoninFullScreen addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    endRangeModifierButtoninFullScreen.frame = CGRectMake(screenRect.size.height-(2*CONTROL_SPACER_X)-45,screenRect.size.width -2*CONTROL_SPACER_Y+25,65 ,65);
-    [endRangeModifierButtoninFullScreen setAccessibilityValue:accesibilityString];
-    
+//    //5s duration extension button
+//    startRangeModifierButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
+//    [startRangeModifierButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
+//    [startRangeModifierButtoninFullScreen setTag:0];
+//    NSString *accesibilityString = startRangeModifierButton.accessibilityValue;
+//    NSString *imageName;
+//    if ([accesibilityString isEqualToString:@"extend"]) {
+//        imageName = @"extendstartsec";
+//    }else{
+//        imageName = @"subtractstartsec";
+//    }
+//    [startRangeModifierButtoninFullScreen setImage:[UIImage imageNamed: imageName] forState:UIControlStateNormal];
+//    [startRangeModifierButtoninFullScreen addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+//    CGRect screenRect = [[UIScreen mainScreen] bounds];
+//    startRangeModifierButtoninFullScreen.frame = CGRectMake(2*CONTROL_SPACER_X-20,screenRect.size.width - 2*CONTROL_SPACER_Y+25 ,65 ,65);
+//    [startRangeModifierButtoninFullScreen setAccessibilityValue:accesibilityString];
+//    
+//    //added long press gesture to switch icons between extension icon and substraction icon
+//    UILongPressGestureRecognizer *modifiedTagDurationByStartTimeLongpressgesture = [[UILongPressGestureRecognizer alloc]
+//                                                                                  initWithTarget:self action:@selector(changeDurationModifierButtonIcon:)];
+//    modifiedTagDurationByStartTimeLongpressgesture.minimumPressDuration = 0.5; //seconds
+//    modifiedTagDurationByStartTimeLongpressgesture.delegate = self;
+//    [startRangeModifierButtoninFullScreen addGestureRecognizer:modifiedTagDurationByStartTimeLongpressgesture];
+//    
+//    //5s duration extension button
+//    endRangeModifierButtoninFullScreen= [CustomButton buttonWithType:UIButtonTypeCustom];
+//    [endRangeModifierButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
+//    [endRangeModifierButtoninFullScreen setTag:1];
+//    
+//    accesibilityString = endRangeModifierButton.accessibilityValue;
+//    if ([accesibilityString isEqualToString:@"extend"]) {
+//        imageName = @"extendendsec";
+//    }else{
+//        imageName = @"subtractendsec";
+//    }
+//
+//    [endRangeModifierButtoninFullScreen setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+//    [endRangeModifierButtoninFullScreen addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+//    endRangeModifierButtoninFullScreen.frame = CGRectMake(screenRect.size.height-(2*CONTROL_SPACER_X)-45,screenRect.size.width -2*CONTROL_SPACER_Y+25,65 ,65);
+//    [endRangeModifierButtoninFullScreen setAccessibilityValue:accesibilityString];
+//    
     //added long press gesture to switch icons between extension icon and substraction icon
     UILongPressGestureRecognizer *modifiedTagDurationByEndTimeLongpressgesture = [[UILongPressGestureRecognizer alloc]
                                                                                 initWithTarget:self action:@selector(changeDurationModifierButtonIcon:)];
     modifiedTagDurationByEndTimeLongpressgesture.minimumPressDuration = 0.5; //seconds
     modifiedTagDurationByEndTimeLongpressgesture.delegate = self;
-    [endRangeModifierButtoninFullScreen addGestureRecognizer:modifiedTagDurationByEndTimeLongpressgesture];
+   // [endRangeModifierButtoninFullScreen addGestureRecognizer:modifiedTagDurationByEndTimeLongpressgesture];
     
-    //uilabel display current playing tag's name
-    /*TO DELETE
-    tagEventNameinFullScreen =[[UILabel alloc]init];
-    [tagEventNameinFullScreen setBackgroundColor:[UIColor clearColor]];
-    tagEventNameinFullScreen.layer.borderWidth = 1;
-    tagEventNameinFullScreen.layer.borderColor = [UIColor orangeColor].CGColor;
-    [tagEventNameinFullScreen setTextColor:[UIColor orangeColor]];
-    [tagEventNameinFullScreen setText:self.currentEventName];
-    [tagEventNameinFullScreen setFont:[UIFont boldFontOfSize:20.f]];
-    [tagEventNameinFullScreen setTextAlignment:NSTextAlignmentCenter];
-    tagEventNameinFullScreen.alpha = 1.0f;
-    tagEventNameinFullScreen.frame = CGRectMake(screenRect.size.height/2.0-80,screenRect.size.width- CONTROL_SPACER_Y-20,165 ,50);
-    */
-    
-    /*TO DELETE
-    //add go to live button
-    liveButtoninFullScreen = [BorderButton buttonWithType:UIButtonTypeCustom];
-    [liveButtoninFullScreen setFrame:CGRectMake(screenRect.size.height/2.0+150,screenRect.size.width- CONTROL_SPACER_Y-10, LITTLE_ICON_DIMENSIONS + 90, LITTLE_ICON_DIMENSIONS-10)];
-    [liveButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [liveButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"gotolive"] forState:UIControlStateNormal];
-    [liveButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"gotoliveSelect"] forState:UIControlStateHighlighted];
-    [liveButtoninFullScreen setTitle:@"Live" forState:UIControlStateNormal];
-    //[liveButtoninFullScreen changeBackgroundColor:[UIColor whiteColor] :0.8];
-    [liveButtoninFullScreen addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
-
-    
-    
-    //add continue play button
-    continuePlayButtoninFullScreen = [[BorderButton alloc]init];
-    continuePlayButtoninFullScreen = [BorderButton buttonWithType:UIButtonTypeCustom];
-    [continuePlayButtoninFullScreen setFrame:CGRectMake(screenRect.size.height/2.0-250,screenRect.size.width- CONTROL_SPACER_Y-10, LITTLE_ICON_DIMENSIONS + 90, LITTLE_ICON_DIMENSIONS-10)];
-    [continuePlayButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [continuePlayButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"continue_unselected.png"] forState:UIControlStateNormal];
-    [continuePlayButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"continue.png"] forState:UIControlStateSelected];
-    [continuePlayButtoninFullScreen setTitle:@"Continue" forState:UIControlStateNormal];
-    [continuePlayButtoninFullScreen setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-    [continuePlayButtoninFullScreen setContentEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
-    [continuePlayButtoninFullScreen setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [continuePlayButtoninFullScreen setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [continuePlayButtoninFullScreen addTarget:self action:@selector(continuePlay) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-     */
     //for testing. Telestartion
-    timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CONTROL_SPACER_X-35,TOTAL_WIDTH/4.0 - 150, LITTLE_ICON_DIMENSIONS + 90, LITTLE_ICON_DIMENSIONS-10)];
-    [timeLabel setText:[NSString stringWithFormat:@"%f",[videoPlayer currentTimeInSeconds]]];
-    [timeLabel setBackgroundColor:[UIColor orangeColor]];
-    [timeLabel setFont:[UIFont boldSystemFontOfSize:20.f]];
-    [timeLabel setTextAlignment:NSTextAlignmentCenter];
-
-  /*TO DELETE
-    //seek back five seconds button
-    currentSeekBackButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [currentSeekBackButtoninFullScreen setFrame:CGRectMake(2*CONTROL_SPACER_X+60,screenRect.size.width - 2*CONTROL_SPACER_Y+25 ,65 ,65)];
-    [currentSeekBackButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [currentSeekBackButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    UIImage *backButtonImage;
-    if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackQuarterSecond:)) {
-        backButtonImage = [UIImage imageNamed:@"seekbackquarterseclarge.png"];
-    }else if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackOneSecond:)){
-        backButtonImage = [UIImage imageNamed:@"seekbackoneseclarge.png"];
-    }else{
-        backButtonImage = [UIImage imageNamed:@"seekbackfivesecslarge.png"];
-        globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-    }
-
-    [currentSeekBackButtoninFullScreen setImage:backButtonImage forState:UIControlStateNormal];
-    [currentSeekBackButtoninFullScreen addTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //[currentSeekBackButtoninFullScreen addTarget:self action:@selector(swipeOutSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-    UILongPressGestureRecognizer *seekBackLongpressgesture = [[UILongPressGestureRecognizer alloc]
-                                                              initWithTarget:self action:@selector(handleLongPress:)];
-    seekBackLongpressgesture.minimumPressDuration = 0.5; //seconds
-    seekBackLongpressgesture.delegate = self;
-    [currentSeekBackButtoninFullScreen addGestureRecognizer:seekBackLongpressgesture];
-    
-    //uiview contains three seek back modes: go back 5s, 1s, 0.25s
-    seekBackControlViewinFullScreen = [[UIView alloc]initWithFrame:CGRectMake(currentSeekBackButtoninFullScreen.frame.origin.x , 460,currentSeekBackButtoninFullScreen.frame.size.width +6,3.5*currentSeekBackButtoninFullScreen.frame.size.height)];
-    [seekBackControlViewinFullScreen setBackgroundColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.1]];
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    
-    //go back 0.25s
-    CustomButton *backQuarterSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backQuarterSecButtoninFullScreen setFrame:CGRectMake(0, 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [backQuarterSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [backQuarterSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [backQuarterSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackquarterseclarge.png"] forState:UIControlStateNormal];
-    [backQuarterSecButtoninFullScreen addTarget:self action:@selector(seekBackQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [backQuarterSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlViewinFullScreen addSubview:backQuarterSecButtoninFullScreen];
-   
-    //go back 1 s
-    CustomButton *backOneSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backOneSecButtoninFullScreen setFrame:CGRectMake(0, backQuarterSecButtoninFullScreen.frame.origin.y + backQuarterSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [backOneSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [backOneSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [backOneSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackoneseclarge.png"] forState:UIControlStateNormal];
-    [backOneSecButtoninFullScreen addTarget:self action:@selector(seekBackOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-     [backOneSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlViewinFullScreen addSubview:backOneSecButtoninFullScreen];
-    
-    //go back 5 s
-    CustomButton *backFiveSecsButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backFiveSecsButtoninFullScreen setFrame:CGRectMake(0, backOneSecButtoninFullScreen.frame.origin.y + backOneSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [backFiveSecsButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [backFiveSecsButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [backFiveSecsButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackfivesecslarge.png"] forState:UIControlStateNormal];
-    [backFiveSecsButtoninFullScreen addTarget:self action:@selector(seekBackFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-    [backFiveSecsButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlViewinFullScreen addSubview:backFiveSecsButtoninFullScreen];
-
- 
-    //seek forward 5 seconds button
-    currentSeekForwardButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [currentSeekForwardButtoninFullScreen setFrame:CGRectMake(screenRect.size.height-(2*CONTROL_SPACER_X)-125,screenRect.size.width -2*CONTROL_SPACER_Y+25,65 ,65)];
-    [currentSeekForwardButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [currentSeekForwardButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    UIImage *forwardButtonImage;
-    if (globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardQuarterSecond:)) {
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardquarterseclarge.png"];
-    }else if (globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardOneSecond:)){
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardoneseclarge.png"];
-    }else{
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardfivesecslarge.png"];
-        globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-    }
-
-    
-    
-    [currentSeekForwardButtoninFullScreen setImage:forwardButtonImage forState:UIControlStateNormal];
-    [currentSeekForwardButtoninFullScreen addTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //[currentSeekForwardButtoninFullScreen addTarget:self action:@selector(swipeOutSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-    UILongPressGestureRecognizer *seekForwardLongpressgesture = [[UILongPressGestureRecognizer alloc]
-                                                              initWithTarget:self action:@selector(handleLongPress:)];
-    seekForwardLongpressgesture.minimumPressDuration = 0.5; //seconds
-    seekForwardLongpressgesture.delegate = self;
-    [currentSeekForwardButtoninFullScreen addGestureRecognizer:seekForwardLongpressgesture];
-    
-    //uiview contains three seek back modes: go forward 5s, 1s, 0.25s
-    seekForwardControlViewinFullScreen = [[UIView alloc]initWithFrame:CGRectMake(currentSeekForwardButtoninFullScreen.frame.origin.x , 460,currentSeekBackButtoninFullScreen.frame.size.width +6,3.5*currentSeekBackButtoninFullScreen.frame.size.height)];
-    [seekForwardControlViewinFullScreen setBackgroundColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.1]];
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-   
-    //go back 0.25s
-    CustomButton *forwardQuarterSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardQuarterSecButtoninFullScreen setFrame:CGRectMake(0, 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [forwardQuarterSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardQuarterSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [forwardQuarterSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardquarterseclarge.png"] forState:UIControlStateNormal];
-    [forwardQuarterSecButtoninFullScreen addTarget:self action:@selector(seekForwardQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-     [forwardQuarterSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlViewinFullScreen addSubview:forwardQuarterSecButtoninFullScreen];
-    
-    //go back 1 s
-    CustomButton *forwardOneSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardOneSecButtoninFullScreen setFrame:CGRectMake(0, forwardQuarterSecButtoninFullScreen.frame.origin.y + forwardQuarterSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [forwardOneSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardOneSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [forwardOneSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardoneseclarge.png"] forState:UIControlStateNormal];
-    [forwardOneSecButtoninFullScreen addTarget:self action:@selector(seekForwardOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [forwardOneSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlViewinFullScreen addSubview:forwardOneSecButtoninFullScreen];
-    
-    //go back 5 s
-    CustomButton *forwardFiveSecsButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardFiveSecsButtoninFullScreen setFrame:CGRectMake(0, forwardOneSecButtoninFullScreen.frame.origin.y + forwardOneSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [forwardFiveSecsButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardFiveSecsButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [forwardFiveSecsButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardfivesecslarge.png"] forState:UIControlStateNormal];
-    [forwardFiveSecsButtoninFullScreen addTarget:self action:@selector(seekForwardFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-     [forwardFiveSecsButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlViewinFullScreen addSubview:forwardFiveSecsButtoninFullScreen];
-
-    
-    //slow mode button in fullscreen
-    slowMoButtoninFullScreen =  [CustomButton buttonWithType:UIButtonTypeCustom];
-    [slowMoButtoninFullScreen setFrame:CGRectMake(7*CONTROL_SPACER_X+50,screenRect.size.width- 2*CONTROL_SPACER_Y +30 ,65 ,50)];
-    [slowMoButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    if(globals.PLAYBACK_SPEED == 1.0f)
-    {
-        [slowMoButtoninFullScreen setImage:[UIImage imageNamed:@"normalsp.png"] forState:UIControlStateNormal];
-
-    }else {
-        [slowMoButtoninFullScreen setImage:[UIImage imageNamed:@"slowmo.png"] forState:UIControlStateNormal];
-
-    }
-    [slowMoButtoninFullScreen addTarget:self action:@selector(slowMoController:) forControlEvents:UIControlEventTouchUpInside];
- */
+  
+//    timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CONTROL_SPACER_X-35,TOTAL_WIDTH/4.0 - 150, LITTLE_ICON_DIMENSIONS + 90, LITTLE_ICON_DIMENSIONS-10)];
+//    [timeLabel setText:[NSString stringWithFormat:@"%f",[videoPlayer currentTimeInSeconds]]];
+//    [timeLabel setBackgroundColor:[UIColor orangeColor]];
+//    [timeLabel setFont:[UIFont boldSystemFontOfSize:20.f]];
+//    [timeLabel setTextAlignment:NSTextAlignmentCenter];
+  
     //init button to view telestration
     viewTeleButtoninFullScreen = [BorderButton buttonWithType:UIButtonTypeCustom];
     [viewTeleButtoninFullScreen setFrame:CGRectMake(900,60, 130, LITTLE_ICON_DIMENSIONS)];
-    //[liveButton setBackgroundImage:[UIImage imageNamed:@"gotolive"] forState:UIControlStateNormal];
-    //[liveButton setBackgroundImage:[UIImage imageNamed:@"gotoliveSelect"] forState:UIControlStateHighlighted];
     [viewTeleButtoninFullScreen setTitle:@"View Tele" forState:UIControlStateNormal];
     [viewTeleButtoninFullScreen addTarget:self action:@selector(viewTele:) forControlEvents:UIControlEventTouchUpInside];
     if (!globals.LATEST_TELE || [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"type"]intValue] == 4) {
         viewTeleButtoninFullScreen.hidden = TRUE;
     }
     
-    [self.overlayItems addObject:startRangeModifierButtoninFullScreen];
-    [self.overlayItems addObject:endRangeModifierButtoninFullScreen];
-   
-  /*TO DELETE
-    [self.overlayItems addObject:tagEventNameinFullScreen];
-    [self.overlayItems addObject:slowMoButtoninFullScreen];
-    [self.overlayItems addObject:liveButtoninFullScreen];
-
-    [self.overlayItems addObject:continuePlayButtoninFullScreen];
-*/
+//    [self.overlayItems addObject:startRangeModifierButtoninFullScreen];
+//    [self.overlayItems addObject:endRangeModifierButtoninFullScreen];
     [self.overlayItems addObject:viewTeleButtoninFullScreen];
     
     UIView *fullScreenView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    [fullScreenView  addSubview:startRangeModifierButtoninFullScreen];
-    [fullScreenView  addSubview:endRangeModifierButtoninFullScreen];
- /*TO DELETE
-    [fullScreenView  addSubview:tagEventNameinFullScreen];
-    [fullScreenView  addSubview:slowMoButtoninFullScreen];
-    [fullScreenView  addSubview:currentSeekBackButtoninFullScreen];
-    [fullScreenView  addSubview:currentSeekForwardButtoninFullScreen];
-    [fullScreenView addSubview:continuePlayButtoninFullScreen];
-    [fullScreenView addSubview:liveButtoninFullScreen];
-    [fullScreenView addSubview:seekBackControlViewinFullScreen];
-    [fullScreenView addSubview:seekForwardControlViewinFullScreen];
-     //viewtelebutton only for medical use
-    //[fullScreenView addSubview:viewTeleButtoninFullScreen];
-
-    if(![globals.CURRENT_ENC_STATUS isEqualToString: encStateLive])
-    {
-        [liveButtoninFullScreen setAlpha:0.6];
-        [liveButtoninFullScreen setUserInteractionEnabled:FALSE];
-        
-    }else{
-        [liveButtoninFullScreen setAlpha:1.0];
-        [liveButtoninFullScreen setUserInteractionEnabled:TRUE];
-    }
-*/
+//    [fullScreenView  addSubview:startRangeModifierButtoninFullScreen];
+//    [fullScreenView  addSubview:endRangeModifierButtoninFullScreen];
+ 
     //show telestration button if current playing tag is not telestration tag
     if ([[currentPlayingTag objectForKey:@"type"] intValue] != 4){
         [self showTeleButton];
@@ -4890,38 +3609,23 @@ static void * eventTypeContext = &eventTypeContext;
         if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@"mp4"].location != NSNotFound) {
             [self showPlaybackRateControls];
         }
-       
     }
 }
 
 //when exit fullscreen, remove all buttons in fullscreen
 -(void)removeFullScreenOverlayButtonsinLoopMode{
-    [startRangeModifierButtoninFullScreen removeFromSuperview];
-    [endRangeModifierButtoninFullScreen removeFromSuperview];
-
-
+//    [startRangeModifierButtoninFullScreen removeFromSuperview];
+//    [endRangeModifierButtoninFullScreen removeFromSuperview];
     [viewTeleButtoninFullScreen removeFromSuperview];
-    
-    /*TO DELETE
-         [continuePlayButtoninFullScreen removeFromSuperview];
-    [tagEventNameinFullScreen removeFromSuperview];
-    [slowMoButtoninFullScreen removeFromSuperview];
-    [liveButtoninFullScreen removeFromSuperview];
-    [currentSeekBackButtoninFullScreen removeFromSuperview];
-    [currentSeekForwardButtoninFullScreen removeFromSuperview];
-    [seekBackControlViewinFullScreen removeFromSuperview];
-    [seekForwardControlViewinFullScreen removeFromSuperview];
-*/
 }
 
 //The method will be called when telestration button is pressed
 //hide all the fullscreen control buttons
 -(void)hideFullScreenOverlayButtons{
     if (globals.IS_LOOP_MODE) {
-        [startRangeModifierButtoninFullScreen setAlpha:0.0];
-        [endRangeModifierButtoninFullScreen setAlpha:0.0];
-     /*TO DELETE   [tagEventNameinFullScreen setAlpha:0.0];
-        [continuePlayButtoninFullScreen setAlpha:0.0];*/
+//        [startRangeModifierButtoninFullScreen setAlpha:0.0];
+//        [endRangeModifierButtoninFullScreen setAlpha:0.0];
+     
     }
     
     [playbackRateBackButton setHidden:TRUE];
@@ -4931,14 +3635,7 @@ static void * eventTypeContext = &eventTypeContext;
     [playbackRateForwardLabel setHidden:TRUE];
     [playbackRateForwardGuide setHidden:TRUE];
     [viewTeleButtoninFullScreen setHidden:TRUE];
-/*TO DELETE
-    [slowMoButtoninFullScreen setAlpha:0.0];
-    [liveButtoninFullScreen setAlpha:0.0];
-    [currentSeekBackButtoninFullScreen setAlpha:0.0];
-    [currentSeekForwardButtoninFullScreen setAlpha:0.0];
-    [seekForwardControlViewinFullScreen setHidden:TRUE];
-    [seekBackControlViewinFullScreen setHidden:TRUE];
-*/
+
 }
 
 //The method will be called when the save/clear button is pressed
@@ -4947,11 +3644,9 @@ static void * eventTypeContext = &eventTypeContext;
 -(void)showFullScreenOverlayButtons{
     
     if (globals.IS_LOOP_MODE) {
-        [startRangeModifierButtoninFullScreen setAlpha:1.0];
-        [endRangeModifierButtoninFullScreen setAlpha:1.0];
-/*TO DELETE        [tagEventNameinFullScreen setAlpha:1.0];
-        [continuePlayButtoninFullScreen setAlpha:1.0];
- */
+//        [startRangeModifierButtoninFullScreen setAlpha:1.0];
+//        [endRangeModifierButtoninFullScreen setAlpha:1.0];
+
     }
     
     [playbackRateBackButton setHidden:FALSE];
@@ -4964,13 +3659,7 @@ static void * eventTypeContext = &eventTypeContext;
     [teleButton setAlpha:1.0];
     [teleButton setUserInteractionEnabled:TRUE];
     [viewTeleButtoninFullScreen setHidden:FALSE];
-    /*TO DELETE
-       [slowMoButtoninFullScreen setAlpha:1.0];
-    [liveButtoninFullScreen setAlpha:1.0];
-    [currentSeekBackButtoninFullScreen setAlpha:1.0];
-    [currentSeekForwardButtoninFullScreen setAlpha:1.0];
     
-*/
     
 }
 
@@ -4980,183 +3669,30 @@ static void * eventTypeContext = &eventTypeContext;
     //create left and right event buttons
     [self createOverlayTags];
     
-    /*TO DELETE
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    //seek back five seconds button
-    currentSeekBackButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [currentSeekBackButtoninFullScreen setFrame:CGRectMake(3*CONTROL_SPACER_X + 5,screenRect.size.width -2*CONTROL_SPACER_Y+25 ,65 ,65)];
-    [currentSeekBackButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [currentSeekBackButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    UIImage *backButtonImage;
-    if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackQuarterSecond:)) {
-        backButtonImage = [UIImage imageNamed:@"seekbackquarterseclarge.png"];
-    }else if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackOneSecond:)){
-        backButtonImage = [UIImage imageNamed:@"seekbackoneseclarge.png"];
-    }else{
-        backButtonImage = [UIImage imageNamed:@"seekbackfivesecslarge.png"];
-        globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-    }
- 
-    [currentSeekBackButtoninFullScreen setImage:backButtonImage forState:UIControlStateNormal];
-    [currentSeekBackButtoninFullScreen addTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //[currentSeekBackButtoninFullScreen addTarget:self action:@selector(swipeOutSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [currentSeekBackButton removeTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-    UILongPressGestureRecognizer *seekBackLongpressgesture = [[UILongPressGestureRecognizer alloc]
-                                                              initWithTarget:self action:@selector(handleLongPress:)];
-    seekBackLongpressgesture.minimumPressDuration = 0.5; //seconds
-    seekBackLongpressgesture.delegate = self;
-    [currentSeekBackButtoninFullScreen addGestureRecognizer:seekBackLongpressgesture];
     
-    //uiview contains three seek back modes: go back 5s, 1s, 0.25s
-    seekBackControlViewinFullScreen = [[UIView alloc]initWithFrame:CGRectMake(currentSeekBackButtoninFullScreen.frame.origin.x , 460,currentSeekBackButtoninFullScreen.frame.size.width +6,3.5*currentSeekBackButtoninFullScreen.frame.size.height)];
-    [seekBackControlViewinFullScreen setBackgroundColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.1]];
-    seekBackControlViewinFullScreen.hidden = TRUE;
-    
-    //go back 0.25s
-    CustomButton *backQuarterSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backQuarterSecButtoninFullScreen setFrame:CGRectMake(0, 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [backQuarterSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [backQuarterSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [backQuarterSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackquarterseclarge.png"] forState:UIControlStateNormal];
-    [backQuarterSecButtoninFullScreen addTarget:self action:@selector(seekBackQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [backQuarterSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlViewinFullScreen addSubview:backQuarterSecButtoninFullScreen];
-    
-    //go back 1 s
-    CustomButton *backOneSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backOneSecButtoninFullScreen setFrame:CGRectMake(0, backQuarterSecButtoninFullScreen.frame.origin.y + backQuarterSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [backOneSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [backOneSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [backOneSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackoneseclarge.png"] forState:UIControlStateNormal];
-    [backOneSecButtoninFullScreen addTarget:self action:@selector(seekBackOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [backOneSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlViewinFullScreen addSubview:backOneSecButtoninFullScreen];
-    
-    //go back 5 s
-    CustomButton *backFiveSecsButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [backFiveSecsButtoninFullScreen setFrame:CGRectMake(0, backOneSecButtoninFullScreen.frame.origin.y + backOneSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [backFiveSecsButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [backFiveSecsButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [backFiveSecsButtoninFullScreen setImage:[UIImage imageNamed:@"seekbackfivesecslarge.png"] forState:UIControlStateNormal];
-    [backFiveSecsButtoninFullScreen addTarget:self action:@selector(seekBackFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-    [backFiveSecsButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekBackControlViewinFullScreen addSubview:backFiveSecsButtoninFullScreen];
-    
-    
-    //seek forward 5 seconds button
-    currentSeekForwardButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [currentSeekForwardButtoninFullScreen setFrame:CGRectMake(screenRect.size.height-(3*CONTROL_SPACER_X)-80,screenRect.size.width -2*CONTROL_SPACER_Y+25,65 ,65)];
-    [currentSeekForwardButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [currentSeekForwardButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    UIImage *forwardButtonImage;
-    if (globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardQuarterSecond:)) {
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardquarterseclarge.png"];
-    }else if (globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardOneSecond:)){
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardoneseclarge.png"];
-    }else{
-        forwardButtonImage = [UIImage imageNamed:@"seekforwardfivesecslarge.png"];
-        globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-    }
-    
-    [currentSeekForwardButtoninFullScreen setImage:forwardButtonImage forState:UIControlStateNormal];
-    [currentSeekForwardButtoninFullScreen addTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //[currentSeekForwardButtoninFullScreen addTarget:self action:@selector(swipeOutSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [currentSeekForwardButton removeTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-    UILongPressGestureRecognizer *seekForwardLongpressgesture = [[UILongPressGestureRecognizer alloc]
-                                                                 initWithTarget:self action:@selector(handleLongPress:)];
-    seekForwardLongpressgesture.minimumPressDuration = 0.5; //seconds
-    seekForwardLongpressgesture.delegate = self;
-    [currentSeekForwardButtoninFullScreen addGestureRecognizer:seekForwardLongpressgesture];
-    
-    //uiview contains three seek back modes: go forward 5s, 1s, 0.25s
-    seekForwardControlViewinFullScreen = [[UIView alloc]initWithFrame:CGRectMake(currentSeekForwardButtoninFullScreen.frame.origin.x , 460,currentSeekBackButtoninFullScreen.frame.size.width +6,3.5*currentSeekBackButtoninFullScreen.frame.size.height)];
-    [seekForwardControlViewinFullScreen setBackgroundColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.1]];
-    seekForwardControlViewinFullScreen.hidden = TRUE;
-
-    //go back 0.25s
-    CustomButton *forwardQuarterSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardQuarterSecButtoninFullScreen setFrame:CGRectMake(0, 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [forwardQuarterSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardQuarterSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [forwardQuarterSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardquarterseclarge.png"] forState:UIControlStateNormal];
-    [forwardQuarterSecButtoninFullScreen addTarget:self action:@selector(seekForwardQuarterSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [forwardQuarterSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlViewinFullScreen addSubview:forwardQuarterSecButtoninFullScreen];
-    
-    //go back 1 s
-    CustomButton *forwardOneSecButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardOneSecButtoninFullScreen setFrame:CGRectMake(0, forwardQuarterSecButtoninFullScreen.frame.origin.y + forwardQuarterSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [forwardOneSecButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardOneSecButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [forwardOneSecButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardoneseclarge.png"] forState:UIControlStateNormal];
-    [forwardOneSecButtoninFullScreen addTarget:self action:@selector(seekForwardOneSecond:) forControlEvents:UIControlEventTouchUpInside];
-    [forwardOneSecButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlViewinFullScreen addSubview:forwardOneSecButtoninFullScreen];
-    
-    //go back 5 s
-    CustomButton *forwardFiveSecsButtoninFullScreen = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [forwardFiveSecsButtoninFullScreen setFrame:CGRectMake(0, forwardOneSecButtoninFullScreen.frame.origin.y + forwardOneSecButtoninFullScreen.frame.size.height + 10, currentSeekBackButtoninFullScreen.frame.size.width, currentSeekBackButtoninFullScreen.frame.size.height)];
-    [forwardFiveSecsButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    [forwardFiveSecsButtoninFullScreen setAccessibilityLabel:@"fullscreen"];
-    [forwardFiveSecsButtoninFullScreen setImage:[UIImage imageNamed:@"seekforwardfivesecslarge.png"] forState:UIControlStateNormal];
-    [forwardFiveSecsButtoninFullScreen addTarget:self action:@selector(seekForwardFiveSeconds:) forControlEvents:UIControlEventTouchUpInside];
-    [forwardFiveSecsButtoninFullScreen addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-    [seekForwardControlViewinFullScreen addSubview:forwardFiveSecsButtoninFullScreen];
-    
-    
-    
-    //slow motion button
-    slowMoButtoninFullScreen =  [CustomButton buttonWithType:UIButtonTypeCustom];
-    [slowMoButtoninFullScreen setFrame:CGRectMake(8*CONTROL_SPACER_X,screenRect.size.width- 2*CONTROL_SPACER_Y +35 ,65 ,50)];
-    [slowMoButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFill];
-    if(globals.PLAYBACK_SPEED == 1.0f)
-    {
-        [slowMoButtoninFullScreen setImage:[UIImage imageNamed:@"normalsp.png"] forState:UIControlStateNormal];
-        
-    }else{
-        [slowMoButtoninFullScreen setImage:[UIImage imageNamed:@"slowmo.png"] forState:UIControlStateNormal];
-        
-    }
-    [slowMoButtoninFullScreen addTarget:self action:@selector(slowMoController:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //add go to live button
-    liveButtoninFullScreen = [BorderButton buttonWithType:UIButtonTypeCustom];
-    [liveButtoninFullScreen setFrame:CGRectMake(screenRect.size.height/2.0+200,screenRect.size.width- CONTROL_SPACER_Y-10, LITTLE_ICON_DIMENSIONS + 90, LITTLE_ICON_DIMENSIONS-10)];
-    [liveButtoninFullScreen setContentMode:UIViewContentModeScaleAspectFit];
-    [liveButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"gotolive"] forState:UIControlStateNormal];
-    [liveButtoninFullScreen setBackgroundImage:[UIImage imageNamed:@"gotoliveSelect"] forState:UIControlStateHighlighted];
-    [liveButtoninFullScreen setTitle:@"Live" forState:UIControlStateNormal];
-    //[liveButtoninFullScreen changeBackgroundColor:[UIColor whiteColor] :0.8];
-    [liveButtoninFullScreen addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
-          */
     //for testing
-    timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CONTROL_SPACER_X -50,CONTROL_SPACER_Y + 150,165 ,50)];
-    [timeLabel setText:[NSString stringWithFormat:@"%f",[videoPlayer currentTimeInSeconds]]];
-    [timeLabel setBackgroundColor:[UIColor orangeColor]];
-    [timeLabel setFont:[UIFont boldSystemFontOfSize:20.f]];
-    [timeLabel setTextAlignment:NSTextAlignmentCenter];
-        
+//    timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CONTROL_SPACER_X -50,CONTROL_SPACER_Y + 150,165 ,50)];
+//    [timeLabel setText:[NSString stringWithFormat:@"%f",[videoPlayer currentTimeInSeconds]]];
+//    [timeLabel setBackgroundColor:[UIColor orangeColor]];
+//    [timeLabel setFont:[UIFont boldSystemFontOfSize:20.f]];
+//    [timeLabel setTextAlignment:NSTextAlignmentCenter];
+    
     if ( (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown || [globals.EVENT_NAME isEqualToString:@""] )
     {
         if (![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]){
-    /*TO DELETE    [liveButtoninFullScreen setAlpha:0.6];
-        [liveButtoninFullScreen setUserInteractionEnabled:FALSE];*/
+    
         }
-        /*TO DELETE  [continuePlayButtoninFullScreen setAlpha:0.6];
-        [continuePlayButtoninFullScreen  setUserInteractionEnabled:FALSE];*/
+        
         [teleButton setUserInteractionEnabled:FALSE];
         [teleButton setAlpha:0.6];
     }else{
         if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]){
-     /*TO DELETE      [liveButtoninFullScreen setAlpha:1.0];
-        [liveButtoninFullScreen setUserInteractionEnabled:TRUE];*/
+     
         }else{
-       /*TO DELETE      [liveButtoninFullScreen setAlpha:0.6];
-            [liveButtoninFullScreen setUserInteractionEnabled:FALSE];*/
+       
 
         }
-     /*TO DELETE   [continuePlayButtoninFullScreen setAlpha:1.0];
-        [continuePlayButtoninFullScreen  setUserInteractionEnabled:TRUE];*/
+     
         [teleButton setUserInteractionEnabled:TRUE];
         [teleButton setAlpha:1.0];
     }
@@ -5164,32 +3700,16 @@ static void * eventTypeContext = &eventTypeContext;
     //init button to view telestration
     viewTeleButtoninFullScreen = [BorderButton buttonWithType:UIButtonTypeCustom];
     [viewTeleButtoninFullScreen setFrame:CGRectMake(900,60, 130, LITTLE_ICON_DIMENSIONS)];
-    //[liveButton setBackgroundImage:[UIImage imageNamed:@"gotolive"] forState:UIControlStateNormal];
-    //[liveButton setBackgroundImage:[UIImage imageNamed:@"gotoliveSelect"] forState:UIControlStateHighlighted];
     [viewTeleButtoninFullScreen setTitle:@"View Tele" forState:UIControlStateNormal];
     [viewTeleButtoninFullScreen addTarget:self action:@selector(viewTele:) forControlEvents:UIControlEventTouchUpInside];
     if (!globals.LATEST_TELE || [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"type"]intValue] == 4) {
         viewTeleButtoninFullScreen.hidden = TRUE;
     }
     
- /*TO DELETE     [self.overlayItems addObject:currentSeekBackButtoninFullScreen];
-    [self.overlayItems addObject:currentSeekForwardButtoninFullScreen];
-    [self.overlayItems addObject:slowMoButtoninFullScreen];
-    [self.overlayItems addObject:liveButtoninFullScreen];
-    [self.overlayItems addObject:seekForwardControlViewinFullScreen];
-    [self.overlayItems addObject:seekBackControlViewinFullScreen];*/
+ 
     
     [self.overlayItems addObject:viewTeleButtoninFullScreen];
-     /*TO DELETE    
-    UIView *newParentView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    [newParentView addSubview: currentSeekBackButtoninFullScreen];
-    [newParentView addSubview:currentSeekForwardButtoninFullScreen];
-    [newParentView addSubview:slowMoButtoninFullScreen];
-    [newParentView addSubview: liveButtoninFullScreen];
-    [newParentView addSubview:seekForwardControlViewinFullScreen];
-    [newParentView addSubview:seekBackControlViewinFullScreen];*/
-     //viewtelebutton only for medical use
-    //[newParentView addSubview:viewTeleButtoninFullScreen];
+
 }
 
 //create fullscreen left and right event buttons
@@ -5443,10 +3963,7 @@ static void * eventTypeContext = &eventTypeContext;
         [self goToLive];
     }
     
-//    //for testing
-//    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:@"reset video player in live2bench view" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//    [alert show];
-    
+
     
     NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
     //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];

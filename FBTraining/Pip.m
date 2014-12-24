@@ -24,9 +24,9 @@
 @synthesize avPlayerLayer;
 @synthesize isDragAble;
 @synthesize dragBounds;
-@synthesize quality = _quality;
-@synthesize feed = _feed;
-@synthesize selected = _selected;
+@synthesize quality     = _quality;
+@synthesize feed        = _feed;
+@synthesize selected    = _selected;
 
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip
 {
@@ -106,7 +106,8 @@
     _feed = aFeed;
     
     @try {
-        [avPlayer removeTimeObserver:self];
+        
+        if (avPlayer)[avPlayer removeTimeObserver:self];
     }
     @catch (NSException * __unused exception) {}
     
@@ -123,43 +124,6 @@
 
 
 }
-
-
-
-////
-//-(void)playQualityURL:(NSDictionary *)urls
-//{
-//    _qualityFeeds = urls;
-//    NSURL URLWithString:<#(NSString *)#>
-//    _feed = [Feed alloc]initWithURLString:  quality:<#(int)#>
-//    
-//    @try {
-//        [avPlayer removeTimeObserver:self];
-//    }
-//    @catch (NSException * __unused exception) {}
-//    
-//    NSURL * url;
-//    if (self.hasHighQuality){
-//        url = [_qualityFeeds objectForKey:@"hq"];
-//        _quality = 1;
-//    } else {
-//        url = [_qualityFeeds objectForKey:@"lq"];
-//        _quality = 0;
-//    }
-//    
-//    
-//    avPlayer = nil;
-//    avPlayerItem  = [[AVPlayerItem alloc] initWithURL:url];
-//    avPlayer    = [AVPlayer playerWithPlayerItem:avPlayerItem];
-//    
-//    
-//    if (avPlayerLayer)[avPlayerLayer removeFromSuperlayer];
-//    avPlayerLayer                 = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
-//    avPlayerLayer.frame           = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-//    [self.layer addSublayer:avPlayerLayer];
-//    [avPlayer setRate:1];
-//    
-//}
 
 
 
@@ -236,6 +200,15 @@
 
 -(void)seekTo:(CMTime)time
 {
+    
+    CMTime playerTime = self.avPlayerItem.duration;
+    if (playerTime.value ==0)return;
+    int difference = CMTimeCompare(time, playerTime);
+    
+    if (difference == 1 ){
+        [avPlayer seekToTime:self.avPlayerItem.duration];
+    }
+    
     [avPlayer seekToTime:time];
 }
 
@@ -321,32 +294,6 @@
 {
     return _selected;
 }
-
-// NSCopy Protocol so that this class can be used as a key in a dict
-//- (id)copyWithZone:(NSZone *)zone
-//{
-//    Pip * copy = [[[self class] alloc] init];
-//    if (copy){
-//        copy.avPlayer	    = self.avPlayer;
-//        copy.avPlayerLayer	= self.avPlayerLayer;
-//        copy.avPlayerItem	= self.avPlayerItem;
-//        copy.isDragAble	    = self.isDragAble;
-//        copy.dragBounds	    = self.dragBounds;
-//        copy.muted	        = self.muted;
-//        copy.showFeedLabel	= self.showFeedLabel;
-//        copy.selected	    = self.selected;
-//        copy.quality	    = self.quality;
-//        copy.feed	        = self.feed;
-//    
-//        
-//        copy -> seekToFromNewAVPlayerItem   = seekToFromNewAVPlayerItem;
-//        copy -> debugLabel                  = debugLabel;
-//        copy -> _rate                       = _rate;
-//        copy -> _qualityFeeds               = _qualityFeeds;
-//    }
-//    
-//    return copy;
-//}
 
 
 @end

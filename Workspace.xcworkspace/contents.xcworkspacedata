@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:google-api-objectivec-client-read-only/Source/GTL.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:FBTraining/Live2BenchNative.xcodeproj">
    </FileRef>
 </Workspace>

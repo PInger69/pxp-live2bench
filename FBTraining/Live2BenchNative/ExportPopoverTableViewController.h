@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ExportTagsSync.h"
 #import <MessageUI/MessageUI.h>
-#import "GDFileUploader.h"
+//#import "GDFileUploader.h"
 #import "DPBFileUploader.h"
 
 
@@ -26,7 +26,7 @@
     NSInteger  _currentRowSelection;
     NSInteger  _currentSectionSelection;
     
-    GDFileUploader* _GDUploader;
+//    GDFileUploader* _GDUploader;
     DPBFileUploader* _DPBUploader;
 }
 

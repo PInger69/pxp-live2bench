@@ -1120,7 +1120,7 @@
         //NSString *tagName = [thumbInfoSubDict objectForKey:@"name"];
         UIColor *tagColour =[uController colorWithHexString:[thumbInfoSubDict objectForKey:@"colour"]];
         //create tagmaker for this tag
-        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]]];
+//        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]]];
         //[live2BenchViewController markTag:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]]];
         NSString *tagId = [NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]];
         //[globals.CURRENT_EVENT_THUMBNAILS addObject:thumbInfoSubDict];

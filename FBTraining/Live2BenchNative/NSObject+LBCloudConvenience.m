@@ -7,21 +7,21 @@
 //
 
 #import "NSObject+LBCloudConvenience.h"
-#import "GTLBase64.h"
+//#import "GTLBase64.h"
 #import "NSString+LBConvenience.h"
 
 @implementation NSObject (LBCloudConvenience)
 
-- (GTLDriveFileThumbnail*)GTLThumbnailWithMIMEType: (NSString*)mimeType
-{
-    UIImage* image = [self imageWithMIMEType:mimeType];
-    NSData* imageData = UIImageJPEGRepresentation(image, 7);
-    
-    
-    GTLDriveFileThumbnail* thumbnail = [[GTLDriveFileThumbnail alloc] init];
-    thumbnail.image = GTLEncodeWebSafeBase64(imageData);
-    return thumbnail;
-}
+//- (GTLDriveFileThumbnail*)GTLThumbnailWithMIMEType: (NSString*)mimeType
+//{
+//    UIImage* image = [self imageWithMIMEType:mimeType];
+//    NSData* imageData = UIImageJPEGRepresentation(image, 7);
+//    
+//    
+//    GTLDriveFileThumbnail* thumbnail = [[GTLDriveFileThumbnail alloc] init];
+//    thumbnail.image = GTLEncodeWebSafeBase64(imageData);
+//    return thumbnail;
+//}
 
 
 - (UIImage*)imageWithMIMEType: (NSString*)mimeType

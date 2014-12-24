@@ -26,6 +26,7 @@
 @property (weak,  nonatomic) VideoPlayer   * player;
 @property (strong,nonatomic) NSString      * context;
 @property (assign,nonatomic) BOOL          enable;
+@property (assign,nonatomic) BOOL          animated;
 
 -(id)initWithVideoPlayer:(VideoPlayer *) videoPlayer;
 

@@ -11,8 +11,7 @@
 
 #define LITTLE_ICON_DIMENSIONS     40
 #define SELECTMARGIN            10.0f
-#define MEDIA_PLAYER_WIDTH    1024 //712
-#define MEDIA_PLAYER_HEIGHT   768 //400
+
 
 
 @interface TeleViewController ()
@@ -296,13 +295,7 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     if (globals.IS_IN_FIRST_VIEW) {
         [self.l2bVC.videoPlayer play];
         [self.l2bVC showFullScreenOverlayButtons];
-//<<<<<<< Updated upstream
-//=======
-        [self.l2bVC.saveTeleButton removeFromSuperview];
-        [self.l2bVC.clearTeleButton removeFromSuperview];
-//        if(!self.mainImage.image)
-//>>>>>>> Stashed changes
-        //        {
+
         if(!teleImage){
             //if no tele made, press save button, make sure the video begins to play
             [self.l2bVC.videoPlayer play];
@@ -388,7 +381,7 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
             }
 
             //create tag marker for the new tag
-            [self.l2bVC markTagAtTime:[[dict objectForKey:@"time"] floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//            [self.l2bVC markTagAtTime:[[dict objectForKey:@"time"] floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
        
             CGSize newSize = CGSizeMake(1024, 1024*9/16);
             
@@ -698,8 +691,8 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
         if (globals.IS_IN_FIRST_VIEW) {
             [self.l2bVC showFullScreenOverlayButtons];
             [self.l2bVC.videoPlayer play];
-            [self.l2bVC.saveTeleButton removeFromSuperview];
-            [self.l2bVC.clearTeleButton removeFromSuperview];
+//            [self.l2bVC.saveTeleButton removeFromSuperview];
+//            [self.l2bVC.clearTeleButton removeFromSuperview];
             [self.view removeFromSuperview];
             [self.l2bVC.videoPlayer play];
         }else if(globals.IS_IN_LIST_VIEW){

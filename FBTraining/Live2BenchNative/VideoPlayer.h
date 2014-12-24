@@ -15,6 +15,8 @@
 #import "VideoControlBarSlider.h"
 #import "ExternalScreenButton.h"
 #import "Pip.h"
+#import "LiveIndicatorLight.h"
+
 @class VideoPlayerFreezeTimer;
 typedef enum playerStatus{
     PS_Offline  = 0,
@@ -49,8 +51,9 @@ typedef enum playerStatus{
 @property(nonatomic,strong)	    VideoControlBarSlider  * richVideoControlBar;
 @property(nonatomic,strong)     Feed                * feed;
 @property(nonatomic,strong)     NSString            * context;
+@property(nonatomic,strong)     LiveIndicatorLight  * liveIndicatorLight;
+@property(nonatomic,assign)     float               rate;
 
-//@property(nonatomic,strong)     UIButton *playButton;
 /**
  *  initialize video player with the given frame
  *
@@ -172,4 +175,7 @@ typedef enum playerStatus{
 
 -(void)seekToTheTime:(float)seekTime;
 -(BOOL)seekTo:(float)seekTime;
+
+-(void)playFeed:(Feed*)feed;
+
 @end

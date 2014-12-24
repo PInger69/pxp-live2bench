@@ -29,11 +29,11 @@
 #import <DropboxSDK/DropboxSDK.h>
 #import "EdgeSwipeEditButtonsView.h"
 #import "JPReorderTableView.h"
-#import "GDFileUploader.h"
+//#import "GDFileUploader.h"
 
 
 @class EdgeSwipeEditButtonsView, TeleViewController, BookmarkFilterViewController, FilterToolboxViewController, GDFileUploader, DPBFileUploader;
-@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,MFMailComposeViewControllerDelegate,UIGestureRecognizerDelegate, DBSessionDelegate,DBNetworkRequestDelegate,DBRestClientDelegate,UIDocumentInteractionControllerDelegate, EdgeSwipeButtonDelegate, UIPopoverControllerDelegate, JPReorderTableViewDataSource, JPReorderTableViewDelegate, GDFileUploaderDelegate>
+@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,MFMailComposeViewControllerDelegate,UIGestureRecognizerDelegate, DBSessionDelegate,DBNetworkRequestDelegate,DBRestClientDelegate,UIDocumentInteractionControllerDelegate, EdgeSwipeButtonDelegate, UIPopoverControllerDelegate, JPReorderTableViewDataSource, JPReorderTableViewDelegate>
 {
     Globals                      * globals;
     NSMutableArray               * _tagsToDisplay;

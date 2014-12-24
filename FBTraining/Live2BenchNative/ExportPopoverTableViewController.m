@@ -9,7 +9,7 @@
 #import "ExportPopoverTableViewController.h"
 #import "ExportTagsSync.h"
 #import "Globals.h"
-#import "GDFileUploader.h"
+//#import "GDFileUploader.h"
 #import "DPBFileUploader.h"
 
 
@@ -160,8 +160,8 @@
         
         NSArray* mimeTypes = @[@"text/xml", @"text/xml", @"text/csv", @"text/json"];
         
-        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
-        [_GDUploader uploadFileWithName:fileName data:fileData MIMEType:mimeTypes[_currentSectionSelection]];
+//        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
+//        [_GDUploader uploadFileWithName:fileName data:fileData MIMEType:mimeTypes[_currentSectionSelection]];
         
     }
     else if(_currentRowSelection == 3)

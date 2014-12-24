@@ -11,10 +11,10 @@
 #import "ZoneGraphPDFViewController.h"
 #import "Globals.h"
 #import "SelectPDFTableViewController.h"
-#import "GDTestViewController.h"
-#import "GDContentsNavigationController.h"
-#import "GDContentsViewController.h"
-#import "GDFileUploader.h"
+//#import "GDTestViewController.h"
+//#import "GDContentsNavigationController.h"
+//#import "GDContentsViewController.h"
+//#import "GDFileUploader.h"
 #import "DPBFileUploader.h"
 
 
@@ -156,10 +156,10 @@ NSString* const reuseIdentifier = @"LeftIconCell";
                 break;
             case 3:
             {
-                GDFileUploader* uploader = [[GDFileUploader alloc] initWithDriveService:nil];
-                uploader.delegate = self;
+//                GDFileUploader* uploader = [[GDFileUploader alloc] initWithDriveService:nil];
+//                uploader.delegate = self;
                 
-                [uploader uploadFileWithName:fileName data:[NSData dataWithContentsOfFile:filePath] MIMEType:@"application/pdf"];
+//                [uploader uploadFileWithName:fileName data:[NSData dataWithContentsOfFile:filePath] MIMEType:@"application/pdf"];
                 
                 [self.graphGenerator deletePDFWithFileName:fileName];
             }

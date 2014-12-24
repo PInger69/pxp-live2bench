@@ -27,9 +27,34 @@
         shapeLayer.fillColor    = [UIColor greenColor].CGColor;
         shapeLayer.path         = myFirstShape.CGPath;
         [self.layer addSublayer:shapeLayer];
+        self.hidden = YES;
+    
     }
     return self;
 }
+
+
+-(void)setHidden:(BOOL)hidden
+{
+    [super setHidden:hidden];
+    if (hidden) {
+        [self stopAnimating];
+    } else if (!hidden){
+        self.alpha = 1.0f;
+        [UIImageView animateWithDuration:0.5f
+                                   delay:0.0
+                                 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
+                              animations:^{
+                                  self.alpha = 0.0f;
+                              }
+                              completion:^(BOOL finished){
+                              }];
+
+    }
+
+}
+
+
 
 
 @end

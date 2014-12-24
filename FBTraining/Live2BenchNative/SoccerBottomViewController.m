@@ -719,7 +719,7 @@
             [globals.CURRENT_EVENT_THUMBNAILS setObject:dict forKey:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
             //[live2BenchViewController markTag:[tagTime floatValue] name:[NSString stringWithFormat:@"Pl. %@",button.titleLabel.text] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID: [[@"temp_" stringByAppendingString:tagTime] doubleValue]];
             //create tag marker for the current tag
-            [live2BenchViewController markTagAtTime:[tagTime floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//            [live2BenchViewController markTagAtTime:[tagTime floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
                                                      (unsigned long)NULL), ^(void) {
@@ -931,7 +931,7 @@
         //NSString *tagId = [thumbInfoSubDict objectForKey:@"id"];
         //[live2BenchViewController markTag:tagTime name:tagName colour:tagColour tagID:[[thumbInfoSubDict objectForKey:@"id"] doubleValue]];
         //create tag marker for the current tag
-        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]]];
+//        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]]];
         
         //[globals.CURRENT_EVENT_THUMBNAILS addObject:thumbInfoSubDict];
         NSString *tagId = [NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]];

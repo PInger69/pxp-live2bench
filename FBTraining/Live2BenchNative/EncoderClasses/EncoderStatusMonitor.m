@@ -200,6 +200,7 @@
             checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
         }
     }
+
     
     if ([connection.connectionType isEqualToString: STATUS])   {
        

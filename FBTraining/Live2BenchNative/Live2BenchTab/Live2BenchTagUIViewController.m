@@ -9,38 +9,209 @@
 #import "Live2BenchTagUIViewController.h"
 
 #import "Globals.h"
+
+
+#pragma mark - Tray
+@interface Tray : UIView
+{
+    NSString            * swipeSide;
+    NSMutableDictionary * swipeControlDict;
+}
+- (id)initWithSide:(NSString*)side buttonList:(NSMutableArray*)aButtonList;;
+@end
+
+@implementation Tray
+{
+    BOOL            maximized;
+    NSMutableArray  * buttonList;
+}
+
+
+- (id)initWithSide:(NSString*)side buttonList:(NSMutableArray*)aButtonList;
+{
+    self = [super init];
+    swipeSide = side;
+    if (self) {
+        UISwipeGestureRecognizer *oneFingerSwipeLeft = [[UISwipeGestureRecognizer alloc]
+                                                        initWithTarget:self
+                                                        action:@selector(oneFingerSwipeLeft:)];
+        [oneFingerSwipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+        [oneFingerSwipeLeft setCancelsTouchesInView:YES];
+        [self addGestureRecognizer:oneFingerSwipeLeft];
+        
+        //register right swipe
+        UISwipeGestureRecognizer *oneFingerSwipeRight = [[UISwipeGestureRecognizer alloc]
+                                                         initWithTarget:self
+                                                         action:@selector(oneFingerSwipeRight:)] ;
+        [oneFingerSwipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
+        [oneFingerSwipeLeft setCancelsTouchesInView:YES];
+        [self addGestureRecognizer:oneFingerSwipeRight];
+        
+        //key "left" represents the tag name buttons on the left side, and key value equals to 0 means, the buttons are not swiped out, 1 means, the buttons are swiped out; same for the right  buttons
+        swipeControlDict = [[NSMutableDictionary alloc]initWithObjects:[NSArray arrayWithObjects:@"0",@"0", nil] forKeys:[NSArray arrayWithObjects:@"left",@"right", nil]];
+        
+        self.layer.borderColor = [UIColor whiteColor].CGColor;
+        self.layer.borderWidth = 1;
+    }
+    return self;
+}
+
+
+- (void)oneFingerSwipeLeft:(UITapGestureRecognizer *)recognizer
+{
+    
+    //remember x and y are reversed in fullscreen
+    CGPoint tempCenter = self.center;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         if ([swipeSide isEqualToString:@"left"]) {
+                             //if left buttons have already swiped out,then swipe back to left
+                             if ([[swipeControlDict objectForKey:@"left"]integerValue]) {
+                                 [self setCenter:CGPointMake(tempCenter.x-self.frame.size.width/2, tempCenter.y)];
+                                 for(BorderButton *button in self.subviews)
+                                 {
+                                     [button setContentEdgeInsets:UIEdgeInsetsMake(3, 3+self.frame.size.width/2, 3, 3)];
+                                     [button changeBackgroundColor:[UIColor clearColor] :1.0];
+                                 }
+                                 [swipeControlDict setValue:@"0" forKey:@"left"];
+                             }
+                             
+                         }else{
+                             //if right buttons have not been swiped out, then swipe out to left
+                             if (![[swipeControlDict objectForKey:@"right"]integerValue]) {
+                                 [self setCenter:CGPointMake(tempCenter.x-self.frame.size.width/2, tempCenter.y)];
+                                 for(BorderButton *button in self.subviews)
+                                 {
+                                     [button setContentEdgeInsets:UIEdgeInsetsMake(3, 3, 3, 3)];
+                                     [button changeBackgroundColor:[UIColor whiteColor] :0.8];
+                                 }
+                                 [swipeControlDict setValue:@"1" forKey:@"right"];
+                             }
+                         }
+                     }completion:^(BOOL finished){[self setUserInteractionEnabled:TRUE];
+                         
+                     }];
+}
+
+
+- (void)oneFingerSwipeRight:(UITapGestureRecognizer *)recognizer
+{
+    
+    //remember x and y are reversed in fullscreen check to see if the current touched view is on the left side(-15.5) or on the right side (930.5).
+    //if it is on the left side and it's current position is 81.5 meaning that it is swiped out, set it back to 81.5. if it is on the right side and its current
+    //position is less then 930.5 meaning the right side has not been swiped in, we set the position to its default position(don't move)
+    
+    //NOTE: use view.center.y because the ys and xs are reversed in fullscreen (fs is always in portrait)
+    CGPoint tempCenter = self.center;
+    
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         if ([swipeSide isEqualToString:@"left"]) {
+                             //if left buttons have not been swiped out, swipe out to right
+                             if (![[swipeControlDict objectForKey:@"left"]integerValue]) {
+                                 [self setCenter:CGPointMake(tempCenter.x+self.frame.size.width/2, tempCenter.y)];
+                                 for(BorderButton *button in self.subviews)
+                                 {
+                                     [button setContentEdgeInsets:UIEdgeInsetsMake(3, 3, 3, 3)];
+                                     [button changeBackgroundColor:[UIColor whiteColor] :0.8];
+                                 }
+                                 [swipeControlDict setValue:@"1" forKey:@"left"];
+                                 //////NSLog(@"overlay:%@",NSStringFromCGRect(self.view.frame));
+                             }
+                             
+                         }else{
+                             //if right buttons have been swiped out, swipe back to right
+                             if ([[swipeControlDict objectForKey:@"right"]integerValue]) {
+                                 [self setCenter:CGPointMake(tempCenter.x+self.frame.size.width/2, tempCenter.y)];
+                                 for(BorderButton *button in self.subviews)
+                                 {
+                                     [button setContentEdgeInsets:UIEdgeInsetsMake(3, 3, 3, 3+self.frame.size.width/2)];
+                                     [button changeBackgroundColor:[UIColor clearColor] :1.0];
+                                 }
+                                 [swipeControlDict setValue:@"0" forKey:@"right"];
+                             }
+                         }
+                     }completion:^(BOOL finished){[self setUserInteractionEnabled:TRUE];
+                     }];
+    
+    
+}
+
+
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
  This class manages the creation of the side tags as well as displays them
 
  
  */
+#pragma mark - Live2BenchTagUIViewController
+
+
 
 @implementation Live2BenchTagUIViewController
 {
-
     UIView * placementView;
+    id fullScreenObserver;
+    Tray   * _leftTray;
+    Tray   * _rightTray;
+
 }
-@synthesize enabled     = _enabled;
-@synthesize hidden      = _hidden;
-@synthesize buttonSize  = _buttonSize;
-@synthesize gap         = _gap;
-@synthesize topOffset   = _topOffset;
+
+@synthesize enabled                     = _enabled;
+@synthesize hidden                      = _hidden;
+@synthesize buttonSize                  = _buttonSize;
+@synthesize gap                         = _gap;
+@synthesize topOffset                   = _topOffset;
+@synthesize state                       = _state;
+@synthesize fullScreenViewController    = _fullScreenViewController;
+
 
 -(id)initWithView:(UIView*)view
 {
     self = [super init];
     if (self) {
+
         tagButtonsLeft      = [[NSMutableArray alloc]init];
         tagButtonsRight     = [[NSMutableArray alloc]init];
         buttons             = [[NSMutableDictionary alloc]init];
         placementView       = view;
-//        self.view           = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
         tagCount            = 0;
         _topOffset          = 100.0f; // space from top of the screen
         _buttonSize         = CGSizeMake( 124.0f, 30.0f );
         _gap                = 2;
         _enabled            = NO;
-        
+        _state              = STATE_SMALLSCREEN;
+        _leftTray           = [[Tray alloc]initWithSide:@"left" buttonList:tagButtonsLeft];
+        _rightTray          = [[Tray alloc]initWithSide:@"right" buttonList:tagButtonsRight];
     }
 
     return self;
@@ -52,9 +223,26 @@
     [self clear]; // clear if any is present
      for (NSDictionary * btnData in listOfDicts) {
          // Builds the button and adds it to the view
-         [placementView addSubview:[self _buildButton:btnData]];
+         //[placementView addSubview:[self _buildButton:btnData]];
+         
+         [self _buildButton:btnData];
      }
     self.enabled = _enabled; // sets the fade after build base off last setting of enabled
+    
+
+    
+    [_leftTray setFrame:CGRectMake(0,
+                                   _topOffset,
+                                   _buttonSize.width,
+                                   CGRectGetMaxY(((UIButton*)[tagButtonsLeft lastObject]).frame ))];
+    
+    [_rightTray setFrame:CGRectMake(placementView.frame.size.width - _buttonSize.width,
+                                    _topOffset,
+                                    _buttonSize.width,
+                                    CGRectGetMaxY(((UIButton*)[tagButtonsRight lastObject]).frame ))];
+    
+    [placementView addSubview:_leftTray];
+    [placementView addSubview:_rightTray];
 }
 
 
@@ -96,12 +284,12 @@
         [btn setAccessibilityValue:@"left"];
         
         [btn setFrame:CGRectMake(0,
-                                 ( [tagButtonsLeft count] * (_buttonSize.height + _gap) ) + _topOffset,
+                                 ( [tagButtonsLeft count] * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
         [tagButtonsLeft addObject:btn];
-        
+        [_leftTray addSubview:btn];
         // TODO DEPREICATED START
         if (![[Globals instance].LEFT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
             [[Globals instance].LEFT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
@@ -112,14 +300,14 @@
         
         [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         [btn setAccessibilityValue:@"right"];
-        
-        [btn setFrame:CGRectMake(self.view.bounds.size.width - _buttonSize.width,
-                                 ( [tagButtonsRight count] * (_buttonSize.height + _gap) ) + _topOffset,
+//        self.view.bounds.size.width - _buttonSize.width
+        [btn setFrame:CGRectMake(0,
+                                 ( [tagButtonsRight count] * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
         [tagButtonsRight addObject:btn];
-        
+        [_rightTray addSubview:btn];
         // TODO DEPREICATED START
         if (![[Globals instance].RIGHT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
             [[Globals instance].RIGHT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
@@ -139,7 +327,36 @@
 
 }
 
+#pragma mark - Observers
 
+
+
+#pragma mark - Full Screen Controlls
+
+-(void)minimize
+{
+    if (![_state isEqualToString:STATE_FULLSCREEN]) return;
+}
+
+-(void)maximize
+{
+    if (![_state isEqualToString:STATE_FULLSCREEN]) return;
+}
+
+-(void)close
+{
+    if (![_state isEqualToString:STATE_FULLSCREEN]) return;
+}
+-(void)open
+{
+    if (![_state isEqualToString:STATE_FULLSCREEN]) return;
+}
+
+
+
+
+
+#pragma mark - Getters and Setters
 /////////////////////////////////////////////////// getter and setters
 
 -(void)setEnabled:(BOOL)enabled
@@ -187,6 +404,60 @@
 }
 
 
+-(void)setState:(NSString *)state
+{
+
+    if (state == _state || (!_fullScreenViewController && [state isEqualToString:STATE_FULLSCREEN])) return;
+    
+    [self willChangeValueForKey:@"state"];
+    if ([state isEqualToString:STATE_FULLSCREEN]){
+
+    } else if ([state isEqualToString:STATE_SMALLSCREEN]){
+
+        
+        
+    }
+    _state = state;
+    [self didChangeValueForKey:@"state"];
+}
+
+-(NSString *)state
+{
+    return _state;
+}
+
+
+-(void)setFullScreenViewController:(FullScreenViewController *)fullScreenViewController
+{
+    // removes observer if one is attached... just preventing future memory leaks
+    if (_fullScreenViewController) {
+//        [_fullScreenViewController removeObserver:self forKeyPath:@"enable" context:fullScreenContext];
+    }
+   
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_FULLSCREEN     object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_SMALLSCREEN    object:nil];
+     _fullScreenViewController = fullScreenViewController;
+    
+    // add observers
+//   [_fullScreenViewController addObserver:self forKeyPath:@"enable" options:NSKeyValueObservingOptionNew context:fullScreenContext];
+}
+
+-(FullScreenViewController *)fullScreenViewController
+{
+    return _fullScreenViewController;
+}
+
+-(void)_fullScreen
+{
+
+    if (_fullScreenViewController.enable) {
+        [_fullScreenViewController.view addSubview:_leftTray];
+        [_fullScreenViewController.view addSubview:_rightTray];
+    } else {
+        [placementView addSubview:_leftTray];
+        [placementView addSubview:_rightTray];
+    }
+}
 
 
 @end

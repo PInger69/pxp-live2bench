@@ -612,7 +612,7 @@
         NSString *tagName = [thumbInfoSubDict objectForKey:@"name"];
         UIColor *tagColour =[uController colorWithHexString:[thumbInfoSubDict objectForKey:@"colour"]];
         
-        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[thumbInfoSubDict objectForKey:@"id"]];
+//        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[thumbInfoSubDict objectForKey:@"id"]];
         
         NSString *tagId = [NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]];
         //[globals.CURRENT_EVENT_THUMBNAILS addObject:thumbInfoSubDict];

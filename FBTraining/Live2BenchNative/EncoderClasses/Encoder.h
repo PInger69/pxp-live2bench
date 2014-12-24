@@ -20,6 +20,7 @@
 #define NOTIF_ENCODER_MASTER_HAS_FALLEN     @"encoderMasterLost"
 #define NOTIF_ENCODER_MASTER_ENSLAVED       @"encoderMasterEnslaved"
 #define NOTIF_THIS_ENCODER_IS_READY         @"encoderIsReady"
+#define NOTIF_LIVE_EVENT_FOUND              @"encoderLiveFound"
 
 #define AUTHENTICATE    @"authenticate:timeStamp:"
 #define BUILD           @"buildEncoder:timeStamp:"
@@ -59,6 +60,7 @@
 @property (nonatomic,strong)    NSString        * URL;
 @property (nonatomic,strong)    NSString        * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    NSString        * eventType;        // the current event the encoder is looking at
+@property (nonatomic,strong)    NSString        * liveEventName;
 @property (nonatomic,strong)    NSDictionary    * eventData;   //raw dict
 @property (nonatomic,strong)    NSArray         * allEvents;    // all events on the encoder
 @property (nonatomic,strong)    NSArray         * allEventData;
