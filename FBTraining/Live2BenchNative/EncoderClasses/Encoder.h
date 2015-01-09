@@ -32,7 +32,10 @@
 #define SUMMARY_PUT     @"summaryPut:timeStamp:"
 #define TEAMS_GET       @"teamsGet:timeStamp:"
 
-
+#define STOP_EVENT      @"stopEvent:timeStamp:"
+#define PAUSE_EVENT     @"pauseEvent:timeStamp:"
+#define RESUME_EVENT    @"resumeEvent:timeStamp:"
+#define START_EVENT     @"startEvent:timeStamp:"
 
 @interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands>
 {
@@ -71,6 +74,7 @@
 @property (nonatomic,strong)    NSDictionary    * league;
 
 @property (nonatomic,assign)    EncoderStatus   status;
+@property (nonatomic,strong)    NSString        * statusAsString;
 @property (nonatomic,assign)    double          bitrate;
 
 @property (nonatomic,readonly)  NSMutableString * log;

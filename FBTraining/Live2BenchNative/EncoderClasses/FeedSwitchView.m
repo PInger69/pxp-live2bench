@@ -31,6 +31,7 @@
 @synthesize primaryPosition     = _primaryPosition;
 @synthesize secondaryPosition   = _secondaryPosition;
 @synthesize buttonArray         = _buttonArray;
+@synthesize buttonDict          = _buttonDict;
 
 -(id)initWithFrame:(CGRect)frame
 {
@@ -57,12 +58,36 @@
         _primaryPosition    = 0;
         _secondaryPosition  = -1;
         _buttonToFeedDict   = [[NSMutableDictionary alloc]init];
+        _buttonDict         = [[NSMutableDictionary alloc]init];
         _buttonSize         = CGSizeMake(frame.size.width, frame.size.height);
-         _secondarySelected   = NO;
+        _secondarySelected  = NO;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:encoderManager];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMovmentCheck:)       name:NOTIF_MOTION_ALARM object:nil];
     }
     return self;
+}
+
+
+-(void)onMovmentCheck:(NSNotification*)note
+{
+
+    NSDictionary * data = note.userInfo;
+    NSArray      * alarms = [data objectForKey:@"alarms"];
+    NSArray      * feedsOnEnc = [data objectForKey:@"feeds"];
+    
+    for (NSString * btnName1 in feedsOnEnc) {
+        UIButton * btn1 = [_buttonDict objectForKey:btnName1];
+        [btn1 setBackgroundColor:[UIColor clearColor]];
+    }
+    
+    if ([alarms count]>0) {
+        for (NSString * btnName2 in alarms) {
+            UIButton * btn2 = [_buttonDict objectForKey:btnName2];
+            [btn2 setBackgroundColor:[UIColor redColor]];
+        }
+        
+    }
 }
 
 
@@ -92,7 +117,7 @@
     [_buttonArray makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_buttonArray removeAllObjects];
     [_buttonToFeedDict removeAllObjects];
-    
+    [_buttonDict removeAllObjects];
     NSArray * list      = [aList allKeys];
     CGPoint myXY        = self.frame.origin;
     NSUInteger count    = list.count;
@@ -119,7 +144,7 @@
             button.layer.borderColor = [PRIMARY_COLOR CGColor];
         }
         
-        
+        [_buttonDict setObject:button forKey:theKey];
         [_buttonToFeedDict setObject:feed forKey:theKey]; // this dict is to keep the feeds when the button is pressed it will call the feeds based on it self
         [_buttonArray addObject: button];
         [self addSubview:button];
@@ -141,7 +166,8 @@
 
 -(Feed*)feedFromKey:(NSString*)key
 {
-    return [_buttonToFeedDict objectForKey:key];
+    Feed * theFeed = [_buttonToFeedDict objectForKey:key];
+    return theFeed;
 }
 
 // Primary is alway HQ and a secondary is all LQ
@@ -214,14 +240,22 @@
 
 -(Feed*)primaryFeed
 {
-    NSString * key = ((UIButton*)[_buttonArray objectAtIndex:_primaryPosition]).accessibilityValue;
-    return [_buttonToFeedDict objectForKey:key];
+    if (![_buttonArray count]){
+        return nil;
+    }
+    
+    NSString * key      = ((UIButton*)[_buttonArray objectAtIndex:_primaryPosition]).accessibilityValue;
+    return [self feedFromKey:key];
 }
 
 -(Feed*)secondaryFeed
 {
+    if (![_buttonArray count]){
+        return nil;
+    }
+
     NSString * key = ((UIButton*)[_buttonArray objectAtIndex:_secondaryPosition]).accessibilityValue;
-    return [_buttonToFeedDict objectForKey:key];
+    return [self feedFromKey:key];
 }
 
 -(void)deselectByIndex:(NSUInteger)index

@@ -13,9 +13,10 @@
 @interface FeedSwitchView : UIView
 
 
-@property (nonatomic,strong) NSMutableArray * buttonArray;
-@property (nonatomic,assign) NSUInteger     primaryPosition;
-@property (nonatomic,assign) NSUInteger     secondaryPosition;
+@property (nonatomic,strong) NSMutableArray         * buttonArray;
+@property (nonatomic,strong) NSMutableDictionary    * buttonDict;
+@property (nonatomic,assign) NSUInteger             primaryPosition;
+@property (nonatomic,assign) NSUInteger             secondaryPosition;
 
 
 -(id)initWithFrame:(CGRect)frame encoderManager:(EncoderManager*)encoderManager;

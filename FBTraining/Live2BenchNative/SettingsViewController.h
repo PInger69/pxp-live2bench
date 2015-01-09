@@ -21,13 +21,13 @@
 #import "SignalStrengthViewController.h"
 #import <DropboxSDK/DropboxSDK.h>
 
+@class EncoderManager;
+
 @interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,TeamPickerViewDelegate,LeaguePickerViewDelegate,DBRestClientDelegate,DBNetworkRequestDelegate>
 {
     UtilitiesController *uController;
     UILabel *userName;
     Globals *globals;
-    //AppQueue *appQueue;
-    NSMutableArray *menuItems;
     UIScrollView *scrollView;
     UIView *firstEncButton;
     UIView *secondEncButton;
@@ -52,8 +52,8 @@
     UIView *doNotShowContainer;
     UIView *viewEulaContainer;
     UIView *encoderHomeLabel;
-    TeamPickerViewController *teamPicker;
-    LeaguePickerViewController *leaguePicker;
+//    TeamPickerViewController *teamPicker;
+//    LeaguePickerViewController *leaguePicker;
     BorderlessButton *dropBoxLabel;
     UILabel *accountTitle;
     CustomButton *backToGeneral;
@@ -62,19 +62,18 @@
     DBRestClient *restClient;
     NSTimer *updateDBLabelTimer;
     UILabel *fbAndEmailNote;
+    CustomLabel *encoderHomeText;
 }
-@property (strong, nonatomic) CustomButton *encHomeButton;
-@property (strong, nonatomic) BorderlessButton *logoutButton;
-@property (strong, nonatomic) CustomLabel *appVersionLabel;
+@property (strong, nonatomic) CustomButton      *encHomeButton;
+@property (strong, nonatomic) BorderlessButton  *logoutButton;
+@property (strong, nonatomic) CustomLabel       *appVersionLabel;
 @property (nonatomic)int timerCounter;
-//@property (nonatomic)BOOL encoderAvailable;
-@property (nonatomic, strong) CustomLabel *encoderHomeText;
 @property (nonatomic) int willStartNewEventCount;
 @property (nonatomic) int waitEncoderResponseCounter;
 @property (nonatomic,strong)NSTimer *spinnerTimer;
 
+-(id)initWithEncoderManager:(EncoderManager*)aEncoderManager;
 
--(void)viewWillAppear:(BOOL)animated;
 -(void)appLogOut:(id)sender;
 -(void)startEnc:(id)sender;
 -(void)pauseEnc:(id)sender;

@@ -95,8 +95,15 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 // Encoder
 #define NOTIF_TAG_NAMES_FROM_CLOUD          @"tagNamesFromCloud"
-
+#define NOTIF_MOTION_ALARM                  @"motionAlarm"
 #define NOTIF_USER_CENTER_UPDATE            @"updateUserCenterData"
+#define NOTIF_MASTER_COMMAND                @"masterEncoderCommand"
+#define NOTIF_LIVE_EVENT_STOPPED            @"liveStopped"  
+#define NOTIF_LIVE_EVENT_STARTED            @"liveStarted"
+#define NOTIF_LIVE_EVENT_PAUSED             @"livePaused"
+#define NOTIF_LIVE_EVENT_RESUMED            @"liveResumed"
+
+
 
 // VideoPlayer
 #define NOTIF_FULLSCREEN                    @"fullScreen"
@@ -118,6 +125,8 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SPORT_RUGBY                 @"rugby"
 #define SPORT_MEDICAL               @"medical"
 #define SPORT_BLANK                 @""
+
+
 
 /**
  *  Limit Constants

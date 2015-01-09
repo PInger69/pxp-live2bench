@@ -115,6 +115,8 @@
 
 +(float)sumOfVersion:(NSString*)input
 {
+//    NSLog(@"Utility Class: sumOfVersion version check depricated");
+    
     NSArray *numbers = [input componentsSeparatedByString:@"."];
     float sum = 0;
     for (NSString *number in numbers) {
@@ -237,5 +239,19 @@
     return result;
 }
 
+
+
++(NSComparisonResult)compareVersion:(NSString *)versionNum1 with:(NSString*)versionNum2
+{
+//    NSInteger (^cmpGroup)(NSString *grp1,NSString *grp2) = ^NSInteger(NSString *grp1,NSString *grp2) {
+//    
+//        NSInteger n1 = [string componentsSeparatedByString: @";"]
+//        
+//        return
+//    };
+//
+//    
+//    return (NSComparisonResult)1;
+}
 
 @end

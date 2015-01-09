@@ -18,6 +18,11 @@
 #import "L2BVideoBarViewController.h"
 #import "L2BFullScreenViewController.h"
 
+#import "Pip.h"
+#import "PipViewController.h"
+#import "FeedSwitchView.h"
+#import "Feed.h"
+
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
 #define TOTAL_WIDTH          1024
@@ -65,6 +70,10 @@
     L2BFullScreenViewController         * _fullscreenViewController;     // fullscreen class to manage all actions in full
     // Telestration                                                     // telestration might be added to full screen class
     void                                * eventTypeContext;             // to see when sport changes in encoderManager
+    
+    PipViewController                   * _pipController;
+    Pip                                 * _pip;
+    FeedSwitchView                      * _feedSwitch;
 }
 
 // Player
@@ -212,8 +221,7 @@ static void * eventTypeContext = &eventTypeContext;
     currentEventTitle.font              = [UIFont fontWithName:@"trebuchet" size:17.0f];
     currentEventTitle.backgroundColor   = [UIColor clearColor];
     currentEventTitle.autoresizingMask  = UIViewAutoresizingFlexibleRightMargin;
-    
-    currentEventTitle.layer.borderWidth = 1;
+
     [self.view addSubview:currentEventTitle];
     
     
@@ -301,6 +309,19 @@ static void * eventTypeContext = &eventTypeContext;
     // so get buttons are connected to full screen
     _tagButtonController.fullScreenViewController = _fullscreenViewController;
     
+    
+    _pip            = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
+    _pip.isDragAble  = YES;
+    _pip.hidden      = YES;
+    _pip.dragBounds  = videoPlayer.playerLayer.frame;
+    
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 600, 100, 100) encoderManager:_encoderManager];
+    
+    _pipController  = [[PipViewController alloc]initWithVideoPlayer:videoPlayer f:_feedSwitch encoderManager:_encoderManager];
+    [_pipController addPip:_pip];
+    [_pipController viewDidLoad];
+    [self.view addSubview:_feedSwitch];
+    [videoPlayer playFeed:_feedSwitch.primaryFeed];
 }
 
 -(void)viewWillAppear:(BOOL)animated

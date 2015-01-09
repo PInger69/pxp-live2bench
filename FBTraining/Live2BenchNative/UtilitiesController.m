@@ -1423,9 +1423,7 @@ NSArray *eventsArray;
     globals.CURRENT_ENC_STATUS=[jsonArray objectForKey:@"status"];
     int encStateCode = [[jsonArray objectForKey:@"code"] intValue];
     
-    //send notification to settings view controller to update the encoder's state
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"updatedEncoderStatus" object:nil];
-    
+
     
     //this case will happen, if camera/prorecoder is disconnected during live event and then reconnected
     if ([globals.EVENT_NAME isEqual:@"live"] && [globals.CURRENT_ENC_STATUS isEqualToString:encStateStreamingOk]) {

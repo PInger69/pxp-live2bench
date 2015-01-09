@@ -31,7 +31,7 @@
 @property (nonatomic,readonly)          BOOL                    searchForEncoders;
 @property (nonatomic,assign)            BOOL                    hasLive; // all the Encoders status checkers will effect this if non have live or if one has
 @property (nonatomic,strong)            NSString                * liveEventName;
-@property (nonatomic,strong)            NSMutableArray          * feeds; // this is an array of Dicts @{ @"feedPath": @"???", @"feedName":@"???" }
+@property (nonatomic,strong)            NSMutableDictionary          * feeds; // this is an array of Dicts @{ @"feedPath": @"???", @"feedName":@"???" }
 @property (nonatomic,strong)            NSMutableArray          * allEvents;
 @property (nonatomic,strong)            NSMutableArray          * allEventData;
 @property (nonatomic,strong)            NSMutableArray          * authenticatedEncoders;
@@ -39,6 +39,9 @@
 @property (nonatomic,strong,readonly)   NSString                * currentEventType; // like sport or medical
 @property (nonatomic,strong,readonly)   NSDictionary            * currentEventData; // like sport or medical
 @property (nonatomic,strong)            NSMutableDictionary     * openDurationTags;
+
+@property (nonatomic,strong)            Encoder                 * masterEncoder;
+
 
 #pragma mark - Encoder Manager Methods
 -(id)initWithID:(NSString*)custID localDocPath:(NSString*)aLocalDocsPath;

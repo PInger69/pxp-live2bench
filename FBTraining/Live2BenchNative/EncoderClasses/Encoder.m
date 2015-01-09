@@ -95,7 +95,7 @@
 
 
 
-@synthesize name;
+@synthesize name = _name;
 @synthesize ipAddress;
 @synthesize version;
 @synthesize URL;
@@ -105,6 +105,7 @@
 
 @synthesize authenticated   = _authenticated;
 @synthesize status          = _status;
+@synthesize statusAsString  = _statusAsString;
 @synthesize bitrate         = _bitrate;     // To be used with KVO
 @synthesize event           = _event;
 @synthesize eventType       = _eventType;
@@ -132,6 +133,7 @@
         isWaitiing      = NO;
         log             = [NSMutableString stringWithString:@"Encoder Log: \r"];
         version         = @"?";
+        _statusAsString = @"";
         statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self];
         _isMaster       = NO;
         isTeamsGet      = NO;
@@ -160,34 +162,93 @@
         {
             self.eventData = dict;
             
-            if ([dict[@"vid"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
+            // The new version have _authenticated the old versions do not
+            if (_authenticated) {
             
-               // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
-                // this creates a feed object from just a string with it  source named s1
-               Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"vid"] quality:0];
-                _feeds = @{ @"s1":theFeed};
-                
-            }  else if ([dict[@"vid"] isKindOfClass:[NSDictionary class]]){
-                NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-                
-                for (id key in dict[@"vid"])
-                {
-                    if ([key isEqualToString:@"url"]) continue;
-                    NSDictionary * vidDict      = dict[@"vid"];
-                    NSDictionary * qualities    = [vidDict objectForKey:key];
+                if ([dict[@"vid_2"] isKindOfClass:[NSDictionary class]]){
+                    NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
                     
-                    Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
-                    createdFeed.sourceName = key;
+                    for (id key in dict[@"vid_2"])
+                    {
+                        NSDictionary * vidDict      = dict[@"vid_2"];
+                        NSDictionary * qualities    = [vidDict objectForKey:key];
+                        
+                        Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+                        createdFeed.sourceName = key;
+                        
+                        [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+                    }
                     
-                    [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+                    _feeds = [collect copy];
+                    
+                    
+                } else if ([dict[@"live_2"] isKindOfClass:[NSDictionary class]]){
+                    NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
+                    
+                    for (id key in dict[@"live_2"])
+                    {
+                        NSDictionary * vidDict      = dict[@"live_2"];
+                        NSDictionary * qualities    = [vidDict objectForKey:key];
+                        
+                        Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+                        createdFeed.sourceName = key;
+                        
+                        [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+                    }
+                    
+                    _feeds = [collect copy];
+                    
+                    
                 }
                 
-                _feeds = [collect copy];
+                
                 
                 
             } else {
-                NSLog(@"JSON ERROR");
+                if (dict[@"live"]) { // This is for backwards compatibility
+                    // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
+                    // this creates a feed object from just a string with it  source named s1
+                    Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
+                    _feeds = @{ @"s1":theFeed};
+                } else if (dict[@"vid"]) {
+                    Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"vid"] quality:0];
+                    _feeds = @{ @"s1":theFeed};
+                }
             }
+            
+            
+//            if ([dict[@"vid"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
+//            
+//               // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
+//                // this creates a feed object from just a string with it  source named s1
+//               Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"vid"] quality:0];
+//                _feeds = @{ @"s1":theFeed};
+//                
+//            }  else if ([dict[@"vid"] isKindOfClass:[NSDictionary class]]){
+//                NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
+//                
+//                for (id key in dict[@"vid"])
+//                {
+//                    if ([key isEqualToString:@"url"]) continue;
+//                    NSDictionary * vidDict      = dict[@"vid"];
+//                    NSDictionary * qualities    = [vidDict objectForKey:key];
+//                    
+//                    Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+//                    createdFeed.sourceName = key;
+//                    
+//                    [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+//                }
+//                
+//                _feeds = [collect copy];
+//                
+//                
+//            } else {
+//                NSLog(@"JSON ERROR");
+//            }
+//            
+            
+            
+            
             [self willChangeValueForKey:@"eventType"];
             _eventType = [dict objectForKey:@"sport"];
             [self didChangeValueForKey:@"eventType"];
@@ -256,7 +317,7 @@
 
 
 // Commands
-
+#pragma mark - Commands
 -(void)authenticateWithCustomerID:(NSString*)custID
 {
   //  void * context  =  &context;
@@ -343,7 +404,6 @@
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encshutdown",self.ipAddress]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-//    encoderConnection.accessibilityValue    = SHUTDOWN;
     encoderConnection.connectionType        = SHUTDOWN;
     encoderConnection.timeStamp             = aTimeStamp;
 }
@@ -436,11 +496,83 @@
     encoderConnection.timeStamp             = aTimeStamp;
 }
 
+#pragma mark -  Master Commands
+-(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%@",aTimeStamp],@"requesttime", nil];
+    
+    NSError *error;
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:summarydict options:0 error:&error];
+    NSString *jsonString;
+    if (! jsonData) {
+        
+    } else {
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encstop/%@",self.ipAddress,jsonString]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = STOP_EVENT;
+    encoderConnection.timeStamp             = aTimeStamp;
+}
+
+-(void)pauseEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encpause/",self.ipAddress]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = PAUSE_EVENT;
+    encoderConnection.timeStamp             = aTimeStamp;
+}
+
+-(void)resumeEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encresume/",self.ipAddress]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = RESUME_EVENT;
+    encoderConnection.timeStamp             = aTimeStamp;
+}
+
+
+-(void)startEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    NSString * homeTeam = [tData objectForKey:@"homeTeam"];
+    NSString * awayTeam = [tData objectForKey:@"awayTeam"];
+    NSString * league   = [tData objectForKey:@"league"];
+    
+    NSString *unencoded = [NSString stringWithFormat:@"http://%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",
+                           self.ipAddress,
+                           homeTeam,
+                           awayTeam,
+                           league,
+                           [NSString stringWithFormat:@"%@",aTimeStamp],
+                           @"high"];
+    
+    unencoded = [unencoded stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURL * checkURL                        = [NSURL URLWithString:unencoded  ];
+    
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = START_EVENT;
+    encoderConnection.timeStamp             = aTimeStamp;
+}
+
+
+
 
 // Connections // Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections
 // Connections // Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections
 // Connections // Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections
-
+#pragma mark - Connections
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
@@ -475,11 +607,19 @@
     if ([connectionType isEqualToString: AUTHENTICATE]){
         [self authenticateResponse: finishedData];
     }  else if ([connectionType isEqualToString: VERSION]){
-        [self versionResponse:      finishedData];
+        [self versionResponse:  finishedData];
     }  else if ([connectionType isEqualToString: BUILD]){
         [self getAllEventsResponse: finishedData];
     }  else if ([connectionType isEqualToString: TEAMS_GET]) {
-        [self teamsResponse:finishedData];
+        [self teamsResponse:    finishedData];
+    }  else if ([connectionType isEqualToString: STOP_EVENT]) {
+        [self stopResponce:     finishedData];
+    }  else if ([connectionType isEqualToString: START_EVENT]) {
+        [self startResponce:    finishedData];
+    } else if ([connectionType isEqualToString: PAUSE_EVENT]) {
+        [self pauseResponce:     finishedData];
+    }  else if ([connectionType isEqualToString: RESUME_EVENT]) {
+        [self resumeResponce:    finishedData];
     }
    
     
@@ -520,7 +660,7 @@
 }
 
 
-
+#pragma mark - Responce Methods
 
 /**
  *  This method checks to see if the user has access to this encoder
@@ -646,6 +786,36 @@
     isTeamsGet = YES;
 }
 
+
+#pragma mark - Master Responce
+
+-(void)stopResponce:(NSData *)data
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
+    NSLog(@"Event Stopped          !!!");
+}
+
+-(void)startResponce:(NSData *)data
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STARTED object:self];
+    NSLog(@"Event Started          !!!");
+}
+
+-(void)pauseResponce:(NSData *)data
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_PAUSED object:self];
+    NSLog(@"Event Paused          !!!");
+}
+
+-(void)resumeResponce:(NSData *)data
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_RESUMED object:self];
+    NSLog(@"Event Resumed          !!!");
+}
+
+
+
+
 /**
  *  This class is what buils the rest of the data from the encoder
  *
@@ -697,6 +867,12 @@
                         self.feeds = [collect copy];
 
                         self.event = [dict objectForKey:@"name"]; // LIVE
+                        _liveEventName = self.event;
+                        
+                        [self willChangeValueForKey:@"eventType"];
+                        _eventType = [dict objectForKey:@"sport"];
+                        [self didChangeValueForKey:@"eventType"];
+                        
                     } else if ([dict objectForKey:@"live"]) { // this is for the new encoder version
                         /////
                         self.event = [dict objectForKey:@"name"];
@@ -706,6 +882,11 @@
                             // this creates a feed object from just a string with it  source named s1
                             Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
                             self.feeds = @{ @"s1":theFeed};
+                            _liveEventName = dict[@"live"];
+                            
+                            [self willChangeValueForKey:@"eventType"];
+                            _eventType = [dict objectForKey:@"sport"];
+                            [self didChangeValueForKey:@"eventType"];
                             
                         }  else if ([dict[@"live"] isKindOfClass:[NSDictionary class]]){
                             //                            NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
@@ -749,7 +930,7 @@
 }
 
 
-
+#pragma mark - Queue methods
 // Queue methods
 -(void)addToQueue:(EncoderCommand *)obj
 {
@@ -852,7 +1033,7 @@
 
 
 //debugging
-
+#pragma mark - debugging
 
 // This will show name and status
 -(NSString*)description
@@ -864,5 +1045,19 @@
     
     return txt;
 }
+
+
+-(NSString*)name
+{
+    return _name;
+}
+
+-(void)setName:(NSString *)name
+{
+    [self willChangeValueForKey:@"name"];
+    _name = name;
+    [self didChangeValueForKey:@"name"];
+}
+
 
 @end

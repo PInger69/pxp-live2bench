@@ -509,6 +509,7 @@
 		D79F9B7D17F5D5F00081C5E9 /* myplayXplay_tagging@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D79F9B7B17F5D5F00081C5E9 /* myplayXplay_tagging@2x.png */; };
 		D79F9B8017F5ED0B0081C5E9 /* myplayXplay_phonecall.png in Resources */ = {isa = PBXBuildFile; fileRef = D79F9B7E17F5ED0B0081C5E9 /* myplayXplay_phonecall.png */; };
 		D79F9B8117F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D79F9B7F17F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png */; };
+		D79FB04A1A5C8AB7003F0CFA /* TablePopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */; };
 		D79FBBDA17E2271A009F4BBE /* event_filter_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D79FBBD217E2271A009F4BBE /* event_filter_selected.png */; };
 		D79FBBDB17E2271A009F4BBE /* event_filter_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D79FBBD317E2271A009F4BBE /* event_filter_selected@2x.png */; };
 		D79FBBDC17E2271A009F4BBE /* event_filter_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D79FBBD417E2271A009F4BBE /* event_filter_unselected.png */; };
@@ -1347,6 +1348,8 @@
 		D79F9B7B17F5D5F00081C5E9 /* myplayXplay_tagging@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myplayXplay_tagging@2x.png"; sourceTree = "<group>"; };
 		D79F9B7E17F5ED0B0081C5E9 /* myplayXplay_phonecall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myplayXplay_phonecall.png; sourceTree = "<group>"; };
 		D79F9B7F17F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myplayXplay_phonecall@2x.png"; sourceTree = "<group>"; };
+		D79FB0481A5C8AB7003F0CFA /* TablePopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TablePopoverController.h; path = Live2BenchNative/Live2BenchTab/TablePopoverController.h; sourceTree = "<group>"; };
+		D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TablePopoverController.m; path = Live2BenchNative/Live2BenchTab/TablePopoverController.m; sourceTree = "<group>"; };
 		D79FBBD217E2271A009F4BBE /* event_filter_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = event_filter_selected.png; sourceTree = "<group>"; };
 		D79FBBD317E2271A009F4BBE /* event_filter_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "event_filter_selected@2x.png"; sourceTree = "<group>"; };
 		D79FBBD417E2271A009F4BBE /* event_filter_unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = event_filter_unselected.png; sourceTree = "<group>"; };
@@ -2500,6 +2503,8 @@
 				D72779AA1A37498E0034DD66 /* CalendarTableCell.m */,
 				D72779A61A3609620034DD66 /* ListPopoverController.h */,
 				D72779A71A3609620034DD66 /* ListPopoverController.m */,
+				D79FB0481A5C8AB7003F0CFA /* TablePopoverController.h */,
+				D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */,
 				D72779A31A32605B0034DD66 /* BottomViewControllerBase.h */,
 				D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */,
 				D727798B1A30C5870034DD66 /* UserCenter.h */,
@@ -3219,7 +3224,7 @@
 		D7A9393616ADA65D006CBAB2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastTestingUpgradeCheck = 0510;
+				LastTestingUpgradeCheck = 0610;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = DEV;
 				TargetAttributes = {
@@ -3805,6 +3810,7 @@
 				AA8358C219B10A4D009B3ABC /* JPXMLTag.m in Sources */,
 				D7A673DB180EC8A1001C68D1 /* BookmarkViewController.m in Sources */,
 				9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */,
+				D79FB04A1A5C8AB7003F0CFA /* TablePopoverController.m in Sources */,
 				AA83591319B10B23009B3ABC /* graphDisplayView.m in Sources */,
 				D7EE84D019F19DC000DEC82B /* EncoderManager.m in Sources */,
 				AA8358A319B1099D009B3ABC /* StatsTabViewController.m in Sources */,

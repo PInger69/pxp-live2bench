@@ -7,6 +7,10 @@
 //
 
 #import "SettingsViewController.h"
+#import "EncoderManager.h"
+#import "Encoder.h"
+#import "EncoderStatusMonitor.h"
+#import "TablePopoverController.h"
 
 @interface SettingsViewController ()
 
@@ -15,6 +19,38 @@ typedef enum {
     SVSignalShowing = 1,
     SVSignalNotFound = 2
 } SVSignalStatus;
+
+
+// This is for the button controll states
+
+typedef enum  {
+    START_HIDDEN    = 1<<1,
+    START_ENABLE    = 1<<2,
+    STOP_HIDDEN     = 1<<3,
+    STOP_ENABLE     = 1<<4,
+    PAUSE_HIDDEN    = 1<<5,
+    PAUSE_ENABLE    = 1<<6,
+    RESUME_HIDDEN   = 1<<7,
+    RESUME_ENABLE   = 1<<8,
+    SHUTDOWN_HIDDEN = 1<<9,
+    SHUTDOWN_ENABLE = 1<<10,
+    
+    HOME_ENABLE     = 1<<11,
+    AWAY_ENABLE     = 1<<12,
+    LEAGUE_ENABLE   = 1<<13,
+    
+    EventButtonControlStatesDisabled    = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN,
+    EventButtonControlStatesReady       = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN |SHUTDOWN_ENABLE | START_ENABLE | HOME_ENABLE | AWAY_ENABLE | LEAGUE_ENABLE,
+    EventButtonControlStatesStart       = STOP_ENABLE | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_HIDDEN,
+    EventButtonControlStatesLive        = STOP_ENABLE | PAUSE_ENABLE | START_HIDDEN | SHUTDOWN_HIDDEN | RESUME_HIDDEN,
+    EventButtonControlStatesPause       = RESUME_ENABLE | STOP_ENABLE | START_HIDDEN | PAUSE_HIDDEN | SHUTDOWN_HIDDEN,
+    EventButtonControlStatesStopping    = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_ENABLE,
+    BUTTON_STATE                        = START_HIDDEN | STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_HIDDEN
+}EventButtonControlStates;
+
+
+
+
 
 @end
 
@@ -26,19 +62,54 @@ typedef enum {
     int encStateCounter;
     
     BOOL encoderAvailable;
+    
+    //Richard
+    EncoderManager         * encoderManager;
+    Encoder                * masterEncoder;
+    TablePopoverController * homeTeamPick;
+    TablePopoverController * visitTeamPick;
+    TablePopoverController * LeaguePick;
+    NSArray                * teamNames;
+    NSArray                * leagueNames;
+    id                     observerForFoundMaster;
+    id                     observerForLostMaster;
 }
-@synthesize logoutButton,appVersionLabel,timerCounter,spinnerTimer,encoderHomeText;
+
+static void *masterContext;
+
+@synthesize logoutButton,appVersionLabel,timerCounter,spinnerTimer;
 @synthesize waitEncoderResponseCounter;
 
 NSTimer *signalTimer;
 UIPopoverController *signalPop;
 SVSignalStatus signalStatus;
 
-- (id)initWithDict:(NSDictionary*)dict
+- (id)initWithEncoderManager:(EncoderManager*)aEncoderManager
 {
     self = [super init];
     if (self) {
-        // Custom initialization
+        encoderManager = aEncoderManager;
+        masterContext  = &masterContext;
+        homeTeamPick   = [[TablePopoverController alloc]init];
+        visitTeamPick  = [[TablePopoverController alloc]init];
+        LeaguePick     = [[TablePopoverController alloc]init];
+
+        encoderHomeText = [CustomLabel labelWithStyle:CLStyleOrange];
+        
+        // observers
+        observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
+            masterEncoder = encoderManager.masterEncoder;
+            encoderHomeText.text = @"Encoder Home";
+            [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
+        }];
+        observerForLostMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil queue:nil usingBlock:^(NSNotification *note) {
+            if (masterEncoder){
+                encoderHomeText.text = @"Encoder is not available.";
+                [masterEncoder removeObserver:self forKeyPath:@"status" context:&masterContext];
+            }
+        }];
+
+        
     }
     return self;
 }
@@ -168,6 +239,7 @@ SVSignalStatus signalStatus;
     logoutButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     [logoutButton addTarget:self action:@selector(appLogOut:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:logoutButton];
+    
 }
 
 - (void)viewDidLoad
@@ -183,22 +255,16 @@ SVSignalStatus signalStatus;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSpinnerView) name:@"EventInformationUpdated" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateForStatus) name:@"updatedEncoderStatus" object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectTeamCallback) name:@"updateTeamInfo" object:nil];
-    
-    
+   
+
     
     if (!restClient) {
         restClient =
         [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
         restClient.delegate = self;
     }
-    
-    //appQueue=[[AppQueue alloc]init];
-    menuItems=[[NSMutableArray alloc]init];
-    teamPicker=[[TeamPickerViewController alloc] init];
-    teamPicker.delegate = self;
-    leaguePicker=[[LeaguePickerViewController alloc]init];
-    leaguePicker.delegate = self;
+
+
     if(!uController)
     {
         uController=[[UtilitiesController alloc] init];
@@ -210,194 +276,89 @@ SVSignalStatus signalStatus;
     [self initialiseLayout];
     
     // Do any additional setup after loading the view from its nib.
-    encoderHomeText = [CustomLabel labelWithStyle:CLStyleOrange];
+
     encoderHomeText.frame = encoderHomeLabel.bounds;
     
     
+    
+    
+
 }
 
--(void)updateViews
+
+
+#pragma mark - Observers
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    [selectAwayTeam setTitle:globals.ENCODER_SELECTED_AWAY_TEAM forState:UIControlStateNormal];
-    [selectHomeTeam setTitle:globals.ENCODER_SELECTED_HOME_TEAM forState:UIControlStateNormal];
-    [selectLeague setTitle:globals.ENCODER_SELECTED_LEAGUE forState:UIControlStateNormal];
-    
-    //when there is no encoder or the live event is still stopping, disable everything;
-    //If the user shuts down the server whiling the live event is still stopping, the mp4 file might not be created properly
-    if (!globals.HAS_MIN) {
-        //disabel team and league selection
-        [selectHomeTeam setAlpha:0.6f];
-        [selectAwayTeam setAlpha:0.6f];
-        [selectLeague setAlpha:0.6f];
-        
-        [selectHomeTeam setUserInteractionEnabled:FALSE];
-        [selectAwayTeam setUserInteractionEnabled:FALSE];
-        [selectLeague setUserInteractionEnabled:FALSE];
-        
-        //show start button but disable it
-        [startButton setEnabled:NO];
-        [startButton setAlpha:0.6f];
-        [startButton setHidden:FALSE];
-        //show shutdown button but disable it
-        [shutdownButton setEnabled:NO];
-        [shutdownButton setAlpha:0.6f];
-        [shutdownButton setHidden:FALSE];
-        
-        //hide stop,pause and resume buttons
-        [stopButton setHidden:TRUE];
-        [pauseButton setHidden:TRUE];
-        [resumeButton setHidden:TRUE];
+    if (context == &masterContext){
+        //[[change objectForKey:@"new"]integerValue]
+        [self masterEncoderStatusObserver:(Encoder*)object];
+    }
 
-        return;
-    }
-    
-    //update encoder state label
-    if(![globals.CURRENT_ENC_STATUS isEqualToString:@""]){
-        [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",globals.CURRENT_ENC_STATUS]];
-    }
-    
-    
-    //use global camera status to set which buttons are on and which are off
-    if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateStarting]) {
-        //waiting for the live event to start
-        
-        //show stop button and enable it
-        [stopButton setHidden:FALSE];
-        [stopButton setEnabled:TRUE];
-        
-        //show the start button but disable it
-        [startButton setHidden:FALSE];
-        [startButton setAlpha:0.6];
-        [startButton setEnabled:FALSE];
-        
-        //hide pause,resume and shutdown button
-        [resumeButton setHidden:TRUE];
-        [shutdownButton setHidden:TRUE];
-        [pauseButton setHidden:TRUE];
-        
-        //disable teams and league selection
-        [selectHomeTeam setAlpha:0.6f];
-        [selectAwayTeam setAlpha:0.6f];
-        [selectLeague setAlpha:0.6f];
-        
-        [selectAwayTeam setEnabled:FALSE];
-        [selectHomeTeam setEnabled:FALSE];
-        [selectLeague setEnabled:FALSE];
-        
-        
-    }else if([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]) //live camera encoding
-    {
-        //show the stop button and enable it
-        [stopButton setHidden:FALSE];
-        [stopButton setEnabled:TRUE];
-        
-        //show pause button and enable it
-        [pauseButton setHidden:FALSE];
-        [pauseButton setEnabled:TRUE];
-        
-        //hide the start, resume and shutdown buttons
-        [startButton setHidden:TRUE];
-        [resumeButton setHidden:TRUE];
-        [shutdownButton setHidden:TRUE];
-        
-        
-        //disable teams and league selection
-        
-        [selectHomeTeam setAlpha:0.6f];
-        [selectAwayTeam setAlpha:0.6f];
-        [selectLeague setAlpha:0.6f];
-        
-        [selectAwayTeam setEnabled:FALSE];
-        [selectHomeTeam setEnabled:FALSE];
-        [selectLeague setEnabled:FALSE];
-        
-    }else if([globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) //encoder is paused
-    {
-        //show resume button and enable it
-        [resumeButton setHidden:FALSE];
-        [resumeButton setEnabled:TRUE];
-        
-        //show stop button and enable it
-        [stopButton setHidden:FALSE];
-        [stopButton setEnabled:TRUE];
-        
-        //hide pause,start and shutdown buttons
-        [pauseButton setHidden:TRUE];
-        [startButton setHidden:TRUE];
-        [shutdownButton setHidden:TRUE];
-        
-        //disable teams and league selection
-        [selectHomeTeam setAlpha:0.6f];
-        [selectAwayTeam setAlpha:0.6f];
-        [selectLeague setAlpha:0.6f];
-        
-        [selectAwayTeam setEnabled:FALSE];
-        [selectHomeTeam setEnabled:FALSE];
-        [selectLeague setEnabled:FALSE];
-        
-        
-    }else if([globals.CURRENT_ENC_STATUS isEqualToString:encStateReady] || [globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped]){ //encoder is not on or stopped
-        
-        //show start button and enable it
-        [startButton setHidden:FALSE];
-        [startButton setAlpha:1.0];
-        [startButton setEnabled:TRUE];
-        
-        //show shutdown button and enable it
-        [shutdownButton setHidden:FALSE];
-        [shutdownButton setAlpha:1.0];
-        [shutdownButton setEnabled:TRUE];
-        
-        //hide resume,stop and pause buttons
-        [resumeButton setHidden:TRUE];
-        [stopButton setHidden:TRUE];
-        [pauseButton setHidden:TRUE];
-        
-        //Enable dropdowns
-        [selectHomeTeam setAlpha:1.0];
-        [selectAwayTeam setAlpha:1.0];
-        [selectLeague setAlpha:1.0];
-        [selectAwayTeam setEnabled:TRUE];
-        [selectHomeTeam setEnabled:TRUE];
-        [selectLeague setEnabled:TRUE];
-        
-        //[firstEncLabel setText:@"Start"];
-        //[secondEncLabel setText:@"Shutdown"];
-    }else{
-        
-        //show start button and disable it
-        [startButton setHidden:FALSE];
-        [startButton setAlpha:0.6];
-        [startButton setEnabled:FALSE];
-        
-        //show shut down button
-        [shutdownButton setHidden:FALSE];
-        //if the current live event is still stopping, disable the shutdown button
-        if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateStopping]) {
-            //disable shutdown button
-            [shutdownButton setAlpha:0.6];
-            [shutdownButton setEnabled:FALSE];
-        }else{
-            //enable shutdown button
-            [shutdownButton setAlpha:1.0];
-            [shutdownButton setEnabled:TRUE];
-        }
-        
-        //hide resume, stop and pause buttons
-        [resumeButton setHidden:TRUE];
-        [stopButton setHidden:TRUE];
-        [pauseButton setHidden:TRUE];
-        
-        //disable teams and league selection
-        [selectHomeTeam setAlpha:0.6f];
-        [selectAwayTeam setAlpha:0.6f];
-        [selectLeague setAlpha:0.6f];
-        [selectAwayTeam setEnabled:FALSE];
-        [selectHomeTeam setEnabled:FALSE];
-        [selectLeague setEnabled:FALSE];
-    }
-    
 }
+
+-(void)masterEncoderStatusObserver:(Encoder*)master
+{
+    EncoderStatus status    = master.status;
+    NSString * stringStatus = master.statusAsString;
+    switch (status) {
+            
+        case ENCODER_STATUS_INIT :
+            NSLog(@"ENCODER_STATUS_INIT");
+        case ENCODER_STATUS_UNKNOWN :
+            NSLog(@"ENCODER_STATUS_UNKNOWN");
+        case ENCODER_STATUS_CAM_LOADING :
+            NSLog(@"ENCODER_STATUS_CAM_LOADING");
+            [self eventControlsState:EventButtonControlStatesDisabled];
+            break;
+        case ENCODER_STATUS_READY :
+            NSLog(@"ENCODER_STATUS_READY");
+            [self eventControlsState:EventButtonControlStatesReady];
+            break;
+        case ENCODER_STATUS_LIVE :
+            NSLog(@"ENCODER_STATUS_LIVE");
+            [self eventControlsState:EventButtonControlStatesLive];
+            break;
+        case ENCODER_STATUS_SHUTDOWN :
+            NSLog(@"ENCODER_STATUS_SHUTDOWN");
+            [self eventControlsState:EventButtonControlStatesDisabled];
+            break;
+        case ENCODER_STATUS_PAUSED :
+            NSLog(@"ENCODER_STATUS_PAUSED");
+            [self eventControlsState:EventButtonControlStatesPause];
+            break;
+        case ENCODER_STATUS_STOP :
+            NSLog(@"ENCODER_STATUS_STOPPING");
+            [self eventControlsState:EventButtonControlStatesStopping];
+            break;
+        case ENCODER_STATUS_START :
+            NSLog(@"ENCODER_STATUS_START");
+            [self eventControlsState:EventButtonControlStatesStart];
+            break;
+        case ENCODER_STATUS_NOCAM :
+            NSLog(@"ENCODER_STATUS_NOCAM");
+            [self eventControlsState:EventButtonControlStatesDisabled];
+            break;
+        case ENCODER_STATUS_LOCAL :
+            NSLog(@"ENCODER_STATUS_LOCAL");
+            [self eventControlsState:EventButtonControlStatesDisabled];
+            break;
+            
+        default:
+            break;
+    }
+    
+    
+    [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
+}
+
+
+
+#pragma mark -
+
+
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -409,25 +370,49 @@ SVSignalStatus signalStatus;
         globals.ENCODER_SELECTED_LEAGUE = @"League";
     }
     
-    [self updateViews];
+
     [self setButtonImagesAndLabels];
     
     signalTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateSignalStrength) userInfo:nil repeats:YES];
     [signalTimer fire];
+    
+    // block
+    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
+        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+        NSArray         * keys          = [input allKeys];
+        for (NSString * item in keys) {
+            NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
+            [collection addObject:nam];
+        }
+        return [collection copy];
+    };
+    // block end
+    
+    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    leagueNames = grabNames(encoderManager.masterEncoder.league);
+    
 }
 
+
+/*
+    Deselects all buttons and stops timer
+ 
+ */
 -(void)viewWillDisappear:(BOOL)animated
 {
     [signalTimer invalidate];
-    //NSLog(@"invalidate");
     signalTimer = nil;
+    
+    selectHomeTeam.selected     = NO;
+    selectAwayTeam.selected     = NO;
+    selectLeague.selected       = NO;
+    
 }
 
 - (void)didReceiveMemoryWarning
 {
-    globals.DID_RECEIVE_MEMORY_WARNING = TRUE;
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self];
 }
 
 -(void)updateSignalStrength {
@@ -475,43 +460,52 @@ SVSignalStatus signalStatus;
 -(void)pickHome:(id)sender
 {
     UIButton *popButton = (UIButton*)sender;
-    popButton.selected = YES;
-    if(!globals.HOME_POP)
-    {
-        globals.HOME_POP = [[UIPopoverController alloc]initWithContentViewController:teamPicker];
-    }
-    [teamPicker viewWillAppear:TRUE];
-    [globals.HOME_POP setDelegate:self];
-    globals.HOME_POP.contentViewController.view.tag=0;
-    [globals.HOME_POP presentPopoverFromRect:popButton.frame inView:selectHomeContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    
+    popButton.selected  = YES;
+
+    [homeTeamPick populateWith:teamNames];
+    [homeTeamPick addOnCompletionBlock:^(NSString *pick) {
+        [popButton setTitle:pick forState:UIControlStateNormal];
+        popButton.selected = NO;
+    }];
+
+    [homeTeamPick presentPopoverFromRect:popButton.frame inView:selectHomeContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
 -(void)pickAway:(id)sender
 {
     UIButton *popButton = (UIButton*)sender;
     popButton.selected = YES;
-    if(!globals.AWAY_POP)
-    {
-        globals.AWAY_POP = [[UIPopoverController alloc]initWithContentViewController:teamPicker];
-    }
-    [teamPicker viewWillAppear:TRUE];
-    [globals.AWAY_POP setDelegate:self];
-    globals.AWAY_POP.contentViewController.view.tag=1;
-    [globals.AWAY_POP presentPopoverFromRect:popButton.frame inView:selectAwayContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    [visitTeamPick populateWith:teamNames];
+    [visitTeamPick addOnCompletionBlock:^(NSString *pick) {
+        [popButton setTitle:pick forState:UIControlStateNormal];
+        popButton.selected = NO;
+    }];
+    
+    [visitTeamPick presentPopoverFromRect:popButton.frame inView:selectAwayContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    
 }
 
 -(void)pickLeague:(id)sender
 {
     UIButton *popButton = (UIButton*)sender;
     popButton.selected = YES;
-    if(!globals.LEAGUE_POP)
-    {
-        globals.LEAGUE_POP = [[UIPopoverController alloc]initWithContentViewController:leaguePicker];
-    }
-    [leaguePicker viewWillAppear:TRUE];
-    [globals.LEAGUE_POP setDelegate:self];
-    [globals.LEAGUE_POP presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+//    if(!globals.LEAGUE_POP)
+//    {
+//        globals.LEAGUE_POP = [[UIPopoverController alloc]initWithContentViewController:leaguePicker];
+//    }
+//    [leaguePicker viewWillAppear:TRUE];
+//    [globals.LEAGUE_POP setDelegate:self];
+//    [globals.LEAGUE_POP presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    
+    [LeaguePick populateWith:leagueNames];
+    [LeaguePick addOnCompletionBlock:^(NSString *pick) {
+        [popButton setTitle:pick forState:UIControlStateNormal];
+        popButton.selected = NO;
+    }];
+    
+    [LeaguePick presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    
+    
 }
 
 -(void)dismissTeamPicker
@@ -546,188 +540,11 @@ SVSignalStatus signalStatus;
     }
 }
 
-- (void)updateUserInteraction
-{
-    if (!globals.HAS_MIN) {
-        //disabel team and league selection
-        [selectHomeTeam setAlpha:0.6f];
-        [selectAwayTeam setAlpha:0.6f];
-        [selectLeague setAlpha:0.6f];
-        
-        [selectHomeTeam setUserInteractionEnabled:FALSE];
-        [selectAwayTeam setUserInteractionEnabled:FALSE];
-        [selectLeague setUserInteractionEnabled:FALSE];
-        
-        //show start button but disable it
-        [startButton setEnabled:NO];
-        [startButton setAlpha:0.6f];
-        [startButton setHidden:FALSE];
-        //show shutdown button but disable it
-        [shutdownButton setEnabled:NO];
-        [shutdownButton setAlpha:0.6f];
-        [shutdownButton setHidden:FALSE];
-        
-        //hide stop,pause and resume buttons
-        [stopButton setHidden:TRUE];
-        [pauseButton setHidden:TRUE];
-        [resumeButton setHidden:TRUE];
-        
-        
-    }else{
-        
-        //update teams and league information
-        [selectAwayTeam setTitle:globals.ENCODER_SELECTED_AWAY_TEAM forState:UIControlStateNormal];
-        [selectHomeTeam setTitle:globals.ENCODER_SELECTED_HOME_TEAM forState:UIControlStateNormal];
-        [selectLeague setTitle:globals.ENCODER_SELECTED_LEAGUE forState:UIControlStateNormal];
-        
-        
-        //use global camera status to set which buttons are on and which are off
-        if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateStarting]) {
-            //waiting for the live event to start
-            
-            //show stop button and enable it
-            [stopButton setHidden:FALSE];
-            [stopButton setEnabled:TRUE];
-            
-            //show the start button but disable it
-            [startButton setHidden:FALSE];
-            [startButton setAlpha:0.6];
-            [startButton setEnabled:FALSE];
-            
-            //hide pause,resume and shutdown button
-            [resumeButton setHidden:TRUE];
-            [shutdownButton setHidden:TRUE];
-            [pauseButton setHidden:TRUE];
-            
-            //disable teams and league selection
-            [selectHomeTeam setAlpha:0.6f];
-            [selectAwayTeam setAlpha:0.6f];
-            [selectLeague setAlpha:0.6f];
-            
-            [selectAwayTeam setEnabled:FALSE];
-            [selectHomeTeam setEnabled:FALSE];
-            [selectLeague setEnabled:FALSE];
-            
-            
-        }else if([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]) //live camera encoding
-        {
-            //show the stop button and enable it
-            [stopButton setHidden:FALSE];
-            [stopButton setEnabled:TRUE];
-            
-            //show pause button and enable it
-            [pauseButton setHidden:FALSE];
-            [pauseButton setEnabled:TRUE];
-            
-            //hide the start, resume and shutdown buttons
-            [startButton setHidden:TRUE];
-            [resumeButton setHidden:TRUE];
-            [shutdownButton setHidden:TRUE];
-            
-            
-            //disable teams and league selection
-            
-            [selectHomeTeam setAlpha:0.6f];
-            [selectAwayTeam setAlpha:0.6f];
-            [selectLeague setAlpha:0.6f];
-            
-            [selectAwayTeam setEnabled:FALSE];
-            [selectHomeTeam setEnabled:FALSE];
-            [selectLeague setEnabled:FALSE];
-           
-        }else if([globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) //encoder is paused
-        {
-            //show resume button and enable it
-            [resumeButton setHidden:FALSE];
-            [resumeButton setEnabled:TRUE];
-            
-            //show stop button and enable it
-            [stopButton setHidden:FALSE];
-            [stopButton setEnabled:TRUE];
-            
-            //hide pause,start and shutdown buttons
-            [pauseButton setHidden:TRUE];
-            [startButton setHidden:TRUE];
-            [shutdownButton setHidden:TRUE];
-            
-            //disable teams and league selection
-            [selectHomeTeam setAlpha:0.6f];
-            [selectAwayTeam setAlpha:0.6f];
-            [selectLeague setAlpha:0.6f];
-            
-            [selectAwayTeam setEnabled:FALSE];
-            [selectHomeTeam setEnabled:FALSE];
-            [selectLeague setEnabled:FALSE];
-            
-           
-        }else if([globals.CURRENT_ENC_STATUS isEqualToString:encStateReady] || [globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped]){ //encoder is not on or stopped
-            
-            //show start button and enable it
-            [startButton setHidden:FALSE];
-            [startButton setAlpha:1.0];
-            [startButton setEnabled:TRUE];
-            
-            //show shutdown button and enable it
-            [shutdownButton setHidden:FALSE];
-            [shutdownButton setAlpha:1.0];
-            [shutdownButton setEnabled:TRUE];
-            
-            //hide resume,stop and pause buttons
-            [resumeButton setHidden:TRUE];
-            [stopButton setHidden:TRUE];
-            [pauseButton setHidden:TRUE];
-            
-            //Enable dropdowns
-            [selectHomeTeam setAlpha:1.0];
-            [selectAwayTeam setAlpha:1.0];
-            [selectLeague setAlpha:1.0];
-            [selectAwayTeam setEnabled:TRUE];
-            [selectHomeTeam setEnabled:TRUE];
-            [selectLeague setEnabled:TRUE];
-            
-            //[firstEncLabel setText:@"Start"];
-            //[secondEncLabel setText:@"Shutdown"];
-        }else{
-            
-            //show start button and disable it
-            [startButton setHidden:FALSE];
-            [startButton setAlpha:0.6];
-            [startButton setEnabled:FALSE];
-            
-            //show shut down button
-            [shutdownButton setHidden:FALSE];
-            //if the current live event is still stopping, disable the shutdown button
-            if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateStopping]) {
-                //disable shutdown button
-                [shutdownButton setAlpha:0.6];
-                [shutdownButton setEnabled:FALSE];
-            }else{
-                //enable shutdown button
-                [shutdownButton setAlpha:1.0];
-                [shutdownButton setEnabled:TRUE];
-            }
-            
-            //hide resume, stop and pause buttons
-            [resumeButton setHidden:TRUE];
-            [stopButton setHidden:TRUE];
-            [pauseButton setHidden:TRUE];
-            
-            //disable teams and league selection
-            [selectHomeTeam setAlpha:0.6f];
-            [selectAwayTeam setAlpha:0.6f];
-            [selectLeague setAlpha:0.6f];
-            [selectAwayTeam setEnabled:FALSE];
-            [selectHomeTeam setEnabled:FALSE];
-            [selectLeague setEnabled:FALSE];
-        }
-    
-    }
-
-}
 
 -(void)initialiseLayout
 {
     selectHomeTeam = [DropdownButton buttonWithType:UIButtonTypeCustom];
+    
     [selectHomeTeam setFrame:CGRectMake(0.0f, 0.0f, selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
     selectHomeTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectHomeTeam setTitle:globals.ENCODER_SELECTED_HOME_TEAM forState:UIControlStateNormal];
@@ -736,6 +553,7 @@ SVSignalStatus signalStatus;
     [selectHomeContainer addSubview:selectHomeTeam];
     
     selectAwayTeam = [DropdownButton buttonWithType:UIButtonTypeCustom];
+    
     [selectAwayTeam setFrame:CGRectMake(0.0f, 0.0f, selectAwayContainer.bounds.size.width, selectAwayContainer.bounds.size.height)];
     selectAwayTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectAwayTeam setTitle:globals.ENCODER_SELECTED_AWAY_TEAM forState:UIControlStateNormal];
@@ -744,6 +562,7 @@ SVSignalStatus signalStatus;
     [selectAwayContainer addSubview:selectAwayTeam];
     
     selectLeague = [DropdownButton buttonWithType:UIButtonTypeCustom];
+    
     [selectLeague setFrame:CGRectMake(0.0f, 0.0f, selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
     selectLeague.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectLeague setTitle:globals.ENCODER_SELECTED_LEAGUE forState:UIControlStateNormal];
@@ -752,21 +571,7 @@ SVSignalStatus signalStatus;
     [selectLeagueContainer addSubview:selectLeague];
     
     startButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
-    //    logoutButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
-    //    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
-    //    logoutButton.frame = CGRectMake(self.view.frame.size.width - 90.0f, userLabel.frame.origin.y, 75.0f, 30.0f);
-    //    logoutButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-    //    [logoutButton addTarget:self action:@selector(appLogOut:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.view addSubview:logoutButton];
 
-//    UIButton* sbutton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [sbutton setTitle:@"" forState:UIControlStateNormal];
-//    [sbutton setFrame:CGRectZero];
-//    
-//    sbutton.accessibilityLabel = @"Stop";
-//    [sbutton accessibilityActivate];
-//    [startButton addSubview:sbutton];
-    
     [startButton setTitle:@"Start" forState:UIControlStateNormal];
     [startButton setTitleColor:[UIColor colorWithRed:57.0f/255.0f green:181.0f/255.0f blue:74.0f/255.0f alpha:1.0f] forState:UIControlStateNormal];
     [startButton setBackgroundImage:[UIImage imageNamed:@"GreenSettingsButton"] forState:UIControlStateNormal];
@@ -841,20 +646,23 @@ SVSignalStatus signalStatus;
     [encHomeButton setUserInteractionEnabled:YES];
     
     //encoder state label
-    encStateLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(encHomeButton.frame), 10, encoderHomeLabel.frame.size.width - encHomeButton.frame.size.width , encoderHomeLabel.frame.size.height)];
+    encStateLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(encHomeButton.frame), 0, encoderHomeLabel.frame.size.width - encHomeButton.frame.size.width , encoderHomeLabel.frame.size.height)];
     [encoderHomeLabel addSubview:encStateLabel];
 
     [doNotShowContainer setHidden:TRUE];
     [self updateForStatus];
+    
+    if (masterEncoder){
+        [self masterEncoderStatusObserver:masterEncoder];
+    } else {
+        [self eventControlsState:EventButtonControlStatesDisabled];
+    }
 }
 
 - (void)updateForStatus
 {
     [self setButtonImagesAndLabels];
-    [self updateUserInteraction];
-    
-    //NSLog(@"#######################setttings globals.CURRENT_ENC_STATUS %@",globals.CURRENT_ENC_STATUS);
-    //[self updateEncStateSpinnerView];
+
 }
 
 
@@ -1037,12 +845,12 @@ SVSignalStatus signalStatus;
 -(void)setButtonImagesAndLabels
 {
     [userName setText:[globals.ACCOUNT_INFO objectForKey:@"emailAddress"]];
-    //encoderHomeText = [[UITextView alloc] initWithFrame: encoderHomeLabel.bounds];
+
     
     if (!globals.HAS_MIN) {
-        encoderHomeText.text = @"Encoder is not available.";
+//        encoderHomeText.text = @"Encoder is not available.";
         //[encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
-        [encStateLabel setText:@""];
+//        [encStateLabel setText:@""];
         [encHomeButton removeFromSuperview];
         [encHomeButton setUserInteractionEnabled:NO];
         [encoderHomeLabel addSubview:encoderHomeText];
@@ -1058,10 +866,10 @@ SVSignalStatus signalStatus;
             msg = globals.CURRENT_ENC_STATUS;
         }
         //update encoder state label
-        if(![globals.CURRENT_ENC_STATUS isEqualToString:@""]){
-            [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",msg]];
-        }
-        
+//        if(![globals.CURRENT_ENC_STATUS isEqualToString:@""]){
+//            [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",msg]];
+//        }
+//        
         [encoderHomeText removeFromSuperview];
         [encoderHomeLabel addSubview:encHomeButton];
         [encHomeButton setUserInteractionEnabled:YES];
@@ -1109,7 +917,8 @@ SVSignalStatus signalStatus;
     }
     
     NSDictionary *accountInfo = [[NSDictionary alloc]initWithContentsOfFile:globals.ACCOUNT_PLIST_PATH];
-    NSString *emailAddress = [self stringToSha1:[accountInfo objectForKey:@"emailAddress"] ];
+    
+    NSString *emailAddress = [Utility stringToSha1:[accountInfo objectForKey:@"emailAddress"]];
     NSString *accountInfoString = [NSString stringWithFormat:@"v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",[accountInfo objectForKey:@"authorization"],emailAddress,[accountInfo objectForKey:@"password"],[accountInfo objectForKey:@"tagColour"],[accountInfo objectForKey:@"customer"]];
     NSData *accountInfoData = [accountInfoString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     NSString *postDataLength = [NSString stringWithFormat:@"%d",[accountInfoData length]];
@@ -1149,40 +958,19 @@ SVSignalStatus signalStatus;
     }
 }
 
-- (NSString *)stringToSha1:(NSString *)hashkey{
-    
-    // Using UTF8Encoding
-    const char *s = [hashkey cStringUsingEncoding:NSUTF8StringEncoding];
-    NSData *keyData = [NSData dataWithBytes:s length:strlen(s)];
-    
-    // This is the destination
-    uint8_t digest[CC_SHA1_DIGEST_LENGTH] = {0};
-    // This one function does an unkeyed SHA1 hash of your hash data
-    CC_SHA1(keyData.bytes, keyData.length, digest);
-    
-    // Now convert to NSData structure to make it usable again
-    NSData *out = [NSData dataWithBytes:digest
-                                 length:CC_SHA1_DIGEST_LENGTH];
-    // description converts to hex but puts <> around it and spaces every 4bytes
-    NSString *hash = [out description];
-    hash = [hash stringByReplacingOccurrencesOfString:@" " withString:@""];
-    hash = [hash stringByReplacingOccurrencesOfString:@"<" withString:@""];
-    hash = [hash stringByReplacingOccurrencesOfString:@">" withString:@""];
-    // hash is now a string with just the 40char hash value in it
-    
-    return hash;
-}
-
-
 - (void)startEnc:(id)sender
 {
+    
+    NSString * buttonTitle = ((UIButton*)sender).titleLabel.text;
+    
     NSString *homeTeam=[selectHomeTeam.titleLabel.text isEqualToString:@"Home Team"] ? nil : selectHomeTeam.titleLabel.text;
     NSString *awayTeam=[selectAwayTeam.titleLabel.text isEqualToString:@"Away Team"] ? nil : selectAwayTeam.titleLabel.text;
     NSString *league=[selectLeague.titleLabel.text isEqualToString:@"League"] ? nil : selectLeague.titleLabel.text;
     
     if(!(homeTeam && awayTeam && league))//only allow user to start enc if they have selected all three, home team, away team, league
     {
-        if([globals.CURRENT_ENC_STATUS isEqualToString:encStateReady] || [globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped])
+        if (masterEncoder.status == ENCODER_STATUS_READY || masterEncoder.status == ENCODER_STATUS_STOP)
+//        if([globals.CURRENT_ENC_STATUS isEqualToString:encStateReady] || [globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped])
         {
             CustomAlertView *alert = [[CustomAlertView alloc]
                                   initWithTitle: @"myplayXplay"
@@ -1195,87 +983,111 @@ SVSignalStatus signalStatus;
             return;
         }
     }
-    [spinnerView removeSpinner];
-    spinnerView = nil;
-    spinnerView = [SpinnerView loadSpinnerIntoView:[[[UIApplication sharedApplication]windows]objectAtIndex:0]];
-    spinnerTimer=[NSTimer scheduledTimerWithTimeInterval:1
-                                                  target:self
-                                                selector:@selector(encSpinnerTimerCallback)
-                                                userInfo:nil repeats:YES];
-    NSString *url ;
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime", nil];
-    
-    NSError *error;
-    
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:summarydict options:0 error:&error];
-    NSString *jsonString;
-    if (!jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+    if ([buttonTitle isEqualToString:@"Start"]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"start"  : [NSNumber numberWithBool:YES],
+                                                                                                          @"homeTeam"   : homeTeam,
+                                                                                                          @"awayTeam"   : awayTeam,
+                                                                                                          @"league" : league
+                                                                                                          }];
+        [self eventControlsState:EventButtonControlStatesStart];
+    } else { // resume video
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"resume"  : [NSNumber numberWithBool:YES]}];
     }
     
-    if(!([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || [globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]))
-    {
-        NSString *unencoded = [NSString stringWithFormat:@"%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",globals.URL,homeTeam,awayTeam,league,[NSString stringWithFormat:@"%f",currentSystemTime],@"high"];
-        url = [unencoded stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    else if([globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused])
-    {
-        url = [NSString stringWithFormat:@"%@/min/ajax/encresume/%@",globals.URL,jsonString];
-    }
     
-    //NSLog(@"################################start or resume encoder: %@",url);
-    //callback method and parent view controller reference for the appqueue
-    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(startEncCallback:)],self,@"20", nil];
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller",@"timeout", nil];
-    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    [globals.APP_QUEUE enqueue:url dict:instObj];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
+    
+//    return;
+    
+//    [spinnerView removeSpinner];
+//    spinnerView = nil;
+//    spinnerView = [SpinnerView loadSpinnerIntoView:[[[UIApplication sharedApplication]windows]objectAtIndex:0]];
+//    spinnerTimer=[NSTimer scheduledTimerWithTimeInterval:1
+//                                                  target:self
+//                                                selector:@selector(encSpinnerTimerCallback)
+//                                                userInfo:nil repeats:YES];
+//    NSString *url ;
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime", nil];
+//    
+//    NSError *error;
+//    
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:summarydict options:0 error:&error];
+//    NSString *jsonString;
+//    if (!jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    
+//    if(!([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || [globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]))
+//    {
+//        NSString *unencoded = [NSString stringWithFormat:@"%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",globals.URL,homeTeam,awayTeam,league,[NSString stringWithFormat:@"%f",currentSystemTime],@"high"];
+//        url = [unencoded stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    else if([globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused])
+//    {
+//        url = [NSString stringWithFormat:@"%@/min/ajax/encresume/%@",globals.URL,jsonString];
+//    }
+//    return;
+//    //NSLog(@"################################start or resume encoder: %@",url);
+//    //callback method and parent view controller reference for the appqueue
+//    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(startEncCallback:)],self,@"20", nil];
+//    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller",@"timeout", nil];
+//    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    [globals.APP_QUEUE enqueue:url dict:instObj];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
 }
 
 - (void)pauseEnc:(id)sender {
     
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime", nil];
     
-    NSError *error;
-    
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:summarydict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    
-    [spinnerView removeSpinner];
-    spinnerView = nil;
-    spinnerView = [SpinnerView loadSpinnerIntoView:[[[UIApplication sharedApplication]windows]objectAtIndex:0 ]];
-    spinnerTimer=[NSTimer scheduledTimerWithTimeInterval:1
-                                                  target:self
-                                                selector:@selector(encSpinnerTimerCallback)
-                                                userInfo:nil repeats:YES];
-    
-    NSString  *url = [NSString stringWithFormat:@"%@/min/ajax/encpause/%@",globals.URL,jsonString];
-    
-    
-    //NSLog(@"################################ Pause encoder: %@",url);
-    //callback method and parent view controller reference for the appqueue
-    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(encCallback:)],self, nil];
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    [globals.APP_QUEUE enqueue:url dict:instObj];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
+//    
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime", nil];
+//    
+//    NSError *error;
+//    
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:summarydict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    
+//    [spinnerView removeSpinner];
+//    spinnerView = nil;
+//    spinnerView = [SpinnerView loadSpinnerIntoView:[[[UIApplication sharedApplication]windows]objectAtIndex:0 ]];
+//    spinnerTimer=[NSTimer scheduledTimerWithTimeInterval:1
+//                                                  target:self
+//                                                selector:@selector(encSpinnerTimerCallback)
+//                                                userInfo:nil repeats:YES];
+//    
+//    NSString  *url = [NSString stringWithFormat:@"%@/min/ajax/encpause/%@",globals.URL,jsonString];
+//    
+//    
+//    //NSLog(@"################################ Pause encoder: %@",url);
+//    //callback method and parent view controller reference for the appqueue
+//    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(encCallback:)],self, nil];
+//    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
+//    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    [globals.APP_QUEUE enqueue:url dict:instObj];
     
 }
 
 - (void)stopEnc:(id)sender {
     
+    
+    // Richard
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop":[NSNumber numberWithBool:YES] }];
+
+    return;
     if ([globals.EVENT_NAME isEqualToString:@"live"]) {
         [uController stopSyncMeTimer];
     }
@@ -1315,7 +1127,7 @@ SVSignalStatus signalStatus;
     NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller",@"timeout",nil];
     NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     
-    [globals.APP_QUEUE enqueue:url dict:instObj];
+  //  [globals.APP_QUEUE enqueue:url dict:instObj];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
 }
 
@@ -1422,6 +1234,16 @@ SVSignalStatus signalStatus;
     }
     
 }
+
+
+
+//Richard
+-(void)liveEventStarted:(NSNotification*)note
+{
+
+
+}
+
 
 -(void)startEncCallback:(id)json
 {
@@ -1575,5 +1397,47 @@ SVSignalStatus signalStatus;
     //globals.WHITE_BACKGROUND.transform = CGAffineTransformMakeRotation(M_PI/2.0);
     [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:globals.WHITE_BACKGROUND];
 }
+
+
+-(void)eventControlsState:(EventButtonControlStates)state
+{
+
+    [startButton setHidden:      (state & START_HIDDEN)!=0];
+    [startButton setEnabled:     (state & START_ENABLE)!=0];
+    [startButton setAlpha:       ( state & START_ENABLE )?1.0f:0.6f];
+    
+    [stopButton setHidden:       (state & STOP_HIDDEN)!=0];
+    [stopButton setEnabled:      (state & STOP_ENABLE)!=0];
+    [stopButton setAlpha:        (state & STOP_ENABLE)?1.0f:0.6f];
+    
+    [pauseButton setHidden:      (state & PAUSE_HIDDEN)!=0];
+    [pauseButton setEnabled:     (state & PAUSE_ENABLE)!=0];
+    [pauseButton setAlpha:       (state & PAUSE_ENABLE)?1.0f:0.6f];
+    
+    [resumeButton setHidden:     (state & RESUME_HIDDEN)!=0];
+    [resumeButton setEnabled:    (state & RESUME_ENABLE)!=0];
+    [resumeButton setAlpha:      (state & RESUME_ENABLE)?1.0f:0.6f];
+    
+    [shutdownButton setHidden:   (state & SHUTDOWN_HIDDEN)!=0];
+    [shutdownButton setEnabled:  (state & SHUTDOWN_ENABLE)!=0];
+    [shutdownButton setAlpha:    (state & SHUTDOWN_ENABLE)?1.0f:0.6f];
+    
+    [selectHomeTeam setAlpha:   (state & HOME_ENABLE)?1.0f:0.6f];
+    [selectHomeTeam setUserInteractionEnabled:(state & HOME_ENABLE)!=0];//
+    
+    [selectAwayTeam setAlpha:   (state & AWAY_ENABLE)?1.0f:0.6f];
+    [selectAwayTeam setUserInteractionEnabled:(state & AWAY_ENABLE)!=0];//
+    
+    [selectLeague setAlpha:     (state & LEAGUE_ENABLE)?1.0f:0.6f];;
+    [selectLeague setUserInteractionEnabled:(state & LEAGUE_ENABLE)!=0];//
+
+
+    //    globals.ENCODER_SELECTED_HOME_TEAM = @"Home Team";
+//    globals.ENCODER_SELECTED_AWAY_TEAM = @"Away Team";
+//    globals.ENCODER_SELECTED_LEAGUE = @"League";
+    
+    
+}
+
 
 @end

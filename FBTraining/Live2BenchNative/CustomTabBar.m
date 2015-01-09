@@ -130,7 +130,7 @@ static NSMutableArray *tabButtonItems=nil;
     
   
     
-    LogoViewController          *logoVC     = [[LogoViewController alloc] init];
+    LogoViewController          *logoVC     = [[LogoViewController alloc] initWithAppDelegate:appDel];
     CalendarViewController      *calendarVC = [[CalendarViewController alloc] initWithAppDelegate:appDel];
     Live2BenchViewController    *liveVC     = [[Live2BenchViewController alloc] initWithAppDelegate:appDel];
     ClipViewController          *clipVC     = [[ClipViewController alloc] init];
@@ -782,7 +782,7 @@ static NSMutableArray *tabButtonItems=nil;
             if (![CustomAlertView alertMessageExists:message]) {
                 
                 CustomAlertView *noWifiAlert = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                [noWifiAlert show];
+//                [noWifiAlert show];
             }
 
             
@@ -1176,6 +1176,7 @@ static NSMutableArray *tabButtonItems=nil;
 }
 //---browse for services---
 -(void) browseServices {
+    return;
     ////////NSLog(@"browseServices");
     services = [[NSMutableArray alloc]init];
     serviceBrowser = [NSNetServiceBrowser new] ;

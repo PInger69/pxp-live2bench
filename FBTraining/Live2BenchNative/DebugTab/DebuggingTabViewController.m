@@ -69,50 +69,43 @@
 
 - (void)viewDidLoad
 {
+    // buid video player
     videoPlayer     = [[VideoPlayer alloc]init];
     [videoPlayer initializeVideoPlayerWithFrame:CGRectMake(0, 60, 800, 600)];
     [self.view addSubview:videoPlayer.view];
     
     
+    // Build pip
     pip             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
-    pip.isDragAble  =YES;
-    pip.hidden = YES;
+    pip.isDragAble  = YES;
+    pip.hidden      = YES;
     pip.dragBounds  = videoPlayer.playerLayer.frame;
 
-   // [self.view addSubview:pip];
    [videoPlayer.view addSubview:pip];
     
-    feedSwitch = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 80, 100, 100) encoderManager:EM];
-//    [feedSwitch buildButtonsWithData:@{
-//                                       @"F1":[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_00.m3u8" quality:0],
-//                                       @"F2":[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]
-//                                       }];
     
+    feedSwitch = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 80, 100, 100) encoderManager:EM];
+
    [videoPlayer.view addSubview:feedSwitch];
+    
+    // build pip controller
     pipController = [[PipViewController alloc]initWithVideoPlayer:videoPlayer f:feedSwitch encoderManager:EM];
     [pipController addPip:pip];
     videoPlayer.context = @"debug";
 
 
+    // build full screen
     fullScreen = [[L2BFullScreenViewController alloc]initWithVideoPlayer:videoPlayer];
     fullScreen.context = @"debug";
     [self.view addSubview:fullScreen.view];
 
 
-    [videoPlayer playFeed:[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]];
+  //  [videoPlayer playFeed:[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]];
     [super viewDidLoad];
     [pipController viewDidLoad];
     
-    
-    
-    
-//    
-//    pip2             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
-//    pip2.isDragAble  =YES;
-//    pip2.dragBounds  = videoPlayer.playerLayer.frame;
-//     [self.view addSubview:pip2];
-//
-//    [pip2 playWithFeed:[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]];
+
+
 }
 
 

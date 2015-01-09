@@ -1439,6 +1439,7 @@ int seekAttempts = 0;
 
 -(void)playFeed:(Feed*)feed
 {
+    if (!feed)return;
     self.feed = feed;
 
     
@@ -1450,7 +1451,7 @@ int seekAttempts = 0;
     }
     
     
-    playerItem  = [[AVPlayerItem alloc] initWithURL:[feed path]];
+    playerItem  = [[AVPlayerItem alloc] initWithURL:[self.feed path]];
     avPlayer    = [AVPlayer playerWithPlayerItem:playerItem];
     
 

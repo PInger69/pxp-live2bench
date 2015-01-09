@@ -8,13 +8,11 @@
 
 #import "LogoViewController.h"
 #import "UserSettings.h"
-//#import "GDContentsNavigationController.h"
-//#import "GDContentsViewController.h"
 #import "DPBContentNavigationController.h"
 #import "DPBContentViewController.h"
 #import "CustomAlertView.h"
 #import "ScreenController.h"
-
+#import "EncoderManager.h"
 #define LABEL_X              22
 #define LABEL_Y             100
 #define LABEL_WIDTH         300
@@ -52,17 +50,34 @@ UIToolbar           * welcomeToolBar;
 UIView              * tabContentView;
 NSDictionary        * tabAttributes;
 NSDictionary        * tabSelectAttributes;
-ScreenController * screenTest;
+ScreenController    * screenTest;
+EncoderManager      * encoderManager;
 @synthesize mailController;
-- (id)init
+
+
+//// Depricated
+//- (id)init
+//{
+//    self = [super init];
+//    if (self) {
+//        // Custom initialization
+//        encoderManager = _appDel.encoderManager;
+//        [self setMainSectionTab:NSLocalizedString(@"Welcome",nil)  imageName:@"logoTab"];
+//    }
+//    return self;
+//}
+//
+
+-(id)initWithAppDelegate:(AppDelegate *)appDel
 {
-    self = [super init];
+    self = [super initWithAppDelegate:appDel];
     if (self) {
-        // Custom initialization
-      
+        encoderManager = _appDel.encoderManager;
         [self setMainSectionTab:NSLocalizedString(@"Welcome",nil)  imageName:@"logoTab"];
+         settingsViewController = [[SettingsViewController alloc]initWithEncoderManager:encoderManager];
     }
     return self;
+
 }
 
 - (void)viewDidLoad
@@ -88,7 +103,9 @@ ScreenController * screenTest;
     [globals.VIDEO_PLAYER_LIST_VIEW pause];
     [globals.VIDEO_PLAYER_LIVE2BENCH pause];
 
+ 
 }
+
 
 - (void)setupView{
     //Commented out bits (0-3 instead of 1-3) are for when we have 3 images to display
@@ -396,6 +413,7 @@ ScreenController * screenTest;
         self.tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
         self.tapBehindGesture.numberOfTapsRequired = 1;
         self.tapBehindGesture.cancelsTouchesInView = NO;
+        self.tapBehindGesture.delegate = self;
     }
     
     if (!blur){
@@ -407,21 +425,30 @@ ScreenController * screenTest;
     [self.view.window addGestureRecognizer:self.tapBehindGesture];
     //if the settings view controller already initialized,DONNOT reinitialize it
     if (!settingsViewController) {
-        settingsViewController = [[SettingsViewController alloc]init];
+        settingsViewController = [[SettingsViewController alloc]initWithEncoderManager:encoderManager];
     }
     [settingsTab setImage:[UIImage imageNamed:@"settingsButtonSelect"]];
     [self.tabBarController presentViewController:settingsViewController animated:YES completion:nil];
-    
 }
 
+-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    return YES;
+}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    return YES;
+}
 
 -(void)tapBehindDetected:(UITapGestureRecognizer*)sender
 {
+
     if (sender.state == UIGestureRecognizerStateEnded)
     {
         CGPoint location = [sender locationInView:nil];
-        if (![self.presentedViewController.view pointInside:[self.presentedViewController.view convertPoint:location fromView:self.view.window] withEvent:nil])
+        if (![self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil])
         {
             if (self.presentedViewController && ![globals.HOME_POP isPopoverVisible] && ![globals.AWAY_POP isPopoverVisible] && ![globals.LEAGUE_POP isPopoverVisible]){
                 [self hideSettings];

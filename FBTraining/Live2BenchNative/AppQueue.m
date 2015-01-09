@@ -209,8 +209,7 @@ NSDate *startRequestTime;
                 NoServerConnectionErrorCount++;
                 if (NoServerConnectionErrorCount > 2) {
                     globals.HAS_MIN = NO;
-                    //send notification to settings view controller to update the encoder's state
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"updatedEncoderStatus" object:nil];
+
                 }
             }
         }

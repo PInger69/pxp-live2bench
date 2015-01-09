@@ -104,9 +104,8 @@
 -(void)prepareWithFeed:(Feed*)aFeed
 {
     _feed = aFeed;
-    
     @try {
-        
+
         if (avPlayer)[avPlayer removeTimeObserver:self];
     }
     @catch (NSException * __unused exception) {}

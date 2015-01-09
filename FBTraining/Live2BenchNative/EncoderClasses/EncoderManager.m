@@ -217,7 +217,7 @@
     EncoderDataSync             * encoderSync;
    
     LocalEncoder                * _localEncoder;
-    Encoder                     * _masterEncoder;
+//    Encoder                     * _masterEncoder;
     CloudEncoder                * _cloudEncoder;
     id                          _userDataObserver;
     id                          _masterLostObserver;
@@ -236,6 +236,8 @@
 @synthesize openDurationTags        = _openDurationTags;
 @synthesize liveEventName           = _liveEventName;
 
+@synthesize masterEncoder           = _masterEncoder;
+
 #pragma mark - Encoder Manager Methods
 
 -(id)initWithID:(NSString*)custID  localDocPath:(NSString*)aLocalDocsPath
@@ -250,16 +252,19 @@
         dictOfEncoders          = [[NSMutableDictionary alloc]init];
         uController             = [[UtilitiesController alloc]init];
         _openDurationTags       = [[NSMutableDictionary alloc]init];
-        
+        _liveEventName          = @"None";
+
         // Browse for services
+        // Starts Bonjour search for pxp servers
         services                = [[NSMutableArray alloc]init];
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
         [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
         
+        
 
         arrayOfTagSets          = [[NSMutableArray alloc]init];
-        _feeds                  = [[NSMutableArray alloc]init];
+        _feeds                  = [[NSMutableDictionary alloc]init];
         
         _cloudEncoder           = [[CloudEncoder alloc]initWithIP:[uController getIPAddress]];
         [_cloudEncoder test];
@@ -280,10 +285,12 @@
         
         _masterLostObserver     = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;
+
         }];
         
         _masterFoundObserver    = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = nil;
+            _liveEventName = nil;
             [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
                     Encoder * anEncoder = (Encoder *) obj;
@@ -294,13 +301,15 @@
         
         _encoderReadyObserver     = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_THIS_ENCODER_IS_READY    object:nil queue:nil usingBlock:^(NSNotification *note) {
             
-            self.currentEvent = self.liveEventName;
-            
+            if (_masterEncoder.liveEventName) {
+                _liveEventName = _masterEncoder.liveEventName;
+            }
+
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }];
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting) name:NOTIF_TAG_POSTED object:nil];
- 
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:) name:NOTIF_MASTER_COMMAND object:nil]; // watch whole app for start or stop events
     }
     return self;
 }
@@ -333,7 +342,12 @@ static void * builtContext          = &builtContext; // depricated?
     }
 }
 
-
+/**
+ *  This removes an encoder and posts to the app to let it know when a feed changes or when master is lost
+ *  If master is loas Setting ViewController is always checking for master status
+ *
+ *  @param aEncoder
+ */
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {
     
@@ -344,6 +358,7 @@ static void * builtContext          = &builtContext; // depricated?
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
     [aEncoder destroy];
     if (_masterEncoder == aEncoder){
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self];
         _masterEncoder = nil;
         NSLog(@"Master Linched!");
     }
@@ -417,6 +432,7 @@ static void * builtContext          = &builtContext; // depricated?
         self.hasLive = _masterEncoder.status& (ENCODER_STATUS_LIVE | ENCODER_STATUS_PAUSED | ENCODER_STATUS_START);
         if(self.hasLive){
             self.liveEventName = _masterEncoder.liveEventName;
+            //_currentEvent = LIVE_EVENT;
         }
         
 
@@ -451,7 +467,7 @@ static void * builtContext          = &builtContext; // depricated?
     [self createTag:tagData isDuration:isDuration];
 }
 
-#pragma mark - Services Methods
+#pragma mark - Bonjour Methods
 // Services Methods     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //---services found---
@@ -531,6 +547,25 @@ static void * builtContext          = &builtContext; // depricated?
 }
 
 // END of Services Methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#pragma mark - Master Command Methods
+-(void)masterCommands:(NSNotification *)note
+{
+    NSDictionary * data = note.userInfo;
+    NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary: data];
+    if (_masterEncoder) {
+        if ([data objectForKey:@"stop"]) {
+            [_masterEncoder issueCommand:STOP_EVENT     priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
+        } else if ([data objectForKey:@"start"]) {
+            [_masterEncoder issueCommand:START_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
+        } else if ([data objectForKey:@"pause"]) {
+            [_masterEncoder issueCommand:PAUSE_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
+        }  else if ([data objectForKey:@"resume"]) {
+            [_masterEncoder issueCommand:RESUME_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
+        }
+    }
+
+}
 
 #pragma mark - Command Methods
 

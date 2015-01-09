@@ -142,9 +142,9 @@
         statusInvocation    = [self _buildInvokSel:selector_ path:statusPath  type:STATUS       timeout:&timeout];
         feedInvocation      = [self _buildInvokSel:selector_ path:feedPath    type:FEED_CHECK   timeout:&timeout];
 
+        
+//        [statusPack addObject:feedInvocation];
         [statusPack addObject:statusInvocation];
-        [statusPack addObject:feedInvocation];
-
     }
     return self;
 }
@@ -217,7 +217,7 @@
     } else  if ([connection.connectionType isEqualToString: FEED_CHECK]) {
         [self checkFeeds:connection.cumulatedData];
     }
-    
+    // get cam check..... add it
 }
 
 
@@ -258,14 +258,29 @@
         {
             results     = object;
             statusCode  = [[results objectForKey:@"code"]integerValue] ;
-
+         
             // this is for the older encoder versions
-            if ([Utility sumOfVersion:checkedEncoder.version] <= [Utility sumOfVersion:OLD_VERSION]){
+            if ([checkedEncoder.version compare:OLD_VERSION options:NSNumericSearch]){
+//            if ([Utility sumOfVersion:checkedEncoder.version] >= [Utility sumOfVersion:OLD_VERSION]){
                 BOOL checkIfNobel =[[results objectForKey:@"master"]boolValue];
                 checkedEncoder.isMaster = checkIfNobel;
             }
             
-           if (checkedEncoder.status != statusCode) checkedEncoder.status = statusCode; /// maybe make this mod directly
+            if (checkedEncoder.status != statusCode) {
+                checkedEncoder.statusAsString   = ([results objectForKey:@"status"])?[results objectForKey:@"status"]:@"";
+                checkedEncoder.status           = statusCode; /// maybe make this mod directly
+                
+            }
+        
+            if ([results objectForKey:@"alarms"]) {
+                NSArray * feedsChecked = (checkedEncoder.feeds)?[checkedEncoder.feeds allKeys]:@[];
+                NSArray * alarmedFeeds = [results objectForKey:@"alarms"];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MOTION_ALARM object:checkedEncoder userInfo:@{
+                                                                                                                              @"feeds"    : feedsChecked,
+                                                                                                                              @"alarms"   : alarmedFeeds
+                                                                                                                              }];
+            }
+
         }
     }
 }
@@ -350,7 +365,7 @@
             // If the feeds are different... update and using  .feeds the encoder will dispatch an event about the chnage
            // if ( !(tempFeeds == nil) && (checkedEncoder.feeds == nil)){
                 if (![tempFeeds isEqualToDictionary:checkedEncoder.feeds]){
-                    checkedEncoder.feeds = tempFeeds;
+                 //   checkedEncoder.feeds = tempFeeds;
                 }
            // }
                 
