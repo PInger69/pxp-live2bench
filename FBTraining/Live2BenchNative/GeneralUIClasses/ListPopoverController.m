@@ -25,7 +25,7 @@
     contentVC                       = [[UIViewController alloc] init];
     self                            = [super initWithContentViewController:contentVC];
     if (self) {
-        content                     = [[UIView alloc] init];
+        content                     = contentVC.view;
         content.backgroundColor     = [UIColor whiteColor];
         
         _message                    = aMessage;
@@ -38,10 +38,10 @@
         messageText.font            = [UIFont defaultFontOfSize:17.0f];
         [content addSubview:messageText];
         
-        _animateDismiss             = YES;
+        _animateDismiss             = NO;
         _animatePresent             = NO;
         
-        contentVC.view              = content;
+//        contentVC.view              = content;
         contentVC.modalInPopover    = YES;
         self.contentViewController  = contentVC;
         
@@ -96,11 +96,17 @@
 
 -(void)addOnCompletionBlock:(void (^)(NSString*pick))aBlock
 {
+
     [onCompletionBlocks addObject:aBlock];
+
 }
 
 -(void)clear
 {
+    for (PopoverButton *button in teamButtons) {
+        [button removeFromSuperview];
+    }
+    
     [teamButtons removeAllObjects];
     [onCompletionBlocks removeAllObjects];
 }
@@ -119,8 +125,11 @@
     
 }
 
--(void)setListOfButtonNames:(NSArray *)listOfButtonNames
+-(void)setListOfButtonNames:(NSArray *)aListOfButtonNames
 {
+    
+    NSArray * listOfButtonNames = [aListOfButtonNames sortedArrayUsingSelector:@selector(compare:)];
+    
     [self willChangeValueForKey:@"listOfButtonNames"];
     [teamButtons removeAllObjects];
     _listOfButtonNames                = listOfButtonNames;
@@ -129,6 +138,8 @@
         [self _buildButton:nm index:i];
     }
     [self didChangeValueForKey:@"listOfButtonNames"];
+    [content setFrame:CGRectMake(0, 0, POP_WIDTH, (BUTTON_HEIGHT*_listOfButtonNames.count)+90-22)];
+    [self setPopoverContentSize:CGSizeMake(content.frame.size.width, content.frame.size.height) animated:_animatePresent];
 }
 
 -(NSArray *)listOfButtonNames
@@ -148,5 +159,7 @@
                          animated:animated];
 
 }
+
+
 
 @end

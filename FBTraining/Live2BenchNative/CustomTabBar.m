@@ -133,16 +133,16 @@ static NSMutableArray *tabButtonItems=nil;
     LogoViewController          *logoVC     = [[LogoViewController alloc] initWithAppDelegate:appDel];
     CalendarViewController      *calendarVC = [[CalendarViewController alloc] initWithAppDelegate:appDel];
     Live2BenchViewController    *liveVC     = [[Live2BenchViewController alloc] initWithAppDelegate:appDel];
-    ClipViewController          *clipVC     = [[ClipViewController alloc] init];
-    ListViewController          *listVC     = [[ListViewController alloc] init];
+    ClipViewController          *clipVC     = [[ClipViewController alloc] initWithAppDelegate:appDel];
+//    ListViewController          *listVC     = [[ListViewController alloc] init];
     BookmarkViewController      *bookmarkVC = [[BookmarkViewController alloc] initWithAppDelegate:appDel];
     StatsTabViewController      *statsVC    = [[StatsTabViewController alloc] init];
-    DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
-    NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects:logoVC, calendarVC, liveVC, clipVC, listVC, bookmarkVC, nil];
+//    DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
+    NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects:logoVC, calendarVC, liveVC, clipVC,  bookmarkVC, nil]; //listVC,
     if(SHOW_STATS_TAB)
         //   [vcArray addObject:statsVC];
         //    if(SHOW_STATS_TAB)
-        [vcArray addObject:debugTabView];
+//        [vcArray addObject:debugTabView];
     for (UIViewController *vc in vcArray) {
         [self addChildViewController:vc];
 
@@ -241,7 +241,7 @@ static NSMutableArray *tabButtonItems=nil;
     [self addCustomElements]; // add custom tab bar buttons
     
     //[uController showSpinner];
-     globals.SPINNERVIEW = [SpinnerView loadSpinnerIntoView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+//     globals.SPINNERVIEW = [SpinnerView loadSpinnerIntoView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
     
     updateAppStateTimer =[NSTimer scheduledTimerWithTimeInterval:TIMER_PERIOD
                                                           target:self
@@ -288,8 +288,9 @@ static NSMutableArray *tabButtonItems=nil;
 }
 
 //this view will display the app's loading progress when just open the app
+//TO REMOVE
 -(void)addProgressView{
-    
+    return;
     loadingProgressView = [[UIProgressView alloc] initWithFrame:CGRectMake(300,450,400,100)];
     loadingProgressView.progress = 0.0;
     [loadingProgressView setProgressViewStyle:UIProgressViewStyleBar];
@@ -796,17 +797,17 @@ static NSMutableArray *tabButtonItems=nil;
 //                [noWifiAlert show];
 //                [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:noWifiAlert];
 //            }
-            [globals.SPINNERVIEW removeSpinner];
-            globals.SPINNERVIEW = nil;
-            [spinnerView removeSpinner];
-            NSString *pathToEventVid = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"videos/main.mp4"];
-            
-            //goes to calendar directly
-            if ((![self.selectedViewController isKindOfClass:[LogoViewController class]] && ![self.selectedViewController isKindOfClass:[BookmarkViewController class]]) && ![[NSFileManager defaultManager] fileExistsAtPath: pathToEventVid]){
-                [self selectTab:1];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadCalendarData" object:self];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeLiveSpinner" object:self];
-            }
+//            [globals.SPINNERVIEW removeSpinner];
+//            globals.SPINNERVIEW = nil;
+//            [spinnerView removeSpinner];
+//            NSString *pathToEventVid = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"videos/main.mp4"];
+//            
+////            //goes to calendar directly
+////            if ((![self.selectedViewController isKindOfClass:[LogoViewController class]] && ![self.selectedViewController isKindOfClass:[BookmarkViewController class]]) && ![[NSFileManager defaultManager] fileExistsAtPath: pathToEventVid]){
+////                [self selectTab:1];
+////                [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadCalendarData" object:self];
+////                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeLiveSpinner" object:self];
+////            }
             globals.CURRENT_APP_STATE=apstSkipTimer;
             
             break;
@@ -888,12 +889,12 @@ static NSMutableArray *tabButtonItems=nil;
                        
         case apstEncStatusCheck://if there is min, check current encoder status
         {
-            [globals.SPINNERVIEW removeSpinner];
-            globals.SPINNERVIEW = nil;
-            spinnerView = [SpinnerView loadSpinnerIntoView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
-            [spinnerView addSubview:progressViewTextLabel];
-            [spinnerView addSubview:loadingProgressView];
-            //only for apple testing
+//            [globals.SPINNERVIEW removeSpinner];
+//            globals.SPINNERVIEW = nil;
+//            spinnerView = [SpinnerView loadSpinnerIntoView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+//            [spinnerView addSubview:progressViewTextLabel];
+//            [spinnerView addSubview:loadingProgressView];
+//            //only for apple testing
             if (!globals.HAS_MIN && [[NSString stringWithFormat:@"%@",[globals.ACCOUNT_INFO objectForKey:@"customer" ]]isEqualToString:@"356a192b7913b04c54574d18c28d46e6395428ab"] && [[NSString stringWithFormat:@"%@",[globals.ACCOUNT_INFO objectForKey:@"password"]] isEqualToString:@"9d8168f2aafcc4a53ea4e53d3881b357e459777671cea7da025a055887b93c7a"]) {
                 //if no encoder is found, use the default one -> For apple demo (coach,coach)
                 globals.URL= @"http://avocatec.org:8888";//[NSString stringWithFormat:@"http://%@:%d",ipString,htons(port)];//set the global url parameter to our ipstring:port -- we need to use htons to flip the bytes returned by the port
@@ -1023,11 +1024,11 @@ static NSMutableArray *tabButtonItems=nil;
             [self updateProgessView:5.0/NUM_STEPS :@"getting events" ];
             if(globals.DID_RECV_NEW_CAL_EVENTS|| timerCounter >10/TIMER_PERIOD)
             {
-                [globals.SPINNERVIEW removeSpinner];
-                globals.SPINNERVIEW = nil;
-                [spinnerView removeSpinner];
-                [loadingProgressView removeFromSuperview];
-                [progressViewTextLabel removeFromSuperview];
+//                [globals.SPINNERVIEW removeSpinner];
+//                globals.SPINNERVIEW = nil;
+//                [spinnerView removeSpinner];
+//                [loadingProgressView removeFromSuperview];
+//                [progressViewTextLabel removeFromSuperview];
                 NSString *pathToEventVid = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"videos/main.mp4"];
                 
                 if (((![self.selectedViewController isKindOfClass:[LogoViewController class]] && ![self.selectedViewController isKindOfClass:[BookmarkViewController class]]) && ![[NSFileManager defaultManager] fileExistsAtPath: pathToEventVid]) || firstLoadGoToCalendar){
@@ -1073,12 +1074,12 @@ static NSMutableArray *tabButtonItems=nil;
                //after recieving all the game tags, go to live2bench view
                 [self selectTab:2];
                 //remove loading progress view and spinner view
-                [loadingProgressView removeFromSuperview];
-                [progressViewTextLabel removeFromSuperview];
+//                [loadingProgressView removeFromSuperview];
+//                [progressViewTextLabel removeFromSuperview];
                 globals.CURRENT_APP_STATE=apstSkipTimer;
-                [globals.SPINNERVIEW removeSpinner];
-                 globals.SPINNERVIEW = nil;
-                [spinnerView removeSpinner];
+//                [globals.SPINNERVIEW removeSpinner];
+//                 globals.SPINNERVIEW = nil;
+//                [spinnerView removeSpinner];
                 //after app finish loading and make sure encoder is available, then begin to download clips which were not finished in old games
                 [[NSNotificationCenter defaultCenter]postNotificationName:@"sendOldBookmarkRequest" object:nil];
             }
@@ -1098,19 +1099,19 @@ static NSMutableArray *tabButtonItems=nil;
              {
                  globals.DID_RECV_GAME_TAGS=FALSE;
                  [self selectTab:2];
-                 [globals.SPINNERVIEW removeSpinner];
-                 globals.SPINNERVIEW = nil;
-                 [loadingProgressView removeFromSuperview];
-                 [progressViewTextLabel removeFromSuperview];
-                 [spinnerView removeSpinner];
+//                 [globals.SPINNERVIEW removeSpinner];
+//                 globals.SPINNERVIEW = nil;
+//                 [loadingProgressView removeFromSuperview];
+//                 [progressViewTextLabel removeFromSuperview];
+//                 [spinnerView removeSpinner];
                  globals.CURRENT_APP_STATE=apstSkipTimer;
              }else{
                  //if there is no response in 20 seconds, remove spinner view and go to live2bench view
                  if (timerCounter > 40/TIMER_PERIOD) {
                      ////////NSLog(@"apstWaitplaybackStr timed out");
-                     [globals.SPINNERVIEW removeSpinner];
-                     globals.SPINNERVIEW = nil;
-                     [spinnerView removeSpinner];
+//                     [globals.SPINNERVIEW removeSpinner];
+//                     globals.SPINNERVIEW = nil;
+//                     [spinnerView removeSpinner];
                      timerCounter = 0;
                      [self selectTab:2];
                      globals.CURRENT_APP_STATE = apstSkipTimer;

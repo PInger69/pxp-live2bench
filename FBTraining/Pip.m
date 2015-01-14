@@ -17,6 +17,7 @@
     float           _rate;
     NSDictionary    * _qualityFeeds;
     
+    void (^seekReady)();
     
 }
 @synthesize avPlayerItem;
@@ -77,10 +78,11 @@
 {
     _feed          = [[Feed alloc]initWithURLString:  [url absoluteString]   quality:_quality];
     
-    @try {
-        [avPlayer removeTimeObserver:self];
-    }
-    @catch (NSException * __unused exception) {}
+//    @try {
+//        [avPlayer removeTimeObserver:self];
+//   
+//    }
+//    @catch (NSException * __unused exception) {}
     
     avPlayer        = nil;
     avPlayerItem    = [[AVPlayerItem alloc] initWithURL:[_feed path]];
@@ -104,11 +106,12 @@
 -(void)prepareWithFeed:(Feed*)aFeed
 {
     _feed = aFeed;
-    @try {
-
-        if (avPlayer)[avPlayer removeTimeObserver:self];
-    }
-    @catch (NSException * __unused exception) {}
+//    @try {
+//
+//        if (avPlayer)[avPlayer removeTimeObserver:self];
+//
+//    }
+//    @catch (NSException * __unused exception) {}
     
     _feed.quality   = _quality;
     NSURL * url     = [_feed path];
@@ -125,17 +128,17 @@
 }
 
 
-
--(void)playPlayerItem:(AVPlayerItem *) avpi
-{
-    if (avPlayer.status != AVPlayerStatusReadyToPlay)return;
-    
-    NSURL * nextURL     = [self urlOfCurrentlyPlayingInPlayer:avpi];
-    seekToFromNewAVPlayerItem     = avpi.currentTime;
-    
-    [self playerURL:nextURL];
-    [avPlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
-}
+static void * pipContext = &pipContext;
+//-(void)playPlayerItem:(AVPlayerItem *) avpi
+//{
+//    if (avPlayer.status != AVPlayerStatusReadyToPlay)return;
+//    
+//    NSURL * nextURL     = [self urlOfCurrentlyPlayingInPlayer:avpi];
+//    seekToFromNewAVPlayerItem     = avpi.currentTime;
+//    
+//    [self playerURL:nextURL];
+//    [avPlayer addObserver:self forKeyPath:@"status" options:0 context:pipContext];
+//}
 
 
 -(NSURL *)urlOfCurrentlyPlayingInPlayer:(AVPlayerItem *)playerItem{
@@ -150,12 +153,21 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath  ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"status"]) {
+    if (context == &pipContext) {
         AVPlayer * ply = (AVPlayer *)object;
         if (ply.status == AVPlayerStatusReadyToPlay) {
             //[avPlayer seekToTime:seekToFromNewAVPlayerItem];
             [object removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
         }
+    }
+    
+    if (context == &seekContext){
+        AVPlayerItem * plyItm = (AVPlayerItem *)object;
+        if (plyItm.status == AVPlayerStatusReadyToPlay) {
+            [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+           if(seekReady) seekReady();
+        }
+    
     }
     
 
@@ -197,18 +209,34 @@
     [avPlayer setRate:0.0];
 }
 
+
+static void * seekContext = &seekContext;
 -(void)seekTo:(CMTime)time
 {
+    CMTime playerTime   = self.avPlayerItem.duration;
+    int difference      = CMTimeCompare(time, playerTime);
+    AVPlayer * avplyer  = avPlayer;
+    AVPlayerItem * avplyeritm  = avPlayerItem;
+    if (self.avPlayerItem.status != AVPlayerItemStatusReadyToPlay){
     
-    CMTime playerTime = self.avPlayerItem.duration;
-    if (playerTime.value ==0)return;
-    int difference = CMTimeCompare(time, playerTime);
-    
-    if (difference == 1 ){
-        [avPlayer seekToTime:self.avPlayerItem.duration];
+        [self.avPlayerItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&seekContext];
+        // MAKES BLOCK
+        seekReady = ^void(){
+            
+            if (difference == 1 ){
+                [avplyer seekToTime:avplyeritm.duration];
+            }
+            
+            [avplyer seekToTime:time];
+            
+        };
+    } else { // avplayer item is ready to play
+//        if (playerTime.value ==0)return;
+        if (difference == 1 ){
+            [avPlayer seekToTime:self.avPlayerItem.duration];
+        }
+        [avPlayer seekToTime:time];
     }
-    
-    [avPlayer seekToTime:time];
 }
 
 -(void)playRate:(float)rate

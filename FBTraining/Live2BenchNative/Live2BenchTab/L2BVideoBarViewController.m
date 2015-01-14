@@ -123,7 +123,7 @@
 
 -(Slomo*)makeSlomo
 {
-    Slomo *  btn = [[Slomo alloc]initWithFrame:CGRectMake(50, 0, 50, BAR_HEIGHT)];
+    Slomo *  btn = [[Slomo alloc]initWithFrame:CGRectMake(50+30, 0, 50, BAR_HEIGHT)];
     return btn;
 }
 
@@ -170,7 +170,7 @@
     
     
     [background setFrame:CGRectMake(0,
-                                    10,
+                                    0,
                                     self.view.frame.size.width ,
                                     self.view.frame.size.height)];
     
@@ -179,12 +179,12 @@
     [tagLabel setFrame:CGRectMake(CGRectGetMidX(background.frame)- (LABEL_WIDTH/2), 5, LABEL_WIDTH, BAR_HEIGHT-10)];
     
     
-    [forwardButton  setFrame:CGRectMake(self.view.frame.size.width - (5 +forwardButton.frame.size.width),
+    [forwardButton  setFrame:CGRectMake(self.view.frame.size.width - (35 +forwardButton.frame.size.width),
                                         forwardButton.frame.origin.y,
                                         forwardButton.frame.size.width,
                                         forwardButton.frame.size.height)];
     
-    [backwardButton  setFrame:CGRectMake(5,
+    [backwardButton  setFrame:CGRectMake(35,
                                          backwardButton.frame.origin.y,
                                          backwardButton.frame.size.width,
                                          backwardButton.frame.size.height)];

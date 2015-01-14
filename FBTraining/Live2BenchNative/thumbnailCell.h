@@ -48,6 +48,7 @@
 @property (nonatomic) BOOL imageLoaded;
 @property (nonatomic,strong) UIView *translucentEditingView;
 @property (nonatomic,strong) UIImageView *checkmarkOverlay;
+@property (nonatomic,strong) NSDictionary *data;
 
 //- (void)didDeleteThumbnail:(id)sender;
 @end

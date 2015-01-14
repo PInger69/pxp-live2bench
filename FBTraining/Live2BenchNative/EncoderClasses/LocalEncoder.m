@@ -26,6 +26,7 @@
 @synthesize status          = _status;
 @synthesize allEvents       = _allEvents;
 @synthesize allEventData      = _allEventData;
+@synthesize eventTagsDict   = _eventTagsDict;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath
 {
@@ -37,6 +38,7 @@
         _event                          = @"none";
         _allEventData                   = [[NSArray alloc]initWithContentsOfFile:_localDocsPListPath];
         _eventData                      = @{};
+        _eventTagsDict                  = [[NSMutableDictionary alloc]init];
         NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
         NSEnumerator *enumerator        = [_allEventData objectEnumerator];
         id value;

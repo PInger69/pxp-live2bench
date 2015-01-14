@@ -172,6 +172,9 @@
     
     EM.currentEvent = EM.liveEventName;
     [videoPlayer playFeed:feedSwitch.primaryFeed];
+    
+    
+    
 }
 
 - (void)didReceiveMemoryWarning

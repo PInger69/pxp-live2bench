@@ -19,4 +19,9 @@
 +(NSString*)sha256HashFor:(NSString*)input;
 +(UIColor*)colorWithHexString:(NSString*)hex;
 +(NSString*)encoderStatusToString:(int)status;
++(NSDictionary*)tagDict;
+//+(NSString*)cmTimeToString:(CMTime)time;
+
+
+
 @end

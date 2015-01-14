@@ -37,7 +37,7 @@
                                                         action:@selector(oneFingerSwipeLeft:)];
         [oneFingerSwipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
         [oneFingerSwipeLeft setCancelsTouchesInView:YES];
-        [self addGestureRecognizer:oneFingerSwipeLeft];
+//        [self addGestureRecognizer:oneFingerSwipeLeft];
         
         //register right swipe
         UISwipeGestureRecognizer *oneFingerSwipeRight = [[UISwipeGestureRecognizer alloc]
@@ -45,13 +45,12 @@
                                                          action:@selector(oneFingerSwipeRight:)] ;
         [oneFingerSwipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
         [oneFingerSwipeLeft setCancelsTouchesInView:YES];
-        [self addGestureRecognizer:oneFingerSwipeRight];
+//        [self addGestureRecognizer:oneFingerSwipeRight];
         
         //key "left" represents the tag name buttons on the left side, and key value equals to 0 means, the buttons are not swiped out, 1 means, the buttons are swiped out; same for the right  buttons
         swipeControlDict = [[NSMutableDictionary alloc]initWithObjects:[NSArray arrayWithObjects:@"0",@"0", nil] forKeys:[NSArray arrayWithObjects:@"left",@"right", nil]];
         
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.layer.borderWidth = 1;
+
     }
     return self;
 }
@@ -117,6 +116,7 @@
                                  }
                                  [swipeControlDict setValue:@"1" forKey:@"left"];
                                  //////NSLog(@"overlay:%@",NSStringFromCGRect(self.view.frame));
+                                 
                              }
                              
                          }else{
@@ -452,7 +452,9 @@
 
     if (_fullScreenViewController.enable) {
         [_fullScreenViewController.view addSubview:_leftTray];
+//        [_leftTray setCenter:CGPointMake(_leftTray.center.x/2, _leftTray.center.y)];
         [_fullScreenViewController.view addSubview:_rightTray];
+//        [_rightTray setCenter:CGPointMake(_rightTray.center.x/2, _rightTray.center.y)];
     } else {
         [placementView addSubview:_leftTray];
         [placementView addSubview:_rightTray];

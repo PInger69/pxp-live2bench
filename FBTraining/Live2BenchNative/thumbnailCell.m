@@ -30,6 +30,7 @@
 @synthesize backgroundView=_backgroundView;
 @synthesize translucentEditingView;
 @synthesize checkmarkOverlay;
+@synthesize data = _data;
 
 - (id)init
 {
@@ -45,6 +46,7 @@
     self = [super initWithFrame:frame];
     if (self){
         [self setupView];
+
     }
     return self;
 }
@@ -105,7 +107,7 @@
     [self.thumbPeriod setTextColor:[UIColor darkGrayColor]];
     [self.thumbPeriod setBackgroundColor:[UIColor clearColor]];
     [self.thumbPeriod setFont:[UIFont systemFontOfSize:17.0f]];
-    [self addSubview:self.thumbPeriod];
+//    [self addSubview:self.thumbPeriod];
     
     self.thumbDur = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbName.frame)-(7*PADDING), self.thumbName.frame.origin.y, self.imageView.bounds.size.width/3 + 2*PADDING, 18.0f)];
     [self.thumbDur setText:@"s"];
@@ -128,27 +130,27 @@
     self.thumbRatingOne = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingOne setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingOne setFrame:CGRectMake(50, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingOne];
+//    [self addSubview:self.thumbRatingOne];
     
     self.thumbRatingTwo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingTwo setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingTwo setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingOne.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingTwo];
+//    [self addSubview:self.thumbRatingTwo];
     
     self.thumbRatingThree = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingThree setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingThree setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingTwo.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingThree];
+//    [self addSubview:self.thumbRatingThree];
     
     self.thumbRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingFour setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingThree.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingFour];
+//    [self addSubview:self.thumbRatingFour];
 
     self.thumbRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingFive setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingFive setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingFour.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self addSubview:self.thumbRatingFive];
+//    [self addSubview:self.thumbRatingFive];
     imageLoaded = FALSE;
     
     self.activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -169,17 +171,28 @@
     [checkmarkOverlay setUserInteractionEnabled:TRUE];
     [checkmarkOverlay setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self addSubview:checkmarkOverlay];
+    self.layer.borderWidth = 1;
+    self.layer.borderColor = [[UIColor grayColor]CGColor];
 }
 
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+-(void)prepareForReuse
 {
-    // Drawing code
+    _data = nil;
+    NSLog(@"Clean Cell");
+    [super prepareForReuse];
 }
-*/
+
+-(void)setData:(NSDictionary *)data
+{
+    _data = data;
+}
+
+-(NSDictionary *)data
+{
+
+    return _data;
+}
 
 
 @end

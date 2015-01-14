@@ -19,6 +19,8 @@
 @property (nonatomic,strong)    NSArray         * allEventData; // all the event dicts
 @property (nonatomic,strong)    NSDictionary    * feeds;
 @property (nonatomic,assign)    EncoderStatus   status;
+@property (nonatomic,strong)    NSMutableDictionary * eventTagsDict;
+
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 

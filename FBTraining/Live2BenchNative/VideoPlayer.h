@@ -14,8 +14,10 @@
 #import "OBSlider.h"
 #import "VideoControlBarSlider.h"
 #import "ExternalScreenButton.h"
-#import "Pip.h"
+#import "Feed.h"
 #import "LiveIndicatorLight.h"
+
+#define NOTIF_READY_TO_PLAY  @"readyToPlay"
 
 @class VideoPlayerFreezeTimer;
 typedef enum playerStatus{
@@ -29,6 +31,15 @@ typedef enum playerStatus{
     PS_Stop     = 7
 }playerStatus;
 
+
+
+typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
+    VideoPlayerCommandStop = 1<<1,
+    VideoPlayerCommandPlay = 1<<2,
+    VideoPlayerCommandMute = 1<<3,
+    VideoPlayerCommandUnmute = 1<<4
+
+};
 
 @interface VideoPlayer : UIViewController
 
@@ -177,5 +188,5 @@ typedef enum playerStatus{
 -(BOOL)seekTo:(float)seekTime;
 
 -(void)playFeed:(Feed*)feed;
-
+-(void)delayedSeekToTheTime:(float)seekTime;
 @end

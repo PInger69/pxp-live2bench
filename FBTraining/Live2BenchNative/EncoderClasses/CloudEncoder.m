@@ -152,6 +152,12 @@
     
 }
 
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_NAMES_FROM_CLOUD object:self];
+}
+
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
@@ -172,6 +178,7 @@
     NSDictionary * jsonDict = [Utility JSONDatatoDict:data];
     if ([[jsonDict objectForKey:@"success"]integerValue]){
         NSDictionary * tagnames = [jsonDict objectForKey:@"tagnames"];
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_NAMES_FROM_CLOUD object:self userInfo:tagnames];
     }
     

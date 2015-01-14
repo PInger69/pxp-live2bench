@@ -430,7 +430,7 @@ UIScrollView *scrollView;
     [emailAddressTextField resignFirstResponder];
     [submitButton setUserInteractionEnabled:NO];
 
-        [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:globals.SPINNERVIEW];
+//        [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:globals.SPINNERVIEW];
     receivedResponse = NO;
     [self performSelector:@selector(didReceiveResponse) withObject: nil afterDelay:5];
     

@@ -11,6 +11,7 @@
 #define L2B_FULLSCREEN_MODE_LIVE     1
 #define L2B_FULLSCREEN_MODE_CLIP     2
 #define L2B_FULLSCREEN_MODE_TELE     3
+#define L2B_FULLSCREEN_MODE_DEMO     4
 
 #import "FullScreenViewController.h"
 #import "VideoPlayer.h"

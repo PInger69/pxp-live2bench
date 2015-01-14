@@ -91,7 +91,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_APST_CHANGE                   @"apstStateChange"
 #define NOTIF_USER_INFO_RETRIEVED           @"userInfoAdded"
 
-#define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{tabName:@"liveToBejch"}
+#define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{@"tabName":@"Live2Bench"}
 
 // Encoder
 #define NOTIF_TAG_NAMES_FROM_CLOUD          @"tagNamesFromCloud"
@@ -102,7 +102,9 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_LIVE_EVENT_STARTED            @"liveStarted"
 #define NOTIF_LIVE_EVENT_PAUSED             @"livePaused"
 #define NOTIF_LIVE_EVENT_RESUMED            @"liveResumed"
+#define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived"
 
+#define NOTIF_ENCODER_STAT                  @"encoderStatusMonitor"
 
 
 // VideoPlayer
@@ -110,7 +112,10 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_SMALLSCREEN                   @"smallScreen"
 #define NOTIF_SAVE_TELE                     @"Save Tele"
 #define NOTIF_CLEAR_TELE                    @"Clear Tele"
+#define NOTIF_COMMAND_VIDEO_PLAYER          @"videoPlayer Commands" // userInfo:@{@"context":<videoplayer context, if omited then all are commanded> ,  @"command": <typedef NS_OPTIONS in VideoPlayer> }
 
+// PipViewController
+#define NOTIF_SET_PLAYER_FEED               @"setPlayerFeed"   // userInfo:@{@"time":<float>,  @"feed": <NSString>,  @"state":<playerState> }
 
 /**
  *  Sports

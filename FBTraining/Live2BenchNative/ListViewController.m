@@ -257,6 +257,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     if(![self.view.subviews containsObject:self.videoPlayer.view])
     {
         self.videoPlayer = globals.VIDEO_PLAYER_LIST_VIEW;
+        self.videoPlayer.context = @"ListView Tab";
         [self.videoPlayer.view setFrame:CGRectMake(2, 113, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
         [self.view addSubview:self.videoPlayer.view];
         

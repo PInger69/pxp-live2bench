@@ -27,5 +27,5 @@
 -(void)removePip:(Pip *)aPip;
 -(void)swapVideoPlayer:(VideoPlayer*)aVideoPlayer withPip:(Pip*)aPip;
 -(void)syncToPlayer;
-
+-(void)pipsAndVideoPlayerToLive;
 @end

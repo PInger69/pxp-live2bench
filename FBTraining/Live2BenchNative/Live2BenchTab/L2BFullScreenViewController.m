@@ -14,6 +14,7 @@
     NSArray                 * liveElements;
     NSArray                 * clipElements;
     NSArray                 * teleElements;
+    NSArray                 * demoElements;
     NSArray                 * activeElements;
     float                   controlOffsetY;
 }
@@ -82,7 +83,7 @@
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:teleElements];
    // [self _revealThese:@[]];
     
-    
+    demoElements    = @[_seekForward, _seekBackward, _slomo];
     
     // Tele init
 //    _teleViewController
@@ -276,6 +277,9 @@
             break;
         case L2B_FULLSCREEN_MODE_TELE :
             [self _revealThese:teleElements];
+            break;
+        case L2B_FULLSCREEN_MODE_DEMO :
+            [self _revealThese:demoElements];
             break;
         default:
             break;

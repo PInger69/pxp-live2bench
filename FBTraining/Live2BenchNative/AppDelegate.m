@@ -77,7 +77,7 @@
     
     _userCenter     = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
 
-    [_userCenter enableObservers:_encoderManager.hasInternet];
+    [_userCenter enableObservers:YES];
     // end Build encoder manager
     
     self.tabBarController           = [[CustomTabBar alloc]init];

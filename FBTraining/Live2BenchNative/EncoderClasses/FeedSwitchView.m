@@ -8,7 +8,7 @@
 
 #import "FeedSwitchView.h"
 #define FEEDS @"feeds"
-#define PRIMARY_COLOR   [UIColor yellowColor]
+#define PRIMARY_COLOR   [UIColor greenColor]
 #define SECONDARY_COLOR [UIColor blueColor]
 #define DESELECT_COLOR  [UIColor darkGrayColor]
 
@@ -269,5 +269,28 @@
 {
     return _secondarySelected;
 }
+
+
+-(void)clear
+{
+    [_buttonArray enumerateObjectsUsingBlock:^(UIButton *obj, NSUInteger idx, BOOL *stop) {
+        [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
+        obj.layer.borderColor = [DESELECT_COLOR CGColor];
+        
+    }];
+}
+
+
+-(void)setPrimaryPositionByName:(NSString*)btnName
+{
+    if([_buttonDict objectForKey:btnName]){
+        UIButton * btn = [_buttonDict objectForKey:btnName];
+        _primaryPosition = btn.tag;
+        [self colorize: btn color:PRIMARY_COLOR];
+    }
+}
+
+
+
 
 @end

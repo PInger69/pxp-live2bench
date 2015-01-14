@@ -642,7 +642,10 @@ NSArray *eventsArray;
         globals.WAITING_GAME_TAGS_RESPONSE = TRUE;
         //current absolute time in seconds
         double currentSystemTime = CACurrentMediaTime();
-        NSDictionary *jsonDict = [[NSDictionary alloc]initWithObjectsAndKeys:[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"authorization"],@"device",globals.EVENT_NAME,@"event", nil];
+        NSDictionary *jsonDict = [[NSDictionary alloc]initWithObjectsAndKeys:[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+                                  [NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",
+                                  [globals.ACCOUNT_INFO objectForKey:@"authorization"],@"device",
+                                  globals.EVENT_NAME,@"event", nil];
         
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict

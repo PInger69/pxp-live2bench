@@ -28,6 +28,8 @@
 @property (nonatomic,strong)    NSNumber        * timeStamp;
 @property (nonatomic,strong)    NSMutableData   * cumulatedData;
 @property (nonatomic,strong)    NSString        * connectionType;
+@property (nonatomic,strong)    NSString        * extra;
+
 
 -(NSNumber*)timeStamp;
 -(void)setTimeStamp:(NSNumber*)time;
@@ -39,6 +41,8 @@
 @dynamic timeStamp;
 @dynamic cumulatedData;
 @dynamic connectionType;
+@dynamic extra;
+
 
 -(void)setTimeStamp:(NSNumber*)time
 {
@@ -72,6 +76,15 @@
     return (NSString*)objc_getAssociatedObject(self,@selector(connectionType));
 }
 
+-(void)setExtra:(NSString *)extra
+{
+    objc_setAssociatedObject(self, @selector(extra), extra,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+-(NSString*)extra
+{
+    return (NSString*)objc_getAssociatedObject(self,@selector(extra));
+}
 
 @end
 
@@ -109,6 +122,7 @@
 @synthesize bitrate         = _bitrate;     // To be used with KVO
 @synthesize event           = _event;
 @synthesize eventType       = _eventType;
+@synthesize eventTags       = _eventTags;
 @synthesize eventData       = _eventData;
 @synthesize feeds           = _feeds;
 @synthesize isMaster        = _isMaster;
@@ -118,8 +132,8 @@
 @synthesize teams           = _teams;
 @synthesize playerData      = _playerData;
 @synthesize league          = _league;
-
-
+@synthesize cameraCount     = _cameraCount;
+@synthesize eventTagsDict   = _eventTagsDict;
 
 
 -(id)initWithIP:(NSString*)ip
@@ -130,17 +144,19 @@
         _authenticated  = NO;
         timeOut         = 15.0f;
         queue           = [[NSMutableDictionary alloc]init];
+        _eventTagsDict  = [[NSMutableDictionary alloc]init];
         isWaitiing      = NO;
         log             = [NSMutableString stringWithString:@"Encoder Log: \r"];
         version         = @"?";
         _statusAsString = @"";
-        statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self];
         _isMaster       = NO;
         isTeamsGet      = NO;
         isAuthenticate  = NO;
         isVersion       = NO;
         isBuild         = NO;
         isReady         = NO;
+        _cameraCount    = 0;
+        
     }
     return self;
 }
@@ -158,6 +174,7 @@
     NSArray         * events = [rawEncoderData objectForKey:@"events"];
     for(NSDictionary* dict in events)
     {
+       _event =  nil;
         if([dict isKindOfClass:[NSDictionary class]]  && [dict[@"name"] isEqualToString: event])
         {
             self.eventData = dict;
@@ -216,46 +233,16 @@
                 }
             }
             
-            
-//            if ([dict[@"vid"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
-//            
-//               // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
-//                // this creates a feed object from just a string with it  source named s1
-//               Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"vid"] quality:0];
-//                _feeds = @{ @"s1":theFeed};
-//                
-//            }  else if ([dict[@"vid"] isKindOfClass:[NSDictionary class]]){
-//                NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-//                
-//                for (id key in dict[@"vid"])
-//                {
-//                    if ([key isEqualToString:@"url"]) continue;
-//                    NSDictionary * vidDict      = dict[@"vid"];
-//                    NSDictionary * qualities    = [vidDict objectForKey:key];
-//                    
-//                    Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
-//                    createdFeed.sourceName = key;
-//                    
-//                    [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
-//                }
-//                
-//                _feeds = [collect copy];
-//                
-//                
-//            } else {
-//                NSLog(@"JSON ERROR");
-//            }
-//            
-            
-            
+
             
             [self willChangeValueForKey:@"eventType"];
             _eventType = [dict objectForKey:@"sport"];
             [self didChangeValueForKey:@"eventType"];
+           _event =  event;
             break;
         }
     }
-    _event =  event;
+ 
    [self didChangeValueForKey:@"event"];
     
 }
@@ -353,26 +340,32 @@
  */
 -(void)buildEncoderRequest
 {
-    [self issueCommand:BUILD        priority:2 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
-    [self issueCommand:TEAMS_GET    priority:1 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+    [self issueCommand:BUILD            priority:3 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+    [self issueCommand:CAMERAS_GET      priority:2 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+    [self issueCommand:TEAMS_GET        priority:1 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
 }
 
 
 -(void)authenticate:(NSMutableDictionary *)data timeStamp:(NSNumber *)aTimeStamp
 {
 
-    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
-        [self willChangeValueForKey:@"authenticated"];
-        _authenticated  = YES;
-        [self didChangeValueForKey:@"authenticated"];
-        isWaitiing      = NO;
-        [self removeFromQueue:currentCommand];
-        [self runNextCommand]; // this line is for testing
-        return;
-    }
+    
+    NSLog(@"Encoder: Version check in Authenticate Disabled");
+//    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
+//        [self willChangeValueForKey:@"authenticated"];
+//        _authenticated  = YES;
+//        isAuthenticate = YES;
+//        [self didChangeValueForKey:@"authenticated"];
+//        isWaitiing      = NO;
+//        [self removeFromQueue:currentCommand];
+//        [self runNextCommand]; // this line is for testing
+//        return;
+//    }
     
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/auth/?id=%@",self.ipAddress,customerID]  ];
+    NSString * json = [Utility dictToJSON:@{@"id":customerID}];
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/auth/%@",self.ipAddress,json]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = AUTHENTICATE;
@@ -496,6 +489,31 @@
     encoderConnection.timeStamp             = aTimeStamp;
 }
 
+-(void)camerasGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getcameras",self.ipAddress]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = CAMERAS_GET;
+    encoderConnection.timeStamp             = aTimeStamp;
+}
+
+
+-(void)eventTagsGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+
+    NSString *jsonString                    = [Utility dictToJSON:tData];
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/gametags/%@",self.ipAddress,jsonString]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = EVENT_GET_TAGS;
+    encoderConnection.timeStamp             = aTimeStamp;
+    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key that will be used when making the dict
+}
+
+
 #pragma mark -  Master Commands
 -(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
@@ -601,7 +619,7 @@
 
     NSString * connectionType   = connection.connectionType;
     NSData * finishedData       = connection.cumulatedData;
-    
+    NSString * extra            = connection.extra;
     
     
     if ([connectionType isEqualToString: AUTHENTICATE]){
@@ -620,12 +638,22 @@
         [self pauseResponce:     finishedData];
     }  else if ([connectionType isEqualToString: RESUME_EVENT]) {
         [self resumeResponce:    finishedData];
+    } else if ([connectionType isEqualToString: MAKE_TAG]) {
+        [self makeTagResponce:    finishedData];
+    } else if ([connectionType isEqualToString: CAMERAS_GET]) {
+        [self camerasGetResponce:    finishedData];
+    } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
+        NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
+        
+        [self eventTagsGetResponce:finishedData eventNameKey:extra];
     }
    
     
     if (isAuthenticate && isVersion && isBuild && isTeamsGet && !isReady){
-        isReady = YES;
+        isReady         = YES;
+        statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
+        
     }
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:@{@"responce":finishedData}];
@@ -649,14 +677,16 @@
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    NSLog(@"%@ FAIL %@ \n%@",self.name,[connection originalRequest],connection.connectionType);
-    isWaitiing = NO;
     
+    NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
+    isWaitiing = NO;
+    NSLog(@"%@ FAIL %@ \n%@",self.name,[connection originalRequest],connection.connectionType);
+    NSLog(@"FAIL TYPE: %@ ",failType);
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:nil];//
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
 
-    [log appendString:@"FAIL! \\n"];
+//    [log appendString:@"FAIL! \\n"];
 }
 
 
@@ -786,6 +816,52 @@
     isTeamsGet = YES;
 }
 
+
+-(void)makeTagResponce:(NSData *)data
+{
+
+    NSDictionary    * results;
+    if(NSClassFromString(@"NSJSONSerialization"))
+    {
+        NSError *error = nil;
+        id object = [NSJSONSerialization
+                     JSONObjectWithData:data
+                     options:0
+                     error:&error];
+        
+        if([object isKindOfClass:[NSDictionary class]])
+        {
+            results = object;
+          // add tag to its dic
+            if ([results objectForKey:@"id"]) {
+                
+                NSString * tagId = [[results objectForKey:@"id"]stringValue];
+
+                [_eventTagsDict setObject:results forKey:tagId];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+            }
+        }
+    }
+
+}
+
+-(void)eventTagsGetResponce:(NSData *)data eventNameKey:(NSString*)eventName
+{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    
+    if (results){
+        NSDictionary    * tags = [results objectForKey:@"tags"];
+       if (tags) _eventTagsDict = [NSMutableDictionary dictionaryWithDictionary:tags];
+    }
+}
+
+-(void)camerasGetResponce:(NSData *)data
+{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+
+
+    _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
+}
 
 #pragma mark - Master Responce
 

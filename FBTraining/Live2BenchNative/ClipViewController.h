@@ -64,7 +64,7 @@
 //return an array of tags which are sorted by time
 -(NSMutableArray*)sortArrayByTime:(NSMutableArray*)arr;
 
-@property (nonatomic,strong) NSMutableArray *tagsToDisplay;
+@property (nonatomic,strong) NSMutableArray *tagsToDisplay; // THIS IS WHAT YOU ADD TO THE SHOW UP ON SCREEN
 @property (nonatomic,strong) NSMutableArray *typesOfTags;
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic,strong) NSMutableArray *thumbRatingArray;

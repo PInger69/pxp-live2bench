@@ -32,7 +32,7 @@
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip;
 
 -(void)playerURL:(NSURL *)url;
--(void)playPlayerItem:(AVPlayerItem *) avpi;
+//-(void)playPlayerItem:(AVPlayerItem *) avpi;
 -(void)playWithFeed:(Feed*)aFeed;
 -(void)prepareWithFeed:(Feed*)aFeed;
 

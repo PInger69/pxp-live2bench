@@ -8,6 +8,8 @@
 
 #import "PipViewController.h"
 #import "Feed.h"
+#import "Globals.h"
+
 static void * primaryContext    = &primaryContext;
 static void * secondaryContext  = &secondaryContext;
 static void * changeContextPri  = &changeContextPri;
@@ -15,9 +17,11 @@ static void * changeContextSec  = &changeContextSec;
 
 // VideoPlayer Context
 static void * vpStatusContext  = &vpStatusContext;
+static void * vpFrameContext   = &vpFrameContext;
 
 /**
  *  This class will tie the interacions with the VideoPlayer class and the FeedSwitch as well as watch the EncoderManager
+ *  This class will also make sure the pips will match dragable in video play frame
  */
 
 
@@ -33,6 +37,7 @@ static void * vpStatusContext  = &vpStatusContext;
 {
     NSMutableArray  * _gesturePool;
     EncoderManager  * _encoderManager;
+    Globals         * globals;
 }
 
 
@@ -64,20 +69,25 @@ static void * vpStatusContext  = &vpStatusContext;
         
         // Feed switch
         self.feedSwitchView                 = f;
-        [self.feedSwitchView    addObserver:self forKeyPath:@"primaryPosition" options:(NSKeyValueObservingOptionNew) context:changeContextPri];
-        [self.feedSwitchView    addObserver:self forKeyPath:@"secondaryPosition" options:(NSKeyValueObservingOptionNew) context:changeContextSec];
+        [self.feedSwitchView    addObserver:self forKeyPath:@"primaryPosition" options:(NSKeyValueObservingOptionNew) context:&changeContextPri];
+        [self.feedSwitchView    addObserver:self forKeyPath:@"secondaryPosition" options:(NSKeyValueObservingOptionNew) context:&changeContextSec];
         
         // video player
-        [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:vpStatusContext];
-        
+        [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
+        [self.videoPlayer.view       addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         
 
-       
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerPlayTag:) name:NOTIF_SET_PLAYER_FEED object:nil];
+        
+        
+        
+        
         
         // hides all added pips
         for (Pip * pip in self.pips) {
             [pip setHidden:YES];
         }
+        if ([Globals instance]) globals = [Globals instance];
     }
     return self;
 
@@ -90,12 +100,30 @@ static void * vpStatusContext  = &vpStatusContext;
     
     if (context == changeContextSec || context == changeContextPri) {
      [self observerMethodForSwitchForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-    
-    if(context == vpStatusContext) {
+        
+    }else if(context == vpStatusContext) {
         [self observerMethodForVideoPlayerForKeyPath:keyPath ofObject:object change:change context:context];
+        
+    } else if(context == &vpFrameContext) {
+        [self observerMethodFrameChange:keyPath ofObject:object change:change context:context];
+        
     }
+
+}
+
+
+-(void)observerMethodFrameChange:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    CGRect createdFrame =  [(NSValue *)[change objectForKey:@"new"]CGRectValue];
     
+    for (Pip * pip in self.pips) {
+        float midx = createdFrame.size.width    * 0.5f;
+        float midy = createdFrame.size.height   * 0.5f;
+        
+        pip.frame = CGRectMake(midx - (pip.frame.size.width * 0.5), midy-(pip.frame.size.width * 0.5), pip.frame.size.width, pip.frame.size.height);
+        [pip setDragBounds:CGRectMake(0,0,createdFrame.size.width,createdFrame.size.height)];
+     }
+
 }
 
 -(void)observerMethodForSwitchForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -196,7 +224,32 @@ static void * vpStatusContext  = &vpStatusContext;
     
 }
 
+-(void)videoPlayerPlayTag:(NSNotification *)note
+{
+    NSDictionary * rick = note.userInfo;
+    float time = [[rick objectForKey:@"time"]floatValue];
+    CMTime cmtime = CMTimeMake(time, 1);
+    
+    Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
+    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
 
+    
+    VideoPlayer * vid   = _videoPlayer;
+    [vid playFeed:f];
+    vid.live = NO;
+    [vid delayedSeekToTheTime:time];
+    
+    globals.IS_LOOP_MODE = YES;
+    
+    for (Pip * pip in self.pips) {
+        [pip setHidden:YES];
+        [pip seekTo:cmtime];
+    }
+    // set feeds highlight
+    
+    [_feedSwitchView clear];
+    [_feedSwitchView setPrimaryPositionByName:[rick objectForKey:@"feed"]];
+}
 
 -(void)swapVideoPlayer:(VideoPlayer*)aVideoPlayer withPip:(Pip*)aPip
 {
@@ -281,6 +334,13 @@ static void * vpStatusContext  = &vpStatusContext;
     // Dispose of any resources that can be recreated.
 }
 
-
+-(void)pipsAndVideoPlayerToLive
+{
+    [_videoPlayer goToLive];
+    CMTime  time = CMTimeMake([_videoPlayer durationInSeconds], 1);
+    for (Pip * pp in self.pips) {
+        [pp seekTo:time];
+    }
+}
 
 @end

@@ -63,6 +63,7 @@
     UserCenter                          * _userCenter;                  // any userdata from plists
     NSString                            * _eventType;                   // Sport or medical
     LiveButton                          * _liveButton;                  // live button
+    LiveButton                          * _gotoLiveButton;                  // live button
     // player with pip and feed select                                  // updated player
     L2BVideoBarViewController           * _videoBarViewController;       // player updated control bar
     Live2BenchTagUIViewController       * _tagButtonController;         // side tags
@@ -132,7 +133,8 @@ int tagsinQueueInOfflineMode = 0;
 
 
 // Context
-static void * eventTypeContext = &eventTypeContext;
+static void * eventTypeContext  = &eventTypeContext;
+static void * eventContext      = &eventContext;
 
 #pragma mark - View Controller Methods
 
@@ -172,7 +174,8 @@ static void * eventTypeContext = &eventTypeContext;
     _userCenter             = _appDel.userCenter;
     
     // observers //@"currentEventType"
-    [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEventType)) options:NSKeyValueObservingOptionNew context:eventTypeContext];
+    [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEventType))  options:NSKeyValueObservingOptionNew context:&eventTypeContext];
+    [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEvent))      options:NSKeyValueObservingOptionNew context:&eventContext];
     return self;
     
 }
@@ -182,8 +185,10 @@ static void * eventTypeContext = &eventTypeContext;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (context == eventTypeContext){ // This checks to see if the encoder manager has changed Events Types like Sport or Medical
+    if (context == &eventTypeContext){ // This checks to see if the encoder manager has changed Events Types like Sport or Medical
         [self onEventTypeChange: [change objectForKey:@"new"]];
+    } else if (context == &eventContext){
+        [self onEventChange];
     }
 
 }
@@ -195,6 +200,31 @@ static void * eventTypeContext = &eventTypeContext;
     _eventType = aType;
 
 }
+
+// when the event changes mod these
+-(void)onEventChange
+{
+
+    if ([_encoderManager.currentEvent isEqualToString:@"None"]){
+        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
+        self.videoPlayer.live   = NO;
+        [_gotoLiveButton isActive:NO];
+
+    } else if ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName]){      // LIVE
+        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+        self.videoPlayer.live   = YES;
+          [_gotoLiveButton isActive:YES];
+
+    } else { // CLIP
+        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
+        self.videoPlayer.live   = NO;
+        [_gotoLiveButton isActive:YES];
+
+    }
+    
+}
+
+
 #pragma mark -
 
 
@@ -224,11 +254,8 @@ static void * eventTypeContext = &eventTypeContext;
 
     [self.view addSubview:currentEventTitle];
     
+
     
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFullScreenOverlay)          name:@"Entering FullScreen" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFullScreenOverlay)          name:@"Exiting FullScreen" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continuePlay)                     name:NOTIF_DESTROY_TELE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrubbingDestroyLoopMode)         name:@"scrubbingDestroyLoopMode" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseUpdatePlayerDurationTimer)   name:UIApplicationWillResignActiveNotification object:nil];
@@ -281,8 +308,9 @@ static void * eventTypeContext = &eventTypeContext;
     [uController startEncoderStatusTimer];
     
 
-         self.videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
-   
+//         self.videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
+    self.videoPlayer = [[VideoPlayer alloc] init];
+    [self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
     
     // side tags
     _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
@@ -305,43 +333,32 @@ static void * eventTypeContext = &eventTypeContext;
     
 
     videoPlayer.context = _fullscreenViewController.context;
-    
+    [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
     // so get buttons are connected to full screen
     _tagButtonController.fullScreenViewController = _fullscreenViewController;
     
     
-    _pip            = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
+    _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
     _pip.isDragAble  = YES;
     _pip.hidden      = YES;
     _pip.dragBounds  = videoPlayer.playerLayer.frame;
-    
+    [videoPlayer.view addSubview:_pip];
     _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 600, 100, 100) encoderManager:_encoderManager];
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
-    [videoPlayer playFeed:_feedSwitch.primaryFeed];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
 
     [super viewWillAppear:animated];
-
-
-    //spinnerViewCounter: used to time out spinner view
-    //if the video player is not playing properly, add spinnerView and increase spinnerViewCounter
-    //if spinnerViewCounter > 10, remove the spinner view
-    spinnerViewCounter          = 0;
-    //switchToLiveEvent: if the avplayer switches to live event from an old event, this variable will be set to TRUE
-    //If it is true, the tagmarkers from old event will be removed and new ones from live event will be created
-    switchToLiveEvent           = FALSE;
+    _encoderManager.currentEvent = _encoderManager.liveEventName;
+    [videoPlayer playFeed:_feedSwitch.primaryFeed];
     
-    globals.IS_IN_FIRST_VIEW    = TRUE;
-    globals.IS_IN_LIST_VIEW     = FALSE;
-    globals.IS_IN_BOOKMARK_VIEW = FALSE;
-    globals.IS_IN_CLIP_VIEW     = FALSE;
     //pause the videoplayer and also stop the update slider timer in list view 
     [globals.VIDEO_PLAYER_LIST_VIEW pause];
     
@@ -355,7 +372,7 @@ static void * eventTypeContext = &eventTypeContext;
     }
     //make sure no duplicated timer is fired
     [updateCurrentEventInfoTimer invalidate];
-    updateCurrentEventInfoTimer =nil;
+    updateCurrentEventInfoTimer = nil;
     updateCurrentEventInfoTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
                                    selector:@selector(updateCurrentEventInfo)
@@ -378,7 +395,7 @@ static void * eventTypeContext = &eventTypeContext;
      {
 
 
-         self.videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
+//         self.videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
          self.videoPlayer.antiFreeze.enable = YES;   //RICHARD
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
 
@@ -391,65 +408,27 @@ static void * eventTypeContext = &eventTypeContext;
          //add swipe gesture: swipe left: seek back ; swipe right: seek forward
          UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
          [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
-         [self.videoPlayer.view addGestureRecognizer:recognizer];
+//         [self.videoPlayer.view addGestureRecognizer:recognizer];
          
          recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
          [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
-         [self.videoPlayer.view addGestureRecognizer:recognizer];
+//         [self.videoPlayer.view addGestureRecognizer:recognizer];
          
      }
     [self.videoPlayer.view setUserInteractionEnabled:TRUE];
      [self createTagButtons]; // temp place
-    //if we just started a new event, seek to live automatically
-    if(globals.DID_START_NEW_EVENT)
-    {
-        if ((int)[[[videoPlayer avPlayer]currentItem]status] != 1) {
-            globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-            NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-            //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-            
-            [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
-            [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
-            [globals.VIDEO_PLAYER_LIST_VIEW pause];
-            
-            [videoPlayer setVideoURL:videoURL];
-            [videoPlayer setPlayerWithURL:videoURL];
-            [videoPlayer play];
-
-            globals.VIDEO_PLAYBACK_FAILED = FALSE;
-            globals.PLAYABLE_DURATION = -1;
-        }
-                
-        if ([globals.EVENT_NAME isEqualToString:@"live"]) {
-            if (globals.PLAYBACK_SPEED > 0) {
-                videoPlayer.avPlayer.rate = globals.PLAYBACK_SPEED;
-            }else{
-                [videoPlayer play];
-                
-            }
-
-        }
-        //start new event, go to live
-        [_liveButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-        globals.DID_START_NEW_EVENT=FALSE;
-    }
-
+   
     //1.first time open the app, initialize all the buttons; 2.when received memory warning, all the UIview will be deleted, so when back to live2bench view, we need to reinitialize all the buttons
-    if(!self.didInitLayout || globals.DID_RECEIVE_MEMORY_WARNING)
+    if(!self.didInitLayout)
     {
         [self initialiseLayout];
         [self updateEventInformation];
-        globals.DID_RECEIVE_MEMORY_WARNING = FALSE;
+
     }
     
     [self.view bringSubviewToFront:self.playerCollectionViewController.view];
     
-    //playback old event
-    if( globals.IS_PAST_EVENT)
-    {
-        globals.DID_GO_TO_LIVE = FALSE;
-    }
-    
+
     //1.when playing live event, if encoder status is not live or paused or player status is not "readytoplay"; 2. there is no event playing: disable all tag buttons
     if((((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && ![globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused])|| (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""])))
     {
@@ -483,21 +462,7 @@ static void * eventTypeContext = &eventTypeContext;
         [self.leftSideButtons setAlpha:1.0f];
         [self.rightSideButtons setUserInteractionEnabled:true];
         [self.rightSideButtons setAlpha:1.0f];
-        /*
-        if (!globals.IS_LOOP_MODE) {
-            [currentSeekBackButton setHidden:FALSE];
-            [currentSeekForwardButton setHidden:FALSE];
-        }
-       */
-    }
-    
-    //if current encoder status is "live", enable live button; otherwise, disable it
-    if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || [globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) {
-        _liveButton.enabled = YES;
-//        [liveButtoninFullScreen setEnabled:TRUE];
-    }else{
-         _liveButton.enabled = NO;
-//        [liveButtoninFullScreen setEnabled:FALSE];
+
     }
 
     [videoPlayer play];
@@ -559,78 +524,10 @@ static void * eventTypeContext = &eventTypeContext;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-
+    [self onEventChange];
 //    [_videoBarViewController viewDidAppear:animated];
    // [_fullscreenViewController viewDidAppear:animated];
     [self.view addSubview:_fullscreenViewController.view];
-}
-//update full screen buttons when enter fullscreen or exit fullscreen
--(void)updateFullScreenOverlay
-{
-    if (videoPlayer.isFullScreen && !fullscreenOverlayCreated) {
-        enterFullScreen = TRUE;
-        //enter full screen
-        [self willEnterFullscreen];
-        if ( telestrationOverlay) {
-            //set the frame size of the telestration overlay to match the thumbnail image
-            [telestrationOverlay setFrame:CGRectMake(0, videoPlayer.view.bounds.origin.y + 15, videoPlayer.view.bounds.size.width, videoPlayer.view.bounds.size.height - 15)];
-            [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFit];
-        }
-        fullscreenOverlayCreated = TRUE;
-        
-    }else if(!videoPlayer.isFullScreen && fullscreenOverlayCreated){
-        //exit full screen
-        enterFullScreen = FALSE;
-        //if telestration in the fullscreen, remove it and destroy loop mode
-        if (telestrationOverlay) {
-            [telestrationOverlay removeFromSuperview];
-            telestrationOverlay = nil;
-            [self destroyThumbLoop];
-            [videoPlayer play];
-
-        }
-        [self willExitFullscreen];
-        //[self didExitFullscreen];
-        
-        //"bringSubviewToFront" is needed; otherwise all the following subviews could not be visible
-//        [self.view bringSubviewToFront:self.leftSideButtons];
-//        [self.view bringSubviewToFront:self.rightSideButtons];
-        if (self.hockeyBottomViewController) {
-            [self.view bringSubviewToFront:self.hockeyBottomViewController.view];
-        }else if(self.soccerBottomViewController){
-            [self.view bringSubviewToFront:self.soccerBottomViewController.view];
-        }else if(self.footballBottomViewController){
-            [self.view bringSubviewToFront:self.footballBottomViewController.view];
-        }else if(self.footballTrainingBottomViewController){
-            [self.view bringSubviewToFront:self.footballTrainingBottomViewController.view];
-        }
-        [self.view bringSubviewToFront:_liveButton];
-        [self.view bringSubviewToFront:continuePlayButton];
-        [self.view addSubview:videoPlayer.view];
-        [self.view bringSubviewToFront:self.playerCollectionViewController.view];
-
-        fullscreenOverlayCreated = FALSE;
-        
-        //if the user opens a duration tag in fullscreen mode, when back to normal mode, we need to highlight the button with the selected event name
-        if (swipedOutButton && isDurationTagEnabled && swipedOutButton.selected){
-            
-            for(CustomButton *button in tagButtonsArray){
-                if (([button.titleLabel.text isEqual:swipedOutButton.titleLabel.text] && [button.accessibilityValue isEqual:swipedOutButton.accessibilityValue]) || [globals.UNCLOSED_EVENT isEqualToString:button.titleLabel.text]) {
-                    button.selected = TRUE;
-                    swipedOutButton = button;
-                }
-            }
-        }
-    }
-    
-    [self.view bringSubviewToFront: self.leftSideButtons];
-    [self.view bringSubviewToFront:self.rightSideButtons];
-}
-
-- (void)removeLiveSpinner
-{
-    [spinnerView removeSpinner];
 }
 
 ///we are going to update the global variable every second if the stored value is less then the current duration.
@@ -692,12 +589,7 @@ static void * eventTypeContext = &eventTypeContext;
         }
         
         
-//        if (spinnerViewCounter >= errorCount - 1) {
-//            if (spinnerView) {
-//                [spinnerView removeSpinner];
-//                spinnerView = nil;
-//            }
-//        }
+
         
         //***********************************TODO: if the wifi connection of the ipad lost, handle the case*********************************//
         //if the live event stopped, check if the wifi still there
@@ -760,8 +652,8 @@ static void * eventTypeContext = &eventTypeContext;
                     [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
                     [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
                     
-                    [globals.VIDEO_PLAYER_LIVE2BENCH setVideoURL:videoURL];
-                    [globals.VIDEO_PLAYER_LIVE2BENCH setPlayerWithURL:videoURL];
+                    [self.videoPlayer setVideoURL:videoURL];
+                    [self.videoPlayer setPlayerWithURL:videoURL];
                     
 
                 }
@@ -866,9 +758,11 @@ static void * eventTypeContext = &eventTypeContext;
     
     //enable live button if the current encoder status is @"live", otherwise disable it
     if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || [globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) {
-        _liveButton.enabled = YES;
+//        _liveButton.enabled = YES;
+                [_liveButton isActive:YES];
     }else{
-         _liveButton.enabled = NO;
+//         _liveButton.enabled = NO;
+                [_liveButton isActive:NO];
     }
     
     if ([globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){ 
@@ -1115,16 +1009,15 @@ static void * eventTypeContext = &eventTypeContext;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-     globals.IS_IN_FIRST_VIEW = FALSE;
+   
+    // If current event is not live... pause it
+    
     //will leaving live2bench view,pause video
     if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
         [videoPlayer pause];
         if (videoPlayer.timeObserver) [videoPlayer removePlayerItemTimeObserver];
     }
-    //if navigating to other view while video player is still in fullscreen mode, call the exit fullscreen method
-    if (videoPlayer.isFullScreen) {
-         [videoPlayer exitFullScreen];
-    }
+
 
     //if was viewing telestartion, remove it
     if (telestrationOverlay) {
@@ -1179,9 +1072,17 @@ static void * eventTypeContext = &eventTypeContext;
 
 
 
-//snap to live
+/**
+ *  This is run when the Live button is pressed
+ */
 - (void)goToLive
 {
+    // Richard
+//    [videoPlayer goToLive];
+    [_pipController pipsAndVideoPlayerToLive];// ALLL TO LIVE
+    
+    return;
+    
     globals.IS_TELE=FALSE;
     
     globals.eventExistsOnServer = TRUE;
@@ -1335,37 +1236,7 @@ static void * eventTypeContext = &eventTypeContext;
     }
 }
 
-//press the cell for more than 2 seconds, pop up the details of the tag and the event
-- (void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer
-{
-    /*
-    if ([gestureRecognizer.view isEqual:currentSeekBackButton]) {
-         seekBackControlView.hidden = FALSE;
-    }else if ([gestureRecognizer.view isEqual:currentSeekForwardButton]){
-        seekForwardControlView.hidden = FALSE;
-    }else if([gestureRecognizer.view isEqual:currentSeekBackButtoninFullScreen]){
-        seekBackControlViewinFullScreen.hidden = FALSE;
-    }else if([gestureRecognizer.view isEqual:currentSeekForwardButtoninFullScreen]){
-        seekForwardControlViewinFullScreen.hidden = FALSE;
-    }
-     */
-}
 
-/*
--(void)swipeOutSeekControlView:(CustomButton*)button{
-    if ([button isEqual:currentSeekBackButton]) {
-        seekBackControlView.hidden = FALSE;
-    }else if ([button isEqual:currentSeekForwardButton]){
-        seekForwardControlView.hidden = FALSE;
-    }else if([button isEqual:currentSeekBackButtoninFullScreen]){
-        seekBackControlViewinFullScreen.hidden = FALSE;
-    }else if([button isEqual:currentSeekForwardButtoninFullScreen]){
-        seekForwardControlViewinFullScreen.hidden = FALSE;
-    }
-
-}
-*/
- 
 
 //get all the tagnames from TagButtons.plist file
 // DEPRICATED Recieved from encoder manager
@@ -1392,13 +1263,7 @@ static void * eventTypeContext = &eventTypeContext;
         [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
     }
     
-    // is it swiped out?
-//    if ((isDurationTagEnabled && swipedOutButton.selected && ([[dict objectForKey:@"name"] isEqual:swipedOutButton.titleLabel.text] || [[dict objectForKey:@"period"] isEqual:swipedOutButton.titleLabel.text]) && [[dict objectForKey:@"side"] isEqual:swipedOutButton.accessibilityValue]) || [globals.UNCLOSED_EVENT isEqualToString:[dict objectForKey:@"name"]]) {
-//        button.selected = TRUE;
-//        swipedOutButton = button;
-//    }
-    
-    // are the buttons use able
+
     
     // ugly if... fix it
     if([globals.EVENT_NAME isEqualToString:@""] ||
@@ -1406,11 +1271,13 @@ static void * eventTypeContext = &eventTypeContext;
        (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed ||
        (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) {
         
-        _tagButtonController.enabled    = NO;
-        _liveButton.enabled             = NO;
+       _tagButtonController.enabled    = YES;
+//        _liveButton.enabled             = NO;
+                [_liveButton isActive:NO];
     }else{
         _tagButtonController.enabled    = YES;
-        _liveButton.enabled             = YES;
+//        _liveButton.enabled             = YES;
+                [_liveButton isActive:YES];
         
     }
     
@@ -1808,8 +1675,22 @@ static void * eventTypeContext = &eventTypeContext;
         [self.footballTrainingCollectionViewController.view setAlpha:0.0f];
         return;
     }
-    globals.DID_CREATE_NEW_TAG=TRUE; // Dead code
+    
+    
+    
     CustomButton *button = (CustomButton*)sender;
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                      @"name":button.titleLabel.text,
+                                                                                                      @"time":[NSString stringWithFormat:@"%f",videoPlayer.currentTimeInSeconds - videoPlayer.startTime]
+                                                                                                      }];
+    
+    
+    return;
+    
+// The rest of the code is for reference
+    
     
     NSMutableDictionary *dict;
     
@@ -2465,7 +2346,7 @@ static void * eventTypeContext = &eventTypeContext;
 
 
         
-        NSURL *videoURL = globals.VIDEO_PLAYER_LIVE2BENCH.videoURL;
+        NSURL *videoURL = self.videoPlayer.videoURL;
         AVAsset *asset = [AVAsset assetWithURL:videoURL];
         AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
         imageGenerator.requestedTimeToleranceBefore = kCMTimeZero;
@@ -2532,7 +2413,15 @@ static void * eventTypeContext = &eventTypeContext;
     
     _liveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +videoPlayer.view.frame.origin.x+32,PADDING + videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
     [_liveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
-    [self.view insertSubview:_liveButton aboveSubview:_videoBarViewController.view];
+//    [self.view insertSubview:_liveButton aboveSubview:_videoBarViewController.view];
+    
+    
+    _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +videoPlayer.view.frame.origin.x+32,PADDING + videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
+    [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:_gotoLiveButton aboveSubview:_videoBarViewController.view];
+    
+
+    
     
     //add continue play button
     continuePlayButton = [BorderButton buttonWithType:UIButtonTypeCustom];

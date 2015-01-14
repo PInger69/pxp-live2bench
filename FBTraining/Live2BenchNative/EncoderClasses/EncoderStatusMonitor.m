@@ -266,9 +266,10 @@
                 checkedEncoder.isMaster = checkIfNobel;
             }
             
-            if (checkedEncoder.status != statusCode) {
+            if (checkedEncoder.status != statusCode && (!(checkedEncoder.status & ENCODER_STATUS_LIVE) || checkedEncoder.liveEventName)) {
                 checkedEncoder.statusAsString   = ([results objectForKey:@"status"])?[results objectForKey:@"status"]:@"";
                 checkedEncoder.status           = statusCode; /// maybe make this mod directly
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:checkedEncoder];
                 
             }
         

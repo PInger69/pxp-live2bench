@@ -36,11 +36,15 @@
 @property (nonatomic,strong)            NSMutableArray          * allEventData;
 @property (nonatomic,strong)            NSMutableArray          * authenticatedEncoders;
 @property (nonatomic,strong)            NSString                * currentEvent;
+@property (nonatomic,strong)            NSMutableArray          * currentEventTags;
 @property (nonatomic,strong,readonly)   NSString                * currentEventType; // like sport or medical
 @property (nonatomic,strong,readonly)   NSDictionary            * currentEventData; // like sport or medical
 @property (nonatomic,strong)            NSMutableDictionary     * openDurationTags;
+@property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
 
 @property (nonatomic,strong)            Encoder                 * masterEncoder;
+@property (nonatomic,assign,readonly)   NSInteger               totalCameraCount;
+
 
 
 #pragma mark - Encoder Manager Methods
@@ -59,14 +63,21 @@
 
 -(void)closeDurationTag:(NSString *)tagName;
 
+
+-(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
+
+
+
 #pragma mark - Commands Methods
 
-
+-(void)refresh;
 #pragma mark - Debugging Methods
 /**
  *  Removes all external Encoders and disables searching for others
  *  This is to be used for Debugging
  */
 -(void)removeAllExternalEncoders;
+
+
 
 @end

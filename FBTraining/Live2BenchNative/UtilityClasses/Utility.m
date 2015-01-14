@@ -239,7 +239,12 @@
     return result;
 }
 
-
+//+(NSString*)cmTimeToString:(CMTime)time
+//{
+//    NSString * txt;
+//    
+//    return txt;
+//}
 
 +(NSComparisonResult)compareVersion:(NSString *)versionNum1 with:(NSString*)versionNum2
 {
@@ -253,5 +258,13 @@
 //    
 //    return (NSComparisonResult)1;
 }
+
+
+
+/**
+ *  This makes a NSDictionary of basic data for taging
+ */
++(NSDictionary*)tagDict
+{}
 
 @end

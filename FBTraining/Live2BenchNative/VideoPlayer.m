@@ -55,10 +55,10 @@ static void * feedContext  = &feedContext;
 @synthesize startTime;
 @synthesize teleBigView;
 @synthesize richVideoControlBar;
-@synthesize feed = _feed;
-@synthesize context = _context;
-@synthesize liveIndicatorLight = _liveIndicatorLight;
-@synthesize rate    = _rate;
+@synthesize feed                = _feed;
+@synthesize context             = _context;
+@synthesize liveIndicatorLight  = _liveIndicatorLight;
+@synthesize rate                = _rate;
 /**
  *  initialize video player with the given frame as well at build the playerLayer, added the control slider and sets the guestures.
  *
@@ -99,9 +99,8 @@ static void * feedContext  = &feedContext;
     
     statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 100, 20)];
     statusLabel.text = @"Offline";
-
     statusLabel.textColor = [UIColor whiteColor];
-    [self.view addSubview:statusLabel];
+//    [self.view addSubview:statusLabel];
     
     // this is so we know what Video Player belongs to what
     _context = @"";
@@ -192,7 +191,7 @@ static void * feedContext  = &feedContext;
     
     [self play];
     
-    _antiFreeze = [[VideoPlayerFreezeTimer alloc]initWithVideoPlayer:self];
+//    _antiFreeze = [[VideoPlayerFreezeTimer alloc]initWithVideoPlayer:self];
 
 }
 
@@ -462,11 +461,11 @@ static void * feedContext  = &feedContext;
     if(self.richVideoControlBar.hidden == FALSE){
         //        videoConrolBar.hidden       = TRUE;
         self.richVideoControlBar.hidden   = TRUE;
-        [self play];
+        if (isFullScreen) [self play];
     }else{
         //        videoConrolBar.hidden       = FALSE;
         self.richVideoControlBar.hidden   = FALSE;
-        [self pause];
+         if (isFullScreen) [self pause];
     }
     
 }
@@ -556,6 +555,7 @@ static void * feedContext  = &feedContext;
                     break;
                 case AVPlayerItemStatusReadyToPlay:
                     resetPlayerCounter = 0;
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_READY_TO_PLAY object:nil];
                     break;
                 case AVPlayerItemStatusUnknown:
                     resetPlayerCounter = 0;
@@ -607,17 +607,17 @@ static void * feedContext  = &feedContext;
     //main dispatch queue
     NSOperationQueue *queue = [NSOperationQueue mainQueue];
     //create callback block for observer
-    __weak VideoPlayer *weakSelf = self;
-    void(^callback)(NSNotification *note) = ^(NSNotification *notification){
-        if (avPlayer.currentItem.status == 1) {
-            [weakSelf.avPlayer seekToTime:kCMTimeZero completionHandler:^(BOOL finished){
-                [weakSelf playerItemDidReachEnd];
-            }];
-        }
-        
-    };
-    //add observer and store observer for future use
-    itemEndObserver = [[NSNotificationCenter defaultCenter] addObserverForName:name object: avPlayer.currentItem queue:queue usingBlock:callback];
+//    __weak VideoPlayer *weakSelf = self;
+//    void(^callback)(NSNotification *note) = ^(NSNotification *notification){
+//        if (avPlayer.currentItem.status == 1) {
+//            [weakSelf.avPlayer seekToTime:kCMTimeZero completionHandler:^(BOOL finished){
+//                [weakSelf playerItemDidReachEnd];
+//            }];
+//        }
+//        
+//    };
+//    //add observer and store observer for future use
+//    itemEndObserver = [[NSNotificationCenter defaultCenter] addObserverForName:name object: avPlayer.currentItem queue:queue usingBlock:callback];
 }
 
 
@@ -638,12 +638,36 @@ int counter = 0;
        
     //}
 }
+
+id readyToPlayobserver;
+-(void)delayedSeekToTheTime:(float)seekTime
+{
+    if (avPlayer.currentItem.status != AVPlayerItemStatusReadyToPlay) {
+        __weak VideoPlayer * weakSelf = self;
+        readyToPlayobserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_READY_TO_PLAY object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [weakSelf seekToTheTime:seekTime];
+            [[NSNotificationCenter defaultCenter]removeObserver:readyToPlayobserver];
+        }];
+    }
+    else {
+    
+        [self seekToTheTime:seekTime];
+    }
+
+    
+}
+
+
 //for debugging
 int seekAttempts = 0;
 -(void)seekToTheTime:(float)seekTime{
 
     isReseeking = FALSE;
-    //NSLog(@"seek");
+  
+    if (avPlayer.currentItem.status != AVPlayerItemStatusReadyToPlay) {
+        return;
+    }
+
 //    [avPlayer.currentItem cancelPendingSeeks];
     if (counter > 0) { //gets here when the timer counter starts ticking - i.e. this is re-seeking
         //-------------------------------------
@@ -670,6 +694,9 @@ int seekAttempts = 0;
      
     }
     
+    
+    AVPlayerItem * checkItem = avPlayer.currentItem;
+
     [avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, 600) completionHandler:^(BOOL finished) {
 //        if (_rate > 0) {
 //            [self play];
@@ -817,7 +844,9 @@ int seekAttempts = 0;
 }
 
 
-//force the video to go to live
+/**
+ *  The is run when the Live Button is pressed
+ */
 -(void)goToLive{
     duration = [self durationInSeconds];
     if (avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && duration > 0) {
@@ -1450,7 +1479,7 @@ int seekAttempts = 0;
         @catch (NSException *exception) {}
     }
     
-    
+    playerItem  = nil;
     playerItem  = [[AVPlayerItem alloc] initWithURL:[self.feed path]];
     avPlayer    = [AVPlayer playerWithPlayerItem:playerItem];
     
@@ -1465,7 +1494,7 @@ int seekAttempts = 0;
     [self addPlayerItemTimeObserver];
     [self addItemEndObserverForPlayerItem];
     [self play];
-    _antiFreeze = [[VideoPlayerFreezeTimer alloc]initWithVideoPlayer:self];
+//    _antiFreeze = [[VideoPlayerFreezeTimer alloc]initWithVideoPlayer:self];
  [avPlayer setRate:1];
 
 }
@@ -1473,7 +1502,12 @@ int seekAttempts = 0;
 
 ///////////////////// END OF NEW FEED METHODS ///////////////////////////
 
+-(void)videoPlayerCommands:(NSNotification *)note
+{
+    VideoPlayerCommand cmd= nil;
 
+
+}
 
 
 @end

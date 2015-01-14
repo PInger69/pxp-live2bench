@@ -186,11 +186,13 @@
         [self.view setHidden:YES];
         [self viewDidDisappear:NO];
         [self returnVideoToPreviousViewFromFullScreen:_animated];
+        _player.isFullScreen = NO;
     } else if (!_enable && enable){
         // to true
         [self.view setHidden:NO];
         [self viewDidAppear:NO];
         [self moveVideoToFullScreen:_animated];
+        _player.isFullScreen = YES;
     }
     [self willChangeValueForKey:@"enable"];
     _enable = enable;

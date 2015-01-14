@@ -31,6 +31,9 @@
 #define SUMMARY_GET     @"summaryGet:timeStamp:"
 #define SUMMARY_PUT     @"summaryPut:timeStamp:"
 #define TEAMS_GET       @"teamsGet:timeStamp:"
+#define EVENT_GET_TAGS  @"eventTagsGet:timeStamp:"
+#define CAMERAS_GET     @"camerasGet:timeStamp:"
+
 
 #define STOP_EVENT      @"stopEvent:timeStamp:"
 #define PAUSE_EVENT     @"pauseEvent:timeStamp:"
@@ -63,6 +66,7 @@
 @property (nonatomic,strong)    NSString        * URL;
 @property (nonatomic,strong)    NSString        * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    NSString        * eventType;        // the current event the encoder is looking at
+@property (nonatomic,strong)    NSArray         * eventTags;        // the current event the encoder is looking at
 @property (nonatomic,strong)    NSString        * liveEventName;
 @property (nonatomic,strong)    NSDictionary    * eventData;   //raw dict
 @property (nonatomic,strong)    NSArray         * allEvents;    // all events on the encoder
@@ -79,8 +83,8 @@
 
 @property (nonatomic,readonly)  NSMutableString * log;
 @property (nonatomic,assign)    BOOL            isMaster;
-
-
+@property (nonatomic,assign)    NSInteger       cameraCount;
+@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 
 /**
  *  This will create and instance of an endcoder at inputted ip

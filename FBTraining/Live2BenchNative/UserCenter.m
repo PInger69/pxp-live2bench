@@ -68,6 +68,22 @@
             NSMutableArray * tgnames = [note.userInfo mutableCopy];
             if (tgnames){
                 _tagNames = tgnames;
+                
+                
+//                NSError *error;
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
+               
+                
+                NSString *plistPath = [documentsDirectory stringByAppendingPathComponent:PLIST_TAG_BUTTONS];
+//                if (![fileManager fileExistsAtPath: plistPath])
+//                {
+//                    NSString *bundle = [[NSBundle mainBundle] pathForResource:@”myPlistFile” ofType:@”plist”];
+//                    [fileManager copyItemAtPath:bundle toPath:plistPath error:&error];
+//                }
+                [_tagNames writeToFile:plistPath atomically: YES];
+
+              
             } else {
                 _tagNames = [self _buildTagNames:localPath];
             }
@@ -80,8 +96,8 @@
 
 -(NSMutableArray*)_buildTagNames:(NSString*)aLocalPath
 {
-    NSMutableArray * list = [[NSMutableArray alloc] init];
-    NSString *tagFilePath = [aLocalPath stringByAppendingPathComponent:@"TagButtons.plist"];
+//    NSMutableArray * list = [[NSMutableArray alloc] init];
+    NSString *tagFilePath = [aLocalPath stringByAppendingPathComponent:PLIST_TAG_BUTTONS];
     
     return  [[NSMutableArray alloc] initWithContentsOfFile:tagFilePath];
 }

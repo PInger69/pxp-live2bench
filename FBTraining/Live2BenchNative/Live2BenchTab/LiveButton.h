@@ -14,5 +14,5 @@
 @property (nonatomic,assign) BOOL enabled;
 
 -(id)initWithFrame:(CGRect)frame;
-
+-(void)isActive:(BOOL)enabled;
 @end

@@ -95,16 +95,19 @@ SVSignalStatus signalStatus;
         LeaguePick     = [[TablePopoverController alloc]init];
 
         encoderHomeText = [CustomLabel labelWithStyle:CLStyleOrange];
-        
+        encoderHomeText.text = @"Encoder is not available.";
+        [encStateLabel setHidden:YES];
         // observers
         observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
             masterEncoder = encoderManager.masterEncoder;
             encoderHomeText.text = @"Encoder Home";
+            [encStateLabel setHidden:NO];
             [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
         }];
         observerForLostMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (masterEncoder){
                 encoderHomeText.text = @"Encoder is not available.";
+                [encStateLabel setHidden:YES];
                 [masterEncoder removeObserver:self forKeyPath:@"status" context:&masterContext];
             }
         }];
@@ -349,7 +352,8 @@ SVSignalStatus signalStatus;
             break;
     }
     
-    
+//    NSInteger cc = encoderManager.totalCameraCount;
+//    NSString * scourceCount = (cc)?[NSString stringWithFormat:@" (s%i)",cc]:@"";
     [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }
 
@@ -364,11 +368,11 @@ SVSignalStatus signalStatus;
 {
     [super viewWillAppear:animated];
     //if no event playing, set the team and league information to default values
-    if (!globals.CURRENT_PLAYBACK_EVENT || [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-        globals.ENCODER_SELECTED_HOME_TEAM = @"Home Team";
-        globals.ENCODER_SELECTED_AWAY_TEAM = @"Away Team";
-        globals.ENCODER_SELECTED_LEAGUE = @"League";
-    }
+//    if (!globals.CURRENT_PLAYBACK_EVENT || [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//        globals.ENCODER_SELECTED_HOME_TEAM = @"Home Team";
+//        globals.ENCODER_SELECTED_AWAY_TEAM = @"Away Team";
+//        globals.ENCODER_SELECTED_LEAGUE = @"League";
+//    }
     
 
     [self setButtonImagesAndLabels];
