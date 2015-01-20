@@ -14,7 +14,9 @@
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
 
-
+#import "CheckWiFiAction.h"
+#import "CheckCloudAction.h"
+#import "CheckMasterEncoderAction.h"
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
@@ -84,6 +86,7 @@
         for (EncoderDataSync *edS in _encodersBeingWatched) {
              [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
         }
+        
 
     }
     return self;
@@ -262,6 +265,11 @@
     id                          _masterLostObserver;
     id                          _masterFoundObserver;
     id                          _encoderReadyObserver;
+    
+    
+    CheckWiFiAction             * checkWiFiAction;
+    CheckCloudAction            * checkCloudAction;
+    CheckMasterEncoderAction    * checkMasterEncoderAction;
 }
 
 @synthesize hasLive                 = _hasLive;
@@ -302,7 +310,7 @@
         services                = [[NSMutableArray alloc]init];
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
-        [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+//       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
         
         
 
@@ -315,7 +323,7 @@
         [_authenticatedEncoders addObject:_localEncoder];
         
         _currentEventType       = SPORT_HOCKEY;
-        _searchForEncoders      = YES;
+        _searchForEncoders      = NO;
         encoderSync             = [[EncoderDataSync alloc]init];
         _hasLive                = NO; // default before checking
         
@@ -329,6 +337,7 @@
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;
             [self refresh];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
 
         }];
         
@@ -345,9 +354,13 @@
         
         _encoderReadyObserver     = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_THIS_ENCODER_IS_READY    object:nil queue:nil usingBlock:^(NSNotification *note) {
             
-            if (_masterEncoder.liveEventName) {
-                _liveEventName = _masterEncoder.liveEventName;
+            
+            Encoder * anEncoder = (Encoder *) note.object; // was _masterEncoder. before
+            
+            if (anEncoder.liveEventName) {
+                _liveEventName = anEncoder.liveEventName;
                 [self refresh];
+                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
             }
 
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
@@ -355,9 +368,18 @@
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting:) name:NOTIF_TAG_POSTED object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:) name:NOTIF_MASTER_COMMAND object:nil]; // watch whole app for start or stop events
-        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:) name:NOTIF_ENCODER_STAT object:nil];
 
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:) name:NOTIF_MASTER_HAS_LIVE object:nil];
+        
+        // making actions
+        
+        
+        checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
+        checkCloudAction            = [[CheckCloudAction alloc]init];
+        checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
+        
+        
     }
     return self;
 }
@@ -442,6 +464,23 @@ static void * builtContext          = &builtContext; // depricated?
     
 }
 
+-(void)masterHasLive:(NSNotification *)note
+{
+//    self.liveEventName  = _masterEncoder.liveEventName;
+    
+    self.currentEvent   = self.liveEventName;
+    [self deleteAllThumbs];
+    [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
+        
+        [_eventTags setObject:all forKey:_liveEventName];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+    }];
+
+
+
+}
+
+
 #pragma mark -
 
 // this method was added to possibly sync the feed changes since only the EncoderManager sees NOTIF_ENCODER_FEEDS_UPDATED
@@ -461,27 +500,29 @@ static void * builtContext          = &builtContext; // depricated?
         case ENCODER_STATUS_UNKNOWN: // Disconnected
             [self unRegisterEncoder:encoder];
             break;
+        case ENCODER_STATUS_LIVE:  // This is so when you start a live event on the device it builds a encoder
+            if (!encoder.isBuild) {
+                encoder.isReady = NO;
+                [encoder issueCommand:BUILD priority:3 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+            }
+            break;
+        case ENCODER_STATUS_STOP:
+            self.hasLive = NO;
+            // rebuld all encoders
+            [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
+                    Encoder * anEncoder = (Encoder *) obj;
+                    [anEncoder issueCommand:BUILD priority:3 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+                }
+            }];
+            break;
+        case ENCODER_STATUS_READY:
+            self.hasLive = NO;
+            break;
         default:
             break;
     }
 
-
-    // check all Encoders for live
-
-
-    self.hasLive =( _masterEncoder.status& (ENCODER_STATUS_LIVE | ENCODER_STATUS_PAUSED | ENCODER_STATUS_START)) && _masterEncoder.liveEventName ;
-    if(self.hasLive){
-        self.liveEventName  = _masterEncoder.liveEventName;
-
-        self.currentEvent   = self.liveEventName;
-        [self deleteAllThumbs];
-        [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
-
-            [_eventTags setObject:all forKey:_liveEventName];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
-        }];
-        
-    }
 
 
 }
@@ -500,54 +541,6 @@ static void * builtContext          = &builtContext; // depricated?
          //   [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }
     }
-//    else if (context == statusContext){
-//        NSLog(@"status !!!!!");
-//        switch (encoder.status) {
-//            case ENCODER_STATUS_UNKNOWN: // Disconnected
-//                [self unRegisterEncoder:encoder];
-//                break;
-//            default:
-//                break;
-//        }
-//        
-//
-//        // check all Encoders for live
-//
-//        
-//        self.hasLive =( _masterEncoder.status& (ENCODER_STATUS_LIVE | ENCODER_STATUS_PAUSED | ENCODER_STATUS_START)) && _masterEncoder.liveEventName ;
-//        if(self.hasLive){
-//            self.liveEventName  = _masterEncoder.liveEventName;
-//            
-//            self.currentEvent   = self.liveEventName;
-//            [self deleteAllThumbs];
-//            [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
-//                
-//                [_eventTags setObject:all forKey:_liveEventName];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
-//            }];
-//            
-//        }
-    
-
-//        for (Encoder * enc in _authenticatedEncoders) {
-//            if (enc.status & (ENCODER_STATUS_LIVE | ENCODER_STATUS_PAUSED | ENCODER_STATUS_START))
-//            {
-//               
-//                live        = YES;
-//                liveName    = (enc.liveEventName)?enc.liveEventName:nil;
-//            }
-//            
-//        }
-
-
-//        // this is the ask to be live message
-//        if (live) {
-//             self.currentEvent = @"live";
-//        } else {
-//            self.currentEvent = @"live";
-//        }
-        
-//    }
 
 }
 
@@ -639,6 +632,9 @@ static void * builtContext          = &builtContext; // depricated?
     
 }
 
+
+
+
 // END of Services Methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #pragma mark - Master Command Methods
@@ -675,7 +671,60 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(BOOL)hasWiFi
 {
-    return [uController hasConnectivity];
+    struct sockaddr_in zeroAddress;
+    bzero(&zeroAddress, sizeof(zeroAddress));
+    zeroAddress.sin_len = sizeof(zeroAddress);
+    zeroAddress.sin_family = AF_INET;
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)&zeroAddress);
+    if(reachability != NULL) {
+        //NetworkStatus retVal = NotReachable;
+        SCNetworkReachabilityFlags flags;
+        if (SCNetworkReachabilityGetFlags(reachability, &flags)) {
+            if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
+            {
+                // if target host is not reachable
+                CFRelease(reachability);
+                return NO;
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
+            {
+                // if target host is reachable and no connection is required
+                //  then we'll assume (for now) that your on Wi-Fi
+                CFRelease(reachability);
+                return YES;
+            }
+            
+            
+            if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
+                 (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
+            {
+                // ... and the connection is on-demand (or on-traffic) if the
+                //     calling application is using the CFSocketStream or higher APIs
+                
+                if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
+                {
+                    // ... and no [user] intervention is needed
+                    CFRelease(reachability);
+                    return YES;
+                }
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0)
+            {
+                // ... but WWAN connections are OK if the calling application
+                //     is using the CFNetwork (CFSocketStream?) APIs.
+                CFRelease(reachability);
+                return YES;
+            }
+        }
+    }
+    
+    CFRelease(reachability);
+    return NO;
+    
+//    return [uController hasConnectivity];
 }
 
 
@@ -988,10 +1037,10 @@ static void * builtContext          = &builtContext; // depricated?
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet
 {
     NSString * myEvent = ([event isEqualToString:_liveEventName])?@"live":event; // Converts event name to live if needed
-
+    NSString * hid     = [_dictOfAccountInfo objectForKey:@"hid"];
     
     NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                        @"user"        : [_dictOfAccountInfo objectForKey:@"hid"],
+                                                                                        @"user"        : hid,
                                                                                         @"requesttime" : GET_NOW_TIME,
                                                                                         @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
                                                                                         @"event"       : myEvent
@@ -1113,6 +1162,25 @@ static void * builtContext          = &builtContext; // depricated?
     return c;
 }
 
+-(BOOL)searchForEncoders
+{
+    return _searchForEncoders;
+}
+-(void)setSearchForEncoders:(BOOL)searchForEncoders
+{
+    if (searchForEncoders == _searchForEncoders)return;
+    if (searchForEncoders) {
+        [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+    } else{
+        [serviceBrowser stop];
+    }
+    [self willChangeValueForKey:@"searchForEncoders"];
+    _searchForEncoders = searchForEncoders;
+    [self didChangeValueForKey:@"searchForEncoders"];
+    
+}
+
+
 
 // For debugging
 
@@ -1187,6 +1255,30 @@ static void * builtContext          = &builtContext; // depricated?
         txt = [NSString stringWithFormat:@"%@%@\n",txt,encoderStats];
     }   
     return txt;
+}
+
+// Action Methods
+
+-(id<ActionListItem>)checkForWiFiAction
+{
+    checkWiFiAction.isFinished = NO;
+    checkWiFiAction.isSuccess  = NO;
+    return checkWiFiAction;
+}
+-(id<ActionListItem>)checkForCloudAction
+{
+    checkCloudAction.isFinished = NO;
+    checkCloudAction.isSuccess  = NO;
+    return checkCloudAction;
+}
+
+
+
+-(id<ActionListItem>)checkForMasterAction
+{
+    checkMasterEncoderAction.isFinished = NO;
+    checkMasterEncoderAction.isSuccess  = NO;
+    return checkMasterEncoderAction;
 }
 
 

@@ -179,8 +179,10 @@
 
 - (void)didReceiveMemoryWarning
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if ([self.view window] == nil) self.view = nil;
+    
 }
 
 

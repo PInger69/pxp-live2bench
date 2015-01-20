@@ -22,8 +22,7 @@ typedef enum {
 
 
 // This is for the button controll states
-
-typedef enum  {
+typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     START_HIDDEN    = 1<<1,
     START_ENABLE    = 1<<2,
     STOP_HIDDEN     = 1<<3,
@@ -46,9 +45,10 @@ typedef enum  {
     EventButtonControlStatesPause       = RESUME_ENABLE | STOP_ENABLE | START_HIDDEN | PAUSE_HIDDEN | SHUTDOWN_HIDDEN,
     EventButtonControlStatesStopping    = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_ENABLE,
     BUTTON_STATE                        = START_HIDDEN | STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_HIDDEN
-}EventButtonControlStates;
-
-
+};
+//typedef enum  {
+//    
+//}EventButtonControlStates;
 
 
 
@@ -56,12 +56,12 @@ typedef enum  {
 
 @implementation SettingsViewController{
 
-    //SpinnerView *encStateSpinnerView;
-    //label to show the encoder state
     UILabel *encStateLabel;
     int encStateCounter;
     
     BOOL encoderAvailable;
+
+    BOOL                    dismissEnabled;
     
     //Richard
     EncoderManager         * encoderManager;
@@ -73,11 +73,12 @@ typedef enum  {
     NSArray                * leagueNames;
     id                     observerForFoundMaster;
     id                     observerForLostMaster;
+    UITapGestureRecognizer *tapBehindGesture;
 }
 
 static void *masterContext;
 
-@synthesize logoutButton,appVersionLabel,timerCounter,spinnerTimer;
+@synthesize logoutButton,appVersionLabel,timerCounter,spinnerTimer,encHomeButton;
 @synthesize waitEncoderResponseCounter;
 
 NSTimer *signalTimer;
@@ -88,14 +89,15 @@ SVSignalStatus signalStatus;
 {
     self = [super init];
     if (self) {
-        encoderManager = aEncoderManager;
-        masterContext  = &masterContext;
-        homeTeamPick   = [[TablePopoverController alloc]init];
-        visitTeamPick  = [[TablePopoverController alloc]init];
-        LeaguePick     = [[TablePopoverController alloc]init];
+        dismissEnabled          = YES;
+        encoderManager          = aEncoderManager;
+        masterContext           = &masterContext;
+        homeTeamPick            = [[TablePopoverController alloc]init];
+        visitTeamPick           = [[TablePopoverController alloc]init];
+        LeaguePick              = [[TablePopoverController alloc]init];
 
-        encoderHomeText = [CustomLabel labelWithStyle:CLStyleOrange];
-        encoderHomeText.text = @"Encoder is not available.";
+        encoderHomeText         = [CustomLabel labelWithStyle:CLStyleOrange];
+        encoderHomeText.text    = @"Encoder is not available.";
         [encStateLabel setHidden:YES];
         // observers
         observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -112,6 +114,7 @@ SVSignalStatus signalStatus;
             }
         }];
 
+        
         
     }
     return self;
@@ -289,6 +292,45 @@ SVSignalStatus signalStatus;
 }
 
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if(!tapBehindGesture) {
+        tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
+        [tapBehindGesture setNumberOfTapsRequired:1];
+        [tapBehindGesture setCancelsTouchesInView:NO]; //So the user can still interact with controls in the modal view
+    }
+    
+    [self.view.window addGestureRecognizer:tapBehindGesture];
+
+}
+
+- (void)tapBehindDetected:(UITapGestureRecognizer *)sender
+{
+    
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        CGPoint location = [sender locationInView:nil]; //Passing nil gives us coordinates in the window
+        //Convert tap location into the local view's coordinate system. If outside, dismiss the view.
+        if (![self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil])
+        {
+            [self dismiss];
+        }
+    }
+}
+
+/**
+ *  Dissmisses this view
+ *  This method should be used by the tap behind method or the automatically on success
+ */
+-(void)dismiss
+{
+    if (dismissEnabled){
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [self.view.window removeGestureRecognizer:tapBehindGesture];
+    }
+}
 
 #pragma mark - Observers
 
@@ -366,6 +408,7 @@ SVSignalStatus signalStatus;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+
     [super viewWillAppear:animated];
     //if no event playing, set the team and league information to default values
 //    if (!globals.CURRENT_PLAYBACK_EVENT || [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
@@ -410,7 +453,7 @@ SVSignalStatus signalStatus;
     selectHomeTeam.selected     = NO;
     selectAwayTeam.selected     = NO;
     selectLeague.selected       = NO;
-    
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -493,13 +536,6 @@ SVSignalStatus signalStatus;
 {
     UIButton *popButton = (UIButton*)sender;
     popButton.selected = YES;
-//    if(!globals.LEAGUE_POP)
-//    {
-//        globals.LEAGUE_POP = [[UIPopoverController alloc]initWithContentViewController:leaguePicker];
-//    }
-//    [leaguePicker viewWillAppear:TRUE];
-//    [globals.LEAGUE_POP setDelegate:self];
-//    [globals.LEAGUE_POP presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     
     [LeaguePick populateWith:leagueNames];
     [LeaguePick addOnCompletionBlock:^(NSString *pick) {
@@ -616,11 +652,7 @@ SVSignalStatus signalStatus;
     [secondEncButton addSubview:shutdownButton];
     
     stopButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
-//    UIButton* button = [[UIButton alloc] initWithFrame:CGRectZero];
-//    button.accessibilityLabel = @"Stop";
-//    [button accessibilityActivate];
-//    [stopButton addSubview:button];
-    
+
     [stopButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [stopButton setBackgroundImage:[UIImage imageNamed:@"RedSettingsButton"] forState:UIControlStateNormal];
     [stopButton setBackgroundImage:[UIImage imageNamed:@"RedSettingsButtonSelect"] forState:UIControlStateHighlighted];
@@ -949,7 +981,8 @@ SVSignalStatus signalStatus;
         {
             [fileManager removeItemAtPath:globals.ACCOUNT_PLIST_PATH error:nil];
         }
-        [self addWhiteBackground];
+
+         [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:globals.WHITE_BACKGROUND];
         globals.IS_LOGGED_IN=FALSE;
         globals.IS_EULA = FALSE;
         
@@ -1000,7 +1033,7 @@ SVSignalStatus signalStatus;
     }
     
     
-    
+/* TO DELETE
 //    return;
     
 //    [spinnerView removeSpinner];
@@ -1043,12 +1076,14 @@ SVSignalStatus signalStatus;
 //    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 //    [globals.APP_QUEUE enqueue:url dict:instObj];
 //    [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
+ */
 }
 
 - (void)pauseEnc:(id)sender {
     
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
+    
 //    
 //    //current absolute time in seconds
 //    double currentSystemTime = CACurrentMediaTime();
@@ -1086,12 +1121,12 @@ SVSignalStatus signalStatus;
 }
 
 - (void)stopEnc:(id)sender {
-    
-    
     // Richard
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop":[NSNumber numberWithBool:YES] }];
 
-    return;
+
+    
+/* TO DELETE
     if ([globals.EVENT_NAME isEqualToString:@"live"]) {
         [uController stopSyncMeTimer];
     }
@@ -1132,7 +1167,7 @@ SVSignalStatus signalStatus;
     NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     
   //  [globals.APP_QUEUE enqueue:url dict:instObj];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];*/
 }
 
 - (void)shutdownEnc:(id)sender {
@@ -1147,6 +1182,7 @@ SVSignalStatus signalStatus;
     alert.accessibilityValue = @"shutdownEnc";
 	[alert show];
 //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+ 
 }
 
 //catch response of shutdown alertview adn do thigns with it
@@ -1248,7 +1284,7 @@ SVSignalStatus signalStatus;
 
 }
 
-
+/*
 -(void)startEncCallback:(id)json
 {
     
@@ -1328,7 +1364,7 @@ SVSignalStatus signalStatus;
         
     }
 }
-
+*/
 //This one used for start, pause,stop encoder
 -(void)encSpinnerTimerCallback{
     waitEncoderResponseCounter++;
@@ -1396,11 +1432,6 @@ SVSignalStatus signalStatus;
     encoderAvailable = TRUE;
 }
 
-
--(void)addWhiteBackground{
-    //globals.WHITE_BACKGROUND.transform = CGAffineTransformMakeRotation(M_PI/2.0);
-    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:globals.WHITE_BACKGROUND];
-}
 
 
 -(void)eventControlsState:(EventButtonControlStates)state

@@ -180,9 +180,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
     [globals.VIDEO_PLAYER_LIST_VIEW pause];
     [globals.VIDEO_PLAYER_LIVE2BENCH pause];
-//    [globals.VIDEO_PLAYER_LIST_VIEW stopTimer];
-//    [globals.VIDEO_PLAYER_LIVE2BENCH stopTimer];
-    
+
     //if no filter tool box, initialize filter tool box // This is dead code now
     if(!_filterToolBoxView)
     {
@@ -1269,7 +1267,10 @@ static void * masterEncoderContext = &masterEncoderContext;
             NSLog(@"You Picked a feed: %@",pick);
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
             
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"feed":pick, @"time":[selectedCell.data objectForKey:@"starttime"],@"state":[NSNumber numberWithInteger:PS_Play]}];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"feed":pick,
+                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
         }];
         
         [sourceSelectPopover presentPopoverFromRect:selectedCell.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];

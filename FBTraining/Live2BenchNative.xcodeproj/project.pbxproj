@@ -536,6 +536,12 @@
 		D7A2E5EB19B6498200022795 /* Slomo.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A2E5EA19B6498200022795 /* Slomo.m */; };
 		D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A2E5ED19B6749100022795 /* VideoBarContainerView.m */; };
 		D7A2E5F119B7711E00022795 /* FullVideoBarMyClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A2E5F019B7711E00022795 /* FullVideoBarMyClipViewController.m */; };
+		D7A391721A6959DF00BFD353 /* ActionList.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A391711A6959DF00BFD353 /* ActionList.m */; };
+		D7A3917B1A6D659600BFD353 /* CheckWiFiAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A3917A1A6D659600BFD353 /* CheckWiFiAction.m */; };
+		D7A3917E1A6D68CE00BFD353 /* CheckCloudAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A3917D1A6D68CE00BFD353 /* CheckCloudAction.m */; };
+		D7A391821A6D871F00BFD353 /* CheckLoginAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A391811A6D871F00BFD353 /* CheckLoginAction.m */; };
+		D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A391841A6EA23E00BFD353 /* MultiPip.m */; };
+		D7A391881A6ED68C00BFD353 /* CheckMasterEncoderAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A391871A6ED68C00BFD353 /* CheckMasterEncoderAction.m */; };
 		D7A49113170C797A0070A7DB /* continue.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A49111170C797A0070A7DB /* continue.png */; };
 		D7A49114170C797A0070A7DB /* continue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A49112170C797A0070A7DB /* continue@2x.png */; };
 		D7A49124170CAB850070A7DB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A49123170CAB850070A7DB /* MessageUI.framework */; };
@@ -1391,6 +1397,18 @@
 		D7A2E5ED19B6749100022795 /* VideoBarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoBarContainerView.m; sourceTree = "<group>"; };
 		D7A2E5EF19B7711E00022795 /* FullVideoBarMyClipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullVideoBarMyClipViewController.h; sourceTree = "<group>"; };
 		D7A2E5F019B7711E00022795 /* FullVideoBarMyClipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullVideoBarMyClipViewController.m; sourceTree = "<group>"; };
+		D7A391701A6959DF00BFD353 /* ActionList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionList.h; path = Live2BenchNative/UtilityClasses/ActionList.h; sourceTree = "<group>"; };
+		D7A391711A6959DF00BFD353 /* ActionList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ActionList.m; path = Live2BenchNative/UtilityClasses/ActionList.m; sourceTree = "<group>"; };
+		D7A391791A6D659600BFD353 /* CheckWiFiAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckWiFiAction.h; path = EncoderClasses/CheckWiFiAction.h; sourceTree = "<group>"; };
+		D7A3917A1A6D659600BFD353 /* CheckWiFiAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckWiFiAction.m; path = EncoderClasses/CheckWiFiAction.m; sourceTree = "<group>"; };
+		D7A3917C1A6D68CE00BFD353 /* CheckCloudAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckCloudAction.h; path = EncoderClasses/CheckCloudAction.h; sourceTree = "<group>"; };
+		D7A3917D1A6D68CE00BFD353 /* CheckCloudAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckCloudAction.m; path = EncoderClasses/CheckCloudAction.m; sourceTree = "<group>"; };
+		D7A391801A6D871F00BFD353 /* CheckLoginAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckLoginAction.h; path = Live2BenchNative/CheckLoginAction.h; sourceTree = "<group>"; };
+		D7A391811A6D871F00BFD353 /* CheckLoginAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckLoginAction.m; path = Live2BenchNative/CheckLoginAction.m; sourceTree = "<group>"; };
+		D7A391831A6EA23E00BFD353 /* MultiPip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiPip.h; path = Live2BenchNative/MultiPip.h; sourceTree = "<group>"; };
+		D7A391841A6EA23E00BFD353 /* MultiPip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultiPip.m; path = Live2BenchNative/MultiPip.m; sourceTree = "<group>"; };
+		D7A391861A6ED68C00BFD353 /* CheckMasterEncoderAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckMasterEncoderAction.h; path = EncoderClasses/CheckMasterEncoderAction.h; sourceTree = "<group>"; };
+		D7A391871A6ED68C00BFD353 /* CheckMasterEncoderAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckMasterEncoderAction.m; path = EncoderClasses/CheckMasterEncoderAction.m; sourceTree = "<group>"; };
 		D7A49111170C797A0070A7DB /* continue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = continue.png; sourceTree = "<group>"; };
 		D7A49112170C797A0070A7DB /* continue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue@2x.png"; sourceTree = "<group>"; };
 		D7A49123170CAB850070A7DB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -2361,6 +2379,17 @@
 			name = VideoBarViewControllers;
 			sourceTree = "<group>";
 		};
+		D7A3917F1A6D86D700BFD353 /* UserClasses */ = {
+			isa = PBXGroup;
+			children = (
+				D727798B1A30C5870034DD66 /* UserCenter.h */,
+				D7A391801A6D871F00BFD353 /* CheckLoginAction.h */,
+				D7A391811A6D871F00BFD353 /* CheckLoginAction.m */,
+				D727798C1A30C5870034DD66 /* UserCenter.m */,
+			);
+			name = UserClasses;
+			sourceTree = "<group>";
+		};
 		D7A49122170CAADF0070A7DB /* MyClipViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2507,8 +2536,7 @@
 				D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */,
 				D72779A31A32605B0034DD66 /* BottomViewControllerBase.h */,
 				D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */,
-				D727798B1A30C5870034DD66 /* UserCenter.h */,
-				D727798C1A30C5870034DD66 /* UserCenter.m */,
+				D7A3917F1A6D86D700BFD353 /* UserClasses */,
 				D72779881A2FBEBE0034DD66 /* LiveButton.h */,
 				D72779891A2FBEBE0034DD66 /* LiveButton.m */,
 				D727089C1A141AD90086BCB8 /* Localizable.strings */,
@@ -2522,6 +2550,8 @@
 				D7A188BB19FE8FE100513909 /* TagBuilder.m */,
 				D79BC1DA19E8720100ECD8DB /* Pip.h */,
 				D79BC1DB19E8720100ECD8DB /* Pip.m */,
+				D7A391831A6EA23E00BFD353 /* MultiPip.h */,
+				D7A391841A6EA23E00BFD353 /* MultiPip.m */,
 				D7A188C01A013E2D00513909 /* PipViewController.h */,
 				D7A188C11A013E2D00513909 /* PipViewController.m */,
 				D79BC1D719E836F800ECD8DB /* DebuggingTabViewController.h */,
@@ -3063,6 +3093,8 @@
 		D7CF390819DF213F0013E46B /* UtilityClasses */ = {
 			isa = PBXGroup;
 			children = (
+				D7A391701A6959DF00BFD353 /* ActionList.h */,
+				D7A391711A6959DF00BFD353 /* ActionList.m */,
 				D700801919DF2456000144CF /* Utility.h */,
 				D700801A19DF2456000144CF /* Utility.m */,
 			);
@@ -3173,6 +3205,12 @@
 				D7EE84CF19F19DC000DEC82B /* EncoderManager.m */,
 				D7EE84D119F19E0900DEC82B /* Encoder.h */,
 				D7EE84D219F19E0900DEC82B /* Encoder.m */,
+				D7A391791A6D659600BFD353 /* CheckWiFiAction.h */,
+				D7A3917A1A6D659600BFD353 /* CheckWiFiAction.m */,
+				D7A3917C1A6D68CE00BFD353 /* CheckCloudAction.h */,
+				D7A3917D1A6D68CE00BFD353 /* CheckCloudAction.m */,
+				D7A391861A6ED68C00BFD353 /* CheckMasterEncoderAction.h */,
+				D7A391871A6ED68C00BFD353 /* CheckMasterEncoderAction.m */,
 			);
 			name = EncoderClasses;
 			sourceTree = "<group>";
@@ -3794,6 +3832,7 @@
 				D7581F2C196461ED0029C5DD /* drawXYZ.m in Sources */,
 				D79046AC18F48FD300A58B28 /* VideoPlayer.m in Sources */,
 				AA8358B119B109D7009B3ABC /* DurationTableViewCell.m in Sources */,
+				D7A391721A6959DF00BFD353 /* ActionList.m in Sources */,
 				AA83588E19B10967009B3ABC /* DejalActivityView.m in Sources */,
 				D7A7380719A3A27B0080B882 /* TagPopOverContent.m in Sources */,
 				D7A9395416ADA65E006CBAB2 /* AppDelegate.m in Sources */,
@@ -3820,6 +3859,7 @@
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
 				D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */,
 				D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */,
+				D7A391881A6ED68C00BFD353 /* CheckMasterEncoderAction.m in Sources */,
 				D73689A1183BC86100373385 /* TTSwitch.m in Sources */,
 				D7A188C21A013E2D00513909 /* PipViewController.m in Sources */,
 				AA83596D19B115D2009B3ABC /* ExportPlayersPopoverController.m in Sources */,
@@ -3852,6 +3892,7 @@
 				AA8358A419B1099D009B3ABC /* StatsViewController.m in Sources */,
 				AA83597319B116C5009B3ABC /* JPFont.m in Sources */,
 				D7A7380419A2920D0080B882 /* SortArrow.m in Sources */,
+				D7A3917E1A6D68CE00BFD353 /* CheckCloudAction.m in Sources */,
 				D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */,
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,
 				D7DFD4AC1829AED400D98BE7 /* CustomProgressView.m in Sources */,
@@ -3880,6 +3921,7 @@
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
 				AA8358A519B1099D009B3ABC /* StatsCell.m in Sources */,
 				D7A2E5BD19AE39F900022795 /* ToggleButton.m in Sources */,
+				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
 				AA8358B819B10A22009B3ABC /* LDProgressView.m in Sources */,
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
 				D79D709219DD8ED2001FBE16 /* ExternalScreenButton.m in Sources */,
@@ -3894,6 +3936,7 @@
 				AA8358C319B10A4D009B3ABC /* ImportTagsSync.m in Sources */,
 				94F95970192272C100B7D201 /* AVPlayerRewindableItem.m in Sources */,
 				D72779931A30F0D50034DD66 /* EncoderCommand.m in Sources */,
+				D7A3917B1A6D659600BFD353 /* CheckWiFiAction.m in Sources */,
 				AA83589619B10967009B3ABC /* SVStatusHUD.m in Sources */,
 				D727799C1A3240A00034DD66 /* LiveIndicatorLight.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
@@ -3923,6 +3966,7 @@
 				D793513F16D5B2ED00D28CCB /* Globals.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
+				D7A391821A6D871F00BFD353 /* CheckLoginAction.m in Sources */,
 				AA83593C19B10B71009B3ABC /* LBCloudPlayerView.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
 				D799748216F8C37700CAAABB /* playerCell.m in Sources */,

@@ -259,6 +259,7 @@
             results     = object;
             statusCode  = [[results objectForKey:@"code"]integerValue] ;
          
+            //TODO
             // this is for the older encoder versions
             if ([checkedEncoder.version compare:OLD_VERSION options:NSNumericSearch]){
 //            if ([Utility sumOfVersion:checkedEncoder.version] >= [Utility sumOfVersion:OLD_VERSION]){
@@ -266,9 +267,14 @@
                 checkedEncoder.isMaster = checkIfNobel;
             }
             
-            if (checkedEncoder.status != statusCode && (!(checkedEncoder.status & ENCODER_STATUS_LIVE) || checkedEncoder.liveEventName)) {
+            if (checkedEncoder.status != statusCode /*&& (!(checkedEncoder.status & ENCODER_STATUS_LIVE) || checkedEncoder.liveEventName || (statusCode & ENCODER_STATUS_READY))*/) {
+                // encoder status changed
+                // old encoder status is not live or live event name was set or new encoder status is ready
                 checkedEncoder.statusAsString   = ([results objectForKey:@"status"])?[results objectForKey:@"status"]:@"";
                 checkedEncoder.status           = statusCode; /// maybe make this mod directly
+                if (checkedEncoder.status == ENCODER_STATUS_LIVE) {
+                    checkedEncoder.isBuild = false; // This is so the encoder manager rebuilds it once
+                }
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:checkedEncoder];
                 
             }

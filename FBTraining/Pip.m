@@ -19,6 +19,11 @@
     
     void (^seekReady)();
     
+    
+    
+    id                           loopingObserver;
+    CMTimeRange                 _range; // this is the range of the player.... used for looping
+    
 }
 @synthesize avPlayerItem;
 @synthesize avPlayer;
@@ -28,6 +33,9 @@
 @synthesize quality     = _quality;
 @synthesize feed        = _feed;
 @synthesize selected    = _selected;
+@synthesize muted       = _muted;
+@synthesize looping             = _looping;
+
 
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip
 {
@@ -35,14 +43,14 @@
     AVPlayer           * tempAvPlayer       = thisPip.avPlayer;
     AVPlayerLayer      * tempAvPlayerLayer  = thisPip.avPlayerLayer;
     AVPlayerItem       * tempAvPlayerItem   = thisPip.avPlayerItem;
-    BOOL               tempMuted            = thisPip.isMuted;
+    BOOL               tempMuted            = thisPip.muted;
 
     
     thisPip.avPlayer        = thatPip.avPlayer;
     thisPip.avPlayerLayer   = thatPip.avPlayerLayer;
 
     thisPip.avPlayerItem    = thatPip.avPlayerItem;
-    thisPip.muted           = thatPip.isMuted;
+    thisPip.muted           = thatPip.muted;
 
     thatPip.avPlayer        = tempAvPlayer;
     thatPip.avPlayerLayer   = tempAvPlayerLayer;
@@ -67,6 +75,7 @@
         self.layer.borderWidth  = 1;
         self.layer.borderColor  = [DESELECT_COLOR CGColor];
         self.isDragAble         = NO;
+        avPlayer.muted          = NO;
         _rate                   = 1.0;
         _quality                = 0;
         debugLabel              = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 100, 30)];
@@ -77,17 +86,10 @@
 -(void)playerURL:(NSURL *)url
 {
     _feed          = [[Feed alloc]initWithURLString:  [url absoluteString]   quality:_quality];
-    
-//    @try {
-//        [avPlayer removeTimeObserver:self];
-//   
-//    }
-//    @catch (NSException * __unused exception) {}
-    
     avPlayer        = nil;
     avPlayerItem    = [[AVPlayerItem alloc] initWithURL:[_feed path]];
     avPlayer        = [AVPlayer playerWithPlayerItem:avPlayerItem];
-    
+    avPlayer.muted  = _muted;
     if (avPlayerLayer)[avPlayerLayer removeFromSuperlayer];
     avPlayerLayer                 = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
     avPlayerLayer.frame           = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
@@ -103,27 +105,29 @@
     [avPlayer setRate:_rate];
 }
 
+-(void)playWithFeed:(Feed*)feed withRange:(CMTimeRange)range
+{
+    _range = range;
+    [self playWithFeed:feed];
+
+}
+
+
 -(void)prepareWithFeed:(Feed*)aFeed
 {
     _feed = aFeed;
-//    @try {
-//
-//        if (avPlayer)[avPlayer removeTimeObserver:self];
-//
-//    }
-//    @catch (NSException * __unused exception) {}
     
     _feed.quality   = _quality;
     NSURL * url     = [_feed path];
     avPlayer        = nil;
     avPlayerItem    = [[AVPlayerItem alloc] initWithURL:url];
     avPlayer        = [AVPlayer playerWithPlayerItem:avPlayerItem];
-    
+    avPlayer.muted  = _muted;
     if (avPlayerLayer)[avPlayerLayer removeFromSuperlayer];
     avPlayerLayer                 = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
     avPlayerLayer.frame           = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     [self.layer addSublayer:avPlayerLayer];
-
+    NSLog(avPlayer.muted?@"mute":@"sound");
 
 }
 
@@ -216,7 +220,10 @@ static void * seekContext = &seekContext;
     CMTime playerTime   = self.avPlayerItem.duration;
     int difference      = CMTimeCompare(time, playerTime);
     AVPlayer * avplyer  = avPlayer;
+    avplyer.muted       = _muted;
     AVPlayerItem * avplyeritm  = avPlayerItem;
+
+    
     if (self.avPlayerItem.status != AVPlayerItemStatusReadyToPlay){
     
         [self.avPlayerItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&seekContext];
@@ -227,8 +234,8 @@ static void * seekContext = &seekContext;
                 [avplyer seekToTime:avplyeritm.duration];
             }
             
-            [avplyer seekToTime:time];
-            
+//            [avplyer seekToTime:time];
+            [avplyer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity];
         };
     } else { // avplayer item is ready to play
 //        if (playerTime.value ==0)return;
@@ -255,18 +262,47 @@ static void * seekContext = &seekContext;
 }
 
 
+-(void)live
+{
+    AVPlayerItem* currentItem   = avPlayer.currentItem;
+    NSArray* seekableRanges     = currentItem.seekableTimeRanges;
+   
+    int32_t  ts                 = self.avPlayerItem.asset.duration.timescale;
+
+    CMTime time;
+    
+    
+    if (seekableRanges.count > 0)
+    {
+        CMTimeRange range   = [[seekableRanges objectAtIndex:0] CMTimeRangeValue];
+        CMTime startT       = range.start;
+        CMTime endT         = CMTimeAdd(startT,range.duration);
+        
+        time                = endT;
+        
+    } else {
+        
+        time                = CMTimeMakeWithSeconds(0, NSEC_PER_SEC);
+    }
+    
+    if (avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+        [avPlayer.currentItem cancelPendingSeeks];
+        [self seekTo:time];
+        [self play];
+    }
+
+    
+}
 
 
-
-
-
--(BOOL)isMuted{
-    return avPlayer.muted;
+-(BOOL)muted{
+    return _muted;
 }
 
 -(void)setMuted:(BOOL)muted
 {
-    avPlayer.muted = muted;
+    _muted = muted;
+    avPlayer.muted = _muted;
 }
 
 -(BOOL)hasHighQuality
@@ -321,6 +357,54 @@ static void * seekContext = &seekContext;
 {
     return _selected;
 }
+
+
+-(BOOL)looping
+{
+    return  _looping;
+}
+
+
+-(void)setLooping:(BOOL)looping
+{
+    if (_looping == looping) return;
+    
+    [self willChangeValueForKey:@"looping"];
+    _looping = looping;
+    [self didChangeValueForKey:@"looping"];
+    
+    if (_looping) {
+        
+        if(loopingObserver) { // remove it if it has it :)
+            [avPlayer removeTimeObserver:loopingObserver];
+            loopingObserver = nil;
+        }
+        
+        //        NSArray *times = [NSArray arrayWithObjects:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(globals.HOME_END_TIME, 600)], nil];
+        
+        
+        CMTime startT   = _range.start;
+        CMTime endT     = _range.duration;
+        
+        NSArray *times = @[ [NSValue valueWithCMTime:endT ] ];
+        
+        __block AVPlayer *weakRef = avPlayer;
+        
+        // the observer watches till endT is hit then seeks to startT
+        loopingObserver = [avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
+            //set queue: NULL will use the default queue which is the main queue
+            //[weakRef seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600)];
+            [weakRef seekToTime:startT];
+        }];
+        
+        
+        
+        
+        
+    }
+    
+}
+
 
 
 @end

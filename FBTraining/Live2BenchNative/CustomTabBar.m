@@ -10,25 +10,43 @@
 #import "CustomTabBar.h"
 #import "StatsTabViewController.h"
 #import "EncoderClasses/EncoderManager.h"
-
-#define SHOW_STATS_TAB              YES
-
-#define TAB_WIDTH                   171//1024/6.0
-#define HORIZANTAL_TAB_SPACING      0
-#define TIMER_PERIOD                0.1
-#define NUM_STEPS                   7
-
 #import "CustomTabViewController.h"
 #import "DebuggingTabViewController.h"
+#import "UtilityClasses/ActionList.h"
+#import "UserCenter.h";
+#define SHOW_STATS_TAB              YES
+
+#define TIMER_PERIOD                0.1
+
+
 static NSArray *tabBarItems = nil;
 static NSMutableArray *tabButtonItems=nil;
+
+
+typedef NS_OPTIONS(NSInteger, PXPTabs) {
+    PXPTabsLogoTab      = 1<<1,
+    PXPTabsCalendarTab  = 1<<2,
+    PXPTabsL2BTab       = 1<<3,
+    PXPTabsClipViewTab  = 1<<4,
+    PXPTabsListViewTab  = 1<<5,
+    PXPTabsMyClipsTab   = 1<<6,
+    PXPTabsStatsTab     = 1<<7,
+    PXPTabsDebuggingTab = 1<<10,
+//    EventButtonControlStatesDisabled    = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN,
+
+};
+
+
 
 @implementation CustomTabBar
 {
     NSMutableDictionary * tabNameReferenceDict;
-
+    ActionList          * actionList;
+    EncoderManager      * encoderManager;
+    AppDelegate         * appDel;
+    UserCenter          * userCenter;
 }
-@synthesize spinnerView;
+
 @synthesize progressViewTextLabel;
 @synthesize loadingProgressView;
 @synthesize uploadLocalTagsLabel;
@@ -41,6 +59,21 @@ static NSMutableArray *tabButtonItems=nil;
 @synthesize tBar = _tBar;
 
 
+-(id)init
+{
+    appDel              = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    encoderManager      = appDel.encoderManager;
+    userCenter          = appDel.userCenter;
+    
+    self = [super init];
+    if (self) {
+        
+  
+    }
+    return self;
+}
+
+
 -(void)viewDidLoad
 {
     [super viewDidLoad];
@@ -50,7 +83,6 @@ static NSMutableArray *tabButtonItems=nil;
     }
     [self setupView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppStateChange:)        name:NOTIF_APST_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationSelectTab:)   name:NOTIF_SELECT_TAB object:nil];
     //init utilities
     if(!uController)
@@ -58,15 +90,15 @@ static NSMutableArray *tabButtonItems=nil;
         uController=[[UtilitiesController alloc]init];
     }
     
-    
     //resize window so that there is no black strip at bottom, (black strip from native tab bar) move native tab bar off screen.
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.0];
-     UIView *nativeTabView = [self.view.subviews objectAtIndex:1];
+    UIView *nativeTabView = [self.view.subviews objectAtIndex:1];
     [nativeTabView setFrame:CGRectMake(-1024, -1024, nativeTabView.frame.size.width, nativeTabView.frame.size.height)];
     [UIView commitAnimations];
     
     toastAnimationDidStart = FALSE;
+    
     if(!toastTimer)
     {
         toastTimer=[NSTimer scheduledTimerWithTimeInterval:1
@@ -93,7 +125,7 @@ static NSMutableArray *tabButtonItems=nil;
     
     
     firstLoadGoToCalendar = FALSE;
-    globals.CURRENT_APP_STATE = apstNotInited ;// set app status to 0 so we can initialise variables;
+//    globals.CURRENT_APP_STATE = apstNotInited ;// set app status to 0 so we can initialise variables;
     
     //flash button indicating local tags uploading
     uploadLocalTagButton = [[UploadButton alloc]init];
@@ -101,7 +133,8 @@ static NSMutableArray *tabButtonItems=nil;
     [uploadLocalTagButton addTarget:self action:@selector(showUploadLocalTagsLabel) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:uploadLocalTagButton];
     
-
+    // this is used to replace the app load states
+    actionList = [[ActionList alloc]init];
 }
 
 //display the label of uploading local tags to the server
@@ -126,9 +159,7 @@ static NSMutableArray *tabButtonItems=nil;
         
 -(void)setupView
 {
-    AppDelegate * appDel = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-  
+//    AppDelegate * appDel = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     LogoViewController          *logoVC     = [[LogoViewController alloc] initWithAppDelegate:appDel];
     CalendarViewController      *calendarVC = [[CalendarViewController alloc] initWithAppDelegate:appDel];
@@ -136,7 +167,7 @@ static NSMutableArray *tabButtonItems=nil;
     ClipViewController          *clipVC     = [[ClipViewController alloc] initWithAppDelegate:appDel];
 //    ListViewController          *listVC     = [[ListViewController alloc] init];
     BookmarkViewController      *bookmarkVC = [[BookmarkViewController alloc] initWithAppDelegate:appDel];
-    StatsTabViewController      *statsVC    = [[StatsTabViewController alloc] init];
+//    StatsTabViewController      *statsVC    = [[StatsTabViewController alloc] init];
 //    DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
     NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects:logoVC, calendarVC, liveVC, clipVC,  bookmarkVC, nil]; //listVC,
     if(SHOW_STATS_TAB)
@@ -232,37 +263,16 @@ static NSMutableArray *tabButtonItems=nil;
     
 }
 
-
+#pragma mark - ACTION LIST IS HERE
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     //hide original tab bar
     [self hideExistingTabBar]; // is this dead?
-    [self addCustomElements]; // add custom tab bar buttons
-    
-    //[uController showSpinner];
-//     globals.SPINNERVIEW = [SpinnerView loadSpinnerIntoView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
-    
-    updateAppStateTimer =[NSTimer scheduledTimerWithTimeInterval:TIMER_PERIOD
-                                                          target:self
-                                                        selector:@selector(updateAppState)
-                                                        userInfo:nil repeats:YES];
-    [updateAppStateTimer fire];
-    
-    
-    //Richard
-    [SpinnerView initTheGlobalSpinner];
-}
 
 
-//this background is for login/eula popup
--(void)addWhiteBackground{
-    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:globals.WHITE_BACKGROUND];
-}
-
-// add custom tab bar buttons
--(void)addCustomElements
-{
+    
+    
     //array of tab bar items -- this array is used to create buttons in the tab bar
     TabBarButton *welcomeTab    = [[TabBarButton alloc] initWithName:@"Welcome"     andImageName:@"logoTab"];
     TabBarButton *calendarTab   = [[TabBarButton alloc] initWithName:@"Calendar"    andImageName:@"calendarTab"];
@@ -271,22 +281,100 @@ static NSMutableArray *tabButtonItems=nil;
     TabBarButton *listTab       = [[TabBarButton alloc] initWithName:@"List View"   andImageName:@"listTab"];
     TabBarButton *myClipTab     = [[TabBarButton alloc] initWithName:@"My Clip"     andImageName:@"myClipTab"];
     TabBarButton *statsTab      = [[TabBarButton alloc] initWithName:@"Stats"       andImageName:@"statsTab"];
-//    welcomeTab.accessibilityLabel = @"Welcome";
-//    welcomeTab.contentMode = UIViewContentModeScaleAspectFill;
-//    calendarTab.accessibilityLabel = @"Calendar";
-//    live2BenchTab.accessibilityLabel = @"Live2Bench";
-//    clipTab.accessibilityLabel = @"Clip View";
-//    listTab.accessibilityLabel = @"List View";
+
     NSMutableArray* tabItems = [NSMutableArray arrayWithObjects: welcomeTab, calendarTab, live2BenchTab, clipTab, listTab, myClipTab, nil];
     if(SHOW_STATS_TAB)
         [tabItems addObject:statsTab];
     
     tabBarItems = [tabItems copy];
-    
-    globals.CUSTOM_TAB_ITEMS = [[NSArray alloc]initWithArray:tabBarItems];
+
     [self createButton:tabBarItems];
+    
+    
+    
+    
+    
+    //Richard
+    [SpinnerView initTheGlobalSpinner];
+
+     //ACTION LIST ACTION HERE!
+   
+    __block EncoderManager * weakEM = encoderManager;
+    
+    
+    [actionList addItem:encoderManager.checkForWiFiAction onItemStart:^{
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
+                                                               object:nil
+                                                             userInfo:[SpinnerView message:@"Checking for WiFi..." progress:.1 animated:YES]];
+            } onItemFinish:^(BOOL succsess) {
+                NSLog(@"WIFI Check");
+                NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+    }];
+    
+    [actionList addItem:encoderManager.checkForCloudAction onItemStart:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
+                                                           object:nil
+                                                         userInfo:[SpinnerView message:@"Checking for Cloud..." progress:.2 animated:YES]];
+            } onItemFinish:^(BOOL succsess) {
+                NSLog(@"Cloud Check");
+                NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+    }];
+    
+    [actionList addItem:[userCenter loginAction] onItemStart:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
+                                                           object:nil
+                                                         userInfo:[SpinnerView message:@"Checking user credentials..." progress:.3 animated:YES]];
+
+        } onItemFinish:^(BOOL succsess) {
+            NSLog(@"User Check");
+            NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+            
+            if(succsess){
+                weakEM.searchForEncoders = weakEM.hasWiFi;
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+            }
+        }];
+    
+    
+    
+    
+        [actionList addItem:encoderManager.checkForMasterAction onItemStart:^{
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
+                                                               object:nil
+                                                             userInfo:[SpinnerView message:@"Checking for Master Encoder..." progress:.4 animated:YES]];
+        } onItemFinish:^(BOOL succsess) {
+            
+        }];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    [actionList onFinishList:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
+    }];
+    
+    
+    [actionList start];
+    
 }
 
+
+//this background is for login/eula popup
+-(void)addWhiteBackground{
+    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:globals.WHITE_BACKGROUND];
+}
+
+
+
+/*TO DELETE
 //this view will display the app's loading progress when just open the app
 //TO REMOVE
 -(void)addProgressView{
@@ -307,13 +395,13 @@ static NSMutableArray *tabButtonItems=nil;
     [self updateProgessView:0.0/NUM_STEPS :@"checking for login and eula"];
     
 }
-
+*/
 //create custom tab buttons
 -(void)createButton:(NSArray*)buttonArray
 {
     
     int tabCount = [self.viewControllers count];
-  tabNameReferenceDict = [[NSMutableDictionary alloc]init]; // this is so the tabs can be ref by name;
+    tabNameReferenceDict = [[NSMutableDictionary alloc]init]; // this is so the tabs can be ref by name;
     for (int i =0; i<tabCount;i++){
     
         TabBarButton* btn = ((CustomTabViewController*)[self.viewControllers objectAtIndex:i]).sectionTab ;
@@ -329,50 +417,53 @@ static NSMutableArray *tabButtonItems=nil;
         
     }
     
-    return;
-    
-//    contains actual buttons - added from the list (tabBarItems)
-//    use this array to access tabs (i.e. change tabs, backgrounds, etc)
-    if (tabButtonItems) return;
-    tabButtonItems=[[NSMutableArray alloc]init];
-    
-    //we are going to go into each dict item in the button array and create a custom button with each object
-    for(TabBarButton* btn in buttonArray)
-    {
-        int currIndex = [buttonArray indexOfObject:btn];
-        
-        //different images for if the tab bar is on or off
-        
-        btn.frame = CGRectMake(currIndex*(self.view.bounds.size.width/[buttonArray count]), 0, self.view.bounds.size.width/[buttonArray count] + 1, 55); // Set the frame (size and position) of the button)
-        [btn setClipsToBounds:TRUE];
-        
-//        [btn setBackgroundImage:btnImageSelected forState:UIControlStateSelected]; // Set the image for the selected state of the button
-        [btn setTag:currIndex]; // Assign the button a "tag" so when our "click" event is called we know which button was pressed.
-       
-        [self.view addSubview:btn];
-        [btn addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [tabButtonItems addObject:btn];
-    }
-    if(!self.tBar)
-    {
-        self.tBar=(UITabBar*)self.tabBarController.tabBar;
-    }
+
+    /*TO DELETE
+////    contains actual buttons - added from the list (tabBarItems)
+////    use this array to access tabs (i.e. change tabs, backgrounds, etc)
+//    if (tabButtonItems) return;
+//    tabButtonItems=[[NSMutableArray alloc]init];
+//    
+//    //we are going to go into each dict item in the button array and create a custom button with each object
+//    for(TabBarButton* btn in buttonArray)
+//    {
+//        int currIndex = [buttonArray indexOfObject:btn];
+//        
+//        //different images for if the tab bar is on or off
+//        
+//        btn.frame = CGRectMake(currIndex*(self.view.bounds.size.width/[buttonArray count]), 0, self.view.bounds.size.width/[buttonArray count] + 1, 55); // Set the frame (size and position) of the button)
+//        [btn setClipsToBounds:TRUE];
+//        
+////        [btn setBackgroundImage:btnImageSelected forState:UIControlStateSelected]; // Set the image for the selected state of the button
+//        [btn setTag:currIndex]; // Assign the button a "tag" so when our "click" event is called we know which button was pressed.
+//       
+//        [self.view addSubview:btn];
+//        [btn addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//        [tabButtonItems addObject:btn];
+//    }
+//    if(!self.tBar)
+//    {
+//        self.tBar=(UITabBar*)self.tabBarController.tabBar;
+//    }
+    */
 }
 
-
+/*TO DELETE
 -(void)updateProgessView:(float)loadingPercentComplete :(NSString*)currentProcessString{
     [loadingProgressView setProgress:loadingPercentComplete animated:YES] ;
     
     //progressViewTextLabel.accessibilityLabel = @"checking for wifi";
     [progressViewTextLabel setText:currentProcessString];
 }
-
+*/
 
 -(void)onAppStateChange:(NSNotification*)note
 {
     globals.CURRENT_APP_STATE = [[note.userInfo objectForKey:@"state"]intValue];
 }
 
+
+/*
 -(void)updateAppState
 {
     //if there are local tags uploading, show the uploadLocalTagsLabel and not in list view or my clip view (the text will overlap the tableview title);otherwise hide it
@@ -762,7 +853,7 @@ static NSMutableArray *tabButtonItems=nil;
         case apstNoWifi: // no wifi available
         case apstNoMin: //no min available
         {
-            CustomAlertView * noWifiAlert;
+//            CustomAlertView * noWifiAlert;
             NSString        * message;
             
             if (!globals.HAS_WIFI) {
@@ -782,7 +873,7 @@ static NSMutableArray *tabButtonItems=nil;
             
             if (![CustomAlertView alertMessageExists:message]) {
                 
-                CustomAlertView *noWifiAlert = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//                CustomAlertView *noWifiAlert = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 //                [noWifiAlert show];
             }
 
@@ -1123,7 +1214,10 @@ static NSMutableArray *tabButtonItems=nil;
             break;
     }
 }
+*/
 
+
+/*TO DELETE
 //ping server to see if anything is there
 //if there is response for ping,there is cloud
 -(void)pingServerCallback:(id)response
@@ -1131,7 +1225,9 @@ static NSMutableArray *tabButtonItems=nil;
     globals.HAS_CLOUD = TRUE; 
 
 }
+*/
 
+/*TO DELETE
 //response of encoder status request
 -(void)encoderStatusCallback :(id)jsonResp
 {
@@ -1170,11 +1266,18 @@ static NSMutableArray *tabButtonItems=nil;
     }
 
 }
+ 
+ */
+
 
 -(void)dismissAlertView:(UIAlertView*)alertView{
     [alertView dismissWithClickedButtonIndex:0 animated:YES];
     [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
 }
+
+
+/*TO DELETE
+
 //---browse for services---
 -(void) browseServices {
     return;
@@ -1301,6 +1404,7 @@ static NSMutableArray *tabButtonItems=nil;
     
 }
 
+*/
 // This selects tab by string name like this
 -(void)notificationSelectTab:(NSNotification*)note
 {
@@ -1323,10 +1427,10 @@ static NSMutableArray *tabButtonItems=nil;
 //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SWITCH_MAIN_TAB object:self];
 //    }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Force Fullscreen Exit" object:nil];
-    
     [self selectTab:tagNum];
 }
+
+
 
 //hide the native IOS tab bar
 -(void)hideExistingTabBar
@@ -1342,7 +1446,6 @@ static NSMutableArray *tabButtonItems=nil;
 - (void)setSelectedIndex:(NSUInteger)selectedIndex
 {
     [super setSelectedIndex:selectedIndex];
-    
     [self changeButtonHighlightForTab:selectedIndex];
     [self.selectedViewController viewDidAppear:YES];
 }

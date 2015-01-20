@@ -39,7 +39,14 @@ static SpinnerView *instance;
 
 +(NSDictionary*)message:(NSString*)aMessage progress:(float)aProgress animated:(BOOL)aAnimated
 {
-    return @{@"message":aMessage,@"progress":[NSNumber numberWithFloat:aProgress], @"animated":[NSNumber numberWithBool:aAnimated]};
+    
+    NSMutableDictionary * dict = [[NSMutableDictionary alloc]init];
+    
+    if(aMessage) [dict setObject:aMessage forKey:@"message"];
+    [dict setObject:[NSNumber numberWithFloat:aProgress] forKey:@"progress"];
+    [dict setObject:[NSNumber numberWithBool:aAnimated] forKey: @"animated"];
+    
+    return [dict copy];
 }
 
 
@@ -123,7 +130,6 @@ static SpinnerView *instance;
             [indicator stopAnimating];
             [instance removeFromSuperview];
 
-//            NSLog(@"Global Spinner CLOSED");
         }];
         
         
@@ -137,7 +143,6 @@ static SpinnerView *instance;
                 [progressBar setProgress:[[note.userInfo objectForKey:@"progress"]floatValue]
                                 animated:[[note.userInfo objectForKey:@"animated"]boolValue]];
             }
-//            NSLog(@"update spinner");
         }];
         
 

@@ -19,14 +19,14 @@
 @property (nonatomic, strong)           AVPlayerItem       * avPlayerItem;
 @property (assign, nonatomic)           BOOL               isDragAble;
 @property (assign, nonatomic)           CGRect             dragBounds;
-@property (nonatomic, getter=isMuted)   BOOL               muted;
+@property (nonatomic, assign)   BOOL               muted;
 @property (nonatomic,assign)            BOOL               showFeedLabel;
 @property (nonatomic,assign,readonly)   BOOL               hasHighQuality;
 @property (nonatomic,assign,readonly)   BOOL               hasLowQuality;
 @property (nonatomic,assign)            BOOL               selected;
 @property (nonatomic,assign)            int                quality;
 @property (nonatomic,strong)            Feed               * feed;
-
+@property(nonatomic,assign)             BOOL                looping;
 
 
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip;
@@ -34,11 +34,13 @@
 -(void)playerURL:(NSURL *)url;
 //-(void)playPlayerItem:(AVPlayerItem *) avpi;
 -(void)playWithFeed:(Feed*)aFeed;
+-(void)playWithFeed:(Feed*)feed withRange:(CMTimeRange)range;
 -(void)prepareWithFeed:(Feed*)aFeed;
 
 -(void)play;
 -(void)pause;
 -(void)seekTo:(CMTime)time;
+-(void)live;
 -(void)playRate:(float)rate;
 -(CMTime)currentTimePosition;
 

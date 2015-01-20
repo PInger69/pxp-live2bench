@@ -20,13 +20,15 @@
 #import "SpinnerView.h"
 #import "UtilitiesController.h"
 #import "Toast.h"
-//#import "AppQueue.h"
 #import "VideoPlayer.h"
 #import "TabBarButton.h"
 #import "Reachability.h"
 #import "UploadButton.h"
 
 @class Toast;
+
+
+
 
 
 @interface CustomTabBar : UITabBarController <NSNetServiceBrowserDelegate,NSNetServiceDelegate>{
@@ -47,7 +49,6 @@
 }
 
 @property (nonatomic,strong) UITabBar *tBar;
-@property (nonatomic,strong) SpinnerView *spinnerView;
 @property (nonatomic,strong) LoginViewController *loginViewController;
 @property (nonatomic,strong) UIProgressView *loadingProgressView;  //when open the app, display the loading progress
 @property (nonatomic,strong) UILabel *progressViewTextLabel;
@@ -56,19 +57,11 @@
 @property (nonatomic)BOOL waitingEncoderSelection; //used to reset the timer counter when waiting the user selects the right encoder
 //flash button used to indicate local tags are uploading to the server
 @property (nonatomic,strong) UploadButton *uploadLocalTagButton;
-//uitextview shows the uploading local tags progress
-//@property (nonatomic,strong)UITextView *popoverView;
 @property (nonatomic,strong)UIPopoverController *popoverController;
 
 
-
-//create custom tabbar's titiles
--(void) addCustomElements;
-//hide the native IOS tab bar
--(void) hideExistingTabBar;
 //select the tab at index "tabID"
 -(void) selectTab:(int)tabID;
-//-(void)popupForTeamPlayerSelection; //there are two teams, the user needs to choose which team's players he/she wants to tag in the app
 
 @end
 

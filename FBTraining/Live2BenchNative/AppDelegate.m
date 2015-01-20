@@ -21,7 +21,7 @@
 @synthesize lVController=_lVController;
 //@synthesize bmViewController;
 @synthesize screenController;
-//@synthesize encoderManager = _encoderManager;
+@synthesize encoderManager = _encoderManager;
 
 // will be boolean NO, meaning the URL was not handled by the authenticating application
 - (BOOL)application:(UIApplication *)application
@@ -332,18 +332,5 @@ static int outstandingRequests;
     return window;
 }
 
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
-*/
-
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
-{
-}
-*/
 
 @end

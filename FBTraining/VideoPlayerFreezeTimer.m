@@ -166,7 +166,17 @@
     }
 }
 
-
+-(void)dealloc
+{
+    NSLog(@"DEALLOC ANTIFREEZE");
+    @try{
+        [checkedPlayer.avPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
+    }@catch(id anException){
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
+    
+    if (timeObserver) [checkedPlayer.avPlayer removeTimeObserver:timeObserver];
+}
 
 
 

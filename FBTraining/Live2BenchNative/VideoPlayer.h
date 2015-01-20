@@ -33,13 +33,13 @@ typedef enum playerStatus{
 
 
 
-typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
-    VideoPlayerCommandStop = 1<<1,
-    VideoPlayerCommandPlay = 1<<2,
-    VideoPlayerCommandMute = 1<<3,
-    VideoPlayerCommandUnmute = 1<<4
-
-};
+//typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
+//    VideoPlayerCommandStop = 1<<1,
+//    VideoPlayerCommandPlay = 1<<2,
+//    VideoPlayerCommandMute = 1<<3,
+//    VideoPlayerCommandUnmute = 1<<4
+//
+//};
 
 @interface VideoPlayer : UIViewController
 
@@ -64,6 +64,10 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
 @property(nonatomic,strong)     NSString            * context;
 @property(nonatomic,strong)     LiveIndicatorLight  * liveIndicatorLight;
 @property(nonatomic,assign)     float               rate;
+
+
+@property(nonatomic,assign)     BOOL                looping;
+@property(nonatomic,assign)     BOOL                isScrubbing;
 
 /**
  *  initialize video player with the given frame
@@ -188,5 +192,6 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
 -(BOOL)seekTo:(float)seekTime;
 
 -(void)playFeed:(Feed*)feed;
+-(void)playFeed:(Feed*)feed withRange:(CMTimeRange)range;
 -(void)delayedSeekToTheTime:(float)seekTime;
 @end

@@ -9,10 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "Globals.h"
 #import "LoginViewController.h"
-//#import "AppQueue.h"
 #import "SpinnerView.h"
-#import "TeamPickerViewController.h"
-#import "LeaguePickerViewController.h"
+//#import "TeamPickerViewController.h"
+//#import "LeaguePickerViewController.h"
 #import "UtilitiesController.h"
 #import "BorderlessButton.h"
 #import "BorderButton.h"
@@ -23,7 +22,7 @@
 
 @class EncoderManager;
 
-@interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,TeamPickerViewDelegate,LeaguePickerViewDelegate,DBRestClientDelegate,DBNetworkRequestDelegate>
+@interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,DBRestClientDelegate>/*Removed: DBNetworkRequestDelegate no imp found*/
 {
     UtilitiesController *uController;
     UILabel *userName;
@@ -52,8 +51,6 @@
     UIView *doNotShowContainer;
     UIView *viewEulaContainer;
     UIView *encoderHomeLabel;
-//    TeamPickerViewController *teamPicker;
-//    LeaguePickerViewController *leaguePicker;
     BorderlessButton *dropBoxLabel;
     UILabel *accountTitle;
     CustomButton *backToGeneral;

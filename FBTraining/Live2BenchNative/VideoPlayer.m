@@ -41,7 +41,8 @@ static void * feedContext  = &feedContext;
     playerStatus                _currentStatus;
     UILabel                     * statusLabel;
     
-   
+    id                           loopingObserver;
+    CMTimeRange                 _range; // this is the range of the player.... used for looping
 }
 
 @synthesize avPlayer;
@@ -59,6 +60,9 @@ static void * feedContext  = &feedContext;
 @synthesize context             = _context;
 @synthesize liveIndicatorLight  = _liveIndicatorLight;
 @synthesize rate                = _rate;
+
+@synthesize looping             = _looping;
+@synthesize isScrubbing         =_isScrubbing;
 /**
  *  initialize video player with the given frame as well at build the playerLayer, added the control slider and sets the guestures.
  *
@@ -70,7 +74,7 @@ static void * feedContext  = &feedContext;
     _wasPlayBeforeSeek          = NO;
     smallFrame                  = frame;     //this frame used to resize video view when it is back from fullscreen view
     playerFrame                 = frame;
-
+    _isScrubbing                = NO;
     playerLayer                 = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
     playerLayer.frame           = CGRectMake(0, 0, playerFrame.size.width, playerFrame.size.height);
     playerLayer.videoGravity    = AVLayerVideoGravityResizeAspect;     //set video gravity; AVLayerVideoGravityResizeAspect: will scale the video with the player layer's bounds in order to preserve the video's original aspect ratio;
@@ -237,7 +241,7 @@ static void * feedContext  = &feedContext;
     {
         //slider's current value is set to current time
         double currentTime = self.currentTimeInSeconds;
-        [self.self.richVideoControlBar.timeSlider setValue:currentTime];
+       if (!_isScrubbing) [self.self.richVideoControlBar.timeSlider setValue:currentTime];
         [self.self.richVideoControlBar.leftTimeLabel setText:[NSString stringWithFormat:@"%@",[self translateTimeFormat:self.self.richVideoControlBar.timeSlider.value]]];
         //slider's max value is set to the seekable duration
         self.richVideoControlBar.timeSlider.maximumValue = duration;
@@ -288,6 +292,8 @@ static void * feedContext  = &feedContext;
 
 #pragma mark - Scrubbing Controls
 -(void)scrubbingStart{
+    _isScrubbing = YES;
+    
     //if the video is not playing properly, just return
     if(avPlayer.status != AVPlayerStatusReadyToPlay)
     {
@@ -357,7 +363,8 @@ static void * feedContext  = &feedContext;
     //fix the problem:moving the slider, there is long time delay for the avplayer to seek to the right time
 
     float sliderValue = lroundf(self.richVideoControlBar.timeSlider.value);
-    CMTime ttttt = CMTimeMakeWithSeconds(sliderValue, 1);
+    int32_t  ts                 = playerItem.asset.duration.timescale;
+    CMTime ttttt = CMTimeMakeWithSeconds(sliderValue, NSEC_PER_SEC);//1
     //self.richVideoControlBar.timeSlider.value, NSEC_PER_SEC
     [avPlayer seekToTime:ttttt  completionHandler:^(BOOL finished) {
          dispatch_async(dispatch_get_main_queue(), ^{
@@ -378,7 +385,7 @@ static void * feedContext  = &feedContext;
  */
 -(void)scrubbingEnd{
 
-    
+    _isScrubbing                = NO;
     
     if(avPlayer.status != AVPlayerStatusReadyToPlay){
         return;
@@ -407,7 +414,7 @@ static void * feedContext  = &feedContext;
     } else {
         self.status = PS_Paused;
     }
-    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FINISH_SCRUB object:self];
 }
 
 
@@ -583,7 +590,9 @@ static void * feedContext  = &feedContext;
 //method used to add periodic time observer which is used to update current time, duration and slider value
 - (void)addPlayerItemTimeObserver{
     //create 0.5 second refresh interval
-    CMTime interval = CMTimeMakeWithSeconds(REFRESH_INTERVAL, NSEC_PER_SEC);
+    int32_t  ts                 = (!playerItem.asset.duration.timescale)? NSEC_PER_SEC: playerItem.asset.duration.timescale;
+    
+    CMTime interval = CMTimeMakeWithSeconds(REFRESH_INTERVAL, NSEC_PER_SEC);//NSEC_PER_SEC
     //main dispatch queue; Use the main queue as you will typically use this type of notification to update the user interface on the main thread.
     dispatch_queue_t queue = dispatch_get_main_queue();
     //create callback block for time observer
@@ -696,8 +705,8 @@ int seekAttempts = 0;
     
     
     AVPlayerItem * checkItem = avPlayer.currentItem;
-
-    [avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, 600) completionHandler:^(BOOL finished) {
+    int32_t  ts                 = (!playerItem.asset.duration.timescale)? NSEC_PER_SEC: playerItem.asset.duration.timescale;
+    [avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
 //        if (_rate > 0) {
 //            [self play];
 //        }
@@ -1150,6 +1159,7 @@ int seekAttempts = 0;
         return;
     }
     if (!isnan(timeInSeconds)) {
+        int32_t  ts                 = playerItem.asset.duration.timescale;//NSEC_PER_SEC
         [avPlayer seekToTime: CMTimeMakeWithSeconds(timeInSeconds, NSEC_PER_SEC)];
     }
     
@@ -1255,10 +1265,11 @@ int seekAttempts = 0;
     }
     
     Float64 currTime = CMTimeGetSeconds([self.avPlayer currentTime]);
-    
+    int32_t  ts      = playerItem.asset.duration.timescale;//NSEC_PER_SEC
     if (currTime + secValue > duration)
     {
         self.richVideoControlBar.timeSlider.value = duration;
+        
         [avPlayer seekToTime:CMTimeMakeWithSeconds(duration, NSEC_PER_SEC)];
         return;
     } else if (currTime + secValue < 0)
@@ -1311,7 +1322,7 @@ int seekAttempts = 0;
 {
     BOOL checkIfSeek = NO;
     if (avPlayer.status == AVPlayerStatusReadyToPlay){      
-        
+        int32_t  ts                 = playerItem.asset.duration.timescale;//NSEC_PER_SEC
         [avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
         
         }];
@@ -1354,8 +1365,8 @@ int seekAttempts = 0;
  */
 -(void)setLive:(BOOL)live
 {
-    _live = live;
-    
+    _live           = live;
+    self.looping    = NO;
     if (live){
         [_liveIndicatorLight setHidden:NO];
         [self.richVideoControlBar.rightTimeLabel setText:@"live"];
@@ -1443,6 +1454,17 @@ int seekAttempts = 0;
   
 }
 
+
+/**
+ *  This method is to load the avplayer with current feed and time
+ */
+-(void)refresh
+{
+
+
+}
+
+
 #pragma mark - Feed Methods
 ///////////////////// NEW FEED METHODS //////////////////////////////////
 
@@ -1478,9 +1500,10 @@ int seekAttempts = 0;
         }
         @catch (NSException *exception) {}
     }
-    
+   
     playerItem  = nil;
     playerItem  = [[AVPlayerItem alloc] initWithURL:[self.feed path]];
+    avPlayer    = nil;
     avPlayer    = [AVPlayer playerWithPlayerItem:playerItem];
     
 
@@ -1495,9 +1518,25 @@ int seekAttempts = 0;
     [self addItemEndObserverForPlayerItem];
     [self play];
 //    _antiFreeze = [[VideoPlayerFreezeTimer alloc]initWithVideoPlayer:self];
- [avPlayer setRate:1];
+    [avPlayer setRate:1];
+    NSLog(avPlayer.muted?@" Main: mute":@" Main: sound");
+    NSLog(@"%@",[self.feed path]);
+    
+    
 
 }
+
+-(void)playFeed:(Feed*)feed withRange:(CMTimeRange)range
+{
+    _range = range;
+    // range will be the tag times.... might have to make a new class for this
+    [self playFeed:feed];
+}
+
+
+
+
+
 
 
 ///////////////////// END OF NEW FEED METHODS ///////////////////////////
@@ -1508,6 +1547,48 @@ int seekAttempts = 0;
 
 
 }
+
+
+#pragma mark - Getter Setter
+
+-(BOOL)looping
+{
+    return  _looping;
+}
+
+
+-(void)setLooping:(BOOL)looping
+{
+    if (_looping == looping) return;
+
+    [self willChangeValueForKey:@"looping"];
+    _looping = looping;
+    [self didChangeValueForKey:@"looping"];
+
+    if(loopingObserver) { // remove it if it has it :)
+        [avPlayer removeTimeObserver:loopingObserver];
+        loopingObserver = nil;
+    }
+    
+    if (_looping) {
+        
+        CMTime startT   = _range.start;
+        CMTime endT     = CMTimeAdd(startT, _range.duration);
+        
+        NSArray *times = @[ [NSValue valueWithCMTime: endT] ];
+        
+        __block AVPlayer *weakRef = avPlayer;
+        
+        // the observer watches till endT is hit then seeks to startT
+        loopingObserver = [avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
+                            [weakRef seekToTime:startT];
+                            }];
+
+    } 
+    
+}
+
+
 
 
 @end

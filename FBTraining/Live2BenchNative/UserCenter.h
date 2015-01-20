@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ActionList.h"
 
 @interface UserCenter : NSObject
 
@@ -14,10 +15,29 @@
 @property (nonatomic,strong) NSString               * userPick;// team pic
 
 @property (nonatomic,strong) NSMutableDictionary    * currentEventThumbnails;
+@property (nonatomic,assign) BOOL                   isLoggedIn;
+@property (nonatomic,assign) BOOL                   isEULA;
+
+
+
+//Paths
+
+@property (nonatomic,strong) NSString               * accountInfoPath;
+
 
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
 
 -(void)enableObservers:(BOOL)isObserve;
+
+
+
+
+// Action methods
+
+-(id<ActionListItem>)loginAction;
+
+
+
 
 @end

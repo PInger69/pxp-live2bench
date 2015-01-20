@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "UtilitiesController.h"
+#import "ActionList.h"
+
 
 @class Encoder;
 #define NOTIF_ENCODER_COUNT_CHANGE          @"encoderCountChange"
@@ -28,7 +30,7 @@
 @property (nonatomic,readonly)          BOOL                    hasInternet;
 @property (nonatomic,readonly)          BOOL                    hasWiFi;
 @property (nonatomic,readonly)          BOOL                    hasMIN;
-@property (nonatomic,readonly)          BOOL                    searchForEncoders;
+@property (nonatomic,assign)            BOOL                    searchForEncoders;
 @property (nonatomic,assign)            BOOL                    hasLive; // all the Encoders status checkers will effect this if non have live or if one has
 @property (nonatomic,strong)            NSString                * liveEventName;
 @property (nonatomic,strong)            NSMutableDictionary          * feeds; // this is an array of Dicts @{ @"feedPath": @"???", @"feedName":@"???" }
@@ -78,6 +80,10 @@
  */
 -(void)removeAllExternalEncoders;
 
+
+-(id<ActionListItem>)checkForWiFiAction;
+-(id<ActionListItem>)checkForCloudAction;
+-(id<ActionListItem>)checkForMasterAction;
 
 
 @end

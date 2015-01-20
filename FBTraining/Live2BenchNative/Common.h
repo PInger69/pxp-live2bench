@@ -88,10 +88,14 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_PLAYER_RESTART_UPDATE         @"RestartUpdate"
 #define NOTIF_PLAYER_EXITING_FULL_SCREEN    @"Exiting FullScreen"
 #define NOTIF_SWITCH_MAIN_TAB               @"main tab switch"
-#define NOTIF_APST_CHANGE                   @"apstStateChange"
+#define NOTIF_APST_CHANGE                   @"apstStateChange" // Depricated
 #define NOTIF_USER_INFO_RETRIEVED           @"userInfoAdded"
 
 #define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{@"tabName":@"Live2Bench"}
+
+// User Center
+#define NOTIF_SIDE_TAGS_READY_FOR_L2B      @"tagsReadyForLive2Bench"
+
 
 // Encoder
 #define NOTIF_TAG_NAMES_FROM_CLOUD          @"tagNamesFromCloud"
@@ -105,7 +109,10 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived"
 
 #define NOTIF_ENCODER_STAT                  @"encoderStatusMonitor"
+#define NOTIF_MASTER_HAS_LIVE               @"masterHasLive"
 
+
+#define NOTIF_EM_FOUND_MASTER               @"NOTIF_EM_FOUND_MASTER"
 
 // VideoPlayer
 #define NOTIF_FULLSCREEN                    @"fullScreen"
@@ -113,6 +120,21 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_SAVE_TELE                     @"Save Tele"
 #define NOTIF_CLEAR_TELE                    @"Clear Tele"
 #define NOTIF_COMMAND_VIDEO_PLAYER          @"videoPlayer Commands" // userInfo:@{@"context":<videoplayer context, if omited then all are commanded> ,  @"command": <typedef NS_OPTIONS in VideoPlayer> }
+#define NOTIF_START_SCRUB                   @"startScrubbing"
+#define NOTIF_FINISH_SCRUB                  @"finishedScrubbing"
+
+
+typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
+    VideoPlayerCommandStop = 1<<1,
+    VideoPlayerCommandPlay = 1<<2,
+    VideoPlayerCommandMute = 1<<3,
+    VideoPlayerCommandUnmute = 1<<4
+    
+};
+
+
+
+
 
 // PipViewController
 #define NOTIF_SET_PLAYER_FEED               @"setPlayerFeed"   // userInfo:@{@"time":<float>,  @"feed": <NSString>,  @"state":<playerState> }

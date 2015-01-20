@@ -9,7 +9,8 @@
 #import "PipViewController.h"
 #import "Feed.h"
 #import "Globals.h"
-
+#import "MultiPip.h"
+#import <AVFoundation/AVPlayerItem.h>
 static void * primaryContext    = &primaryContext;
 static void * secondaryContext  = &secondaryContext;
 static void * changeContextPri  = &changeContextPri;
@@ -38,6 +39,7 @@ static void * vpFrameContext   = &vpFrameContext;
     NSMutableArray  * _gesturePool;
     EncoderManager  * _encoderManager;
     Globals         * globals;
+    MultiPip        * multi;
 }
 
 
@@ -78,8 +80,9 @@ static void * vpFrameContext   = &vpFrameContext;
         
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerPlayTag:) name:NOTIF_SET_PLAYER_FEED object:nil];
-        
-        
+       
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerStartScrub:) name:NOTIF_START_SCRUB object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerEndScrub:) name:NOTIF_FINISH_SCRUB object:nil];
         
         
         
@@ -88,6 +91,7 @@ static void * vpFrameContext   = &vpFrameContext;
             [pip setHidden:YES];
         }
         if ([Globals instance]) globals = [Globals instance];
+        multi = [[MultiPip alloc]initWithFrame:self.videoPlayer.view.frame];
     }
     return self;
 
@@ -141,9 +145,10 @@ static void * vpFrameContext   = &vpFrameContext;
         
         
         if ([fsv secondarySelected]){
-            _selectPip.hidden = NO;
+            
             [_selectPip playWithFeed:feed];
             [_selectPip seekTo:prevTime];
+            _selectPip.hidden = NO;
             
         } else {
             _selectPip.hidden = YES;
@@ -226,20 +231,27 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)videoPlayerPlayTag:(NSNotification *)note
 {
-    NSDictionary * rick = note.userInfo;
-    float time = [[rick objectForKey:@"time"]floatValue];
-    CMTime cmtime = CMTimeMake(time, 1);
+    NSDictionary * rick     = note.userInfo;
+    float time              = [[rick objectForKey:@"time"]floatValue];
+    float dur               = [[rick objectForKey:@"duration"]floatValue];
+    CMTime cmtime           = CMTimeMake(time, 1);
+    CMTime cmDur            = CMTimeMake(dur, 1);
+    
+    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
+
     
     Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
     playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
 
     
     VideoPlayer * vid   = _videoPlayer;
-    [vid playFeed:f];
-    vid.live = NO;
+//    [vid playFeed:f];
+    vid.looping         = NO;
+    [vid playFeed:f withRange:timeRange];
+    vid.live            = NO;
     [vid delayedSeekToTheTime:time];
-    
-    globals.IS_LOOP_MODE = YES;
+    vid.looping         = YES;
+
     
     for (Pip * pip in self.pips) {
         [pip setHidden:YES];
@@ -249,7 +261,35 @@ static void * vpFrameContext   = &vpFrameContext;
     
     [_feedSwitchView clear];
     [_feedSwitchView setPrimaryPositionByName:[rick objectForKey:@"feed"]];
+    
+    
+//    [self showMulti];
 }
+
+-(void)videoPlayerStartScrub:(NSNotification *)note
+{
+    VideoPlayer * vid   = note.object;
+    if ([vid.context isEqualToString:_videoPlayer.context]){
+        [self.pips makeObjectsPerformSelector:@selector(pause)];
+    }
+}
+
+
+-(void)videoPlayerEndScrub:(NSNotification *)note
+{
+    VideoPlayer * vid   = note.object;
+    if ([vid.context isEqualToString:_videoPlayer.context]){
+        
+        CMTime time = vid.avPlayer.currentItem.currentTime;
+        
+        for (Pip * pip in self.pips) {
+            [pip seekTo:time];
+        }
+    }
+        
+
+}
+
 
 -(void)swapVideoPlayer:(VideoPlayer*)aVideoPlayer withPip:(Pip*)aPip
 {
@@ -337,10 +377,27 @@ static void * vpFrameContext   = &vpFrameContext;
 -(void)pipsAndVideoPlayerToLive
 {
     [_videoPlayer goToLive];
-    CMTime  time = CMTimeMake([_videoPlayer durationInSeconds], 1);
+    
+    
+//    CMTime  time = CMTimeMake([_videoPlayer durationInSeconds], 1);
     for (Pip * pp in self.pips) {
-        [pp seekTo:time];
+                //        [pp seekTo:time];
+        [pp live];
     }
 }
+
+
+
+-(void)showMulti
+{
+    [_videoPlayer.view addSubview:multi];
+}
+
+-(void)hideMulti
+{
+    [multi removeFromSuperview];
+}
+
+
 
 @end

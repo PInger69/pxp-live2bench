@@ -45,7 +45,6 @@ static const NSString * HOMEPAGE_WEBSITE    = @"http://www.myplayxplay.com/";
 
 @implementation LogoViewController
 
-AMBlurView          * blur;
 UIToolbar           * welcomeToolBar;
 UIView              * tabContentView;
 NSDictionary        * tabAttributes;
@@ -103,13 +102,12 @@ EncoderManager      * encoderManager;
     [globals.VIDEO_PLAYER_LIST_VIEW pause];
     [globals.VIDEO_PLAYER_LIVE2BENCH pause];
 
- 
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"command": <typedef NS_OPTIONS in VideoPlayer> }];
 }
 
 
+
 - (void)setupView{
-    //Commented out bits (0-3 instead of 1-3) are for when we have 3 images to display
-    //for (int i=0; i<3; i++) {
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
@@ -218,14 +216,6 @@ EncoderManager      * encoderManager;
     [self.tabContentLink setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [tabContentView addSubview:self.tabContentLink];
     
-//    UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeDetected:)];
-//    rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
-//    [tabContentView addGestureRecognizer:rightSwipe];
-//    UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeDetected:)];
-//    leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
-//    [tabContentView addGestureRecognizer:leftSwipe];
-    
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideSettings) name:@"hideSettings" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSettings:) name:@"showSettings" object:nil];
     
@@ -238,39 +228,6 @@ EncoderManager      * encoderManager;
 
     return nil;
 }
-
-
-
-//-(void)swipeDetected:(UISwipeGestureRecognizer*)swipe
-//{
-//    int tabNum = tabContentView.tag;
-//    if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
-//        tabNum -= 1;
-//    else
-//        tabNum += 1;
-//    
-//    switch (tabNum) {
-//        case -1:
-//            [self selectTab:contactTab];
-//            break;
-//        case 0:
-//            [self selectTab:hardwareTab];
-//            break;
-//        case 1:
-//            [self selectTab:taggingTab];
-//            break;
-//        case 2:
-//            [self selectTab:contactTab];
-//            break;
-//        case 3:
-//            [self selectTab:hardwareTab];
-//            break;
-//        default:
-//            //////NSLog(@"Warning: tabContentView.tag == %i", tabContentView.tag);
-//            [self selectTab:hardwareTab];
-//            break;
-//    }
-//}
 
 -(void)selectTab:(UIBarButtonItem*)tab{
     
@@ -416,31 +373,31 @@ EncoderManager      * encoderManager;
         self.tapBehindGesture.delegate = self;
     }
     
-    if (!blur){
-        blur = [[AMBlurView alloc] initWithFrame:self.view.bounds];
-        blur.alpha = 0.8f;
-    }
-    [self.view addSubview:blur];
-    
+
     [self.view.window addGestureRecognizer:self.tapBehindGesture];
     //if the settings view controller already initialized,DONNOT reinitialize it
     if (!settingsViewController) {
         settingsViewController = [[SettingsViewController alloc]initWithEncoderManager:encoderManager];
     }
+    
     [settingsTab setImage:[UIImage imageNamed:@"settingsButtonSelect"]];
-    [self.tabBarController presentViewController:settingsViewController animated:YES completion:nil];
+    
+    [self.tabBarController presentViewController:settingsViewController animated:YES completion:^{
+     
+        [settingsTab setImage:[UIImage imageNamed:@"settingsButton"]];
+    }];
 }
-
--(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    return YES;
-}
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    return YES;
-}
+//
+//-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+//    return YES;
+//}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+//    return YES;
+//}
+//
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+//    return YES;
+//}
 
 -(void)tapBehindDetected:(UITapGestureRecognizer*)sender
 {
@@ -464,8 +421,8 @@ EncoderManager      * encoderManager;
         [self.tabBarController dismissViewControllerAnimated:YES completion:nil];
     }
     
-    [blur removeFromSuperview];
-    [self.view.window removeGestureRecognizer:self.tapBehindGesture];
+
+//    [self.view.window removeGestureRecognizer:self.tapBehindGesture];
     [settingsTab setImage:[UIImage imageNamed:@"settingsButton"]];
 }
 
@@ -506,7 +463,7 @@ EncoderManager      * encoderManager;
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
 }
 
 @end

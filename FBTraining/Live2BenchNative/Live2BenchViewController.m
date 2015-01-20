@@ -75,6 +75,9 @@
     PipViewController                   * _pipController;
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
+    
+    
+    id                                  tagsReadyObserver;
 }
 
 // Player
@@ -176,6 +179,15 @@ static void * eventContext      = &eventContext;
     // observers //@"currentEventType"
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEventType))  options:NSKeyValueObservingOptionNew context:&eventTypeContext];
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEvent))      options:NSKeyValueObservingOptionNew context:&eventContext];
+   
+    __block Live2BenchViewController * weakSelf = self;
+    tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [weakSelf createTagButtons];
+    }];
+  
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name:NOTIF_MASTER_HAS_LIVE object:nil];
+    
     return self;
     
 }
@@ -209,19 +221,29 @@ static void * eventContext      = &eventContext;
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:NO];
+        _tagButtonController.enabled = NO;
 
     } else if ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName]){      // LIVE
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         self.videoPlayer.live   = YES;
-          [_gotoLiveButton isActive:YES];
+        [_gotoLiveButton isActive:YES];
+        _tagButtonController.enabled = YES;
 
-    } else { // CLIP
+    } else { // CLIPs and playing back old events
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
         self.videoPlayer.live   = NO;
-        [_gotoLiveButton isActive:YES];
-
+        [_gotoLiveButton isActive:YES]; // TODO
+        _tagButtonController.enabled = YES;
     }
     
+}
+
+-(void)gotLiveEvent
+{
+    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+    self.videoPlayer.live   = YES;
+    [_gotoLiveButton isActive:YES];
+    _tagButtonController.enabled = YES;
 }
 
 
@@ -283,8 +305,7 @@ static void * eventContext      = &eventContext;
     //initially, the playback rate is 1
     globals.PLAYBACK_SPEED      = 1.0f;
     
-    //get all the event tag buttons' names
-    [self populateTagNames];
+
     
     //create all the event tag buttons
     [self createTagButtons];
@@ -341,6 +362,7 @@ static void * eventContext      = &eventContext;
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
     _pip.isDragAble  = YES;
     _pip.hidden      = YES;
+    _pip.muted       = YES;
     _pip.dragBounds  = videoPlayer.playerLayer.frame;
     [videoPlayer.view addSubview:_pip];
     _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 600, 100, 100) encoderManager:_encoderManager];
@@ -363,13 +385,13 @@ static void * eventContext      = &eventContext;
     [globals.VIDEO_PLAYER_LIST_VIEW pause];
     
     //will enter live2bench view, start playing video
-    if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-        [videoPlayer play];
-        if (!videoPlayer.timeObserver) {
-            [videoPlayer addPlayerItemTimeObserver];
-        }
-
-    }
+//    if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//        [videoPlayer play];
+//        if (!videoPlayer.timeObserver) {
+//            [videoPlayer addPlayerItemTimeObserver];
+//        }
+//
+//    }
     //make sure no duplicated timer is fired
     [updateCurrentEventInfoTimer invalidate];
     updateCurrentEventInfoTimer = nil;
@@ -396,7 +418,7 @@ static void * eventContext      = &eventContext;
 
 
 //         self.videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
-         self.videoPlayer.antiFreeze.enable = YES;   //RICHARD
+//         self.videoPlayer.antiFreeze.enable = YES;   //RICHARD
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
 
          [self.view addSubview:self.videoPlayer.view];
@@ -491,19 +513,19 @@ static void * eventContext      = &eventContext;
         globals.IS_TAG_PLAYBACK=FALSE;
     }
     
-    if (!globals.IS_LOOP_MODE) {
-        //if live event, seek to live
-        if (videoPlayer.duration >0 && [globals.EVENT_NAME isEqualToString:@"live"] && globals.DID_GO_TO_LIVE) {
-            [videoPlayer goToLive];
-            [_liveButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-        }else if(![globals.EVENT_NAME isEqualToString:@"live"] && globals.FIRST_LOCAL_PLAYBACK){
-            //if first time play back old event, start from time 0.1sec;If set from time 0 sec, the video won't start play
-            [videoPlayer setTime:0.1];
-            [videoPlayer prepareToPlay];
-            [videoPlayer play];
-
-        }
-    }
+//    if (!globals.IS_LOOP_MODE) {
+//        //if live event, seek to live
+//        if (videoPlayer.duration >0 && [globals.EVENT_NAME isEqualToString:@"live"] && globals.DID_GO_TO_LIVE) {
+//            [videoPlayer goToLive];
+//            [_liveButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//        }else if(![globals.EVENT_NAME isEqualToString:@"live"] && globals.FIRST_LOCAL_PLAYBACK){
+//            //if first time play back old event, start from time 0.1sec;If set from time 0 sec, the video won't start play
+//            [videoPlayer setTime:0.1];
+//            [videoPlayer prepareToPlay];
+//            [videoPlayer play];
+//
+//        }
+//    }
     
 
     //used to alert the video palying back successfully or not
@@ -525,8 +547,6 @@ static void * eventContext      = &eventContext;
 {
     [super viewDidAppear:animated];
     [self onEventChange];
-//    [_videoBarViewController viewDidAppear:animated];
-   // [_fullscreenViewController viewDidAppear:animated];
     [self.view addSubview:_fullscreenViewController.view];
 }
 
@@ -845,7 +865,7 @@ static void * eventContext      = &eventContext;
     if(globals.DID_RECV_TAG_NAMES)
     {
         globals.TAG_BTNS_REQ_SENT=FALSE;
-        [self populateTagNames];
+
 //        [self createTagButtons];//888
         [_videoBarViewController.tagMarkerController createTagMarkers];
     }
@@ -1237,14 +1257,6 @@ static void * eventContext      = &eventContext;
 }
 
 
-
-//get all the tagnames from TagButtons.plist file
-// DEPRICATED Recieved from encoder manager
-- (void)populateTagNames
-{
-    NSString *tagFilePath = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"TagButtons.plist"];
-    self.tagNames = [[NSMutableArray alloc] initWithContentsOfFile:tagFilePath];
-}
 
 
 //create all the tag buttons according to all the tagnames

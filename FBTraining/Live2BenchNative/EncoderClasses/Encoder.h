@@ -86,6 +86,10 @@
 @property (nonatomic,assign)    NSInteger       cameraCount;
 @property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 
+
+@property (nonatomic,assign)    BOOL            isBuild;
+@property (nonatomic,assign)    BOOL            isReady;
+
 /**
  *  This will create and instance of an endcoder at inputted ip
  *

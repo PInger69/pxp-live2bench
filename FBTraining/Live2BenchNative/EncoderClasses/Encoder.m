@@ -102,8 +102,8 @@
     BOOL isTeamsGet;
     BOOL isAuthenticate;
     BOOL isVersion;
-    BOOL isBuild;
-    BOOL isReady;
+//    BOOL isBuild;
+//    BOOL isReady;
 }
 
 
@@ -135,6 +135,8 @@
 @synthesize cameraCount     = _cameraCount;
 @synthesize eventTagsDict   = _eventTagsDict;
 
+@synthesize isBuild         = _isBuild;
+@synthesize isReady         = _isReady;
 
 -(id)initWithIP:(NSString*)ip
 {
@@ -153,10 +155,10 @@
         isTeamsGet      = NO;
         isAuthenticate  = NO;
         isVersion       = NO;
-        isBuild         = NO;
-        isReady         = NO;
+        _isBuild        = NO;
+        _isReady         = NO;
         _cameraCount    = 0;
-        
+        _status         = ENCODER_STATUS_INIT;
     }
     return self;
 }
@@ -435,7 +437,6 @@
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-//    encoderConnection.accessibilityValue    = MODIFY_TAG;
     encoderConnection.connectionType        = MODIFY_TAG;
     encoderConnection.timeStamp             = aTimeStamp;
 }
@@ -649,9 +650,9 @@
     }
    
     
-    if (isAuthenticate && isVersion && isBuild && isTeamsGet && !isReady){
-        isReady         = YES;
-        statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
+    if (isAuthenticate && isVersion && _isBuild && isTeamsGet && !_isReady){
+        _isReady         = YES;
+        if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
         
     }
@@ -1002,7 +1003,7 @@
             
         }
     }
-    isBuild = YES;
+    _isBuild = YES;
 }
 
 

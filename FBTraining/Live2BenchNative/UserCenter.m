@@ -13,37 +13,53 @@
 // all plists will be loaded to this class if it should be accsessed
 // it will manage making, updating and retreving pl data
 #import "UserCenter.h"
+#import "ActionList.h"
+#import "CheckLoginAction.h"
+
+
 
 #define PLIST_THUMBNAILS        @"Thumbnails.plist"
 #define PLIST_PLAYER_SETUP      @"players-setup.plist"
 #define PLIST_TAG_BUTTONS       @"TagButtons.plist"
-
+#define PLIST_ACCOUNT_INFO      @"accountInformation.plist"
 @implementation UserCenter
 {
     NSString        * localPath;
     NSFileManager   * fileManager;
     id              tagNameObserver;
     BOOL            observering;
+    
+    
+    CheckLoginAction     * loginAction;
 }
 
-@synthesize tagNames = _tagNames;
+@synthesize tagNames                = _tagNames;
+@synthesize userPick                = _userPick;
+@synthesize currentEventThumbnails  = _currentEventThumbnails;
+@synthesize isLoggedIn              = _isLoggedIn;
+@synthesize isEULA                  = _isEULA;
 
-@synthesize userPick = _userPick;
-
-@synthesize currentEventThumbnails = _currentEventThumbnails;
-
+@synthesize accountInfoPath         = _accountInfoPath;
 
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath
 {
     self = [super init];
     if (self) {
+        // paths
         localPath       = aLocalDocsPath;
+        _accountInfoPath = [localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
+        
+        
+        _isEULA         = NO;
         observering     = NO;
         fileManager     = [NSFileManager defaultManager];
         
         // notifications will mostly be coming from the cloud Encoder
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(update:) name:NOTIF_USER_CENTER_UPDATE object:nil];
+        
+        loginAction     = [[CheckLoginAction alloc]initWithCenter:self];
+        
     }
     return self;
 }
@@ -100,6 +116,16 @@
     NSString *tagFilePath = [aLocalPath stringByAppendingPathComponent:PLIST_TAG_BUTTONS];
     
     return  [[NSMutableArray alloc] initWithContentsOfFile:tagFilePath];
+}
+
+
+
+
+-(id<ActionListItem>)loginAction
+{
+    loginAction.isFinished  = NO;
+    loginAction.isSuccess   = NO;
+    return loginAction;
 }
 
 
