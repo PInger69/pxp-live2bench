@@ -10,8 +10,9 @@
 //#import <QuartzCore/QuartzCore.h>
 #import "Live2BenchViewController.h"
 //#import "AppQueue.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "UtilitiesController.h"
+#import "CustomLabel.h"
 
 @class Live2BenchViewController;
 @interface SoccerBottomViewController : UIViewController{
@@ -20,7 +21,7 @@
     Live2BenchViewController *live2BenchViewController;
     UIView *playerViewController;
     //AppQueue *appQueue;
-    Globals *globals;
+//    Globals *globals;
     NSString *thumbId;
     UtilitiesController *uController;
     NSString *nameforZone;

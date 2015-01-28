@@ -7,11 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UtilitiesController.h"
+#import "UtilitiesController.h" // TODO DELETE
 #import "ActionList.h"
-
+#import "CloudEncoder.h"
 
 @class Encoder;
+
+
+
+typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
+    EncoderManagerModeOnline   = 1<<1,
+    EncoderManagerModeOffline  = 1<<2
+};
+
+
 #define NOTIF_ENCODER_COUNT_CHANGE          @"encoderCountChange"
 #define NOTIF_THIS_ENCODER_IS_READY         @"encoderIsReady" // this is called on the encoder in question
 #define NOTIF_ENCODER_AUTHENTICATED         @"encoderAuthenticated"
@@ -26,14 +35,15 @@
 
 @interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
 
+@property (nonatomic,assign)            EncoderManagerMode      mode;
 
-@property (nonatomic,readonly)          BOOL                    hasInternet;
-@property (nonatomic,readonly)          BOOL                    hasWiFi;
-@property (nonatomic,readonly)          BOOL                    hasMIN;
+@property (nonatomic,assign)            BOOL                    hasInternet;
+@property (nonatomic,assign)            BOOL                    hasWiFi; // Toggled by checkForWiFiAction
+@property (nonatomic,assign)            BOOL                    hasMAX;
 @property (nonatomic,assign)            BOOL                    searchForEncoders;
 @property (nonatomic,assign)            BOOL                    hasLive; // all the Encoders status checkers will effect this if non have live or if one has
 @property (nonatomic,strong)            NSString                * liveEventName;
-@property (nonatomic,strong)            NSMutableDictionary          * feeds; // this is an array of Dicts @{ @"feedPath": @"???", @"feedName":@"???" }
+@property (nonatomic,strong)            NSMutableDictionary     * feeds; // this is an array of Dicts @{ @"feedPath": @"???", @"feedName":@"???" }
 @property (nonatomic,strong)            NSMutableArray          * allEvents;
 @property (nonatomic,strong)            NSMutableArray          * allEventData;
 @property (nonatomic,strong)            NSMutableArray          * authenticatedEncoders;
@@ -45,12 +55,14 @@
 @property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
 
 @property (nonatomic,strong)            Encoder                 * masterEncoder;
+@property (nonatomic,strong)            CloudEncoder            * cloudEncoder;
 @property (nonatomic,assign,readonly)   NSInteger               totalCameraCount;
 
+@property (nonatomic,strong)            NSString                * customerID;
 
 
 #pragma mark - Encoder Manager Methods
--(id)initWithID:(NSString*)custID localDocPath:(NSString*)aLocalDocsPath;
+-(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
 
 
 
@@ -73,6 +85,9 @@
 #pragma mark - Commands Methods
 
 -(void)refresh;
+-(void)logoutOfCloud;
+
+
 #pragma mark - Debugging Methods
 /**
  *  Removes all external Encoders and disables searching for others
@@ -82,8 +97,8 @@
 
 
 -(id<ActionListItem>)checkForWiFiAction;
--(id<ActionListItem>)checkForCloudAction;
+-(id<ActionListItem>)checkForACloudAction;
 -(id<ActionListItem>)checkForMasterAction;
-
+-(id<ActionListItem>)logoutAction;
 
 @end

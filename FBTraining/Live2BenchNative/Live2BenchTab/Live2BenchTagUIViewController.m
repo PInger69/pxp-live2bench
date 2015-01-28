@@ -8,7 +8,7 @@
 
 #import "Live2BenchTagUIViewController.h"
 
-#import "Globals.h"
+//#import "Globals.h"
 
 
 #pragma mark - Tray
@@ -291,9 +291,9 @@
         [tagButtonsLeft addObject:btn];
         [_leftTray addSubview:btn];
         // TODO DEPREICATED START
-        if (![[Globals instance].LEFT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
-            [[Globals instance].LEFT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
-        }
+//        if (![[Globals instance].LEFT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
+//            [[Globals instance].LEFT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
+//        }
         // TODO DEPREICATED END
         
     } else { /// Right Tags
@@ -309,9 +309,9 @@
         [tagButtonsRight addObject:btn];
         [_rightTray addSubview:btn];
         // TODO DEPREICATED START
-        if (![[Globals instance].RIGHT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
-            [[Globals instance].RIGHT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
-        }
+//        if (![[Globals instance].RIGHT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
+//            [[Globals instance].RIGHT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
+//        }
         // TODO DEPREICATED END
     
     }

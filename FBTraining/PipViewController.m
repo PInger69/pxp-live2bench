@@ -8,7 +8,7 @@
 
 #import "PipViewController.h"
 #import "Feed.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "MultiPip.h"
 #import <AVFoundation/AVPlayerItem.h>
 static void * primaryContext    = &primaryContext;
@@ -38,7 +38,7 @@ static void * vpFrameContext   = &vpFrameContext;
 {
     NSMutableArray  * _gesturePool;
     EncoderManager  * _encoderManager;
-    Globals         * globals;
+//    Globals         * globals;
     MultiPip        * multi;
 }
 
@@ -90,7 +90,7 @@ static void * vpFrameContext   = &vpFrameContext;
         for (Pip * pip in self.pips) {
             [pip setHidden:YES];
         }
-        if ([Globals instance]) globals = [Globals instance];
+//        if ([Globals instance]) globals = [Globals instance];
         multi = [[MultiPip alloc]initWithFrame:self.videoPlayer.view.frame];
     }
     return self;

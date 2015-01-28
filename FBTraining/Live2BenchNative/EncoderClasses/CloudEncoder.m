@@ -102,28 +102,131 @@
 
 
 @implementation CloudEncoder
-
-
-
-
-
-
-
--(void)test
 {
-    [self issueCommand:CE_TAG_NAMES_GET priority:99 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+
 
 }
 
+@synthesize loggedIn = _loggedIn;
+
+
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _loggedIn = NO;
+    }
+    return self;
+}
+
+
+
+
+
+-(void)startObserving
+{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(verifyUser:) name:NOTIF_CLOUD_VERIFY object:nil];// UserCenter is what is dispatching
+
+}
+
+/**
+ *  Asked to check user info
+ *
+ *  @param note
+ */
+-(void)verifyUser:(NSNotification*)note
+{
+
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+    [self issueCommand:CE_VERIFY_GET priority:1 timeoutInSec:15 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+-(void)updateTagInfoFromCloud
+{
+    __block CloudEncoder * weakSelf = self;
+   
+   
+    void (^onRecieveData)(NSDictionary*) = ^void(NSDictionary* theData){
+        [weakSelf issueCommand:CE_TAG_NAMES_GET priority:99 timeoutInSec:15 tagData:[NSMutableDictionary dictionaryWithDictionary:theData] timeStamp:GET_NOW_TIME];
+    };
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UC_REQUEST_USER_INFO object:self userInfo:@{@"block":onRecieveData}];
+}
+
+-(void)logoutOfCloud
+{
+    __block CloudEncoder * weakSelf = self;
+    
+    
+    
+    void (^onRecieveData)(NSDictionary*) = ^void(NSDictionary* theData){
+        [weakSelf issueCommand:CE_LOGOUT priority:99 timeoutInSec:15 tagData:[NSMutableDictionary dictionaryWithDictionary:theData] timeStamp:GET_NOW_TIME];
+    };
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UC_REQUEST_USER_INFO object:self userInfo:@{@"block":onRecieveData}];
+    
+    
+}
+
+
+
+#pragma mark -
+#pragma mark Commands
 
 -(void)tagNamesGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
+    NSString * user             = [tData objectForKey:@"emailAddress"];
+    NSString * password         = [tData objectForKey:@"password"];
+    NSString * authoriz         = [tData objectForKey:@"authorization"];
+    NSString * customer         = [tData objectForKey:@"customer"];
+    NSString *emailAddress      = [Utility stringToSha1: user];
+
+//    NSString *UUID              = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//    NSString *deviceType        = [Utility stringToSha1: @"tablet"];
+//    NSString *hashedPassword    = [Utility sha256HashFor: [password stringByAppendingString: @"azucar"]];
+//    NSString *deviceName        = [[UIDevice currentDevice] name];
+    NSString *pData             = [NSString stringWithFormat:@"&v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",authoriz,emailAddress,password,@"( . Y . )",customer];
+    // v0 autherzation  v1 hashedEmail  v2 password v3 ( . Y . )  v4 customerID
+    NSData   *postData          = [pData dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSString *postDataLength    = [NSString stringWithFormat:@"%d",[postData length]];
+    
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc]init];
+
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postDataLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Current=Type"];
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/requesttagnames/ajax"]]];
+    
+    request.timeoutInterval = currentCommand.timeOut;
+    [request setHTTPBody:postData];
+    
+    
+    
+    
+    
+//      NSURLRequest  * reqUrl                  = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    urlRequest = request;
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = CE_TAG_NAMES_GET;
+    encoderConnection.timeStamp             = aTimeStamp;
+    [encoderConnection start];
+    
+    
+}
+
+-(void)verifyGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    NSString * user             = [tData objectForKey:@"user"];
+    NSString * password         = [tData objectForKey:@"password"];
+    
     NSString *deviceName        = [[UIDevice currentDevice] name];
     NSString *UUID              = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
     NSString *deviceType        = [Utility stringToSha1: @"tablet"];
-    NSString *emailAddress      = [Utility stringToSha1: @"hockey"];
-    NSString *password          = [Utility sha256HashFor: [@"hockey" stringByAppendingString: @"azucar"]];
-    NSString *pData             = [NSString stringWithFormat:@"&v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",deviceType,emailAddress,password,deviceName,UUID];
+    NSString *emailAddress      = [Utility stringToSha1: user];
+    NSString *hashedPassword    = [Utility sha256HashFor: [password stringByAppendingString: @"azucar"]];
+    NSString *pData             = [NSString stringWithFormat:@"&v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",deviceType,emailAddress,hashedPassword,deviceName,UUID];
     
     NSData *postData            = [pData dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
     NSString *postDataLength    = [NSString stringWithFormat:@"%d",[postData length]];
@@ -135,27 +238,55 @@
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Current=Type"];
     [request setHTTPBody:postData];
     
-    
+    request.timeoutInterval = currentCommand.timeOut;
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/activate/ajax"]]];
     
     
-//    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    
     urlRequest = request;
-    
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teamsget",self.ipAddress]  ];
-
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    encoderConnection.connectionType        = CE_TAG_NAMES_GET;
+    encoderConnection.connectionType        = CE_VERIFY_GET;
     encoderConnection.timeStamp             = aTimeStamp;
+    [encoderConnection start];
+}
+
+
+-(void)logout:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+ 
+    NSDictionary        *accountInfo           = [tData copy];
+    NSString            *emailAddress          = [Utility stringToSha1:[accountInfo objectForKey:@"emailAddress"] ];
+    NSString            *accountInfoString     = [NSString stringWithFormat:@"v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",[accountInfo objectForKey:@"authorization"],emailAddress,[accountInfo objectForKey:@"password"],[accountInfo objectForKey:@"tagColour"],[accountInfo objectForKey:@"customer"]];
+    NSData              *accountInfoData       = [accountInfoString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    NSString            *postDataLength        = [NSString stringWithFormat:@"%d",[accountInfoData length]];
+    NSMutableURLRequest *request               = [[NSMutableURLRequest alloc]init];
     
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/deactivate/ajax"]]];
     
+    //create post request
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postDataLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Current=Type"];
+    [request setHTTPBody:accountInfoData];
+
+    
+    urlRequest = request;
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = CE_LOGOUT;
+    encoderConnection.timeStamp             = aTimeStamp;
+    [encoderConnection start];
     
 }
+
+
+#pragma mark -
+#pragma mark Connections
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
 
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_NAMES_FROM_CLOUD object:self];
+    [super connection:connection didFailWithError:error];
 }
 
 
@@ -166,24 +297,52 @@
     
     if ([connectionType isEqualToString: CE_TAG_NAMES_GET]){
         [self tagNamesResponce: finishedData];
+    } else if ([connectionType isEqualToString: CE_VERIFY_GET]) {
+        [self verifyResponce: finishedData];
+    } else if ([connectionType isEqualToString: CE_LOGOUT]) {
+        [self logoutResponce: finishedData];
     }
+    
+    
     [super connectionDidFinishLoading:connection];
     
 }
+
+
+#pragma mark -
+#pragma  mark Responces
 
 
 -(void)tagNamesResponce:(NSData *)data
 {
 
     NSDictionary * jsonDict = [Utility JSONDatatoDict:data];
-    if ([[jsonDict objectForKey:@"success"]integerValue]){
-        NSDictionary * tagnames = [jsonDict objectForKey:@"tagnames"];
-        
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_NAMES_FROM_CLOUD object:self userInfo:tagnames];
+    if ([jsonDict objectForKey:@"tagbuttons"]){
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_NAMES_FROM_CLOUD object:self userInfo:jsonDict];
     }
     
-    
 }
+
+-(void)verifyResponce:(NSData *)data
+{
+    
+    NSDictionary * jsonDict = [Utility JSONDatatoDict:data];
+     if ([[jsonDict objectForKey:@"success"]boolValue]) {
+         self.loggedIn = YES;
+     }
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOUD_VERIFY_RESULTS object:self userInfo:jsonDict];
+}
+
+
+-(void)logoutResponce:(NSData *)data
+{
+    NSDictionary * jsonDict = [Utility JSONDatatoDict:data];
+    if ([[jsonDict objectForKey:@"success"]boolValue]) {
+        self.loggedIn = NO;
+    }
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_LOGGED_OUT object:self userInfo:jsonDict];
+}
+
 
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Globals.h"
+//#import "Globals.h"
 #import "FilterScrollView.h"
 #import "FilterTabViewController.h"
 #import "CustomButton.h"

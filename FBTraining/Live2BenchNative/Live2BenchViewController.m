@@ -55,7 +55,7 @@
     float frameByFrameInterval;
     
     
-    Globals                             * globals;
+//    Globals                             * globals;
     
     // New class
     ScreenController                    * _externalControlScreen;       // this is for attacked screens
@@ -296,14 +296,14 @@ static void * eventContext      = &eventContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeCurrentTimeObserver)        name:@"setvideourl" object:nil];
     
     
-    globals                     = [Globals instance];
+//    globals                     = [Globals instance];
     uController                 = [[UtilitiesController alloc] init];
     
     //fullscreenOverlayCreated: used to check whether the fullscreen overlay buttons have been created or not; By default, it is false
     fullscreenOverlayCreated    = FALSE;
 
     //initially, the playback rate is 1
-    globals.PLAYBACK_SPEED      = 1.0f;
+//    globals.PLAYBACK_SPEED      = 1.0f;
     
 
     
@@ -319,9 +319,9 @@ static void * eventContext      = &eventContext;
         [self intialPlayerCollectionView];
     }
     //Start the sync me timeronly if there is event playing
-    if (![globals.EVENT_NAME isEqualToString:@""]) {
-       [uController restartSyncMeTimer];
-    }
+//    if (![globals.EVENT_NAME isEqualToString:@""]) {
+//       [uController restartSyncMeTimer];
+//    }
 
     
     
@@ -382,7 +382,7 @@ static void * eventContext      = &eventContext;
     [videoPlayer playFeed:_feedSwitch.primaryFeed];
     
     //pause the videoplayer and also stop the update slider timer in list view 
-    [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//    [globals.VIDEO_PLAYER_LIST_VIEW pause];
     
     //will enter live2bench view, start playing video
 //    if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
@@ -402,13 +402,13 @@ static void * eventContext      = &eventContext;
                                     repeats:YES];
     
     //update the event tag buttons if the user has made any change after opening the app
-    if(globals.HAS_CLOUD)
-    {
-        [uController sync2Cloud];
-    }
-    
+//    if(globals.HAS_CLOUD)
+//    {
+//        [uController sync2Cloud];
+//    }
+//    
     //display the event name on the top right of the videoplayer
-    [currentEventTitle setText:globals.HUMAN_READABLE_EVENT_NAME];
+//    [currentEventTitle setText:globals.HUMAN_READABLE_EVENT_NAME];
     [currentEventTitle setNeedsDisplay];
     
     
@@ -452,40 +452,40 @@ static void * eventContext      = &eventContext;
     
 
     //1.when playing live event, if encoder status is not live or paused or player status is not "readytoplay"; 2. there is no event playing: disable all tag buttons
-    if((((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && ![globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused])|| (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""])))
-    {
-        [self.leftSideButtons setUserInteractionEnabled:FALSE];
-        [self.leftSideButtons setAlpha:0.6f];
-        [self.rightSideButtons setUserInteractionEnabled:FALSE];
-        [self.rightSideButtons setAlpha:0.6f];
-        
-        if([_eventType isEqualToString:@"hockey"]){
-            [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
-            [self.hockeyBottomViewController.view setAlpha:0.6];
-        }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.zoneLabel setAlpha:0.6];
-            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:0.6];
-            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.halfLabel setAlpha:0.6];
-            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.periodSegmentedControl setAlpha:0.6];
-        }else if([_eventType isEqualToString:@"football"]) {
-            [self.footballBottomViewController.view setUserInteractionEnabled:FALSE];
-            [self.footballBottomViewController.view setAlpha:0.6];
-        }else if([_eventType isEqualToString:@"football training"]) {
-            [self.footballTrainingBottomViewController.view setUserInteractionEnabled:FALSE];
-            [self.footballTrainingBottomViewController.view setAlpha:0.6];
-        }
-
-    }else{
-        [self.leftSideButtons setUserInteractionEnabled:TRUE];
-        [self.leftSideButtons setAlpha:1.0f];
-        [self.rightSideButtons setUserInteractionEnabled:true];
-        [self.rightSideButtons setAlpha:1.0f];
-
-    }
+//    if((((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && ![globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused])|| (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""])))
+//    {
+//        [self.leftSideButtons setUserInteractionEnabled:FALSE];
+//        [self.leftSideButtons setAlpha:0.6f];
+//        [self.rightSideButtons setUserInteractionEnabled:FALSE];
+//        [self.rightSideButtons setAlpha:0.6f];
+//        
+//        if([_eventType isEqualToString:@"hockey"]){
+//            [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
+//            [self.hockeyBottomViewController.view setAlpha:0.6];
+//        }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.zoneLabel setAlpha:0.6];
+//            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:0.6];
+//            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.halfLabel setAlpha:0.6];
+//            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.periodSegmentedControl setAlpha:0.6];
+//        }else if([_eventType isEqualToString:@"football"]) {
+//            [self.footballBottomViewController.view setUserInteractionEnabled:FALSE];
+//            [self.footballBottomViewController.view setAlpha:0.6];
+//        }else if([_eventType isEqualToString:@"football training"]) {
+//            [self.footballTrainingBottomViewController.view setUserInteractionEnabled:FALSE];
+//            [self.footballTrainingBottomViewController.view setAlpha:0.6];
+//        }
+//
+//    }else{
+//        [self.leftSideButtons setUserInteractionEnabled:TRUE];
+//        [self.leftSideButtons setAlpha:1.0f];
+//        [self.rightSideButtons setUserInteractionEnabled:true];
+//        [self.rightSideButtons setAlpha:1.0f];
+//
+//    }
 
     [videoPlayer play];
     
@@ -507,11 +507,11 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController.tagMarkerController createTagMarkers];
 
     //when selecting a thumbnail in clip view, globals.IS_TAG_PLAYBACK will be set to true, then come to live2bench view, the method "setCurrentPlayingTag" will be called
-    if(globals.IS_TAG_PLAYBACK)
-    {
-        [self setCurrentPlayingTag:globals.CURRENT_PLAYBACK_TAG];
-        globals.IS_TAG_PLAYBACK=FALSE;
-    }
+//    if(globals.IS_TAG_PLAYBACK)
+//    {
+//        [self setCurrentPlayingTag:globals.CURRENT_PLAYBACK_TAG];
+//        globals.IS_TAG_PLAYBACK=FALSE;
+//    }
     
 //    if (!globals.IS_LOOP_MODE) {
 //        //if live event, seek to live
@@ -531,10 +531,10 @@ static void * eventContext      = &eventContext;
     //used to alert the video palying back successfully or not
     poorSignalCounter = 0;
 
-    if (globals.UNCLOSED_EVENT || [_eventType isEqualToString:@"football training"]) {
-        [self highlightDurationTag];
-    }
-    
+//    if (globals.UNCLOSED_EVENT || [_eventType isEqualToString:@"football training"]) {
+//        [self highlightDurationTag];
+//    }
+//    
   
 
 
@@ -554,476 +554,476 @@ static void * eventContext      = &eventContext;
 -(void)updateCurrentEventInfo
 {
     
-    if(globals.STOP_TIMERS_FROM_LOGOUT)
-    {
-        return;
-    }
+//    if(globals.STOP_TIMERS_FROM_LOGOUT)
+//    {
+//        return;
+//    }
 
     //send new tag information to the server
-    if (globals.ARRAY_OF_TAGSET.count >0) {
-        [self sendTagInformationToServer];
-    }
+//    if (globals.ARRAY_OF_TAGSET.count >0) {
+//        [self sendTagInformationToServer];
+//    }
     
-    if(!globals.IS_PAST_EVENT)
-    {
-        CGFloat duration = videoPlayer.duration;
-        NSDate* startDate = [NSDate dateWithTimeIntervalSinceNow:-1*duration];
-        globals.eventStartDate = startDate;
-    }
-    
+//    if(!globals.IS_PAST_EVENT)
+//    {
+//        CGFloat duration = videoPlayer.duration;
+//        NSDate* startDate = [NSDate dateWithTimeIntervalSinceNow:-1*duration];
+//        globals.eventStartDate = startDate;
+//    }
+//    
     //if the live event is not properly playing or not event playing ,gray the all the tag buttons
-    if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && ![globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""]))
-    {
-        
-        //if the current event is live and just started, give video player 40 seconds to prepare for playing, else 10 seconds;
-        //if after the errorCount time, the event is still not playing properly, will show the error alert view
-        int errorCount;
-        if(globals.DID_START_NEW_EVENT){
-            errorCount = 40;
-        }else{
-            errorCount = 10;
-        }
-
-        if (![globals.EVENT_NAME isEqualToString:@""] && !globals.VIDEO_PLAYBACK_FAILED) {
-            //show spinner view if live event not playing properly in 10s
-            [spinnerView removeSpinner];
-            spinnerView = nil;
-            if (spinnerViewCounter < errorCount) {
-                spinnerView = [SpinnerView loadSpinnerIntoView:[[[UIApplication sharedApplication]windows]objectAtIndex:0 ]];
-            }else{
-                //if the video player not playing properly for more than 10s, remove spinner view
-                if (spinnerView) {
-                    [spinnerView removeSpinner];
-                    spinnerView = nil;
-                }
-
-            }
-            spinnerViewCounter++;
-        }else{
-            //if live event stopped or video playback failed alert view pop up, remove the spinner view
-            if (spinnerView) {
-                [spinnerView removeSpinner];
-                spinnerView = nil;
-            }
-            spinnerViewCounter = 0;
-        }
-        
-        
-
-        
-        //***********************************TODO: if the wifi connection of the ipad lost, handle the case*********************************//
-        //if the live event stopped, check if the wifi still there
-        if(([globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped]||[globals.CURRENT_ENC_STATUS isEqualToString:@""]) && [globals.EVENT_NAME isEqualToString: @"live"] && globals.HAS_WIFI){
-            //if the wifi is turned off
-            globals.HAS_WIFI = [uController hasConnectivity];
-            if (!globals.HAS_WIFI) {
-                [spinnerView removeSpinner];
-                spinnerView = nil;
-                spinnerViewCounter = 0;
-                CustomAlertView *alert = [[CustomAlertView alloc]
-                                      initWithTitle: @"myplayXplay"
-                                      message: @"No wifi available."
-                                      delegate: nil
-                                      cancelButtonTitle:@"OK"
-                                      otherButtonTitles:nil];
-                [alert show];
-//                [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-            }
-        }
-        
-        //if lose wifi in live event, keep checking is wifi reconnected
-        if ([globals.EVENT_NAME isEqualToString:@"live"] && !globals.HAS_WIFI) {
-            globals.HAS_WIFI = [uController hasConnectivity];
-            if (globals.HAS_WIFI) {
-                //if wifi comes back, remove all the request in the app_queue
-                [globals.APP_QUEUE.queue removeAllObjects];
-            }
-        }
-        
-        if ((int)[[[videoPlayer avPlayer]currentItem]status] == 0) {
-            
-            //playerStatus = @"avplayerUnknown";
-            if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-                poorSignalCounter++;
-            }
-            
-            //if the video is not playing properly in 60 secs, remove the spinnerView and pop up a alert that video playback failed
-            if (!videoPlaybackFailedAlertView && [globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && poorSignalCounter > 9 && !globals.VIDEO_PLAYBACK_FAILED) {
-                //reset video player every 10 seconds for 6 times
-                if (poorSignalCounter > 0 && poorSignalCounter%10 == 0) {
-                    
-                    [videoPlayer resetAvplayer];
-                    //go to live after 3 seconds delay
-                    [videoPlayer performSelector:@selector(goToLive) withObject:nil afterDelay:5];
-                }else if(poorSignalCounter > 60){
-                    //if the video is not playing properly in 50 secs, remove the spinnerView and pop up a alert that video playback failed
-                    globals.VIDEO_PLAYBACK_FAILED = TRUE;
-                    if (spinnerView) {
-                        [spinnerView removeSpinner];
-                        spinnerView = nil;
-                    }
-                    videoPlaybackFailedAlertView = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:@"Video play back error. Please check the network condition and hardware connection." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-                    [videoPlaybackFailedAlertView show];
-//                    [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:videoPlaybackFailedAlertView];
-                    //if the video playback failed, set the video url to @"", donot continue to try to reset the url
-                    NSURL *videoURL = [NSURL URLWithString:@""];
-                    //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-                    
-                    [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
-                    [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
-                    
-                    [self.videoPlayer setVideoURL:videoURL];
-                    [self.videoPlayer setPlayerWithURL:videoURL];
-                    
-
-                }
-            }
-            
-        }else if((int)[[[videoPlayer avPlayer] currentItem] status] == 1){
-            poorSignalCounter = 0;
-            //playerStatus = @"avplayerReadyToPlay";
-           
-        }else if((int)[[[videoPlayer avPlayer]currentItem]status] == 2){
-            poorSignalCounter = 0;
-                globals.VIDEO_PLAYBACK_FAILED = TRUE;
-                if (spinnerView) {
-                    [spinnerView removeSpinner];
-                    spinnerView = nil;
-                }
-
-            
-        }
-
-        
-        [self.leftSideButtons setUserInteractionEnabled:FALSE];
-        [self.leftSideButtons setAlpha:0.6];
-        
-        [self.rightSideButtons setUserInteractionEnabled:FALSE];
-        [self.rightSideButtons setAlpha:0.6];
-        
-        [self.overlayLeftViewController.view setUserInteractionEnabled:FALSE];
-        [self.overlayRightViewController.view setUserInteractionEnabled:FALSE];
-        if (!isModifyingPlaybackRate) {
-            [self.overlayLeftViewController.view setAlpha:0.6];
-            [self.overlayRightViewController.view setAlpha:0.6];
-        }
-        
-        if([_eventType isEqualToString:@"hockey"]){
-            [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
-            [self.hockeyBottomViewController.view setAlpha:0.6];
-        }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.zoneLabel setAlpha:0.6];
-            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:0.6];
-            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.halfLabel setAlpha:0.6];
-            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.periodSegmentedControl setAlpha:0.6];
-        }else if([_eventType isEqualToString:@"football"]) {
-            [self.footballBottomViewController.view setUserInteractionEnabled:FALSE];
-            [self.footballBottomViewController.view setAlpha:0.6];
-        }else if([_eventType isEqualToString:@"football training"]) {
-            [self.footballTrainingBottomViewController.view setUserInteractionEnabled:FALSE];
-            [self.footballTrainingBottomViewController.view setAlpha:0.6];
-        }
-        
-    }else{
-
-        
-        if (spinnerView) {
-            [spinnerView removeSpinner];
-    
-            spinnerView = nil;
-        }
-
-        
-        [self.leftSideButtons setUserInteractionEnabled:TRUE];
-        [self.leftSideButtons setAlpha:1.0];
-        
-        [self.rightSideButtons setUserInteractionEnabled:TRUE];
-        [self.rightSideButtons setAlpha:1.0];
-        
-        [self.overlayLeftViewController.view setUserInteractionEnabled:TRUE];
-        [self.overlayRightViewController.view setUserInteractionEnabled:TRUE];
-        if (!isModifyingPlaybackRate) {
-            [self.overlayLeftViewController.view setAlpha:1.0];
-            [self.overlayRightViewController.view setAlpha:1.0];
-        }
-        
-
-            if([_eventType isEqualToString:@"hockey"]){
-                [self.hockeyBottomViewController.view setUserInteractionEnabled:TRUE];
-                [self.hockeyBottomViewController.view setAlpha:1.0];
-            }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-                [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:TRUE];
-                [self.soccerBottomViewController.zoneLabel setAlpha:1.0];
-                [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:TRUE];
-                [self.soccerBottomViewController.zoneSegmentedControl setAlpha:1.0];
-                [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:TRUE];
-                [self.soccerBottomViewController.halfLabel setAlpha:1.0];
-                [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:TRUE];
-                [self.soccerBottomViewController.periodSegmentedControl setAlpha:1.0];
-            }else if([_eventType isEqualToString:@"football"]) {
-                [self.footballBottomViewController.view setUserInteractionEnabled:TRUE];
-                [self.footballBottomViewController.view setAlpha:1.0];
-            }else if([_eventType isEqualToString:@"football training"]) {
-                [self.footballTrainingBottomViewController.view setUserInteractionEnabled:TRUE];
-                [self.footballTrainingBottomViewController.view setAlpha:1.0];
-            }
-        }
-        
-    
-        [self.view setUserInteractionEnabled:TRUE];
-    
-    //enable live button if the current encoder status is @"live", otherwise disable it
-    if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || [globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) {
-//        _liveButton.enabled = YES;
-                [_liveButton isActive:YES];
-    }else{
-//         _liveButton.enabled = NO;
-                [_liveButton isActive:NO];
-    }
-    
-    if ([globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){ 
-        //if no event playing, leave the bottom view blank
-        [self.hockeyBottomViewController.view setHidden:TRUE];
-        [self.soccerBottomViewController.view setHidden:TRUE];
-    }else{
-        //show record button if playing live game
-        if ([globals.EVENT_NAME isEqualToString:@"live"]){
-            [self.hockeyBottomViewController.view setHidden:FALSE];
-            [self.soccerBottomViewController.view setHidden:FALSE];
-        }
-        
-    }
-    //if we just started a new event, reset video url and  seek to live automatically
-    if(globals.DID_START_NEW_EVENT && globals.DID_RECV_GAME_TAGS)
-    {
-        if ((int)[[[videoPlayer avPlayer]currentItem]status] != 1) {
-            globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-            NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-            //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-            
-            [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
-            [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
-            [globals.VIDEO_PLAYER_LIST_VIEW pause];
-            
-            [videoPlayer setVideoURL:videoURL];
-            [videoPlayer setPlayerWithURL:videoURL];
-            [videoPlayer play];
-
-            globals.VIDEO_PLAYBACK_FAILED = FALSE;
-            globals.PLAYABLE_DURATION = -1;
-            //tagMarkerLoopCounter = 20;
-        }
-        globals.DID_START_NEW_EVENT=FALSE;
-        globals.DID_RECV_GAME_TAGS = FALSE;
-        [_liveButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }
-    globals.GLOBAL_PLAYED_DURATION = videoPlayer.duration;
-    
-    //create tagmarkers for the new tags get from syncme callback
-    if(globals.NEW_TAGS_FROM_SYNC.count>0)
-    {
-        NSString *color;
-        float tagTime;
-        UIColor *tagColour;
-        
-        NSMutableDictionary *UIColourDict;
-        for(NSMutableDictionary *oneTag in globals.NEW_TAGS_FROM_SYNC){
-            if ([oneTag objectForKey:@"time"] && [[oneTag objectForKey:@"type"]integerValue]!=3 && [[oneTag objectForKey:@"type"]integerValue]!=8 && [[oneTag objectForKey:@"type"]integerValue]!=18 && [[oneTag objectForKey:@"type"]integerValue]!=22 && !([[oneTag objectForKey:@"type"]integerValue]&1)) {
-                color = [oneTag objectForKey:@"colour"];
-                if ([UIColourDict count] == 0){
-                    tagColour = [uController colorWithHexString:color];
-                    UIColourDict = [NSMutableDictionary dictionaryWithObject:tagColour forKey:color];
-                } else {
-                    if (![UIColourDict objectForKey:color]){
-                        tagColour = [uController colorWithHexString:color];
-                        [UIColourDict setObject:tagColour forKey:color];
-                    }
-                }
-                
-                tagColour = [UIColourDict objectForKey:color];
-                tagTime = [[oneTag objectForKey:@"time"] floatValue];
-//                [self markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
-                //[self markTag:tagTime name:tagName colour:tagColour tagID: [[oneTag objectForKey:@"id"] doubleValue]];
-            }
-        }
-        globals.NEW_TAGS_FROM_SYNC=nil;
-    }
-    //playback old event
-    if (![globals.EVENT_NAME isEqualToString:@"live"] && globals.FIRST_LOCAL_PLAYBACK) {
-        [videoPlayer play];
-        globals.FIRST_LOCAL_PLAYBACK=FALSE;
-    }
-    
-    //current playback time 
-    currentPlayBackTime = CMTimeGetSeconds(videoPlayer.avPlayer.currentTime);
-    
-    //if get tagnames from sync2cloudcallback, update tag buttons 
-    if(globals.DID_RECV_TAG_NAMES)
-    {
-        globals.TAG_BTNS_REQ_SENT=FALSE;
-
-//        [self createTagButtons];//888
-        [_videoBarViewController.tagMarkerController createTagMarkers];
-    }
-    [self.view setNeedsDisplay];
-
-    //if a tag is playing currently, update the position of the currentPlayingEventMarker(small orange triangle) according to the lead tagmarker's position
-    if (globals.IS_LOOP_MODE) {
-        
-        //NOTE: [NSString stringWithFormat:@"%@",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] is very important for a key value of a dictionary, otherwise currentPlayingTagMarker will be nil value
-        TagMarker *currentPlayingTagMarker = [globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%@",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]]];
-        CGRect oldFrame = self.currentPlayingEventMarker.frame;
-        [self.currentPlayingEventMarker setFrame:CGRectMake(currentPlayingTagMarker.leadTag.xValue -7, oldFrame.origin.y,oldFrame.size.width, oldFrame.size.height)];
-        self.currentPlayingEventMarker.hidden = FALSE;
-
-    }
-  
-    // Richard
+//    if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && ![globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""]))
+//    {
+//        
+//        //if the current event is live and just started, give video player 40 seconds to prepare for playing, else 10 seconds;
+//        //if after the errorCount time, the event is still not playing properly, will show the error alert view
+//        int errorCount;
+//        if(globals.DID_START_NEW_EVENT){
+//            errorCount = 40;
+//        }else{
+//            errorCount = 10;
+//        }
+//
+//        if (![globals.EVENT_NAME isEqualToString:@""] && !globals.VIDEO_PLAYBACK_FAILED) {
+//            //show spinner view if live event not playing properly in 10s
+//            [spinnerView removeSpinner];
+//            spinnerView = nil;
+//            if (spinnerViewCounter < errorCount) {
+//                spinnerView = [SpinnerView loadSpinnerIntoView:[[[UIApplication sharedApplication]windows]objectAtIndex:0 ]];
+//            }else{
+//                //if the video player not playing properly for more than 10s, remove spinner view
+//                if (spinnerView) {
+//                    [spinnerView removeSpinner];
+//                    spinnerView = nil;
+//                }
+//
+//            }
+//            spinnerViewCounter++;
+//        }else{
+//            //if live event stopped or video playback failed alert view pop up, remove the spinner view
+//            if (spinnerView) {
+//                [spinnerView removeSpinner];
+//                spinnerView = nil;
+//            }
+//            spinnerViewCounter = 0;
+//        }
+//        
+//        
+//
+//        
+//        //***********************************TODO: if the wifi connection of the ipad lost, handle the case*********************************//
+//        //if the live event stopped, check if the wifi still there
+//        if(([globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped]||[globals.CURRENT_ENC_STATUS isEqualToString:@""]) && [globals.EVENT_NAME isEqualToString: @"live"] && globals.HAS_WIFI){
+//            //if the wifi is turned off
+//            globals.HAS_WIFI = [uController hasConnectivity];
+//            if (!globals.HAS_WIFI) {
+//                [spinnerView removeSpinner];
+//                spinnerView = nil;
+//                spinnerViewCounter = 0;
+//                CustomAlertView *alert = [[CustomAlertView alloc]
+//                                      initWithTitle: @"myplayXplay"
+//                                      message: @"No wifi available."
+//                                      delegate: nil
+//                                      cancelButtonTitle:@"OK"
+//                                      otherButtonTitles:nil];
+//                [alert show];
+////                [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+//            }
+//        }
+//        
+//        //if lose wifi in live event, keep checking is wifi reconnected
+//        if ([globals.EVENT_NAME isEqualToString:@"live"] && !globals.HAS_WIFI) {
+//            globals.HAS_WIFI = [uController hasConnectivity];
+//            if (globals.HAS_WIFI) {
+//                //if wifi comes back, remove all the request in the app_queue
+//                [globals.APP_QUEUE.queue removeAllObjects];
+//            }
+//        }
+//        
+//        if ((int)[[[videoPlayer avPlayer]currentItem]status] == 0) {
+//            
+//            //playerStatus = @"avplayerUnknown";
+//            if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//                poorSignalCounter++;
+//            }
+//            
+//            //if the video is not playing properly in 60 secs, remove the spinnerView and pop up a alert that video playback failed
+//            if (!videoPlaybackFailedAlertView && [globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && poorSignalCounter > 9 && !globals.VIDEO_PLAYBACK_FAILED) {
+//                //reset video player every 10 seconds for 6 times
+//                if (poorSignalCounter > 0 && poorSignalCounter%10 == 0) {
+//                    
+//                    [videoPlayer resetAvplayer];
+//                    //go to live after 3 seconds delay
+//                    [videoPlayer performSelector:@selector(goToLive) withObject:nil afterDelay:5];
+//                }else if(poorSignalCounter > 60){
+//                    //if the video is not playing properly in 50 secs, remove the spinnerView and pop up a alert that video playback failed
+//                    globals.VIDEO_PLAYBACK_FAILED = TRUE;
+//                    if (spinnerView) {
+//                        [spinnerView removeSpinner];
+//                        spinnerView = nil;
+//                    }
+//                    videoPlaybackFailedAlertView = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:@"Video play back error. Please check the network condition and hardware connection." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+//                    [videoPlaybackFailedAlertView show];
+////                    [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:videoPlaybackFailedAlertView];
+//                    //if the video playback failed, set the video url to @"", donot continue to try to reset the url
+//                    NSURL *videoURL = [NSURL URLWithString:@""];
+//                    //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
+//                    
+//                    [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
+//                    [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
+//                    
+//                    [self.videoPlayer setVideoURL:videoURL];
+//                    [self.videoPlayer setPlayerWithURL:videoURL];
+//                    
+//
+//                }
+//            }
+//            
+//        }else if((int)[[[videoPlayer avPlayer] currentItem] status] == 1){
+//            poorSignalCounter = 0;
+//            //playerStatus = @"avplayerReadyToPlay";
+//           
+//        }else if((int)[[[videoPlayer avPlayer]currentItem]status] == 2){
+//            poorSignalCounter = 0;
+//                globals.VIDEO_PLAYBACK_FAILED = TRUE;
+//                if (spinnerView) {
+//                    [spinnerView removeSpinner];
+//                    spinnerView = nil;
+//                }
+//
+//            
+//        }
+//
+//        
+//        [self.leftSideButtons setUserInteractionEnabled:FALSE];
+//        [self.leftSideButtons setAlpha:0.6];
+//        
+//        [self.rightSideButtons setUserInteractionEnabled:FALSE];
+//        [self.rightSideButtons setAlpha:0.6];
+//        
+//        [self.overlayLeftViewController.view setUserInteractionEnabled:FALSE];
+//        [self.overlayRightViewController.view setUserInteractionEnabled:FALSE];
+//        if (!isModifyingPlaybackRate) {
+//            [self.overlayLeftViewController.view setAlpha:0.6];
+//            [self.overlayRightViewController.view setAlpha:0.6];
+//        }
+//        
+//        if([_eventType isEqualToString:@"hockey"]){
+//            [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
+//            [self.hockeyBottomViewController.view setAlpha:0.6];
+//        }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.zoneLabel setAlpha:0.6];
+//            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:0.6];
+//            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.halfLabel setAlpha:0.6];
+//            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.periodSegmentedControl setAlpha:0.6];
+//        }else if([_eventType isEqualToString:@"football"]) {
+//            [self.footballBottomViewController.view setUserInteractionEnabled:FALSE];
+//            [self.footballBottomViewController.view setAlpha:0.6];
+//        }else if([_eventType isEqualToString:@"football training"]) {
+//            [self.footballTrainingBottomViewController.view setUserInteractionEnabled:FALSE];
+//            [self.footballTrainingBottomViewController.view setAlpha:0.6];
+//        }
+//        
+//    }else{
+//
+//        
+//        if (spinnerView) {
+//            [spinnerView removeSpinner];
+//    
+//            spinnerView = nil;
+//        }
+//
+//        
+//        [self.leftSideButtons setUserInteractionEnabled:TRUE];
+//        [self.leftSideButtons setAlpha:1.0];
+//        
+//        [self.rightSideButtons setUserInteractionEnabled:TRUE];
+//        [self.rightSideButtons setAlpha:1.0];
+//        
+//        [self.overlayLeftViewController.view setUserInteractionEnabled:TRUE];
+//        [self.overlayRightViewController.view setUserInteractionEnabled:TRUE];
+//        if (!isModifyingPlaybackRate) {
+//            [self.overlayLeftViewController.view setAlpha:1.0];
+//            [self.overlayRightViewController.view setAlpha:1.0];
+//        }
+//        
+//
+//            if([_eventType isEqualToString:@"hockey"]){
+//                [self.hockeyBottomViewController.view setUserInteractionEnabled:TRUE];
+//                [self.hockeyBottomViewController.view setAlpha:1.0];
+//            }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//                [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:TRUE];
+//                [self.soccerBottomViewController.zoneLabel setAlpha:1.0];
+//                [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:TRUE];
+//                [self.soccerBottomViewController.zoneSegmentedControl setAlpha:1.0];
+//                [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:TRUE];
+//                [self.soccerBottomViewController.halfLabel setAlpha:1.0];
+//                [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:TRUE];
+//                [self.soccerBottomViewController.periodSegmentedControl setAlpha:1.0];
+//            }else if([_eventType isEqualToString:@"football"]) {
+//                [self.footballBottomViewController.view setUserInteractionEnabled:TRUE];
+//                [self.footballBottomViewController.view setAlpha:1.0];
+//            }else if([_eventType isEqualToString:@"football training"]) {
+//                [self.footballTrainingBottomViewController.view setUserInteractionEnabled:TRUE];
+//                [self.footballTrainingBottomViewController.view setAlpha:1.0];
+//            }
+//        }
+//        
+//    
+//        [self.view setUserInteractionEnabled:TRUE];
+//    
+//    //enable live button if the current encoder status is @"live", otherwise disable it
+//    if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || [globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]) {
+////        _liveButton.enabled = YES;
+//                [_liveButton isActive:YES];
+//    }else{
+////         _liveButton.enabled = NO;
+//                [_liveButton isActive:NO];
+//    }
+//    
+//    if ([globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){ 
+//        //if no event playing, leave the bottom view blank
+//        [self.hockeyBottomViewController.view setHidden:TRUE];
+//        [self.soccerBottomViewController.view setHidden:TRUE];
+//    }else{
+//        //show record button if playing live game
+//        if ([globals.EVENT_NAME isEqualToString:@"live"]){
+//            [self.hockeyBottomViewController.view setHidden:FALSE];
+//            [self.soccerBottomViewController.view setHidden:FALSE];
+//        }
+//        
+//    }
+//    //if we just started a new event, reset video url and  seek to live automatically
+//    if(globals.DID_START_NEW_EVENT && globals.DID_RECV_GAME_TAGS)
+//    {
+//        if ((int)[[[videoPlayer avPlayer]currentItem]status] != 1) {
+//            globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
+//            NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
+//            //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
+//            
+//            [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
+//            [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
+//            [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//            
+//            [videoPlayer setVideoURL:videoURL];
+//            [videoPlayer setPlayerWithURL:videoURL];
+//            [videoPlayer play];
+//
+//            globals.VIDEO_PLAYBACK_FAILED = FALSE;
+//            globals.PLAYABLE_DURATION = -1;
+//            //tagMarkerLoopCounter = 20;
+//        }
+//        globals.DID_START_NEW_EVENT=FALSE;
+//        globals.DID_RECV_GAME_TAGS = FALSE;
+//        [_liveButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//    }
+//    globals.GLOBAL_PLAYED_DURATION = videoPlayer.duration;
+//    
+//    //create tagmarkers for the new tags get from syncme callback
+//    if(globals.NEW_TAGS_FROM_SYNC.count>0)
+//    {
+//        NSString *color;
+//        float tagTime;
+//        UIColor *tagColour;
+//        
+//        NSMutableDictionary *UIColourDict;
+//        for(NSMutableDictionary *oneTag in globals.NEW_TAGS_FROM_SYNC){
+//            if ([oneTag objectForKey:@"time"] && [[oneTag objectForKey:@"type"]integerValue]!=3 && [[oneTag objectForKey:@"type"]integerValue]!=8 && [[oneTag objectForKey:@"type"]integerValue]!=18 && [[oneTag objectForKey:@"type"]integerValue]!=22 && !([[oneTag objectForKey:@"type"]integerValue]&1)) {
+//                color = [oneTag objectForKey:@"colour"];
+//                if ([UIColourDict count] == 0){
+//                    tagColour = [uController colorWithHexString:color];
+//                    UIColourDict = [NSMutableDictionary dictionaryWithObject:tagColour forKey:color];
+//                } else {
+//                    if (![UIColourDict objectForKey:color]){
+//                        tagColour = [uController colorWithHexString:color];
+//                        [UIColourDict setObject:tagColour forKey:color];
+//                    }
+//                }
+//                
+//                tagColour = [UIColourDict objectForKey:color];
+//                tagTime = [[oneTag objectForKey:@"time"] floatValue];
+////                [self markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
+//                //[self markTag:tagTime name:tagName colour:tagColour tagID: [[oneTag objectForKey:@"id"] doubleValue]];
+//            }
+//        }
+//        globals.NEW_TAGS_FROM_SYNC=nil;
+//    }
+//    //playback old event
+//    if (![globals.EVENT_NAME isEqualToString:@"live"] && globals.FIRST_LOCAL_PLAYBACK) {
+//        [videoPlayer play];
+//        globals.FIRST_LOCAL_PLAYBACK=FALSE;
+//    }
+//    
+//    //current playback time 
+//    currentPlayBackTime = CMTimeGetSeconds(videoPlayer.avPlayer.currentTime);
+//    
+//    //if get tagnames from sync2cloudcallback, update tag buttons 
+//    if(globals.DID_RECV_TAG_NAMES)
+//    {
+//        globals.TAG_BTNS_REQ_SENT=FALSE;
+//
+////        [self createTagButtons];//888
+//        [_videoBarViewController.tagMarkerController createTagMarkers];
+//    }
+//    [self.view setNeedsDisplay];
+//
+//    //if a tag is playing currently, update the position of the currentPlayingEventMarker(small orange triangle) according to the lead tagmarker's position
+//    if (globals.IS_LOOP_MODE) {
+//        
+//        //NOTE: [NSString stringWithFormat:@"%@",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] is very important for a key value of a dictionary, otherwise currentPlayingTagMarker will be nil value
+//        TagMarker *currentPlayingTagMarker = [globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%@",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]]];
+//        CGRect oldFrame = self.currentPlayingEventMarker.frame;
+//        [self.currentPlayingEventMarker setFrame:CGRectMake(currentPlayingTagMarker.leadTag.xValue -7, oldFrame.origin.y,oldFrame.size.width, oldFrame.size.height)];
+//        self.currentPlayingEventMarker.hidden = FALSE;
+//
+//    }
+//  
+//    // Richard
     [_videoBarViewController update];
-    
-    
+//
+//    
 }
 
 //looping tag
 - (void)handleThumbnailLoop
 {
-    if(globals.STOP_TIMERS_FROM_LOGOUT)
-    {
-        return;
-    }
-    
-    if (isnan([videoPlayer currentTimeInSeconds]))
-    {
-        return;
-        
-    }else{
-        
-        //play telestration
-        if (globals.IS_PLAYBACK_TELE) {
-            
-            if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".m3u8"].location != NSNotFound || globals.IS_LOCAL_PLAYBACK) {
-                
-                [videoPlayer pause];
-                
-                if (telestrationOverlay) {
-                    
-                    [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 1.0) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-                    
-                    [videoPlayer pause];
-                    
-                }else{
-                    
-                    //set the frame size of the telestration overlay to match the thumbnail image
-                    
-                    telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y+ 6,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
-                    
-                    [telestrationOverlay setClipsToBounds:TRUE];
-                    
-                    [telestrationOverlay setBackgroundColor:[UIColor clearColor]];
-                    
-                    [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
-                    
-                    NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
-                    
-                    NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-                    
-                    telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
-                    
-                    [videoPlayer.view  addSubview:telestrationOverlay];
-                    
-                    if (isViewTeleButtonSelected) {
-                        isViewTeleButtonSelected = FALSE;
-                        //set the frame size of the telestration overlay to match the thumbnail image
-                        [telestrationOverlay setFrame:CGRectMake(0, videoPlayer.view.bounds.origin.y+10, videoPlayer.view.bounds.size.width, videoPlayer.view.bounds.size.height)];
-                        [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFit];
-
-                    }
-                  
-                }
-            }else{
-                
-                //TODO: playing telestration off with mp4 format
-                
-                if (telestrationOverlay) {
-                    
-                    [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 1.0) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-                        
-                    [videoPlayer pause];
-                        
-                    }];
-                    
-                }else{
-                    
-                    //set the frame size of the telestration overlay to match the thumbnail image
-                    
-                    telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y+ 6,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
-                    
-                    [telestrationOverlay setClipsToBounds:TRUE];
-                    
-                    [telestrationOverlay setBackgroundColor:[UIColor clearColor]];
-                    
-                    [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
-                    
-                    NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
-                    
-                    NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-                    
-                    telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
-                    
-                    [videoPlayer.view  addSubview:telestrationOverlay];
-                    
-                }
-            }
-        }else if(!globals.IS_PLAYBACK_TELE){
-            //play normal tags
-            if (self.videoPlayer.currentTimeInSeconds >= globals.HOME_END_TIME || (self.videoPlayer.currentTimeInSeconds <= globals.HOME_START_TIME -1)){ //&& !self.videoPlayer.isLoopMode)) {
-                [self.videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 1.0)];
-                [self.videoPlayer setTime:globals.HOME_START_TIME];
-                sleep(1);
-                [self.videoPlayer prepareToPlay];
-                [self.videoPlayer play];
-
-            }
-            if(self.videoPlayer.avPlayer.rate > 0)
-            {
-                [self.videoPlayer play];
-
-            }
-        
-        }
-    }
+//    if(globals.STOP_TIMERS_FROM_LOGOUT)
+////    {
+////        return;
+////    }
+//    
+//    if (isnan([videoPlayer currentTimeInSeconds]))
+//    {
+//        return;
+//        
+//    }else{
+//        
+//        //play telestration
+//        if (globals.IS_PLAYBACK_TELE) {
+//            
+//            if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".m3u8"].location != NSNotFound || globals.IS_LOCAL_PLAYBACK) {
+//                
+//                [videoPlayer pause];
+//                
+//                if (telestrationOverlay) {
+//                    
+//                    [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 1.0) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//                    
+//                    [videoPlayer pause];
+//                    
+//                }else{
+//                    
+//                    //set the frame size of the telestration overlay to match the thumbnail image
+//                    
+//                    telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y+ 6,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
+//                    
+//                    [telestrationOverlay setClipsToBounds:TRUE];
+//                    
+//                    [telestrationOverlay setBackgroundColor:[UIColor clearColor]];
+//                    
+//                    [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
+//                    
+//                    NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
+//                    
+//                    NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
+//                    
+//                    telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
+//                    
+//                    [videoPlayer.view  addSubview:telestrationOverlay];
+//                    
+//                    if (isViewTeleButtonSelected) {
+//                        isViewTeleButtonSelected = FALSE;
+//                        //set the frame size of the telestration overlay to match the thumbnail image
+//                        [telestrationOverlay setFrame:CGRectMake(0, videoPlayer.view.bounds.origin.y+10, videoPlayer.view.bounds.size.width, videoPlayer.view.bounds.size.height)];
+//                        [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFit];
+//
+//                    }
+//                  
+//                }
+//            }else{
+//                
+//                //TODO: playing telestration off with mp4 format
+//                
+//                if (telestrationOverlay) {
+//                    
+//                    [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 1.0) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+//                        
+//                    [videoPlayer pause];
+//                        
+//                    }];
+//                    
+//                }else{
+//                    
+//                    //set the frame size of the telestration overlay to match the thumbnail image
+//                    
+//                    telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y+ 6,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
+//                    
+//                    [telestrationOverlay setClipsToBounds:TRUE];
+//                    
+//                    [telestrationOverlay setBackgroundColor:[UIColor clearColor]];
+//                    
+//                    [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
+//                    
+//                    NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
+//                    
+//                    NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
+//                    
+//                    telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
+//                    
+//                    [videoPlayer.view  addSubview:telestrationOverlay];
+//                    
+//                }
+//            }
+//        }else if(!globals.IS_PLAYBACK_TELE){
+//            //play normal tags
+//            if (self.videoPlayer.currentTimeInSeconds >= globals.HOME_END_TIME || (self.videoPlayer.currentTimeInSeconds <= globals.HOME_START_TIME -1)){ //&& !self.videoPlayer.isLoopMode)) {
+//                [self.videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 1.0)];
+//                [self.videoPlayer setTime:globals.HOME_START_TIME];
+//                sleep(1);
+//                [self.videoPlayer prepareToPlay];
+//                [self.videoPlayer play];
+//
+//            }
+//            if(self.videoPlayer.avPlayer.rate > 0)
+//            {
+//                [self.videoPlayer play];
+//
+//            }
+//        
+//        }
+//    }
 }
 
 //destroy thumbnail looping
 - (void)destroyThumbLoop
 {
-    //remove the observer for looping tag
-    if (loopTagObserver) {
-        [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
-        loopTagObserver = nil;
-    }
-    
-    globals.IS_PLAYBACK_TELE = FALSE;
-    globals.IS_TAG_PLAYBACK = FALSE;
-    [self.currentPlayingEventMarker setHidden:TRUE];
-    [self.continuePlayButton setHidden:TRUE];
-    //remove the telestration overlay
-    if(telestrationOverlay)
-    {
-        [telestrationOverlay removeFromSuperview];
-        telestrationOverlay = nil;
-    }
-    //if is in fullscreen, remove buttons for loop mode and create buttons for normal mode
-    if (videoPlayer.isFullScreen && globals.IS_LOOP_MODE) {
-        [self removeFullScreenOverlayButtonsinLoopMode];
-        [self createFullScreenOverlayButtons];
-    }
-    
-    globals.IS_LOOP_MODE = FALSE;
+//    //remove the observer for looping tag
+//    if (loopTagObserver) {
+//        [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
+//        loopTagObserver = nil;
+//    }
+//    
+//    globals.IS_PLAYBACK_TELE = FALSE;
+//    globals.IS_TAG_PLAYBACK = FALSE;
+//    [self.currentPlayingEventMarker setHidden:TRUE];
+//    [self.continuePlayButton setHidden:TRUE];
+//    //remove the telestration overlay
+//    if(telestrationOverlay)
+//    {
+//        [telestrationOverlay removeFromSuperview];
+//        telestrationOverlay = nil;
+//    }
+//    //if is in fullscreen, remove buttons for loop mode and create buttons for normal mode
+//    if (videoPlayer.isFullScreen && globals.IS_LOOP_MODE) {
+//        [self removeFullScreenOverlayButtonsinLoopMode];
+//        [self createFullScreenOverlayButtons];
+//    }
+//    
+//    globals.IS_LOOP_MODE = FALSE;
 }
 
 
@@ -1033,10 +1033,10 @@ static void * eventContext      = &eventContext;
     // If current event is not live... pause it
     
     //will leaving live2bench view,pause video
-    if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-        [videoPlayer pause];
-        if (videoPlayer.timeObserver) [videoPlayer removePlayerItemTimeObserver];
-    }
+//    if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//        [videoPlayer pause];
+//        if (videoPlayer.timeObserver) [videoPlayer removePlayerItemTimeObserver];
+//    }
 
 
     //if was viewing telestartion, remove it
@@ -1053,23 +1053,23 @@ static void * eventContext      = &eventContext;
     [self.playerCollectionViewController.view setAlpha:0.0f];
     [self.footballTrainingCollectionViewController.view setAlpha:0.0f];
     
-    globals.DID_RECV_GAME_TAGS=FALSE;
-    
-    //if the player seeks to live, the globals.RETAINEDPLAYBACKTIME is set to zero; otherwise globals.RETAINEDPLAYBACKTIME is set to current playback time
-    if (globals.DID_GO_TO_LIVE) {
-        globals.RETAINEDPLAYBACKTIME = 0.0;
-    }else{
-        globals.RETAINEDPLAYBACKTIME = currentPlayBackTime;
-    }
+//    globals.DID_RECV_GAME_TAGS=FALSE;
+//    
+//    //if the player seeks to live, the globals.RETAINEDPLAYBACKTIME is set to zero; otherwise globals.RETAINEDPLAYBACKTIME is set to current playback time
+//    if (globals.DID_GO_TO_LIVE) {
+//        globals.RETAINEDPLAYBACKTIME = 0.0;
+//    }else{
+//        globals.RETAINEDPLAYBACKTIME = currentPlayBackTime;
+//    }
     //when leave live2bench view, stop the updateplayertimer
     [updateCurrentEventInfoTimer invalidate];
     updateCurrentEventInfoTimer = nil;
     
     
     //if current event is downloaded and not exist in the current encoder, save all the tags in local plist file
-    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
-       [uController writeTagsToPlist];
-    }
+//    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
+//       [uController writeTagsToPlist];
+//    }
 //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeAllObjects];
     [CustomAlertView removeAll];
     
@@ -1103,118 +1103,118 @@ static void * eventContext      = &eventContext;
     
     return;
     
-    globals.IS_TELE=FALSE;
-    
-    globals.eventExistsOnServer = TRUE;
-    globals.DID_GO_TO_LIVE = TRUE;
-    globals.IS_PLAYBACK_TELE = FALSE;
+//    globals.IS_TELE=FALSE;
+//    
+//    globals.eventExistsOnServer = TRUE;
+//    globals.DID_GO_TO_LIVE = TRUE;
+//    globals.IS_PLAYBACK_TELE = FALSE;
     
 //    check if already playing a live game
-    if([globals.EVENT_NAME isEqualToString:@"live"]){
-         globals.IS_LOCAL_PLAYBACK = FALSE;
-        //go to live, destroy the loop mode
-        [self destroyThumbLoop];
-        globals.IS_LOOP_MODE = FALSE;
-        [videoPlayer goToLive];
-
-        [[NSNotificationCenter defaultCenter ]postNotificationName:@"RestartUpdate" object:nil];
-        
-       //[self createTagMarkers];
-
-    }else{
-        //switchToLiveEvent is set to TRUE. It is used to recreate tagmarkers for the current live event
-        switchToLiveEvent = TRUE;
-        // if was not playing a live game, show spinner view while reseting everything
-        [spinnerView removeSpinner];
-        spinnerView = nil;
-        spinnerView = [SpinnerView loadSpinnerIntoView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
-        //empty the app_queue for the new event
-        [globals.APP_QUEUE.queue removeAllObjects];
-        globals.WAITING_RESPONSE_FROM_SERVER = FALSE;
-        globals.SWITCH_TO_DIFFERENT_EVENT = TRUE;
-        videoPlayer.videoURL = nil;
-        if (globals.DID_START_NEW_EVENT) {
-            globals.DID_START_NEW_EVENT = FALSE;
-        }
-        //used to update the positions of tag markers
-        //tagMarkerLoopCounter = 20;
-        //reset event name
-        globals.EVENT_NAME = @"live";
-        globals.HUMAN_READABLE_EVENT_NAME=@"Live";
-        globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-        globals.IS_LOCAL_PLAYBACK = FALSE;
-        //send request to get all game tags for current live event
-        [uController getAllGameTags];
-        //reset avplayer
-        NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-        [self.videoPlayer setVideoURL:videoURL];
-        //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-       
-        //set the avplayer for list view
-        //[globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
-        [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
-        [globals.VIDEO_PLAYER_LIST_VIEW pause];
-        
-        [videoPlayer setPlayerWithURL:videoURL];
-        [videoPlayer prepareToPlay];
-        [videoPlayer play];
-
-        globals.VIDEO_PLAYBACK_FAILED = FALSE;
-        globals.PLAYABLE_DURATION = -1;
-
-        [currentEventTitle setText:globals.HUMAN_READABLE_EVENT_NAME];
-        [currentEventTitle setNeedsDisplay];
-        
-        globals.THUMBNAILS_PATH = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"thumbnails"];
-        globals.VIDEOS_PATH = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"videos"];
-              
-        //Press live, reenable all the control buttons
-        [self.leftSideButtons setUserInteractionEnabled:TRUE];
-        [self.leftSideButtons setAlpha:1.0f];
-        [self.rightSideButtons setUserInteractionEnabled:true];
-        [self.rightSideButtons setAlpha:1.0f];
-        if([_eventType isEqualToString:@"hockey"]){
-            [self.hockeyBottomViewController.view setUserInteractionEnabled:TRUE];
-            [self.hockeyBottomViewController.view setAlpha:1.0];
-        }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.zoneLabel setAlpha:1.0];
-            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:1.0];
-            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.halfLabel setAlpha:1.0];
-            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.periodSegmentedControl setAlpha:1.0];
-        }
-
-        [teleButton setUserInteractionEnabled:TRUE];
-        [teleButton setAlpha:1.0];
-        [self.overlayLeftViewController.view setUserInteractionEnabled:TRUE];
-        [self.overlayRightViewController.view setUserInteractionEnabled:TRUE];
-        if (!isModifyingPlaybackRate) {
-            [self.overlayLeftViewController.view setAlpha:1.0];
-            [self.overlayRightViewController.view setAlpha:1.0];
-        }
-        
-        [videoPlayer goToLive];
-        //clear all the objects for the old event
-        if ([globals.TAGGED_ATTS_DICT count])[globals.TAGGED_ATTS_DICT removeAllObjects];
-        if ([globals.TAGGED_ATTS_DICT_SHIFT count])[globals.TAGGED_ATTS_DICT_SHIFT removeAllObjects];
-        if ([globals.ARRAY_OF_COLOURS count])[globals.ARRAY_OF_COLOURS removeAllObjects];
-        //[tagTimesColoured removeAllObjects];
-       
-        /*
-        //clean tag markers
-        [self cleanTagMarkers];
-        
-        *///888
-        
-        [globals.THUMBS_WERE_SELECTED_CLIPVIEW removeAllObjects];
-        [globals.THUMBS_WERE_SELECTED_LISTVIEW removeAllObjects];
-        globals.THUMB_WAS_SELECTED_CLIPVIEW = nil;
-        globals.THUMB_WAS_SELECTED_LISTVIEW = nil;
-    }
-   
+//    if([globals.EVENT_NAME isEqualToString:@"live"]){
+//         globals.IS_LOCAL_PLAYBACK = FALSE;
+//        //go to live, destroy the loop mode
+//        [self destroyThumbLoop];
+//        globals.IS_LOOP_MODE = FALSE;
+//        [videoPlayer goToLive];
+//
+//        [[NSNotificationCenter defaultCenter ]postNotificationName:@"RestartUpdate" object:nil];
+//        
+//       //[self createTagMarkers];
+//
+//    }else{
+//        //switchToLiveEvent is set to TRUE. It is used to recreate tagmarkers for the current live event
+//        switchToLiveEvent = TRUE;
+//        // if was not playing a live game, show spinner view while reseting everything
+//        [spinnerView removeSpinner];
+//        spinnerView = nil;
+//        spinnerView = [SpinnerView loadSpinnerIntoView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+//        //empty the app_queue for the new event
+//        [globals.APP_QUEUE.queue removeAllObjects];
+//        globals.WAITING_RESPONSE_FROM_SERVER = FALSE;
+//        globals.SWITCH_TO_DIFFERENT_EVENT = TRUE;
+//        videoPlayer.videoURL = nil;
+//        if (globals.DID_START_NEW_EVENT) {
+//            globals.DID_START_NEW_EVENT = FALSE;
+//        }
+//        //used to update the positions of tag markers
+//        //tagMarkerLoopCounter = 20;
+//        //reset event name
+//        globals.EVENT_NAME = @"live";
+//        globals.HUMAN_READABLE_EVENT_NAME=@"Live";
+//        globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
+//        globals.IS_LOCAL_PLAYBACK = FALSE;
+//        //send request to get all game tags for current live event
+//        [uController getAllGameTags];
+//        //reset avplayer
+//        NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
+//        [self.videoPlayer setVideoURL:videoURL];
+//        //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
+//       
+//        //set the avplayer for list view
+//        //[globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
+//        [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
+//        [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//        
+//        [videoPlayer setPlayerWithURL:videoURL];
+//        [videoPlayer prepareToPlay];
+//        [videoPlayer play];
+//
+//        globals.VIDEO_PLAYBACK_FAILED = FALSE;
+//        globals.PLAYABLE_DURATION = -1;
+//
+//        [currentEventTitle setText:globals.HUMAN_READABLE_EVENT_NAME];
+//        [currentEventTitle setNeedsDisplay];
+//        
+//        globals.THUMBNAILS_PATH = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"thumbnails"];
+//        globals.VIDEOS_PATH = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"videos"];
+//              
+//        //Press live, reenable all the control buttons
+//        [self.leftSideButtons setUserInteractionEnabled:TRUE];
+//        [self.leftSideButtons setAlpha:1.0f];
+//        [self.rightSideButtons setUserInteractionEnabled:true];
+//        [self.rightSideButtons setAlpha:1.0f];
+//        if([_eventType isEqualToString:@"hockey"]){
+//            [self.hockeyBottomViewController.view setUserInteractionEnabled:TRUE];
+//            [self.hockeyBottomViewController.view setAlpha:1.0];
+//        }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.zoneLabel setAlpha:1.0];
+//            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:1.0];
+//            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.halfLabel setAlpha:1.0];
+//            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.periodSegmentedControl setAlpha:1.0];
+//        }
+//
+//        [teleButton setUserInteractionEnabled:TRUE];
+//        [teleButton setAlpha:1.0];
+//        [self.overlayLeftViewController.view setUserInteractionEnabled:TRUE];
+//        [self.overlayRightViewController.view setUserInteractionEnabled:TRUE];
+//        if (!isModifyingPlaybackRate) {
+//            [self.overlayLeftViewController.view setAlpha:1.0];
+//            [self.overlayRightViewController.view setAlpha:1.0];
+//        }
+//        
+//        [videoPlayer goToLive];
+//        //clear all the objects for the old event
+//        if ([globals.TAGGED_ATTS_DICT count])[globals.TAGGED_ATTS_DICT removeAllObjects];
+//        if ([globals.TAGGED_ATTS_DICT_SHIFT count])[globals.TAGGED_ATTS_DICT_SHIFT removeAllObjects];
+//        if ([globals.ARRAY_OF_COLOURS count])[globals.ARRAY_OF_COLOURS removeAllObjects];
+//        //[tagTimesColoured removeAllObjects];
+//       
+//        /*
+//        //clean tag markers
+//        [self cleanTagMarkers];
+//        
+//        *///888
+//        
+//        [globals.THUMBS_WERE_SELECTED_CLIPVIEW removeAllObjects];
+//        [globals.THUMBS_WERE_SELECTED_LISTVIEW removeAllObjects];
+//        globals.THUMB_WAS_SELECTED_CLIPVIEW = nil;
+//        globals.THUMB_WAS_SELECTED_LISTVIEW = nil;
+//    }
+//   
 }
 
 //this method will be called, is switch to live event from old event
@@ -1225,10 +1225,10 @@ static void * eventContext      = &eventContext;
     
     //destroy loop mode
     [self destroyThumbLoop];
-    globals.IS_LOOP_MODE = FALSE;
+//    globals.IS_LOOP_MODE = FALSE;
     [videoPlayer play];
 
-    globals.DID_RECV_GAME_TAGS=FALSE;
+//    globals.DID_RECV_GAME_TAGS=FALSE;
     //create all new tagmarkers
 //    [self createTagMarkers];//888
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
@@ -1278,20 +1278,20 @@ static void * eventContext      = &eventContext;
 
     
     // ugly if... fix it
-    if([globals.EVENT_NAME isEqualToString:@""] ||
-       ([globals.EVENT_NAME isEqualToString:@"live"] && (![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && ![globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]))||
-       (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed ||
-       (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) {
-        
-       _tagButtonController.enabled    = YES;
-//        _liveButton.enabled             = NO;
-                [_liveButton isActive:NO];
-    }else{
-        _tagButtonController.enabled    = YES;
-//        _liveButton.enabled             = YES;
-                [_liveButton isActive:YES];
-        
-    }
+//    if([globals.EVENT_NAME isEqualToString:@""] ||
+//       ([globals.EVENT_NAME isEqualToString:@"live"] && (![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && ![globals.CURRENT_ENC_STATUS isEqualToString:encStatePaused]))||
+//       (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed ||
+//       (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) {
+//        
+//       _tagButtonController.enabled    = YES;
+////        _liveButton.enabled             = NO;
+//                [_liveButton isActive:NO];
+//    }else{
+//        _tagButtonController.enabled    = YES;
+////        _liveButton.enabled             = YES;
+//                [_liveButton isActive:YES];
+//        
+//    }
     
     return;
         ////////////////////////////////////////////////////////// OLD    ////////////////////////////////////////////////////////// OLD    ////////////////////////////////////////////////////////// OLD
@@ -1464,96 +1464,96 @@ static void * eventContext      = &eventContext;
 //when swipe the tag buttons, this method will be called
 -(void)showPlayerCollection:(id)sender
 {
-    globals.UNCLOSED_EVENT = nil;
-    
-    CustomButton *selectedTagButton = (CustomButton *)sender;
-    tagTimeWhenSwipe = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoPlayer.avPlayer.currentTime)];
-    if ( swipedOutButton) {
-        [self.playerCollectionViewController clearCellSelections];
-    }
-    if ([selectedTagButton.accessibilityValue isEqualToString:@"left"]) {
-        [leftArrow setFrame:CGRectMake(-15,10, 15, 25)];
-        [leftArrow setAlpha:1.0f];
-        [self.playerCollectionViewController.view setFrame:CGRectMake(selectedTagButton.frame.origin.x+selectedTagButton.frame.size.width +25,43+selectedTagButton.frame.origin.y+selectedTagButton.frame.size.height,320 ,130)];
-        if ([self.playerCollectionViewController.accessibilityValue isEqualToString:@"right"]) {
-            [rightArrow setAlpha:0.0f];
-        }
-        [self.playerCollectionViewController setAccessibilityValue:@"left"];
-    }else{
-        [self.playerCollectionViewController.view setFrame:CGRectMake(self.view.frame.size.width - selectedTagButton.frame.size.width-345,43+selectedTagButton.frame.origin.y+selectedTagButton.frame.size.height,320 ,130)];
-        [rightArrow setFrame:CGRectMake(self.playerCollectionViewController.view.frame.size.width, 10, 15, 25)];
-        [rightArrow setAlpha:1.0f];
-        if ([self.playerCollectionViewController.accessibilityValue isEqualToString:@"left"]) {
-            [leftArrow setAlpha:0.0f];
-        }
-        [self.playerCollectionViewController setAccessibilityValue:@"right"];
-    }
-    [self.playerCollectionViewController.view setAlpha:1.0f];
-    
-    NSMutableDictionary *dict;
-    
-    //create a normal tag with event name: button.titleLabel.text
-    NSString *tagTime = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoPlayer.avPlayer.currentTime)];
-    
-    if (![tagTime isEqualToString:@"nan"]) {
-
-        //if "duration tag" enabled, send duration tagset request to the server
-        if(isDurationTagEnabled)
-        {
-            if (!globals.HAS_MIN|| (globals.HAS_MIN && !globals.eventExistsOnServer)){
-                
-                NSUInteger dTotalSeconds = [tagTime floatValue];
-                NSUInteger dHours = floor(dTotalSeconds / 3600);
-                NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
-                NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
-                NSString *displayTime = [NSString stringWithFormat:@"%01i:%02i:%02i",dHours, dMinutes, dSeconds];
-                
-                dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",selectedTagButton.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", displayTime, @"displaytime",tagTime, @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted", @"0",@"edited",@"1", @"local",nil];
-
-               if (![selectedTagButton isEqual:swipedOutButton] && swipedOutButton.selected) {
-                   [swipedOutButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-                }
-                selectedTagButton.selected = TRUE;
-                
-                [globals.OPENED_DURATION_TAGS setObject:dict forKey:selectedTagButton.titleLabel.text];
-
-            }else{
-                dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",selectedTagButton.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", nil];
-                if (dict) {
-                    if (!selectedTagButton.selected) {
-                        [dict setObject:@"99" forKey:@"type"];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
-                        //send device information to the server
-                        NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
-                        [dict setObject:UUID forKey:@"deviceid"];
-
-                        if (swipedOutButton.selected) {
-                            swipedOutButton.selected = FALSE;
-                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-                            [self.soccerBottomViewController deSelectTagButton];
-                        }
-                        if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
-                            NSString * catName = [NSString stringWithFormat:@"%@",selectedTagButton.titleLabel.text];
-                            [dict setObject:catName forKey:@"name"];
-                            [dict setObject:catName forKey:@"period"];
-                            
-                        }
-                        selectedTagButton.selected = TRUE;
-                        
-                        [globals.ARRAY_OF_TAGSET addObject:dict];
-                    }
-                    
-                }
-            }
-        }
-    }
-
-    swipedOutButton = selectedTagButton;
+////    globals.UNCLOSED_EVENT = nil;
+//    
+//    CustomButton *selectedTagButton = (CustomButton *)sender;
+//    tagTimeWhenSwipe = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoPlayer.avPlayer.currentTime)];
+//    if ( swipedOutButton) {
+//        [self.playerCollectionViewController clearCellSelections];
+//    }
+//    if ([selectedTagButton.accessibilityValue isEqualToString:@"left"]) {
+//        [leftArrow setFrame:CGRectMake(-15,10, 15, 25)];
+//        [leftArrow setAlpha:1.0f];
+//        [self.playerCollectionViewController.view setFrame:CGRectMake(selectedTagButton.frame.origin.x+selectedTagButton.frame.size.width +25,43+selectedTagButton.frame.origin.y+selectedTagButton.frame.size.height,320 ,130)];
+//        if ([self.playerCollectionViewController.accessibilityValue isEqualToString:@"right"]) {
+//            [rightArrow setAlpha:0.0f];
+//        }
+//        [self.playerCollectionViewController setAccessibilityValue:@"left"];
+//    }else{
+//        [self.playerCollectionViewController.view setFrame:CGRectMake(self.view.frame.size.width - selectedTagButton.frame.size.width-345,43+selectedTagButton.frame.origin.y+selectedTagButton.frame.size.height,320 ,130)];
+//        [rightArrow setFrame:CGRectMake(self.playerCollectionViewController.view.frame.size.width, 10, 15, 25)];
+//        [rightArrow setAlpha:1.0f];
+//        if ([self.playerCollectionViewController.accessibilityValue isEqualToString:@"left"]) {
+//            [leftArrow setAlpha:0.0f];
+//        }
+//        [self.playerCollectionViewController setAccessibilityValue:@"right"];
+//    }
+//    [self.playerCollectionViewController.view setAlpha:1.0f];
+//    
+//    NSMutableDictionary *dict;
+//    
+//    //create a normal tag with event name: button.titleLabel.text
+//    NSString *tagTime = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoPlayer.avPlayer.currentTime)];
+//    
+//    if (![tagTime isEqualToString:@"nan"]) {
+//
+//        //if "duration tag" enabled, send duration tagset request to the server
+//        if(isDurationTagEnabled)
+//        {
+//            if (!globals.HAS_MIN|| (globals.HAS_MIN && !globals.eventExistsOnServer)){
+//                
+//                NSUInteger dTotalSeconds = [tagTime floatValue];
+//                NSUInteger dHours = floor(dTotalSeconds / 3600);
+//                NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
+//                NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
+//                NSString *displayTime = [NSString stringWithFormat:@"%01i:%02i:%02i",dHours, dMinutes, dSeconds];
+//                
+//                dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",selectedTagButton.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", displayTime, @"displaytime",tagTime, @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted", @"0",@"edited",@"1", @"local",nil];
+//
+//               if (![selectedTagButton isEqual:swipedOutButton] && swipedOutButton.selected) {
+//                   [swipedOutButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//                }
+//                selectedTagButton.selected = TRUE;
+//                
+//                [globals.OPENED_DURATION_TAGS setObject:dict forKey:selectedTagButton.titleLabel.text];
+//
+//            }else{
+//                dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",selectedTagButton.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", nil];
+//                if (dict) {
+//                    if (!selectedTagButton.selected) {
+//                        [dict setObject:@"99" forKey:@"type"];
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
+//                        //send device information to the server
+//                        NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//                        [dict setObject:UUID forKey:@"deviceid"];
+//
+//                        if (swipedOutButton.selected) {
+//                            swipedOutButton.selected = FALSE;
+//                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//                            [self.soccerBottomViewController deSelectTagButton];
+//                        }
+//                        if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+//                            NSString * catName = [NSString stringWithFormat:@"%@",selectedTagButton.titleLabel.text];
+//                            [dict setObject:catName forKey:@"name"];
+//                            [dict setObject:catName forKey:@"period"];
+//                            
+//                        }
+//                        selectedTagButton.selected = TRUE;
+//                        
+//                        [globals.ARRAY_OF_TAGSET addObject:dict];
+//                    }
+//                    
+//                }
+//            }
+//        }
+//    }
+//
+//    swipedOutButton = selectedTagButton;
 }
 
 - (void)showFootballTrainingCollection:(id)sender
 {
-    globals.UNCLOSED_EVENT = nil;
+//    globals.UNCLOSED_EVENT = nil;
     
     CustomButton *selectedTagButton = (CustomButton *)sender;
     tagTimeWhenSwipe = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoPlayer.avPlayer.currentTime)];
@@ -1678,7 +1678,7 @@ static void * eventContext      = &eventContext;
 // connect to EM to send Nofit
 -(void)tagButtonSelected:(id)sender
 {
-    globals.UNCLOSED_EVENT = nil;
+//    globals.UNCLOSED_EVENT = nil;
     
     if ([_eventType isEqualToString:@""]) {
         [leftArrow setAlpha:0.0f];
@@ -1703,552 +1703,552 @@ static void * eventContext      = &eventContext;
     
 // The rest of the code is for reference
     
-    
-    NSMutableDictionary *dict;
-    
-    //get the right tag time; If the video player's current start time is not zero, minus the offset
-    NSString *tagTime = [NSString stringWithFormat:@"%f",videoPlayer.currentTimeInSeconds - videoPlayer.startTime];
-    //NSLog(@"********************************tagTime****************************** : %@",tagTime);
-    if (![tagTime isEqualToString:@"nan"]) {
-        //For local tags
-        if (!globals.HAS_MIN|| (globals.HAS_MIN && !globals.eventExistsOnServer)){
-            //dictionary which is generated when a duration tag is closed
-            NSMutableDictionary *closeDurationDict;
-            
-            NSUInteger dTotalSeconds = [tagTime floatValue];
-            NSUInteger dHours = floor(dTotalSeconds / 3600);
-            NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
-            NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
-            NSString *displayTime = [NSString stringWithFormat:@"%01i:%02i:%02i",dHours, dMinutes, dSeconds];
-
-            //no more than 20 tags in the tag queue; otherwise the app will become very slow
-            if (tagsinQueueInOfflineMode <=20){
-                tagsinQueueInOfflineMode++;
-               
-                if(![button isEqual:swipedOutButton] ||self.playerCollectionViewController.view.alpha == 0){
-                     //If no players are selected for tag
-                    if (!isDurationTagEnabled ) {
-                         dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
-                                 button.titleLabel.text,@"name",
-                                 [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                 [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                                 tagTime,@"time",
-                                 displayTime, @"displaytime",
-                                 [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
-                                 @"20", @"duration",
-                                 [@"temp_" stringByAppendingString:tagTime] ,@"id",
-                                 @"0", @"type",
-                                 @"", @"comment",
-                                 @"0", @"rating",
-                                 @"0", @"coachpick",
-                                 @"0", @"bookmark",
-                                 @"0", @"deleted",
-                                 @"0",@"edited",
-                                 @"1", @"local",nil];
-                        
-                    }else if (isDurationTagEnabled && !button.selected){
-                         dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
-                                 button.titleLabel.text,@"name",
-                                 [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                 [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                                 tagTime,@"time",
-                                 displayTime, @"displaytime",
-                                 tagTime, @"starttime",
-                                 @"20", @"duration",
-                                 [@"temp_" stringByAppendingString:tagTime] ,@"id",
-                                 @"0", @"type",
-                                 @"", @"comment",
-                                 @"0", @"rating",
-                                 @"0", @"coachpick",
-                                 @"0", @"bookmark",
-                                 @"0", @"deleted",
-                                 @"0",@"edited",
-                                 @"1", @"local",nil];
-                    }
-                   
-                        
-                    //if duration-tag control enabled, create new duration tag or close an old duration tag
-                    if (isDurationTagEnabled && !button.selected) {
-                        
-                        if (swipedOutButton.selected) {
-                            swipedOutButton.selected = FALSE;
-                            //close the previous duration tag
-                            if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
-                                closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
-                                int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
-                                NSString *duration;
-                                if (durationNumber >= 0) {
-                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
-                                }else{
-                                    durationNumber = -durationNumber;
-                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
-                                    [closeDurationDict setObject:displayTime forKey:@"displaytime"];
-                                    [closeDurationDict setObject:tagTime forKey:@"time"];
-                                    [closeDurationDict setObject:tagTime forKey:@"starttime"];
-                                }
-                               
-                                [closeDurationDict setObject:duration forKey:@"duration"];
-                                [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
-                            }
-                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-                            [self.soccerBottomViewController deSelectTagButton];
-                        }
-                        button.selected = TRUE;
-                        
-                        if (dict) {
-                            [globals.OPENED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
-                        }
-                       
-                        
-                    }else if (isDurationTagEnabled && button.selected){
-                        //close this duration tag
-                        if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
-                            closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
-                            int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
-                            NSString *duration;
-                            if (durationNumber >= 0) {
-                                duration = [NSString stringWithFormat:@"%d",durationNumber];
-                            }else{
-                                durationNumber = -durationNumber;
-                                duration = [NSString stringWithFormat:@"%d",durationNumber];
-                                [closeDurationDict setObject:displayTime forKey:@"displaytime"];
-                                [closeDurationDict setObject:tagTime forKey:@"time"];
-                                [closeDurationDict setObject:tagTime forKey:@"starttime"];
-                            }
-                            [closeDurationDict setObject:duration forKey:@"duration"];
-                            [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
-                        }
-
-                        button.selected = FALSE;
-                    }
-                    
-                }
-                else
-                {
-                    NSMutableDictionary *selectedData = [[self.playerCollectionViewController getAllSelectedPlayers] mutableCopy];
-                    NSMutableArray *selectedPlayers = [selectedData objectForKey:@"players"];
-                    
-                    //If players are selected for hockey
-                    if([_eventType isEqualToString:@"hockey"])
-                    {
-                        NSString *selectedZone = [selectedData objectForKey:@"zone"];
-                        
-                        if ((!selectedPlayers || selectedPlayers.count < 1) && ![selectedZone isEqualToString:@""]) {
-                            
-                            //if no player selected, has zone selected
-                              dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedZone,@"zone",
-                                      globals.EVENT_NAME,@"event",
-                                      button.titleLabel.text,@"name",
-                                      [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                      [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                                      tagTime,@"time",
-                                      tagTime, @"time",
-                                      displayTime, @"displaytime",
-                                      [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
-                                      @"20", @"duration",
-                                      [@"temp_" stringByAppendingString:tagTime] ,@"id",
-                                      @"0", @"type",
-                                      @"", @"comment",
-                                      @"0", @"rating",
-                                      @"0", @"coachpick",
-                                      @"0", @"bookmark",
-                                      @"0", @"deleted",
-                                      @"0",@"edited",
-                                      @"1", @"local", nil];
-                            
-                        }else if([selectedZone isEqualToString:@""] && selectedPlayers.count > 0){
-                            
-                            //if no zone selected, has player selected
-                             dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",
-                                     globals.EVENT_NAME,@"event",
-                                     button.titleLabel.text,@"name",
-                                     [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                     [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                                     tagTime,@"time",
-                                     tagTime, @"time",
-                                     displayTime, @"displaytime",
-                                     [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
-                                     @"20", @"duration",
-                                     [@"temp_" stringByAppendingString:tagTime] ,@"id",
-                                     @"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted", @"0",@"edited", @"1", @"local", nil];
-                            
-                        }else if((!selectedPlayers || selectedPlayers.count < 1) && [selectedZone isEqualToString:@""]){
-                            
-                            //if no player nor zone selected
-                              dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
-                                      button.titleLabel.text,@"name",
-                                      [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                      [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                                      tagTime,@"time",
-                                      tagTime, @"time",
-                                      displayTime, @"displaytime",
-                                      [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
-                                      @"20", @"duration",
-                                      [@"temp_" stringByAppendingString:tagTime] ,@"id",
-                                      @"0", @"type",
-                                      @"", @"comment",
-                                      @"0", @"rating",
-                                      @"0", @"coachpick",
-                                      @"0", @"bookmark",
-                                      @"0", @"deleted",
-                                      @"0",@"edited",
-                                      @"1", @"local", nil];
-                            
-                        }else{
-                            
-                            //if both player and zone are selected
-                              dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",selectedZone,@"zone", globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"time", displayTime, @"displaytime",[NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted", @"0",@"edited", @"1", @"local", nil];
-                        }
-                      
-                        
-                    }
-                    //If players are selected fro soccer/rugby/football
-                    else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"football"])
-                    {
-                        
-                        if ((!selectedPlayers || selectedPlayers.count < 1)) {
-                            //if no player selected
-                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys: globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"time", displayTime, @"displaytime",[NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted",[globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[@"temp_" stringByAppendingString:tagTime]]] ,@"url",@"0",@"edited", @"1", @"local", nil];
-                        }else{
-                            //if player selected
-                           dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player", globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", displayTime, @"displaytime",[NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted",[globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[@"temp_" stringByAppendingString:tagTime]]] ,@"url",@"0",@"edited", @"1", @"local", nil];
-                        }
-                        
-                    }
-                    
-                    //if duration-tag control enabled, create new duration tag or close an old duration tag
-                    if (isDurationTagEnabled && !button.selected) {
-                        
-                        if (swipedOutButton.selected) {
-                            swipedOutButton.selected = FALSE;
-                            //close the previous duration tag
-                            if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
-                                closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
-                                int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
-                                NSString *duration;
-                                if (durationNumber >= 0) {
-                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
-                                }else{
-                                    durationNumber = -durationNumber;
-                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
-                                    [closeDurationDict setObject:displayTime forKey:@"displaytime"];
-                                    [closeDurationDict setObject:tagTime forKey:@"time"];
-                                    [closeDurationDict setObject:tagTime forKey:@"starttime"];
-                                }
-                               
-                                [closeDurationDict setObject:duration forKey:@"duration"];
-                                [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
-                            }
-                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-                            [self.soccerBottomViewController deSelectTagButton];
-                        }
-                        button.selected = TRUE;
-                        
-                        [dict setObject:tagTime forKey:@"starttime"];
-                        if (dict) {
-                             [globals.OPENED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
-                        }
-                       
-                        
-                    }else if (isDurationTagEnabled && button.selected){
-                        //close this duration tag
-                        if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
-                            closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
-                            int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
-                            NSString *duration;
-                            if (durationNumber >= 0) {
-                                duration = [NSString stringWithFormat:@"%d",durationNumber];
-                            }else{
-                                durationNumber = -durationNumber;
-                                duration = [NSString stringWithFormat:@"%d",durationNumber];
-                                [closeDurationDict setObject:displayTime forKey:@"displaytime"];
-                                [closeDurationDict setObject:tagTime forKey:@"time"];
-                                [closeDurationDict setObject:tagTime forKey:@"starttime"];
-                            }
-
-                            [closeDurationDict setObject:duration forKey:@"duration"];
-                            if ([dict objectForKey:@"player"]) {
-                                [closeDurationDict setObject:[dict objectForKey:@"player"] forKey:@"player"];
-                            }
-                            if ([dict objectForKey:@"zone"]) {
-                                [closeDurationDict setObject:[dict objectForKey:@"zone"] forKey:@"zone"];
-                            }
-                            [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
-                        }
-
-                        button.selected = FALSE;
-                    }
-
-                }
-                
-                
-                if (isDurationTagEnabled && closeDurationDict) {
-                    //if one duration tag closed, generate the thumbnail and add it to the globals tags dictionary
-                    dict = closeDurationDict;
-                }else if (isDurationTagEnabled && !closeDurationDict){
-                    swipedOutButton = button;
-                    //hide the playercollectionview and the arrows
-                    [leftArrow setAlpha:0.0f];
-                    [rightArrow setAlpha:0.0f];
-                    [self.playerCollectionViewController.view setAlpha:0.0f];
-                    [self.footballTrainingCollectionViewController.view setAlpha:0.0f];
-                    //if no duration tag closed, return
-                    return;
-                }
-                
-                NSString *filePath = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
-                NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[dict objectForKey:@"id"]];
-                NSString *imagePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-                
-                if (dict) {
-                    //save tag information in global dictionary
-                    [globals.CURRENT_EVENT_THUMBNAILS setObject:dict forKey:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
-                    
-                }
-                
-                [dict setObject:imagePath forKey:@"url"];
-                //create tagmarker
-//                [self markTagAtTime:[tagTime floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
-                //[self markTag:[tagTime floatValue] name:button.titleLabel.text colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID: [[@"temp_" stringByAppendingString:tagTime] doubleValue]];
-                //save the thumbnail image in local storage. This is running in the background thread
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
-                                                         (unsigned long)NULL), ^(void) {
-                    BOOL isDir;
-                    if(![[NSFileManager defaultManager] fileExistsAtPath:globals.THUMBNAILS_PATH isDirectory:&isDir])
-                    {
-                        [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
-                    }
-                    
-                    //create thumbnail using avfoundation and save it in the local dir
-                    NSURL *videoURL = videoPlayer.videoURL;
-                    AVAsset *asset = [AVAsset assetWithURL:videoURL];
-                    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
-                    [imageGenerator setMaximumSize:CGSizeMake(190, 106)];
-                    [imageGenerator setApertureMode:AVAssetImageGeneratorApertureModeProductionAperture];
-                    //CMTime time = [[dict objectForKey:@"cmtime"] CMTimeValue];//CMTimeMake(30, 1);
-                    CMTime time = CMTimeMakeWithSeconds([[dict objectForKey:@"time"] floatValue], 1);
-                    CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
-                    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
-                    CGImageRelease(imageRef);
-                    
-                    NSData *imageData = UIImageJPEGRepresentation(thumbnail, 0.5);
-                    if(![[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDir])
-                    {
-                        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
-                    }
-                    //add image to directory
-                    [imageData writeToFile:imagePath atomically:YES ];
-                    tagsinQueueInOfflineMode--;
-                    
-                });
-            }
-        }
-        else {
-            //Normal tags
-            
-            //No players selected
-            if(![button isEqual:swipedOutButton] ||self.playerCollectionViewController.view.alpha == 0)
-            {
-               // NSLog(@"################### NO PLAYER SELECTED!!!!!!#####################");
-                dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
-                        button.titleLabel.text,@"name",
-                        [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                        [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                        tagTime,@"time", nil];
-                if (dict) {
-                    
-                    //if duration-tag control enabled, create new duration tag or close an old duration tag
-                    if (isDurationTagEnabled && !button.selected) {
-                        [dict setObject:@"99" forKey:@"type"];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
-                        //send device information to the server
-                        NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
-                        [dict setObject:UUID forKey:@"deviceid"];
-                        if (swipedOutButton.selected) {
-                            swipedOutButton.selected = FALSE;
-                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-                            [self.soccerBottomViewController deSelectTagButton];
-                        }
-                        if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
-                            NSString * catName = [NSString stringWithFormat:@"%@",button.titleLabel.text];
-                            [dict setObject:catName forKey:@"name"];
-                            [dict setObject:catName forKey:@"period"];
-                            
-                        }
-                        button.selected = TRUE;
-                        [globals.ARRAY_OF_TAGSET addObject:dict];
-                    }else if (isDurationTagEnabled && button.selected){
-                        if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys] containsObject:button.titleLabel.text]) {
-                            
-                            [dict setObject:@"100" forKey:@"type"];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
-                            //send device information to the server
-                            NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
-                            [dict setObject:UUID forKey:@"deviceid"];
-
-                            id tagId = [globals.OPENED_DURATION_TAGS objectForKey:button.titleLabel.text];
-                            [dict setObject:tagId forKey:@"id"];
-                            [globals.OPENED_DURATION_TAGS removeObjectForKey:button.titleLabel.text];
-                 
-                            if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
-                                
-                                NSString * catName = [NSString stringWithFormat:@"%@",button.titleLabel.text];
-                                [dict setObject:catName forKey:@"name"];
-                                [dict setObject:catName forKey:@"period"];
-                                
-                            }
-
-                            
-                            [globals.ARRAY_OF_TAGSET addObject:dict];
-                        }else{
-                            [dict setObject:@"100" forKey:@"type"];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
-                            //send device information to the server
-                            NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
-                            [dict setObject:UUID forKey:@"deviceid"];
-
-                            [globals.PRECLOSED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
-                        }
-                        
-                        button.selected = FALSE;
-                      
-
-                    }else{
-                        [globals.ARRAY_OF_TAGSET addObject:dict];
-                    }
-                   
-
-                }
-                    
-            }
-            else
-            {
-                //create a tag with players with event name:button.titleLabel.text
-                if(![tagTimeWhenSwipe isEqualToString:@"nan"]){
-                    NSMutableDictionary *selectedData = [[self.playerCollectionViewController getAllSelectedPlayers] mutableCopy];
-                    NSMutableArray *selectedPlayers = [selectedData objectForKey:@"players"];
-                    //NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   selectedPlayers %@, selectedData: %@",selectedPlayers,selectedData);
-                    NSMutableDictionary *dict;
-                    
-                    if ([_eventType isEqualToString:@"hockey"]) {
-                        //Players selection for hockey
-                        NSString *selectedZone = [selectedData objectForKey:@"zone"];
-                        if ((!selectedPlayers || selectedPlayers.count < 1) && ![selectedZone isEqualToString:@""]) {
-                            
-                            //if no player selected, has zone selected
-                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedZone,@"zone",
-                                    globals.EVENT_NAME,@"event",
-                                    button.titleLabel.text,@"name",
-                                    [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                    [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
-                        
-                        }else if([selectedZone isEqualToString:@""] && selectedPlayers.count > 0){
-                            
-                            //if no zone selected, has player selected
-                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
-                       
-                        }else if((!selectedPlayers || selectedPlayers.count < 1) && [selectedZone isEqualToString:@""]){
-                            
-                            //if no player nor zone selected
-                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
-                            
-                        }else{
-                            
-                            //if both player and zone are selected
-                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",selectedZone,@"zone",globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
-                        }
-                    }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"football"]){
-                        //Players selection for soccer/rugby/football
-                        
-                        if ((!selectedPlayers || selectedPlayers.count < 1)) {
-                            //if no player selected
-                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
-                                    button.titleLabel.text,@"name",
-                                    [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                    [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                                    tagTimeWhenSwipe,@"time", nil];
-                        }else{
-                            //if player selected
-                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",
-                                    globals.EVENT_NAME,@"event",
-                                    button.titleLabel.text,@"name",
-                                    [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
-                                    [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
-                                    tagTimeWhenSwipe,@"time", nil];
-                        }
-                        
-                    }
-                    //added the new tag dictionary into the array of tag dictionaries; And then the tagset request will be sent one per sec
-                    if (dict) {
-                        
-                         //if duration-tag control enabled, create new duration tag or close an old duration tag
-                        if (isDurationTagEnabled && !button.selected) {
-                            [dict setObject:@"99" forKey:@"type"];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
-                            //send device information to the server
-                            NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
-                            [dict setObject:UUID forKey:@"deviceid"];
-
-                            if (swipedOutButton.selected) {
-                                swipedOutButton.selected = FALSE;
-                            }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
-                                [self.soccerBottomViewController deSelectTagButton];
-                            }
-                            if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
-                                
-                                NSString * catName = [NSString stringWithFormat:@"%@",button.titleLabel.text];
-                                [dict setObject:catName forKey:@"name"];
-                                [dict setObject:catName forKey:@"period"];
-                                
-                            }
-                            button.selected = TRUE;
-                            [globals.ARRAY_OF_TAGSET addObject:dict];
-                        }else if (isDurationTagEnabled && button.selected){
-                            if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys] containsObject:button.titleLabel.text]) {
-                                [dict setObject:@"100" forKey:@"type"];
-                                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
-                                //send device information to the server
-                                NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
-                                [dict setObject:UUID forKey:@"deviceid"];
-
-                                id tagId = [globals.OPENED_DURATION_TAGS objectForKey:button.titleLabel.text];
-                                [dict setObject:tagId forKey:@"id"];
-                                [globals.OPENED_DURATION_TAGS removeObjectForKey:button.titleLabel.text];
-                                
-                                [globals.ARRAY_OF_TAGSET addObject:dict];
-                            }else{
-                                [dict setObject:@"100" forKey:@"type"];
-                                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
-                                //send device information to the server
-                                NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
-                                [dict setObject:UUID forKey:@"deviceid"];
-
-                                [globals.PRECLOSED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
-                            }
-                            
-                            button.selected = FALSE;
-                           
-                        }else{
-                            [globals.ARRAY_OF_TAGSET addObject:dict];
-                        }
-
-
-                        
-                    }
-
-                }
-            }
-        }
-    }
-    
-    
-
-    swipedOutButton = button;
-    //hide the playercollectionview and the arrows
-    [leftArrow setAlpha:0.0f];
-    [rightArrow setAlpha:0.0f];
-    [self.playerCollectionViewController.view setAlpha:0.0f];
-    [self.footballTrainingCollectionViewController.view setAlpha:0.0f];
+//    
+//    NSMutableDictionary *dict;
+//    
+//    //get the right tag time; If the video player's current start time is not zero, minus the offset
+//    NSString *tagTime = [NSString stringWithFormat:@"%f",videoPlayer.currentTimeInSeconds - videoPlayer.startTime];
+//    //NSLog(@"********************************tagTime****************************** : %@",tagTime);
+//    if (![tagTime isEqualToString:@"nan"]) {
+//        //For local tags
+//        if (!globals.HAS_MIN|| (globals.HAS_MIN && !globals.eventExistsOnServer)){
+//            //dictionary which is generated when a duration tag is closed
+//            NSMutableDictionary *closeDurationDict;
+//            
+//            NSUInteger dTotalSeconds = [tagTime floatValue];
+//            NSUInteger dHours = floor(dTotalSeconds / 3600);
+//            NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
+//            NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
+//            NSString *displayTime = [NSString stringWithFormat:@"%01i:%02i:%02i",dHours, dMinutes, dSeconds];
+//
+//            //no more than 20 tags in the tag queue; otherwise the app will become very slow
+//            if (tagsinQueueInOfflineMode <=20){
+//                tagsinQueueInOfflineMode++;
+//               
+//                if(![button isEqual:swipedOutButton] ||self.playerCollectionViewController.view.alpha == 0){
+//                     //If no players are selected for tag
+//                    if (!isDurationTagEnabled ) {
+//                         dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
+//                                 button.titleLabel.text,@"name",
+//                                 [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                 [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                                 tagTime,@"time",
+//                                 displayTime, @"displaytime",
+//                                 [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
+//                                 @"20", @"duration",
+//                                 [@"temp_" stringByAppendingString:tagTime] ,@"id",
+//                                 @"0", @"type",
+//                                 @"", @"comment",
+//                                 @"0", @"rating",
+//                                 @"0", @"coachpick",
+//                                 @"0", @"bookmark",
+//                                 @"0", @"deleted",
+//                                 @"0",@"edited",
+//                                 @"1", @"local",nil];
+//                        
+//                    }else if (isDurationTagEnabled && !button.selected){
+//                         dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
+//                                 button.titleLabel.text,@"name",
+//                                 [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                 [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                                 tagTime,@"time",
+//                                 displayTime, @"displaytime",
+//                                 tagTime, @"starttime",
+//                                 @"20", @"duration",
+//                                 [@"temp_" stringByAppendingString:tagTime] ,@"id",
+//                                 @"0", @"type",
+//                                 @"", @"comment",
+//                                 @"0", @"rating",
+//                                 @"0", @"coachpick",
+//                                 @"0", @"bookmark",
+//                                 @"0", @"deleted",
+//                                 @"0",@"edited",
+//                                 @"1", @"local",nil];
+//                    }
+//                   
+//                        
+//                    //if duration-tag control enabled, create new duration tag or close an old duration tag
+//                    if (isDurationTagEnabled && !button.selected) {
+//                        
+//                        if (swipedOutButton.selected) {
+//                            swipedOutButton.selected = FALSE;
+//                            //close the previous duration tag
+//                            if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
+//                                closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
+//                                int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
+//                                NSString *duration;
+//                                if (durationNumber >= 0) {
+//                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                                }else{
+//                                    durationNumber = -durationNumber;
+//                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                                    [closeDurationDict setObject:displayTime forKey:@"displaytime"];
+//                                    [closeDurationDict setObject:tagTime forKey:@"time"];
+//                                    [closeDurationDict setObject:tagTime forKey:@"starttime"];
+//                                }
+//                               
+//                                [closeDurationDict setObject:duration forKey:@"duration"];
+//                                [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
+//                            }
+//                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//                            [self.soccerBottomViewController deSelectTagButton];
+//                        }
+//                        button.selected = TRUE;
+//                        
+//                        if (dict) {
+//                            [globals.OPENED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
+//                        }
+//                       
+//                        
+//                    }else if (isDurationTagEnabled && button.selected){
+//                        //close this duration tag
+//                        if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
+//                            closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
+//                            int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
+//                            NSString *duration;
+//                            if (durationNumber >= 0) {
+//                                duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                            }else{
+//                                durationNumber = -durationNumber;
+//                                duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                                [closeDurationDict setObject:displayTime forKey:@"displaytime"];
+//                                [closeDurationDict setObject:tagTime forKey:@"time"];
+//                                [closeDurationDict setObject:tagTime forKey:@"starttime"];
+//                            }
+//                            [closeDurationDict setObject:duration forKey:@"duration"];
+//                            [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
+//                        }
+//
+//                        button.selected = FALSE;
+//                    }
+//                    
+//                }
+//                else
+//                {
+//                    NSMutableDictionary *selectedData = [[self.playerCollectionViewController getAllSelectedPlayers] mutableCopy];
+//                    NSMutableArray *selectedPlayers = [selectedData objectForKey:@"players"];
+//                    
+//                    //If players are selected for hockey
+//                    if([_eventType isEqualToString:@"hockey"])
+//                    {
+//                        NSString *selectedZone = [selectedData objectForKey:@"zone"];
+//                        
+//                        if ((!selectedPlayers || selectedPlayers.count < 1) && ![selectedZone isEqualToString:@""]) {
+//                            
+//                            //if no player selected, has zone selected
+//                              dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedZone,@"zone",
+//                                      globals.EVENT_NAME,@"event",
+//                                      button.titleLabel.text,@"name",
+//                                      [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                      [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                                      tagTime,@"time",
+//                                      tagTime, @"time",
+//                                      displayTime, @"displaytime",
+//                                      [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
+//                                      @"20", @"duration",
+//                                      [@"temp_" stringByAppendingString:tagTime] ,@"id",
+//                                      @"0", @"type",
+//                                      @"", @"comment",
+//                                      @"0", @"rating",
+//                                      @"0", @"coachpick",
+//                                      @"0", @"bookmark",
+//                                      @"0", @"deleted",
+//                                      @"0",@"edited",
+//                                      @"1", @"local", nil];
+//                            
+//                        }else if([selectedZone isEqualToString:@""] && selectedPlayers.count > 0){
+//                            
+//                            //if no zone selected, has player selected
+//                             dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",
+//                                     globals.EVENT_NAME,@"event",
+//                                     button.titleLabel.text,@"name",
+//                                     [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                     [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                                     tagTime,@"time",
+//                                     tagTime, @"time",
+//                                     displayTime, @"displaytime",
+//                                     [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
+//                                     @"20", @"duration",
+//                                     [@"temp_" stringByAppendingString:tagTime] ,@"id",
+//                                     @"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted", @"0",@"edited", @"1", @"local", nil];
+//                            
+//                        }else if((!selectedPlayers || selectedPlayers.count < 1) && [selectedZone isEqualToString:@""]){
+//                            
+//                            //if no player nor zone selected
+//                              dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
+//                                      button.titleLabel.text,@"name",
+//                                      [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                      [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                                      tagTime,@"time",
+//                                      tagTime, @"time",
+//                                      displayTime, @"displaytime",
+//                                      [NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime",
+//                                      @"20", @"duration",
+//                                      [@"temp_" stringByAppendingString:tagTime] ,@"id",
+//                                      @"0", @"type",
+//                                      @"", @"comment",
+//                                      @"0", @"rating",
+//                                      @"0", @"coachpick",
+//                                      @"0", @"bookmark",
+//                                      @"0", @"deleted",
+//                                      @"0",@"edited",
+//                                      @"1", @"local", nil];
+//                            
+//                        }else{
+//                            
+//                            //if both player and zone are selected
+//                              dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",selectedZone,@"zone", globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"time", displayTime, @"displaytime",[NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted", @"0",@"edited", @"1", @"local", nil];
+//                        }
+//                      
+//                        
+//                    }
+//                    //If players are selected fro soccer/rugby/football
+//                    else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"football"])
+//                    {
+//                        
+//                        if ((!selectedPlayers || selectedPlayers.count < 1)) {
+//                            //if no player selected
+//                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys: globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"time", displayTime, @"displaytime",[NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted",[globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[@"temp_" stringByAppendingString:tagTime]]] ,@"url",@"0",@"edited", @"1", @"local", nil];
+//                        }else{
+//                            //if player selected
+//                           dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player", globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", displayTime, @"displaytime",[NSString stringWithFormat:@"%f",[tagTime floatValue] - 10.0], @"starttime", @"20", @"duration", [@"temp_" stringByAppendingString:tagTime] ,@"id",@"0", @"type",  @"", @"comment", @"0", @"rating", @"0", @"coachpick", @"0", @"bookmark", @"0", @"deleted",[globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[@"temp_" stringByAppendingString:tagTime]]] ,@"url",@"0",@"edited", @"1", @"local", nil];
+//                        }
+//                        
+//                    }
+//                    
+//                    //if duration-tag control enabled, create new duration tag or close an old duration tag
+//                    if (isDurationTagEnabled && !button.selected) {
+//                        
+//                        if (swipedOutButton.selected) {
+//                            swipedOutButton.selected = FALSE;
+//                            //close the previous duration tag
+//                            if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
+//                                closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
+//                                int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
+//                                NSString *duration;
+//                                if (durationNumber >= 0) {
+//                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                                }else{
+//                                    durationNumber = -durationNumber;
+//                                    duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                                    [closeDurationDict setObject:displayTime forKey:@"displaytime"];
+//                                    [closeDurationDict setObject:tagTime forKey:@"time"];
+//                                    [closeDurationDict setObject:tagTime forKey:@"starttime"];
+//                                }
+//                               
+//                                [closeDurationDict setObject:duration forKey:@"duration"];
+//                                [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
+//                            }
+//                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//                            [self.soccerBottomViewController deSelectTagButton];
+//                        }
+//                        button.selected = TRUE;
+//                        
+//                        [dict setObject:tagTime forKey:@"starttime"];
+//                        if (dict) {
+//                             [globals.OPENED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
+//                        }
+//                       
+//                        
+//                    }else if (isDurationTagEnabled && button.selected){
+//                        //close this duration tag
+//                        if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys]containsObject:swipedOutButton.titleLabel.text]) {
+//                            closeDurationDict = [[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text]mutableCopy];
+//                            int durationNumber =(int)([tagTime floatValue] - [[[globals.OPENED_DURATION_TAGS objectForKey:swipedOutButton.titleLabel.text] objectForKey:@"time"] floatValue]);
+//                            NSString *duration;
+//                            if (durationNumber >= 0) {
+//                                duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                            }else{
+//                                durationNumber = -durationNumber;
+//                                duration = [NSString stringWithFormat:@"%d",durationNumber];
+//                                [closeDurationDict setObject:displayTime forKey:@"displaytime"];
+//                                [closeDurationDict setObject:tagTime forKey:@"time"];
+//                                [closeDurationDict setObject:tagTime forKey:@"starttime"];
+//                            }
+//
+//                            [closeDurationDict setObject:duration forKey:@"duration"];
+//                            if ([dict objectForKey:@"player"]) {
+//                                [closeDurationDict setObject:[dict objectForKey:@"player"] forKey:@"player"];
+//                            }
+//                            if ([dict objectForKey:@"zone"]) {
+//                                [closeDurationDict setObject:[dict objectForKey:@"zone"] forKey:@"zone"];
+//                            }
+//                            [globals.OPENED_DURATION_TAGS removeObjectForKey:swipedOutButton.titleLabel.text];
+//                        }
+//
+//                        button.selected = FALSE;
+//                    }
+//
+//                }
+//                
+//                
+//                if (isDurationTagEnabled && closeDurationDict) {
+//                    //if one duration tag closed, generate the thumbnail and add it to the globals tags dictionary
+//                    dict = closeDurationDict;
+//                }else if (isDurationTagEnabled && !closeDurationDict){
+//                    swipedOutButton = button;
+//                    //hide the playercollectionview and the arrows
+//                    [leftArrow setAlpha:0.0f];
+//                    [rightArrow setAlpha:0.0f];
+//                    [self.playerCollectionViewController.view setAlpha:0.0f];
+//                    [self.footballTrainingCollectionViewController.view setAlpha:0.0f];
+//                    //if no duration tag closed, return
+//                    return;
+//                }
+//                
+//                NSString *filePath = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
+//                NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[dict objectForKey:@"id"]];
+//                NSString *imagePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
+//                
+//                if (dict) {
+//                    //save tag information in global dictionary
+//                    [globals.CURRENT_EVENT_THUMBNAILS setObject:dict forKey:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//                    
+//                }
+//                
+//                [dict setObject:imagePath forKey:@"url"];
+//                //create tagmarker
+////                [self markTagAtTime:[tagTime floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//                //[self markTag:[tagTime floatValue] name:button.titleLabel.text colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID: [[@"temp_" stringByAppendingString:tagTime] doubleValue]];
+//                //save the thumbnail image in local storage. This is running in the background thread
+//                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
+//                                                         (unsigned long)NULL), ^(void) {
+//                    BOOL isDir;
+//                    if(![[NSFileManager defaultManager] fileExistsAtPath:globals.THUMBNAILS_PATH isDirectory:&isDir])
+//                    {
+//                        [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
+//                    }
+//                    
+//                    //create thumbnail using avfoundation and save it in the local dir
+//                    NSURL *videoURL = videoPlayer.videoURL;
+//                    AVAsset *asset = [AVAsset assetWithURL:videoURL];
+//                    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+//                    [imageGenerator setMaximumSize:CGSizeMake(190, 106)];
+//                    [imageGenerator setApertureMode:AVAssetImageGeneratorApertureModeProductionAperture];
+//                    //CMTime time = [[dict objectForKey:@"cmtime"] CMTimeValue];//CMTimeMake(30, 1);
+//                    CMTime time = CMTimeMakeWithSeconds([[dict objectForKey:@"time"] floatValue], 1);
+//                    CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
+//                    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+//                    CGImageRelease(imageRef);
+//                    
+//                    NSData *imageData = UIImageJPEGRepresentation(thumbnail, 0.5);
+//                    if(![[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDir])
+//                    {
+//                        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+//                    }
+//                    //add image to directory
+//                    [imageData writeToFile:imagePath atomically:YES ];
+//                    tagsinQueueInOfflineMode--;
+//                    
+//                });
+//            }
+//        }
+//        else {
+//            //Normal tags
+//            
+//            //No players selected
+//            if(![button isEqual:swipedOutButton] ||self.playerCollectionViewController.view.alpha == 0)
+//            {
+//               // NSLog(@"################### NO PLAYER SELECTED!!!!!!#####################");
+//                dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
+//                        button.titleLabel.text,@"name",
+//                        [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                        [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                        tagTime,@"time", nil];
+//                if (dict) {
+//                    
+//                    //if duration-tag control enabled, create new duration tag or close an old duration tag
+//                    if (isDurationTagEnabled && !button.selected) {
+//                        [dict setObject:@"99" forKey:@"type"];
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
+//                        //send device information to the server
+//                        NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//                        [dict setObject:UUID forKey:@"deviceid"];
+//                        if (swipedOutButton.selected) {
+//                            swipedOutButton.selected = FALSE;
+//                        }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//                            [self.soccerBottomViewController deSelectTagButton];
+//                        }
+//                        if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+//                            NSString * catName = [NSString stringWithFormat:@"%@",button.titleLabel.text];
+//                            [dict setObject:catName forKey:@"name"];
+//                            [dict setObject:catName forKey:@"period"];
+//                            
+//                        }
+//                        button.selected = TRUE;
+//                        [globals.ARRAY_OF_TAGSET addObject:dict];
+//                    }else if (isDurationTagEnabled && button.selected){
+//                        if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys] containsObject:button.titleLabel.text]) {
+//                            
+//                            [dict setObject:@"100" forKey:@"type"];
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
+//                            //send device information to the server
+//                            NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//                            [dict setObject:UUID forKey:@"deviceid"];
+//
+//                            id tagId = [globals.OPENED_DURATION_TAGS objectForKey:button.titleLabel.text];
+//                            [dict setObject:tagId forKey:@"id"];
+//                            [globals.OPENED_DURATION_TAGS removeObjectForKey:button.titleLabel.text];
+//                 
+//                            if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+//                                
+//                                NSString * catName = [NSString stringWithFormat:@"%@",button.titleLabel.text];
+//                                [dict setObject:catName forKey:@"name"];
+//                                [dict setObject:catName forKey:@"period"];
+//                                
+//                            }
+//
+//                            
+//                            [globals.ARRAY_OF_TAGSET addObject:dict];
+//                        }else{
+//                            [dict setObject:@"100" forKey:@"type"];
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
+//                            //send device information to the server
+//                            NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//                            [dict setObject:UUID forKey:@"deviceid"];
+//
+//                            [globals.PRECLOSED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
+//                        }
+//                        
+//                        button.selected = FALSE;
+//                      
+//
+//                    }else{
+//                        [globals.ARRAY_OF_TAGSET addObject:dict];
+//                    }
+//                   
+//
+//                }
+//                    
+//            }
+//            else
+//            {
+//                //create a tag with players with event name:button.titleLabel.text
+//                if(![tagTimeWhenSwipe isEqualToString:@"nan"]){
+//                    NSMutableDictionary *selectedData = [[self.playerCollectionViewController getAllSelectedPlayers] mutableCopy];
+//                    NSMutableArray *selectedPlayers = [selectedData objectForKey:@"players"];
+//                    //NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   selectedPlayers %@, selectedData: %@",selectedPlayers,selectedData);
+//                    NSMutableDictionary *dict;
+//                    
+//                    if ([_eventType isEqualToString:@"hockey"]) {
+//                        //Players selection for hockey
+//                        NSString *selectedZone = [selectedData objectForKey:@"zone"];
+//                        if ((!selectedPlayers || selectedPlayers.count < 1) && ![selectedZone isEqualToString:@""]) {
+//                            
+//                            //if no player selected, has zone selected
+//                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedZone,@"zone",
+//                                    globals.EVENT_NAME,@"event",
+//                                    button.titleLabel.text,@"name",
+//                                    [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                    [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
+//                        
+//                        }else if([selectedZone isEqualToString:@""] && selectedPlayers.count > 0){
+//                            
+//                            //if no zone selected, has player selected
+//                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
+//                       
+//                        }else if((!selectedPlayers || selectedPlayers.count < 1) && [selectedZone isEqualToString:@""]){
+//                            
+//                            //if no player nor zone selected
+//                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
+//                            
+//                        }else{
+//                            
+//                            //if both player and zone are selected
+//                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",selectedZone,@"zone",globals.EVENT_NAME,@"event",button.titleLabel.text,@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTimeWhenSwipe,@"time", nil];
+//                        }
+//                    }else if ([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"football"]){
+//                        //Players selection for soccer/rugby/football
+//                        
+//                        if ((!selectedPlayers || selectedPlayers.count < 1)) {
+//                            //if no player selected
+//                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",
+//                                    button.titleLabel.text,@"name",
+//                                    [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                    [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                                    tagTimeWhenSwipe,@"time", nil];
+//                        }else{
+//                            //if player selected
+//                            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:selectedPlayers,@"player",
+//                                    globals.EVENT_NAME,@"event",
+//                                    button.titleLabel.text,@"name",
+//                                    [globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",
+//                                    [globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",
+//                                    tagTimeWhenSwipe,@"time", nil];
+//                        }
+//                        
+//                    }
+//                    //added the new tag dictionary into the array of tag dictionaries; And then the tagset request will be sent one per sec
+//                    if (dict) {
+//                        
+//                         //if duration-tag control enabled, create new duration tag or close an old duration tag
+//                        if (isDurationTagEnabled && !button.selected) {
+//                            [dict setObject:@"99" forKey:@"type"];
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
+//                            //send device information to the server
+//                            NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//                            [dict setObject:UUID forKey:@"deviceid"];
+//
+//                            if (swipedOutButton.selected) {
+//                                swipedOutButton.selected = FALSE;
+//                            }else if([_eventType isEqualToString:@"soccer"] || [_eventType isEqualToString:@"rugby"]){
+//                                [self.soccerBottomViewController deSelectTagButton];
+//                            }
+//                            if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+//                                
+//                                NSString * catName = [NSString stringWithFormat:@"%@",button.titleLabel.text];
+//                                [dict setObject:catName forKey:@"name"];
+//                                [dict setObject:catName forKey:@"period"];
+//                                
+//                            }
+//                            button.selected = TRUE;
+//                            [globals.ARRAY_OF_TAGSET addObject:dict];
+//                        }else if (isDurationTagEnabled && button.selected){
+//                            if (globals.OPENED_DURATION_TAGS && [[globals.OPENED_DURATION_TAGS allKeys] containsObject:button.titleLabel.text]) {
+//                                [dict setObject:@"100" forKey:@"type"];
+//                                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
+//                                //send device information to the server
+//                                NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//                                [dict setObject:UUID forKey:@"deviceid"];
+//
+//                                id tagId = [globals.OPENED_DURATION_TAGS objectForKey:button.titleLabel.text];
+//                                [dict setObject:tagId forKey:@"id"];
+//                                [globals.OPENED_DURATION_TAGS removeObjectForKey:button.titleLabel.text];
+//                                
+//                                [globals.ARRAY_OF_TAGSET addObject:dict];
+//                            }else{
+//                                [dict setObject:@"100" forKey:@"type"];
+//                                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DURATION_TAG object:self userInfo:dict];
+//                                //send device information to the server
+//                                NSString *UUID = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
+//                                [dict setObject:UUID forKey:@"deviceid"];
+//
+//                                [globals.PRECLOSED_DURATION_TAGS setObject:dict forKey:button.titleLabel.text];
+//                            }
+//                            
+//                            button.selected = FALSE;
+//                           
+//                        }else{
+//                            [globals.ARRAY_OF_TAGSET addObject:dict];
+//                        }
+//
+//
+//                        
+//                    }
+//
+//                }
+//            }
+//        }
+//    }
+//    
+//    
+//
+//    swipedOutButton = button;
+//    //hide the playercollectionview and the arrows
+//    [leftArrow setAlpha:0.0f];
+//    [rightArrow setAlpha:0.0f];
+//    [self.playerCollectionViewController.view setAlpha:0.0f];
+//    [self.footballTrainingCollectionViewController.view setAlpha:0.0f];
     
 }
 
@@ -2261,58 +2261,58 @@ static void * eventContext      = &eventContext;
 //after receiving the new duration tag id, send the tagmod request to the server to close the duration tag
 -(void)closeDurationTag:(NSNotification *)notification {
     
-    NSString *tagName = notification.object;
-    id tagId = [globals.OPENED_DURATION_TAGS objectForKey:tagName];
-    NSMutableDictionary *dict = [globals.PRECLOSED_DURATION_TAGS objectForKey:tagName];
-    [dict setObject:tagId forKey:@"id"];
-    [globals.ARRAY_OF_TAGSET addObject:dict];
+//    NSString *tagName = notification.object;
+//    id tagId = [globals.OPENED_DURATION_TAGS objectForKey:tagName];
+//    NSMutableDictionary *dict = [globals.PRECLOSED_DURATION_TAGS objectForKey:tagName];
+//    [dict setObject:tagId forKey:@"id"];
+//    [globals.ARRAY_OF_TAGSET addObject:dict];
 }
 
 
 //send the tagset request to the server
 // TODO make Nofit to encodermanager
 -(void)sendTagInformationToServer{
-    if (globals.ARRAY_OF_TAGSET.count < 1) {
-        return;
-    }
-    NSDictionary *dict = [globals.ARRAY_OF_TAGSET objectAtIndex:0];
-    [globals.ARRAY_OF_TAGSET removeObjectAtIndex:0];
-    NSError *error;
-    NSMutableDictionary *mutableDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
-    NSString *unencodedName = [dict objectForKey:@"name"];
-    NSString *encodedName = [Utility encodeSpecialCharacters:unencodedName];
-    [mutableDict removeObjectForKey:@"name"];
-    [mutableDict setObject:encodedName forKey:@"name"];
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    [mutableDict setObject:[NSString stringWithFormat:@"%f",currentSystemTime] forKey:@"requesttime"];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mutableDict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    NSString *url;
-    if ([dict objectForKey:@"type"] && [[dict objectForKey:@"type"] isEqualToString:@"100"]) {
-        //close duration tag
-        url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    }else{
-        //create new tags
-        url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
-    }
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-        
-        NSURLConnection *connection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-        //NSLog(@"Live2bench view sends request.");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //update UI here
-        });
-    });
-    
+//    if (globals.ARRAY_OF_TAGSET.count < 1) {
+//        return;
+//    }
+//    NSDictionary *dict = [globals.ARRAY_OF_TAGSET objectAtIndex:0];
+//    [globals.ARRAY_OF_TAGSET removeObjectAtIndex:0];
+//    NSError *error;
+//    NSMutableDictionary *mutableDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
+//    NSString *unencodedName = [dict objectForKey:@"name"];
+//    NSString *encodedName = [Utility encodeSpecialCharacters:unencodedName];
+//    [mutableDict removeObjectForKey:@"name"];
+//    [mutableDict setObject:encodedName forKey:@"name"];
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    [mutableDict setObject:[NSString stringWithFormat:@"%f",currentSystemTime] forKey:@"requesttime"];
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mutableDict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url;
+//    if ([dict objectForKey:@"type"] && [[dict objectForKey:@"type"] isEqualToString:@"100"]) {
+//        //close duration tag
+//        url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//    }else{
+//        //create new tags
+//        url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
+//    }
+//
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//        
+//        NSURLConnection *connection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//        //NSLog(@"Live2bench view sends request.");
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            //update UI here
+//        });
+//    });
+//    
 
 }
 
@@ -2334,7 +2334,7 @@ static void * eventContext      = &eventContext;
     [videoPlayer pause];
     CMTime currentCMTime = videoPlayer.avPlayer.currentTime;
    // NSLog(@"init Tele currentime 1: %lld,CMTimeGetSeconds(currentCMTime): %f",currentCMTime.value,CMTimeGetSeconds(currentCMTime));
-    globals.TELE_TIME = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
+//    globals.TELE_TIME = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
     //when show the telestration screen, hide all the buttons in full screen and only diaplay save button and clear button for telestration
     [self hideFullScreenOverlayButtons];
    
@@ -2342,54 +2342,54 @@ static void * eventContext      = &eventContext;
     videoPlayer.playerFrame = CGRectMake(0, 0, 748, 1024);
     
      //if the mp4 file is played right now
-    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location != NSNotFound) {
-        
-        UIView *rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-        
-
-        
-        
-        //add televiewcontroller
-        self.teleViewController= [[TeleViewController alloc] initWithController:self];
-        [self.teleViewController.view setFrame:CGRectMake(0, 55, self.view.frame.size.width,self.view.frame.size.width * 9/16 + 10)];
-//        self.teleViewController.clearButton = clearTeleButton;
-        [teleButton setHidden:TRUE];
-        [rootView addSubview:self.teleViewController.view];
-
-
-        
-        NSURL *videoURL = self.videoPlayer.videoURL;
-        AVAsset *asset = [AVAsset assetWithURL:videoURL];
-        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
-        imageGenerator.requestedTimeToleranceBefore = kCMTimeZero;
-        imageGenerator.requestedTimeToleranceAfter = kCMTimeZero;
-        [imageGenerator setMaximumSize:CGSizeMake(self.view.frame.size.width,self.view.frame.size.width * 9/16)];
-        //CMTime time = CMTimeMake([[dict objectForKey:@"time"]floatValue],1);//CMTimeMake(30, 1);
-        ////////NSLog(@"%f", [[dict objectForKey:@"time"]floatValue]);
-        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:currentCMTime actualTime:&currentCMTime error:NULL];
-        UIImage *currentImage = [UIImage imageWithCGImage:imageRef];
-        CGImageRelease(imageRef);
-        
-        self.teleViewController.currentImage = currentImage;//[self imageWithImage:currentImage convertToSize:CGSizeMake(self.view.frame.size.width,self.view.frame.size.width * 9/16)];//currentImage;
-        self.teleViewController.thumbImageView = [[UIImageView alloc] initWithImage:currentImage];//[UIImage imageNamed:@"test.jpg"]];
-        [self.teleViewController.thumbImageView setFrame:CGRectMake(0, 40, self.teleViewController.view.bounds.size.width, self.teleViewController.view.bounds.size.height)];//CGRectMake(0, -10, 1024,768)];
-        [self.teleViewController.thumbImageView setBackgroundColor:[UIColor blackColor]];
-        [self.teleViewController.view insertSubview:self.teleViewController.thumbImageView atIndex:0];
-
-    }else{
-        //if the mp4 video file not exist
-        
-        //add televiewcontroller
-        self.teleViewController= [[TeleViewController alloc] initWithController:self];
-        
-        globals.TELE_TIME = [videoPlayer currentTimeInSeconds];
-        self.teleViewController.offsetTime = videoPlayer.startTime;
-        [self.teleViewController.view setFrame:CGRectMake(0, 10, 1024, 768)];
-        [self.teleButton setHidden:TRUE];
-        [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self.teleViewController.view];
-       
-    }
-    
+//    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location != NSNotFound) {
+//        
+//        UIView *rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+//        
+//
+//        
+//        
+//        //add televiewcontroller
+//        self.teleViewController= [[TeleViewController alloc] initWithController:self];
+//        [self.teleViewController.view setFrame:CGRectMake(0, 55, self.view.frame.size.width,self.view.frame.size.width * 9/16 + 10)];
+////        self.teleViewController.clearButton = clearTeleButton;
+//        [teleButton setHidden:TRUE];
+//        [rootView addSubview:self.teleViewController.view];
+//
+//
+//        
+//        NSURL *videoURL = self.videoPlayer.videoURL;
+//        AVAsset *asset = [AVAsset assetWithURL:videoURL];
+//        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+//        imageGenerator.requestedTimeToleranceBefore = kCMTimeZero;
+//        imageGenerator.requestedTimeToleranceAfter = kCMTimeZero;
+//        [imageGenerator setMaximumSize:CGSizeMake(self.view.frame.size.width,self.view.frame.size.width * 9/16)];
+//        //CMTime time = CMTimeMake([[dict objectForKey:@"time"]floatValue],1);//CMTimeMake(30, 1);
+//        ////////NSLog(@"%f", [[dict objectForKey:@"time"]floatValue]);
+//        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:currentCMTime actualTime:&currentCMTime error:NULL];
+//        UIImage *currentImage = [UIImage imageWithCGImage:imageRef];
+//        CGImageRelease(imageRef);
+//        
+//        self.teleViewController.currentImage = currentImage;//[self imageWithImage:currentImage convertToSize:CGSizeMake(self.view.frame.size.width,self.view.frame.size.width * 9/16)];//currentImage;
+//        self.teleViewController.thumbImageView = [[UIImageView alloc] initWithImage:currentImage];//[UIImage imageNamed:@"test.jpg"]];
+//        [self.teleViewController.thumbImageView setFrame:CGRectMake(0, 40, self.teleViewController.view.bounds.size.width, self.teleViewController.view.bounds.size.height)];//CGRectMake(0, -10, 1024,768)];
+//        [self.teleViewController.thumbImageView setBackgroundColor:[UIColor blackColor]];
+//        [self.teleViewController.view insertSubview:self.teleViewController.thumbImageView atIndex:0];
+//
+//    }else{
+//        //if the mp4 video file not exist
+//        
+//        //add televiewcontroller
+//        self.teleViewController= [[TeleViewController alloc] initWithController:self];
+//        
+//        globals.TELE_TIME = [videoPlayer currentTimeInSeconds];
+//        self.teleViewController.offsetTime = videoPlayer.startTime;
+//        [self.teleViewController.view setFrame:CGRectMake(0, 10, 1024, 768)];
+//        [self.teleButton setHidden:TRUE];
+//        [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self.teleViewController.view];
+//       
+//    }
+//    
 }
 
 -(int)roundValue:(float)numberToRound{
@@ -2462,26 +2462,26 @@ static void * eventContext      = &eventContext;
     [viewTeleButton setTitle:@"View Tele" forState:UIControlStateNormal];
     [viewTeleButton addTarget:self action:@selector(viewTele:) forControlEvents:UIControlEventTouchUpInside];
 
-    if (!globals.LATEST_TELE) {
-        viewTeleButton.hidden = TRUE;
-    }
+//    if (!globals.LATEST_TELE) {
+//        viewTeleButton.hidden = TRUE;
+//    }
 }
 
 //view the latest telestration
 -(void)viewTele:(BorderButton*)button{
-    button.hidden = TRUE;
-    viewTeleButton.hidden = TRUE;
-    viewTeleButtoninFullScreen.hidden = TRUE;
-    isViewTeleButtonSelected = TRUE;
-    globals.IS_PLAYBACK_TELE = YES;
-    globals.CURRENT_PLAYBACK_TAG = globals.LATEST_TELE;
-    [self setCurrentPlayingTag:globals.LATEST_TELE];
-    if (!videoPlayer.isFullScreen) {
-        [videoPlayer enterFullscreen];
-    }else{
-        [self updateViewforTele];
-    }
-    globals.LATEST_TELE = nil;
+//    button.hidden = TRUE;
+//    viewTeleButton.hidden = TRUE;
+//    viewTeleButtoninFullScreen.hidden = TRUE;
+//    isViewTeleButtonSelected = TRUE;
+//    globals.IS_PLAYBACK_TELE = YES;
+//    globals.CURRENT_PLAYBACK_TAG = globals.LATEST_TELE;
+//    [self setCurrentPlayingTag:globals.LATEST_TELE];
+//    if (!videoPlayer.isFullScreen) {
+//        [videoPlayer enterFullscreen];
+//    }else{
+//        [self updateViewforTele];
+//    }
+//    globals.LATEST_TELE = nil;
 }
 //when receive new telestration from the server, show the view tele button if it is hidden; or flash the tele button if it is not hidden
 -(void)getNewTele{
@@ -2526,7 +2526,7 @@ static void * eventContext      = &eventContext;
         }
         isDurationTagEnabled = FALSE;
     }
-    globals.UNCLOSED_EVENT = nil;
+//    globals.UNCLOSED_EVENT = nil;
 }
 
 
@@ -2535,402 +2535,402 @@ static void * eventContext      = &eventContext;
     ////////NSLog(@"updateeventinformation globals.TEAM_SETUP: %@",globals.TEAM_SETUP);
     //update the event title 
     //display the event name on the top right of the videoplayer
-    [currentEventTitle setText:globals.HUMAN_READABLE_EVENT_NAME];
-    [currentEventTitle setNeedsDisplay];
-    
-    //update playercollectionview
-    if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
-        [self initialFootballTrainingCollectionView];
-    } else {
-        [self intialPlayerCollectionView];
-    }
-    //update bottomview
-   // [self initialBottomView:_eventType];
-    //update tagmarkers
-    if (switchToLiveEvent && globals.DID_RECV_GAME_TAGS) {
-        [self switchToLive];
-        switchToLiveEvent = FALSE;
-    }
+//    [currentEventTitle setText:globals.HUMAN_READABLE_EVENT_NAME];
+//    [currentEventTitle setNeedsDisplay];
+//    
+//    //update playercollectionview
+//    if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+//        [self initialFootballTrainingCollectionView];
+//    } else {
+//        [self intialPlayerCollectionView];
+//    }
+//    //update bottomview
+//   // [self initialBottomView:_eventType];
+//    //update tagmarkers
+//    if (switchToLiveEvent && globals.DID_RECV_GAME_TAGS) {
+//        [self switchToLive];
+//        switchToLiveEvent = FALSE;
+//    }
 }
 
 //create bottom views according to which sport is playing
 -(void)initialBottomView:(NSString*)sport
 {
     //if there is a duration tag from other event not closed(then the tag button is in selected mode), deselect the tag button
-    if (isDurationTagEnabled && swipedOutButton.selected) {
-        swipedOutButton.selected = FALSE;
-        swipedOutButton = nil;
-    }
-    isDurationTagEnabled = ([sport isEqualToString:@""])?YES:NO; // Richard
-    
-    //delete the duration tag label and switch in case the next playing event is a different sport
-    [durationTagLabel removeFromSuperview];
-    [durationTagSwitch removeFromSuperview];
-    durationTagLabel = nil;
-    durationTagSwitch = nil;
-    
-    //always remove the old one, create a new one.
-    if (self.hockeyBottomViewController){
-        [[NSNotificationCenter defaultCenter]removeObserver:self.hockeyBottomViewController name:@"EventInformationUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter]removeObserver:self.hockeyBottomViewController name:@"UpdateBottomViewControInfo" object:nil];
-        [self.hockeyBottomViewController.view removeFromSuperview];
-        self.hockeyBottomViewController = nil;
-    }else if (self.soccerBottomViewController) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self.soccerBottomViewController name:@"EventInformationUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter]removeObserver:self.soccerBottomViewController name:@"UpdateSoccerBottomViewControInfo" object:nil];
-        [self.soccerBottomViewController.view removeFromSuperview];
-        self.soccerBottomViewController = nil;
-    }else if(self.footballBottomViewController) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"EventInformationUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"UpdateFBBottomViewControInfo" object:nil];
-        
-        [self.footballBottomViewController.view removeFromSuperview];
-        self.footballBottomViewController = nil;
-    }else if(self.footballTrainingBottomViewController) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"EventInformationUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"UpdateFBBottomViewControInfo" object:nil];
-        
-        [self.footballTrainingBottomViewController.view removeFromSuperview];
-        self.footballTrainingBottomViewController = nil;
-    }
-
-    if (FALSE){ // Forces football training. remove this and the "else" before the next if statement
-        NSLog(@"BOTTOM VIEW BEING FORCED TO FOOTBALL TRAINING, REMOVE THIS BEFORE PUSHING");
-        self.footballTrainingBottomViewController=[[FootballTrainingBottomViewController alloc] initWithController:self];
-        [self.footballTrainingBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
-        [self.view insertSubview:self.footballTrainingBottomViewController.view belowSubview:self.footballTrainingCollectionViewController.view];
-        
-        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-            [self.footballTrainingBottomViewController.view setHidden:FALSE];
-        }else{
-            //if no event playing, leave the bottom view blank
-            [self.footballTrainingBottomViewController.view setHidden:TRUE];
-        }
-        
-        
-    }
-    
-    //If stop and (not going to live2bench)start new live event with the same sport as before in setting view,the buttons selected in bottom view in the old event will stay here
-    else if([sport isEqualToString:@"hockey"])
-    {
-        //create bottom cont
-        self.hockeyBottomViewController=[[HockeyBottomViewController alloc] initWithController:self];
-        [self.hockeyBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
-        //[self.view addSubview:self.bottomViewController.view];
-        [self.view insertSubview:self.hockeyBottomViewController.view belowSubview:self.playerCollectionViewController.view];
-        
-        if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""]))|| [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){
-            [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
-            [self.hockeyBottomViewController.view setAlpha:0.6];
-            
-        }else{
-            [self.hockeyBottomViewController.view setUserInteractionEnabled:TRUE];
-            [self.hockeyBottomViewController.view setAlpha:1.0];
-        }
-        
-        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-            [self.hockeyBottomViewController.view setHidden:FALSE];
-        }else{
-            //if no event playing, leave the bottom view blank
-            [self.hockeyBottomViewController.view setHidden:TRUE];
-        }
-       
-        
-    }else if ([[sport lowercaseString] isEqualToString:@"soccer"] || [[sport lowercaseString] isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"basketball"])// for soccer and ruby
-    {
-        //create bottom cont
-        self.soccerBottomViewController=[[SoccerBottomViewController alloc] initWithController:self];
-        [self.soccerBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
-        //[self.view addSubview:self.soccerBottomViewController.view];
-        [self.view insertSubview:self.soccerBottomViewController.view belowSubview:self.playerCollectionViewController.view];
-        
-        if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""]))|| [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){
-            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.zoneLabel setAlpha:0.6];
-            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:0.6];
-            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.halfLabel setAlpha:0.6];
-            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:FALSE];
-            [self.soccerBottomViewController.periodSegmentedControl setAlpha:0.6];
-        }else{
-            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.zoneLabel setAlpha:1.0];
-            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:1.0];
-            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.halfLabel setAlpha:1.0];
-            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:TRUE];
-            [self.soccerBottomViewController.periodSegmentedControl setAlpha:1.0];
-        }
-        
-        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-            [self.soccerBottomViewController.view setHidden:FALSE];
-        }else{
-            //if no event playing, leave the bottom view blank
-            [self.soccerBottomViewController.view setHidden:TRUE];
-        }
-        
-        
-    }else if([_eventType isEqual:@"football"]){
-        self.footballBottomViewController=[[FootballBottomViewController alloc] initWithController:self];
-        [self.footballBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
-        [self.view insertSubview:self.footballBottomViewController.view belowSubview:self.playerCollectionViewController.view];
-        
-        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-            [self.footballBottomViewController.view setHidden:FALSE];
-        }else{
-            //if no event playing, leave the bottom view blank
-            [self.footballBottomViewController.view setHidden:TRUE];
-        }
-
-    } else if ([_eventType isEqual:SPORT_FOOTBALL_TRAINING]){
-        self.footballTrainingBottomViewController=[[FootballTrainingBottomViewController alloc] initWithController:self];
-        [self.footballTrainingBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
-        [self.view insertSubview:self.footballTrainingBottomViewController.view belowSubview:self.footballTrainingCollectionViewController.view];
-        
-        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-            [self.footballTrainingBottomViewController.view setHidden:FALSE];
-        }else{
-            //if no event playing, leave the bottom view blank
-            [self.footballTrainingBottomViewController.view setHidden:TRUE];
-        }
-        
-
-    } else {
-        NSLog(@"Unrecognized sport %@",_eventType);
-    }
-    
-    if ([_eventType isEqual:@"hockey"] || [_eventType isEqual:@"football"] || [_eventType isEqualToString:@"football training"]) {
-        //label for "duration tag"
-        durationTagLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 60, 90, 28)];
-        [durationTagLabel setText:@"Dur/Event"];
-        [durationTagLabel setFont:[UIFont defaultFontOfSize:17.0f]];
-        
-        //switch which used to enable duration tag
-        durationTagSwitch = [[TTSwitch alloc] initWithFrame:CGRectMake( CGRectGetMaxX(durationTagLabel.frame), durationTagLabel.frame.origin.y,durationTagLabel.frame.size.width-10, durationTagLabel.frame.size.height)];
-        durationTagSwitch.trackImage = [UIImage imageNamed:@"switch_track"];
-        durationTagSwitch.thumbImage = [UIImage imageNamed:@"switch_thumb"];
-        durationTagSwitch.trackMaskImage = [UIImage imageNamed:@"square-switch-mask"];
-        durationTagSwitch.thumbMaskImage = nil; // Set this to nil to override the UIAppearance setting
-        durationTagSwitch.thumbInsetX = 1;
-        [durationTagSwitch addTarget:self action:@selector(switchValueChanged) forControlEvents:UIControlEventValueChanged];
-        durationTagSwitch.on = FALSE;
-
-        [self.view addSubview:durationTagLabel];
-        [self.view addSubview:durationTagSwitch];
-
-       
-    }else if ([[sport lowercaseString] isEqualToString:@"soccer"] || [[sport lowercaseString] isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"basketball"]){
-        
-        float durationTagLabelX = 0;
-        if ([[sport lowercaseString] isEqualToString:@"soccer"]) {
-            durationTagLabelX = 27;
-        }else if([[sport lowercaseString] isEqualToString:@"rugby"]){
-            durationTagLabelX = 322;
-        }
-
-        
-        //label for "duration tag"
-        durationTagLabel = [[UILabel alloc]initWithFrame:CGRectMake(durationTagLabelX, 23, 90, 28)];
-        [durationTagLabel setText:@"Dur/Event"];
-        [durationTagLabel setFont:[UIFont defaultFontOfSize:17.0f]];
-        
-        //switch which used to enable duration tag
-        durationTagSwitch = [[TTSwitch alloc] initWithFrame:CGRectMake(durationTagLabelX, CGRectGetMaxY(durationTagLabel.frame),durationTagLabel.frame.size.width-10, durationTagLabel.frame.size.height)];
-        durationTagSwitch.trackImage = [UIImage imageNamed:@"switch_track"];
-        durationTagSwitch.thumbImage = [UIImage imageNamed:@"switch_thumb"];
-        durationTagSwitch.trackMaskImage = [UIImage imageNamed:@"square-switch-mask"];
-        durationTagSwitch.thumbMaskImage = nil; // Set this to nil to override the UIAppearance setting
-        [durationTagSwitch addTarget:self action:@selector(switchValueChanged) forControlEvents:UIControlEventValueChanged];
-        durationTagSwitch.on = FALSE;
-        [self.soccerBottomViewController.view addSubview:durationTagLabel];
-        [self.soccerBottomViewController.view addSubview:durationTagSwitch];
- 
-    }
-    
+//    if (isDurationTagEnabled && swipedOutButton.selected) {
+//        swipedOutButton.selected = FALSE;
+//        swipedOutButton = nil;
+//    }
+//    isDurationTagEnabled = ([sport isEqualToString:@""])?YES:NO; // Richard
+//    
+//    //delete the duration tag label and switch in case the next playing event is a different sport
+//    [durationTagLabel removeFromSuperview];
+//    [durationTagSwitch removeFromSuperview];
+//    durationTagLabel = nil;
+//    durationTagSwitch = nil;
+//    
+//    //always remove the old one, create a new one.
+//    if (self.hockeyBottomViewController){
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.hockeyBottomViewController name:@"EventInformationUpdated" object:nil];
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.hockeyBottomViewController name:@"UpdateBottomViewControInfo" object:nil];
+//        [self.hockeyBottomViewController.view removeFromSuperview];
+//        self.hockeyBottomViewController = nil;
+//    }else if (self.soccerBottomViewController) {
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.soccerBottomViewController name:@"EventInformationUpdated" object:nil];
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.soccerBottomViewController name:@"UpdateSoccerBottomViewControInfo" object:nil];
+//        [self.soccerBottomViewController.view removeFromSuperview];
+//        self.soccerBottomViewController = nil;
+//    }else if(self.footballBottomViewController) {
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"EventInformationUpdated" object:nil];
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"UpdateFBBottomViewControInfo" object:nil];
+//        
+//        [self.footballBottomViewController.view removeFromSuperview];
+//        self.footballBottomViewController = nil;
+//    }else if(self.footballTrainingBottomViewController) {
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"EventInformationUpdated" object:nil];
+//        [[NSNotificationCenter defaultCenter]removeObserver:self.footballBottomViewController name:@"UpdateFBBottomViewControInfo" object:nil];
+//        
+//        [self.footballTrainingBottomViewController.view removeFromSuperview];
+//        self.footballTrainingBottomViewController = nil;
+//    }
+//
+//    if (FALSE){ // Forces football training. remove this and the "else" before the next if statement
+//        NSLog(@"BOTTOM VIEW BEING FORCED TO FOOTBALL TRAINING, REMOVE THIS BEFORE PUSHING");
+//        self.footballTrainingBottomViewController=[[FootballTrainingBottomViewController alloc] initWithController:self];
+//        [self.footballTrainingBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
+//        [self.view insertSubview:self.footballTrainingBottomViewController.view belowSubview:self.footballTrainingCollectionViewController.view];
+//        
+////        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+////            [self.footballTrainingBottomViewController.view setHidden:FALSE];
+////        }else{
+////            //if no event playing, leave the bottom view blank
+////            [self.footballTrainingBottomViewController.view setHidden:TRUE];
+////        }
+//        
+//        
+//    }
+//    
+//    //If stop and (not going to live2bench)start new live event with the same sport as before in setting view,the buttons selected in bottom view in the old event will stay here
+//    else if([sport isEqualToString:@"hockey"])
+//    {
+//        //create bottom cont
+//        self.hockeyBottomViewController=[[HockeyBottomViewController alloc] initWithController:self];
+//        [self.hockeyBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
+//        //[self.view addSubview:self.bottomViewController.view];
+//        [self.view insertSubview:self.hockeyBottomViewController.view belowSubview:self.playerCollectionViewController.view];
+//        
+////        if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""]))|| [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){
+////            [self.hockeyBottomViewController.view setUserInteractionEnabled:FALSE];
+////            [self.hockeyBottomViewController.view setAlpha:0.6];
+////            
+////        }else{
+////            [self.hockeyBottomViewController.view setUserInteractionEnabled:TRUE];
+////            [self.hockeyBottomViewController.view setAlpha:1.0];
+////        }
+////        
+////        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+////            [self.hockeyBottomViewController.view setHidden:FALSE];
+////        }else{
+////            //if no event playing, leave the bottom view blank
+////            [self.hockeyBottomViewController.view setHidden:TRUE];
+////        }
+//       
+//        
+//    }else if ([[sport lowercaseString] isEqualToString:@"soccer"] || [[sport lowercaseString] isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"basketball"])// for soccer and ruby
+//    {
+//        //create bottom cont
+//        self.soccerBottomViewController=[[SoccerBottomViewController alloc] initWithController:self];
+//        [self.soccerBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
+//        //[self.view addSubview:self.soccerBottomViewController.view];
+//        [self.view insertSubview:self.soccerBottomViewController.view belowSubview:self.playerCollectionViewController.view];
+//        
+//        if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown) && ([globals.EVENT_NAME isEqualToString:@"live"]|| [globals.EVENT_NAME isEqualToString:@""]))|| [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]){
+//            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.zoneLabel setAlpha:0.6];
+//            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:0.6];
+//            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.halfLabel setAlpha:0.6];
+//            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:FALSE];
+//            [self.soccerBottomViewController.periodSegmentedControl setAlpha:0.6];
+//        }else{
+//            [self.soccerBottomViewController.zoneLabel setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.zoneLabel setAlpha:1.0];
+//            [self.soccerBottomViewController.zoneSegmentedControl setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.zoneSegmentedControl setAlpha:1.0];
+//            [self.soccerBottomViewController.halfLabel setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.halfLabel setAlpha:1.0];
+//            [self.soccerBottomViewController.periodSegmentedControl setUserInteractionEnabled:TRUE];
+//            [self.soccerBottomViewController.periodSegmentedControl setAlpha:1.0];
+//        }
+//        
+//        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//            [self.soccerBottomViewController.view setHidden:FALSE];
+//        }else{
+//            //if no event playing, leave the bottom view blank
+//            [self.soccerBottomViewController.view setHidden:TRUE];
+//        }
+//        
+//        
+//    }else if([_eventType isEqual:@"football"]){
+//        self.footballBottomViewController=[[FootballBottomViewController alloc] initWithController:self];
+//        [self.footballBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
+//        [self.view insertSubview:self.footballBottomViewController.view belowSubview:self.playerCollectionViewController.view];
+//        
+//        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//            [self.footballBottomViewController.view setHidden:FALSE];
+//        }else{
+//            //if no event playing, leave the bottom view blank
+//            [self.footballBottomViewController.view setHidden:TRUE];
+//        }
+//
+//    } else if ([_eventType isEqual:SPORT_FOOTBALL_TRAINING]){
+//        self.footballTrainingBottomViewController=[[FootballTrainingBottomViewController alloc] initWithController:self];
+//        [self.footballTrainingBottomViewController.view setFrame:CGRectMake(0, 548, TOTAL_WIDTH, 250)];
+//        [self.view insertSubview:self.footballTrainingBottomViewController.view belowSubview:self.footballTrainingCollectionViewController.view];
+//        
+//        if (![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//            [self.footballTrainingBottomViewController.view setHidden:FALSE];
+//        }else{
+//            //if no event playing, leave the bottom view blank
+//            [self.footballTrainingBottomViewController.view setHidden:TRUE];
+//        }
+//        
+//
+//    } else {
+//        NSLog(@"Unrecognized sport %@",_eventType);
+//    }
+//    
+//    if ([_eventType isEqual:@"hockey"] || [_eventType isEqual:@"football"] || [_eventType isEqualToString:@"football training"]) {
+//        //label for "duration tag"
+//        durationTagLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 60, 90, 28)];
+//        [durationTagLabel setText:@"Dur/Event"];
+//        [durationTagLabel setFont:[UIFont defaultFontOfSize:17.0f]];
+//        
+//        //switch which used to enable duration tag
+//        durationTagSwitch = [[TTSwitch alloc] initWithFrame:CGRectMake( CGRectGetMaxX(durationTagLabel.frame), durationTagLabel.frame.origin.y,durationTagLabel.frame.size.width-10, durationTagLabel.frame.size.height)];
+//        durationTagSwitch.trackImage = [UIImage imageNamed:@"switch_track"];
+//        durationTagSwitch.thumbImage = [UIImage imageNamed:@"switch_thumb"];
+//        durationTagSwitch.trackMaskImage = [UIImage imageNamed:@"square-switch-mask"];
+//        durationTagSwitch.thumbMaskImage = nil; // Set this to nil to override the UIAppearance setting
+//        durationTagSwitch.thumbInsetX = 1;
+//        [durationTagSwitch addTarget:self action:@selector(switchValueChanged) forControlEvents:UIControlEventValueChanged];
+//        durationTagSwitch.on = FALSE;
+//
+//        [self.view addSubview:durationTagLabel];
+//        [self.view addSubview:durationTagSwitch];
+//
+//       
+//    }else if ([[sport lowercaseString] isEqualToString:@"soccer"] || [[sport lowercaseString] isEqualToString:@"rugby"]|| [_eventType isEqualToString:@"basketball"]){
+//        
+//        float durationTagLabelX = 0;
+//        if ([[sport lowercaseString] isEqualToString:@"soccer"]) {
+//            durationTagLabelX = 27;
+//        }else if([[sport lowercaseString] isEqualToString:@"rugby"]){
+//            durationTagLabelX = 322;
+//        }
+//
+//        
+//        //label for "duration tag"
+//        durationTagLabel = [[UILabel alloc]initWithFrame:CGRectMake(durationTagLabelX, 23, 90, 28)];
+//        [durationTagLabel setText:@"Dur/Event"];
+//        [durationTagLabel setFont:[UIFont defaultFontOfSize:17.0f]];
+//        
+//        //switch which used to enable duration tag
+//        durationTagSwitch = [[TTSwitch alloc] initWithFrame:CGRectMake(durationTagLabelX, CGRectGetMaxY(durationTagLabel.frame),durationTagLabel.frame.size.width-10, durationTagLabel.frame.size.height)];
+//        durationTagSwitch.trackImage = [UIImage imageNamed:@"switch_track"];
+//        durationTagSwitch.thumbImage = [UIImage imageNamed:@"switch_thumb"];
+//        durationTagSwitch.trackMaskImage = [UIImage imageNamed:@"square-switch-mask"];
+//        durationTagSwitch.thumbMaskImage = nil; // Set this to nil to override the UIAppearance setting
+//        [durationTagSwitch addTarget:self action:@selector(switchValueChanged) forControlEvents:UIControlEventValueChanged];
+//        durationTagSwitch.on = FALSE;
+//        [self.soccerBottomViewController.view addSubview:durationTagLabel];
+//        [self.soccerBottomViewController.view addSubview:durationTagSwitch];
+// 
+//    }
+//    
 }
 
 //This method will be called when continue play button is pressed.
 //The loop mode will be destroyed, and video player will continue to play
 -(void)continuePlay{
-    [self destroyThumbLoop];
-    [videoPlayer play];
-    globals.IS_LOOP_MODE = FALSE;
-    globals.IS_PLAYBACK_TELE = FALSE;
+//    [self destroyThumbLoop];
+//    [videoPlayer play];
+//    globals.IS_LOOP_MODE = FALSE;
+//    globals.IS_PLAYBACK_TELE = FALSE;
 }
 
 //playing a thumbnail which is selected in clip view, 
 -(void)setCurrentPlayingTag:(NSDictionary*)tag
 {
     //set globals.DID_GO_TO_LIVE to false
-    globals.DID_GO_TO_LIVE = FALSE;
-    //set globals.RETAINEDPLAYBACKTIME to zer
-    globals.RETAINEDPLAYBACKTIME = 0.0;
-    //display continue play button
-    [self.continuePlayButton setHidden:FALSE];
-    //init the variable: currentPlayingTag
-    currentPlayingTag = [tag mutableCopy];
-    //set tagEventName label text to be the current tag name
-    [self setCurrentEventName:[tag objectForKey:@"name"]];
-    
-    [_videoBarViewController setTagName:self.currentEventName];
-    _fullscreenViewController.tagEventName.text = self.currentEventName;
-
-     globals.IS_LOOP_MODE = TRUE;
-    
-    //telestration type = 4
-    if([[tag objectForKey:@"type"] intValue]==4)
-    {
-        //pause video
-        [videoPlayer pause];
-        globals.IS_PLAYBACK_TELE = TRUE;
-        
-        //NSLog(@"starttime %f, globals.HOME_START_TIME %f",videoPlayer.startTime, globals.HOME_START_TIME);
-        globals.HOME_START_TIME=[[tag objectForKey:@"time"] doubleValue]+ videoPlayer.startTime;
-        globals.HOME_END_TIME=globals.HOME_START_TIME;
-       
-        //if there is tele overlay from previous tele tag, remove it
-        if(telestrationOverlay)
-        {
-            [telestrationOverlay removeFromSuperview];
-            telestrationOverlay = nil;
-        }
-        //get the current time scale
-        int timeScale = self.videoPlayer.avPlayer.currentTime.timescale;//[[tag objectForKey:@"timescale"]integerValue];
-        if(timeScale <= 0){
-            timeScale = 600;
-        }
-        videoPlayer.avPlayer.currentItem.seekingWaitsForVideoCompositionRendering = YES;
-        //NSLog(@"Play tele ---------------- starttime %f, globals.HOME_START_TIME %f timeScale %d",videoPlayer.startTime, globals.HOME_START_TIME ,timeScale);
-        [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, timeScale) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero ];// completionHandler:^(BOOL finished) {
-        //show telestration
-        [self playBackTele];
-
-        return;
-    }else{
-        globals.IS_PLAYBACK_TELE = FALSE;
-        
-        //get the tag's start time
-        globals.HOME_START_TIME=[[tag objectForKey:@"starttime"] floatValue] + videoPlayer.startTime;
-        //get the tag's end time
-        globals.HOME_END_TIME= globals.HOME_START_TIME + [[tag objectForKey:@"duration"] floatValue] ;
-        
-        //if start time is negative, seek to time 0.1 sec
-        if (globals.HOME_START_TIME < 0) {
-            globals.HOME_START_TIME = 0.1;
-        }
-
-        //if the tag's end time is greater than the current seekable duration; make it equal to the current seekable duration
-        if (globals.HOME_END_TIME>videoPlayer.durationInSeconds){
-            globals.HOME_END_TIME=videoPlayer.durationInSeconds;
-        }
-       [videoPlayer play];
-       //remove the old observer before add the new one
-        if (loopTagObserver) {
-            [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
-            loopTagObserver = nil;
-        }
-        
-        //start playing tag from tag start time
-        [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero ];// completionHandler:^(BOOL finished) {
-        /*
-         * Use addBoundaryTimeObserverForTimes: to loop the tag instread of timer;
-         * When avplayer plays to the tag end time, the block will be invoked and will call loopTag method
-         */
-        
-        NSArray *times = [NSArray arrayWithObjects:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(globals.HOME_END_TIME, 600)], nil];
-        __weak Live2BenchViewController *l2bController = self;
-        //set queue: NULL will use the default queue which is the main queue
-        loopTagObserver = [videoPlayer.avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
-            // if the video plays to the tag end time, seek back to the start time for looping
-            [l2bController loopTag];
-            
-        }];
-
-         [[NSNotificationCenter defaultCenter ]postNotificationName:@"RestartUpdate" object:nil];
-    }
-    
-   
+//    globals.DID_GO_TO_LIVE = FALSE;
+//    //set globals.RETAINEDPLAYBACKTIME to zer
+//    globals.RETAINEDPLAYBACKTIME = 0.0;
+//    //display continue play button
+//    [self.continuePlayButton setHidden:FALSE];
+//    //init the variable: currentPlayingTag
+//    currentPlayingTag = [tag mutableCopy];
+//    //set tagEventName label text to be the current tag name
+//    [self setCurrentEventName:[tag objectForKey:@"name"]];
+//    
+//    [_videoBarViewController setTagName:self.currentEventName];
+//    _fullscreenViewController.tagEventName.text = self.currentEventName;
+//
+//     globals.IS_LOOP_MODE = TRUE;
+//    
+//    //telestration type = 4
+//    if([[tag objectForKey:@"type"] intValue]==4)
+//    {
+//        //pause video
+//        [videoPlayer pause];
+//        globals.IS_PLAYBACK_TELE = TRUE;
+//        
+//        //NSLog(@"starttime %f, globals.HOME_START_TIME %f",videoPlayer.startTime, globals.HOME_START_TIME);
+//        globals.HOME_START_TIME=[[tag objectForKey:@"time"] doubleValue]+ videoPlayer.startTime;
+//        globals.HOME_END_TIME=globals.HOME_START_TIME;
+//       
+//        //if there is tele overlay from previous tele tag, remove it
+//        if(telestrationOverlay)
+//        {
+//            [telestrationOverlay removeFromSuperview];
+//            telestrationOverlay = nil;
+//        }
+//        //get the current time scale
+//        int timeScale = self.videoPlayer.avPlayer.currentTime.timescale;//[[tag objectForKey:@"timescale"]integerValue];
+//        if(timeScale <= 0){
+//            timeScale = 600;
+//        }
+//        videoPlayer.avPlayer.currentItem.seekingWaitsForVideoCompositionRendering = YES;
+//        //NSLog(@"Play tele ---------------- starttime %f, globals.HOME_START_TIME %f timeScale %d",videoPlayer.startTime, globals.HOME_START_TIME ,timeScale);
+//        [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, timeScale) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero ];// completionHandler:^(BOOL finished) {
+//        //show telestration
+//        [self playBackTele];
+//
+//        return;
+//    }else{
+//        globals.IS_PLAYBACK_TELE = FALSE;
+//        
+//        //get the tag's start time
+//        globals.HOME_START_TIME=[[tag objectForKey:@"starttime"] floatValue] + videoPlayer.startTime;
+//        //get the tag's end time
+//        globals.HOME_END_TIME= globals.HOME_START_TIME + [[tag objectForKey:@"duration"] floatValue] ;
+//        
+//        //if start time is negative, seek to time 0.1 sec
+//        if (globals.HOME_START_TIME < 0) {
+//            globals.HOME_START_TIME = 0.1;
+//        }
+//
+//        //if the tag's end time is greater than the current seekable duration; make it equal to the current seekable duration
+//        if (globals.HOME_END_TIME>videoPlayer.durationInSeconds){
+//            globals.HOME_END_TIME=videoPlayer.durationInSeconds;
+//        }
+//       [videoPlayer play];
+//       //remove the old observer before add the new one
+//        if (loopTagObserver) {
+//            [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
+//            loopTagObserver = nil;
+//        }
+//        
+//        //start playing tag from tag start time
+//        [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero ];// completionHandler:^(BOOL finished) {
+//        /*
+//         * Use addBoundaryTimeObserverForTimes: to loop the tag instread of timer;
+//         * When avplayer plays to the tag end time, the block will be invoked and will call loopTag method
+//         */
+//        
+//        NSArray *times = [NSArray arrayWithObjects:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(globals.HOME_END_TIME, 600)], nil];
+//        __weak Live2BenchViewController *l2bController = self;
+//        //set queue: NULL will use the default queue which is the main queue
+//        loopTagObserver = [videoPlayer.avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
+//            // if the video plays to the tag end time, seek back to the start time for looping
+//            [l2bController loopTag];
+//            
+//        }];
+//
+//         [[NSNotificationCenter defaultCenter ]postNotificationName:@"RestartUpdate" object:nil];
+//    }
+//    
+//   
     
 }
 
 -(void)playBackTele{
    
-    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".m3u8"].location != NSNotFound) {
-        
-        [videoPlayer pause];
-        
-        //set the frame size of the telestration overlay to match the thumbnail image
-        
-//<<<<<<< Updated upstream
-        telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
-//=======
-//        telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y+6,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
-//>>>>>>> Stashed changes
+//    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".m3u8"].location != NSNotFound) {
 //        
-        [telestrationOverlay setClipsToBounds:TRUE];
-        
-        [telestrationOverlay setBackgroundColor:[UIColor clearColor]];
-        
-       // [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
-        
-        NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
-        
-        NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-        
-        telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
-        
-        [videoPlayer.view  addSubview:telestrationOverlay];
-        
-        if (isViewTeleButtonSelected) {
-            isViewTeleButtonSelected = FALSE;
-            //set the frame size of the telestration overlay to match the thumbnail image
-            [telestrationOverlay setFrame:CGRectMake(0, videoPlayer.view.bounds.origin.y+10, videoPlayer.view.bounds.size.width, videoPlayer.view.bounds.size.height)];
-            [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFit];
-            
-        }
-        
-        //  }
-    }else{
-        
-//        //TODO: playing telestration off with mp4 format
+//        [videoPlayer pause];
 //        
-//        if (telestrationOverlay) {
+//        //set the frame size of the telestration overlay to match the thumbnail image
+//        
+////<<<<<<< Updated upstream
+//        telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
+////=======
+////        telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y+6,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
+////>>>>>>> Stashed changes
+////        
+//        [telestrationOverlay setClipsToBounds:TRUE];
+//        
+//        [telestrationOverlay setBackgroundColor:[UIColor clearColor]];
+//        
+//       // [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
+//        
+//        NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
+//        
+//        NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
+//        
+//        telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
+//        
+//        [videoPlayer.view  addSubview:telestrationOverlay];
+//        
+//        if (isViewTeleButtonSelected) {
+//            isViewTeleButtonSelected = FALSE;
+//            //set the frame size of the telestration overlay to match the thumbnail image
+//            [telestrationOverlay setFrame:CGRectMake(0, videoPlayer.view.bounds.origin.y+10, videoPlayer.view.bounds.size.width, videoPlayer.view.bounds.size.height)];
+//            [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFit];
 //            
-//            [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-//                
-//                [videoPlayer pause];
-//                
-//            }];
-//            
-//        }else{
-        
-            //set the frame size of the telestration overlay to match the thumbnail image
-            
-            telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
-            
-            [telestrationOverlay setClipsToBounds:TRUE];
-            
-            [telestrationOverlay setBackgroundColor:[UIColor blackColor]];
-            
-            [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
-            
-            NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
-            
-            NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-            
-            telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
-            
-            [videoPlayer.view  addSubview:telestrationOverlay];
-            
 //        }
-    }
+//        
+//        //  }
+//    }else{
+//        
+////        //TODO: playing telestration off with mp4 format
+////        
+////        if (telestrationOverlay) {
+////            
+////            [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+////                
+////                [videoPlayer pause];
+////                
+////            }];
+////            
+////        }else{
+//        
+//            //set the frame size of the telestration overlay to match the thumbnail image
+//            
+//            telestrationOverlay=[[UIImageView alloc]initWithFrame:CGRectMake(videoPlayer.view.frame.origin.x, videoPlayer.view.frame.origin.y,videoPlayer.view.frame.size.width, videoPlayer.playerFrame.size.height)];
+//            
+//            [telestrationOverlay setClipsToBounds:TRUE];
+//            
+//            [telestrationOverlay setBackgroundColor:[UIColor blackColor]];
+//            
+//            [telestrationOverlay setContentMode:UIViewContentModeScaleAspectFill];
+//            
+//            NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
+//            
+//            NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
+//            
+//            telestrationOverlay.image = [[UIImage alloc] initWithContentsOfFile:tUrl];
+//            
+//            [videoPlayer.view  addSubview:telestrationOverlay];
+//            
+////        }
+//    }
 }
 //when playing back tag, if the tag end time is crossed, go back to the tag start time
 -(void)loopTag{
     //NSLog(@"loop tag!");
-    [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600)];// completionHandler:^(BOOL finished) {
+//    [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600)];// completionHandler:^(BOOL finished) {
 }
 
 //uilongpressgestureRecongnizer is a continous event recognizer.
@@ -3161,16 +3161,16 @@ static void * eventContext      = &eventContext;
      *
      */
     
-    NSArray *times = [NSArray arrayWithObjects:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(globals.HOME_END_TIME + 1, 600)], nil];
-    __weak Live2BenchViewController *l2bController = self;
-    //set queue: NULL will use the default queue which is the main queue
-    loopTagObserver = [videoPlayer.avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
-        // if the video plays to the tag end time, seek back to the start time for looping
-        [l2bController loopTag];
-        
-    }];
-
-    [self.videoPlayer setTime: globals.HOME_END_TIME];
+//    NSArray *times = [NSArray arrayWithObjects:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(globals.HOME_END_TIME + 1, 600)], nil];
+//    __weak Live2BenchViewController *l2bController = self;
+//    //set queue: NULL will use the default queue which is the main queue
+//    loopTagObserver = [videoPlayer.avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
+//        // if the video plays to the tag end time, seek back to the start time for looping
+//        [l2bController loopTag];
+//        
+//    }];
+//
+//    [self.videoPlayer setTime: globals.HOME_END_TIME];
     [self.videoPlayer pause];
 }
 
@@ -3221,19 +3221,19 @@ static void * eventContext      = &eventContext;
     [videoPlayer pause];
      */
     
-    if ([sender isSelected]) {
-        [sender setSelected:NO];
-        globals.PLAYBACK_SPEED = 0.0f;
-        [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
-    } else {
-        if ([sender tag] == 0) {
-            globals.PLAYBACK_SPEED = -2.0f;
-        } else {
-            globals.PLAYBACK_SPEED = 2.0f;
-        }
-        [sender setSelected:YES];
-        [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
-    }
+//    if ([sender isSelected]) {
+//        [sender setSelected:NO];
+//        globals.PLAYBACK_SPEED = 0.0f;
+//        [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
+//    } else {
+//        if ([sender tag] == 0) {
+//            globals.PLAYBACK_SPEED = -2.0f;
+//        } else {
+//            globals.PLAYBACK_SPEED = 2.0f;
+//        }
+//        [sender setSelected:YES];
+//        [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
+//    }
 }
 
 -(void)playbackRateButtonDrag:(id)sender forEvent:(UIEvent*)event{
@@ -3242,24 +3242,24 @@ static void * eventContext      = &eventContext;
     CGPoint touchPoint = [touch locationInView:button.superview];
     CGPoint buttonPosition = [self coordForPosition:touchPoint onGuide:[button tag]];
     [button setCenter:buttonPosition];
-    if ([button tag] == 0) {
-        [playbackRateBackLabel setFrame:CGRectMake(CGRectGetMaxX(button.frame), button.frame.origin.y, playbackRateBackLabel.bounds.size.width, playbackRateBackLabel.bounds.size.height)];
-        if (isFrameByFrame) {
-            [playbackRateBackLabel setText:[NSString stringWithFormat:@"-%.0ffps",1/frameByFrameInterval]];
-        } else {
-            [playbackRateBackLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
-        }
-    } else if ([button tag] == 1){
-        [playbackRateForwardLabel setFrame:CGRectMake(button.frame.origin.x - playbackRateForwardLabel.bounds.size.width, button.frame.origin.y, playbackRateForwardLabel.bounds.size.width, playbackRateForwardLabel.bounds.size.height)];
-        if (isFrameByFrame) {
-            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.0ffps",1/frameByFrameInterval]];
-        } else {
-            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
-        }
-    }
-    if (videoPlayer.avPlayer.rate != globals.PLAYBACK_SPEED) {
-        videoPlayer.avPlayer.rate = globals.PLAYBACK_SPEED;
-    }
+//    if ([button tag] == 0) {
+//        [playbackRateBackLabel setFrame:CGRectMake(CGRectGetMaxX(button.frame), button.frame.origin.y, playbackRateBackLabel.bounds.size.width, playbackRateBackLabel.bounds.size.height)];
+//        if (isFrameByFrame) {
+//            [playbackRateBackLabel setText:[NSString stringWithFormat:@"-%.0ffps",1/frameByFrameInterval]];
+//        } else {
+//            [playbackRateBackLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
+//        }
+//    } else if ([button tag] == 1){
+//        [playbackRateForwardLabel setFrame:CGRectMake(button.frame.origin.x - playbackRateForwardLabel.bounds.size.width, button.frame.origin.y, playbackRateForwardLabel.bounds.size.width, playbackRateForwardLabel.bounds.size.height)];
+//        if (isFrameByFrame) {
+//            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.0ffps",1/frameByFrameInterval]];
+//        } else {
+//            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
+//        }
+//    }
+//    if (videoPlayer.avPlayer.rate != globals.PLAYBACK_SPEED) {
+//        videoPlayer.avPlayer.rate = globals.PLAYBACK_SPEED;
+//    }
 }
 
 -(CGPoint)coordForPosition:(CGPoint)point onGuide:(int)tag{
@@ -3287,19 +3287,19 @@ static void * eventContext      = &eventContext;
             [self startFrameByFrameScrollingAtInterval:0.2f goingForward:FALSE];
         } else {
             isFrameByFrame = NO;
-            if (degrees >= increment*2 && degrees < increment*3){
-                globals.PLAYBACK_SPEED = 0.25f;
-            } else if (degrees >= increment*3 && degrees < increment*4){
-                globals.PLAYBACK_SPEED = 0.5f;
-            } else if (degrees >= increment*4 && degrees < increment*5){
-                globals.PLAYBACK_SPEED = 1.0f;
-            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
-                globals.PLAYBACK_SPEED = 2.0f;
-            } else if (degrees >= (increment*6 - 3)){
-                globals.PLAYBACK_SPEED = 4.0f;
-            }
+//            if (degrees >= increment*2 && degrees < increment*3){
+//                globals.PLAYBACK_SPEED = 0.25f;
+//            } else if (degrees >= increment*3 && degrees < increment*4){
+//                globals.PLAYBACK_SPEED = 0.5f;
+//            } else if (degrees >= increment*4 && degrees < increment*5){
+//                globals.PLAYBACK_SPEED = 1.0f;
+//            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
+//                globals.PLAYBACK_SPEED = 2.0f;
+//            } else if (degrees >= (increment*6 - 3)){
+//                globals.PLAYBACK_SPEED = 4.0f;
+//            }
         }
-        globals.PLAYBACK_SPEED = -globals.PLAYBACK_SPEED;
+//        globals.PLAYBACK_SPEED = -globals.PLAYBACK_SPEED;
         
         yPos = sinf(theta)*playbackRateRadius;
         xPos = cosf(theta)*playbackRateRadius;
@@ -3323,17 +3323,17 @@ static void * eventContext      = &eventContext;
             [self startFrameByFrameScrollingAtInterval:0.2f goingForward:TRUE];
         } else {
             isFrameByFrame = NO;
-            if (degrees >= increment*2 && degrees < increment*3){
-                globals.PLAYBACK_SPEED = 0.25f;
-            } else if (degrees >= increment*3 && degrees < increment*4){
-                globals.PLAYBACK_SPEED = 0.5f;
-            } else if (degrees >= increment*4 && degrees < increment*5){
-                globals.PLAYBACK_SPEED = 1.0f;
-            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
-                globals.PLAYBACK_SPEED = 2.0f;
-            } else if (degrees >= (increment*6 - 3)){
-                globals.PLAYBACK_SPEED = 4.0f;
-            }
+//            if (degrees >= increment*2 && degrees < increment*3){
+//                globals.PLAYBACK_SPEED = 0.25f;
+//            } else if (degrees >= increment*3 && degrees < increment*4){
+//                globals.PLAYBACK_SPEED = 0.5f;
+//            } else if (degrees >= increment*4 && degrees < increment*5){
+//                globals.PLAYBACK_SPEED = 1.0f;
+//            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
+//                globals.PLAYBACK_SPEED = 2.0f;
+//            } else if (degrees >= (increment*6 - 3)){
+//                globals.PLAYBACK_SPEED = 4.0f;
+//            }
         }
         
         yPos = sinf(theta)*playbackRateRadius;
@@ -3377,31 +3377,31 @@ static void * eventContext      = &eventContext;
 {
 
 ///going to bring the tabbar controller to the front now, we want to have access to it at all times, including fullscreen mode
-    UIView *fullScreenView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    
-    //iterate through all the views in teh fullscreen (the tabs are there, just hidden away
-    for(id tBar in fullScreenView.subviews)
-    {
-        //if the view is a subclass of type tabbarbutton, then we will bring it to the front
-        if([tBar isKindOfClass:[TabBarButton class]])
-        {
-            [fullScreenView bringSubviewToFront:tBar];
-        }
-    }
-
-    if(globals.IS_IN_LIST_VIEW  == FALSE && globals.IS_IN_BOOKMARK_VIEW ==FALSE){
-        if(globals.IS_LOOP_MODE == FALSE){
-            [self createFullScreenOverlayButtons];
-        }else{
-            [self createFullScreenOverlayButtonsinLoopMode];
-            if ([[currentPlayingTag objectForKey:@"name"] isEqualToString:@"telestration"]) {
-                //IS_VIEW_TELE = TRUE;
-                globals.IS_PLAYBACK_TELE = TRUE;
-            }else{
-                globals.IS_PLAYBACK_TELE = FALSE;
-            }
-        }
-    }
+//    UIView *fullScreenView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+//    
+//    //iterate through all the views in teh fullscreen (the tabs are there, just hidden away
+//    for(id tBar in fullScreenView.subviews)
+//    {
+//        //if the view is a subclass of type tabbarbutton, then we will bring it to the front
+//        if([tBar isKindOfClass:[TabBarButton class]])
+//        {
+//            [fullScreenView bringSubviewToFront:tBar];
+//        }
+//    }
+//
+//    if(globals.IS_IN_LIST_VIEW  == FALSE && globals.IS_IN_BOOKMARK_VIEW ==FALSE){
+//        if(globals.IS_LOOP_MODE == FALSE){
+//            [self createFullScreenOverlayButtons];
+//        }else{
+//            [self createFullScreenOverlayButtonsinLoopMode];
+//            if ([[currentPlayingTag objectForKey:@"name"] isEqualToString:@"telestration"]) {
+//                //IS_VIEW_TELE = TRUE;
+//                globals.IS_PLAYBACK_TELE = TRUE;
+//            }else{
+//                globals.IS_PLAYBACK_TELE = FALSE;
+//            }
+//        }
+//    }
  
 }
 
@@ -3418,33 +3418,33 @@ static void * eventContext      = &eventContext;
     }
 
     //if was in loop mode, remove all the control buttons in fullscreen
-    if(globals.IS_LOOP_MODE){
-        [self removeFullScreenOverlayButtonsinLoopMode];
-        
-        //Set the startRangeModifierButton's icon according to the startRangeModifierButtoninFullScreen's accessibilityValue
-        //Make sure when switching between fullscreen and normal screen,the buttons' icons and controls are synced
-//        NSString *accesibilityString = startRangeModifierButtoninFullScreen.accessibilityValue;
-//        NSString *imageName;
-//        if ([accesibilityString isEqualToString:@"extend"]) {
-//            imageName = @"extendstartsec";
-//        }else{
-//            imageName = @"subtractstartsec";
-//        }
-//        [startRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-//        [startRangeModifierButton setAccessibilityValue:accesibilityString];
+//    if(globals.IS_LOOP_MODE){
+//        [self removeFullScreenOverlayButtonsinLoopMode];
 //        
-//        //set the endRangeModifierButton's icon according to the endRangeModifierButtoninFullScreen's accessibilityValue
+//        //Set the startRangeModifierButton's icon according to the startRangeModifierButtoninFullScreen's accessibilityValue
 //        //Make sure when switching between fullscreen and normal screen,the buttons' icons and controls are synced
-//        accesibilityString = endRangeModifierButtoninFullScreen.accessibilityValue;
-//        if ([accesibilityString isEqualToString:@"extend"]) {
-//            imageName = @"extendendsec";
-//        }else{
-//            imageName = @"subtractendsec";
-//        }
-//        [endRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-//        [endRangeModifierButton setAccessibilityValue:accesibilityString];
-
-    }
+////        NSString *accesibilityString = startRangeModifierButtoninFullScreen.accessibilityValue;
+////        NSString *imageName;
+////        if ([accesibilityString isEqualToString:@"extend"]) {
+////            imageName = @"extendstartsec";
+////        }else{
+////            imageName = @"subtractstartsec";
+////        }
+////        [startRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+////        [startRangeModifierButton setAccessibilityValue:accesibilityString];
+////        
+////        //set the endRangeModifierButton's icon according to the endRangeModifierButtoninFullScreen's accessibilityValue
+////        //Make sure when switching between fullscreen and normal screen,the buttons' icons and controls are synced
+////        accesibilityString = endRangeModifierButtoninFullScreen.accessibilityValue;
+////        if ([accesibilityString isEqualToString:@"extend"]) {
+////            imageName = @"extendendsec";
+////        }else{
+////            imageName = @"subtractendsec";
+////        }
+////        [endRangeModifierButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+////        [endRangeModifierButton setAccessibilityValue:accesibilityString];
+//
+//    }
 }
 
 -(void)createFullScreenOverlayButtonsinLoopMode
@@ -3511,9 +3511,9 @@ static void * eventContext      = &eventContext;
     [viewTeleButtoninFullScreen setFrame:CGRectMake(900,60, 130, LITTLE_ICON_DIMENSIONS)];
     [viewTeleButtoninFullScreen setTitle:@"View Tele" forState:UIControlStateNormal];
     [viewTeleButtoninFullScreen addTarget:self action:@selector(viewTele:) forControlEvents:UIControlEventTouchUpInside];
-    if (!globals.LATEST_TELE || [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"type"]intValue] == 4) {
-        viewTeleButtoninFullScreen.hidden = TRUE;
-    }
+//    if (!globals.LATEST_TELE || [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"type"]intValue] == 4) {
+//        viewTeleButtoninFullScreen.hidden = TRUE;
+//    }
     
 //    [self.overlayItems addObject:startRangeModifierButtoninFullScreen];
 //    [self.overlayItems addObject:endRangeModifierButtoninFullScreen];
@@ -3528,9 +3528,9 @@ static void * eventContext      = &eventContext;
         [self showTeleButton];
         
         //when it is local playback
-        if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@"mp4"].location != NSNotFound) {
-            [self showPlaybackRateControls];
-        }
+//        if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@"mp4"].location != NSNotFound) {
+//            [self showPlaybackRateControls];
+//        }
     }
 }
 
@@ -3544,11 +3544,11 @@ static void * eventContext      = &eventContext;
 //The method will be called when telestration button is pressed
 //hide all the fullscreen control buttons
 -(void)hideFullScreenOverlayButtons{
-    if (globals.IS_LOOP_MODE) {
-//        [startRangeModifierButtoninFullScreen setAlpha:0.0];
-//        [endRangeModifierButtoninFullScreen setAlpha:0.0];
-     
-    }
+//    if (globals.IS_LOOP_MODE) {
+////        [startRangeModifierButtoninFullScreen setAlpha:0.0];
+////        [endRangeModifierButtoninFullScreen setAlpha:0.0];
+//     
+//    }
     
     [playbackRateBackButton setHidden:TRUE];
     [playbackRateBackLabel setHidden:TRUE];
@@ -3565,11 +3565,11 @@ static void * eventContext      = &eventContext;
 //show all the fullscreen control buttons
 -(void)showFullScreenOverlayButtons{
     
-    if (globals.IS_LOOP_MODE) {
-//        [startRangeModifierButtoninFullScreen setAlpha:1.0];
-//        [endRangeModifierButtoninFullScreen setAlpha:1.0];
-
-    }
+//    if (globals.IS_LOOP_MODE) {
+////        [startRangeModifierButtoninFullScreen setAlpha:1.0];
+////        [endRangeModifierButtoninFullScreen setAlpha:1.0];
+//
+//    }
     
     [playbackRateBackButton setHidden:FALSE];
     [playbackRateBackLabel setHidden:FALSE];
@@ -3599,34 +3599,34 @@ static void * eventContext      = &eventContext;
 //    [timeLabel setFont:[UIFont boldSystemFontOfSize:20.f]];
 //    [timeLabel setTextAlignment:NSTextAlignmentCenter];
     
-    if ( (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown || [globals.EVENT_NAME isEqualToString:@""] )
-    {
-        if (![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]){
-    
-        }
-        
-        [teleButton setUserInteractionEnabled:FALSE];
-        [teleButton setAlpha:0.6];
-    }else{
-        if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]){
-     
-        }else{
-       
-
-        }
-     
-        [teleButton setUserInteractionEnabled:TRUE];
-        [teleButton setAlpha:1.0];
-    }
+//    if ( (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown || [globals.EVENT_NAME isEqualToString:@""] )
+//    {
+//        if (![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]){
+//    
+//        }
+//        
+//        [teleButton setUserInteractionEnabled:FALSE];
+//        [teleButton setAlpha:0.6];
+//    }else{
+//        if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]){
+//     
+//        }else{
+//       
+//
+//        }
+//     
+//        [teleButton setUserInteractionEnabled:TRUE];
+//        [teleButton setAlpha:1.0];
+//    }
     
     //init button to view telestration
     viewTeleButtoninFullScreen = [BorderButton buttonWithType:UIButtonTypeCustom];
     [viewTeleButtoninFullScreen setFrame:CGRectMake(900,60, 130, LITTLE_ICON_DIMENSIONS)];
     [viewTeleButtoninFullScreen setTitle:@"View Tele" forState:UIControlStateNormal];
     [viewTeleButtoninFullScreen addTarget:self action:@selector(viewTele:) forControlEvents:UIControlEventTouchUpInside];
-    if (!globals.LATEST_TELE || [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"type"]intValue] == 4) {
-        viewTeleButtoninFullScreen.hidden = TRUE;
-    }
+//    if (!globals.LATEST_TELE || [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"type"]intValue] == 4) {
+//        viewTeleButtoninFullScreen.hidden = TRUE;
+//    }
     
  
     
@@ -3661,11 +3661,11 @@ static void * eventContext      = &eventContext;
         [button setTag:count];
         //if the user opens a duration tag in normal mode, when going to fullscreen mode, we need to highlight the button with the selected event name
         
-        if ((isDurationTagEnabled && swipedOutButton.selected && [[dict objectForKey:@"name"] isEqual:swipedOutButton.titleLabel.text] && [[dict objectForKey:@"side"] isEqual:swipedOutButton.accessibilityValue]) || [globals.UNCLOSED_EVENT isEqualToString:[dict objectForKey:@"name"]]) {
-            swipedOutButton.selected = FALSE;
-            button.selected = TRUE;
-            swipedOutButton = button;
-        }
+//        if ((isDurationTagEnabled && swipedOutButton.selected && [[dict objectForKey:@"name"] isEqual:swipedOutButton.titleLabel.text] && [[dict objectForKey:@"side"] isEqual:swipedOutButton.accessibilityValue]) || [globals.UNCLOSED_EVENT isEqualToString:[dict objectForKey:@"name"]]) {
+//            swipedOutButton.selected = FALSE;
+//            button.selected = TRUE;
+//            swipedOutButton = button;
+//        }
 
         if([[dict objectForKey:@"side"] isEqualToString:@"left"])
         {
@@ -3688,23 +3688,23 @@ static void * eventContext      = &eventContext;
     }
     
     //when 1. there is no wifi; 2. play back a downloaded event 3.there is no live event or old event playing,gray the all the tag buttons
-    if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] ||(int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown )&& ([globals.EVENT_NAME isEqualToString:@"live"] || [globals.EVENT_NAME isEqualToString:@""])) || [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""])
-    {
-        [self.overlayLeftViewController.view setUserInteractionEnabled:FALSE];
-        [self.overlayRightViewController.view setUserInteractionEnabled:FALSE];
-        if (!isModifyingPlaybackRate) {
-            [self.overlayLeftViewController.view setAlpha:0.6];
-            [self.overlayRightViewController.view setAlpha:0.6];
-        }
-    }else{
-        [self.overlayLeftViewController.view setUserInteractionEnabled:TRUE];
-        [self.overlayRightViewController.view setUserInteractionEnabled:TRUE];
-        if (!isModifyingPlaybackRate) {
-            [self.overlayLeftViewController.view setAlpha:1.0];
-            [self.overlayRightViewController.view setAlpha:1.0];
-        }
-        
-    }
+//    if(((![globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] ||(int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusFailed || (int)[[[videoPlayer avPlayer]currentItem]status] == AVPlayerItemStatusUnknown )&& ([globals.EVENT_NAME isEqualToString:@"live"] || [globals.EVENT_NAME isEqualToString:@""])) || [globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""])
+//    {
+//        [self.overlayLeftViewController.view setUserInteractionEnabled:FALSE];
+//        [self.overlayRightViewController.view setUserInteractionEnabled:FALSE];
+//        if (!isModifyingPlaybackRate) {
+//            [self.overlayLeftViewController.view setAlpha:0.6];
+//            [self.overlayRightViewController.view setAlpha:0.6];
+//        }
+//    }else{
+//        [self.overlayLeftViewController.view setUserInteractionEnabled:TRUE];
+//        [self.overlayRightViewController.view setUserInteractionEnabled:TRUE];
+//        if (!isModifyingPlaybackRate) {
+//            [self.overlayLeftViewController.view setAlpha:1.0];
+//            [self.overlayRightViewController.view setAlpha:1.0];
+//        }
+//        
+//    }
     
     [self.overlayItems addObject:self.overlayLeftViewController.view];
     [self.overlayItems addObject:self.overlayRightViewController.view];
@@ -3729,9 +3729,9 @@ static void * eventContext      = &eventContext;
     [self showTeleButton];
     
     //when it is local playback
-    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@"mp4"].location != NSNotFound) {
-        [self showPlaybackRateControls];
-    }
+//    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@"mp4"].location != NSNotFound) {
+//        [self showPlaybackRateControls];
+//    }
 
 
     
@@ -3756,16 +3756,16 @@ static void * eventContext      = &eventContext;
 
 -(void)showPlaybackRateControls
 {
-    if (globals.CURRENT_PLAYBACK_EVENT && globals.CURRENT_PLAYBACK_EVENT.length > 4) {
-        if (!globals.IS_LOCAL_PLAYBACK && [[globals.CURRENT_PLAYBACK_EVENT substringWithRange:NSMakeRange(globals.CURRENT_PLAYBACK_EVENT.length - 4, 3)] isEqualToString:@"mp4"]) {
-            NSLog(@"Is not local playback, but is an mp4");
-        } else if (globals.IS_LOCAL_PLAYBACK && ![[globals.CURRENT_PLAYBACK_EVENT substringWithRange:NSMakeRange(globals.CURRENT_PLAYBACK_EVENT.length - 4, 3)] isEqualToString:@"mp4"]) {
-            NSLog(@"Is local playback, but is not an mp4");
-        }
-    }
-    if (!globals.IS_LOCAL_PLAYBACK) {
-        return;
-    }
+//    if (globals.CURRENT_PLAYBACK_EVENT && globals.CURRENT_PLAYBACK_EVENT.length > 4) {
+//        if (!globals.IS_LOCAL_PLAYBACK && [[globals.CURRENT_PLAYBACK_EVENT substringWithRange:NSMakeRange(globals.CURRENT_PLAYBACK_EVENT.length - 4, 3)] isEqualToString:@"mp4"]) {
+//            NSLog(@"Is not local playback, but is an mp4");
+//        } else if (globals.IS_LOCAL_PLAYBACK && ![[globals.CURRENT_PLAYBACK_EVENT substringWithRange:NSMakeRange(globals.CURRENT_PLAYBACK_EVENT.length - 4, 3)] isEqualToString:@"mp4"]) {
+//            NSLog(@"Is local playback, but is not an mp4");
+//        }
+//    }
+//    if (!globals.IS_LOCAL_PLAYBACK) {
+//        return;
+//    }
     if (playbackRateBackButton){
         [playbackRateBackButton removeFromSuperview];
         playbackRateBackButton = nil;
@@ -3837,111 +3837,111 @@ static void * eventContext      = &eventContext;
 }
 
 //when scrubbing the slider, need to remove telestration
--(void)scrubbingDestroyLoopMode
-{
-    
-    if(telestrationOverlay)
-    {
-        [self continuePlay];
-    }
-    [self destroyThumbLoop];
-    globals.IS_LOOP_MODE = FALSE;
-}
+//-(void)scrubbingDestroyLoopMode
+//{
+//    
+//    if(telestrationOverlay)
+//    {
+//        [self continuePlay];
+//    }
+//    [self destroyThumbLoop];
+//    globals.IS_LOOP_MODE = FALSE;
+//}
 
 //if the device is locked, stop the updateplayeration timer
--(void)pauseUpdatePlayerDurationTimer
-{
-   
-    if (globals.IS_IN_FIRST_VIEW) {
-        globals.PLAYABLE_DURATION = videoPlayer.duration;
-        [updateCurrentEventInfoTimer invalidate];
-        updateCurrentEventInfoTimer = nil;
-        
-        if (globals.IS_LOOP_MODE) {
-            [self destroyThumbLoop];
-        }
-    }
-}
+//-(void)pauseUpdatePlayerDurationTimer
+//{
+//   
+////    if (globals.IS_IN_FIRST_VIEW) {
+////        globals.PLAYABLE_DURATION = videoPlayer.duration;
+////        [updateCurrentEventInfoTimer invalidate];
+////        updateCurrentEventInfoTimer = nil;
+////        
+////        if (globals.IS_LOOP_MODE) {
+////            [self destroyThumbLoop];
+////        }
+////    }
+//}
 
 //if the device is back to active, restart the updateplayerduaration timer
--(void)resumeUpdatePlayerDurationTimer
-{
-  
-    if (globals.IS_IN_FIRST_VIEW) {
-        if (!updateCurrentEventInfoTimer) {
-            updateCurrentEventInfoTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                                 target:self
-                                                               selector:@selector(updateCurrentEventInfo)
-                                                               userInfo:nil
-                                                                repeats:YES];
-        }
-        [self updateCurrentEventInfo];
-    }
-    
-    //if the device locks when there is live event playing,reset the player when the device becomes active, otherwise we will have black screen
-
-    if ([globals.EVENT_NAME isEqualToString:@"live"]) {
-        globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-        [self goToLive];
-    }
-    
-
-    
-    NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-    //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-    globals.isBACKFROMSLEEP = TRUE;
-    [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
-    [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
-    
-    [videoPlayer setVideoURL:videoURL];
-    [videoPlayer setPlayerWithURL:videoURL];
-    //videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
-
-    
-    globals.VIDEO_PLAYBACK_FAILED = FALSE;
-    if (globals.IS_IN_FIRST_VIEW) {
-        [globals.VIDEO_PLAYER_LIST_VIEW pause];
-        if(globals.IS_TELE){
-            globals.RETAINEDPLAYBACKTIME = globals.TELE_TIME;
-            CMTime teleTime = CMTimeMakeWithSeconds(globals.RETAINEDPLAYBACKTIME, 1);
-            [videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-            [videoPlayer pause];
-        }else{
-            globals.RETAINEDPLAYBACKTIME =  currentPlayBackTime;
-            CMTime teleTime = CMTimeMakeWithSeconds(globals.RETAINEDPLAYBACKTIME, 1);
-            [videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-            if (globals.PLAYBACK_SPEED == 0) {
-                 [videoPlayer pause];
-            }else{
-                [videoPlayer play];
-            }
-
-            
-            //go to live after 3 seconds delay
-            [videoPlayer performSelector:@selector(goToLive) withObject:nil afterDelay:5];
-        }
-     
-    }else if(globals.IS_IN_LIST_VIEW){
-        [videoPlayer pause];
-        if(globals.IS_TELE){
-            globals.RETAINEDPLAYBACKTIME = globals.TELE_TIME;
-            CMTime teleTime = CMTimeMakeWithSeconds(globals.RETAINEDPLAYBACKTIME, 1);
-            [globals.VIDEO_PLAYER_LIST_VIEW.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-            [globals.VIDEO_PLAYER_LIST_VIEW pause];
-        }else{
-            globals.RETAINEDPLAYBACKTIME =  currentPlayBackTime;
-            
-            if (globals.PLAYBACK_SPEED == 0) {
-                [globals.VIDEO_PLAYER_LIST_VIEW pause];
-
-            }else{
-                [globals.VIDEO_PLAYER_LIST_VIEW play];
-            }
-
-        }
-    }
-    
-}
+//-(void)resumeUpdatePlayerDurationTimer
+//{
+//  
+//    if (globals.IS_IN_FIRST_VIEW) {
+//        if (!updateCurrentEventInfoTimer) {
+//            updateCurrentEventInfoTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+//                                                                 target:self
+//                                                               selector:@selector(updateCurrentEventInfo)
+//                                                               userInfo:nil
+//                                                                repeats:YES];
+//        }
+//        [self updateCurrentEventInfo];
+//    }
+//    
+//    //if the device locks when there is live event playing,reset the player when the device becomes active, otherwise we will have black screen
+//
+//    if ([globals.EVENT_NAME isEqualToString:@"live"]) {
+//        globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
+//        [self goToLive];
+//    }
+//    
+//
+//    
+//    NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
+//    //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
+//    globals.isBACKFROMSLEEP = TRUE;
+//    [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
+//    [globals.VIDEO_PLAYER_LIST_VIEW setPlayerWithURL:videoURL];
+//    
+//    [videoPlayer setVideoURL:videoURL];
+//    [videoPlayer setPlayerWithURL:videoURL];
+//    //videoPlayer = globals.VIDEO_PLAYER_LIVE2BENCH;
+//
+//    
+//    globals.VIDEO_PLAYBACK_FAILED = FALSE;
+//    if (globals.IS_IN_FIRST_VIEW) {
+//        [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//        if(globals.IS_TELE){
+//            globals.RETAINEDPLAYBACKTIME = globals.TELE_TIME;
+//            CMTime teleTime = CMTimeMakeWithSeconds(globals.RETAINEDPLAYBACKTIME, 1);
+//            [videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//            [videoPlayer pause];
+//        }else{
+//            globals.RETAINEDPLAYBACKTIME =  currentPlayBackTime;
+//            CMTime teleTime = CMTimeMakeWithSeconds(globals.RETAINEDPLAYBACKTIME, 1);
+//            [videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//            if (globals.PLAYBACK_SPEED == 0) {
+//                 [videoPlayer pause];
+//            }else{
+//                [videoPlayer play];
+//            }
+//
+//            
+//            //go to live after 3 seconds delay
+//            [videoPlayer performSelector:@selector(goToLive) withObject:nil afterDelay:5];
+//        }
+//     
+//    }else if(globals.IS_IN_LIST_VIEW){
+//        [videoPlayer pause];
+//        if(globals.IS_TELE){
+//            globals.RETAINEDPLAYBACKTIME = globals.TELE_TIME;
+//            CMTime teleTime = CMTimeMakeWithSeconds(globals.RETAINEDPLAYBACKTIME, 1);
+//            [globals.VIDEO_PLAYER_LIST_VIEW.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//            [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//        }else{
+//            globals.RETAINEDPLAYBACKTIME =  currentPlayBackTime;
+//            
+//            if (globals.PLAYBACK_SPEED == 0) {
+//                [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//
+//            }else{
+//                [globals.VIDEO_PLAYER_LIST_VIEW play];
+//            }
+//
+//        }
+//    }
+//    
+//}
 
 -(void)highlightDurationTag
 {

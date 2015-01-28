@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "HockeyBottomViewController.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "playerCell.h"
 #import "BorderButton.h"
 
@@ -24,7 +24,7 @@
     NSMutableArray *currentLine;
     NSMutableDictionary *playerMap;
     int numberOfPlayersAllowed;
-    Globals *globals;
+//    Globals *globals;
 }
 @property NSMutableArray *currentLine;
 @property NSMutableArray *selectedNumbers;

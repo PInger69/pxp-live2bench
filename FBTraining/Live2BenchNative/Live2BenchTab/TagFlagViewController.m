@@ -8,7 +8,7 @@
 
 #import "TagFlagViewController.h"
 #import "Utility.h"
-#import "Globals.h"
+//#import "Globals.h"
 
 
 // this is what manages all the little colored notches in the player bar
@@ -16,7 +16,7 @@
 {
     BOOL        isCreatingAllTagMarkers;
     int         updateTagmarkerCounter;
-    Globals     * globals;
+//    Globals     * globals;
     VideoPlayer * videoPlayer;
 }
 
@@ -29,7 +29,7 @@
 {
     self = [super init];
     if (self) {
-        globals                         = [Globals instance]; // EEEEEWWWww
+//        globals                         = [Globals instance]; // EEEEEWWWww
         videoPlayer                     = aVideoPlayer;
         tagMarkerLeadObjDict            = [[NSMutableDictionary alloc]init];
         tagMarkerObjDict                = [[NSMutableDictionary alloc]init];
@@ -86,39 +86,39 @@
  */
 -(void)createTagMarkers
 {
-    isCreatingAllTagMarkers = TRUE;
-    
-    NSString *color;
-    float tagTime;
-    NSMutableDictionary *UIColourDict;
-    UIColor *tagColour;
-    for(NSMutableDictionary *oneTag in [globals.CURRENT_EVENT_THUMBNAILS allValues]){
-        //if the tag was deleted(type == 3) or type == 8 , don't create marker
-        if ([oneTag objectForKey:@"time"] && [[oneTag objectForKey:@"type"]integerValue]!=3 && [[oneTag objectForKey:@"type"]integerValue]!=8 && [[oneTag objectForKey:@"type"]integerValue]!=18 && [[oneTag objectForKey:@"type"]integerValue]!=22 && !([[oneTag objectForKey:@"type"]integerValue]&1)) {
-            color = [oneTag objectForKey:@"colour"];
-            
-            if ([UIColourDict count] == 0){
-                tagColour = [Utility colorWithHexString:color];
-                UIColourDict = [NSMutableDictionary dictionaryWithObject:tagColour forKey:color];
-            } else {
-                if (![UIColourDict objectForKey:color]){
-                    tagColour = [Utility colorWithHexString:color];
-                    [UIColourDict setObject:tagColour forKey:color];
-                }
-            }
-            
-            tagColour = [UIColourDict objectForKey:color];
-            tagTime = [[oneTag objectForKey:@"time"] floatValue];
-            
-            //create tag marker for this tag
-            [self markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
-        }
-    }
-    
-    //NSLog(@"tagMarkerLeadObjDict: %@, videoplayer.duration: %f",tagMarkerLeadObjDict,videoPlayer.duration);
-    //go through all the tag marker leads and create all the tag maker views
-    [self createAllTagmarkerViews];
-    
+//    isCreatingAllTagMarkers = TRUE;
+//    
+//    NSString *color;
+//    float tagTime;
+//    NSMutableDictionary *UIColourDict;
+//    UIColor *tagColour;
+//    for(NSMutableDictionary *oneTag in [globals.CURRENT_EVENT_THUMBNAILS allValues]){
+//        //if the tag was deleted(type == 3) or type == 8 , don't create marker
+//        if ([oneTag objectForKey:@"time"] && [[oneTag objectForKey:@"type"]integerValue]!=3 && [[oneTag objectForKey:@"type"]integerValue]!=8 && [[oneTag objectForKey:@"type"]integerValue]!=18 && [[oneTag objectForKey:@"type"]integerValue]!=22 && !([[oneTag objectForKey:@"type"]integerValue]&1)) {
+//            color = [oneTag objectForKey:@"colour"];
+//            
+//            if ([UIColourDict count] == 0){
+//                tagColour = [Utility colorWithHexString:color];
+//                UIColourDict = [NSMutableDictionary dictionaryWithObject:tagColour forKey:color];
+//            } else {
+//                if (![UIColourDict objectForKey:color]){
+//                    tagColour = [Utility colorWithHexString:color];
+//                    [UIColourDict setObject:tagColour forKey:color];
+//                }
+//            }
+//            
+//            tagColour = [UIColourDict objectForKey:color];
+//            tagTime = [[oneTag objectForKey:@"time"] floatValue];
+//            
+//            //create tag marker for this tag
+//            [self markTagAtTime:tagTime colour:tagColour tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
+//        }
+//    }
+//    
+//    //NSLog(@"tagMarkerLeadObjDict: %@, videoplayer.duration: %f",tagMarkerLeadObjDict,videoPlayer.duration);
+//    //go through all the tag marker leads and create all the tag maker views
+//    [self createAllTagmarkerViews];
+//    
 }
 
 -(void)cleanTagMarkers
@@ -172,7 +172,7 @@
 
 //generate TagMarker object when we receive a new tag from syncme callback
 -(TagMarker*)markTagAtTime:(float)time colour:(UIColor*)color tagID:(NSString*)tagID{
-    double liveTime = MAX(globals.PLAYABLE_DURATION, videoPlayer.duration);
+    double liveTime = 0;//MAX(globals.PLAYABLE_DURATION, videoPlayer.duration);
     
     //NSLog(@"videoPlayer: %@,self.videoPlayer.duration: %f, globals.PLAYABLE_DURATION: %f, time: %f",videoPlayer,self.videoPlayer.duration,globals.PLAYABLE_DURATION,time);
     if(liveTime < 1 || time > liveTime){
@@ -191,7 +191,7 @@
     //tMarker.marker.backgroundColor = color;
     //[tMarker.marker setAccessibilityIdentifier:@"tagMarker"];
     
-    [globals.TAG_MARKER_OBJ_DICT setObject:tMarker forKey:tagID];
+//    [globals.TAG_MARKER_OBJ_DICT setObject:tMarker forKey:tagID];
     [self adjustTagFrames:xValue color:color tMarker:tMarker];
     
     return tMarker;
@@ -290,15 +290,15 @@
  */
 -(void)update
 {
-    double liveTime = MAX(globals.PLAYABLE_DURATION, videoPlayer.duration);
+    double liveTime = 0;//MAX(globals.PLAYABLE_DURATION, videoPlayer.duration);
     
     if (tagMarkerLeadObjDict.count < 1 ) {
         //if just start playing back an old event, the duration of the video might be 0. In this case no tag markers will be created.
         //Here, we check if there is no tag markers but there is tags for the current event, call the createTagMarkers method to generate all the tag markers
-        if (globals.CURRENT_EVENT_THUMBNAILS.count > 0) {
-            [self cleanTagMarkers];
-            [self createTagMarkers];
-        }
+//        if (globals.CURRENT_EVENT_THUMBNAILS.count > 0) {
+//            [self cleanTagMarkers];
+//            [self createTagMarkers];
+//        }
         
     }else{
         updateTagmarkerCounter++;

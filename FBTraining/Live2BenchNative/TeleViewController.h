@@ -12,7 +12,7 @@
 //#import "AppQueue.h"
 #import "UtilitiesController.h"
 #import "WBImage.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "ListViewController.h"
 #import "BookmarkViewController.h"
 #import "BorderButton.h"
@@ -28,7 +28,7 @@
     UIButton *lineButton;
     UIButton *arrowButton;
     UIButton *focusButton;
-    Globals *globals;
+//    Globals *globals;
     CGPoint lastPoint;
     CGPoint lastPoint2;
     CGPoint currentPoint;

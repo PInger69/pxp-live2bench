@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Common.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "CustomLabel.h"
 #import "BorderButton.h"
 

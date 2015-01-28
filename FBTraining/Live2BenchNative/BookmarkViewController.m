@@ -16,9 +16,9 @@
 #import "RatingInput.h"
 #import "JPReorderTableView.h"
 #import "JPTripleSwipeCell.h"
-#import "UserInterfaceConstants.h"
-#import "JPStyle.h"
-#import "JPFont.h"
+//#import "UserInterfaceConstants.h"
+//#import "JPStyle.h"
+//#import "JPFont.h"
 #import "MyClipFilterViewController.h"
 #import "TagPopOverContent.h"
 #import "SVStatusHUD.h"
@@ -133,9 +133,9 @@ int viewWillAppearCalled;
 {
     [super viewDidLoad];
     
-    if (!globals) {
-        globals = [Globals instance];
-    }
+//    if (!globals) {
+//        globals = [Globals instance];
+//    }
     
     uController = [[UtilitiesController alloc]init];
     //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
@@ -237,13 +237,13 @@ int viewWillAppearCalled;
 {
     
     [super viewWillAppear:animated];
-
-    [globals.VIDEO_PLAYER_LIST_VIEW pause];
-    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
-    globals.VIDEO_PLAYER_BOOKMARK = self.videoPlayer;
-    
-
-    
+//
+//    [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
+//    globals.VIDEO_PLAYER_BOOKMARK = self.videoPlayer;
+//    
+//
+//    
     //get all the events information which will be used to display home team, visit team
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     documentsDirectory = [paths objectAtIndex:0];
@@ -259,20 +259,20 @@ int viewWillAppearCalled;
         
     }
     
-    if(!_filterToolBoxView)
-    {
-        _filterToolBoxView = [[MyClipFilterViewController alloc]initWithTagData:globals.BOOKMARK_TAGS];
-        [_filterToolBoxView setOrigin:CGPointMake(60, 194)];
-        [_filterToolBoxView close:NO]; // is animated
-        [_filterToolBoxView onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-        [_filterToolBoxView viewDidAppear:TRUE];
-    }
-    
-    
-    globals.IS_IN_BOOKMARK_VIEW = TRUE;
-    globals.IS_IN_LIST_VIEW = FALSE;
-    globals.IS_IN_CLIP_VIEW = FALSE;
-    globals.IS_IN_FIRST_VIEW = FALSE;
+//    if(!_filterToolBoxView)
+//    {
+//        _filterToolBoxView = [[MyClipFilterViewController alloc]initWithTagData:globals.BOOKMARK_TAGS];
+//        [_filterToolBoxView setOrigin:CGPointMake(60, 194)];
+//        [_filterToolBoxView close:NO]; // is animated
+//        [_filterToolBoxView onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+//        [_filterToolBoxView viewDidAppear:TRUE];
+//    }
+//    
+//    
+//    globals.IS_IN_BOOKMARK_VIEW = TRUE;
+//    globals.IS_IN_LIST_VIEW = FALSE;
+//    globals.IS_IN_CLIP_VIEW = FALSE;
+//    globals.IS_IN_FIRST_VIEW = FALSE;
     
     if(![self.view.subviews containsObject:self.videoPlayer.view])
     {
@@ -328,13 +328,13 @@ int viewWillAppearCalled;
     
     
     //if all the new bookmark tags are received from the server or no new bookmark tag is processed, hide the progress bar;Otherwise display the progress bar to indicate the process of loading new bookmark tags
-    if (globals.DID_FINISH_RECEIVE_BOOKMARK_VIDEO || globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS <1) {
-        [progressLabel setHidden:TRUE];
-        [progressBar setHidden:TRUE];
-    }else{
-        [progressLabel setHidden:FALSE];
-        [progressBar setHidden:FALSE];
-    }
+//    if (globals.DID_FINISH_RECEIVE_BOOKMARK_VIDEO || globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS <1) {
+//        [progressLabel setHidden:TRUE];
+//        [progressBar setHidden:TRUE];
+//    }else{
+//        [progressLabel setHidden:FALSE];
+//        [progressBar setHidden:FALSE];
+//    }
     
     [self.videoPlayer pause];
     
@@ -407,7 +407,7 @@ int viewWillAppearCalled;
     //////////////////////////////////////////////
     
     self.tableActionButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-    [self.tableActionButton setFrame:CGRectMake(kiPadWidthLandscape - 100, 60, 80, 30)];
+//    [self.tableActionButton setFrame:CGRectMake(kiPadWidthLandscape - 100, 60, 80, 30)];
     self.tableActionButton.titleLabel.font = [UIFont defaultFontOfSize:18];
     [self.tableActionButton setTitle:@"" forState:UIControlStateNormal];
     [self.tableActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -432,177 +432,177 @@ int viewWillAppearCalled;
 //used to indicate loading book mark video from server
 -(void)updateTableView:(NSTimer*)timer{
     //only when all the book mark tags are received from the server,globals.DID_FINISH_RECEIVE_BOOKMARK_VIDEO will be true
-    if (!globals.DID_FINISH_RECEIVE_BOOKMARK_VIDEO) {
-        if (globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED ==0) {
-            [progressBar setProgress:0.0];
-        }
-        [progressLabel setText:@"Processing"];
-        [progressLabel setHidden:FALSE];
-        [progressBar setHidden:FALSE];
-        //when there is a book mark tag received from server, globals.RECEIVED_ONE_BOOKMARK_VIDEO will be true
-        if (globals.RECEIVED_ONE_BOOKMARK_VIDEO) {
-            //old position of the progressed bar (the blue bar)
-            float oldProgressValue = (float)(globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED-1)/(float)globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS;
-            //the duration the progress bar will increase when one new book mark tag is received
-            float progressDuration = 1.0/(float)globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS;
-            //split one progressDuration into 5 parts, then the progress bar will increase slowly instead of jumping
-            float updatedProgressValue = oldProgressValue + ((float)progressBarIndex/5.0)*progressDuration;
-            [progressBar setProgress:updatedProgressValue];
-            progressBarIndex++;
-            //if the progress bar finishes one progress duration, reload data for the tableview and reset all the variables
-            if (progressBarIndex==6) {
-                // [progressLabel setTextAlignment:NSTextAlignmentRight];
-                [self fetchedData];
-                globals.RECEIVED_ONE_BOOKMARK_VIDEO = FALSE;
-                progressBarIndex = 0;
-                //if all book mark tags are received from server, then reset all the variables
-                if (globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED ==globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS) {
-                    [progressLabel setText:@"Done!"];
-                    globals.DID_FINISH_RECEIVE_BOOKMARK_VIDEO = TRUE;
-                    globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED = 0;
-                    globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS = 0;
-                    
-                    NSMutableString *downloadsDoneMessage = [NSMutableString stringWithFormat:@"Finished downloading clips."];
-                    UIAlertView *downloadsFinishedAlert;
-                    if ([globals.BOOKMARK_QUEUE_FAILED count] > 0){
-                        downloadsDoneMessage = [@"Could not be downloaded. Please try it again later."mutableCopy];
-                        BOOL didFail = FALSE;
-                        for(NSDictionary *dict in globals.BOOKMARK_QUEUE_FAILED){
-                            
-                            NSString *videoNameStr = [[dict objectForKey:@"event"] stringByAppendingFormat:@"_%@",[[dict objectForKey:@"vidurl"] lastPathComponent]];
-                            NSString *videoFilePath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoNameStr]];
-                            if (![[NSFileManager defaultManager] fileExistsAtPath:videoFilePath]) {
-                                downloadsDoneMessage = [NSMutableString stringWithFormat:@"%@ at %@.\n%@",[[dict objectForKey:@"tag"] objectForKey:@"name"],[[dict objectForKey:@"tag"] objectForKey:@"displaytime"],downloadsDoneMessage];
-                                didFail = TRUE;
-                            }
-                        }
-                        
-                        if (didFail) {
-                            downloadsFinishedAlert = [[CustomAlertView alloc] initWithTitle:@"myplayXplay" message:downloadsDoneMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles:Nil, nil];
-                            [downloadsFinishedAlert setAccessibilityLabel:@"downloadFailedAlert"];
-                            [downloadsFinishedAlert show];
-                            //[globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:downloadsFinishedAlert];
-                        }
-                        
-                    } else {
-                        //downloadsFinishedAlert = [[UIAlertView alloc] initWithTitle:@"myplayXplay" message:downloadsDoneMessage delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-                        NSDictionary *infoDict = [NSDictionary dictionaryWithObject:@"finished downloading" forKey:@"name"];
-                        [globals.TOAST_QUEUE addObject:infoDict];
-                    }
-                    
-                    
-                    
-                    [progressLabel setHidden:TRUE];
-                    [progressBar setHidden:TRUE];
-                    //[self performSelector:@selector(hideProgress) withObject: nil afterDelay:5];
-                }
-            }
-        }
-    }
+//    if (!globals.DID_FINISH_RECEIVE_BOOKMARK_VIDEO) {
+//        if (globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED ==0) {
+//            [progressBar setProgress:0.0];
+//        }
+//        [progressLabel setText:@"Processing"];
+//        [progressLabel setHidden:FALSE];
+//        [progressBar setHidden:FALSE];
+//        //when there is a book mark tag received from server, globals.RECEIVED_ONE_BOOKMARK_VIDEO will be true
+//        if (globals.RECEIVED_ONE_BOOKMARK_VIDEO) {
+//            //old position of the progressed bar (the blue bar)
+//            float oldProgressValue = (float)(globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED-1)/(float)globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS;
+//            //the duration the progress bar will increase when one new book mark tag is received
+//            float progressDuration = 1.0/(float)globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS;
+//            //split one progressDuration into 5 parts, then the progress bar will increase slowly instead of jumping
+//            float updatedProgressValue = oldProgressValue + ((float)progressBarIndex/5.0)*progressDuration;
+//            [progressBar setProgress:updatedProgressValue];
+//            progressBarIndex++;
+//            //if the progress bar finishes one progress duration, reload data for the tableview and reset all the variables
+//            if (progressBarIndex==6) {
+//                // [progressLabel setTextAlignment:NSTextAlignmentRight];
+//                [self fetchedData];
+//                globals.RECEIVED_ONE_BOOKMARK_VIDEO = FALSE;
+//                progressBarIndex = 0;
+//                //if all book mark tags are received from server, then reset all the variables
+//                if (globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED ==globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS) {
+//                    [progressLabel setText:@"Done!"];
+//                    globals.DID_FINISH_RECEIVE_BOOKMARK_VIDEO = TRUE;
+//                    globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED = 0;
+//                    globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS = 0;
+//                    
+//                    NSMutableString *downloadsDoneMessage = [NSMutableString stringWithFormat:@"Finished downloading clips."];
+//                    UIAlertView *downloadsFinishedAlert;
+//                    if ([globals.BOOKMARK_QUEUE_FAILED count] > 0){
+//                        downloadsDoneMessage = [@"Could not be downloaded. Please try it again later."mutableCopy];
+//                        BOOL didFail = FALSE;
+//                        for(NSDictionary *dict in globals.BOOKMARK_QUEUE_FAILED){
+//                            
+//                            NSString *videoNameStr = [[dict objectForKey:@"event"] stringByAppendingFormat:@"_%@",[[dict objectForKey:@"vidurl"] lastPathComponent]];
+//                            NSString *videoFilePath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoNameStr]];
+//                            if (![[NSFileManager defaultManager] fileExistsAtPath:videoFilePath]) {
+//                                downloadsDoneMessage = [NSMutableString stringWithFormat:@"%@ at %@.\n%@",[[dict objectForKey:@"tag"] objectForKey:@"name"],[[dict objectForKey:@"tag"] objectForKey:@"displaytime"],downloadsDoneMessage];
+//                                didFail = TRUE;
+//                            }
+//                        }
+//                        
+//                        if (didFail) {
+//                            downloadsFinishedAlert = [[CustomAlertView alloc] initWithTitle:@"myplayXplay" message:downloadsDoneMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles:Nil, nil];
+//                            [downloadsFinishedAlert setAccessibilityLabel:@"downloadFailedAlert"];
+//                            [downloadsFinishedAlert show];
+//                            //[globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:downloadsFinishedAlert];
+//                        }
+//                        
+//                    } else {
+//                        //downloadsFinishedAlert = [[UIAlertView alloc] initWithTitle:@"myplayXplay" message:downloadsDoneMessage delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+//                        NSDictionary *infoDict = [NSDictionary dictionaryWithObject:@"finished downloading" forKey:@"name"];
+//                        [globals.TOAST_QUEUE addObject:infoDict];
+//                    }
+//                    
+//                    
+//                    
+//                    [progressLabel setHidden:TRUE];
+//                    [progressBar setHidden:TRUE];
+//                    //[self performSelector:@selector(hideProgress) withObject: nil afterDelay:5];
+//                }
+//            }
+//        }
+//    }
 }
 
 //get all the bookmark tags from the global bookmark dictionary
 - (void)fetchedData
 {
-    for(int i=0;i<4;i++)
-    {
-        NSMutableArray *sectionArray = [[NSMutableArray alloc]init];
-        [typesOfTags addObject:sectionArray];
-    }
-    
-    //NSMutableArray *allBookmarkTags; // contains the bookmarks that will be displayed after iterating through the global bookmarks
-    
-    
-    hasBeenOrdered=FALSE;
-    
-    //url for the plist where the ordered array of bookmarks will be stored -- ordered by user
-    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
-    int orderedTagCount = [[NSArray arrayWithContentsOfFile:orderedBookmarkPlist] count];
-    
-    if(!fileManager)
-    {
-        fileManager = [NSFileManager defaultManager]; //make sure we have a filemanager
-    }
-    
-    //now grab the bookmark tags from the global dictionary, we need to iterate through and add all of them to an array so we can get the total number of bookmarks in the end
-    NSMutableArray *allBMTags = [[NSMutableArray alloc] init]; //temporary array to add the thumb items to
-    for(NSDictionary *d in [globals.BOOKMARK_TAGS allValues])
-    {
-        [allBMTags addObjectsFromArray:[d allValues]];
-    }
-    //if there is no downloaded tags or the total bookmark tags'count and ordered bookmark tags' count are not equal, and the ordered bookmark plist file exists, we need to delete this file
-    if((allBMTags.count == 0 || allBMTags.count != orderedTagCount )&& [fileManager fileExistsAtPath:orderedBookmarkPlist]){
-        [fileManager removeItemAtPath:orderedBookmarkPlist error:nil];
-    }
-    //if ordered bookmark plist file not exist or the total number of bookmark tags are greater than the number of ordered bookmark tags, we need to
-    //use the array of all bookmark tags for this view to display
-    if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
-    {
-        allTags = allBMTags;
-        
-    }else{
-        //if the user has ordered and they aren't filtering then grab the ordered list from the plist
-        hasBeenOrdered=TRUE;
-        allTags =[[NSMutableArray alloc] initWithContentsOfFile:orderedBookmarkPlist];
-    }
-    
-    
-    //allTags = [allBookmarkTags mutableCopy];
-    
-    //after adding all of the old bookmarks and the new bookmarks to the array we need to make sure we write the new array of bookmarks in whichever order they are in to the plist
-    [allTags writeToFile:orderedBookmarkPlist atomically:TRUE];
-    
-    NSMutableArray *tempArray = [[NSMutableArray alloc]init];
-    for(NSDictionary *tag in allTags){
-        if ([tag isKindOfClass:[NSDictionary class]]) {
-            if ([tag objectForKey:@"colour"] != nil && [[tag objectForKey:@"type"]integerValue]!=3) {
-                //type == 2, line tag,type == 0 normal tag, type == 10, strength tag;if the tag was deleted, type value will be 3 and "deleted" value will be 1
-                if([[tag objectForKey:@"type"] intValue]==0||[[tag objectForKey:@"type"] intValue]==100)
-                {
-                    [tempArray addObject:tag];
-                    if(![[typesOfTags objectAtIndex:0] containsObject:[tag  objectForKey:@"name"]])
-                    {
-                        [[typesOfTags objectAtIndex:0] addObject:[tag  objectForKey:@"name"]];
-                    }
-                    
-                }else if([[tag objectForKey:@"type"] intValue]==10){
-                    [tempArray addObject:tag];
-                    if(![[typesOfTags objectAtIndex:2] containsObject:[tag  objectForKey:@"name"]])
-                    {
-                        [[typesOfTags objectAtIndex:2] addObject:[tag  objectForKey:@"name"]];
-                    }
-                    
-                }else{
-                    [tempArray addObject:tag];
-                    if(![[typesOfTags objectAtIndex:1] containsObject:[tag  objectForKey:@"name"]])
-                    {
-                        [[typesOfTags objectAtIndex:1] addObject:[tag  objectForKey:@"name"]];
-                    }
-                }
-                
-            }
-        }
-    }
-    
-    self.tagsToDisplay=[tempArray mutableCopy];
-    
-    if (self.tagsToDisplay.count > 0) {
-        
-        [self.tableView reloadData];
-    }
-    
-    
-    if ([globals.TAGGED_ATTS_BOOKMARK count] >0){
-        if(![self.view.subviews containsObject:_filterToolBoxView.view])
-        {
-            [_filterToolBoxView.view setAlpha:0.95f];
-            [self.view addSubview:_filterToolBoxView.view];
-            
-        }
-        //  [self.view insertSubview:filterToolBoxListViewController.view atIndex:self.view.subviews.count-1];
-//        [_filterToolBoxView viewDidAppear:TRUE];
-    }
-    
+//    for(int i=0;i<4;i++)
+//    {
+//        NSMutableArray *sectionArray = [[NSMutableArray alloc]init];
+//        [typesOfTags addObject:sectionArray];
+//    }
+//    
+//    //NSMutableArray *allBookmarkTags; // contains the bookmarks that will be displayed after iterating through the global bookmarks
+//    
+//    
+//    hasBeenOrdered=FALSE;
+//    
+//    //url for the plist where the ordered array of bookmarks will be stored -- ordered by user
+//    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
+//    int orderedTagCount = [[NSArray arrayWithContentsOfFile:orderedBookmarkPlist] count];
+//    
+//    if(!fileManager)
+//    {
+//        fileManager = [NSFileManager defaultManager]; //make sure we have a filemanager
+//    }
+//    
+//    //now grab the bookmark tags from the global dictionary, we need to iterate through and add all of them to an array so we can get the total number of bookmarks in the end
+//    NSMutableArray *allBMTags = [[NSMutableArray alloc] init]; //temporary array to add the thumb items to
+//    for(NSDictionary *d in [globals.BOOKMARK_TAGS allValues])
+//    {
+//        [allBMTags addObjectsFromArray:[d allValues]];
+//    }
+//    //if there is no downloaded tags or the total bookmark tags'count and ordered bookmark tags' count are not equal, and the ordered bookmark plist file exists, we need to delete this file
+//    if((allBMTags.count == 0 || allBMTags.count != orderedTagCount )&& [fileManager fileExistsAtPath:orderedBookmarkPlist]){
+//        [fileManager removeItemAtPath:orderedBookmarkPlist error:nil];
+//    }
+//    //if ordered bookmark plist file not exist or the total number of bookmark tags are greater than the number of ordered bookmark tags, we need to
+//    //use the array of all bookmark tags for this view to display
+//    if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
+//    {
+//        allTags = allBMTags;
+//        
+//    }else{
+//        //if the user has ordered and they aren't filtering then grab the ordered list from the plist
+//        hasBeenOrdered=TRUE;
+//        allTags =[[NSMutableArray alloc] initWithContentsOfFile:orderedBookmarkPlist];
+//    }
+//    
+//    
+//    //allTags = [allBookmarkTags mutableCopy];
+//    
+//    //after adding all of the old bookmarks and the new bookmarks to the array we need to make sure we write the new array of bookmarks in whichever order they are in to the plist
+//    [allTags writeToFile:orderedBookmarkPlist atomically:TRUE];
+//    
+//    NSMutableArray *tempArray = [[NSMutableArray alloc]init];
+//    for(NSDictionary *tag in allTags){
+//        if ([tag isKindOfClass:[NSDictionary class]]) {
+//            if ([tag objectForKey:@"colour"] != nil && [[tag objectForKey:@"type"]integerValue]!=3) {
+//                //type == 2, line tag,type == 0 normal tag, type == 10, strength tag;if the tag was deleted, type value will be 3 and "deleted" value will be 1
+//                if([[tag objectForKey:@"type"] intValue]==0||[[tag objectForKey:@"type"] intValue]==100)
+//                {
+//                    [tempArray addObject:tag];
+//                    if(![[typesOfTags objectAtIndex:0] containsObject:[tag  objectForKey:@"name"]])
+//                    {
+//                        [[typesOfTags objectAtIndex:0] addObject:[tag  objectForKey:@"name"]];
+//                    }
+//                    
+//                }else if([[tag objectForKey:@"type"] intValue]==10){
+//                    [tempArray addObject:tag];
+//                    if(![[typesOfTags objectAtIndex:2] containsObject:[tag  objectForKey:@"name"]])
+//                    {
+//                        [[typesOfTags objectAtIndex:2] addObject:[tag  objectForKey:@"name"]];
+//                    }
+//                    
+//                }else{
+//                    [tempArray addObject:tag];
+//                    if(![[typesOfTags objectAtIndex:1] containsObject:[tag  objectForKey:@"name"]])
+//                    {
+//                        [[typesOfTags objectAtIndex:1] addObject:[tag  objectForKey:@"name"]];
+//                    }
+//                }
+//                
+//            }
+//        }
+//    }
+//    
+//    self.tagsToDisplay=[tempArray mutableCopy];
+//    
+//    if (self.tagsToDisplay.count > 0) {
+//        
+//        [self.tableView reloadData];
+//    }
+//    
+//    
+//    if ([globals.TAGGED_ATTS_BOOKMARK count] >0){
+//        if(![self.view.subviews containsObject:_filterToolBoxView.view])
+//        {
+//            [_filterToolBoxView.view setAlpha:0.95f];
+//            [self.view addSubview:_filterToolBoxView.view];
+//            
+//        }
+//        //  [self.view insertSubview:filterToolBoxListViewController.view atIndex:self.view.subviews.count-1];
+////        [_filterToolBoxView viewDidAppear:TRUE];
+//    }
+//    
 }
 
 
@@ -659,13 +659,13 @@ int viewWillAppearCalled;
         [cell.tagTime setFont:[UIFont boldSystemFontOfSize:20.f]];
         [cell updateIndexWith:indexPath.row+1];
         //when the tag is viewed, the viewed information is saved in the dictionary:"globals.CURRENT_EVENT_THUMBNAILS".So if repopulate the table view, we should always check the latest tag
-        NSMutableDictionary *updatedTag = [[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"] ] objectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
+//        NSMutableDictionary *updatedTag = [[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"] ] objectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
         
         //if the tag does not exist in globals.BOOKMARK_TAGS, donot display it
-        if(updatedTag == nil){
-            [self.tagsToDisplay removeObject:tag];
-            [self.tableView reloadData];
-        }
+//        if(updatedTag == nil){
+//            [self.tagsToDisplay removeObject:tag];
+//            [self.tableView reloadData];
+//        }
         
     }
 
@@ -698,133 +698,133 @@ int viewWillAppearCalled;
     
 - (void)reorderTableView:(JPReorderTableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-        [headerBar setHeaderBarSortType:HBSortNone];
-    id object = [self.tagsToDisplay objectAtIndex:sourceIndexPath.row]; //object thats being dragged
-    [self.tagsToDisplay removeObjectAtIndex:sourceIndexPath.row];//delete it from where it is
-    [self.tagsToDisplay insertObject:object atIndex:destinationIndexPath.row];//add it back to where it should be
-    
-    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
-    
-    //boring stuff to make sure filemanager actually exists
-    if(!fileManager)
-    {
-        fileManager = [NSFileManager defaultManager];
-    }
-    if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
-    {
-        [fileManager createFileAtPath:orderedBookmarkPlist contents:nil attributes:nil];
-    }
-    
-    //need to write here so that we can retain the information if user exits the window or the app
-    [self.tagsToDisplay writeToFile:orderedBookmarkPlist atomically:TRUE]; //write to the ordered bookmark plist
+//        [headerBar setHeaderBarSortType:HBSortNone];
+//    id object = [self.tagsToDisplay objectAtIndex:sourceIndexPath.row]; //object thats being dragged
+//    [self.tagsToDisplay removeObjectAtIndex:sourceIndexPath.row];//delete it from where it is
+//    [self.tagsToDisplay insertObject:object atIndex:destinationIndexPath.row];//add it back to where it should be
+//    
+//    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
+//    
+//    //boring stuff to make sure filemanager actually exists
+//    if(!fileManager)
+//    {
+//        fileManager = [NSFileManager defaultManager];
+//    }
+//    if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
+//    {
+//        [fileManager createFileAtPath:orderedBookmarkPlist contents:nil attributes:nil];
+//    }
+//    
+//    //need to write here so that we can retain the information if user exits the window or the app
+//    [self.tagsToDisplay writeToFile:orderedBookmarkPlist atomically:TRUE]; //write to the ordered bookmark plist
 }
     
 
 - (void)reorderTableView:(JPReorderTableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    if (teleImage) {
-        [teleImage removeFromSuperview];
-        teleImage=nil;
-    }
-    
-    if (self.videoPlayer.teleBigView) {
-        [self.videoPlayer.teleBigView removeFromSuperview];
-        self.videoPlayer.teleBigView=nil;
-    }
-    
-    wasPlayingIndexPath = indexPath;
-    
-    cellSelectedNumber = 1;
-    NSDictionary *data = [self tagAtIndexPath:indexPath];
-    selectedTag = [[[globals.BOOKMARK_TAGS objectForKey:[data objectForKey:@"event"]] objectForKey:[NSString stringWithFormat:@"%@",[data objectForKey:@"id"]]]mutableCopy];
-    
-    if (![globals.TAGS_WERE_SELECTED_BMVIEW containsObject:[selectedTag objectForKey:@"id"]]) {
-        [globals.TAGS_WERE_SELECTED_BMVIEW addObject:[selectedTag objectForKey:@"id"]];
-    }
-    globals.TAG_WAS_SELECTED_BMVIEW = [[selectedTag objectForKey:@"id"]intValue];
-    
-    
-    if([[selectedTag objectForKey:@"type"] intValue]==4)
-    {
-        //playback telestration
-        globals.IS_PLAYBACK_TELE = TRUE;
-        
-        //reset video url to emtpy string for avplayer
-        NSURL *videoURL = [NSURL URLWithString:@""];
-        [self.videoPlayer setPlayerWithURL:videoURL];
-        
-        if(self.videoPlayer.isFullScreen){
-            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 80, 1024, 576)];
-        }else{
-            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height)];
-        }
-        
-        //globals.IS_TELE=TRUE;
-        
-        NSString *teleFilePath;
-        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
-            teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
-        }
-        [teleImage setImage:[UIImage imageWithContentsOfFile:teleFilePath]];
-        
-        self.videoPlayer.teleBigView = teleImage;
-        globals.CURRENT_PLAYBACK_TAG = selectedTag;
-        [self.videoPlayer.view addSubview:self.videoPlayer.teleBigView];
-        
-        if (teleButton) {
-            teleButton.hidden = TRUE;
-        }
-        
-    }else{
-        
-        //playing tag from book mark video folder
-        NSString *tagVideoPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[selectedTag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[selectedTag objectForKey:@"id"]]]];
-        //when play back from ios device storage set "nsurl" by using "fileurlwithpath" instead of "urlwithstring"
-        NSURL *videoURL = [NSURL URLWithString:[[NSString stringWithFormat:@"file://%@",tagVideoPath] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        [self.videoPlayer setVideoURL:videoURL];
-        
-        [self.videoPlayer setPlayerWithURL:videoURL];
-        
-        [self.videoPlayer play];
-        
-        if (!videoPlayer.timeObserver) {
-            [videoPlayer addPlayerItemTimeObserver];
-        }
-        
-    }
-    
-    currentPlayingTag = [selectedTag copy];
-    /*TO DELETE seek controlls
-    tagEventName.text = [currentPlayingTag objectForKey:@"name"];
-    */
-    
-#pragma mark Rich2 when an item is selected
-
-    
-
-    commentingField.enabled = YES;
-    [commentingField clear];
-    commentingField.text = ( [selectedTag objectForKey:@"comment"] ) ? [selectedTag objectForKey:@"comment"] : @"";
-    commentingField.ratingScale.rating = [[selectedTag objectForKey:@"rating"]integerValue];
-
-    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
-    if (newFullScreenVideoControlBar)        [newFullScreenVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
-
-    
-    // End for richard added
-    
-    
-    NSString *tag_id = [NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]];
-    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:tag_id];
-    
-    tagId = [selectedTag objectForKey:@"id"];
-    
-    //play video
-    int duration = [[selectedTag objectForKey:@"duration"] integerValue];
-    globals.HOME_END_TIME = duration;
-    
+//    if (teleImage) {
+//        [teleImage removeFromSuperview];
+//        teleImage=nil;
+//    }
+//    
+//    if (self.videoPlayer.teleBigView) {
+//        [self.videoPlayer.teleBigView removeFromSuperview];
+//        self.videoPlayer.teleBigView=nil;
+//    }
+//    
+//    wasPlayingIndexPath = indexPath;
+//    
+//    cellSelectedNumber = 1;
+//    NSDictionary *data = [self tagAtIndexPath:indexPath];
+//    selectedTag = [[[globals.BOOKMARK_TAGS objectForKey:[data objectForKey:@"event"]] objectForKey:[NSString stringWithFormat:@"%@",[data objectForKey:@"id"]]]mutableCopy];
+//    
+//    if (![globals.TAGS_WERE_SELECTED_BMVIEW containsObject:[selectedTag objectForKey:@"id"]]) {
+//        [globals.TAGS_WERE_SELECTED_BMVIEW addObject:[selectedTag objectForKey:@"id"]];
+//    }
+//    globals.TAG_WAS_SELECTED_BMVIEW = [[selectedTag objectForKey:@"id"]intValue];
+//    
+//    
+//    if([[selectedTag objectForKey:@"type"] intValue]==4)
+//    {
+//        //playback telestration
+//        globals.IS_PLAYBACK_TELE = TRUE;
+//        
+//        //reset video url to emtpy string for avplayer
+//        NSURL *videoURL = [NSURL URLWithString:@""];
+//        [self.videoPlayer setPlayerWithURL:videoURL];
+//        
+//        if(self.videoPlayer.isFullScreen){
+//            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 80, 1024, 576)];
+//        }else{
+//            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height)];
+//        }
+//        
+//        //globals.IS_TELE=TRUE;
+//        
+//        NSString *teleFilePath;
+//        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
+//        if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
+//            teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
+//        }
+//        [teleImage setImage:[UIImage imageWithContentsOfFile:teleFilePath]];
+//        
+//        self.videoPlayer.teleBigView = teleImage;
+//        globals.CURRENT_PLAYBACK_TAG = selectedTag;
+//        [self.videoPlayer.view addSubview:self.videoPlayer.teleBigView];
+//        
+//        if (teleButton) {
+//            teleButton.hidden = TRUE;
+//        }
+//        
+//    }else{
+//        
+//        //playing tag from book mark video folder
+//        NSString *tagVideoPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[selectedTag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[selectedTag objectForKey:@"id"]]]];
+//        //when play back from ios device storage set "nsurl" by using "fileurlwithpath" instead of "urlwithstring"
+//        NSURL *videoURL = [NSURL URLWithString:[[NSString stringWithFormat:@"file://%@",tagVideoPath] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+//        [self.videoPlayer setVideoURL:videoURL];
+//        
+//        [self.videoPlayer setPlayerWithURL:videoURL];
+//        
+//        [self.videoPlayer play];
+//        
+//        if (!videoPlayer.timeObserver) {
+//            [videoPlayer addPlayerItemTimeObserver];
+//        }
+//        
+//    }
+//    
+//    currentPlayingTag = [selectedTag copy];
+//    /*TO DELETE seek controlls
+//    tagEventName.text = [currentPlayingTag objectForKey:@"name"];
+//    */
+//    
+//#pragma mark Rich2 when an item is selected
+//
+//    
+//
+//    commentingField.enabled = YES;
+//    [commentingField clear];
+//    commentingField.text = ( [selectedTag objectForKey:@"comment"] ) ? [selectedTag objectForKey:@"comment"] : @"";
+//    commentingField.ratingScale.rating = [[selectedTag objectForKey:@"rating"]integerValue];
+//
+//    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+//    if (newFullScreenVideoControlBar)        [newFullScreenVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+//
+//    
+//    // End for richard added
+//    
+//    
+//    NSString *tag_id = [NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]];
+//    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:tag_id];
+//    
+//    tagId = [selectedTag objectForKey:@"id"];
+//    
+//    //play video
+//    int duration = [[selectedTag objectForKey:@"duration"] integerValue];
+//    globals.HOME_END_TIME = duration;
+//    
   /*DELETE
        [slowMoButton setHidden:FALSE];
 
@@ -893,13 +893,13 @@ int viewWillAppearCalled;
 //after viewing a tag, save it into the tagsDidViewed.plist file
 -(void)saveTagsDidViewed:(id)tag
 {
-    NSString *tagsDidViewedPath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:@"tagsDidViewed.plist"];
-    fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath: tagsDidViewedPath])
-    {
-        tagsDidViewedPath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent: [NSString stringWithFormat: @"tagsDidViewed.plist"] ];
-    }
-    [tag writeToFile:tagsDidViewedPath atomically:YES];
+//    NSString *tagsDidViewedPath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:@"tagsDidViewed.plist"];
+//    fileManager = [NSFileManager defaultManager];
+//    if (![fileManager fileExistsAtPath: tagsDidViewedPath])
+//    {
+//        tagsDidViewedPath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent: [NSString stringWithFormat: @"tagsDidViewed.plist"] ];
+//    }
+//    [tag writeToFile:tagsDidViewedPath atomically:YES];
 }
     
 #pragma mark - Swipe Buttons Methods
@@ -949,126 +949,126 @@ int viewWillAppearCalled;
 //catch response of deletion alertview adn do thigns with it
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    //check if the alert view is for deleting tags or sharing tags to facebook
-    if ([alertView.accessibilityLabel isEqualToString:@"deletealert"]) {
-        if (buttonIndex == 0)
-        {
-            NSMutableArray *tempArr = [self.tagsToDisplay mutableCopy];
-            // delete the tags and also send the information to the server
-            NSMutableArray *selectedCellIndexArr = [self.tableView.selectedRows mutableCopy];
-            for (NSNumber *rowNumber in selectedCellIndexArr) {
-                
-                NSInteger row = [rowNumber integerValue];
-                NSMutableDictionary *tag = [tempArr objectAtIndex:row];
-                
-                // if current playing tag is deleted, stop the video
-                if ([[tag objectForKey:@"id"] isEqual:[currentPlayingTag objectForKey:@"id"]]) {
-                    [self.videoPlayer pause];
-                }
-                
-                //tempArr will used to update tagsToDisplay array; if you remove obj directly from tagsToDisplay array , [self tagAtIndexPath:indexPath] will have error
-                [tempArr removeObject:tag];
-                
-                
-                //remove  the tag marker
-                [[[globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%f",[[tag objectForKey:@"id"] doubleValue] ]] markerView] removeFromSuperview];
-                
-                //delete the tag from the global dictionary of tags
-                NSString *tag_id = [NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]];
-                
-                [tag setObject:@"0" forKey:@"bookmark"];
-                //reset tag in global tag dictionary(globals.CURRENT_EVENT_THUMBNAILS)
-                //[globals.CURRENT_EVENT_THUMBNAILS setObject:tag forKey:tag_id];
-                //delete tag from global book mark tag dictionary (globals.BOOKMARK_TAGS_CURRENT_EVENT)
-                if (globals.BOOKMARK_TAGS.count > 0 && [[[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"]] allKeys] containsObject:tag_id]) {
-                    [[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"]] removeObjectForKey:tag_id];
-                }
-                //delete the video of the book mark tag
-                NSString *tagDataPath;
-                if ([[tag objectForKey:@"type"]intValue] != 4) {
-                    //path for video
-                    tagDataPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[tag objectForKey:@"event"] stringByAppendingFormat:@"_%@",[[tag objectForKey:@"vidurl"] lastPathComponent]]]];
-                }else{
-                    //path for image
-                    NSString *imagePathStr = [NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]];
-                    
-                    tagDataPath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:imagePathStr];
-                }
-                
-                [fileManager removeItemAtPath:tagDataPath error:nil];
-                
-                //if game no longer has any saved clips in it, remove the game folder TODO
-                
-                //current absolute time in seconds
-                double currentSystemTime = CACurrentMediaTime();
-                
-                //send the updated information to the server
-                NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"0",@"bookmark",globals.EVENT_NAME,@"event",userIdd,@"user",[tag objectForKey:@"id"],@"id",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime", nil];
-                NSError *error;
-                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-                NSString *jsonString;
-                if (! jsonData) {
-                } else {
-                    jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                    jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                }
-                
-                
-                NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-                
-                //callback method and parent view controller reference for the appqueue
-                NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:nil],self, nil];
-                NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-                NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-                [globals.APP_QUEUE enqueue:url dict:instObj];
-            }
-            //[globals.CURRENT_EVENT_THUMBNAILS writeToFile:[[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"] atomically:YES];
-            
-            [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
-            
-            //update the tagsToDisplay array and reload the table view
-            [self.tagsToDisplay removeAllObjects];
-            
-            if (globals.BOOKMARK_TAGS.count > 0) {
-                self.tagsToDisplay = [tempArr mutableCopy];
-            }
-            
-            //make sure we update the ordered bookmarks with the new array (delete cells)
-            NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
-            
-            if(!fileManager)
-            {
-                fileManager = [NSFileManager defaultManager];
-            }
-            
-            if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
-            {
-                [fileManager createFileAtPath:orderedBookmarkPlist contents:nil attributes:nil];
-            }
-            if (self.tagsToDisplay.count > 0) {
-                //save the undeleted tags to the plist file
-                [self.tagsToDisplay writeToFile:orderedBookmarkPlist atomically:TRUE];
-            }else{
-                //if all tags deleted, delete the file
-                [fileManager removeItemAtPath:orderedBookmarkPlist error:nil];
-            }
-            [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-            
-            [self.tableView reloadData];
-            
-        }
-        else //(buttonIndex == 1)
-        {
-        }
-        [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-        [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
-        
-    }
-    else if ([alertView.accessibilityLabel isEqualToString:@"downloadFailedAlert"]) {
-        
-        [globals.BOOKMARK_QUEUE_FAILED removeAllObjects];
-        [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
-    }
+//    //check if the alert view is for deleting tags or sharing tags to facebook
+//    if ([alertView.accessibilityLabel isEqualToString:@"deletealert"]) {
+//        if (buttonIndex == 0)
+//        {
+//            NSMutableArray *tempArr = [self.tagsToDisplay mutableCopy];
+//            // delete the tags and also send the information to the server
+//            NSMutableArray *selectedCellIndexArr = [self.tableView.selectedRows mutableCopy];
+//            for (NSNumber *rowNumber in selectedCellIndexArr) {
+//                
+//                NSInteger row = [rowNumber integerValue];
+//                NSMutableDictionary *tag = [tempArr objectAtIndex:row];
+//                
+//                // if current playing tag is deleted, stop the video
+//                if ([[tag objectForKey:@"id"] isEqual:[currentPlayingTag objectForKey:@"id"]]) {
+//                    [self.videoPlayer pause];
+//                }
+//                
+//                //tempArr will used to update tagsToDisplay array; if you remove obj directly from tagsToDisplay array , [self tagAtIndexPath:indexPath] will have error
+//                [tempArr removeObject:tag];
+//                
+//                
+//                //remove  the tag marker
+////                [[[globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%f",[[tag objectForKey:@"id"] doubleValue] ]] markerView] removeFromSuperview];
+//                
+//                //delete the tag from the global dictionary of tags
+//                NSString *tag_id = [NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]];
+//                
+//                [tag setObject:@"0" forKey:@"bookmark"];
+//                //reset tag in global tag dictionary(globals.CURRENT_EVENT_THUMBNAILS)
+//                //[globals.CURRENT_EVENT_THUMBNAILS setObject:tag forKey:tag_id];
+//                //delete tag from global book mark tag dictionary (globals.BOOKMARK_TAGS_CURRENT_EVENT)
+////                if (globals.BOOKMARK_TAGS.count > 0 && [[[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"]] allKeys] containsObject:tag_id]) {
+////                    [[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"]] removeObjectForKey:tag_id];
+////                }
+//                //delete the video of the book mark tag
+//                NSString *tagDataPath;
+//                if ([[tag objectForKey:@"type"]intValue] != 4) {
+//                    //path for video
+//                    tagDataPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[tag objectForKey:@"event"] stringByAppendingFormat:@"_%@",[[tag objectForKey:@"vidurl"] lastPathComponent]]]];
+//                }else{
+//                    //path for image
+//                    NSString *imagePathStr = [NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]];
+//                    
+//                    tagDataPath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:imagePathStr];
+//                }
+//                
+//                [fileManager removeItemAtPath:tagDataPath error:nil];
+//                
+//                //if game no longer has any saved clips in it, remove the game folder TODO
+//                
+//                //current absolute time in seconds
+//                double currentSystemTime = CACurrentMediaTime();
+//                
+//                //send the updated information to the server
+//                NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"0",@"bookmark",globals.EVENT_NAME,@"event",userIdd,@"user",[tag objectForKey:@"id"],@"id",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime", nil];
+//                NSError *error;
+//                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//                NSString *jsonString;
+//                if (! jsonData) {
+//                } else {
+//                    jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//                    jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//                }
+//                
+//                
+//                NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//                
+//                //callback method and parent view controller reference for the appqueue
+//                NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:nil],self, nil];
+//                NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
+//                NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//                [globals.APP_QUEUE enqueue:url dict:instObj];
+//            }
+//            //[globals.CURRENT_EVENT_THUMBNAILS writeToFile:[[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"] atomically:YES];
+//            
+//            [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
+//            
+//            //update the tagsToDisplay array and reload the table view
+//            [self.tagsToDisplay removeAllObjects];
+//            
+//            if (globals.BOOKMARK_TAGS.count > 0) {
+//                self.tagsToDisplay = [tempArr mutableCopy];
+//            }
+//            
+//            //make sure we update the ordered bookmarks with the new array (delete cells)
+//            NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
+//            
+//            if(!fileManager)
+//            {
+//                fileManager = [NSFileManager defaultManager];
+//            }
+//            
+//            if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
+//            {
+//                [fileManager createFileAtPath:orderedBookmarkPlist contents:nil attributes:nil];
+//            }
+//            if (self.tagsToDisplay.count > 0) {
+//                //save the undeleted tags to the plist file
+//                [self.tagsToDisplay writeToFile:orderedBookmarkPlist atomically:TRUE];
+//            }else{
+//                //if all tags deleted, delete the file
+//                [fileManager removeItemAtPath:orderedBookmarkPlist error:nil];
+//            }
+//            [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//            
+//            [self.tableView reloadData];
+//            
+//        }
+//        else //(buttonIndex == 1)
+//        {
+//        }
+//        [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//        [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
+//        
+//    }
+//    else if ([alertView.accessibilityLabel isEqualToString:@"downloadFailedAlert"]) {
+//        
+//        [globals.BOOKMARK_QUEUE_FAILED removeAllObjects];
+//        [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
+//    }
 }
 
 
@@ -1081,52 +1081,52 @@ int viewWillAppearCalled;
     
     //handle offline mode, save comment information in local storage
     BOOL addToCurrentEventThumbnails = FALSE;
-    if ([globals.EVENT_NAME isEqualToString:@"live" ]){
-        if ([globals.CURRENT_EVENT_THUMBNAILS count]){
-            NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:[[globals.CURRENT_EVENT_THUMBNAILS allKeys] objectAtIndex:0]];
-            NSString *liveName = [tag objectForKey:@"event"];
-            if ([[selectedTag objectForKey:@"event"] isEqualToString:liveName]){
-                addToCurrentEventThumbnails = TRUE;
-            }
-        }else{
-            addToCurrentEventThumbnails = FALSE;
-        }
-    }
+//    if ([globals.EVENT_NAME isEqualToString:@"live" ]){
+//        if ([globals.CURRENT_EVENT_THUMBNAILS count]){
+//            NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:[[globals.CURRENT_EVENT_THUMBNAILS allKeys] objectAtIndex:0]];
+//            NSString *liveName = [tag objectForKey:@"event"];
+//            if ([[selectedTag objectForKey:@"event"] isEqualToString:liveName]){
+//                addToCurrentEventThumbnails = TRUE;
+//            }
+//        }else{
+//            addToCurrentEventThumbnails = FALSE;
+//        }
+//    }
     
-    if ([[selectedTag objectForKey:@"event"] isEqualToString:globals.EVENT_NAME]){
-        addToCurrentEventThumbnails = TRUE;
-    }
-    
-    if (!addToCurrentEventThumbnails){
-        [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
-    } else {
-        [globals.CURRENT_EVENT_THUMBNAILS setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
-    }
-    
-    //if ([[selectedTag objectForKey:@"bookmark"]integerValue] ==1) {
-    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
-    [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
-    // }
-    
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",recievedRating+1],@"rating",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[selectedTag objectForKey:@"event"],@"event",userIdd,@"user",tagId,@"id", nil];
-    
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *jsonString;
-    if (jsonData)
-    {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(tagModCallback:)],self, nil];
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    [globals.APP_QUEUE enqueue:url dict:instObj];
+//    if ([[selectedTag objectForKey:@"event"] isEqualToString:globals.EVENT_NAME]){
+//        addToCurrentEventThumbnails = TRUE;
+//    }
+//    
+//    if (!addToCurrentEventThumbnails){
+//        [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
+//    } else {
+//        [globals.CURRENT_EVENT_THUMBNAILS setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
+//    }
+//    
+//    //if ([[selectedTag objectForKey:@"bookmark"]integerValue] ==1) {
+//    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
+//    [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
+//    // }
+//    
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    
+//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",recievedRating+1],@"rating",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[selectedTag objectForKey:@"event"],@"event",userIdd,@"user",tagId,@"id", nil];
+//    
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//    NSString *jsonString;
+//    if (jsonData)
+//    {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(tagModCallback:)],self, nil];
+//    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
+//    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    [globals.APP_QUEUE enqueue:url dict:instObj];
     
     
 }
@@ -1137,50 +1137,50 @@ int viewWillAppearCalled;
     NSString *comment = commentingField.textField.text;
     [selectedTag setValue:comment forKey:@"comment"];
     
-    BOOL addToCurrentEventThumbnails = FALSE;
-    if ([globals.EVENT_NAME isEqualToString:@"live" ]){
-        if ([globals.CURRENT_EVENT_THUMBNAILS count]){
-            NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:[[globals.CURRENT_EVENT_THUMBNAILS allKeys] objectAtIndex:0]];
-            NSString *liveName = [tag objectForKey:@"event"];
-            if ([[selectedTag objectForKey:@"event"] isEqualToString:liveName]){
-                addToCurrentEventThumbnails = TRUE;
-            }
-        }
-    }
-    
-    if ([[selectedTag objectForKey:@"event"] isEqualToString:globals.EVENT_NAME]){
-        addToCurrentEventThumbnails = TRUE;
-    }
-    
-    if (addToCurrentEventThumbnails){
-        [globals.CURRENT_EVENT_THUMBNAILS setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
-    }
-    
-    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
-    
-    [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
-    
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:comment,@"comment",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[selectedTag objectForKey:@"event"] ,@"event",userIdd,@"user",tagId,@"id", nil];
-    
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    
-    
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(tagModCallback:)],self,nil];
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-    NSDictionary *instObj  = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    [globals.APP_QUEUE enqueue:url dict:instObj];
-    
+//    BOOL addToCurrentEventThumbnails = FALSE;
+//    if ([globals.EVENT_NAME isEqualToString:@"live" ]){
+//        if ([globals.CURRENT_EVENT_THUMBNAILS count]){
+//            NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:[[globals.CURRENT_EVENT_THUMBNAILS allKeys] objectAtIndex:0]];
+//            NSString *liveName = [tag objectForKey:@"event"];
+//            if ([[selectedTag objectForKey:@"event"] isEqualToString:liveName]){
+//                addToCurrentEventThumbnails = TRUE;
+//            }
+//        }
+//    }
+//    
+//    if ([[selectedTag objectForKey:@"event"] isEqualToString:globals.EVENT_NAME]){
+//        addToCurrentEventThumbnails = TRUE;
+//    }
+//    
+//    if (addToCurrentEventThumbnails){
+//        [globals.CURRENT_EVENT_THUMBNAILS setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
+//    }
+//    
+//    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
+//    
+//    [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
+//    
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    
+//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:comment,@"comment",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[selectedTag objectForKey:@"event"] ,@"event",userIdd,@"user",tagId,@"id", nil];
+//    
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    
+//    
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(tagModCallback:)],self,nil];
+//    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
+//    NSDictionary *instObj  = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    [globals.APP_QUEUE enqueue:url dict:instObj];
+//    
     
 }
 
@@ -1192,13 +1192,13 @@ int viewWillAppearCalled;
     //update it in the dictionary
     //note: cannot use newtaginfo objectforkey"id" directly - the value is either integer or string (id) and needs to be converted to nsstring
     
-    if ([[dict objectForKey:@"bookmark"]integerValue]==1 && [[dict objectForKey:@"type"]integerValue] != 3) {
-        [[globals.BOOKMARK_TAGS objectForKey:[newTagInfo objectForKey:@"event"]] setObject:dict forKey:[NSString stringWithFormat:@"%@",[newTagInfo objectForKey:@"id"]]];
-    }
-    //save it to file
-    // [globals.CURRENT_EVENT_THUMBNAILS writeToFile:[[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"] atomically:YES];
-    [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
-    
+//    if ([[dict objectForKey:@"bookmark"]integerValue]==1 && [[dict objectForKey:@"type"]integerValue] != 3) {
+//        [[globals.BOOKMARK_TAGS objectForKey:[newTagInfo objectForKey:@"event"]] setObject:dict forKey:[NSString stringWithFormat:@"%@",[newTagInfo objectForKey:@"id"]]];
+//    }
+//    //save it to file
+//    // [globals.CURRENT_EVENT_THUMBNAILS writeToFile:[[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"] atomically:YES];
+//    [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
+//    
 }
 
 
@@ -1284,8 +1284,8 @@ int viewWillAppearCalled;
         [videoPlayer exitFullScreen];
     }
     
-    globals.SHOW_TOASTS = TRUE;
-    globals.IS_IN_BOOKMARK_VIEW = FALSE;
+//    globals.SHOW_TOASTS = TRUE;
+//    globals.IS_IN_BOOKMARK_VIEW = FALSE;
     //we will remove the filtertoolbox to deallocate mem -- makes sure app does not freeze up
     [_filterToolBoxView.view removeFromSuperview];
     _filterToolBoxView=nil;
@@ -1303,7 +1303,7 @@ int viewWillAppearCalled;
     [updateTableViewTimer invalidate];
     updateTableViewTimer = nil;
 
-    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeAllObjects];
+//    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeAllObjects];
     
     //Edge Swipe Buttons
     [self.edgeSwipeButtons deselectAllButtons];
@@ -1363,7 +1363,7 @@ int viewWillAppearCalled;
     [self.videoPlayer pause];
     [videoControlBar removeFromSuperview];
     [allTags removeAllObjects];
-    globals.IS_IN_BOOKMARK_VIEW = FALSE;
+//    globals.IS_IN_BOOKMARK_VIEW = FALSE;
     
 }
     
@@ -1519,8 +1519,8 @@ int viewWillAppearCalled;
             [playbackRateForwardLabel setAlpha:1.0f];
         }];
     }
-    globals.PLAYBACK_SPEED = 0.0;
-    [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
+//    globals.PLAYBACK_SPEED = 0.0;
+//    [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
 }
     
 -(void)playbackRateButtonUp:(id)sender
@@ -1544,35 +1544,35 @@ int viewWillAppearCalled;
             
         }];
     }
-    globals.PLAYBACK_SPEED = 0.0;
-    [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
+//    globals.PLAYBACK_SPEED = 0.0;
+//    [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
 }
     
 -(void)playbackRateButtonDrag:(id)sender forEvent:(UIEvent*)event
 {
-    UIButton* button = sender;
-    UITouch *touch = [[event touchesForView:button] anyObject];
-    CGPoint touchPoint = [touch locationInView:button.superview];
-    CGPoint buttonPosition = [self coordForPosition:touchPoint onGuide:[button tag]];
-    [button setCenter:buttonPosition];
-    if ([button tag] == 0) {
-        [playbackRateBackLabel setFrame:CGRectMake(CGRectGetMaxX(button.frame), button.frame.origin.y, playbackRateBackLabel.bounds.size.width, playbackRateBackLabel.bounds.size.height)];
-        if (isFrameByFrame) {
-            [playbackRateBackLabel setText:[NSString stringWithFormat:@"-%.0fps",1/frameByFrameInterval]];
-        } else {
-            [playbackRateBackLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
-        }
-    } else if ([button tag] == 1){
-        [playbackRateForwardLabel setFrame:CGRectMake(button.frame.origin.x - playbackRateForwardLabel.bounds.size.width, button.frame.origin.y, playbackRateForwardLabel.bounds.size.width, playbackRateForwardLabel.bounds.size.height)];
-        if (isFrameByFrame) {
-            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.0ffps",1/frameByFrameInterval]];
-        } else {
-            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
-        }
-    }
-    if (videoPlayer.avPlayer.rate != globals.PLAYBACK_SPEED) {
-        videoPlayer.avPlayer.rate = globals.PLAYBACK_SPEED;
-    }
+//    UIButton* button = sender;
+//    UITouch *touch = [[event touchesForView:button] anyObject];
+//    CGPoint touchPoint = [touch locationInView:button.superview];
+//    CGPoint buttonPosition = [self coordForPosition:touchPoint onGuide:[button tag]];
+//    [button setCenter:buttonPosition];
+//    if ([button tag] == 0) {
+//        [playbackRateBackLabel setFrame:CGRectMake(CGRectGetMaxX(button.frame), button.frame.origin.y, playbackRateBackLabel.bounds.size.width, playbackRateBackLabel.bounds.size.height)];
+//        if (isFrameByFrame) {
+//            [playbackRateBackLabel setText:[NSString stringWithFormat:@"-%.0fps",1/frameByFrameInterval]];
+//        } else {
+//            [playbackRateBackLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
+//        }
+//    } else if ([button tag] == 1){
+//        [playbackRateForwardLabel setFrame:CGRectMake(button.frame.origin.x - playbackRateForwardLabel.bounds.size.width, button.frame.origin.y, playbackRateForwardLabel.bounds.size.width, playbackRateForwardLabel.bounds.size.height)];
+//        if (isFrameByFrame) {
+//            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.0ffps",1/frameByFrameInterval]];
+//        } else {
+//            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
+//        }
+//    }
+//    if (videoPlayer.avPlayer.rate != globals.PLAYBACK_SPEED) {
+//        videoPlayer.avPlayer.rate = globals.PLAYBACK_SPEED;
+//    }
 }
 
 -(CGPoint)coordForPosition:(CGPoint)point onGuide:(int)tag
@@ -1602,19 +1602,19 @@ int viewWillAppearCalled;
             [self startFrameByFrameScrollingAtInterval:0.2f goingForward:FALSE];
         } else {
             isFrameByFrame = NO;
-            if (degrees >= increment*2 && degrees < increment*3){
-                globals.PLAYBACK_SPEED = 0.25f;
-            } else if (degrees >= increment*3 && degrees < increment*4){
-                globals.PLAYBACK_SPEED = 0.5f;
-            } else if (degrees >= increment*4 && degrees < increment*5){
-                globals.PLAYBACK_SPEED = 1.0f;
-            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
-                globals.PLAYBACK_SPEED = 2.0f;
-            } else if (degrees >= (increment*6 - 3)){
-                globals.PLAYBACK_SPEED = 4.0f;
-            }
+//            if (degrees >= increment*2 && degrees < increment*3){
+//                globals.PLAYBACK_SPEED = 0.25f;
+//            } else if (degrees >= increment*3 && degrees < increment*4){
+//                globals.PLAYBACK_SPEED = 0.5f;
+//            } else if (degrees >= increment*4 && degrees < increment*5){
+//                globals.PLAYBACK_SPEED = 1.0f;
+//            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
+//                globals.PLAYBACK_SPEED = 2.0f;
+//            } else if (degrees >= (increment*6 - 3)){
+//                globals.PLAYBACK_SPEED = 4.0f;
+//            }
         }
-        globals.PLAYBACK_SPEED = -globals.PLAYBACK_SPEED;
+//        globals.PLAYBACK_SPEED = -globals.PLAYBACK_SPEED;
         
         yPos = sinf(theta)*playbackRateRadius;
         xPos = cosf(theta)*playbackRateRadius;
@@ -1638,17 +1638,17 @@ int viewWillAppearCalled;
             [self startFrameByFrameScrollingAtInterval:0.2f goingForward:TRUE];
         } else {
             isFrameByFrame = NO;
-            if (degrees >= increment*2 && degrees < increment*3){
-                globals.PLAYBACK_SPEED = 0.25f;
-            } else if (degrees >= increment*3 && degrees < increment*4){
-                globals.PLAYBACK_SPEED = 0.5f;
-            } else if (degrees >= increment*4 && degrees < increment*5){
-                globals.PLAYBACK_SPEED = 1.0f;
-            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
-                globals.PLAYBACK_SPEED = 2.0f;
-            } else if (degrees >= (increment*6 - 3)){
-                globals.PLAYBACK_SPEED = 4.0f;
-            }
+//            if (degrees >= increment*2 && degrees < increment*3){
+//                globals.PLAYBACK_SPEED = 0.25f;
+//            } else if (degrees >= increment*3 && degrees < increment*4){
+//                globals.PLAYBACK_SPEED = 0.5f;
+//            } else if (degrees >= increment*4 && degrees < increment*5){
+//                globals.PLAYBACK_SPEED = 1.0f;
+//            } else if (degrees >= increment*5 && degrees < (increment*6 - 1)){
+//                globals.PLAYBACK_SPEED = 2.0f;
+//            } else if (degrees >= (increment*6 - 3)){
+//                globals.PLAYBACK_SPEED = 4.0f;
+//            }
         }
         
         
@@ -1756,7 +1756,7 @@ int viewWillAppearCalled;
     [self hideFullScreenOverlayButtons];
    
     CMTime currentCMTime            = self.videoPlayer.avPlayer.currentTime;
-    globals.TELE_TIME               = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
+//    globals.TELE_TIME               = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
     ////////NSLog(@"initTele tele time %f, current time %f",globals.TELE_TIME,CMTimeGetSeconds(currentCMTime));
     teleViewController              = [[TeleViewController alloc] initWithController:self];
     [teleViewController.view setFrame:CGRectMake(0, 10, 1024, 768)];
@@ -1911,53 +1911,53 @@ int viewWillAppearCalled;
 #pragma mark - Richard Filtering
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {
-    MyClipFilterViewController * checkFilter = (MyClipFilterViewController *)filter;
-    
-    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
-    NSMutableArray *tempArr;
-    
-    
-    ///we have to check to see if the list has been reordered
-    
-    //check to make sure filemanager exists
-    if(!fileManager)
-    {
-        fileManager = [NSFileManager defaultManager];
-    }
-    
-    //create teh path to the reordered bookmarks plist
-    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
-    
-    //now grab the bookmark tags from the global dictionary, we need to iterate through and add all of them to an array so we can get the total number of bookmarks in the end
-    NSMutableArray *a = [[NSMutableArray alloc] init]; //temporary array to add the thumb items to
-    for(NSDictionary *d in [globals.BOOKMARK_TAGS allValues])
-    {
-        [a addObjectsFromArray:[d allValues]];
-    }
-    
-    int orderedTagCount = [[NSArray arrayWithContentsOfFile:orderedBookmarkPlist] count];
-    //if the user is filtering or or there is no ordered bookmarks then just display the filtered array. If however there is an ordered list and the user is not filtering, then use the
-    //ordered list
-    if(filteredArray.count < a.count || ![fileManager fileExistsAtPath:orderedBookmarkPlist] || a.count > orderedTagCount)
-    {
-        tempArr = [filteredArray mutableCopy];
-    }else{
-        //if all bookmark tags count is smaller than the odered bookmark tags, replace the ordered bookmark tags
-        if (a.count < orderedTagCount && [fileManager fileExistsAtPath:orderedBookmarkPlist]) {
-            [a writeToFile:orderedBookmarkPlist atomically:YES];
-            tempArr = a;
-        }else{
-            tempArr =[[NSMutableArray alloc] initWithContentsOfFile:orderedBookmarkPlist];
-        }
-        
-        
-    }
-    
-    // Added the ability to sor the array from headerbar
-    self.tagsToDisplay = [self sortArrayFromHeaderBar:[tempArr mutableCopy] headerBarState:headerBar.headerBarSortType];
-    
-    [self.tableView reloadData];
-    
+//    MyClipFilterViewController * checkFilter = (MyClipFilterViewController *)filter;
+//    
+//    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
+//    NSMutableArray *tempArr;
+//    
+//    
+//    ///we have to check to see if the list has been reordered
+//    
+//    //check to make sure filemanager exists
+//    if(!fileManager)
+//    {
+//        fileManager = [NSFileManager defaultManager];
+//    }
+//    
+//    //create teh path to the reordered bookmarks plist
+//    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
+//    
+//    //now grab the bookmark tags from the global dictionary, we need to iterate through and add all of them to an array so we can get the total number of bookmarks in the end
+//    NSMutableArray *a = [[NSMutableArray alloc] init]; //temporary array to add the thumb items to
+//    for(NSDictionary *d in [globals.BOOKMARK_TAGS allValues])
+//    {
+//        [a addObjectsFromArray:[d allValues]];
+//    }
+//    
+//    int orderedTagCount = [[NSArray arrayWithContentsOfFile:orderedBookmarkPlist] count];
+//    //if the user is filtering or or there is no ordered bookmarks then just display the filtered array. If however there is an ordered list and the user is not filtering, then use the
+//    //ordered list
+//    if(filteredArray.count < a.count || ![fileManager fileExistsAtPath:orderedBookmarkPlist] || a.count > orderedTagCount)
+//    {
+//        tempArr = [filteredArray mutableCopy];
+//    }else{
+//        //if all bookmark tags count is smaller than the odered bookmark tags, replace the ordered bookmark tags
+//        if (a.count < orderedTagCount && [fileManager fileExistsAtPath:orderedBookmarkPlist]) {
+//            [a writeToFile:orderedBookmarkPlist atomically:YES];
+//            tempArr = a;
+//        }else{
+//            tempArr =[[NSMutableArray alloc] initWithContentsOfFile:orderedBookmarkPlist];
+//        }
+//        
+//        
+//    }
+//    
+//    // Added the ability to sor the array from headerbar
+//    self.tagsToDisplay = [self sortArrayFromHeaderBar:[tempArr mutableCopy] headerBarState:headerBar.headerBarSortType];
+//    
+//    [self.tableView reloadData];
+//    
 
 }
     
@@ -2133,15 +2133,15 @@ int viewWillAppearCalled;
 {
     NSString *tagPath = nil;
     //video file
-    if ([[tag objectForKey:@"type"]intValue] != 4)
-    {
-        tagPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[tag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[tag objectForKey:@"id"]]]];
-    }
-    else //tele
-    {
-        tagPath =[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]]];
-    }
-    
+//    if ([[tag objectForKey:@"type"]intValue] != 4)
+//    {
+//        tagPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[tag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[tag objectForKey:@"id"]]]];
+//    }
+//    else //tele
+//    {
+//        tagPath =[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]]];
+//    }
+//    
     return [NSData dataWithContentsOfFile:tagPath];
     
 }
@@ -2172,83 +2172,83 @@ int viewWillAppearCalled;
 //save one video each time
 -(void)saveFile:(NSDictionary *)tag{
     
-    if ([[tag objectForKey:@"type"]intValue] != 4) {
-        //video file
-        NSString *tagVideoPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[tag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[tag objectForKey:@"id"]]]];
-        //if couldSave is FALSE, this video is not compatible to save
-        BOOL couldSave = UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tagVideoPath);
-        
-        if (couldSave) {
-            UISaveVideoAtPathToSavedPhotosAlbum(tagVideoPath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-        }else{
-            
-            if (!notCompatibleArray) {
-                notCompatibleArray = [NSMutableArray arrayWithObject:tag];
-            }else{
-                [notCompatibleArray addObject:tag];
-            }
-            
-            if(savingToAlbumArray.count == 1){
-                //got all tags info which are not compatible for saving
-                NSString *notCompatibleMsg = [self getNotCompatibleMsg];
-                
-                //got all tags info which are failed by error
-                NSString *errorFailedMsg;
-                if (errorSavingArray.count > 0) {
-                    errorFailedMsg = [self getFailedErrorMsg];
-                }
-                
-                NSString *alertMsg;
-                if (!errorFailedMsg) {
-                    alertMsg = notCompatibleMsg;
-                }else{
-                    alertMsg = [NSString stringWithFormat:@"%@\n%@",notCompatibleMsg,errorFailedMsg];
-                }
-                
-                UIAlertView *alert = [[UIAlertView alloc] init];
-                [alert setTitle:@"myplayXplay"];
-                [alert setMessage:alertMsg];
-                [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-                [alert addButtonWithTitle:@"OK"];
-                //[alert addButtonWithTitle:@"CANCEL"];
-                [alert setAccessibilityValue:@"saveToPhotosError"];
-                [alert show];
-                [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-                savingToAlbumArray = nil;
-                notCompatibleArray = nil;
-                errorSavingArray = nil;
-                
-            }else{
-                [savingToAlbumArray removeObjectAtIndex:0];
-                //if the savingToAlbumArray is not empty, save the next video
-                if (savingToAlbumArray.count > 0) {
-                    [self saveFile:[[savingToAlbumArray objectAtIndex:0]objectForKey:@"tag" ]];
-                }else{
-                    
-                }
-                
-            }
-            
-        }
-        
-    }else{
-        //telestration image file
-        NSString *teleImagePath =[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]]];
-        UIImage *telestrationImage = [UIImage imageWithContentsOfFile:teleImagePath];
-        //save telestration to local photo album
-        UIImageWriteToSavedPhotosAlbum(telestrationImage, nil, nil, nil);
-        
-        [savingToAlbumArray removeObjectAtIndex:0];
-        //if the savingToAlbumArray is not empty, save the next video
-        if (savingToAlbumArray.count > 0) {
-            [self saveFile:[[savingToAlbumArray objectAtIndex:0]objectForKey:@"tag" ]];
-        }else{
-            //show alert view if there is any error or show the finishing toast
-            [self saveFileToPhotoAlbumCallback];
-        }
-        
-    }
-    
+//    if ([[tag objectForKey:@"type"]intValue] != 4) {
+//        //video file
+//        NSString *tagVideoPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[tag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[tag objectForKey:@"id"]]]];
+//        //if couldSave is FALSE, this video is not compatible to save
+//        BOOL couldSave = UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tagVideoPath);
+//        
+//        if (couldSave) {
+//            UISaveVideoAtPathToSavedPhotosAlbum(tagVideoPath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+//        }else{
+//            
+//            if (!notCompatibleArray) {
+//                notCompatibleArray = [NSMutableArray arrayWithObject:tag];
+//            }else{
+//                [notCompatibleArray addObject:tag];
+//            }
+//            
+//            if(savingToAlbumArray.count == 1){
+//                //got all tags info which are not compatible for saving
+//                NSString *notCompatibleMsg = [self getNotCompatibleMsg];
+//                
+//                //got all tags info which are failed by error
+//                NSString *errorFailedMsg;
+//                if (errorSavingArray.count > 0) {
+//                    errorFailedMsg = [self getFailedErrorMsg];
+//                }
+//                
+//                NSString *alertMsg;
+//                if (!errorFailedMsg) {
+//                    alertMsg = notCompatibleMsg;
+//                }else{
+//                    alertMsg = [NSString stringWithFormat:@"%@\n%@",notCompatibleMsg,errorFailedMsg];
+//                }
+//                
+//                UIAlertView *alert = [[UIAlertView alloc] init];
+//                [alert setTitle:@"myplayXplay"];
+//                [alert setMessage:alertMsg];
+//                [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+//                [alert addButtonWithTitle:@"OK"];
+//                //[alert addButtonWithTitle:@"CANCEL"];
+//                [alert setAccessibilityValue:@"saveToPhotosError"];
+//                [alert show];
+//                [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+//                savingToAlbumArray = nil;
+//                notCompatibleArray = nil;
+//                errorSavingArray = nil;
+//                
+//            }else{
+//                [savingToAlbumArray removeObjectAtIndex:0];
+//                //if the savingToAlbumArray is not empty, save the next video
+//                if (savingToAlbumArray.count > 0) {
+//                    [self saveFile:[[savingToAlbumArray objectAtIndex:0]objectForKey:@"tag" ]];
+//                }else{
+//                    
+//                }
+//                
+//            }
+//            
+//        }
+//        
+//    }else{
+//        //telestration image file
+////        NSString *teleImagePath =[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]]];
+////        UIImage *telestrationImage = [UIImage imageWithContentsOfFile:teleImagePath];
+////        //save telestration to local photo album
+////        UIImageWriteToSavedPhotosAlbum(telestrationImage, nil, nil, nil);
+////        
+////        [savingToAlbumArray removeObjectAtIndex:0];
+////        //if the savingToAlbumArray is not empty, save the next video
+////        if (savingToAlbumArray.count > 0) {
+////            [self saveFile:[[savingToAlbumArray objectAtIndex:0]objectForKey:@"tag" ]];
+////        }else{
+////            //show alert view if there is any error or show the finishing toast
+////            [self saveFileToPhotoAlbumCallback];
+////        }
+//        
+//    }
+//    
     
 }
 
@@ -2289,7 +2289,7 @@ int viewWillAppearCalled;
             //[alert addButtonWithTitle:@"CANCEL"];
             [alert setAccessibilityValue:@"saveToPhotosError"];
             [alert show];
-            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+//            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
             savingToAlbumArray = nil;
             notCompatibleArray = nil;
             errorSavingArray = nil;
@@ -2346,10 +2346,10 @@ int viewWillAppearCalled;
         [alert addButtonWithTitle:@"OK"];
         //[alert addButtonWithTitle:@"CANCEL"];
         [alert show];
-        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+//        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
     }else{
         NSDictionary *infoDict = [NSDictionary dictionaryWithObject:@"SaveToAlbum success" forKey:@"name"];
-        [globals.TOAST_QUEUE addObject:infoDict];
+//        [globals.TOAST_QUEUE addObject:infoDict];
     }
     
     savingToAlbumArray = nil;
@@ -2395,11 +2395,11 @@ int viewWillAppearCalled;
 #pragma mark Email Tags
 -(void)emailTags{
     
-    if (!globals.HAS_CLOUD) {
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:@"Please connect the internet before sending an email." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-        return;
-    }
+//    if (!globals.HAS_CLOUD) {
+//        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:@"Please connect the internet before sending an email." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [alert show];
+//        return;
+//    }
     
     [popoverController dismissPopoverAnimated:YES];
     NSString *videoName;
@@ -2459,13 +2459,13 @@ int viewWillAppearCalled;
         
         
         NSString *dataPath;
-        if([[tag objectForKey:@"type"]intValue] !=4)
-        {
-            dataPath=[globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
-        }else{
-            dataPath=[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
-            
-        }
+//        if([[tag objectForKey:@"type"]intValue] !=4)
+//        {
+//            dataPath=[globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
+//        }else{
+//            dataPath=[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
+//            
+//        }
         
         //NSDataReadingMappedIfSafe:A hint indicating the file should be mapped into virtual memory, if possible and safe.
         NSData *myData = [NSData dataWithContentsOfFile:dataPath options:NSDataReadingMappedIfSafe error:&error];
@@ -2483,7 +2483,7 @@ int viewWillAppearCalled;
                                   cancelButtonTitle:@"OK"
                                   otherButtonTitles:nil];
             [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+//            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
             return;
         }
     }

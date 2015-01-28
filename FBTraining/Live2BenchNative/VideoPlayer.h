@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVPlayerItem.h>
-#import "Globals.h"
+//#import "Globals.h"
 #import "OBSlider.h"
 #import "VideoControlBarSlider.h"
 #import "ExternalScreenButton.h"

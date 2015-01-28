@@ -19,7 +19,7 @@
 
 @synthesize offLayoutView;
 @synthesize live2BenchViewController;
-@synthesize globals;
+//@synthesize globals;
 @synthesize offButton;
 @synthesize defButton;
 @synthesize stButton;
@@ -67,11 +67,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateInfo) name:@"UpdateFBBottomViewControInfo" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlayCall:) name:@"UpdatePlayCallOpp" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePlayCall:) name:@"UpdatePlayCall" object: nil];
-    globals = [Globals instance];
-    if([globals.WHICH_SPORT isEqualToString:@"football"])
-    {
-        globals.SHOW_TOASTS = FALSE;
-    }
+//    globals = [Globals instance];
+//    if([globals.WHICH_SPORT isEqualToString:@"football"])
+//    {
+//        globals.SHOW_TOASTS = FALSE;
+//    }
     
     
     arrayOfQuarterButtons = [[NSMutableArray alloc]init];
@@ -105,24 +105,24 @@
 }
 
 -(void)updateInfo{
-    if (![globals.WHICH_SPORT isEqualToString:@"football"]) {
-        return;
-    }
-    
-    if ( globals.CURRENT_QUARTER_FB > -1 && globals.CURRENT_QUARTER_FB < 4) {
-        CustomButton *button = [arrayOfQuarterButtons objectAtIndex:globals.CURRENT_QUARTER_FB];
-        if (quarterButtonWasSelected && ![quarterButtonWasSelected isEqual:button]) {
-            quarterButtonWasSelected.selected = FALSE;
-            button.selected = TRUE;
-            quarterButtonWasSelected = button;
-        }else if(!quarterButtonWasSelected){
-            button.selected = TRUE;
-            quarterButtonWasSelected = button;
-        }
-    }else{
-        CustomButton *button = [arrayOfQuarterButtons objectAtIndex:0];
-        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }
+//    if (![globals.WHICH_SPORT isEqualToString:@"football"]) {
+//        return;
+//    }
+//    
+//    if ( globals.CURRENT_QUARTER_FB > -1 && globals.CURRENT_QUARTER_FB < 4) {
+//        CustomButton *button = [arrayOfQuarterButtons objectAtIndex:globals.CURRENT_QUARTER_FB];
+//        if (quarterButtonWasSelected && ![quarterButtonWasSelected isEqual:button]) {
+//            quarterButtonWasSelected.selected = FALSE;
+//            button.selected = TRUE;
+//            quarterButtonWasSelected = button;
+//        }else if(!quarterButtonWasSelected){
+//            button.selected = TRUE;
+//            quarterButtonWasSelected = button;
+//        }
+//    }else{
+//        CustomButton *button = [arrayOfQuarterButtons objectAtIndex:0];
+//        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+//    }
     
 }
 
@@ -436,82 +436,82 @@
 }
 
 -(void)stateChanged:(id)sender{
-    CustomButton *button = (CustomButton*)sender;
-    if([button isEqual:stButton] && !isNextPlay)
-    { //special teams
-        [self adjustForSpecialTeams:stButton.selected];
-        if (stButton.selected) {
-            
-            stButton.selected = FALSE;
-            
-            return;
-        }else{
-            
-            //special teams depend on whether or not the team is on offense or defense
-            stButton.selected = TRUE;
-            
-            if([globals.CURRENT_STATE_FB isEqualToString:@"def"]) //if defensive special teams then lets update series with current defensive series
-            {
-                [seriesPickerView selectRow:globals.CURRENT_D_SERIES_NUMBER_FB inComponent:0 animated:YES];
-                selectedRowforSeries = globals.CURRENT_D_SERIES_NUMBER_FB;
-                [seriesPickerView reloadComponent:0];
-            }else{ //otherwise we'll update it with the offensive series
-                [seriesPickerView selectRow:globals.CURRENT_O_SERIES_NUMBER_FB inComponent:0 animated:YES];
-                selectedRowforSeries = globals.CURRENT_O_SERIES_NUMBER_FB;
-                [seriesPickerView reloadComponent:0];
-            }
-        }
-        return;
-    }
-    
-    if ([button isEqual:offButton]) { //offense
-        if (offButton.selected) {
-            offButton.selected = FALSE;
-            stateButtonWasSelected = nil;
-            [offLayoutView setAlpha:0.2];
-            [offLayoutView setUserInteractionEnabled:FALSE];
-            return;
-        }else{
-            
-            if (downButtonWasSelected) {
-                [downButtonWasSelected sendActionsForControlEvents:UIControlEventTouchUpInside];
-            }
-            globals.CURRENT_STATE_FB = @"off";
-            stateButtonWasSelected.selected = FALSE;
-            offButton.selected = TRUE;
-            stateButtonWasSelected = offButton;
-            [offLayoutView setAlpha:1.0f];
-            [offLayoutView setUserInteractionEnabled:TRUE];
-            globals.CURRENT_O_SERIES_NUMBER_FB++;
-            [seriesPickerView selectRow:globals.CURRENT_O_SERIES_NUMBER_FB inComponent:0 animated:YES];
-            selectedRowforSeries = globals.CURRENT_O_SERIES_NUMBER_FB;
-            [seriesPickerView reloadComponent:0];
-        }
-    }else if ([button isEqual:defButton]){ //defense
-        if (defButton.selected) {
-            defButton.selected = FALSE;
-            stateButtonWasSelected = nil;
-            [offLayoutView setAlpha:0.2];
-            [offLayoutView setUserInteractionEnabled:FALSE];
-            return;
-        }else{
-            if (downButtonWasSelected) {
-                [downButtonWasSelected sendActionsForControlEvents:UIControlEventTouchUpInside];
-            }
-            globals.CURRENT_STATE_FB = @"def";
-            stateButtonWasSelected.selected = FALSE;
-            defButton.selected = TRUE;
-            stateButtonWasSelected = defButton;
-            globals.CURRENT_D_SERIES_NUMBER_FB++;
-            [offLayoutView setAlpha:1.0f];
-            [offLayoutView setUserInteractionEnabled:TRUE];
-            [seriesPickerView selectRow:globals.CURRENT_D_SERIES_NUMBER_FB inComponent:0 animated:YES];
-            selectedRowforSeries = globals.CURRENT_D_SERIES_NUMBER_FB;
-            [seriesPickerView reloadComponent:0];
-        }
-        
-    }
-    
+//    CustomButton *button = (CustomButton*)sender;
+//    if([button isEqual:stButton] && !isNextPlay)
+//    { //special teams
+//        [self adjustForSpecialTeams:stButton.selected];
+//        if (stButton.selected) {
+//            
+//            stButton.selected = FALSE;
+//            
+//            return;
+//        }else{
+//            
+//            //special teams depend on whether or not the team is on offense or defense
+//            stButton.selected = TRUE;
+//            
+//            if([globals.CURRENT_STATE_FB isEqualToString:@"def"]) //if defensive special teams then lets update series with current defensive series
+//            {
+//                [seriesPickerView selectRow:globals.CURRENT_D_SERIES_NUMBER_FB inComponent:0 animated:YES];
+//                selectedRowforSeries = globals.CURRENT_D_SERIES_NUMBER_FB;
+//                [seriesPickerView reloadComponent:0];
+//            }else{ //otherwise we'll update it with the offensive series
+//                [seriesPickerView selectRow:globals.CURRENT_O_SERIES_NUMBER_FB inComponent:0 animated:YES];
+//                selectedRowforSeries = globals.CURRENT_O_SERIES_NUMBER_FB;
+//                [seriesPickerView reloadComponent:0];
+//            }
+//        }
+//        return;
+//    }
+//    
+//    if ([button isEqual:offButton]) { //offense
+//        if (offButton.selected) {
+//            offButton.selected = FALSE;
+//            stateButtonWasSelected = nil;
+//            [offLayoutView setAlpha:0.2];
+//            [offLayoutView setUserInteractionEnabled:FALSE];
+//            return;
+//        }else{
+//            
+//            if (downButtonWasSelected) {
+//                [downButtonWasSelected sendActionsForControlEvents:UIControlEventTouchUpInside];
+//            }
+//            globals.CURRENT_STATE_FB = @"off";
+//            stateButtonWasSelected.selected = FALSE;
+//            offButton.selected = TRUE;
+//            stateButtonWasSelected = offButton;
+//            [offLayoutView setAlpha:1.0f];
+//            [offLayoutView setUserInteractionEnabled:TRUE];
+//            globals.CURRENT_O_SERIES_NUMBER_FB++;
+//            [seriesPickerView selectRow:globals.CURRENT_O_SERIES_NUMBER_FB inComponent:0 animated:YES];
+//            selectedRowforSeries = globals.CURRENT_O_SERIES_NUMBER_FB;
+//            [seriesPickerView reloadComponent:0];
+//        }
+//    }else if ([button isEqual:defButton]){ //defense
+//        if (defButton.selected) {
+//            defButton.selected = FALSE;
+//            stateButtonWasSelected = nil;
+//            [offLayoutView setAlpha:0.2];
+//            [offLayoutView setUserInteractionEnabled:FALSE];
+//            return;
+//        }else{
+//            if (downButtonWasSelected) {
+//                [downButtonWasSelected sendActionsForControlEvents:UIControlEventTouchUpInside];
+//            }
+//            globals.CURRENT_STATE_FB = @"def";
+//            stateButtonWasSelected.selected = FALSE;
+//            defButton.selected = TRUE;
+//            stateButtonWasSelected = defButton;
+//            globals.CURRENT_D_SERIES_NUMBER_FB++;
+//            [offLayoutView setAlpha:1.0f];
+//            [offLayoutView setUserInteractionEnabled:TRUE];
+//            [seriesPickerView selectRow:globals.CURRENT_D_SERIES_NUMBER_FB inComponent:0 animated:YES];
+//            selectedRowforSeries = globals.CURRENT_D_SERIES_NUMBER_FB;
+//            [seriesPickerView reloadComponent:0];
+//        }
+//        
+//    }
+
     
 }
 
@@ -547,333 +547,333 @@
 }
 
 -(void)quarterChanged:(id)sender{
-    CustomButton *button = (CustomButton*)sender;
-    if (quarterButtonWasSelected && ![quarterButtonWasSelected isEqual:button]) {
-        quarterButtonWasSelected.selected = FALSE;
-        button.selected = TRUE;
-        quarterButtonWasSelected = button;
-    }else if(!quarterButtonWasSelected){
-        button.selected = TRUE;
-        quarterButtonWasSelected = button;
-    }else{
-        button.selected = FALSE;
-        quarterButtonWasSelected = nil;
-        return;
-    }
-    NSString *tagTime;
-    if (globals.CURRENT_QUARTER_FB == -1) {
-        tagTime = @"0.0";
-    }else{
-        tagTime= [live2BenchViewController getCurrentTimeforNewTag];
-    }
-    int index = [arrayOfQuarterButtons indexOfObject:button];
-    NSDictionary *dict= [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%d",index],@"name",[NSString stringWithFormat:@"%d",index],@"period",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",@"7",@"type",nil];
-    [self sendTagInfo:dict];
-    globals.CURRENT_QUARTER_FB = index;
+//    CustomButton *button = (CustomButton*)sender;
+//    if (quarterButtonWasSelected && ![quarterButtonWasSelected isEqual:button]) {
+//        quarterButtonWasSelected.selected = FALSE;
+//        button.selected = TRUE;
+//        quarterButtonWasSelected = button;
+//    }else if(!quarterButtonWasSelected){
+//        button.selected = TRUE;
+//        quarterButtonWasSelected = button;
+//    }else{
+//        button.selected = FALSE;
+//        quarterButtonWasSelected = nil;
+//        return;
+//    }
+//    NSString *tagTime;
+//    if (globals.CURRENT_QUARTER_FB == -1) {
+//        tagTime = @"0.0";
+//    }else{
+//        tagTime= [live2BenchViewController getCurrentTimeforNewTag];
+//    }
+//    int index = [arrayOfQuarterButtons indexOfObject:button];
+//    NSDictionary *dict= [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%d",index],@"name",[NSString stringWithFormat:@"%d",index],@"period",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",@"7",@"type",nil];
+//    [self sendTagInfo:dict];
+//    globals.CURRENT_QUARTER_FB = index;
     
 }
 -(void)downChanged:(id)sender{
-    CustomButton *button = (CustomButton*)sender;
-    int typeOfTag = 1;
-    NSString *tagTime;
-    NSString *name;
-    NSDictionary *dict;
-    NSString *lineStr;
-    
-    [playCallOppArray removeAllObjects];
-    [playCallOppPickerView reloadAllComponents];
-    
-    [playCallArray removeAllObjects];
-    [playCallPickerView reloadAllComponents  ];
-    
-    if(!isNextPlay)
-    {
-        distanceNumber = [distancePickerView selectedRowInComponent:0];
-    }
-    
-    distanceNumber = distanceNumber == 0 ? 10 : distanceNumber; //make sure distance number isn't 0
-    int oldDistanceNumber=distanceNumber;
-    
-    if(!isNextPlay)
-    {
-        if ((button == [arrayOfDownButtons objectAtIndex:0] && ![button isSelected])) // first down
-        {
-            distanceNumber = 10;
-            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-        }else if(gainNumber<0) // loss of yards
-        {
-            distanceNumber = oldDistanceNumber+abs(gainNumber);
-            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-        }else{ // gain of yards
-            
-            
-            if(oldDistanceNumber-gainNumber < 0) // crossed 1st down line, new first down
-            {
-                isNewTurn=TRUE;
-                distanceNumber = 10;
-                [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-                [distancePickerView reloadComponent:0];
-                gainNumber =0;
-                [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
-                return;
-            }else if([[arrayOfDownButtons objectAtIndex:2] isSelected] && !(oldDistanceNumber-gainNumber <= 0)){ // 3rd and didn't reach first down
-                isNewTurn=TRUE;
-                distanceNumber = 10;
-                [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-                gainNumber =0;
-                [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
-                if([offButton isSelected])
-                {
-                    [defButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-                }else{
-                    [offButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-                }
-            }else{ //first or second down, still yards to go
-                distanceNumber=oldDistanceNumber-gainNumber;
-                [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-            }
-        }
-        selectedRowforDistance = distanceNumber;
-        [distancePickerView reloadComponent:0];
-    }
-    isNextPlay = FALSE;
-    
-    if (button.selected && !isNewTurn) {
-        button.selected = FALSE;
-        [distancePickerView selectRow:0 inComponent:0 animated:YES];
-        selectedRowforDistance = 0;
-        [distancePickerView reloadComponent:0];
-        [gainPickerView selectRow:55 inComponent:0 animated:YES];
-        selectedRowforGain = 55;
-        [gainPickerView reloadComponent:0];
-        distanceNumber = 10;
-        if (downButtonWasSelected) {
-            downButtonWasSelected = nil;
-        }
-        
-    }else if(!button.selected || isNewTurn){
-        
-        
-        if (button.tag != 1) {
-            //if it is not down 1, isnewturn set to false
-            isNewTurn = FALSE;
-        }else{
-            isNewTurn = TRUE;
-            distanceNumber = 10;
-        }
-        
-        ////////NSLog(@"button.tag %d, downbuttonwasselected.tag %d",button.tag, downButtonWasSelected.tag);
-        if (![button isEqual:downButtonWasSelected]) {
-            downButtonWasSelected.selected = FALSE;
-            downButtonWasSelected = button;
-        }
-        
-        button.selected = TRUE;
-        
-        tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
-        
-        //We have to differentiate between offensive downs and defensive downs, so if the current state is 'off' then this is an offensive down, if current state is 'def' then defensive down
-        if([globals.CURRENT_STATE_FB isEqual:@"off"]){//offensive
-            
-            //if this is a special teams down, add an ST to the name just to differentiate
-            NSInteger row;
-            row = [sTPickerView selectedRowInComponent:0];
-            
-            if([stButton isSelected])
-            {
-                name = [NSString stringWithFormat:@"ST: %@",[specialTeamsArray objectAtIndex:row]];
-                typeOfTag=0;
-                
-            }else{
-                name = [NSString stringWithFormat:@"O-Down: %d",button.tag];
-            }
-            lineStr = [NSString stringWithFormat:@"line_f_o_%d",button.tag]; //which down we changed to
-        }else{//defensive
-            //if this is a special teams down, add an ST to the name just to differentiate
-            if([stButton isSelected])
-            {
-                NSInteger row;
-                row = [sTPickerView selectedRowInComponent:0];
-                name = [NSString stringWithFormat:@"ST: %@",[specialTeamsArray objectAtIndex:row]];
-                typeOfTag=0;
-                
-            }else{
-                name = [NSString stringWithFormat:@"D-Down: %d",button.tag];
-            }
-            lineStr = [NSString stringWithFormat:@"line_f_d_%d",button.tag]; //which down we changed to
-        }
-    }
-    double currentSystemTime = CACurrentMediaTime();
-    
-    globals.CURRENT_TYPE_FB = globals.CURRENT_TYPE_FB.length > 0 ? globals.CURRENT_TYPE_FB : @"";
-    
-    NSInteger row;
-    row = [sTPickerView selectedRowInComponent:0];
-    NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @"" ;
-    
-    NSDictionary *extraDictionary = [[NSDictionary alloc]initWithObjectsAndKeys:globals.CURRENT_TYPE_FB,@"type",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",[NSNumber numberWithInt:oldDistanceNumber ],@"distance" ,fieldPosSliderPos.text,@"field",[NSNumber numberWithInt:[gainPickerView selectedRowInComponent:0]-55],@"gain",specialTeamsOption,@"spoption", nil];
-    
-    dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",extraDictionary,@"extra",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",tagTime,@"time",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",lineStr,@"line",[NSNumber numberWithInt: typeOfTag ],@"type", nil];
-    [self sendTagInfo:dict];
-    
-    if (isNewTurn) {
-        //clear all the yrds values for new down 1
-        gainNumber = 0;
-        [gainPickerView selectRow:55 inComponent:0 animated:YES];
-        selectedRowforGain = 55;
-        [gainPickerView reloadComponent:0];
-        isNewTurn = FALSE;
-    }else{
-        gainNumber = 0;
-        [gainPickerView selectRow:55 inComponent:0 animated:YES];
-        selectedRowforGain = 55;
-        [gainPickerView reloadComponent:0];
-    }
-    
-    ////clear the action for previous down tag
-    if (actionButtonWasSelected) {
-        actionButtonWasSelected.selected = FALSE;
-        actionButtonWasSelected = nil;
-    }
-    //clear the events for previous down tag
-    for(UIView *view in playcallEventsView.subviews){
-        [view removeFromSuperview];
-    }
-    //clear the events for previous down tag
-    for(UIView *view in playcallOppEventsView.subviews){
-        [view removeFromSuperview];
-    }
-    
-    if([stButton isSelected])
-    {
-        [stButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    
+//    CustomButton *button = (CustomButton*)sender;
+//    int typeOfTag = 1;
+//    NSString *tagTime;
+//    NSString *name;
+//    NSDictionary *dict;
+//    NSString *lineStr;
+//    
+//    [playCallOppArray removeAllObjects];
+//    [playCallOppPickerView reloadAllComponents];
+//    
+//    [playCallArray removeAllObjects];
+//    [playCallPickerView reloadAllComponents  ];
+//    
+//    if(!isNextPlay)
+//    {
+//        distanceNumber = [distancePickerView selectedRowInComponent:0];
+//    }
+//    
+//    distanceNumber = distanceNumber == 0 ? 10 : distanceNumber; //make sure distance number isn't 0
+//    int oldDistanceNumber=distanceNumber;
+//    
+//    if(!isNextPlay)
+//    {
+//        if ((button == [arrayOfDownButtons objectAtIndex:0] && ![button isSelected])) // first down
+//        {
+//            distanceNumber = 10;
+//            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//        }else if(gainNumber<0) // loss of yards
+//        {
+//            distanceNumber = oldDistanceNumber+abs(gainNumber);
+//            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//        }else{ // gain of yards
+//            
+//            
+//            if(oldDistanceNumber-gainNumber < 0) // crossed 1st down line, new first down
+//            {
+//                isNewTurn=TRUE;
+//                distanceNumber = 10;
+//                [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//                [distancePickerView reloadComponent:0];
+//                gainNumber =0;
+//                [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//                return;
+//            }else if([[arrayOfDownButtons objectAtIndex:2] isSelected] && !(oldDistanceNumber-gainNumber <= 0)){ // 3rd and didn't reach first down
+//                isNewTurn=TRUE;
+//                distanceNumber = 10;
+//                [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//                gainNumber =0;
+//                [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//                if([offButton isSelected])
+//                {
+//                    [defButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//                }else{
+//                    [offButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//                }
+//            }else{ //first or second down, still yards to go
+//                distanceNumber=oldDistanceNumber-gainNumber;
+//                [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//            }
+//        }
+//        selectedRowforDistance = distanceNumber;
+//        [distancePickerView reloadComponent:0];
+//    }
+//    isNextPlay = FALSE;
+//    
+//    if (button.selected && !isNewTurn) {
+//        button.selected = FALSE;
+//        [distancePickerView selectRow:0 inComponent:0 animated:YES];
+//        selectedRowforDistance = 0;
+//        [distancePickerView reloadComponent:0];
+//        [gainPickerView selectRow:55 inComponent:0 animated:YES];
+//        selectedRowforGain = 55;
+//        [gainPickerView reloadComponent:0];
+//        distanceNumber = 10;
+//        if (downButtonWasSelected) {
+//            downButtonWasSelected = nil;
+//        }
+//        
+//    }else if(!button.selected || isNewTurn){
+//        
+//        
+//        if (button.tag != 1) {
+//            //if it is not down 1, isnewturn set to false
+//            isNewTurn = FALSE;
+//        }else{
+//            isNewTurn = TRUE;
+//            distanceNumber = 10;
+//        }
+//        
+//        ////////NSLog(@"button.tag %d, downbuttonwasselected.tag %d",button.tag, downButtonWasSelected.tag);
+//        if (![button isEqual:downButtonWasSelected]) {
+//            downButtonWasSelected.selected = FALSE;
+//            downButtonWasSelected = button;
+//        }
+//        
+//        button.selected = TRUE;
+//        
+//        tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
+//        
+//        //We have to differentiate between offensive downs and defensive downs, so if the current state is 'off' then this is an offensive down, if current state is 'def' then defensive down
+//        if([globals.CURRENT_STATE_FB isEqual:@"off"]){//offensive
+//            
+//            //if this is a special teams down, add an ST to the name just to differentiate
+//            NSInteger row;
+//            row = [sTPickerView selectedRowInComponent:0];
+//            
+//            if([stButton isSelected])
+//            {
+//                name = [NSString stringWithFormat:@"ST: %@",[specialTeamsArray objectAtIndex:row]];
+//                typeOfTag=0;
+//                
+//            }else{
+//                name = [NSString stringWithFormat:@"O-Down: %d",button.tag];
+//            }
+//            lineStr = [NSString stringWithFormat:@"line_f_o_%d",button.tag]; //which down we changed to
+//        }else{//defensive
+//            //if this is a special teams down, add an ST to the name just to differentiate
+//            if([stButton isSelected])
+//            {
+//                NSInteger row;
+//                row = [sTPickerView selectedRowInComponent:0];
+//                name = [NSString stringWithFormat:@"ST: %@",[specialTeamsArray objectAtIndex:row]];
+//                typeOfTag=0;
+//                
+//            }else{
+//                name = [NSString stringWithFormat:@"D-Down: %d",button.tag];
+//            }
+//            lineStr = [NSString stringWithFormat:@"line_f_d_%d",button.tag]; //which down we changed to
+//        }
+//    }
+//    double currentSystemTime = CACurrentMediaTime();
+//    
+//    globals.CURRENT_TYPE_FB = globals.CURRENT_TYPE_FB.length > 0 ? globals.CURRENT_TYPE_FB : @"";
+//    
+//    NSInteger row;
+//    row = [sTPickerView selectedRowInComponent:0];
+//    NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @"" ;
+//    
+//    NSDictionary *extraDictionary = [[NSDictionary alloc]initWithObjectsAndKeys:globals.CURRENT_TYPE_FB,@"type",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",[NSNumber numberWithInt:oldDistanceNumber ],@"distance" ,fieldPosSliderPos.text,@"field",[NSNumber numberWithInt:[gainPickerView selectedRowInComponent:0]-55],@"gain",specialTeamsOption,@"spoption", nil];
+//    
+//    dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",extraDictionary,@"extra",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",tagTime,@"time",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",lineStr,@"line",[NSNumber numberWithInt: typeOfTag ],@"type", nil];
+//    [self sendTagInfo:dict];
+//    
+//    if (isNewTurn) {
+//        //clear all the yrds values for new down 1
+//        gainNumber = 0;
+//        [gainPickerView selectRow:55 inComponent:0 animated:YES];
+//        selectedRowforGain = 55;
+//        [gainPickerView reloadComponent:0];
+//        isNewTurn = FALSE;
+//    }else{
+//        gainNumber = 0;
+//        [gainPickerView selectRow:55 inComponent:0 animated:YES];
+//        selectedRowforGain = 55;
+//        [gainPickerView reloadComponent:0];
+//    }
+//    
+//    ////clear the action for previous down tag
+//    if (actionButtonWasSelected) {
+//        actionButtonWasSelected.selected = FALSE;
+//        actionButtonWasSelected = nil;
+//    }
+//    //clear the events for previous down tag
+//    for(UIView *view in playcallEventsView.subviews){
+//        [view removeFromSuperview];
+//    }
+//    //clear the events for previous down tag
+//    for(UIView *view in playcallOppEventsView.subviews){
+//        [view removeFromSuperview];
+//    }
+//    
+//    if([stButton isSelected])
+//    {
+//        [stButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//    }
+//    
+//    
 }
 
 -(void)typeChanged:(id)sender{
-    CustomButton *button = (CustomButton*)sender;
-    NSString *zoneStr;
-    NSDictionary *dict;
-    if (offButton.selected) {
-        
-        if (![button isEqual:actionButtonWasSelected]) {
-            if (actionButtonWasSelected) {
-                actionButtonWasSelected.selected = FALSE;
-            }
-            button.selected = TRUE;
-            actionButtonWasSelected = button;
-            zoneStr = [NSString stringWithFormat:@"%d", button.tag];
-            globals.CURRENT_O_ACTION_FB = button.tag;
-            globals.CURRENT_TYPE_FB = button.titleLabel.text;
-            NSInteger row;
-            row = [sTPickerView selectedRowInComponent:0];
-            NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @" " ;
-            
-            
-            NSDictionary *typeDictionary = [[NSDictionary alloc]initWithObjectsAndKeys:globals.CURRENT_TYPE_FB,@"type",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",[NSNumber numberWithInt:[distancePickerView selectedRowInComponent:0] ],@"distance" ,fieldPosSliderPos.text,@"field",specialTeamsOption,@"spoption", nil];
-            dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",typeDictionary,@"extra",globals.CURRENT_DOWN_TAGID,@"id",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",nil];//,nil];
-            [self modTagInfo:dict];
-        }
-    }else{
-        
-        if (![button isEqual:actionButtonWasSelected]) {
-            if (actionButtonWasSelected) {
-                actionButtonWasSelected.selected = FALSE;
-            }
-            button.selected = TRUE;
-            actionButtonWasSelected = button;
-            zoneStr = [NSString stringWithFormat:@"%d", button.tag];
-            globals.CURRENT_D_ACTION_FB = button.tag;
-            
-            globals.CURRENT_TYPE_FB = button.titleLabel.text;
-            NSInteger row;
-            row = [sTPickerView selectedRowInComponent:0];
-            NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @" " ;
-            
-            NSDictionary *typeDictionary = [[NSDictionary alloc]initWithObjectsAndKeys:globals.CURRENT_TYPE_FB,@"type",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",[NSNumber numberWithInt:[distancePickerView selectedRowInComponent:0] ],@"distance" ,fieldPosSliderPos.text,@"field",specialTeamsOption,@"spoption", nil];
-            dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",typeDictionary,@"extra",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",globals.CURRENT_DOWN_TAGID,@"id",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",nil];//,nil];
-            [self modTagInfo:dict];
-        }
-    }
+//    CustomButton *button = (CustomButton*)sender;
+//    NSString *zoneStr;
+//    NSDictionary *dict;
+//    if (offButton.selected) {
+//        
+//        if (![button isEqual:actionButtonWasSelected]) {
+//            if (actionButtonWasSelected) {
+//                actionButtonWasSelected.selected = FALSE;
+//            }
+//            button.selected = TRUE;
+//            actionButtonWasSelected = button;
+//            zoneStr = [NSString stringWithFormat:@"%d", button.tag];
+//            globals.CURRENT_O_ACTION_FB = button.tag;
+//            globals.CURRENT_TYPE_FB = button.titleLabel.text;
+//            NSInteger row;
+//            row = [sTPickerView selectedRowInComponent:0];
+//            NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @" " ;
+//            
+//            
+//            NSDictionary *typeDictionary = [[NSDictionary alloc]initWithObjectsAndKeys:globals.CURRENT_TYPE_FB,@"type",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",[NSNumber numberWithInt:[distancePickerView selectedRowInComponent:0] ],@"distance" ,fieldPosSliderPos.text,@"field",specialTeamsOption,@"spoption", nil];
+//            dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",typeDictionary,@"extra",globals.CURRENT_DOWN_TAGID,@"id",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",nil];//,nil];
+//            [self modTagInfo:dict];
+//        }
+//    }else{
+//        
+//        if (![button isEqual:actionButtonWasSelected]) {
+//            if (actionButtonWasSelected) {
+//                actionButtonWasSelected.selected = FALSE;
+//            }
+//            button.selected = TRUE;
+//            actionButtonWasSelected = button;
+//            zoneStr = [NSString stringWithFormat:@"%d", button.tag];
+//            globals.CURRENT_D_ACTION_FB = button.tag;
+//            
+//            globals.CURRENT_TYPE_FB = button.titleLabel.text;
+//            NSInteger row;
+//            row = [sTPickerView selectedRowInComponent:0];
+//            NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @" " ;
+//            
+//            NSDictionary *typeDictionary = [[NSDictionary alloc]initWithObjectsAndKeys:globals.CURRENT_TYPE_FB,@"type",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",[NSNumber numberWithInt:[distancePickerView selectedRowInComponent:0] ],@"distance" ,fieldPosSliderPos.text,@"field",specialTeamsOption,@"spoption", nil];
+//            dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",typeDictionary,@"extra",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",globals.CURRENT_DOWN_TAGID,@"id",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ],@"series",nil];//,nil];
+//            [self modTagInfo:dict];
+//        }
+//    }
     
 }
 -(void)nextPlayButtonSelected:(id)sender{
-    isNextPlay =TRUE;
-    if(!downButtonWasSelected)
-    {
-        [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
-        return;
-    }
-    if([globals.CURRENT_STATE_FB isEqualToString:@"off"])
-    {
-        globals.CURRENT_O_PLAY_NUMBER_FB++;
-    }else{
-        globals.CURRENT_D_PLAY_NUMBER_FB++;
-    }
-    
-    //we have to update the current position of the players on the field.
-    gainNumber  = [(NSString*)[gainPickerViewDataArr objectAtIndex:[gainPickerView selectedRowInComponent:0]] intValue];
-    
-    NSInteger row;
-    row = [sTPickerView selectedRowInComponent:0];
-    NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @"" ;
-    
-    NSDictionary *extraDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:globals.CURRENT_O_PLAY_NUMBER_FB],@"play",[NSNumber numberWithInt:[gainPickerView selectedRowInComponent:0]-55],@"gain",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ], @"series", specialTeamsOption,@"spoption", nil]; //lets put all of the play information in the extra key
-    if([stButton isSelected])
-    {
-        [stButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    NSDictionary * taginfoDict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",extraDictionary,@"extra",globals.CURRENT_DOWN_TAGID,@"id",nil];
-    [self modTagInfo:taginfoDict];
-    
-    distanceNumber = [distancePickerView selectedRowInComponent:0];
-    distanceNumber = distanceNumber == 0 ? 10 : distanceNumber; //make sure distance number isn't 0
-    int oldDistanceNumber=distanceNumber;
-    
-   if(gainNumber<0) // loss of yards
-    {
-        if (downButtonWasSelected.tag >2) {
-            [ downButtonWasSelected setTag:2];
-        }
-        distanceNumber = oldDistanceNumber+abs(gainNumber);
-        [[arrayOfDownButtons objectAtIndex:downButtonWasSelected.tag] sendActionsForControlEvents:UIControlEventTouchUpInside];
-        
-    }else{ // gain of yards
-        if(oldDistanceNumber-gainNumber < 0 || oldDistanceNumber-gainNumber == 0) // crossed 1st down line, new first down
-        {
-            isNewTurn=TRUE;
-            distanceNumber = 10;
-            selectedRowforDistance = distanceNumber;
-            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-            [distancePickerView reloadComponent:0];
-            gainNumber =0;
-            [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
-            return;
-        }else if([[arrayOfDownButtons objectAtIndex:2] isSelected] && !(oldDistanceNumber-gainNumber <= 0)){ // 3rd and didn't reach first down
-            isNewTurn=TRUE;
-            distanceNumber = 10;
-            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-            gainNumber =0;
-            [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
-            if([offButton isSelected])
-            {
-                [defButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-            }else{
-                [offButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-            }
-        }else{ //first or second down, still yards to go
-            distanceNumber=oldDistanceNumber-gainNumber;
-            [[arrayOfDownButtons objectAtIndex:downButtonWasSelected.tag] sendActionsForControlEvents:UIControlEventTouchUpInside];
-            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
-        }
-    }
-    
-    selectedRowforDistance = distanceNumber;
-    [distancePickerView reloadComponent:0];
-    
+//    isNextPlay =TRUE;
+//    if(!downButtonWasSelected)
+//    {
+//        [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//        return;
+//    }
+//    if([globals.CURRENT_STATE_FB isEqualToString:@"off"])
+//    {
+//        globals.CURRENT_O_PLAY_NUMBER_FB++;
+//    }else{
+//        globals.CURRENT_D_PLAY_NUMBER_FB++;
+//    }
+//    
+//    //we have to update the current position of the players on the field.
+//    gainNumber  = [(NSString*)[gainPickerViewDataArr objectAtIndex:[gainPickerView selectedRowInComponent:0]] intValue];
+//    
+//    NSInteger row;
+//    row = [sTPickerView selectedRowInComponent:0];
+//    NSString * specialTeamsOption = stButton.selected ? [specialTeamsArray objectAtIndex:row] : @"" ;
+//    
+//    NSDictionary *extraDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:globals.CURRENT_O_PLAY_NUMBER_FB],@"play",[NSNumber numberWithInt:[gainPickerView selectedRowInComponent:0]-55],@"gain",[NSNumber numberWithInt:[seriesPickerView selectedRowInComponent:0] ], @"series", specialTeamsOption,@"spoption", nil]; //lets put all of the play information in the extra key
+//    if([stButton isSelected])
+//    {
+//        [stButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//    }
+//    
+//    NSDictionary * taginfoDict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",extraDictionary,@"extra",globals.CURRENT_DOWN_TAGID,@"id",nil];
+//    [self modTagInfo:taginfoDict];
+//    
+//    distanceNumber = [distancePickerView selectedRowInComponent:0];
+//    distanceNumber = distanceNumber == 0 ? 10 : distanceNumber; //make sure distance number isn't 0
+//    int oldDistanceNumber=distanceNumber;
+//    
+//   if(gainNumber<0) // loss of yards
+//    {
+//        if (downButtonWasSelected.tag >2) {
+//            [ downButtonWasSelected setTag:2];
+//        }
+//        distanceNumber = oldDistanceNumber+abs(gainNumber);
+//        [[arrayOfDownButtons objectAtIndex:downButtonWasSelected.tag] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//        
+//    }else{ // gain of yards
+//        if(oldDistanceNumber-gainNumber < 0 || oldDistanceNumber-gainNumber == 0) // crossed 1st down line, new first down
+//        {
+//            isNewTurn=TRUE;
+//            distanceNumber = 10;
+//            selectedRowforDistance = distanceNumber;
+//            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//            [distancePickerView reloadComponent:0];
+//            gainNumber =0;
+//            [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//            return;
+//        }else if([[arrayOfDownButtons objectAtIndex:2] isSelected] && !(oldDistanceNumber-gainNumber <= 0)){ // 3rd and didn't reach first down
+//            isNewTurn=TRUE;
+//            distanceNumber = 10;
+//            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//            gainNumber =0;
+//            [[arrayOfDownButtons objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//            if([offButton isSelected])
+//            {
+//                [defButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//            }else{
+//                [offButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//            }
+//        }else{ //first or second down, still yards to go
+//            distanceNumber=oldDistanceNumber-gainNumber;
+//            [[arrayOfDownButtons objectAtIndex:downButtonWasSelected.tag] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//            [distancePickerView selectRow:distanceNumber inComponent:0 animated:YES];
+//        }
+//    }
+//    
+//    selectedRowforDistance = distanceNumber;
+//    [distancePickerView reloadComponent:0];
+//    
     
 }
 
@@ -900,53 +900,53 @@
 
 -(void)updatePlayCall:(id)info
 {
-    NSDictionary *dict;
-    if ([[info name] isEqualToString:@"UpdatePlayCallOpp"])
-    {
-        if (globals.playCallOppArray.count)
-        {
-            dict = [[NSDictionary alloc]initWithDictionary:[globals.playCallOppArray objectAtIndex:0]];
-            [globals.playCallOppArray removeObjectAtIndex:0];
-        }
-
-    }else{
-        if (globals.playCallArray.count)
-        {
-            dict = [[NSDictionary alloc]initWithDictionary:[globals.playCallArray objectAtIndex:0]];
-            [globals.playCallArray removeObjectAtIndex:0];
-        }
-    }
-    if(dict)
-    {
-        NSString *tagName = [dict objectForKey:@"name"] ;
-        NSRange rangeOfName = [[tagName lowercaseString] rangeOfString:@"opp"];
-        
-        if([globals.RIGHT_TAG_BUTTONS_NAME containsObject:tagName])
-        {
-            if([playCallOppArray count] < 1 || [[playCallOppArray objectAtIndex:0]length]<2)
-            {
-                [playCallOppArray removeAllObjects];
-            }
-            if (rangeOfName.length) {
-                [playCallOppArray addObject:[tagName stringByReplacingCharactersInRange:rangeOfName withString:@""]];
-            }else{
-                [playCallOppArray addObject:tagName];
-            }
-            [playCallOppPickerView reloadAllComponents];
-            [playCallOppPickerView selectRow:[playCallOppArray count]-1 inComponent:0 animated:YES];
-        }else{
-            if([[dict objectForKey:@"type"] intValue]==0 ||[[dict objectForKey:@"type"] intValue]==100)
-            {
-                if([playCallArray count] < 1 || [[playCallArray objectAtIndex:0]length]<2)
-                {
-                    [playCallArray removeAllObjects];
-                }
-                [playCallArray addObject:tagName];
-                [playCallPickerView reloadAllComponents];
-                [playCallPickerView selectRow:[playCallArray count]-1 inComponent:0 animated:YES];
-            }
-        }
-    }
+//    NSDictionary *dict;
+//    if ([[info name] isEqualToString:@"UpdatePlayCallOpp"])
+//    {
+//        if (globals.playCallOppArray.count)
+//        {
+//            dict = [[NSDictionary alloc]initWithDictionary:[globals.playCallOppArray objectAtIndex:0]];
+//            [globals.playCallOppArray removeObjectAtIndex:0];
+//        }
+//
+//    }else{
+//        if (globals.playCallArray.count)
+//        {
+//            dict = [[NSDictionary alloc]initWithDictionary:[globals.playCallArray objectAtIndex:0]];
+//            [globals.playCallArray removeObjectAtIndex:0];
+//        }
+//    }
+//    if(dict)
+//    {
+//        NSString *tagName = [dict objectForKey:@"name"] ;
+//        NSRange rangeOfName = [[tagName lowercaseString] rangeOfString:@"opp"];
+//        
+//        if([globals.RIGHT_TAG_BUTTONS_NAME containsObject:tagName])
+//        {
+//            if([playCallOppArray count] < 1 || [[playCallOppArray objectAtIndex:0]length]<2)
+//            {
+//                [playCallOppArray removeAllObjects];
+//            }
+//            if (rangeOfName.length) {
+//                [playCallOppArray addObject:[tagName stringByReplacingCharactersInRange:rangeOfName withString:@""]];
+//            }else{
+//                [playCallOppArray addObject:tagName];
+//            }
+//            [playCallOppPickerView reloadAllComponents];
+//            [playCallOppPickerView selectRow:[playCallOppArray count]-1 inComponent:0 animated:YES];
+//        }else{
+//            if([[dict objectForKey:@"type"] intValue]==0 ||[[dict objectForKey:@"type"] intValue]==100)
+//            {
+//                if([playCallArray count] < 1 || [[playCallArray objectAtIndex:0]length]<2)
+//                {
+//                    [playCallArray removeAllObjects];
+//                }
+//                [playCallArray addObject:tagName];
+//                [playCallPickerView reloadAllComponents];
+//                [playCallPickerView selectRow:[playCallArray count]-1 inComponent:0 animated:YES];
+//            }
+//        }
+//    }
 }
 
 // Display each row's data.
@@ -970,42 +970,42 @@
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     // //////NSLog(@"You selected this: %@", [pickerViewDataArr objectAtIndex: row]);
     //Send series info to the server
-    if ([pickerView isEqual:seriesPickerView]) {
-        if (offButton.selected) {
-            globals.CURRENT_O_SERIES_NUMBER_FB = row;
-        }else if(defButton.selected){
-            globals.CURRENT_D_SERIES_NUMBER_FB = row;
-        }
-        
-        globals.CURRENT_STATE_FB = @"def";
-        
-        selectedRowforSeries = row;
-        [seriesPickerView reloadComponent:0];
-        
-        seriesNumber = row;
-    }else if([pickerView isEqual:distancePickerView]){
-        //if it is not new down 1, update both distance and field number
-        if (fieldNumber != 0 && downButtonWasSelected) {
-            if (fieldNumber > 0 && fieldNumber - distanceNumber + row > 55) {
-                fieldNumber = fieldNumber - distanceNumber + row - 110;
-            }else if(fieldNumber > 0 && fieldNumber - distanceNumber + row <= 55){
-                fieldNumber = fieldNumber - distanceNumber + row;
-            }else if(fieldNumber <=0 && fieldNumber - distanceNumber + row < -54){
-                fieldNumber = fieldNumber - distanceNumber + row + 110;
-            }else{
-                fieldNumber = fieldNumber - distanceNumber + row;
-            }
-        }
-        distanceNumber = row;
-        //if (row != 0) {
-        selectedRowforDistance = row;
-        [pickerView reloadComponent:0];
-        //}
-    }else{
-        gainNumber = [[gainPickerViewDataArr objectAtIndex: row]integerValue];
-        selectedRowforGain = row;
-        [pickerView reloadComponent:0];
-    }
+//    if ([pickerView isEqual:seriesPickerView]) {
+//        if (offButton.selected) {
+//            globals.CURRENT_O_SERIES_NUMBER_FB = row;
+//        }else if(defButton.selected){
+//            globals.CURRENT_D_SERIES_NUMBER_FB = row;
+//        }
+//        
+//        globals.CURRENT_STATE_FB = @"def";
+//        
+//        selectedRowforSeries = row;
+//        [seriesPickerView reloadComponent:0];
+//        
+//        seriesNumber = row;
+//    }else if([pickerView isEqual:distancePickerView]){
+//        //if it is not new down 1, update both distance and field number
+//        if (fieldNumber != 0 && downButtonWasSelected) {
+//            if (fieldNumber > 0 && fieldNumber - distanceNumber + row > 55) {
+//                fieldNumber = fieldNumber - distanceNumber + row - 110;
+//            }else if(fieldNumber > 0 && fieldNumber - distanceNumber + row <= 55){
+//                fieldNumber = fieldNumber - distanceNumber + row;
+//            }else if(fieldNumber <=0 && fieldNumber - distanceNumber + row < -54){
+//                fieldNumber = fieldNumber - distanceNumber + row + 110;
+//            }else{
+//                fieldNumber = fieldNumber - distanceNumber + row;
+//            }
+//        }
+//        distanceNumber = row;
+//        //if (row != 0) {
+//        selectedRowforDistance = row;
+//        [pickerView reloadComponent:0];
+//        //}
+//    }else{
+//        gainNumber = [[gainPickerViewDataArr objectAtIndex: row]integerValue];
+//        selectedRowforGain = row;
+//        [pickerView reloadComponent:0];
+//    }
 }
 //hight the row we selected
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
@@ -1062,38 +1062,38 @@
 
 
 -(void)sendTagInfo:(NSDictionary *)dict{
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    [connection start];
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
+//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//    [connection start];
 }
 
 -(void)modTagInfo:(NSDictionary *)dict{
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    [connection start];
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//    
+//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//    [connection start];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -1110,29 +1110,29 @@
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection{
-    if (responseData) {
-        id json = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
-        if (json) {
-            if ([[json objectForKey:@"requrl"]rangeOfString:@"/ajax/tagset/{\"line\""].location != NSNotFound) {
-                globals.CURRENT_DOWN_TAGID = [json objectForKey:@"newTagID"];
-                //                if ([[json objectForKey:@"requrl"]rangeOfString:@"Offense"].location != NSNotFound) {
-                //                    NSDictionary *dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[globals.ACCOUNT_INFO objectForKey:@"customer"],@"user",[NSString stringWithFormat:@"%d",yrdLeftToRun],@"player",globals.CURRENT_DOWN_TAGID,@"id",nil];//,nil];
-                //                    [self modTagInfo:dict];
-                //                }
-                
-            }else{
-                responseData = nil;
-                return;
-            }
-        }else{
-            
-            //leave in for testing purposes
-            //            NSString * foo = [[NSString alloc]initWithData:responseData encoding:NSASCIIStringEncoding];
-            //            //////NSLog(@"jjson -- %@",foo);
-            //            //////NSLog(@"response data is corrupted.");
-        }
-        responseData = nil;
-    }
+//    if (responseData) {
+//        id json = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
+//        if (json) {
+//            if ([[json objectForKey:@"requrl"]rangeOfString:@"/ajax/tagset/{\"line\""].location != NSNotFound) {
+//                globals.CURRENT_DOWN_TAGID = [json objectForKey:@"newTagID"];
+//                //                if ([[json objectForKey:@"requrl"]rangeOfString:@"Offense"].location != NSNotFound) {
+//                //                    NSDictionary *dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[globals.ACCOUNT_INFO objectForKey:@"customer"],@"user",[NSString stringWithFormat:@"%d",yrdLeftToRun],@"player",globals.CURRENT_DOWN_TAGID,@"id",nil];//,nil];
+//                //                    [self modTagInfo:dict];
+//                //                }
+//                
+//            }else{
+//                responseData = nil;
+//                return;
+//            }
+//        }else{
+//            
+//            //leave in for testing purposes
+//            //            NSString * foo = [[NSString alloc]initWithData:responseData encoding:NSASCIIStringEncoding];
+//            //            //////NSLog(@"jjson -- %@",foo);
+//            //            //////NSLog(@"response data is corrupted.");
+//        }
+//        responseData = nil;
+//    }
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
@@ -1143,8 +1143,7 @@
 
 - (void)didReceiveMemoryWarning
 {
-    globals.DID_RECEIVE_MEMORY_WARNING = TRUE;
-    [super didReceiveMemoryWarning];
+      [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 

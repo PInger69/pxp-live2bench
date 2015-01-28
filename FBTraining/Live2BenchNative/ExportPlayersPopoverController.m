@@ -8,7 +8,7 @@
 
 #import "ExportPlayersPopoverController.h"
 #import "ExportPlayersSync.h"
-#import "Globals.h"
+//#import "Globals.h"
 
 
 const NSString* kExportPlayerDirectoryName = @"PlayerExports";
@@ -85,37 +85,37 @@ const NSString* kExportPlayerDirectoryName = @"PlayerExports";
 - (void)exportPlayersSync:(ExportPlayersSync*)syncer didFinishLoadingWithString:(NSString *)result
 {
     
-    NSMutableString* fileName = [[[Globals instance] HUMAN_READABLE_EVENT_NAME] mutableCopy];
-    [fileName appendFormat:@".%@", syncer.exportType];
-    
-    NSString* newFilePath = @"";
-    
-    if(_currentSelectedIndex.row == 0)
-    {
-         //copy
-        [[UIPasteboard generalPasteboard] setString:result];
-    }
-    else
-    {
-        newFilePath = [self saveTextFileWithName:fileName folderName:[kExportPlayerDirectoryName copy] withString:result];
-    }
-    
-    if(_currentSelectedIndex.row == 2)
-    {
-        emailController = [[MFMailComposeViewController alloc] init];
-        emailController.mailComposeDelegate = self;
-        
-        [emailController setSubject:[NSString stringWithFormat:@"MyPlayXPlay Export: %@", fileName]];
-        
-        [emailController addAttachmentData:[NSData dataWithContentsOfFile:newFilePath] mimeType:[NSString stringWithFormat:@"text/%@", syncer.exportType] fileName:fileName];
-        
-        [self presentViewController:emailController animated:YES completion:nil];
-    }
-    else
-    {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ExportPlayersPopoverControllerDidFinishSelection" object:nil];
-    }
-    
+//    NSMutableString* fileName = [[[Globals instance] HUMAN_READABLE_EVENT_NAME] mutableCopy];
+//    [fileName appendFormat:@".%@", syncer.exportType];
+//    
+//    NSString* newFilePath = @"";
+//    
+//    if(_currentSelectedIndex.row == 0)
+//    {
+//         //copy
+//        [[UIPasteboard generalPasteboard] setString:result];
+//    }
+//    else
+//    {
+//        newFilePath = [self saveTextFileWithName:fileName folderName:[kExportPlayerDirectoryName copy] withString:result];
+//    }
+//    
+//    if(_currentSelectedIndex.row == 2)
+//    {
+//        emailController = [[MFMailComposeViewController alloc] init];
+//        emailController.mailComposeDelegate = self;
+//        
+//        [emailController setSubject:[NSString stringWithFormat:@"MyPlayXPlay Export: %@", fileName]];
+//        
+//        [emailController addAttachmentData:[NSData dataWithContentsOfFile:newFilePath] mimeType:[NSString stringWithFormat:@"text/%@", syncer.exportType] fileName:fileName];
+//        
+//        [self presentViewController:emailController animated:YES completion:nil];
+//    }
+//    else
+//    {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"ExportPlayersPopoverControllerDidFinishSelection" object:nil];
+//    }
+//    
     
 }
 

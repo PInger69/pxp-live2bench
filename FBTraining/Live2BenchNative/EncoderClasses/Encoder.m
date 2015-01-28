@@ -671,8 +671,7 @@
     }
     isWaitiing = NO;
     [self removeFromQueue:currentCommand];
-    [self runNextCommand]; // this line is for testing
-
+    [self runNextCommand];
 }
 
 

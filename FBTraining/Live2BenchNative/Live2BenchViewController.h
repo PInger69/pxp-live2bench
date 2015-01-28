@@ -16,7 +16,7 @@
 #import "TagMarker.h"
 #import "TeleViewController.h"
 #import "UtilitiesController.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "ListViewController.h"
 #import "SoccerBottomViewController.h"

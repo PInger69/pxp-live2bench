@@ -60,10 +60,10 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    if (!globals) {
-        globals = [Globals instance];
-    }
+//    
+//    if (!globals) {
+//        globals = [Globals instance];
+//    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forceCloseTele) name:@"Close Tele" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveTeles) name:@"Save Tele" object:nil];
@@ -89,55 +89,55 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     savedShapeStartpoint = CGPointMake(0, 0);
     savedShapeEndpoint = CGPointMake(0, 0);
     
-    globals.IS_TELE = TRUE;
-    
-    //get current time scale
-    timeScale = self.l2bVC.videoPlayer.avPlayer.currentTime.timescale;
-    if (timeScale < 1) {
-        timeScale = 600;
-    }
-    CMTime teleTime = CMTimeMakeWithSeconds(globals.TELE_TIME, timeScale);
-    
-     //if the mp4 video file was not downloaded to the local deveice.(Current event is live event or streaming past event from the server)
-    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location == NSNotFound || globals.IS_IN_BOOKMARK_VIEW) {
-        if (globals.IS_IN_FIRST_VIEW) {
-            [self.l2bVC.videoPlayer pause];
-            //seek to an int time value, will make sure the review tele is accurate
-            [self.l2bVC.videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-            [self.l2bVC.videoPlayer pause];
-            //offsetTime = self.l2bVC.videoPlayer.startTime;
-            //globals.TELE_TIME = [self.l2bVC.videoPlayer currentTimeInSeconds];
-            //NSLog(@"Tele view controller globals.TELE_TIME %f",globals.TELE_TIME);
-            [self.l2bVC.teleButton setHidden:TRUE];
-        }else if(globals.IS_IN_LIST_VIEW){
-            [lvController.videoPlayer pause];
-            [lvController.videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-            [lvController.videoPlayer pause];
-            [lvController.teleButton setHidden:TRUE];
-        }else if(globals.IS_IN_BOOKMARK_VIEW){
-            [bmvController.videoPlayer pause];
-            //bookmark view's telestration won't be saved, do not need to seek to int time value to pause
-            
-            //[bmvController.videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.TELE_TIME, 1.0) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-            //[bmvController.videoPlayer.avPlayer pause];
-            [bmvController.teleButton setHidden:TRUE];
-            [saveButton setHidden:TRUE];
-        }
-
-
-    }else{
-        
-        if (globals.IS_IN_FIRST_VIEW) {
-            [self.l2bVC.teleButton setHidden:TRUE];
-        }else if(globals.IS_IN_LIST_VIEW){
-            [lvController.teleButton setHidden:TRUE];
-        }else if(globals.IS_IN_BOOKMARK_VIEW){
-            [bmvController.teleButton setHidden:TRUE];
-            [saveButton setHidden:TRUE];
-        }
-        
-
-    }
+//    globals.IS_TELE = TRUE;
+//    
+//    //get current time scale
+//    timeScale = self.l2bVC.videoPlayer.avPlayer.currentTime.timescale;
+//    if (timeScale < 1) {
+//        timeScale = 600;
+//    }
+//    CMTime teleTime = CMTimeMakeWithSeconds(globals.TELE_TIME, timeScale);
+//    
+//     //if the mp4 video file was not downloaded to the local deveice.(Current event is live event or streaming past event from the server)
+//    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location == NSNotFound || globals.IS_IN_BOOKMARK_VIEW) {
+//        if (globals.IS_IN_FIRST_VIEW) {
+//            [self.l2bVC.videoPlayer pause];
+//            //seek to an int time value, will make sure the review tele is accurate
+//            [self.l2bVC.videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//            [self.l2bVC.videoPlayer pause];
+//            //offsetTime = self.l2bVC.videoPlayer.startTime;
+//            //globals.TELE_TIME = [self.l2bVC.videoPlayer currentTimeInSeconds];
+//            //NSLog(@"Tele view controller globals.TELE_TIME %f",globals.TELE_TIME);
+//            [self.l2bVC.teleButton setHidden:TRUE];
+//        }else if(globals.IS_IN_LIST_VIEW){
+//            [lvController.videoPlayer pause];
+//            [lvController.videoPlayer.avPlayer seekToTime:teleTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//            [lvController.videoPlayer pause];
+//            [lvController.teleButton setHidden:TRUE];
+//        }else if(globals.IS_IN_BOOKMARK_VIEW){
+//            [bmvController.videoPlayer pause];
+//            //bookmark view's telestration won't be saved, do not need to seek to int time value to pause
+//            
+//            //[bmvController.videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.TELE_TIME, 1.0) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//            //[bmvController.videoPlayer.avPlayer pause];
+//            [bmvController.teleButton setHidden:TRUE];
+//            [saveButton setHidden:TRUE];
+//        }
+//
+//
+//    }else{
+//        
+//        if (globals.IS_IN_FIRST_VIEW) {
+//            [self.l2bVC.teleButton setHidden:TRUE];
+//        }else if(globals.IS_IN_LIST_VIEW){
+//            [lvController.teleButton setHidden:TRUE];
+//        }else if(globals.IS_IN_BOOKMARK_VIEW){
+//            [bmvController.teleButton setHidden:TRUE];
+//            [saveButton setHidden:TRUE];
+//        }
+//        
+//
+//    }
     
     
    
@@ -233,38 +233,38 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     [self.view sendSubviewToBack:self.colourIndicator];
     
      //if the mp4 video file was not downloaded to the local deveice.(Current event is live event or streaming past event from the server)
-    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location == NSNotFound  || globals.IS_IN_BOOKMARK_VIEW) {
-
-        saveButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-        [saveButton setFrame:CGRectMake(377.0f, 695.0f, 123.0f, 33.0f)];
-        //[saveButton setBackgroundImage:[UIImage imageNamed:@"tab-bar"] forState:UIControlStateNormal];
-        [saveButton setTitle:@"Save" forState:UIControlStateNormal];
-        [saveButton addTarget:self action:@selector(saveTeles) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:saveButton];
-        
-        clearButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-        [clearButton setFrame:CGRectMake(CGRectGetMaxX(saveButton.frame) + 15.0f, saveButton.frame.origin.y, 123.0f, 33.0f)];
-        //[clearButton setBackgroundImage:[UIImage imageNamed:@"tab-bar"] forState:UIControlStateNormal];
-        [clearButton setTitle:@"Close" forState:UIControlStateNormal];
-        [clearButton addTarget:self action:@selector(clearAll) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:clearButton];
-
-    }
+//    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location == NSNotFound  || globals.IS_IN_BOOKMARK_VIEW) {
+//
+//        saveButton = [BorderButton buttonWithType:UIButtonTypeCustom];
+//        [saveButton setFrame:CGRectMake(377.0f, 695.0f, 123.0f, 33.0f)];
+//        //[saveButton setBackgroundImage:[UIImage imageNamed:@"tab-bar"] forState:UIControlStateNormal];
+//        [saveButton setTitle:@"Save" forState:UIControlStateNormal];
+//        [saveButton addTarget:self action:@selector(saveTeles) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:saveButton];
+//        
+//        clearButton = [BorderButton buttonWithType:UIButtonTypeCustom];
+//        [clearButton setFrame:CGRectMake(CGRectGetMaxX(saveButton.frame) + 15.0f, saveButton.frame.origin.y, 123.0f, 33.0f)];
+//        //[clearButton setBackgroundImage:[UIImage imageNamed:@"tab-bar"] forState:UIControlStateNormal];
+//        [clearButton setTitle:@"Close" forState:UIControlStateNormal];
+//        [clearButton addTarget:self action:@selector(clearAll) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:clearButton];
+//
+//    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    globals.IS_TELE=FALSE;
-    if (globals.IS_IN_FIRST_VIEW) {
-        [self.l2bVC.videoPlayer pause];
-        [self.l2bVC.teleButton setHidden:FALSE];
-    }else if(globals.IS_IN_LIST_VIEW){
-        [lvController.videoPlayer pause];
-        [lvController.teleButton setHidden:FALSE];
-    }else if (globals.IS_IN_BOOKMARK_VIEW){
-        [bmvController.videoPlayer pause];
-        [bmvController.teleButton setHidden:FALSE];
-    }
+//    globals.IS_TELE=FALSE;
+//    if (globals.IS_IN_FIRST_VIEW) {
+//        [self.l2bVC.videoPlayer pause];
+//        [self.l2bVC.teleButton setHidden:FALSE];
+//    }else if(globals.IS_IN_LIST_VIEW){
+//        [lvController.videoPlayer pause];
+//        [lvController.teleButton setHidden:FALSE];
+//    }else if (globals.IS_IN_BOOKMARK_VIEW){
+//        [bmvController.videoPlayer pause];
+//        [bmvController.teleButton setHidden:FALSE];
+//    }
 
 }
 
@@ -288,232 +288,232 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 
 - (void)saveTeles
 {
-    [self.teleView saveTelestration];
-    teleImage = self.teleView.teleImage;
-    globals.IS_TELE=FALSE;
-    [self.view removeFromSuperview];
-    if (globals.IS_IN_FIRST_VIEW) {
-        [self.l2bVC.videoPlayer play];
-        [self.l2bVC showFullScreenOverlayButtons];
-
-        if(!teleImage){
-            //if no tele made, press save button, make sure the video begins to play
-            [self.l2bVC.videoPlayer play];
-            return;
-        }
-    }else if(globals.IS_IN_LIST_VIEW){
-        [lvController.videoPlayer play];
-        [lvController showTeleButton];
-        [lvController.saveTeleButton removeFromSuperview];
-        [lvController.clearTeleButton removeFromSuperview];
-        if (globals.IS_LOOP_MODE) {
-            [lvController showFullScreenOverlayButtonsinLoopMode];
-        }else{
-            [lvController showFullScreenOverlayButtons];
-        }
-        
-        if(!teleImage)
-        {
-            //if no tele made, press save button, make sure the video begins to play
-            [lvController.videoPlayer play];
-            return;
-        }
-        
-    }else if(globals.IS_IN_BOOKMARK_VIEW){
-        [bmvController.videoPlayer play];
-        [bmvController showTeleButton];
-        [bmvController showFullScreenOverlayButtons];
-        
-        if(!teleImage)
-        {
-            //if no tele made, press save button, make sure the video begins to play
-            [bmvController.videoPlayer play];
-            return;
-        }
-        
-
-    }
-    globals.DID_CREATE_NEW_TAG=TRUE;
-//<<<<<<< Updated upstream
-    //UIImage *teleImage=[self.mainImage.image rotate:UIImageOrientationLeft];
-    CGSize newSize = CGSizeMake(1024, 768);
-    UIGraphicsBeginImageContext( newSize );
-    [teleImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
-    UIImage *tempImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    //using the paused time will help seeking to the accurate time when reviewing telestration
-    NSString *tagTime = [NSString stringWithFormat:@"%f",globals.TELE_TIME - offsetTime];//CMTimeGetSeconds(pausedTime)];
-    
-//=======
-//    UIImage *teleImage = self.mainImage.image;
-//>>>>>>> Stashed changes
-    NSMutableDictionary *dict;
-   
-    //if the mp4 video file was not downloaded to the local deveice.(Current event is live event or streaming past event from the server)
-    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location == NSNotFound) {
-        // UIImage *teleImage = self.mainImage.image;
-        [self sendTagToServer:teleImage];
-        
-    }else{
-         //tag time is for playing telestration
-        float tagTimeF = globals.TELE_TIME; //CMTimeGetSeconds(cm_time);
-        NSString *tagTime = [NSString stringWithFormat:@"%f",tagTimeF];
-        NSUInteger dTotalSeconds = tagTimeF; //CMTimeGetSeconds(cm_time);
-        NSUInteger dHours = floor(dTotalSeconds / 3600);
-        NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
-        NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
-        NSString *displayTime = [NSString stringWithFormat:@"%i:%02i:%02i",dHours, dMinutes, dSeconds];
-        
-        if (!globals.HAS_MIN || !globals.eventExistsOnServer) {
-            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",@"telestration",@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"id", @"1",@"duration",@"4",@"type", displayTime,@"displaytime", @"1", @"local", nil];
-        }else{
-            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",@"telestration",@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"id", @"1",@"duration",@"4",@"type", displayTime,@"displaytime", nil];
-        }
-        
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
-                                                 (unsigned long)NULL), ^(void) {
-            BOOL isDir;
-            if(![[NSFileManager defaultManager] fileExistsAtPath:globals.THUMBNAILS_PATH isDirectory:&isDir])
-            {
-                [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
-            }
-
-            //create tag marker for the new tag
-//            [self.l2bVC markTagAtTime:[[dict objectForKey:@"time"] floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
-       
-            CGSize newSize = CGSizeMake(1024, 1024*9/16);
-            
-            // create a new bitmap image context at the device resolution (retina/non-retina)
-            UIGraphicsBeginImageContextWithOptions(newSize, YES, 0.0);
-            
-            // get context
-            CGContextRef context = UIGraphicsGetCurrentContext();
-            
-            // push context to make it current
-            // (need to do this manually because we are not drawing in a UIView)
-            UIGraphicsPushContext(context);
-            
-            // drawing code comes here- look at CGContext referenc
-            // for available operations
-            // this example draws the inputImage into the context
-            [self.currentImage drawInRect:self.view.frame blendMode:kCGBlendModeNormal alpha:1.0];
-            [teleImage drawInRect:CGRectMake(self.view.frame.origin.x, 0, self.view.frame.size.width, self.view.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
-            //[thumbnail drawInRect:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT) blendMode:kCGBlendModeNormal alpha:0.8];        // pop context
-            UIGraphicsPopContext();
-            
-            // get a UIImage from the image context- enjoy!!!
-            teleThumbImage = UIGraphicsGetImageFromCurrentImageContext();
-
-            NSString *teleImageName = [NSString stringWithFormat:@"tl%@.png",[dict objectForKey:@"id"]];
-            NSString *thumbImageName = [NSString stringWithFormat:@"tn%@.jpg",[dict objectForKey:@"id"]];
-            NSData *imageData = UIImagePNGRepresentation(teleThumbImage);// newImage
-            NSData *thumbData = UIImageJPEGRepresentation(teleThumbImage, 0.4);
-            //NSData *thumbData = UIImagePNGRepresentation(thumbnail);
-            //add image to directory
-            NSString *teleFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-            NSString *thumbFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",thumbImageName]];
-            
-            [imageData writeToFile:teleFilePath atomically:YES ];
-            [thumbData writeToFile:thumbFilePath atomically:YES];
-            [dict setObject:teleFilePath forKey:@"teleurl"];
-            [dict setObject:thumbFilePath forKey:@"url"];
-            //NSDictionary *toSave = [[NSDictionary alloc] initWithDictionary: dict];
-            //save tag information in global dictionary
-            [globals.CURRENT_EVENT_THUMBNAILS setObject:dict forKey:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
-        });
-        
-        if (globals.HAS_MIN && globals.eventExistsOnServer) {
-            [self sendTagToServer:teleThumbImage];
-        }
-    }
-    
-//<<<<<<< Updated upstream
-//    NSString *dataPath = [globals.THUMBNAILS_PATH  stringByAppendingPathComponent:@"/teles"];
-//    NSError* err;
-//    //create thumbnail directory in documents directory
-//    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
-//        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:&err];
+//    [self.teleView saveTelestration];
+//    teleImage = self.teleView.teleImage;
+//    globals.IS_TELE=FALSE;
+//    [self.view removeFromSuperview];
+//    if (globals.IS_IN_FIRST_VIEW) {
+//        [self.l2bVC.videoPlayer play];
+//        [self.l2bVC showFullScreenOverlayButtons];
+//
+//        if(!teleImage){
+//            //if no tele made, press save button, make sure the video begins to play
+//            [self.l2bVC.videoPlayer play];
+//            return;
+//        }
+//    }else if(globals.IS_IN_LIST_VIEW){
+//        [lvController.videoPlayer play];
+//        [lvController showTeleButton];
+//        [lvController.saveTeleButton removeFromSuperview];
+//        [lvController.clearTeleButton removeFromSuperview];
+//        if (globals.IS_LOOP_MODE) {
+//            [lvController showFullScreenOverlayButtonsinLoopMode];
+//        }else{
+//            [lvController showFullScreenOverlayButtons];
+//        }
+//        
+//        if(!teleImage)
+//        {
+//            //if no tele made, press save button, make sure the video begins to play
+//            [lvController.videoPlayer play];
+//            return;
+//        }
+//        
+//    }else if(globals.IS_IN_BOOKMARK_VIEW){
+//        [bmvController.videoPlayer play];
+//        [bmvController showTeleButton];
+//        [bmvController showFullScreenOverlayButtons];
+//        
+//        if(!teleImage)
+//        {
+//            //if no tele made, press save button, make sure the video begins to play
+//            [bmvController.videoPlayer play];
+//            return;
+//        }
+//        
+//
+//    }
+//    globals.DID_CREATE_NEW_TAG=TRUE;
+////<<<<<<< Updated upstream
+//    //UIImage *teleImage=[self.mainImage.image rotate:UIImageOrientationLeft];
+//    CGSize newSize = CGSizeMake(1024, 768);
+//    UIGraphicsBeginImageContext( newSize );
+//    [teleImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+//    UIImage *tempImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    
+//    //using the paused time will help seeking to the accurate time when reviewing telestration
+//    NSString *tagTime = [NSString stringWithFormat:@"%f",globals.TELE_TIME - offsetTime];//CMTimeGetSeconds(pausedTime)];
+//    
+////=======
+////    UIImage *teleImage = self.mainImage.image;
+////>>>>>>> Stashed changes
+//    NSMutableDictionary *dict;
+//   
+//    //if the mp4 video file was not downloaded to the local deveice.(Current event is live event or streaming past event from the server)
+//    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location == NSNotFound) {
+//        // UIImage *teleImage = self.mainImage.image;
+//        [self sendTagToServer:teleImage];
+//        
+//    }else{
+//         //tag time is for playing telestration
+//        float tagTimeF = globals.TELE_TIME; //CMTimeGetSeconds(cm_time);
+//        NSString *tagTime = [NSString stringWithFormat:@"%f",tagTimeF];
+//        NSUInteger dTotalSeconds = tagTimeF; //CMTimeGetSeconds(cm_time);
+//        NSUInteger dHours = floor(dTotalSeconds / 3600);
+//        NSUInteger dMinutes = floor(dTotalSeconds % 3600 / 60);
+//        NSUInteger dSeconds = floor(dTotalSeconds % 3600 % 60);
+//        NSString *displayTime = [NSString stringWithFormat:@"%i:%02i:%02i",dHours, dMinutes, dSeconds];
+//        
+//        if (!globals.HAS_MIN || !globals.eventExistsOnServer) {
+//            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",@"telestration",@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"id", @"1",@"duration",@"4",@"type", displayTime,@"displaytime", @"1", @"local", nil];
+//        }else{
+//            dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",@"telestration",@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time", tagTime, @"id", @"1",@"duration",@"4",@"type", displayTime,@"displaytime", nil];
+//        }
+//        
+//        
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
+//                                                 (unsigned long)NULL), ^(void) {
+//            BOOL isDir;
+//            if(![[NSFileManager defaultManager] fileExistsAtPath:globals.THUMBNAILS_PATH isDirectory:&isDir])
+//            {
+//                [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
+//            }
+//
+//            //create tag marker for the new tag
+////            [self.l2bVC markTagAtTime:[[dict objectForKey:@"time"] floatValue] colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//       
+//            CGSize newSize = CGSizeMake(1024, 1024*9/16);
+//            
+//            // create a new bitmap image context at the device resolution (retina/non-retina)
+//            UIGraphicsBeginImageContextWithOptions(newSize, YES, 0.0);
+//            
+//            // get context
+//            CGContextRef context = UIGraphicsGetCurrentContext();
+//            
+//            // push context to make it current
+//            // (need to do this manually because we are not drawing in a UIView)
+//            UIGraphicsPushContext(context);
+//            
+//            // drawing code comes here- look at CGContext referenc
+//            // for available operations
+//            // this example draws the inputImage into the context
+//            [self.currentImage drawInRect:self.view.frame blendMode:kCGBlendModeNormal alpha:1.0];
+//            [teleImage drawInRect:CGRectMake(self.view.frame.origin.x, 0, self.view.frame.size.width, self.view.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
+//            //[thumbnail drawInRect:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT) blendMode:kCGBlendModeNormal alpha:0.8];        // pop context
+//            UIGraphicsPopContext();
+//            
+//            // get a UIImage from the image context- enjoy!!!
+//            teleThumbImage = UIGraphicsGetImageFromCurrentImageContext();
+//
+//            NSString *teleImageName = [NSString stringWithFormat:@"tl%@.png",[dict objectForKey:@"id"]];
+//            NSString *thumbImageName = [NSString stringWithFormat:@"tn%@.jpg",[dict objectForKey:@"id"]];
+//            NSData *imageData = UIImagePNGRepresentation(teleThumbImage);// newImage
+//            NSData *thumbData = UIImageJPEGRepresentation(teleThumbImage, 0.4);
+//            //NSData *thumbData = UIImagePNGRepresentation(thumbnail);
+//            //add image to directory
+//            NSString *teleFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
+//            NSString *thumbFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",thumbImageName]];
+//            
+//            [imageData writeToFile:teleFilePath atomically:YES ];
+//            [thumbData writeToFile:thumbFilePath atomically:YES];
+//            [dict setObject:teleFilePath forKey:@"teleurl"];
+//            [dict setObject:thumbFilePath forKey:@"url"];
+//            //NSDictionary *toSave = [[NSDictionary alloc] initWithDictionary: dict];
+//            //save tag information in global dictionary
+//            [globals.CURRENT_EVENT_THUMBNAILS setObject:dict forKey:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//        });
+//        
+//        if (globals.HAS_MIN && globals.eventExistsOnServer) {
+//            [self sendTagToServer:teleThumbImage];
+//        }
 //    }
 //    
-//    //add image to directory - For testing only
-//    NSString *filePath = [dataPath stringByAppendingPathComponent:@"/tele.png"];
-//    NSData* data = UIImagePNGRepresentation(teleImage);
-//    [data writeToFile:filePath atomically:YES];
-//    
-//=======
-//>>>>>>> Stashed changes
-    [self.l2bVC.videoPlayer play];
+////<<<<<<< Updated upstream
+////    NSString *dataPath = [globals.THUMBNAILS_PATH  stringByAppendingPathComponent:@"/teles"];
+////    NSError* err;
+////    //create thumbnail directory in documents directory
+////    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
+////        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:&err];
+////    }
+////    
+////    //add image to directory - For testing only
+////    NSString *filePath = [dataPath stringByAppendingPathComponent:@"/tele.png"];
+////    NSData* data = UIImagePNGRepresentation(teleImage);
+////    [data writeToFile:filePath atomically:YES];
+////    
+////=======
+////>>>>>>> Stashed changes
+//    [self.l2bVC.videoPlayer play];
 }
 
 -(void)sendTagToServer:(UIImage*) teleImage{
     
-    CGSize newSize = CGSizeMake(1024, 768);
-    UIGraphicsBeginImageContext( newSize );
-    [teleImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
-    UIImage *tempImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    //using the paused time will help seeking to the accurate time when reviewing telestration
-    NSString *tagTime = [NSString stringWithFormat:@"%f",globals.TELE_TIME - offsetTime];//CMTimeGetSeconds(pausedTime)];
-    
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",@"telestration",@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time",@"1",@"duration",@"4",@"type",nil];
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/min/ajax/teleset",globals.URL]]
-                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                            timeoutInterval:60];
-    //create post request
-    [request setHTTPMethod:@"POST"];
-    NSString *boundary = @"----WebKitFormBoundarycC4YiaUFwM44F6rT";
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-    NSMutableData *body = [NSMutableData data];
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=tag\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    // [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
-    // Now we need to append the different data 'segments'. We first start by adding the boundary.
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=file; filename=picture.png\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    // We now need to tell the receiver what content type we have
-    // In my case it's a png image. If you have a jpg, set it to 'image/jpg'
-    [body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    // Now we append the actual image data
-    [body appendData:[NSData dataWithData:UIImagePNGRepresentation(tempImage)]];
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    // and again the delimiting boundary
-    //NSString *tempstr =[[NSString alloc]initWithData:body encoding:NSStringEncodingConversionAllowLossy];
-    [request setHTTPBody:body];
-    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:nil],self, nil];
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    
-    NSString * foo = [[NSString alloc]initWithData:body encoding:NSASCIIStringEncoding]; // used to ////////NSLog appqueue response
-    ////////NSLog(@"jjson -- %@",foo);
-    [globals.APP_QUEUE enqueue:request dict:instObj];
-    
-//    NSString *dataPath = [globals.THUMBNAILS_PATH  stringByAppendingPathComponent:@"/teles"];
-//    NSError* err;
-//    //create thumbnail directory in documents directory
-//    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
-//        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:&err];
-//    }
+//    CGSize newSize = CGSizeMake(1024, 768);
+//    UIGraphicsBeginImageContext( newSize );
+//    [teleImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+//    UIImage *tempImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
 //    
-//    //add image to directory - For testing only
-//    NSString *filePath = [dataPath stringByAppendingPathComponent:@"/tele.png"];
-//    NSData* data = UIImagePNGRepresentation(self.mainImage.image);
-//    [data writeToFile:filePath atomically:YES];
-    
+//    //using the paused time will help seeking to the accurate time when reviewing telestration
+//    NSString *tagTime = [NSString stringWithFormat:@"%f",globals.TELE_TIME - offsetTime];//CMTimeGetSeconds(pausedTime)];
+//    
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",@"telestration",@"name",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"time",@"1",@"duration",@"4",@"type",nil];
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    }
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/min/ajax/teleset",globals.URL]]
+//                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
+//                                                            timeoutInterval:60];
+//    //create post request
+//    [request setHTTPMethod:@"POST"];
+//    NSString *boundary = @"----WebKitFormBoundarycC4YiaUFwM44F6rT";
+//    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+//    [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
+//    NSMutableData *body = [NSMutableData data];
+//    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [body appendData:[@"Content-Disposition: form-data; name=tag\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    // [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    [body appendData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
+//    // Now we need to append the different data 'segments'. We first start by adding the boundary.
+//    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [body appendData:[@"Content-Disposition: form-data; name=file; filename=picture.png\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    // We now need to tell the receiver what content type we have
+//    // In my case it's a png image. If you have a jpg, set it to 'image/jpg'
+//    [body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    // Now we append the actual image data
+//    [body appendData:[NSData dataWithData:UIImagePNGRepresentation(tempImage)]];
+//    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    // and again the delimiting boundary
+//    //NSString *tempstr =[[NSString alloc]initWithData:body encoding:NSStringEncodingConversionAllowLossy];
+//    [request setHTTPBody:body];
+//    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:nil],self, nil];
+//    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
+//    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    
+//    NSString * foo = [[NSString alloc]initWithData:body encoding:NSASCIIStringEncoding]; // used to ////////NSLog appqueue response
+//    ////////NSLog(@"jjson -- %@",foo);
+//    [globals.APP_QUEUE enqueue:request dict:instObj];
+//    
+////    NSString *dataPath = [globals.THUMBNAILS_PATH  stringByAppendingPathComponent:@"/teles"];
+////    NSError* err;
+////    //create thumbnail directory in documents directory
+////    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
+////        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:&err];
+////    }
+////    
+////    //add image to directory - For testing only
+////    NSString *filePath = [dataPath stringByAppendingPathComponent:@"/tele.png"];
+////    NSData* data = UIImagePNGRepresentation(self.mainImage.image);
+////    [data writeToFile:filePath atomically:YES];
+//    
 
 }
 
@@ -685,39 +685,39 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 
 -(void)clearAll
 {
-    NSLog(@"isBlank: %@",self.teleView.isBlank ? @"yes" : @"no");
-    if (self.teleView.isBlank) {
-        globals.IS_TELE=FALSE;
-        if (globals.IS_IN_FIRST_VIEW) {
-            [self.l2bVC showFullScreenOverlayButtons];
-            [self.l2bVC.videoPlayer play];
-//            [self.l2bVC.saveTeleButton removeFromSuperview];
-//            [self.l2bVC.clearTeleButton removeFromSuperview];
-            [self.view removeFromSuperview];
-            [self.l2bVC.videoPlayer play];
-        }else if(globals.IS_IN_LIST_VIEW){
-            [self.lvController.saveTeleButton removeFromSuperview];
-            [self.lvController.clearTeleButton removeFromSuperview];
-            if (globals.IS_LOOP_MODE) {
-                [lvController showFullScreenOverlayButtonsinLoopMode];
-            }else{
-                [lvController showFullScreenOverlayButtons];
-            }
-            [lvController showTeleButton];
-            [lvController.videoPlayer play];
-        }else if (globals.IS_IN_BOOKMARK_VIEW){
-            [bmvController showFullScreenOverlayButtons];
-            [bmvController showTeleButton];
-            [bmvController.videoPlayer play];
-        }
-        [self.view removeFromSuperview];
-        [self.teleView removeFromSuperview];
-        self.teleView = nil;
-    }else{
-        [clearButton setTitle:@"Close" forState:UIControlStateNormal];
-        [self.teleView clearTelestration];
-    }
-   
+//    NSLog(@"isBlank: %@",self.teleView.isBlank ? @"yes" : @"no");
+//    if (self.teleView.isBlank) {
+//        globals.IS_TELE=FALSE;
+//        if (globals.IS_IN_FIRST_VIEW) {
+//            [self.l2bVC showFullScreenOverlayButtons];
+//            [self.l2bVC.videoPlayer play];
+////            [self.l2bVC.saveTeleButton removeFromSuperview];
+////            [self.l2bVC.clearTeleButton removeFromSuperview];
+//            [self.view removeFromSuperview];
+//            [self.l2bVC.videoPlayer play];
+//        }else if(globals.IS_IN_LIST_VIEW){
+//            [self.lvController.saveTeleButton removeFromSuperview];
+//            [self.lvController.clearTeleButton removeFromSuperview];
+//            if (globals.IS_LOOP_MODE) {
+//                [lvController showFullScreenOverlayButtonsinLoopMode];
+//            }else{
+//                [lvController showFullScreenOverlayButtons];
+//            }
+//            [lvController showTeleButton];
+//            [lvController.videoPlayer play];
+//        }else if (globals.IS_IN_BOOKMARK_VIEW){
+//            [bmvController showFullScreenOverlayButtons];
+//            [bmvController showTeleButton];
+//            [bmvController.videoPlayer play];
+//        }
+//        [self.view removeFromSuperview];
+//        [self.teleView removeFromSuperview];
+//        self.teleView = nil;
+//    }else{
+//        [clearButton setTitle:@"Close" forState:UIControlStateNormal];
+//        [self.teleView clearTelestration];
+//    }
+//   
 }
 
 
@@ -730,14 +730,13 @@ CGPoint midPoint(CGPoint p1, CGPoint p2)
 
 - (void)didReceiveMemoryWarning
 {
-    globals.DID_RECEIVE_MEMORY_WARNING = TRUE;
-    [super didReceiveMemoryWarning];
-    if (globals.IS_IN_FIRST_VIEW) {
-        [self.l2bVC.teleButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }else{
-        [lvController.teleButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }
-    
+     [super didReceiveMemoryWarning];
+//    if (globals.IS_IN_FIRST_VIEW) {
+//        [self.l2bVC.teleButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//    }else{
+//        [lvController.teleButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//    }
+//    
 //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There has been a low memory warning. Please try again." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
 //    [alert show];
 

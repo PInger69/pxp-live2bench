@@ -13,7 +13,7 @@
 //#import "AppQueue.h"
 #import "UtilitiesController.h"
 #import "Live2BenchViewController.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "CustomButton.h"
 #import "CustomLabel.h"
 
@@ -46,7 +46,7 @@
     NSString *documentsDirectory;
     UtilitiesController *uController;
     Live2BenchViewController *live2BenchViewController;
-    Globals *globals;
+//    Globals *globals;
     CustomLabel *strengthHomeLabel;
     CustomLabel *strengthAwayLabel;
     CustomButton *leftLineButtonWasSelected;

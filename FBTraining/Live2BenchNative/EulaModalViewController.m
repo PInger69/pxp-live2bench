@@ -7,33 +7,41 @@
 //
 
 #import "EulaModalViewController.h"
+#import "PopoverButton.h"
+
 @interface EulaModalViewController ()
 
 @end
 
+
 @implementation EulaModalViewController
+{
+    UITextView *eulaTextView;
+    void            (^_onAccept)(void);
+    
+}
 
-UITextView *eulaTextView;
+@synthesize accepted = _accepted;
 
-- (id)initWithController:(id)loginViewController;
+-(id)init
 {
     self = [super init];
-    if(loginViewController)
-    {
-        lVController=loginViewController;
-    }
-    globals = [Globals instance];
-    if (self) {
-        // Custom initialization
+    if (self){
+        [self setModalPresentationStyle:UIModalPresentationFormSheet];
+        _accepted = NO;
     }
     return self;
+
 }
+
 
 - (void)viewDidLoad
 {
+
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
+    
     
     UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44.0f)];
     navBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -65,23 +73,25 @@ UITextView *eulaTextView;
     line.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
     line.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
     [self.view addSubview:line];
+//    [self setModalPresentationStyle:UIModalPresentationFormSheet];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    
+
     [super viewWillAppear:animated];
     [eulaTextView scrollRectToVisible:CGRectMake(0.0f, 0.0f, 1.0f, 1.0f) animated:NO];
 }
 
-- (void)didReceiveMemoryWarning
+-(void)onCompleteAccept:(void(^)(void))onAccept
 {
-    globals.DID_RECEIVE_MEMORY_WARNING = TRUE;
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    _onAccept = onAccept;
 }
 
+
+
+
 - (void)dismissView:(id)sender {
-    globals.IS_EULA=FALSE;
+
     
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle: @"myplayXplay"
@@ -93,14 +103,20 @@ UITextView *eulaTextView;
     
 }
 - (void)acceptEula:(id)sender {
-    globals.IS_EULA=TRUE;
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc]initWithContentsOfFile:globals.ACCOUNT_PLIST_PATH];
-    [userInfo setObject:@"1" forKey:@"eula"];
-    [userInfo writeToFile: globals.ACCOUNT_PLIST_PATH atomically:YES];
-    [self dismissViewControllerAnimated:YES completion:^{
-        if(lVController)
-            [lVController dismissViewControllerAnimated:YES completion:nil];
-    }];
-    [globals.WHITE_BACKGROUND removeFromSuperview];
+
+    self.accepted = YES;
+    [self dismissViewControllerAnimated:YES completion:(_onAccept)?_onAccept:nil];
+    
+
 }
+
+
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+
+
 @end

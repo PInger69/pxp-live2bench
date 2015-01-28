@@ -7,8 +7,8 @@
 //
 
 #import "JPTripleSwipeCell.h"
-#import "JPStyle.h"
-#import "JPFont.h"
+//#import "JPStyle.h"
+//#import "JPFont.h"
 #import "JPReorderTableView.h"
 
 
@@ -73,7 +73,7 @@ static const NSInteger kCellCustomViewTag = 324;
     
     //SubViews on Main View
     self.mainLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    self.mainLabel.font = [UIFont fontWithName:[JPFont defaultFont] size:20];
+//    self.mainLabel.font = [UIFont fontWithName:[JPFont defaultFont] size:20];
     [self.mainCellView addSubview:self.mainLabel];
     
     //For customizing the Triple Swipe Cell, add to customView
@@ -92,7 +92,7 @@ static const NSInteger kCellCustomViewTag = 324;
     UIImage* shareIcon= [UIImage imageNamed:@"swipeShareIcon.png"];
     _shareImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 35, 35)];
     _shareImgView.contentMode = UIViewContentModeScaleAspectFit;
-    _shareImgView.image = [shareIcon imageWithColor:[UIColor whiteColor]];
+//    _shareImgView.image = [shareIcon imageWithColor:[UIColor whiteColor]];
     _shareImgView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
     [_shareView addSubview:_shareImgView];
     
@@ -103,7 +103,7 @@ static const NSInteger kCellCustomViewTag = 324;
     UIImage* deleteIcon= [UIImage imageNamed:@"swipeTrashIcon"];
     _deleteImgView = [[UIImageView alloc] initWithFrame:CGRectMake(200, 5, 35, 35)];
     _deleteImgView.contentMode = UIViewContentModeScaleAspectFit;
-    _deleteImgView.image = [deleteIcon imageWithColor:[UIColor whiteColor]];
+//    _deleteImgView.image = [deleteIcon imageWithColor:[UIColor whiteColor]];
     _deleteImgView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
 
     _deleteView.backgroundColor = [UIColor redColor];
@@ -238,7 +238,7 @@ static const NSInteger kCellCustomViewTag = 324;
 {
     if(longRec.state == UIGestureRecognizerStateBegan)
     {
-        self.customView.backgroundColor = [JPStyle colorWithHex:@"e6e6e6" alpha:1];
+//        self.customView.backgroundColor = [JPStyle colorWithHex:@"e6e6e6" alpha:1];
         _cellPressCancelled = NO;
     }
     else if(longRec.state == UIGestureRecognizerStateEnded)

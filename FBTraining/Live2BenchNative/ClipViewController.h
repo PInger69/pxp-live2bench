@@ -14,7 +14,7 @@
 #import "CustomTabBar.h"    
 #import "UtilitiesController.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "CustomButton.h"
 #import "ClipCornerView.h"
 #import "EdgeSwipeEditButtonsView.h"
@@ -29,7 +29,7 @@
 
 @interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, EdgeSwipeButtonDelegate>
 {
-    Globals *globals;
+//    Globals *globals;
     UIScrollView *breadCrumbsView;
     UtilitiesController *uController;
     UICollectionView *_collectionView; //collection view for displaying thumbnails in clip view

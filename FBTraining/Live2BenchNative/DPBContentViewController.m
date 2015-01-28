@@ -7,8 +7,8 @@
 //
 
 #import "DPBContentViewController.h"
-#import "JPStyle.h"
-#import "UserInterfaceConstants.h"
+//#import "JPStyle.h"
+//#import "UserInterfaceConstants.h"
 #import "NSObject+LBCloudConvenience.h"
 #import "DPBContentNavigationController.h"
 
@@ -26,11 +26,11 @@
     UIBarButtonItem* dismissItem = [[UIBarButtonItem alloc] initWithTitle:@"Dismiss" style:UIBarButtonSystemItemDone target:self action:@selector(dismissButtonPressed)];
     self.navigationItem.rightBarButtonItem = dismissItem;
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kiPadWidthFormSheetLandscape, kiPadHeightFormSheetLandscape) style:UITableViewStyleGrouped];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    [self.view addSubview:self.tableView];
+//    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kiPadWidthFormSheetLandscape, kiPadHeightFormSheetLandscape) style:UITableViewStyleGrouped];
+//    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"reuseIdentifier"];
+//    self.tableView.delegate = self;
+//    self.tableView.dataSource = self;
+//    [self.view addSubview:self.tableView];
     
 }
 

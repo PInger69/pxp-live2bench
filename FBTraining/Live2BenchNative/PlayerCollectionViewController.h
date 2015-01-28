@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 //#import <QuartzCore/QuartzCore.h>
-#import "Globals.h"
+//#import "Globals.h"
 #import "BorderButton.h"
 
 @interface PlayerCollectionViewController : UIViewController<UIScrollViewDelegate>{
     NSMutableArray *displayData;
     NSMutableArray *playersDidSelected;
     NSMutableArray *playerButtons;
-    Globals *globals;
+//    Globals *globals;
     IBOutlet UIScrollView *scrollView;
     
 }

@@ -6,22 +6,31 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
-#import "AppDelegate.h"
 
-#import "Live2BenchViewController.h"
-#import "EncoderClasses/EncoderManager.h"
-#import "UserCenter.h"
-#import "CalendarViewController.h"
+#import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
 
+#import "EncoderClasses/EncoderManager.h"
+#import "UserCenter.h"
+#import "UtilityClasses/ActionList.h"
+#import "AppDelegateActionPack.h"
+
+
+
 @implementation AppDelegate
+{
+    ActionList                  * _actionList;
+    RequestUserInfoAction       * requestInfoAction;
+    RequestEulaAction           * requestEulaAction;
+}
+
 @synthesize window;
 @synthesize tabBarController;
-//@synthesize ctabBar=_ctabBar;
-@synthesize lVController=_lVController;
-//@synthesize bmViewController;
-@synthesize screenController;
-@synthesize encoderManager = _encoderManager;
+@synthesize screenController    = _screenController;
+@synthesize encoderManager      = _encoderManager;
+@synthesize loginController     = _loginController;
+@synthesize eulaViewController  = _eulaViewController;
+
 
 // will be boolean NO, meaning the URL was not handled by the authenticating application
 - (BOOL)application:(UIApplication *)application
@@ -53,87 +62,71 @@
     //we can also startwithapikey with a delay if we need to (not necessary)
     [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
     
-    // set up external screens
-    screenController = [[ScreenController alloc]init];
-  
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSArray     * kpaths    = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString    * kdocumentsDirectory = [kpaths objectAtIndex:0];
     
-    // Build Encoder Manager
+    _screenController       = [[ScreenController alloc]init];
+    _loginController        = [[LoginViewController alloc]init];
+    _eulaViewController     = [[EulaModalViewController alloc]init];
     
-    NSArray                      * kpaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString                     * kdocumentsDirectory = [kpaths objectAtIndex:0];
-    NSFileManager                * fileManager;
-    fileManager = [NSFileManager defaultManager];
+    
+    _actionList             = [[ActionList alloc]init];
+    _userCenter             = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
+    [_userCenter enableObservers:YES];
     
     NSString *accountInformationPath = [kdocumentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
     NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
     NSString * custID = [accountInfo objectForKey:@"customer"];
     
-    _encoderManager = [[EncoderManager alloc]initWithID: custID
-                                           localDocPath: kdocumentsDirectory];
-    
-    
-    
-    _userCenter     = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
+    _encoderManager = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 
-    [_userCenter enableObservers:YES];
-    // end Build encoder manager
+
     
     self.tabBarController           = [[CustomTabBar alloc]init];
     self.window.rootViewController  = self.tabBarController;
     self.window.tintColor           = [UIColor orangeColor];
     [self.window makeKeyAndVisible];
-    uController                     = [[UtilitiesController alloc]init];
-    globals                         = [Globals instance];
-
     
-    globals.LOCAL_DOCS_PATH         = [[NSString alloc]initWithString:documentsDirectory];
-    globals.LOG_PATH                = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"log.plist"];
-    globals.BOOKMARK_PATH           = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"bookmark"];
-    globals.BOOKMARK_TAGS_PATH      = [globals.BOOKMARK_PATH stringByAppendingPathComponent:@"bookmarktags.plist"];
-    globals.BOOKMARK_QUEUE_PATH     = [globals.BOOKMARK_PATH stringByAppendingPathComponent:@"bookmarkqueue.plist"];
-    globals.BOOKMARK_VIDEO_PATH     = [globals.BOOKMARK_PATH stringByAppendingPathComponent:@"bookmarkvideo"];
-    globals.EVENTS_PATH             = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"events"];
-    globals.TAGS_PLIST_PATH         = [globals.LOCAL_DOCS_PATH stringByAppendingString:@"tags.plist"];
-    BOOL isDir;
-    if(![[NSFileManager defaultManager] fileExistsAtPath:globals.EVENTS_PATH isDirectory:&isDir])
-    {
-        [[NSFileManager defaultManager] createDirectoryAtPath:globals.EVENTS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
-    }
+    
+    
+    
+    NSFileManager                * fileManager;
+    fileManager = [NSFileManager defaultManager];
+    
+//    uController                     = [[UtilitiesController alloc]init];
 
-    globals.EVENT_NAME= @"";
-    globals.WHICH_SPORT = @"";
-    globals.CURRENT_PLAYBACK_EVENT = @"";
-    globals.ACCOUNT_PLIST_PATH=[globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"accountInformation.plist"];
-   // globals.DOWNLOADED_EVENTS_PLIST = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"downloadedEvents.plist"];
-    //make sure live folder is cleared when start the app
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"]]) {
-        [[NSFileManager defaultManager]removeItemAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"] error:nil];
-    }
+//    BOOL isDir;
+//    if(![[NSFileManager defaultManager] fileExistsAtPath:globals.EVENTS_PATH isDirectory:&isDir])
+//    {
+//        [[NSFileManager defaultManager] createDirectoryAtPath:globals.EVENTS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
+//    }
+//    //make sure live folder is cleared when start the app
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"]]) {
+//        [[NSFileManager defaultManager]removeItemAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"] error:nil];
+//    }
     //get all the local events which have offline tags
     //LocalEvents.plist saved all the local events which have offline tags
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"LocalEvents.plist"]]) {
-        globals.LOCAL_MODIFIED_EVENTS = [[NSMutableArray alloc]initWithContentsOfFile:[globals.EVENTS_PATH stringByAppendingPathComponent:@"LocalEvents.plist"]];
-    }
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:globals.LOG_PATH]) {
-        globals.LOG_INFO = [[NSMutableDictionary alloc]initWithContentsOfFile:globals.LOG_PATH];
-    }else{
-        globals.LOG_INFO = [[NSMutableDictionary alloc]init];
-    }
-    NSMutableDictionary *bookmarkTags;
-    NSString *bookmarkTagPath = globals.BOOKMARK_TAGS_PATH;
-    if ([[NSFileManager defaultManager] fileExistsAtPath: bookmarkTagPath])
-    {
-        bookmarkTags = [[NSMutableDictionary alloc]initWithContentsOfFile:bookmarkTagPath];
-    }else{
-        bookmarkTags = [[NSMutableDictionary alloc]init];
-    }
-    globals.BOOKMARK_TAGS = bookmarkTags;
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"LocalEvents.plist"]]) {
+//        globals.LOCAL_MODIFIED_EVENTS = [[NSMutableArray alloc]initWithContentsOfFile:[globals.EVENTS_PATH stringByAppendingPathComponent:@"LocalEvents.plist"]];
+//    }
+//    
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:globals.LOG_PATH]) {
+//        globals.LOG_INFO = [[NSMutableDictionary alloc]initWithContentsOfFile:globals.LOG_PATH];
+//    }else{
+//        globals.LOG_INFO = [[NSMutableDictionary alloc]init];
+//    }
+//    NSMutableDictionary *bookmarkTags;
+//    NSString *bookmarkTagPath = globals.BOOKMARK_TAGS_PATH;
+//    if ([[NSFileManager defaultManager] fileExistsAtPath: bookmarkTagPath])
+//    {
+//        bookmarkTags = [[NSMutableDictionary alloc]initWithContentsOfFile:bookmarkTagPath];
+//    }else{
+//        bookmarkTags = [[NSMutableDictionary alloc]init];
+//    }
+//    globals.BOOKMARK_TAGS = bookmarkTags;
     
     //check if user has already logged in on this device at least once
-    globals.ACCOUNT_FIELDS = [[NSArray alloc]initWithObjects:@"emailAddress",@"password",@"authorization",@"customer",@"hid",@"tagColour",nil];
+//    globals.ACCOUNT_FIELDS = [[NSArray alloc]initWithObjects:@"emailAddress",@"password",@"authorization",@"customer",@"hid",@"tagColour",nil];
     
     // Set these variables before launching the app
     NSString* appKey = @"huc2enjbl496cq8";
@@ -174,9 +167,51 @@
 		 show];
 	}
     
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutApp:) name:NOTIF_USER_LOGGED_OUT object:nil];
+    
+    // action creation
+    requestInfoAction = [[RequestUserInfoAction alloc]initWithAppDelegate:self];
+    requestEulaAction = [[RequestEulaAction alloc]initWithAppDelegate:self];
+    
+    // run main logic for status checking
 
+    
+    [self actionListBlock];
+    
+    [_actionList onFinishList:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
+//        _loginController        = nil;
+//        _eulaViewController     = nil;
+
+    }];
+    
+    [_actionList start];
     return YES;
 }
+
+
+-(void)logoutApp:(NSNotification *)note
+{
+    if ([[note.userInfo objectForKey:@"success"]boolValue]){
+
+        _loginController        = [[LoginViewController alloc]init];
+        _eulaViewController     = [[EulaModalViewController alloc]init];
+        [_actionList clear];
+        [self actionListBlock];
+        
+        [_actionList onFinishList:^{
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
+//            _loginController        = nil;
+//            _eulaViewController     = nil;
+            
+        }];
+        
+        [_actionList start];
+    }
+}
+
+
 
 #pragma mark -
 #pragma mark DBSessionDelegate methods
@@ -222,14 +257,12 @@ static int outstandingRequests;
 	}
 }
 
-
-
 -(void)applicationDidBecomeActive:(UIApplication *)application
 {
-    if (globals.CURRENT_APP_STATE != apstNotInited)
-    {
-        globals.CURRENT_APP_STATE = apstReactiveCheck;
-    }
+//    if (globals.CURRENT_APP_STATE != apstNotInited)
+//    {
+//        globals.CURRENT_APP_STATE = apstReactiveCheck;
+//    }
 
 }
 
@@ -238,9 +271,9 @@ static int outstandingRequests;
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     
-    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
-        [uController writeTagsToPlist];
-    }
+//    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
+//        [uController writeTagsToPlist];
+//    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -255,72 +288,72 @@ static int outstandingRequests;
 {
     // check for login and eula
 
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    // check for login and eula
-    NSString *path = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"accountInformation.plist"];
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    // check for login and eula
+//    NSString *path = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"accountInformation.plist"];
+//
+//    if ([fileManager fileExistsAtPath: path])
+//    {
+//        globals.IS_LOGGED_IN=TRUE;
+//        //set eula boolean value depending on whether or not user has accepted -- from the users info
+//        globals.IS_EULA = [globals.ACCOUNT_INFO objectForKey:@"eula"];
+//    }
 
-    if ([fileManager fileExistsAtPath: path])
-    {
-        globals.IS_LOGGED_IN=TRUE;
-        //set eula boolean value depending on whether or not user has accepted -- from the users info
-        globals.IS_EULA = [globals.ACCOUNT_INFO objectForKey:@"eula"];
-    }
-
-    [self.lVController refreshUI];
+//    [self.lVController refreshUI];
    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
-        [uController writeTagsToPlist];
-    }
-    if (globals.HAS_MIN) {
-        NSMutableArray *unfinishedTagArray;
-        
-        //tags in current event haven't processed yet (in globals.BOOKMARK_QUEUE)
-        if (globals.BOOKMARK_QUEUE.count > 0) {
-            for(NSDictionary *dict in globals.BOOKMARK_QUEUE){
-                if (!unfinishedTagArray) {
-                    unfinishedTagArray = [NSMutableArray arrayWithObject:[dict objectForKey:@"tag"]];
-                }else{
-                    [unfinishedTagArray addObject:[dict objectForKey:@"tag"]];
-                }
-            }
-        }
-        
-        //tag videos haven't been converted by AV Foundation (in globals.TAGS_DOWNLOADED_FROM_SERVER)
-        if (globals.TAGS_DOWNLOADED_FROM_SERVER.count > 0) {
-            for(NSDictionary *dict in globals.TAGS_DOWNLOADED_FROM_SERVER){
-                if (!unfinishedTagArray) {
-                    unfinishedTagArray = [NSMutableArray arrayWithObject:[dict objectForKey:@"tag"]];
-                }else{
-                    [unfinishedTagArray addObject:[dict objectForKey:@"tag"]];
-                }
-            }
-        }
-        
-        //tags not sucessfully processed (lobals.BOOKMARK_TAGS_UNFINISHED) from the past
-        if (globals.BOOKMARK_TAGS_UNFINISHED.count > 0) {
-            for(NSDictionary *dict in globals.BOOKMARK_TAGS_UNFINISHED){
-                if (!unfinishedTagArray) {
-                    unfinishedTagArray = [NSMutableArray arrayWithObject:dict];
-                }else{
-                    [unfinishedTagArray addObject:dict];
-                }
-            }
-        }
-        
-        if(![[NSFileManager defaultManager]fileExistsAtPath:globals.BOOKMARK_QUEUE_PATH]){
-            [[NSFileManager defaultManager]createFileAtPath:globals.BOOKMARK_QUEUE_PATH contents:nil attributes:nil];
-        }
-        [unfinishedTagArray writeToFile:globals.BOOKMARK_QUEUE_PATH atomically:YES];
-    }
-   
+//    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
+//        [uController writeTagsToPlist];
+//    }
+//    if (globals.HAS_MIN) {
+//        NSMutableArray *unfinishedTagArray;
+//        
+//        //tags in current event haven't processed yet (in globals.BOOKMARK_QUEUE)
+//        if (globals.BOOKMARK_QUEUE.count > 0) {
+//            for(NSDictionary *dict in globals.BOOKMARK_QUEUE){
+//                if (!unfinishedTagArray) {
+//                    unfinishedTagArray = [NSMutableArray arrayWithObject:[dict objectForKey:@"tag"]];
+//                }else{
+//                    [unfinishedTagArray addObject:[dict objectForKey:@"tag"]];
+//                }
+//            }
+//        }
+//        
+//        //tag videos haven't been converted by AV Foundation (in globals.TAGS_DOWNLOADED_FROM_SERVER)
+//        if (globals.TAGS_DOWNLOADED_FROM_SERVER.count > 0) {
+//            for(NSDictionary *dict in globals.TAGS_DOWNLOADED_FROM_SERVER){
+//                if (!unfinishedTagArray) {
+//                    unfinishedTagArray = [NSMutableArray arrayWithObject:[dict objectForKey:@"tag"]];
+//                }else{
+//                    [unfinishedTagArray addObject:[dict objectForKey:@"tag"]];
+//                }
+//            }
+//        }
+//        
+//        //tags not sucessfully processed (lobals.BOOKMARK_TAGS_UNFINISHED) from the past
+//        if (globals.BOOKMARK_TAGS_UNFINISHED.count > 0) {
+//            for(NSDictionary *dict in globals.BOOKMARK_TAGS_UNFINISHED){
+//                if (!unfinishedTagArray) {
+//                    unfinishedTagArray = [NSMutableArray arrayWithObject:dict];
+//                }else{
+//                    [unfinishedTagArray addObject:dict];
+//                }
+//            }
+//        }
+//        
+//        if(![[NSFileManager defaultManager]fileExistsAtPath:globals.BOOKMARK_QUEUE_PATH]){
+//            [[NSFileManager defaultManager]createFileAtPath:globals.BOOKMARK_QUEUE_PATH contents:nil attributes:nil];
+//        }
+//        [unfinishedTagArray writeToFile:globals.BOOKMARK_QUEUE_PATH atomically:YES];
+//    }
+//   
     //make sure live folder is cleared when close the app
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"]]) {
-        [[NSFileManager defaultManager]removeItemAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"] error:nil];
-    }
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"]]) {
+//        [[NSFileManager defaultManager]removeItemAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"] error:nil];
+//    }
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
@@ -332,5 +365,84 @@ static int outstandingRequests;
     return window;
 }
 
+
+#pragma mark -
+#pragma mark Start Up ActionList methods
+
+/**
+ *  this is where the make actionlist code resides
+ */
+-(void)actionListBlock
+{
+ 
+    //Richard
+    [SpinnerView initTheGlobalSpinner];
+ 
+    __block EncoderManager * weakEM             = _encoderManager;
+    __block AppDelegate    * weakSelf           = self;
+    __block ActionList     * weakAList          = _actionList;
+    __block id<ActionListItem> weakReq          = [requestInfoAction reset];
+    __block id<ActionListItem> weakEula         = [requestEulaAction reset];
+   
+    
+    
+    
+    //Check wifi
+    [_actionList addItem:_encoderManager.checkForWiFiAction     onItemStart:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
+                                                           object:nil
+                                                         userInfo:[SpinnerView message:@"Checking for WiFi..." progress:.1 animated:YES]];
+    } onItemFinish:^(BOOL succsess) {
+        NSLog(@"WIFI Check");
+        NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+    }];
+
+    //Check Cloud
+    [_actionList addItem:_encoderManager.checkForACloudAction   onItemStart:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
+                                                           object:nil
+                                                         userInfo:[SpinnerView message:@"Checking for Cloud..." progress:.2 animated:YES]];
+    } onItemFinish:^(BOOL succsess) {
+        NSLog(@"Cloud Check");
+        NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+        weakSelf.loginController.hasInternet = succsess;
+    }];
+    
+    //Check if user plist exists
+    [_actionList addItem:[_userCenter checkLoginPlistAction]    onItemStart:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
+                                                           object:nil
+                                                         userInfo:[SpinnerView message:@"Checking user credentials plist..." progress:.3 animated:YES]];
+        
+    } onItemFinish:^(BOOL succsess) {
+        NSLog(@"User Plist Check");
+        NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+        
+        if(succsess){ // get the ID from the userCenter and sets it to the Manager so it can look for encoders
+            weakEM.customerID = weakSelf.userCenter.customerID;
+            weakEM.searchForEncoders = weakEM.hasWiFi;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+            // add to action list success list bransh
+            
+        } else {
+            [weakAList addItem:weakReq];
+            [weakAList addItem:weakEula onItemFinish:^(BOOL succsess) {
+                if (succsess){
+                    weakSelf.userCenter.isEULA = YES;
+                    [weakSelf.userCenter writeAccountInfoToPlist];
+                    weakEM.customerID = weakSelf.userCenter.customerID;
+                    weakEM.searchForEncoders = weakEM.hasWiFi;
+                    // present Eula and accept
+                    // if info is okay and Eula is accepted
+                    // save to plist
+                }
+                
+            }];
+        }
+    }];
+    
+
+    
+}
 
 @end

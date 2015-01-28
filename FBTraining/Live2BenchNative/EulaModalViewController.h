@@ -7,18 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Globals.h"
-#import "LoginViewController.h"
-
-@class LoginViewController;
 
 @interface EulaModalViewController : UIViewController
 {
-    Globals *globals;
-    LoginViewController *lVController;
-}
 
-- (id)initWithController:(LoginViewController*)loginViewController;
+}
+@property (nonatomic,assign)    BOOL accepted;
+
+-(void)onCompleteAccept:(void(^)(void))onAccept;
+
 - (void)dismissView:(id)sender;
 - (void)acceptEula:(id)sender;
 

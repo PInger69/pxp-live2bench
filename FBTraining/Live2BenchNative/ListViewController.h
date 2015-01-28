@@ -13,11 +13,13 @@
 #import "ListViewCell.h"
 #import "Live2BenchViewController.h"
 #import "UtilitiesController.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "TeleViewController.h"
 #import "UIFont+Default.h"
 #import "BorderButton.h"
 #import "EdgeSwipeEditButtonsView.h"
+#import "VideoPlayer.h"
+
 
 @class FilterToolboxViewController;
 @class TeleViewController, ExportPlayersPopoverController;
@@ -27,7 +29,7 @@
     int cellCounter;            //number of cells created in list view
     int coachPickMode;          //if it is a coach pick tag, this value is equal to 1; else is 0
     int cellSelectedNumber;     //number of list view cell has been selected (0 or 1), used for enabling the comment box
-    Globals                     *globals;
+//    Globals                     *globals;
     NSString                    *userId;                             // user's hid
     NSString                    *tagId;                              //tag's id
     NSFileManager               *fileManager;

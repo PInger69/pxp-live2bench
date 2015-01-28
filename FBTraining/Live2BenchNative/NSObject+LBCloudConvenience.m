@@ -8,7 +8,7 @@
 
 #import "NSObject+LBCloudConvenience.h"
 //#import "GTLBase64.h"
-#import "NSString+LBConvenience.h"
+//#import "NSString+LBConvenience.h"
 
 @implementation NSObject (LBCloudConvenience)
 
@@ -132,7 +132,7 @@
     }
     else if(unit == NSCalendarUnitMonth)
     {
-        resultString = [NSString monthFullStringWithInt:dateComponents.month];
+//        resultString = [NSString monthFullStringWithInt:dateComponents.month];
     }
     else if(unit == NSCalendarUnitDay)
     {

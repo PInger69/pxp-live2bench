@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Globals.h"
+//#import "Globals.h"
 #import "Live2BenchViewController.h"
 #import "CustomButton.h"
 
@@ -37,7 +37,7 @@
 @property (nonatomic,strong) NSMutableArray *playCallArray;
 @property (strong, nonatomic) IBOutlet UIView *offLayoutView;
 @property (strong, nonatomic) Live2BenchViewController *live2BenchViewController;
-@property (strong, nonatomic) Globals *globals;
+//@property (strong, nonatomic) Globals *globals;
 @property (strong, nonatomic) CustomButton *offButton;
 @property (strong, nonatomic) CustomButton *defButton;
 @property (strong, nonatomic) CustomButton *stButton;

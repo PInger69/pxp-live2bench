@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Globals.h"
+//#import "Globals.h"
 #import "Live2BenchViewController.h"
 
 @class Live2BenchViewController;

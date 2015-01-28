@@ -10,7 +10,7 @@
 #import "HNBorderButton.h"
 #import "DPBFileUploader.h"
 #import "UIColor+RGBValues.h"
-#import "UserInterfaceConstants.h"
+//#import "UserInterfaceConstants.h"
 #import "DPBContentViewController.h"
 #import "DejalActivityView.h"
 #import "NSObject+LBCloudConvenience.h"
@@ -74,11 +74,11 @@
 {
     if(!linkButton)
     {
-        linkButton = [[HNBorderButton alloc] initWithFrame:CGRectMake(kiPadWidthFormSheetLandscape/2 - 50, kiPadHeightFormSheetLandscape/2, 100, 44)];
-        [linkButton setTitle:@"Link Dropbox" forState:UIControlStateNormal];
-        linkButton.color = [[UIColor greenColor] darkerColor];
-        [linkButton addTarget:self action:@selector(linkButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:linkButton];
+//        linkButton = [[HNBorderButton alloc] initWithFrame:CGRectMake(kiPadWidthFormSheetLandscape/2 - 50, kiPadHeightFormSheetLandscape/2, 100, 44)];
+//        [linkButton setTitle:@"Link Dropbox" forState:UIControlStateNormal];
+//        linkButton.color = [[UIColor greenColor] darkerColor];
+//        [linkButton addTarget:self action:@selector(linkButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:linkButton];
     }
     
     if(isShown)

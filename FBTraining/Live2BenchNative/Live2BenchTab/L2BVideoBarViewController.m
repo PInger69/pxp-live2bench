@@ -78,7 +78,7 @@
         // range mod Buttons
         
         _endRangeModifierButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-        _endRangeModifierButton = [[CustomButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH + 115,5 + videoPlayer.view.frame.size.height + 100, LITTLE_ICON_DIMENSIONS-5, LITTLE_ICON_DIMENSIONS-10)];
+//        _endRangeModifierButton = [[CustomButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH + 115,5 + videoPlayer.view.frame.size.height + 100, LITTLE_ICON_DIMENSIONS-5, LITTLE_ICON_DIMENSIONS-10)];
         [_endRangeModifierButton setContentMode:UIViewContentModeScaleAspectFit];
         [_endRangeModifierButton setImage:[UIImage imageNamed:@"extendendsec.png"] forState:UIControlStateNormal];
         [_endRangeModifierButton setAccessibilityValue:@"extend"];

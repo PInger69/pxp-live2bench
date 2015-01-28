@@ -15,7 +15,7 @@
 #define MAX_TAGS_IN_ROW 4
 #define MAX_PLAYERS_ROW 9
 
-Globals *globals;
+//Globals *globals;
 NSMutableData *responseData;
 
 NSString *oldTagID;
@@ -42,7 +42,7 @@ UIView *horizontalDivider;
 {
     self = [super init];
     if (self) {
-        globals = [Globals instance];
+//        globals = [Globals instance];
         
         subtagsView = [[UIView alloc] init];
         subtagButtons = [[NSMutableArray alloc] init];
@@ -150,20 +150,20 @@ UIView *horizontalDivider;
 {
     currentPeriodTag = nil;
     //Check for what the current duration tag is
-    for (NSString *key in [globals.CURRENT_EVENT_THUMBNAILS allKeys]) {
-        NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:key];
-        if ([[tag objectForKey:@"type"] intValue] == 99 && [[tag objectForKey:@"user"] isEqualToString:[globals.ACCOUNT_INFO objectForKey:@"hid"]]){
-            currentPeriodTag = tag;
-        }
-    }
-    if ([[currentPeriodTag objectForKey:@"id"] isEqual:oldTagID]) {
-        //If the current duration tag is recorded as an oldTag give the server time to update before checking again
-        [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateCurrentDurationTag) userInfo:nil repeats:NO];
-    } else {
-        oldTagID = nil;
-        [self updatePreselectedSubtag];
-        [self updatePreselectedPlayers];
-    }
+//    for (NSString *key in [globals.CURRENT_EVENT_THUMBNAILS allKeys]) {
+//        NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:key];
+//        if ([[tag objectForKey:@"type"] intValue] == 99 && [[tag objectForKey:@"user"] isEqualToString:[globals.ACCOUNT_INFO objectForKey:@"hid"]]){
+//            currentPeriodTag = tag;
+//        }
+//    }
+//    if ([[currentPeriodTag objectForKey:@"id"] isEqual:oldTagID]) {
+//        //If the current duration tag is recorded as an oldTag give the server time to update before checking again
+//        [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateCurrentDurationTag) userInfo:nil repeats:NO];
+//    } else {
+//        oldTagID = nil;
+//        [self updatePreselectedSubtag];
+//        [self updatePreselectedPlayers];
+//    }
 }
 
 - (void)setSubtagsArray:(NSMutableArray *)subtagsArray
@@ -376,8 +376,8 @@ UIView *horizontalDivider;
 {
     NSMutableDictionary *modDict = [NSMutableDictionary dictionaryWithDictionary:dict];
     [modDict setObject:[currentPeriodTag objectForKey:@"id"] forKey:@"id"];
-    [modDict setObject:globals.EVENT_NAME forKey:@"event"];
-    [modDict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
+//    [modDict setObject:globals.EVENT_NAME forKey:@"event"];
+//    [modDict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
     [self modTagInfo:modDict];
 }
 
@@ -392,12 +392,12 @@ UIView *horizontalDivider;
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    [connection start];
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//    
+//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//    [connection start];
 }
 
 - (void)didReceiveMemoryWarning

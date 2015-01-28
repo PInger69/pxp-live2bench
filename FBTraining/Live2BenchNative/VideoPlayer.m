@@ -25,7 +25,7 @@ static void * feedContext  = &feedContext;
 
 @implementation VideoPlayer{
     
-    Globals                     * globals;
+//    Globals                     * globals;
     UIPinchGestureRecognizer    * pinchGesture;         //pinch gesture: pinch to zoom video view to fullscreen view or back to normal view
     AVPlayerItem                * playerItem;
 
@@ -163,22 +163,22 @@ static void * feedContext  = &feedContext;
     avPlayer    = [AVPlayer playerWithPlayerItem:playerItem];
     
     //init globals TODO try and remove these
-    if(!globals)
-    {
-        globals=[Globals instance];
-        //used to detect the event when current playing event name changed
-        [globals addObserver:self forKeyPath:@"EVENT_NAME" options:0 context:nil];
-    }
+//    if(!globals)
+//    {
+//        globals=[Globals instance];
+//        //used to detect the event when current playing event name changed
+//        [globals addObserver:self forKeyPath:@"EVENT_NAME" options:0 context:nil];
+//    }
     
     
-    if (self == globals.VIDEO_PLAYER_LIVE2BENCH || self == globals.VIDEO_PLAYER_LIST_VIEW) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"setvideourl" object:nil];
-    }
-    //if no event playing, donot set the avplayer
-    if (!globals.CURRENT_PLAYBACK_EVENT ) {
-        return;
-    }
-    
+//    if (self == globals.VIDEO_PLAYER_LIVE2BENCH || self == globals.VIDEO_PLAYER_LIST_VIEW) {
+//        [[NSNotificationCenter defaultCenter]postNotificationName:@"setvideourl" object:nil];
+//    }
+//    //if no event playing, donot set the avplayer
+//    if (!globals.CURRENT_PLAYBACK_EVENT ) {
+//        return;
+//    }
+//    
     //link player layer with avplayer
     [playerLayer setPlayer:avPlayer];
     //add observer for player item to check the playback status
@@ -204,28 +204,28 @@ static void * feedContext  = &feedContext;
 //this method will be called when video playback complete event is detected
 -(void)playerItemDidReachEnd
 {
-    if ([globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-        return;
-    }
-
-    if (globals.IS_IN_BOOKMARK_VIEW && self == globals.VIDEO_PLAYER_BOOKMARK) {
-        //if the video player is in bookmark view, seek back to time zero, replay the video
-        
-        //if the user is not drawing telestration,continue playing, else pause the video
-        if (!globals.IS_TELE) {
-            [self play];
-        }else{
-            [self pause];
-        }
-        
-        //make sure the video palyers in live2bench view and list view are paused
-        [globals.VIDEO_PLAYER_LIST_VIEW pause];
-        [globals.VIDEO_PLAYER_LIVE2BENCH pause];
-    }else if ((self == globals.VIDEO_PLAYER_LIST_VIEW || self == globals.VIDEO_PLAYER_LIVE2BENCH )&& ![globals.EVENT_NAME isEqualToString: @"live"])
-    {
-        //if current event is not live event and is in list view or live2bench view, pause the video
-        [self pause];
-    }
+//    if ([globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//        return;
+//    }
+//
+//    if (globals.IS_IN_BOOKMARK_VIEW && self == globals.VIDEO_PLAYER_BOOKMARK) {
+//        //if the video player is in bookmark view, seek back to time zero, replay the video
+//        
+//        //if the user is not drawing telestration,continue playing, else pause the video
+//        if (!globals.IS_TELE) {
+//            [self play];
+//        }else{
+//            [self pause];
+//        }
+//        
+//        //make sure the video palyers in live2bench view and list view are paused
+//        [globals.VIDEO_PLAYER_LIST_VIEW pause];
+//        [globals.VIDEO_PLAYER_LIVE2BENCH pause];
+//    }else if ((self == globals.VIDEO_PLAYER_LIST_VIEW || self == globals.VIDEO_PLAYER_LIVE2BENCH )&& ![globals.EVENT_NAME isEqualToString: @"live"])
+//    {
+//        //if current event is not live event and is in list view or live2bench view, pause the video
+//        [self pause];
+//    }
 
 }
 
@@ -261,25 +261,25 @@ static void * feedContext  = &feedContext;
      [self.richVideoControlBar.leftTimeLabel setText:[NSString stringWithFormat:@"%@",[self translateTimeFormat:self.currentTimeInSeconds]]];
 
     //NSLog(@"current time %f, duration %f",currentTime,duration);
-    if (duration - currentTime < 1 && (self == globals.VIDEO_PLAYER_LIVE2BENCH || self == globals.VIDEO_PLAYER_LIST_VIEW) && [globals.EVENT_NAME isEqualToString:@"live"])
-    {
-        //if current event is live event
-        //if the difference between current time and the seekable duration is smaller than 5 secs, set the right time label to @"live"
-//        [rightTimeLabel setText:@"live"];
-        [self.richVideoControlBar.rightTimeLabel setText:@"live"];
-    }else{
-        if ((currentTime > duration || currentTime == duration) && ![globals.EVENT_NAME isEqualToString:@"live"]) {
-//             [rightTimeLabel setText:@"00:00"];
-             [self.richVideoControlBar.rightTimeLabel setText:@"00:00"];
-        }else{
-            //set the right time label text to the value : [self currentTimeInSeconds] - duration
-//            [rightTimeLabel setText:[self translateTimeFormat:currentTime - duration]];
-            [self.richVideoControlBar.rightTimeLabel setText:[self translateTimeFormat:currentTime - duration]];
-
-           
-        }
-        
-    }
+//    if (duration - currentTime < 1 && (self == globals.VIDEO_PLAYER_LIVE2BENCH || self == globals.VIDEO_PLAYER_LIST_VIEW) && [globals.EVENT_NAME isEqualToString:@"live"])
+//    {
+//        //if current event is live event
+//        //if the difference between current time and the seekable duration is smaller than 5 secs, set the right time label to @"live"
+////        [rightTimeLabel setText:@"live"];
+//        [self.richVideoControlBar.rightTimeLabel setText:@"live"];
+//    }else{
+//        if ((currentTime > duration || currentTime == duration) && ![globals.EVENT_NAME isEqualToString:@"live"]) {
+////             [rightTimeLabel setText:@"00:00"];
+//             [self.richVideoControlBar.rightTimeLabel setText:@"00:00"];
+//        }else{
+//            //set the right time label text to the value : [self currentTimeInSeconds] - duration
+////            [rightTimeLabel setText:[self translateTimeFormat:currentTime - duration]];
+//            [self.richVideoControlBar.rightTimeLabel setText:[self translateTimeFormat:currentTime - duration]];
+//
+//           
+//        }
+//        
+//    }
 
     
    
@@ -329,15 +329,15 @@ static void * feedContext  = &feedContext;
     [avPlayer removeTimeObserver:timeObserver];
     
     //if was looping tag, post notification to "destroy" loop  mode
-    if (globals.IS_LOOP_MODE) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"scrubbingDestroyLoopMode" object:nil];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"StopUpdate" object:nil];
-    globals.IS_TELE=FALSE;
-    if (!globals.IS_IN_BOOKMARK_VIEW && !globals.IS_IN_LIST_VIEW) {
-        globals.DID_GO_TO_LIVE = FALSE;
-    }
-    
+//    if (globals.IS_LOOP_MODE) {
+//        [[NSNotificationCenter defaultCenter]postNotificationName:@"scrubbingDestroyLoopMode" object:nil];
+//    }
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"StopUpdate" object:nil];
+//    globals.IS_TELE=FALSE;
+//    if (!globals.IS_IN_BOOKMARK_VIEW && !globals.IS_IN_LIST_VIEW) {
+//        globals.DID_GO_TO_LIVE = FALSE;
+//    }
+//    
 
     self.status = PS_Seeking;
 }
@@ -501,33 +501,33 @@ static void * feedContext  = &feedContext;
     }
     
     
-    if ([object isKindOfClass:[Globals class]])
-    {
-        //if switch to different event, the event name will be changed
-        if ([keyPath isEqualToString:@"EVENT_NAME"])
-        {
-            globals.SWITCH_TO_DIFFERENT_EVENT = TRUE;
-            if ([globals.EVENT_NAME isEqualToString:@"live"])
-            {
-                //if the user is not drawing tele, continue play
-                if (!globals.IS_TELE) {
-                    [self play];
-                    //seek to live for live event
-                    [self goToLive];
-                    
-                }
-                
-            }
-            //when switch to different event,remove local images from the old event to save space
-            //BUT DONOT delete local images from downloaded event; Those images will be used for offline mode
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            if (globals.THUMBNAILS_PATH && !globals.IS_LOCAL_PLAYBACK)
-            {
-                [fileManager removeItemAtPath:globals.THUMBNAILS_PATH error:NULL];
-            }
-            
-        }
-    }
+//    if ([object isKindOfClass:[Globals class]])
+//    {
+//        //if switch to different event, the event name will be changed
+//        if ([keyPath isEqualToString:@"EVENT_NAME"])
+//        {
+//            globals.SWITCH_TO_DIFFERENT_EVENT = TRUE;
+//            if ([globals.EVENT_NAME isEqualToString:@"live"])
+//            {
+//                //if the user is not drawing tele, continue play
+//                if (!globals.IS_TELE) {
+//                    [self play];
+//                    //seek to live for live event
+//                    [self goToLive];
+//                    
+//                }
+//                
+//            }
+//            //when switch to different event,remove local images from the old event to save space
+//            //BUT DONOT delete local images from downloaded event; Those images will be used for offline mode
+//            NSFileManager *fileManager = [NSFileManager defaultManager];
+//            if (globals.THUMBNAILS_PATH && !globals.IS_LOCAL_PLAYBACK)
+//            {
+//                [fileManager removeItemAtPath:globals.THUMBNAILS_PATH error:NULL];
+//            }
+//            
+//        }
+//    }
     if ([object isKindOfClass:[AVPlayerItem class]])
     {
         AVPlayerItem *item = (AVPlayerItem *)object;
@@ -538,27 +538,27 @@ static void * feedContext  = &feedContext;
             {//TODO
                 case AVPlayerItemStatusFailed:
                     //play back failed; if there is event needs to play and video url was reset less than 20 times(more than 40 seconds), reset the video url
-                    if (![videoURL isEqual:[NSURL URLWithString:@""] ] && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-                        if (resetPlayerCounter < 20) {
-                            //reset video player with the event name string
-                            videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-                            //reset avplayer after 2 seconds delay
-                            [self performSelector:@selector(resetAvplayer) withObject:nil afterDelay:2];
-                            
-                            
-                        }else{
-                            
-                            //if after reseting 10 times, still failed, set the current playback event to empty string and pop up the alter view
-                            globals.CURRENT_PLAYBACK_EVENT = @"";
-                            NSString *informStr = @"Video play back error. Please check the network condition and hardware connection.";//[NSString stringWithFormat:@"Poor signal. Please check the network condition. Current encoder status: %@, current event name: %@, current playing event: %@, current avplayer.currentItem.status: %@ error: %@",globals.CURRENT_ENC_STATUS,globals.EVENT_NAME,globals.CURRENT_PLAYBACK_EVENT,playerStatus,avPlayer.avPlayer.currentItem.error];
-                            globals.VIDEO_PLAYBACK_FAILED = TRUE;
-                            CustomAlertView *videoPlaybackFailedAlertView = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:informStr delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-                            [videoPlaybackFailedAlertView show];
-                            //                            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:videoPlaybackFailedAlertView];
-                            
-                        }
-
-                    }
+//                    if (![videoURL isEqual:[NSURL URLWithString:@""] ] && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
+//                        if (resetPlayerCounter < 20) {
+//                            //reset video player with the event name string
+//                            videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
+//                            //reset avplayer after 2 seconds delay
+//                            [self performSelector:@selector(resetAvplayer) withObject:nil afterDelay:2];
+//                            
+//                            
+//                        }else{
+//                            
+//                            //if after reseting 10 times, still failed, set the current playback event to empty string and pop up the alter view
+//                            globals.CURRENT_PLAYBACK_EVENT = @"";
+//                            NSString *informStr = @"Video play back error. Please check the network condition and hardware connection.";//[NSString stringWithFormat:@"Poor signal. Please check the network condition. Current encoder status: %@, current event name: %@, current playing event: %@, current avplayer.currentItem.status: %@ error: %@",globals.CURRENT_ENC_STATUS,globals.EVENT_NAME,globals.CURRENT_PLAYBACK_EVENT,playerStatus,avPlayer.avPlayer.currentItem.error];
+//                            globals.VIDEO_PLAYBACK_FAILED = TRUE;
+//                            CustomAlertView *videoPlaybackFailedAlertView = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:informStr delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+//                            [videoPlaybackFailedAlertView show];
+//                            //                            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:videoPlaybackFailedAlertView];
+//                            
+//                        }
+//
+//                    }
                     break;
                 case AVPlayerItemStatusReadyToPlay:
                     resetPlayerCounter = 0;
@@ -716,22 +716,22 @@ int seekAttempts = 0;
             [checkSeekTimer invalidate];
             
             //if the play button set to pause or the user is drawing telestration, pause the video else continue playing
-            if (    self.richVideoControlBar.playButton.selected || globals.IS_TELE) {
-                [avPlayer pause];
-            }else{
-                [self play];
-            }
+//            if (    self.richVideoControlBar.playButton.selected || globals.IS_TELE) {
+//                [avPlayer pause];
+//            }else{
+//                [self play];
+//            }
             //update slider
             [self updateVideoControlBar];
             //set slider value to current time
             self.richVideoControlBar.timeSlider.value = [self currentTimeInSeconds];
         }else{
             //if the user is drawing telestration pause the video else continue playing
-            if (globals.IS_TELE) {
-                [self pause];
-            }else{
-                [self play];
-            }
+//            if (globals.IS_TELE) {
+//                [self pause];
+//            }else{
+//                [self play];
+//            }
             
             //NSLog(@"seeking finished by canced!");
         }
@@ -762,12 +762,12 @@ int seekAttempts = 0;
     }else{
         [self play];
         //if was viewing telestration, post nitification to "destroy" telestration mode and also set globals.IS_PLAYBACK_TELE, globals.IS_LOOP_MODE to be FALSE
-        if (globals.IS_PLAYBACK_TELE) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DESTROY_TELE object:nil];
-            globals.IS_PLAYBACK_TELE = FALSE;
-            globals.IS_LOOP_MODE = FALSE;
-            globals.IS_TELE = FALSE;
-        }
+//        if (globals.IS_PLAYBACK_TELE) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DESTROY_TELE object:nil];
+//            globals.IS_PLAYBACK_TELE = FALSE;
+//            globals.IS_LOOP_MODE = FALSE;
+//            globals.IS_TELE = FALSE;
+//        }
     }
 }
 
@@ -882,209 +882,209 @@ int seekAttempts = 0;
 - (void)enterFullscreen{
     UIView *newParentView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
     //if not fullscreen, enter fullscreen
-    if((avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && globals.EVENT_NAME) || (globals.IS_PLAYBACK_TELE && globals.IS_IN_BOOKMARK_VIEW))
-    {
-        [UIView animateWithDuration:.1 delay:0 options:nil animations: ^{
-            
-            isFullScreen = TRUE;
-            //hide the toolbar while going to fullscreen
-//            videoConrolBar.hidden = TRUE;
-            self.richVideoControlBar.hidden = TRUE;
-            playerFrame = newParentView.bounds;
-            [self.view removeFromSuperview];
-            
-            if(globals.IS_PLAYBACK_TELE && (globals.IS_IN_LIST_VIEW || globals.IS_IN_BOOKMARK_VIEW))
-            {
-                //here we are going to overlay only the telestration onto the video
-                
-                [self pause];
-                
-                if(!self.teleBigView)
-                {
-                    self.teleBigView = [[UIImageView alloc] init];
-                }
-                
-                if (globals.IS_IN_LIST_VIEW) {
-                    
-                    [self.teleBigView setFrame:CGRectMake(0, 20, playerFrame.size.width, 740)];
-                    if ([[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] rangeOfString:@"http://"].location != NSNotFound) {
-                        NSURL *teleUrl = [NSURL URLWithString:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
-                        [self.teleBigView setImageWithURL:teleUrl placeholderImage:[UIImage imageNamed:@"live.png"] options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {}];
-                    }else{
-                        UIImage *teleImage = [UIImage imageWithContentsOfFile:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
-                        [self.teleBigView setImage:teleImage];
-                    }
-                    
-                }else{
-                    [self.teleBigView setFrame:CGRectMake(0, 80, playerFrame.size.width, 576)];
-                    // [self.teleBigView setFrame:CGRectMake(0, 0, playerFrame.size.width, playerFrame.size.height)];
-                    NSString *teleFilePath;
-                    teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
-                    if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
-                        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
-                    }
-                    
-                    UIImage *teleImage = [UIImage imageWithContentsOfFile:teleFilePath];
-                    [self.teleBigView setContentMode:UIViewContentModeScaleAspectFit];
-                    [self.teleBigView setImage:teleImage];
-                }
-                
-                [self.view addSubview:self.teleBigView];
-                
-                //hide the video player's tool bar
-//                videoConrolBar.hidden = TRUE;
-                self.richVideoControlBar.hidden = TRUE;
-            }
-
-            
-        }completion:^ (BOOL finished){
-            
-            [UIView animateWithDuration:0 delay: 0 options:nil animations: ^{
-                //reset playerview's and playerlayer's frame and bounds
-                self.view.frame = playerFrame;
-                self.view.bounds = playerFrame;
-                playerLayer.frame = playerFrame;
-                playerLayer.bounds = playerFrame;
-                [self.view setFrame:playerFrame];
-                [self.view setBounds:playerFrame];
-                [newParentView addSubview:self.view];
-                
-            }completion:^ (BOOL finished){
-                //resize toolbar for fullscreen
-                self.richVideoControlBar.frame = CGRectMake(0.0f, playerFrame.size.height - 134.0f, playerFrame.size.width, 44.0f);
+//    if((avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && globals.EVENT_NAME) || (globals.IS_PLAYBACK_TELE && globals.IS_IN_BOOKMARK_VIEW))
+//    {
+//        [UIView animateWithDuration:.1 delay:0 options:nil animations: ^{
+//            
+//            isFullScreen = TRUE;
+//            //hide the toolbar while going to fullscreen
+////            videoConrolBar.hidden = TRUE;
+//            self.richVideoControlBar.hidden = TRUE;
+//            playerFrame = newParentView.bounds;
+//            [self.view removeFromSuperview];
+//            
+//            if(globals.IS_PLAYBACK_TELE && (globals.IS_IN_LIST_VIEW || globals.IS_IN_BOOKMARK_VIEW))
+//            {
+//                //here we are going to overlay only the telestration onto the video
+//                
+//                [self pause];
+//                
+//                if(!self.teleBigView)
+//                {
+//                    self.teleBigView = [[UIImageView alloc] init];
+//                }
+//                
+//                if (globals.IS_IN_LIST_VIEW) {
+//                    
+//                    [self.teleBigView setFrame:CGRectMake(0, 20, playerFrame.size.width, 740)];
+//                    if ([[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] rangeOfString:@"http://"].location != NSNotFound) {
+//                        NSURL *teleUrl = [NSURL URLWithString:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
+//                        [self.teleBigView setImageWithURL:teleUrl placeholderImage:[UIImage imageNamed:@"live.png"] options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {}];
+//                    }else{
+//                        UIImage *teleImage = [UIImage imageWithContentsOfFile:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
+//                        [self.teleBigView setImage:teleImage];
+//                    }
+//                    
+//                }else{
+//                    [self.teleBigView setFrame:CGRectMake(0, 80, playerFrame.size.width, 576)];
+//                    // [self.teleBigView setFrame:CGRectMake(0, 0, playerFrame.size.width, playerFrame.size.height)];
+//                    NSString *teleFilePath;
+//                    teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
+//                    if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
+//                        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
+//                    }
+//                    
+//                    UIImage *teleImage = [UIImage imageWithContentsOfFile:teleFilePath];
+//                    [self.teleBigView setContentMode:UIViewContentModeScaleAspectFit];
+//                    [self.teleBigView setImage:teleImage];
+//                }
+//                
+//                [self.view addSubview:self.teleBigView];
+//                
+//                //hide the video player's tool bar
+////                videoConrolBar.hidden = TRUE;
+//                self.richVideoControlBar.hidden = TRUE;
+//            }
 //
-                [self.richVideoControlBar.timeSliderItem setWidth:playerFrame.size.width - 220];
-
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"Entering FullScreen" object:nil];
-            }];
-        }];
-    }
-
+//            
+//        }completion:^ (BOOL finished){
+//            
+//            [UIView animateWithDuration:0 delay: 0 options:nil animations: ^{
+//                //reset playerview's and playerlayer's frame and bounds
+//                self.view.frame = playerFrame;
+//                self.view.bounds = playerFrame;
+//                playerLayer.frame = playerFrame;
+//                playerLayer.bounds = playerFrame;
+//                [self.view setFrame:playerFrame];
+//                [self.view setBounds:playerFrame];
+//                [newParentView addSubview:self.view];
+//                
+//            }completion:^ (BOOL finished){
+//                //resize toolbar for fullscreen
+//                self.richVideoControlBar.frame = CGRectMake(0.0f, playerFrame.size.height - 134.0f, playerFrame.size.width, 44.0f);
+////
+//                [self.richVideoControlBar.timeSliderItem setWidth:playerFrame.size.width - 220];
+//
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"Entering FullScreen" object:nil];
+//            }];
+//        }];
+//    }
+//
 }
 
 //This is a test enterFullScreen
 
 - (void)enterFullscreenOn:(UIView *)parentView{
-    UIView *newParentView = parentView;
-
-    //if not fullscreen, enter fullscreen
-    //if((avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && globals.EVENT_NAME) || (globals.IS_PLAYBACK_TELE && globals.IS_IN_BOOKMARK_VIEW)){
-        [UIView animateWithDuration:.1 delay:0 options:nil animations: ^{
-            
-            isFullScreen = TRUE;
-            //hide the toolbar while going to fullscreen
-            //            videoConrolBar.hidden = TRUE;
-            self.richVideoControlBar.hidden = TRUE;
-            playerFrame = newParentView.bounds;
-            [self.view removeFromSuperview];
-            
-            if(globals.IS_PLAYBACK_TELE && (globals.IS_IN_LIST_VIEW || globals.IS_IN_BOOKMARK_VIEW))
-            {
-                //here we are going to overlay only the telestration onto the video
-                
-                [self pause];
-                
-                if(!self.teleBigView)
-                {
-                    self.teleBigView = [[UIImageView alloc] init];
-                }
-                
-                if (globals.IS_IN_LIST_VIEW) {
-                    
-                    [self.teleBigView setFrame:CGRectMake(0, 20, playerFrame.size.width, 740)];
-                    if ([[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] rangeOfString:@"http://"].location != NSNotFound) {
-                        NSURL *teleUrl = [NSURL URLWithString:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
-                        [self.teleBigView setImageWithURL:teleUrl placeholderImage:[UIImage imageNamed:@"live.png"] options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {}];
-                    }else{
-                        UIImage *teleImage = [UIImage imageWithContentsOfFile:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
-                        [self.teleBigView setImage:teleImage];
-                    }
-                    
-                }else{
-                    [self.teleBigView setFrame:CGRectMake(0, 80, playerFrame.size.width, 576)];
-                    // [self.teleBigView setFrame:CGRectMake(0, 0, playerFrame.size.width, playerFrame.size.height)];
-                    NSString *teleFilePath;
-                    teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
-                    if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
-                        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
-                    }
-                    
-                    UIImage *teleImage = [UIImage imageWithContentsOfFile:teleFilePath];
-                    [self.teleBigView setContentMode:UIViewContentModeScaleAspectFit];
-                    [self.teleBigView setImage:teleImage];
-                }
-                
-                [self.view addSubview:self.teleBigView];
-                
-                //hide the video player's tool bar
-                //                videoConrolBar.hidden = TRUE;
-                self.richVideoControlBar.hidden = TRUE;
-            }
-            
-            
-        }completion:^ (BOOL finished){
-            [UIView animateWithDuration:0 delay: 0 options:nil animations: ^{
-                //reset playerview's and playerlayer's frame and bounds
-                self.view.frame = playerFrame;
-                self.view.bounds = playerFrame;
-                playerLayer.frame = playerFrame;
-                playerLayer.bounds = playerFrame;
-                [self.view setFrame:playerFrame];
-                [self.view setBounds:playerFrame];
-                [newParentView addSubview:self.view];
-                
-            }completion:^ (BOOL finished){
-                //resize toolbar for fullscreen
-                self.richVideoControlBar.frame = CGRectMake(0.0f, playerFrame.size.height - 134.0f, playerFrame.size.width, 44.0f);
-
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"Entering FullScreen" object:nil];
-            }];
-        }];
-    
-    //}
-    
+//    UIView *newParentView = parentView;
+//
+//    //if not fullscreen, enter fullscreen
+//    //if((avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay && globals.EVENT_NAME) || (globals.IS_PLAYBACK_TELE && globals.IS_IN_BOOKMARK_VIEW)){
+//        [UIView animateWithDuration:.1 delay:0 options:nil animations: ^{
+//            
+//            isFullScreen = TRUE;
+//            //hide the toolbar while going to fullscreen
+//            //            videoConrolBar.hidden = TRUE;
+//            self.richVideoControlBar.hidden = TRUE;
+//            playerFrame = newParentView.bounds;
+//            [self.view removeFromSuperview];
+//            
+//            if(globals.IS_PLAYBACK_TELE && (globals.IS_IN_LIST_VIEW || globals.IS_IN_BOOKMARK_VIEW))
+//            {
+//                //here we are going to overlay only the telestration onto the video
+//                
+//                [self pause];
+//                
+//                if(!self.teleBigView)
+//                {
+//                    self.teleBigView = [[UIImageView alloc] init];
+//                }
+//                
+//                if (globals.IS_IN_LIST_VIEW) {
+//                    
+//                    [self.teleBigView setFrame:CGRectMake(0, 20, playerFrame.size.width, 740)];
+//                    if ([[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] rangeOfString:@"http://"].location != NSNotFound) {
+//                        NSURL *teleUrl = [NSURL URLWithString:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
+//                        [self.teleBigView setImageWithURL:teleUrl placeholderImage:[UIImage imageNamed:@"live.png"] options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {}];
+//                    }else{
+//                        UIImage *teleImage = [UIImage imageWithContentsOfFile:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
+//                        [self.teleBigView setImage:teleImage];
+//                    }
+//                    
+//                }else{
+//                    [self.teleBigView setFrame:CGRectMake(0, 80, playerFrame.size.width, 576)];
+//                    // [self.teleBigView setFrame:CGRectMake(0, 0, playerFrame.size.width, playerFrame.size.height)];
+//                    NSString *teleFilePath;
+//                    teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
+//                    if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
+//                        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
+//                    }
+//                    
+//                    UIImage *teleImage = [UIImage imageWithContentsOfFile:teleFilePath];
+//                    [self.teleBigView setContentMode:UIViewContentModeScaleAspectFit];
+//                    [self.teleBigView setImage:teleImage];
+//                }
+//                
+//                [self.view addSubview:self.teleBigView];
+//                
+//                //hide the video player's tool bar
+//                //                videoConrolBar.hidden = TRUE;
+//                self.richVideoControlBar.hidden = TRUE;
+//            }
+//            
+//            
+//        }completion:^ (BOOL finished){
+//            [UIView animateWithDuration:0 delay: 0 options:nil animations: ^{
+//                //reset playerview's and playerlayer's frame and bounds
+//                self.view.frame = playerFrame;
+//                self.view.bounds = playerFrame;
+//                playerLayer.frame = playerFrame;
+//                playerLayer.bounds = playerFrame;
+//                [self.view setFrame:playerFrame];
+//                [self.view setBounds:playerFrame];
+//                [newParentView addSubview:self.view];
+//                
+//            }completion:^ (BOOL finished){
+//                //resize toolbar for fullscreen
+//                self.richVideoControlBar.frame = CGRectMake(0.0f, playerFrame.size.height - 134.0f, playerFrame.size.width, 44.0f);
+//
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"Entering FullScreen" object:nil];
+//            }];
+//        }];
+//    
+//    //}
+//    
 }
 
 
 //this method will be called when user pinches video view to go back to normal view
 - (void)exitFullScreen{
-    //if in fullscreen, exit fullscreen
-  
-    //remove the telestration layout
-    if(self.teleBigView && globals.IS_IN_FIRST_VIEW){
-        [self.teleBigView removeFromSuperview];
-        self.teleBigView = nil;
-    }
-    if(!isFullScreen)
-    {
-        return;
-    }
-        isFullScreen        = FALSE;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Close Tele" object:nil];
-//    videoConrolBar.hidden = TRUE;
-    self.richVideoControlBar.hidden = TRUE;
-    playerFrame = smallFrame;
-    
-    if(globals.IS_PLAYBACK_TELE && (globals.IS_IN_LIST_VIEW || globals.IS_IN_BOOKMARK_VIEW) && self.teleBigView)
-    {
-        [self.teleBigView setFrame:CGRectMake(0, -17, playerFrame.size.width, playerFrame.size.height+40)];
-    }
-    
-    
-    //self.view.frame = CGRectMake(0.0f, 0.0f, playerFrame.size.width, playerFrame.size.height);
-    playerLayer.frame = CGRectMake(0.0f, 0.0f, playerFrame.size.width, playerFrame.size.height);
-    self.view.frame = playerFrame;
-    //self.view.bounds = currentFrame;
-//    [timeSliderItem setWidth:playerFrame.size.width - 220];
-//    videoConrolBar.frame = CGRectMake(0.0f, playerFrame.size.height - 44.0f, playerFrame.size.width, 44.0f);
-    self.richVideoControlBar.frame = CGRectMake(0.0f, playerFrame.size.height - 44.0f, playerFrame.size.width, 44.0f);
-    [self.richVideoControlBar.timeSliderItem setWidth:playerFrame.size.width - 220];
-    [self.view removeFromSuperview];
-
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_PLAYER_EXITING_FULL_SCREEN object:nil];
-    playerLayer.hidden  = false;
-
+//    //if in fullscreen, exit fullscreen
+//  
+//    //remove the telestration layout
+//    if(self.teleBigView && globals.IS_IN_FIRST_VIEW){
+//        [self.teleBigView removeFromSuperview];
+//        self.teleBigView = nil;
+//    }
+//    if(!isFullScreen)
+//    {
+//        return;
+//    }
+//        isFullScreen        = FALSE;
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"Close Tele" object:nil];
+////    videoConrolBar.hidden = TRUE;
+//    self.richVideoControlBar.hidden = TRUE;
+//    playerFrame = smallFrame;
+//    
+//    if(globals.IS_PLAYBACK_TELE && (globals.IS_IN_LIST_VIEW || globals.IS_IN_BOOKMARK_VIEW) && self.teleBigView)
+//    {
+//        [self.teleBigView setFrame:CGRectMake(0, -17, playerFrame.size.width, playerFrame.size.height+40)];
+//    }
+//    
+//    
+//    //self.view.frame = CGRectMake(0.0f, 0.0f, playerFrame.size.width, playerFrame.size.height);
+//    playerLayer.frame = CGRectMake(0.0f, 0.0f, playerFrame.size.width, playerFrame.size.height);
+//    self.view.frame = playerFrame;
+//    //self.view.bounds = currentFrame;
+////    [timeSliderItem setWidth:playerFrame.size.width - 220];
+////    videoConrolBar.frame = CGRectMake(0.0f, playerFrame.size.height - 44.0f, playerFrame.size.width, 44.0f);
+//    self.richVideoControlBar.frame = CGRectMake(0.0f, playerFrame.size.height - 44.0f, playerFrame.size.width, 44.0f);
+//    [self.richVideoControlBar.timeSliderItem setWidth:playerFrame.size.width - 220];
+//    [self.view removeFromSuperview];
+//
+//
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_PLAYER_EXITING_FULL_SCREEN object:nil];
+//    playerLayer.hidden  = false;
+//
     
 }
 
@@ -1098,40 +1098,40 @@ int seekAttempts = 0;
         self.teleBigView = [[UIImageView alloc] init];
     }
     
-    if (globals.IS_IN_LIST_VIEW || globals.IS_IN_FIRST_VIEW) {
-        
-        [self.teleBigView setFrame:CGRectMake(0, 55, playerFrame.size.width, playerFrame.size.height)];
-        [self.teleBigView setContentMode:UIViewContentModeScaleAspectFill];
-        
-        NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
-        
-        NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-        
-        [self.teleBigView setImage:[[UIImage alloc] initWithContentsOfFile:tUrl]];
-        
-        //                    if ([[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] rangeOfString:@"http://"].location != NSNotFound) {
-        //                        NSURL *teleUrl = [NSURL URLWithString:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
-        //                        [self.teleBigView setImageWithURL:teleUrl placeholderImage:[UIImage imageNamed:@"live.png"] options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {}];
-        //                    }else{
-        //                        UIImage *teleImage = [UIImage imageWithContentsOfFile:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
-        //                        [self.teleBigView setImage:teleImage];
-        //                    }
-        
-    }else{
-        [self.teleBigView setFrame:CGRectMake(0, 80, playerFrame.size.width, 576)];
-        // [self.teleBigView setFrame:CGRectMake(0, 0, playerFrame.size.width, playerFrame.size.height)];
-        NSString *teleFilePath;
-        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
-            teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
-        }
-        
-        UIImage *teleImage = [UIImage imageWithContentsOfFile:teleFilePath];
-        [self.teleBigView setContentMode:UIViewContentModeScaleAspectFit];
-        [self.teleBigView setImage:teleImage];
-    }
-    
-    [self.view addSubview:self.teleBigView];
+//    if (globals.IS_IN_LIST_VIEW || globals.IS_IN_FIRST_VIEW) {
+//        
+//        [self.teleBigView setFrame:CGRectMake(0, 55, playerFrame.size.width, playerFrame.size.height)];
+//        [self.teleBigView setContentMode:UIViewContentModeScaleAspectFill];
+//        
+//        NSString *teleImageName = [[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] lastPathComponent];
+//        
+//        NSString *tUrl = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
+//        
+//        [self.teleBigView setImage:[[UIImage alloc] initWithContentsOfFile:tUrl]];
+//        
+//        //                    if ([[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"] rangeOfString:@"http://"].location != NSNotFound) {
+//        //                        NSURL *teleUrl = [NSURL URLWithString:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
+//        //                        [self.teleBigView setImageWithURL:teleUrl placeholderImage:[UIImage imageNamed:@"live.png"] options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {}];
+//        //                    }else{
+//        //                        UIImage *teleImage = [UIImage imageWithContentsOfFile:[globals.CURRENT_PLAYBACK_TAG objectForKey:@"teleurl"]];
+//        //                        [self.teleBigView setImage:teleImage];
+//        //                    }
+//        
+//    }else{
+//        [self.teleBigView setFrame:CGRectMake(0, 80, playerFrame.size.width, 576)];
+//        // [self.teleBigView setFrame:CGRectMake(0, 0, playerFrame.size.width, playerFrame.size.height)];
+//        NSString *teleFilePath;
+//        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
+//        if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
+//            teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[globals.CURRENT_PLAYBACK_TAG objectForKey:@"event"],[globals.CURRENT_PLAYBACK_TAG objectForKey:@"id"]] ];
+//        }
+//        
+//        UIImage *teleImage = [UIImage imageWithContentsOfFile:teleFilePath];
+//        [self.teleBigView setContentMode:UIViewContentModeScaleAspectFit];
+//        [self.teleBigView setImage:teleImage];
+//    }
+//    
+//    [self.view addSubview:self.teleBigView];
     
     //hide the video player's tool bar
     // videoConrolBar.hidden = TRUE;
@@ -1205,9 +1205,9 @@ int seekAttempts = 0;
     //videoURL = vURL;
     [self setPlayerWithURL:videoURL];
     //if live event is playing currently and the encoder status  is also live, go to live after 5 seconds delay(in order to get the right duration)
-    if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && [globals.EVENT_NAME isEqualToString:@"live"]) {
-        [self performSelector:@selector(goToLive) withObject:nil afterDelay:5];
-    }
+//    if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive] && [globals.EVENT_NAME isEqualToString:@"live"]) {
+//        [self performSelector:@selector(goToLive) withObject:nil afterDelay:5];
+//    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -1254,15 +1254,15 @@ int seekAttempts = 0;
  */
 -(void)seekBy:(float)secValue
 {
-    globals.IS_TELE=FALSE;
+//    globals.IS_TELE=FALSE;
     self.live = NO;
     
     // this could be useless but its added to be inline with the other seeks
-    if (!globals.IS_IN_BOOKMARK_VIEW && !globals.IS_IN_LIST_VIEW) {
-        globals.DID_GO_TO_LIVE = FALSE;
-    } else if (secValue < 0) {
-        globals.DID_GO_TO_LIVE = FALSE;
-    }
+//    if (!globals.IS_IN_BOOKMARK_VIEW && !globals.IS_IN_LIST_VIEW) {
+//        globals.DID_GO_TO_LIVE = FALSE;
+//    } else if (secValue < 0) {
+//        globals.DID_GO_TO_LIVE = FALSE;
+//    }
     
     Float64 currTime = CMTimeGetSeconds([self.avPlayer currentTime]);
     int32_t  ts      = playerItem.asset.duration.timescale;//NSEC_PER_SEC
@@ -1300,19 +1300,19 @@ int seekAttempts = 0;
         return;
     }
     
-    if (globals.IS_LOOP_MODE){
-        if(currentTime+seekAmount >= globals.HOME_END_TIME || currentTime+seekAmount <= globals.HOME_START_TIME-1.0) {
-            [self setTime: globals.HOME_START_TIME];
-        } else {
-            [self seekBy:seekAmount];
-        }
-    } else {
+//    if (globals.IS_LOOP_MODE){
+//        if(currentTime+seekAmount >= globals.HOME_END_TIME || currentTime+seekAmount <= globals.HOME_START_TIME-1.0) {
+//            [self setTime: globals.HOME_START_TIME];
+//        } else {
+//            [self seekBy:seekAmount];
+//        }
+//    } else {
         if (currentTime+seekAmount > self.duration) {
             [self goToLive];
         } else {
             [self seekBy:seekAmount];
         }
-    }
+//    }
     
     
 }

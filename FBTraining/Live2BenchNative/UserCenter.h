@@ -19,6 +19,12 @@
 @property (nonatomic,assign) BOOL                   isEULA;
 
 
+@property (nonatomic,strong) NSString               * customerID;
+@property (nonatomic,strong) NSString               * customerAuthorization;
+@property (nonatomic,strong) NSString               * customerEmail;
+@property (nonatomic,strong) NSString               * customerHid;
+@property (nonatomic,strong) UIColor                * customerColor;
+
 
 //Paths
 
@@ -31,11 +37,11 @@
 -(void)enableObservers:(BOOL)isObserve;
 
 
-
+-(void)writeAccountInfoToPlist;
 
 // Action methods
 
--(id<ActionListItem>)loginAction;
+-(id<ActionListItem>)checkLoginPlistAction;
 
 
 

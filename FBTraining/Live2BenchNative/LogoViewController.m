@@ -53,27 +53,13 @@ ScreenController    * screenTest;
 EncoderManager      * encoderManager;
 @synthesize mailController;
 
-
-//// Depricated
-//- (id)init
-//{
-//    self = [super init];
-//    if (self) {
-//        // Custom initialization
-//        encoderManager = _appDel.encoderManager;
-//        [self setMainSectionTab:NSLocalizedString(@"Welcome",nil)  imageName:@"logoTab"];
-//    }
-//    return self;
-//}
-//
-
 -(id)initWithAppDelegate:(AppDelegate *)appDel
 {
     self = [super initWithAppDelegate:appDel];
     if (self) {
         encoderManager = _appDel.encoderManager;
         [self setMainSectionTab:NSLocalizedString(@"Welcome",nil)  imageName:@"logoTab"];
-         settingsViewController = [[SettingsViewController alloc]initWithEncoderManager:encoderManager];
+         settingsViewController = [[SettingsViewController alloc]initWithAppDelegate:appDel];
     }
     return self;
 
@@ -83,31 +69,10 @@ EncoderManager      * encoderManager;
 {
     [super viewDidLoad];
     [self setupView];
-
-    if(!globals)
-    {
-        globals=[Globals instance];
-    }
-    
-    // Do any additional setup after loading the view from its nib.
-}
-
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    
-    globals.IS_IN_CLIP_VIEW     = FALSE;
-    globals.IS_IN_FIRST_VIEW    = FALSE;
-    globals.IS_IN_BOOKMARK_VIEW = FALSE;
-    globals.IS_IN_LIST_VIEW     = FALSE;
-    [globals.VIDEO_PLAYER_LIST_VIEW pause];
-    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
-
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"command": <typedef NS_OPTIONS in VideoPlayer> }];
 }
 
 
-
-- (void)setupView{
+-(void)setupView{
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
@@ -366,18 +331,20 @@ EncoderManager      * encoderManager;
 
 -(void)showSettings:(id)sender
 {
-    if (!self.tapBehindGesture){
-        self.tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
-        self.tapBehindGesture.numberOfTapsRequired = 1;
-        self.tapBehindGesture.cancelsTouchesInView = NO;
-        self.tapBehindGesture.delegate = self;
-    }
-    
-
-    [self.view.window addGestureRecognizer:self.tapBehindGesture];
+//    if (!self.tapBehindGesture){
+//        self.tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
+//        self.tapBehindGesture.numberOfTapsRequired = 1;
+//        self.tapBehindGesture.cancelsTouchesInView = NO;
+//        self.tapBehindGesture.delegate = self;
+//    }
+//    
+//
+//    [self.view.window addGestureRecognizer:self.tapBehindGesture];
     //if the settings view controller already initialized,DONNOT reinitialize it
+ 
+    // TODO Move up to view did load
     if (!settingsViewController) {
-        settingsViewController = [[SettingsViewController alloc]initWithEncoderManager:encoderManager];
+        settingsViewController = [[SettingsViewController alloc]initWithAppDelegate:_appDel];
     }
     
     [settingsTab setImage:[UIImage imageNamed:@"settingsButtonSelect"]];
@@ -399,20 +366,20 @@ EncoderManager      * encoderManager;
 //    return YES;
 //}
 
--(void)tapBehindDetected:(UITapGestureRecognizer*)sender
-{
-
-    if (sender.state == UIGestureRecognizerStateEnded)
-    {
-        CGPoint location = [sender locationInView:nil];
-        if (![self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil])
-        {
-            if (self.presentedViewController && ![globals.HOME_POP isPopoverVisible] && ![globals.AWAY_POP isPopoverVisible] && ![globals.LEAGUE_POP isPopoverVisible]){
-                [self hideSettings];
-            }
-        }
-    }
-}
+//-(void)tapBehindDetected:(UITapGestureRecognizer*)sender
+//{
+//
+//    if (sender.state == UIGestureRecognizerStateEnded)
+//    {
+//        CGPoint location = [sender locationInView:nil];
+//        if (![self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil])
+//        {
+//            if (self.presentedViewController && ![globals.HOME_POP isPopoverVisible] && ![globals.AWAY_POP isPopoverVisible] && ![globals.LEAGUE_POP isPopoverVisible]){
+//                [self hideSettings];
+//            }
+//        }
+//    }
+//}
 
 
 -(void)hideSettings

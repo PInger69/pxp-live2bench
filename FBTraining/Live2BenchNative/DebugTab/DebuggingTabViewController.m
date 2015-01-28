@@ -9,7 +9,7 @@
 #import "DebuggingTabViewController.h"
 #import "Pip.h"
 #import "EncoderManager.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "FeedSwitchView.h"
 #import "PipViewController.h"
 #import "BitrateMonitor.h"

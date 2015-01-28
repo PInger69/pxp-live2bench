@@ -19,6 +19,7 @@ static void * actionContext = &actionContext;
     NSMutableArray * _alist;
     void(^finishList)(void);
     BOOL _running;
+    NSDictionary * currentActionItem;
 }
 
 @synthesize paused  = _paused;
@@ -37,11 +38,11 @@ static void * actionContext = &actionContext;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (context == &actionContext) {
-        NSDictionary *      itemPack                = [_alist firstObject];
-        id <ActionListItem> item                    = [itemPack objectForKey: ACTION_ITEM];
-        if ([itemPack objectForKey: FINISH_BLOCK]) {
-            void * (^onEndBlock)(BOOL succsess)     = [itemPack objectForKey: FINISH_BLOCK];
+    if (context == &actionContext && [[change objectForKey:@"new"]boolValue]) {
+//        NSDictionary *      itemPack                = [_alist firstObject];
+        id <ActionListItem> item                    = [currentActionItem objectForKey: ACTION_ITEM];
+        if ([currentActionItem objectForKey: FINISH_BLOCK]) {
+            void * (^onEndBlock)(BOOL succsess)     = [currentActionItem objectForKey: FINISH_BLOCK];
             onEndBlock(item.isSuccess);
         }
         [self finish];
@@ -74,15 +75,15 @@ static void * actionContext = &actionContext;
  */
 -(void)run
 {
-    NSDictionary *      itemPack     = [_alist firstObject];
-    id <ActionListItem> item         = [itemPack objectForKey:ACTION_ITEM];
-    
-    if ([itemPack objectForKey:START_BLOCK]) {
-        void * (^onStartBlock)()    = [itemPack objectForKey:START_BLOCK];
+    currentActionItem                 = [_alist firstObject];
+    id <ActionListItem> item         = [currentActionItem objectForKey:ACTION_ITEM];
+    [_alist removeObjectAtIndex:0];
+    if ([currentActionItem objectForKey:START_BLOCK]) {
+        void * (^onStartBlock)()    = [currentActionItem objectForKey:START_BLOCK];
         onStartBlock();
     }
     
-    [((NSObject*)item) addObserver:self forKeyPath:NSStringFromSelector(@selector(isFinished)) options:0 context:&actionContext];
+    [((NSObject*)item) addObserver:self forKeyPath:NSStringFromSelector(@selector(isFinished)) options:NSKeyValueObservingOptionNew context:&actionContext];
     [item start];
 }
 
@@ -107,11 +108,11 @@ static void * actionContext = &actionContext;
  */
 -(void)next
 {
-    // Removes old objext
-    NSDictionary *      itemPack     = [_alist firstObject];
-    id <ActionListItem> item         = [itemPack objectForKey:ACTION_ITEM];
+    // Removes old object observer
+
+    id <ActionListItem> item         = [currentActionItem objectForKey:ACTION_ITEM];
     [((NSObject*)item) removeObserver:self forKeyPath:NSStringFromSelector(@selector(isFinished)) context:&actionContext];
-    [_alist removeObjectAtIndex:0];
+
     
     // Is list empty?... run complete if else run next item
     if (![_alist count]){
@@ -144,12 +145,44 @@ static void * actionContext = &actionContext;
     [_alist addObject:@{ACTION_ITEM:item, FINISH_BLOCK:onFinish, START_BLOCK:onStart}];
 }
 
-
 -(void)addItem:(id<ActionListItem>)item onItemStart:(void (^)())onStart
 {
     item.isFinished = NO;
     [_alist addObject:@{ACTION_ITEM:item, START_BLOCK:onStart}];
 }
+
+
+
+-(void)unShiftItem:(id<ActionListItem>)item
+{
+    item.isFinished = NO;
+    [_alist insertObject:@{ACTION_ITEM:item} atIndex:0];
+}
+
+-(void)unShiftItem:(id<ActionListItem>)item onItemFinish:(void (^)(BOOL succsess))onFinish
+{
+    item.isFinished = NO;
+    [_alist insertObject:@{ACTION_ITEM:item,FINISH_BLOCK:onFinish} atIndex:0];
+}
+
+-(void)unShiftItem:(id<ActionListItem>)item   onItemStart:(void (^)())onStart onItemFinish:(void (^)(BOOL succsess))onFinish
+{
+    item.isFinished = NO;
+    [_alist insertObject:@{ACTION_ITEM:item, FINISH_BLOCK:onFinish, START_BLOCK:onStart} atIndex:0];
+}
+
+-(void)unShiftItem:(id<ActionListItem>)item onItemStart:(void (^)())onStart
+{
+    item.isFinished = NO;
+    [_alist insertObject:@{ACTION_ITEM:item, START_BLOCK:onStart} atIndex:0];
+}
+
+-(void)addStack:(NSArray*)items
+{
+    [_alist addObjectsFromArray:items];
+}
+
+
 
 
 -(void)onFinishList:(void(^)(void))finBlock
@@ -175,7 +208,70 @@ static void * actionContext = &actionContext;
 }
 
 
+-(NSString*)description
+{
+    NSString* txt = [NSString stringWithFormat:@"Count of items in Action List: %i",[_alist count]];
+    
+    
+    return txt;
+}
+
 @end
+
+
+
+
+
+
+
+// Utility Classes
+
+
+
+
+@implementation DelayAction
+{
+    int t;
+}
+
+@synthesize isFinished;
+@synthesize isSuccess;
+
+-(id)initWithTime:(int)time
+{
+    self = [super init];
+    if (self){
+        t = time;
+    }
+    return self;
+}
+
+-(void)start
+{
+    [self performSelector:@selector(onFinishWait) withObject:self afterDelay:t];
+}
+
+-(void)onFinishWait
+{
+    self.isFinished = YES;
+}
+
+
+
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

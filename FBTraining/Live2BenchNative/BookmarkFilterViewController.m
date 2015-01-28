@@ -133,10 +133,10 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if(!globals)
-    {
-        globals=[Globals instance];
-    }
+//    if(!globals)
+//    {
+//        globals=[Globals instance];
+//    }
     [self prepArraysForDisplay];
     [self createOppTags];
     [self createDateTags];
@@ -152,140 +152,140 @@
     
     //get all the events information which will be used to display home team, visit team
     
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *plistPath = [documentsDirectory stringByAppendingPathComponent:@"EventsHid.plist"];
-    NSMutableArray *eventsData = [[NSMutableArray alloc] initWithContentsOfFile: plistPath];
-    for (NSDictionary *event in eventsData) {
-        if (!allEvents) {
-            allEvents = [[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc]initWithObjects:event, nil] forKeys:[[NSArray alloc]initWithObjects:[event objectForKey:@"name"], nil]];
-        }else{
-            [allEvents setObject:event forKey:[NSString stringWithFormat:@"%@",[event objectForKey:@"name"]]];
-        }
-    }
-
-    
-    NSMutableArray *allBookmarkTags;
-    NSMutableArray *allBookmarkDictArr = [[globals.BOOKMARK_TAGS allValues]mutableCopy];
-    if (!eventsArray) eventsArray = [[NSMutableArray alloc] init];
-    for (NSDictionary *dict in allBookmarkDictArr) {
-        if (allBookmarkTags) {
-            [allBookmarkTags addObjectsFromArray:[dict allValues]];
-        }else{
-            allBookmarkTags = [[NSMutableArray alloc]initWithArray:[dict allValues]];
-        }
-    }
-    
-
-    for(NSDictionary *dict in allBookmarkTags) // get all bookmarks and iterate
-    {
-        if([dict isKindOfClass:[NSDictionary class]])
-        {
-            if(![[dict objectForKey:@"event"] isEqualToString:@"live"]) // for now if its a live event, we aren't going to filter -- need to fix on server
-            {
-                NSArray *tempArr = [[dict objectForKey:@"event" ] componentsSeparatedByString:@"_"];
-                NSString *eventDate =  [NSString stringWithString:[tempArr objectAtIndex:0] ];
-                NSDictionary *teamInfo = [[allEvents objectForKey:[dict objectForKey:@"event"]] copy];
-                NSString *homeTeam = [teamInfo objectForKey:@"homeTeam"];
-                NSString *visitTeam = [teamInfo objectForKey:@"visitTeam"];
-                if (!homeTeam || !visitTeam){
-                    homeTeam = [dict objectForKey:@"homeTeam"];
-                    visitTeam = [dict objectForKey:@"visitTeam"];
-                }
-                NSString *whosPlaying = [NSString stringWithFormat:@"%@ VS. %@",homeTeam,visitTeam];
-                
-                if(![globals.BOOKMARK_DATES containsObject:eventDate])
-                {
-                    [globals.BOOKMARK_DATES addObject:eventDate];
-                }
-                
-                if(![globals.BOOKMARK_OPPONENTS containsObject:whosPlaying] && homeTeam && visitTeam)
-                {
-                    [globals.BOOKMARK_OPPONENTS addObject:whosPlaying];
-                }
-                
-                if (![eventsArray containsObject:[dict objectForKey:@"name"]]){
-                    [eventsArray addObject:[dict objectForKey:@"name"]];
-                }
-            }
-        }
-    }
-    if(!taggedAttsDict)
-    {
-        taggedAttsDict = [globals.TAGGED_ATTS_BOOKMARK mutableCopy];
-
-        
-    }
-    if (!allFilters){
-        allFilters = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 14, 820, 30)];
-
-        //[allFilters setAccessibilityLabel:@"filters"];
-        //[allFilters setBackgroundColor:[UIColor grayColor]];
-        allFilters.scrollEnabled = YES;
-        //allFilters.clipsToBounds = TRUE;
-        allFilters.showsHorizontalScrollIndicator = YES;
-        allFilters.showsVerticalScrollIndicator = YES;
-        allFilters.delegate = self;
-        [allFilters setAlwaysBounceHorizontal:TRUE];
-        [self.view addSubview:allFilters];
-    }
-    [numTagsLabel setText:[NSString stringWithFormat:@"%d Tags", globals.BOOKMARK_TAGS.count]];
-    [numTagsLabel setNeedsDisplay];
+//    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *plistPath = [documentsDirectory stringByAppendingPathComponent:@"EventsHid.plist"];
+//    NSMutableArray *eventsData = [[NSMutableArray alloc] initWithContentsOfFile: plistPath];
+//    for (NSDictionary *event in eventsData) {
+//        if (!allEvents) {
+//            allEvents = [[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc]initWithObjects:event, nil] forKeys:[[NSArray alloc]initWithObjects:[event objectForKey:@"name"], nil]];
+//        }else{
+//            [allEvents setObject:event forKey:[NSString stringWithFormat:@"%@",[event objectForKey:@"name"]]];
+//        }
+//    }
+//
+//    
+//    NSMutableArray *allBookmarkTags;
+//    NSMutableArray *allBookmarkDictArr = [[globals.BOOKMARK_TAGS allValues]mutableCopy];
+//    if (!eventsArray) eventsArray = [[NSMutableArray alloc] init];
+//    for (NSDictionary *dict in allBookmarkDictArr) {
+//        if (allBookmarkTags) {
+//            [allBookmarkTags addObjectsFromArray:[dict allValues]];
+//        }else{
+//            allBookmarkTags = [[NSMutableArray alloc]initWithArray:[dict allValues]];
+//        }
+//    }
+//    
+//
+//    for(NSDictionary *dict in allBookmarkTags) // get all bookmarks and iterate
+//    {
+//        if([dict isKindOfClass:[NSDictionary class]])
+//        {
+//            if(![[dict objectForKey:@"event"] isEqualToString:@"live"]) // for now if its a live event, we aren't going to filter -- need to fix on server
+//            {
+//                NSArray *tempArr = [[dict objectForKey:@"event" ] componentsSeparatedByString:@"_"];
+//                NSString *eventDate =  [NSString stringWithString:[tempArr objectAtIndex:0] ];
+//                NSDictionary *teamInfo = [[allEvents objectForKey:[dict objectForKey:@"event"]] copy];
+//                NSString *homeTeam = [teamInfo objectForKey:@"homeTeam"];
+//                NSString *visitTeam = [teamInfo objectForKey:@"visitTeam"];
+//                if (!homeTeam || !visitTeam){
+//                    homeTeam = [dict objectForKey:@"homeTeam"];
+//                    visitTeam = [dict objectForKey:@"visitTeam"];
+//                }
+//                NSString *whosPlaying = [NSString stringWithFormat:@"%@ VS. %@",homeTeam,visitTeam];
+//                
+//                if(![globals.BOOKMARK_DATES containsObject:eventDate])
+//                {
+//                    [globals.BOOKMARK_DATES addObject:eventDate];
+//                }
+//                
+//                if(![globals.BOOKMARK_OPPONENTS containsObject:whosPlaying] && homeTeam && visitTeam)
+//                {
+//                    [globals.BOOKMARK_OPPONENTS addObject:whosPlaying];
+//                }
+//                
+//                if (![eventsArray containsObject:[dict objectForKey:@"name"]]){
+//                    [eventsArray addObject:[dict objectForKey:@"name"]];
+//                }
+//            }
+//        }
+//    }
+//    if(!taggedAttsDict)
+//    {
+//        taggedAttsDict = [globals.TAGGED_ATTS_BOOKMARK mutableCopy];
+//
+//        
+//    }
+//    if (!allFilters){
+//        allFilters = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 14, 820, 30)];
+//
+//        //[allFilters setAccessibilityLabel:@"filters"];
+//        //[allFilters setBackgroundColor:[UIColor grayColor]];
+//        allFilters.scrollEnabled = YES;
+//        //allFilters.clipsToBounds = TRUE;
+//        allFilters.showsHorizontalScrollIndicator = YES;
+//        allFilters.showsVerticalScrollIndicator = YES;
+//        allFilters.delegate = self;
+//        [allFilters setAlwaysBounceHorizontal:TRUE];
+//        [self.view addSubview:allFilters];
+//    }
+//    [numTagsLabel setText:[NSString stringWithFormat:@"%d Tags", globals.BOOKMARK_TAGS.count]];
+//    [numTagsLabel setNeedsDisplay];
 }
 
 //create tags in the format HTeamA Vs. VTeamB wherein H means home and V means visiting
 -(void)createOppTags
 {
     //NSMutableArray *typeofTagsArr = [[globals.TYPES_OF_TAGS objectAtIndex:0] mutableCopy];
-    NSArray *sortedArray = [globals.BOOKMARK_OPPONENTS sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    for(NSString *eventName in sortedArray)
-    {
-        int i = [sortedArray indexOfObject:eventName];
-        //int i = [typeofTagsArr indexOfObject:eventName];
-        int colNum = ceil(i/ROWS_IN_EVENTS);
-        
-        int rowNum = (i+1)%ROWS_IN_EVENTS>0 ? (i+1)%ROWS_IN_EVENTS : ROWS_IN_EVENTS;
-        // //
-        CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
-        //[eventButton setFrame:CGRectMake((colNum * 83)-60, (rowNum*28)+2, 80, 25)];
-        [eventButton setFrame:CGRectMake((colNum * 223)+10, (rowNum*28)-20, 220, 25)];
-        //[eventButton setContentEdgeInsets:UIEdgeInsetsMake(3, 3, 3, 3)];
-        [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
-        [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
-        [eventButton setTitle:eventName forState:UIControlStateNormal];
-        [eventButton setAccessibilityLabel:@"teams"];
-        [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
-        eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
-        [oppScrollView addSubview:eventButton];
-        
-        BOOL doesContainTeams = ([[taggedAttsDict objectForKey:@"teams"] containsObject:eventName]);
-        
-        if(doesContainTeams)
-        {
-            [taggedButtonArr addObject:eventButton];
-            [eventButton setSelected:TRUE];
-        }
-    }
-    
-    if ([[taggedAttsDict objectForKey:@"teams"] count] > 0){
-        NSArray *teamsArray = [[taggedAttsDict objectForKey:@"teams"] copy];
-        for (NSString *team in teamsArray){
-            if (![sortedArray containsObject:team]){
-                [[taggedAttsDict objectForKey:@"teams"] removeObject:team];
-            }
-        }
-        if ([[taggedAttsDict objectForKey:@"teams"] count] == 0){
-            [taggedAttsDict removeObjectForKey:@"teams"];
-        }
-    }
-    
-    if(ceil((float)globals.BOOKMARK_OPPONENTS.count/ROWS_IN_EVENTS) <2){
-        [oppScrollView setContentSize:CGSizeMake(oppScrollView.frame.size.width, oppScrollView.frame.size.height)];
-    }else{
-        [oppScrollView setContentSize:CGSizeMake( ceil((float)globals.BOOKMARK_OPPONENTS.count/ROWS_IN_EVENTS)*223 + 10, oppScrollView.frame.size.height)];
-    }
+//    NSArray *sortedArray = [globals.BOOKMARK_OPPONENTS sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+//    for(NSString *eventName in sortedArray)
+//    {
+//        int i = [sortedArray indexOfObject:eventName];
+//        //int i = [typeofTagsArr indexOfObject:eventName];
+//        int colNum = ceil(i/ROWS_IN_EVENTS);
+//        
+//        int rowNum = (i+1)%ROWS_IN_EVENTS>0 ? (i+1)%ROWS_IN_EVENTS : ROWS_IN_EVENTS;
+//        // //
+//        CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
+//        //[eventButton setFrame:CGRectMake((colNum * 83)-60, (rowNum*28)+2, 80, 25)];
+//        [eventButton setFrame:CGRectMake((colNum * 223)+10, (rowNum*28)-20, 220, 25)];
+//        //[eventButton setContentEdgeInsets:UIEdgeInsetsMake(3, 3, 3, 3)];
+//        [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
+//        [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+//        [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
+//        [eventButton setTitle:eventName forState:UIControlStateNormal];
+//        [eventButton setAccessibilityLabel:@"teams"];
+//        [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
+//        eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
+//        [oppScrollView addSubview:eventButton];
+//        
+//        BOOL doesContainTeams = ([[taggedAttsDict objectForKey:@"teams"] containsObject:eventName]);
+//        
+//        if(doesContainTeams)
+//        {
+//            [taggedButtonArr addObject:eventButton];
+//            [eventButton setSelected:TRUE];
+//        }
+//    }
+//    
+//    if ([[taggedAttsDict objectForKey:@"teams"] count] > 0){
+//        NSArray *teamsArray = [[taggedAttsDict objectForKey:@"teams"] copy];
+//        for (NSString *team in teamsArray){
+//            if (![sortedArray containsObject:team]){
+//                [[taggedAttsDict objectForKey:@"teams"] removeObject:team];
+//            }
+//        }
+//        if ([[taggedAttsDict objectForKey:@"teams"] count] == 0){
+//            [taggedAttsDict removeObjectForKey:@"teams"];
+//        }
+//    }
+//    
+//    if(ceil((float)globals.BOOKMARK_OPPONENTS.count/ROWS_IN_EVENTS) <2){
+//        [oppScrollView setContentSize:CGSizeMake(oppScrollView.frame.size.width, oppScrollView.frame.size.height)];
+//    }else{
+//        [oppScrollView setContentSize:CGSizeMake( ceil((float)globals.BOOKMARK_OPPONENTS.count/ROWS_IN_EVENTS)*223 + 10, oppScrollView.frame.size.height)];
+//    }
     
 }
 
@@ -379,7 +379,7 @@
     }
     [taggedButtonArr removeAllObjects];
     [taggedAttsDict removeAllObjects];
-    [globals.TAGGED_ATTS_BOOKMARK removeAllObjects];
+//    [globals.TAGGED_ATTS_BOOKMARK removeAllObjects];
     
 }
 
@@ -425,67 +425,67 @@
 //sorting mechanism
 -(void)sortClipsBySelecting
 {
-    NSMutableArray *allBookmarkTags;
-    NSMutableArray *allBookmarkDictArr = [[globals.BOOKMARK_TAGS allValues]mutableCopy];
-    for (NSDictionary *dict in allBookmarkDictArr) {
-        if (allBookmarkTags) {
-            [allBookmarkTags addObjectsFromArray:[dict allValues]];
-        }else{
-            allBookmarkTags = [[NSMutableArray alloc]initWithArray:[dict allValues]];
-        }
-    }
-    
-    //if our display array doesn't exist, create it
-    if(!displayArray)
-    {
-        displayArray = [[NSMutableArray alloc] init];
-    }
-    
-    if(taggedAttsDict.count<1) //if there is nothing in the tagged attributes, then we want all bookmarks
-    {
-        displayArray = [NSMutableArray arrayWithArray:allBookmarkTags];
-    }else{
-        for(NSDictionary *obj in allBookmarkTags)
-        {
-            NSString *homeTeam;
-            NSString *visitTeam;
-            NSString *whosPlaying;
-            if ([obj isKindOfClass:[NSDictionary class]])
-            {
-                ////////NSLog(@"obj %@",obj);
-                if(![[obj objectForKey:@"event" ]isEqualToString:@"live"]) //for now ignore live bookmarks
-                {
-                    NSDictionary *teamInfo = [[allEvents objectForKey:[obj objectForKey:@"event"]] copy];
-                    NSArray *tempArr = [[obj objectForKey:@"event" ] componentsSeparatedByString:@"_"];
-                    NSString *eventDate =  [NSString stringWithString:[tempArr objectAtIndex:0] ];
-                    homeTeam = [teamInfo objectForKey:@"homeTeam"];
-                    visitTeam = [teamInfo objectForKey:@"visitTeam"];
-                    
-                    if (!homeTeam || !visitTeam){
-                        homeTeam = [obj objectForKey:@"homeTeam"];
-                        visitTeam = [obj objectForKey:@"visitTeam"];
-                    }
-                    
-                    whosPlaying = [NSString stringWithFormat:@"%@ VS. %@",homeTeam,visitTeam];
-               
-                    BOOL doesContainDate = !([[taggedAttsDict objectForKey:@"dates"]count]>0) || [[taggedAttsDict objectForKey:@"dates"] containsObject:eventDate] ;           
-                    BOOL doesContainTeams = !([[taggedAttsDict objectForKey:@"teams"]count] >0) || [[taggedAttsDict objectForKey:@"teams"]containsObject:whosPlaying];
-                    BOOL doesContainNames = !([[taggedAttsDict objectForKey:@"names"]count] >0) || [[taggedAttsDict objectForKey:@"names"]containsObject:[obj objectForKey:@"name"]];
-                    if(doesContainDate && doesContainTeams && doesContainNames)
-                    {
-                        [displayArray addObject:obj];
-                    }
-                }
-            }
-        }
-    }
-    //reload tags
-    [bkViewController receiveFilteredArray:displayArray];
-    globals.TAGGED_ATTS_BOOKMARK = [taggedAttsDict mutableCopy];
-    [numTagsLabel setText:[NSString stringWithFormat:@"%d Tags", displayArray.count]];
-    [numTagsLabel setNeedsDisplay];
-    [displayArray removeAllObjects];
-
+//    NSMutableArray *allBookmarkTags;
+//    NSMutableArray *allBookmarkDictArr = [[globals.BOOKMARK_TAGS allValues]mutableCopy];
+//    for (NSDictionary *dict in allBookmarkDictArr) {
+//        if (allBookmarkTags) {
+//            [allBookmarkTags addObjectsFromArray:[dict allValues]];
+//        }else{
+//            allBookmarkTags = [[NSMutableArray alloc]initWithArray:[dict allValues]];
+//        }
+//    }
+//    
+//    //if our display array doesn't exist, create it
+//    if(!displayArray)
+//    {
+//        displayArray = [[NSMutableArray alloc] init];
+//    }
+//    
+//    if(taggedAttsDict.count<1) //if there is nothing in the tagged attributes, then we want all bookmarks
+//    {
+//        displayArray = [NSMutableArray arrayWithArray:allBookmarkTags];
+//    }else{
+//        for(NSDictionary *obj in allBookmarkTags)
+//        {
+//            NSString *homeTeam;
+//            NSString *visitTeam;
+//            NSString *whosPlaying;
+//            if ([obj isKindOfClass:[NSDictionary class]])
+//            {
+//                ////////NSLog(@"obj %@",obj);
+//                if(![[obj objectForKey:@"event" ]isEqualToString:@"live"]) //for now ignore live bookmarks
+//                {
+//                    NSDictionary *teamInfo = [[allEvents objectForKey:[obj objectForKey:@"event"]] copy];
+//                    NSArray *tempArr = [[obj objectForKey:@"event" ] componentsSeparatedByString:@"_"];
+//                    NSString *eventDate =  [NSString stringWithString:[tempArr objectAtIndex:0] ];
+//                    homeTeam = [teamInfo objectForKey:@"homeTeam"];
+//                    visitTeam = [teamInfo objectForKey:@"visitTeam"];
+//                    
+//                    if (!homeTeam || !visitTeam){
+//                        homeTeam = [obj objectForKey:@"homeTeam"];
+//                        visitTeam = [obj objectForKey:@"visitTeam"];
+//                    }
+//                    
+//                    whosPlaying = [NSString stringWithFormat:@"%@ VS. %@",homeTeam,visitTeam];
+//               
+//                    BOOL doesContainDate = !([[taggedAttsDict objectForKey:@"dates"]count]>0) || [[taggedAttsDict objectForKey:@"dates"] containsObject:eventDate] ;           
+//                    BOOL doesContainTeams = !([[taggedAttsDict objectForKey:@"teams"]count] >0) || [[taggedAttsDict objectForKey:@"teams"]containsObject:whosPlaying];
+//                    BOOL doesContainNames = !([[taggedAttsDict objectForKey:@"names"]count] >0) || [[taggedAttsDict objectForKey:@"names"]containsObject:[obj objectForKey:@"name"]];
+//                    if(doesContainDate && doesContainTeams && doesContainNames)
+//                    {
+//                        [displayArray addObject:obj];
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    //reload tags
+//    [bkViewController receiveFilteredArray:displayArray];
+//    globals.TAGGED_ATTS_BOOKMARK = [taggedAttsDict mutableCopy];
+//    [numTagsLabel setText:[NSString stringWithFormat:@"%d Tags", displayArray.count]];
+//    [numTagsLabel setNeedsDisplay];
+//    [displayArray removeAllObjects];
+//
 }
 
 
@@ -505,54 +505,54 @@
 -(void)createDateTags
 {
     //NSMutableArray *typeofTagsArr = [[globals.TYPES_OF_TAGS objectAtIndex:0] mutableCopy];
-    NSArray *sortedArray = [globals.BOOKMARK_DATES sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    for(NSString *eventName in sortedArray)
-    {
-        int i = [sortedArray indexOfObject:eventName];
-        //int i = [typeofTagsArr indexOfObject:eventName];
-        int colNum = ceil(i/ROWS_IN_EVENTS);
-        
-        int rowNum = (i+1)%ROWS_IN_EVENTS>0 ? (i+1)%ROWS_IN_EVENTS : ROWS_IN_EVENTS;
-        // //
-        CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
-        //[eventButton setFrame:CGRectMake((colNum * 83)-60, (rowNum*28)+2, 80, 25)];
-        [eventButton setFrame:CGRectMake((colNum * 113)+10, (rowNum*28)-20, 110, 25)];
-        [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
-        [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
-        [eventButton setTitle:eventName forState:UIControlStateNormal];
-        [eventButton setAccessibilityLabel:@"dates"];
-        [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
-        eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
-        [dateScrollView addSubview:eventButton];
-        
-        BOOL doesContainDate = ([[taggedAttsDict objectForKey:@"dates"] containsObject:eventName]);
-        
-        if(doesContainDate)
-        {
-            [taggedButtonArr addObject:eventButton];
-            [eventButton setSelected:TRUE];
-        }
-    }
-    
-    if ([[taggedAttsDict objectForKey:@"dates"] count] > 0){
-        NSArray *datesArray = [[taggedAttsDict objectForKey:@"teams"] copy];
-        for (NSString *date in datesArray){
-            if (![sortedArray containsObject:date]){
-                [[taggedAttsDict objectForKey:@"dates"] removeObject:date];
-            }
-        }
-        if ([[taggedAttsDict objectForKey:@"dates"] count] == 0){
-            [taggedAttsDict removeObjectForKey:@"dates"];
-        }
-    }
-    
-    if(ceil(globals.BOOKMARK_DATES.count/ROWS_IN_EVENTS) <3){
-        [dateScrollView setContentSize:CGSizeMake(dateScrollView.frame.size.width, dateScrollView.frame.size.height)];
-    }else{
-        [dateScrollView setContentSize:CGSizeMake(ceil((float)globals.BOOKMARK_DATES.count/ROWS_IN_EVENTS)*113 + 10, dateScrollView.frame.size.height)];
-    }
+//    NSArray *sortedArray = [globals.BOOKMARK_DATES sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+//    for(NSString *eventName in sortedArray)
+//    {
+//        int i = [sortedArray indexOfObject:eventName];
+//        //int i = [typeofTagsArr indexOfObject:eventName];
+//        int colNum = ceil(i/ROWS_IN_EVENTS);
+//        
+//        int rowNum = (i+1)%ROWS_IN_EVENTS>0 ? (i+1)%ROWS_IN_EVENTS : ROWS_IN_EVENTS;
+//        // //
+//        CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
+//        //[eventButton setFrame:CGRectMake((colNum * 83)-60, (rowNum*28)+2, 80, 25)];
+//        [eventButton setFrame:CGRectMake((colNum * 113)+10, (rowNum*28)-20, 110, 25)];
+//        [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
+//        [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+//        [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
+//        [eventButton setTitle:eventName forState:UIControlStateNormal];
+//        [eventButton setAccessibilityLabel:@"dates"];
+//        [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
+//        eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
+//        [dateScrollView addSubview:eventButton];
+//        
+//        BOOL doesContainDate = ([[taggedAttsDict objectForKey:@"dates"] containsObject:eventName]);
+//        
+//        if(doesContainDate)
+//        {
+//            [taggedButtonArr addObject:eventButton];
+//            [eventButton setSelected:TRUE];
+//        }
+//    }
+//    
+//    if ([[taggedAttsDict objectForKey:@"dates"] count] > 0){
+//        NSArray *datesArray = [[taggedAttsDict objectForKey:@"teams"] copy];
+//        for (NSString *date in datesArray){
+//            if (![sortedArray containsObject:date]){
+//                [[taggedAttsDict objectForKey:@"dates"] removeObject:date];
+//            }
+//        }
+//        if ([[taggedAttsDict objectForKey:@"dates"] count] == 0){
+//            [taggedAttsDict removeObjectForKey:@"dates"];
+//        }
+//    }
+//    
+//    if(ceil(globals.BOOKMARK_DATES.count/ROWS_IN_EVENTS) <3){
+//        [dateScrollView setContentSize:CGSizeMake(dateScrollView.frame.size.width, dateScrollView.frame.size.height)];
+//    }else{
+//        [dateScrollView setContentSize:CGSizeMake(ceil((float)globals.BOOKMARK_DATES.count/ROWS_IN_EVENTS)*113 + 10, dateScrollView.frame.size.height)];
+//    }
 }
 
 
@@ -571,7 +571,6 @@
 
 - (void)didReceiveMemoryWarning
 {
-    globals.DID_RECEIVE_MEMORY_WARNING = TRUE;
     [super didReceiveMemoryWarning];
     if ([self.view window] == nil) self.view = nil;
     // Dispose of any resources that can be recreated.

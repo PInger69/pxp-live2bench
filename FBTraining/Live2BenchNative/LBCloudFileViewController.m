@@ -7,8 +7,8 @@
 //
 
 #import "LBCloudFileViewController.h"
-#import "UserInterfaceConstants.h"
-#import "JPStyle.h"
+//#import "UserInterfaceConstants.h"
+//#import "JPStyle.h"
 
 
 @interface LBCloudFileViewController ()
@@ -47,7 +47,7 @@
     _fileDataString = [[NSString alloc] initWithData:self.fileData encoding:NSUTF8StringEncoding];
     _fontSize = 25;
     
-    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, kiPadWidthFormSheetLandscape, kiPadHeightFormSheetLandscape)];
+    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0,0,100,100)];//CGRectMake(0, 0, kiPadWidthFormSheetLandscape, kiPadHeightFormSheetLandscape)
     
     if(self.fileURL != nil)
     {

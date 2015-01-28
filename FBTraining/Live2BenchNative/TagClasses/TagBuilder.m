@@ -8,7 +8,7 @@
 
 #import "TagBuilder.h"
 #import "EncoderManager.h"
-#import "Globals.h"
+//#import "Globals.h"
 
 @implementation TagBuilder
 {
@@ -38,20 +38,20 @@
     NSMutableDictionary *tag = [NSMutableDictionary dictionary];
     
     // Populate it with common date taken from the event, user and encoder
-    [tag addEntriesFromDictionary:@{
-                                     @"event"       : encoderManager.currentEvent,
-                                     @"colour"      : [[Globals instance].ACCOUNT_INFO objectForKey:@"tagColour"],
-                                     @"user"        : [[Globals instance].ACCOUNT_INFO objectForKey:@"hid"],
-                                     @"id"          : [@"temp_" stringByAppendingString:tagTime],
-                                     @"type"        : @"0",
-                                     @"comment"     : @"",
-                                     @"rating"      : @"0",
-                                     @"coachpick"   : @"0",
-                                     @"bookmark"    : @"0",
-                                     @"deleted"     : @"0",
-                                     @"edited"      : @"0",
-                                     @"local"       : @"1"
-                                     }];
+//    [tag addEntriesFromDictionary:@{
+//                                     @"event"       : encoderManager.currentEvent,
+//                                     @"colour"      : [[Globals instance].ACCOUNT_INFO objectForKey:@"tagColour"],
+//                                     @"user"        : [[Globals instance].ACCOUNT_INFO objectForKey:@"hid"],
+//                                     @"id"          : [@"temp_" stringByAppendingString:tagTime],
+//                                     @"type"        : @"0",
+//                                     @"comment"     : @"",
+//                                     @"rating"      : @"0",
+//                                     @"coachpick"   : @"0",
+//                                     @"bookmark"    : @"0",
+//                                     @"deleted"     : @"0",
+//                                     @"edited"      : @"0",
+//                                     @"local"       : @"1"
+//                                     }];
 
     // Add the collected data to the teg dict
     [tag addEntriesFromDictionary:data];

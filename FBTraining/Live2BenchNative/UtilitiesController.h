@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 //#import "AppQueue.h"
 #import "Live2BenchViewController.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "sys/socket.h"
 #import "netinet/in.h"
 #import "SystemConfiguration/SystemConfiguration.h"
@@ -22,7 +22,7 @@
 @class Live2BenchViewController;
 
 @interface UtilitiesController : NSObject{
-    Globals *globals;
+//    Globals *globals;
     //AppQueue *appQueue;
     Live2BenchViewController *live2BenchViewController;
     NSString * responseMsg;

@@ -33,15 +33,15 @@
 {
     [super viewDidLoad];
     [self setupView];
-    globals = [Globals instance];
-    if ([globals.WHICH_SPORT isEqualToString:@"hockey"]) {
-        displayData = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithObjects:@"OZ",@"NZ",@"DZ", nil]];//globals.TEAM_SETUP];
-        [displayData addObjectsFromArray:globals.TEAM_SETUP];
-    }else if ([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"]|| [globals.WHICH_SPORT isEqualToString:@"football"]){
-        displayData = [[NSMutableArray alloc] initWithArray:globals.TEAM_SETUP];
-    }else{
-        //not soccer or rguby or hockey
-    }
+//    globals = [Globals instance];
+//    if ([globals.WHICH_SPORT isEqualToString:@"hockey"]) {
+//        displayData = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithObjects:@"OZ",@"NZ",@"DZ", nil]];//globals.TEAM_SETUP];
+//        [displayData addObjectsFromArray:globals.TEAM_SETUP];
+//    }else if ([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"]|| [globals.WHICH_SPORT isEqualToString:@"football"]){
+//        displayData = [[NSMutableArray alloc] initWithArray:globals.TEAM_SETUP];
+//    }else{
+//        //not soccer or rguby or hockey
+//    }
     ////////NSLog(@"playercollectionview viewdidload globals.TEAM_SETUP: %@",globals.TEAM_SETUP);
      ////////NSLog(@"playercollection view team setup %@",globals.TEAM_SETUP);
      playersDidSelected = [[NSMutableArray alloc]init];
@@ -103,55 +103,55 @@
 }
 
 - (CustomButton*)cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+//    
     //create the cell, use the player for the given indexpath
     
     BorderButton *cell = [BorderButton buttonWithType:UIButtonTypeCustom];
-
-//    [cell setBackgroundImage:[UIImage imageNamed:@"line-button.png"] forState:UIControlStateSelected];
 //
-//    [cell setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-    
-    if ([indexPath indexAtPosition:1] <3 && [globals.WHICH_SPORT isEqualToString:@"hockey"]) {
-        NSString *zone = [displayData objectAtIndex:[indexPath indexAtPosition:1]];
-//        UILabel *zoneLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
-//        [zoneLabel setTextAlignment:NSTextAlignmentCenter];
-//        [zoneLabel setTextColor:[UIColor darkGrayColor]];
-//        [zoneLabel setBackgroundColor:[UIColor clearColor]];
-//        [zoneLabel setAccessibilityLabel:@"title"];
-//        [zoneLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
-//        [zoneLabel setText:zone];
-//        [cell addSubview:zoneLabel];
-        [cell setAccessibilityLabel:@"zone"];
-//        [cell.layer setBorderColor:[UIColor orangeColor].CGColor];
-//        [cell.layer setBorderWidth:1.0];
-        [cell setTitle:zone forState:UIControlStateNormal];
-        [cell addTarget:self action:@selector(didSelectCell:) forControlEvents:UIControlEventTouchUpInside];
-    //}else if ([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"]){
-    }else{
-        NSString *playerNumber = [[[displayData objectAtIndex:[indexPath indexAtPosition:1]] objectForKey:@"jersey"] stringValue];
-//        UILabel *playerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
-//        [playerLabel setTextAlignment:NSTextAlignmentCenter];
-//        [playerLabel setTextColor:[UIColor darkGrayColor]];
-//        [playerLabel setBackgroundColor:[UIColor clearColor]];
-//        [playerLabel setAccessibilityLabel:@"title"];
-//        [playerLabel setText:playerNumber];
-//        [cell addSubview:playerLabel];
-        [cell setAccessibilityLabel:playerNumber];
-        [cell setTitle:playerNumber forState:UIControlStateNormal];
-        [cell addTarget:self action:@selector(didSelectCell:) forControlEvents:UIControlEventTouchUpInside];
-        [cell setTag:[playerNumber intValue]];
-
-//    }else {
-//        //If it isnt hockey, soccer or rugby
-    }
-    //No shadows = better performance
-    /*[cell.layer setShadowColor:[[UIColor blackColor] CGColor]];
-    [cell.layer setShadowOpacity:0.5f];
-    [cell.layer setShadowRadius:1.0f];
-    [cell.layer setShadowOffset:CGSizeMake(-1, 1)];*/
-    
-    [cell setContentMode:UIViewContentModeScaleAspectFit];
+////    [cell setBackgroundImage:[UIImage imageNamed:@"line-button.png"] forState:UIControlStateSelected];
+////
+////    [cell setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
+//    
+//    if ([indexPath indexAtPosition:1] <3 && [globals.WHICH_SPORT isEqualToString:@"hockey"]) {
+//        NSString *zone = [displayData objectAtIndex:[indexPath indexAtPosition:1]];
+////        UILabel *zoneLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
+////        [zoneLabel setTextAlignment:NSTextAlignmentCenter];
+////        [zoneLabel setTextColor:[UIColor darkGrayColor]];
+////        [zoneLabel setBackgroundColor:[UIColor clearColor]];
+////        [zoneLabel setAccessibilityLabel:@"title"];
+////        [zoneLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
+////        [zoneLabel setText:zone];
+////        [cell addSubview:zoneLabel];
+//        [cell setAccessibilityLabel:@"zone"];
+////        [cell.layer setBorderColor:[UIColor orangeColor].CGColor];
+////        [cell.layer setBorderWidth:1.0];
+//        [cell setTitle:zone forState:UIControlStateNormal];
+//        [cell addTarget:self action:@selector(didSelectCell:) forControlEvents:UIControlEventTouchUpInside];
+//    //}else if ([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"]){
+//    }else{
+//        NSString *playerNumber = [[[displayData objectAtIndex:[indexPath indexAtPosition:1]] objectForKey:@"jersey"] stringValue];
+////        UILabel *playerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
+////        [playerLabel setTextAlignment:NSTextAlignmentCenter];
+////        [playerLabel setTextColor:[UIColor darkGrayColor]];
+////        [playerLabel setBackgroundColor:[UIColor clearColor]];
+////        [playerLabel setAccessibilityLabel:@"title"];
+////        [playerLabel setText:playerNumber];
+////        [cell addSubview:playerLabel];
+//        [cell setAccessibilityLabel:playerNumber];
+//        [cell setTitle:playerNumber forState:UIControlStateNormal];
+//        [cell addTarget:self action:@selector(didSelectCell:) forControlEvents:UIControlEventTouchUpInside];
+//        [cell setTag:[playerNumber intValue]];
+//
+////    }else {
+////        //If it isnt hockey, soccer or rugby
+//    }
+//    //No shadows = better performance
+//    /*[cell.layer setShadowColor:[[UIColor blackColor] CGColor]];
+//    [cell.layer setShadowOpacity:0.5f];
+//    [cell.layer setShadowRadius:1.0f];
+//    [cell.layer setShadowOffset:CGSizeMake(-1, 1)];*/
+//    
+//    [cell setContentMode:UIViewContentModeScaleAspectFit];
     return cell;
 }
 
@@ -200,20 +200,20 @@
 
 -(NSMutableDictionary*)getAllSelectedPlayers{
     NSMutableArray *tempArr = [playersDidSelected mutableCopy];
-    NSString *tempStr = [zoneDidSelected mutableCopy];
-    NSMutableDictionary *selectedData = [[NSMutableDictionary alloc]init];
-    if ([globals.WHICH_SPORT isEqualToString:@"hockey"]) {
-        [selectedData setObject:tempArr forKey:@"players"];
-        [selectedData setObject:tempStr forKey:@"zone"];
-    }else if([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"] || [globals.WHICH_SPORT isEqualToString:@"football"]){
-        [selectedData setObject:tempArr forKey:@"players"];
-    }else {
-        
-    }
-    
-    [playersDidSelected removeAllObjects];
-    zoneDidSelected = @"";
-    return selectedData;
+//    NSString *tempStr = [zoneDidSelected mutableCopy];
+//    NSMutableDictionary *selectedData = [[NSMutableDictionary alloc]init];
+//    if ([globals.WHICH_SPORT isEqualToString:@"hockey"]) {
+//        [selectedData setObject:tempArr forKey:@"players"];
+//        [selectedData setObject:tempStr forKey:@"zone"];
+//    }else if([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"] || [globals.WHICH_SPORT isEqualToString:@"football"]){
+//        [selectedData setObject:tempArr forKey:@"players"];
+//    }else {
+//        
+//    }
+//    
+//    [playersDidSelected removeAllObjects];
+//    zoneDidSelected = @"";
+//    return selectedData;
 
 }
 
@@ -222,8 +222,7 @@
 
 - (void)didReceiveMemoryWarning
 {
-    globals.DID_RECEIVE_MEMORY_WARNING = TRUE;
-    [super didReceiveMemoryWarning];
+       [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 

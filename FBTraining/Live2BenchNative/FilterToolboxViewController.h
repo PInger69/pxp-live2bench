@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ClipViewController.h" 
 #import "FilterCell.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "UtilitiesController.h"
 #import "CustomButton.h"
 
@@ -17,7 +17,7 @@
 
 @interface FilterToolboxViewController : UIViewController<UIScrollViewDelegate>
 {
-    Globals *globals;
+//    Globals *globals;
     NSMutableArray *filterButtonsArr;
     ClipViewController *lbController;
 

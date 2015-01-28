@@ -29,7 +29,7 @@ float buttonHeight;
 float spacing;
 int numOfRows;
 
-Globals *globals;
+//Globals *globals;
 
 NSString *offenseGroupTagID;
 NSString *defenseGroupTagID;
@@ -53,7 +53,7 @@ NSMutableData *responseData;
 {
     self = [super init];
     if (self) {
-        globals = [Globals instance];
+//        globals = [Globals instance];
         self.live2BenchViewController = l2b;
         currentGroupPlayers = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewElements) name:NOTIF_UPDATED_THUMBNAILS object:nil];
@@ -145,52 +145,52 @@ NSMutableData *responseData;
 
 - (void)updateViewElements
 {
-    //Determine if the app is in a state where the view should be enabled or disabled
-    BOOL containsOpenDurationTag = FALSE;
-    BOOL hasPlayers = FALSE;
-    for (NSString *key in [globals.CURRENT_EVENT_THUMBNAILS allKeys]) {
-        NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:key];
-        if ([[tag objectForKey:@"type"] intValue] == 99){
-            //If a new tag is being opened
-            currentPeriodTag = tag;
-            containsOpenDurationTag = TRUE;
-        }
-    }
-    if (globals.UNCLOSED_EVENT) {
-        containsOpenDurationTag = TRUE;
-    }
-    if (!containsOpenDurationTag) {
-        [disabledLabel setText:@"Select a Period"];
-    }
-    if (globals.TEAM_SETUP && [globals.TEAM_SETUP count] > 0) {
-        hasPlayers = YES;
-    } else {
-        [disabledLabel setText:@"No Players Found"];
-    }
-    [self updateViewElementsForEnabled:(containsOpenDurationTag&&hasPlayers)];
+//    //Determine if the app is in a state where the view should be enabled or disabled
+//    BOOL containsOpenDurationTag = FALSE;
+//    BOOL hasPlayers = FALSE;
+//    for (NSString *key in [globals.CURRENT_EVENT_THUMBNAILS allKeys]) {
+//        NSDictionary *tag = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:key];
+//        if ([[tag objectForKey:@"type"] intValue] == 99){
+//            //If a new tag is being opened
+//            currentPeriodTag = tag;
+//            containsOpenDurationTag = TRUE;
+//        }
+//    }
+//    if (globals.UNCLOSED_EVENT) {
+//        containsOpenDurationTag = TRUE;
+//    }
+//    if (!containsOpenDurationTag) {
+//        [disabledLabel setText:@"Select a Period"];
+//    }
+//    if (globals.TEAM_SETUP && [globals.TEAM_SETUP count] > 0) {
+//        hasPlayers = YES;
+//    } else {
+//        [disabledLabel setText:@"No Players Found"];
+//    }
+//    [self updateViewElementsForEnabled:(containsOpenDurationTag&&hasPlayers)];
 }
 
 - (void)updateViewElementsForNotification:(NSNotification*)notification
 {
-    //Notification to update the UI when a new duration tag is selected
-    NSDictionary *dict = [notification userInfo];
-    BOOL containsOpenDurationTag = [[dict objectForKey:@"type"] intValue] == 99;
-    BOOL hasPlayers = FALSE;
-    if (containsOpenDurationTag) {
-        if (![currentPeriodTag isEqualToDictionary:dict]) {
-            [self closeGroupTag];
-            currentPeriodTag = dict;
-        }
-    } else {
-        [disabledLabel setText:@"Select a Period"];
-    }
-    if (globals.TEAM_SETUP && [globals.TEAM_SETUP count] > 0) {
-        hasPlayers = YES;
-    } else {
-        [disabledLabel setText:@"No Players Found"];
-    }
-    [self updateViewElementsForEnabled:(containsOpenDurationTag&&hasPlayers)];
-    
+//    //Notification to update the UI when a new duration tag is selected
+//    NSDictionary *dict = [notification userInfo];
+//    BOOL containsOpenDurationTag = [[dict objectForKey:@"type"] intValue] == 99;
+//    BOOL hasPlayers = FALSE;
+//    if (containsOpenDurationTag) {
+//        if (![currentPeriodTag isEqualToDictionary:dict]) {
+//            [self closeGroupTag];
+//            currentPeriodTag = dict;
+//        }
+//    } else {
+//        [disabledLabel setText:@"Select a Period"];
+//    }
+//    if (globals.TEAM_SETUP && [globals.TEAM_SETUP count] > 0) {
+//        hasPlayers = YES;
+//    } else {
+//        [disabledLabel setText:@"No Players Found"];
+//    }
+//    [self updateViewElementsForEnabled:(containsOpenDurationTag&&hasPlayers)];
+//    
 }
 
 - (void)updateViewElementsForEnabled:(BOOL)enabled
@@ -386,9 +386,9 @@ NSMutableData *responseData;
     if (currentPeriodTag) {
         [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
     }
-    [dict setObject:globals.EVENT_NAME forKey:@"event"];
-    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
-    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
+//    [dict setObject:globals.EVENT_NAME forKey:@"event"];
+//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
+//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
     [self sendTagInfo:dict];
     offenseGroupTagID = nil;
 }
@@ -400,9 +400,9 @@ NSMutableData *responseData;
     if (currentPeriodTag) {
         [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
     }
-    [dict setObject:globals.EVENT_NAME forKey:@"event"];
-    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
-    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
+//    [dict setObject:globals.EVENT_NAME forKey:@"event"];
+//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
+//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
     [self sendTagInfo:dict];
     defenseGroupTagID = nil;
 }
@@ -410,16 +410,16 @@ NSMutableData *responseData;
 
 - (void)sendTagForCurrentOtherGroup
 {
-    NSString *tagTime = [self.live2BenchViewController getCurrentTimeforNewTag];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjects:@[[NSString stringWithFormat:@"%d",currentOtherGroup],@"23",@"1",[NSString stringWithFormat:@"Other_%d",currentOtherGroup],tagTime,currentGroupPlayers] forKeys:@[@"group",@"type",@"other",@"name",@"time",@"player"]];
-    if (currentPeriodTag) {
-        [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
-    }
-    [dict setObject:globals.EVENT_NAME forKey:@"event"];
-    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
-    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
-    [self sendTagInfo:dict];
-    otherGroupTagID = nil;
+//    NSString *tagTime = [self.live2BenchViewController getCurrentTimeforNewTag];
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjects:@[[NSString stringWithFormat:@"%d",currentOtherGroup],@"23",@"1",[NSString stringWithFormat:@"Other_%d",currentOtherGroup],tagTime,currentGroupPlayers] forKeys:@[@"group",@"type",@"other",@"name",@"time",@"player"]];
+//    if (currentPeriodTag) {
+//        [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
+//    }
+//    [dict setObject:globals.EVENT_NAME forKey:@"event"];
+//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
+//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
+//    [self sendTagInfo:dict];
+//    otherGroupTagID = nil;
 }
 
 - (void)closeGroupTag
@@ -440,39 +440,39 @@ NSMutableData *responseData;
 
 - (void)createPlayersDictionaryWithTeamSetup
 {
-    //Converts the current team setup into a more easily parseable dictionary
-    NSMutableDictionary *players = [[NSMutableDictionary alloc] init];
-    if (!globals.TEAM_SETUP || [globals.TEAM_SETUP count] <= 0) {
-        return;
-    }
-    NSMutableDictionary *allPlayersDict = [NSMutableDictionary dictionaryWithObjects:@[[[NSMutableArray alloc] init],[[NSMutableArray alloc] init],[[NSMutableArray alloc] init]] forKeys:@[@"offense",@"defense",@"other"]];
-    [players setObject:allPlayersDict forKey:@"all"];
-    for (NSDictionary *player in globals.TEAM_SETUP) {
-        BOOL isOffense = [[[player objectForKey:@"line"] substringToIndex:1] isEqualToString:@"O"];
-        BOOL isDefense = [[[player objectForKey:@"line"] substringToIndex:1] isEqualToString:@"D"];
-        NSString *type;
-        if (isOffense) {
-            type = @"offense";
-        } else if (isDefense) {
-            type = @"defense";
-        } else {
-            type = @"other";
-        }
-        NSString *groupNum = [[player objectForKey:@"line"] substringFromIndex:2];
-        if ([groupNum isEqualToString:@""]) {
-            groupNum = @"0";
-        }
-        NSString *playerNum = [player objectForKey:@"jersey"];
-        
-        if (![players objectForKey:[player objectForKey:@"line"]]) {
-            NSMutableDictionary *groupDict = [NSMutableDictionary dictionaryWithObjects:@[type,groupNum,[NSMutableArray arrayWithObject:playerNum]] forKeys:@[@"type",@"group",@"players"]];
-            [players setObject:groupDict forKey:[player objectForKey:@"line"]];
-        } else {
-            [[[players objectForKey:[player objectForKey:@"line"]] objectForKey:@"players"] addObject:playerNum];
-        }
-        [[[players objectForKey:@"all"] objectForKey:type] addObject:playerNum];
-    }
-    [self initializePlayersDictionary:players];
+//    //Converts the current team setup into a more easily parseable dictionary
+//    NSMutableDictionary *players = [[NSMutableDictionary alloc] init];
+//    if (!globals.TEAM_SETUP || [globals.TEAM_SETUP count] <= 0) {
+//        return;
+//    }
+//    NSMutableDictionary *allPlayersDict = [NSMutableDictionary dictionaryWithObjects:@[[[NSMutableArray alloc] init],[[NSMutableArray alloc] init],[[NSMutableArray alloc] init]] forKeys:@[@"offense",@"defense",@"other"]];
+//    [players setObject:allPlayersDict forKey:@"all"];
+//    for (NSDictionary *player in globals.TEAM_SETUP) {
+//        BOOL isOffense = [[[player objectForKey:@"line"] substringToIndex:1] isEqualToString:@"O"];
+//        BOOL isDefense = [[[player objectForKey:@"line"] substringToIndex:1] isEqualToString:@"D"];
+//        NSString *type;
+//        if (isOffense) {
+//            type = @"offense";
+//        } else if (isDefense) {
+//            type = @"defense";
+//        } else {
+//            type = @"other";
+//        }
+//        NSString *groupNum = [[player objectForKey:@"line"] substringFromIndex:2];
+//        if ([groupNum isEqualToString:@""]) {
+//            groupNum = @"0";
+//        }
+//        NSString *playerNum = [player objectForKey:@"jersey"];
+//        
+//        if (![players objectForKey:[player objectForKey:@"line"]]) {
+//            NSMutableDictionary *groupDict = [NSMutableDictionary dictionaryWithObjects:@[type,groupNum,[NSMutableArray arrayWithObject:playerNum]] forKeys:@[@"type",@"group",@"players"]];
+//            [players setObject:groupDict forKey:[player objectForKey:@"line"]];
+//        } else {
+//            [[[players objectForKey:[player objectForKey:@"line"]] objectForKey:@"players"] addObject:playerNum];
+//        }
+//        [[[players objectForKey:@"all"] objectForKey:type] addObject:playerNum];
+//    }
+//    [self initializePlayersDictionary:players];
 }
 
 - (void)initializePlayersDictionary:(NSDictionary*)groupPlayersDictionary
@@ -665,25 +665,25 @@ NSMutableData *responseData;
 
 - (void)modCurrentTagWithInfo:(NSDictionary *)dict
 {
-    NSMutableDictionary *modDict = [NSMutableDictionary dictionaryWithDictionary:dict];
-//    if ([self isOffenseGroup] && offenseGroupTagID > 0) {
-//        [modDict setObject:offenseGroupTagID forKey:@"id"];
-//    } else if ([self isDefenseGroup] && defenseGroupTagID > 0) {
-//        [modDict setObject:defenseGroupTagID forKey:@"id"];
-//    } else if (otherGroupTagID > 0){
-//        [modDict setObject:otherGroupTagID forKey:@"id"];
+//    NSMutableDictionary *modDict = [NSMutableDictionary dictionaryWithDictionary:dict];
+////    if ([self isOffenseGroup] && offenseGroupTagID > 0) {
+////        [modDict setObject:offenseGroupTagID forKey:@"id"];
+////    } else if ([self isDefenseGroup] && defenseGroupTagID > 0) {
+////        [modDict setObject:defenseGroupTagID forKey:@"id"];
+////    } else if (otherGroupTagID > 0){
+////        [modDict setObject:otherGroupTagID forKey:@"id"];
+////    }
+//    if (currentPeriodTag) {
+//        id tagId = [globals.OPENED_DURATION_TAGS objectForKey:[currentPeriodTag objectForKey:@"name"]];
+//        if (tagId) {
+//            [modDict setObject:tagId forKey:@"id"];
+//        }
+//    } else {
+//        NSLog(@"No CurrentPeriodTag to mod");
 //    }
-    if (currentPeriodTag) {
-        id tagId = [globals.OPENED_DURATION_TAGS objectForKey:[currentPeriodTag objectForKey:@"name"]];
-        if (tagId) {
-            [modDict setObject:tagId forKey:@"id"];
-        }
-    } else {
-        NSLog(@"No CurrentPeriodTag to mod");
-    }
-    [modDict setObject:globals.EVENT_NAME forKey:@"event"];
-    [modDict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
-    [self modTagInfo:modDict];
+//    [modDict setObject:globals.EVENT_NAME forKey:@"event"];
+//    [modDict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
+//    [self modTagInfo:modDict];
 }
 
 - (void)sortCurrentPlayers
@@ -718,83 +718,83 @@ NSMutableData *responseData;
 - (void)sendTagInfo:(NSMutableDictionary *)dict
 {
     //    NSLog(@"sendingDict: %@", dict);
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    [connection start];
-    
-    if (!globals.HAS_MIN) {
-        NSString *filePath = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
-        NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[dict objectForKey:@"id"]];
-        NSString *imagePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-        
-        //save tag information in global dictionary
-        [globals.CURRENT_EVENT_THUMBNAILS setObject:dict forKey:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
-        
-        [dict setObject:imagePath forKey:@"url"];
-        //create tagmarker
-        //        [self markTag:[[dict valueForKey:@"time"] floatValue] name:button.titleLabel.text colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID: [[@"temp_" stringByAppendingString:tagTime] doubleValue]];
-        //save the thumbnail image in local storage. This is running in the background thread
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
-                                                 (unsigned long)NULL), ^(void) {
-            BOOL isDir;
-            if(![[NSFileManager defaultManager] fileExistsAtPath:globals.THUMBNAILS_PATH isDirectory:&isDir])
-            {
-                [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
-            }
-            
-            //create thumbnail using avfoundation and save it in the local dir
-            NSURL *videoURL = self.live2BenchViewController.videoPlayer.videoURL;
-            AVAsset *asset = [AVAsset assetWithURL:videoURL];
-            AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
-            [imageGenerator setMaximumSize:CGSizeMake(190, 106)];
-            [imageGenerator setApertureMode:AVAssetImageGeneratorApertureModeProductionAperture];
-            //CMTime time = [[dict objectForKey:@"cmtime"] CMTimeValue];//CMTimeMake(30, 1);
-            CMTime time = CMTimeMakeWithSeconds([[dict objectForKey:@"time"] floatValue], 1);
-            CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
-            UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
-            CGImageRelease(imageRef);
-            
-            NSData *imageData = UIImageJPEGRepresentation(thumbnail, 0.5);
-            if(![[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDir])
-            {
-                [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
-            }
-            //add image to directory
-            [imageData writeToFile:imagePath atomically:YES ];
-            
-        });
-        
-    }
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
+//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//    [connection start];
+//    
+//    if (!globals.HAS_MIN) {
+//        NSString *filePath = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
+//        NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[dict objectForKey:@"id"]];
+//        NSString *imagePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
+//        
+//        //save tag information in global dictionary
+//        [globals.CURRENT_EVENT_THUMBNAILS setObject:dict forKey:[NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]]];
+//        
+//        [dict setObject:imagePath forKey:@"url"];
+//        //create tagmarker
+//        //        [self markTag:[[dict valueForKey:@"time"] floatValue] name:button.titleLabel.text colour:[uController colorWithHexString:[globals.ACCOUNT_INFO objectForKey:@"tagColour"]] tagID: [[@"temp_" stringByAppendingString:tagTime] doubleValue]];
+//        //save the thumbnail image in local storage. This is running in the background thread
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
+//                                                 (unsigned long)NULL), ^(void) {
+//            BOOL isDir;
+//            if(![[NSFileManager defaultManager] fileExistsAtPath:globals.THUMBNAILS_PATH isDirectory:&isDir])
+//            {
+//                [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
+//            }
+//            
+//            //create thumbnail using avfoundation and save it in the local dir
+//            NSURL *videoURL = self.live2BenchViewController.videoPlayer.videoURL;
+//            AVAsset *asset = [AVAsset assetWithURL:videoURL];
+//            AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+//            [imageGenerator setMaximumSize:CGSizeMake(190, 106)];
+//            [imageGenerator setApertureMode:AVAssetImageGeneratorApertureModeProductionAperture];
+//            //CMTime time = [[dict objectForKey:@"cmtime"] CMTimeValue];//CMTimeMake(30, 1);
+//            CMTime time = CMTimeMakeWithSeconds([[dict objectForKey:@"time"] floatValue], 1);
+//            CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
+//            UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+//            CGImageRelease(imageRef);
+//            
+//            NSData *imageData = UIImageJPEGRepresentation(thumbnail, 0.5);
+//            if(![[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDir])
+//            {
+//                [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+//            }
+//            //add image to directory
+//            [imageData writeToFile:imagePath atomically:YES ];
+//            
+//        });
+//        
+//    }
 }
 
 - (void)modTagInfo:(NSDictionary *)dict
 {
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
-    NSLog(@"mod: %@",dict);
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    [connection start];
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//    
+//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    
+//    NSLog(@"mod: %@",dict);
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//    [connection start];
 }
 
 #pragma mark - Connection Methods

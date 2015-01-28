@@ -8,11 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomTabViewController.h"
-//#import <QuartzCore/QuartzCore.h>
 #import "EulaModalViewController.h"
 #import "SettingsViewController.h"
-//#import "AppQueue.h"
-#import "Globals.h"
 #import "IconButton.h"
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
@@ -21,8 +18,7 @@
 @class SettingsViewController;
 
 @interface LogoViewController : CustomTabViewController<MFMailComposeViewControllerDelegate,UIGestureRecognizerDelegate,UITabBarDelegate>{
-    Globals *globals;
-    //AppQueue *appQueue;
+
     NSArray *paths;
     NSString *documentsDirectory;
     NSFileManager *fileManager;
@@ -41,7 +37,7 @@
 @property(nonatomic,strong) MFMailComposeViewController *mailController;
 @property(nonatomic,strong) UITapGestureRecognizer *tapBehindGesture;
 
-//-(void)encStatusCallback:(id)encStatObj;
+
 -(void)hideSettings;
 
 @end

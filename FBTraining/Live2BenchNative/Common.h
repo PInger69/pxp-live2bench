@@ -67,6 +67,11 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 
 /**
+ *  URLS
+ */
+
+
+/**
  *  Graphics Commons
  */
 #define PRIMARY_APP_COLOR [UIColor orangeColor]
@@ -76,6 +81,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 /**
  *  Notifications
  */
+
 #define NOTIF_UPDATE_MEMORY                 @"update memory"
 #define NOTIF_RECEIVE_MEMORY_WARNING        @"receive memory warning"
 #define NOTIF_SUBTAG_SELECTED       		@"subtag selected"
@@ -92,9 +98,18 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_USER_INFO_RETRIEVED           @"userInfoAdded"
 
 #define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{@"tabName":@"Live2Bench"}
+#define NOTIF_USER_LOGGED_OUT               @"userLoggedout" // {@"success":<bool>}
+
+
+
+
+
 
 // User Center
-#define NOTIF_SIDE_TAGS_READY_FOR_L2B      @"tagsReadyForLive2Bench"
+#define NOTIF_SIDE_TAGS_READY_FOR_L2B       @"tagsReadyForLive2Bench"
+#define NOTIF_CREDENTIALS_TO_VERIFY         @"verifyCredentials"        // userInfo:@{@"user":<user name or email>,@"password":<password>}
+#define NOTIF_CREDENTIALS_VERIFY_RESULT     @"verifyCredentialsResults" // userInfo:@{@"success":[NSNumber numberWithBool:<yes or no>]}
+#define NOTIF_UC_REQUEST_USER_INFO          @"requestUserInfo"          //
 
 
 // Encoder
@@ -111,8 +126,12 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_ENCODER_STAT                  @"encoderStatusMonitor"
 #define NOTIF_MASTER_HAS_LIVE               @"masterHasLive"
 
-
 #define NOTIF_EM_FOUND_MASTER               @"NOTIF_EM_FOUND_MASTER"
+
+
+
+
+
 
 // VideoPlayer
 #define NOTIF_FULLSCREEN                    @"fullScreen"

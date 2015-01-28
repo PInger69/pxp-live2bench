@@ -9,7 +9,7 @@
 #import "JPReorderTableView.h"
 #import "JPTripleSwipeCell.h"
 #import "JPReorderHelper.h"
-#import "JPStyle.h"
+//#import "JPStyle.h"
 
 
 static NSString* const kTripleSwipeCellIdentifier = @"TripleSwipeCellReuseIdentifier";
@@ -69,7 +69,7 @@ static NSString* const kTableSelectRecognizerTag = @"214";
         //Adding Dragging Cell Img to Table View
         _draggingCellImg = [[UIImageView alloc] initWithFrame:_draggingCell.frame];
         _draggingCellImg.clipsToBounds = NO;
-        _draggingCellImg.image = [imageFromView(_draggingCell) imageWithAlpha:0.9];
+//        _draggingCellImg.image = [imageFromView(_draggingCell) imageWithAlpha:0.9];
         
         [self addSubview:_draggingCellImg];
         

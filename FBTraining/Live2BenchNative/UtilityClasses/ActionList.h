@@ -33,6 +33,13 @@
  */
 -(void)start;
 
+/**
+ *  should toggle isFinished and success
+ *
+ *  @return <#return value description#>
+ */
+-(id <ActionListItem>)reset;
+
 @end
 
 
@@ -97,5 +104,40 @@
 
 
 
+
+
+-(void)unShiftItem:(id<ActionListItem>)item;
+-(void)unShiftItem:(id<ActionListItem>)item onItemFinish:(void (^)(BOOL succsess))onFinish;
+-(void)unShiftItem:(id<ActionListItem>)item   onItemStart:(void (^)())onStart onItemFinish:(void (^)(BOOL succsess))onFinish;
+-(void)unShiftItem:(id<ActionListItem>)item onItemStart:(void (^)())onStart;
+
+-(void)addStack:(NSArray*)items;
+
+
+    
+
+
+
+
+
+
+
+
+
+
 @end
+
+
+
+
+
+
+
+@interface DelayAction : NSObject<ActionListItem>
+-(id)initWithTime:(int)time;
+@end
+
+
+
+
 

@@ -7,8 +7,8 @@
 //
 
 #import "HNBorderButton.h"
-#import "JPFont.h"
-#import "JPStyle.h"
+//#import "JPFont.h"
+//#import "JPStyle.h"
 
 @implementation HNBorderButton
 
@@ -16,15 +16,15 @@
 {
     self = [super initWithFrame:frame];
     
-    self.layer.borderColor = [JPStyle interfaceTintColor].CGColor;
-    self.layer.borderWidth = 1;
-    self.layer.cornerRadius = 10;
-    self.titleLabel.font = [JPFont fontWithName:[JPFont defaultThinFont] size:20];
-    self.titleLabel.numberOfLines = 2;
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self setTitleColor:[JPStyle interfaceTintColor] forState:UIControlStateNormal];
-    [self setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-    
+//    self.layer.borderColor = [JPStyle interfaceTintColor].CGColor;
+//    self.layer.borderWidth = 1;
+//    self.layer.cornerRadius = 10;
+//    self.titleLabel.font = [JPFont fontWithName:[JPFont defaultThinFont] size:20];
+//    self.titleLabel.numberOfLines = 2;
+//    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [self setTitleColor:[JPStyle interfaceTintColor] forState:UIControlStateNormal];
+//    [self setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+//    
     [self addTarget:self action:@selector(changeBorderColorWhite) forControlEvents:UIControlEventTouchDown];
     [self addTarget:self action:@selector(changeBorderColorWhite) forControlEvents:UIControlEventTouchDragInside];
     [self addTarget:self action:@selector(changeBorderColorBack) forControlEvents:UIControlEventTouchDragOutside];
@@ -42,7 +42,7 @@
     }
     else if(rec.state == UIGestureRecognizerStateCancelled || rec.state == UIGestureRecognizerStateFailed || rec.state == UIGestureRecognizerStateEnded)
     {
-        self.layer.borderColor = [JPStyle interfaceTintColor].CGColor;
+//        self.layer.borderColor = [JPStyle interfaceTintColor].CGColor;
     }
     
 }

@@ -55,7 +55,7 @@
 //                                                       selector:@selector(updateControlInfo)
 //                                                       userInfo:nil
 //                                                        repeats:YES];
-     globals= [Globals instance];
+//     globals= [Globals instance];
     [self initLayout];
     
    
@@ -128,155 +128,155 @@
 }
 //timer that highlights lines, period, strength
 -(void)updateControlInfo{
-
-    if (![globals.WHICH_SPORT isEqualToString:@"hockey"]) {
-        return;
-    }
-    //highlight current period, globals.CURRENT_PERIOD is the int value of segment control index
-    if (globals.CURRENT_PERIOD>=0) {
-       [self.periodSegmentedControl setSelectedSegmentIndex:globals.CURRENT_PERIOD];
-    }else {
-         if(globals.HAS_MIN)
-         {
-           [self.periodSegmentedControl setSelectedSegmentIndex:0];
-           [self.periodSegmentedControl sendActionsForControlEvents:UIControlEventValueChanged];
-         }
-    }
-    
-    if(globals.CURRENT_STRENGTH)
-    {
-         NSArray *arrayOfStrength = [globals.CURRENT_STRENGTH componentsSeparatedByString:@","];
-        //if the globals.CURRENT_STRENGTH is some random value, then set the strength as default one
-        if (2<[[arrayOfStrength objectAtIndex:0]integerValue]<7) {
-             [self.homeSegControl setSelectedSegmentIndex:[globals.ARRAY_OF_POSS_PLAYERS indexOfObject:[arrayOfStrength objectAtIndex:0] ]];
-        }else{
-            [self.homeSegControl setSelectedSegmentIndex:2];
-        }
-       if (2<[[arrayOfStrength objectAtIndex:1]integerValue]<7) {
-            [self.awaySegControl setSelectedSegmentIndex:[globals.ARRAY_OF_POSS_PLAYERS indexOfObject:[arrayOfStrength objectAtIndex:1] ]];
-       }else{
-           [self.awaySegControl setSelectedSegmentIndex:2];
-       }
-        int homeValue = [[self.homeSegControl titleForSegmentAtIndex:[self.homeSegControl selectedSegmentIndex]]integerValue];
-        int awayValue = [[self.awaySegControl titleForSegmentAtIndex:[self.awaySegControl selectedSegmentIndex]]integerValue];
-        
-        if (homeValue==awayValue) {
-            strengthHomeLabel.backgroundColor =[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
-            strengthAwayLabel.backgroundColor = [UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
-        }else if(homeValue > awayValue){
-            strengthHomeLabel.backgroundColor = [UIColor greenColor];
-            strengthAwayLabel.backgroundColor = [UIColor redColor];
-        }else{
-            strengthHomeLabel.backgroundColor = [UIColor redColor];
-            strengthAwayLabel.backgroundColor = [UIColor greenColor];
-        }
-    }else{
-        //set the selected segment index for both home and away, then send action to value changed function once;
-        [self.homeSegControl setSelectedSegmentIndex:2];
-        [self.awaySegControl setSelectedSegmentIndex:2];
-        [self.homeSegControl sendActionsForControlEvents:UIControlEventValueChanged];
-        //[self.awaySegControl sendActionsForControlEvents:UIControlEventValueChanged];
-    }
-    
-    //highlight the button of the current forward line
-    
-    if(globals.CURRENT_F_LINE>=0){
-        ////NSLog(@"updateControlInfo current_f_line: %d, leftLineButtonWasSelected: %@,[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1]: %@ ",globals.CURRENT_F_LINE,leftLineButtonWasSelected,[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1]);
-        if (![leftLineButtonWasSelected isEqual:[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1]]) {
-            if (leftLineButtonWasSelected) {
-                leftLineButtonWasSelected.selected = FALSE;
-            }
-            [[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1] setSelected:TRUE];
-            leftLineButtonWasSelected = [leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1];
-            //update player box in bottom view according to the line changing
-            CustomButton *button = (CustomButton*)[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1];
-            if (self.leftArrow.alpha == 1.0) {
-                
-                if(self.playerDrawerLeft)
-                {
-                    [self.playerDrawerLeft.view removeFromSuperview];
-                    self.playerDrawerLeft = nil;
-                    
-                    
-                }
-                
-                
-                [UIView animateWithDuration:0.2
-                                 animations:^{
-                                     [self.leftArrow setAlpha:1.0f];
-                                     [self.leftArrow setFrame:CGRectMake(button.center.x-15, self.leftArrow.frame.origin.y, self.leftArrow.frame.size.width, self.leftArrow.frame.size.height)];
-                                 }
-                                 completion:^(BOOL finished){ }];
-                
-                self.playerDrawerLeft = [[ContentViewController alloc] initWithIndex:button.tag side:@"Forward"];
-                [self.playerDrawerLeft.view setBackgroundColor:[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f]];
-                [self.playerDrawerLeft.view setFrame:CGRectMake(35,button.frame.origin.y+button.frame.size.height+10,300,160)];
-                
-                [self.leftView addSubview:self.playerDrawerLeft.view];
-                
-                [self.leftArrow setAlpha:1.0f];
-                [self.playerDrawerLeft.view setAlpha:1.0f];
-                
-            }
-            
-        }
-        
-    }else {
-        if(globals.HAS_MIN)
-        {
-            // NSLog(@"update control infor, if(globals.has_min) current_f_line: %d ",globals.CURRENT_F_LINE);
-            //reset the leftelineButtonWasSelected when restart a new event, otherwise it will keep using the value in the previous event
-            leftLineButtonWasSelected = nil;
-            [[leftLineButtonArr objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-    ////highlight the button of the current defense line
-    if(globals.CURRENT_D_LINE>= 0){
-        if (![rightLineButtonWasSelected isEqual:[rightLineButtonArr objectAtIndex:globals.CURRENT_D_LINE-1]]) {
-            if (rightLineButtonWasSelected) {
-                rightLineButtonWasSelected.selected = FALSE;
-            }
-            [[rightLineButtonArr objectAtIndex:globals.CURRENT_D_LINE-1] setSelected:TRUE];
-            rightLineButtonWasSelected = [rightLineButtonArr objectAtIndex:globals.CURRENT_D_LINE-1];
-            //update player box in bottom view according to the line changing
-            CustomButton *button = (CustomButton*)rightLineButtonWasSelected;
-            if (self.rightArrow.alpha == 1.0) {
-                if(self.playerDrawerRight)
-                {
-                    [self.playerDrawerRight .view removeFromSuperview];
-                    self.playerDrawerRight = nil;
-                    
-                    
-                }
-                [UIView animateWithDuration:0.2
-                                 animations:^{
-                                     [self.rightArrow setAlpha:1.0f];
-                                     [self.rightArrow setFrame:CGRectMake(button.center.x-15, self.rightArrow.frame.origin.y, self.rightArrow.frame.size.width, self.rightArrow.frame.size.height)];
-                                 }
-                                 completion:^(BOOL finished){ }];
-                
-                
-                self.playerDrawerLeft = [[ContentViewController alloc] initWithIndex:button.tag side:@"Defense"];
-                [self.playerDrawerRight.view setBackgroundColor:[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f]];
-                [self.playerDrawerRight.view setFrame:CGRectMake(-5,button.frame.origin.y+button.frame.size.height+10,300,160)];
-                
-                [self.rightView addSubview:self.playerDrawerRight.view];
-                
-                [self.rightArrow setAlpha:1.0f];
-                [self.playerDrawerRight.view setAlpha:1.0f];
-            }
-            
-        }
-    }else{
-        if(globals.HAS_MIN)
-        {
-         //NSLog(@"update control infor, if(globals.has_min) current_d_line: %d ",globals.CURRENT_D_LINE);
-             //reset the leftelineButtonWasSelected when restart a new event, otherwise it will keep using the value in the previous event
-            rightLineButtonWasSelected = nil;   
-            [[rightLineButtonArr objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-    
+//
+//    if (![globals.WHICH_SPORT isEqualToString:@"hockey"]) {
+//        return;
+//    }
+//    //highlight current period, globals.CURRENT_PERIOD is the int value of segment control index
+//    if (globals.CURRENT_PERIOD>=0) {
+//       [self.periodSegmentedControl setSelectedSegmentIndex:globals.CURRENT_PERIOD];
+//    }else {
+//         if(globals.HAS_MIN)
+//         {
+//           [self.periodSegmentedControl setSelectedSegmentIndex:0];
+//           [self.periodSegmentedControl sendActionsForControlEvents:UIControlEventValueChanged];
+//         }
+//    }
+//    
+//    if(globals.CURRENT_STRENGTH)
+//    {
+//         NSArray *arrayOfStrength = [globals.CURRENT_STRENGTH componentsSeparatedByString:@","];
+//        //if the globals.CURRENT_STRENGTH is some random value, then set the strength as default one
+//        if (2<[[arrayOfStrength objectAtIndex:0]integerValue]<7) {
+//             [self.homeSegControl setSelectedSegmentIndex:[globals.ARRAY_OF_POSS_PLAYERS indexOfObject:[arrayOfStrength objectAtIndex:0] ]];
+//        }else{
+//            [self.homeSegControl setSelectedSegmentIndex:2];
+//        }
+//       if (2<[[arrayOfStrength objectAtIndex:1]integerValue]<7) {
+//            [self.awaySegControl setSelectedSegmentIndex:[globals.ARRAY_OF_POSS_PLAYERS indexOfObject:[arrayOfStrength objectAtIndex:1] ]];
+//       }else{
+//           [self.awaySegControl setSelectedSegmentIndex:2];
+//       }
+//        int homeValue = [[self.homeSegControl titleForSegmentAtIndex:[self.homeSegControl selectedSegmentIndex]]integerValue];
+//        int awayValue = [[self.awaySegControl titleForSegmentAtIndex:[self.awaySegControl selectedSegmentIndex]]integerValue];
+//        
+//        if (homeValue==awayValue) {
+//            strengthHomeLabel.backgroundColor =[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
+//            strengthAwayLabel.backgroundColor = [UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
+//        }else if(homeValue > awayValue){
+//            strengthHomeLabel.backgroundColor = [UIColor greenColor];
+//            strengthAwayLabel.backgroundColor = [UIColor redColor];
+//        }else{
+//            strengthHomeLabel.backgroundColor = [UIColor redColor];
+//            strengthAwayLabel.backgroundColor = [UIColor greenColor];
+//        }
+//    }else{
+//        //set the selected segment index for both home and away, then send action to value changed function once;
+//        [self.homeSegControl setSelectedSegmentIndex:2];
+//        [self.awaySegControl setSelectedSegmentIndex:2];
+//        [self.homeSegControl sendActionsForControlEvents:UIControlEventValueChanged];
+//        //[self.awaySegControl sendActionsForControlEvents:UIControlEventValueChanged];
+//    }
+//    
+//    //highlight the button of the current forward line
+//    
+//    if(globals.CURRENT_F_LINE>=0){
+//        ////NSLog(@"updateControlInfo current_f_line: %d, leftLineButtonWasSelected: %@,[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1]: %@ ",globals.CURRENT_F_LINE,leftLineButtonWasSelected,[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1]);
+//        if (![leftLineButtonWasSelected isEqual:[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1]]) {
+//            if (leftLineButtonWasSelected) {
+//                leftLineButtonWasSelected.selected = FALSE;
+//            }
+//            [[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1] setSelected:TRUE];
+//            leftLineButtonWasSelected = [leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1];
+//            //update player box in bottom view according to the line changing
+//            CustomButton *button = (CustomButton*)[leftLineButtonArr objectAtIndex:globals.CURRENT_F_LINE-1];
+//            if (self.leftArrow.alpha == 1.0) {
+//                
+//                if(self.playerDrawerLeft)
+//                {
+//                    [self.playerDrawerLeft.view removeFromSuperview];
+//                    self.playerDrawerLeft = nil;
+//                    
+//                    
+//                }
+//                
+//                
+//                [UIView animateWithDuration:0.2
+//                                 animations:^{
+//                                     [self.leftArrow setAlpha:1.0f];
+//                                     [self.leftArrow setFrame:CGRectMake(button.center.x-15, self.leftArrow.frame.origin.y, self.leftArrow.frame.size.width, self.leftArrow.frame.size.height)];
+//                                 }
+//                                 completion:^(BOOL finished){ }];
+//                
+//                self.playerDrawerLeft = [[ContentViewController alloc] initWithIndex:button.tag side:@"Forward"];
+//                [self.playerDrawerLeft.view setBackgroundColor:[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f]];
+//                [self.playerDrawerLeft.view setFrame:CGRectMake(35,button.frame.origin.y+button.frame.size.height+10,300,160)];
+//                
+//                [self.leftView addSubview:self.playerDrawerLeft.view];
+//                
+//                [self.leftArrow setAlpha:1.0f];
+//                [self.playerDrawerLeft.view setAlpha:1.0f];
+//                
+//            }
+//            
+//        }
+//        
+//    }else {
+//        if(globals.HAS_MIN)
+//        {
+//            // NSLog(@"update control infor, if(globals.has_min) current_f_line: %d ",globals.CURRENT_F_LINE);
+//            //reset the leftelineButtonWasSelected when restart a new event, otherwise it will keep using the value in the previous event
+//            leftLineButtonWasSelected = nil;
+//            [[leftLineButtonArr objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//        }
+//    }
+//    ////highlight the button of the current defense line
+//    if(globals.CURRENT_D_LINE>= 0){
+//        if (![rightLineButtonWasSelected isEqual:[rightLineButtonArr objectAtIndex:globals.CURRENT_D_LINE-1]]) {
+//            if (rightLineButtonWasSelected) {
+//                rightLineButtonWasSelected.selected = FALSE;
+//            }
+//            [[rightLineButtonArr objectAtIndex:globals.CURRENT_D_LINE-1] setSelected:TRUE];
+//            rightLineButtonWasSelected = [rightLineButtonArr objectAtIndex:globals.CURRENT_D_LINE-1];
+//            //update player box in bottom view according to the line changing
+//            CustomButton *button = (CustomButton*)rightLineButtonWasSelected;
+//            if (self.rightArrow.alpha == 1.0) {
+//                if(self.playerDrawerRight)
+//                {
+//                    [self.playerDrawerRight .view removeFromSuperview];
+//                    self.playerDrawerRight = nil;
+//                    
+//                    
+//                }
+//                [UIView animateWithDuration:0.2
+//                                 animations:^{
+//                                     [self.rightArrow setAlpha:1.0f];
+//                                     [self.rightArrow setFrame:CGRectMake(button.center.x-15, self.rightArrow.frame.origin.y, self.rightArrow.frame.size.width, self.rightArrow.frame.size.height)];
+//                                 }
+//                                 completion:^(BOOL finished){ }];
+//                
+//                
+//                self.playerDrawerLeft = [[ContentViewController alloc] initWithIndex:button.tag side:@"Defense"];
+//                [self.playerDrawerRight.view setBackgroundColor:[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f]];
+//                [self.playerDrawerRight.view setFrame:CGRectMake(-5,button.frame.origin.y+button.frame.size.height+10,300,160)];
+//                
+//                [self.rightView addSubview:self.playerDrawerRight.view];
+//                
+//                [self.rightArrow setAlpha:1.0f];
+//                [self.playerDrawerRight.view setAlpha:1.0f];
+//            }
+//            
+//        }
+//    }else{
+//        if(globals.HAS_MIN)
+//        {
+//         //NSLog(@"update control infor, if(globals.has_min) current_d_line: %d ",globals.CURRENT_D_LINE);
+//             //reset the leftelineButtonWasSelected when restart a new event, otherwise it will keep using the value in the previous event
+//            rightLineButtonWasSelected = nil;   
+//            [[rightLineButtonArr objectAtIndex:0] sendActionsForControlEvents:UIControlEventTouchUpInside];
+//        }
+//    }
+//    
 }
 
 -(void)initLayout
@@ -359,13 +359,13 @@
         
     }
     
-    for(NSString *possPlayer in globals.ARRAY_OF_POSS_PLAYERS)
-    {
-        int i = [globals.ARRAY_OF_POSS_PLAYERS indexOfObject:possPlayer];
-        [self.homeSegControl setTitle:possPlayer forSegmentAtIndex:i];
-        [self.awaySegControl setTitle:possPlayer forSegmentAtIndex:i];
-    }
-    
+//    for(NSString *possPlayer in globals.ARRAY_OF_POSS_PLAYERS)
+//    {
+//        int i = [globals.ARRAY_OF_POSS_PLAYERS indexOfObject:possPlayer];
+//        [self.homeSegControl setTitle:possPlayer forSegmentAtIndex:i];
+//        [self.awaySegControl setTitle:possPlayer forSegmentAtIndex:i];
+//    }
+//    
     strengthHomeLabel = [[UILabel alloc]initWithFrame:CGRectMake(595,self.homeSegControl.frame.origin.y  , 30, 30)];
     [strengthHomeLabel setText:@"H"];
     [strengthHomeLabel setTextAlignment:NSTextAlignmentCenter];
@@ -401,12 +401,12 @@
     if([button.accessibilityLabel isEqualToString:@"left"])
     {
         
-        if (globals.CURRENT_F_LINE == -1 ) {
-            tagTime = @"0.0";
-        }else{
-            //tagTime= [NSString stringWithFormat:@"%f",firstViewController.moviePlayer.currentPlaybackTime];
-            tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
-        }
+//        if (globals.CURRENT_F_LINE == -1 ) {
+//            tagTime = @"0.0";
+//        }else{
+//            //tagTime= [NSString stringWithFormat:@"%f",firstViewController.moviePlayer.currentPlaybackTime];
+//            tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
+//        }
         
        name =[[@"line_" stringByAppendingString:@"f_"] stringByAppendingString:button.titleLabel.text];
         [self.leftArrow setAlpha:0.0f];
@@ -421,17 +421,17 @@
         }
         button.selected = TRUE;
         leftLineButtonWasSelected = button;
-        globals.CURRENT_F_LINE = button.tag +1;
+//        globals.CURRENT_F_LINE = button.tag +1;
          ////NSLog(@"buttonSelected: current_f_line: %d ",globals.CURRENT_F_LINE
         
         
     }else {
-        if (globals.CURRENT_D_LINE == -1) {
-            tagTime = @"0.0";
-        }else{
-            //tagTime= [NSString stringWithFormat:@"%f",live2BenchViewController.moviePlayer.currentPlaybackTime];
-            tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
-        }
+//        if (globals.CURRENT_D_LINE == -1) {
+//            tagTime = @"0.0";
+//        }else{
+//            //tagTime= [NSString stringWithFormat:@"%f",live2BenchViewController.moviePlayer.currentPlaybackTime];
+//            tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
+//        }
         
         name =[[@"line_" stringByAppendingString:@"d_"] stringByAppendingString:button.titleLabel.text];
         [self.rightArrow setAlpha:0.0f];
@@ -446,21 +446,21 @@
         }
         button.selected = TRUE;
         rightLineButtonWasSelected = button;
-        globals.CURRENT_D_LINE = button.tag +1;
+//        globals.CURRENT_D_LINE = button.tag +1;
         
     }
     
    
-    globals.DID_CREATE_NEW_TAG = TRUE;
+//    globals.DID_CREATE_NEW_TAG = TRUE;
     
 //    dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
     
     //current absolute time in seconds
     double currentSystemTime = CACurrentMediaTime();
     //TEMPORARY BUG FIX BY CHANGING USER INFO
-    dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",@"123",@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
-
-    [self sendTagInfo:dict];
+//    dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",@"123",@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
+//
+//    [self sendTagInfo:dict];
     
 }
 
@@ -507,7 +507,7 @@
         }
         button.selected = TRUE;
         leftLineButtonWasSelected = button;
-        globals.CURRENT_F_LINE = button.tag +1;
+//        globals.CURRENT_F_LINE = button.tag +1;
         
     }else {
         if(self.playerDrawerRight)
@@ -547,41 +547,41 @@
         }
         button.selected = TRUE;
         rightLineButtonWasSelected = button;
-        globals.CURRENT_D_LINE = button.tag +1;
+//        globals.CURRENT_D_LINE = button.tag +1;
 
     }
-        globals.DID_CREATE_NEW_TAG = TRUE;
-        
+//        globals.DID_CREATE_NEW_TAG = TRUE;
+    
         //NSString *tagTime = [NSString stringWithFormat:@"%f",live2BenchViewController.moviePlayer.currentPlaybackTime];
         NSString *tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
     //current absolute time in seconds
     double currentSystemTime = CACurrentMediaTime();
-       dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
-        
-        [self sendTagInfo:dict];
+//       dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
+//        
+//        [self sendTagInfo:dict];
 }
 
 -(void)sendTagInfo:(NSDictionary *)newDict{
     
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:newDict options:0 error:&error];
-    NSString *jsonString;
-    if (! jsonData) {
-        
-    } else {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
-    
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
-    [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self];
-    
-    //    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(nullFunction)],self, nil];
-    //    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-    //    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    //    [globals.APP_QUEUE enqueue:url dict:instObj];
+//    NSError *error;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:newDict options:0 error:&error];
+//    NSString *jsonString;
+//    if (! jsonData) {
+//        
+//    } else {
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagset/%@",globals.URL,jsonString];
+//    
+//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    
+//    [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self];
+//    
+//    //    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(nullFunction)],self, nil];
+//    //    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
+//    //    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    //    [globals.APP_QUEUE enqueue:url dict:instObj];
     
 }
 
@@ -593,69 +593,69 @@
 -(void)handleNewThumbnail:(id)jsonArray
 {
 
-    thumbId = [jsonArray objectForKey:@"id"];
-    //extract url from jsonarray
-    NSString *url = [jsonArray objectForKey:@"url"];
-    NSURL *jurl;
-    if (url != nil) {
-        jurl = [[NSURL alloc]initWithString:[jsonArray objectForKey:@"url"]];
-        NSMutableDictionary *thumbInfoSubDict = [jsonArray mutableCopy];
-        
-        //NSString *pathToThumbPlist = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
-        
-
-        NSString *imageName = [jurl lastPathComponent];
-       
-        [thumbInfoSubDict setObject:imageName forKey:@"imageName"];
-        
-        float tagTime = [[thumbInfoSubDict objectForKey:@"starttime"] floatValue];
-        NSString *tagName = [thumbInfoSubDict objectForKey:@"name"];
-        UIColor *tagColour =[uController colorWithHexString:[thumbInfoSubDict objectForKey:@"colour"]];
-        
-//        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[thumbInfoSubDict objectForKey:@"id"]];
-        
-        NSString *tagId = [NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]];
-        //[globals.CURRENT_EVENT_THUMBNAILS addObject:thumbInfoSubDict];
-        [globals.CURRENT_EVENT_THUMBNAILS setObject:thumbInfoSubDict forKey:tagId];
-        
-        //create second thread to create the thumbnail
-        dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            
-            NSData *imgData= [NSData dataWithContentsOfURL:jurl options:0 error:nil];
-           
-            
-            //get image name
-            
-            
-            NSError* error;
-            
-            //create thumbnail directory in documents directory
-            if(  [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:&error])
-            {
-
-            }
-                else
-            {
-
-                NSAssert( FALSE, @"Failed to create directory maybe out of disk space?");
-            }
-            
-            //add image to directory
-            NSString *filePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-            
-            
-            
-            [imgData writeToFile:filePath atomically:NO ];
-            
-            dispatch_async( dispatch_get_main_queue(), ^{
-                //back to main thread
-
-                
-            });
-        });
-
-    }
-
+//    thumbId = [jsonArray objectForKey:@"id"];
+//    //extract url from jsonarray
+//    NSString *url = [jsonArray objectForKey:@"url"];
+//    NSURL *jurl;
+//    if (url != nil) {
+//        jurl = [[NSURL alloc]initWithString:[jsonArray objectForKey:@"url"]];
+//        NSMutableDictionary *thumbInfoSubDict = [jsonArray mutableCopy];
+//        
+//        //NSString *pathToThumbPlist = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
+//        
+//
+//        NSString *imageName = [jurl lastPathComponent];
+//       
+//        [thumbInfoSubDict setObject:imageName forKey:@"imageName"];
+//        
+//        float tagTime = [[thumbInfoSubDict objectForKey:@"starttime"] floatValue];
+//        NSString *tagName = [thumbInfoSubDict objectForKey:@"name"];
+//        UIColor *tagColour =[uController colorWithHexString:[thumbInfoSubDict objectForKey:@"colour"]];
+//        
+////        [live2BenchViewController markTagAtTime:tagTime colour:tagColour tagID:[thumbInfoSubDict objectForKey:@"id"]];
+//        
+//        NSString *tagId = [NSString stringWithFormat:@"%@",[thumbInfoSubDict objectForKey:@"id"]];
+//        //[globals.CURRENT_EVENT_THUMBNAILS addObject:thumbInfoSubDict];
+//        [globals.CURRENT_EVENT_THUMBNAILS setObject:thumbInfoSubDict forKey:tagId];
+//        
+//        //create second thread to create the thumbnail
+//        dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            
+//            NSData *imgData= [NSData dataWithContentsOfURL:jurl options:0 error:nil];
+//           
+//            
+//            //get image name
+//            
+//            
+//            NSError* error;
+//            
+//            //create thumbnail directory in documents directory
+//            if(  [[NSFileManager defaultManager] createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:YES attributes:nil error:&error])
+//            {
+//
+//            }
+//                else
+//            {
+//
+//                NSAssert( FALSE, @"Failed to create directory maybe out of disk space?");
+//            }
+//            
+//            //add image to directory
+//            NSString *filePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
+//            
+//            
+//            
+//            [imgData writeToFile:filePath atomically:NO ];
+//            
+//            dispatch_async( dispatch_get_main_queue(), ^{
+//                //back to main thread
+//
+//                
+//            });
+//        });
+//
+//    }
+//
 }
 
 
@@ -675,7 +675,6 @@
 
 - (void)didReceiveMemoryWarning
 {
-     globals.DID_RECEIVE_MEMORY_WARNING = TRUE;
     [super didReceiveMemoryWarning];
     if ([self.view window] == nil) self.view = nil;
     // Dispose of any resources that can be recreated.
@@ -684,50 +683,50 @@
 - (IBAction)segmentValueChanged:(id)sender {
     
     //get the integer values of the current strengths (we need to compare)
-    int homeValue = [[globals.ARRAY_OF_POSS_PLAYERS objectAtIndex:self.homeSegControl.selectedSegmentIndex] intValue];
-    int awayValue = [[globals.ARRAY_OF_POSS_PLAYERS objectAtIndex:self.awaySegControl.selectedSegmentIndex] intValue];
-    
-    //if i have more players the the other team then the H view is green, other wise it is red
-    if (homeValue==awayValue) {
-        strengthHomeLabel.backgroundColor =[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
-        strengthAwayLabel.backgroundColor = [UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
-    }else if(homeValue > awayValue){
-        strengthHomeLabel.backgroundColor = [UIColor greenColor];
-        strengthAwayLabel.backgroundColor = [UIColor redColor];
-    }else{
-        strengthHomeLabel.backgroundColor = [UIColor redColor];
-        strengthAwayLabel.backgroundColor = [UIColor greenColor];
-    }
-    
-    NSString *tagTime;
-    if (!globals.CURRENT_STRENGTH) {
-        tagTime = @"0.0";
-    }else{
-        tagTime= [live2BenchViewController getCurrentTimeforNewTag];
-    }
-
-    NSString *name = [NSString stringWithFormat:@"%d VS %d",homeValue,awayValue];
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    dict= [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[NSString stringWithFormat:@"%d,%d",homeValue,awayValue],@"strength",name,@"name",@"123",@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",@"9",@"type",nil];
-    [self sendTagInfo:dict];
-    globals.CURRENT_STRENGTH=[NSString stringWithFormat:@"%d,%d",homeValue,awayValue];
+//    int homeValue = [[globals.ARRAY_OF_POSS_PLAYERS objectAtIndex:self.homeSegControl.selectedSegmentIndex] intValue];
+//    int awayValue = [[globals.ARRAY_OF_POSS_PLAYERS objectAtIndex:self.awaySegControl.selectedSegmentIndex] intValue];
+//    
+//    //if i have more players the the other team then the H view is green, other wise it is red
+//    if (homeValue==awayValue) {
+//        strengthHomeLabel.backgroundColor =[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
+//        strengthAwayLabel.backgroundColor = [UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f];
+//    }else if(homeValue > awayValue){
+//        strengthHomeLabel.backgroundColor = [UIColor greenColor];
+//        strengthAwayLabel.backgroundColor = [UIColor redColor];
+//    }else{
+//        strengthHomeLabel.backgroundColor = [UIColor redColor];
+//        strengthAwayLabel.backgroundColor = [UIColor greenColor];
+//    }
+//    
+//    NSString *tagTime;
+//    if (!globals.CURRENT_STRENGTH) {
+//        tagTime = @"0.0";
+//    }else{
+//        tagTime= [live2BenchViewController getCurrentTimeforNewTag];
+//    }
+//
+//    NSString *name = [NSString stringWithFormat:@"%d VS %d",homeValue,awayValue];
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    dict= [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[NSString stringWithFormat:@"%d,%d",homeValue,awayValue],@"strength",name,@"name",@"123",@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",@"9",@"type",nil];
+//    [self sendTagInfo:dict];
+//    globals.CURRENT_STRENGTH=[NSString stringWithFormat:@"%d,%d",homeValue,awayValue];
 }
 //select or change period button
 - (IBAction)periodSegmentValueChanged:(id)sender {
-    NSString *tagTime;
-    if (globals.CURRENT_PERIOD == -1) {
-        tagTime = @"0.0";
-    }else{
-        tagTime= [live2BenchViewController getCurrentTimeforNewTag];
-    }
-    //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
-    
-    //TEMPORARY BUG FIX BY CHANGING USER INFO
-    dict= [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[NSString stringWithFormat:@"%d",[self.periodSegmentedControl selectedSegmentIndex]],@"name",[NSString stringWithFormat:@"%d",[self.periodSegmentedControl selectedSegmentIndex]],@"period",@"123",@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",@"7",@"type",nil];
-    [self sendTagInfo:dict];
-    globals.CURRENT_PERIOD = [self.periodSegmentedControl selectedSegmentIndex];
+//    NSString *tagTime;
+//    if (globals.CURRENT_PERIOD == -1) {
+//        tagTime = @"0.0";
+//    }else{
+//        tagTime= [live2BenchViewController getCurrentTimeforNewTag];
+//    }
+//    //current absolute time in seconds
+//    double currentSystemTime = CACurrentMediaTime();
+//    
+//    //TEMPORARY BUG FIX BY CHANGING USER INFO
+//    dict= [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[NSString stringWithFormat:@"%d",[self.periodSegmentedControl selectedSegmentIndex]],@"name",[NSString stringWithFormat:@"%d",[self.periodSegmentedControl selectedSegmentIndex]],@"period",@"123",@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",@"7",@"type",nil];
+//    [self sendTagInfo:dict];
+//    globals.CURRENT_PERIOD = [self.periodSegmentedControl selectedSegmentIndex];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

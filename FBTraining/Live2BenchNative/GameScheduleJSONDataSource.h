@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Kal/src/Kal.h"
-#import "Globals.h"
+//#import "Globals.h"
 #import "CalendarViewController.h"
 #import "Live2BenchViewController.h"
 #import "UtilitiesController.h"
@@ -16,7 +16,7 @@
 #import "AutoScrollLabel.h"
 #import "UIFont+Default.h" 
 #import "DownloadButton.h"
-#import "CustomProgressView.h"
+//#import "CustomProgressView.h"
 #import "EncoderClasses/EncoderManager.h"
 #import "ListPopoverController.h"
 
@@ -26,7 +26,7 @@
 @class UtilitiesController;
 @class EncoderManager;
 @interface GameScheduleJSONDataSource : NSObject <KalDataSource,UITableViewDelegate,UITableViewDataSource,UIAlertViewDelegate>{
-    Globals *globals;
+//    Globals *globals;
     NSMutableArray *gameScheduleItems;
     NSMutableArray *gameSchedules;
     NSMutableData *buffer;
@@ -72,7 +72,7 @@
 //if get success response from "dlstart" request, this value is set to TRUE
 @property (nonatomic)BOOL isDownloadingStarted;
 //progress bar indicates the downloading process
-@property (nonatomic, strong) CustomProgressView *progressBar;
+//@property (nonatomic, strong) CustomProgressView *progressBar;
 //the index path of the cell which is selected to be deleted
 @property (nonatomic, strong) NSIndexPath *currentDeletingIndexPath;
 @property (nonatomic) BOOL isDeleting;

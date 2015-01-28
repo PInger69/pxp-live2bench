@@ -141,7 +141,7 @@
 {
     monthSummaryField                       = [[CommentingField alloc]initWithFrame:CGRectMake(2, 523, 490, 180+35) title:@"Month Summary"];
     monthSummaryField.textField.delegate    = self;
-    monthSummaryField.enabled               = encoderManager.hasMIN;
+    monthSummaryField.enabled               = encoderManager.hasMAX;
     [monthSummaryField onPressSavePerformSelector:@selector(saveSummary:) addTarget:self];
     [self.view addSubview:monthSummaryField];
     
@@ -283,15 +283,15 @@
 
 //change the current app state, will jump to custom tab bar's "updateAppState" method
 -(void)playCurrentEvent{
-    [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_APST_CHANGE
-                                                       object: self
-                                                     userInfo: @{@"state":[NSNumber numberWithInt:apstWaitPlaybackStrt]} ];
+//    [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_APST_CHANGE
+//                                                       object: self
+//                                                     userInfo: @{@"state":[NSNumber numberWithInt:apstWaitPlaybackStrt]} ];
 }
 
 
 - (void)receiveCalendarNotification:(NSNotification *) notification
 {
-    if (!encoderManager.hasMIN) return;
+    if (!encoderManager.hasMAX) return;
    
     [gameSummaryField clear];
     

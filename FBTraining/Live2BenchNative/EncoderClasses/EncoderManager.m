@@ -9,14 +9,13 @@
 #import "EncoderManager.h"
 #import "Encoder.h"
 #import "LocalEncoder.h"
-#import "CloudEncoder.h"
+
 #import "EncoderCommands.h"
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
 
-#import "CheckWiFiAction.h"
-#import "CheckCloudAction.h"
-#import "CheckMasterEncoderAction.h"
+#import "EncoderManagerActionPack.h" // All actions are in here!
+
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
@@ -247,9 +246,8 @@
 
 @implementation EncoderManager
 {
-    NSString                    * customerID;
+
     NSMutableArray              * foundEncoders;
-    UtilitiesController         * uController;
     NSNetServiceBrowser         * serviceBrowser;   //serviceBrowser searches for services
     NSMutableArray              * services;         //array of netservices which are detected
     NSMutableDictionary         * dictOfIPs;        //dictionary of all IPs detected
@@ -259,8 +257,7 @@
     EncoderDataSync             * encoderSync;
    
     LocalEncoder                * _localEncoder;
-//    Encoder                     * _masterEncoder;
-    CloudEncoder                * _cloudEncoder;
+
     id                          _userDataObserver;
     id                          _masterLostObserver;
     id                          _masterFoundObserver;
@@ -268,10 +265,18 @@
     
     
     CheckWiFiAction             * checkWiFiAction;
-    CheckCloudAction            * checkCloudAction;
+    CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
+    LogoutAction                * logoutAction;
 }
 
+@synthesize mode                    = _mode;
+
+@synthesize hasWiFi                 = _hasWiFi;
+@synthesize hasMAX                  = _hasMAX;
+
+
+@synthesize customerID              = _customerID;
 @synthesize hasLive                 = _hasLive;
 @synthesize searchForEncoders       = _searchForEncoders;
 @synthesize feeds                   = _feeds;
@@ -285,22 +290,22 @@
 @synthesize liveEventName           = _liveEventName;
 @synthesize eventTags               = _eventTags;
 @synthesize masterEncoder           = _masterEncoder;
+@synthesize cloudEncoder            = _cloudEncoder;
 @synthesize totalCameraCount        = _totalCameraCount;
 
 
 #pragma mark - Encoder Manager Methods
 
--(id)initWithID:(NSString*)custID  localDocPath:(NSString*)aLocalDocsPath
+-(id)initWithLocalDocPath:(NSString*)aLocalDocsPath
 {
     
 
     self = [super init];
     if (self){
-        customerID              = custID;
+
         foundEncoders           = [[NSMutableArray alloc]init];
         _authenticatedEncoders  = [[NSMutableArray alloc]init];
         dictOfEncoders          = [[NSMutableDictionary alloc]init];
-        uController             = [[UtilitiesController alloc]init];
         _openDurationTags       = [[NSMutableDictionary alloc]init];
         _eventTags              = [[NSMutableDictionary alloc]init];
         _liveEventName          = @"None";
@@ -317,8 +322,13 @@
         arrayOfTagSets          = [[NSMutableArray alloc]init];
         _feeds                  = [[NSMutableDictionary alloc]init];
         
-        _cloudEncoder           = [[CloudEncoder alloc]initWithIP:[uController getIPAddress]];
-        [_cloudEncoder test];
+        _cloudEncoder           = [[CloudEncoder alloc]initWithIP:[self getIPAddress]];  // started in searchForEncoders
+        [_cloudEncoder startObserving];
+        
+        
+        
+        
+        
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
         [_authenticatedEncoders addObject:_localEncoder];
         
@@ -376,9 +386,9 @@
         
         
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
-        checkCloudAction            = [[CheckCloudAction alloc]init];
+        checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
         checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
-        
+        logoutAction                = [[LogoutAction alloc]initWithEncoderManager:self];
         
     }
     return self;
@@ -403,7 +413,7 @@ static void * builtContext          = &builtContext; // depricated?
         [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
         newEncoder.name         = name;
         [newEncoder requestVersion];
-        [newEncoder authenticateWithCustomerID:customerID];
+        [newEncoder authenticateWithCustomerID:_customerID];
         if (_masterEncoder == nil) [newEncoder searchForMaster];        
         [dictOfEncoders setValue:newEncoder forKey:name];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForFeedChange:) name:NOTIF_ENCODER_FEEDS_UPDATED object:newEncoder];
@@ -478,6 +488,34 @@ static void * builtContext          = &builtContext; // depricated?
 
 
 
+}
+
+
+-(void)setMode:(EncoderManagerMode)mode
+{
+    if (mode == _mode)return;
+    
+    [self willChangeValueForKey:@"mode"];
+    switch (mode) {
+        case EncoderManagerModeOnline:
+            
+            break;
+        case EncoderManagerModeOffline:
+//            _masterEncoder = _localEncoder;
+            break;
+        default:
+            break;
+    }
+    
+    
+    _mode = mode;
+    [self didChangeValueForKey:@"mode"];
+    
+}
+
+-(EncoderManagerMode)mode
+{
+    return _mode;
 }
 
 
@@ -584,8 +622,8 @@ static void * builtContext          = &builtContext; // depricated?
     struct sockaddr_in *socketAddress = nil;
     NSString *ipString      = nil;
     int port;
-    BOOL isSameNetwork      =TRUE;
-    NSString *deviceIP      = [uController getIPAddress];
+    BOOL isSameNetwork      = TRUE;
+    NSString *deviceIP      = [self getIPAddress];
     
     NSArray *parseLocalIP   = [[NSArray alloc]initWithArray:[deviceIP componentsSeparatedByString:@"."]]; //split the local ip of the device into an array of each number -- used to compare to remote ip(test if on the same network
     
@@ -658,6 +696,12 @@ static void * builtContext          = &builtContext; // depricated?
 
 #pragma mark - Command Methods
 
+-(void)logoutOfCloud
+{
+    [_cloudEncoder logoutOfCloud];
+}
+
+
 -(void)pushTag:(NSMutableDictionary *)tagSet
 {
     [arrayOfTagSets addObject:tagSet];
@@ -666,8 +710,19 @@ static void * builtContext          = &builtContext; // depricated?
 // Getters
 -(BOOL)hasInternet
 {
-    return [uController checkInternetConnection];
+    SCNetworkReachabilityFlags flags;
+    BOOL receivedFlags;
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
+    
+    receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
+    
+    CFRelease(reachability);
+    
+    return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
+
 }
+
 
 -(BOOL)hasWiFi
 {
@@ -1094,7 +1149,7 @@ static void * builtContext          = &builtContext; // depricated?
  */
 -(BOOL)hasMIN
 {
-    return [Globals instance].HAS_MIN;
+    return NO;//[Globals instance].HAS_MIN;
 }
 
 /**
@@ -1162,6 +1217,9 @@ static void * builtContext          = &builtContext; // depricated?
     return c;
 }
 
+
+#pragma mark -
+#pragma This what starts the encoder manager to start searching
 -(BOOL)searchForEncoders
 {
     return _searchForEncoders;
@@ -1171,6 +1229,7 @@ static void * builtContext          = &builtContext; // depricated?
     if (searchForEncoders == _searchForEncoders)return;
     if (searchForEncoders) {
         [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+        [_cloudEncoder updateTagInfoFromCloud];// search for cloud
     } else{
         [serviceBrowser stop];
     }
@@ -1257,6 +1316,42 @@ static void * builtContext          = &builtContext; // depricated?
     return txt;
 }
 
+
+#pragma mark -
+#pragma Utility Methods
+- (NSString *)getIPAddress {
+    NSString *address = @"error";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    // retrieve the current interfaces - returns 0 on success
+    success = getifaddrs(&interfaces);
+    if (success == 0) {
+        // Loop through linked list of interfaces
+        temp_addr = interfaces;
+        while(temp_addr != NULL) {
+            if(temp_addr->ifa_addr->sa_family == AF_INET) {
+                // Check if interface is en0 which is the wired connection on a simulator, en1 - wifi on the simulator, or lo0 - wifi on an iPad
+                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"] ||
+                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en1"] ||
+                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"lo0"]) {
+                    // Get NSString from C String
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                }
+            }
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    // Free memory
+    freeifaddrs(interfaces);
+    return address;
+    
+}
+
+
+
+#pragma mark -
+#pragma Action Methods
 // Action Methods
 
 -(id<ActionListItem>)checkForWiFiAction
@@ -1265,15 +1360,19 @@ static void * builtContext          = &builtContext; // depricated?
     checkWiFiAction.isSuccess  = NO;
     return checkWiFiAction;
 }
--(id<ActionListItem>)checkForCloudAction
+-(id<ActionListItem>)checkForACloudAction
 {
-    checkCloudAction.isFinished = NO;
-    checkCloudAction.isSuccess  = NO;
-    return checkCloudAction;
+    checkForACloudAction.isFinished = NO;
+    checkForACloudAction.isSuccess  = NO;
+    return checkForACloudAction;
 }
 
 
-
+/**
+ *  This just pings the cloud
+ *
+ *  @return the action
+ */
 -(id<ActionListItem>)checkForMasterAction
 {
     checkMasterEncoderAction.isFinished = NO;
@@ -1281,6 +1380,17 @@ static void * builtContext          = &builtContext; // depricated?
     return checkMasterEncoderAction;
 }
 
+/**
+ *  logout of the cloud encoder
+ *
+ *  @return the action
+ */
+-(id<ActionListItem>)logoutAction
+{
+    logoutAction.isFinished = NO;
+    logoutAction.isSuccess  = NO;
+    return logoutAction;
+}
 
 @end
 

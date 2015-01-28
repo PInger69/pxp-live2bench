@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Globals.h"
+//#import "Globals.h"
 #import "BookmarkViewController.h"
 
 @class BookmarkViewController;
@@ -18,7 +18,7 @@
     IBOutlet UIScrollView *dateScrollView;
     IBOutlet UIScrollView *eventScrollView;
     IBOutlet UILabel *numTagsLabel;
-    Globals *globals;
+//    Globals *globals;
     NSMutableArray *taggedButtonArr;
     NSMutableDictionary *taggedAttsDict;
     NSMutableArray *displayArray;    
