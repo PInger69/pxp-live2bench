@@ -8,6 +8,8 @@
 
 #import "L2BFullScreenViewController.h"
 
+
+
 @implementation L2BFullScreenViewController
 {
 
@@ -35,7 +37,7 @@
 @synthesize clearTeleButton             = _clearTeleButton;
 @synthesize teleViewController          = _teleViewController;
 
--(id)initWithVideoPlayer:(VideoPlayer *)videoPlayer
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)videoPlayer
 {
     
     controlOffsetY  = 700.0f;
@@ -129,9 +131,23 @@
 -(Slomo*)_makeSlomo:(VideoPlayer*)vp
 {
     Slomo *  btn = [[Slomo alloc]initWithFrame:CGRectMake(75, controlOffsetY, 65, 50)];
-    [btn addTarget:vp action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
+
     return btn;
 }
+
+-(void)toggleSlowmo:(id)sender
+{
+    if ([self.player respondsToSelector:@selector(toggleSlowmo)]){
+        [self.player performSelector:@selector(toggleSlowmo)];
+    } else {
+        self.player.slowmo = !self.player.slowmo;
+    }
+    
+    
+}
+
+
 
 -(BorderButton *)_makeContinueButton
 {

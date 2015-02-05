@@ -19,10 +19,10 @@
     Slomo                   * slomoButton;
     SeekButton              * forwardButton;
     SeekButton              * backwardButton;
-    VideoPlayer             * videoPlayer;
+    UIViewController <PxpVideoPlayerProtocol>* videoPlayer;
     NSArray                 * activeElements;
 }
--(id)initWithVideoPlayer:(VideoPlayer *)vidPlayer;
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer;
 
 -(void)setTagName:(NSString*)name;
 

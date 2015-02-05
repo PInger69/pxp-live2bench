@@ -152,7 +152,7 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     [self clearAll];
     [self.teleView removeFromSuperview];
     self.teleView = nil;
-    [self.l2bVC showFullScreenOverlayButtons];
+//    [self.l2bVC showFullScreenOverlayButtons];
 //    [self.view removeFromSuperview];
     [self.l2bVC.videoPlayer play];
 }

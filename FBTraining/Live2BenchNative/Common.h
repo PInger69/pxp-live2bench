@@ -144,11 +144,17 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 
 typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
-    VideoPlayerCommandStop = 1<<1,
-    VideoPlayerCommandPlay = 1<<2,
-    VideoPlayerCommandMute = 1<<3,
-    VideoPlayerCommandUnmute = 1<<4
-    
+    VideoPlayerCommandStop      = 1<<1,
+    VideoPlayerCommandPlay      = 1<<2,
+    VideoPlayerCommandPause     = 1<<3,
+    VideoPlayerCommandMute      = 1<<4,
+    VideoPlayerCommandUnmute    = 1<<5,
+    VideoPlayerCommandPlayFeed  = 1<<6,
+    VideoPlayerCommandLive      = 1<<7,
+    VideoPlayerCommandLooping   = 1<<8,
+    VideoPlayerCommandNoLooping = 1<<9,
+    VideoPlayerCommandSlowmo    = 1<<10,
+    VideoPlayerCommandNoSlomo   = 1<<11
 };
 
 

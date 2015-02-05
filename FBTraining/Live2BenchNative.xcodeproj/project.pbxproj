@@ -248,6 +248,10 @@
 		D7424B9A183FF7B700034F05 /* uploading.gif in Resources */ = {isa = PBXBuildFile; fileRef = D7424B98183FF7B700034F05 /* uploading.gif */; };
 		D7424B9B183FF7B700034F05 /* uploading@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = D7424B99183FF7B700034F05 /* uploading@2x.gif */; };
 		D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B75C1A72ADED00258D63 /* AppDelegateActionPack.m */; };
+		D749B7641A7931A200258D63 /* RJLVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7631A7931A200258D63 /* RJLVideoPlayer.m */; };
+		D749B7671A795AC000258D63 /* RJLVideoPlayerPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7661A795AC000258D63 /* RJLVideoPlayerPlaybackView.m */; };
+		D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7691A800AE800258D63 /* RJLFreezeCounter.m */; };
+		D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7A71A82842200258D63 /* RJLVideoPlayerResponder.m */; };
 		D74DC1DE17B98D860041E475 /* green_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = D74DC1DA17B98D860041E475 /* green_bar.png */; };
 		D74DC1DF17B98D860041E475 /* green_bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D74DC1DB17B98D860041E475 /* green_bar@2x.png */; };
 		D74DC1E417BA67160041E475 /* greybar.png in Resources */ = {isa = PBXBuildFile; fileRef = D74DC1E217BA67160041E475 /* greybar.png */; };
@@ -897,6 +901,15 @@
 		D7424B99183FF7B700034F05 /* uploading@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "uploading@2x.gif"; sourceTree = "<group>"; };
 		D749B75B1A72ADED00258D63 /* AppDelegateActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegateActionPack.h; sourceTree = "<group>"; };
 		D749B75C1A72ADED00258D63 /* AppDelegateActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegateActionPack.m; sourceTree = "<group>"; };
+		D749B7621A7931A200258D63 /* RJLVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RJLVideoPlayer.h; path = RJLVideoPlayerClasses/RJLVideoPlayer.h; sourceTree = "<group>"; };
+		D749B7631A7931A200258D63 /* RJLVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RJLVideoPlayer.m; path = RJLVideoPlayerClasses/RJLVideoPlayer.m; sourceTree = "<group>"; };
+		D749B7651A795AC000258D63 /* RJLVideoPlayerPlaybackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RJLVideoPlayerPlaybackView.h; path = RJLVideoPlayerClasses/RJLVideoPlayerPlaybackView.h; sourceTree = "<group>"; };
+		D749B7661A795AC000258D63 /* RJLVideoPlayerPlaybackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RJLVideoPlayerPlaybackView.m; path = RJLVideoPlayerClasses/RJLVideoPlayerPlaybackView.m; sourceTree = "<group>"; };
+		D749B7681A800AE700258D63 /* RJLFreezeCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RJLFreezeCounter.h; path = RJLVideoPlayerClasses/RJLFreezeCounter.h; sourceTree = "<group>"; };
+		D749B7691A800AE800258D63 /* RJLFreezeCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RJLFreezeCounter.m; path = RJLVideoPlayerClasses/RJLFreezeCounter.m; sourceTree = "<group>"; };
+		D749B7A61A82842200258D63 /* RJLVideoPlayerResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RJLVideoPlayerResponder.h; path = RJLVideoPlayerClasses/RJLVideoPlayerResponder.h; sourceTree = "<group>"; };
+		D749B7A71A82842200258D63 /* RJLVideoPlayerResponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RJLVideoPlayerResponder.m; path = RJLVideoPlayerClasses/RJLVideoPlayerResponder.m; sourceTree = "<group>"; };
+		D749B7A91A82AC0800258D63 /* PxpVideoPlayerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PxpVideoPlayerProtocol.h; path = Live2BenchNative/VideoPlayerClasses/PxpVideoPlayerProtocol.h; sourceTree = SOURCE_ROOT; };
 		D74DC1DA17B98D860041E475 /* green_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_bar.png; sourceTree = "<group>"; };
 		D74DC1DB17B98D860041E475 /* green_bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_bar@2x.png"; sourceTree = "<group>"; };
 		D74DC1E217BA67160041E475 /* greybar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greybar.png; sourceTree = "<group>"; };
@@ -1778,6 +1791,14 @@
 		D749B7611A792F3A00258D63 /* RJLVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D749B7621A7931A200258D63 /* RJLVideoPlayer.h */,
+				D749B7631A7931A200258D63 /* RJLVideoPlayer.m */,
+				D749B7651A795AC000258D63 /* RJLVideoPlayerPlaybackView.h */,
+				D749B7661A795AC000258D63 /* RJLVideoPlayerPlaybackView.m */,
+				D749B7681A800AE700258D63 /* RJLFreezeCounter.h */,
+				D749B7691A800AE800258D63 /* RJLFreezeCounter.m */,
+				D749B7A61A82842200258D63 /* RJLVideoPlayerResponder.h */,
+				D749B7A71A82842200258D63 /* RJLVideoPlayerResponder.m */,
 			);
 			name = RJLVideoPlayer;
 			sourceTree = "<group>";
@@ -2519,6 +2540,7 @@
 		D7B523581760CEFE00BF92EB /* VideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D749B7A91A82AC0800258D63 /* PxpVideoPlayerProtocol.h */,
 				D727799A1A3240A00034DD66 /* LiveIndicatorLight.h */,
 				D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */,
 				D719869819C8BA6E00122CAA /* VideoControlBar.h */,
@@ -3206,6 +3228,7 @@
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
 				D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */,
 				D7F6973B1811C7E8003EDDDB /* ListViewCell.m in Sources */,
+				D749B7671A795AC000258D63 /* RJLVideoPlayerPlaybackView.m in Sources */,
 				D7A188BF19FFE6A200513909 /* FeedSwitchView.m in Sources */,
 				D727798D1A30C5870034DD66 /* UserCenter.m in Sources */,
 				D738304E198A94D60053F0A1 /* FilterTab.m in Sources */,
@@ -3266,6 +3289,7 @@
 				BD9BC31117EB480A001B67DE /* SpinnerView.m in Sources */,
 				D7383078199417CB0053F0A1 /* DurationView.m in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
+				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
 				D7AFD99016D570A7000CA781 /* WBImage.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
@@ -3282,6 +3306,7 @@
 				D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */,
 				D7A2E5F119B7711E00022795 /* FullVideoBarMyClipViewController.m in Sources */,
 				D7A2E5EB19B6498200022795 /* Slomo.m in Sources */,
+				D749B7641A7931A200258D63 /* RJLVideoPlayer.m in Sources */,
 				D7A673DA180EC8A1001C68D1 /* BookmarkViewCell.m in Sources */,
 				D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */,
 				AA83593A19B10B71009B3ABC /* NSObject+LBCloudConvenience.m in Sources */,
@@ -3290,6 +3315,7 @@
 				D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */,
 				947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */,
 				D75CD0A917CBF25500DD24E8 /* HockeyBottomViewController.m in Sources */,
+				D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,

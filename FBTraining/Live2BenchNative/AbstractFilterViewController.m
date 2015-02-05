@@ -149,7 +149,7 @@
                                self.view.frame.size.width, self.view.frame.size.height);
     // This is the color of the filter back plate
     backplate = [[UIView alloc] init];
-    [backplate setBackgroundColor:[UIColor colorWithHexString:@"#e6e6e6"]];
+    [backplate setBackgroundColor:[Utility colorWithHexString:@"#e6e6e6"]];
     [backplate setFrame:CGRectMake(0, 44, FILTER_AREA_WIDTH, FILTER_AREA_HEIGHT)];
 
     [self.view addSubview:backplate];

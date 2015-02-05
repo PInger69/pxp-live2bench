@@ -19,17 +19,19 @@
 #import "VideoBarContainerView.h"
 #import "TagFlagViewController.h"
 #import "CustomButton.h"
+#import "PxpVideoPlayerProtocol.h"
+
 
 @interface L2BVideoBarViewController : UIViewController
 {
-    VideoBarContainerView   * container;
-    UIView                  * background;
-    UILabel                 * tagLabel;
-    Slomo                   * slomoButton;
-    SeekButton              * forwardButton;
-    SeekButton              * backwardButton;
-    VideoPlayer             * videoPlayer;
-    NSArray                 * activeElements;
+    VideoBarContainerView       * container;
+    UIView                      * background;
+    UILabel                     * tagLabel;
+    Slomo                       * slomoButton;
+    SeekButton                  * forwardButton;
+    SeekButton                  * backwardButton;
+    UIViewController <PxpVideoPlayerProtocol>* videoPlayer;
+    NSArray                     * activeElements;
 //    TagFlagViewController   * _tagMarkerController;         // what displays the tag notches in the bar
 }
 
@@ -40,7 +42,7 @@
 @property (nonatomic,strong) TagFlagViewController * tagMarkerController;
 
 
--(id)initWithVideoPlayer:(VideoPlayer *)vidPlayer;
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer;
 
 -(void)setTagName:(NSString*)name;
 

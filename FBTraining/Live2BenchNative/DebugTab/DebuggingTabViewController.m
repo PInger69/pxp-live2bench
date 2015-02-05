@@ -19,9 +19,12 @@
 #import "FullScreenViewController.h"
 #import "L2BFullScreenViewController.h"
 #import "VideoPlayer.h"
+#import "RJLVideoPlayer.h"
 
 @interface DebuggingTabViewController ()
 {
+    RJLVideoPlayer              * testPlayer;
+    
     
     VideoPlayer                 * videoPlayer;
     Pip    * pip;
@@ -69,13 +72,24 @@
 
 - (void)viewDidLoad
 {
+    
+    
+    
+    testPlayer = [[RJLVideoPlayer alloc]init];
+    
+
+    
+    
+    
+    
+    
     // buid video player
     videoPlayer     = [[VideoPlayer alloc]init];
-    [videoPlayer initializeVideoPlayerWithFrame:CGRectMake(0, 60, 800, 600)];
+    [videoPlayer initializeVideoPlayerWithFrame:CGRectMake(0, 60, 400, 300)];
     [self.view addSubview:videoPlayer.view];
+    videoPlayer.context = @"debug";
     
-    
-    // Build pip
+//     Build pip
     pip             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
     pip.isDragAble  = YES;
     pip.hidden      = YES;
@@ -88,49 +102,67 @@
 
    [videoPlayer.view addSubview:feedSwitch];
     
-    // build pip controller
+//     build pip controller
     pipController = [[PipViewController alloc]initWithVideoPlayer:videoPlayer f:feedSwitch encoderManager:EM];
     [pipController addPip:pip];
-    videoPlayer.context = @"debug";
+    
 
 
-    // build full screen
+//     build full screen
     fullScreen = [[L2BFullScreenViewController alloc]initWithVideoPlayer:videoPlayer];
     fullScreen.context = @"debug";
     [self.view addSubview:fullScreen.view];
 
 
-  //  [videoPlayer playFeed:[[Feed alloc]initWithURLString:@"http://192.168.3.100/events/live/video/list_01.m3u8" quality:0]];
     [super viewDidLoad];
     [pipController viewDidLoad];
     
-
-
+   
+//
+//        pip2 = [[Pip alloc]initWithFrame:CGRectMake(30, 500, 200, 150)];
+//
+//        [self.view addSubview:pip2];
+//    [pip2 playerURL:[[NSURL alloc]initWithString:@"http://192.168.1.111/events/live/video/list_00hq.m3u8"]];
+    
+    [self multiPip:@[@"http://192.168.1.111/events/live/video/list_00hq.m3u8",
+                     @"http://192.168.1.111/events/live/video/list_01hq.m3u8",
+                     @"http://192.168.1.111/events/live/video/list_02hq.m3u8"]];
+    
+    
+    
+    UIButton * butt = [[UIButton alloc]initWithFrame:CGRectMake(50, 400, 50, 50)];
+    [butt addTarget:self action:@selector(buttonPress:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:butt];
+    butt.layer.borderWidth = 1;
+    [self.view addSubview:testPlayer.view];
+  
 }
 
 
--(void)delayed
+
+
+-(void)buttonPress:(id)sender
 {
     
+    Feed * myFeed = [[Feed alloc]initWithURLString:@"http://192.168.1.111/events/live/video/list_00hq.m3u8" quality:1];
     
-    fullScreen.enable = YES;
+//    NSURL * urls = [[NSURL alloc]initWithString:@"http://192.168.1.111/events/live/video/list_00hq.m3u8"];
+//    [testPlayer setURL:urls];
     
     
-//    playerStatus st =  PS_Stop;
-  
-//    videoPlayer.status = st;
     
-//    testPopup = [[ListPopoverController alloc]initWithMessage:@"cool" buttonListNames:@[@"Richard",@"Robert"]];
-//    [testPopup addOnCompletionBlock:^(NSString *pick) {
-//        NSLog(@"First Block %@",pick);
-//    }];
-//    
-//    [testPopup addOnCompletionBlock:^(NSString *pick) {
-//        NSLog(@"Second Block %@",pick);
-//    }];
-//    [testPopup presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view animated:NO];
-//    [testPopup presentPopoverFromRect:CGRectMake(0, 0 , 400, 380) inView:[UIApplication sharedApplication].keyWindow.rootViewController.view permittedArrowDirections:0 animated:NO];
+    
+//    [testPlayer live];
+    
+    NSDictionary * command = @{  @"command":[NSNumber numberWithInteger:VideoPlayerCommandPlayFeed],
+                                    @"feed":myFeed,
+                                   };//@"range":NSvalue
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:command];
+
 }
+
 
 
 -(void)multiPip:(NSArray*)paths
@@ -139,9 +171,9 @@
     int col = 0;
     float w = 200;
     float h = 150;
-    for (int i = 0; i<5; i++) {
-        Pip * tt = [[Pip alloc]initWithFrame:CGRectMake(w *col, 50+(h*row), w, h)];
-        [tt playerURL:  [NSURL URLWithString:paths[0]]];
+    for (int i = 0; i<[paths count]; i++) {
+        Pip * tt = [[Pip alloc]initWithFrame:CGRectMake(w *col, 500+(h*row), w, h)];
+        [tt playerURL:  [NSURL URLWithString:paths[i]]];
         tt.isDragAble = YES;
         [self.view addSubview:tt];
         if (col++ > 3){
@@ -163,11 +195,14 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+
+
+
     
-    
+//    [testPlayer performSelector:@selector(play) withObject:nil afterDelay:5];
     NSLog(@"DEBUG APPEAR!");
 
-    [self performSelector:@selector(delayed) withObject:nil afterDelay:10];
+//    [self performSelector:@selector(delayed) withObject:nil afterDelay:10];
     [super viewDidAppear:animated];
     
     EM.currentEvent = EM.liveEventName;

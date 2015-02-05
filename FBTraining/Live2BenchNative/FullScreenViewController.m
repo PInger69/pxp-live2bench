@@ -35,7 +35,7 @@
 @synthesize context  = _context;
 @synthesize animated = _animated;
 
--(id)initWithVideoPlayer:(VideoPlayer *) videoPlayer
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*) videoPlayer
 {
     self = [super init];
     if (self) {
@@ -96,8 +96,8 @@
     if (!smallScreenFramesParts){
         smallScreenFramesParts = @{
                                    @"light" : [NSValue valueWithCGRect:_player.liveIndicatorLight.frame],
-                                   @"bar"   : [NSValue valueWithCGRect:_player.richVideoControlBar.frame],
-                                   @"slide" : [NSValue valueWithCGRect:_player.richVideoControlBar.timeSlider.frame]
+                                   @"bar"   : [NSValue valueWithCGRect:_player.videoControlBar.frame],
+                                   @"slide" : [NSValue valueWithCGRect:_player.videoControlBar.timeSlider.frame]
                                    //@"status" : [NSValue valueWithCGRect:_player.liveIndicatorLight.frame]
                                    };
         fullScreenFramesParts = @{
@@ -109,11 +109,11 @@
                                    @"bar"   : [NSValue valueWithCGRect:CGRectMake(0,
                                                                                   640,
                                                                                   screenBounds.size.width,
-                                                                                  _player.richVideoControlBar.frame.size.height)],
+                                                                                  _player.videoControlBar.frame.size.height)],
                                    @"slide" : [NSValue valueWithCGRect:CGRectMake(0,
                                                                                   0,
                                                                                   screenBounds.size.width-200,
-                                                                                  _player.richVideoControlBar.timeSlider.frame.size.height)]
+                                                                                  _player.videoControlBar.timeSlider.frame.size.height)]
                                    //@"status" : [NSValue valueWithCGRect:_player.liveIndicatorLight.frame],
                                    };
     }
@@ -124,9 +124,9 @@
     prevDispayIndex         = [[prevView subviews]indexOfObject:_player.view];
     prevPlayerViewRect      = _player.view.frame;
     prevPlayerViewBounds    = _player.view.bounds;
-    prevPlayerLayerRect     = _player.playerLayer.frame;
-    prevPlayerLayerBounds   = _player.playerLayer.bounds;
-    [_player.playerLayer removeAllAnimations];
+    prevPlayerLayerRect     = _player.playBackView.frame;
+    prevPlayerLayerBounds   = _player.playBackView.bounds;
+    [[_player.playBackView layer] removeAllAnimations];
    // setting to external screen
     
     if (animated){
@@ -135,11 +135,11 @@
     }
     _player.view.frame                              = screenBounds;
     _player.view.bounds                             = screenBounds;
-    _player.playerLayer.frame                       = screenBounds;
-    _player.playerLayer.bounds                      = screenBounds;
+    _player.playBackView.frame                       = screenBounds;
+    _player.playBackView.bounds                      = screenBounds;
     _player.liveIndicatorLight.frame                = [((NSValue *)[fullScreenFramesParts objectForKey:@"light"]) CGRectValue];
-    _player.richVideoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
-    _player.richVideoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+    _player.videoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
+    _player.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
     if (animated){
         [UIView commitAnimations];
     }
@@ -152,24 +152,25 @@
     if (_player.view.superview == prevView || prevView == nil) return;
     
     [prevView insertSubview:_player.view atIndex:prevDispayIndex];
-    [_player.playerLayer removeAllAnimations];
+    [[_player.playBackView layer] removeAllAnimations];
     if (animated){
         [UIView beginAnimations:@"scaleAnimation" context:nil];
         [UIView setAnimationDuration:0.22];
     }
     _player.view.frame              = prevPlayerViewRect;
     _player.view.bounds             = prevPlayerViewBounds;
-    _player.playerLayer.frame       = prevPlayerLayerRect;
-    _player.playerLayer.bounds      = prevPlayerLayerBounds;
+    _player.playBackView.frame       = prevPlayerLayerRect;
+    _player.playBackView.bounds      = prevPlayerLayerBounds;
+    
     _player.liveIndicatorLight.frame                = [((NSValue *)[smallScreenFramesParts objectForKey:@"light"]) CGRectValue];
-    _player.richVideoControlBar.frame               = [((NSValue *)[smallScreenFramesParts objectForKey:@"bar"]) CGRectValue];
-    _player.richVideoControlBar.timeSlider.frame    = [((NSValue *)[smallScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+    _player.videoControlBar.frame               = [((NSValue *)[smallScreenFramesParts objectForKey:@"bar"]) CGRectValue];
+    _player.videoControlBar.timeSlider.frame    = [((NSValue *)[smallScreenFramesParts objectForKey:@"slide"]) CGRectValue];
     if (animated){
         [UIView commitAnimations];
     }
     
     prevView                        = nil;
-    [_player.view addSubview:_player.richVideoControlBar];
+    [_player.view addSubview:_player.videoControlBar];
 }
 
 
@@ -186,13 +187,13 @@
         [self.view setHidden:YES];
         [self viewDidDisappear:NO];
         [self returnVideoToPreviousViewFromFullScreen:_animated];
-        _player.isFullScreen = NO;
+//        _player.isFullScreen = NO;
     } else if (!_enable && enable){
         // to true
         [self.view setHidden:NO];
         [self viewDidAppear:NO];
         [self moveVideoToFullScreen:_animated];
-        _player.isFullScreen = YES;
+//        _player.isFullScreen = YES;
     }
     [self willChangeValueForKey:@"enable"];
     _enable = enable;

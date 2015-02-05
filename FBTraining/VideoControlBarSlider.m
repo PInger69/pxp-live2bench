@@ -16,7 +16,9 @@
 
 @implementation VideoControlBarSlider
 {
-
+    id player;
+    SEL playSEL;
+    SEL pauseSEL;
     
 }
 
@@ -24,14 +26,14 @@
 @synthesize playButton;
 @synthesize leftTimeLabel;
 @synthesize rightTimeLabel;
-
+@synthesize enable =_enable;
 
 - (id)initWithFrame:(CGRect)frame
 {
     CGRect videoConrolBarFrame = CGRectMake(0.0f, frame.size.height - CONTROL_BAR_HEIGHT, frame.size.width, CONTROL_BAR_HEIGHT);
     self = [super initWithFrame:videoConrolBarFrame];
     if (self) {
-        
+        _enable                             = YES;
         CGRect slideFrame                   = CGRectMake(SLIDER_HEIGHT, 0.0, frame.size.width-220, SLIDER_HEIGHT);
         self.barStyle                       = UIBarStyleBlackTranslucent;
         
@@ -49,15 +51,32 @@
     return self;
 }
 
-
--(void)update
+-(void)setupPlay:(SEL)onPlaySel Pause:(SEL)onPauseSel target:(id)target
 {
-    
-    
-    
-    
-    
-    
+    player      = target;
+    playSEL     = onPlaySel;
+    pauseSEL    = onPauseSel;
+    [self.playButton addTarget:self action:@selector(playPause:)
+                         forControlEvents:UIControlEventTouchUpInside];
+
+}
+
+-(void)playPause:(id)sender
+{
+    UIButton * button = sender;
+    if (!button.selected) {
+        button.selected = NO;
+        IMP imp = [player methodForSelector:pauseSEL];
+        void (*func)(id, SEL) = (void *)imp;
+        func(player, pauseSEL);
+   
+       } else if (button.selected) {
+           button.selected = YES;
+        IMP imp = [player methodForSelector:playSEL];
+        void (*func)(id, SEL) = (void *)imp;
+        func(player, playSEL);
+    }
+
 }
 
 
@@ -103,6 +122,37 @@
     [lbl setBackgroundColor:[UIColor clearColor]];
     
     return lbl;
+}
+
+#pragma mark -
+#pragma mark Getter and setter
+
+-(BOOL)enable
+{
+    return _enable;
+}
+
+-(void)setEnable:(BOOL)enable
+{
+    if (_enable == enable) return;
+    [self willChangeValueForKey:@"enable"];
+    _enable = enable;
+    [self didChangeValueForKey:@"enable"];
+
+    if (enable) {
+        self.playButton.enabled = YES;
+        self.timeSlider.enabled = YES;
+
+    } else {
+
+        [self.leftTimeLabel setText:@"--:--"];
+        [self.rightTimeLabel setText:@"--:--"];
+        self.playButton.enabled = NO;
+        self.timeSlider.enabled = NO;
+    }
+    
+
+
 }
 
 @end

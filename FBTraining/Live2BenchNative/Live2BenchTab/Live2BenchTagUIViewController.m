@@ -155,19 +155,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
  This class manages the creation of the side tags as well as displays them
 
@@ -220,13 +207,51 @@
 // this builds the tags from the supplied data
 -(void)inputTagData:(NSArray*)listOfDicts
 {
+ 
     [self clear]; // clear if any is present
-     for (NSDictionary * btnData in listOfDicts) {
+    
+    NSMutableArray * left  = [[NSMutableArray alloc]init];
+    NSMutableArray * right = [[NSMutableArray alloc]init];
+    
+    for (NSDictionary * btnData in listOfDicts) {
          // Builds the button and adds it to the view
          //[placementView addSubview:[self _buildButton:btnData]];
-         
-         [self _buildButton:btnData];
+        if ([[btnData objectForKey:@"position"]isEqualToString:@"left"]) {
+            [left addObject:btnData];
+        } else {
+            [right addObject:btnData];
+        }
+
      }
+    
+   
+    NSArray *sortedLeft = [left sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSNumber * first   = [(NSDictionary *)a objectForKey:@"order"];
+        NSNumber * second  = [(NSDictionary *)b objectForKey:@"order"];
+        NSComparisonResult result =  [first compare:second];
+        
+        
+        return result;
+    }];
+
+    NSArray *sortedRight = [right sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSNumber * first   = [(NSDictionary *)a objectForKey:@"order"];
+        NSNumber * second  = [(NSDictionary *)b objectForKey:@"order"];
+        NSComparisonResult result =  [first compare:second];
+        
+        
+        return result;
+    }];
+    
+    for (NSDictionary * dc in sortedLeft) {
+        [self _buildButton:dc];
+    }
+    
+    for (NSDictionary * dc in sortedRight) {
+        [self _buildButton:dc];
+    }
+    
+
     self.enabled = _enabled; // sets the fade after build base off last setting of enabled
     
 

@@ -141,9 +141,9 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     fileManager                     = [NSFileManager defaultManager];
 
     //Find path to accountInformation plist
-    NSString *accountInformationPath = [documentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
-    NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
-    userId = [accountInfo objectForKey:@"hid"];
+//    NSString *accountInformationPath = [documentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
+//    NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
+//    userId = [accountInfo objectForKey:@"hid"];
     
     [self setupView];
     myTableView.dataSource = self;

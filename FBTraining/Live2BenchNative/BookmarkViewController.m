@@ -32,7 +32,7 @@
 
 #import "FullScreenViewController.h"
 #import "ScreenController.h"
-
+#import "CustomLabel.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -170,9 +170,9 @@ int viewWillAppearCalled;
     fileManager = [NSFileManager defaultManager];
     
     //Find path to accountInformation plist
-    NSString *accountInformationPath = [documentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
-    NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
-    userIdd = [accountInfo objectForKey:@"hid"];
+//    NSString *accountInformationPath = [documentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
+//    NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
+//    userIdd = [accountInfo objectForKey:@"hid"];
     
     
     [self setupView];

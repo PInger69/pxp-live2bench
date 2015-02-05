@@ -553,7 +553,7 @@
 //        globals.DID_CREATE_NEW_TAG = TRUE;
     
         //NSString *tagTime = [NSString stringWithFormat:@"%f",live2BenchViewController.moviePlayer.currentPlaybackTime];
-        NSString *tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
+//        NSString *tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
     //current absolute time in seconds
     double currentSystemTime = CACurrentMediaTime();
 //       dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];

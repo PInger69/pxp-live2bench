@@ -14,7 +14,7 @@
 #import "UserCenter.h"
 #import "UtilityClasses/ActionList.h"
 #import "AppDelegateActionPack.h"
-
+#import "SpinnerView.h"
 
 
 @implementation AppDelegate
@@ -73,10 +73,6 @@
     _actionList             = [[ActionList alloc]init];
     _userCenter             = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
     [_userCenter enableObservers:YES];
-    
-    NSString *accountInformationPath = [kdocumentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
-    NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
-    NSString * custID = [accountInfo objectForKey:@"customer"];
     
     _encoderManager = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 

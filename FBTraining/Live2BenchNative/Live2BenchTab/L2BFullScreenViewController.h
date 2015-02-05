@@ -22,6 +22,8 @@
 #import "LiveButton.h"
 #import "BorderButton.h"
 
+#import "PxpVideoPlayerProtocol.h"
+
 @interface L2BFullScreenViewController : FullScreenViewController
 
 
@@ -30,7 +32,7 @@
 @property (nonatomic,assign) int                mode;
 
 
-@property (weak,  nonatomic) VideoPlayer        * player;
+@property (weak,  nonatomic) UIViewController <PxpVideoPlayerProtocol>*         player;
 @property (strong,nonatomic) SeekButton         * seekForward;
 @property (strong,nonatomic) SeekButton         * seekBackward;
 @property (strong,nonatomic) Slomo              * slomo;

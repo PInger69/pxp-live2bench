@@ -10,7 +10,7 @@
 #import "VideoPlayer.h"
 @interface FullVideoBarMyClipViewController : UIViewController
 
--(id)initWithVideoPlayer:(VideoPlayer *)vidPlayer;
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer;
 -(void)setTagName:(NSString*)name;
 -(void)onPressNextPrevPerformSelector:(SEL)sel addTarget:(id)target;
 @end

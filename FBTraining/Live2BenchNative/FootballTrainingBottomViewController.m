@@ -7,7 +7,8 @@
 //
 
 #import "FootballTrainingBottomViewController.h"
-
+#import "BorderlessButton.h"
+#import "CustomLabel.h"
 #define kDEFAULT_NUM_OF_GROUPS 6
 
 NSMutableDictionary *offenseGroupDictionary;
@@ -381,30 +382,30 @@ NSMutableData *responseData;
 
 - (void)sendTagForCurrentOffenseGroup
 {
-    NSString *tagTime = [self.live2BenchViewController getCurrentTimeforNewTag];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjects:@[[NSString stringWithFormat:@"%d",currentOffenseGroup],@"23",@"1",[NSString stringWithFormat:@"Group_O_%d",currentOffenseGroup],tagTime,currentGroupPlayers] forKeys:@[@"group",@"type",@"offense",@"name",@"time",@"player"]];
-    if (currentPeriodTag) {
-        [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
-    }
-//    [dict setObject:globals.EVENT_NAME forKey:@"event"];
-//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
-//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
-    [self sendTagInfo:dict];
-    offenseGroupTagID = nil;
+//    NSString *tagTime = [self.live2BenchViewController getCurrentTimeforNewTag];
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjects:@[[NSString stringWithFormat:@"%d",currentOffenseGroup],@"23",@"1",[NSString stringWithFormat:@"Group_O_%d",currentOffenseGroup],tagTime,currentGroupPlayers] forKeys:@[@"group",@"type",@"offense",@"name",@"time",@"player"]];
+//    if (currentPeriodTag) {
+//        [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
+//    }
+////    [dict setObject:globals.EVENT_NAME forKey:@"event"];
+////    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
+////    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
+//    [self sendTagInfo:dict];
+//    offenseGroupTagID = nil;
 }
 
 - (void)sendTagForCurrentDefenseGroup
 {
-    NSString *tagTime = [self.live2BenchViewController getCurrentTimeforNewTag];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjects:@[[NSString stringWithFormat:@"%d",currentDefenseGroup],@"23",@"1",[NSString stringWithFormat:@"Group_D_%d",currentDefenseGroup],tagTime,currentGroupPlayers] forKeys:@[@"group",@"type",@"defense",@"name",@"time",@"player"]];
-    if (currentPeriodTag) {
-        [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
-    }
-//    [dict setObject:globals.EVENT_NAME forKey:@"event"];
-//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
-//    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
-    [self sendTagInfo:dict];
-    defenseGroupTagID = nil;
+//    NSString *tagTime = [self.live2BenchViewController getCurrentTimeforNewTag];
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjects:@[[NSString stringWithFormat:@"%d",currentDefenseGroup],@"23",@"1",[NSString stringWithFormat:@"Group_D_%d",currentDefenseGroup],tagTime,currentGroupPlayers] forKeys:@[@"group",@"type",@"defense",@"name",@"time",@"player"]];
+//    if (currentPeriodTag) {
+//        [dict setObject:[currentPeriodTag objectForKey:@"name"] forKey:@"period"];
+//    }
+////    [dict setObject:globals.EVENT_NAME forKey:@"event"];
+////    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"hid"] forKey:@"user"];
+////    [dict setObject:[globals.ACCOUNT_INFO objectForKey:@"tagColour"] forKey:@"colour"];
+//    [self sendTagInfo:dict];
+//    defenseGroupTagID = nil;
 }
 
 

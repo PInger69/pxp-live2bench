@@ -33,6 +33,22 @@
     return self;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self setContentMode:UIViewContentModeScaleAspectFit];
+        self.opaque             = NO;
+        myFirstShape            = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(5, 5, 20, 20)];
+        shapeLayer              = [[CAShapeLayer alloc] initWithLayer:self.layer];
+        shapeLayer.lineWidth    = 1.0;
+        shapeLayer.fillColor    = [UIColor greenColor].CGColor;
+        shapeLayer.path         = myFirstShape.CGPath;
+        [self.layer addSublayer:shapeLayer];
+        self.hidden = YES;
+    }
+    return self;
+}
 
 -(void)setHidden:(BOOL)hidden
 {

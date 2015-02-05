@@ -25,7 +25,7 @@
 @synthesize endRangeModifierButton      = _endRangeModifierButton;
 @synthesize tagMarkerController         = _tagMarkerController;
 
--(id)initWithVideoPlayer:(VideoPlayer *)vidPlayer
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer
 {
     
     self = [super init];
@@ -67,7 +67,8 @@
 
         slomoButton     = [self makeSlomo];
         [container addTouchableSubview:slomoButton];
-        [slomoButton addTarget:videoPlayer action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
+        [slomoButton addTarget:self action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
+
         
         tagLabel        = [self makeTagLabel];
         [container addSubview:tagLabel];
@@ -103,7 +104,16 @@
 }
 
 
+-(void)toggleSlowmo:(id)sender
+{
+    if ([videoPlayer respondsToSelector:@selector(toggleSlowmo)]){
+        [videoPlayer performSelector:@selector(toggleSlowmo)];
+    } else {
+        videoPlayer.slowmo = !videoPlayer.slowmo;
+    }
 
+
+}
 
 -(SeekButton*)makeSeekButton:(Direction)dir
 {

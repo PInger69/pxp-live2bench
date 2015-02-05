@@ -68,7 +68,7 @@
         {
             rawResponce     = [[NSMutableDictionary alloc] initWithContentsOfFile: _accountInfoPath];
             [self updateCustomerInfoWith:rawResponce];
-          
+            _tagNames       = [self convertToL2BReadable: rawResponce key:@"tagnames"];
         }
         
         
@@ -153,6 +153,7 @@
     _customerHid            = [dataDict objectForKey:@"hid"];
     _customerColor          = [Utility colorWithHexString:[dataDict objectForKey:@"tagColour"]];
     _customerAuthorization  = [dataDict objectForKey:@"authorization"];
+
 }
 
 
@@ -171,42 +172,113 @@
     if (observering && !isObserve){
         [[NSNotificationCenter defaultCenter]removeObserver:tagNameObserver];
     } else if (!observering && isObserve) {
-        tagNameObserver =    [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_TAG_NAMES_FROM_CLOUD object:nil queue:nil usingBlock:^(NSNotification *note) {
-            NSLog(@"UserCenter see data from Cloud Encoder");
-            NSMutableArray * tgnames = [note.userInfo mutableCopy];
-            if (tgnames){
-                _tagNames = tgnames;
-                
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                NSString *documentsDirectory = [paths objectAtIndex:0];
-               
-                
-                NSString *plistPath = [documentsDirectory stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
-//                if (![fileManager fileExistsAtPath: plistPath])
-//                {
-//                    NSString *bundle = [[NSBundle mainBundle] pathForResource:@”myPlistFile” ofType:@”plist”];
-//                    [fileManager copyItemAtPath:bundle toPath:plistPath error:&error];
+        NSLog(@"UserCenter see data from Cloud Encoder");
+        tagNameObserver     =    [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_TAG_NAMES_FROM_CLOUD object:nil queue:nil usingBlock:^(NSNotification *note) {
+        
+       NSMutableDictionary         * tgnames = [note.userInfo mutableCopy];
+           
+        // this is clearing out all the illigal NULL in the dict, so the plist can be written
+        NSMutableDictionary         * onlyTags = [[tgnames objectForKey:@"tagbuttons"]mutableCopy];
+        [tgnames setObject:onlyTags forKey:@"tagbuttons"];
+            
+        for (NSString * theKey in [onlyTags allKeys]) {
+            NSMutableDictionary * checkedTag =  [[onlyTags objectForKey:theKey]mutableCopy];
+            [onlyTags setObject:checkedTag forKey:theKey];
+            [checkedTag removeObjectForKey:@"subtags"];
+//            if ([checkedTag objectForKey:@"subtags"]) {
+//                NSMutableArray * listSubtags = [checkedTag objectForKey:@"subtags"];
+//                for (int i=0; i<[listSubtags count]; i++) {
+//                    NSLog(@"");
+//                    if ([listSubtags objectAtIndex:i] == [NSNull null]  ){
+//                        [listSubtags replaceObjectAtIndex:i withObject:@""];
+//                    }
 //                }
-                [_tagNames writeToFile:plistPath atomically: YES];
-
-              
-            } else {
-                _tagNames = [self _buildTagNames:localPath];
+//            }
+        }
+            
+        // get user info plist
+        NSString                * plistPath   = [localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
+        NSMutableDictionary     * userInfo    = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+        
+        if (tgnames){// no respoince from cloud
+            
+            // convert new tags for Live to bench
+            _tagNames = [self convertToL2BReadable: tgnames key:@"tagbuttons"];
+            
+      
+            // delete old tags if there
+            if ([userInfo objectForKey:@"tagnames"]){
+                [userInfo removeObjectForKey:@"tagnames"];
             }
+            
+            // write new tags
+            [userInfo setObject:[tgnames objectForKey:@"tagbuttons"] forKey:@"tagnames"];
+            
+//             save data
+            if ([[userInfo copy] writeToFile:plistPath atomically: YES]) {
+                NSLog(@"WRITE");
+            } else {
+                NSLog(@"Fail");
+            }
+
+        } else {
+            
+            _tagNames =[self convertToL2BReadable: tgnames key:@"tagbuttons"];
+//                _tagNames = [self _buildTagNames:localPath];
+        }
         }];
     }
     observering = isObserve;
 }
 
 
-
+/**
+ *  This converts the tag data in to a format that is comsumable to the Live2Bench
+ *
+ *  @param aLocalPath <#aLocalPath description#>
+ *
+ *  @return <#return value description#>
+ */
 -(NSMutableArray*)_buildTagNames:(NSString*)aLocalPath
 {
 
+    
+    
+    
+    
     NSString        * tagFilePath   = [aLocalPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
     NSDictionary    * userInfo      =  [[NSDictionary alloc] initWithContentsOfFile:tagFilePath];
     NSDictionary    * tagnames      = [userInfo objectForKey:@"tagnames"];
     return  tagnames;
+}
+
+
+-(NSMutableArray*)convertToL2BReadable:(NSDictionary *)toConvert key:(NSString*)key
+{
+    NSDictionary * buttons      = [toConvert objectForKey:key];
+
+    NSMutableArray * tempLeft   = [[NSMutableArray alloc]init];
+    NSMutableArray * tempRigh   = [[NSMutableArray alloc]init];
+    
+    
+    NSArray * items = [buttons allKeys];
+    
+    for (NSString * i in items){
+        NSDictionary  * tbtn = [buttons objectForKey:i];
+        NSString * side = [tbtn objectForKey:@"side"];
+        if ([side isEqualToString:@"left"]) {
+            [tempLeft addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
+        } else {
+            [tempRigh addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
+        }
+    }
+    
+
+    
+   NSMutableArray * temp = [[NSMutableArray alloc]init];
+    [temp addObjectsFromArray:tempLeft];
+    [temp addObjectsFromArray:tempRigh];
+    return temp;
 }
 
 

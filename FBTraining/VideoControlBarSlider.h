@@ -16,10 +16,11 @@
 @property (strong,nonatomic)    UIButton        * playButton;
 @property (strong,nonatomic)    UILabel         * leftTimeLabel;
 @property (strong,nonatomic)    UILabel         * rightTimeLabel;
+@property (assign,nonatomic)    BOOL            enable;
 
 
 
+-(void)setupPlay:(SEL)onPlaySel Pause:(SEL)onPauseSel target:(id)target;
 
--(void)update;
 
 @end

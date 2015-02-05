@@ -23,13 +23,13 @@
     SeekButton              * backwardButton;
     BorderButton            * nextButton;
     BorderButton            * previousButton;
-    VideoPlayer             * videoPlayer;
+    UIViewController <PxpVideoPlayerProtocol>* videoPlayer;
 }
 @end
 
 @implementation FullVideoBarMyClipViewController
 
--(id)initWithVideoPlayer:(VideoPlayer *)vidPlayer
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer
 {
     self = [super init];
     if (self) {
@@ -47,7 +47,7 @@
         
         slomoButton     = [self makeSlomo];
         [container addTouchableSubview:slomoButton];
-        [slomoButton addTarget:videoPlayer action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
+        [slomoButton addTarget:self action:  @selector(toggleSlowmo:) forControlEvents:UIControlEventTouchUpInside];
         
         tagLabel        = [self makeTagLabel];
         tagLabel.alpha  = 0.7;
@@ -63,6 +63,19 @@
     }
     return self;
 }
+
+-(void)toggleSlowmo:(id)sender
+{
+    if ([videoPlayer respondsToSelector:@selector(toggleSlowmo)]){
+        [videoPlayer performSelector:@selector(toggleSlowmo)];
+    } else {
+        videoPlayer.slowmo = !videoPlayer.slowmo;
+    }
+    
+    
+}
+
+
 -(SeekButton*)makeSeekButton:(Direction)dir
 {
     SeekButton  * btn;

@@ -11,6 +11,7 @@
 //#import "Globals.h"
 #import "MultiPip.h"
 #import <AVFoundation/AVPlayerItem.h>
+#import "RJLVideoPlayer.h"
 static void * primaryContext    = &primaryContext;
 static void * secondaryContext  = &secondaryContext;
 static void * changeContextPri  = &changeContextPri;
@@ -57,7 +58,7 @@ static void * vpFrameContext   = &vpFrameContext;
  *
  *  @return
  */
--(id)initWithVideoPlayer:(VideoPlayer *)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager
 {
     self = [super init];
     if (self) {
@@ -76,13 +77,12 @@ static void * vpFrameContext   = &vpFrameContext;
         
         // video player
         [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
-        [self.videoPlayer.view       addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
+        [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         
 
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerPlayTag:) name:NOTIF_SET_PLAYER_FEED object:nil];
-       
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerStartScrub:) name:NOTIF_START_SCRUB object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerEndScrub:) name:NOTIF_FINISH_SCRUB object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerPlayTag:)       name:NOTIF_SET_PLAYER_FEED object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerStartScrub:)    name:NOTIF_START_SCRUB object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerEndScrub:)      name:NOTIF_FINISH_SCRUB object:nil];
         
         
         
@@ -90,7 +90,6 @@ static void * vpFrameContext   = &vpFrameContext;
         for (Pip * pip in self.pips) {
             [pip setHidden:YES];
         }
-//        if ([Globals instance]) globals = [Globals instance];
         multi = [[MultiPip alloc]initWithFrame:self.videoPlayer.view.frame];
     }
     return self;
@@ -165,35 +164,59 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)observerMethodForVideoPlayerForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    playerStatus oldStatus = [[change objectForKey:@"old"]intValue];
-    playerStatus newStatus = [[change objectForKey:@"new"]intValue];
+    int oldStatus = [[change objectForKey:@"old"]intValue];
+    int newStatus = [[change objectForKey:@"new"]intValue];
     if (oldStatus == newStatus) return;
-    switch (newStatus) {
-        case PS_Paused: // PAUSE ALL PIPS
-            
+    
+    if ([object isKindOfClass:[VideoPlayer class]]){
+    
+        switch (newStatus) {
+            case PS_Paused: // PAUSE ALL PIPS
+                
+                [self.pips makeObjectsPerformSelector:@selector(pause)];
+    //            [_selectPip pause];
+                break;
+            case PS_Slomo: // SLOW MO
+                for (Pip * pip in self.pips) {
+                    [pip playRate:self.videoPlayer.avPlayer.rate];
+
+                }
+    //            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
+                break;
+            case PS_Play:
+                for (Pip * pip in self.pips) {
+                    [pip playRate:self.videoPlayer.avPlayer.rate];
+                    [pip play];
+                }
+    //            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
+    //            [_selectPip play];
+                break;
+            default:
+                [self.pips makeObjectsPerformSelector:@selector(pause)];
+                break;
+        }
+    } else if ([object isKindOfClass:[RJLVideoPlayer class]]){
+        RJLVideoPlayer * ply = (RJLVideoPlayer * )object;
+        
+        if (ply.status & RJLPS_Paused) {
             [self.pips makeObjectsPerformSelector:@selector(pause)];
-//            [_selectPip pause];
-            break;
-        case PS_Slomo: // SLOW MO
+        }
+        if (ply.status & RJLPS_Slomo) {
             for (Pip * pip in self.pips) {
                 [pip playRate:self.videoPlayer.avPlayer.rate];
-
             }
-//            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
-            break;
-        case PS_Play:
+        }
+        if (ply.status & RJLPS_Play) {
             for (Pip * pip in self.pips) {
                 [pip playRate:self.videoPlayer.avPlayer.rate];
                 [pip play];
             }
-//            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
-//            [_selectPip play];
-            break;
-        default:
-            [self.pips makeObjectsPerformSelector:@selector(pause)];
-            break;
+        }
+        
+    
     }
-
+    
+    
     NSLog(@"watching player");
 }
 
@@ -244,12 +267,12 @@ static void * vpFrameContext   = &vpFrameContext;
     playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
 
     
-    VideoPlayer * vid   = _videoPlayer;
+    id <PxpVideoPlayerProtocol> vid   = _videoPlayer;
 //    [vid playFeed:f];
     vid.looping         = NO;
     [vid playFeed:f withRange:timeRange];
     vid.live            = NO;
-    [vid delayedSeekToTheTime:time];
+    [vid seekToInSec:time];
     vid.looping         = YES;
 
     
@@ -268,8 +291,8 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)videoPlayerStartScrub:(NSNotification *)note
 {
-    VideoPlayer * vid   = note.object;
-    if ([vid.context isEqualToString:_videoPlayer.context]){
+    id <PxpVideoPlayerProtocol> vid   = note.object;
+    if ([vid.playerContext isEqualToString:_videoPlayer.playerContext]){
         [self.pips makeObjectsPerformSelector:@selector(pause)];
     }
 }
@@ -277,8 +300,8 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)videoPlayerEndScrub:(NSNotification *)note
 {
-    VideoPlayer * vid   = note.object;
-    if ([vid.context isEqualToString:_videoPlayer.context]){
+    id <PxpVideoPlayerProtocol> vid   = note.object;
+    if ([vid.playerContext isEqualToString:_videoPlayer.playerContext]){
         
         CMTime time = vid.avPlayer.currentItem.currentTime;
         
@@ -291,10 +314,10 @@ static void * vpFrameContext   = &vpFrameContext;
 }
 
 
--(void)swapVideoPlayer:(VideoPlayer*)aVideoPlayer withPip:(Pip*)aPip
+-(void)swapVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer withPip:(Pip*)aPip
 {
     
-    VideoPlayer * vid   = aVideoPlayer;
+    UIViewController <PxpVideoPlayerProtocol>* vid   = aVideoPlayer;
     Pip * p             = aPip;
     
     Feed *vpFeed        = vid.feed;
@@ -376,7 +399,7 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)pipsAndVideoPlayerToLive
 {
-    [_videoPlayer goToLive];
+    [_videoPlayer gotolive];
     
     
 //    CMTime  time = CMTimeMake([_videoPlayer durationInSeconds], 1);

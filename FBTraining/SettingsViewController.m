@@ -738,7 +738,7 @@ SVSignalStatus signalStatus;
         [scrollView addSubview:backToGeneral];
         
         dropboxContainer = [[UIView alloc] initWithFrame:CGRectMake(scrollView.bounds.size.width, backToGeneral.frame.origin.y+40, scrollView.bounds.size.width, 40)];
-        [dropboxContainer.layer setBorderColor:[[UIColor colorWithHexString:@"#e6e6e6"] CGColor]];
+        [dropboxContainer.layer setBorderColor:[[Utility colorWithHexString:@"#575757"] CGColor]];
         [dropboxContainer.layer setBorderWidth:1.2f];
         
         dropBoxLabel = [BorderlessButton buttonWithType:UIButtonTypeCustom];
@@ -759,14 +759,14 @@ SVSignalStatus signalStatus;
         NSString *logoutTitle = [[DBSession sharedSession] isLinked] ? @"Unlink":@"Link";
         [dropboxLogout setTitle:logoutTitle forState:UIControlStateNormal];
         [dropboxLogout addTarget:self action:@selector(logoutDropbox:) forControlEvents:UIControlEventTouchUpInside];
-        [dropboxLogout setTitleColor:[UIColor colorWithHexString:@"#575757"] forState:UIControlStateNormal];
+        [dropboxLogout setTitleColor:[Utility colorWithHexString:@"#575757"] forState:UIControlStateNormal];
         
         [dropboxContainer addSubview:dropboxLogout];
         fbAndEmailNote =[[UILabel alloc] initWithFrame:CGRectMake(dropboxContainer.frame.origin.x+5, dropboxContainer.frame.origin.y+40, dropboxContainer.frame.size.width, 80)];
         [fbAndEmailNote setBackgroundColor:[UIColor clearColor]];
         [fbAndEmailNote setNumberOfLines:2];
         [fbAndEmailNote setLineBreakMode:NSLineBreakByWordWrapping];
-        [fbAndEmailNote setTextColor:[UIColor colorWithHexString:@"#575757"]];
+        [fbAndEmailNote setTextColor:[Utility colorWithHexString:@"#575757"]];
         [fbAndEmailNote setText:@"Note: Login settings for Facebook and Email are available in your iPad's settings app."];
         
         [scrollView addSubview:fbAndEmailNote];

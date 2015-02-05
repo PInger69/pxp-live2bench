@@ -41,7 +41,7 @@
             
         }
         _qualities = [tempDict copy];
-        _urlPath = defaultURL;
+        _urlPath = [defaultURL copy];
     }
     return self;
 }

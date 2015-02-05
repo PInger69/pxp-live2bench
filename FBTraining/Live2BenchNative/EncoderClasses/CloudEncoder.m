@@ -180,7 +180,7 @@
     NSString * password         = [tData objectForKey:@"password"];
     NSString * authoriz         = [tData objectForKey:@"authorization"];
     NSString * customer         = [tData objectForKey:@"customer"];
-    NSString *emailAddress      = [Utility stringToSha1: user];
+    NSString * emailAddress     = [Utility stringToSha1: user];
 
 //    NSString *UUID              = [[[UIDevice currentDevice] identifierForVendor]UUIDString];
 //    NSString *deviceType        = [Utility stringToSha1: @"tablet"];

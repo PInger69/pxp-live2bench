@@ -13,9 +13,8 @@
 #import "EncoderCommands.h"
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
-
 #import "EncoderManagerActionPack.h" // All actions are in here!
-
+#import <SDWebImage/SDImageCache.h>
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 

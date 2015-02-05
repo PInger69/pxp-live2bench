@@ -33,6 +33,7 @@
  */
 -(void)start;
 
+@optional
 /**
  *  should toggle isFinished and success
  *

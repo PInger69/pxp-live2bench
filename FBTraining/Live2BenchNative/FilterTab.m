@@ -45,7 +45,7 @@
         [tabLabel setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateSelected];
         tabLabel.titleLabel.font=[UIFont systemFontOfSize:14.0f];
         [tabLabel setFrame:CGRectMake(0, 0, TAB_BUTTON_WIDTH, TAB_BUTTON_HEIGHT)];
-        [tabLabel setBackgroundColor:[UIColor colorWithHexString:@"#e6e6e6"]];
+        [tabLabel setBackgroundColor:[Utility colorWithHexString:@"#e6e6e6"]];
 
          UIBezierPath * myFirstShape;
         myFirstShape = [[UIBezierPath alloc]init];

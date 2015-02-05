@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "VideoPlayer.h"
-
+#import "PxpVideoPlayerProtocol.h"
 
 @interface FullScreenViewController : UIViewController
 {
@@ -23,12 +23,12 @@
 
 
 
-@property (weak,  nonatomic) VideoPlayer   * player;
+@property (weak,  nonatomic) UIViewController <PxpVideoPlayerProtocol>* player;
 @property (strong,nonatomic) NSString      * context;
 @property (assign,nonatomic) BOOL          enable;
 @property (assign,nonatomic) BOOL          animated;
 
--(id)initWithVideoPlayer:(VideoPlayer *) videoPlayer;
+-(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*) videoPlayer;
 
 
 /**

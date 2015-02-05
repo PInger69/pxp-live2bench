@@ -10,12 +10,12 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVPlayerItem.h>
-//#import "Globals.h"
 #import "OBSlider.h"
 #import "VideoControlBarSlider.h"
 #import "ExternalScreenButton.h"
 #import "Feed.h"
 #import "LiveIndicatorLight.h"
+#import "PxpVideoPlayerProtocol.h"
 
 #define NOTIF_READY_TO_PLAY  @"readyToPlay"
 
@@ -41,7 +41,7 @@ typedef enum playerStatus{
 //
 //};
 
-@interface VideoPlayer : UIViewController
+@interface VideoPlayer : UIViewController <PxpVideoPlayerProtocol>
 
 //property of avplayer
 @property(nonatomic,strong)     VideoPlayerFreezeTimer *antiFreeze;
