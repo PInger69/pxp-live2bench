@@ -33,7 +33,7 @@
     // block to run when ready
     void (^onReadyBlock)();
     
-    
+    UILabel * currentItemTime;
     CGRect videoFrame;
 
 }
@@ -79,9 +79,8 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
         freezeCounter   = [[RJLFreezeCounter alloc]initWithTarget:self selector:@selector(onFreeze) object:nil];
-        
-        commander = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
-        videoFrame = CGRectMake(500, 60, 400, 300);
+        commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
+        videoFrame      = CGRectMake(500, 60, 400, 300);
     }
     return self;
 }
@@ -128,6 +127,11 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     seekAttempt = 0;
     [self.view addSubview:liveIndicatorLight];
     [self.view addSubview:videoControlBar];
+    
+    // debugging
+    currentItemTime = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 30)];
+    currentItemTime.textColor = [UIColor whiteColor];
+    [self.view addSubview:currentItemTime];
     [super viewDidLoad];
 }
 
@@ -399,6 +403,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     double                      interval        = 0.5f;
     __block RJLVideoPlayer      * weakSelf      = self;
     __block RJLFreezeCounter    * weakCounter   = freezeCounter;
+    __block UILabel             * weakLabel     = currentItemTime;
     
     timeObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
                                                                queue:NULL
@@ -406,7 +411,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
                     {
                         [weakSelf syncControlBar];
                         [weakCounter reset];
-                        
+                        [weakLabel setText:[NSString stringWithFormat:@"%f",CMTimeGetSeconds([weakSelf.playerItem currentTime]) ]];
                         /**
                          *  Should add check life to keep up to date
                          */
@@ -641,19 +646,15 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     }
     
     if (_looping) {
-        self.status     = _status | RJLPS_Looping;
-        CMTime startT   = range.start;
-        CMTime endT     = CMTimeAdd(startT, range.duration);
+        self.status                 = _status | RJLPS_Looping;
+        CMTime startT               = range.start;
+        CMTime endT                 = CMTimeAdd(startT, range.duration);
+        NSArray *times              = @[ [NSValue valueWithCMTime: endT] ];
+        __block AVPlayer *weakRef   = self.avPlayer;
         
-        NSArray *times  = @[ [NSValue valueWithCMTime: endT] ];
-        
-        __block AVPlayer *weakRef = self.avPlayer;
-        
-        // the observer watches till endT is hit then seeks to startT
         loopingObserver = [self.avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
             [weakRef seekToTime:startT];
         }];
-        
     }
     
 }

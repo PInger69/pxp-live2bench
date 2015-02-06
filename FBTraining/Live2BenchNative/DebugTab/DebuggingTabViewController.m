@@ -87,7 +87,7 @@
     videoPlayer     = [[VideoPlayer alloc]init];
     [videoPlayer initializeVideoPlayerWithFrame:CGRectMake(0, 60, 400, 300)];
     [self.view addSubview:videoPlayer.view];
-    videoPlayer.context = @"debug";
+    videoPlayer.playerContext = @"debug";
     
 //     Build pip
     pip             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];

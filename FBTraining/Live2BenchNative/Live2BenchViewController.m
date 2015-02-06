@@ -30,6 +30,8 @@
 #define CONTROL_SPACER_Y       50
 #define PADDING                 5
 
+
+
 @implementation Live2BenchViewController{
     ScreenController                    * _externalControlScreen;       // this is for attacked screens
     EncoderManager                      * _encoderManager;              // where all vids/feeds coming from
@@ -196,13 +198,14 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_videoBarViewController.view];
 
     _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    _fullscreenViewController.context = @"Live2Bench Tab";
+    _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
     [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
     
 
-    self.videoPlayer.playerContext = _fullscreenViewController.context;
+    self.videoPlayer.playerContext      = STRING_LIVE2BENCH_CONTEXT;
+    
     [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
     // so get buttons are connected to full screen
     _tagButtonController.fullScreenViewController = _fullscreenViewController;
@@ -216,6 +219,8 @@ static void * eventContext      = &eventContext;
     _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 600, 100, 100) encoderManager:_encoderManager];
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
+    _pipController.context = STRING_LIVE2BENCH_CONTEXT;
+    
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];

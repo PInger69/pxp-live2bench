@@ -1268,7 +1268,8 @@ static void * masterEncoderContext = &masterEncoderContext;
             NSLog(@"You Picked a feed: %@",pick);
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
             
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"feed":pick,
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                                  @"feed":pick,
                                                                                                                   @"time":[selectedCell.data objectForKey:@"starttime"],
                                                                                                                   @"duration":[selectedCell.data objectForKey:@"duration"],
                                                                                                                   @"state":[NSNumber numberWithInteger:PS_Play]}];

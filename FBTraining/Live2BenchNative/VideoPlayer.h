@@ -61,7 +61,7 @@ typedef enum playerStatus{
 @property(nonatomic,assign)     playerStatus        status;
 @property(nonatomic,strong)	    VideoControlBarSlider  * richVideoControlBar;
 @property(nonatomic,strong)     Feed                * feed;
-@property(nonatomic,strong)     NSString            * context;
+@property(nonatomic,strong)     NSString            * playerContext;
 @property(nonatomic,strong)     LiveIndicatorLight  * liveIndicatorLight;
 @property(nonatomic,assign)     float               rate;
 

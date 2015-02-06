@@ -181,6 +181,13 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
 
 
 /**
+ *  Tab String Context
+ */
+
+#define STRING_LIVE2BENCH_CONTEXT  @"Live2Bench Tab"
+
+
+/**
  *  Limit Constants
  */
 

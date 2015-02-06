@@ -8,21 +8,22 @@
 
 #import "Pip.h"
 #import "Utility.h"
+
+
+
 #define DESELECT_COLOR  [UIColor darkGrayColor]
 #define SELECTED_COLOR   PRIMARY_APP_COLOR
 @implementation Pip
 {
-    CMTime          seekToFromNewAVPlayerItem;
-    UILabel         * debugLabel;
-    float           _rate;
-    NSDictionary    * _qualityFeeds;
-    
-    void (^seekReady)();
-    
-    
-    
+    UILabel                     * debugLabel;
+    NSDictionary                * _qualityFeeds;
+    float                       _rate;
+    BOOL                        isSeeking;
+    void                        (^seekReady)();
     id                           loopingObserver;
+    id                           timeObserver;
     CMTimeRange                 _range; // this is the range of the player.... used for looping
+    RJLFreezeCounter            * freezeCounter;
     
 }
 @synthesize avPlayerItem;
@@ -34,8 +35,14 @@
 @synthesize feed        = _feed;
 @synthesize selected    = _selected;
 @synthesize muted       = _muted;
-@synthesize looping             = _looping;
+@synthesize looping     = _looping;
+@synthesize status      =_status;
 
+static void * pipContext = &pipContext;
+
+
+#pragma mark -
+#pragma mark Statics
 
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip
 {
@@ -67,6 +74,11 @@
 
 
 
+#pragma mark -
+#pragma mark Pip setup methods
+
+
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -78,13 +90,20 @@
         avPlayer.muted          = NO;
         _rate                   = 1.0;
         _quality                = 0;
-        debugLabel              = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 100, 30)];
+        debugLabel              = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 200, 30)];
+        debugLabel.textColor    = [UIColor whiteColor];
+        _status                 = PIP_Offline;
     }
     return self;
 }
 
+#pragma mark -
+#pragma mark Commands
+
+
 -(void)playerURL:(NSURL *)url
 {
+    [self removePlayerTimeObserver];
     _feed          = [[Feed alloc]initWithURLString:  [url absoluteString]   quality:_quality];
     avPlayer        = nil;
     avPlayerItem    = [[AVPlayerItem alloc] initWithURL:[_feed path]];
@@ -100,7 +119,7 @@
 
 -(void)playWithFeed:(Feed*)aFeed
 {
-
+    
     [self prepareWithFeed:aFeed];
     [avPlayer setRate:_rate];
 }
@@ -109,14 +128,13 @@
 {
     _range = range;
     [self playWithFeed:feed];
-
 }
 
 
 -(void)prepareWithFeed:(Feed*)aFeed
 {
+        [self removePlayerTimeObserver];
     _feed = aFeed;
-    
     _feed.quality   = _quality;
     NSURL * url     = [_feed path];
     avPlayer        = nil;
@@ -128,21 +146,11 @@
     avPlayerLayer.frame           = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     [self.layer addSublayer:avPlayerLayer];
     NSLog(avPlayer.muted?@"mute":@"sound");
-
+    [self addSubview:debugLabel];
 }
 
 
-static void * pipContext = &pipContext;
-//-(void)playPlayerItem:(AVPlayerItem *) avpi
-//{
-//    if (avPlayer.status != AVPlayerStatusReadyToPlay)return;
-//    
-//    NSURL * nextURL     = [self urlOfCurrentlyPlayingInPlayer:avpi];
-//    seekToFromNewAVPlayerItem     = avpi.currentTime;
-//    
-//    [self playerURL:nextURL];
-//    [avPlayer addObserver:self forKeyPath:@"status" options:0 context:pipContext];
-//}
+
 
 
 -(NSURL *)urlOfCurrentlyPlayingInPlayer:(AVPlayerItem *)playerItem{
@@ -154,52 +162,6 @@ static void * pipContext = &pipContext;
     return [(AVURLAsset *)currentPlayerAsset URL];
 }
 
-
-- (void)observeValueForKeyPath:(NSString *)keyPath  ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (context == &pipContext) {
-        AVPlayer * ply = (AVPlayer *)object;
-        if (ply.status == AVPlayerStatusReadyToPlay) {
-            //[avPlayer seekToTime:seekToFromNewAVPlayerItem];
-            [object removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
-        }
-    }
-    
-    if (context == &seekContext){
-        AVPlayerItem * plyItm = (AVPlayerItem *)object;
-        if (plyItm.status == AVPlayerStatusReadyToPlay) {
-            [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
-           if(seekReady) seekReady();
-        }
-    
-    }
-    
-
-}
-
-
-
-
--(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    if (!isDragAble) return;
-
-    UITouch *aTouch             = [touches anyObject];
-    CGPoint location            = [aTouch locationInView:self];
-    CGPoint previousLocation    = [aTouch previousLocationInView:self];
-    self.frame                  = CGRectOffset(self.frame, (location.x - previousLocation.x), (location.y - previousLocation.y));
-    
-    if ( !CGRectIsEmpty(self.dragBounds) && !CGRectContainsRect(self.dragBounds,self.frame) ) { // if its has bounds AND is outside them
-        CGRect difference       = CGRectUnion(self.dragBounds,self.frame);
-        float xCorrection       = (difference.origin.x < self.dragBounds.origin.x)? (difference.origin.x - self.dragBounds.origin.x): (difference.size.width - self.dragBounds.size.width);
-        float yCorrection       = (difference.origin.y < self.dragBounds.origin.y)? (difference.origin.y - self.dragBounds.origin.y): (difference.size.height - self.dragBounds.size.height);
-        self.frame              = CGRectOffset(self.frame, -xCorrection,-yCorrection);
-    }
-}
-
-
-
-// Controls for the video
 
 
 
@@ -222,10 +184,10 @@ static void * seekContext = &seekContext;
     AVPlayer * avplyer  = avPlayer;
     avplyer.muted       = _muted;
     AVPlayerItem * avplyeritm  = avPlayerItem;
-
+    __block Pip      * weakSelf      = self;
     
     if (self.avPlayerItem.status != AVPlayerItemStatusReadyToPlay){
-    
+        
         [self.avPlayerItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&seekContext];
         // MAKES BLOCK
         seekReady = ^void(){
@@ -234,11 +196,21 @@ static void * seekContext = &seekContext;
                 [avplyer seekToTime:avplyeritm.duration];
             }
             
-//            [avplyer seekToTime:time];
-            [avplyer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity];
+            //            [avplyer seekToTime:time];
+            [avplyer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (finished) {
+                        isSeeking = NO;
+                        weakSelf.status = weakSelf.status & ~(PIP_Seeking);
+                    } else {
+                        NSLog(@"FreezeSeek CANCELLED");
+                    }
+                    
+                });
+            }];
         };
     } else { // avplayer item is ready to play
-//        if (playerTime.value ==0)return;
+        //        if (playerTime.value ==0)return;
         if (difference == 1 ){
             [avPlayer seekToTime:self.avPlayerItem.duration];
         }
@@ -255,22 +227,12 @@ static void * seekContext = &seekContext;
 
 
 
--(CMTime)currentTimePosition
-{
-
-    return [avPlayer currentTime];
-}
-
-
 -(void)live
 {
     AVPlayerItem* currentItem   = avPlayer.currentItem;
     NSArray* seekableRanges     = currentItem.seekableTimeRanges;
-   
-    int32_t  ts                 = self.avPlayerItem.asset.duration.timescale;
-
-    CMTime time;
     
+    CMTime time;
     
     if (seekableRanges.count > 0)
     {
@@ -289,10 +251,115 @@ static void * seekContext = &seekContext;
         [avPlayer.currentItem cancelPendingSeeks];
         [self seekTo:time];
         [self play];
+         self.status = _status | PIP_Live;
     }
-
+    
     
 }
+
+
+#pragma mark -
+#pragma mark Observers
+
+- (void)observeValueForKeyPath:(NSString *)keyPath  ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context == &pipContext) {
+        AVPlayer * ply = (AVPlayer *)object;
+        if (ply.status == AVPlayerStatusReadyToPlay) {
+            [object removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
+        }
+    }
+    
+    if (context == &seekContext){
+        AVPlayerItem * plyItm = (AVPlayerItem *)object;
+        if (plyItm.status == AVPlayerStatusReadyToPlay) {
+            [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+           if(seekReady) seekReady();
+            [self removePlayerTimeObserver];
+            [self addPeriodicTimeObserver];
+            
+        }
+    
+    }
+    
+
+}
+
+// Controls for the video
+
+-(void)addPeriodicTimeObserver
+{
+    double                      interval            = 0.5f;
+    __block UILabel             * weakLabel         = debugLabel;
+    __block AVPlayerItem        * weakPlayerItem    = avPlayerItem;
+    __block RJLFreezeCounter    * weakCounter       = freezeCounter;
+    
+    timeObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
+                                                               queue:NULL
+                                                          usingBlock:^(CMTime time)
+                    {
+                        if (weakCounter)[weakCounter reset];
+                        [weakLabel setText:[NSString stringWithFormat:@"%f",CMTimeGetSeconds([weakPlayerItem currentTime]) ]];
+                    }];
+    
+}
+
+-(void)removePlayerTimeObserver
+{
+    if (timeObserver)
+    {
+        [self.avPlayer removeTimeObserver:timeObserver];
+        timeObserver = nil;
+    }
+}
+
+
+
+
+#pragma mark -
+#pragma mark
+
+-(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (!isDragAble) return;
+
+    UITouch *aTouch             = [touches anyObject];
+    CGPoint location            = [aTouch locationInView:self];
+    CGPoint previousLocation    = [aTouch previousLocationInView:self];
+    self.frame                  = CGRectOffset(self.frame, (location.x - previousLocation.x), (location.y - previousLocation.y));
+    
+    if ( !CGRectIsEmpty(self.dragBounds) && !CGRectContainsRect(self.dragBounds,self.frame) ) { // if its has bounds AND is outside them
+        CGRect difference       = CGRectUnion(self.dragBounds,self.frame);
+        float xCorrection       = (difference.origin.x < self.dragBounds.origin.x)? (difference.origin.x - self.dragBounds.origin.x): (difference.size.width - self.dragBounds.size.width);
+        float yCorrection       = (difference.origin.y < self.dragBounds.origin.y)? (difference.origin.y - self.dragBounds.origin.y): (difference.size.height - self.dragBounds.size.height);
+        self.frame              = CGRectOffset(self.frame, -xCorrection,-yCorrection);
+    }
+}
+
+
+
+-(CMTime)currentTimePosition
+{
+
+    return [avPlayer currentTime];
+}
+
+#pragma mark -
+#pragma mark Getters and setters
+
+
+-(PipStatus)status
+{
+    return _status;
+}
+
+-(void)setStatus:(PipStatus)status
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(status))];
+    _status = status;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(status))];
+}
+
 
 
 -(BOOL)muted{
@@ -303,6 +370,7 @@ static void * seekContext = &seekContext;
 {
     _muted = muted;
     avPlayer.muted = _muted;
+    self.status = (avPlayer.muted)? _status | PIP_Mute : _status & ~PIP_Mute;
 }
 
 -(BOOL)hasHighQuality
@@ -347,8 +415,10 @@ static void * seekContext = &seekContext;
 {
     _selected = selected;
     if (_selected){
+        self.status = _status | PIP_Selected;
         self.layer.borderColor  = [SELECTED_COLOR CGColor];
     } else {
+        self.status = _status & ~PIP_Selected;
         self.layer.borderColor  = [DESELECT_COLOR CGColor];
     }
 }
@@ -357,7 +427,6 @@ static void * seekContext = &seekContext;
 {
     return _selected;
 }
-
 
 -(BOOL)looping
 {
@@ -373,37 +442,30 @@ static void * seekContext = &seekContext;
     _looping = looping;
     [self didChangeValueForKey:@"looping"];
     
+    if(loopingObserver) { // remove it if it has it :)
+        [avPlayer removeTimeObserver:loopingObserver];
+        loopingObserver = nil;
+        self.status     = _status & ~(PIP_Looping);
+    }
+    
     if (_looping) {
+        self.status                 = _status | PIP_Looping;
+        CMTime startT               = _range.start;
+        CMTime endT                 = _range.duration;
+        NSArray *times              = @[ [NSValue valueWithCMTime:endT ] ];
+        __block AVPlayer *weakRef   = avPlayer;
         
-        if(loopingObserver) { // remove it if it has it :)
-            [avPlayer removeTimeObserver:loopingObserver];
-            loopingObserver = nil;
-        }
-        
-        //        NSArray *times = [NSArray arrayWithObjects:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(globals.HOME_END_TIME, 600)], nil];
-        
-        
-        CMTime startT   = _range.start;
-        CMTime endT     = _range.duration;
-        
-        NSArray *times = @[ [NSValue valueWithCMTime:endT ] ];
-        
-        __block AVPlayer *weakRef = avPlayer;
-        
-        // the observer watches till endT is hit then seeks to startT
         loopingObserver = [avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
-            //set queue: NULL will use the default queue which is the main queue
-            //[weakRef seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600)];
-            [weakRef seekToTime:startT];
+            [weakRef seekToTime:startT]; // maybe add seek param
         }];
-        
-        
-        
-        
-        
     }
     
 }
+
+#pragma mark -
+#pragma mark Checkers
+
+
 
 
 

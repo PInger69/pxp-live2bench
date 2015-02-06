@@ -19,7 +19,7 @@
 
 @class EncoderManager;
 
-@interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,DBRestClientDelegate>/*Removed: DBNetworkRequestDelegate no imp found*/
+@interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,DBRestClientDelegate,UIGestureRecognizerDelegate>/*Removed: DBNetworkRequestDelegate no imp found*/
 {
     UtilitiesController *uController;
     UILabel *userName;

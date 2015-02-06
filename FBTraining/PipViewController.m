@@ -8,10 +8,12 @@
 
 #import "PipViewController.h"
 #import "Feed.h"
-//#import "Globals.h"
 #import "MultiPip.h"
 #import <AVFoundation/AVPlayerItem.h>
 #import "RJLVideoPlayer.h"
+#import "RJLFreezeCounter.h"
+
+
 static void * primaryContext    = &primaryContext;
 static void * secondaryContext  = &secondaryContext;
 static void * changeContextPri  = &changeContextPri;
@@ -39,13 +41,12 @@ static void * vpFrameContext   = &vpFrameContext;
 {
     NSMutableArray  * _gesturePool;
     EncoderManager  * _encoderManager;
-//    Globals         * globals;
     MultiPip        * multi;
 }
 
 
 @synthesize feedSwitchView  = _feedSwitchView;
-@synthesize selectPip             = _selectPip;
+@synthesize selectPip       = _selectPip;
 @synthesize videoPlayer     = _videoPlayer;
 
 
@@ -147,6 +148,21 @@ static void * vpFrameContext   = &vpFrameContext;
             
             [_selectPip playWithFeed:feed];
             [_selectPip seekTo:prevTime];
+            
+//            for (Pip * pp in self.pips) {
+//                
+//                __block Pip * weakPip = pp;
+//                [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
+//                    if (finished) {
+//                        weakPip.status = weakPip.status & ~(PIP_Seeking);
+//                    } else {
+//                        NSLog(@"Pip seekBy: CANCELLED");
+//                    }
+//                }];
+//                
+//                
+//                //        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
+//            }
             _selectPip.hidden = NO;
             
         } else {
@@ -213,6 +229,12 @@ static void * vpFrameContext   = &vpFrameContext;
             }
         }
         
+        // was main Player Finished Seeking
+        if ( (oldStatus & RJLPS_Seeking) && !((newStatus & RJLPS_Seeking)!=0)) {
+            [self syncToPlayer];
+
+        }
+        
     
     }
     
@@ -254,7 +276,13 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)videoPlayerPlayTag:(NSNotification *)note
 {
+
+    
     NSDictionary * rick     = note.userInfo;
+    
+    if (![[rick objectForKey:@"context"] isEqualToString:_videoPlayer.playerContext]) return;
+    
+    
     float time              = [[rick objectForKey:@"time"]floatValue];
     float dur               = [[rick objectForKey:@"duration"]floatValue];
     CMTime cmtime           = CMTimeMake(time, 1);
@@ -270,9 +298,9 @@ static void * vpFrameContext   = &vpFrameContext;
     id <PxpVideoPlayerProtocol> vid   = _videoPlayer;
 //    [vid playFeed:f];
     vid.looping         = NO;
-    [vid playFeed:f withRange:timeRange];
     vid.live            = NO;
-    [vid seekToInSec:time];
+    [vid playFeed:f withRange:timeRange];
+
     vid.looping         = YES;
 
     
@@ -381,7 +409,18 @@ static void * vpFrameContext   = &vpFrameContext;
 -(void)syncToPlayer
 {
     for (Pip * pp in self.pips) {
-        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
+        
+        __block Pip * weakPip = pp;
+        [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
+            if (finished) {
+                weakPip.status = weakPip.status & ~(PIP_Seeking);
+            } else {
+                NSLog(@"Pip seekBy: CANCELLED");
+            }
+        }];
+        
+        
+//        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
     }
 }
 
@@ -399,6 +438,8 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)pipsAndVideoPlayerToLive
 {
+    _videoPlayer.feed = _feedSwitchView.primaryFeed;
+    
     [_videoPlayer gotolive];
     
     
@@ -420,6 +461,45 @@ static void * vpFrameContext   = &vpFrameContext;
 {
     [multi removeFromSuperview];
 }
+
+
+-(Pip*)addAntiFreezeOnPip:(Pip*)aPip
+{
+    
+    __weak Pip                  * weakPip      = aPip;
+    __weak PipViewController    * weakSelf     = self;
+
+    void (^onFreeze)(BOOL) = ^void(BOOL isSubzero) {
+        if (isSubzero) {
+            NSLog(@"IS SUB ZERO");
+        } else {
+            [weakSelf syncToPlayer];
+        }
+    };
+    
+    
+    void (^onSubzero)() = ^void() {
+        NSLog(@"SUB ZERO DONE");
+    
+    };
+    
+    
+    
+    aPip.freezeCounter  = [[RJLFreezeCounter alloc]initWithOnFreeze:onFreeze onCriticalFreeze:onSubzero];
+    
+    return aPip;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

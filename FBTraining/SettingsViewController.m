@@ -63,6 +63,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     BOOL                    dismissEnabled;
     
     //Richard
+    AppDelegate            * _appDel;
     EncoderManager         * encoderManager;
     Encoder                * masterEncoder;
     UserCenter             * userCenter;
@@ -71,7 +72,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     TablePopoverController * LeaguePick;
     NSArray                * teamNames;
     NSArray                * leagueNames;
-    id                     observerForFoundMaster;
+//    id                     observerForFoundMaster;
     id                     observerForLostMaster;
     UITapGestureRecognizer *tapBehindGesture;
     
@@ -94,6 +95,7 @@ SVSignalStatus signalStatus;
 {
     self = [super init];
     if (self) {
+        _appDel                 = appDel;
         dismissEnabled          = YES;
         encoderManager          = appDel.encoderManager;
         userCenter              = appDel.userCenter;
@@ -104,14 +106,24 @@ SVSignalStatus signalStatus;
 
         encoderHomeText         = [CustomLabel labelWithStyle:CLStyleOrange];
         encoderHomeText.text    = @"Encoder is not available.";
+        
+        __block SettingsViewController * weakSelf = self;
+        
         [encStateLabel setHidden:YES];
         // observers
-        observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
-            masterEncoder = encoderManager.masterEncoder;
-            encoderHomeText.text = @"Encoder Home";
-            [encStateLabel setHidden:NO];
-            [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
-        }];
+//        observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
+//            masterEncoder = encoderManager.masterEncoder;
+//            encoderHomeText.text = @"Encoder Home";
+//            [encStateLabel setHidden:NO];
+//            [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
+//        }];
+        
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterFound:) name:NOTIF_ENCODER_MASTER_FOUND object:nil];
+        
+        
+        
+        
         observerForLostMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (masterEncoder){
                 encoderHomeText.text = @"Encoder is not available.";
@@ -296,31 +308,83 @@ SVSignalStatus signalStatus;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    
+
     [super viewDidAppear:animated];
     
     if(!tapBehindGesture) {
         tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
+        tapBehindGesture.delegate = self;
         [tapBehindGesture setNumberOfTapsRequired:1];
         [tapBehindGesture setCancelsTouchesInView:NO]; //So the user can still interact with controls in the modal view
     }
-    
+ 
     [self.view.window addGestureRecognizer:tapBehindGesture];
 
 }
 
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+    [super viewWillAppear:animated];
+    
+    [self setButtonImagesAndLabels];
+    
+    signalTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateSignalStrength) userInfo:nil repeats:YES];
+    [signalTimer fire];
+    
+    // block
+    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
+        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+        NSArray         * keys          = [input allKeys];
+        for (NSString * item in keys) {
+            NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
+            [collection addObject:nam];
+        }
+        return [collection copy];
+    };
+    // block end
+    
+    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    leagueNames = grabNames(encoderManager.masterEncoder.league);
+    
+}
+
+
+/*
+ Deselects all buttons and stops timer
+ 
+ */
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [signalTimer invalidate];
+    signalTimer = nil;
+    
+    selectHomeTeam.selected     = NO;
+    selectAwayTeam.selected     = NO;
+    selectLeague.selected       = NO;
+    
+}
+
+
+
 - (void)tapBehindDetected:(UITapGestureRecognizer *)sender
 {
+ 
     
     if (sender.state == UIGestureRecognizerStateEnded)
     {
-        CGPoint location = [sender locationInView:nil]; //Passing nil gives us coordinates in the window
-        //Convert tap location into the local view's coordinate system. If outside, dismiss the view.
-        if (![self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil])
-        {
+        UIView *rootView = self.view.window.rootViewController.view;
+        CGPoint location = [sender locationInView:rootView];
+        if (![self.view pointInside:[self.view convertPoint:location fromView:rootView] withEvent:nil]) {
             [self dismiss];
         }
+
     }
 }
+
+
 
 /**
  *  Dissmisses this view
@@ -402,6 +466,31 @@ SVSignalStatus signalStatus;
 }
 
 
+-(void)onMasterFound:(NSNotification*)note
+{
+    masterEncoder = encoderManager.masterEncoder;
+    encoderHomeText.text = @"Encoder Home";
+    [encStateLabel setHidden:NO];
+    [encoderHomeText setAlpha:1];
+    [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
+
+    // block
+    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
+        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+        NSArray         * keys          = [input allKeys];
+        for (NSString * item in keys) {
+            NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
+            [collection addObject:nam];
+        }
+        return [collection copy];
+    };
+    // block end
+    
+    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    leagueNames = grabNames(encoderManager.masterEncoder.league);
+}
+
+
 
 #pragma mark -
 #pragma mark Encoder Controls
@@ -459,49 +548,6 @@ SVSignalStatus signalStatus;
 
 #pragma mark -
 
-
--(void)viewWillAppear:(BOOL)animated
-{
-
-    [super viewWillAppear:animated];
-
-    [self setButtonImagesAndLabels];
-    
-    signalTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateSignalStrength) userInfo:nil repeats:YES];
-    [signalTimer fire];
-    
-    // block
-    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
-        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
-        NSArray         * keys          = [input allKeys];
-        for (NSString * item in keys) {
-            NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
-            [collection addObject:nam];
-        }
-        return [collection copy];
-    };
-    // block end
-    
-    teamNames   = grabNames(encoderManager.masterEncoder.teams);
-    leagueNames = grabNames(encoderManager.masterEncoder.league);
-    
-}
-
-
-/*
-    Deselects all buttons and stops timer
- 
- */
--(void)viewWillDisappear:(BOOL)animated
-{
-    [signalTimer invalidate];
-    signalTimer = nil;
-    
-    selectHomeTeam.selected     = NO;
-    selectAwayTeam.selected     = NO;
-    selectLeague.selected       = NO;
-
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -899,7 +945,7 @@ SVSignalStatus signalStatus;
    [userName setText:userCenter.customerEmail];
 
     
-    if (!encoderManager.hasInternet) {
+    if (!encoderManager.hasWiFi) {
         encoderHomeText.text = @"Encoder is not available.";
         [encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
         [encStateLabel setText:@""];
@@ -907,14 +953,14 @@ SVSignalStatus signalStatus;
         [encHomeButton setUserInteractionEnabled:NO];
         [encoderHomeLabel addSubview:encoderHomeText];
         
-        encHomeButton.alpha = 0;
+//        encHomeButton.alpha = 0;
     }else{
 
         [encoderHomeText removeFromSuperview];
         [encoderHomeLabel addSubview:encHomeButton];
         [encHomeButton setUserInteractionEnabled:YES];
         
-        encHomeButton.alpha = 1;
+//        encHomeButton.alpha = 1;
     }
 }
 
@@ -1097,6 +1143,12 @@ SVSignalStatus signalStatus;
     
     
 }
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer
+{
+    return YES;
+}
+
 
 
 @end

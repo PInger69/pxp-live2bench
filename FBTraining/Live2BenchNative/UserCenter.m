@@ -223,7 +223,7 @@
 
         } else {
             
-            _tagNames =[self convertToL2BReadable: tgnames key:@"tagbuttons"];
+            _tagNames =[self convertToL2BReadable: rawResponce key:@"tagnames"];
 //                _tagNames = [self _buildTagNames:localPath];
         }
         }];

@@ -166,7 +166,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
     self.videoPlayer = [[VideoPlayer alloc]init];
     [self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
-    self.videoPlayer.context = @"ListView Tab";
+    self.videoPlayer.playerContext = @"ListView Tab";
 
     [self.view addSubview:self.videoPlayer.view];
     
@@ -270,7 +270,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         self.videoPlayer = [[VideoPlayer alloc] init];
         
         [self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, 530, 340)];
-        self.videoPlayer.context = @"ListView Tab";
+        self.videoPlayer.playerContext = @"ListView Tab";
         [self.videoPlayer.view setFrame:CGRectMake(2, 113, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
         [self.view addSubview:self.videoPlayer.view];
         

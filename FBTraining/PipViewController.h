@@ -20,7 +20,7 @@
 @property (nonatomic,strong) Pip                            * selectPip;
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>*    videoPlayer;
 @property (nonatomic,strong) NSMutableArray                 * pips;// for when you have more then one pip
-
+@property (nonatomic,strong) NSString                       * context;
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager;
 //-(id)initWithPip:(Pip *)aMainPip pip:(Pip*)aPip f:(FeedSwitchView *)f;

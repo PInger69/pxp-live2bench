@@ -10,6 +10,22 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVPlayerItem.h>
 #import "Feed.h"
+#import "RJLFreezeCounter.h"
+
+typedef NS_OPTIONS (NSInteger,PipStatus){
+    PIP_Offline      = 0,
+    PIP_Live         = 1<<0,
+    PIP_Play         = 1<<1,
+    PIP_Stop         = 1<<2,
+    PIP_Paused       = 1<<3,
+    PIP_Seeking      = 1<<4,
+    PIP_Scrubbing    = 1<<5,
+    PIP_Slomo        = 1<<6,
+    PIP_Error        = 1<<7,
+    PIP_Mute         = 1<<8,
+    PIP_Looping      = 1<<9,
+    PIP_Selected     = 1<<10
+};
 
 @interface Pip : UIView  //So it can be used as a key in a Dict
 
@@ -28,11 +44,12 @@
 @property (nonatomic,strong)            Feed               * feed;
 @property(nonatomic,assign)             BOOL                looping;
 
+@property (nonatomic,assign)            PipStatus           status;
+@property (nonatomic,strong)            RJLFreezeCounter    * freezeCounter;
 
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip;
 
 -(void)playerURL:(NSURL *)url;
-//-(void)playPlayerItem:(AVPlayerItem *) avpi;
 -(void)playWithFeed:(Feed*)aFeed;
 -(void)playWithFeed:(Feed*)feed withRange:(CMTimeRange)range;
 -(void)prepareWithFeed:(Feed*)aFeed;

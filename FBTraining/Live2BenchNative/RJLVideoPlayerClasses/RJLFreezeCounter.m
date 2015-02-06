@@ -12,29 +12,54 @@
 {
     id      _target;
     SEL     _selector;
-
-    int     _max;
     int     _current;
+    BOOL    isSubzero;
+    
+    void (^onFreeze)(BOOL);// BOOL is for subzero freeze
+    void (^onSubzero)();
+    
+
 }
 
-@synthesize freezeTimer =_freezeTimer;
+@synthesize freezeTimer     = _freezeTimer;
+@synthesize freezeCounter   = _freezeCounter;
+@synthesize maxfreeze       = _maxfreeze;
+@synthesize subzeroCounter  = _subzeroCounter;
+
+
 - (instancetype)initWithTarget:(id)target selector:(SEL)sel object:(id)arg
 {
     self = [super init];
     if (self) {
-        _target     = target;
-        _selector   = sel;
+        _target         = target;
+        _selector       = sel;
+        isSubzero       = NO;
+        _subzeroCounter = 0;
     }
     return self;
 }
 
+
+-(instancetype)initWithOnFreeze:(void (^)(BOOL))onFreezeBlock  onCriticalFreeze:(void (^)())subZeroBlock
+{
+    self = [super init];
+    if (self) {
+        onFreeze    = onFreezeBlock;
+        onSubzero   = subZeroBlock;
+        isSubzero   = NO;
+        _subzeroCounter = 0;
+    }
+    return self;
+}
+
+
 -(void)startTimer:(int)interval max:(int)max
 {
-    _max            = max;
-    _current        = _max;
-    NSTimeInterval  inter =  interval;
+    _maxfreeze              = max;
+    _current                = _maxfreeze;
+    NSTimeInterval  inter   =  interval;
 
-    _freezeTimer    = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
+    _freezeTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_freezeTimer forMode:NSDefaultRunLoopMode];
 //    [_freezeTimer fire];
 
@@ -42,7 +67,8 @@
 
 -(void)reset
 {
-    _current = _max;
+    _current = _maxfreeze;
+    _subzeroCounter = 0;
 }
 
 
@@ -62,7 +88,7 @@
 
 -(void)start
 {
-
+    [self reset];
     [[NSRunLoop mainRunLoop] addTimer:_freezeTimer forMode:NSDefaultRunLoopMode];
 }
 

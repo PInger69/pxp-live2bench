@@ -57,7 +57,7 @@ static void * feedContext  = &feedContext;
 @synthesize teleBigView;
 @synthesize richVideoControlBar;
 @synthesize feed                = _feed;
-@synthesize context             = _context;
+@synthesize playerContext             = _context;
 @synthesize liveIndicatorLight  = _liveIndicatorLight;
 @synthesize rate                = _rate;
 
