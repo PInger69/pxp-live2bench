@@ -252,6 +252,7 @@
 		D749B7671A795AC000258D63 /* RJLVideoPlayerPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7661A795AC000258D63 /* RJLVideoPlayerPlaybackView.m */; };
 		D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7691A800AE800258D63 /* RJLFreezeCounter.m */; };
 		D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7A71A82842200258D63 /* RJLVideoPlayerResponder.m */; };
+		D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7AB1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */; };
 		D74DC1DE17B98D860041E475 /* green_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = D74DC1DA17B98D860041E475 /* green_bar.png */; };
 		D74DC1DF17B98D860041E475 /* green_bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D74DC1DB17B98D860041E475 /* green_bar@2x.png */; };
 		D74DC1E417BA67160041E475 /* greybar.png in Resources */ = {isa = PBXBuildFile; fileRef = D74DC1E217BA67160041E475 /* greybar.png */; };
@@ -910,6 +911,8 @@
 		D749B7A61A82842200258D63 /* RJLVideoPlayerResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RJLVideoPlayerResponder.h; path = RJLVideoPlayerClasses/RJLVideoPlayerResponder.h; sourceTree = "<group>"; };
 		D749B7A71A82842200258D63 /* RJLVideoPlayerResponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RJLVideoPlayerResponder.m; path = RJLVideoPlayerClasses/RJLVideoPlayerResponder.m; sourceTree = "<group>"; };
 		D749B7A91A82AC0800258D63 /* PxpVideoPlayerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PxpVideoPlayerProtocol.h; path = Live2BenchNative/VideoPlayerClasses/PxpVideoPlayerProtocol.h; sourceTree = SOURCE_ROOT; };
+		D749B7AA1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RJLVideoPlayer+RJLVideoPlayer_Gesture.h"; path = "Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer+RJLVideoPlayer_Gesture.h"; sourceTree = "<group>"; };
+		D749B7AB1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RJLVideoPlayer+RJLVideoPlayer_Gesture.m"; path = "Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer+RJLVideoPlayer_Gesture.m"; sourceTree = "<group>"; };
 		D74DC1DA17B98D860041E475 /* green_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_bar.png; sourceTree = "<group>"; };
 		D74DC1DB17B98D860041E475 /* green_bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_bar@2x.png"; sourceTree = "<group>"; };
 		D74DC1E217BA67160041E475 /* greybar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greybar.png; sourceTree = "<group>"; };
@@ -2071,6 +2074,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D749B7AA1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.h */,
+				D749B7AB1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */,
 				D72779AC1A38994E0034DD66 /* Live2BenchTagUIViewController.h */,
 				D72779AD1A38994E0034DD66 /* Live2BenchTagUIViewController.m */,
 				D72779A91A37498E0034DD66 /* CalendarTableCell.h */,
@@ -3218,6 +3223,7 @@
 				D72779AB1A37498E0034DD66 /* CalendarTableCell.m in Sources */,
 				D7DB750417E8F419009C402F /* PopoverButton.m in Sources */,
 				D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */,
+				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,

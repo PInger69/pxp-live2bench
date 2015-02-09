@@ -102,8 +102,7 @@ static void * masterEncoderContext = &masterEncoderContext;
   
     sourceSelectPopover = [[ListPopoverController alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
     sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
-    //initialize variables
-//    globals=[Globals instance];
+
     uController = [[UtilitiesController alloc]init];
     typesOfTags = [[NSMutableArray alloc]init];
     downloadedTagIds = [[NSMutableArray alloc] init];
@@ -162,10 +161,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 {
     [super viewWillAppear:animated];
     
-//    globals.IS_IN_CLIP_VIEW = TRUE;
-//    globals.IS_IN_FIRST_VIEW = FALSE;
-//    globals.IS_IN_BOOKMARK_VIEW = FALSE;
-//    globals.IS_IN_LIST_VIEW = FALSE;
+
     
     //clean the image cache to make sure each thumbnail displays the right image ;
     //otherwise the images from the old event will stay there
@@ -176,9 +172,11 @@ static void * masterEncoderContext = &masterEncoderContext;
     
     //pause the video palyer in live2bench view and my clip view
     
+    
+    // MUTE THE VIDEOS
     //Richard
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
 //    [globals.VIDEO_PLAYER_LIST_VIEW pause];
 //    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
 

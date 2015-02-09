@@ -14,7 +14,6 @@
 @implementation CheckForACloudAction
 {
     EncoderManager * encoderMangager;
-    
 }
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;

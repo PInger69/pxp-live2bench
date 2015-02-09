@@ -129,8 +129,8 @@
     }
     if (screenDetected) externalWindow = nil;
     NSString * count = [NSString stringWithFormat:@"%i",[UIScreen screens].count];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"screenDidDisconnect" message:count delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Say Hello",nil];
-    [alert show];
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"screenDidDisconnect" message:count delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Say Hello",nil];
+//    [alert show];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_SWITCH_MAIN_TAB];
 }
 

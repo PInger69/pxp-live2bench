@@ -23,7 +23,7 @@
     id                           loopingObserver;
     id                           timeObserver;
     CMTimeRange                 _range; // this is the range of the player.... used for looping
-    RJLFreezeCounter            * freezeCounter;
+
     
 }
 @synthesize avPlayerItem;
@@ -37,6 +37,7 @@
 @synthesize muted       = _muted;
 @synthesize looping     = _looping;
 @synthesize status      =_status;
+@synthesize freezeCounter = _freezeCounter;
 
 static void * pipContext = &pipContext;
 
@@ -292,13 +293,15 @@ static void * seekContext = &seekContext;
     double                      interval            = 0.5f;
     __block UILabel             * weakLabel         = debugLabel;
     __block AVPlayerItem        * weakPlayerItem    = avPlayerItem;
-    __block RJLFreezeCounter    * weakCounter       = freezeCounter;
+    __block RJLFreezeCounter    * weakCounter       = _freezeCounter;
     
     timeObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
                                                                queue:NULL
                                                           usingBlock:^(CMTime time)
                     {
-                        if (weakCounter)[weakCounter reset];
+                        if (weakCounter){
+                             [weakCounter reset];
+                        }
                         [weakLabel setText:[NSString stringWithFormat:@"%f",CMTimeGetSeconds([weakPlayerItem currentTime]) ]];
                     }];
     
@@ -461,6 +464,25 @@ static void * seekContext = &seekContext;
     }
     
 }
+
+
+-(Feed*)feed
+{
+    return _feed;
+}
+
+-(void)setFeed:(Feed *)feed
+{
+    [self willChangeValueForKey:@"feed"];
+    if (_feed){
+        [_feed removeObserver:self forKeyPath:@"quality" context:FeedQualityChangeContext];
+    }
+    _feed = feed;
+    [_feed addObserver:self forKeyPath:@"quality" options:NSKeyValueObservingOptionNew context:FeedQualityChangeContext];
+    [self didChangeValueForKey:@"feed"];
+}
+
+
 
 #pragma mark -
 #pragma mark Checkers

@@ -252,12 +252,12 @@
     
     switch (_barMode) {
         case L2B_VIDEO_BAR_MODE_CLIP:
-            [self _hideAll];
-            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,slomoButton,_tagMarkerController.view,_tagMarkerController.currentPositionMarker]];
+            [self _hideAll];//,slomoButton
+            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,_tagMarkerController.view,_tagMarkerController.currentPositionMarker]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
-            [self _hideAll];
-            [self _revealThese:@[forwardButton,backwardButton,slomoButton,_tagMarkerController.view]];
+            [self _hideAll];//,slomoButton
+            [self _revealThese:@[forwardButton,backwardButton,_tagMarkerController.view]];
             break;
         case L2B_VIDEO_BAR_MODE_DISABLE:
             [self _hideAll];

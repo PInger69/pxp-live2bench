@@ -111,7 +111,7 @@
     if ([aList isKindOfClass:[NSArray class]]){
         return; // messy clean up later
     }
-    NSLog(@"Feed switch error on encoder change count");
+
 
     // Clean up previous buttons
     [_buttonArray makeObjectsPerformSelector:@selector(removeFromSuperview)];

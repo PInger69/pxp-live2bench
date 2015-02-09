@@ -81,9 +81,7 @@ static void * vpFrameContext   = &vpFrameContext;
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         
 
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerPlayTag:)       name:NOTIF_SET_PLAYER_FEED object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerStartScrub:)    name:NOTIF_START_SCRUB object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerEndScrub:)      name:NOTIF_FINISH_SCRUB object:nil];
+
         
         
         
@@ -95,6 +93,14 @@ static void * vpFrameContext   = &vpFrameContext;
     }
     return self;
 
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerPlayTag:)       name:NOTIF_SET_PLAYER_FEED object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerStartScrub:)    name:NOTIF_START_SCRUB object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerEndScrub:)      name:NOTIF_FINISH_SCRUB object:nil];
 }
 
 #pragma mark - Observers
@@ -148,21 +154,8 @@ static void * vpFrameContext   = &vpFrameContext;
             
             [_selectPip playWithFeed:feed];
             [_selectPip seekTo:prevTime];
-            
-//            for (Pip * pp in self.pips) {
-//                
-//                __block Pip * weakPip = pp;
-//                [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
-//                    if (finished) {
-//                        weakPip.status = weakPip.status & ~(PIP_Seeking);
-//                    } else {
-//                        NSLog(@"Pip seekBy: CANCELLED");
-//                    }
-//                }];
-//                
-//                
-//                //        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
-//            }
+            _selectPip.avPlayer.rate =self.videoPlayer.avPlayer.rate;
+
             _selectPip.hidden = NO;
             
         } else {
@@ -238,8 +231,7 @@ static void * vpFrameContext   = &vpFrameContext;
     
     }
     
-    
-    NSLog(@"watching player");
+
 }
 
 
@@ -276,11 +268,16 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)videoPlayerPlayTag:(NSNotification *)note
 {
+    NSDictionary * rick     = note.userInfo;
+    if (![[rick objectForKey:@"context"] isEqualToString:_videoPlayer.playerContext]) return;
+    
+    
 
     
-    NSDictionary * rick     = note.userInfo;
-    
-    if (![[rick objectForKey:@"context"] isEqualToString:_videoPlayer.playerContext]) return;
+    id <PxpVideoPlayerProtocol> vid   = _videoPlayer;
+    vid.live            = NO;
+
+
     
     
     float time              = [[rick objectForKey:@"time"]floatValue];
@@ -292,10 +289,10 @@ static void * vpFrameContext   = &vpFrameContext;
 
     
     Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
-    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
+//    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
 
     
-    id <PxpVideoPlayerProtocol> vid   = _videoPlayer;
+ 
 //    [vid playFeed:f];
     vid.looping         = NO;
     vid.live            = NO;
@@ -387,10 +384,10 @@ static void * vpFrameContext   = &vpFrameContext;
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     tapGesture.numberOfTapsRequired     = 1;
     
-    [self.pips addObject:aPip];
+    [self.pips addObject:[self addAntiFreezeOnPip:aPip]]; // add the anti freeze
     [aPip addGestureRecognizer:tapGesture];
     [aPip addGestureRecognizer:tap2Times];
-
+    [aPip.freezeCounter startTimer:1 max:3];
 }
 
 -(void)removePip:(Pip *)aPip
@@ -424,11 +421,6 @@ static void * vpFrameContext   = &vpFrameContext;
     }
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-}
 
 - (void)didReceiveMemoryWarning
 {

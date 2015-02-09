@@ -50,7 +50,7 @@
     TTSwitch                                     * durationTagSwitch;
     UILabel                                      * durationTagLabel;
     
-    
+    UIPinchGestureRecognizer            * pinchGesture;
     
 }
 
@@ -162,9 +162,32 @@ static void * eventContext      = &eventContext;
     _tagButtonController.enabled = YES;
 }
 
+#pragma mark -
+#pragma mark Gesture
+
+//this method will be triggered if user pinches the video view. Based on the pinch velocity, will enter full screen or back to normal screen
+- (void)handlePinchGuesture:(UIGestureRecognizer *)recognizer{
+    
+    if((pinchGesture.velocity > 0.5 || pinchGesture.velocity < -0.5) && pinchGesture.numberOfTouches == 2){
+        if (CGRectContainsPoint(self.view.bounds, [pinchGesture locationInView:self.view]))
+        {
+
+            
+            if (pinchGesture.scale >1) {
+                _fullscreenViewController.enable = YES;
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
+            }else if (pinchGesture.scale < 1){
+                _fullscreenViewController.enable = NO;
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
+            }
+        }
+    }
+    
+}
+
 
 #pragma mark -
-#pragma mark - Normal Methods
+#pragma mark Normal Methods
 
 - (void)viewDidLoad
 {
@@ -184,6 +207,13 @@ static void * eventContext      = &eventContext;
     [self createTagButtons];
 
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    
+    
+    pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
+    [self.view addGestureRecognizer:pinchGesture];
+    
+    
+    
     
     // side tags
     _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
@@ -216,7 +246,8 @@ static void * eventContext      = &eventContext;
     _pip.muted       = YES;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 600, 100, 100) encoderManager:_encoderManager];
+    
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156, 59, 100, 38) encoderManager:_encoderManager];
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
@@ -237,38 +268,41 @@ static void * eventContext      = &eventContext;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-RJLVideoPlayer * awre = self.videoPlayer;
-    [super viewWillAppear:animated];
-    _encoderManager.currentEvent = _encoderManager.liveEventName;
-    [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
 
-    [currentEventTitle setNeedsDisplay];
+    [super viewWillAppear:animated];
+//   _encoderManager.currentEvent = _encoderManager.liveEventName;
+
+    
+    if (!self.videoPlayer.feed) {
+     [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+        
+    }
+
+//    [currentEventTitle setNeedsDisplay];
     
     
     // maybe this should be part of the videoplayer
      if(![self.view.subviews containsObject:self.videoPlayer.view])
      {
-
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-
          [self.view addSubview:self.videoPlayer.view];
-        [_videoBarViewController viewDidAppear:animated];
+         [_videoBarViewController viewDidAppear:animated];
          
-        [self.videoPlayer play];
-
-         //add swipe gesture: swipe left: seek back ; swipe right: seek forward
-         UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
-         [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
-//         [self.videoPlayer.view addGestureRecognizer:recognizer];
-         
-         recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
-         [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
-//         [self.videoPlayer.view addGestureRecognizer:recognizer];
+         [self.videoPlayer play];
+         [self.view addSubview:_fullscreenViewController.view];
+//         //add swipe gesture: swipe left: seek back ; swipe right: seek forward
+//         UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
+//         [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+////         [self.videoPlayer.view addGestureRecognizer:recognizer];
+//         
+//         recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
+//         [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+////         [self.videoPlayer.view addGestureRecognizer:recognizer];
          
      }
-    [self.videoPlayer.view setUserInteractionEnabled:TRUE];
+//    [self.videoPlayer.view setUserInteractionEnabled:TRUE];
     [self createTagButtons]; // temp place
-    [self.videoPlayer play];// ???
+//    [self.videoPlayer play];// ???
 
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
@@ -277,8 +311,8 @@ RJLVideoPlayer * awre = self.videoPlayer;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self onEventChange];
-    [self.view addSubview:_fullscreenViewController.view];
+//    [self onEventChange];
+//    [self.view addSubview:_fullscreenViewController.view];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -312,12 +346,12 @@ RJLVideoPlayer * awre = self.videoPlayer;
     [_tagButtonController inputTagData:tNames];
     
     //Add Actions
-    [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
-    if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
-        [_tagButtonController addActionToAllTagButtons:@selector(showFootballTrainingCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
-    } else {
-        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
-    }
+//    [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
+//    if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+//        [_tagButtonController addActionToAllTagButtons:@selector(showFootballTrainingCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
+//    } else {
+//        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
+//    }
 }
 
 

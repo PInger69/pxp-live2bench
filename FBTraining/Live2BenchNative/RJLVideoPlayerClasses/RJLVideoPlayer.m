@@ -19,7 +19,7 @@
     id      timeObserver;
 
     RJLVideoPlayerResponder * commander;
-    BOOL    isSeeking;
+//    BOOL    isSeeking;
     NSURL   * mURL;
     int     seekAttempt;
     
@@ -113,16 +113,11 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     
     
     [videoControlBar setupPlay:@selector(play) Pause:@selector(pause) target:self];
-    
-//    [videoControlBar.playButton addTarget:self action:@selector(play)
-//             forControlEvents:UIControlEventTouchUpInside];
+
 
     videoControlBar.enable = NO;
     
-//    videoControlBar.hidden = TRUE;
     [self initBarTimer];
-    isSeeking = NO;
-    
 
     seekAttempt = 0;
     [self.view addSubview:liveIndicatorLight];
@@ -152,11 +147,6 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
         [self addPeriodicTimeObserver];
     }
 }
-
-
-
-
-
 
 
 /**
@@ -211,12 +201,11 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 -(void)sliderValueChanged {
     
 
-    
-    
-    if (!isSeeking){
-        isSeeking   = YES;
+    if (!(_status & RJLPS_Seeking)!=0){
+
         self.status = _status | RJLPS_Seeking;
         self.status = _status & ~(RJLPS_Live);
+        self.looping = NO;
         
         CMTime playerDuration = [self playerItemDuration];
         if (CMTIME_IS_INVALID(playerDuration)) {
@@ -230,19 +219,17 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
             float minValue  = [self.videoControlBar.timeSlider minimumValue];
             float maxValue  = [self.videoControlBar.timeSlider maximumValue];
             float value     = [self.videoControlBar.timeSlider value];
-            NSLog(@"SeekSPeed: %f",self.videoControlBar.timeSlider.scrubbingSpeed);
             NSLog(@"Seek Attempt: %i",++seekAttempt);
             double time     = duration * (value - minValue) / (maxValue - minValue);
             lastSeekTime    = time;
             __block RJLVideoPlayer      * weakSelf      = self;
             
             CMTime accuraccy = [self precisionOfScrub:self.videoControlBar.timeSlider.scrubbingSpeed];
-            
+         
             [self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:accuraccy toleranceAfter:accuraccy completionHandler:^(BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     if (finished) {
-                        isSeeking = NO;
                         weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
                     } else {
                         NSLog(@"Seek CANCELD");
@@ -409,9 +396,10 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
                                                                queue:NULL
                                                           usingBlock:^(CMTime time)
                     {
-                        [weakSelf syncControlBar];
+                        
                         [weakCounter reset];
                         [weakLabel setText:[NSString stringWithFormat:@"%f",CMTimeGetSeconds([weakSelf.playerItem currentTime]) ]];
+                        [weakSelf syncControlBar];
                         /**
                          *  Should add check life to keep up to date
                          */
@@ -473,8 +461,16 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange
 {
     range = aRange;
+    
+    if ([[self.feed path] isEqual:[aFeed path]]){
+        [self seekToInSec:CMTimeGetSeconds(aRange.start)];
+        return;
+    }
+    
+    
     // range will be the tag times.... might have to make a new class for this
-    [self playFeed:aFeed];
+//    self.feed = aFeed;
+//    self.URL = [self.feed path];
     [self seekToInSec:CMTimeGetSeconds(aRange.start)];
 }
 
@@ -492,29 +488,46 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 {
 
     self.status                             = _status | RJLPS_Seeking;
-    onReadyBlock                               = nil;
+    onReadyBlock                           = nil;
     __block RJLVideoPlayer  * weakSelf      = self;
     
     
-    
+    NSLog(@"                          Seeking too: %f",seekTime);
+
+
     if (self.playerItem.status == AVPlayerItemStatusUnknown){ // This delays the seek if its not ready
         onReadyBlock = ^void(){
-            [weakSelf seekBy:seekTime];
+        
+            [weakSelf.avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
+                //        dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (finished) {
+//                    isSeeking = NO;
+                    weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+
+                } else {
+                    NSLog(@"seekToInSec: CANCELLED");
+                }
+                
+                //        });
+            }];
+            
         };
         return;
     }
     
     [self.avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
+//        dispatch_async(dispatch_get_main_queue(), ^{
+        
             if (finished) {
-                isSeeking = NO;
+//                isSeeking = NO;
+                NSLog(@"Player Time is: %f",CMTimeGetSeconds(weakSelf.avPlayer.currentTime));
                 weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
             } else {
                 NSLog(@"seekToInSec: CANCELLED");
             }
 
-        });
+//        });
     }];
 }
 
@@ -560,7 +573,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     [self.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (finished) {
-                isSeeking = NO;
+//                isSeeking = NO;
                 weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
             } else {
                 NSLog(@"seekBy: CANCELLED");
@@ -651,9 +664,19 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
         CMTime endT                 = CMTimeAdd(startT, range.duration);
         NSArray *times              = @[ [NSValue valueWithCMTime: endT] ];
         __block AVPlayer *weakRef   = self.avPlayer;
-        
+        __block RJLVideoPlayer  * weakSelf      = self;
         loopingObserver = [self.avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
-            [weakRef seekToTime:startT];
+            
+            weakSelf.status = weakSelf.status |RJLPS_Seeking;
+            [weakRef seekToTime:startT completionHandler:^(BOOL finished) {
+                if (finished) {
+                    weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                } else {
+                    NSLog(@"seekin LoopBy: CANCELLED");
+                }
+
+            }];
+            
         }];
     }
     
@@ -976,7 +999,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
             [self.avPlayer seekToTime:CMTimeMakeWithSeconds(roundedLastTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (finished) {
-                        isSeeking = NO;
+//                        isSeeking = NO;
                         weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
                     } else {
                         NSLog(@"FreezeSeek CANCELLED");
