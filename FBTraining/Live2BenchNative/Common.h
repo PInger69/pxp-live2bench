@@ -74,9 +74,11 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 /**
  *  Graphics Commons
  */
-#define PRIMARY_APP_COLOR [UIColor orangeColor]
+#define PRIMARY_APP_COLOR   [UIColor orangeColor]
+#define SECONDARY_APP_COLOR [UIColor orangeColor]
+#define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-
+#define DEBUG_MODE                          NO
 
 /**
  *  Notifications
@@ -121,7 +123,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_LIVE_EVENT_STARTED            @"liveStarted"
 #define NOTIF_LIVE_EVENT_PAUSED             @"livePaused"
 #define NOTIF_LIVE_EVENT_RESUMED            @"liveResumed"
-#define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived"
+#define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived" // returnds NSDict
 
 #define NOTIF_ENCODER_STAT                  @"encoderStatusMonitor"
 #define NOTIF_MASTER_HAS_LIVE               @"masterHasLive"

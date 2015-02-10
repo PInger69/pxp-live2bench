@@ -838,7 +838,7 @@
                 NSString * tagId = [[results objectForKey:@"id"]stringValue];
 
                 [_eventTagsDict setObject:results forKey:tagId];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:results];
             }
         }
     }

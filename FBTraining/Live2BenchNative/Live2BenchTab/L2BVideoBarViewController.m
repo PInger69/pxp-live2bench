@@ -94,7 +94,14 @@
 
         
         
-        activeElements = @[_startRangeModifierButton,_endRangeModifierButton,forwardButton,backwardButton,tagLabel,slomoButton,_tagMarkerController.view,_tagMarkerController.currentPositionMarker];
+        activeElements = @[_startRangeModifierButton,
+                           _endRangeModifierButton,
+                           forwardButton,
+                           backwardButton,
+                           tagLabel,
+                           slomoButton,
+                           _tagMarkerController.view,
+                           _tagMarkerController.currentPositionMarker];
         
         
         
@@ -256,8 +263,8 @@
             [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,_tagMarkerController.view,_tagMarkerController.currentPositionMarker]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
-            [self _hideAll];//,slomoButton
-            [self _revealThese:@[forwardButton,backwardButton,_tagMarkerController.view]];
+            [self _hideAll];//,slomoButton,forwardButton,backwardButton,
+            [self _revealThese:@[_tagMarkerController.view]];
             break;
         case L2B_VIDEO_BAR_MODE_DISABLE:
             [self _hideAll];

@@ -147,7 +147,7 @@ static void * pipContext = &pipContext;
     avPlayerLayer.frame           = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     [self.layer addSublayer:avPlayerLayer];
     NSLog(avPlayer.muted?@"mute":@"sound");
-    [self addSubview:debugLabel];
+   if (DEBUG_MODE) [self addSubview:debugLabel];
 }
 
 
@@ -201,7 +201,6 @@ static void * seekContext = &seekContext;
             [avplyer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (finished) {
-                        isSeeking = NO;
                         weakSelf.status = weakSelf.status & ~(PIP_Seeking);
                     } else {
                         NSLog(@"FreezeSeek CANCELLED");
@@ -474,12 +473,35 @@ static void * seekContext = &seekContext;
 -(void)setFeed:(Feed *)feed
 {
     [self willChangeValueForKey:@"feed"];
-    if (_feed){
-        [_feed removeObserver:self forKeyPath:@"quality" context:FeedQualityChangeContext];
-    }
+//    if (_feed){
+//        [_feed removeObserver:self forKeyPath:@"quality" context:FeedQualityChangeContext];
+//    }
     _feed = feed;
-    [_feed addObserver:self forKeyPath:@"quality" options:NSKeyValueObservingOptionNew context:FeedQualityChangeContext];
+//    [_feed addObserver:self forKeyPath:@"quality" options:NSKeyValueObservingOptionNew context:FeedQualityChangeContext];
     [self didChangeValueForKey:@"feed"];
+}
+
+
+
+
+
+-(Feed*)removeFeed
+{
+    Feed* cutFeed = self.feed;
+    
+    [self removePlayerTimeObserver];
+    
+    return cutFeed;
+}
+-(void)seekToTime:(CMTime)time completionHandler:(void(^)(BOOL finished) )block
+{
+    CMTime inRange = time;
+    
+    if ( CMTimeGetSeconds(time)>CMTimeGetSeconds(avPlayerItem.duration) ){
+        inRange = avPlayerItem.duration;
+    }
+
+    [self.avPlayer seekToTime:inRange completionHandler:block];
 }
 
 

@@ -12,6 +12,7 @@
 
 @interface MultiPip : UIView
 
+@property (strong,nonatomic) NSString * context;
 
 
 -(void)makePips:(NSArray*)listOfFeeds;
@@ -19,5 +20,12 @@
 
 
 -(void)seekTo:(CMTime) time;
+-(void)pause;
+-(void)live;
+-(void)fullScreen;
+-(void)normalScreen;
+
+
+
 
 @end

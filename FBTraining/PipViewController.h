@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Pip.h"
 #import "FeedSwitchView.h"
-
+#import "MultiPip.h"
 #import "EncoderManager.h"
 #import "PxpVideoPlayerProtocol.h"
 
@@ -21,6 +21,8 @@
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>*    videoPlayer;
 @property (nonatomic,strong) NSMutableArray                 * pips;// for when you have more then one pip
 @property (nonatomic,strong) NSString                       * context;
+@property (nonatomic,strong) MultiPip                       * multi;
+
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager;
 //-(id)initWithPip:(Pip *)aMainPip pip:(Pip*)aPip f:(FeedSwitchView *)f;

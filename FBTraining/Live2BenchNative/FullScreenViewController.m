@@ -50,7 +50,7 @@
         self.view = [[UIView alloc]initWithFrame:screenBounds];
         //[self.view setBackgroundColor:[UIColor redColor]];
         [self.view setHidden:YES];
-        [self   buildAddSubview:_player];
+        [self buildAddSubview:_player];
         
         // this is so we know what Video Player belongs to what
         _context = @"";

@@ -8,9 +8,9 @@
 
 #import "FeedSwitchView.h"
 #define FEEDS @"feeds"
-#define PRIMARY_COLOR   [UIColor greenColor]
-#define SECONDARY_COLOR [UIColor blueColor]
-#define DESELECT_COLOR  [UIColor darkGrayColor]
+#define PRIMARY_COLOR   PRIMARY_APP_COLOR
+#define SECONDARY_COLOR [UIColor darkGrayColor]
+#define DESELECT_COLOR  [UIColor lightGrayColor]
 
 /**
  *   This class is just the View it will show a set of buttons and
@@ -43,6 +43,7 @@
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
         _buttonSize          = CGSizeMake(frame.size.width, frame.size.height);
         _secondarySelected   = NO;
+        
     }
     return self;
 
@@ -134,14 +135,14 @@
         [button addTarget:self action:@selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
         [button setTag:i];
         
-        button.layer.borderColor = [DESELECT_COLOR CGColor];
+//        button.layer.borderColor = [DESELECT_COLOR CGColor];
         
         if (i == _secondaryPosition && i != _primaryPosition){
             [button setTitleColor:SECONDARY_COLOR forState:UIControlStateNormal];
-            button.layer.borderColor = [SECONDARY_COLOR CGColor];
+//            button.layer.borderColor = [SECONDARY_COLOR CGColor];
         } else if (i == _primaryPosition){
             [button setTitleColor:PRIMARY_COLOR forState:UIControlStateNormal];
-            button.layer.borderColor = [PRIMARY_COLOR CGColor];
+//            button.layer.borderColor = [PRIMARY_COLOR CGColor];
         }
         
         [_buttonDict setObject:button forKey:theKey];
@@ -160,6 +161,7 @@
     [button setTitle:aName forState:UIControlStateNormal];
     [button setAccessibilityValue:aKey];
     [button setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
+    button.layer.borderColor = [PRIMARY_COLOR CGColor];
     button.layer.borderWidth = 1;
     return button;
 }
@@ -180,7 +182,7 @@
     
     [_buttonArray enumerateObjectsUsingBlock:^(UIButton *obj, NSUInteger idx, BOOL *stop) {
         [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
-        obj.layer.borderColor = [DESELECT_COLOR CGColor];
+//        obj.layer.borderColor = [DESELECT_COLOR CGColor];
         
     }];
     
@@ -235,7 +237,7 @@
 -(void)colorize:(UIButton*)button color:(UIColor*)col
 {
     [button setTitleColor:col  forState:UIControlStateNormal];
-     button.layer.borderColor = [col CGColor];
+//     button.layer.borderColor = [col CGColor];
 }
 
 -(Feed*)primaryFeed
@@ -262,7 +264,7 @@
 {
     UIButton *obj =[_buttonArray objectAtIndex:index];
    [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
-    obj.layer.borderColor = [DESELECT_COLOR CGColor];
+//    obj.layer.borderColor = [DESELECT_COLOR CGColor];
 }
 
 -(BOOL)secondarySelected
@@ -275,7 +277,7 @@
 {
     [_buttonArray enumerateObjectsUsingBlock:^(UIButton *obj, NSUInteger idx, BOOL *stop) {
         [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
-        obj.layer.borderColor = [DESELECT_COLOR CGColor];
+//        obj.layer.borderColor = [DESELECT_COLOR CGColor];
         
     }];
 }

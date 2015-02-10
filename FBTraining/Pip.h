@@ -60,5 +60,5 @@ typedef NS_OPTIONS (NSInteger,PipStatus){
 -(void)live;
 -(void)playRate:(float)rate;
 -(CMTime)currentTimePosition;
-
+-(void)seekToTime:(CMTime)time completionHandler:(void(^)(BOOL finished) )block;
 @end

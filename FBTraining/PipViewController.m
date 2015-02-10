@@ -41,14 +41,16 @@ static void * vpFrameContext   = &vpFrameContext;
 {
     NSMutableArray  * _gesturePool;
     EncoderManager  * _encoderManager;
-    MultiPip        * multi;
+
+    
+   NSTimer          * syncTimer;
 }
 
 
 @synthesize feedSwitchView  = _feedSwitchView;
 @synthesize selectPip       = _selectPip;
 @synthesize videoPlayer     = _videoPlayer;
-
+@synthesize multi           = _multi;
 
 
 /**
@@ -81,15 +83,17 @@ static void * vpFrameContext   = &vpFrameContext;
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         
 
-
         
+        NSTimeInterval  inter   =  2;
+        syncTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(syncTimerMethod) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:syncTimer forMode:NSDefaultRunLoopMode];
         
         
         // hides all added pips
         for (Pip * pip in self.pips) {
             [pip setHidden:YES];
         }
-        multi = [[MultiPip alloc]initWithFrame:self.videoPlayer.view.frame];
+        _multi = [[MultiPip alloc]initWithFrame:self.videoPlayer.view.frame];
     }
     return self;
 
@@ -104,6 +108,8 @@ static void * vpFrameContext   = &vpFrameContext;
 }
 
 #pragma mark - Observers
+
+
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -197,8 +203,7 @@ static void * vpFrameContext   = &vpFrameContext;
                     [pip playRate:self.videoPlayer.avPlayer.rate];
                     [pip play];
                 }
-    //            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
-    //            [_selectPip play];
+
                 break;
             default:
                 [self.pips makeObjectsPerformSelector:@selector(pause)];
@@ -225,7 +230,9 @@ static void * vpFrameContext   = &vpFrameContext;
         // was main Player Finished Seeking
         if ( (oldStatus & RJLPS_Seeking) && !((newStatus & RJLPS_Seeking)!=0)) {
             [self syncToPlayer];
-
+            
+            
+            
         }
         
     
@@ -234,7 +241,30 @@ static void * vpFrameContext   = &vpFrameContext;
 
 }
 
+-(void)syncTimerMethod
+{
 
+    for (Pip * pp in self.pips) {
+        
+        __block Pip * weakPip = pp;
+        
+        double pipTime       = CMTimeGetSeconds(pp.avPlayer.currentTime);
+        double playerTime    = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
+      
+        if (fabs(pipTime - playerTime) > 2){
+            
+        
+        
+            [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
+                if (finished) {
+                    weakPip.status = weakPip.status & ~(PIP_Seeking);
+                } else {
+                    NSLog(@"Pip seekBy: out of range");
+                }
+            }];
+        }
+    }
+}
 
 
 
@@ -311,7 +341,7 @@ static void * vpFrameContext   = &vpFrameContext;
     [_feedSwitchView setPrimaryPositionByName:[rick objectForKey:@"feed"]];
     
     
-//    [self showMulti];
+
 }
 
 -(void)videoPlayerStartScrub:(NSNotification *)note
@@ -350,25 +380,19 @@ static void * vpFrameContext   = &vpFrameContext;
     
     Feed *pipFeed       = p.feed;
     
-    [vid playFeed:pipFeed];
-    [vid.avPlayer seekToTime:playerTime];
+    float time              = CMTimeGetSeconds(playerTime);
+    float dur               = 0;
+    CMTime cmtime           = CMTimeMake(time, 1);
+    CMTime cmDur            = CMTimeMake(dur, 1);
+    
+    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
+
+    
+    
+    [vid playFeed:pipFeed withRange:timeRange];// just setting the start time
     
     [aPip playWithFeed:vpFeed];
     [aPip seekTo:playerTime];
-
-
-    
-// get VideoPlayers Feed
-// get players position
-// get Pips Feed
-    
-// load pips feed to player
-// load players feed to pip
-
-// all see to correct time
-    
-// play all if player is play or stop all if player is stop
-    
 
 }
 
@@ -408,18 +432,31 @@ static void * vpFrameContext   = &vpFrameContext;
     for (Pip * pp in self.pips) {
         
         __block Pip * weakPip = pp;
+        
+//        pp see
+        
+        
+        
         [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
             if (finished) {
                 weakPip.status = weakPip.status & ~(PIP_Seeking);
             } else {
-                NSLog(@"Pip seekBy: CANCELLED");
+                NSLog(@"Pip seekBy: CANCELLED error or out of range");
             }
         }];
         
         
 //        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
     }
+    
+    if ([_multi superview] != nil){
+        [_multi seekTo:self.videoPlayer.avPlayer.currentTime];
+    }
+    
 }
+
+
+
 
 
 - (void)didReceiveMemoryWarning
@@ -428,6 +465,8 @@ static void * vpFrameContext   = &vpFrameContext;
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark -
+#pragma mark LIVE
 -(void)pipsAndVideoPlayerToLive
 {
     _videoPlayer.feed = _feedSwitchView.primaryFeed;
@@ -440,18 +479,30 @@ static void * vpFrameContext   = &vpFrameContext;
                 //        [pp seekTo:time];
         [pp live];
     }
+    
+    
+     if ([_multi superview] != nil){
+         [_multi live];
+     }
+    
 }
 
 
 
 -(void)showMulti
 {
-    [_videoPlayer.view addSubview:multi];
+    _multi.frame = CGRectMake(0, 0, _videoPlayer.view.frame.size.width, _videoPlayer.view.frame.size.height);
+    [_multi makePips:[_encoderManager.feeds allValues]];
+    [_multi seekTo:_videoPlayer.avPlayer.currentItem.currentTime];
+//    [_videoPlayer.view addSubview:multi];
+    [_videoPlayer.view insertSubview:_multi atIndex:1];
+    _selectPip.hidden = YES;
 }
 
 -(void)hideMulti
 {
-    [multi removeFromSuperview];
+    [_multi pause];
+    [_multi removeFromSuperview];
 }
 
 
@@ -483,7 +534,18 @@ static void * vpFrameContext   = &vpFrameContext;
 }
 
 
+-(void)onButtonPressMulti:(id)sender
+{
+//    UIButton * button = (UIButton*)sender;
+    
+    if ([_multi superview] == nil){
+        [self showMulti];
+    } else {
+        [self hideMulti];
+    }
 
+
+}
 
 
 

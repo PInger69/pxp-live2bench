@@ -20,6 +20,7 @@
 #import "FeedSwitchView.h"
 #import "Feed.h"
 #import "RJLVideoPlayer.h"
+#import "MultiPip.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -49,7 +50,7 @@
     // some old stuff
     TTSwitch                                     * durationTagSwitch;
     UILabel                                      * durationTagLabel;
-    
+    UIButton                            * multiButton;
     UIPinchGestureRecognizer            * pinchGesture;
     
 }
@@ -175,9 +176,11 @@ static void * eventContext      = &eventContext;
             
             if (pinchGesture.scale >1) {
                 _fullscreenViewController.enable = YES;
+                [_pipController.multi fullScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 _fullscreenViewController.enable = NO;
+                [_pipController.multi normalScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
@@ -247,7 +250,7 @@ static void * eventContext      = &eventContext;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
     
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156, 59, 100, 38) encoderManager:_encoderManager];
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
@@ -256,6 +259,14 @@ static void * eventContext      = &eventContext;
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
     
+    
+    // multi button
+    multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];
+    [multiButton setTitle:@"Multi" forState:UIControlStateNormal];
+    [multiButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [multiButton addTarget:_pipController action:@selector(onButtonPressMulti:) forControlEvents:UIControlEventTouchUpInside];
+    multiButton.layer.borderWidth = 1;
+    [self.view addSubview:multiButton];
     
     
     _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.videoPlayer.view.frame.origin.x+32,PADDING + self.videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
@@ -346,7 +357,7 @@ static void * eventContext      = &eventContext;
     [_tagButtonController inputTagData:tNames];
     
     //Add Actions
-//    [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
+    [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
 //    if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showFootballTrainingCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    } else {

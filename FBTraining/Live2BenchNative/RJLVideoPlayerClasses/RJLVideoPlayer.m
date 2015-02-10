@@ -33,8 +33,13 @@
     // block to run when ready
     void (^onReadyBlock)();
     
+    void (^onFeedReadyBlock)();
+    
     UILabel * currentItemTime;
     CGRect videoFrame;
+
+    
+    BOOL  isFeedReady;
 
 }
 static void *ViewControllerRateObservationContext           = &ViewControllerRateObservationContext;
@@ -57,7 +62,6 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     self = [super init];
     if (self) {
         _status         = RJLPS_Offline;
-        
         // This listens to the app if it wants the player to do something
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
@@ -126,7 +130,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     // debugging
     currentItemTime = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 30)];
     currentItemTime.textColor = [UIColor whiteColor];
-    [self.view addSubview:currentItemTime];
+   if (DEBUG_MODE) [self.view addSubview:currentItemTime];
     [super viewDidLoad];
 }
 
@@ -422,16 +426,18 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 
 
 -(void)gotolive{
-    self.status                                 = _status | RJLPS_Live;
-    self.status                                 = _status & ~(RJLPS_Looping);
+    
     self.looping    = NO;
     self.videoControlBar.timeSlider.value =         self.videoControlBar.timeSlider.maximumValue;
     [self play];
+    self.status                                 = _status | RJLPS_Live;
+    self.status                                 = _status & ~(RJLPS_Looping);
 }
 
 -(void)play{
-    self.status                                 = _status | RJLPS_Play;
+    
     [self.avPlayer play];
+    self.status                                 = _status | RJLPS_Play;
     [self.videoControlBar setHidden:NO];
     self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil;
@@ -460,6 +466,8 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange
 {
+    onFeedReadyBlock = nil;
+    
     range = aRange;
     
     if ([[self.feed path] isEqual:[aFeed path]]){
@@ -467,11 +475,34 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
         return;
     }
     
+    self.status                             = _status | RJLPS_Seeking;
+    
+    __block RJLVideoPlayer  * weakSelf          = self;
+    __block CMTime rStart                       = aRange.start;
+    onFeedReadyBlock = ^void(){
+        
+        [weakSelf.avPlayer seekToTime:rStart completionHandler:^(BOOL finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (finished) {
+                    weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                } else {
+                    NSLog(@"seekToInSec: CANCELLED");
+                }
+                
+            });
+        }];
+        
+    };
+
+    
+    
+    
     
     // range will be the tag times.... might have to make a new class for this
-//    self.feed = aFeed;
-//    self.URL = [self.feed path];
-    [self seekToInSec:CMTimeGetSeconds(aRange.start)];
+    self.feed = aFeed;
+    self.URL = [self.feed path];
+//    [self seekToInSec:CMTimeGetSeconds(aRange.start)];
 }
 
 
@@ -499,7 +530,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
         onReadyBlock = ^void(){
         
             [weakSelf.avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
-                //        dispatch_async(dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (finished) {
 //                    isSeeking = NO;
@@ -509,7 +540,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
                     NSLog(@"seekToInSec: CANCELLED");
                 }
                 
-                //        });
+                });
             }];
             
         };
@@ -517,7 +548,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     }
     
     [self.avPlayer seekToTime:CMTimeMakeWithSeconds(seekTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
         
             if (finished) {
 //                isSeeking = NO;
@@ -527,7 +558,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
                 NSLog(@"seekToInSec: CANCELLED");
             }
 
-//        });
+        });
     }];
 }
 
@@ -894,6 +925,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 
     _status = _status | RJLPS_Play;
 
+    if (onFeedReadyBlock) onFeedReadyBlock(); // if there is a place to seek to when ready
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error
