@@ -337,7 +337,8 @@
         _hasLive                = NO; // default before checking
         
         // setup observers
-  
+        __block EncoderManager * weakSelf = self;
+        
         _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
             [[NSNotificationCenter defaultCenter]removeObserver:_userDataObserver];
@@ -345,15 +346,26 @@
         
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;
-            [self refresh];
+            [weakSelf refresh];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
 
         }];
         
           _masterLostObserver  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            _masterEncoder = nil;
-            _liveEventName = nil;
-            [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+                [weakSelf.authenticatedEncoders removeObject:weakSelf.masterEncoder];
+              
+
+              
+              if (weakSelf.masterEncoder !=nil) [weakSelf unRegisterEncoder:weakSelf.masterEncoder];
+//              weakSelf.masterEncoder = nil;
+              if ( [weakSelf.liveEventName isEqualToString:weakSelf.currentEvent]){
+                  weakSelf.currentEvent = nil;
+              }
+                 
+              weakSelf.liveEventName = nil;
+              
+            [weakSelf.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
                     Encoder * anEncoder = (Encoder *) obj;
                     [anEncoder searchForMaster];
@@ -368,19 +380,19 @@
             
             if (anEncoder.liveEventName) {
                 _liveEventName = anEncoder.liveEventName;
-                [self refresh];
+                [weakSelf refresh];
                  [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
             }
 
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }];
 
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting:) name:NOTIF_TAG_POSTED object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:) name:NOTIF_MASTER_COMMAND object:nil]; // watch whole app for start or stop events
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:) name:NOTIF_ENCODER_STAT object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting:)   name:NOTIF_TAG_POSTED       object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)           name:NOTIF_MASTER_COMMAND   object:nil]; // watch whole app for start or stop events
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
 
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:) name:NOTIF_MASTER_HAS_LIVE object:nil];
-        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:)            name:NOTIF_MASTER_HAS_LIVE  object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
         // making actions
         
         
@@ -431,15 +443,17 @@ static void * builtContext          = &builtContext; // depricated?
 {
     
     NSLog(@"   ENCODER REMOVED: %@",aEncoder.name);
+    
     [aEncoder removeObserver:self forKeyPath:@"authenticated"];
     [aEncoder removeObserver:self forKeyPath:@"status"];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_ENCODER_FEEDS_UPDATED object:aEncoder];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
     [aEncoder destroy];
     if (_masterEncoder == aEncoder){
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self];
+       
         _masterEncoder = nil;
         NSLog(@"Master Linched!");
+//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self];
     }
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];
@@ -517,8 +531,8 @@ static void * builtContext          = &builtContext; // depricated?
     return _mode;
 }
 
-
 #pragma mark -
+#pragma mark Observers
 
 // this method was added to possibly sync the feed changes since only the EncoderManager sees NOTIF_ENCODER_FEEDS_UPDATED
 // the switchers see
@@ -589,6 +603,24 @@ static void * builtContext          = &builtContext; // depricated?
     BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
     [self createTag:tagData isDuration:isDuration];
 }
+
+
+-(void)notificationDataRequest:(NSNotification*)note
+{
+    NSString * requestType = note.userInfo[@"type"];
+    
+    if ([requestType isEqualToString:EM_REQUEST_TAG_DATA_FOR_EVENT]){
+        NSString * eventName = note.userInfo[@"eventName"];
+        [self requestTagDataForEvent:eventName onComplete:[note.userInfo objectForKey:@"block"]];
+    
+    } else if ([requestType isEqualToString:EM_REQUEST_ALL_EVENT_DATA]) {
+    
+    }
+
+
+}
+
+
 
 #pragma mark - Bonjour Methods
 // Services Methods     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -686,8 +718,10 @@ static void * builtContext          = &builtContext; // depricated?
             [_masterEncoder issueCommand:START_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
         } else if ([data objectForKey:@"pause"]) {
             [_masterEncoder issueCommand:PAUSE_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
-        }  else if ([data objectForKey:@"resume"]) {
+        } else if ([data objectForKey:@"resume"]) {
             [_masterEncoder issueCommand:RESUME_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
+        } else if ([data objectForKey:@"shutdown"]) {
+            [_masterEncoder issueCommand:SHUTDOWN    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
         }
     }
 
@@ -872,8 +906,8 @@ static void * builtContext          = &builtContext; // depricated?
 -(void)createTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration
 {
     
-    NSString *tagTime = [data objectForKey:@"time"];
-    NSString *tagName = [data objectForKey:@"name"];
+    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
     NSString *eventNm = ([_currentEvent isEqualToString:_liveEventName])?@"live":_currentEvent;
     
     // This is the starndard info that is collected from the encoder
@@ -899,7 +933,7 @@ static void * builtContext          = &builtContext; // depricated?
         [tagData addEntriesFromDictionary:durationData];
     }
 
-
+    [tagData addEntriesFromDictionary:data];//
     
     
     
@@ -920,7 +954,7 @@ static void * builtContext          = &builtContext; // depricated?
     // issue command to all encoder with events
     NSArray     * encoders          = [_authenticatedEncoders copy];
     NSNumber    * nowTime             = GET_NOW_TIME;
-    int timeout = [encoders count] * 10;
+    int timeout = [encoders count] * 20;
     [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
     // ignore local
         if (obj.event != nil){

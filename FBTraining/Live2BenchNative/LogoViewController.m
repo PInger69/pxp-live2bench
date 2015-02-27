@@ -59,10 +59,10 @@ EncoderManager      * encoderManager;
     if (self) {
         encoderManager = _appDel.encoderManager;
         [self setMainSectionTab:NSLocalizedString(@"Welcome",nil)  imageName:@"logoTab"];
-         settingsViewController = [[SettingsViewController alloc]initWithAppDelegate:appDel];
+        settingsViewController = [[SettingsViewController alloc]initWithAppDelegate:appDel];
     }
     return self;
-
+    
 }
 
 - (void)viewDidLoad
@@ -74,12 +74,13 @@ EncoderManager      * encoderManager;
 
 -(void)setupView{
     
+    
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
     tabAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [UIFont defaultFontOfSize:35.0f], NSFontAttributeName,
-                                   [UIColor colorWithWhite:0.3f alpha:1.0f], NSForegroundColorAttributeName,
-                                   nil];
+                     [UIFont defaultFontOfSize:35.0f], NSFontAttributeName,
+                     [UIColor colorWithWhite:0.3f alpha:1.0f], NSForegroundColorAttributeName,
+                     nil];
     tabSelectAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                            [UIFont defaultFontOfSize:35.0f], NSFontAttributeName,
                            [UIColor orangeColor], NSForegroundColorAttributeName,
@@ -111,7 +112,7 @@ EncoderManager      * encoderManager;
     settingsTab = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settingsButton"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettings:)];
     settingsTab.tag = 5;
     //////////////////////////////////////////////
-
+    
     settingsTab.tintColor = [UIColor darkGrayColor];
     
     welcomeToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, self.view.bounds.size.height - 60.0f, self.view.bounds.size.width, 60.0f)];
@@ -140,8 +141,12 @@ EncoderManager      * encoderManager;
     [self.tabContentTitle addTarget:self action:@selector(goToTabLink:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabContentTitle setFont:[UIFont lightFontOfSize:100.0f]];
     [tabContentView addSubview:self.tabContentTitle];
+    float descriptionWidth =self.view.bounds.size.width - self.tabContentImage.bounds.size.width ;
+    NSLog(@"float for width is %f", descriptionWidth);
+    NSLog(@"float for width is %f", self.view.frame.size.width);
+    NSLog(@"float for width is %f", self.tabContentImage.frame.size.width);
     
-    self.tabContentDescription = [[UITextView alloc] initWithFrame:CGRectMake(self.tabContentTitle.frame.origin.x, CGRectGetMaxY(self.tabContentTitle.frame) + 50.0f, self.view.bounds.size.width/2 + 100.0f, 185.0f)];
+    self.tabContentDescription = [[UITextView alloc] initWithFrame:CGRectMake(self.tabContentTitle.frame.origin.x, CGRectGetMaxY(self.tabContentTitle.frame) + 50.0f, 500, 185.0f)];
     self.tabContentDescription.editable = NO;
     self.tabContentDescription.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.8f];
     self.tabContentDescription.scrollEnabled = NO;
@@ -172,13 +177,17 @@ EncoderManager      * encoderManager;
     
     self.tabContentLink = [IconButton buttonWithType:UIButtonTypeCustom];
     self.tabContentLink.iconLocation = IconRight;
-    self.tabContentLink.frame = CGRectMake(self.tabContentDescription.frame.origin.x + 20.0f, tabContentView.bounds.size.height - 90.0f, 170.0f, 30.0f);
+    self.tabContentLink.frame = CGRectMake(self.tabContentDescription.frame.origin.x + 20.0f, tabContentView.bounds.size.height - 90.0f, 180.0f, 30.0f);
+    [self.tabContentLink setNeedsDisplay];
+    //self.tabContentLink.backgroundColor = [UIColor grayColor];
     self.tabContentLink.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.tabContentLink addTarget:self action:@selector(goToTabLink:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabContentLink setImage:[UIImage imageNamed:@"youtube"] forState:UIControlStateNormal];
     [self.tabContentLink setImage:[UIImage imageNamed:@"youtubeSelect"] forState:UIControlStateHighlighted];
+    //self.tabContentLink.titleLabel.backgroundColor = [UIColor blueColor];
     [self.tabContentLink setTitle:@"Learn more" forState:UIControlStateNormal];
     [self.tabContentLink setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    self.tabContentLink.adjustsImageWhenHighlighted = NO;
     [tabContentView addSubview:self.tabContentLink];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideSettings) name:@"hideSettings" object:nil];
@@ -190,7 +199,7 @@ EncoderManager      * encoderManager;
 
 -(UIView*)makeHardware
 {
-
+    
     return nil;
 }
 
@@ -295,14 +304,14 @@ EncoderManager      * encoderManager;
 //{
 //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.youtube.com/watch?v=1hHVE8Ur-c8&feature=c4-overview-vl&list=PLKi5daaUxbXGlOV6E5Sb_FjZdS9tNX34e/"]];
 //}
-//             
+//
 //-(void)goToHomepage:(id)sender
 //{
 //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.myplayxplay.com/"]];
 //}
 
 -(void)sendEmail{
-   
+    
     mailController = [[MFMailComposeViewController alloc] init];
     mailController.mailComposeDelegate = self;
     [mailController setSubject:@""];
@@ -312,7 +321,7 @@ EncoderManager      * encoderManager;
     if (mailController){
         [self presentViewController:mailController animated:YES completion:nil];
     }
-
+    
 }
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
@@ -331,17 +340,17 @@ EncoderManager      * encoderManager;
 
 -(void)showSettings:(id)sender
 {
-//    if (!self.tapBehindGesture){
-//        self.tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
-//        self.tapBehindGesture.numberOfTapsRequired = 1;
-//        self.tapBehindGesture.cancelsTouchesInView = NO;
-//        self.tapBehindGesture.delegate = self;
-//    }
-//    
-//
-//    [self.view.window addGestureRecognizer:self.tapBehindGesture];
+    //    if (!self.tapBehindGesture){
+    //        self.tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
+    //        self.tapBehindGesture.numberOfTapsRequired = 1;
+    //        self.tapBehindGesture.cancelsTouchesInView = NO;
+    //        self.tapBehindGesture.delegate = self;
+    //    }
+    //
+    //
+    //    [self.view.window addGestureRecognizer:self.tapBehindGesture];
     //if the settings view controller already initialized,DONNOT reinitialize it
- 
+    
     // TODO Move up to view did load
     if (!settingsViewController) {
         settingsViewController = [[SettingsViewController alloc]initWithAppDelegate:_appDel];
@@ -350,9 +359,10 @@ EncoderManager      * encoderManager;
     [settingsTab setImage:[UIImage imageNamed:@"settingsButtonSelect"]];
     
     [self.tabBarController presentViewController:settingsViewController animated:YES completion:^{
-     
+        
         [settingsTab setImage:[UIImage imageNamed:@"settingsButton"]];
     }];
+    
 }
 //
 //-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
@@ -388,18 +398,18 @@ EncoderManager      * encoderManager;
         [self.tabBarController dismissViewControllerAnimated:YES completion:nil];
     }
     
-
-//    [self.view.window removeGestureRecognizer:self.tapBehindGesture];
+    
+    //    [self.view.window removeGestureRecognizer:self.tapBehindGesture];
     [settingsTab setImage:[UIImage imageNamed:@"settingsButton"]];
 }
 
 
 - (void)showGoogleDrive
 {
-//    GDContentsViewController* contentsController = [[GDContentsViewController alloc] initWithNibName:nil bundle:nil];
-//    GDContentsNavigationController* navController = [[GDContentsNavigationController alloc] initWithRootViewController:contentsController];
-//    navController.modalPresentationStyle = UIModalPresentationFormSheet;
-//    [self presentViewController:navController animated:YES completion:nil];
+    //    GDContentsViewController* contentsController = [[GDContentsViewController alloc] initWithNibName:nil bundle:nil];
+    //    GDContentsNavigationController* navController = [[GDContentsNavigationController alloc] initWithRootViewController:contentsController];
+    //    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    //    [self presentViewController:navController animated:YES completion:nil];
 }
 
 
@@ -422,7 +432,7 @@ EncoderManager      * encoderManager;
     {
         [self hideSettings];
     }
-
+    
     [CustomAlertView removeAll];
 }
 
@@ -430,7 +440,7 @@ EncoderManager      * encoderManager;
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
-
+    
 }
 
 @end

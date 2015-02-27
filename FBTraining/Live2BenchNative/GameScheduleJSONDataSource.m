@@ -81,6 +81,8 @@ static BOOL IsDateBetweenInclusive(NSDate *date, NSDate *begin, NSDate *end)
 - (void)reloadMyTableView {
     [self.myTableView reloadData];
 }
+
+
 - (UITableViewCell *)OLDtableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *identifier = @"MyCell";
@@ -519,16 +521,17 @@ static BOOL IsDateBetweenInclusive(NSDate *date, NSDate *begin, NSDate *end)
 //when select a row from the table list view, could get the information of the event in the row
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *currentCell = [tableView cellForRowAtIndexPath:indexPath];
+    CalendarTableCell *currentCell = (CalendarTableCell *)[tableView cellForRowAtIndexPath:indexPath];
     
     currentCell.layer.borderWidth = 1.0f;
     
-    UITableViewCell *lastCell;
+    CalendarTableCell *lastCell;
+    
     UIColor * color = [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
     UIColor * textColor = [UIColor colorWithWhite:0.224 alpha:1.0f];
 
     if (lastSelected && ![lastSelected isEqual:indexPath]) {
-        lastCell = [self.myTableView cellForRowAtIndexPath:lastSelected];
+        lastCell = (CalendarTableCell *)[self.myTableView cellForRowAtIndexPath:lastSelected];
         lastCell.layer.borderWidth = 0.0f;
         if (![lastCell.selectedBackgroundView.backgroundColor isEqualToColor:[UIColor orangeColor]]){
             color = [UIColor colorWithWhite:0.9f alpha:1.0f];

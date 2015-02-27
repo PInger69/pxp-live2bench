@@ -151,7 +151,9 @@
         [weakSelf issueCommand:CE_TAG_NAMES_GET priority:99 timeoutInSec:15 tagData:[NSMutableDictionary dictionaryWithDictionary:theData] timeStamp:GET_NOW_TIME];
     };
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UC_REQUEST_USER_INFO object:self userInfo:@{@"block":onRecieveData}];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UC_REQUEST_USER_INFO object:self userInfo:@{@"block":onRecieveData}];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:self userInfo:@{@"type":UC_REQUEST_USER_INFO,@"block":onRecieveData}];
 }
 
 -(void)logoutOfCloud
@@ -164,8 +166,9 @@
         [weakSelf issueCommand:CE_LOGOUT priority:99 timeoutInSec:15 tagData:[NSMutableDictionary dictionaryWithDictionary:theData] timeStamp:GET_NOW_TIME];
     };
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UC_REQUEST_USER_INFO object:self userInfo:@{@"block":onRecieveData}];
-    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UC_REQUEST_USER_INFO object:self userInfo:@{@"block":onRecieveData}];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:self userInfo:@{@"type":UC_REQUEST_USER_INFO,@"block":onRecieveData}];
+
     
 }
 

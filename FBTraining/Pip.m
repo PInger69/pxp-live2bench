@@ -15,7 +15,7 @@
 #define SELECTED_COLOR   PRIMARY_APP_COLOR
 @implementation Pip
 {
-    UILabel                     * debugLabel;
+    UITextView                     * debugLabel;
     NSDictionary                * _qualityFeeds;
     float                       _rate;
     BOOL                        isSeeking;
@@ -91,7 +91,7 @@ static void * pipContext = &pipContext;
         avPlayer.muted          = NO;
         _rate                   = 1.0;
         _quality                = 0;
-        debugLabel              = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 200, 30)];
+        debugLabel              = [[UITextView alloc]initWithFrame:CGRectMake(5, 5, frame.size.width-10, frame.size.height *.5)];
         debugLabel.textColor    = [UIColor whiteColor];
         _status                 = PIP_Offline;
     }
@@ -147,7 +147,12 @@ static void * pipContext = &pipContext;
     avPlayerLayer.frame           = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     [self.layer addSublayer:avPlayerLayer];
     NSLog(avPlayer.muted?@"mute":@"sound");
-   if (DEBUG_MODE) [self addSubview:debugLabel];
+    if (DEBUG_MODE) {
+        [self addSubview:debugLabel];
+        debugLabel.editable = NO;
+        [debugLabel setBackgroundColor:[UIColor clearColor] ];
+
+    }
 }
 
 
@@ -186,6 +191,7 @@ static void * seekContext = &seekContext;
     avplyer.muted       = _muted;
     AVPlayerItem * avplyeritm  = avPlayerItem;
     __block Pip      * weakSelf      = self;
+    weakSelf.status = weakSelf.status | PIP_Seeking;
     
     if (self.avPlayerItem.status != AVPlayerItemStatusReadyToPlay){
         
@@ -194,16 +200,18 @@ static void * seekContext = &seekContext;
         seekReady = ^void(){
             
             if (difference == 1 ){
-                [avplyer seekToTime:avplyeritm.duration];
+                [weakSelf.avPlayer seekToTime:avplyeritm.duration];
             }
             
             //            [avplyer seekToTime:time];
-            [avplyer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+            [weakSelf.avPlayer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (finished) {
+                        NSLog(@"seekTo Finished");
                         weakSelf.status = weakSelf.status & ~(PIP_Seeking);
                     } else {
-                        NSLog(@"FreezeSeek CANCELLED");
+                        NSLog(@"seekTo CANCELLED");
+                        weakSelf.status = weakSelf.status & ~(PIP_Seeking);
                     }
                     
                 });
@@ -214,7 +222,18 @@ static void * seekContext = &seekContext;
         if (difference == 1 ){
             [avPlayer seekToTime:self.avPlayerItem.duration];
         }
-        [avPlayer seekToTime:time];
+        [avPlayer seekToTime:time completionHandler:^(BOOL finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (finished) {
+                        NSLog(@"seekTo Finished");
+                    weakSelf.status = weakSelf.status & ~(PIP_Seeking);
+                } else {
+                    NSLog(@"seekTo CANCELLED");
+                    weakSelf.status = weakSelf.status & ~(PIP_Seeking);
+                }
+                
+            });
+        }];
     }
 }
 
@@ -231,7 +250,7 @@ static void * seekContext = &seekContext;
 {
     AVPlayerItem* currentItem   = avPlayer.currentItem;
     NSArray* seekableRanges     = currentItem.seekableTimeRanges;
-    
+    seekReady                   = nil;
     CMTime time;
     
     if (seekableRanges.count > 0)
@@ -252,7 +271,27 @@ static void * seekContext = &seekContext;
         [self seekTo:time];
         [self play];
          self.status = _status | PIP_Live;
-    }
+    } else {
+        
+        __block Pip      * weakSelf      = self;
+        seekReady = ^void(){
+            [weakSelf.avPlayer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (finished) {
+                            NSLog(@"Live Seek Finishe");
+                            weakSelf.status = weakSelf.status & ~(PIP_Seeking);
+                        } else {
+                            NSLog(@"Live Seek CANCELLED");
+                            weakSelf.status = weakSelf.status & ~(PIP_Seeking);
+                        }
+    
+                    });
+            }];
+        }; // SeekReady
+            
+            
+    
+    }//
     
     
 }
@@ -290,10 +329,10 @@ static void * seekContext = &seekContext;
 -(void)addPeriodicTimeObserver
 {
     double                      interval            = 0.5f;
-    __block UILabel             * weakLabel         = debugLabel;
-    __block AVPlayerItem        * weakPlayerItem    = avPlayerItem;
+    __block UITextField        * weakLabel         = debugLabel;
+//    __block AVPlayerItem        * weakPlayerItem    = avPlayerItem;
     __block RJLFreezeCounter    * weakCounter       = _freezeCounter;
-    
+    __block Pip                 * weakSelf          = self;
     timeObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
                                                                queue:NULL
                                                           usingBlock:^(CMTime time)
@@ -301,7 +340,7 @@ static void * seekContext = &seekContext;
                         if (weakCounter){
                              [weakCounter reset];
                         }
-                        [weakLabel setText:[NSString stringWithFormat:@"%f",CMTimeGetSeconds([weakPlayerItem currentTime]) ]];
+                        [weakLabel setText:[weakSelf description]];
                     }];
     
 }
@@ -493,23 +532,84 @@ static void * seekContext = &seekContext;
     
     return cutFeed;
 }
+
 -(void)seekToTime:(CMTime)time completionHandler:(void(^)(BOOL finished) )block
 {
     CMTime inRange = time;
     
+    self.status = _status | PIP_Seeking;
     if ( CMTimeGetSeconds(time)>CMTimeGetSeconds(avPlayerItem.duration) ){
         inRange = avPlayerItem.duration;
     }
-
-    [self.avPlayer seekToTime:inRange completionHandler:block];
+    __block Pip      * weakSelf      = self;
+    [self.avPlayer seekToTime:inRange completionHandler:^(BOOL finished) {
+        
+        if (finished){
+            weakSelf.status = _status & ~(PIP_Seeking);
+        } else {
+            weakSelf.status = _status & ~(PIP_Seeking);
+        
+        }
+        block(finished);
+    }];
 }
 
+
+-(void)clear
+{
+
+    [self removePlayerTimeObserver];
+    self.looping        = NO;
+    if (avPlayerLayer)[avPlayerLayer removeFromSuperlayer];
+    _feed               = nil;
+    debugLabel.text     = @"";
+}
 
 
 #pragma mark -
 #pragma mark Checkers
 
 
+
+
+-(void)dealloc
+{
+    [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
+}
+
+
+-(NSString*)description
+{
+
+    NSString * txt =  [NSString stringWithFormat:@"%f  \nStatus: ",CMTimeGetSeconds(self.currentTimePosition) ];
+    
+    if (_status & PIP_Live){
+       txt = [txt stringByAppendingString:@" LIVE "];
+    }
+    
+    if (_status & PIP_Play){
+       txt = [txt stringByAppendingString:@" PLAY "];
+    }
+
+    if (_status & PIP_Stop){
+      txt =  [txt stringByAppendingString:@" STOP "];
+    }
+
+    if (_status & PIP_Paused){
+      txt =  [txt stringByAppendingString:@" PAUSE "];
+    }
+
+    if (_status & PIP_Seeking){
+      txt =  [txt stringByAppendingString:@" SEEK "];
+    }
+
+    if (_status & PIP_Scrubbing){
+      txt =  [txt stringByAppendingString:@" SCRUB "];
+    }
+    
+    return txt;
+}
 
 
 

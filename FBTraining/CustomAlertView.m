@@ -94,6 +94,7 @@ static AlertType allowedTypes;
     self = [super init];
     if (self) {
         [alertPool addObject:self];
+
     }
     return self;
 
@@ -106,6 +107,7 @@ static AlertType allowedTypes;
     if (self) {
         self.type = AlertNone;
         [alertPool addObject:self];
+
     }
     return self;
 }
@@ -116,5 +118,13 @@ static AlertType allowedTypes;
      [super show];   
    // }
 }
+
+-(CustomAlertView*)alertType:(AlertType)type
+{
+    self.type = type;
+    return self;
+}
+
+
 
 @end

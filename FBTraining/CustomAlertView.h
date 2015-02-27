@@ -11,14 +11,14 @@
  *  This class is meant to manage all the UI alerts taht are sent in the app so that we know where they all are
  */
 
-typedef enum : NSUInteger {
+
+typedef NS_OPTIONS (NSInteger,AlertType){
     AlertNone       = 0,
-    AlertImportant  = 1<<1,
-    AlertMinor      = 1<<2,
-    AlertCritical   = 1<<3,
-    AlertAll        = 4294967295
-    
-} AlertType;
+    AlertImportant  = 1<<0,
+    AlertMinor      = 1<<1,
+    AlertCritical   = 1<<2,
+    AlertAll        = 4255
+};
 
 
 @interface CustomAlertView : UIAlertView
@@ -31,4 +31,7 @@ typedef enum : NSUInteger {
 +(void)removeAlert:(UIAlertView*)alert;
 +(BOOL)alertMessageExists:(NSString*)alertMsg;
 +(void)removeAlertWithMessage:(NSString*)message;
+
+-(CustomAlertView*)alertType:(AlertType)type;
+
 @end

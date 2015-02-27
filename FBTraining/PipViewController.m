@@ -105,6 +105,8 @@ static void * vpFrameContext   = &vpFrameContext;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerPlayTag:)       name:NOTIF_SET_PLAYER_FEED object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerStartScrub:)    name:NOTIF_START_SCRUB object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(videoPlayerEndScrub:)      name:NOTIF_FINISH_SCRUB object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:)               name:NOTIF_LIVE_EVENT_STOPPED object:nil];
 }
 
 #pragma mark - Observers
@@ -241,28 +243,53 @@ static void * vpFrameContext   = &vpFrameContext;
 
 }
 
+-(void)masterLost:(NSNotification*)note
+{
+    if (_encoderManager.liveEventName == nil  && _encoderManager.currentEvent == nil){
+        for (Pip * pip in self.pips) {
+            [pip clear];
+        }
+        [self.videoPlayer clear];
+    }
+}
+
+-(void)liveEventStopped:(NSNotification*)note
+{
+    if (_encoderManager.liveEventName == nil  && _encoderManager.currentEvent == nil){
+        for (Pip * pip in self.pips) {
+            [pip clear];
+        }
+        [self.videoPlayer clear];
+    }
+}
+
+
+#pragma mark -
+
+
 -(void)syncTimerMethod
 {
 
     for (Pip * pp in self.pips) {
-        
+        if ((pp.status |PIP_Live) !=0)return;
         __block Pip * weakPip = pp;
         
         double pipTime       = CMTimeGetSeconds(pp.avPlayer.currentTime);
+        double pipTimeTotal  = CMTimeGetSeconds( [self playerItemDuration:pp.avPlayerItem]);
         double playerTime    = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
       
-        if (fabs(pipTime - playerTime) > 2){
-            
-        
-        
-            [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
-                if (finished) {
-                    weakPip.status = weakPip.status & ~(PIP_Seeking);
-                } else {
-                    NSLog(@"Pip seekBy: out of range");
-                }
-            }];
-        }
+//        if (fabs(pipTime - playerTime) > 2){
+//            
+//        
+//        
+//            [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
+//                if (finished) {
+//                    weakPip.status = weakPip.status & ~(PIP_Seeking);
+//                } else {
+//                    NSLog(@"Pip seekBy: out of range");
+//                }
+//            }];
+//        }
     }
 }
 
@@ -371,6 +398,9 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)swapVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer withPip:(Pip*)aPip
 {
+    if (aVideoPlayer.avPlayer.currentItem.status != AVPlayerItemStatusReadyToPlay|| aPip.avPlayer.currentItem.status !=AVPlayerItemStatusReadyToPlay){
+        return;
+    }
     
     UIViewController <PxpVideoPlayerProtocol>* vid   = aVideoPlayer;
     Pip * p             = aPip;
@@ -432,16 +462,21 @@ static void * vpFrameContext   = &vpFrameContext;
     for (Pip * pp in self.pips) {
         
         __block Pip * weakPip = pp;
-        
+        float r = [self.videoPlayer.avPlayer rate];
 //        pp see
+    
+        weakPip.status = weakPip.status | PIP_Seeking;
         
-        
-        
-        [pp.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
+        [weakPip.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
             if (finished) {
+                [weakPip.avPlayer.currentItem cancelPendingSeeks];
+                weakPip.avPlayer.rate = r;
                 weakPip.status = weakPip.status & ~(PIP_Seeking);
+                
             } else {
+                [weakPip.avPlayer.currentItem cancelPendingSeeks];
                 NSLog(@"Pip seekBy: CANCELLED error or out of range");
+                weakPip.status = weakPip.status & ~(PIP_Seeking);
             }
         }];
         
@@ -479,8 +514,6 @@ static void * vpFrameContext   = &vpFrameContext;
                 //        [pp seekTo:time];
         [pp live];
     }
-    
-    
      if ([_multi superview] != nil){
          [_multi live];
      }
@@ -494,7 +527,7 @@ static void * vpFrameContext   = &vpFrameContext;
     _multi.frame = CGRectMake(0, 0, _videoPlayer.view.frame.size.width, _videoPlayer.view.frame.size.height);
     [_multi makePips:[_encoderManager.feeds allValues]];
     [_multi seekTo:_videoPlayer.avPlayer.currentItem.currentTime];
-//    [_videoPlayer.view addSubview:multi];
+
     [_videoPlayer.view insertSubview:_multi atIndex:1];
     _selectPip.hidden = YES;
 }
@@ -520,13 +553,9 @@ static void * vpFrameContext   = &vpFrameContext;
         }
     };
     
-    
     void (^onSubzero)() = ^void() {
         NSLog(@"SUB ZERO DONE");
-    
     };
-    
-    
     
     aPip.freezeCounter  = [[RJLFreezeCounter alloc]initWithOnFreeze:onFreeze onCriticalFreeze:onSubzero];
     
@@ -548,12 +577,33 @@ static void * vpFrameContext   = &vpFrameContext;
 }
 
 
+-(CMTime)playerItemDuration:(AVPlayerItem *)playerItem
+{
+   
+    if (playerItem.status == AVPlayerItemStatusReadyToPlay)
+    {
+        NSArray* seekableRanges = playerItem.seekableTimeRanges;
+        if ([seekableRanges count] > 0)
+        {
+            CMTimeRange srange = [[seekableRanges objectAtIndex:0] CMTimeRangeValue];
+            return srange.duration;
+        }
+    }
+    return(kCMTimeInvalid);
+}
 
 
 
 
+-(void)dealloc
+{
+    [self.feedSwitchView removeObserver:self forKeyPath:@"primaryPosition"      context:&changeContextPri];
+    [self.feedSwitchView removeObserver:self forKeyPath:@"secondaryPosition"    context:&changeContextSec];
+    [self.videoPlayer       removeObserver:self forKeyPath:@"status"    context:&vpStatusContext];
+    [self.videoPlayer.view  removeObserver:self forKeyPath:@"frame"     context:&vpFrameContext];
 
-
+    [syncTimer invalidate];
+}
 
 
 

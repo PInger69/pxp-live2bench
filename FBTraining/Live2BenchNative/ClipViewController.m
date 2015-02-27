@@ -10,12 +10,19 @@
 #import "AbstractFilterViewController.h"
 #import "FBTFilterViewController.h"
 #import "BreadCrumbsViewController.h"
-#import "ListPopoverController.h"
+#import "ListPopoverControllerWithImages.h"
 #import "EncoderManager.h"
+#import "ImageAssetManager.h"
+
+
 
 #define CELLS_ON_SCREEN         12
 #define TOTAL_WIDTH             1024
 #define TOTAL_HEIGHT                600
+
+#define BUTTON_HEIGHT   125
+#define POP_WIDTH       200
+
 @interface ClipViewController ()
 
 @end
@@ -24,10 +31,12 @@
 {
     AbstractFilterViewController    * componentFilter;
     BreadCrumbsViewController       * breadCrumbVC;
-    ListPopoverController           * sourceSelectPopover;
+    ListPopoverControllerWithImages * sourceSelectPopover;
     NSString                        * eventType;
     EncoderManager                  * _encoderManager;
     id                              clipViewTagObserver;
+    ImageAssetManager               * _imageAssetManager;
+
 }
 
 //@synthesize thumbnails=_thumbnails;
@@ -63,6 +72,7 @@ static void * masterEncoderContext = &masterEncoderContext;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
         [_encoderManager addObserver:self forKeyPath:@"hasLive" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&masterEncoderContext];
+        _imageAssetManager = appDel.imageAssetManager;
     }
     return self;
     
@@ -100,7 +110,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [super viewDidLoad];
     
   
-    sourceSelectPopover = [[ListPopoverController alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
+    sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
     sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
 
     uController = [[UtilitiesController alloc]init];
@@ -148,9 +158,9 @@ static void * masterEncoderContext = &masterEncoderContext;
     [filterContainer setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
     [self.view addSubview:filterContainer];
     
-    self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(1024-44, 55, 44, 768-55)];
-    self.edgeSwipeButtons.delegate = self;
-    [self.view addSubview:self.edgeSwipeButtons];
+    //self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(1024-44, 55, 44, 768-55)];
+    //self.edgeSwipeButtons.delegate = self;
+    //[self.view addSubview:self.edgeSwipeButtons];
     
 }
 
@@ -199,6 +209,15 @@ static void * masterEncoderContext = &masterEncoderContext;
         
     }
 
+     componentFilter = [[FBTFilterViewController alloc]initWithTagData:_encoderManager.eventTags];
+    
+    [componentFilter setOrigin:CGPointMake(60, 190)];
+   
+    
+    [componentFilter close:NO];
+    [componentFilter viewDidAppear:TRUE];
+    [self.view addSubview:componentFilter.view];
+    
     /* TODO This was disabled for Demo
     // Richard
     if(!componentFilter || eventType != globals.WHICH_SPORT) {
@@ -920,211 +939,21 @@ static void * masterEncoderContext = &masterEncoderContext;
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
     cell.backgroundView = nil;
     cell.data           = tagSelect;
+//    cell.thumbColour.backgroundColor = [Utility colorWithHexString:[tagSelect objectForKey:@"colour"]];
+    [cell.thumbColour changeColor:[Utility colorWithHexString:[tagSelect objectForKey:@"colour"]] withRect:cell.thumbColour.frame];
+    
+    NSString *thumbNameStr = [tagSelect  objectForKey:@"name"];
+    
+    [cell.thumbName setText:[[thumbNameStr stringByRemovingPercentEncoding] stringByReplacingOccurrencesOfString:@"%" withString:@""]];
+    [cell.thumbName setFont:[UIFont boldSystemFontOfSize:18.0f]];
+    [cell.thumbTime setText:[tagSelect objectForKey:@"displaytime"]];
+    [cell.thumbDur setText:[NSString stringWithFormat:@"%.02fs",[[tagSelect objectForKey:@"duration"] floatValue]]];
+    [cell.checkmarkOverlay removeFromSuperview];
+    cell.checkmarkOverlay = nil;
     
     
-//    if (!globals.FINISHED_LOADING_THUMBNAIL_IMAGES && [downloadedTagIds count] != [globals.DOWNLOADED_THUMBNAILS_SET count]){
-//        @try {
-//            downloadedTagIds = [globals.DOWNLOADED_THUMBNAILS_SET mutableCopy];
-//        }
-//        @catch (NSException *exception) {
-//            NSLog(@"downloadedTagIds: %@",exception.reason);
-//        }
-//    }
-//    NSMutableArray *openEndStrings = [[NSMutableArray alloc] init]; //will use this array for open and end types of different sports -- soccer will be 17,18 hockey will be 7,8
-//    if([globals.WHICH_SPORT isEqualToString:@"hockey"])
-//    {
-//        [openEndStrings addObject:@"7"];
-//        [openEndStrings addObject:@"8"];
-//    }else if([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"])
-//    {
-//        [openEndStrings addObject:@"17"];
-//        [openEndStrings addObject:@"18"];
-//    }else if ([globals.WHICH_SPORT isEqualToString:@"football"])
-//    {
-//        [openEndStrings addObject:@"21"];
-//        [openEndStrings addObject:@"22"];
-//    }else{
-//        //this will happen if the there is new tag coming when the user stops the live event (globals.WHICH_SPORT is empty), then just return; Otherwise the app will crash
-//        //for testing
-//        [openEndStrings addObject:@"100"];
-//        [openEndStrings addObject:@"101"];
-//        //return cell;
-//    }
+    [_imageAssetManager imageForURL: tagSelect[@"url"] atImageView: cell.imageView ];
     
-
-    //updated tag dictionary from globals current event thumbnails
-//    NSDictionary *thumbDict = [globals.CURRENT_EVENT_THUMBNAILS objectForKey:[NSString stringWithFormat:@"%@",[tagSelect objectForKey:@"id"]]];//[[NSDictionary alloc]initWithDictionary:[self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]] copyItems:TRUE];
-    
-//    if(![arrayToBeDeleted containsObject:tagSelect]){
-//        [cell.translucentEditingView setHidden:TRUE];
-//        [cell.checkmarkOverlay setHidden:TRUE];
-//    }else{
-//        [cell.translucentEditingView setHidden:FALSE];
-//        [cell.checkmarkOverlay setHidden:FALSE];
-//    }
-//    
-//    globals.THUMBNAILS_PATH = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"thumbnails"];
-//    //path of the thumb image file in the local folder
-//    NSString *currentImage = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[[tagSelect objectForKey:@"url"] lastPathComponent]];
-//    //if the image file is not downloaded to the local folder, redownloaded
-//    if (![[NSFileManager defaultManager] fileExistsAtPath:currentImage]) {
-//        cell.imageLoaded = [self redownloadImageFromtheServer:tagSelect];
-//    }else{
-//        //if the image file is already downloaded, set the boolean value cell.imageLoaded to TRUE
-//        cell.imageLoaded = TRUE;
-//    }
-//    
-//    if (cell.imageLoaded){
-//        //if the thumb image has been downloaded, present the image
-//        
-//        cell.imageView.contentMode = UIViewContentModeCenter;
-//        [cell.imageView setImage:[UIImage imageWithContentsOfFile:currentImage]];
-//        cell.imageView.contentMode = UIViewContentModeScaleToFill;
-//        //[cell.imageView setImageWithURL:[thumbDict objectForKey:@"url"] placeholderImage:[UIImage imageNamed:@"live.png"] options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {[weakCell.activityInd stopAnimating]; weakCell.imageView.contentMode = UIViewContentModeScaleToFill;}];
-//    } else {
-//        //if the thumb image has not been downloaded, present the default image (live.png)
-//        
-//        cell.imageView.contentMode = UIViewContentModeCenter;
-//        [cell.imageView setImage:[UIImage imageNamed:@"live.png"]];
-//    }
-//    
-//    UIColor *thumbColour = [uController colorWithHexString:[tagSelect objectForKey:@"colour"]];
-//    NSString *thumbNameStr = [tagSelect  objectForKey:@"name"];
-//    if ([_encoderManager.currentEventType isEqualToString:SPORT_FOOTBALL_TRAINING] && ([tagSelect objectForKey:@"subtag"] && ![[tagSelect objectForKey:@"subtag"] isEqualToString:@""]))
-//    {
-//        thumbNameStr = [NSString stringWithFormat:@"%@ - %@",[tagSelect objectForKey:@"name"],[tagSelect objectForKey:@"subtag"]];
-//    }
-//    
-//    [cell.thumbName setText:thumbNameStr];
-//    [cell.thumbName setFont:[UIFont boldSystemFontOfSize:18.0f]];
-//    [cell.thumbTime setText:[tagSelect objectForKey:@"displaytime"]];
-//    [cell.thumbDur setText:[NSString stringWithFormat:@"%.02fs",[[tagSelect objectForKey:@"duration"] floatValue]]];
-//    [cell.thumbColour changeColor:thumbColour withRect:cell.thumbColour.frame];
-//    
-//    //set cells delete button title to index path of cell so we can reference later -- title is invisible -- section,row
-//    [cell.thumbDeleteButton setTitle:[NSString stringWithFormat:@"%ld,%ld",(long)indexPath.section ,(long)indexPath.row] forState:UIControlStateNormal];
-//    [cell.thumbDeleteButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-//
-    
-    /*
-    if ([globals.WHICH_SPORT isEqualToString:@"medical"] || [globals.WHICH_SPORT isEqualToString:@""]) {
-        [cell.thumbPeriod setHidden:TRUE];
-    }else{
-        if(globals.ARRAY_OF_PERIODS && globals.ARRAY_OF_PERIODS.count > 0){
-            
-            NSString *tagTime = [NSString stringWithFormat:@"%@",[thumbDict objectForKey:@"time"] ];
-            NSString *closestTagTime;
-            NSDictionary *timeDictionary;
-            NSMutableArray *t;
-            
-            
-            t = [[NSMutableArray alloc]initWithArray:[globals.DURATION_TYPE_TIMES objectForKey:[openEndStrings  objectAtIndex:1]]];
-            if(globals.HAS_MIN)
-            {
-                [t addObjectsFromArray:[globals.DURATION_TYPE_TIMES objectForKey:[openEndStrings objectAtIndex:0]]];
-            }
-            NSMutableArray *temp=[t mutableCopy];
-            
-            // force all times to be strings -- makes it easier to search for items in dictionary later
-            for(NSNumber* obj in t)
-            {
-                int i = [t indexOfObject:obj];
-                [temp replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@",obj]];
-            }
-            t=[temp mutableCopy];
-            temp=nil;
-            //sorting
-            [t sortUsingComparator:^NSComparisonResult(NSString *str1, NSString *str2) {
-                return [str1 compare:str2 options:(NSNumericSearch)];
-            }];
-            
-            int periodIndex=-1;
-            
-            NSInteger *sortedIndex = 0;
-            if (t.count >= 1) {
-                int binSearchIndex =[t binarySearch:tagTime] ; // binsearch returns -1 if time not found
-                
-                binSearchIndex = (int)binSearchIndex <0 ? 0:binSearchIndex; // make sure the binary search index is greater then 0
-                sortedIndex=(int)binSearchIndex >t.count-1 ? t.count-1 : binSearchIndex-1; // make sure index isn't greater then size of array
-                sortedIndex=(int)sortedIndex < 0 ? 0:sortedIndex; //make sure index isn't less then 0
-                closestTagTime = [NSString stringWithFormat:@"%@",[t objectAtIndex:sortedIndex]];
-                timeDictionary = [[NSDictionary alloc]initWithDictionary:[globals.DURATION_TAGS_TIME objectForKey: closestTagTime]];
-                
-                periodIndex = [[timeDictionary objectForKey:[openEndStrings objectAtIndex:1]] integerValue];
-                if(!periodIndex)
-                {
-                    periodIndex=[[timeDictionary objectForKey:[openEndStrings objectAtIndex:0]] integerValue];
-                }
-                
-            }
-            if (periodIndex <0) {
-                periodIndex = 0;
-            }
-            if(periodIndex>=0)
-            {
-                if ([globals.WHICH_SPORT isEqualToString:@"hockey"]) {
-                    [cell.thumbPeriod setText:[NSString stringWithFormat:@"P:%@",[globals.ARRAY_OF_PERIODS objectAtIndex:periodIndex]]];
-                }else if([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"]){
-                    [cell.thumbPeriod setText:[NSString stringWithFormat:@"H:%@",[globals.ARRAY_OF_PERIODS objectAtIndex:periodIndex]]];
-                }else if([globals.WHICH_SPORT isEqualToString:@"football"]){
-                    [cell.thumbPeriod setText:[NSString stringWithFormat:@"Q:%@",[globals.ARRAY_OF_PERIODS objectAtIndex:periodIndex]]];
-                }
-            }
-        }else{
-            [cell.thumbPeriod setText:@""];
-        }
-    }
-*/
-    
-//    int ratingValue = [[thumbDict objectForKey:@"rating"]integerValue];
-//    if (ratingValue > [thumbRatingArray count]){
-//        ratingValue = [thumbRatingArray count];
-//    } else if (ratingValue < 0){
-//        ratingValue = 0;
-//    }
-//    for (int i=0; i<ratingValue; i++) {
-//        UIView *ratingView = [thumbRatingArray objectAtIndex:i];
-//        [ratingView setHidden:FALSE];
-//    }
-//    //have to hide the other rating views;otherwise, rating stars will randomly display in thumbnails
-//    for (int i = ratingValue; i<5; i++) {
-//        UIView *ratingView = [thumbRatingArray objectAtIndex:i];
-//        [ratingView setHidden:TRUE];
-//    }
-//    
-    
-    //set image to cell view
-    
-//    [cell.imageView setIsAccessibilityElement:TRUE];
-//    if(![self.view.subviews containsObject:_filterToolBoxView.view])
-//    {
-//        [_filterToolBoxView.view setFrame:filterContainer.frame];
-//        [self.view addSubview:_filterToolBoxView.view];
-//          [self.view addSubview:componentFilter.view];// RICHARD
-////        globals.TYPES_OF_TAGS=typesOfTags;
-//        //[_filterToolBoxView viewDidAppear:TRUE];
-//    }
-    //if the tag has aready been view, set the background colored
-    
-//    if(!cell.backgroundView)
-//    {
-//        cell.backgroundView = [cell.subviews objectAtIndex:1];
-//    }
-//    if([globals.THUMBS_WERE_SELECTED_CLIPVIEW containsObject: [thumbDict objectForKey:@"id"]]){
-//        if([[thumbDict objectForKey:@"id"] isEqual: globals.THUMB_WAS_SELECTED_CLIPVIEW]){
-//            [cell.backgroundView setImage:[UIImage imageNamed:@"clip-back-just"]];
-//            [cell setNeedsDisplay];
-//        }else{
-//            cell.alpha = 0.5;
-//            [cell.backgroundView setImage:[UIImage imageNamed:@"clip-back-old"]];
-//            [cell setNeedsDisplay];
-//        }
-//    }else{
-//        [cell.backgroundView setImage:[UIImage imageNamed:@"clip-back"]];
-//        [cell setNeedsDisplay];
-//        
-//    }
-//    
     return cell;
 }
 
@@ -1251,18 +1080,38 @@ static void * masterEncoderContext = &masterEncoderContext;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    //    NSDictionary *thumbDict = [[NSDictionary alloc]initWithDictionary:[self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]] copyItems:TRUE];
-    
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     
-
+    
     [sourceSelectPopover clear];
     
     if ([selectedCell.data objectForKey:@"url_2"]) { // if is new
-        NSArray * listOfScource = [[selectedCell.data objectForKey:@"url_2"] allKeys];
+        NSArray * listOfScource = [[[selectedCell.data objectForKey:@"url_2"] allKeys]sortedArrayUsingSelector:@selector(compare:)];
+        
+        
+
         
         [sourceSelectPopover setListOfButtonNames:listOfScource];
+        
+        //This is where the Thumbnail images are added to the popover
+        NSDictionary *tagSelect = [selectedCell.data objectForKey:@"url_2"] ;
+
+        int i = 0;
+        for (NSString *url in listOfScource){
+            //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
+            
+            
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, POP_WIDTH - 10, BUTTON_HEIGHT - 10)];
+            
+            
+            [_imageAssetManager imageForURL: tagSelect[url] atImageView:imageView ];
+            
+            [(UIButton *)sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
+            ++i;
+        }
+        
         [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
+            
             NSLog(@"You Picked a feed: %@",pick);
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
             
@@ -1273,89 +1122,13 @@ static void * masterEncoderContext = &masterEncoderContext;
                                                                                                                   @"state":[NSNumber numberWithInteger:PS_Play]}];
         }];
         
-        [sourceSelectPopover presentPopoverFromRect:selectedCell.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+        [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
     } else {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-    
+        
     }
-
+    
     [selectedCell setSelected:NO];
-    
-    
-    
-    
-    
-    
-//
-//    
-//    return;
-//    if(!isEditingClips)
-//    {
-//        [[NSNotificationCenter defaultCenter]postNotificationName:@"StopUpdate" object:nil];
-//
-//        globals.DID_GO_TO_LIVE = FALSE;
-//        //globals.IS_LOOP_MODE = TRUE;
-//        
-//        
-//        //is there a way to work around this?
-//        customTab=[[CustomTabBar alloc]init];
-//        globals.CURRENT_APP_STATE = apstSkipTimer;
-//        [customTab selectTab:2];
-//        
-//        int indexOfBtn = 0;
-//        int i=0;
-//        for (UIButton *custButton in globals.CUSTOM_TAB_ITEMS) {
-//            if([custButton.titleLabel.text isEqualToString:@"Live2Bench"])
-//            {
-//                indexOfBtn = i;
-//            }
-//            i++;
-//        }
-//        
-//        Live2BenchViewController *tempFirstCont= [self.tabBarController.viewControllers objectAtIndex:indexOfBtn];
-//        
-//        globals.CURRENT_PLAYBACK_TAG=[[NSDictionary alloc]initWithDictionary:thumbDict];
-//        globals.IS_TAG_PLAYBACK=TRUE;
-//        globals.START_TAG_PLAYBACK = TRUE;
-//        [self.tabBarController setSelectedViewController:tempFirstCont];
-//        if ([((NSNumber*)[thumbDict valueForKey:@"type"]) intValue] == 4){
-//            //tele
-//            [tempFirstCont.videoPlayer enterFullscreen];
-//            globals.IS_PLAYBACK_TELE = YES;
-//        }
-//        
-//        if (![globals.THUMBS_WERE_SELECTED_CLIPVIEW containsObject:[thumbDict objectForKey:@"id"]]) {
-//            [globals.THUMBS_WERE_SELECTED_CLIPVIEW addObject:[thumbDict objectForKey:@"id"]];
-//        }
-//        globals.THUMB_WAS_SELECTED_CLIPVIEW = [thumbDict objectForKey:@"id"];
-//    }else{
-//        thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-//        
-//        if(!arrayToBeDeleted)
-//        {
-//            arrayToBeDeleted =[[NSMutableArray alloc] init];
-//        }
-//        
-//        if(![arrayToBeDeleted containsObject:thumbDict])
-//        {
-//            [selectedCell.translucentEditingView setHidden:FALSE];
-//            [selectedCell.checkmarkOverlay setHidden:FALSE];
-//            [arrayToBeDeleted addObject:thumbDict];
-//        }else{
-//            [arrayToBeDeleted removeObject:thumbDict];
-//            [selectedCell.translucentEditingView setHidden:TRUE];
-//            [selectedCell.checkmarkOverlay setHidden:TRUE];
-//        }
-//        if(!isEditingClips)
-//        {
-//            if (![globals.THUMBS_WERE_SELECTED_CLIPVIEW containsObject:[thumbDict objectForKey:@"id"]]) {
-//                [globals.THUMBS_WERE_SELECTED_CLIPVIEW addObject:[thumbDict objectForKey:@"id"]];
-//                
-//            }
-//        }
-//    }
-//    
-//    
     
 }
 

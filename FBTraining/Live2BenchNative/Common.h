@@ -9,9 +9,19 @@
 #ifndef Live2BenchNative_Common_h
 #define Live2BenchNative_Common_h
 
+// Version check tools
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
+
+
 
 // Common Classes
-
+static float APP_WIDTH      = 0;
+static float APP_HEIGHT     = 0;
 
 
 //encoder state
@@ -78,7 +88,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          NO
+#define DEBUG_MODE                          YES
 
 /**
  *  Notifications
@@ -111,7 +121,15 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_SIDE_TAGS_READY_FOR_L2B       @"tagsReadyForLive2Bench"
 #define NOTIF_CREDENTIALS_TO_VERIFY         @"verifyCredentials"        // userInfo:@{@"user":<user name or email>,@"password":<password>}
 #define NOTIF_CREDENTIALS_VERIFY_RESULT     @"verifyCredentialsResults" // userInfo:@{@"success":[NSNumber numberWithBool:<yes or no>]}
-#define NOTIF_UC_REQUEST_USER_INFO          @"requestUserInfo"          //
+
+
+#define NOTIF_USER_CENTER_DATA_REQUEST      @"NOTIF_USER_CENTER_DATA_REQUEST"
+#define NOTIF_UC_REQUEST_USER_INFO          @"requestUserInfo"          // userInfo:@{@"type"<type> ,  @"block":<block>}
+
+// Request Types
+#define UC_REQUEST_EVENT_HIDS               @"UC_REQUEST_EVENT_HIDS"   //@"block":(void(^)(NSArray*pooled))onCompleteGet
+#define UC_REQUEST_USER_INFO                @"UC_REQUEST_USER_INFO"     //@"block":(void(^)(NSDictionary*pooled))onCompleteGet
+
 
 
 // Encoder
@@ -131,9 +149,12 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_EM_FOUND_MASTER               @"NOTIF_EM_FOUND_MASTER"
 
 
-
-
-
+// Encoder Manager
+#define NOTIF_ENCODER_MNG_DATA_REQUEST      @"NOTIF_ENCODER_MNG_DATA_REQUEST"   // userInfo:@{@"type"<type> ,  @"block":<block>}
+// Request Types
+#define EM_REQUEST_TAG_DATA_FOR_EVENT       @"EM_REQUEST_TAG_DATA_FOR_EVENT"    // add to user info  @"eventName":<NSString> , @"block":(void(^)(NSDictionary*all))onCompleteGet
+#define EM_REQUEST_TEAM_DATA                @"EM_REQUEST_TEAM_DATA"             //@"block":(void(^)(NSArray*pooled))onCompleteGet
+#define EM_REQUEST_ALL_EVENT_DATA           @"EM_REQUEST_ALL_EVENT_DATA"
 
 // VideoPlayer
 #define NOTIF_FULLSCREEN                    @"fullScreen"
@@ -143,7 +164,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_COMMAND_VIDEO_PLAYER          @"videoPlayer Commands" // userInfo:@{@"context":<videoplayer context, if omited then all are commanded> ,  @"command": <typedef NS_OPTIONS in VideoPlayer> }
 #define NOTIF_START_SCRUB                   @"startScrubbing"
 #define NOTIF_FINISH_SCRUB                  @"finishedScrubbing"
-
+#define NOTIF_CURRENT_TIME_REQUEST          @"currentTimeRequest"
 
 typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
     VideoPlayerCommandStop      = 1<<1,

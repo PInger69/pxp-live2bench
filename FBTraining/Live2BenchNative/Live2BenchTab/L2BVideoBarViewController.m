@@ -24,13 +24,13 @@
 @synthesize startRangeModifierButton    = _startRangeModifierButton;
 @synthesize endRangeModifierButton      = _endRangeModifierButton;
 @synthesize tagMarkerController         = _tagMarkerController;
-
+@synthesize videoPlayer                 = _videoPlayer;
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer
 {
     
     self = [super init];
     if (self) {
-        videoPlayer = vidPlayer;
+        _videoPlayer = vidPlayer;
         container   = [[VideoBarContainerView alloc]init];
         self.view   = container;
         
@@ -41,17 +41,17 @@
         [container addSubview:background];
         
         // frame does nothign now
-         _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:videoPlayer];
+         _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
         [background addSubview:_tagMarkerController.view];
         
         
         forwardButton   = [self makeSeekButton:SEEK_DIRECTION_RIGHT];
         [container addTouchableSubview:forwardButton];
-        [forwardButton onPressSeekPerformSelector:  @selector(seekWithSeekerButton:) addTarget:videoPlayer];
+        [forwardButton onPressSeekPerformSelector:  @selector(seekWithSeekerButton:) addTarget:_videoPlayer];
         
         backwardButton  = [self makeSeekButton:SEEK_DIRECTION_LEFT];
         [container addTouchableSubview:backwardButton];
-        [backwardButton onPressSeekPerformSelector: @selector(seekWithSeekerButton:) addTarget:videoPlayer];
+        [backwardButton onPressSeekPerformSelector: @selector(seekWithSeekerButton:) addTarget:_videoPlayer];
         
         
         
@@ -86,7 +86,7 @@
         [background addSubview:_endRangeModifierButton];
         
         _startRangeModifierButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-        _startRangeModifierButton = [[CustomButton alloc]initWithFrame:CGRectMake(160,5 + videoPlayer.view.frame.size.height + 100, LITTLE_ICON_DIMENSIONS-5, LITTLE_ICON_DIMENSIONS-10)];
+        _startRangeModifierButton = [[CustomButton alloc]initWithFrame:CGRectMake(160,5 + _videoPlayer.view.frame.size.height + 100, LITTLE_ICON_DIMENSIONS-5, LITTLE_ICON_DIMENSIONS-10)];
         [_startRangeModifierButton setContentMode:UIViewContentModeScaleAspectFill];
         [_startRangeModifierButton setImage:[UIImage imageNamed:@"extendstartsec.png"] forState:UIControlStateNormal];
         [_startRangeModifierButton setAccessibilityValue:@"extend"];
@@ -113,10 +113,10 @@
 
 -(void)toggleSlowmo:(id)sender
 {
-    if ([videoPlayer respondsToSelector:@selector(toggleSlowmo)]){
-        [videoPlayer performSelector:@selector(toggleSlowmo)];
+    if ([_videoPlayer respondsToSelector:@selector(toggleSlowmo)]){
+        [_videoPlayer performSelector:@selector(toggleSlowmo)];
     } else {
-        videoPlayer.slowmo = !videoPlayer.slowmo;
+        _videoPlayer.slowmo = !_videoPlayer.slowmo;
     }
 
 
@@ -177,11 +177,11 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     
-    [videoPlayer.liveIndicatorLight setHidden:NO];
+    [_videoPlayer.liveIndicatorLight setHidden:NO];
     
-    [self.view setFrame:CGRectMake(videoPlayer.view.frame.origin.x,
-                                   videoPlayer.view.frame.origin.y + videoPlayer.view.frame.size.height,
-                                   videoPlayer.view.frame.size.width ,
+    [self.view setFrame:CGRectMake(_videoPlayer.view.frame.origin.x,
+                                   _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height,
+                                   _videoPlayer.view.frame.size.width ,
                                    BAR_HEIGHT)];
     
     
@@ -206,7 +206,7 @@
                                          backwardButton.frame.size.width,
                                          backwardButton.frame.size.height)];
     
-    [self.view.superview insertSubview:self.view aboveSubview:videoPlayer.view];
+    [self.view.superview insertSubview:self.view aboveSubview:_videoPlayer.view];
     
     
 

@@ -19,17 +19,25 @@
 
 #define PLIST_THUMBNAILS        @"Thumbnails.plist"
 #define PLIST_PLAYER_SETUP      @"players-setup.plist"
+#define PLIST_EVENT_HID         @"EventsHid.plist"
 #define PLIST_ACCOUNT_INFO      @"accountInformation.plist"
+
 
 
 @implementation UserCenter
 {
-    NSString        * localPath;
+
     NSFileManager   * fileManager;
     id              tagNameObserver;
     BOOL            observering;
     
     NSDictionary    * rawResponce;
+    
+    
+    NSArray * eventHIDs;
+    
+    
+    
     
     CheckLoginPlistAction     * _checkLoginPlistAction;
 }
@@ -41,14 +49,14 @@
 @synthesize isEULA                  = _isEULA;
 
 @synthesize accountInfoPath         = _accountInfoPath;
-
+@synthesize customerColor           = _customerColor;
 // about the userData
 
 @synthesize customerID              = _customerID;
 @synthesize customerAuthorization   = _customerAuthorization;
 @synthesize customerEmail           = _customerEmail;
 @synthesize customerHid             = _customerHid;
-@synthesize customerColor           = _customerColor;
+@synthesize localPath               = _localPath;
 
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath
@@ -56,8 +64,8 @@
     self = [super init];
     if (self) {
         // paths
-        localPath       = aLocalDocsPath;
-        _accountInfoPath = [localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
+        _localPath       = aLocalDocsPath;
+        _accountInfoPath = [_localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
         _isEULA         = NO;
         observering     = NO;
         fileManager     = [NSFileManager defaultManager];
@@ -71,15 +79,15 @@
             _tagNames       = [self convertToL2BReadable: rawResponce key:@"tagnames"];
         }
         
-        
+        eventHIDs = [[NSArray alloc]initWithContentsOfFile:[_localPath stringByAppendingPathComponent:PLIST_EVENT_HID]];
         
         
         // notifications will mostly be coming from the cloud Encoder
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(update:) name:NOTIF_USER_CENTER_UPDATE object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(checkCredentials:) name:NOTIF_CREDENTIALS_TO_VERIFY object:nil]; // listen to the app for check
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(update:)                   name:NOTIF_USER_CENTER_UPDATE object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(checkCredentials:)         name:NOTIF_CREDENTIALS_TO_VERIFY object:nil]; // listen to the app for check
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(cloudCredentialsResponce:) name:NOTIF_CLOUD_VERIFY_RESULTS object:nil]; // listen to the Cloud for check
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInfoRequest:) name:NOTIF_UC_REQUEST_USER_INFO object:nil]; // listen to the Cloud for check
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutUser:) name:NOTIF_USER_LOGGED_OUT object:nil]; // listen to the Cloud for check
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(dataRequest:)              name:NOTIF_USER_CENTER_DATA_REQUEST object:nil]; // listen to the Cloud for check
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutUser:)               name:NOTIF_USER_LOGGED_OUT object:nil]; // listen to the Cloud for check
         
         _checkLoginPlistAction     = [[CheckLoginPlistAction alloc]initWithCenter:self];
         
@@ -106,11 +114,18 @@
  *
  *  @param note NSNotification
  */
--(void)userInfoRequest:(NSNotification*)note
+-(void)dataRequest:(NSNotification*)note
 {
-    void (^passingDataBack)(NSDictionary*) = [note.userInfo objectForKey:@"block"];
+
+    NSString * requestType = note.userInfo[@"type"];
     
-    passingDataBack(rawResponce);
+    if ([requestType isEqualToString:UC_REQUEST_EVENT_HIDS]) {
+        void (^passingDataBack)(NSArray*) = [note.userInfo objectForKey:@"block"];
+        passingDataBack(eventHIDs);
+    } else if ([requestType isEqualToString:UC_REQUEST_USER_INFO]){
+        void (^passingDataBack)(NSDictionary*) = [note.userInfo objectForKey:@"block"];
+        passingDataBack(rawResponce);
+    }
 }
 
 
@@ -197,7 +212,7 @@
         }
             
         // get user info plist
-        NSString                * plistPath   = [localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
+        NSString                * plistPath   = [_localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
         NSMutableDictionary     * userInfo    = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
         
         if (tgnames){// no respoince from cloud
@@ -291,6 +306,98 @@
 {
     return [_checkLoginPlistAction reset];
 }
+
+
+// Write plists
+
+
+//update events info of current encoder and the events array will be used to update the calendar too
+-(void)writingEventsArrayToPlistFile:(NSArray*)eventsArray{
+    
+//    //NSLog(@"################################### eventsArray from server  %@",eventsArray);
+//    //go through all the new events received from the server, if the event has video id, save it in the local plist file
+//    if(![eventsArray isKindOfClass:[NSDictionary class]])
+//    {
+//        //the local path for plist file which saved all the events
+//        NSString *plistPath = [localPath stringByAppendingPathComponent:PLIST_EVENT_HID];
+//        NSFileManager *fileManager = [NSFileManager defaultManager];
+//        
+//        NSMutableArray *eventsData;
+//        if ([fileManager fileExistsAtPath: plistPath])
+//        {
+//            //if the EventsHid.plist file exists, initializes the eventsData array with the plist file content
+//            eventsData = [[NSMutableArray alloc] initWithContentsOfFile: plistPath];
+//        }else{
+//            //if the EventsHid.plist file not exist, create a new one
+//            plistPath = [localPath stringByAppendingPathComponent: [NSString stringWithFormat: PLIST_EVENT_HID] ];
+//            eventsData = [[NSMutableArray alloc] init];
+//        }
+//        
+//        NSMutableArray *eventsDataCopy = [eventsData mutableCopy];
+//        //go through all events in old plist file, if the event was not downloaded, delete it
+//        for(NSDictionary *event in eventsDataCopy){
+//            if (![[NSFileManager defaultManager]fileExistsAtPath:[[globals.EVENTS_PATH stringByAppendingPathComponent:[event objectForKey:@"name"]] stringByAppendingPathComponent:@"videos/main.mp4"]]) {
+//                [eventsData removeObject:event];
+//            }
+//        }
+//        NSString *eventHid;
+//        NSString *vid;
+//        NSString *oldHid;
+//        
+//        for(NSDictionary *event in eventsArray){
+//            //check event's vid : 1. get rid of events like: "camera = live/camera = off" which will make the app crash when go to calendar view or my clip view
+//            // 2. if there is no video id for the event, don't show it in the calendar
+//            if ([event objectForKey:@"vid"] || [event objectForKey:@"mp4"]) {
+//                eventHid = [event objectForKey:@"hid"];
+//                if ([event objectForKey:@"vid"]) {
+//                    vid = [event objectForKey:@"vid"];
+//                    [globals.ALL_EVENTS_DICT setObject:event forKey:vid];
+//                }else if([event objectForKey:@"mp4"]){
+//                    vid = [event objectForKey:@"mp4"];
+//                    [globals.ALL_EVENTS_DICT setObject:event forKey:vid];
+//                }
+//                
+//                NSUInteger index = -1;
+//                for (NSDictionary *oldEvent in eventsData) {
+//                    oldHid = [oldEvent objectForKey:@"hid"];
+//                    if ([oldHid isEqualToString:eventHid]) {
+//                        index = [eventsData indexOfObject:oldEvent];
+//                    }
+//                }
+//                //the current events is already saved in the old event plist file
+//                if(index != -1){
+//                    //at this point, all the events saved in eventsData have already downloaded
+//                    //1. if the event is not deleted from the current encode, delete from eventsData to prevent duplicated event.
+//                    //Because all the undeleted new events will be added to the eventsData array
+//                    //2. if the event is deleted from the current encoder,don't remove it from eventsData array.
+//                    //Because it has been downloaded and deleted new event won't be added to the eventsData array
+//                    if ([[event objectForKey:@"deleted"]integerValue]!=1) {
+//                        [eventsData removeObjectAtIndex:index];
+//                    }
+//                }
+//                //if the event is not deleted([event objectForKey:@"deleted"] is equals to 0), added it to the eventsData array
+//                if ([[event objectForKey:@"deleted"]integerValue]!=1) {
+//                    [eventsData addObject:event];
+//                }
+//                
+//            }
+//        }
+//        //NSLog(@"###############################################eventsData new events information : %@",eventsData);
+//        //if writeToFile not success, please check if there is any null value in eventsData
+//        [eventsData writeToFile: plistPath atomically:YES];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"oldEventsUpdated" object:nil];
+//        
+//        //get all the events from the current encoder
+//        globals.EVENTS_ON_SERVER = [globals.ALL_EVENTS_DICT allValues];
+//        
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"sync2CloudCallback" object:self];
+//    }else{
+//        return;
+//    }
+    
+    
+}
+
 
 
 

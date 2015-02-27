@@ -39,6 +39,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     AWAY_ENABLE     = 1<<12,
     LEAGUE_ENABLE   = 1<<13,
     
+    EventButtonControlStatesShutdown    = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN |SHUTDOWN_ENABLE,
     EventButtonControlStatesDisabled    = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN,
     EventButtonControlStatesReady       = STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN |SHUTDOWN_ENABLE | START_ENABLE | HOME_ENABLE | AWAY_ENABLE | LEAGUE_ENABLE,
     EventButtonControlStatesStart       = STOP_ENABLE | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_HIDDEN,
@@ -108,6 +109,9 @@ SVSignalStatus signalStatus;
         encoderHomeText.text    = @"Encoder is not available.";
         
         __block SettingsViewController * weakSelf = self;
+        __block UILabel * weakStateLable    =  encStateLabel;
+        __block UILabel * weakHomeLable     =  encoderHomeText;
+        __block Encoder * weakMasterEncoder =  masterEncoder;
         
         [encStateLabel setHidden:YES];
         // observers
@@ -125,10 +129,12 @@ SVSignalStatus signalStatus;
         
         
         observerForLostMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if (masterEncoder){
-                encoderHomeText.text = @"Encoder is not available.";
-                [encStateLabel setHidden:YES];
-                [masterEncoder removeObserver:self forKeyPath:@"status" context:&masterContext];
+            if (weakMasterEncoder != nil){
+                weakHomeLable.text = @"Encoder is not available.";
+                [weakStateLable setHidden:YES];
+                
+                
+                [weakMasterEncoder removeObserver:self forKeyPath:@"status" context:&masterContext];
             }
         }];
 
@@ -419,6 +425,7 @@ SVSignalStatus signalStatus;
             NSLog(@"ENCODER_STATUS_INIT");
         case ENCODER_STATUS_UNKNOWN :
             NSLog(@"ENCODER_STATUS_UNKNOWN");
+            [self eventControlsState:EventButtonControlStatesDisabled];
         case ENCODER_STATUS_CAM_LOADING :
             NSLog(@"ENCODER_STATUS_CAM_LOADING");
             [self eventControlsState:EventButtonControlStatesDisabled];
@@ -449,7 +456,7 @@ SVSignalStatus signalStatus;
             break;
         case ENCODER_STATUS_NOCAM :
             NSLog(@"ENCODER_STATUS_NOCAM");
-            [self eventControlsState:EventButtonControlStatesDisabled];
+            [self eventControlsState:EventButtonControlStatesShutdown];
             break;
         case ENCODER_STATUS_LOCAL :
             NSLog(@"ENCODER_STATUS_LOCAL");
@@ -533,6 +540,11 @@ SVSignalStatus signalStatus;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"resume"  : [NSNumber numberWithBool:YES]}];
     }
     
+}
+
+
+- (void)shutdownEnc:(id)sender {
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"shutdown"  : [NSNumber numberWithBool:YES]}];
 }
 
 - (void)pauseEnc:(id)sender {

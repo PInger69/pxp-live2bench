@@ -18,7 +18,7 @@
 #import "ScreenController.h"
 
 //#import "UtilitiesController.h"
-
+#import "ImageAssetManager.h"
 
 #import "LoginViewController.h"
 #import "EulaModalViewController.h"
@@ -44,6 +44,6 @@
 
 @property (strong, nonatomic) LoginViewController       * loginController;
 @property (strong, nonatomic) EulaModalViewController   * eulaViewController;
-
+@property (strong, nonatomic) ImageAssetManager         * imageAssetManager;
 
 @end

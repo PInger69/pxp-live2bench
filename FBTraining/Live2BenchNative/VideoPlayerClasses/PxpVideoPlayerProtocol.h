@@ -25,7 +25,8 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
     RJLPS_Slomo        = 1<<6,
     RJLPS_Error        = 1<<7,
     RJLPS_Mute         = 1<<8,
-    RJLPS_Looping      = 1<<9
+    RJLPS_Thawing      = 1<<9,
+    RJLPS_Looping      = 1<<10
 };
 
 
@@ -53,6 +54,7 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 -(void)gotolive;
 -(void)play;
 -(void)pause;
+-(void)clear;
 -(void)seekToInSec:(float)seekTime;
 -(void)seekBy: (float)secValue;
 -(void)seekWithSeekerButton:(id)sender;

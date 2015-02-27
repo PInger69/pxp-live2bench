@@ -30,13 +30,13 @@
     Slomo                       * slomoButton;
     SeekButton                  * forwardButton;
     SeekButton                  * backwardButton;
-    UIViewController <PxpVideoPlayerProtocol>* videoPlayer;
+//    UIViewController <PxpVideoPlayerProtocol>* videoPlayer;
     NSArray                     * activeElements;
 //    TagFlagViewController   * _tagMarkerController;         // what displays the tag notches in the bar
 }
 
 @property (nonatomic,assign) int    barMode;
-
+@property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>* videoPlayer;
 @property (nonatomic,strong) CustomButton * startRangeModifierButton;
 @property (nonatomic,strong) CustomButton * endRangeModifierButton;
 @property (nonatomic,strong) TagFlagViewController * tagMarkerController;

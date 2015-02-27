@@ -15,13 +15,14 @@
 #import "UtilityClasses/ActionList.h"
 #import "AppDelegateActionPack.h"
 #import "SpinnerView.h"
-
+#import "ToastObserver.h"
 
 @implementation AppDelegate
 {
     ActionList                  * _actionList;
     RequestUserInfoAction       * requestInfoAction;
     RequestEulaAction           * requestEulaAction;
+    ToastObserver               * _toastObserver;
 }
 
 @synthesize window;
@@ -58,6 +59,12 @@
 //this loads first when you launch the app
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
+    APP_HEIGHT  = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.width  : [[UIScreen mainScreen] bounds].size.height;
+    APP_WIDTH   = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width;
+    
+    self.imageAssetManager = [[ImageAssetManager alloc]init];
+
     ///In order for crashlytics to work, we have to initialise it with the secret app key we get during sign up
     //we can also startwithapikey with a delay if we need to (not necessary)
     [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
@@ -183,6 +190,10 @@
     }];
     
     [_actionList start];
+    
+    _toastObserver = [[ToastObserver alloc]init];
+    _toastObserver.parentView = self.window.rootViewController.view;
+    
     return YES;
 }
 

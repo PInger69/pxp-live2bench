@@ -25,6 +25,8 @@
 
 }
 
+@property (nonatomic,strong) UITableView *tableView;
+
 @property (nonatomic,strong) GameScheduleJSONDataSource *gameScheduleJSONDataSource;
 
 @end

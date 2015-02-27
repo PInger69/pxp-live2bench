@@ -33,7 +33,7 @@
 #define TEAMS_GET       @"teamsGet:timeStamp:"
 #define EVENT_GET_TAGS  @"eventTagsGet:timeStamp:"
 #define CAMERAS_GET     @"camerasGet:timeStamp:"
-
+#define ALL_EVENTS_GET_ @"allEventsGet:timeStamp:"
 
 #define STOP_EVENT      @"stopEvent:timeStamp:"
 #define PAUSE_EVENT     @"pauseEvent:timeStamp:"

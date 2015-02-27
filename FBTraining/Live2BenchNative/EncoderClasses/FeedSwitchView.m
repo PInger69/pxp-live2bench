@@ -62,8 +62,8 @@
         _buttonDict         = [[NSMutableDictionary alloc]init];
         _buttonSize         = CGSizeMake(frame.size.width, frame.size.height);
         _secondarySelected  = NO;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:encoderManager];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMovmentCheck:)       name:NOTIF_MOTION_ALARM object:nil];
     }
     return self;

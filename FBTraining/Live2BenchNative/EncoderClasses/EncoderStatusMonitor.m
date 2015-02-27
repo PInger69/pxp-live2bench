@@ -127,7 +127,7 @@
         ipAddress           = checkedEncoder.ipAddress;
         statusInterval      = 1.0;
         flag                = NO;
-        maxFailCount        = 2; // 3 tries   0 index
+        maxFailCount        = 10; // 3 tries   0 index
         currentFailCount    = maxFailCount;
         statusPack          = [[NSMutableArray alloc]init];
         statusSync          = YES;
@@ -193,19 +193,21 @@
 {
     statusSync = YES;
 
-    if ([connection.connectionType isEqualToString: SHUTDOWN_RESPONCE]){
-        if (currentCount-- == 0) [self serverHasShutdown];
-    } else {
-        if (!currentFailCount--)  {
-            checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
-        }
+//    if ([connection.connectionType isEqualToString: SHUTDOWN_RESPONCE]){
+//        if (currentCount-- == 0) [self serverHasShutdown];
+//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil userInfo:nil];
+//    } else {
+    if (currentFailCount--<=0)  {
+        checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:checkedEncoder userInfo:nil];
     }
+//    }
 
     
-    if ([connection.connectionType isEqualToString: STATUS])   {
-       
-    }
-     
+//    if ([connection.connectionType isEqualToString: STATUS])   {
+//       
+//    }
+    
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection

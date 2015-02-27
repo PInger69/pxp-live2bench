@@ -21,6 +21,7 @@
 #import "Feed.h"
 #import "RJLVideoPlayer.h"
 #import "MultiPip.h"
+#import "CustomAlertView.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -48,8 +49,8 @@
     id                                  tagsReadyObserver;
     
     // some old stuff
-    TTSwitch                                     * durationTagSwitch;
-    UILabel                                      * durationTagLabel;
+    TTSwitch                            * durationTagSwitch;
+    UILabel                             * durationTagLabel;
     UIButton                            * multiButton;
     UIPinchGestureRecognizer            * pinchGesture;
     
@@ -94,7 +95,6 @@ static void * eventContext      = &eventContext;
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
-        self.view.backgroundColor = [UIColor whiteColor];
     }
     
     
@@ -105,6 +105,7 @@ static void * eventContext      = &eventContext;
     }];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name:NOTIF_MASTER_HAS_LIVE object:nil];
+
     return self;
 }
 
@@ -145,13 +146,24 @@ static void * eventContext      = &eventContext;
         self.videoPlayer.live   = YES;
         [_gotoLiveButton isActive:YES];
         _tagButtonController.enabled = YES;
-
+        if (!self.videoPlayer.feed) {
+            [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+            [self.videoPlayer play];
+        }
+        
+    } else if (_encoderManager.currentEvent == nil) { // CLIPs and playing back old events
+        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
+        self.videoPlayer.live   = NO;
+        [_gotoLiveButton isActive:NO]; // TODO
+        _tagButtonController.enabled = NO;
     } else { // CLIPs and playing back old events
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:YES]; // TODO
         _tagButtonController.enabled = YES;
     }
+    
+    [multiButton setHidden:!([_encoderManager.feeds count]>1)];
     
 }
 
@@ -209,9 +221,10 @@ static void * eventContext      = &eventContext;
     //create all the event tag buttons
     [self createTagButtons];
 
+    
+    
+    
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-    
-    
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer:pinchGesture];
     
@@ -226,6 +239,7 @@ static void * eventContext      = &eventContext;
     // Richard
     
     _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
     [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_videoBarViewController.view];
@@ -242,7 +256,7 @@ static void * eventContext      = &eventContext;
     [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
     // so get buttons are connected to full screen
     _tagButtonController.fullScreenViewController = _fullscreenViewController;
-    
+
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
     _pip.isDragAble  = YES;
     _pip.hidden      = YES;
@@ -267,15 +281,33 @@ static void * eventContext      = &eventContext;
     [multiButton addTarget:_pipController action:@selector(onButtonPressMulti:) forControlEvents:UIControlEventTouchUpInside];
     multiButton.layer.borderWidth = 1;
     [self.view addSubview:multiButton];
-    
-    
+    [multiButton setHidden:!([_encoderManager.feeds count]>1)];
     _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.videoPlayer.view.frame.origin.x+32,PADDING + self.videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
     [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_gotoLiveButton];
-    
-    
+        [_gotoLiveButton isActive:NO];
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
 }
+
+
+
+/**
+ *  This is run when the Main Encoder is removed
+ *
+ *  @param note
+ */
+-(void)masterLost:(NSNotification*)note
+{
+    if (_encoderManager.liveEventName == nil  && _encoderManager.currentEvent == nil){
+        [self restartPlayer];
+        CustomAlertView * alert = [[CustomAlertView alloc]initWithTitle:@"Encoder Status" message:@"Encoder connection lost" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+        [[alert alertType:AlertAll] show];
+        
+        [multiButton setHidden:!([_encoderManager.feeds count]>1)];
+    }
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -311,19 +343,24 @@ static void * eventContext      = &eventContext;
 ////         [self.videoPlayer.view addGestureRecognizer:recognizer];
          
      }
-//    [self.videoPlayer.view setUserInteractionEnabled:TRUE];
+
     [self createTagButtons]; // temp place
-//    [self.videoPlayer play];// ???
 
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
+    
+    // just to update UI
+
 }
+
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-//    [self onEventChange];
-//    [self.view addSubview:_fullscreenViewController.view];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
+    [self onEventChange];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -384,6 +421,23 @@ static void * eventContext      = &eventContext;
                                                                                                       @"time":[NSString stringWithFormat:@"%f",currentTime]
                                                                                                       }];
 }
+
+
+
+-(void)restartPlayer
+{
+    [self.videoPlayer.view removeFromSuperview];
+    self.videoPlayer                        = nil;
+    self.videoPlayer                        = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    self.videoPlayer.playerContext          = STRING_LIVE2BENCH_CONTEXT;
+    _videoBarViewController.videoPlayer     = self.videoPlayer;
+    _pipController.videoPlayer              = self.videoPlayer;
+    _fullscreenViewController.player        = self.videoPlayer;
+
+    [self.videoPlayer.view addSubview:_pip];
+    [self.view addSubview:self.videoPlayer.view];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

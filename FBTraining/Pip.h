@@ -35,14 +35,14 @@ typedef NS_OPTIONS (NSInteger,PipStatus){
 @property (nonatomic, strong)           AVPlayerItem       * avPlayerItem;
 @property (assign, nonatomic)           BOOL               isDragAble;
 @property (assign, nonatomic)           CGRect             dragBounds;
-@property (nonatomic, assign)   BOOL               muted;
+@property (nonatomic, assign)           BOOL               muted;
 @property (nonatomic,assign)            BOOL               showFeedLabel;
 @property (nonatomic,assign,readonly)   BOOL               hasHighQuality;
 @property (nonatomic,assign,readonly)   BOOL               hasLowQuality;
 @property (nonatomic,assign)            BOOL               selected;
 @property (nonatomic,assign)            int                quality;
 @property (nonatomic,strong)            Feed               * feed;
-@property(nonatomic,assign)             BOOL                looping;
+@property (nonatomic,assign)            BOOL                looping;
 
 @property (nonatomic,assign)            PipStatus           status;
 @property (nonatomic,strong)            RJLFreezeCounter    * freezeCounter;
@@ -53,7 +53,7 @@ typedef NS_OPTIONS (NSInteger,PipStatus){
 -(void)playWithFeed:(Feed*)aFeed;
 -(void)playWithFeed:(Feed*)feed withRange:(CMTimeRange)range;
 -(void)prepareWithFeed:(Feed*)aFeed;
-
+-(void)clear;
 -(void)play;
 -(void)pause;
 -(void)seekTo:(CMTime)time;

@@ -72,7 +72,7 @@
 -(void)gotolive;
 -(void)play;
 -(void)pause;
-
+-(void)clear;
 
 
 -(void)seekToInSec:(float)seekTime;

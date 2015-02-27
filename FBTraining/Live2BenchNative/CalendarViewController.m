@@ -14,6 +14,8 @@
 #import "CommentingField.h"
 #import "UtilityClasses/Utility.h"
 #import "ListPopoverController.h"
+
+
 /*
  Note: look at keyboard and maybe disable input when lookingo for encoder
  
@@ -27,12 +29,10 @@
 @implementation CalendarViewController
 {
     BOOL                        firstTimeLoad;
-    UtilitiesController         * uController;
     MemoryBar                   * memoryBar;
     CommentingField             * gameSummaryField;
     CommentingField             * monthSummaryField;
     KalViewController           * kal;
-    NSString                    * video_id;
     __weak EncoderManager       * encoderManager;
     NSDateFormatter             * _dateFormat_yyyy_MM;
     NSDateFormatter             * _dateFormat_yyyy_MM_DD;
@@ -41,6 +41,11 @@
 
 }
 @synthesize gameScheduleJSONDataSource;
+@synthesize tableView = _tableView;
+
+
+#pragma mark -
+#pragma mark Class Methods
 
 
 -(id)initWithAppDelegate:(AppDelegate *) appDel
@@ -61,46 +66,43 @@
     return self;
 }
 
-
-- (void)viewDidLoad
+-(void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-
-    //    add notifiers for keyboard hiding/showing (when a text field gets/loses focus)
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)    name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)    name:UIKeyboardWillHideNotification object:nil];
+    firstTimeLoad                               = TRUE;
+    kal                                         = [[KalViewController alloc] init];
+    gameScheduleJSONDataSource                  = [[GameScheduleJSONDataSource alloc] init];
+    gameScheduleJSONDataSource.encoderManager   = encoderManager;
+    kal.dataSource                              = gameScheduleJSONDataSource;
+    memoryBar                                   = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
+    
+    [self initSummaryFields];
+    [self.view addSubview:kal.view];
+    [self addChildViewController:kal];
+    [self.view addSubview:memoryBar];
+    
+    //Observers
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playCurrentEvent)
                                                  name:@"IsEventPlayback"
                                                object:nil];
     
-    uController                                 = [[UtilitiesController alloc]init];
-    kal                                         = [[KalViewController alloc] init];
-    gameScheduleJSONDataSource                  = [[GameScheduleJSONDataSource alloc] init];
-    gameScheduleJSONDataSource.encoderManager   = encoderManager;
-    kal.dataSource                              = gameScheduleJSONDataSource;
-    [self.view addSubview:kal.view];
-    [self addChildViewController:kal];
-    
-    //Richard Start
-    [self initSummaryFields];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveCalendarNotification:)
                                                  name:@"GameScheduleJSONDataSourceClearEvents"
                                                object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveCalendarNotification:)
                                                  name:@"GameScheduleJSONDataSourceSelectEvent"
                                                object:nil];
 
-    // Richard End
-
     [[NSNotificationCenter defaultCenter] addObserver:gameScheduleJSONDataSource
                                              selector:@selector(fetchGameSchedules)
                                                  name:@"sync2CloudCallback"
                                                object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:gameScheduleJSONDataSource
                                              selector:@selector(fetchGameSchedules)
                                                  name:@"reloadCalendarData"
@@ -117,13 +119,25 @@
         
     }];
     
-    firstTimeLoad = TRUE;
-    [uController startEncoderStatusTimer];
+    
+    void (^onRecieveData)(NSArray*) = ^void(NSArray* theData){
+        NSLog(@"UC");
+    };
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"type":UC_REQUEST_EVENT_HIDS ,  @"block":onRecieveData}];
+
+    
+    void (^onRecieveData2)(NSArray*) = ^void(NSArray* theData){
+        NSLog(@"EM");
+    };
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil userInfo:@{@"type":EM_REQUEST_ALL_EVENT_DATA ,  @"block":onRecieveData2}];
+
+    
 }
 
-
-
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
     
     //update the data in calendar view
@@ -133,10 +147,12 @@
         firstTimeLoad = FALSE;
     }
     
-    memoryBar = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
-    [self.view addSubview:memoryBar];
+
 }
 
+/**
+ *  Builds the layout for the summary fields
+ */
 -(void)initSummaryFields
 {
     monthSummaryField                       = [[CommentingField alloc]initWithFrame:CGRectMake(2, 523, 490, 180+35) title:@"Month Summary"];
@@ -163,63 +179,26 @@
     }
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(void)viewWillDisappear:(BOOL)animated
 {
-    return 0;
-}
-
-// Display a details screen for the selected row.
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    GameSchedule *gameSchedule              = [gameScheduleJSONDataSource gameScheduleAtIndexPath:indexPath];
-    GameScheduleDetailViewController *vc    = [[GameScheduleDetailViewController alloc] initWithGameSchedule:gameSchedule];
-    [self.view addSubview:vc.view];
-    [self addChildViewController:vc];
-}
-
--(void)saveSummary:(id)sender
-{
-    CommentingField *commentField   = sender;
-    currentSelectedGame = [gameScheduleJSONDataSource gameIsSelected];
     
-    if ([commentField.title isEqualToString:@"Month Summary"]){
-        NSString *monthYear = [_dateFormat_yyyy_MM stringFromDate:kal.selectedDate];
-        [encoderManager updateSummaryId:monthYear type:@"month" summary:commentField.textField.text onComplete:^(NSArray *pooled) {
-            NSLog(@"month pushed");
-        }];
-    } else {
-        NSString * videoId              = currentSelectedGame.videoId;
-        NSPredicate *predicate          = [NSPredicate predicateWithFormat:@"vid = %@", videoId];
-        NSArray *filteredArray          = [encoderManager.allEventData filteredArrayUsingPredicate:predicate];
-        id firstFoundObject             = nil;
-        firstFoundObject                = filteredArray.count > 0 ? filteredArray.firstObject : nil;
-        NSMutableDictionary * dict      = [NSMutableDictionary dictionaryWithDictionary:firstFoundObject];
-        NSString * hid                  = [dict objectForKey:@"hid"];
-        [encoderManager updateSummaryId:hid type:@"game" summary:commentField.textField.text onComplete:^(NSArray *pooled) {
-            NSLog(@"game pushed");
-        }];
-    }
+    //set the frame dimensions back to normal / Does this line need to be there
+    [self.view setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     
-
+    [CustomAlertView removeAll];
+    [gameSummaryField.textField resignFirstResponder];
+    [monthSummaryField.textField resignFirstResponder];
 }
 
-
--(void)sumSetCallback:(id)newTagInfo
+- (void)didReceiveMemoryWarning
 {
-    ////////NSLog(@"sumsetcallback: %@", newTagInfo);
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
+    [super didReceiveMemoryWarning];
 }
-//
--(BOOL)textViewShouldEndEditing:(UITextView *)textView{
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         //what to do for animation
-                         [self.view setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-                     }
-                     completion:^(BOOL finished){
-                     }];
-    [textView resignFirstResponder];
-    return YES;
-}
+
+
+#pragma mark -
+#pragma mark Keyboard Methods
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
@@ -234,16 +213,28 @@
     ////////NSLog(@"TextViewdidbeginEditing");
 }
 
-- (void)textViewDidChange:(UITextView *)textView{
-    ////////NSLog(@"TextViewdidChange");
+-(BOOL)textViewShouldEndEditing:(UITextView *)textView
+{
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         //what to do for animation
+                         [self.view setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                     }
+                     completion:^(BOOL finished){
+                     }];
+    [textView resignFirstResponder];
+    return YES;
 }
 
-
+-(void)textViewDidChange:(UITextView *)textView
+{
+    ////////NSLog(@"TextViewdidChange");
+}
 
 //user clicked in a textbox field - animate the screen to move up with the keyboard
 - (void)keyboardWillShow:(NSNotification *)note
 {
- 
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          //what kind of animation
@@ -255,7 +246,7 @@
 //user clicked out of a textbox field - animate the screen to move down with the keyboard
 - (void)keyboardWillHide:(NSNotification *)note
 {
-
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          //what to do for animation
@@ -265,10 +256,9 @@
                      }];
 }
 
-
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-   
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
     UITouch *touch = [[event allTouches] anyObject];
     
     if ([gameSummaryField.textField isFirstResponder] && [touch view] != gameSummaryField.textField) {
@@ -277,22 +267,20 @@
     if ([monthSummaryField.textField isFirstResponder] && [touch view] != monthSummaryField.textField) {
         [monthSummaryField.textField resignFirstResponder];
     }
-
+    
     [super touchesBegan:touches withEvent:event];
 }
 
-//change the current app state, will jump to custom tab bar's "updateAppState" method
--(void)playCurrentEvent{
-//    [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_APST_CHANGE
-//                                                       object: self
-//                                                     userInfo: @{@"state":[NSNumber numberWithInt:apstWaitPlaybackStrt]} ];
-}
+
+#pragma mark -
+#pragma mark Observer Methods
 
 
-- (void)receiveCalendarNotification:(NSNotification *) notification
+
+-(void)receiveCalendarNotification:(NSNotification *) notification
 {
     if (!encoderManager.hasMAX) return;
-   
+    
     [gameSummaryField clear];
     
     if ([[notification name] isEqualToString:@"GameScheduleJSONDataSourceClearEvents"]){
@@ -321,7 +309,7 @@
         id firstFoundObject         = nil;
         firstFoundObject            = filteredArray.count > 0 ? filteredArray.firstObject : nil;
         NSMutableDictionary *dict   = [NSMutableDictionary dictionaryWithDictionary:firstFoundObject];
-
+        
         if ([gameScheduleJSONDataSource gameIsSelected] && dict){
             gameSummaryField.enabled        = YES;
             NSString *hid                   = [dict objectForKey:@"hid"];
@@ -332,6 +320,72 @@
     }
 }
 
+
+
+
+#pragma mark -
+#pragma mark Table Methods
+
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 0;
+}
+
+// Display a details screen for the selected row.
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    GameSchedule *gameSchedule              = [gameScheduleJSONDataSource gameScheduleAtIndexPath:indexPath];
+    GameScheduleDetailViewController *vc    = [[GameScheduleDetailViewController alloc] initWithGameSchedule:gameSchedule];
+    [self.view addSubview:vc.view];
+    [self addChildViewController:vc];
+}
+
+
+
+
+//change the current app state, will jump to custom tab bar's "updateAppState" method
+-(void)playCurrentEvent{
+//    [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_APST_CHANGE
+//                                                       object: self
+//                                                     userInfo: @{@"state":[NSNumber numberWithInt:apstWaitPlaybackStrt]} ];
+}
+
+
+#pragma mark -
+#pragma mark Summary Methods
+-(void)saveSummary:(id)sender
+{
+    CommentingField *commentField   = sender;
+    currentSelectedGame = [gameScheduleJSONDataSource gameIsSelected];
+    
+    if ([commentField.title isEqualToString:@"Month Summary"]){
+        NSString *monthYear = [_dateFormat_yyyy_MM stringFromDate:kal.selectedDate];
+        [encoderManager updateSummaryId:monthYear type:@"month" summary:commentField.textField.text onComplete:^(NSArray *pooled) {
+            NSLog(@"month pushed");
+        }];
+    } else {
+        NSString * videoId              = currentSelectedGame.videoId;
+        NSPredicate *predicate          = [NSPredicate predicateWithFormat:@"vid = %@", videoId];
+        NSArray *filteredArray          = [encoderManager.allEventData filteredArrayUsingPredicate:predicate];
+        id firstFoundObject             = nil;
+        firstFoundObject                = filteredArray.count > 0 ? filteredArray.firstObject : nil;
+        NSMutableDictionary * dict      = [NSMutableDictionary dictionaryWithDictionary:firstFoundObject];
+        NSString * hid                  = [dict objectForKey:@"hid"];
+        [encoderManager updateSummaryId:hid type:@"game" summary:commentField.textField.text onComplete:^(NSArray *pooled) {
+            NSLog(@"game pushed");
+        }];
+    }
+    
+    
+}
+
+-(void)sumSetCallback:(id)newTagInfo
+{
+    ////////NSLog(@"sumsetcallback: %@", newTagInfo);
+}
+
+//
 -(void)sumGetCallback:(id)getDict
 {
     NSDictionary *dict = getDict;
@@ -345,7 +399,6 @@
     NSString *monthText = [dict objectForKey:@"summary"];
     [monthSummaryField setText:monthText];//Richard
 }
-
 
 // This method is called when ever there is a month change and also when the tab is loaded
 -(void)_updateMonthSummaryWith:(NSString*)aMonthYear
@@ -381,19 +434,5 @@
 
 
 
--(void)viewWillDisappear:(BOOL)animated{
-
-    //set the frame dimensions back to normal
-    [self.view setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [CustomAlertView removeAll];
-    [gameSummaryField.textField resignFirstResponder];
-    [monthSummaryField.textField resignFirstResponder];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
-    [super didReceiveMemoryWarning];
-}
 
 @end

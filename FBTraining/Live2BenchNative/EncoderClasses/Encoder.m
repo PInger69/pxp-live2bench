@@ -401,6 +401,17 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = SHUTDOWN;
     encoderConnection.timeStamp             = aTimeStamp;
+    
+    
+    
+    
+//    __weak Encoder * weakSelf = self;
+//    [statusMonitor startShutdownChecker:^(void){
+//        NSLog(@"Server has shutdown");
+//        if (weakSelf.isMaster) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:weakSelf userInfo:nil];
+//    }];
+    
+    
 }
 
 
@@ -513,6 +524,21 @@
     encoderConnection.timeStamp             = aTimeStamp;
     encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key that will be used when making the dict
 }
+
+
+-(void)allEventsGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    NSString *jsonString                    = [Utility dictToJSON:tData];
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/gametags/%@",self.ipAddress,jsonString]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = EVENT_GET_TAGS;
+    encoderConnection.timeStamp             = aTimeStamp;
+    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key that will be used when making the dict
+}
+
 
 
 #pragma mark -  Master Commands
@@ -648,7 +674,6 @@
         
         [self eventTagsGetResponce:finishedData eventNameKey:extra];
     }
-   
     
     if (isAuthenticate && isVersion && _isBuild && isTeamsGet && !_isReady){
         _isReady         = YES;
@@ -838,7 +863,7 @@
                 NSString * tagId = [[results objectForKey:@"id"]stringValue];
 
                 [_eventTagsDict setObject:results forKey:tagId];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:results];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:results];
             }
         }
     }
@@ -1072,6 +1097,9 @@
 {
     [statusMonitor destroy];
     [self clearQueueAndCurrent];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_ENCODER_MASTER_FOUND object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_foundMaster:) name:NOTIF_ENCODER_MASTER_FOUND object:nil];
+    
 }
 
 -(NSDictionary*)feeds

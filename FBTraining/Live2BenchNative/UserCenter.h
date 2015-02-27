@@ -29,7 +29,7 @@
 //Paths
 
 @property (nonatomic,strong) NSString               * accountInfoPath;
-
+@property (nonatomic,strong) NSString               * localPath;
 
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;

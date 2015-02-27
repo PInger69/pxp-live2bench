@@ -18,7 +18,7 @@
 @class SettingsViewController;
 
 @interface LogoViewController : CustomTabViewController<MFMailComposeViewControllerDelegate,UIGestureRecognizerDelegate,UITabBarDelegate>{
-
+    
     NSArray *paths;
     NSString *documentsDirectory;
     NSFileManager *fileManager;

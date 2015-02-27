@@ -176,12 +176,7 @@
 }
 
 
--(void)prepareForReuse
-{
-    _data = nil;
-    NSLog(@"Clean Cell");
-    [super prepareForReuse];
-}
+
 
 -(void)setData:(NSDictionary *)data
 {
@@ -193,6 +188,21 @@
 
     return _data;
 }
+
+-(void)prepareForReuse
+{
+    _data = nil;
+    self.imageView.image = [UIImage imageNamed:@"live.png"];
+    self.thumbPeriod.text = @"";
+    self.thumbName.text = @"";
+    self.thumbTime.text = @"";
+    self.thumbDur.text = @"";
+    self.thumbColour.backgroundColor = nil;
+    self.backgroundView = nil;
+    self.data = nil;
+    [super prepareForReuse];
+}
+
 
 
 @end

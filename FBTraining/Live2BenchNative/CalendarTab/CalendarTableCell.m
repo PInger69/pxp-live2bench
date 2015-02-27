@@ -135,6 +135,15 @@ static NSString * lastViewed;
     return [lastViewed isEqualToString:_eventHid];
 }
 
+- (void)prepareForReuse
+{
+
+
+
+
+}
+
+
 
 
 @end

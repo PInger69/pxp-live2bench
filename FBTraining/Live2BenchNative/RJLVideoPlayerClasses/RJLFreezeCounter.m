@@ -61,7 +61,7 @@
 
     _freezeTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(timerFireMethod:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_freezeTimer forMode:NSDefaultRunLoopMode];
-//    [_freezeTimer fire];
+   [_freezeTimer fire];
 
 }
 
@@ -82,6 +82,9 @@
             
 //            [_target performSelector:_selector withObject:nil];
             [self reset];
+        } else if (onFreeze) {
+            _current = _maxfreeze;
+            onFreeze(NO);
         }
     }
 }
@@ -90,6 +93,7 @@
 {
     [self reset];
     [[NSRunLoop mainRunLoop] addTimer:_freezeTimer forMode:NSDefaultRunLoopMode];
+     [_freezeTimer fire];
 }
 
 
