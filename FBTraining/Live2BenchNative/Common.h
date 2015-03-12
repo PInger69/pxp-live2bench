@@ -88,7 +88,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          YES
+#define DEBUG_MODE                          NO
 
 /**
  *  Notifications
@@ -111,7 +111,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{@"tabName":@"Live2Bench"}
 #define NOTIF_USER_LOGGED_OUT               @"userLoggedout" // {@"success":<bool>}
-
+#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER" // this is watched by the encoder manager
 
 
 
@@ -143,6 +143,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_LIVE_EVENT_RESUMED            @"liveResumed"
 #define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived" // returnds NSDict
 
+
 #define NOTIF_ENCODER_STAT                  @"encoderStatusMonitor"
 #define NOTIF_MASTER_HAS_LIVE               @"masterHasLive"
 
@@ -150,6 +151,11 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 
 // Encoder Manager
+#define NOTIF_EM_CHANGE_EVENT               @"NOTIF_EM_CHANGE_EVENT"            // userInfo:@{@"name"<NSString>}
+#define NOTIF_EVENT_LOADED                  @"NOTIF_EVENT_LOADED"               // this will be observed so we can ask the user to pick a team.
+#define NOTIF_EM_DOWNLOAD_CLIP              @"NOTIF_EM_DOWNLOAD_CLIP"           // userInfo:// the clip data
+
+
 #define NOTIF_ENCODER_MNG_DATA_REQUEST      @"NOTIF_ENCODER_MNG_DATA_REQUEST"   // userInfo:@{@"type"<type> ,  @"block":<block>}
 // Request Types
 #define EM_REQUEST_TAG_DATA_FOR_EVENT       @"EM_REQUEST_TAG_DATA_FOR_EVENT"    // add to user info  @"eventName":<NSString> , @"block":(void(^)(NSDictionary*all))onCompleteGet

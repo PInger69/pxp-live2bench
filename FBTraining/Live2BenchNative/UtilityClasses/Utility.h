@@ -22,6 +22,6 @@
 +(NSDictionary*)tagDict;
 //+(NSString*)cmTimeToString:(CMTime)time;
 
-
++(NSString*)myWifiName;
 
 @end

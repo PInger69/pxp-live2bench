@@ -445,6 +445,7 @@ static int outstandingRequests;
                 }
                 
             }];
+            [weakAList addItem:[weakSelf.userCenter checkLoginPlistAction]];
         }
     }];
     

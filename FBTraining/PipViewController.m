@@ -81,7 +81,7 @@ static void * vpFrameContext   = &vpFrameContext;
         // video player
         [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
-        
+        [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
 
         
         NSTimeInterval  inter   =  2;
@@ -126,7 +126,14 @@ static void * vpFrameContext   = &vpFrameContext;
         [self observerMethodFrameChange:keyPath ofObject:object change:change context:context];
         
     }
-
+    
+    
+    if (context == &isObservedContext2) {
+        UIViewController <PxpVideoPlayerProtocol>* p = object;
+        [p removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive))    context:&isObservedContext2];
+        [p       removeObserver:self forKeyPath:@"status"    context:&vpStatusContext];
+        [p.view  removeObserver:self forKeyPath:@"frame"     context:&vpFrameContext];
+    }
 }
 
 

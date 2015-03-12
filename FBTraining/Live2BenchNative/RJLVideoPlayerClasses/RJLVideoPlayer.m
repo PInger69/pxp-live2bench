@@ -50,6 +50,8 @@ static void *FeedQualityChangeContext                       = &FeedQualityChange
 
 static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerStatusChange;
 
+static void *FeedAliveContext                               = &FeedAliveContext;
+
 @synthesize status      = _status;
 @synthesize looping     = _looping;
 @synthesize feed        = _feed;
@@ -57,6 +59,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 
 @synthesize liveIndicatorLight,playerContext,videoControlBar,playBackView,range;
 
+@synthesize isAlive;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -64,6 +67,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     if (self) {
         _status         = RJLPS_Offline;
         // This listens to the app if it wants the player to do something
+        self.isAlive = YES;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(timeRequest:)          name:NOTIF_CURRENT_TIME_REQUEST object:nil];
@@ -87,7 +91,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     self = [super init];
     if (self) {
         _status         = RJLPS_Offline;
-        
+        self.isAlive = YES;
         // This listens to the app if it wants the player to do something
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
@@ -408,6 +412,15 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
      }else if (context == RJLVideoPlayerStatusChange) {
          [self observeRJLPlayerStatusObject:object change:change];
      }
+    
+    
+    
+    if (context == &FeedAliveContext) {
+ 
+        [object removeObserver:self forKeyPath:@"quality" context:FeedQualityChangeContext];
+        [object removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) context:&FeedAliveContext];
+        
+    }
 
 }
 
@@ -869,9 +882,11 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     [self willChangeValueForKey:@"feed"];
     if (_feed){
         [_feed removeObserver:self forKeyPath:@"quality" context:FeedQualityChangeContext];
+        [_feed removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) context:&FeedAliveContext];
     }
     _feed = feed;
     [_feed addObserver:self forKeyPath:@"quality" options:NSKeyValueObservingOptionNew context:FeedQualityChangeContext];
+    [_feed addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew context:&FeedAliveContext];
     [self didChangeValueForKey:@"feed"];
 }
 
@@ -900,6 +915,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
                             ^{
                                 /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
                                 [self prepareToPlayAsset:asset withKeys:requestedKeys];
+                                
                             });
          }];
     }
@@ -961,7 +977,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
     self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
    
-    
+
     
     /* Observe the player item "status" key to determine when it is ready to play. */
     [self.playerItem addObserver:self
@@ -1013,7 +1029,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
          selecting media options) before associating it with a player
          */
         [self.avPlayer replaceCurrentItemWithPlayerItem:self.playerItem];
-        
+  
 //        [self syncPlayPauseButtons];
     }
     
@@ -1177,7 +1193,7 @@ static void *RJLVideoPlayerStatusChange                     = &RJLVideoPlayerSta
 
 -(void)dealloc
 {
-
+    self.isAlive = NO;
     [freezeCounter stop];
 }
 

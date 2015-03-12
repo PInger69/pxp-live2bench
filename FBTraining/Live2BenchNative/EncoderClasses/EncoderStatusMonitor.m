@@ -112,6 +112,8 @@
 
     
     BOOL                    flag; // simple flag to alternate status calls
+    
+    BOOL                    isLegacy;
 }
 
 
@@ -145,6 +147,9 @@
         
 //        [statusPack addObject:feedInvocation];
         [statusPack addObject:statusInvocation];
+        isLegacy            = ([checkedEncoder.version isEqualToString:@"0.94.5"])?YES:NO;
+        
+        
     }
     return self;
 }
@@ -247,6 +252,8 @@
 
 -(void)statusResponse:(NSData *)data
 {
+    
+    NSString * legacyStatus;
     NSDictionary    * results;
     if(NSClassFromString(@"NSJSONSerialization"))
     {
@@ -261,11 +268,44 @@
             results     = object;
             statusCode  = [[results objectForKey:@"code"]integerValue] ;
          
+            if (isLegacy){
+                legacyStatus = [results objectForKey:@"status"] ;
+                
+                if ([legacyStatus isEqualToString:@"Event is being stopped"]) {
+                    statusCode = ENCODER_STATUS_STOP;
+                } else if ([legacyStatus isEqualToString:@"paused"]) {
+                    statusCode = ENCODER_STATUS_PAUSED;
+                } else if ([legacyStatus isEqualToString:@"stopped"]) {
+                    statusCode = ENCODER_STATUS_READY;
+                } else if ([legacyStatus isEqualToString:@"live"]) {
+                    statusCode = ENCODER_STATUS_LIVE;
+                } else if ([legacyStatus isEqualToString:@"pro recoder disconnected"]) {
+                    statusCode = ENCODER_STATUS_NOCAM;
+                } else if ([legacyStatus isEqualToString:@"camera disconnected"]) {
+                    statusCode = ENCODER_STATUS_NOCAM;
+                } else if ([legacyStatus isEqualToString:@"streaming app is starting"]) {
+                    statusCode = ENCODER_STATUS_CAM_LOADING;
+                } else if ([legacyStatus isEqualToString:@"preparing to stream"]) {
+                    statusCode = ENCODER_STATUS_START;
+                } else {
+                    statusCode = ENCODER_STATUS_UNKNOWN;
+                }
+
+
+                
+            } ///
+            
             //TODO
             // this is for the older encoder versions
             if ([checkedEncoder.version compare:OLD_VERSION options:NSNumericSearch]){
 //            if ([Utility sumOfVersion:checkedEncoder.version] >= [Utility sumOfVersion:OLD_VERSION]){
+//                 NSLog(@"Encoder: Version check in Authenticate Disabled");
                 BOOL checkIfNobel =[[results objectForKey:@"master"]boolValue];
+                
+                if (isLegacy){
+                    checkIfNobel = YES;
+                }
+                
                 checkedEncoder.isMaster = checkIfNobel;
             }
             

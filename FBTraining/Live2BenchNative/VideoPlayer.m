@@ -148,7 +148,7 @@ static void * feedContext  = &feedContext;
 
 -(void)setPlayerWithURL:(NSURL*)url
 {
- 
+    if ([[url absoluteString] isEqualToString:@""])return;
     videoURL    = url;
     
     if (playerItem !=nil){

@@ -22,7 +22,7 @@
 @property (nonatomic,strong) NSString               * customerID;
 @property (nonatomic,strong) NSString               * customerAuthorization;
 @property (nonatomic,strong) NSString               * customerEmail;
-@property (nonatomic,strong) NSString               * customerHid;
+@property (nonatomic,strong) NSString               * userHID;
 @property (nonatomic,strong) UIColor                * customerColor;
 
 

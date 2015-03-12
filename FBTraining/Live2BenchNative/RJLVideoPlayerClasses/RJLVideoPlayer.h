@@ -60,6 +60,7 @@
 @property (nonatomic,assign)    BOOL                        live;
 @property (nonatomic,assign)    CMTimeRange                 range;
 
+@property (nonatomic,assign)            BOOL                isAlive;
 
 // Graphic
 @property (nonatomic,strong)     LiveIndicatorLight     * liveIndicatorLight;

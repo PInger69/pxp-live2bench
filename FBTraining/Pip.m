@@ -39,6 +39,8 @@
 @synthesize status      =_status;
 @synthesize freezeCounter = _freezeCounter;
 
+@synthesize isAlive;
+
 static void * pipContext = &pipContext;
 
 
@@ -311,14 +313,18 @@ static void * seekContext = &seekContext;
     
     if (context == &seekContext){
         AVPlayerItem * plyItm = (AVPlayerItem *)object;
-        if (plyItm.status == AVPlayerStatusReadyToPlay) {
-            [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+        if (plyItm.status == AVPlayerItemStatusReadyToPlay && avPlayer.status ==AVPlayerStatusReadyToPlay) {
+            [plyItm removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
            if(seekReady) seekReady();
             [self removePlayerTimeObserver];
             [self addPeriodicTimeObserver];
             
         }
     
+    }
+    
+    if (context == &isObservedContext) {
+        
     }
     
 
@@ -574,6 +580,7 @@ static void * seekContext = &seekContext;
 
 -(void)dealloc
 {
+    self.isAlive = NO;
     [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
     [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
 }

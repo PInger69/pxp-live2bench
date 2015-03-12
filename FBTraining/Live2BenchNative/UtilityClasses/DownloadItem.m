@@ -7,6 +7,7 @@
 //
 
 #import "DownloadItem.h"
+#import "Utility.h"
 
 #define DEFAULT_FRAME_BUFFER_SIZE   500
 #define DEFAULT_TIMEOUT             120
@@ -21,11 +22,15 @@
     NSURLConnection * theConnection;
     NSString        * path;
     NSOutputStream  *stream;
+    NSMutableData   * _data;
+    
     void(^progressBlock)(float,NSInteger);
     
     // For kbsp
     CFTimeInterval startTime;
     CFTimeInterval elapsedTime;
+    
+    DownloadType    downloadType;
 }
 
 
@@ -48,10 +53,27 @@
         kbps                = 0;
         _timeoutInterval    = DEFAULT_TIMEOUT;
         _freeSpaceBuffer    = DEFAULT_FRAME_BUFFER_SIZE;
+        downloadType        = DownloadItem_TypeVideo;
     }
     return self;
 }
 
+
+- (instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath type:(DownloadType)aType
+{
+    self = [super init];
+    if (self) {
+        url                 = aURL;
+        path                = aPath;
+        self.status         = DownloadItemStatusWaiting;
+        _progress           = 0;
+        kbps                = 0;
+        _timeoutInterval    = DEFAULT_TIMEOUT;
+        _freeSpaceBuffer    = DEFAULT_FRAME_BUFFER_SIZE;
+        downloadType        = aType;
+    }
+    return self;
+}
 
 
 #pragma mark -
@@ -62,6 +84,7 @@
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     
+    
     _expectedBytes  = (NSUInteger)response.expectedContentLength;
     
     // this is to overwirte the file
@@ -69,7 +92,7 @@
     {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
-
+    
     
     // this pauses the download if there is inifficient space on the device // you can resume the download by [Downloader defaultDownloder].pause = NO;
     if (![self deviceHasFreeSpace:_freeSpaceBuffer andItemSize:_expectedBytes]){
@@ -79,9 +102,26 @@
     }
     
     self.status     = DownloadItemStatusStart;
-    _receivedBytes  = 0;
-    stream          = [[NSOutputStream alloc] initToFileAtPath:path append:YES];
-    [stream open];
+    _receivedBytes  = 0;  
+    
+    
+    
+    if (downloadType == DownloadItem_TypeVideo){
+    
+         stream          = [[NSOutputStream alloc] initToFileAtPath:path append:YES];
+        [stream open];
+    
+    } else if (downloadType == DownloadItem_TypePlist) {
+        _data           = [[NSMutableData alloc]init];
+    
+    }
+    
+    
+    
+
+    
+
+
     startTime       = CACurrentMediaTime();
 }
 
@@ -91,33 +131,45 @@
     _receivedBytes += data.length;
     
     NSUInteger left = [data length];
-    NSUInteger nwr = 0;
-    do {
-        nwr = [stream write:[data bytes] maxLength:left];
-        if (-1 == nwr) break;
-        left -= nwr;
-    } while (left > 0);
-    if (left) {
-        NSLog(@"stream error: %@", [stream streamError]);
+    
+
+    if (downloadType == DownloadItem_TypeVideo){
+        NSUInteger nwr = 0;
+        do {
+            nwr = [stream write:[data bytes] maxLength:left];
+            if (-1 == nwr) break;
+            left -= nwr;
+        } while (left > 0);
+        if (left) {
+            NSLog(@"stream error: %@", [stream streamError]);
+        }
+    } else if (downloadType == DownloadItem_TypePlist) {
+        [_data appendData:data];
+        
     }
+    
+    
+
+    
+    
     self.status     = DownloadItemStatusProgress;
     self.progress   = (float)_receivedBytes / (float)_expectedBytes;
     if (progressBlock) progressBlock(self.progress, kbps);
-    
-
-
     elapsedTime = CACurrentMediaTime() - startTime;
-    
-    
     kbps = ((float)_receivedBytes /  (float)elapsedTime) * 0.001;
     
-//    startTime = CACurrentMediaTime();
+ 
     
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    [stream close];
+    if (stream)[stream close];
+    
+    if (downloadType == DownloadItem_TypePlist) {
+        [self parseAndSavePlistTo:path data:_data];
+    }
+    
     self.status     = DownloadItemStatusComplete;
     self.progress   = 1;
 }
@@ -125,7 +177,7 @@
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     self.status = DownloadItemStatusError;
-    [stream close];
+    if (stream) [stream close];
     // delete file if partly downloaded
     if([[NSFileManager defaultManager] fileExistsAtPath:path])
     {
@@ -148,7 +200,7 @@
 -(void)cancel
 {
     self.status     = DownloadItemStatusCancel;
-    [stream close];
+    if (stream) [stream close];
     [theConnection cancel];
    
     // delete file if partly downloaded
@@ -187,11 +239,28 @@
     return (totalFreeSpace-itemSize > buffer * 1048576);
 }
 
-
+/**
+ *  This method adds a block to monitor the progress of a download if needed
+ *
+ *  @param pBlock progress gives a number from 0-1 based of the progress and kbps is kbps :)
+ */
 -(void)addOnProgressBlock:(void(^)(float progress,NSInteger kbps)) pBlock
 {
     progressBlock = pBlock;
 }
+
+/**
+ *  This takes in Data and converts to plist and saves to a location on the device
+ *
+ *  @param aPath where the final plist will be saved
+ *  @param aData the JSON data that will be parsed
+ */
+-(void)parseAndSavePlistTo:(NSString*)aPath data:(NSMutableData*)aData
+{
+    NSDictionary * toPlist = [Utility JSONDatatoDict:(NSData *)aData];
+    [toPlist writeToFile: aPath atomically:YES];
+}
+
 
 
 @end

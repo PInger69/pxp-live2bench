@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class Encoder;
-typedef NS_ENUM(NSInteger, EncoderStatus)  {
+typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
     ENCODER_STATUS_UNKNOWN        = 0,
     ENCODER_STATUS_INIT           = 1<<0, //encoder is initializing (pxpservice just started)
     ENCODER_STATUS_CAM_LOADING    = 1<<1, //the camera is initializing (searching for teradek cube's or matrox monarch's)
@@ -23,6 +23,16 @@ typedef NS_ENUM(NSInteger, EncoderStatus)  {
     ENCODER_STATUS_LOCAL          = 1<<10,  //no camera found
     FILLER                        = 257
 };
+
+//typedef NS_OPTIONS(NSInteger, LegacyEncoderStatus)  {
+//    LEGACY_ENCODER_STATUS_FFMPEG_ON         = 1<<0, // ffmpeg or mediaseggmenter are on
+//    LEGACY_ENCODER_STATUS_APP_STARTING      = 1<<1, // app start
+//    LEGACY_ENCODER_STATUS_ENCODER_STREAMIN  = 1<<2, // eoncoder Streming
+//    LEGACY_ENCODER_STATUS_CAMERA_PRESENT    = 1<<3, // camera present
+//    LEGACY_ENCODER_STATUS_RECORDER_PRESENT  = 1<<4  // pro recorder present
+//
+//};
+
 
 
 @interface EncoderStatusMonitor : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>

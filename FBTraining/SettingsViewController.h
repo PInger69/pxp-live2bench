@@ -23,6 +23,7 @@
 {
     UtilitiesController *uController;
     UILabel *userName;
+    UILabel *wifi;
     UIScrollView *scrollView;
     UIView *firstEncButton;
     UIView *secondEncButton;

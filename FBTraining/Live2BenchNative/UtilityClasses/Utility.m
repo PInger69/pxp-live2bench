@@ -12,6 +12,7 @@
 #import "SystemConfiguration/SystemConfiguration.h"
 #import <sys/types.h>
 #import <sys/sysctl.h>
+#import <SystemConfiguration/CaptiveNetwork.h>
 #import "sys/socket.h"
 #import "netinet/in.h"
 
@@ -303,7 +304,19 @@
     return platform;
 }
 
++(NSString*)myWifiName
+{
+    CFArrayRef myArray = CNCopySupportedInterfaces();
+    // Get the dictionary containing the captive network infomation
+    CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
+//    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
+    NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
+    NSString* ssid = [dict objectForKey:@"SSID"];
+//    NSLog(@"network name: %@",ssid);
+    return ssid;
 
+
+}
 
 
 @end

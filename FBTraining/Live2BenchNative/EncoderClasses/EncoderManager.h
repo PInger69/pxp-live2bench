@@ -10,6 +10,7 @@
 #import "UtilitiesController.h" // TODO DELETE
 #import "ActionList.h"
 #import "CloudEncoder.h"
+#import "LocalEncoder.h"
 
 @class Encoder;
 
@@ -55,6 +56,8 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 @property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
 
 @property (nonatomic,strong)            Encoder                 * masterEncoder;
+@property (nonatomic,strong)            LocalEncoder            * localEncoder;
+
 @property (nonatomic,strong)            CloudEncoder            * cloudEncoder;
 @property (nonatomic,assign,readonly)   NSInteger               totalCameraCount;
 

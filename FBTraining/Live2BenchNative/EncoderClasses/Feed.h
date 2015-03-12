@@ -14,10 +14,10 @@
 @property (nonatomic, assign,readonly)   BOOL        hasHighQuality;
 @property (nonatomic, assign,readonly)   BOOL        hasLowQuality;
 @property (nonatomic, strong)            NSString    * sourceName;
+@property (nonatomic,assign)             BOOL        isAlive;
 
 -(id)initWithURLDict:(NSDictionary *)aDict;
 -(id)initWithURLString:(NSString *)aPath quality:(int)qlty;
-
 -(NSURL *)path;
 
 

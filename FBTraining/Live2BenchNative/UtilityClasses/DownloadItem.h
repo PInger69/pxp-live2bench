@@ -18,6 +18,11 @@ typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
     DownloadItemStatusIOError   = 1<<7
 };
 
+typedef NS_OPTIONS(NSInteger, DownloadType) {
+    DownloadItem_TypePlist   = 1<<1,
+    DownloadItem_TypeVideo     = 1<<2
+};
+
 
 @interface DownloadItem : NSObject <NSURLConnectionDataDelegate,NSURLConnectionDelegate>
 
@@ -29,6 +34,9 @@ typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
 @property (nonatomic,assign) NSInteger          kbps;
 
 -(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath;
+
+-(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath type:(DownloadType)aType;
+
 -(void)start;
 -(void)cancel;
 -(void)addOnProgressBlock:(void(^)(float progress,NSInteger kbps)) pBlock;

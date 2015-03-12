@@ -20,12 +20,14 @@
 
 @synthesize quality     = _quality;
 @synthesize sourceName  =_sourceName;
+@synthesize isAlive;
 
 // this is to be used right from the JSON data
 -(id)initWithURLDict:(NSDictionary *)aDict
 {
     self = [super init];
     if (self) {
+        self.isAlive                        = YES;
         NSArray             * keys          = [aDict allKeys];
         NSMutableDictionary * tempDict      = [[NSMutableDictionary alloc]init];
         NSURL               * defaultURL;
@@ -50,7 +52,7 @@
 {
     self = [super init];
     if (self) {
-        
+        self.isAlive = YES;
         NSString * correctedQuality;
         if (qlty>=1) correctedQuality = HIGH_QUALITY;
         if (qlty<=0) correctedQuality = LOW_QUALITY;
@@ -113,6 +115,12 @@
     if (self.hasLowQuality)txt  = [NSString stringWithFormat:@"%@Low Quaility:\t %@",txt,[_qualities objectForKey:LOW_QUALITY]];
 
     return txt;
+}
+
+
+-(void)dealloc
+{
+    self.isAlive = NO;
 }
 
 

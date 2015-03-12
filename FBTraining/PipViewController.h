@@ -13,6 +13,8 @@
 #import "EncoderManager.h"
 #import "PxpVideoPlayerProtocol.h"
 
+static void * isObservedContext2 = &isObservedContext2;
+
 @interface PipViewController : UIViewController
 
 
@@ -22,6 +24,7 @@
 @property (nonatomic,strong) NSMutableArray                 * pips;// for when you have more then one pip
 @property (nonatomic,strong) NSString                       * context;
 @property (nonatomic,strong) MultiPip                       * multi;
+
 
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager;

@@ -27,6 +27,8 @@ typedef NS_OPTIONS (NSInteger,PipStatus){
     PIP_Selected     = 1<<10
 };
 
+static void * isObservedContext = &isObservedContext;
+
 @interface Pip : UIView  //So it can be used as a key in a Dict
 
 
@@ -46,6 +48,10 @@ typedef NS_OPTIONS (NSInteger,PipStatus){
 
 @property (nonatomic,assign)            PipStatus           status;
 @property (nonatomic,strong)            RJLFreezeCounter    * freezeCounter;
+
+
+@property (nonatomic,assign)            BOOL                isAlive;
+
 
 +(void)swapPip:(Pip*)thisPip with:(Pip*)thatPip;
 

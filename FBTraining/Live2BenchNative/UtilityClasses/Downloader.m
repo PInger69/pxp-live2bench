@@ -63,6 +63,13 @@ static void *  downLoaderContext = &downLoaderContext;
     return item;
 }
 
++(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path type:(DownloadType)aType
+{
+    DownloadItem * item = [[DownloadItem alloc]initWithURL:url destination:path type:aType];
+    [[Downloader defaultDownloader] addToQueue:item];
+    return item;
+}
+
 +(DownloadItem *)downloadEvent:(NSString*)eventName
 {
     return nil;

@@ -19,5 +19,5 @@
 
 +(Downloader*)defaultDownloader;
 +(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path;
-
++(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path type:(DownloadType)aType;
 @end

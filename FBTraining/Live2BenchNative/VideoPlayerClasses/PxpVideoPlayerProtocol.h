@@ -49,6 +49,8 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 @property (nonatomic,strong)    VideoControlBarSlider       * videoControlBar;
 @property (nonatomic,copy)      NSURL                       *URL;
 
+@property (nonatomic,assign)    BOOL                isAlive;
+
 -(instancetype)initWithFrame:(CGRect)frame;
 
 -(void)gotolive;

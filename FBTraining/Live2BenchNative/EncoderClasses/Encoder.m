@@ -235,8 +235,6 @@
                 }
             }
             
-
-            
             [self willChangeValueForKey:@"eventType"];
             _eventType = [dict objectForKey:@"sport"];
             [self didChangeValueForKey:@"eventType"];
@@ -353,16 +351,20 @@
 
     
     NSLog(@"Encoder: Version check in Authenticate Disabled");
+    if ([self.version isEqualToString:@"0.94.5"]){
+
 //    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
-//        [self willChangeValueForKey:@"authenticated"];
-//        _authenticated  = YES;
-//        isAuthenticate = YES;
-//        [self didChangeValueForKey:@"authenticated"];
-//        isWaitiing      = NO;
-//        [self removeFromQueue:currentCommand];
-//        [self runNextCommand]; // this line is for testing
-//        return;
-//    }
+        [self willChangeValueForKey:@"authenticated"];
+        _authenticated  = YES;
+        isAuthenticate = YES;
+        [self didChangeValueForKey:@"authenticated"];
+        isWaitiing      = NO;
+        self.isMaster = YES;
+
+        [self removeFromQueue:currentCommand];
+        [self runNextCommand]; // this line is for testing
+        return;
+  }
     
     
     NSString * json = [Utility dictToJSON:@{@"id":customerID}];
@@ -401,17 +403,7 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = SHUTDOWN;
     encoderConnection.timeStamp             = aTimeStamp;
-    
-    
-    
-    
-//    __weak Encoder * weakSelf = self;
-//    [statusMonitor startShutdownChecker:^(void){
-//        NSLog(@"Server has shutdown");
-//        if (weakSelf.isMaster) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:weakSelf userInfo:nil];
-//    }];
-    
-    
+
 }
 
 
@@ -429,7 +421,6 @@
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-//    encoderConnection.accessibilityValue    = MAKE_TAG;
     encoderConnection.connectionType        = MAKE_TAG;
     encoderConnection.timeStamp             = aTimeStamp;
 }
@@ -437,10 +428,10 @@
 -(void)modifyTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
-    
+    if (!encodedName) encodedName = @"";
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
-                                      @"name"           : encodedName,
+                                    //  @"name"           : encodedName,
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
@@ -667,7 +658,11 @@
         [self resumeResponce:    finishedData];
     } else if ([connectionType isEqualToString: MAKE_TAG]) {
         [self makeTagResponce:    finishedData];
-    } else if ([connectionType isEqualToString: CAMERAS_GET]) {
+    }else if ([connectionType isEqualToString: MODIFY_TAG]) {
+        [self modTagResponce:    finishedData];
+    }
+    
+    else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
         NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
@@ -841,6 +836,33 @@
     isTeamsGet = YES;
 }
 
+-(void)modTagResponce:(NSData *)data
+{
+    
+    NSDictionary    * results;
+    if(NSClassFromString(@"NSJSONSerialization"))
+    {
+        NSError *error = nil;
+        id object = [NSJSONSerialization
+                     JSONObjectWithData:data
+                     options:0
+                     error:&error];
+        
+        if([object isKindOfClass:[NSDictionary class]])
+        {
+            results = object;
+            // add tag to its dic
+            if ([results objectForKey:@"id"]) {
+                
+                NSString * tagId = [[results objectForKey:@"id"]stringValue];
+                
+                [_eventTagsDict setObject:results forKey:tagId];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:results];
+            }
+        }
+    }
+    
+}
 
 -(void)makeTagResponce:(NSData *)data
 {

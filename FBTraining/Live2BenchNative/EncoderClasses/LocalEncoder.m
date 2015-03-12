@@ -8,14 +8,16 @@
 
 #import "LocalEncoder.h"
 #import "Feed.h"
-
+#import "Downloader.h"
 
 #define LOCAL_PLIST  @"EventsHid.plist"
 
 
 @implementation LocalEncoder
 {
-    NSString * _localDocsPListPath;
+    NSString        * _localDocsPListPath;
+    NSString        * _localPath;
+    NSMutableArray  * _bookmarkPlistNames;
 }
 
 @synthesize name;
@@ -28,17 +30,21 @@
 @synthesize allEventData      = _allEventData;
 @synthesize eventTagsDict   = _eventTagsDict;
 
+@synthesize clipFeeds       = _clipFeeds;
+
 -(id)initWithDocsPath:(NSString*)aDocsPath
 {
     self = [super init];
     if (self){
         name                            = @"Local Encoder";
+        _localPath                      = aDocsPath;
         _localDocsPListPath             = [aDocsPath stringByAppendingPathComponent:LOCAL_PLIST];
         _status                         = ENCODER_STATUS_LOCAL;
         _event                          = @"none";
         _allEventData                   = [[NSArray alloc]initWithContentsOfFile:_localDocsPListPath];
         _eventData                      = @{};
         _eventTagsDict                  = [[NSMutableDictionary alloc]init];
+        _clipFeeds                      = [[NSMutableDictionary alloc]init];
         NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
         NSEnumerator *enumerator        = [_allEventData objectEnumerator];
         id value;
@@ -76,7 +82,27 @@
 {
     //_allEvents = [[NSArray alloc]initWithContentsOfFile:_localDocsPListPath];
   //  _allEventData
+    
+    [self scanPath];
 }
+
+
+/**
+ *   This gets all the videos and clips in the bookmarks folder of the device and adds them to dict based off video name key
+ */
+-(void)buildAllFeeds
+{
+
+//    
+//    for (int i = ; i< list count ; i++) {
+//        Feed * localFeed = [[Feed alloc]initWithURLString:@"http://192.168.3.100/events/2014-11-13_16-21-16_dff4c99c75cf73a4b374a693f919244648f5aa31_local/video/list.m3u8" quality:0];
+//        [_clipFeeds setValue:localFeed forKey:@""];
+//    }
+//    
+//    
+    
+}
+
 
 -(void)setEvent:(NSString *)event
 {
@@ -155,64 +181,88 @@
  */
 -(void)getAllEventsResponse:(NSData *)data
 {
-//    
-//    if(NSClassFromString(@"NSJSONSerialization"))
-//    {
-//        NSError *error = nil;
-//        id object = [NSJSONSerialization
-//                     JSONObjectWithData:data
-//                     options:0
-//                     error:&error];
-//        
-//        if([object isKindOfClass:[NSDictionary class]])
-//        {
-//            
-//            rawEncoderData                  = object;
-//            NSArray         * events        = [rawEncoderData objectForKey:@"events"];
-//            NSMutableArray  * pool          = [[NSMutableArray alloc]init];
-//            
-//            
-//            @try {
-//                NSEnumerator *enumerator = [events objectEnumerator];
-//                id value;
-//                
-//                while ((value = [enumerator nextObject])) {
-//                    NSDictionary * dict = value;
-//                    if ([dict objectForKey:@"name"]) {
-//                        [pool addObject:[dict objectForKey:@"name"]];
-//                    }
-//                    
-//                    if ([dict objectForKey:@"live"]){
-//                        self.event = @"live";
-//                        _feeds = ( [[dict objectForKey:@"live"] isKindOfClass:[NSString class]] )? @[[dict objectForKey:@"live"]] :[dict objectForKey:@"live"] ;
-//                        
-//                        
-//                    }
-//                }
-//            }
-//            @catch (NSException *exception) {
-//                NSLog(@"error parsing json data: %@",exception);
-//            }
-//            @finally {
-//                
-//            }
-//            
-//            self.allEvents = [pool copy];
-//            if (_feeds == nil) _feeds     = @{};
-//        }
-//    }
-    
+
 }
 
 // This will show name and status
 -(NSString*)description
 {
     NSString * txt = [NSString stringWithFormat:@" %@: %d - %@   - %@",self.name,self.status,self.event,self.eventType  ];
-    
-    
-    
-    
     return txt;
 }
+
+
+-(void)downloadToClip:(NSString*)clip
+{
+
+
+}
+
+
+-(NSString*)bookmarkPath
+{
+
+    return [NSString stringWithFormat:@"%@/bookmark",_localPath];
+}
+
+-(void)scanPath
+{
+
+    NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark",_localPath];
+    NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:bookmarkPath
+                                                                        error:NULL];
+    NSMutableArray *mp3Files = [[NSMutableArray alloc] init];
+    [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *filename = (NSString *)obj;
+        NSString *extension = [[filename pathExtension] lowercaseString];
+        if ([extension isEqualToString:@"plist"]) {
+            [_bookmarkPlistNames addObject:filename];
+            [mp3Files addObject:[bookmarkPath stringByAppendingPathComponent:filename]];
+        }
+    }];
+
+
+}
+
+-(int)gap:(NSArray*)list first:(int)first last:(int)last
+{
+    
+    if ([list count] <1){
+        return 0;
+    }
+
+    if (first >= last){
+        if(first >= list[first]){
+            return last+1;
+        }
+        return last;
+    }
+    int med =  (last+first)>>1;
+    if(med < list[med]){
+        return [self gap:list first:med+1 last:last];
+    }
+    return [self gap:list first:med+1 last:last];
+    
+}
+
+/**
+ *  This will check the bookmark folder on the device and give a number that will be used for the name of the video that will be used
+ *
+ *  @return n
+ */
+-(NSInteger)getBookmarkSpace
+{
+    return 0;
+}
+
+
+-(void)deleteClip:(NSString*)name
+{
+
+
+}
+
+
+
 
 @end

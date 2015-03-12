@@ -17,6 +17,7 @@
 #import "UserCenterActionPack.h" // This has all the user Actions
 #import "CloudEncoder.h"// to get defins
 
+
 #define PLIST_THUMBNAILS        @"Thumbnails.plist"
 #define PLIST_PLAYER_SETUP      @"players-setup.plist"
 #define PLIST_EVENT_HID         @"EventsHid.plist"
@@ -55,7 +56,7 @@
 @synthesize customerID              = _customerID;
 @synthesize customerAuthorization   = _customerAuthorization;
 @synthesize customerEmail           = _customerEmail;
-@synthesize customerHid             = _customerHid;
+@synthesize userHID             = _userHID;
 @synthesize localPath               = _localPath;
 
 
@@ -94,6 +95,13 @@
     }
     return self;
 }
+
+
+
+#pragma mark -
+#pragma mark Observer Methods
+
+
 
 
 // a logged out user get their plist deleted
@@ -165,7 +173,7 @@
 {
     _customerID             = [dataDict objectForKey:@"customer"];
     _customerEmail          = [dataDict objectForKey:@"emailAddress"];
-    _customerHid            = [dataDict objectForKey:@"hid"];
+    _userHID                = [dataDict objectForKey:@"hid"];
     _customerColor          = [Utility colorWithHexString:[dataDict objectForKey:@"tagColour"]];
     _customerAuthorization  = [dataDict objectForKey:@"authorization"];
 
@@ -275,18 +283,48 @@
     NSMutableArray * tempLeft   = [[NSMutableArray alloc]init];
     NSMutableArray * tempRigh   = [[NSMutableArray alloc]init];
     
+    if  ([buttons isKindOfClass:[NSArray class]]){
     
-    NSArray * items = [buttons allKeys];
-    
-    for (NSString * i in items){
-        NSDictionary  * tbtn = [buttons objectForKey:i];
-        NSString * side = [tbtn objectForKey:@"side"];
-        if ([side isEqualToString:@"left"]) {
-            [tempLeft addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
-        } else {
-            [tempRigh addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
+        NSArray * items2 = [toConvert objectForKey:key] ;
+        
+        
+        for (int i=0; i<[items2 count]; i++) {
+            NSDictionary  * tbtn = items2[i];
+            NSString * side = [tbtn objectForKey:@"position"];
+            if ([side isEqualToString:@"left"]) {
+                
+                [tempLeft addObject:@{@"name":items2[i][@"name"], @"position":side, @"order": [NSNumber numberWithInt:i]}];
+            } else {
+                [tempRigh addObject:@{@"name":items2[i][@"name"], @"position":side, @"order": [NSNumber numberWithInt:i]}];
+            }
+        }
+        
+//        
+//        for (NSString * i in items){
+//            NSDictionary  * tbtn = [buttons objectForKey:i];
+//            NSString * side = [tbtn objectForKey:@"side"];
+//            if ([side isEqualToString:@"left"]) {
+//                [tempLeft addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
+//            } else {
+//                [tempRigh addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
+//            }
+//        }
+        
+        
+    } else {
+        NSArray * items = [buttons allKeys];
+        
+        for (NSString * i in items){
+            NSDictionary  * tbtn = [buttons objectForKey:i];
+            NSString * side = [tbtn objectForKey:@"side"];
+            if ([side isEqualToString:@"left"]) {
+                [tempLeft addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
+            } else {
+                [tempRigh addObject:@{@"name":i, @"position":side, @"order": [tbtn objectForKey:@"order"]}];
+            }
         }
     }
+    
     
 
     

@@ -8,13 +8,17 @@
 
 #import "EncoderManager.h"
 #import "Encoder.h"
-#import "LocalEncoder.h"
+
 
 #import "EncoderCommands.h"
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
 #import "EncoderManagerActionPack.h" // All actions are in here!
+#import "Downloader.h"
+#import "DownloadItem.h"
+
 #import <SDWebImage/SDImageCache.h>
+
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
@@ -85,6 +89,7 @@
              [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
         }
         
+
 
     }
     return self;
@@ -255,12 +260,13 @@
     NSMutableDictionary         * _dictOfAccountInfo; // this will take in the from the global ACCOUNT_INFO, to cut down access to the global
     EncoderDataSync             * encoderSync;
    
-    LocalEncoder                * _localEncoder;
+
 
     id                          _userDataObserver;
     id                          _masterLostObserver;
     id                          _masterFoundObserver;
     id                          _encoderReadyObserver;
+    id                          _logoutObserver;
     
     
     CheckWiFiAction             * checkWiFiAction;
@@ -291,14 +297,13 @@
 @synthesize masterEncoder           = _masterEncoder;
 @synthesize cloudEncoder            = _cloudEncoder;
 @synthesize totalCameraCount        = _totalCameraCount;
-
+@synthesize localEncoder            = _localEncoder;
 
 #pragma mark - Encoder Manager Methods
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath
 {
     
-
     self = [super init];
     if (self){
 
@@ -315,18 +320,12 @@
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
 //       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-        
-        
 
         arrayOfTagSets          = [[NSMutableArray alloc]init];
         _feeds                  = [[NSMutableDictionary alloc]init];
         
         _cloudEncoder           = [[CloudEncoder alloc]initWithIP:[self getIPAddress]];  // started in searchForEncoders
         [_cloudEncoder startObserving];
-        
-        
-        
-        
         
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
         [_authenticatedEncoders addObject:_localEncoder];
@@ -338,6 +337,11 @@
         
         // setup observers
         __block EncoderManager * weakSelf = self;
+        
+        
+        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [weakSelf.logoutAction start];
+        }];
         
         _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
@@ -351,12 +355,10 @@
 
         }];
         
-          _masterLostObserver  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
+        _masterLostObserver  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
             
-                [weakSelf.authenticatedEncoders removeObject:weakSelf.masterEncoder];
-              
-
-              
+            [weakSelf.authenticatedEncoders removeObject:weakSelf.masterEncoder];
+ 
               if (weakSelf.masterEncoder !=nil) [weakSelf unRegisterEncoder:weakSelf.masterEncoder];
 //              weakSelf.masterEncoder = nil;
               if ( [weakSelf.liveEventName isEqualToString:weakSelf.currentEvent]){
@@ -393,6 +395,9 @@
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:)            name:NOTIF_MASTER_HAS_LIVE  object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
+
+                [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
         // making actions
         
         
@@ -401,6 +406,9 @@
         checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
         logoutAction                = [[LogoutAction alloc]initWithEncoderManager:self];
         
+        
+        // This will look for the external encoder if no other normal encoders are found
+        [self performSelector:@selector(makeCoachExternal) withObject:nil afterDelay:40];
     }
     return self;
 }
@@ -605,6 +613,16 @@ static void * builtContext          = &builtContext; // depricated?
 }
 
 
+
+-(void)changeCurrentEvent:(NSNotification*)note
+{
+    NSString * eventName = note.userInfo[@"name"];
+    self.currentEvent = eventName;
+
+}
+
+
+
 -(void)notificationDataRequest:(NSNotification*)note
 {
     NSString * requestType = note.userInfo[@"type"];
@@ -618,6 +636,68 @@ static void * builtContext          = &builtContext; // depricated?
     }
 
 
+}
+
+/**
+ *  The Encoder manager will tell the server to create the clip then it will get the url where it can be downloaded
+ *  it will then ask the Lockal encoder to for a place to place the file then it will start the download and pass the downloader item thru the block
+ *
+ *
+ *  @param note clip request
+ */
+-(void)notificationDownloadClip:(NSNotification*)note
+{
+    
+    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+    
+
+    // This gets run when the server responds
+    void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
+
+        NSData          * data = pooledResponces[0];
+        NSDictionary    * results;
+        NSString        * urlForImageOnServer;
+        
+        if(NSClassFromString(@"NSJSONSerialization"))
+        {
+            NSError *error = nil;
+            id object = [NSJSONSerialization
+                         JSONObjectWithData:data
+                         options:0
+                         error:&error];
+            
+            if([object isKindOfClass:[NSDictionary class]])
+            {
+                results = object;
+                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"] ;
+                
+            }
+        }
+
+        
+        NSInteger bookmarkSpace = 1;
+        NSString * pth = [NSString stringWithFormat:@"%@/%d.mp4",[_localEncoder bookmarkPath],bookmarkSpace];
+        DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
+        dItemBlock(dli);
+
+    };
+    
+    
+    
+    NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
+                                            @{
+                                              @"id":note.userInfo[@"id"],
+                                              @"event":note.userInfo[@"event"],
+                                              @"requesttime":GET_NOW_TIME_STRING,
+                                              @"bookmark":@"1",
+                                              @"user":[_dictOfAccountInfo objectForKey:@"hid"]
+                                              }];
+    
+
+    [_masterEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:GET_NOW_TIME];
+
+    [encoderSync syncAll:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
+    
 }
 
 
@@ -694,6 +774,10 @@ static void * builtContext          = &builtContext; // depricated?
         }
     }
 
+    
+
+    
+    
 }
 
 //---did not managed to resolve---
@@ -968,7 +1052,14 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(void)modifyTag:(NSMutableDictionary *)data
 {
-
+    for (id <EncoderCommands> aEncoder  in _authenticatedEncoders) {
+        
+        [aEncoder issueCommand:MODIFY_TAG
+                      priority:10
+                  timeoutInSec:5
+                       tagData:data
+                     timeStamp:GET_NOW_TIME];
+    }
 }
 
 -(void)closeDurationTag:(NSString *)tagName
@@ -1347,6 +1438,28 @@ static void * builtContext          = &builtContext; // depricated?
         txt = [NSString stringWithFormat:@"%@%@\n",txt,encoderStats];
     }   
     return txt;
+}
+
+
+/**
+ *   This makes the external encoder
+ */
+-(void)makeCoachExternal
+{
+    if ([_authenticatedEncoders count] == 1 && self.hasMAX){
+        __block EncoderManager * weakSelf = self;
+        void (^onRecieveData)(NSDictionary*) = ^void(NSDictionary* theData){
+            if ([theData[@"emailAddress"] isEqualToString:@"coach"]){
+                [weakSelf registerEncoder:@"External Encoder" ip:@"avocatec.org:8888"];
+            }
+        };
+        
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"type":UC_REQUEST_USER_INFO, @"block":onRecieveData}];
+    }
+
+    
+
 }
 
 

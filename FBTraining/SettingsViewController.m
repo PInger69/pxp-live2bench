@@ -12,6 +12,7 @@
 #import "EncoderStatusMonitor.h"
 #import "TablePopoverController.h"
 #import "UserCenter.h"
+#import "ListPopoverController.h"
 
 @interface SettingsViewController ()
 
@@ -80,6 +81,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     NSString                * homeTeam;
     NSString                * awayTeam;
     NSString                * league;
+    ListPopoverController   * askUser;
     
 }
 
@@ -124,7 +126,7 @@ SVSignalStatus signalStatus;
         
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterFound:) name:NOTIF_ENCODER_MASTER_FOUND object:nil];
-        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(askUserToPickATeam) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
         
         
         
@@ -157,6 +159,10 @@ SVSignalStatus signalStatus;
     scrollView.delegate = self;
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:scrollView];
+    
+    wifi = [[UILabel alloc]initWithFrame:CGRectMake(20.0f, 86.0f, 300.0f, 23.0f)];
+    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",[Utility myWifiName] ];
+    [scrollView addSubview:wifi];
     
     CustomLabel *encoderControlsLabel = [CustomLabel labelWithStyle:CLStyleBlackHeader];
     encoderControlsLabel.frame = CGRectMake(20.0f, 20.0f, 200.0f, 23.0f);
@@ -282,10 +288,9 @@ SVSignalStatus signalStatus;
     //init subviews
     [self setupView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSpinnerView) name:@"EventInformationUpdated" object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateForStatus) name:@"updatedEncoderStatus" object:nil];
    
-
     
     if (!restClient) {
         restClient =
@@ -293,21 +298,9 @@ SVSignalStatus signalStatus;
         restClient.delegate = self;
     }
 
-
-    if(!uController)
-    {
-        uController=[[UtilitiesController alloc] init];
-    }
-    //get version information
     [appVersionLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
-    
-    //[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(selectTeamCallback) userInfo:nil repeats:YES];
+
     [self initialiseLayout];
-    
-    // Do any additional setup after loading the view from its nib.
-
-//    encoderHomeText.frame = encoderHomeLabel.bounds;
-
 
 }
 
@@ -332,7 +325,7 @@ SVSignalStatus signalStatus;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",[Utility myWifiName] ];
     [super viewWillAppear:animated];
     
     [self setButtonImagesAndLabels];
@@ -355,6 +348,7 @@ SVSignalStatus signalStatus;
     teamNames   = grabNames(encoderManager.masterEncoder.teams);
     leagueNames = grabNames(encoderManager.masterEncoder.league);
     
+
 }
 
 
@@ -508,11 +502,11 @@ SVSignalStatus signalStatus;
     
     NSString * buttonTitle = ((UIButton*)sender).titleLabel.text;
     
-    NSString *homeTeam=[selectHomeTeam.titleLabel.text isEqualToString:@"Home Team"] ? nil : selectHomeTeam.titleLabel.text;
-    NSString *awayTeam=[selectAwayTeam.titleLabel.text isEqualToString:@"Away Team"] ? nil : selectAwayTeam.titleLabel.text;
-    NSString *league=[selectLeague.titleLabel.text isEqualToString:@"League"] ? nil : selectLeague.titleLabel.text;
+    NSString *ahomeTeam=[selectHomeTeam.titleLabel.text isEqualToString:@"Home Team"] ? nil : selectHomeTeam.titleLabel.text;
+    NSString *aawayTeam=[selectAwayTeam.titleLabel.text isEqualToString:@"Away Team"] ? nil : selectAwayTeam.titleLabel.text;
+    NSString *aleague=[selectLeague.titleLabel.text isEqualToString:@"League"] ? nil : selectLeague.titleLabel.text;
     
-    if(!(homeTeam && awayTeam && league))//only allow user to start enc if they have selected all three, home team, away team, league
+    if(!(ahomeTeam && aawayTeam && aleague))//only allow user to start enc if they have selected all three, home team, away team, league
     {
         if (masterEncoder.status == ENCODER_STATUS_READY || masterEncoder.status == ENCODER_STATUS_STOP)
             //        if([globals.CURRENT_ENC_STATUS isEqualToString:encStateReady] || [globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped])
@@ -531,9 +525,9 @@ SVSignalStatus signalStatus;
     
     if ([buttonTitle isEqualToString:@"Start"]) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"start"  : [NSNumber numberWithBool:YES],
-                                                                                                              @"homeTeam"   : homeTeam,
-                                                                                                              @"awayTeam"   : awayTeam,
-                                                                                                              @"league" : league
+                                                                                                              @"homeTeam"   : ahomeTeam,
+                                                                                                              @"awayTeam"   : aawayTeam,
+                                                                                                              @"league" : aleague
                                                                                                               }];
         [self eventControlsState:EventButtonControlStatesStart];
     } else { // resume video
@@ -1025,96 +1019,30 @@ SVSignalStatus signalStatus;
 
 
 -(void)sendAppLogoutRequest{
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LOGOUT_USER object:nil];
+    
     [encoderManager.logoutAction start];
     dismissEnabled = YES;
     [self dismiss];
+    
+    
 }
 
 
-
-
-
-/*
--(void)startEncCallback:(id)json
+-(void)askUserToPickATeam
 {
     
-    if([[json objectForKey:@"success"]integerValue] != 0 && [[NSString stringWithFormat:@"%@",[json objectForKey:@"requrl"]] rangeOfString:@"encresume"].location == NSNotFound)
-    {
-        //reset waitEncoderResponseCounter
-        waitEncoderResponseCounter = 0;
-        globals.LIVE_TIMER_ON = TRUE;
-        
-        globals.DID_START_NEW_EVENT=TRUE;
-        //reset all the line,period/zone,strength info for new event
-        globals.CURRENT_F_LINE = -1;
-        globals.CURRENT_D_LINE = -1;
-        globals.CURRENT_PERIOD = -1;
-        globals.CURRENT_STRENGTH = nil;
-        globals.CURRENT_ZONE = nil;
-        globals.CURRENT_O_PLAY_NUMBER_FB = -1;
-        globals.CURRENT_D_PLAY_NUMBER_FB = -1;
-        globals.CURRENT_QUARTER_FB = -1;
-        [globals.DURATION_TAGS_TIME removeAllObjects];
-        [globals.DURATION_TYPE_TIMES removeAllObjects];
-        [globals.ARRAY_OF_COLOURS removeAllObjects];
-        globals.SWITCH_TO_DIFFERENT_EVENT = TRUE;
-        if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]) {
-            //only when encoder status is live, reset global variables, video player and syncme timer
-            
-            
-            [globals.CURRENT_EVENT_THUMBNAILS removeAllObjects];
-            //[globals.TAG_MARKER_ITEMS removeAllObjects];
-            [globals.TAGGED_ATTS_DICT removeAllObjects];
-            [globals.TAGGED_ATTS_DICT_SHIFT removeAllObjects];
-            [globals.ARRAY_OF_COLOURS removeAllObjects];
-            [globals.ARRAY_OF_TAGSET removeAllObjects];
-            [globals.TOAST_QUEUE removeAllObjects];
-            [globals.THUMBS_WERE_SELECTED_CLIPVIEW removeAllObjects];
-            [globals.THUMBS_WERE_SELECTED_LISTVIEW removeAllObjects];
-            globals.THUMB_WAS_SELECTED_CLIPVIEW = nil;
-            globals.THUMB_WAS_SELECTED_LISTVIEW = nil;
-            NSMutableArray *tempArray = [[globals.TAG_MARKER_OBJ_DICT allKeys] mutableCopy];
-            for(NSString *key in tempArray){
-                [[[globals.TAG_MARKER_OBJ_DICT objectForKey:key] markerView] removeFromSuperview];
-            }
-            [globals.TAG_MARKER_OBJ_DICT removeAllObjects];
-            globals.EVENT_NAME = @"live";
-            globals.HUMAN_READABLE_EVENT_NAME = @"Live";
-            [uController getAllGameTags];
-            globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-            NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-            AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-            
-            [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
-            [globals.VIDEO_PLAYER_LIST_VIEW setAvPlayer:myPlayer];
-            [globals.VIDEO_PLAYER_LIST_VIEW pause];
-            
-            [globals.VIDEO_PLAYER_LIVE2BENCH setVideoURL:videoURL];
-            [globals.VIDEO_PLAYER_LIVE2BENCH setAvPlayer:myPlayer];
-            [globals.VIDEO_PLAYER_LIVE2BENCH pause];
-            globals.VIDEO_PLAYBACK_FAILED = FALSE;
-            globals.PLAYABLE_DURATION = -1;
-            
-            [uController restartSyncMeTimer];
-            
-        }
-      
-        
-        
-    }else if([[json objectForKey:@"success"]integerValue] != 0 && [[NSString stringWithFormat:@"%@",[json objectForKey:@"requrl"]] rangeOfString:@"encresume"].location != NSNotFound){
-        [globals.VIDEO_PLAYER_LIVE2BENCH play];
-        [self removeSpinnerView];
-        
-    }else{
-        if ([json objectForKey:@"msg"]) {
-            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:[NSString stringWithFormat:@"start/resume video error: %@",[json objectForKey:@"msg"]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
-//            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-        }
-        
-    }
+//    if (askUser && askUser.isPopoverVisible) return;
+//    askUser = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag",nil) buttonListNames:@[homeTeam,awayTeam]];
+//    __block UserCenter * weakSelf = userCenter;
+//    [askUser addOnCompletionBlock:^(NSString *pick) {
+//        weakSelf.userPick = pick;
+//    }];
+//    [askUser presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view animated:NO];
 }
-*/
+
+
+
 
 -(void)eventControlsState:(EventButtonControlStates)state
 {
@@ -1152,6 +1080,13 @@ SVSignalStatus signalStatus;
 //    globals.ENCODER_SELECTED_HOME_TEAM = @"Home Team";
 //    globals.ENCODER_SELECTED_AWAY_TEAM = @"Away Team";
 //    globals.ENCODER_SELECTED_LEAGUE = @"League";
+    
+    
+    if (encoderManager.currentEventData) {
+        [selectHomeTeam setTitle:encoderManager.currentEventData[@"homeTeam"] forState:UIControlStateNormal];
+        [selectAwayTeam setTitle:encoderManager.currentEventData[@"visitTeam"] forState:UIControlStateNormal];
+        [selectLeague setTitle:encoderManager.currentEventData[@"league"] forState:UIControlStateNormal];
+    }
     
     
 }
