@@ -1079,7 +1079,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 //TODO create gloabal dictionary of view controllers
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     
     
@@ -1089,13 +1089,13 @@ static void * masterEncoderContext = &masterEncoderContext;
         NSArray * listOfScource = [[[selectedCell.data objectForKey:@"url_2"] allKeys]sortedArrayUsingSelector:@selector(compare:)];
         
         
-
+        
         
         [sourceSelectPopover setListOfButtonNames:listOfScource];
         
         //This is where the Thumbnail images are added to the popover
         NSDictionary *tagSelect = [selectedCell.data objectForKey:@"url_2"] ;
-
+        
         int i = 0;
         for (NSString *url in listOfScource){
             //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
@@ -1110,19 +1110,29 @@ static void * masterEncoderContext = &masterEncoderContext;
             ++i;
         }
         
-        [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
-            
-            NSLog(@"You Picked a feed: %@",pick);
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-            
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                                  @"feed":pick,
-                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
-                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
-                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
-        }];
         
-        [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                              @"feed":@"s_00",
+                                                                                                              @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                              @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                              @"state":[NSNumber numberWithInteger:PS_Play]}];
+        
+        
+        //        [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
+        //
+        //            NSLog(@"You Picked a feed: %@",pick);
+        //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        //
+        //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+        //                                                                                                                  @"feed":pick,
+        //                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
+        //                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
+        //                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
+        //        }];
+        
+        //        [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
     } else {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
@@ -1131,6 +1141,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [selectedCell setSelected:NO];
     
 }
+
 
 //
 -(void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{

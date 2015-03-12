@@ -120,7 +120,7 @@
 
 +(float)sumOfVersion:(NSString*)input
 {
-//    NSLog(@"Utility Class: sumOfVersion version check depricated");
+    //    NSLog(@"Utility Class: sumOfVersion version check depricated");
     
     NSArray *numbers = [input componentsSeparatedByString:@"."];
     float sum = 0;
@@ -229,7 +229,7 @@
 {
     if (status ==0) return @"ENCODER_STATUS_UNKNOWN";
     NSString * result = @"";
-
+    
     if (1<<0 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_INIT"];            //encoder is initializing (pxpservice just started)
     if (1<<1 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_CAM_LOADING"];     //the camera is initializing (searching for teradek cube's or matrox monarch's)
     if (1<<2 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_READY"];           //encoder is ready to start an event
@@ -240,28 +240,28 @@
     if (1<<7 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_START"];           //live event starting
     if (1<<8 & status)       result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_NOCAM"];            //no camera found
     if (1<<10 & status)      result = [NSString stringWithFormat:@"%@ %@",result ,@"ENCODER_STATUS_LOCAL"];            //no camera found
-
+    
     return result;
 }
 
 //+(NSString*)cmTimeToString:(CMTime)time
 //{
 //    NSString * txt;
-//    
+//
 //    return txt;
 //}
 
 +(NSComparisonResult)compareVersion:(NSString *)versionNum1 with:(NSString*)versionNum2
 {
-//    NSInteger (^cmpGroup)(NSString *grp1,NSString *grp2) = ^NSInteger(NSString *grp1,NSString *grp2) {
-//    
-//        NSInteger n1 = [string componentsSeparatedByString: @";"]
-//        
-//        return
-//    };
-//
-//    
-//    return (NSComparisonResult)1;
+    //    NSInteger (^cmpGroup)(NSString *grp1,NSString *grp2) = ^NSInteger(NSString *grp1,NSString *grp2) {
+    //
+    //        NSInteger n1 = [string componentsSeparatedByString: @";"]
+    //
+    //        return
+    //    };
+    //
+    //
+    //    return (NSComparisonResult)1;
 }
 
 
@@ -284,7 +284,7 @@
     sysctlbyname("hw.machine", machine, &size, NULL, 0);
     NSString *platform = [NSString stringWithUTF8String:machine];
     free(machine);
-
+    
     if ([platform isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
     if ([platform isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
     if ([platform isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
@@ -309,14 +309,18 @@
     CFArrayRef myArray = CNCopySupportedInterfaces();
     // Get the dictionary containing the captive network infomation
     CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
-//    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
+    //    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
     NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
     NSString* ssid = [dict objectForKey:@"SSID"];
-//    NSLog(@"network name: %@",ssid);
+    //    NSLog(@"network name: %@",ssid);
     return ssid;
-
-
+    
+    
 }
 
++(NSString *) dateFromEvent: (NSString *) eventName{
+    return [eventName substringToIndex:10];
+}
 
 @end
+

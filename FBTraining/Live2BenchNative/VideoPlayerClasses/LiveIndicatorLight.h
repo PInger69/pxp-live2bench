@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-@interface LiveIndicatorLight : UIImageView
-
--(id)initWithFrame:(CGRect)frame;
-
-
-
-@end
+//#import <UIKit/UIKit.h>
+//
+//@interface LiveIndicatorLight : UIImageView
+//
+//-(id)initWithFrame:(CGRect)frame;
+//
+//
+//
+//@end

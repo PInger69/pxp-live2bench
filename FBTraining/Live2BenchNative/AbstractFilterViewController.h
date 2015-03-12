@@ -28,6 +28,8 @@
 @property (nonatomic) BOOL finishedSwipe;
 @property (strong,nonatomic) FilterTabViewController * tabManager;
 
+@property (strong, nonatomic) NSMutableDictionary *rawTagData;
+@property (strong, nonatomic) NSMutableArray      *rawTagArray;
 
 -(IBAction)swipeFilter:(id)sender;
 - (id)initWithTagData: (NSMutableDictionary *)tagData;

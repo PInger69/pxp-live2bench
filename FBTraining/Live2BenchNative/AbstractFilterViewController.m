@@ -70,6 +70,9 @@
     return self;
 }
 
+-(void)setRawTagArray:(NSMutableArray *)newRawTagArray{
+    rawTagArray = newRawTagArray;
+}
 
 
 - (void)viewDidLoad
@@ -127,6 +130,7 @@
                      }
                          completion:^(BOOL finished){
                              isOpen = NO;
+                             [self.view removeFromSuperview];
                          }];
       } else {
           [self.view setFrame:offScreenRect];
@@ -169,7 +173,7 @@
     [numTagsLabel setTextColor:[UIColor darkGrayColor]];
     [numTagsLabel setBackgroundColor:[UIColor clearColor]];
     [numTagsLabel setFont:[UIFont systemFontOfSize:17.0f]];
-    [self.view addSubview:numTagsLabel];
+    //[self.view addSubview:numTagsLabel];
 
     // Filter clear button, this will always sit on top of all tabs but control the active tab unless connected
     clearAll = [CustomButton buttonWithType:UIButtonTypeCustom];
@@ -184,6 +188,7 @@
     [clearAll setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
     clearAll.titleLabel.font=[UIFont systemFontOfSize:14.0f];
     [self.view addSubview:clearAll];
+    [self.view setAutoresizingMask: UIViewAutoresizingNone];
     
 
 }

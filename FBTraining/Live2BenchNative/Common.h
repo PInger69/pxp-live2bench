@@ -18,6 +18,17 @@
 
 
 
+//BEN AND SAGAR STUFF BEGINNING
+#define NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW  @"setPlayerFeedInListView"
+#define STRING_LISTVIEW_CONTEXT             @"ListView Tab"
+#define STRING_MYCLIP_CONTEXT               @"MyClip Tab"
+#define NOTIF_LIST_VIEW_CONTROLLER_FEED     @"ListViewControllerFeed"
+#define NOTIF_REQUEST_CALENDAR_DATA         @"RequestCalendarData"
+#define NOTIF_EVENT_CHANGE                  @"NOTIF_EVENT_CHANGE"
+#define NOTIF_REQUEST_MYCLIP_DATA           @"MyClipDataRequest"
+#define NOTIF_SET_PLAYER_FEED_IN_MYCLIP     @"setPlayerFeedInMyClip"
+// BEN AND SAGAR STUFF END
+#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER"
 
 // Common Classes
 static float APP_WIDTH      = 0;

@@ -44,7 +44,8 @@ static void *  downLoaderContext = &downLoaderContext;
     NSDictionary            * fileSystemDictionary      = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[fileSystemPaths lastObject] error: &error];
     NSNumber                * freeFileSystemSizeInBytes = [fileSystemDictionary objectForKey:NSFileSystemFreeSize];
     totalFreeSpace                                      = [freeFileSystemSizeInBytes unsignedLongLongValue];
-    return (totalFreeSpace < 500 * 1048576);
+    NSLog(@"The totalFreeSpace is %llu", totalFreeSpace / (1024 * 1024));
+    return (totalFreeSpace > 500 * 1048576);
 }
 
 
@@ -83,6 +84,13 @@ static void *  downLoaderContext = &downLoaderContext;
         _queue                  = [[NSMutableArray alloc]init];
         _pause                  = NO;
         isDownloading           = NO;
+        
+        _IOAlertView            = [[CustomAlertView alloc]init];
+        
+        [_IOAlertView setTitle:@"myplayXplay"];
+        [_IOAlertView setMessage:@"There isn't enough space on the device."];
+        [_IOAlertView addButtonWithTitle:@"Ok"];
+        [_IOAlertView setDelegate:self];
     }
     return self;
 }
@@ -114,9 +122,12 @@ static void *  downLoaderContext = &downLoaderContext;
     
     // check again for space, if none... pause and show an alert if it has one
     if (![Downloader deviceHasFreeSpace]) {
-        self.pause = YES;
+        self.pause = NO;
         if (_IOAlertView) [_IOAlertView show];
+        isDownloading = NO;
+        [self removeFromQueue: [_queue lastObject]];
         NSLog(@"Device needs more space");
+        return;
     }
     
     if ([_queue count]>0) {
@@ -132,25 +143,39 @@ static void *  downLoaderContext = &downLoaderContext;
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     DownloadItem        * cItem = (DownloadItem *)object;
-
+    
     switch (cItem.status) {
         case DownloadItemStatusIOError:
             if (_IOAlertView) [_IOAlertView show];
             self.pause = YES;
             break;
         case DownloadItemStatusComplete:
+            //[[NSNotificationCenter defaultCenter] postNotificationName:@"finishDownloading" object:nil userInfo:@{@"dateString" : cItem.dateString}];
+            [self removeFromQueue:cItem];
+            break;
         case DownloadItemStatusCancel:
+            break;
         case DownloadItemStatusError:
+            [_IOAlertView setTitle:@"myplayXplay"];
+            [_IOAlertView setMessage:[NSString stringWithFormat:@"Can't download the event %@", cItem.name]];
+            //[_IOAlertView addButtonWithTitle:@"Ok"];
+            [_IOAlertView setDelegate:self];
+            [_IOAlertView show];
             [self removeFromQueue:cItem];
             [self process];
             break;
-            
+        case DownloadItemStatusWaiting:
+            break;
+        case DownloadItemStatusStart:
+            break;
+        case DownloadItemStatusProgress:
+            break;
         default:
             break;
     }
     
     
-
+    
 }
 
 #pragma mark -
@@ -169,6 +194,12 @@ static void *  downLoaderContext = &downLoaderContext;
 -(BOOL)pause
 {
     return _pause;
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [CustomAlertView removeAlert:_IOAlertView];
 }
 
 @end

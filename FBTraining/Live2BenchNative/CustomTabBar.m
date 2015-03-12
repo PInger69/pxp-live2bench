@@ -26,6 +26,7 @@
 #import "EncoderClasses/EncoderManager.h"
 #import "CustomTabViewController.h"
 #import "DebuggingTabViewController.h"
+#import "SettingsPageViewController.h"
 
 #import "UserCenter.h"
 //#import "StatsTabViewController.h"
@@ -120,16 +121,17 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 -(void)setupView
 {
 
-    LogoViewController          *logoVC     = [[LogoViewController alloc] initWithAppDelegate:appDel];
+    SettingsPageViewController  *settingsVC = [[SettingsPageViewController alloc] initWithAppDelegate:appDel];
+    //LogoViewController          *logoVC     = [[LogoViewController alloc] initWithAppDelegate:appDel];
     CalendarViewController      *calendarVC = [[CalendarViewController alloc] initWithAppDelegate:appDel];
     Live2BenchViewController    *liveVC     = [[Live2BenchViewController alloc] initWithAppDelegate:appDel];
     ClipViewController          *clipVC     = [[ClipViewController alloc] initWithAppDelegate:appDel];
-//  ListViewController          *listVC     = [[ListViewController alloc] init];
+   ListViewController          *listVC     = [[ListViewController alloc] init];
     BookmarkViewController      *bookmarkVC = [[BookmarkViewController alloc] initWithAppDelegate:appDel];
 //  StatsTabViewController      *statsVC    = [[StatsTabViewController alloc] init];
   DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
   
-    NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects:logoVC, calendarVC, liveVC, clipVC,  bookmarkVC, nil]; //listVC,
+    NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects: settingsVC,/* logoVC, */calendarVC, liveVC, clipVC,  bookmarkVC, listVC, nil]; //listVC,
     if(SHOW_STATS_TAB)
         //   [vcArray addObject:statsVC];
         //    if(SHOW_STATS_TAB)
@@ -149,7 +151,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     [super viewWillAppear:animated];
 
     //array of tab bar items -- this array is used to create buttons in the tab bar
-    TabBarButton *welcomeTab    = [[TabBarButton alloc] initWithName:@"Welcome"     andImageName:@"logoTab"];
+   // TabBarButton *welcomeTab    = [[TabBarButton alloc] initWithName:@"Welcome"     andImageName:@"logoTab"];
     TabBarButton *calendarTab   = [[TabBarButton alloc] initWithName:@"Calendar"    andImageName:@"calendarTab"];
     TabBarButton *live2BenchTab = [[TabBarButton alloc] initWithName:@"Live2Bench"  andImageName:@"live2BenchTab"];
     TabBarButton *clipTab       = [[TabBarButton alloc] initWithName:@"Clip View"   andImageName:@"clipTab"];
@@ -157,7 +159,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     TabBarButton *myClipTab     = [[TabBarButton alloc] initWithName:@"My Clip"     andImageName:@"myClipTab"];
     TabBarButton *statsTab      = [[TabBarButton alloc] initWithName:@"Stats"       andImageName:@"statsTab"];
 
-    NSMutableArray* tabItems = [NSMutableArray arrayWithObjects: welcomeTab, calendarTab, live2BenchTab, clipTab, listTab, myClipTab, nil];
+    NSMutableArray* tabItems = [NSMutableArray arrayWithObjects:/* welcomeTab,*/ calendarTab, live2BenchTab, clipTab, listTab, myClipTab, nil];
     if(SHOW_STATS_TAB)
         [tabItems addObject:statsTab];
     

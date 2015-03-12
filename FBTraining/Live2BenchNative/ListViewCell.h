@@ -5,14 +5,14 @@
 //  Created by dev on 13-02-19.
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
-
+#import "DeletableTableViewCell.h"
 #import <UIKit/UIKit.h>
 #import "UIFont+Default.h"
 #import "ClipCornerView.h"
 #import "DownloadButton.h"
 
-@interface ListViewCell : UITableViewCell<UIScrollViewDelegate>{
-
+@interface ListViewCell : DeletableTableViewCell<UIScrollViewDelegate>{
+    
     UILabel *tagname;
     UILabel *tagtime;
     ClipCornerView *tagcolor;
@@ -53,5 +53,8 @@
 @property (nonatomic, strong) UIView *translucentEditingView;
 @property (nonatomic, strong) UIImageView *checkmarkOverlay;
 @property (nonatomic, strong) UILabel *playersLabel;
+
+//@property (nonatomic, strong) NSIndexPath *indexPath;
+//@property (nonatomic, strong) id <UITableViewDataSource> tableViewDataSource;
 
 @end
