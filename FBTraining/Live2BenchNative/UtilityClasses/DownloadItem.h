@@ -21,7 +21,7 @@ typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
 
 @interface DownloadItem : NSObject <NSURLConnectionDataDelegate,NSURLConnectionDelegate>
 
-@property (nonatomic,assign) NSString           * name; // this is here for convenience
+@property (nonatomic,strong) NSString           * name; // this is here for convenience
 @property (nonatomic,assign) DownloadItemStatus status;
 @property (nonatomic,assign) float              progress;
 @property (nonatomic,assign) NSTimeInterval     timeoutInterval;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */; };
 		947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */; };
 		9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9482F269199A59E7000670B0 /* FootballTrainingCollectionViewController.m */; };
 		94B28D7C193380F40000E804 /* teleButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 94B28D78193380F40000E804 /* teleButton.png */; };
@@ -190,7 +191,6 @@
 		D727798D1A30C5870034DD66 /* UserCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D727798C1A30C5870034DD66 /* UserCenter.m */; };
 		D72779901A30C8120034DD66 /* CloudEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D727798F1A30C8120034DD66 /* CloudEncoder.m */; };
 		D72779931A30F0D50034DD66 /* EncoderCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779921A30F0D50034DD66 /* EncoderCommand.m */; };
-		D727799C1A3240A00034DD66 /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */; };
 		D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */; };
 		D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779A71A3609620034DD66 /* ListPopoverController.m */; };
 		D72779AB1A37498E0034DD66 /* CalendarTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779AA1A37498E0034DD66 /* CalendarTableCell.m */; };
@@ -242,6 +242,12 @@
 		D73B42E5193F763B00EA2775 /* subtractendsec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D73B42E1193F763B00EA2775 /* subtractendsec@2x.png */; };
 		D73B42E6193F763B00EA2775 /* subtractstartsec.png in Resources */ = {isa = PBXBuildFile; fileRef = D73B42E2193F763B00EA2775 /* subtractstartsec.png */; };
 		D73B42E7193F763B00EA2775 /* subtractstartsec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D73B42E3193F763B00EA2775 /* subtractstartsec@2x.png */; };
+		D73CDBDB1AA77F33002D682D /* BookmarkTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBDA1AA77F33002D682D /* BookmarkTableViewController.m */; };
+		D73CDBE11AA8B096002D682D /* DeletableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBE01AA8B096002D682D /* DeletableTableViewCell.m */; };
+		D73CDBE41AA8BF66002D682D /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBE31AA8BF66002D682D /* DeletableTableViewController.m */; };
+		D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */; };
+		D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEF1AAF283C002D682D /* AccountsViewController.m */; };
+		D73CDBF31AAF3CA8002D682D /* infoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBF21AAF3CA8002D682D /* infoViewController.m */; };
 		D73FE3301A40882600341D57 /* L2BVideoBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */; };
 		D73FE3331A41DBF000341D57 /* L2BFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE3321A41DBF000341D57 /* L2BFullScreenViewController.m */; };
 		D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7424B96183FEA5A00034F05 /* UploadButton.m */; };
@@ -328,6 +334,19 @@
 		D7807BF418185F040061305A /* extendstartsec.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47717F5C73200D5C185 /* extendstartsec.png */; };
 		D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */; };
 		D781900F1A70697D00B964B4 /* UserCenterActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900E1A70697D00B964B4 /* UserCenterActionPack.m */; };
+		D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF271AA4B0560068D260 /* CKCalendarView.m */; };
+		D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF291AA4B0560068D260 /* CKViewController.m */; };
+		D784EF3D1AA4B0570068D260 /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */; };
+		D784EF3E1AA4B0570068D260 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF2E1AA4B0570068D260 /* DetailViewController.m */; };
+		D784EF3F1AA4B0570068D260 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF301AA4B0570068D260 /* SettingsTableViewController.m */; };
+		D784EF401AA4B0570068D260 /* SwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF321AA4B0570068D260 /* SwipeableTableViewCell.m */; };
+		D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF341AA4B0570068D260 /* CalendarTableViewController.m */; };
+		D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF361AA4B0570068D260 /* CalendarBar.m */; };
+		D784EF431AA4B0570068D260 /* HeaderBarForListView.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF381AA4B0570068D260 /* HeaderBarForListView.m */; };
+		D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF3A1AA4B0570068D260 /* ListTableViewController.m */; };
+		D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF461AA4B3090068D260 /* ARCalendarTableViewController.m */; };
+		D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF491AA4B6230068D260 /* TestFilterViewController.m */; };
+		D784EF4D1AA4B6620068D260 /* RangeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF4C1AA4B6620068D260 /* RangeSlider.m */; };
 		D786C1E817EB9BF90042DD96 /* myClipTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D786C1D817EB9BF90042DD96 /* myClipTab@2x.png */; };
 		D786C1E917EB9BF90042DD96 /* settingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D786C1D917EB9BF90042DD96 /* settingsButtonSelect@2x.png */; };
 		D786C1EA17EB9BF90042DD96 /* settingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D786C1DA17EB9BF90042DD96 /* settingsButton@2x.png */; };
@@ -584,6 +603,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveIndicatorLight.h; sourceTree = SOURCE_ROOT; };
+		43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveIndicatorLight.m; sourceTree = SOURCE_ROOT; };
 		947F44A419883E150081E81D /* FootballTrainingBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingBottomViewController.h; sourceTree = "<group>"; };
 		947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FootballTrainingBottomViewController.m; sourceTree = "<group>"; };
 		9482F268199A59E7000670B0 /* FootballTrainingCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingCollectionViewController.h; sourceTree = "<group>"; };
@@ -816,8 +837,6 @@
 		D727798F1A30C8120034DD66 /* CloudEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CloudEncoder.m; path = EncoderClasses/CloudEncoder.m; sourceTree = "<group>"; };
 		D72779911A30F0D50034DD66 /* EncoderCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderCommand.h; path = EncoderClasses/EncoderCommand.h; sourceTree = "<group>"; };
 		D72779921A30F0D50034DD66 /* EncoderCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderCommand.m; path = EncoderClasses/EncoderCommand.m; sourceTree = "<group>"; };
-		D727799A1A3240A00034DD66 /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveIndicatorLight.h; path = "../../../Documents/pxp-live2bench/FBTraining/Live2BenchNative/VideoPlayerClasses/LiveIndicatorLight.h"; sourceTree = "<group>"; };
-		D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveIndicatorLight.m; path = "../../../Documents/pxp-live2bench/FBTraining/Live2BenchNative/VideoPlayerClasses/LiveIndicatorLight.m"; sourceTree = "<group>"; };
 		D72779A31A32605B0034DD66 /* BottomViewControllerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BottomViewControllerBase.h; path = Live2BenchNative/Live2BenchTab/BottomViewClasses/BottomViewControllerBase.h; sourceTree = "<group>"; };
 		D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BottomViewControllerBase.m; path = Live2BenchNative/Live2BenchTab/BottomViewClasses/BottomViewControllerBase.m; sourceTree = "<group>"; };
 		D72779A61A3609620034DD66 /* ListPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ListPopoverController.h; path = Live2BenchNative/GeneralUIClasses/ListPopoverController.h; sourceTree = "<group>"; };
@@ -899,6 +918,19 @@
 		D73B42E1193F763B00EA2775 /* subtractendsec@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subtractendsec@2x.png"; sourceTree = "<group>"; };
 		D73B42E2193F763B00EA2775 /* subtractstartsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = subtractstartsec.png; sourceTree = "<group>"; };
 		D73B42E3193F763B00EA2775 /* subtractstartsec@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subtractstartsec@2x.png"; sourceTree = "<group>"; };
+		D73CDBD91AA77F33002D682D /* BookmarkTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkTableViewController.h; sourceTree = "<group>"; };
+		D73CDBDA1AA77F33002D682D /* BookmarkTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkTableViewController.m; sourceTree = "<group>"; };
+		D73CDBDF1AA8B095002D682D /* DeletableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewCell.h; sourceTree = "<group>"; };
+		D73CDBE01AA8B096002D682D /* DeletableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewCell.m; sourceTree = "<group>"; };
+		D73CDBE21AA8BF66002D682D /* DeletableTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeletableTableViewController.h; sourceTree = "<group>"; };
+		D73CDBE31AA8BF66002D682D /* DeletableTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeletableTableViewController.m; sourceTree = "<group>"; };
+		D73CDBEB1AAE17FC002D682D /* SettingsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsPageViewController.h; sourceTree = "<group>"; };
+		D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
+		D73CDBEE1AAF283C002D682D /* AccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountsViewController.h; sourceTree = "<group>"; };
+		D73CDBEF1AAF283C002D682D /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
+		D73CDBF11AAF3CA8002D682D /* infoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = infoViewController.h; sourceTree = "<group>"; };
+		D73CDBF21AAF3CA8002D682D /* infoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = infoViewController.m; sourceTree = "<group>"; };
+		D73CDBF51AB08173002D682D /* SettingsViewControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewControllerProtocol.h; sourceTree = "<group>"; };
 		D73FE32E1A40882600341D57 /* L2BVideoBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BVideoBarViewController.h; path = Live2BenchTab/L2BVideoBarViewController.h; sourceTree = "<group>"; };
 		D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = L2BVideoBarViewController.m; path = Live2BenchTab/L2BVideoBarViewController.m; sourceTree = "<group>"; };
 		D73FE3311A41DBF000341D57 /* L2BFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BFullScreenViewController.h; path = Live2BenchTab/L2BFullScreenViewController.h; sourceTree = "<group>"; };
@@ -1030,6 +1062,32 @@
 		D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderManagerActionPack.m; path = EncoderClasses/EncoderManagerActionPack.m; sourceTree = "<group>"; };
 		D781900D1A70697D00B964B4 /* UserCenterActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserCenterActionPack.h; path = Live2BenchNative/UserCenterActionPack.h; sourceTree = "<group>"; };
 		D781900E1A70697D00B964B4 /* UserCenterActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserCenterActionPack.m; path = Live2BenchNative/UserCenterActionPack.m; sourceTree = "<group>"; };
+		D784EF271AA4B0560068D260 /* CKCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCalendarView.m; sourceTree = "<group>"; };
+		D784EF281AA4B0560068D260 /* CKCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCalendarView.h; sourceTree = "<group>"; };
+		D784EF291AA4B0560068D260 /* CKViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKViewController.m; sourceTree = "<group>"; };
+		D784EF2A1AA4B0560068D260 /* ARCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewCell.h; sourceTree = "<group>"; };
+		D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewCell.m; sourceTree = "<group>"; };
+		D784EF2C1AA4B0560068D260 /* CKViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKViewController.h; sourceTree = "<group>"; };
+		D784EF2D1AA4B0570068D260 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		D784EF2E1AA4B0570068D260 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		D784EF2F1AA4B0570068D260 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		D784EF301AA4B0570068D260 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
+		D784EF311AA4B0570068D260 /* SwipeableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeableTableViewCell.h; sourceTree = "<group>"; };
+		D784EF321AA4B0570068D260 /* SwipeableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeableTableViewCell.m; sourceTree = "<group>"; };
+		D784EF331AA4B0570068D260 /* CalendarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarTableViewController.h; sourceTree = "<group>"; };
+		D784EF341AA4B0570068D260 /* CalendarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarTableViewController.m; sourceTree = "<group>"; };
+		D784EF351AA4B0570068D260 /* CalendarBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarBar.h; sourceTree = "<group>"; };
+		D784EF361AA4B0570068D260 /* CalendarBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarBar.m; sourceTree = "<group>"; };
+		D784EF371AA4B0570068D260 /* HeaderBarForListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderBarForListView.h; sourceTree = "<group>"; };
+		D784EF381AA4B0570068D260 /* HeaderBarForListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBarForListView.m; sourceTree = "<group>"; };
+		D784EF391AA4B0570068D260 /* ListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListTableViewController.h; sourceTree = "<group>"; };
+		D784EF3A1AA4B0570068D260 /* ListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListTableViewController.m; sourceTree = "<group>"; };
+		D784EF451AA4B3090068D260 /* ARCalendarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewController.h; sourceTree = "<group>"; };
+		D784EF461AA4B3090068D260 /* ARCalendarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewController.m; sourceTree = "<group>"; };
+		D784EF481AA4B6230068D260 /* TestFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFilterViewController.h; sourceTree = "<group>"; };
+		D784EF491AA4B6230068D260 /* TestFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestFilterViewController.m; sourceTree = "<group>"; };
+		D784EF4B1AA4B6620068D260 /* RangeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeSlider.h; sourceTree = "<group>"; };
+		D784EF4C1AA4B6620068D260 /* RangeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RangeSlider.m; sourceTree = "<group>"; };
 		D786C1D817EB9BF90042DD96 /* myClipTab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myClipTab@2x.png"; sourceTree = "<group>"; };
 		D786C1D917EB9BF90042DD96 /* settingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D786C1DA17EB9BF90042DD96 /* settingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settingsButton@2x.png"; sourceTree = "<group>"; };
@@ -2094,6 +2152,45 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D73CDBF51AB08173002D682D /* SettingsViewControllerProtocol.h */,
+				D73CDBF11AAF3CA8002D682D /* infoViewController.h */,
+				D73CDBF21AAF3CA8002D682D /* infoViewController.m */,
+				D784EF4B1AA4B6620068D260 /* RangeSlider.h */,
+				D784EF4C1AA4B6620068D260 /* RangeSlider.m */,
+				D784EF271AA4B0560068D260 /* CKCalendarView.m */,
+				D784EF281AA4B0560068D260 /* CKCalendarView.h */,
+				D784EF291AA4B0560068D260 /* CKViewController.m */,
+				D73CDBEB1AAE17FC002D682D /* SettingsPageViewController.h */,
+				D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */,
+				D784EF2A1AA4B0560068D260 /* ARCalendarTableViewCell.h */,
+				D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */,
+				D784EF481AA4B6230068D260 /* TestFilterViewController.h */,
+				D784EF491AA4B6230068D260 /* TestFilterViewController.m */,
+				D73CDBEE1AAF283C002D682D /* AccountsViewController.h */,
+				D73CDBEF1AAF283C002D682D /* AccountsViewController.m */,
+				D73CDBDF1AA8B095002D682D /* DeletableTableViewCell.h */,
+				D73CDBE01AA8B096002D682D /* DeletableTableViewCell.m */,
+				D73CDBE21AA8BF66002D682D /* DeletableTableViewController.h */,
+				D73CDBE31AA8BF66002D682D /* DeletableTableViewController.m */,
+				D784EF451AA4B3090068D260 /* ARCalendarTableViewController.h */,
+				D784EF461AA4B3090068D260 /* ARCalendarTableViewController.m */,
+				D784EF2C1AA4B0560068D260 /* CKViewController.h */,
+				D784EF2D1AA4B0570068D260 /* DetailViewController.h */,
+				D784EF2E1AA4B0570068D260 /* DetailViewController.m */,
+				D784EF2F1AA4B0570068D260 /* SettingsTableViewController.h */,
+				D784EF301AA4B0570068D260 /* SettingsTableViewController.m */,
+				D784EF311AA4B0570068D260 /* SwipeableTableViewCell.h */,
+				D784EF321AA4B0570068D260 /* SwipeableTableViewCell.m */,
+				D784EF331AA4B0570068D260 /* CalendarTableViewController.h */,
+				D784EF341AA4B0570068D260 /* CalendarTableViewController.m */,
+				D784EF351AA4B0570068D260 /* CalendarBar.h */,
+				D784EF361AA4B0570068D260 /* CalendarBar.m */,
+				D784EF371AA4B0570068D260 /* HeaderBarForListView.h */,
+				D784EF381AA4B0570068D260 /* HeaderBarForListView.m */,
+				D784EF391AA4B0570068D260 /* ListTableViewController.h */,
+				D784EF3A1AA4B0570068D260 /* ListTableViewController.m */,
+				D73CDBD91AA77F33002D682D /* BookmarkTableViewController.h */,
+				D73CDBDA1AA77F33002D682D /* BookmarkTableViewController.m */,
 				D7A5E5A71A9F7A1F00E3D4DB /* DownloadItem.h */,
 				D7A5E5A81A9F7A1F00E3D4DB /* DownloadItem.m */,
 				D749B7AA1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.h */,
@@ -2101,9 +2198,9 @@
 				D72779AC1A38994E0034DD66 /* Live2BenchTagUIViewController.h */,
 				D72779AD1A38994E0034DD66 /* Live2BenchTagUIViewController.m */,
 				D72779A91A37498E0034DD66 /* CalendarTableCell.h */,
+				D72779AA1A37498E0034DD66 /* CalendarTableCell.m */,
 				D76B6DD31A8AC07300601BAF /* ToastObserver.h */,
 				D76B6DD41A8AC07300601BAF /* ToastObserver.m */,
-				D72779AA1A37498E0034DD66 /* CalendarTableCell.m */,
 				D76B6DD61A8AC08500601BAF /* ImageAssetManager.h */,
 				D76B6DD71A8AC08500601BAF /* ImageAssetManager.m */,
 				D76B6DD91A8AC13000601BAF /* ListPopoverControllerWithImages.h */,
@@ -2575,8 +2672,8 @@
 			isa = PBXGroup;
 			children = (
 				D749B7A91A82AC0800258D63 /* PxpVideoPlayerProtocol.h */,
-				D727799A1A3240A00034DD66 /* LiveIndicatorLight.h */,
-				D727799B1A3240A00034DD66 /* LiveIndicatorLight.m */,
+				43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */,
+				43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */,
 				D719869819C8BA6E00122CAA /* VideoControlBar.h */,
 				D719869919C8BA6E00122CAA /* VideoControlBar.m */,
 				D79046AA18F48FD300A58B28 /* VideoPlayer.h */,
@@ -3176,7 +3273,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Crashlytics.framework/run cd63aefd0fa9df5e632e5dc77360ecaae90108a1";
+			shellScript = "";
 		};
 		D7A9397216ADA65E006CBAB2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3208,13 +3305,16 @@
 				D738304D198A94D60053F0A1 /* FilterScrollView.m in Sources */,
 				D738305E198AEC610053F0A1 /* BreadCrumbsViewController.m in Sources */,
 				D738304C198A94D60053F0A1 /* FilterProcessor.m in Sources */,
+				D784EF401AA4B0570068D260 /* SwipeableTableViewCell.m in Sources */,
 				D79BC1D919E836F800ECD8DB /* DebuggingTabViewController.m in Sources */,
 				D7A188C81A0D2D4F00513909 /* BitRateViewController.m in Sources */,
 				D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */,
+				D73CDBF31AAF3CA8002D682D /* infoViewController.m in Sources */,
 				D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */,
 				D737F5B717F0DFC40053081F /* GameSchedule.m in Sources */,
 				AA83595B19B10C1B009B3ABC /* DPBContentViewController.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
+				D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */,
 				D7C5F38119BF894A008190CE /* ScreenController.m in Sources */,
 				D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */,
 				AA0FED2C19589951001D25EB /* ClipSharePopoverViewController.m in Sources */,
@@ -3223,6 +3323,7 @@
 				D79046AC18F48FD300A58B28 /* VideoPlayer.m in Sources */,
 				D7A391721A6959DF00BFD353 /* ActionList.m in Sources */,
 				D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */,
+				D73CDBDB1AA77F33002D682D /* BookmarkTableViewController.m in Sources */,
 				AA83588E19B10967009B3ABC /* DejalActivityView.m in Sources */,
 				D7A7380719A3A27B0080B882 /* TagPopOverContent.m in Sources */,
 				D7A9395416ADA65E006CBAB2 /* AppDelegate.m in Sources */,
@@ -3238,15 +3339,21 @@
 				D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */,
 				D79D708B19D603E2001FBE16 /* CustomTabViewController.m in Sources */,
 				AA83589A19B10967009B3ABC /* TRVSMonitor.m in Sources */,
+				D784EF3D1AA4B0570068D260 /* ARCalendarTableViewCell.m in Sources */,
 				D7383061198AECD60053F0A1 /* BreadCrumbView.m in Sources */,
 				D7A673DB180EC8A1001C68D1 /* BookmarkViewController.m in Sources */,
 				9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */,
 				D79FB04A1A5C8AB7003F0CFA /* TablePopoverController.m in Sources */,
+				D784EF3F1AA4B0570068D260 /* SettingsTableViewController.m in Sources */,
 				D7EE84D019F19DC000DEC82B /* EncoderManager.m in Sources */,
+				D73CDBE11AA8B096002D682D /* DeletableTableViewCell.m in Sources */,
+				43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */,
+				D784EF4D1AA4B6620068D260 /* RangeSlider.m in Sources */,
 				BDE05E9017F08AAD00CD6012 /* UIColor+Expanded.m in Sources */,
 				AA83595A19B10C1B009B3ABC /* DPBContentNavigationController.m in Sources */,
 				D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */,
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
+				D784EF3E1AA4B0570068D260 /* DetailViewController.m in Sources */,
 				D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */,
 				D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */,
 				D73689A1183BC86100373385 /* TTSwitch.m in Sources */,
@@ -3263,11 +3370,14 @@
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,
+				D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */,
+				D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */,
 				D7E4AC7616B3225B00129222 /* TagMarker.m in Sources */,
 				D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */,
 				D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */,
 				AA83593B19B10B71009B3ABC /* LBCloudFileViewController.m in Sources */,
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
+				D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */,
 				D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */,
 				D7F6973B1811C7E8003EDDDB /* ListViewCell.m in Sources */,
 				D749B7671A795AC000258D63 /* RJLVideoPlayerPlaybackView.m in Sources */,
@@ -3294,6 +3404,7 @@
 				D7DB755317EA690F009C402F /* LoginTextField.m in Sources */,
 				D7A188BC19FE8FE100513909 /* TagBuilder.m in Sources */,
 				D786C24617F39F3F0042DD96 /* IconButton.m in Sources */,
+				D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */,
 				94B9A516192521CD0009547B /* SnapshotView.m in Sources */,
 				D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */,
 				AA0FED321958AEC1001D25EB /* EdgeSwipeButton.m in Sources */,
@@ -3312,7 +3423,6 @@
 				94F95970192272C100B7D201 /* AVPlayerRewindableItem.m in Sources */,
 				D72779931A30F0D50034DD66 /* EncoderCommand.m in Sources */,
 				AA83589619B10967009B3ABC /* SVStatusHUD.m in Sources */,
-				D727799C1A3240A00034DD66 /* LiveIndicatorLight.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				AA0FED2F1958A93D001D25EB /* EdgeSwipeEditButtonsView.m in Sources */,
@@ -3320,6 +3430,7 @@
 				D7B0F3A516C99B23009D8099 /* FilterCell.m in Sources */,
 				D7A7B61216D3C6C3000D3A84 /* LogoViewController.m in Sources */,
 				D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */,
+				D73CDBE41AA8BF66002D682D /* DeletableTableViewController.m in Sources */,
 				D70FBA3C17FE0DFA00B606CF /* EulaModalViewController.m in Sources */,
 				AA83587719B108F0009B3ABC /* JPReorderHelper.m in Sources */,
 				D72708A01A1520900086BCB8 /* LocalEncoder.m in Sources */,
@@ -3329,15 +3440,18 @@
 				D738305A198AC9A30053F0A1 /* MyClipFilterViewController.m in Sources */,
 				D786C20117ECA00E0042DD96 /* CustomLabel.m in Sources */,
 				D7A7B61816D3C852000D3A84 /* TeleViewController.m in Sources */,
+				D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */,
 				BD9BC31117EB480A001B67DE /* SpinnerView.m in Sources */,
 				D7383078199417CB0053F0A1 /* DurationView.m in Sources */,
 				D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
+				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
 				D7AFD99016D570A7000CA781 /* WBImage.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
+				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				AA83593C19B10B71009B3ABC /* LBCloudPlayerView.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
@@ -3352,6 +3466,7 @@
 				D7A2E5EB19B6498200022795 /* Slomo.m in Sources */,
 				D749B7641A7931A200258D63 /* RJLVideoPlayer.m in Sources */,
 				D7A673DA180EC8A1001C68D1 /* BookmarkViewCell.m in Sources */,
+				D784EF431AA4B0570068D260 /* HeaderBarForListView.m in Sources */,
 				D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */,
 				AA83593A19B10B71009B3ABC /* NSObject+LBCloudConvenience.m in Sources */,
 				D72708A51A1BA4B30086BCB8 /* Feed.m in Sources */,
@@ -3360,6 +3475,7 @@
 				947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */,
 				D75CD0A917CBF25500DD24E8 /* HockeyBottomViewController.m in Sources */,
 				D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */,
+				D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,

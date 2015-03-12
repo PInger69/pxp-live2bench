@@ -267,6 +267,7 @@
     CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
     LogoutAction                * logoutAction;
+    id                          _logoutObserver;
 }
 
 @synthesize mode                    = _mode;
@@ -344,6 +345,10 @@
             [[NSNotificationCenter defaultCenter]removeObserver:_userDataObserver];
         }];
         
+        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [weakSelf.logoutAction start];
+        }];
+        
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;
             [weakSelf refresh];
@@ -395,6 +400,11 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
         // making actions
         
+        //SAGAR AND BEN NOTIFICATIONS
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listViewFeed:) name:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDataRequest:) name:NOTIF_REQUEST_CALENDAR_DATA object:nil];
+        
         
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
         checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
@@ -408,6 +418,22 @@
 static void * authenticatContext    = &authenticatContext;
 static void * statusContext         = &statusContext;
 static void * builtContext          = &builtContext; // depricated?
+
+//SAGAR AND BEN CODE BEGINS
+
+-(void)eventDataRequest: (NSNotification *)note{
+    
+    void(^theBlock)(NSArray *eventData) = [note.userInfo objectForKey:@"block"];
+    theBlock(self.allEventData);
+}
+
+-(void)listViewFeed: (NSNotification *)note{
+    
+    void(^theBlock)(NSDictionary *someFeeds, NSArray *allTags) = [note.userInfo objectForKey:@"block"];
+    theBlock(self.feeds, [self.eventTags allValues]);
+}
+
+//SAGAR AND BEN CODE FINISHES
 
 /**
  *  When an Encoder if found it is checked and obervers are added to check the status

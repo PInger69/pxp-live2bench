@@ -20,8 +20,11 @@
 +(UIColor*)colorWithHexString:(NSString*)hex;
 +(NSString*)encoderStatusToString:(int)status;
 +(NSDictionary*)tagDict;
++(NSString *)dateFromEvent: (NSString *) eventName;
 //+(NSString*)cmTimeToString:(CMTime)time;
 
-
++(NSString*)myWifiName;
 
 @end
+
+

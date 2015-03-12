@@ -29,10 +29,11 @@
 #import "VideoBarMyClipViewController.h"
 #import "FullVideoBarMyClipViewController.h"
 #import "TagPopOverContent.h"
-
+#import "RJLVideoPlayer.h"
 #import "FullScreenViewController.h"
 #import "ScreenController.h"
 #import "CustomLabel.h"
+#import "BookmarkTableViewController.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -42,6 +43,10 @@
 #define COMMENTBOX_WIDTH            530//560
 
 @interface BookmarkViewController ()
+
+@property (strong, nonatomic) BookmarkTableViewController *tableViewController;
+@property (strong, nonatomic) NSDictionary                *feeds;
+@property (strong, nonatomic) UIButton                    * filterButton;
 
 @end
 
@@ -62,6 +67,7 @@
     
     // Richards's new UI Elements
     MyClipFilterViewController          * _filterToolBoxView;
+    TestFilterViewController            * componentFilter;
     HeaderBar                           * headerBar;
     CommentingRatingField               * commentingField;
     CustomLabel                         * numTagsLabel;
@@ -128,6 +134,38 @@ int viewWillAppearCalled;
 
 }
 
+-(void) feedSelected: (NSNotification *) notification
+{
+    
+    NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
+    
+    float time              = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"time"] floatValue];
+    float dur               = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"duration"] floatValue];
+    CMTime cmtime           = CMTimeMake(time, 1);
+    CMTime cmDur            = CMTimeMake(dur, 1);
+    
+    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
+    
+    NSString *pick = [userInfo objectForKey:@"feed"];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_MYCLIP_CONTEXT,
+                                                                                                          @"feed":pick,
+                                                                                                          @"time":[userInfo objectForKey:@"time"],
+                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
+                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+    
+    [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
+    
+    selectedTag = [self.tagsToDisplay[[self.tableData indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
+    
+    [commentingField clear];
+    commentingField.enabled             = YES;
+    commentingField.text                = [selectedTag objectForKey:@"comment"];
+    commentingField.ratingScale.rating  = [[selectedTag objectForKey:@"rating"]integerValue];
+    
+    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+}
+
 
 - (void)viewDidLoad
 {
@@ -136,6 +174,8 @@ int viewWillAppearCalled;
 //    if (!globals) {
 //        globals = [Globals instance];
 //    }
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil];
     
     uController = [[UtilitiesController alloc]init];
     //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
@@ -159,8 +199,8 @@ int viewWillAppearCalled;
         }
     }
     
-    self.videoPlayer = [[VideoPlayer alloc]init];
-    [self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(1, COMMENTBOX_HEIGHT+LABEL_HEIGHT*3.5, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
+    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, COMMENTBOX_HEIGHT+LABEL_HEIGHT*3.5, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
+    self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
     
     allTags = [[NSMutableArray alloc]init];
     
@@ -182,7 +222,7 @@ int viewWillAppearCalled;
     tagsDidViewed = [[NSMutableArray alloc]init];
     
     fullScreenMode = FALSE;
-    progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 110,200 ,25)];
+    //progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 110,200 ,25)];
     [progressLabel setText:@"Processing"];
     [progressLabel setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:progressLabel];
@@ -194,11 +234,11 @@ int viewWillAppearCalled;
     
     
     progressBar = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
-    [progressBar setFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 155,200 ,25)];
+    //[progressBar setFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 155,200 ,25)];
     [self.view addSubview:progressBar];
 
     
-    uploadFileResponseLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 180,120 , 25)];
+    //uploadFileResponseLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 180,120 , 25)];
     [uploadFileResponseLabel setText:@"sharing:"];
     [uploadFileResponseLabel setBackgroundColor:[UIColor clearColor]];
     [uploadFileResponseLabel setHidden:TRUE];
@@ -237,6 +277,19 @@ int viewWillAppearCalled;
 {
     
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
+        if(feeds){
+                        self.feeds = feeds;
+            //            Feed *theFeed = [[feeds allValues] firstObject];
+            //            [self.videoPlayer playFeed:theFeed];
+        }
+        
+        if(eventTags){
+            self.tableData =[ NSMutableArray arrayWithArray:[eventTags copy]];
+            _tableViewController.tableData = self.tableData;
+            [_tableViewController.tableView reloadData];
+        }
+    }}];
 //
 //    [globals.VIDEO_PLAYER_LIST_VIEW pause];
 //    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
@@ -289,9 +342,9 @@ int viewWillAppearCalled;
         
     }else{
         //when just enter bookmark view, no video is selected,leave the player screen black
-        NSURL *videoURL = [NSURL URLWithString:@""];
-        [self.videoPlayer setVideoURL:videoURL];
-        [self.videoPlayer setPlayerWithURL:videoURL];
+//        NSURL *videoURL = [NSURL URLWithString:@""];
+//        [self.videoPlayer setVideoURL:videoURL];
+//        [self.videoPlayer setPlayerWithURL:videoURL];
     }
     
 
@@ -338,7 +391,7 @@ int viewWillAppearCalled;
     
     [self.videoPlayer pause];
     
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
     
     [newVideoControlBar viewDidAppear:NO];
 
@@ -355,10 +408,10 @@ int viewWillAppearCalled;
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    [numTagsLabel setFrame:CGRectMake(self.tableView.frame.origin.x,
-                                      CGRectGetMaxY(self.tableView.frame),
-                                      self.tableView.frame.size.width,
-                                      21.0f)];
+    //[numTagsLabel setFrame:CGRectMake(self.tableView.frame.origin.x,
+//                                      CGRectGetMaxY(self.tableView.frame),
+//                                      self.tableView.frame.size.width,
+//                                      21.0f)];
     UIEdgeInsets insets = {10, 50, 0, 50};
     [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets)];
     
@@ -396,14 +449,25 @@ int viewWillAppearCalled;
     [self.view addSubview:commentingField];
     
     
+    self.tableViewController = [[BookmarkTableViewController alloc] init];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        [self.tableViewController.view setFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.width - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.height - CGRectGetMaxY(headerBar.frame) - 50.0f)];
+    } else {
+        [self.tableViewController.view setFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.height - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.width - CGRectGetMaxY(headerBar.frame) - 50.0f)];
+    }
+    self.tableViewController.view.autoresizingMask = UIViewAutoresizingNone;
+    [self addChildViewController: self.tableViewController];
+    [self.view addSubview: self.tableViewController.view];
+    
+    
     
     
     //Reorder Table View
-    self.tableView = [[JPReorderTableView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.width - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.width - CGRectGetMaxY(headerBar.frame) - 100.0f) style:UITableViewStylePlain];
-    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.tableView.reorderDataSource = self;
-    self.tableView.reorderDelegate = self;
-    [self.view addSubview:self.tableView];
+//    self.tableView = [[JPReorderTableView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.width - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.width - CGRectGetMaxY(headerBar.frame) - 100.0f) style:UITableViewStylePlain];
+//    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//    self.tableView.reorderDataSource = self;
+//    self.tableView.reorderDelegate = self;
+//    [self.view addSubview:self.tableView];
     //////////////////////////////////////////////
     
     self.tableActionButton = [BorderButton buttonWithType:UIButtonTypeCustom];
@@ -420,9 +484,15 @@ int viewWillAppearCalled;
     
     /////////////////////////////////////////////////////////////////
     //Swipe Edit View with reorder, filter ... functions
-    self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(1024-44, 55, 44, 768-55)];
-    self.edgeSwipeButtons.delegate = self;
-    [self.view addSubview:self.edgeSwipeButtons];
+//    self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(1024-44, 55, 44, 768-55)];
+//    self.edgeSwipeButtons.delegate = self;
+//    [self.view addSubview:self.edgeSwipeButtons];
+    self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
+    [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [self.filterButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview: self.filterButton];
+
     /////////////////////////////////////////////////////////////////
     
     
@@ -616,280 +686,280 @@ int viewWillAppearCalled;
 
 - (void)actionButtonPressed: (UIButton*)button
 {
-    if(self.tableView.selectionType == JPTripleSwipeCellSelectionLeft)
-    {
-        [self shareTagsReorderTable:button];
-    }
-    else if(self.tableView.selectionType == JPTripleSwipeCellSelectionRight)
-    {
-        [self deleteCells];
-    }
-}
-
-- (NSInteger)reorderTableView:(JPReorderTableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.tagsToDisplay count];
-}
-
-
-- (UITableViewCell*)reorderTableView:(JPReorderTableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
-    BookmarkViewCell *cell = (BookmarkViewCell*)[tableView dequeueReusableCellWithIdentifier:@"BookmarkViewCell"];
-    
-    if(!cell)
-        cell = [[BookmarkViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BookmarkViewCell"];
-    
-    
-    NSDictionary *tag = [self tagAtIndexPath:indexPath];
-    
-    if ([tag isKindOfClass:[NSDictionary class]])
-    {
-        if ([[tag objectForKey:@"event"] isEqualToString:@"live"]) {
-            [cell.eventDate setText:[tag objectForKey:@"event"]];
-        }else{
-            NSArray *tempArr = [[tag objectForKey:@"event" ] componentsSeparatedByString:@"_"];
-            [cell.eventDate setText: [NSString stringWithString:[tempArr objectAtIndex:0] ]];
-        }
-        
-        [cell.eventDate setFont:[UIFont boldSystemFontOfSize:20.f]];
-        [cell.tagName setText:[tag objectForKey:@"name"]];
-        [cell.tagName setFont:[UIFont boldSystemFontOfSize:20.f]];
-        [cell.tagTime setText: [tag objectForKey:@"displaytime"]];
-        [cell.tagTime setFont:[UIFont boldSystemFontOfSize:20.f]];
-        [cell updateIndexWith:indexPath.row+1];
-        //when the tag is viewed, the viewed information is saved in the dictionary:"globals.CURRENT_EVENT_THUMBNAILS".So if repopulate the table view, we should always check the latest tag
-//        NSMutableDictionary *updatedTag = [[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"] ] objectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
-        
-        //if the tag does not exist in globals.BOOKMARK_TAGS, donot display it
-//        if(updatedTag == nil){
-//            [self.tagsToDisplay removeObject:tag];
-//            [self.tableView reloadData];
-//        }
-        
-    }
-
-    return cell;
-}
-
-
-- (void)reorderTableView:(JPReorderTableView *)tableView selectionTypeChangedTo:(JPTripleSwipeCellSelection)type
-{
-    if(type == JPTripleSwipeCellSelectionNone)
-    {
-        isEditingClips = NO;
-        self.tableActionButton.hidden = YES;
-    }
-    else
-    {
-        isEditingClips = YES;
-        self.tableActionButton.hidden = NO;
-    }
-    
-    if(type == JPTripleSwipeCellSelectionLeft)
-    {
-        [self.tableActionButton setTitle: @"Share" forState:UIControlStateNormal];
-    }
-    else if(type == JPTripleSwipeCellSelectionRight)
-    {
-        [self.tableActionButton setTitle: @"Delete" forState:UIControlStateNormal];
-    }
-}
-    
-- (void)reorderTableView:(JPReorderTableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
-{
-//        [headerBar setHeaderBarSortType:HBSortNone];
-//    id object = [self.tagsToDisplay objectAtIndex:sourceIndexPath.row]; //object thats being dragged
-//    [self.tagsToDisplay removeObjectAtIndex:sourceIndexPath.row];//delete it from where it is
-//    [self.tagsToDisplay insertObject:object atIndex:destinationIndexPath.row];//add it back to where it should be
-//    
-//    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
-//    
-//    //boring stuff to make sure filemanager actually exists
-//    if(!fileManager)
+//    if(self.tableView.selectionType == JPTripleSwipeCellSelectionLeft)
 //    {
-//        fileManager = [NSFileManager defaultManager];
+//        [self shareTagsReorderTable:button];
 //    }
-//    if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
+//    else if(self.tableView.selectionType == JPTripleSwipeCellSelectionRight)
 //    {
-//        [fileManager createFileAtPath:orderedBookmarkPlist contents:nil attributes:nil];
+//        [self deleteCells];
 //    }
-//    
-//    //need to write here so that we can retain the information if user exits the window or the app
-//    [self.tagsToDisplay writeToFile:orderedBookmarkPlist atomically:TRUE]; //write to the ordered bookmark plist
 }
-    
-
-- (void)reorderTableView:(JPReorderTableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
-//    if (teleImage) {
-//        [teleImage removeFromSuperview];
-//        teleImage=nil;
-//    }
+//
+//- (NSInteger)reorderTableView:(JPReorderTableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//    return [self.tagsToDisplay count];
+//}
+//
+//
+//- (UITableViewCell*)reorderTableView:(JPReorderTableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//
+//    BookmarkViewCell *cell = (BookmarkViewCell*)[tableView dequeueReusableCellWithIdentifier:@"BookmarkViewCell"];
 //    
-//    if (self.videoPlayer.teleBigView) {
-//        [self.videoPlayer.teleBigView removeFromSuperview];
-//        self.videoPlayer.teleBigView=nil;
-//    }
-//    
-//    wasPlayingIndexPath = indexPath;
-//    
-//    cellSelectedNumber = 1;
-//    NSDictionary *data = [self tagAtIndexPath:indexPath];
-//    selectedTag = [[[globals.BOOKMARK_TAGS objectForKey:[data objectForKey:@"event"]] objectForKey:[NSString stringWithFormat:@"%@",[data objectForKey:@"id"]]]mutableCopy];
-//    
-//    if (![globals.TAGS_WERE_SELECTED_BMVIEW containsObject:[selectedTag objectForKey:@"id"]]) {
-//        [globals.TAGS_WERE_SELECTED_BMVIEW addObject:[selectedTag objectForKey:@"id"]];
-//    }
-//    globals.TAG_WAS_SELECTED_BMVIEW = [[selectedTag objectForKey:@"id"]intValue];
+//    if(!cell)
+//        cell = [[BookmarkViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BookmarkViewCell"];
 //    
 //    
-//    if([[selectedTag objectForKey:@"type"] intValue]==4)
+//    NSDictionary *tag = [self tagAtIndexPath:indexPath];
+//    
+//    if ([tag isKindOfClass:[NSDictionary class]])
 //    {
-//        //playback telestration
-//        globals.IS_PLAYBACK_TELE = TRUE;
-//        
-//        //reset video url to emtpy string for avplayer
-//        NSURL *videoURL = [NSURL URLWithString:@""];
-//        [self.videoPlayer setPlayerWithURL:videoURL];
-//        
-//        if(self.videoPlayer.isFullScreen){
-//            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 80, 1024, 576)];
+//        if ([[tag objectForKey:@"event"] isEqualToString:@"live"]) {
+//            [cell.eventDate setText:[tag objectForKey:@"event"]];
 //        }else{
-//            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height)];
+//            NSArray *tempArr = [[tag objectForKey:@"event" ] componentsSeparatedByString:@"_"];
+//            [cell.eventDate setText: [NSString stringWithString:[tempArr objectAtIndex:0] ]];
 //        }
 //        
-//        //globals.IS_TELE=TRUE;
+//        [cell.eventDate setFont:[UIFont boldSystemFontOfSize:20.f]];
+//        [cell.tagName setText:[tag objectForKey:@"name"]];
+//        [cell.tagName setFont:[UIFont boldSystemFontOfSize:20.f]];
+//        [cell.tagTime setText: [tag objectForKey:@"displaytime"]];
+//        [cell.tagTime setFont:[UIFont boldSystemFontOfSize:20.f]];
+//        [cell updateIndexWith:indexPath.row+1];
+//        //when the tag is viewed, the viewed information is saved in the dictionary:"globals.CURRENT_EVENT_THUMBNAILS".So if repopulate the table view, we should always check the latest tag
+////        NSMutableDictionary *updatedTag = [[globals.BOOKMARK_TAGS objectForKey:[tag objectForKey:@"event"] ] objectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
 //        
-//        NSString *teleFilePath;
-//        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
-//        if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
-//            teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
-//        }
-//        [teleImage setImage:[UIImage imageWithContentsOfFile:teleFilePath]];
-//        
-//        self.videoPlayer.teleBigView = teleImage;
-//        globals.CURRENT_PLAYBACK_TAG = selectedTag;
-//        [self.videoPlayer.view addSubview:self.videoPlayer.teleBigView];
-//        
-//        if (teleButton) {
-//            teleButton.hidden = TRUE;
-//        }
-//        
-//    }else{
-//        
-//        //playing tag from book mark video folder
-//        NSString *tagVideoPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[selectedTag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[selectedTag objectForKey:@"id"]]]];
-//        //when play back from ios device storage set "nsurl" by using "fileurlwithpath" instead of "urlwithstring"
-//        NSURL *videoURL = [NSURL URLWithString:[[NSString stringWithFormat:@"file://%@",tagVideoPath] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-//        [self.videoPlayer setVideoURL:videoURL];
-//        
-//        [self.videoPlayer setPlayerWithURL:videoURL];
-//        
-//        [self.videoPlayer play];
-//        
-//        if (!videoPlayer.timeObserver) {
-//            [videoPlayer addPlayerItemTimeObserver];
-//        }
+//        //if the tag does not exist in globals.BOOKMARK_TAGS, donot display it
+////        if(updatedTag == nil){
+////            [self.tagsToDisplay removeObject:tag];
+////            [self.tableView reloadData];
+////        }
 //        
 //    }
-//    
-//    currentPlayingTag = [selectedTag copy];
-//    /*TO DELETE seek controlls
-//    tagEventName.text = [currentPlayingTag objectForKey:@"name"];
-//    */
-//    
-//#pragma mark Rich2 when an item is selected
 //
+//    return cell;
+//}
+//
+//
+//- (void)reorderTableView:(JPReorderTableView *)tableView selectionTypeChangedTo:(JPTripleSwipeCellSelection)type
+//{
+//    if(type == JPTripleSwipeCellSelectionNone)
+//    {
+//        isEditingClips = NO;
+//        self.tableActionButton.hidden = YES;
+//    }
+//    else
+//    {
+//        isEditingClips = YES;
+//        self.tableActionButton.hidden = NO;
+//    }
+//    
+//    if(type == JPTripleSwipeCellSelectionLeft)
+//    {
+//        [self.tableActionButton setTitle: @"Share" forState:UIControlStateNormal];
+//    }
+//    else if(type == JPTripleSwipeCellSelectionRight)
+//    {
+//        [self.tableActionButton setTitle: @"Delete" forState:UIControlStateNormal];
+//    }
+//}
+//    
+//- (void)reorderTableView:(JPReorderTableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+//{
+////        [headerBar setHeaderBarSortType:HBSortNone];
+////    id object = [self.tagsToDisplay objectAtIndex:sourceIndexPath.row]; //object thats being dragged
+////    [self.tagsToDisplay removeObjectAtIndex:sourceIndexPath.row];//delete it from where it is
+////    [self.tagsToDisplay insertObject:object atIndex:destinationIndexPath.row];//add it back to where it should be
+////    
+////    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
+////    
+////    //boring stuff to make sure filemanager actually exists
+////    if(!fileManager)
+////    {
+////        fileManager = [NSFileManager defaultManager];
+////    }
+////    if(![fileManager fileExistsAtPath:orderedBookmarkPlist])
+////    {
+////        [fileManager createFileAtPath:orderedBookmarkPlist contents:nil attributes:nil];
+////    }
+////    
+////    //need to write here so that we can retain the information if user exits the window or the app
+////    [self.tagsToDisplay writeToFile:orderedBookmarkPlist atomically:TRUE]; //write to the ordered bookmark plist
+//}
 //    
 //
-//    commentingField.enabled = YES;
-//    [commentingField clear];
-//    commentingField.text = ( [selectedTag objectForKey:@"comment"] ) ? [selectedTag objectForKey:@"comment"] : @"";
-//    commentingField.ratingScale.rating = [[selectedTag objectForKey:@"rating"]integerValue];
+//- (void)reorderTableView:(JPReorderTableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
 //
-//    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
-//    if (newFullScreenVideoControlBar)        [newFullScreenVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+////    if (teleImage) {
+////        [teleImage removeFromSuperview];
+////        teleImage=nil;
+////    }
+////    
+////    if (self.videoPlayer.teleBigView) {
+////        [self.videoPlayer.teleBigView removeFromSuperview];
+////        self.videoPlayer.teleBigView=nil;
+////    }
+////    
+////    wasPlayingIndexPath = indexPath;
+////    
+////    cellSelectedNumber = 1;
+////    NSDictionary *data = [self tagAtIndexPath:indexPath];
+////    selectedTag = [[[globals.BOOKMARK_TAGS objectForKey:[data objectForKey:@"event"]] objectForKey:[NSString stringWithFormat:@"%@",[data objectForKey:@"id"]]]mutableCopy];
+////    
+////    if (![globals.TAGS_WERE_SELECTED_BMVIEW containsObject:[selectedTag objectForKey:@"id"]]) {
+////        [globals.TAGS_WERE_SELECTED_BMVIEW addObject:[selectedTag objectForKey:@"id"]];
+////    }
+////    globals.TAG_WAS_SELECTED_BMVIEW = [[selectedTag objectForKey:@"id"]intValue];
+////    
+////    
+////    if([[selectedTag objectForKey:@"type"] intValue]==4)
+////    {
+////        //playback telestration
+////        globals.IS_PLAYBACK_TELE = TRUE;
+////        
+////        //reset video url to emtpy string for avplayer
+////        NSURL *videoURL = [NSURL URLWithString:@""];
+////        [self.videoPlayer setPlayerWithURL:videoURL];
+////        
+////        if(self.videoPlayer.isFullScreen){
+////            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 80, 1024, 576)];
+////        }else{
+////            teleImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height)];
+////        }
+////        
+////        //globals.IS_TELE=TRUE;
+////        
+////        NSString *teleFilePath;
+////        teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.png",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
+////        if (![[NSFileManager defaultManager] fileExistsAtPath:teleFilePath]) {
+////            teleFilePath = [globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"telestration_%@_%@.jpg",[selectedTag objectForKey:@"event"],[selectedTag objectForKey:@"id"]] ];
+////        }
+////        [teleImage setImage:[UIImage imageWithContentsOfFile:teleFilePath]];
+////        
+////        self.videoPlayer.teleBigView = teleImage;
+////        globals.CURRENT_PLAYBACK_TAG = selectedTag;
+////        [self.videoPlayer.view addSubview:self.videoPlayer.teleBigView];
+////        
+////        if (teleButton) {
+////            teleButton.hidden = TRUE;
+////        }
+////        
+////    }else{
+////        
+////        //playing tag from book mark video folder
+////        NSString *tagVideoPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",[[selectedTag objectForKey:@"event"] stringByAppendingFormat:@"_vid_%@.mp4",[selectedTag objectForKey:@"id"]]]];
+////        //when play back from ios device storage set "nsurl" by using "fileurlwithpath" instead of "urlwithstring"
+////        NSURL *videoURL = [NSURL URLWithString:[[NSString stringWithFormat:@"file://%@",tagVideoPath] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+////        [self.videoPlayer setVideoURL:videoURL];
+////        
+////        [self.videoPlayer setPlayerWithURL:videoURL];
+////        
+////        [self.videoPlayer play];
+////        
+////        if (!videoPlayer.timeObserver) {
+////            [videoPlayer addPlayerItemTimeObserver];
+////        }
+////        
+////    }
+////    
+////    currentPlayingTag = [selectedTag copy];
+////    /*TO DELETE seek controlls
+////    tagEventName.text = [currentPlayingTag objectForKey:@"name"];
+////    */
+////    
+////#pragma mark Rich2 when an item is selected
+////
+////    
+////
+////    commentingField.enabled = YES;
+////    [commentingField clear];
+////    commentingField.text = ( [selectedTag objectForKey:@"comment"] ) ? [selectedTag objectForKey:@"comment"] : @"";
+////    commentingField.ratingScale.rating = [[selectedTag objectForKey:@"rating"]integerValue];
+////
+////    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+////    if (newFullScreenVideoControlBar)        [newFullScreenVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+////
+////    
+////    // End for richard added
+////    
+////    
+////    NSString *tag_id = [NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]];
+////    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:tag_id];
+////    
+////    tagId = [selectedTag objectForKey:@"id"];
+////    
+////    //play video
+////    int duration = [[selectedTag objectForKey:@"duration"] integerValue];
+////    globals.HOME_END_TIME = duration;
+////    
+//  /*DELETE
+//       [slowMoButton setHidden:FALSE];
 //
-//    
-//    // End for richard added
-//    
-//    
-//    NSString *tag_id = [NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]];
-//    [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:tag_id];
-//    
-//    tagId = [selectedTag objectForKey:@"id"];
-//    
-//    //play video
-//    int duration = [[selectedTag objectForKey:@"duration"] integerValue];
-//    globals.HOME_END_TIME = duration;
-//    
-  /*DELETE
-       [slowMoButton setHidden:FALSE];
+//    [currentSeekBackButton setHidden:FALSE];
+//    [currentSeekForwardButton setHidden:FALSE];
+//*/
+//}
+//
+//#pragma mark - Reorder Table Related Methods
+//
+//
+////-(void)deleteCells
+////{
+////    
+////    if ([self.tableView.cellsSelected containsObject:@YES]) {
+////        UIAlertView *alert = [[UIAlertView alloc] init];
+////        [alert setAccessibilityLabel:@"deletealert"];
+////        [alert setTitle:@"myplayXplay"];
+////        [alert setMessage:@"Are you sure you want to delete these tags?"];
+////        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+////        [alert addButtonWithTitle:@"Yes"];
+////        [alert addButtonWithTitle:@"No"];
+////        [alert show];
+////    }
+////    
+////}
+//
+//
+////-(void)shareTags: (UIButton*)eButton
+////{
+////    if ([self.tableView.cellsSelected containsObject:@YES])
+////    {
+////        ClipSharePopoverViewController* popoverContent = [[ClipSharePopoverViewController alloc] init];
+////        popoverContent.bookmarkViewController = self;
+////        popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+////        popoverController.delegate = self;
+////        [popoverController setPopoverContentSize:CGSizeMake(300, 200) animated:YES];
+////        [popoverController presentPopoverFromRect:CGRectMake(eButton.frame.origin.x + self.edgeSwipeButtons.frame.size.width/2.0f, eButton.frame.origin.y, eButton.frame.size.width, eButton.frame.size.height) inView:self.edgeSwipeButtons permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
+////    }
+////    else
+////    {
+////        [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+////    }
+////}
+////
+////
+////
+////-(void)shareTagsReorderTable: (UIButton*)eButton
+////{
+////    if ([self.tableView.cellsSelected containsObject:@YES])
+////    {
+////        ClipSharePopoverViewController* popoverContent = [[ClipSharePopoverViewController alloc] init];
+////        popoverContent.bookmarkViewController = self;
+////        popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+////        popoverController.delegate = self;
+////        [popoverController setPopoverContentSize:CGSizeMake(300, 200) animated:YES];
+////        [popoverController presentPopoverFromRect:CGRectMake(eButton.frame.origin.x + self.edgeSwipeButtons.frame.size.width/2.0f, eButton.frame.origin.y, eButton.frame.size.width, eButton.frame.size.height) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight|UIPopoverArrowDirectionUp animated:YES];
+////    }
+////    else
+////    {
+////        [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+////    }
+////}
+//
 
-    [currentSeekBackButton setHidden:FALSE];
-    [currentSeekForwardButton setHidden:FALSE];
-*/
-}
-
-#pragma mark - Reorder Table Related Methods
-
-
--(void)deleteCells
-{
-    
-    if ([self.tableView.cellsSelected containsObject:@YES]) {
-        UIAlertView *alert = [[UIAlertView alloc] init];
-        [alert setAccessibilityLabel:@"deletealert"];
-        [alert setTitle:@"myplayXplay"];
-        [alert setMessage:@"Are you sure you want to delete these tags?"];
-        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-        [alert addButtonWithTitle:@"Yes"];
-        [alert addButtonWithTitle:@"No"];
-        [alert show];
-    }
-    
-}
-
-
--(void)shareTags: (UIButton*)eButton
-{
-    if ([self.tableView.cellsSelected containsObject:@YES])
-    {
-        ClipSharePopoverViewController* popoverContent = [[ClipSharePopoverViewController alloc] init];
-        popoverContent.bookmarkViewController = self;
-        popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-        popoverController.delegate = self;
-        [popoverController setPopoverContentSize:CGSizeMake(300, 200) animated:YES];
-        [popoverController presentPopoverFromRect:CGRectMake(eButton.frame.origin.x + self.edgeSwipeButtons.frame.size.width/2.0f, eButton.frame.origin.y, eButton.frame.size.width, eButton.frame.size.height) inView:self.edgeSwipeButtons permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
-    }
-    else
-    {
-        [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-    }
-}
-
-
-
--(void)shareTagsReorderTable: (UIButton*)eButton
-{
-    if ([self.tableView.cellsSelected containsObject:@YES])
-    {
-        ClipSharePopoverViewController* popoverContent = [[ClipSharePopoverViewController alloc] init];
-        popoverContent.bookmarkViewController = self;
-        popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-        popoverController.delegate = self;
-        [popoverController setPopoverContentSize:CGSizeMake(300, 200) animated:YES];
-        [popoverController presentPopoverFromRect:CGRectMake(eButton.frame.origin.x + self.edgeSwipeButtons.frame.size.width/2.0f, eButton.frame.origin.y, eButton.frame.size.width, eButton.frame.size.height) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight|UIPopoverArrowDirectionUp animated:YES];
-    }
-    else
-    {
-        [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-    }
-}
-
-    
 //after viewing a tag, save it into the tagsDidViewed.plist file
 -(void)saveTagsDidViewed:(id)tag
 {
@@ -917,6 +987,7 @@ int viewWillAppearCalled;
         [blurView addGestureRecognizer:tapRec];
         
         blurView.hidden = YES;
+        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tableData];
     }
     [self.view insertSubview:blurView aboveSubview:newVideoControlBar.view];
     [self.view insertSubview:_filterToolBoxView.view aboveSubview:blurView];
@@ -935,6 +1006,22 @@ int viewWillAppearCalled;
 //        [self.edgeSwipeButtons deselectButtonAtIndex:1];
 //    }
     
+    componentFilter.rawTagArray = self.tableData;
+    componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
+    
+    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
+    componentFilter.finishedSwipe = TRUE;
+    
+    [self.view addSubview:componentFilter.view];
+    componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
+    [componentFilter setOrigin:CGPointMake(60, 190)];
+    [componentFilter close:NO];
+    [componentFilter viewDidAppear:TRUE];
+    
+    
+    [componentFilter open:YES];
+
 }
 
 - (void)dismissFilterToolbox
@@ -942,6 +1029,8 @@ int viewWillAppearCalled;
     [_filterToolBoxView close:YES]; // Slide filter close
     blurView.hidden = YES;
     [self.edgeSwipeButtons deselectButtonAtIndex:1];
+    
+    [componentFilter close:YES];
     
 }
 
@@ -1234,8 +1323,10 @@ int viewWillAppearCalled;
 {
     HeaderBar * hBar = (HeaderBar *)sender;
 
-    self.tagsToDisplay = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:hBar.headerBarSortType];
-    [self.tableView reloadData];
+    self.tableData = [self sortArrayFromHeaderBar:self.tableData headerBarState:hBar.headerBarSortType];
+    self.tableViewController.tableData = self.tableData;
+    [self.tableViewController.tableView reloadData];
+    //[self.tableView reloadData];
     
 
     
@@ -1275,14 +1366,14 @@ int viewWillAppearCalled;
     [super viewWillDisappear:animated];
     //pause video and remove the time observer
     [videoPlayer pause];
-    if (videoPlayer.timeObserver) {
-        [videoPlayer removePlayerItemTimeObserver];
-    }
-    
-    //if it was in fullscreen mode, exit from fullscreen
-    if (videoPlayer.isFullScreen) {
-        [videoPlayer exitFullScreen];
-    }
+//    if (videoPlayer.timeObserver) {
+//        [videoPlayer removePlayerItemTimeObserver];
+//    }
+//    
+//    //if it was in fullscreen mode, exit from fullscreen
+//    if (videoPlayer.isFullScreen) {
+//        [videoPlayer exitFullScreen];
+//    }
     
 //    globals.SHOW_TOASTS = TRUE;
 //    globals.IS_IN_BOOKMARK_VIEW = FALSE;
@@ -1367,47 +1458,47 @@ int viewWillAppearCalled;
     
 }
     
--(void)checkFullScreen
-{
-    
-    
+//-(void)checkFullScreen
+//{
+//    
+//    
+//
+//    if (self.videoPlayer.isFullScreen && !fullScreenMode) {
+//        fullScreenMode = TRUE;
+//        [self willEnterFullScreen];
+////        [self.view addSubview:testFullScreen.view];
+//        
+////        [testFullScreen. view insertSubview:videoPlayer.view atIndex:0];
+//    }else if(!self.videoPlayer.isFullScreen && fullScreenMode ){
+//        [self willExitFullscreen];
+//        [self performSelector:@selector(didExitFullscreen) withObject:nil afterDelay:0.1];
+//        fullScreenMode = FALSE;
+//        [self.view insertSubview:videoPlayer.view belowSubview:newVideoControlBar.view];
+////        [testFullScreen.view removeFromSuperview];
+//    }
+//
+//}
 
-    if (self.videoPlayer.isFullScreen && !fullScreenMode) {
-        fullScreenMode = TRUE;
-        [self willEnterFullScreen];
-//        [self.view addSubview:testFullScreen.view];
-        
-//        [testFullScreen. view insertSubview:videoPlayer.view atIndex:0];
-    }else if(!self.videoPlayer.isFullScreen && fullScreenMode ){
-        [self willExitFullscreen];
-        [self performSelector:@selector(didExitFullscreen) withObject:nil afterDelay:0.1];
-        fullScreenMode = FALSE;
-        [self.view insertSubview:videoPlayer.view belowSubview:newVideoControlBar.view];
-//        [testFullScreen.view removeFromSuperview];
-    }
-
-}
-    
 -(void)willEnterFullScreen
 {
-    [self.videoPlayer setIsFullScreen:YES];
-    
-    ///going to bring the tabbar controller to the front now, we want to have access to it at all times, including fullscreen mode
-    UIView *fullScreenView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    
-    //iterate through all the views in teh fullscreen (the tabs are there, just hidden away
-    for(id tBar in fullScreenView.subviews)
-    {
-        //if the view is a subclass of type tabbarbutton, then we will bring it to the front
-        if([tBar isKindOfClass:[TabBarButton class]])
-        {
-            [fullScreenView bringSubviewToFront:tBar];
-        }
-    }
-    [self createAllFullScreenSubviews];
-    if (externalControlScreen.view){
-        [fullScreenView addSubview:[externalControlScreen buildDebugPanel:self.videoPlayer]];
-    }
+//    [self.videoPlayer setIsFullScreen:YES];
+//    
+//    ///going to bring the tabbar controller to the front now, we want to have access to it at all times, including fullscreen mode
+//    UIView *fullScreenView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+//    
+//    //iterate through all the views in teh fullscreen (the tabs are there, just hidden away
+//    for(id tBar in fullScreenView.subviews)
+//    {
+//        //if the view is a subclass of type tabbarbutton, then we will bring it to the front
+//        if([tBar isKindOfClass:[TabBarButton class]])
+//        {
+//            [fullScreenView bringSubviewToFront:tBar];
+//        }
+//    }
+//    [self createAllFullScreenSubviews];
+//    if (externalControlScreen.view){
+//        [fullScreenView addSubview:[externalControlScreen buildDebugPanel:self.videoPlayer]];
+//    }
 }
 
     
@@ -1728,7 +1819,7 @@ int viewWillAppearCalled;
     }
 
     NSIndexPath *nextPath = [NSIndexPath indexPathForRow:nextIndex inSection:wasPlayingIndexPath.section];
-    [self reorderTableView:self.tableView didSelectRowAtIndexPath:nextPath];
+    //[self reorderTableView:self.tableView didSelectRowAtIndexPath:nextPath];
 }
 
 -(void)showTeleButton
@@ -1749,23 +1840,23 @@ int viewWillAppearCalled;
 }
 
 
-//create telestration screen
--(void)initTele:(id)sender
-{
-    [self.videoPlayer pause];
-    [self hideFullScreenOverlayButtons];
-   
-    CMTime currentCMTime            = self.videoPlayer.avPlayer.currentTime;
-//    globals.TELE_TIME               = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
-    ////////NSLog(@"initTele tele time %f, current time %f",globals.TELE_TIME,CMTimeGetSeconds(currentCMTime));
-    teleViewController              = [[TeleViewController alloc] initWithController:self];
-    [teleViewController.view setFrame:CGRectMake(0, 10, 1024, 768)];
-    self.videoPlayer.playerFrame    = CGRectMake(0, 0, 1024, 748);
-    [self.teleButton setHidden:TRUE];
-    
-    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self.teleViewController.view];
-   
-}
+////create telestration screen
+//-(void)initTele:(id)sender
+//{
+//    [self.videoPlayer pause];
+//    [self hideFullScreenOverlayButtons];
+//   
+//    CMTime currentCMTime            = self.videoPlayer.avPlayer.currentTime;
+////    globals.TELE_TIME               = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
+//    ////////NSLog(@"initTele tele time %f, current time %f",globals.TELE_TIME,CMTimeGetSeconds(currentCMTime));
+//    teleViewController              = [[TeleViewController alloc] initWithController:self];
+//    [teleViewController.view setFrame:CGRectMake(0, 10, 1024, 768)];
+//    self.videoPlayer.playerFrame    = CGRectMake(0, 0, 1024, 748);
+//    [self.teleButton setHidden:TRUE];
+//    
+//    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self.teleViewController.view];
+//   
+//}
 
 /**
  *  This method is used byt the teleViewController
@@ -1798,16 +1889,16 @@ int viewWillAppearCalled;
     [newFullScreenVideoControlBar.view setHidden:NO]; // Richard
 }
 
--(int)roundValue:(float)numberToRound
-{
-    numberToRound = numberToRound;
-    if (self.videoPlayer.duration - numberToRound < 2) {
-        return (int)numberToRound;
-    }
-    
-    return  (int)(numberToRound + 0.5);
-    
-}
+//-(int)roundValue:(float)numberToRound
+//{
+//    numberToRound = numberToRound;
+//    if ([self.videoPlayer durationInSeconds] - numberToRound < 2) {
+//        return (int)numberToRound;
+//    }
+//    
+//    return  (int)(numberToRound + 0.5);
+//    
+//}
 
 -(void)removeAllFullScreenSubviews
 {
@@ -1848,60 +1939,60 @@ int viewWillAppearCalled;
         BookmarkViewCell *cell;
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
             
-            CGPoint p = [gestureRecognizer locationInView:self.tableView];
-//                CGPoint q = [gestureRecognizer locationInView:self.view];
-            
-            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:p];
-            if (indexPath == nil) {
-                return;
-            }
-
-            [self reorderTableView:self.tableView didSelectRowAtIndexPath:indexPath];
-            cell = (BookmarkViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
-            NSDictionary *data = [self tagAtIndexPath:indexPath];
+//            CGPoint p = [gestureRecognizer locationInView:self.tableView];
+////                CGPoint q = [gestureRecognizer locationInView:self.view];
+//            
+//            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:p];
+//            if (indexPath == nil) {
+//                return;
+//            }
+//
+//            [self reorderTableView:self.tableView didSelectRowAtIndexPath:indexPath];
+//            cell = (BookmarkViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+//            NSDictionary *data = [self tagAtIndexPath:indexPath];
             
             //show popover view to show the tag's details information,ie: event date,event time, home/visit teams, league, tag name and tag time
-            
-            UIViewController* popoverContent = [[UIViewController alloc] init];
-            UIView *popoverView = [[UIView alloc] init];
-            popoverView.backgroundColor = [UIColor whiteColor];
-            UITextView *tagDetailsView = [[UITextView alloc]initWithFrame:CGRectMake(10, 5, 340, 280)];
-            if([[data objectForKey:@"event" ] isEqualToString:@"live"])
-            {
-                return;
-            }
-            NSArray *tempArr = [[data objectForKey:@"event" ] componentsSeparatedByString:@"_"];
-            NSString *eventDate =  [NSString stringWithString:[tempArr objectAtIndex:0] ];
-            NSArray *tempTime = [[NSString stringWithFormat:@"%@",[tempArr objectAtIndex:1]]componentsSeparatedByString:@"-"] ;
-            NSString *eventTime = [NSString stringWithFormat:@"%@ : %@ : %@",[tempTime objectAtIndex:0],[tempTime objectAtIndex:1],[tempTime objectAtIndex:2]];
-            
-            NSDictionary *teamInfo = [[allEvents objectForKey:[data objectForKey:@"event"]] copy];
-            NSString *homeTeam;
-            NSString *visitTeam;
-            NSString *leagueName;
-            if (teamInfo){
-                homeTeam = [teamInfo objectForKey:@"homeTeam"];
-                visitTeam = [teamInfo objectForKey:@"visitTeam"];
-                leagueName = [teamInfo objectForKey:@"league"];
-            } else {
-                homeTeam = [data objectForKey:@"homeTeam"];
-                visitTeam = [data objectForKey:@"visitTeam"];
-                leagueName = @"";
-            }
-            
-            [tagDetailsView setText:[NSString stringWithFormat:@"event date: %@ \nevent time: %@ \nhome team: %@ \nvisit team: %@ \nleague: %@\ntag name: %@ \ntag time: %@",eventDate,eventTime,homeTeam,visitTeam,leagueName,[data objectForKey:@"name"],           [data objectForKey:@"displaytime"]]];
-            [tagDetailsView setFont:[UIFont boldSystemFontOfSize:18.f]];
-            [tagDetailsView setUserInteractionEnabled:FALSE];
-            [popoverView addSubview:tagDetailsView];
-            popoverContent.view = popoverView;
-            popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-            [popoverController setPopoverContentSize:CGSizeMake(300, 220) animated:YES];
-            //pop over the view based on the cell's position
-            [popoverController presentPopoverFromRect:cell.bounds inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+//            
+//            UIViewController* popoverContent = [[UIViewController alloc] init];
+//            UIView *popoverView = [[UIView alloc] init];
+//            popoverView.backgroundColor = [UIColor whiteColor];
+//            UITextView *tagDetailsView = [[UITextView alloc]initWithFrame:CGRectMake(10, 5, 340, 280)];
+//            if([[data objectForKey:@"event" ] isEqualToString:@"live"])
+//            {
+//                return;
+//            }
+//            NSArray *tempArr = [[data objectForKey:@"event" ] componentsSeparatedByString:@"_"];
+//            NSString *eventDate =  [NSString stringWithString:[tempArr objectAtIndex:0] ];
+//            NSArray *tempTime = [[NSString stringWithFormat:@"%@",[tempArr objectAtIndex:1]]componentsSeparatedByString:@"-"] ;
+//            NSString *eventTime = [NSString stringWithFormat:@"%@ : %@ : %@",[tempTime objectAtIndex:0],[tempTime objectAtIndex:1],[tempTime objectAtIndex:2]];
+//            
+//            NSDictionary *teamInfo = [[allEvents objectForKey:[data objectForKey:@"event"]] copy];
+//            NSString *homeTeam;
+//            NSString *visitTeam;
+//            NSString *leagueName;
+//            if (teamInfo){
+//                homeTeam = [teamInfo objectForKey:@"homeTeam"];
+//                visitTeam = [teamInfo objectForKey:@"visitTeam"];
+//                leagueName = [teamInfo objectForKey:@"league"];
+//            } else {
+//                homeTeam = [data objectForKey:@"homeTeam"];
+//                visitTeam = [data objectForKey:@"visitTeam"];
+//                leagueName = @"";
+//            }
+//            
+//            [tagDetailsView setText:[NSString stringWithFormat:@"event date: %@ \nevent time: %@ \nhome team: %@ \nvisit team: %@ \nleague: %@\ntag name: %@ \ntag time: %@",eventDate,eventTime,homeTeam,visitTeam,leagueName,[data objectForKey:@"name"],           [data objectForKey:@"displaytime"]]];
+//            [tagDetailsView setFont:[UIFont boldSystemFontOfSize:18.f]];
+//            [tagDetailsView setUserInteractionEnabled:FALSE];
+//            [popoverView addSubview:tagDetailsView];
+//            popoverContent.view = popoverView;
+//            popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+//            [popoverController setPopoverContentSize:CGSizeMake(300, 220) animated:YES];
+//            //pop over the view based on the cell's position
+//            [popoverController presentPopoverFromRect:cell.bounds inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 
-            [[self.tableView cellForRowAtIndexPath:wasPlayingIndexPath] setBackgroundColor:[UIColor colorWithWhite:0.9f alpha:1.0f]];
+           // [[self.tableView cellForRowAtIndexPath:wasPlayingIndexPath] setBackgroundColor:[UIColor colorWithWhite:0.9f alpha:1.0f]];
             //            }
-            wasPlayingIndexPath = indexPath;
+           // wasPlayingIndexPath = indexPath;
         }
 
         [videoPlayer play];
@@ -1911,6 +2002,14 @@ int viewWillAppearCalled;
 #pragma mark - Richard Filtering
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {
+    AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
+    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
+    self.tagsToDisplay = [filteredArray mutableCopy];
+    
+    _tableViewController.tableData = self.tagsToDisplay;
+    [self.tableViewController reloadData];
+    //[breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
+    
 //    MyClipFilterViewController * checkFilter = (MyClipFilterViewController *)filter;
 //    
 //    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
@@ -1968,7 +2067,7 @@ int viewWillAppearCalled;
     
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
-    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+    //[self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
 }
 
 /**
@@ -1977,24 +2076,24 @@ int viewWillAppearCalled;
  *  @param jpTable   TableView
  *  @param indexPath indexPath of tag
  */
--(void)reorderTableView:(JPReorderTableView*)jpTable accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath
-{
-    if (indexPath == nil)  return;
-
-    BookmarkViewCell    * cell              = (BookmarkViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
-    NSDictionary        * data              = [self tagAtIndexPath:indexPath];
-    UIViewController    * popoverContent    = [[UIViewController alloc] init];
-    popoverContent.view                     = [[TagPopOverContent alloc]initWithData:data frame:CGRectMake(0,0,280, 210)];
-    popoverController                       = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-    
-    [popoverController setPopoverContentSize:CGSizeMake(300, 220) animated:YES];
-
-    [popoverController presentPopoverFromRect:cell.bounds
-                                       inView:cell
-                     permittedArrowDirections:UIPopoverArrowDirectionAny
-                                     animated:YES];
-
-}
+//-(void)reorderTableView:(JPReorderTableView*)jpTable accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath
+//{
+//    if (indexPath == nil)  return;
+//
+//    BookmarkViewCell    * cell              = (BookmarkViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+//    NSDictionary        * data              = [self tagAtIndexPath:indexPath];
+//    UIViewController    * popoverContent    = [[UIViewController alloc] init];
+//    popoverContent.view                     = [[TagPopOverContent alloc]initWithData:data frame:CGRectMake(0,0,280, 210)];
+//    popoverController                       = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+//    
+//    [popoverController setPopoverContentSize:CGSizeMake(300, 220) animated:YES];
+//
+//    [popoverController presentPopoverFromRect:cell.bounds
+//                                       inView:cell
+//                     permittedArrowDirections:UIPopoverArrowDirectionAny
+//                                     animated:YES];
+//
+//}
 
 /**
  *  This is a getter that returnds the tages To Be displayed 
@@ -2036,89 +2135,89 @@ int viewWillAppearCalled;
 #pragma mark - Sharing Methods
 
 //send clip to dropbox
--(void)sendVideoToDropbox:(id)sender
-{
-    DBSession* dropboxSession = [[DBSession alloc] initWithAppKey:kDropboxAppKey appSecret:kDropboxAppSecret root:kDropboxAppRoot];
-    [DBSession setSharedSession:dropboxSession];
-    
-    if(![dropboxSession isLinked])
-    {
-        [[DBSession sharedSession] linkFromController:self];
-        return;
-    }
-    
-    _DPBUploader = [[DPBFileUploader alloc] initWithSession:dropboxSession];
-    _DPBUploader.expectedUploadNum = [self.tableView.selectedRows count];
-    
-    for(NSNumber* rowNum in self.tableView.selectedRows)
-    {
-        NSInteger selectedRow = [rowNum integerValue];
-        NSDictionary* tag = [self.tagsToDisplay objectAtIndex:selectedRow];
-        
-        NSString* fileName = [self cloudFileNameWithTag:tag];
-        NSData* fileData = [self cloudFileDataWithTag:tag];
-        
-        [_DPBUploader uploadFileAsyncWithFileName:fileName data:fileData destPath:[self dropboxTodayFolderPath]];
-    }
-    
-    [popoverController dismissPopoverAnimated:YES];
-    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-}
-
-#pragma mark Google Drive Share
-
-- (void)googleDriveShare
-{
-    _currentSharingMethod = 0;
-    
-    [self uploadToGoogleDrive];
-    
-    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-    
-    [popoverController dismissPopoverAnimated:YES];
-    isEditingClips= NO;
-    
-}
-
-//just upload to google drive, do not change iPad interface
-- (void)uploadToGoogleDrive
-{
-    NSArray *selectedCellArr = self.tableView.selectedRows;
-    
-    if (selectedCellArr.count == 0) {
-        [popoverController dismissPopoverAnimated:YES];
-        isEditingClips = NO;
-        return;
-    }
+//-(void)sendVideoToDropbox:(id)sender
+//{
+//    DBSession* dropboxSession = [[DBSession alloc] initWithAppKey:kDropboxAppKey appSecret:kDropboxAppSecret root:kDropboxAppRoot];
+//    [DBSession setSharedSession:dropboxSession];
 //    
-//    if(!_GDUploader)
+//    if(![dropboxSession isLinked])
 //    {
-//        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
-//        _GDUploader.delegate = self;
+//        [[DBSession sharedSession] linkFromController:self];
+//        return;
 //    }
 //    
-//    _GDUploader.exepectedFileNumber = selectedCellArr.count;
+//    _DPBUploader = [[DPBFileUploader alloc] initWithSession:dropboxSession];
+//    _DPBUploader.expectedUploadNum = [self.tableView.selectedRows count];
 //    
-    for (NSNumber* rowNum in selectedCellArr) {
-        
-        NSDictionary *dict = [self.tagsToDisplay objectAtIndex:[rowNum integerValue]];
-        NSMutableDictionary *tag = [dict mutableCopy];
-        
-        NSString* mimeType = @"video/mp4";
-        
-        //tele
-        if ([[tag objectForKey:@"type"]intValue] == 4) {
-            mimeType = @"image/png";
-        }
-        
-        NSData* fileData = [self cloudFileDataWithTag:tag];
-        
-        NSString* fileName = [self cloudFileNameWithTag:tag];
-        
-//        [_GDUploader uploadFileWithName:fileName data:fileData MIMEType:mimeType];
-        
-    }
-}
+//    for(NSNumber* rowNum in self.tableView.selectedRows)
+//    {
+//        NSInteger selectedRow = [rowNum integerValue];
+//        NSDictionary* tag = [self.tagsToDisplay objectAtIndex:selectedRow];
+//        
+//        NSString* fileName = [self cloudFileNameWithTag:tag];
+//        NSData* fileData = [self cloudFileDataWithTag:tag];
+//        
+//        [_DPBUploader uploadFileAsyncWithFileName:fileName data:fileData destPath:[self dropboxTodayFolderPath]];
+//    }
+//    
+//    [popoverController dismissPopoverAnimated:YES];
+//    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//}
+//
+//#pragma mark Google Drive Share
+//
+//- (void)googleDriveShare
+//{
+//    _currentSharingMethod = 0;
+//    
+//    [self uploadToGoogleDrive];
+//    
+//    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//    
+//    [popoverController dismissPopoverAnimated:YES];
+//    isEditingClips= NO;
+//    
+//}
+//
+////just upload to google drive, do not change iPad interface
+//- (void)uploadToGoogleDrive
+//{
+//    NSArray *selectedCellArr = self.tableView.selectedRows;
+//    
+//    if (selectedCellArr.count == 0) {
+//        [popoverController dismissPopoverAnimated:YES];
+//        isEditingClips = NO;
+//        return;
+//    }
+////    
+////    if(!_GDUploader)
+////    {
+////        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
+////        _GDUploader.delegate = self;
+////    }
+////    
+////    _GDUploader.exepectedFileNumber = selectedCellArr.count;
+////    
+//    for (NSNumber* rowNum in selectedCellArr) {
+//        
+//        NSDictionary *dict = [self.tagsToDisplay objectAtIndex:[rowNum integerValue]];
+//        NSMutableDictionary *tag = [dict mutableCopy];
+//        
+//        NSString* mimeType = @"video/mp4";
+//        
+//        //tele
+//        if ([[tag objectForKey:@"type"]intValue] == 4) {
+//            mimeType = @"image/png";
+//        }
+//        
+//        NSData* fileData = [self cloudFileDataWithTag:tag];
+//        
+//        NSString* fileName = [self cloudFileNameWithTag:tag];
+//        
+////        [_GDUploader uploadFileWithName:fileName data:fileData MIMEType:mimeType];
+//        
+//    }
+//}
 
 - (NSString*)cloudFileNameWithTag: (NSDictionary*)tag
 {
@@ -2150,23 +2249,23 @@ int viewWillAppearCalled;
 #pragma mark Save To Album
 
 //save the video to the device's photos album
--(void)saveVideoToPhotosAlbum{
-    
-    savingToAlbumArray = [NSMutableArray array];
-    
-    for(NSNumber* rowNum in self.tableView.selectedRows)
-    {
-        NSInteger selectedRow = [rowNum integerValue];
-        NSDictionary* tag = [self.tagsToDisplay objectAtIndex:selectedRow];
-        [savingToAlbumArray addObject:tag];
-    }
-    
-    if (savingToAlbumArray.count>0) {
-        [self saveFile:[savingToAlbumArray objectAtIndex:0]];
-    }
-    [popoverController dismissPopoverAnimated:YES];
-    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-}
+//-(void)saveVideoToPhotosAlbum{
+//    
+//    savingToAlbumArray = [NSMutableArray array];
+//    
+//    for(NSNumber* rowNum in self.tableView.selectedRows)
+//    {
+//        NSInteger selectedRow = [rowNum integerValue];
+//        NSDictionary* tag = [self.tagsToDisplay objectAtIndex:selectedRow];
+//        [savingToAlbumArray addObject:tag];
+//    }
+//    
+//    if (savingToAlbumArray.count>0) {
+//        [self saveFile:[savingToAlbumArray objectAtIndex:0]];
+//    }
+//    [popoverController dismissPopoverAnimated:YES];
+//    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//}
 
 
 //save one video each time
@@ -2393,135 +2492,135 @@ int viewWillAppearCalled;
 
 
 #pragma mark Email Tags
--(void)emailTags{
-    
-//    if (!globals.HAS_CLOUD) {
-//        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:@"Please connect the internet before sending an email." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [alert show];
-//        return;
-//    }
-    
-    [popoverController dismissPopoverAnimated:YES];
-    NSString *videoName;
-    NSString *emailBody = @"";
-    self.mailController = [[MFMailComposeViewController alloc] init];
-    self.mailController.mailComposeDelegate = self;
-    int length = 0;
-    int i = 0;
-    
-    NSArray *selectedCellArr = self.tableView.selectedRows;
-    for (NSNumber* rowNum in selectedCellArr) {
-        
-        NSDictionary *dict = [self.tagsToDisplay objectAtIndex:[rowNum integerValue]];
-        NSMutableDictionary *tag = [dict mutableCopy];
-        
-        NSString *mimeType;
-        if([[tag objectForKey:@"type"]intValue] !=4)
-        {
-            mimeType=@"video/mp4";
-            videoName = [[tag objectForKey:@"event"] stringByAppendingFormat:@"_%@",[[tag objectForKey:@"vidurl"] lastPathComponent]];
-        }else{
-            mimeType=@"image/png";
-            videoName = [NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]];
-        }
-        
-        if([[tag objectForKey:@"event" ] isEqualToString:@"live"])
-        {
-            return;
-        }
-        
-        NSMutableString *formattedInfo;
-        NSArray *tempArr = [[tag objectForKey:@"event" ] componentsSeparatedByString:@"_"];
-        NSString *eventTime = [[tempArr objectAtIndex:1] stringByReplacingOccurrencesOfString:@"-" withString:@":"];
-        
-        if ([tag objectForKey:@"homeTeam"] && [tag objectForKey:@"visitTeam"]){
-            formattedInfo = [NSMutableString stringWithFormat:@"Tag: %@\nEvent date: %@ \nEvent Time: %@ \nTag Time: %@ \nHome: %@ \nVisiting: %@ \n", [tag objectForKey:@"name"],[tempArr objectAtIndex:0],eventTime,[tag objectForKey:@"displaytime"], [tag objectForKey:@"homeTeam"], [tag objectForKey:@"visitTeam"]];
-        } else {
-            NSDictionary *teamInfo = [[allEvents objectForKey:[tag objectForKey:@"event"]] copy];
-            NSString *homeTeam = [teamInfo objectForKey:@"homeTeam"];
-            NSString *visitTeam = [teamInfo objectForKey:@"visitTeam"];
-            
-            if (homeTeam && visitTeam ){
-                formattedInfo = [NSMutableString stringWithFormat:@"Tag: %@\nEvent date: %@ \nEvent Time: %@ \nTag Time: %@ \nHome: %@ \nVisiting: %@ \n", [tag objectForKey:@"name"],[tempArr objectAtIndex:0],eventTime,[tag objectForKey:@"displaytime"], homeTeam, visitTeam];
-            } else {
-                formattedInfo = [NSMutableString stringWithFormat:@"Tag: %@\nEvent date: %@ \nEvent Time: %@ \nTag Time: %@ \n", [tag objectForKey:@"name"],[tempArr objectAtIndex:0],eventTime,[tag objectForKey:@"displaytime"]];
-            }
-        }
-        
-        if ([[tag objectForKey:@"comment"] length]>0){
-            [formattedInfo appendFormat:@"Comment: %@ \n",[tag objectForKey:@"comment"]];
-        }
-        int rating = [[tag objectForKey:@"rating"] integerValue];
-        if (rating != 0){
-            [formattedInfo appendFormat:@"Rating: %@/5 \n",[tag objectForKey:@"rating"]];
-        }
-        NSError *error;
-        
-        
-        NSString *dataPath;
+//-(void)emailTags{
+//    
+////    if (!globals.HAS_CLOUD) {
+////        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:@"Please connect the internet before sending an email." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+////        [alert show];
+////        return;
+////    }
+//    
+//    [popoverController dismissPopoverAnimated:YES];
+//    NSString *videoName;
+//    NSString *emailBody = @"";
+//    self.mailController = [[MFMailComposeViewController alloc] init];
+//    self.mailController.mailComposeDelegate = self;
+//    int length = 0;
+//    int i = 0;
+
+//    NSArray *selectedCellArr = self.tableView.selectedRows;
+//    for (NSNumber* rowNum in selectedCellArr) {
+//        
+//        NSDictionary *dict = [self.tagsToDisplay objectAtIndex:[rowNum integerValue]];
+//        NSMutableDictionary *tag = [dict mutableCopy];
+//        
+//        NSString *mimeType;
 //        if([[tag objectForKey:@"type"]intValue] !=4)
 //        {
-//            dataPath=[globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
+//            mimeType=@"video/mp4";
+//            videoName = [[tag objectForKey:@"event"] stringByAppendingFormat:@"_%@",[[tag objectForKey:@"vidurl"] lastPathComponent]];
 //        }else{
-//            dataPath=[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
-//            
+//            mimeType=@"image/png";
+//            videoName = [NSString stringWithFormat:@"telestration_%@_%@.png",[tag objectForKey:@"event"],[tag objectForKey:@"id"]];
 //        }
-        
-        //NSDataReadingMappedIfSafe:A hint indicating the file should be mapped into virtual memory, if possible and safe.
-        NSData *myData = [NSData dataWithContentsOfFile:dataPath options:NSDataReadingMappedIfSafe error:&error];
-        [self.mailController addAttachmentData:myData mimeType:@"video/mp4" fileName:videoName];
-        emailBody  = [NSString stringWithFormat:@"%@ \n%@ ",emailBody,formattedInfo];
-        
-        length = length + [myData length];
-        i++;
-        //if the attachment size if too large, will cause low memory warning; temporarily attachment limit 20M
-        if ((float)length/1048576.0 > 20) {
-            UIAlertView *alert = [[UIAlertView alloc]
-                                  initWithTitle: @"myplayXplay"
-                                  message: @"Message size exceeds the maximum size allowed by the server."
-                                  delegate: nil
-                                  cancelButtonTitle:@"OK"
-                                  otherButtonTitles:nil];
-            [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-//            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-            return;
-        }
-    }
-    [self.mailController setSubject:@""];
-    [self.mailController setMessageBody:@"" isHTML:NO];
-    [self.mailController setMessageBody:emailBody isHTML:NO];
-    
-    if (self.mailController){
-        [self presentViewController:self.mailController animated:YES completion:nil];
-    }
-}
-
--(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-    
-    if(result == MFMailComposeResultFailed)
-    {
-        NSString *msg = @"Mail failed. Please select less tags and try it again later.";
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-}
-
+//        
+//        if([[tag objectForKey:@"event" ] isEqualToString:@"live"])
+//        {
+//            return;
+//        }
+//        
+//        NSMutableString *formattedInfo;
+//        NSArray *tempArr = [[tag objectForKey:@"event" ] componentsSeparatedByString:@"_"];
+//        NSString *eventTime = [[tempArr objectAtIndex:1] stringByReplacingOccurrencesOfString:@"-" withString:@":"];
+//        
+//        if ([tag objectForKey:@"homeTeam"] && [tag objectForKey:@"visitTeam"]){
+//            formattedInfo = [NSMutableString stringWithFormat:@"Tag: %@\nEvent date: %@ \nEvent Time: %@ \nTag Time: %@ \nHome: %@ \nVisiting: %@ \n", [tag objectForKey:@"name"],[tempArr objectAtIndex:0],eventTime,[tag objectForKey:@"displaytime"], [tag objectForKey:@"homeTeam"], [tag objectForKey:@"visitTeam"]];
+//        } else {
+//            NSDictionary *teamInfo = [[allEvents objectForKey:[tag objectForKey:@"event"]] copy];
+//            NSString *homeTeam = [teamInfo objectForKey:@"homeTeam"];
+//            NSString *visitTeam = [teamInfo objectForKey:@"visitTeam"];
+//            
+//            if (homeTeam && visitTeam ){
+//                formattedInfo = [NSMutableString stringWithFormat:@"Tag: %@\nEvent date: %@ \nEvent Time: %@ \nTag Time: %@ \nHome: %@ \nVisiting: %@ \n", [tag objectForKey:@"name"],[tempArr objectAtIndex:0],eventTime,[tag objectForKey:@"displaytime"], homeTeam, visitTeam];
+//            } else {
+//                formattedInfo = [NSMutableString stringWithFormat:@"Tag: %@\nEvent date: %@ \nEvent Time: %@ \nTag Time: %@ \n", [tag objectForKey:@"name"],[tempArr objectAtIndex:0],eventTime,[tag objectForKey:@"displaytime"]];
+//            }
+//        }
+//        
+//        if ([[tag objectForKey:@"comment"] length]>0){
+//            [formattedInfo appendFormat:@"Comment: %@ \n",[tag objectForKey:@"comment"]];
+//        }
+//        int rating = [[tag objectForKey:@"rating"] integerValue];
+//        if (rating != 0){
+//            [formattedInfo appendFormat:@"Rating: %@/5 \n",[tag objectForKey:@"rating"]];
+//        }
+//        NSError *error;
+//        
+//        
+//        NSString *dataPath;
+////        if([[tag objectForKey:@"type"]intValue] !=4)
+////        {
+////            dataPath=[globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
+////        }else{
+////            dataPath=[globals.BOOKMARK_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]] ;
+////            
+////        }
+//        
+//        //NSDataReadingMappedIfSafe:A hint indicating the file should be mapped into virtual memory, if possible and safe.
+//        NSData *myData = [NSData dataWithContentsOfFile:dataPath options:NSDataReadingMappedIfSafe error:&error];
+//        [self.mailController addAttachmentData:myData mimeType:@"video/mp4" fileName:videoName];
+//        emailBody  = [NSString stringWithFormat:@"%@ \n%@ ",emailBody,formattedInfo];
+//        
+//        length = length + [myData length];
+//        i++;
+//        //if the attachment size if too large, will cause low memory warning; temporarily attachment limit 20M
+//        if ((float)length/1048576.0 > 20) {
+//            UIAlertView *alert = [[UIAlertView alloc]
+//                                  initWithTitle: @"myplayXplay"
+//                                  message: @"Message size exceeds the maximum size allowed by the server."
+//                                  delegate: nil
+//                                  cancelButtonTitle:@"OK"
+//                                  otherButtonTitles:nil];
+//            [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+////            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+//            return;
+//        }
+//    }
+//    [self.mailController setSubject:@""];
+//    [self.mailController setMessageBody:@"" isHTML:NO];
+//    [self.mailController setMessageBody:emailBody isHTML:NO];
+//    
+//    if (self.mailController){
+//        [self presentViewController:self.mailController animated:YES completion:nil];
+//    }
+//}
+//
+//-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+//    
+//    if(result == MFMailComposeResultFailed)
+//    {
+//        NSString *msg = @"Mail failed. Please select less tags and try it again later.";
+//        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [alert show];
+//    }
+//    
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//}
+//
 
 #pragma mark Facebook Methods
-- (void)facebookShare
-{
-    [self socialShareWithMethod:1];
-}
+//- (void)facebookShare
+//{
+//    [self socialShareWithMethod:1];
+//}
 
 
 #pragma mark Twitter Share
--(void)twitterShare
-{
-    [self socialShareWithMethod:2];
-}
+//-(void)twitterShare
+//{
+//    [self socialShareWithMethod:2];
+//}
 
 - (void)socialShareWithMethod: (NSInteger)service
 {
@@ -2542,11 +2641,11 @@ int viewWillAppearCalled;
 //        return;
 //    }
     
-    _currentSharingMethod = service;
-    [self uploadToGoogleDrive];
-    
-    [popoverController dismissPopoverAnimated:YES];
-    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//    _currentSharingMethod = service;
+//    [self uploadToGoogleDrive];
+//    
+//    [popoverController dismissPopoverAnimated:YES];
+//    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
     
 }
 
@@ -2587,3 +2686,4 @@ int viewWillAppearCalled;
 }
 
 @end
+

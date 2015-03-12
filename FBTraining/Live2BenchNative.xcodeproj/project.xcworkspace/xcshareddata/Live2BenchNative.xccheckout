@@ -10,31 +10,31 @@
 	<string>Live2BenchNative</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>28AE6985-6A76-4817-8E6B-64BD16591ECA</key>
-		<string>ssh://devServer/home/git/pxp-live2BenchNative.git</string>
+		<key>EFC82023A03AA21CE226B05A64BF8C50035D36D5</key>
+		<string>ssh://avocatec.org:2008/home/git/pxp-live2bench.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Live2BenchNative.xcodeproj/project.xcworkspace</string>
+	<string>FBTraining/Live2BenchNative.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>28AE6985-6A76-4817-8E6B-64BD16591ECA</key>
-		<string>../..</string>
+		<key>EFC82023A03AA21CE226B05A64BF8C50035D36D5</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://devServer/home/git/pxp-live2BenchNative.git</string>
+	<string>ssh://avocatec.org:2008/home/git/pxp-live2bench.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>28AE6985-6A76-4817-8E6B-64BD16591ECA</string>
+	<string>EFC82023A03AA21CE226B05A64BF8C50035D36D5</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>28AE6985-6A76-4817-8E6B-64BD16591ECA</string>
+			<string>EFC82023A03AA21CE226B05A64BF8C50035D36D5</string>
 			<key>IDESourceControlWCCName</key>
-			<string>FBTraining</string>
+			<string>pxp-live2bench</string>
 		</dict>
 	</array>
 </dict>

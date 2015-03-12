@@ -49,7 +49,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     BUTTON_STATE                        = START_HIDDEN | STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_HIDDEN
 };
 //typedef enum  {
-//    
+//
 //}EventButtonControlStates;
 
 
@@ -57,7 +57,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 @end
 
 @implementation SettingsViewController{
-
+    
     UILabel                 * encStateLabel;
     int                     encStateCounter;
     BOOL                    encoderAvailable;
@@ -73,7 +73,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     TablePopoverController * LeaguePick;
     NSArray                * teamNames;
     NSArray                * leagueNames;
-//    id                     observerForFoundMaster;
+    //    id                     observerForFoundMaster;
     id                     observerForLostMaster;
     UITapGestureRecognizer *tapBehindGesture;
     
@@ -104,7 +104,7 @@ SVSignalStatus signalStatus;
         homeTeamPick            = [[TablePopoverController alloc]init];
         visitTeamPick           = [[TablePopoverController alloc]init];
         LeaguePick              = [[TablePopoverController alloc]init];
-
+        
         encoderHomeText         = [CustomLabel labelWithStyle:CLStyleOrange];
         encoderHomeText.text    = @"Encoder is not available.";
         
@@ -115,12 +115,12 @@ SVSignalStatus signalStatus;
         
         [encStateLabel setHidden:YES];
         // observers
-//        observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
-//            masterEncoder = encoderManager.masterEncoder;
-//            encoderHomeText.text = @"Encoder Home";
-//            [encStateLabel setHidden:NO];
-//            [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
-//        }];
+        //        observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
+        //            masterEncoder = encoderManager.masterEncoder;
+        //            encoderHomeText.text = @"Encoder Home";
+        //            [encStateLabel setHidden:NO];
+        //            [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
+        //        }];
         
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterFound:) name:NOTIF_ENCODER_MASTER_FOUND object:nil];
@@ -137,7 +137,7 @@ SVSignalStatus signalStatus;
                 [weakMasterEncoder removeObserver:self forKeyPath:@"status" context:&masterContext];
             }
         }];
-
+        
         
         homeTeam            = @"Home Team";
         awayTeam            = @"Away Team";
@@ -149,7 +149,7 @@ SVSignalStatus signalStatus;
 
 - (void)setupView
 {
-   
+    
     [self.view setFrame:CGRectMake(0, 0, 350.0f, 768.0f)];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
@@ -161,23 +161,23 @@ SVSignalStatus signalStatus;
     CustomLabel *encoderControlsLabel = [CustomLabel labelWithStyle:CLStyleBlackHeader];
     encoderControlsLabel.frame = CGRectMake(20.0f, 20.0f, 200.0f, 23.0f);
     encoderControlsLabel.text = @"Encoder Controls";
-    [scrollView addSubview:encoderControlsLabel];
+    //    [scrollView addSubview:encoderControlsLabel];
+    //
+    //    CustomLabel *versionLabel = [CustomLabel labelWithStyle:CLStyleBlack];
+    //    versionLabel.frame = CGRectMake(self.view.bounds.size.width - 125.0f, encoderControlsLabel.frame.origin.y + 6.0f, 63.0f, 17.0f);
+    //    versionLabel.text = @"Version:";
+    //    versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    //    [scrollView addSubview:versionLabel];
     
-    CustomLabel *versionLabel = [CustomLabel labelWithStyle:CLStyleBlack];
-    versionLabel.frame = CGRectMake(self.view.bounds.size.width - 125.0f, encoderControlsLabel.frame.origin.y + 6.0f, 63.0f, 17.0f);
-    versionLabel.text = @"Version:";
-    versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [scrollView addSubview:versionLabel];
-    
-    appVersionLabel = [CustomLabel labelWithStyle:CLStyleGrey];
-    appVersionLabel.frame = CGRectMake(CGRectGetMaxX(versionLabel.frame), versionLabel.frame.origin.y, 55.0f, versionLabel.frame.size.height);
-    appVersionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [scrollView addSubview:appVersionLabel];
+    //    appVersionLabel = [CustomLabel labelWithStyle:CLStyleGrey];
+    //    appVersionLabel.frame = CGRectMake(CGRectGetMaxX(versionLabel.frame), versionLabel.frame.origin.y, 55.0f, versionLabel.frame.size.height);
+    //    appVersionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    //    [scrollView addSubview:appVersionLabel];
     
     UIView *line1 = [[UIView alloc] initWithFrame:CGRectMake(15.0f, CGRectGetMaxY(encoderControlsLabel.frame) + 5.0f, self.view.bounds.size.width - 30.0f, 1.0f)];
     line1.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     line1.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
-    [scrollView addSubview:line1];
+    //    [scrollView addSubview:line1];
     
     selectHomeContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetMaxY(line1.frame) + 70.0f, self.view.bounds.size.width, 55.0f)];
     selectHomeContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
@@ -191,7 +191,7 @@ SVSignalStatus signalStatus;
     selectLeagueContainer.autoresizingMask = selectHomeContainer.autoresizingMask;
     [scrollView addSubview:selectLeagueContainer];
     
-    firstEncButton = [[UIView alloc] initWithFrame:CGRectMake(80.0f, CGRectGetMaxY(selectLeagueContainer.frame) + 15.0f, 150.0f, 150.0f)];
+    firstEncButton = [[UIView alloc] initWithFrame:CGRectMake(80.0f, CGRectGetMaxY(selectLeagueContainer.frame) + 80.0f, 150.0f, 150.0f)];
     firstEncButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [scrollView addSubview:firstEncButton];
     
@@ -208,92 +208,92 @@ SVSignalStatus signalStatus;
     signalStrengthLabel.textAlignment = NSTextAlignmentRight;
     signalStrengthLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
     signalStrengthLabel.text = @"Signal:";
-//    [scrollView addSubview:signalStrengthLabel];
+    //    [scrollView addSubview:signalStrengthLabel];
     
     UIView *signalStrengthBG = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(signalStrengthLabel.frame) + 5.0f, CGRectGetMaxY(line1.frame) + 6.0f, 31.0f, 28.0f)];
     signalStrengthBG.backgroundColor = [UIColor colorWithRed:(202.0f/255.0f) green:(100.0f/255.0f) blue:0.0f alpha:1.0f];
     signalStrengthBG.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-//    [scrollView addSubview:signalStrengthBG];
+    //    [scrollView addSubview:signalStrengthBG];
     
     //Width of this frame represents the strength of the signal
     signalStrengthView = [[UIView alloc] initWithFrame:CGRectMake(signalStrengthBG.frame.origin.x + 1.0f, signalStrengthBG.frame.origin.y, 0.0f, signalStrengthBG.bounds.size.height)];
     signalStrengthView.backgroundColor = [UIColor orangeColor];
     signalStrengthView.autoresizingMask = signalStrengthBG.autoresizingMask;
     signalStatus = SVSignalShowing;
-//    [scrollView addSubview:signalStrengthView];
+    //    [scrollView addSubview:signalStrengthView];
     
     signalStrengthOverlay = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"signalStrength"]];
     signalStrengthOverlay.frame = signalStrengthBG.frame;
     signalStrengthOverlay.autoresizingMask = signalStrengthBG.autoresizingMask;
-//    [scrollView addSubview:signalStrengthOverlay];
+    //    [scrollView addSubview:signalStrengthOverlay];
     
     UIButton *signalPopoverButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [signalPopoverButton addTarget:self action:@selector(showSignalPopover:) forControlEvents:UIControlEventTouchUpInside];
     [signalPopoverButton setImage:[UIImage imageNamed:@"detailDisclosure"] forState:UIControlStateNormal];
     signalPopoverButton.frame = CGRectMake(self.view.bounds.size.width - 35.0f, signalStrengthOverlay.frame.origin.y, 28.0f, 28.0f);
     signalPopoverButton.autoresizingMask = signalStrengthBG.autoresizingMask;
-//    [scrollView addSubview:signalPopoverButton];
+    //    [scrollView addSubview:signalPopoverButton];
     
-    CustomLabel *generalLabel = [CustomLabel labelWithStyle:CLStyleBlackHeader];
-    generalLabel.frame = CGRectMake(20.0f, self.view.frame.size.height - 150.0f, 100.0f, 23.0f);
-    generalLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin;
-    generalLabel.text = @"General";
-    [scrollView addSubview:generalLabel];
-    
-    viewEulaContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetMaxY(generalLabel.frame), self.view.bounds.size.width, 85.0f)];
-    viewEulaContainer.backgroundColor = [UIColor clearColor];
-    viewEulaContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    
-    UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(15.0f, 5.0f, viewEulaContainer.bounds.size.width - 30.0f, 1.0f)];
-    line2.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
-    line2.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
-    [viewEulaContainer addSubview:line2];
-    [scrollView addSubview: viewEulaContainer];
-    
-    doNotShowContainer = [[UIView alloc] initWithFrame:CGRectMake(generalLabel.frame.origin.x, CGRectGetMaxY(viewEulaContainer.frame) + 14.0f, self.view.bounds.size.width - 2*generalLabel.frame.origin.x, 59.0f)];
-    doNotShowContainer.backgroundColor = [UIColor clearColor];
-    doNotShowContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [scrollView addSubview:doNotShowContainer];
-    
-    CustomLabel *userLabel = [CustomLabel labelWithStyle:CLStyleBlack];
-    userLabel.text = @"User:";
-    userLabel.frame = CGRectMake(15.0f, CGRectGetMaxY(self.view.frame) - 45.0f, 45.0f, 30.0f);
-    userLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-    [self.view addSubview:userLabel];
-    
-    userName = [CustomLabel labelWithStyle:CLStyleGrey];
-    userName.frame = CGRectMake(CGRectGetMaxX(userLabel.frame), userLabel.frame.origin.y, 207.0f, 30.0f);
-    userName.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-    [self.view addSubview:userName];
-    
-    logoutButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
-    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
-    logoutButton.frame = CGRectMake(self.view.frame.size.width - 90.0f, userLabel.frame.origin.y, 75.0f, 30.0f);
-    logoutButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-    [logoutButton addTarget:self action:@selector(appLogOut:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:logoutButton];
+    //    CustomLabel *generalLabel = [CustomLabel labelWithStyle:CLStyleBlackHeader];
+    //    generalLabel.frame = CGRectMake(20.0f, self.view.frame.size.height - 150.0f, 100.0f, 23.0f);
+    //    generalLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin;
+    //    generalLabel.text = @"General";
+    //    [scrollView addSubview:generalLabel];
+    //
+    //    viewEulaContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetMaxY(generalLabel.frame), self.view.bounds.size.width, 85.0f)];
+    //    viewEulaContainer.backgroundColor = [UIColor clearColor];
+    //    viewEulaContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    //
+    //    UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(15.0f, 5.0f, viewEulaContainer.bounds.size.width - 30.0f, 1.0f)];
+    //    line2.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
+    //    line2.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+    //    [viewEulaContainer addSubview:line2];
+    //    [scrollView addSubview: viewEulaContainer];
+    //
+    //    doNotShowContainer = [[UIView alloc] initWithFrame:CGRectMake(generalLabel.frame.origin.x, CGRectGetMaxY(viewEulaContainer.frame) + 14.0f, self.view.bounds.size.width - 2*generalLabel.frame.origin.x, 59.0f)];
+    //    doNotShowContainer.backgroundColor = [UIColor clearColor];
+    //    doNotShowContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    //    [scrollView addSubview:doNotShowContainer];
+    //
+    //    CustomLabel *userLabel = [CustomLabel labelWithStyle:CLStyleBlack];
+    //    userLabel.text = @"User:";
+    //    userLabel.frame = CGRectMake(15.0f, CGRectGetMaxY(self.view.frame) - 45.0f, 45.0f, 30.0f);
+    //    userLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    //    [self.view addSubview:userLabel];
+    //
+    //    userName = [CustomLabel labelWithStyle:CLStyleGrey];
+    //    userName.frame = CGRectMake(CGRectGetMaxX(userLabel.frame), userLabel.frame.origin.y, 207.0f, 30.0f);
+    //    userName.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    //    [self.view addSubview:userName];
+    //
+    //    logoutButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
+    //    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
+    //    logoutButton.frame = CGRectMake(self.view.frame.size.width - 90.0f, userLabel.frame.origin.y, 75.0f, 30.0f);
+    //    logoutButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+    //    [logoutButton addTarget:self action:@selector(appLogOut:) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.view addSubview:logoutButton];
     
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     //init subviews
     [self setupView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSpinnerView) name:@"EventInformationUpdated" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateForStatus) name:@"updatedEncoderStatus" object:nil];
-   
-
+    
+    
     
     if (!restClient) {
         restClient =
         [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
         restClient.delegate = self;
     }
-
-
+    
+    
     if(!uController)
     {
         uController=[[UtilitiesController alloc] init];
@@ -305,17 +305,17 @@ SVSignalStatus signalStatus;
     [self initialiseLayout];
     
     // Do any additional setup after loading the view from its nib.
-
-//    encoderHomeText.frame = encoderHomeLabel.bounds;
-
-
+    
+    //    encoderHomeText.frame = encoderHomeLabel.bounds;
+    
+    
 }
 
 
 -(void)viewDidAppear:(BOOL)animated
 {
     
-
+    
     [super viewDidAppear:animated];
     
     if(!tapBehindGesture) {
@@ -324,9 +324,9 @@ SVSignalStatus signalStatus;
         [tapBehindGesture setNumberOfTapsRequired:1];
         [tapBehindGesture setCancelsTouchesInView:NO]; //So the user can still interact with controls in the modal view
     }
- 
+    
     [self.view.window addGestureRecognizer:tapBehindGesture];
-
+    
 }
 
 
@@ -377,7 +377,7 @@ SVSignalStatus signalStatus;
 
 - (void)tapBehindDetected:(UITapGestureRecognizer *)sender
 {
- 
+    
     
     if (sender.state == UIGestureRecognizerStateEnded)
     {
@@ -386,7 +386,7 @@ SVSignalStatus signalStatus;
         if (![self.view pointInside:[self.view convertPoint:location fromView:rootView] withEvent:nil]) {
             [self dismiss];
         }
-
+        
     }
 }
 
@@ -412,7 +412,7 @@ SVSignalStatus signalStatus;
         //[[change objectForKey:@"new"]integerValue]
         [self masterEncoderStatusObserver:(Encoder*)object];
     }
-
+    
 }
 
 -(void)masterEncoderStatusObserver:(Encoder*)master
@@ -467,8 +467,8 @@ SVSignalStatus signalStatus;
             break;
     }
     
-//    NSInteger cc = encoderManager.totalCameraCount;
-//    NSString * scourceCount = (cc)?[NSString stringWithFormat:@" (s%i)",cc]:@"";
+    //    NSInteger cc = encoderManager.totalCameraCount;
+    //    NSString * scourceCount = (cc)?[NSString stringWithFormat:@" (s%i)",cc]:@"";
     [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }
 
@@ -480,7 +480,7 @@ SVSignalStatus signalStatus;
     [encStateLabel setHidden:NO];
     [encoderHomeText setAlpha:1];
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
-
+    
     // block
     NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
         NSMutableArray  * collection    = [[NSMutableArray alloc]init];
@@ -568,58 +568,58 @@ SVSignalStatus signalStatus;
 }
 
 -(void)updateSignalStrength {
-//    if (!globals.HAS_MIN || globals.BIT_RATE == 0) {
-//        signalStatus = SVSignalNotFound;
-//        signalStrengthView.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
-//        [signalStrengthOverlay setImage:[UIImage imageNamed:@"signalStrength"]];
-//        //1px whitespace on overlay
-//        float maxWidth = signalStrengthOverlay.bounds.size.width - 2.0f;
-//        CGRect tempRect = signalStrengthView.frame;
-//        tempRect.size.width = maxWidth;
-//        signalStrengthView.frame = tempRect;
-//        
-//    } else if (globals.BIT_RATE > 0){
-//        signalStatus = SVSignalShowing;
-//        double strength = globals.BIT_RATE/1000;
-//        if (strength > 1.0)
-//            strength = 1.0;
-//        signalStrengthView.backgroundColor = [UIColor orangeColor];
-//        [signalStrengthOverlay setImage:[UIImage imageNamed:@"signalStrength"]];
-//        //1px whitespace on overlay
-//        float maxWidth = signalStrengthOverlay.bounds.size.width - 2.0f;
-//        float signalWidth = strength*maxWidth;
-//        CGRect tempRect = signalStrengthView.frame;
-//        tempRect.size.width = signalWidth;
-//        signalStrengthView.frame = tempRect;
-//    } else if (globals.BIT_RATE < 0) {
-//        if (signalStatus != SVSignalSearching){
-//            NSURL *url = [[NSBundle mainBundle] URLForResource:@"signalStrength" withExtension:@"gif"];
-//            [signalStrengthOverlay setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
-//            signalStatus = SVSignalSearching;
-//        }
-//    }
+    //    if (!globals.HAS_MIN || globals.BIT_RATE == 0) {
+    //        signalStatus = SVSignalNotFound;
+    //        signalStrengthView.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+    //        [signalStrengthOverlay setImage:[UIImage imageNamed:@"signalStrength"]];
+    //        //1px whitespace on overlay
+    //        float maxWidth = signalStrengthOverlay.bounds.size.width - 2.0f;
+    //        CGRect tempRect = signalStrengthView.frame;
+    //        tempRect.size.width = maxWidth;
+    //        signalStrengthView.frame = tempRect;
+    //
+    //    } else if (globals.BIT_RATE > 0){
+    //        signalStatus = SVSignalShowing;
+    //        double strength = globals.BIT_RATE/1000;
+    //        if (strength > 1.0)
+    //            strength = 1.0;
+    //        signalStrengthView.backgroundColor = [UIColor orangeColor];
+    //        [signalStrengthOverlay setImage:[UIImage imageNamed:@"signalStrength"]];
+    //        //1px whitespace on overlay
+    //        float maxWidth = signalStrengthOverlay.bounds.size.width - 2.0f;
+    //        float signalWidth = strength*maxWidth;
+    //        CGRect tempRect = signalStrengthView.frame;
+    //        tempRect.size.width = signalWidth;
+    //        signalStrengthView.frame = tempRect;
+    //    } else if (globals.BIT_RATE < 0) {
+    //        if (signalStatus != SVSignalSearching){
+    //            NSURL *url = [[NSBundle mainBundle] URLForResource:@"signalStrength" withExtension:@"gif"];
+    //            [signalStrengthOverlay setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
+    //            signalStatus = SVSignalSearching;
+    //        }
+    //    }
 }
 
 -(void)showSignalPopover:(id)sender {
-//    UIButton *popButton = (UIButton*)sender;
-//    
-//    signalPop = [[UIPopoverController alloc] initWithContentViewController:[[SignalStrengthViewController alloc] init]];
-//    [signalPop setDelegate:self];
-//    [signalPop setPopoverContentSize:CGSizeMake(300.0f, 200.0f)];
-//    [signalPop presentPopoverFromRect:popButton.frame inView:scrollView permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    //    UIButton *popButton = (UIButton*)sender;
+    //
+    //    signalPop = [[UIPopoverController alloc] initWithContentViewController:[[SignalStrengthViewController alloc] init]];
+    //    [signalPop setDelegate:self];
+    //    [signalPop setPopoverContentSize:CGSizeMake(300.0f, 200.0f)];
+    //    [signalPop presentPopoverFromRect:popButton.frame inView:scrollView permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
 -(void)pickHome:(id)sender
 {
     UIButton *popButton = (UIButton*)sender;
     popButton.selected  = YES;
-
+    
     [homeTeamPick populateWith:teamNames];
     [homeTeamPick addOnCompletionBlock:^(NSString *pick) {
         [popButton setTitle:pick forState:UIControlStateNormal];
         popButton.selected = NO;
     }];
-
+    
     [homeTeamPick presentPopoverFromRect:popButton.frame inView:selectHomeContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
@@ -685,7 +685,7 @@ SVSignalStatus signalStatus;
     [selectLeagueContainer addSubview:selectLeague];
     
     startButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
-
+    
     [startButton setTitle:@"Start" forState:UIControlStateNormal];
     [startButton setTitleColor:[UIColor colorWithRed:57.0f/255.0f green:181.0f/255.0f blue:74.0f/255.0f alpha:1.0f] forState:UIControlStateNormal];
     [startButton setBackgroundImage:[UIImage imageNamed:@"GreenSettingsButton"] forState:UIControlStateNormal];
@@ -726,7 +726,7 @@ SVSignalStatus signalStatus;
     [secondEncButton addSubview:shutdownButton];
     
     stopButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
-
+    
     [stopButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [stopButton setBackgroundImage:[UIImage imageNamed:@"RedSettingsButton"] forState:UIControlStateNormal];
     [stopButton setBackgroundImage:[UIImage imageNamed:@"RedSettingsButtonSelect"] forState:UIControlStateHighlighted];
@@ -736,17 +736,17 @@ SVSignalStatus signalStatus;
     [stopButton addTarget:self action:@selector(stopEnc:) forControlEvents:UIControlEventTouchUpInside];
     [secondEncButton addSubview:stopButton];
     
-    BorderlessButton *viewLicenseButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
-    [viewLicenseButton setFrame:CGRectMake(0.0f, 5.0f, 140, 45)];
-    [viewLicenseButton setTitle:@"View EULA" forState:UIControlStateNormal];
-    [viewLicenseButton addTarget:self action:@selector(viewLicense:) forControlEvents:UIControlEventTouchUpInside];
-    [viewEulaContainer addSubview:viewLicenseButton];
-    
-    BorderlessButton *accountsButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
-    [accountsButton setFrame:CGRectMake(-5.0f, 35.0f, 140, 45)];
-    [accountsButton setTitle:@"Accounts" forState:UIControlStateNormal];
-    [accountsButton addTarget:self action:@selector(showAccountView:) forControlEvents:UIControlEventTouchUpInside];
-    [viewEulaContainer addSubview:accountsButton];
+    //    BorderlessButton *viewLicenseButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
+    //    [viewLicenseButton setFrame:CGRectMake(0.0f, 5.0f, 140, 45)];
+    //    [viewLicenseButton setTitle:@"View EULA" forState:UIControlStateNormal];
+    //    [viewLicenseButton addTarget:self action:@selector(viewLicense:) forControlEvents:UIControlEventTouchUpInside];
+    //    [viewEulaContainer addSubview:viewLicenseButton];
+    //
+    //    BorderlessButton *accountsButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
+    //    [accountsButton setFrame:CGRectMake(-5.0f, 35.0f, 140, 45)];
+    //    [accountsButton setTitle:@"Accounts" forState:UIControlStateNormal];
+    //    [accountsButton addTarget:self action:@selector(showAccountView:) forControlEvents:UIControlEventTouchUpInside];
+    //    [viewEulaContainer addSubview:accountsButton];
     
     encHomeButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
     [encHomeButton setFrame:CGRectMake(0.0f, 5.0f, 140, 45)];
@@ -758,7 +758,7 @@ SVSignalStatus signalStatus;
     //encoder state label
     encStateLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(encHomeButton.frame), 10, encoderHomeLabel.frame.size.width - encHomeButton.frame.size.width , encoderHomeLabel.frame.size.height)];
     [encoderHomeLabel addSubview:encStateLabel];
-
+    
     [doNotShowContainer setHidden:TRUE];
     [self updateForStatus];
     
@@ -778,60 +778,60 @@ SVSignalStatus signalStatus;
 //show the accounts view
 -(void)showAccountView:(id)sender
 {
-    if(scrollView.contentSize.width <= self.view.frame.size.width)
-    {
-        [scrollView setContentSize:CGSizeMake(scrollView.bounds.size.width*2, scrollView.bounds.size.height)];
-    }
-    [scrollView setScrollEnabled:TRUE];
-    if(!dropBoxLabel)
-    {
-        backToGeneral = [UIButton buttonWithType:UIButtonTypeCustom];
-        [backToGeneral setFrame:CGRectMake(scrollView.bounds.size.width, 15,150 ,30  )];
-        [backToGeneral setImage:[UIImage imageNamed:@"dropdownleft"] forState:UIControlStateNormal];
-        [backToGeneral setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-        [backToGeneral addTarget:self action:@selector(backToGeneralView:) forControlEvents:UIControlEventTouchUpInside];
-        [backToGeneral setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 20.0, 0.0, 0.0)];
-        [backToGeneral setTitle:@"Accounts" forState:UIControlStateNormal];
-        backToGeneral.titleLabel.font=[UIFont systemFontOfSize:18.0];
-        [scrollView addSubview:backToGeneral];
-        
-        dropboxContainer = [[UIView alloc] initWithFrame:CGRectMake(scrollView.bounds.size.width, backToGeneral.frame.origin.y+40, scrollView.bounds.size.width, 40)];
-        [dropboxContainer.layer setBorderColor:[[Utility colorWithHexString:@"#575757"] CGColor]];
-        [dropboxContainer.layer setBorderWidth:1.2f];
-        
-        dropBoxLabel = [BorderlessButton buttonWithType:UIButtonTypeCustom];
-        [dropBoxLabel setFrame:CGRectMake(10, 5, 300, 40)];
-        
-        if([[DBSession sharedSession] isLinked])
-        {
-            [restClient loadAccountInfo];
-        }
-        dropBoxLabel.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        dropBoxLabel.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
-        [dropBoxLabel setTitle:@"DropBox" forState:UIControlStateNormal];
-        [dropboxContainer addSubview:dropBoxLabel];
-        
-        
-        dropboxLogout = [BorderlessButton buttonWithType:UIButtonTypeCustom];
-        [dropboxLogout setFrame:CGRectMake(self.view.frame.size.width-80, 0, 70, dropBoxLabel.frame.size.height)];
-        NSString *logoutTitle = [[DBSession sharedSession] isLinked] ? @"Unlink":@"Link";
-        [dropboxLogout setTitle:logoutTitle forState:UIControlStateNormal];
-        [dropboxLogout addTarget:self action:@selector(logoutDropbox:) forControlEvents:UIControlEventTouchUpInside];
-        [dropboxLogout setTitleColor:[Utility colorWithHexString:@"#575757"] forState:UIControlStateNormal];
-        
-        [dropboxContainer addSubview:dropboxLogout];
-        fbAndEmailNote =[[UILabel alloc] initWithFrame:CGRectMake(dropboxContainer.frame.origin.x+5, dropboxContainer.frame.origin.y+40, dropboxContainer.frame.size.width, 80)];
-        [fbAndEmailNote setBackgroundColor:[UIColor clearColor]];
-        [fbAndEmailNote setNumberOfLines:2];
-        [fbAndEmailNote setLineBreakMode:NSLineBreakByWordWrapping];
-        [fbAndEmailNote setTextColor:[Utility colorWithHexString:@"#575757"]];
-        [fbAndEmailNote setText:@"Note: Login settings for Facebook and Email are available in your iPad's settings app."];
-        
-        [scrollView addSubview:fbAndEmailNote];
-        [scrollView addSubview:dropboxContainer];
-    }
-    [scrollView scrollRectToVisible:dropboxContainer.frame animated:TRUE];
-    [scrollView setScrollEnabled:FALSE];
+    //    if(scrollView.contentSize.width <= self.view.frame.size.width)
+    //    {
+    //        [scrollView setContentSize:CGSizeMake(scrollView.bounds.size.width*2, scrollView.bounds.size.height)];
+    //    }
+    //    [scrollView setScrollEnabled:TRUE];
+    //    if(!dropBoxLabel)
+    //    {
+    //        backToGeneral = [UIButton buttonWithType:UIButtonTypeCustom];
+    //        [backToGeneral setFrame:CGRectMake(scrollView.bounds.size.width, 15,150 ,30  )];
+    //        [backToGeneral setImage:[UIImage imageNamed:@"dropdownleft"] forState:UIControlStateNormal];
+    //        [backToGeneral setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    //        [backToGeneral addTarget:self action:@selector(backToGeneralView:) forControlEvents:UIControlEventTouchUpInside];
+    //        [backToGeneral setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 20.0, 0.0, 0.0)];
+    //        [backToGeneral setTitle:@"Accounts" forState:UIControlStateNormal];
+    //        backToGeneral.titleLabel.font=[UIFont systemFontOfSize:18.0];
+    //        [scrollView addSubview:backToGeneral];
+    //
+    //        dropboxContainer = [[UIView alloc] initWithFrame:CGRectMake(scrollView.bounds.size.width, backToGeneral.frame.origin.y+40, scrollView.bounds.size.width, 40)];
+    //        [dropboxContainer.layer setBorderColor:[[Utility colorWithHexString:@"#575757"] CGColor]];
+    //        [dropboxContainer.layer setBorderWidth:1.2f];
+    //
+    //        dropBoxLabel = [BorderlessButton buttonWithType:UIButtonTypeCustom];
+    //        [dropBoxLabel setFrame:CGRectMake(10, 5, 300, 40)];
+    //
+    //        if([[DBSession sharedSession] isLinked])
+    //        {
+    //            [restClient loadAccountInfo];
+    //        }
+    //        dropBoxLabel.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    //        dropBoxLabel.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    //        [dropBoxLabel setTitle:@"DropBox" forState:UIControlStateNormal];
+    //        [dropboxContainer addSubview:dropBoxLabel];
+    //
+    //
+    //        dropboxLogout = [BorderlessButton buttonWithType:UIButtonTypeCustom];
+    //        [dropboxLogout setFrame:CGRectMake(self.view.frame.size.width-80, 0, 70, dropBoxLabel.frame.size.height)];
+    //        NSString *logoutTitle = [[DBSession sharedSession] isLinked] ? @"Unlink":@"Link";
+    //        [dropboxLogout setTitle:logoutTitle forState:UIControlStateNormal];
+    //        [dropboxLogout addTarget:self action:@selector(logoutDropbox:) forControlEvents:UIControlEventTouchUpInside];
+    //        [dropboxLogout setTitleColor:[Utility colorWithHexString:@"#575757"] forState:UIControlStateNormal];
+    //
+    //        [dropboxContainer addSubview:dropboxLogout];
+    //        fbAndEmailNote =[[UILabel alloc] initWithFrame:CGRectMake(dropboxContainer.frame.origin.x+5, dropboxContainer.frame.origin.y+40, dropboxContainer.frame.size.width, 80)];
+    //        [fbAndEmailNote setBackgroundColor:[UIColor clearColor]];
+    //        [fbAndEmailNote setNumberOfLines:2];
+    //        [fbAndEmailNote setLineBreakMode:NSLineBreakByWordWrapping];
+    //        [fbAndEmailNote setTextColor:[Utility colorWithHexString:@"#575757"]];
+    //        [fbAndEmailNote setText:@"Note: Login settings for Facebook and Email are available in your iPad's settings app."];
+    //
+    //        [scrollView addSubview:fbAndEmailNote];
+    //        [scrollView addSubview:dropboxContainer];
+    //    }
+    //    [scrollView scrollRectToVisible:dropboxContainer.frame animated:TRUE];
+    //    [scrollView setScrollEnabled:FALSE];
     
 }
 
@@ -944,18 +944,18 @@ SVSignalStatus signalStatus;
 }
 
 
--(void)viewLicense:(id)sender{
-    EulaModalViewController *eulaViewController=[[EulaModalViewController   alloc]init];
-    [self presentViewController:eulaViewController animated:YES completion:nil];
-    
-}
+//-(void)viewLicense:(id)sender{
+//    EulaModalViewController *eulaViewController=[[EulaModalViewController   alloc]init];
+//    [self presentViewController:eulaViewController animated:YES completion:nil];
+//
+//}
 
 -(void)setButtonImagesAndLabels
 {
     
     
-   [userName setText:userCenter.customerEmail];
-
+    [userName setText:userCenter.customerEmail];
+    
     
     if (!encoderManager.hasWiFi) {
         encoderHomeText.text = @"Encoder is not available.";
@@ -965,14 +965,14 @@ SVSignalStatus signalStatus;
         [encHomeButton setUserInteractionEnabled:NO];
         [encoderHomeLabel addSubview:encoderHomeText];
         
-//        encHomeButton.alpha = 0;
+        //        encHomeButton.alpha = 0;
     }else{
-
+        
         [encoderHomeText removeFromSuperview];
         [encoderHomeLabel addSubview:encHomeButton];
         [encHomeButton setUserInteractionEnabled:YES];
         
-//        encHomeButton.alpha = 1;
+        //        encHomeButton.alpha = 1;
     }
 }
 
@@ -994,7 +994,7 @@ SVSignalStatus signalStatus;
                      delegate: self
                      cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [errorView show];
-//        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:errorView];
+        //        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:errorView];
     }else{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
         CustomAlertView *alertView;
@@ -1006,7 +1006,7 @@ SVSignalStatus signalStatus;
         alertView.accessibilityValue = @"appLogOut";
         [alertView show];
         alertView.delegate = self;
-//        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alertView];
+        //        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alertView];
     }
     
 }
@@ -1035,90 +1035,90 @@ SVSignalStatus signalStatus;
 
 
 /*
--(void)startEncCallback:(id)json
-{
-    
-    if([[json objectForKey:@"success"]integerValue] != 0 && [[NSString stringWithFormat:@"%@",[json objectForKey:@"requrl"]] rangeOfString:@"encresume"].location == NSNotFound)
-    {
-        //reset waitEncoderResponseCounter
-        waitEncoderResponseCounter = 0;
-        globals.LIVE_TIMER_ON = TRUE;
-        
-        globals.DID_START_NEW_EVENT=TRUE;
-        //reset all the line,period/zone,strength info for new event
-        globals.CURRENT_F_LINE = -1;
-        globals.CURRENT_D_LINE = -1;
-        globals.CURRENT_PERIOD = -1;
-        globals.CURRENT_STRENGTH = nil;
-        globals.CURRENT_ZONE = nil;
-        globals.CURRENT_O_PLAY_NUMBER_FB = -1;
-        globals.CURRENT_D_PLAY_NUMBER_FB = -1;
-        globals.CURRENT_QUARTER_FB = -1;
-        [globals.DURATION_TAGS_TIME removeAllObjects];
-        [globals.DURATION_TYPE_TIMES removeAllObjects];
-        [globals.ARRAY_OF_COLOURS removeAllObjects];
-        globals.SWITCH_TO_DIFFERENT_EVENT = TRUE;
-        if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]) {
-            //only when encoder status is live, reset global variables, video player and syncme timer
-            
-            
-            [globals.CURRENT_EVENT_THUMBNAILS removeAllObjects];
-            //[globals.TAG_MARKER_ITEMS removeAllObjects];
-            [globals.TAGGED_ATTS_DICT removeAllObjects];
-            [globals.TAGGED_ATTS_DICT_SHIFT removeAllObjects];
-            [globals.ARRAY_OF_COLOURS removeAllObjects];
-            [globals.ARRAY_OF_TAGSET removeAllObjects];
-            [globals.TOAST_QUEUE removeAllObjects];
-            [globals.THUMBS_WERE_SELECTED_CLIPVIEW removeAllObjects];
-            [globals.THUMBS_WERE_SELECTED_LISTVIEW removeAllObjects];
-            globals.THUMB_WAS_SELECTED_CLIPVIEW = nil;
-            globals.THUMB_WAS_SELECTED_LISTVIEW = nil;
-            NSMutableArray *tempArray = [[globals.TAG_MARKER_OBJ_DICT allKeys] mutableCopy];
-            for(NSString *key in tempArray){
-                [[[globals.TAG_MARKER_OBJ_DICT objectForKey:key] markerView] removeFromSuperview];
-            }
-            [globals.TAG_MARKER_OBJ_DICT removeAllObjects];
-            globals.EVENT_NAME = @"live";
-            globals.HUMAN_READABLE_EVENT_NAME = @"Live";
-            [uController getAllGameTags];
-            globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-            NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-            AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-            
-            [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
-            [globals.VIDEO_PLAYER_LIST_VIEW setAvPlayer:myPlayer];
-            [globals.VIDEO_PLAYER_LIST_VIEW pause];
-            
-            [globals.VIDEO_PLAYER_LIVE2BENCH setVideoURL:videoURL];
-            [globals.VIDEO_PLAYER_LIVE2BENCH setAvPlayer:myPlayer];
-            [globals.VIDEO_PLAYER_LIVE2BENCH pause];
-            globals.VIDEO_PLAYBACK_FAILED = FALSE;
-            globals.PLAYABLE_DURATION = -1;
-            
-            [uController restartSyncMeTimer];
-            
-        }
-      
-        
-        
-    }else if([[json objectForKey:@"success"]integerValue] != 0 && [[NSString stringWithFormat:@"%@",[json objectForKey:@"requrl"]] rangeOfString:@"encresume"].location != NSNotFound){
-        [globals.VIDEO_PLAYER_LIVE2BENCH play];
-        [self removeSpinnerView];
-        
-    }else{
-        if ([json objectForKey:@"msg"]) {
-            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:[NSString stringWithFormat:@"start/resume video error: %@",[json objectForKey:@"msg"]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
-//            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-        }
-        
-    }
-}
-*/
+ -(void)startEncCallback:(id)json
+ {
+ 
+ if([[json objectForKey:@"success"]integerValue] != 0 && [[NSString stringWithFormat:@"%@",[json objectForKey:@"requrl"]] rangeOfString:@"encresume"].location == NSNotFound)
+ {
+ //reset waitEncoderResponseCounter
+ waitEncoderResponseCounter = 0;
+ globals.LIVE_TIMER_ON = TRUE;
+ 
+ globals.DID_START_NEW_EVENT=TRUE;
+ //reset all the line,period/zone,strength info for new event
+ globals.CURRENT_F_LINE = -1;
+ globals.CURRENT_D_LINE = -1;
+ globals.CURRENT_PERIOD = -1;
+ globals.CURRENT_STRENGTH = nil;
+ globals.CURRENT_ZONE = nil;
+ globals.CURRENT_O_PLAY_NUMBER_FB = -1;
+ globals.CURRENT_D_PLAY_NUMBER_FB = -1;
+ globals.CURRENT_QUARTER_FB = -1;
+ [globals.DURATION_TAGS_TIME removeAllObjects];
+ [globals.DURATION_TYPE_TIMES removeAllObjects];
+ [globals.ARRAY_OF_COLOURS removeAllObjects];
+ globals.SWITCH_TO_DIFFERENT_EVENT = TRUE;
+ if ([globals.CURRENT_ENC_STATUS isEqualToString:encStateLive]) {
+ //only when encoder status is live, reset global variables, video player and syncme timer
+ 
+ 
+ [globals.CURRENT_EVENT_THUMBNAILS removeAllObjects];
+ //[globals.TAG_MARKER_ITEMS removeAllObjects];
+ [globals.TAGGED_ATTS_DICT removeAllObjects];
+ [globals.TAGGED_ATTS_DICT_SHIFT removeAllObjects];
+ [globals.ARRAY_OF_COLOURS removeAllObjects];
+ [globals.ARRAY_OF_TAGSET removeAllObjects];
+ [globals.TOAST_QUEUE removeAllObjects];
+ [globals.THUMBS_WERE_SELECTED_CLIPVIEW removeAllObjects];
+ [globals.THUMBS_WERE_SELECTED_LISTVIEW removeAllObjects];
+ globals.THUMB_WAS_SELECTED_CLIPVIEW = nil;
+ globals.THUMB_WAS_SELECTED_LISTVIEW = nil;
+ NSMutableArray *tempArray = [[globals.TAG_MARKER_OBJ_DICT allKeys] mutableCopy];
+ for(NSString *key in tempArray){
+ [[[globals.TAG_MARKER_OBJ_DICT objectForKey:key] markerView] removeFromSuperview];
+ }
+ [globals.TAG_MARKER_OBJ_DICT removeAllObjects];
+ globals.EVENT_NAME = @"live";
+ globals.HUMAN_READABLE_EVENT_NAME = @"Live";
+ [uController getAllGameTags];
+ globals.CURRENT_PLAYBACK_EVENT = [NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
+ NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
+ AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
+ 
+ [globals.VIDEO_PLAYER_LIST_VIEW setVideoURL:videoURL];
+ [globals.VIDEO_PLAYER_LIST_VIEW setAvPlayer:myPlayer];
+ [globals.VIDEO_PLAYER_LIST_VIEW pause];
+ 
+ [globals.VIDEO_PLAYER_LIVE2BENCH setVideoURL:videoURL];
+ [globals.VIDEO_PLAYER_LIVE2BENCH setAvPlayer:myPlayer];
+ [globals.VIDEO_PLAYER_LIVE2BENCH pause];
+ globals.VIDEO_PLAYBACK_FAILED = FALSE;
+ globals.PLAYABLE_DURATION = -1;
+ 
+ [uController restartSyncMeTimer];
+ 
+ }
+ 
+ 
+ 
+ }else if([[json objectForKey:@"success"]integerValue] != 0 && [[NSString stringWithFormat:@"%@",[json objectForKey:@"requrl"]] rangeOfString:@"encresume"].location != NSNotFound){
+ [globals.VIDEO_PLAYER_LIVE2BENCH play];
+ [self removeSpinnerView];
+ 
+ }else{
+ if ([json objectForKey:@"msg"]) {
+ CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:[NSString stringWithFormat:@"start/resume video error: %@",[json objectForKey:@"msg"]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+ [alert show];
+ //            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+ }
+ 
+ }
+ }
+ */
 
 -(void)eventControlsState:(EventButtonControlStates)state
 {
-
+    
     [startButton setHidden:      (state & START_HIDDEN)!=0];
     [startButton setEnabled:     (state & START_ENABLE)!=0];
     [startButton setAlpha:       ( state & START_ENABLE )?1.0f:0.6f];
@@ -1147,11 +1147,13 @@ SVSignalStatus signalStatus;
     
     [selectLeague setAlpha:     (state & LEAGUE_ENABLE)?1.0f:0.6f];;
     [selectLeague setUserInteractionEnabled:(state & LEAGUE_ENABLE)!=0];//
-
-
-//    globals.ENCODER_SELECTED_HOME_TEAM = @"Home Team";
-//    globals.ENCODER_SELECTED_AWAY_TEAM = @"Away Team";
-//    globals.ENCODER_SELECTED_LEAGUE = @"League";
+    
+    
+    if (encoderManager.currentEventData) {
+        [selectHomeTeam setTitle:encoderManager.currentEventData[@"homeTeam"] forState:UIControlStateNormal];
+        [selectAwayTeam setTitle:encoderManager.currentEventData[@"visitTeam"] forState:UIControlStateNormal];
+        [selectLeague setTitle:encoderManager.currentEventData[@"league"] forState:UIControlStateNormal];
+    }
     
     
 }

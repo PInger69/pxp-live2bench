@@ -41,6 +41,7 @@
 
 -(void)imageForURL: (NSString *) imageURLString atImageView: (UIImageView *) viewReference{
     NSURL *imageURL =[NSURL URLWithString:imageURLString];
+    viewReference.image = [UIImage imageNamed:@"live.png"];
     /*viewReference.animationImages = [NSArray arrayWithObjects:
                                               [UIImage imageNamed:@"tmp-0.gif"],
                                               [UIImage imageNamed:@"tmp-1.gif"],

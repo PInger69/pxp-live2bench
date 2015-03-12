@@ -57,6 +57,8 @@
                                             @"t1":test
                                             };
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
+        
         
         
         
@@ -66,6 +68,9 @@
     return self;
 }
 
+-(void)myClipDataRequest: (NSNotification *)note{
+    
+}
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {

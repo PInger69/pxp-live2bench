@@ -8,6 +8,7 @@
 
 #import "CustomButton.h"
 #import "UIImage+animatedGIF.h"
+#import "DownloadItem.h"
 
 typedef enum{
     DBDefault = 0,
@@ -16,6 +17,9 @@ typedef enum{
 } DBDownloadState ;
 
 @interface DownloadButton : CustomButton
+
+@property (assign, nonatomic) float progress;
+@property (strong, nonatomic) DownloadItem *downloadItem;
 
 -(void)setState:(DBDownloadState)state;
 
