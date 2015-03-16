@@ -355,7 +355,7 @@ static void * vpFrameContext   = &vpFrameContext;
     Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
 //    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
 
-    
+    f = _encoderManager.feeds[[rick objectForKey:@"feed"]];
  
 //    [vid playFeed:f];
     vid.looping         = NO;

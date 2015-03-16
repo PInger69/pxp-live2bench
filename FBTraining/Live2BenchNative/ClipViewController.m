@@ -97,7 +97,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
+//    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
     //
     NSMutableArray * tags = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
     _tagsToDisplay = tags;
@@ -158,10 +158,6 @@ static void * masterEncoderContext = &masterEncoderContext;
     [filterContainer setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
     [self.view addSubview:filterContainer];
     
-    //self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(1024-44, 55, 44, 768-55)];
-    //self.edgeSwipeButtons.delegate = self;
-    //[self.view addSubview:self.edgeSwipeButtons];
-    
 }
 
 
@@ -187,8 +183,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     //Richard
 //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
 //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
-//    [globals.VIDEO_PLAYER_LIST_VIEW pause];
-//    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
+
 
     //if no filter tool box, initialize filter tool box // This is dead code now
     if(!_filterToolBoxView)
@@ -485,7 +480,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     }
     else{
         self.blurView.hidden = YES;
-        [self createBreadCrumbsView];
+
     }
 
     [componentFilter open:YES]; //Richard
@@ -534,7 +529,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [alert addButtonWithTitle:@"Yes"];
     [alert addButtonWithTitle:@"No"];
     [alert show];
-//    [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+
 }
 
 
@@ -695,164 +690,6 @@ static void * masterEncoderContext = &masterEncoderContext;
     
 }
 
-// TODO dead?
--(void)createBreadCrumbsView{
-    
-//    [breadCrumbsView removeFromSuperview];
-//    breadCrumbsView  = nil;
-//    
-//    breadCrumbsView = [[UIScrollView alloc]initWithFrame:CGRectMake(0,self.collectionView.frame.origin.y-20, self.view.bounds.size.width, 40)];
-//
-////    [self.view addSubview:breadCrumbsView];
-//    
-//    
-//    NSDictionary *currentCrumbDict;
-//    NSMutableArray *currentBreadCrumbs=[[NSMutableArray alloc] init];
-//    
-//    if(globals.TAGGED_ATTS_DICT_SHIFT.count>0)
-//    {
-//        currentCrumbDict = [[NSDictionary alloc] initWithDictionary:globals.TAGGED_ATTS_DICT_SHIFT];
-//    }
-//    if(globals.TAGGED_ATTS_DICT.count>0){
-//        currentCrumbDict = [[NSDictionary alloc] initWithDictionary:globals.TAGGED_ATTS_DICT];
-//    }
-//    if(currentCrumbDict.count>0)
-//    {
-//        for(NSString *keyValue in [currentCrumbDict allKeys])
-//        {
-//            //currentBreadCrumbs = (NSMutableArray*)[currentBreadCrumbs arrayByAddingObjectsFromArray:arr];
-//            
-//            NSString *crumbKeyValue = [NSString stringWithFormat:@"%@|%@",keyValue,[[currentCrumbDict objectForKey:keyValue] componentsJoinedByString:@","]];
-//            [currentBreadCrumbs addObject:crumbKeyValue];
-//        }
-//    }
-//    if (currentBreadCrumbs.count>0) {
-//        int i = 0;
-//        for(NSString *obj in currentBreadCrumbs)
-//        {
-//            UIImageView *crumbBG = [[UIImageView alloc] initWithFrame:CGRectMake(25+(i*113), 0, 120, 35)];
-//            NSString *imgName = i ==0 ? @"chevrect" : @"chevbothpoints";
-//            [crumbBG setImage:[UIImage imageNamed:imgName]];
-//            
-//            int xFactor = i == 0 ? 5 : 13;
-//            
-//            UIScrollView *crumb = [[UIScrollView alloc]initWithFrame:CGRectMake(xFactor, 0, 100 - xFactor, 35)];
-//            [crumb setBackgroundColor:[UIColor clearColor]];
-//            [crumb setScrollEnabled:TRUE];
-//            [crumbBG addSubview:crumb];
-//            
-//            NSString *typeOfFilter = [[obj componentsSeparatedByString:@"|"] objectAtIndex:0];
-//    
-//            if (![typeOfFilter isEqualToString:@"colours"]) {
-//                
-//                UILabel *crumbName = [[UILabel alloc] initWithFrame:CGRectMake(0, crumb.bounds.origin.y, crumb.bounds.size.width - xFactor, crumb.bounds.size.height)];
-//                NSString *crumbText = obj;
-//                if([typeOfFilter isEqualToString:@"periods"])
-//                {
-//                    if ([globals.WHICH_SPORT isEqualToString:@"football"]){
-//                        crumbText = @"Quarter: ";
-//                    }else{
-//                        crumbText = @"Period: ";
-//                    }
-//
-//                    NSArray *periodNumberArr = [[[obj componentsSeparatedByString:@"|"] objectAtIndex:1] componentsSeparatedByString:@","];
-//                    for(id periodNumber in periodNumberArr){
-//                        int i = [periodNumberArr indexOfObject:periodNumber];
-//                        NSString *periodStr;
-//                        if (i==0) {
-//                            periodStr = [NSString stringWithFormat:@"%@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-//                        }else{
-//                            periodStr = [NSString stringWithFormat:@", %@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-//                        }
-//                        crumbText = [crumbText stringByAppendingString:periodStr];
-//                    }
-//                }else if([typeOfFilter isEqualToString:@"half"])
-//                {
-//                    crumbText = @"Half: ";
-//                    NSArray *periodNumberArr = [[[obj componentsSeparatedByString:@"|"] objectAtIndex:1] componentsSeparatedByString:@","];
-//                    for(id periodNumber in periodNumberArr){
-//                        int i = [periodNumberArr indexOfObject:periodNumber];
-//                        NSString *periodStr;
-//                        if (i==0) {
-//                            periodStr = [NSString stringWithFormat:@"%@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-//                        }else{
-//                            periodStr = [NSString stringWithFormat:@", %@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-//                        }
-//                        crumbText = [crumbText stringByAppendingString:periodStr];
-//                    }
-//                }else if([typeOfFilter isEqualToString:@"players"])
-//                {
-//                    crumbText =[NSString stringWithFormat:@"Player(s): %@",[[obj componentsSeparatedByString:@"|"] objectAtIndex:1]]; ;
-//                    
-//                }else if([typeOfFilter isEqualToString:@"coachpick"])
-//                {
-//                    crumbText = @"Coach Pick";
-//                    
-//                }else if([typeOfFilter isEqualToString:@"homestr"])
-//                {
-//                    crumbText =[NSString stringWithFormat:@"Home strength: %@",[[obj componentsSeparatedByString:@"|"] objectAtIndex:1]]; ;
-//                    
-//                }else if([typeOfFilter isEqualToString:@"awaystr"])
-//                {
-//                    crumbText =[NSString stringWithFormat:@"Away strength: %@",[[obj componentsSeparatedByString:@"|"] objectAtIndex:1]]; ;
-//                    
-//                }else{
-//                    crumbText = [[obj componentsSeparatedByString:@"|"] objectAtIndex:1];
-//                }
-//            
-//                [crumbName setText:crumbText];
-//                [crumbName setBackgroundColor:[UIColor clearColor]];
-//                [crumbName setTextColor:[UIColor darkGrayColor]];
-//                [crumbName setTextAlignment:NSTextAlignmentCenter];
-//                [crumbName setFont:[UIFont defaultFontOfSize:13]];
-//                [crumb addSubview:crumbName];
-//                //if the filtered property's text is greater than the size of the crumbName label, use uiscroll view to display all the information
-//                CGSize labelSize = [crumbText sizeWithAttributes:[NSDictionary dictionaryWithObject:[UIFont defaultFontOfSize:13] forKey:NSFontAttributeName]];
-//                if (labelSize.width > crumbName.frame.size.width) {
-//                    [crumbName setFrame:CGRectMake(0, crumbName.frame.origin.y, labelSize.width+20, crumbName.frame.size.height)];
-//                    [crumb setContentSize:CGSizeMake(labelSize.width+20, 35)];
-//                    [crumb setUserInteractionEnabled:TRUE];
-//                    [crumbBG setUserInteractionEnabled:TRUE];
-//                }else{
-//                    [crumb setContentSize:CGSizeMake(100, 35)];
-//                }
-//                
-//            }else{
-//                NSArray *colorArr = [[[obj componentsSeparatedByString:@"|"] objectAtIndex:1] componentsSeparatedByString:@","];
-//                int labelWidth = 80/colorArr.count;
-//                for(NSString *colorStr in colorArr){
-//                    int i = [colorArr indexOfObject:colorStr];
-//                    UILabel *colorLabel = [[UILabel alloc]initWithFrame:CGRectMake(5+i*labelWidth, crumb.bounds.origin.y+5, labelWidth, crumb.bounds.size.height - 10)];
-//                    [colorLabel setBackgroundColor:[UIColor colorWithHexString:colorStr]];
-//                    [crumb addSubview:colorLabel];
-//                }
-//            }
-//            [breadCrumbsView addSubview:crumbBG];
-//            [breadCrumbsView setContentSize:CGSizeMake(25+((i+1)*118), 35)];
-//            [breadCrumbsView scrollRectToVisible:CGRectMake(breadCrumbsView.contentSize.width-70, 0, 10, 10) animated:TRUE];
-//            [breadCrumbsView setScrollEnabled:TRUE];
-//            i++;
-//        }
-//        
-//    }else{
-//        UIImageView *crumb = [[UIImageView alloc] initWithFrame:CGRectMake(25, 0, 100, 35)];
-//        NSString *imgName = @"chevrect";
-//        [crumb setImage:[UIImage imageNamed:imgName]];
-//        int xFactor = 5 ;
-//        UILabel *crumbName = [[UILabel alloc] initWithFrame:CGRectMake(crumb.bounds.origin.x+xFactor, crumb.bounds.origin.y, crumb.bounds.size.width-xFactor, crumb.bounds.size.height)];
-//        [crumbName setText:@"No filter set"];
-//        [crumbName setBackgroundColor:[UIColor clearColor]];
-//        [crumbName setTextColor:[UIColor darkGrayColor]];
-//        [crumbName setFont:[UIFont systemFontOfSize:13]];
-//        [crumb addSubview:crumbName];
-//        [breadCrumbsView addSubview:crumb];
-//        [breadCrumbsView setContentSize:CGSizeMake(10, 35)];
-//        [breadCrumbsView scrollRectToVisible:CGRectMake(breadCrumbsView.contentSize.width-70, 0, 10, 10) animated:TRUE];
-//        [breadCrumbsView setScrollEnabled:TRUE];
-//        
-//    }
-    
-}
 
 
 -(NSMutableArray*)sortArrayByTime:(NSMutableArray*)arr
@@ -868,14 +705,6 @@ static void * masterEncoderContext = &masterEncoderContext;
     return (NSMutableArray*)sortedArray;
 }
 
-//find the thumbnail images directory and set them to a global array
--(void)retrieveImages
-{
-    
-    // NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:globals.THUMBNAILS_PATH error:NULL];
-    
-    //self.thumbnails=[directoryContent mutableCopy];
-}
 
 //how many thumbnails?
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section
@@ -886,45 +715,6 @@ static void * masterEncoderContext = &masterEncoderContext;
 //how many sections?
 - (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
     return 1;
-}
-
-
-///NOTE: when filterbox.view is all the way up, customer goes to another screen and comes back, filterbox.view cannot be interacted with
--(void)viewWillDisappear:(BOOL)animated
-{
-    return;
-//    globals.IS_IN_CLIP_VIEW = FALSE;
-//    SDImageCache *imageCache = [SDImageCache sharedImageCache];
-//    [imageCache clearMemory];
-//    [imageCache clearDisk];
-//    [imageCache cleanDisk];
-//    if(self.tagsToDisplay.count>0)
-//    {
-//        [self.tagsToDisplay removeAllObjects];
-//    }
-//    //[displayArray removeAllObjects];
-//    thumbRatingArray = nil;
-//    [arrayToBeDeleted removeAllObjects];
-//    globals.SHOW_TOASTS = TRUE;
-//    //we will remove the filtertoolbox to deallocate mem -- makes sure app does not freeze up
-//    [_filterToolBoxView.view removeFromSuperview];
-//    _filterToolBoxView=nil;
-//
-//    [typesOfTags removeAllObjects];
-////    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeAllObjects];
-//    [CustomAlertView removeAll];
-//    isEditingClips = FALSE;
-//    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
-//        [uController writeTagsToPlist];
-//    }
-//    
-//    [self.blurView removeFromSuperview];
-//    self.blurView=nil;
-//    
-//    //Edge Swipe Buttons
-//    [self.edgeSwipeButtons deselectAllButtons];
-//    [componentFilter close:NO];
-
 }
 
 
@@ -1076,7 +866,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 
 
 #pragma mark - UICollectionViewDelegate
-//TODO create gloabal dictionary of view controllers
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -1111,28 +901,34 @@ static void * masterEncoderContext = &masterEncoderContext;
         }
         
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        if ( [tagSelect count] >1 ){
+                [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                              @"feed":@"s_00",
-                                                                                                              @"time":[selectedCell.data objectForKey:@"starttime"],
-                                                                                                              @"duration":[selectedCell.data objectForKey:@"duration"],
-                                                                                                              @"state":[NSNumber numberWithInteger:PS_Play]}];
+                    NSLog(@"You Picked a feed: %@",pick);
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                                          @"feed":pick,
+                                                                                                                          @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                                          @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+                }];
+        
+                [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
         
         
-        //        [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
-        //
-        //            NSLog(@"You Picked a feed: %@",pick);
-        //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-        //
-        //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-        //                                                                                                                  @"feed":pick,
-        //                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
-        //                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
-        //                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
-        //        }];
+        } else {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+            
+            NSString * key =        listOfScource[0];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                                  @"feed":key,
+                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
+        }
         
-        //        [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+        
     } else {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
@@ -1147,38 +943,12 @@ static void * masterEncoderContext = &masterEncoderContext;
 -(void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
 
     [self collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath];
-    
-    //    NSDictionary *thumbDict = [[NSDictionary alloc]initWithDictionary:[self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]] copyItems:TRUE];
-//    thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-//    
-//    if(!arrayToBeDeleted)
-//    {
-//        arrayToBeDeleted =[[NSMutableArray alloc] init];
-//    }
-//    
-//    if(![arrayToBeDeleted containsObject:thumbDict])
-//    {
-//        [selectedCell.translucentEditingView setHidden:FALSE];
-//        [selectedCell.checkmarkOverlay setHidden:FALSE];
-//        [arrayToBeDeleted addObject:thumbDict];
-//    }else{
-//        [arrayToBeDeleted removeObject:thumbDict];
-//        [selectedCell.translucentEditingView setHidden:TRUE];
-//        [selectedCell.checkmarkOverlay setHidden:TRUE];
-//    }
-//  if(!isEditingClips)
-//  {
-//        [globals.THUMBS_WERE_SELECTED_CLIPVIEW removeObject:[thumbDict objectForKey:@"id"]];
-//
-//  }
-
 }
 
 - (NSDictionary*)thumbAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self.tagsToDisplay objectAtIndex:indexPath.row];
 }
-
 
 
 #pragma mark – UICollectionViewDelegateFlowLayout
@@ -1199,56 +969,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 }
 
 
--(BOOL)redownloadImageFromtheServer:(NSDictionary*)dict{
-//    NSFileManager *fileManager= [NSFileManager defaultManager];
-//    //if thumbnail folder not exist, create a new one
-//    if(![fileManager fileExistsAtPath:globals.THUMBNAILS_PATH])
-//    {
-//        NSError *cError;
-//        [fileManager createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:TRUE attributes:nil error:&cError];
-//    }
-//    
-//    NSURL *jurl = [[NSURL alloc]initWithString:[[dict objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-//    NSString *imageName = [[dict objectForKey:@"url"] lastPathComponent];
-//    //thumbnail data
-//    NSData *imgData= [NSData dataWithContentsOfURL:jurl options:0 error:nil];
-//    
-//    //image file path for current image
-//    NSString *filePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-//    
-//    NSData *imgTData;
-//    NSString *teleImageFilePath;
-//    //save telesteration thumb
-//    if([[dict objectForKey:@"type"]intValue]==4)
-//    {
-//        //tele image datat
-//        imgTData= [NSData dataWithContentsOfURL:[NSURL URLWithString:[[dict objectForKey:@"teleurl"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] options:0 error:nil];
-//        NSString *teleImageName = [[dict objectForKey:@"teleurl"] lastPathComponent];
-//        //image file path for telestration
-//        teleImageFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-//        
-//    }
-//    
-//    if (([[dict objectForKey:@"type"]intValue]!=4 && imgData != nil )||([[dict objectForKey:@"type"]intValue]==4 && imgData != nil && imgTData != nil) ) {
-//        
-//        [imgData writeToFile:filePath atomically:YES];
-//        
-//        if ([[dict objectForKey:@"type"]intValue]==4) {
-//            [imgTData writeToFile:teleImageFilePath atomically:YES ];
-//        }
-//        
-//        if (!globals.DOWNLOADED_THUMBNAILS_SET){
-//            globals.DOWNLOADED_THUMBNAILS_SET = [NSMutableArray arrayWithObject:[dict objectForKey:@"id"]];
-//        } else {
-//            [globals.DOWNLOADED_THUMBNAILS_SET addObject:[dict objectForKey:@"id"]];
-//        }
-//        
-//        return TRUE;
-//    }else{
-//        return FALSE;
-//    }
-    return false;// added for debugg
-}
+
 
 - (void)didReceiveMemoryWarning
 {

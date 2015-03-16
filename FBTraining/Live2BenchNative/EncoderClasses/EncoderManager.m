@@ -349,9 +349,6 @@
             [[NSNotificationCenter defaultCenter]removeObserver:_userDataObserver];
         }];
         
-        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            [weakSelf.logoutAction start];
-        }];
         
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;

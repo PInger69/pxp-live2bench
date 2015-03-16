@@ -68,37 +68,6 @@
 @synthesize filterToolBoxListViewController;
 @synthesize breadCrumbsView;
 @synthesize selectedCellRows;
-//@synthesize tagsToDisplay,allTags,typesOfTags,selectedTag,videoControlBar,uController,tagEventNameFullScreen,selectedCellRows, coachPickMode,receivedTagArr,selectAllButton, startRangeModifierButton, endRangeModifierButton;
-//@synthesize downloadingTagsDict;
-//@synthesize teleButton,teleViewController;
-//@synthesize downloadedTagIds;
-//@synthesize thumbRatingArray;
-//@synthesize playNextTagFullScreen;
-//@synthesize downloadTagFullScreen;
-//@synthesize playPreTagFullScreen;
-//
-//@synthesize playbackRateBackButton;
-//@synthesize playbackRateForwardButton;
-//@synthesize currentSeekBackButton;
-//@synthesize currentSeekForwardButton;
-//@synthesize currentSeekBackButtoninFullScreen;
-//@synthesize currentSeekForwardButtoninFullScreen;
-//
-//@synthesize seekBackControlView;
-//@synthesize seekForwardControlView;
-//@synthesize seekBackControlViewinFullScreen;
-//@synthesize seekForwardControlViewinFullScreen;
-//@synthesize fullScreenMode;
-//@synthesize breadCrumbsView;
-////@synthesize shouldRecreateNextTag;
-//@synthesize aCopyOfUnfinishedTags;
-//@synthesize noVideoURLAlert;
-//@synthesize failedBookmarkTagsArr;
-////@synthesize videoPlayer;
-//@synthesize loopTagObserver;
-//@synthesize saveTeleButton;
-//@synthesize clearTeleButton;
-
 NSMutableArray *oldEventNames;
 
 
@@ -2022,14 +1991,14 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
     NSString *pick = [userInfo objectForKey:@"feed"];
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                          @"feed":pick,
-                                                                                                          @"time":[userInfo objectForKey:@"time"],
-                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
-                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
-    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
+//                                                                                                          @"feed":pick,
+//                                                                                                          @"time":[userInfo objectForKey:@"time"],
+//                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
+//                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+    self.videoPlayer.looping = NO;
     [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
-    
+    self.videoPlayer.looping = YES;
     selectedTag = [self.tagsToDisplay[[self.tagsToDisplay indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
     
     [commentingField clear];

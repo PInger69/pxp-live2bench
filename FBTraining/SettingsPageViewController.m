@@ -48,33 +48,33 @@ NS_OPTIONS(NSInteger, style){
         [self setMainSectionTab:NSLocalizedString(@"Settings",nil)  imageName:@"settingsButton"];
         self.settingsArray =@[ @{@"SettingLabel": @"Encoder Controls" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[SettingsViewController alloc]initWithAppDelegate:appDel]},
                                
-                               @{ @"SettingLabel" : @"Something On or Off", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]},
+//                               @{ @"SettingLabel" : @"Something On or Off", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]},
                                
 //                               @{ @"SettingLabel" : @"An Unplausible Setting", @"OptionChar":  [NSNumber numberWithChar:oneButton] },
                                
-                               @{ @"SettingLabel" : @"Social Media", @"OptionChar":  [NSNumber numberWithChar:oneButton | secondButton] },
+//                               @{ @"SettingLabel" : @"Social Media", @"OptionChar":  [NSNumber numberWithChar:oneButton | secondButton] },
                                
 //                               @{ @"SettingLabel" : @"Another Toggle", @"OptionChar":  [NSNumber numberWithChar:toggleIsThere] },
                                
-                               @{ @"SettingLabel" : @"Languages", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
-                                                                                                                                                                                               @[@"English", @"French", @"Mandarin", @"Italian", @"Korean", @"Hindi", @"Russian", @"Japanese"], @"Index":
-                                                                                                                                                                                               [NSNumber numberWithInt:5]} ] },
+//                               @{ @"SettingLabel" : @"Languages", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
+//                                                                                                                                                                                               @[@"English", @"French", @"Mandarin", @"Italian", @"Korean", @"Hindi", @"Russian", @"Japanese"], @"Index":
+//                                                                                                                                                                                               [NSNumber numberWithInt:5]} ] },
+//                               
+//                               @{ @"SettingLabel" : @"Colors", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
+//                                                                                                                                                                                               @[@"blue", @"red", @"yellow"], @"Index": [NSNumber numberWithInt:1]} ] },
+//                                                                                                                                        
+//                                @{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: toggleIsThere | toggleIsOn] },
                                
-                               @{ @"SettingLabel" : @"Colors", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
-                                                                                                                                                                                               @[@"blue", @"red", @"yellow"], @"Index": [NSNumber numberWithInt:1]} ] },
-                                                                                                                                        
-                                @{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: toggleIsThere | toggleIsOn] },
-                                   
                                    
 //                                @{@"SettingLabel": @"Accounts" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[AccountsViewController alloc]init]},
 //                                
 //                               @{@"SettingLabel": @"Information" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[infoViewController alloc]initWithAppDelegate:appDel]},
                                
-                                @{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                             @[@"Some Alert", @"Another Alert", @"Mandarin Alert", @"Italian Alert", @"Korean Alert", @"Hindi Alert", @"Russian", @"Japanese"],
-                                                                                                                                                                                                @"Toggle Settings":
-                                                                                                                                                                                                    @[ @1, @0, @1, @0, @1, @0, @1, @1]}] },
-                               
+//                                @{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+//                                                                                                                                                                                             @[@"Some Alert", @"Another Alert", @"Mandarin Alert", @"Italian Alert", @"Korean Alert", @"Hindi Alert", @"Russian", @"Japanese"],
+//                                                                                                                                                                                                @"Toggle Settings":
+//                                                                                                                                                                                                    @[ @1, @0, @1, @0, @1, @0, @1, @1]}] },
+//                               
                                @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
                                                                                                                                                                                                         @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail], @"WIFI Connection :", @"Eula :"],
                                                                                                                                                                                                     @"Function Buttons":
@@ -107,6 +107,8 @@ NS_OPTIONS(NSInteger, style){
 
 -(void)appLogoutCompleted: (NSNotification *) note{
     
+    NSString *userName = [NSString stringWithFormat:@"Setting - User :  %@", self.userCenter.customerEmail];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:userName object:nil];
 }
 
 -(void)appLoginCompleted: (NSNotification *) note{

@@ -131,11 +131,20 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 //  StatsTabViewController      *statsVC    = [[StatsTabViewController alloc] init];
   DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
   
-    NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects: settingsVC,/* logoVC, */calendarVC, liveVC, clipVC,  bookmarkVC, listVC, nil]; //listVC,
+    NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects:
+                                               settingsVC,
+                                            /* logoVC, */
+                                               calendarVC,
+                                               liveVC,
+                                               clipVC,
+                                               listVC,
+                                               bookmarkVC,
+                                    //           debugTabView,
+                                               nil];
     if(SHOW_STATS_TAB)
         //   [vcArray addObject:statsVC];
         //    if(SHOW_STATS_TAB)
-        [vcArray addObject:debugTabView];
+      //  [vcArray addObject:debugTabView];
     for (UIViewController *vc in vcArray) {
         [self addChildViewController:vc];
 
