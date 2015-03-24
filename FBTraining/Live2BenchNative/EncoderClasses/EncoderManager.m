@@ -340,9 +340,9 @@
         __block EncoderManager * weakSelf = self;
         
         
-        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            [weakSelf.logoutAction start];
-        }];
+//        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
+//            [weakSelf.logoutAction start];
+//        }];
         
         _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             _dictOfAccountInfo       = (NSMutableDictionary*)note.object;

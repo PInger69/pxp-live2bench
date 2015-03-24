@@ -53,6 +53,68 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)showAllData{
+    self.tableData = [self arrayOfAllEventsSorted];
+    [self.tableView reloadData];
+}
+
+-(NSArray *) arrayOfAllEventsSorted{
+    NSMutableArray *sortedArray = [NSMutableArray array];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd";
+    
+    for (NSDictionary *event in self.arrayOfAllData) {
+        NSArray *bothStrings = [event[@"date"]componentsSeparatedByString:@" "];
+        NSDate *date = [formatter dateFromString:bothStrings[0]];
+        
+
+        
+        if (!sortedArray.count) {
+            [sortedArray addObject:event];
+            continue;
+        }
+        
+        for (int i = 0; i < sortedArray.count; ++i) {
+            NSArray *bothStringsOfSortedEvent = [sortedArray[i][@"date"] componentsSeparatedByString:@" "];
+            NSDate *dateOfSortedEvent = [formatter dateFromString:bothStringsOfSortedEvent[0]];
+            
+            if ([date compare: dateOfSortedEvent] == NSOrderedAscending) {
+                [sortedArray insertObject:event atIndex:i];
+                break;
+            }else if ([date compare: dateOfSortedEvent] == NSOrderedSame){
+                
+                NSArray *timeStrings = [bothStrings[1] componentsSeparatedByString:@":"];
+                NSArray *timeStringsForSortedEvent = [bothStringsOfSortedEvent[1] componentsSeparatedByString:@":"];
+                
+                int eventHour = [timeStrings[0] intValue];
+                int sortedHour = [timeStringsForSortedEvent[0] intValue];
+                
+                int eventMin = [timeStrings[0] intValue];
+                int sortedMin = [timeStringsForSortedEvent[0] intValue];
+                
+                if (eventHour < sortedHour) {
+                    [sortedArray insertObject:event atIndex:i];
+                    break;
+                }else if (eventMin < sortedMin){
+                    [sortedArray insertObject:event atIndex:i];
+                    break;
+                }
+                
+            }else if (([date compare: dateOfSortedEvent] == NSOrderedDescending && i == sortedArray.count-1 )){
+                [sortedArray addObject:event];
+                break;
+            }
+        }
+    }
+    
+    NSMutableArray *newestFirstSortedArray = [NSMutableArray array];
+    for (NSDictionary *event in sortedArray) {
+        [newestFirstSortedArray insertObject:event atIndex:0];
+    }
+    
+    return newestFirstSortedArray;
+}
+
 - (void)filterArray:(NSNotification *)note
 {
     NSMutableArray *eventsOfTheDay = [NSMutableArray array];
@@ -111,7 +173,8 @@
         [cell.titleLabel setText: @" "];
         cell.downloadButton.hidden = YES;
         cell.playButton.hidden = YES;
-        cell.swipeRecognizer.enabled = NO;
+        cell.swipeRecognizerForDeleting.enabled = NO;
+        cell.swipeRecognizerForSharing.enabled = NO;
         
         return cell;
     }
@@ -122,11 +185,9 @@
     cell.deleteBlock = ^(UITableViewCell *theCell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:theCell];
         [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
+        [self checkDeleteAllButton];
     };
 
-    
-
-    
 
     cell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
     cell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
@@ -142,7 +203,7 @@
     
     cell.downloadButton.hidden = NO;
     cell.playButton.hidden = NO;
-    cell.swipeRecognizer.enabled = YES;
+    cell.swipeRecognizerForDeleting.enabled = YES;
     
     __block ARCalendarTableViewController *weakSelf = self;
     cell.sendUserInfo = ^(){
@@ -207,6 +268,8 @@
         [cell setCellAsDeleting];
     }
     
+    cell.swipeRecognizerForSharing.enabled = NO;
+    
     return cell;
 }
 
@@ -264,8 +327,10 @@
     }else{
         if (buttonIndex == 0)
         {
+            [self removeIndexPathFromDeletion];
             [self.arrayOfAllData removeObject: self.tableData[self.editingIndexPath.row]];
             [self.tableData removeObject: self.tableData[self.editingIndexPath.row]];
+            
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
             
@@ -283,6 +348,22 @@
     [CustomAlertView removeAlert:alertView];
     
     [self checkDeleteAllButton];
+}
+
+-(void)removeIndexPathFromDeletion{
+    NSMutableSet *indexPathsToRemove = [[NSMutableSet alloc]init];
+    [self.setOfDeletingCells removeObject:self.editingIndexPath];
+    
+    for (NSIndexPath *indexPath in self.setOfDeletingCells) {
+        if (indexPath.row > self.editingIndexPath.row) {
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection: indexPath.section];
+            [indexPathsToRemove addObject: newIndexPath];
+        }else{
+            [indexPathsToRemove addObject: indexPath];
+        }
+    }
+    
+    self.setOfDeletingCells = indexPathsToRemove;
 }
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath{

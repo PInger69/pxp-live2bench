@@ -30,6 +30,7 @@
     [super setupView];
     
     self.deleteButton.frame = CGRectMake(448, 0, 70 , 80);
+    self.shareButton.frame = CGRectMake(0, 0, 70 , 44);
     
     self.dateLabel =[[UILabel alloc] initWithFrame:CGRectMake(5, 5, 150, 40)];
     self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(175, 5, 200, 40)];

@@ -16,6 +16,7 @@
 #import "AppDelegateActionPack.h"
 #import "SpinnerView.h"
 #import "ToastObserver.h"
+#import "SocialSharingManager.h"
 
 @implementation AppDelegate
 {
@@ -83,6 +84,7 @@
     
     _encoderManager = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 
+    [[SocialSharingManager alloc]initWithSocialOptions: @[@"Mail", @"Album", @"Dropbox", @"Facebook", @"GoogleDrive"]];
 
     
     self.tabBarController           = [[CustomTabBar alloc]init];

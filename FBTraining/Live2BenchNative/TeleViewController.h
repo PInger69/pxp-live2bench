@@ -7,20 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Live2BenchViewController.h"
+//#import "Live2BenchViewController.h"
 //#import <QuartzCore/QuartzCore.h>
 //#import "AppQueue.h"
 #import "UtilitiesController.h"
 #import "WBImage.h"
 //#import "Globals.h"
-#import "ListViewController.h"
-#import "BookmarkViewController.h"
+//#import "ListViewController.h"
+//#import "BookmarkViewController.h"
 #import "BorderButton.h"
 #import "TeleView.h"
 
-@class Live2BenchViewController;
-@class ListViewController;
-@class BookmarkViewController;
+//@class Live2BenchViewController;
+//@class ListViewController;
+//@class BookmarkViewController;
+@class FullScreenViewController;
 @class TeleView;
 
 @interface TeleViewController : UIViewController
@@ -47,8 +48,8 @@
     CGPoint touchCurrent;
     CGPoint savedShapeStartpoint;
     CGPoint savedShapeEndpoint;
-    BorderButton *clearButton;
-    BorderButton *saveButton;
+    //BorderButton *clearButton;
+    //BorderButton *saveButton;
     //AppQueue *appQueue;
     NSString *documentsDirectory;
     UtilitiesController *uController;
@@ -59,17 +60,20 @@
 //-(void)saveTelesCallback:(id)jsonArr;
 - (id)initWithController:(id)firstVC;
 -(void)colorPicked:(id)sender;
+-(void) startTelestration;
+-(void) forceCloseTele;
 //-(void)cancel:(id)sender;
-- (void)saveTeles:(id)sender;
+- (void)saveTeles;
 - (void)checkUndoState;
 
 @property (nonatomic,strong)CustomButton *teleButton;
-@property (nonatomic,strong)Live2BenchViewController *l2bVC;
+//@property (nonatomic,strong)Live2BenchViewController *l2bVC;
+@property (nonatomic, strong) FullScreenViewController *fullScreenViewController;
 @property (nonatomic,strong)TeleView *teleView;
 @property (nonatomic,strong)UIView *colourIndicator;
 @property (nonatomic)CMTime pausedTime;
-@property (nonatomic,strong)ListViewController *lvController;
-@property (nonatomic,strong)BookmarkViewController *bmvController;
+//@property (nonatomic,strong)ListViewController *lvController;
+//@property (nonatomic,strong)BookmarkViewController *bmvController;
 @property (nonatomic,strong) UIButton *saveButton;
 @property (nonatomic,strong) UIButton *clearButton;
 @property (nonatomic,strong) UIButton *undoButton;

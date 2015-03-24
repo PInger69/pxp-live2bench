@@ -7,6 +7,7 @@
 //
 
 #import "TeleViewController.h"
+#import "FullScreenViewController.h"
 
 
 #define LITTLE_ICON_DIMENSIONS     40
@@ -23,11 +24,11 @@
     UIImage *teleThumbImage;
 }
 
-@synthesize l2bVC=_l2bVC;
+//@synthesize l2bVC=_l2bVC;
 @synthesize teleButton=_teleButton;
 @synthesize pausedTime;
-@synthesize lvController;
-@synthesize bmvController;
+//@synthesize lvController;
+//@synthesize bmvController;
 @synthesize offsetTime;
 @synthesize timeScale;
 @synthesize undoButton;
@@ -41,15 +42,17 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 - (id)initWithController:(id)viewController
 {
     self = [super init];
-    if ([viewController isKindOfClass:[Live2BenchViewController class]]) {
-        self.l2bVC=(Live2BenchViewController*)viewController;
-    }else if([viewController isKindOfClass:[ListViewController class]]){
-        lvController = (ListViewController*)viewController;
-    }else if([viewController isKindOfClass:[BookmarkViewController class]]){
-        bmvController = (BookmarkViewController*)viewController;
-    }
+//    if ([viewController isKindOfClass:[Live2BenchViewController class]]) {
+//        self.l2bVC=(Live2BenchViewController*)viewController;
+//    }else if([viewController isKindOfClass:[ListViewController class]]){
+//        lvController = (ListViewController*)viewController;
+//    }else if([viewController isKindOfClass:[BookmarkViewController class]]){
+//        bmvController = (BookmarkViewController*)viewController;
+//    }
     
     if (self) {
+        self.fullScreenViewController = (FullScreenViewController *)viewController;
+        
         // Custom initialization
     }
     
@@ -150,11 +153,12 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 {
     self.teleView.isBlank = YES;
     [self clearAll];
-    [self.teleView removeFromSuperview];
-    self.teleView = nil;
+    [self.view removeFromSuperview];
+    [self.teleView clearTelestration];
+    //self.teleView = nil;
 //    [self.l2bVC showFullScreenOverlayButtons];
 //    [self.view removeFromSuperview];
-    [self.l2bVC.videoPlayer play];
+// [self.l2bVC.videoPlayer play];
 }
 
 -(void)setupView
@@ -288,10 +292,11 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 
 - (void)saveTeles
 {
-//    [self.teleView saveTelestration];
-//    teleImage = self.teleView.teleImage;
+    [self.teleView saveTelestration];
+    teleImage = self.teleView.teleImage;
+    [self.fullScreenViewController.player play];
 //    globals.IS_TELE=FALSE;
-//    [self.view removeFromSuperview];
+    [self.view removeFromSuperview];
 //    if (globals.IS_IN_FIRST_VIEW) {
 //        [self.l2bVC.videoPlayer play];
 //        [self.l2bVC showFullScreenOverlayButtons];
@@ -625,10 +630,10 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
             [arrowButton setSelected:![arrowButton isSelected]];
             self.teleView.isArrow = [arrowButton isSelected];
             break;
-        case 5:
-            [focusButton setSelected:![focusButton isSelected]];
-            self.teleView.isFocus = [focusButton isSelected];
-            break;
+//        case 5:
+//            [focusButton setSelected:![focusButton isSelected]];
+//            self.teleView.isFocus = [focusButton isSelected];
+//            break;
     }
     if (shouldAnimate){
         [UIView animateWithDuration:0.1 animations:^{
@@ -731,6 +736,7 @@ CGPoint midPoint(CGPoint p1, CGPoint p2)
 - (void)didReceiveMemoryWarning
 {
      [super didReceiveMemoryWarning];
+     [self.teleView didReceiveMemoryWarning];
 //    if (globals.IS_IN_FIRST_VIEW) {
 //        [self.l2bVC.teleButton sendActionsForControlEvents:UIControlEventTouchUpInside];
 //    }else{
@@ -741,6 +747,14 @@ CGPoint midPoint(CGPoint p1, CGPoint p2)
 //    [alert show];
 
     // Dispose of any resources that can be recreated.
+}
+
+-(void) startTelestration{
+    [self.fullScreenViewController.view addSubview: self.view];
+    //[self.fullScreenViewController.player.playBackView.videoLayer addSublayer: self.teleView.layer];
+    CGRect teleViewframe = CGRectMake(0, 0, 1064, 680);
+    [self.view setFrame: teleViewframe];
+    //NSLog(@"%@", NSStringFromCGRect(self.fullScreenViewController.player.playBackView.videoLayer.frame));
 }
 
 @end

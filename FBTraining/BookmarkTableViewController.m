@@ -10,8 +10,12 @@
 #import "BookmarkViewcell.h"
 #import "Utility.h"
 
+#import "SocialSharingManager.h"
+#import "ShareOptionsViewController.h"
+
 @interface BookmarkTableViewController ()
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressRecognizer;
+@property (strong, nonatomic) UIPopoverController *sharePop;
 @end
 
 @implementation BookmarkTableViewController
@@ -94,12 +98,26 @@
     [cell.tagName setText: [cellDictionary[@"name"] stringByRemovingPercentEncoding] ];
     [cell.indexNum setText: [NSString stringWithFormat:@"%i",indexPath.row + 1]];
     
+    if ([self.setOfDeletingCells containsObject:indexPath]) {
+        [cell setCellAsDeleting];
+    }else if ([self.setOfSharingCells containsObject:indexPath]){
+        [cell setCellAsSharing];
+    }
+    
     cell.deleteBlock = ^(UITableViewCell *cell){
-        [self.tableData removeObjectAtIndex: [self.tableView indexPathForCell:cell]];
-        [self.setOfDeletingCells removeObject: cell];
-        [self checkDeleteAllButton];
-        [self tableView: self.tableView commitEditingStyle: UITableViewCellEditingStyleDelete forRowAtIndexPath:indexPath];
+        NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
+        [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
     };
+    
+    cell.shareBlock = ^(UITableViewCell *cell){
+        ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
+        UIPopoverController *sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
+        sharePop.popoverContentSize = CGSizeMake(280, 180);
+        BookmarkViewCell *cellCasted = (BookmarkViewCell *)cell;
+        [sharePop presentPopoverFromRect: cellCasted.shareButton.frame inView: cell permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+        self.sharePop = sharePop;
+    };
+
     
     //cell.editingAccessoryType = UI
     //cell.deleteButton.hidden = YES;
@@ -135,15 +153,15 @@
 
 
 
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
+//// Override to support editing the table view.
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        // Delete the row from the data source
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+//        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+//    }   
+//}
 
 
 

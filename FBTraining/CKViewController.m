@@ -21,24 +21,24 @@
         CKCalendarView *calendar = [[CKCalendarView alloc] initWithStartDay:startSunday];
         self.calendar = calendar;
         calendar.delegate = self;
-
+        
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:@"dd/MM/yyyy"];
         //self.minimumDate = [self.dateFormatter dateFromString:@"20/09/2012"];
-
+        
         self.disabledDates = @[
-                [self.dateFormatter dateFromString:@"05/01/2013"],
-                [self.dateFormatter dateFromString:@"06/01/2013"],
-                [self.dateFormatter dateFromString:@"07/01/2013"],
-                [self.dateFormatter dateFromString:@"05/01/2013"],
-                [self.dateFormatter dateFromString:@"06/01/2014"],
-                [self.dateFormatter dateFromString:@"07/01/2014"],
-                [self.dateFormatter dateFromString:@"02/01/2015"]
-        ];
-
+                               [self.dateFormatter dateFromString:@"05/01/2013"],
+                               [self.dateFormatter dateFromString:@"06/01/2013"],
+                               [self.dateFormatter dateFromString:@"07/01/2013"],
+                               [self.dateFormatter dateFromString:@"05/01/2013"],
+                               [self.dateFormatter dateFromString:@"06/01/2014"],
+                               [self.dateFormatter dateFromString:@"07/01/2014"],
+                               [self.dateFormatter dateFromString:@"02/01/2015"]
+                               ];
+        
         calendar.onlyShowCurrentMonth = NO;
         calendar.adaptHeightToNumberOfWeeksInMonth = YES;
-
+        
         calendar.frame = CGRectMake(0, 0, 400, 420);
         [self.view setFrame:CGRectMake(100, 100, 400, 400)];
         
@@ -47,7 +47,7 @@
         //self.view = calendar;
         //self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(calendar.frame) + 4, self.view.bounds.size.width, 24)];
         //[self.view addSubview:self.dateLabel];
-
+        
         //self.view.backgroundColor = [UIColor whiteColor];
         //self.dateArray = [[NSMutableArray alloc]init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fastPick:) name:@"fastPick" object:nil];
@@ -56,14 +56,24 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(arrayOfAllDataChanged) name:@"calendarNeedsLayout" object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(goToLatestEvent:) name:@"goToLatestEvent" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(goToAllEvents:) name:@"goToAllEvents" object:nil];
         
         [self.view setAutoresizingMask:UIViewAutoresizingNone];
     }
     return self;
 }
 
+- (void)goToAllEvents:(NSNotification *)note
+{
+    [self.calendar selectDate:nil makeVisible:YES];
+    [self calendar:self.calendar didSelectDate:nil];
+    self.calendar.isAllEventsMode = YES;
+    [self.calendar setNeedsLayout];
+}
+
 - (void)goToLatestEvent:(NSNotification *)note
 {
+    self.calendar.isAllEventsMode = NO;
     NSMutableArray *arrayOfDate = [NSMutableArray array];
     for (NSString *dateString in self.dateArray) {
         NSDate *date = [self.dateFormatter dateFromString:dateString];
@@ -71,6 +81,8 @@
     }
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
     NSArray *descriptors = [NSArray arrayWithObject: descriptor];
+    
+    
     NSArray *sortedArray = [arrayOfDate sortedArrayUsingDescriptors:descriptors];
     
     [self.calendar selectDate:[sortedArray firstObject] makeVisible:YES];
@@ -80,6 +92,7 @@
 
 - (void)fastPick:(NSNotification *)note
 {
+    self.calendar.isAllEventsMode = NO;
     [self.calendar selectDate:note.userInfo[@"date"] makeVisible:YES];
     [self calendar:self.calendar didSelectDate:note.userInfo[@"date"]];
     [self.calendar setNeedsLayout];
@@ -104,7 +117,7 @@
     aDateFormatter.dateFormat = @"yyyy-MM-dd";
     for (NSDictionary *event in arrayOfAllData) {
         NSArray *bothStrings = [event[@"date"]componentsSeparatedByString:@" "];
-    
+        
         NSArray *dateByComponents = [bothStrings[0] componentsSeparatedByString:@"-"];
         NSString *dateString = [NSString stringWithFormat:@"%@/%@/%@", dateByComponents[2], dateByComponents[1], dateByComponents[0] ];
         

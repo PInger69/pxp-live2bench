@@ -54,6 +54,10 @@
     UIButton                            * multiButton;
     UIPinchGestureRecognizer            * pinchGesture;
     
+    //TemporaryButton
+    UIButton                            *zoomButton;
+    UIButton                            *unZoomButton;
+    
 }
 
 // Context
@@ -288,9 +292,29 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_gotoLiveButton];
         [_gotoLiveButton isActive:NO];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
+    
+    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
+    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];
+    zoomButton.backgroundColor = [UIColor redColor];
+    [self.view addSubview: zoomButton];
+    
+    unZoomButton = [[UIButton alloc]initWithFrame:CGRectMake(250, 600, 100, 50)];
+    [unZoomButton addTarget:self action:@selector(unZoomPressed) forControlEvents:UIControlEventTouchUpInside];
+    unZoomButton.backgroundColor = [UIColor blueColor];
+    [self.view addSubview: unZoomButton];
 }
 
+-(void) zoomPressed{
+    [_externalControlScreen returnVideoToPreviousViewFromExternal];
+    //RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
+    //[videoPlayer zoomIntoView: CGRectMake(20, 30, 300, 300)];
+}
 
+-(void) unZoomPressed{
+    [_externalControlScreen moveVideoToExternalDisplay: self.videoPlayer];
+//    RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
+//    [videoPlayer zoomIntoView: CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+}
 
 /**
  *  This is run when the Main Encoder is removed

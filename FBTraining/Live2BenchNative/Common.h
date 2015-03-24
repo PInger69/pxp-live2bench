@@ -29,6 +29,7 @@
 #define NOTIF_SET_PLAYER_FEED_IN_MYCLIP     @"setPlayerFeedInMyClip"
 // BEN AND SAGAR STUFF END
 #define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER"
+#define NOTIF_POST_ON_EXTERNAL_SCREEN       @"NOTIF_POST_ON_EXTERNAL_SCREEN"
 
 // Common Classes
 static float APP_WIDTH      = 0;
@@ -122,7 +123,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{@"tabName":@"Live2Bench"}
 #define NOTIF_USER_LOGGED_OUT               @"userLoggedout" // {@"success":<bool>}
-#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER" // this is watched by the encoder manager
+//#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER" // this is watched by the encoder manager
 
 
 

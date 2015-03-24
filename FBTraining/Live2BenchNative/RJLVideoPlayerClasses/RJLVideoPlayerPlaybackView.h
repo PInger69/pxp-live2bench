@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 @class AVPlayer;
+@class AVPlayerLayer;
+
 @interface RJLVideoPlayerPlaybackView : UIView
 
 
 @property (nonatomic, strong) AVPlayer* player;
+@property (nonatomic, strong) AVPlayerLayer *videoLayer;
 
 - (void)setPlayer:(AVPlayer*)player;
 - (void)setVideoFillMode:(NSString *)fillMode;
