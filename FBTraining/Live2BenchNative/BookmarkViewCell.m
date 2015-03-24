@@ -42,6 +42,7 @@
     [self.myContentView addSubview:self.tagName];
     
     [self.deleteButton setFrame: CGRectMake(390, 0, 70, 44)];
+    [self.shareButton setFrame: CGRectMake(0, 0, 70, 44)];
     
     self.indexNum  = [[UILabel alloc] initWithFrame:CGRectMake(3, 12, 20, 20) ];
     [self.indexNum setFont:[UIFont systemFontOfSize:12.0f]];
@@ -77,7 +78,7 @@
 -(void) setEditing:(BOOL)editing animated:(BOOL)animated{
     [super setEditing:editing animated:animated];
     self.deleteButton.hidden = editing;
-    self.swipeRecognizer.enabled = !editing;
+    self.swipeRecognizerForDeleting.enabled = !editing;
 }
 
 //-(void)updateIndexWith:(int)newIndex

@@ -193,7 +193,7 @@
     
     NSDictionary *tag = self.tableData[indexPath.row];
     
-    [cell.tagname setText:[tag objectForKey:@"name"]];
+    [cell.tagname setText:[[tag objectForKey:@"name"] stringByRemovingPercentEncoding]];
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
     NSString *durationString = [NSString stringWithFormat:@"%@s",[tag objectForKey:@"duration"]];
@@ -205,6 +205,8 @@
     
     UIColor *thumbColour = [Utility colorWithHexString:[tag objectForKey:@"colour"]];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
+    
+    cell.swipeRecognizerForSharing.enabled = NO;
     
     return cell;
 }
@@ -343,70 +345,70 @@
 //    tableView.editing = NO;
 //}
 
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        self.editingIndexPath = indexPath;
-        
-        CustomAlertView *alert = [[CustomAlertView alloc] init];
-        [alert setTitle:@"myplayXplay"];
-        [alert setMessage:@"Are you sure you want to delete this tag?"];
-        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-        [alert addButtonWithTitle:@"Yes"];
-        [alert addButtonWithTitle:@"No"];
-        [alert show];
-        
-        
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    
-    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
-        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-        
-        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-            [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
-            [indexPathsArray addObject: cellIndexPath];
-        }
-        
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
-            [self.tableData removeObject:tag];
-        }
-        
-        [self.setOfDeletingCells removeAllObjects];
-        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-        
-    }else{
-        if (buttonIndex == 0)
-        {
-            [self.tableData removeObjectAtIndex:self.editingIndexPath.row];
-            [self.setOfDeletingCells removeObject: self.editingIndexPath];
-            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-        }
-        else if (buttonIndex == 1)
-        {
-            // No, cancel the action to delete tags
-        }
-        
-    }
-    [CustomAlertView removeAlert:alertView];
-    
-    if (self.setOfDeletingCells.count < 2){
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.5];
-        self.deleteButton.frame = CGRectMake(568, 768, 370, 0);
-        [UIView commitAnimations];
-        
-    }
-    //[self.tableView reloadData];
-}
+//
+//// Override to support editing the table view.
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        // Delete the row from the data source
+//        self.editingIndexPath = indexPath;
+//        
+//        CustomAlertView *alert = [[CustomAlertView alloc] init];
+//        [alert setTitle:@"myplayXplay"];
+//        [alert setMessage:@"Are you sure you want to delete this tag?"];
+//        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+//        [alert addButtonWithTitle:@"Yes"];
+//        [alert addButtonWithTitle:@"No"];
+//        [alert show];
+//        
+//        
+//    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+//        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+//    }
+//}
+//
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    
+//    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
+//        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
+//        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+//        
+//        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
+//            [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
+//            [indexPathsArray addObject: cellIndexPath];
+//        }
+//        
+//        for (NSDictionary *tag in arrayOfTagsToRemove) {
+//            [self.tableData removeObject:tag];
+//        }
+//        
+//        [self.setOfDeletingCells removeAllObjects];
+//        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+//        
+//    }else{
+//        if (buttonIndex == 0)
+//        {
+//            [self.tableData removeObjectAtIndex:self.editingIndexPath.row];
+//            [self.setOfDeletingCells removeObject: self.editingIndexPath];
+//            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        }
+//        else if (buttonIndex == 1)
+//        {
+//            // No, cancel the action to delete tags
+//        }
+//        
+//    }
+//    [CustomAlertView removeAlert:alertView];
+//    
+//    if (self.setOfDeletingCells.count < 2){
+//        [UIView beginAnimations:nil context:nil];
+//        [UIView setAnimationDuration:0.5];
+//        self.deleteButton.frame = CGRectMake(568, 768, 370, 0);
+//        [UIView commitAnimations];
+//        
+//    }
+//    //[self.tableView reloadData];
+//}
 
 /*
  // Override to support rearranging the table view.

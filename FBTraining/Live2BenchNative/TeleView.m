@@ -8,6 +8,12 @@
 
 #import "TeleView.h"
 
+@interface TeleView ()
+
+@property (nonatomic, strong) NSMutableArray *arrayOfUndos;
+
+@end
+
 @implementation TeleView
 
 @synthesize isBlank;
@@ -19,15 +25,16 @@ CGPoint straightPoint;
 NSMutableArray *points;
 CGRect lastStraightRect;
 CGRect lastArrowRect;
-CGPoint minFocusPoint;
-CGPoint maxFocusPoint;
+//CGPoint minFocusPoint;
+//CGPoint maxFocusPoint;
 CGContextRef straightTempContext;
 CGContextRef arrowTempContext;
-CGContextRef focusTempContext;
+//CGContextRef focusTempContext;
 CGContextRef cacheContext;
-CGContextRef undoContext1;
+CGContextRef undoContext;
 CGContextRef undoContext2;
-CGContextRef undoContext3;
+//CGContextRef undoContext2;
+//CGContextRef undoContext3;
 BOOL undoToEmptyIsPossible = YES;
 BOOL didUndo = NO;
 BOOL touchEnded = NO;
@@ -50,6 +57,8 @@ BOOL touchEnded = NO;
         [self initContextWithTag:0 withSize:frame.size];
         [self setBackgroundColor:[UIColor clearColor]];
         self.multipleTouchEnabled = YES;
+        
+        self.arrayOfUndos = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -60,7 +69,7 @@ BOOL touchEnded = NO;
 }
 
 - (BOOL)hasUndoState {
-    if (!undoContext1) {
+    if (!self.arrayOfUndos.count) {
         return NO;
     } else {
         return YES;
@@ -68,7 +77,7 @@ BOOL touchEnded = NO;
 }
 
 - (BOOL)isEmptyCanvas {
-    if ((!undoContext1 && didUndo && undoToEmptyIsPossible) || self.isBlank) {
+    if ((!self.arrayOfUndos.count && didUndo && undoToEmptyIsPossible) || self.isBlank) {
         return YES;
     } else {
         return NO;
@@ -90,13 +99,16 @@ BOOL touchEnded = NO;
 	// where any drawing to the bitmap context will be rendered.
 	switch (contextNum) {
         case 1:
-            undoContext1 = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
-            break;
+//            undoContext1 = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+//            break;
         case 2:
-            undoContext2 = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
-            break;
+//            undoContext2 = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+//            break;
         case 3:
-            undoContext3 = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+//            NSLog(@"somethibn");
+//            struct CGContextRef someUndoContext;
+//            undoContext2 = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+            //[self.arrayOfUndos addObject: (__bridge id)(someUndoContext)];
             break;
         case 4:
             straightTempContext = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
@@ -104,9 +116,9 @@ BOOL touchEnded = NO;
         case 5:
             arrowTempContext = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
             break;
-        case 6:
-            focusTempContext = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
-            break;
+//        case 6:
+//            focusTempContext = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+//            break;
         default:
             cacheContext = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
             break;
@@ -117,11 +129,12 @@ BOOL touchEnded = NO;
     didUndo = NO;
     //NSLog(@"touchesBeganNotBlank");
     self.isBlank = NO;
-    if (self.isFocus) {
-        minFocusPoint = CGPointMake(-1, -1);
-        maxFocusPoint = CGPointMake(-1, -1);
-    }
+//    if (self.isFocus) {
+//        minFocusPoint = CGPointMake(-1, -1);
+//        maxFocusPoint = CGPointMake(-1, -1);
+//    }
     [self reassignUndoStates];
+//    [self initContextWithTag: 1 withSize:self.bounds.size];
     if (self.tvController) {
         [self.tvController checkUndoState];
     }
@@ -157,6 +170,15 @@ BOOL touchEnded = NO;
         CGImageRelease(arrowImage);
     }
     touchEnded = NO;
+    
+    if ([UIScreen screens].count > 1) {
+        UIGraphicsBeginImageContext(self.bounds.size);
+        [self drawRect:self.bounds];
+        UIImage * finishedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_POST_ON_EXTERNAL_SCREEN object:finishedImage];
+    }
 }
 
 - (void)cyclePointsWithNewPoint:(CGPoint)point {
@@ -176,36 +198,36 @@ BOOL touchEnded = NO;
     CGPoint lastPoint = [touch previousLocationInView:self];
     CGPoint newPoint = [touch locationInView:self];
     
-    if (self.isFocus) {
-        if (minFocusPoint.x < 0){
-            [self initContextWithTag:6 withSize:self.bounds.size];
-        }
-        CGContextSetStrokeColorWithColor(focusTempContext, [[UIColor colorWithWhite:1.0f alpha:0.6f] CGColor]);
-        CGContextSetLineCap(focusTempContext, kCGLineCapRound);
-        CGContextSetLineWidth(focusTempContext, 3);
-        CGContextMoveToPoint(focusTempContext, lastPoint.x, lastPoint.y);
-        CGContextAddLineToPoint(focusTempContext, newPoint.x, newPoint.y);
-        CGContextStrokePath(focusTempContext);
-        CGRect displayRect = CGRectMake(MIN(lastPoint.x-5, newPoint.x-5), MIN(lastPoint.y-5, newPoint.y-5), fabsf(lastPoint.x - newPoint.x) + 10, fabsf(lastPoint.y - newPoint.y) + 10);
-        if (minFocusPoint.x < 0 || minFocusPoint.x > newPoint.x) {
-            minFocusPoint.x = newPoint.x;
-        }
-        if (minFocusPoint.y < 0 || minFocusPoint.y > newPoint.y) {
-            minFocusPoint.y = newPoint.y;
-        }
-        if (maxFocusPoint.x < 0 || maxFocusPoint.x < newPoint.x) {
-            maxFocusPoint.x = newPoint.x;
-        }
-        if (maxFocusPoint.y < 0 || maxFocusPoint.y < newPoint.y) {
-            maxFocusPoint.y = newPoint.y;
-        }
-//        hue += 0.05;
-//        if (hue > 1.0)
-//            hue = 0.0;
-//        CGContextSetFillColorWithColor(focusTempContext, [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:0.3].CGColor);
-//        CGContextFillRect(focusTempContext, CGRectMake(minFocusPoint.x, minFocusPoint.y, maxFocusPoint.x - minFocusPoint.x, maxFocusPoint.y - minFocusPoint.y));
-        [self setNeedsDisplayInRect:displayRect];
-    } else {
+//    if (self.isFocus) {
+//        if (minFocusPoint.x < 0){
+//            [self initContextWithTag:6 withSize:self.bounds.size];
+//        }
+//        CGContextSetStrokeColorWithColor(focusTempContext, [[UIColor colorWithWhite:1.0f alpha:0.6f] CGColor]);
+//        CGContextSetLineCap(focusTempContext, kCGLineCapRound);
+//        CGContextSetLineWidth(focusTempContext, 3);
+//        CGContextMoveToPoint(focusTempContext, lastPoint.x, lastPoint.y);
+//        CGContextAddLineToPoint(focusTempContext, newPoint.x, newPoint.y);
+//        CGContextStrokePath(focusTempContext);
+//        CGRect displayRect = CGRectMake(MIN(lastPoint.x-5, newPoint.x-5), MIN(lastPoint.y-5, newPoint.y-5), fabsf(lastPoint.x - newPoint.x) + 10, fabsf(lastPoint.y - newPoint.y) + 10);
+//        if (minFocusPoint.x < 0 || minFocusPoint.x > newPoint.x) {
+//            minFocusPoint.x = newPoint.x;
+//        }
+//        if (minFocusPoint.y < 0 || minFocusPoint.y > newPoint.y) {
+//            minFocusPoint.y = newPoint.y;
+//        }
+//        if (maxFocusPoint.x < 0 || maxFocusPoint.x < newPoint.x) {
+//            maxFocusPoint.x = newPoint.x;
+//        }
+//        if (maxFocusPoint.y < 0 || maxFocusPoint.y < newPoint.y) {
+//            maxFocusPoint.y = newPoint.y;
+//        }
+////        hue += 0.05;
+////        if (hue > 1.0)
+////            hue = 0.0;
+////        CGContextSetFillColorWithColor(focusTempContext, [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:0.3].CGColor);
+////        CGContextFillRect(focusTempContext, CGRectMake(minFocusPoint.x, minFocusPoint.y, maxFocusPoint.x - minFocusPoint.x, maxFocusPoint.y - minFocusPoint.y));
+//        [self setNeedsDisplayInRect:displayRect];
+//    } else {
         if (isStraight && straightPoint.x < 0) {
             straightPoint = lastPoint;
             [self initContextWithTag:4 withSize:self.bounds.size];
@@ -300,7 +322,7 @@ BOOL touchEnded = NO;
                 [self drawArrowHeadWithTip:newPoint usingPoint:dirPoint];
             }
         }
-    }
+//    }
 }
 
 - (float)distanceBetweenPoint:(CGPoint)point1 andPoint:(CGPoint)point2 {
@@ -354,11 +376,11 @@ BOOL touchEnded = NO;
 }
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    if (self.isFocus) {
-        CGImageRef tempImage = CGBitmapContextCreateImage(focusTempContext);
-        CGContextDrawImage(context, self.bounds, tempImage);
-        CGImageRelease(tempImage);
-    } else {
+//    if (self.isFocus) {
+//        CGImageRef tempImage = CGBitmapContextCreateImage(focusTempContext);
+//        CGContextDrawImage(context, self.bounds, tempImage);
+//        CGImageRelease(tempImage);
+//    } else {
         CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
         CGContextDrawImage(context, self.bounds, cacheImage);
         CGImageRelease(cacheImage);
@@ -372,7 +394,7 @@ BOOL touchEnded = NO;
             CGContextDrawImage(context, self.bounds, arrowImage);
             CGImageRelease(arrowImage);
         }
-    }
+   // }
     
     /* For debugging render area
     hue += 0.05;
@@ -391,9 +413,7 @@ BOOL touchEnded = NO;
 
 - (void)clearTelestration {
     CGContextClearRect(cacheContext, self.bounds);
-    undoContext1 = nil;
-    undoContext2 = nil;
-    undoContext3 = nil;
+    [self.arrayOfUndos removeAllObjects];
     undoToEmptyIsPossible = YES;
     [self setNeedsDisplay];
     NSLog(@"clearTeleBlank");
@@ -402,6 +422,7 @@ BOOL touchEnded = NO;
 }
 
 - (BOOL)saveTelestration {
+    [self.arrayOfUndos removeAllObjects];
     UIGraphicsBeginImageContext(self.bounds.size);
     [self drawRect:self.bounds];
     self.teleImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -415,108 +436,154 @@ BOOL touchEnded = NO;
 
 - (void)reassignUndoStates{
     [self recordToUndoContextWithTag:3];
-    [self recordToUndoContextWithTag:2];
-    [self recordToUndoContextWithTag:1];
+ //   [self recordToUndoContextWithTag:2];
+ //   [self recordToUndoContextWithTag:1];
 }
 
 - (void)undoStroke {
-    if (!undoContext1) {
-        return;
-    }
+//    if (!self.arrayOfUndos.count) {
+//        return;
+//    }
     didUndo = YES;
-    [self replaceContextWithTag:0];
-    [self replaceContextWithTag:1];
-    [self replaceContextWithTag:2];
-    undoContext3 = nil;
+//    [self replaceContextWithTag:0];
+//    [self replaceContextWithTag:1];
+//    [self replaceContextWithTag:2];
+//    undoContext3 = nil;
+    
     if (self.tvController) {
         [self.tvController checkUndoState];
     }
+    [self replaceContextWithTag: 1];
     [self setNeedsDisplay];
 }
 
 - (void)recordToUndoContextWithTag:(int)contextNum {
     CGImageRef cgImage;
     switch (contextNum) {
-        case 1:
-            if (!cacheContext) {
-                return;
-            }
-            if (!undoContext1) {
-                [self initContextWithTag:contextNum withSize:self.bounds.size];
-            }
-            CGContextClearRect(undoContext1, self.bounds);
+   //     case 1:
+//            if (!cacheContext) {
+//                return;
+//            }
+//            if (!undoContext1) {
+//                [self initContextWithTag:contextNum withSize:self.bounds.size];
+//            }
+//            CGContextClearRect(undoContext1, self.bounds);
+//            cgImage = CGBitmapContextCreateImage(cacheContext);
+//            CGContextDrawImage(undoContext1, self.bounds, cgImage);
+//            break;
+  //      case 2:
+//            if (!undoContext1) {
+//                return;
+//            }
+//            if (!undoContext2) {
+//                [self initContextWithTag:contextNum withSize:self.bounds.size];
+//            }
+//            CGContextClearRect(undoContext2, self.bounds);
+//            cgImage = CGBitmapContextCreateImage(undoContext1);
+//            CGContextDrawImage(undoContext2, self.bounds, cgImage);
+//            break;
+        case 3:{
+//            if (!undoContext2) {
+//                return;
+//            }
+//            if (!undoContext3) {
+//                [self initContextWithTag:contextNum withSize:self.bounds.size];
+//            } else {
+//                undoToEmptyIsPossible = NO; //Controls whether or not to display "Clear" instead of "Close"
+//            }
+//            CGContextClearRect(undoContext3, self.bounds);
+//            cgImage = CGBitmapContextCreateImage(undoContext2);
+//            CGContextDrawImage(undoContext3, self.bounds, cgImage);
+//            break;
+//            if (!self.arrayOfUndos.count) {
+//                return;
+//            }
+            
+            
+//            undoContext = (__bridge CGContextRef)([self.arrayOfUndos lastObject]);
+//            undoContext2 = (__bridge CGContextRef)(self.arrayOfUndos[self.arrayOfUndos.count -1]);
+//            
+//            CGContextClearRect(undoContext, self.bounds);
+//            cgImage = CGBitmapContextCreateImage(undoContext2);
+//            CGContextDrawImage(undoContext, self.bounds, cgImage);
+            CGSize size = self.bounds.size;
+            
+            int bitmapByteCount;
+            int	bitmapBytesPerRow;
+            
+            // Declare the number of bytes per row. Each pixel in the bitmap in this
+            // example is represented by 4 bytes; 8 bits each of red, green, blue, and
+            // alpha.
+            bitmapBytesPerRow = ((size.width) * 4);
+            bitmapByteCount = (bitmapBytesPerRow * size.height);
+
+            
+            CGContextRef someUndoContext = CGBitmapContextCreate(NULL, size.width, size.height, 8, bitmapBytesPerRow, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+            
             cgImage = CGBitmapContextCreateImage(cacheContext);
-            CGContextDrawImage(undoContext1, self.bounds, cgImage);
+            CGContextDrawImage(someUndoContext, self.bounds, cgImage);
+            CGImageRelease(cgImage);
+            [self.arrayOfUndos addObject: (__bridge id)(someUndoContext)];
+        }
             break;
-        case 2:
-            if (!undoContext1) {
-                return;
-            }
-            if (!undoContext2) {
-                [self initContextWithTag:contextNum withSize:self.bounds.size];
-            }
-            CGContextClearRect(undoContext2, self.bounds);
-            cgImage = CGBitmapContextCreateImage(undoContext1);
-            CGContextDrawImage(undoContext2, self.bounds, cgImage);
-            break;
-        case 3:
-            if (!undoContext2) {
-                return;
-            }
-            if (!undoContext3) {
-                [self initContextWithTag:contextNum withSize:self.bounds.size];
-            } else {
-                undoToEmptyIsPossible = NO; //Controls whether or not to display "Clear" instead of "Close"
-            }
-            CGContextClearRect(undoContext3, self.bounds);
-            cgImage = CGBitmapContextCreateImage(undoContext2);
-            CGContextDrawImage(undoContext3, self.bounds, cgImage);
-            break;
+            
         default:
             break;
     }
-    CGImageRelease(cgImage);
+
 }
 
 - (void)replaceContextWithTag:(int)contextNum {
     switch (contextNum) {
         case 1:
-            if (undoContext2) {
-                CGContextClearRect(undoContext1, self.bounds);
-                CGImageRef cacheImage = CGBitmapContextCreateImage(undoContext2);
-                CGContextDrawImage(undoContext1, self.bounds, cacheImage);
-                CGImageRelease(cacheImage);
-                CGContextClearRect(undoContext2, self.bounds);
-            } else {
-                undoContext1 = nil;
-            }
-            break;
+//            if (undoContext2) {
+//                CGContextClearRect(undoContext1, self.bounds);
+//                CGImageRef cacheImage = CGBitmapContextCreateImage(undoContext2);
+//                CGContextDrawImage(undoContext1, self.bounds, cacheImage);
+//                CGImageRelease(cacheImage);
+//                CGContextClearRect(undoContext2, self.bounds);
+//            } else {
+//                undoContext1 = nil;
+//            }
+//            break;
         case 2:
-            if (undoContext3) {
-                CGContextClearRect(undoContext2, self.bounds);
-                CGImageRef cacheImage = CGBitmapContextCreateImage(undoContext3);
-                CGContextDrawImage(undoContext2, self.bounds, cacheImage);
-                CGImageRelease(cacheImage);
-                CGContextClearRect(undoContext3, self.bounds);
-            } else {
-                undoContext2 = nil;
-            }
-            break;
+//            if (undoContext3) {
+//                CGContextClearRect(undoContext2, self.bounds);
+//                CGImageRef cacheImage = CGBitmapContextCreateImage(undoContext3);
+//                CGContextDrawImage(undoContext2, self.bounds, cacheImage);
+//                CGImageRelease(cacheImage);
+//                CGContextClearRect(undoContext3, self.bounds);
+//            } else {
+//                undoContext2 = nil;
+//            }
+//            break;
         case 3:
-            undoContext3 = nil;
+            NSLog(@"Undo on telestration");
+            CGContextRef someUndoContext = (__bridge CGContextRef)(self.arrayOfUndos[self.arrayOfUndos.count - 1]);
+            
+            CGContextClearRect(cacheContext, self.bounds);
+            CGImageRef cacheImage = CGBitmapContextCreateImage(someUndoContext);
+            CGContextDrawImage(cacheContext, self.bounds, cacheImage);
+            CGImageRelease(cacheImage);
+            [self.arrayOfUndos removeLastObject];
+            [self.tvController checkUndoState];
             break;
         default:
-            if (undoContext1) {
-                CGContextClearRect(cacheContext, self.bounds);
-                CGImageRef cacheImage = CGBitmapContextCreateImage(undoContext1);
-                CGContextDrawImage(cacheContext, self.bounds, cacheImage);
-                CGImageRelease(cacheImage);
-                CGContextClearRect(undoContext1, self.bounds);
-            }
+//            if (undoContext1) {
+//                CGContextClearRect(cacheContext, self.bounds);
+//                CGImageRef cacheImage = CGBitmapContextCreateImage(undoContext1);
+//                CGContextDrawImage(cacheContext, self.bounds, cacheImage);
+//                CGImageRelease(cacheImage);
+//                CGContextClearRect(undoContext1, self.bounds);
+//            }
             break;
     }
     
     
+}
+
+- (void) didReceiveMemoryWarning{
+    [self.arrayOfUndos removeAllObjects];
 }
 
 @end

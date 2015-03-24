@@ -17,7 +17,7 @@
 
 
 
-@property (strong, nonatomic) UIView    * view;
+@property (strong, nonatomic) UIViewController    * viewController;
 @property (assign, nonatomic) BOOL      enableDisplay;
 @property (assign, nonatomic) BOOL      screenDetected;
 

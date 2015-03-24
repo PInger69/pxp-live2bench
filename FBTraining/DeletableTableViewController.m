@@ -7,8 +7,12 @@
 //
 
 #import "DeletableTableViewController.h"
+#import "SocialSharingManager.h"
+#import "ShareOptionsViewController.h"
 
 @interface DeletableTableViewController ()
+
+@property (strong, nonatomic) UIPopoverController *sharePop;
 
 @end
 
@@ -28,11 +32,26 @@
         [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.deleteButton setFrame:CGRectMake(568, 768, 370, 0)];
         
+        self.shareButton = [[UIButton alloc] init];
+        self.shareButton.backgroundColor = [UIColor orangeColor];
+        [self.shareButton addTarget:self action:@selector(shareAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
+        [self.shareButton setTitle: @"Share All" forState: UIControlStateNormal];
+        [self.shareButton.titleLabel setTextColor:[UIColor whiteColor]];
+        [self.shareButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.shareButton setFrame:CGRectMake(568, 768, 370, 0)];
+
+        
         self.setOfDeletingCells = [[NSMutableSet alloc] init];
-        self.dictionaryOfObservers = [[NSMutableDictionary alloc] init];
+        self.setOfSharingCells = [[NSMutableSet alloc] init];
+        //self.dictionaryOfObservers = [[NSMutableDictionary alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addDeletionCell:) name:@"AddDeletionCell" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDeletionCell:) name:@"RemoveDeletionCell" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addSharingCell:) name:@"AddSharingCell" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSharingCell:) name:@"RemoveSharingCell" object:nil];
+
         
     }
     
@@ -68,6 +87,34 @@
     
 }
 
+-(void) addSharingCell: (NSNotification *) aNotification{
+    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:aNotification.object];
+    if(cellIndexPath) {
+        [self.setOfSharingCells addObject: cellIndexPath];
+    }
+    if (self.setOfSharingCells.count >= 2){
+        [self.parentViewController.view addSubview: self.shareButton];
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.5];
+        self.shareButton.frame = self.newFrame;
+        [UIView commitAnimations];
+    }
+}
+
+-(void)removeSharingCell: (NSNotification *) aNotification{
+    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:aNotification.object];
+    if (cellIndexPath) {
+        [self.setOfSharingCells removeObject: cellIndexPath];
+    }
+    if (self.setOfSharingCells.count < 2){
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.5];
+        self.shareButton.frame = self.originalFrame;
+        [UIView commitAnimations];
+    }
+    
+}
+
 -(void)checkDeleteAllButton{
     if (self.setOfDeletingCells.count < 2){
         [UIView beginAnimations:nil context:nil];
@@ -77,6 +124,22 @@
     }
 }
 
+-(void)checkShareAllButton{
+    if (self.setOfSharingCells.count < 2){
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.5];
+        self.shareButton.frame = self.originalFrame;
+        [UIView commitAnimations];
+    }
+}
+
+-(void)shareAllButtonTarget{
+    ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
+    self.sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
+    self.sharePop.popoverContentSize = CGSizeMake(280, 180);
+    [self.sharePop presentPopoverFromRect:self.shareButton.frame inView:self.parentViewController.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+
+}
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
     [alert setTitle:@"myplayXplay"];
@@ -129,8 +192,9 @@
         if (buttonIndex == 0)
         {
             [self.tableData removeObjectAtIndex:self.editingIndexPath.row];
-            [self.setOfDeletingCells removeObject: self.editingIndexPath];
+            [self removeIndexPathFromDeletion];
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadData];
         }
         else if (buttonIndex == 1)
         {
@@ -142,6 +206,22 @@
     
     [self checkDeleteAllButton];
     //[self.tableView reloadData];
+}
+
+-(void)removeIndexPathFromDeletion{
+    NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
+    [self.setOfDeletingCells removeObject:self.editingIndexPath];
+    
+    for (NSIndexPath *indexPath in self.setOfDeletingCells) {
+        if (indexPath.row > self.editingIndexPath.row) {
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection: indexPath.section];
+            [newIndexPathSet addObject: newIndexPath];
+        }else{
+            [newIndexPathSet addObject: indexPath];
+        }
+    }
+    
+    self.setOfDeletingCells = newIndexPathSet;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

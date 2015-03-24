@@ -16,6 +16,7 @@
 #import "VideoControlBarSlider.h"
 #import "RJLVideoPlayerPlaybackView.h"
 #import "PxpVideoPlayerProtocol.h"
+#import "VideoZoomManager.h"
 
 //typedef NS_OPTIONS (NSInteger,PlayerStatus){
 //    RJLPS_Offline      = 0,
@@ -68,6 +69,8 @@
 
 @property (nonatomic,copy)       NSURL                  *URL;
 
+@property (nonatomic, strong)    VideoZoomManager       *zoomManager;
+
 -(instancetype)initWithFrame:(CGRect)frame;
 
 -(void)gotolive;
@@ -82,5 +85,5 @@
 
 -(void)playFeed:(Feed*)aFeed;
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange;
-
+-(void)zoomIntoView: (CGRect) partialView;
 @end

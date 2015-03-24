@@ -117,7 +117,7 @@ EncoderManager      * encoderManager;
     
     welcomeToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, self.view.bounds.size.height - 60.0f, self.view.bounds.size.width, 60.0f)];
     welcomeToolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    [welcomeToolBar setItems:@[flex, hardwareTab, flex, taggingTab, flex, contactTab, flex, dropboxTab,fix,googleDriveTab,fix, settingsTab, fix]];
+    [welcomeToolBar setItems:@[flex, hardwareTab, flex, taggingTab, flex, contactTab, flex/*, dropboxTab,fix,googleDriveTab,fix, settingsTab, fix*/]];
     [self.view addSubview:welcomeToolBar];
     
     tabContentView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 65.0f, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f - welcomeToolBar.bounds.size.height)];

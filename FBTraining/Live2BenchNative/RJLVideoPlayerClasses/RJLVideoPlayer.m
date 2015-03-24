@@ -11,6 +11,7 @@
 #import "RJLVideoPlayerResponder.h"
 #import "ValueBuffer.h"
 
+
 #define LIVE_BUFFER     5
 #define SLOWMO_SPEED    0.5f
 
@@ -42,6 +43,7 @@
     
     BOOL  isFeedReady;
     ValueBuffer * liveBuffer;
+
 }
 static void *ViewControllerRateObservationContext           = &ViewControllerRateObservationContext;
 static void *ViewControllerStatusObservationContext         = &ViewControllerStatusObservationContext;
@@ -107,8 +109,19 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 {
     // every second, after 3 seconds fire if not reset
 
-    
     self.playBackView           = [[RJLVideoPlayerPlaybackView alloc]initWithFrame:videoFrame];//CGRectMake(500, 60, 400, 300)
+    
+    CALayer *maskLayer = [CALayer layer];
+    maskLayer.frame = self.playBackView.bounds;
+    maskLayer.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
+    
+    self.playBackView.layer.mask = maskLayer;
+    
+    self.zoomManager = [[VideoZoomManager alloc]init];
+    self.zoomManager.videoView = self.playBackView;
+    [self.zoomManager addTarget:self action:@selector(zoomManagerTarget:) forControlEvents:UIControlEventAllEvents];
+    //[self zoomIntoView: CGRectMake(50, 50, 100, 100)];
+    
     self.view                   = self.playBackView;
     self.view.backgroundColor   = [UIColor blackColor];
 
@@ -145,6 +158,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     currentItemTime.textColor = [UIColor whiteColor];
    if (DEBUG_MODE) [self.view addSubview:currentItemTime];
     [super viewDidLoad];
+}
+
+-(void)zoomManagerTarget: (VideoZoomManager *)zoomManager{
+    [self zoomIntoView: zoomManager.zoomFrame];
 }
 
 
@@ -1191,13 +1208,41 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 
+
 -(void)dealloc
 {
     self.isAlive = NO;
     [freezeCounter stop];
 }
 
+-(void)zoomIntoView: (CGRect) partialView{
+    CGRect newFrame = CGRectMake(0, 0, 0, 0);
+    
+    newFrame.size.width = (self.playBackView.frame.size.width / partialView.size.width) * self.playBackView.frame.size.width;
+    newFrame.size.height = (self.playBackView.frame.size.width / partialView.size.width) * self.playBackView.frame.size.height;
+    
+    CGFloat xPositionMultiplier = partialView.origin.x / self.playBackView.frame.size.width;
+    CGFloat yPositionMultiplier = partialView.origin.y / self.playBackView.frame.size.width;
+    
+    newFrame.origin.x = - xPositionMultiplier * newFrame.size.width;
+    newFrame.origin.y = - yPositionMultiplier * newFrame.size.height;
+    
+    self.playBackView.videoLayer.frame = newFrame;
+    
+//    CALayer *maskLayer = [CALayer layer];
+//    maskLayer.frame = CGRectMake(xPositionMultiplier * newFrame.size.width, yPositionMultiplier * newFrame.size.height, self.playBackView.frame.size.width, self.playBackView.frame.size.height);
+//    maskLayer.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
+//    self.playBackView.videoLayer.mask = maskLayer;
+}
 
+
+//    CGRect newFrame = CGRectMake( self.playBackView.frame.origin.x - partialView.origin.x, self.playBackView.frame.origin.y - partialView.origin.y, 0, 0);
+//    
+//    newFrame.size.width = (playBackView.frame.size.width / partialView.size.width) * playBackView.frame.size.width;
+//    newFrame.size.height = (playBackView.frame.size.height / partialView.size.height) * playBackView.frame.size.height;
+//    
+//    self.playBackView.layer.frame = newFrame;
+//    self.playBackView.layer.mask = nil;
 
 
 @end

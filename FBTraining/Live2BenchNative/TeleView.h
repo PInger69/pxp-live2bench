@@ -17,7 +17,7 @@
 @property (nonatomic) BOOL isBlank;
 @property (nonatomic) BOOL isStraight;
 @property (nonatomic) BOOL isArrow;
-@property (nonatomic) BOOL isFocus;
+//@property (nonatomic) BOOL isFocus;
 @property (nonatomic, strong) UIImage *teleImage;
 @property (nonatomic, strong) TeleViewController *tvController;
 
@@ -27,5 +27,6 @@
 - (void)clearTelestration;
 - (BOOL)saveTelestration;
 - (void)undoStroke;
+- (void) didReceiveMemoryWarning;
 
 @end

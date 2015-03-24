@@ -14,4 +14,6 @@
 @property (strong, nonatomic) NSMutableArray *arrayOfAllData;
 @property (strong, nonatomic) NSString       *localPath;
 
+-(void)showAllData;
+
 @end

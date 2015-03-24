@@ -119,7 +119,7 @@
     }
     
     
-
+    
     prevView                = (_player.view.superview)?_player.view.superview:nil;
     prevDispayIndex         = [[prevView subviews]indexOfObject:_player.view];
     prevPlayerViewRect      = _player.view.frame;
@@ -129,6 +129,8 @@
     [[_player.playBackView layer] removeAllAnimations];
    // setting to external screen
     
+    //_player.playBackView.layer.mask = nil;
+    
     if (animated){
         [UIView beginAnimations:@"scaleAnimation" context:nil];
         [UIView setAnimationDuration:0.22];
@@ -137,6 +139,12 @@
     _player.view.bounds                             = screenBounds;
     _player.playBackView.frame                       = screenBounds;
     _player.playBackView.bounds                      = screenBounds;
+    
+    if (_player.playBackView.videoLayer.superlayer != _player.playBackView.layer){
+        UIScreen *screenTwo = [UIScreen screens][1];
+        [_player.playBackView.videoLayer setFrame: screenTwo.bounds];
+    }
+    
     _player.liveIndicatorLight.frame                = [((NSValue *)[fullScreenFramesParts objectForKey:@"light"]) CGRectValue];
     _player.videoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
     _player.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
@@ -161,6 +169,12 @@
     _player.view.bounds             = prevPlayerViewBounds;
     _player.playBackView.frame       = prevPlayerLayerRect;
     _player.playBackView.bounds      = prevPlayerLayerBounds;
+    
+    
+    if (_player.playBackView.videoLayer.superlayer != _player.playBackView.layer){
+        UIScreen *screenTwo = [UIScreen screens][1];
+        [_player.playBackView.videoLayer setFrame: screenTwo.bounds];
+    }
     
     _player.liveIndicatorLight.frame                = [((NSValue *)[smallScreenFramesParts objectForKey:@"light"]) CGRectValue];
     _player.videoControlBar.frame               = [((NSValue *)[smallScreenFramesParts objectForKey:@"bar"]) CGRectValue];
@@ -192,6 +206,7 @@
         // to true
         [self.view setHidden:NO];
         [self viewDidAppear:NO];
+        [self buildAddSubview: (VideoPlayer *) self.player];
         [self moveVideoToFullScreen:_animated];
 //        _player.isFullScreen = YES;
     }

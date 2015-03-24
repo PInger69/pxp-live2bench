@@ -18,12 +18,16 @@ static CGFloat const kBounceValue = 10.0f;
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
 - (void)deleteButtonPressed{
     self.deleteBlock(self);
+}
+
+- (void)shareButtonPressed{
+    self.shareBlock(self);
 }
 
 - (void)setupView
@@ -41,6 +45,14 @@ static CGFloat const kBounceValue = 10.0f;
     [self.contentView addSubview:self.deleteButton];
     [self.deleteButton addTarget:self action:@selector(deleteButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
+    self.shareButton = [[UIButton alloc] init];
+    [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    [self.shareButton setBackgroundColor:[UIColor orangeColor]];
+    [self.contentView addSubview:self.shareButton];
+    [self.shareButton addTarget:self action:@selector(shareButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.contentView addSubview:anExtraView];
     //[self.myContentView addSubview:self.deleteButton];
     
@@ -56,48 +68,82 @@ static CGFloat const kBounceValue = 10.0f;
     
     self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.swipeRecognizer =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCell:)];
-    self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.myContentView addGestureRecognizer:self.swipeRecognizer];
+    self.swipeRecognizerForDeleting =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCellForDeleting:)];
+    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
+    
+    self.swipeRecognizerForSharing =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCellForSharing:)];
+    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
     
 }
 
 -(void)prepareForReuse{
     [self resetConstraintContstantsToZero:NO notifyDelegateDidClose:NO];
-    self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
+    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
 }
 
 -(void)setCellAsDeleting{
     [self setConstraintsToShowAllButtons:NO notifyDelegateDidOpen:NO];
-    self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionRight;
 }
 
 
-- (void)panThisCell:(UISwipeGestureRecognizer *)recognizer {
-    recognizer.direction = self.swipeRecognizer.direction;
+-(void)setCellAsSharing{
+    [self setConstraintsToShowAllButtonsForSharing:NO notifyDelegateDidOpen:NO];
+    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionLeft;
+}
+
+
+- (void)panThisCellForDeleting:(UISwipeGestureRecognizer *)recognizer {
+    recognizer.direction = self.swipeRecognizerForDeleting.direction;
     if (recognizer.direction == UISwipeGestureRecognizerDirectionLeft) {
         [self setConstraintsToShowAllButtons:YES notifyDelegateDidOpen:YES];
-        [self.myContentView removeGestureRecognizer:self.swipeRecognizer];
-        self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-        [self.myContentView addGestureRecognizer:self.swipeRecognizer];
+        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForDeleting];
+        self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionRight;
+        [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"AddDeletionCell" object:self];
     }
     else
     {
         [self resetConstraintContstantsToZero:YES notifyDelegateDidClose:YES];
-        [self.myContentView removeGestureRecognizer:self.swipeRecognizer];
-        self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-        [self.myContentView addGestureRecognizer:self.swipeRecognizer];
+        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForDeleting];
+        self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
+        [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveDeletionCell" object:self];
     }
-    
+}
+
+- (void)panThisCellForSharing:(UISwipeGestureRecognizer *)recognizer {
+    recognizer.direction = self.swipeRecognizerForSharing.direction;
+    if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
+        [self setConstraintsToShowAllButtonsForSharing:YES notifyDelegateDidOpen:YES];
+        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForSharing];
+        self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionLeft;
+        [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSharingCell" object:self];
+    }
+    else
+    {
+        [self resetConstraintContstantsToZeroForSharing:YES notifyDelegateDidClose:YES];
+        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForSharing];
+        self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
+        [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveSharingCell" object:self];
+    }
 }
 
 
-- (CGFloat)buttonTotalWidth {
+- (CGFloat)buttonTotalWidthForDeleting {
     return CGRectGetWidth(self.deleteButton.frame);
+}
+- (CGFloat)buttonTotalWidthForSharing {
+    return CGRectGetWidth(self.shareButton.frame);
 }
 
 
@@ -122,21 +168,44 @@ static CGFloat const kBounceValue = 10.0f;
     }];
 }
 
+- (void)resetConstraintContstantsToZeroForSharing:(BOOL)animated notifyDelegateDidClose:(BOOL)endEditing
+{
+    if (self.startingLeftLayoutConstraintConstant == 0 &&
+        self.contentViewLeftConstraint.constant == 0) {
+        //Already all the way closed, no bounce necessary
+        return;
+    }
+    
+    self.contentViewRightConstraint.constant = kBounceValue;
+    self.contentViewLeftConstraint.constant = -kBounceValue;
+    
+    [self updateConstraintsIfNeeded:animated completion:^(BOOL finished) {
+        self.contentViewRightConstraint.constant = 0;
+        self.contentViewLeftConstraint.constant = 0;
+        
+        [self updateConstraintsIfNeeded:animated completion:^(BOOL finished) {
+            self.startingLeftLayoutConstraintConstant = self.contentViewLeftConstraint.constant;
+        }];
+    }];
+}
+
+
+
 
 - (void)setConstraintsToShowAllButtons:(BOOL)animated notifyDelegateDidOpen:(BOOL)notifyDelegate
 {
     
-    if (self.startingRightLayoutConstraintConstant == [self buttonTotalWidth] &&
-        self.contentViewRightConstraint.constant == [self buttonTotalWidth]) {
+    if (self.startingRightLayoutConstraintConstant == [self buttonTotalWidthForDeleting] &&
+        self.contentViewRightConstraint.constant == [self buttonTotalWidthForDeleting]) {
         return;
     }
-    self.contentViewLeftConstraint.constant = -[self buttonTotalWidth] - kBounceValue;
-    self.contentViewRightConstraint.constant = [self buttonTotalWidth] + kBounceValue;
+    self.contentViewLeftConstraint.constant = -[self buttonTotalWidthForDeleting] - kBounceValue;
+    self.contentViewRightConstraint.constant = [self buttonTotalWidthForDeleting] + kBounceValue;
     
     [self updateConstraintsIfNeeded:animated completion:^(BOOL finished) {
         
-        self.contentViewLeftConstraint.constant = -[self buttonTotalWidth];
-        self.contentViewRightConstraint.constant = [self buttonTotalWidth];
+        self.contentViewLeftConstraint.constant = -[self buttonTotalWidthForDeleting];
+        self.contentViewRightConstraint.constant = [self buttonTotalWidthForDeleting];
         
         [self updateConstraintsIfNeeded:animated completion:^(BOOL finished) {
             
@@ -144,6 +213,30 @@ static CGFloat const kBounceValue = 10.0f;
         }];
     }];
 }
+
+- (void)setConstraintsToShowAllButtonsForSharing:(BOOL)animated notifyDelegateDidOpen:(BOOL)notifyDelegate
+{
+    
+    if (self.startingLeftLayoutConstraintConstant == [self buttonTotalWidthForSharing] &&
+        self.contentViewLeftConstraint.constant == [self buttonTotalWidthForSharing]) {
+        return;
+    }
+    self.contentViewRightConstraint.constant = -[self buttonTotalWidthForSharing] - kBounceValue;
+    self.contentViewLeftConstraint.constant = [self buttonTotalWidthForSharing] + kBounceValue;
+    
+    [self updateConstraintsIfNeeded:animated completion:^(BOOL finished) {
+        
+        self.contentViewLeftConstraint.constant = [self buttonTotalWidthForSharing];
+        self.contentViewRightConstraint.constant = -[self buttonTotalWidthForSharing];
+        
+        [self updateConstraintsIfNeeded:animated completion:^(BOOL finished) {
+            
+            self.startingLeftLayoutConstraintConstant = self.contentViewLeftConstraint.constant;
+        }];
+    }];
+}
+
+
 
 
 - (void)updateConstraintsIfNeeded:(BOOL)animated completion:(void (^)(BOOL finished))completion {
@@ -159,3 +252,4 @@ static CGFloat const kBounceValue = 10.0f;
 
 
 @end
+
