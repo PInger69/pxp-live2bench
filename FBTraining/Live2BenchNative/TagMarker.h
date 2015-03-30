@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface TagMarker : NSObject{
-
+    
 }
 
 @property (nonatomic) double xValue;

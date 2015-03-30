@@ -34,7 +34,7 @@
 @class EdgeSwipeEditButtonsView, TeleViewController, BookmarkFilterViewController, FilterToolboxViewController, GDFileUploader, DPBFileUploader;
 @interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,MFMailComposeViewControllerDelegate,UIGestureRecognizerDelegate, DBSessionDelegate,DBNetworkRequestDelegate,DBRestClientDelegate,UIDocumentInteractionControllerDelegate, EdgeSwipeButtonDelegate, UIPopoverControllerDelegate, JPReorderTableViewDataSource, JPReorderTableViewDelegate>
 {
-//    Globals                      * globals;
+    //    Globals                      * globals;
     //NSMutableArray               * _tagsToDisplay;
     NSMutableArray               * allTags;
     NSMutableArray               * typesOfTags;

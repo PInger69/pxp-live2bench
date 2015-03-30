@@ -41,7 +41,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         thisFrame = frame;
-        self.title = @"Comment";
+        self.title = @"";
         [self initComponents];
     }
     return self;
@@ -153,6 +153,7 @@
     textField.editable = NO;
     [saveMessage setHidden:FALSE];
     [self performSelector:@selector(hideMsgLabel:) withObject:saveMessage afterDelay:2];
+    [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"Save in %@", self.context] object:self];
 }
 
 -(BOOL)enabled

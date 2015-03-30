@@ -419,6 +419,8 @@ BOOL touchEnded = NO;
     NSLog(@"clearTeleBlank");
     self.isBlank = YES;
     [self.tvController checkUndoState];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_POST_ON_EXTERNAL_SCREEN object:nil];
 }
 
 - (BOOL)saveTelestration {
@@ -427,6 +429,7 @@ BOOL touchEnded = NO;
     [self drawRect:self.bounds];
     self.teleImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_POST_ON_EXTERNAL_SCREEN object:nil];
     if (self.teleImage) {
         return YES;
     } else {

@@ -100,7 +100,7 @@ NS_OPTIONS(NSInteger, style){
     
     // This indexPath object is used to instantiate the array with the indexPath objects
     // The reason it is -1 is because this is not a possible indexPath for the cells
-    NSIndexPath *somePath = [NSIndexPath indexPathForRow:-1 inSection:0];
+    //NSIndexPath *somePath = [NSIndexPath indexPathForRow:-1 inSection:0];
     
 //    // This is simply to instantiate the array with indexPath objects
 //    // Therefore we instantiate a mutable array that can contain the necessary information
@@ -219,7 +219,7 @@ NS_OPTIONS(NSInteger, style){
     //self.detailViewController.index = index;
     //detailViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
     
-    //self.detailViewController.settingsTableViewController = self;
+    self.detailViewController.settingsTableViewController = self;
     //self.detailViewController.arrayOfOptions = [settingsDictionary objectForKey:@"Setting Options"];
     //self.detailViewController.arrayOfToggleOptions = [settingsDictionary objectForKey:@"Toggle Settings"];
     self.detailViewController.swipeableTableViewCell = (SwipeableTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -244,9 +244,18 @@ NS_OPTIONS(NSInteger, style){
 // THIS IS WHERE ALL THE SIGNALS ARE SENT
 #pragma mark- Signal from Detail View Controller
 
-- (void)choseCellWithString: (NSString*)optionLabel{
-    NSLog(@"The chosen cell was %@", optionLabel);
+- (void) settingChangedInDetailViewController: (NSDictionary *) settingDictionary{
+    NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+    NSString *name = self.dataArray[selectedIndexPath.row][@"SettingLabel"];
+    
+    NSNotification *note = [NSNotification notificationWithName:[@"Setting - " stringByAppendingString:name] object:nil userInfo: settingDictionary];
+    [[NSNotificationCenter defaultCenter] postNotification: note];
+    NSLog(@"%@", settingDictionary);
 }
+
+//- (void)choseCellWithString: (NSString*)optionLabel{
+//    NSLog(@"The chosen cell was %@", optionLabel);
+//}
 
 #pragma mark - SwipeableCellDelegate
 
@@ -255,7 +264,11 @@ NS_OPTIONS(NSInteger, style){
 - (void)switchStateSignal:(BOOL)onOrOff fromCell: (SwipeableTableViewCell *) theCell{
     
     NSDictionary *signalPackage = @{@"Name": theCell.myTextLabel.text, @"Value": (onOrOff ? @YES:@NO), @"Type": @"Toggle"};
-    [self.signalReciever settingChanged: signalPackage fromCell: theCell ];
+    
+    NSNotification *settingNotification = [NSNotification notificationWithName:[ @"Setting - " stringByAppendingString:  theCell.myTextLabel.text] object:nil userInfo:signalPackage];
+
+    [[NSNotificationCenter defaultCenter] postNotification: settingNotification];
+    //[self.signalReciever settingChanged: signalPackage fromCell: theCell ];
     
 }
 
@@ -263,20 +276,20 @@ NS_OPTIONS(NSInteger, style){
 - (void)buttonOneActionForItemText:(NSString *)itemText
 {
     // Passing control to another method that opens up a new window
-    [self showDetailWithText:[NSString stringWithFormat: itemText]];
+    [self showDetailWithText:[NSString stringWithFormat:@"%@", itemText]];
 }
 
 // This function is called when the leftmost button is called upon
 - (void)buttonTwoActionForItemText:(NSString *)itemText
 {
     // Passing control to another method that opens up a new window
-    [self showDetailWithText:[NSString stringWithFormat: itemText]];
+    [self showDetailWithText:[NSString stringWithFormat: @"%@", itemText]];
 }
 
--(void)specificSettingChosen: (NSString *) theSetting fromCell: (SwipeableTableViewCell *)theCell{
-    NSDictionary *signalPackage = @{ @"Name": theCell.myTextLabel.text , @"Value": theSetting, @"Type": @"List"};
-    [self.signalReciever settingChanged: signalPackage fromCell: theCell ];
-}
+//-(void)specificSettingChosen: (NSString *) theSetting fromCell: (SwipeableTableViewCell *)theCell{
+//    NSDictionary *signalPackage = @{ @"Name": theCell.myTextLabel.text , @"Value": theSetting, @"Type": @"List"};
+//    //[self.signalReciever settingChanged: signalPackage fromCell: theCell ];
+//}
 
 // CODE THAT CAN BE ALTERED BEGINS HERE:
 // This function can be altered such that the page that pops up displays

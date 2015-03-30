@@ -85,5 +85,5 @@
 
 -(void)playFeed:(Feed*)aFeed;
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange;
--(void)zoomIntoView: (CGRect) partialView;
+
 @end

@@ -14,7 +14,7 @@
 @interface DetailViewController : UITableViewController <SettingsViewControllerProtocol>
 
 //@property (strong, nonatomic) id detailItem;
-//@property (weak, nonatomic) SettingsTableViewController *settingsTableViewController;
+@property (weak, nonatomic) SettingsTableViewController *settingsTableViewController;
 //@property (nonatomic) int index;
 @property (nonatomic, weak) SwipeableTableViewCell *swipeableTableViewCell;
 @property (nonatomic, strong) UITableView *tableView;

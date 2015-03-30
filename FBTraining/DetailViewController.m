@@ -201,13 +201,15 @@
     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell: theCell];
     toggleArray[cellIndexPath.row] = onOrOff ? @1:@0;
     
+    [self.settingsTableViewController settingChangedInDetailViewController: signalPackage];
+    
 }
 
-- (void)functionalButtonFromCell: (UITableViewCell *) cell{
-    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell: cell];
-    NSString *cellName = (NSString *)self.dataDictionary[@"Setting Options"][cellIndexPath.row];
-    NSString *notificationName = [@"Setting - " stringByAppendingString: cellName];
-    [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
+- (void)functionalButtonFromCell: (SwipeableTableViewCell *) cell{
+    
+    NSDictionary *signalPackage = @{@"Name": cell.functionalButton.titleLabel.text , @"Value": @1, @"Type": @"FunctionalButton"};
+    [self.settingsTableViewController settingChangedInDetailViewController: signalPackage];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
 }
 
 #pragma mark - Selecting the Cell
@@ -230,6 +232,8 @@
     
     [self.dataDictionary setObject: [NSNumber numberWithInt:indexPath.row] forKey:@"Index"];
     
+    NSDictionary *signalPackage = @{@"Name": cell.myTextLabel.text, @"Value": cell.myTextLabel.text, @"Type": @"ListOption"};
+    [self.settingsTableViewController settingChangedInDetailViewController: signalPackage];
 //    // These first lines replace the 
 //    NSIndexPath *oldPath = [self.settingsTableViewController.arrayWithSettingOptionChosen objectAtIndex:self.index];
 //    SwipeableTableViewCell *cell = (SwipeableTableViewCell*)[tableView cellForRowAtIndexPath: oldPath];

@@ -9,6 +9,9 @@
 #import "DownloadButton.h"
 
 @implementation DownloadButton
+{
+    BOOL downloadCancelled;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -21,18 +24,28 @@
 
 -(void) setDownloadItem:(DownloadItem *)downloadItem{
     [_downloadItem addOnProgressBlock:nil];
+    
+    if (_downloadItem) {
+        [_downloadItem removeObserver:self forKeyPath:@"status"];
+    }
+
     _downloadItem = downloadItem;
+    downloadCancelled = NO;
     
     if (downloadItem) {
-    __block DownloadButton *weakself = self;
-    [_downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-        weakself.progress = progress;
-        [weakself setNeedsDisplay];
-        weakself.enabled = NO;
-    }];
+        [downloadItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+        __block DownloadButton *weakself = self;
+        [_downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+            weakself.progress = progress;
+            [weakself setNeedsDisplay];
+            weakself.enabled = NO;
+        }];
         self.enabled = NO;
         self.progress = 0.001;
         [self setNeedsDisplay];
+        if (downloadItem.status == DownloadItemStatusError) {
+            downloadCancelled = YES;
+        }
     }else{
         self.enabled = YES;
         self.progress = 0;
@@ -122,6 +135,22 @@
      downloadPath.lineWidth = 4.0;
      [downloadPath stroke];
      
+     
+     if (downloadCancelled) {
+         UIBezierPath *cancelPath = [UIBezierPath bezierPath];
+         [cancelPath moveToPoint: CGPointMake(3, 3)];
+         [cancelPath addLineToPoint: CGPointMake(27, 27)];
+         [cancelPath moveToPoint:CGPointMake(27, 3)];
+         [cancelPath addLineToPoint: CGPointMake(3, 27)];
+         
+         cancelPath.lineCapStyle = kCGLineCapRound;
+         cancelPath.lineWidth = 2.0;
+         
+         [[UIColor redColor] setStroke];
+         
+         [cancelPath stroke];
+     }
+     
      CGContextSaveGState(currentContext);
      //UIView *backgroundView = [[UIView alloc]initWithFrame:self.frame];
      
@@ -129,5 +158,18 @@
  
  }
 
+-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    switch (self.downloadItem.status) {
+        case DownloadItemStatusIOError:
+        case DownloadItemStatusCancel:
+        case DownloadItemStatusError:
+            downloadCancelled = YES;
+            [self setNeedsDisplay];
+            break;
+            
+        default:
+            break;
+    }
+}
 
 @end

@@ -41,17 +41,17 @@ static CGFloat const kBounceValue = 10.0f;
 {
     [super setupView];
     //UIView *anExtraView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 370, 155)];
-//    UIView *anExtraView = [UIView new];
-//    anExtraView.backgroundColor = [UIColor whiteColor];
-//    
-//    self.myContentView = anExtraView;
-//    
+    //    UIView *anExtraView = [UIView new];
+    //    anExtraView.backgroundColor = [UIColor whiteColor];
+    //
+    //    self.myContentView = anExtraView;
+    //
     self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
-//    [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
-//    [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [self.deleteButton setBackgroundColor:[UIColor redColor]];
-//    [self.contentView addSubview:self.deleteButton];
-//    [self.deleteButton addTarget:self action:@selector(deleteButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
+    //    [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    //    [self.deleteButton setBackgroundColor:[UIColor redColor]];
+    //    [self.contentView addSubview:self.deleteButton];
+    //    [self.deleteButton addTarget:self action:@selector(deleteButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     //[self.contentView addSubview:anExtraView];
     
@@ -178,21 +178,21 @@ static CGFloat const kBounceValue = 10.0f;
      [checkmarkOverlay setAlpha:1.0];
      [self addSubview:checkmarkOverlay];*/
     
-//    NSArray *theConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
-//    [self.contentView addConstraints: theConstraints];
-//    self.contentViewLeftConstraint = theConstraints[0];
-//    self.contentViewRightConstraint = theConstraints[1];
-//    
-//    self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
-//    
-//    NSArray *theConstraintsAgain = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
-//    [self.contentView addConstraints: theConstraintsAgain];
-//    
-//    self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
-//    
-//    self.swipeRecognizer =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCell:)];
-//    self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-//    [self.myContentView addGestureRecognizer:self.swipeRecognizer];
+    //    NSArray *theConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
+    //    [self.contentView addConstraints: theConstraints];
+    //    self.contentViewLeftConstraint = theConstraints[0];
+    //    self.contentViewRightConstraint = theConstraints[1];
+    //
+    //    self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
+    //
+    //    NSArray *theConstraintsAgain = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
+    //    [self.contentView addConstraints: theConstraintsAgain];
+    //
+    //    self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
+    //
+    //    self.swipeRecognizer =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCell:)];
+    //    self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    //    [self.myContentView addGestureRecognizer:self.swipeRecognizer];
 }
 
 -(CGRect)frameWithAspectRatioForImage:(UIImageView *)value withFrame:(CGRect)screenRect

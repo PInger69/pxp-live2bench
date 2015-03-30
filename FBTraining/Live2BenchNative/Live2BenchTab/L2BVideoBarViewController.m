@@ -38,7 +38,7 @@
         
         
         background.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
-        [container addSubview:background];
+        [self.view addSubview:background];
         
         // frame does nothign now
          _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
@@ -264,7 +264,8 @@
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
             [self _hideAll];//,slomoButton,forwardButton,backwardButton,
-            [self _revealThese:@[_tagMarkerController.view]];
+            [self _revealThese:@[_tagMarkerController.view, slomoButton,forwardButton,backwardButton]];
+            //[self _revealThese: activeElements];
             break;
         case L2B_VIDEO_BAR_MODE_DISABLE:
             [self _hideAll];
@@ -299,6 +300,7 @@
 {
     for (UIView * v in list) {
         [v setHidden:NO];
+        [background addSubview: v];
     }
 }
 

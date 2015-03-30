@@ -19,6 +19,7 @@
         self.tagTime = time;
         self.tagID = tagID;
         self.xValue = xVal;
+        self.markerView = [[UIView alloc]init];
         
     }
     return self;

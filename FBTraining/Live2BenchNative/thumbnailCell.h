@@ -50,5 +50,7 @@
 @property (nonatomic,strong) UIImageView *checkmarkOverlay;
 @property (nonatomic,strong) NSDictionary *data;
 
+-(void)setDeletingMode: (BOOL) mode;
+
 //- (void)didDeleteThumbnail:(id)sender;
 @end

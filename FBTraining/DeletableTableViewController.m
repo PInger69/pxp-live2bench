@@ -40,7 +40,7 @@
         [self.shareButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.shareButton setFrame:CGRectMake(568, 768, 370, 0)];
-
+        
         
         self.setOfDeletingCells = [[NSMutableSet alloc] init];
         self.setOfSharingCells = [[NSMutableSet alloc] init];
@@ -51,7 +51,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addSharingCell:) name:@"AddSharingCell" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSharingCell:) name:@"RemoveSharingCell" object:nil];
-
+        
         
     }
     
@@ -69,6 +69,7 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
         self.deleteButton.frame = self.newFrame;
+        [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
 }
@@ -82,6 +83,7 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
         self.deleteButton.frame = self.originalFrame;
+        [self.deleteButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
     
@@ -97,6 +99,7 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
         self.shareButton.frame = self.newFrame;
+        [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
 }
@@ -110,6 +113,7 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
         self.shareButton.frame = self.originalFrame;
+        [self.shareButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
     
@@ -138,7 +142,7 @@
     self.sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
     self.sharePop.popoverContentSize = CGSizeMake(280, 180);
     [self.sharePop presentPopoverFromRect:self.shareButton.frame inView:self.parentViewController.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-
+    
 }
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
@@ -181,12 +185,21 @@
             [indexPathsArray addObject: cellIndexPath];
         }
         
+        for (NSIndexPath *path in self.setOfDeletingCells) {
+            if ([path isEqual:self.selectedPath]) {
+                //NSDictionary *tag = self.tableData[self.selectedPath.row];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:nil];
+                self.selectedPath = nil;
+            }
+        }
+        
         for (NSDictionary *tag in arrayOfTagsToRemove) {
             [self.tableData removeObject:tag];
         }
         
         [self.setOfDeletingCells removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+        [self.tableView reloadData];
         
     }else{
         if (buttonIndex == 0)
@@ -211,6 +224,15 @@
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
     [self.setOfDeletingCells removeObject:self.editingIndexPath];
+    if ([self.selectedPath isEqual:self.editingIndexPath]) {
+        //NSDictionary *tag = self.tableData[self.selectedPath.row];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:self];
+        self.selectedPath = nil;
+    }
+    if (self.selectedPath && self.selectedPath.row > self.editingIndexPath.row) {
+        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:self.selectedPath.row - 1 inSection: self.selectedPath.section];
+        self.selectedPath = newIndexPath;
+    }
     
     for (NSIndexPath *indexPath in self.setOfDeletingCells) {
         if (indexPath.row > self.editingIndexPath.row) {
@@ -316,4 +338,5 @@
  */
 
 @end
+
 

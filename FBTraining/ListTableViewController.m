@@ -154,7 +154,9 @@
     
     //This condition opens up the cell if it is a deleting cell
     if ([self.setOfDeletingCells containsObject:indexPath]) {
-        [cell setCellAsDeleting];
+        [cell setCellAccordingToState:cellStateDeleting];
+    } else {
+        [cell setCellAccordingToState:cellStateNormal];
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -206,7 +208,7 @@
     UIColor *thumbColour = [Utility colorWithHexString:[tag objectForKey:@"colour"]];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
     
-    cell.swipeRecognizerForSharing.enabled = NO;
+    [cell removeGestureRecognizer:cell.swipeRecognizerRight];
     
     return cell;
 }
@@ -228,14 +230,14 @@
         [cell addSubview:cell.translucentEditingView];
         
         ListViewCell *lastSelectedCell = (ListViewCell*)[self.tableView cellForRowAtIndexPath: self.previouslySelectedIndexPath];
-        [lastSelectedCell.backgroundView setBackgroundColor:[UIColor colorWithWhite:0.95f alpha:1.0f]];
+        //[lastSelectedCell.backgroundView setBackgroundColor:[UIColor colorWithWhite:0.95f alpha:1.0f]];
         [lastSelectedCell.backgroundView setBackgroundColor:[UIColor whiteColor]];
         [lastSelectedCell.translucentEditingView removeFromSuperview];
         
-        lastSelectedCell.backgroundView.layer.borderWidth = 0.0f;
+        //lastSelectedCell.backgroundView.layer.borderWidth = 0.0f;
         self.previouslySelectedIndexPath = indexPath;
         
-        cell.backgroundView.layer.borderWidth = 1.0f;
+        //cell.backgroundView.layer.borderWidth = 1.0f;
         [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
     }
     
@@ -351,7 +353,7 @@
 //    if (editingStyle == UITableViewCellEditingStyleDelete) {
 //        // Delete the row from the data source
 //        self.editingIndexPath = indexPath;
-//        
+//
 //        CustomAlertView *alert = [[CustomAlertView alloc] init];
 //        [alert setTitle:@"myplayXplay"];
 //        [alert setMessage:@"Are you sure you want to delete this tag?"];
@@ -359,8 +361,8 @@
 //        [alert addButtonWithTitle:@"Yes"];
 //        [alert addButtonWithTitle:@"No"];
 //        [alert show];
-//        
-//        
+//
+//
 //    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
 //        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
 //    }
@@ -368,23 +370,23 @@
 //
 //- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 //{
-//    
+//
 //    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
 //        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
 //        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-//        
+//
 //        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
 //            [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
 //            [indexPathsArray addObject: cellIndexPath];
 //        }
-//        
+//
 //        for (NSDictionary *tag in arrayOfTagsToRemove) {
 //            [self.tableData removeObject:tag];
 //        }
-//        
+//
 //        [self.setOfDeletingCells removeAllObjects];
 //        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-//        
+//
 //    }else{
 //        if (buttonIndex == 0)
 //        {
@@ -396,16 +398,16 @@
 //        {
 //            // No, cancel the action to delete tags
 //        }
-//        
+//
 //    }
 //    [CustomAlertView removeAlert:alertView];
-//    
+//
 //    if (self.setOfDeletingCells.count < 2){
 //        [UIView beginAnimations:nil context:nil];
 //        [UIView setAnimationDuration:0.5];
 //        self.deleteButton.frame = CGRectMake(568, 768, 370, 0);
 //        [UIView commitAnimations];
-//        
+//
 //    }
 //    //[self.tableView reloadData];
 //}

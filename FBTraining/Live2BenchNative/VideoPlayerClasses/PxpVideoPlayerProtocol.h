@@ -7,12 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 #import "Feed.h"
-#import "LiveIndicatorLight.h"
+//#import "LiveIndicatorLight.h"
 #import "VideoControlBarSlider.h"
 #import "RJLVideoPlayerPlaybackView.h"
 #import "PxpVideoPlayerProtocol.h"
 
+@class LiveIndicatorLight;
 
 typedef NS_OPTIONS (NSInteger,PlayerStatus){
     RJLPS_Offline      = 0,

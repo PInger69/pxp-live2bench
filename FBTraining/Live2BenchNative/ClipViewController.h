@@ -11,7 +11,7 @@
 #import "thumbnailCell.h"
 #import "Live2BenchViewController.h"
 #import "FilterToolboxViewController.h"
-#import "CustomTabBar.h"    
+#import "CustomTabBar.h"
 #import "UtilitiesController.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 //#import "Globals.h"
@@ -29,7 +29,7 @@
 
 @interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, EdgeSwipeButtonDelegate>
 {
-//    Globals *globals;
+    //    Globals *globals;
     UIScrollView *breadCrumbsView;
     UtilitiesController *uController;
     UICollectionView *_collectionView; //collection view for displaying thumbnails in clip view
@@ -57,7 +57,7 @@
 }
 
 
-//this method will be called once a filter action completes and pass the filtered tag array as a parameter 
+//this method will be called once a filter action completes and pass the filtered tag array as a parameter
 -(void)receiveFilteredArray:(NSArray*)filteredArray;
 
 
@@ -70,7 +70,7 @@
 @property (nonatomic,strong) NSMutableArray *thumbRatingArray;
 
 
-//if this boolean value is true, donot call the "reloadData" 
+//if this boolean value is true, donot call the "reloadData"
 @property (nonatomic)BOOL thumbnailsLoaded;
 
 @property (nonatomic, strong) EdgeSwipeEditButtonsView* edgeSwipeButtons;

@@ -269,7 +269,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
     
-    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 00, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT +50)];
+    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
     //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
     //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];

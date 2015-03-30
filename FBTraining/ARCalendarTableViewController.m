@@ -34,9 +34,9 @@
         [self.tableView registerClass:[ARCalendarTableViewCell class] forCellReuseIdentifier: @"ARCalendarTableViewCell"];
         self.downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
         //        self.originalFrame = CGRectMake(568, 768, 370, 0);
-//        [self.deleteButton setFrame: self.originalFrame];
-//        self.newFrame = CGRectMake(568, 708, 370, 60);
-
+        //        [self.deleteButton setFrame: self.originalFrame];
+        //        self.newFrame = CGRectMake(568, 708, 370, 60);
+        
     }
     return self;
 }
@@ -67,7 +67,7 @@
         NSArray *bothStrings = [event[@"date"]componentsSeparatedByString:@" "];
         NSDate *date = [formatter dateFromString:bothStrings[0]];
         
-
+        
         
         if (!sortedArray.count) {
             [sortedArray addObject:event];
@@ -173,8 +173,9 @@
         [cell.titleLabel setText: @" "];
         cell.downloadButton.hidden = YES;
         cell.playButton.hidden = YES;
-        cell.swipeRecognizerForDeleting.enabled = NO;
-        cell.swipeRecognizerForSharing.enabled = NO;
+        cell.swipeRecognizerLeft.enabled = NO;
+        cell.swipeRecognizerRight.enabled = NO;
+        [cell setCellAccordingToState:cellStateNormal];
         
         return cell;
     }
@@ -187,8 +188,8 @@
         [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
         [self checkDeleteAllButton];
     };
-
-
+    
+    
     cell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
     cell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
     [cell.dateLabel setTextColor:[UIColor blackColor]];
@@ -203,7 +204,7 @@
     
     cell.downloadButton.hidden = NO;
     cell.playButton.hidden = NO;
-    cell.swipeRecognizerForDeleting.enabled = YES;
+    
     
     __block ARCalendarTableViewController *weakSelf = self;
     cell.sendUserInfo = ^(){
@@ -237,7 +238,7 @@
             [weakCell.downloadButton setNeedsDisplay];
             weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
         }];
-        cell.downloadButton.progress = cell.downloadButton.downloadItem.progress;
+        //cell.downloadButton.progress = cell.downloadButton.downloadItem.progress;
         [cell.downloadButton setNeedsDisplay];
         cell.playButton.hidden = (cell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
     }else{
@@ -265,10 +266,12 @@
     
     //This condition opens up the cell if it is a deleting cell
     if ([self.setOfDeletingCells containsObject:indexPath]) {
-        [cell setCellAsDeleting];
+        [cell setCellAccordingToState:cellStateDeleting];
+    } else {
+        [cell setCellAccordingToState:cellStateNormal];
     }
     
-    cell.swipeRecognizerForSharing.enabled = NO;
+    
     
     return cell;
 }
@@ -376,6 +379,7 @@
 {
     
     UIColor * color = [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
+    UIColor * colorForTesting = [UIColor orangeColor];
     UIColor * textColor = [UIColor colorWithWhite:0.224 alpha:1.0f];
     
     
@@ -391,14 +395,14 @@
     lastCell.layer.borderWidth = 0.0f;
     
     ARCalendarTableViewCell *currentCell = (ARCalendarTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    currentCell.selectedBackgroundView.backgroundColor = color;
+    currentCell.selectedBackgroundView.backgroundColor = colorForTesting;
     [currentCell.dateLabel setTextColor:textColor];
     [currentCell.timeLabel setTextColor:textColor];
     [currentCell.titleLabel setTextColor:textColor];
     currentCell.backgroundColor = color;
-    [currentCell setSelectionStyle: UITableViewCellSelectionStyleNone];
+    //[currentCell setSelectionStyle: UITableViewCellSelectionStyleNone];
     self.lastSelectedIndexPath = indexPath;
-
+    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

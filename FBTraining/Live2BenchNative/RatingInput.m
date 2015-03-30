@@ -18,8 +18,8 @@
  */
 @implementation RatingInput
 {
- 	UILabel *ratingLabel;
- 	NSMutableArray * ratingButtonArray;
+    //UILabel *ratingLabel;
+    NSMutableArray * ratingButtonArray;
     SEL onRateSelector;
     id rateTarget;
     
@@ -40,27 +40,28 @@ static UIImage* rateUnSelected;
     if (self) {
         
         enabled = TRUE;
-    	if (!rateSelected){
+        if (!rateSelected){
             UIImage *image = [UIImage imageNamed:@"rating_selected.png"];
             rateSelected = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-			rateUnSelected = [UIImage imageNamed:@"rating_unselected.png"];
-    	}
+            rateUnSelected = [UIImage imageNamed:@"rating_unselected.png"];
+        }
         
-
+        
         ratingButtonArray = [[NSMutableArray alloc]init];
-    	
-        // this makes the text field
-	    ratingLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 60 , 25)];
-	    [ratingLabel setTextAlignment:NSTextAlignmentRight];
-	    [ratingLabel setText:@"Rating"];
-        [ratingLabel setFont:[UIFont defaultFontOfSize:18.0f]];
-	    [ratingLabel setTextColor:[UIColor darkGrayColor]];//[UIColor blackColor]
-	    [self addSubview:ratingLabel];
         
-	    // this make each button
+        // this makes the text field
+        _ratingLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 60 , 25)];
+        [_ratingLabel setTextAlignment:NSTextAlignmentRight];
+        [_ratingLabel setText:@"Rating"];
+        [_ratingLabel setFont:[UIFont defaultFontOfSize:18.0f]];
+        
+        [_ratingLabel setTextColor:[UIColor darkGrayColor]];//[UIColor blackColor]
+        [self addSubview:_ratingLabel];
+        
+        // this make each button
         for(int i = 0;i<MAX;i++) {
             UIButton *ratingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [ratingButton setFrame:CGRectMake(80 + 40*i, 3, STAR_SIZE,STAR_SIZE)];
+            [ratingButton setFrame:CGRectMake(110 + 40*i, 3, STAR_SIZE,STAR_SIZE)];
             [ratingButton setImage:rateUnSelected forState:UIControlStateNormal];
             ratingButton.tag = i;
             [ratingButton.imageView setContentMode:UIViewContentModeScaleAspectFit]; /// can this be applied to the image it self ??
@@ -122,7 +123,7 @@ static UIImage* rateUnSelected;
 
 -(void)setRating:(int)rate
 {
-	if (rate <0){
+    if (rate <0){
         _rating = 0;
     } else if (rate > MAX) {
         _rating = MAX;

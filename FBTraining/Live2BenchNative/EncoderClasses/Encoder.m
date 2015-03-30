@@ -1005,7 +1005,7 @@
                             // this creates a feed object from just a string with it  source named s1
                             Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
                             self.feeds = @{ @"s1":theFeed};
-                            _liveEventName = dict[@"live"];
+                            _liveEventName = dict[@"name"];
                             
                             [self willChangeValueForKey:@"eventType"];
                             _eventType = [dict objectForKey:@"sport"];

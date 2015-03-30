@@ -24,7 +24,7 @@
 
 -(void)setupView{
     [super setupView];
-    
+    self.sharingEnabled = YES;
     self.eventDate = [[UILabel alloc] initWithFrame:CGRectMake(25.0f, 0.0f, 130.0f, self.frame.size.height)];
     [self.eventDate setBackgroundColor:[UIColor clearColor]];
     [self.eventDate setText:@"date"];
@@ -41,31 +41,40 @@
     [self.tagName setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     [self.myContentView addSubview:self.tagName];
     
-    [self.deleteButton setFrame: CGRectMake(390, 0, 70, 44)];
+    [self.deleteButton setFrame: CGRectMake(393, 0, 70, 44)];
     [self.shareButton setFrame: CGRectMake(0, 0, 70, 44)];
+    //    self.shareButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    //    self.shareButton.layer.borderWidth = 0.4f;
     
     self.indexNum  = [[UILabel alloc] initWithFrame:CGRectMake(3, 12, 20, 20) ];
     [self.indexNum setFont:[UIFont systemFontOfSize:12.0f]];
     [self.indexNum setTextColor:[UIColor lightGrayColor]];
-//    UITableView* table          = (UITableView *)[self superview];
-//    NSIndexPath* pathOfTheCell  = [table indexPathForCell:self];
-//    //        NSInteger sectionOfTheCell  = [pathOfTheCell section];
-//    NSInteger rowOfTheCell      = [pathOfTheCell row];
-//    [self.indexNum setText: [NSString stringWithFormat:@"%i",rowOfTheCell]];
+    //    UITableView* table          = (UITableView *)[self superview];
+    //    NSIndexPath* pathOfTheCell  = [table indexPathForCell:self];
+    //    //        NSInteger sectionOfTheCell  = [pathOfTheCell section];
+    //    NSInteger rowOfTheCell      = [pathOfTheCell row];
+    //    [self.indexNum setText: [NSString stringWithFormat:@"%i",rowOfTheCell]];
     [self.myContentView addSubview: self.indexNum];
+    
+    //    UIView *seperateLine = [[UIView alloc] initWithFrame:CGRectMake(0, 43, 463, 1)];
+    //    [seperateLine setBackgroundColor:[UIColor lightGrayColor]];
+    //    [self.myContentView addSubview:seperateLine];
+    //self.contentView.layoutMargins = UIEdgeInsetsZero;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     //[super setSelected:selected animated:animated];
     if (selected) {
-        self.myContentView.backgroundColor = [UIColor lightGrayColor];
+        self.myContentView.backgroundColor = [UIColor whiteColor];
     }else{
         self.myContentView.backgroundColor = [UIColor whiteColor];
     }
     
     // Configure the view for the selected state
 }
+
+
 
 -(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
     if (highlighted) {
@@ -78,7 +87,8 @@
 -(void) setEditing:(BOOL)editing animated:(BOOL)animated{
     [super setEditing:editing animated:animated];
     self.deleteButton.hidden = editing;
-    self.swipeRecognizerForDeleting.enabled = !editing;
+    [self.swipeRecognizerRight setEnabled:!editing];
+    [self.swipeRecognizerLeft setEnabled:!editing];
 }
 
 //-(void)updateIndexWith:(int)newIndex

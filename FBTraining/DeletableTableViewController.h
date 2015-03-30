@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DeletableTableViewCell.h"
+
 
 
 
@@ -23,6 +25,9 @@
 
 @property (assign, nonatomic) CGRect originalFrame;
 @property (assign, nonatomic) CGRect newFrame;
+
+@property (strong, nonatomic) NSIndexPath *selectedPath;
+//@property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
 
 //- (void)addObserverForCell:(id)cell atIndexPath:(NSIndexPath *)indexPath;
 

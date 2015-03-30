@@ -307,21 +307,21 @@
     
     self = [super init];
     if (self){
-
+        
         foundEncoders           = [[NSMutableArray alloc]init];
         _authenticatedEncoders  = [[NSMutableArray alloc]init];
         dictOfEncoders          = [[NSMutableDictionary alloc]init];
         _openDurationTags       = [[NSMutableDictionary alloc]init];
         _eventTags              = [[NSMutableDictionary alloc]init];
         _liveEventName          = @"None";
-
+        
         // Browse for services
         // Starts Bonjour search for pxp servers
         services                = [[NSMutableArray alloc]init];
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
-//       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-
+        //       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+        
         arrayOfTagSets          = [[NSMutableArray alloc]init];
         _feeds                  = [[NSMutableDictionary alloc]init];
         
@@ -340,38 +340,35 @@
         __block EncoderManager * weakSelf = self;
         
         
-//        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
-//            [weakSelf.logoutAction start];
-//        }];
+        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [weakSelf.logoutAction start];
+        }];
         
         _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
             [[NSNotificationCenter defaultCenter]removeObserver:_userDataObserver];
         }];
         
-        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            [weakSelf.logoutAction start];
-        }];
         
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;
             [weakSelf refresh];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
-
+            
         }];
         
         _masterLostObserver  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
             
             [weakSelf.authenticatedEncoders removeObject:weakSelf.masterEncoder];
- 
-              if (weakSelf.masterEncoder !=nil) [weakSelf unRegisterEncoder:weakSelf.masterEncoder];
-//              weakSelf.masterEncoder = nil;
-              if ( [weakSelf.liveEventName isEqualToString:weakSelf.currentEvent]){
-                  weakSelf.currentEvent = nil;
-              }
-                 
-              weakSelf.liveEventName = nil;
-              
+            
+            if (weakSelf.masterEncoder !=nil) [weakSelf unRegisterEncoder:weakSelf.masterEncoder];
+            //              weakSelf.masterEncoder = nil;
+            if ( [weakSelf.liveEventName isEqualToString:weakSelf.currentEvent]){
+                weakSelf.currentEvent = nil;
+            }
+            
+            weakSelf.liveEventName = nil;
+            
             [weakSelf.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
                     Encoder * anEncoder = (Encoder *) obj;
@@ -388,21 +385,21 @@
             if (anEncoder.liveEventName) {
                 _liveEventName = anEncoder.liveEventName;
                 [weakSelf refresh];
-                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
             }
-
+            
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }];
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting:)   name:NOTIF_TAG_POSTED       object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)           name:NOTIF_MASTER_COMMAND   object:nil]; // watch whole app for start or stop events
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:)            name:NOTIF_MASTER_HAS_LIVE  object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
-
-                [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
         // making actions
         
         //SAGAR AND BEN NOTIFICATIONS

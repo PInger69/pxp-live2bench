@@ -86,7 +86,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SWITCH_MAIN_TAB object:self];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SWITCH_MAIN_TAB object:self];
     [super viewWillAppear:animated];
 }
 

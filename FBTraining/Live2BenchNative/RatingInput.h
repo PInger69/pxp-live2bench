@@ -10,11 +10,12 @@
 
 @interface RatingInput : UIView
 {
-   int rating;
-   BOOL enabled;
+    int rating;
+    BOOL enabled;
 }
 @property (assign, nonatomic)   int rating;
 @property (nonatomic,assign)    BOOL enabled;
+@property (nonatomic, strong)   UILabel *ratingLabel;
 
 -(void)onPressRatePerformSelector:(SEL)sel addTarget:(id)target;
 

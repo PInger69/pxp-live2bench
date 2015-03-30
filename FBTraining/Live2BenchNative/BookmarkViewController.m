@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
+#import "RatingAndCommentingField.h"
+
 #import "BookmarkViewController.h"
 #import "AppDelegate.h"
 #import "ClipSharePopoverViewController.h"
@@ -53,6 +55,11 @@
 
 @property (strong, nonatomic) UIButton                    *shareButton;
 @property (strong, nonatomic) UIPopoverController         *sharePop;
+
+@property (strong, nonatomic) UIView                      *informationarea;
+
+@property (strong, nonatomic) UIView                      *ratingAndCommentingView;
+@property (strong, nonatomic) NSDictionary                *selectedData;
 
 @end
 
@@ -182,6 +189,23 @@ int viewWillAppearCalled;
     //    }
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil];
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"tagSelected" object:nil queue:nil usingBlock:^(NSNotification *note) {
+        for (TagPopOverContent *info in self.informationarea.subviews) {
+            [info removeFromSuperview];
+        }
+        [self.ratingAndCommentingView removeFromSuperview];
+        
+        self.selectedData = note.userInfo;
+        self.ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, 100, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+60)) andData:[note.userInfo mutableCopy]].view;
+        [self.informationarea addSubview:[[TagPopOverContent alloc] initWithData:note.userInfo frame:CGRectMake(0, 0, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+60))]];
+        [self.informationarea addSubview:self.ratingAndCommentingView];
+    }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){
+        for (TagPopOverContent *info in self.informationarea.subviews) {
+            [info removeFromSuperview];
+        }
+        [self.ratingAndCommentingView removeFromSuperview];
+    }];
     
     uController = [[UtilitiesController alloc]init];
     //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
@@ -190,7 +214,6 @@ int viewWillAppearCalled;
     if (!appDelegate.session.isOpen) {
         // create a fresh session object
         appDelegate.session = [[FBSession alloc] init];
-        
         // if we don't have a cached token, a call to open here would cause UX for login to
         // occur; we don't want that to happen unless the user clicks the login button, and so
         // we check here to make sure we have a token before calling open
@@ -452,7 +475,14 @@ int viewWillAppearCalled;
     [commentingField onPressRatePerformSelector:@selector(sendRatingNew:) addTarget:self ];
     [commentingField onPressSavePerformSelector:@selector(sendComment2) addTarget:self];
     [commentingField.fieldTitle setHidden:YES];
-    [self.view addSubview:commentingField];
+    
+    self.informationarea = [[UIView alloc] initWithFrame:CGRectMake(1,94, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60)];
+    self.informationarea.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.informationarea.layer.borderWidth = 1.0f;
+    [self.view addSubview:self.informationarea];
+    
+    
+    //[self.view addSubview:commentingField];
     
     
     self.tableViewController = [[BookmarkTableViewController alloc] init];
@@ -2606,21 +2636,21 @@ int viewWillAppearCalled;
 //    [self.mailController setSubject:@""];
 //    [self.mailController setMessageBody:@"" isHTML:NO];
 //    [self.mailController setMessageBody:emailBody isHTML:NO];
-//    
+//
 //    if (self.mailController){
 //        [self presentViewController:self.mailController animated:YES completion:nil];
 //    }
 //}
 //
 //-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-//    
+//
 //    if(result == MFMailComposeResultFailed)
 //    {
 //        NSString *msg = @"Mail failed. Please select less tags and try it again later.";
 //        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"myplayXplay" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 //        [alert show];
 //    }
-//    
+//
 //    [self dismissViewControllerAnimated:YES completion:nil];
 //    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
 //}
@@ -2651,7 +2681,7 @@ int viewWillAppearCalled;
     //        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
     //        _GDUploader.delegate = self;
     //    }
-    //    
+    //
     //    if(![_GDUploader isAuthorized])
     //    {
     //        [[[UIAlertView alloc] initWithTitle:@"Cannot Share" message:[NSString stringWithFormat:@"You must also be linked to Google Drive in order to share the video link(s) on %@",methodStrings[service]] delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles: nil] show];
@@ -2660,7 +2690,7 @@ int viewWillAppearCalled;
     
     //    _currentSharingMethod = service;
     //    [self uploadToGoogleDrive];
-    //    
+    //
     //    [popoverController dismissPopoverAnimated:YES];
     //    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
     
@@ -2688,7 +2718,7 @@ int viewWillAppearCalled;
     //        [description appendString:file.title];
     //        [viewController addURL:[NSURL URLWithString:videoLink]];
     //    }
-    //    
+    //
     [viewController setInitialText: description];
     
     [self presentViewController:viewController animated:YES completion:nil];
@@ -2703,4 +2733,3 @@ int viewWillAppearCalled;
 }
 
 @end
-

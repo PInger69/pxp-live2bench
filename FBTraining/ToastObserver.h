@@ -33,6 +33,8 @@
 //This is the view where the toastobservers should pop up
 @property (weak, nonatomic) UIView *parentView;
 
+@property (assign, nonatomic) toastType *toastType;
+
 // The Notification must have the name @"ToastView"
 // As well its user info must be of format:
 // @{ @"Name": <(str)name>, @"Colour": < UIColor >} 

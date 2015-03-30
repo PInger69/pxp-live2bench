@@ -19,7 +19,7 @@
 #import "SocialSharingManager.h"
 #import "LogoViewController.h"
 
-@interface SettingsPageViewController () <SettingsTableDelegate>
+@interface SettingsPageViewController () //<SettingsTableDelegate>
 
 @property (strong, nonatomic) UISplitViewController *splitViewController;
 @property (strong, nonatomic) SettingsTableViewController *settingsTable;
@@ -60,7 +60,7 @@ NS_OPTIONS(NSInteger, style){
                                
 //                               @{ @"SettingLabel" : @"An Unplausible Setting", @"OptionChar":  [NSNumber numberWithChar:oneButton] },
                                
-                               @{ @"SettingLabel" : @"Social Media", @"OptionChar":  [NSNumber numberWithChar:oneButton | secondButton] },
+                               
                                
 //                               @{ @"SettingLabel" : @"Another Toggle", @"OptionChar":  [NSNumber numberWithChar:toggleIsThere] },
                                
@@ -102,8 +102,8 @@ NS_OPTIONS(NSInteger, style){
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogout:) name:userName object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogoutCompleted:) name:NOTIF_USER_LOGGED_OUT object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLoginCompleted:) name: NOTIF_CREDENTIALS_VERIFY_RESULT object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPressLink) name: @"Setting - Dropbox" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPressGoogleLink) name: @"Setting - GoogleDrive" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPressLink:) name: @"Setting - Accounts" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPressGoogleLink) name: @"Setting - GoogleDrive" object:nil];
         
 
     }
@@ -197,7 +197,7 @@ NS_OPTIONS(NSInteger, style){
     self.splitViewController = [[UISplitViewController alloc] init];
     SettingsTableViewController *settingsTable = [[SettingsTableViewController alloc] init];
     settingsTable.dataArray = self.settingsArray;
-    settingsTable.signalReciever = self;
+    //settingsTable.signalReciever = self;
     settingsTable.splitViewController = self.splitViewController;
     self.detailViewController = [[DetailViewController alloc] initViewController];
     
@@ -215,13 +215,13 @@ NS_OPTIONS(NSInteger, style){
     
 }
 
-- (void)settingChanged: (NSDictionary *) settingChangeDictionary fromCell: (id) swipeableTableCell{
-    NSNotification *settingNotification = [NSNotification notificationWithName:settingChangeDictionary[@"Name"] object:nil userInfo:settingChangeDictionary];
-    
-    [[NSNotificationCenter defaultCenter] postNotification: settingNotification];
-}
+//- (void)settingChanged: (NSDictionary *) settingChangeDictionary fromCell: (id) swipeableTableCell{
+//    NSNotification *settingNotification = [NSNotification notificationWithName:[ @"Setting - " stringByAppendingString:  settingChangeDictionary[@"Name"]] object:nil userInfo:settingChangeDictionary];
+//    
+//    [[NSNotificationCenter defaultCenter] postNotification: settingNotification];
+//}
 
-- (void)didPressLink {
+- (void)didPressLink : (NSNotification *) note {
     [[SocialSharingManager commonManager] linkSocialObject:@"Dropbox" inViewController:self];
 }
 

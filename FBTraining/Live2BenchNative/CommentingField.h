@@ -29,6 +29,8 @@
 @property (nonatomic,strong)    NSString * title;
 @property (nonatomic,assign)    BOOL enabled;
 
+@property (nonatomic, strong)   NSString *context;
+
 -(id)initWithFrame:(CGRect)frame title:(NSString *)title;
 
 -(void)onPressClearPerformSelector:(SEL)sel addTarget:(id)target;

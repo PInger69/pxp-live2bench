@@ -30,6 +30,15 @@
 // BEN AND SAGAR STUFF END
 #define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER"
 #define NOTIF_POST_ON_EXTERNAL_SCREEN       @"NOTIF_POST_ON_EXTERNAL_SCREEN"
+#define NOTIF_TAG_POSTED                    @"postedTag"    
+
+//TypeDef for ToastObserver
+typedef NS_OPTIONS (NSInteger, toastType) {
+    ARFileDownloadComplete = 1<<1,
+    ARSynchronizedTags = 1<<2,
+    ARTagCreated = 1<<3,
+};
+//End
 
 // Common Classes
 static float APP_WIDTH      = 0;

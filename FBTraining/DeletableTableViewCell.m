@@ -8,7 +8,7 @@
 
 #import "DeletableTableViewCell.h"
 
-static CGFloat const kBounceValue = 10.0f;
+static CGFloat const kBounceValue = 15.0f;
 
 @implementation DeletableTableViewCell
 
@@ -54,7 +54,6 @@ static CGFloat const kBounceValue = 10.0f;
     [self.shareButton addTarget:self action:@selector(shareButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     [self.contentView addSubview:anExtraView];
-    //[self.myContentView addSubview:self.deleteButton];
     
     NSArray *theConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
     [self.contentView addConstraints: theConstraints];
@@ -68,75 +67,146 @@ static CGFloat const kBounceValue = 10.0f;
     
     self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.swipeRecognizerForDeleting =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCellForDeleting:)];
-    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
+    //    self.swipeRecognizerForDeleting =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCellForDeleting:)];
+    //    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
+    //    [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
+    //
+    //    self.swipeRecognizerForSharing =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCellForSharing:)];
+    //    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
+    //    [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
     
-    self.swipeRecognizerForSharing =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCellForSharing:)];
-    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
-    
+    self.cellState = cellStateNormal;
+    self.swipeRecognizerLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(panThisCell:)];
+    self.swipeRecognizerLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    self.swipeRecognizerRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(panThisCell:)];
+    self.swipeRecognizerRight.direction = UISwipeGestureRecognizerDirectionRight;
+    for (UISwipeGestureRecognizer *previous in self.myContentView.gestureRecognizers) {
+        [self.myContentView removeGestureRecognizer:previous];
+    }
+    [self.myContentView addGestureRecognizer:self.swipeRecognizerLeft];
+    [self.myContentView addGestureRecognizer:self.swipeRecognizerRight];
 }
 
 -(void)prepareForReuse{
-    [self resetConstraintContstantsToZero:NO notifyDelegateDidClose:NO];
-    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
-    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
-}
-
--(void)setCellAsDeleting{
-    [self setConstraintsToShowAllButtons:NO notifyDelegateDidOpen:NO];
-    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.swipeRecognizerRight setEnabled:YES];
+    [self.swipeRecognizerLeft setEnabled:YES];
 }
 
 
--(void)setCellAsSharing{
-    [self setConstraintsToShowAllButtonsForSharing:NO notifyDelegateDidOpen:NO];
-    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionLeft;
+
+-(void)setCellAccordingToState:(cellState)state {
+    NSLog(@"%i",self.cellState);
+    switch (state) {
+        case cellStateNormal:
+            if (self.cellState == cellStateDeleting) {
+                [self resetConstraintContstantsToZero:NO notifyDelegateDidClose:NO];
+            }
+            if (self.cellState == cellStateSharing) {
+                [self resetConstraintContstantsToZeroForSharing:NO notifyDelegateDidClose:NO];
+            }
+            self.cellState = state;
+            break;
+        case cellStateDeleting:
+            [self setConstraintsToShowAllButtons:NO notifyDelegateDidOpen:NO];
+            self.cellState = state;
+            break;
+        case cellStateSharing:
+            [self setConstraintsToShowAllButtonsForSharing:NO notifyDelegateDidOpen:NO];
+            self.cellState = state;
+            break;
+        default:
+            break;
+    }
 }
 
-
-- (void)panThisCellForDeleting:(UISwipeGestureRecognizer *)recognizer {
-    recognizer.direction = self.swipeRecognizerForDeleting.direction;
+- (void)panThisCell:(UISwipeGestureRecognizer *)recognizer {
     if (recognizer.direction == UISwipeGestureRecognizerDirectionLeft) {
-        [self setConstraintsToShowAllButtons:YES notifyDelegateDidOpen:YES];
-        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForDeleting];
-        self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionRight;
-        [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"AddDeletionCell" object:self];
-    }
-    else
-    {
-        [self resetConstraintContstantsToZero:YES notifyDelegateDidClose:YES];
-        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForDeleting];
-        self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
-        [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveDeletionCell" object:self];
+        switch (self.cellState) {
+            case cellStateNormal:
+                [self setConstraintsToShowAllButtons:YES notifyDelegateDidOpen:YES];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"AddDeletionCell" object:self];
+                self.cellState = cellStateDeleting;
+                break;
+            case cellStateSharing:
+                [self resetConstraintContstantsToZeroForSharing:YES notifyDelegateDidClose:YES];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveSharingCell" object:self];
+                self.cellState = cellStateNormal;
+            default:
+                break;
+        }
+    } else {
+        switch (self.cellState) {
+            case cellStateNormal:
+                if (!self.sharingEnabled) {
+                    break;
+                }
+                [self setConstraintsToShowAllButtonsForSharing:YES notifyDelegateDidOpen:YES];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSharingCell" object:self];
+                self.cellState = cellStateSharing;
+                break;
+            case cellStateDeleting:
+                [self resetConstraintContstantsToZero:YES notifyDelegateDidClose:YES];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveDeletionCell" object:self];
+                self.cellState = cellStateNormal;
+            default:
+                break;
+        }
     }
 }
 
-- (void)panThisCellForSharing:(UISwipeGestureRecognizer *)recognizer {
-    recognizer.direction = self.swipeRecognizerForSharing.direction;
-    if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
-        [self setConstraintsToShowAllButtonsForSharing:YES notifyDelegateDidOpen:YES];
-        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForSharing];
-        self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionLeft;
-        [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSharingCell" object:self];
-    }
-    else
-    {
-        [self resetConstraintContstantsToZeroForSharing:YES notifyDelegateDidClose:YES];
-        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForSharing];
-        self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
-        [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveSharingCell" object:self];
-    }
-}
+//-(void)setCellAsDeleting{
+//    [self setConstraintsToShowAllButtons:NO notifyDelegateDidOpen:NO];
+//    self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionRight;
+//}
+//
+//
+//-(void)setCellAsSharing{
+//    [self setConstraintsToShowAllButtonsForSharing:NO notifyDelegateDidOpen:NO];
+//    self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionLeft;
+//}
+//
+//
+//- (void)panThisCellForDeleting:(UISwipeGestureRecognizer *)recognizer {
+//    recognizer.direction = self.swipeRecognizerForDeleting.direction;
+//    if (recognizer.direction == UISwipeGestureRecognizerDirectionLeft) {
+//        [self setConstraintsToShowAllButtons:YES notifyDelegateDidOpen:YES];
+//        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForDeleting];
+//        self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionRight;
+//        [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
+//
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"AddDeletionCell" object:self];
+//    }
+//    else
+//    {
+//        [self resetConstraintContstantsToZero:YES notifyDelegateDidClose:YES];
+//        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForDeleting];
+//        self.swipeRecognizerForDeleting.direction = UISwipeGestureRecognizerDirectionLeft;
+//        [self.myContentView addGestureRecognizer:self.swipeRecognizerForDeleting];
+//
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveDeletionCell" object:self];
+//    }
+//}
+//
+//- (void)panThisCellForSharing:(UISwipeGestureRecognizer *)recognizer {
+//    recognizer.direction = self.swipeRecognizerForSharing.direction;
+//    if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
+//        [self setConstraintsToShowAllButtonsForSharing:YES notifyDelegateDidOpen:YES];
+//        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForSharing];
+//        self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionLeft;
+//        [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
+//
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"AddSharingCell" object:self];
+//    }
+//    else
+//    {
+//        [self resetConstraintContstantsToZeroForSharing:YES notifyDelegateDidClose:YES];
+//        [self.myContentView removeGestureRecognizer:self.swipeRecognizerForSharing];
+//        self.swipeRecognizerForSharing.direction = UISwipeGestureRecognizerDirectionRight;
+//        [self.myContentView addGestureRecognizer:self.swipeRecognizerForSharing];
+//
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveSharingCell" object:self];
+//    }
+//}
 
 
 - (CGFloat)buttonTotalWidthForDeleting {
@@ -167,7 +237,6 @@ static CGFloat const kBounceValue = 10.0f;
         }];
     }];
 }
-
 - (void)resetConstraintContstantsToZeroForSharing:(BOOL)animated notifyDelegateDidClose:(BOOL)endEditing
 {
     if (self.startingLeftLayoutConstraintConstant == 0 &&

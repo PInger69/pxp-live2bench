@@ -158,10 +158,11 @@
     [self addSubview:self.activityInd];
     
     translucentEditingView = [[UIView alloc] initWithFrame:self.bounds];
-    [translucentEditingView setBackgroundColor:[UIColor lightGrayColor]];
+    [translucentEditingView setBackgroundColor:[UIColor orangeColor]];
     [translucentEditingView setAlpha:0.3];
     //[translucentEditingView setUserInteractionEnabled:FALSE];
     [translucentEditingView setTag:998];
+    translucentEditingView.hidden = YES;
     [self addSubview:translucentEditingView];
     
     
@@ -173,6 +174,12 @@
     [self addSubview:checkmarkOverlay];
     self.layer.borderWidth = 1;
     self.layer.borderColor = [[UIColor grayColor]CGColor];
+    
+    self.thumbDeleteButton = [[CustomButton alloc] initWithFrame: CGRectMake(-22, -17, 45, 45)];
+    [self.thumbDeleteButton setImage: [self deleteImage] forState:UIControlStateNormal];
+    [self.thumbDeleteButton setImage: [self deleteImageForHighlighted] forState:UIControlStateHighlighted];
+    self.clipsToBounds = NO;
+    
 }
 
 
@@ -200,9 +207,111 @@
     self.thumbColour.backgroundColor = nil;
     self.backgroundView = nil;
     self.data = nil;
+    
+    self.checkmarkOverlay.hidden = YES;
+    self.translucentEditingView.hidden = YES;
     [super prepareForReuse];
+
 }
 
+-(void)setDeletingMode: (BOOL) mode{
+    if (mode) {
+        [self wiggleView];
+        [self addSubview: self.thumbDeleteButton];
+    }else{
+        [self.layer removeAllAnimations];
+        [self.thumbDeleteButton removeFromSuperview];
+        self.checkmarkOverlay.hidden = YES;
+        self.translucentEditingView.hidden = YES;
+    }
+}
+
+-(void)wiggleView {
+    
+//    CAKeyframeAnimation *animation = [CAKeyframeAnimation animation];
+//    animation.keyPath = @"position.x";
+//    animation.values = @[ @0, @8, @-8, @4, @0 ];
+//    animation.keyTimes = @[ @0, @(1 / 6.0), @(3 / 6.0), @(5 / 6.0), @1 ];
+//    animation.duration = 0.4;
+//    animation.additive = YES;
+//    animation.repeatCount = HUGE_VALF;
+//    [self.layer addAnimation:animation forKey:@"wiggle"];
+    
+    CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
+    animation.values = @[@(-0.03f), @(0.03f)];
+    animation.autoreverses = YES;
+    animation.duration = 0.1;
+    animation.repeatCount = HUGE_VALF;
+    [self.layer addAnimation:animation forKey:@"wiggle"];
+    
+}
+
+-(UIImage *) deleteImage{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(45, 45), NO, [UIScreen mainScreen].scale);
+
+    UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 45, 45) cornerRadius:15];
+    [[UIColor lightGrayColor] setFill];
+    [circlePath fill];
+    
+    UIBezierPath *xPath = [UIBezierPath bezierPath];
+    
+    [xPath moveToPoint: CGPointMake(15, 15)];
+    [xPath addLineToPoint: CGPointMake(30, 30)];
+    [xPath moveToPoint: CGPointMake(30, 15)];
+    [xPath addLineToPoint: CGPointMake(15, 30)];
+    
+    [[UIColor blackColor] setStroke];
+    
+    xPath.lineWidth = 2.0;
+    [xPath stroke];
+    
+    UIImage *deleteButtonImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return deleteButtonImage;
+}
+
+-(UIImage *) deleteImageForHighlighted{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(45, 45), NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 45, 45) cornerRadius:15];
+    [[UIColor blackColor] setFill];
+    [circlePath fill];
+    
+    UIBezierPath *xPath = [UIBezierPath bezierPath];
+    
+    [xPath moveToPoint: CGPointMake(15, 15)];
+    [xPath addLineToPoint: CGPointMake(30, 30)];
+    [xPath moveToPoint: CGPointMake(30, 15)];
+    [xPath addLineToPoint: CGPointMake(15, 30)];
+    
+    [[UIColor whiteColor] setStroke];
+    
+    xPath.lineWidth = 2.0;
+    [xPath stroke];
+    
+    UIImage *deleteButtonImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return deleteButtonImage;
+}
+
+// need this to capture button taps since they are outside of self.frame
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    
+    if (!self.thumbDeleteButton.hidden && CGRectContainsPoint(self.thumbDeleteButton.frame, point)) {
+        return self.thumbDeleteButton;
+    }
+    for (UIView *subview in self.subviews) {
+        if (CGRectContainsPoint(subview.frame, point)) {
+            return subview;
+        }
+    }
+    
+    // use this to pass the 'touch' onward in case no subviews trigger the touch
+    return [super hitTest:point withEvent:event];
+}
 
 
 @end
