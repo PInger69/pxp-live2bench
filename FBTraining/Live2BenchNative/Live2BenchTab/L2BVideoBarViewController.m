@@ -67,7 +67,7 @@
 
         slomoButton     = [self makeSlomo];
         [container addTouchableSubview:slomoButton];
-        [slomoButton addTarget:self action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
+        [slomoButton addTarget:self action:  @selector(toggleSlowmo:) forControlEvents:UIControlEventTouchUpInside];
 
         
         tagLabel        = [self makeTagLabel];
@@ -106,20 +106,42 @@
         
         
         [self _revealThese:activeElements];
+        
+        
+        
+        
+        
+        
+        [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew  | NSKeyValueObservingOptionOld context:nil];
     }
     return self;
+}
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    int oldStatus = [[change objectForKey:@"old"]intValue];
+    int newStatus = [[change objectForKey:@"new"]intValue];
+    if (oldStatus == newStatus) return;
+    
+    if ([keyPath isEqualToString:@"status"]) {
+       UIViewController <PxpVideoPlayerProtocol>* ply = (UIViewController <PxpVideoPlayerProtocol>* )object;
+       // watching for only change in slomo
+//        if (newStatus & RJLPS_Slomo && !(oldStatus & RJLPS_Slomo)) {
+//           NSLog(@"slomow");
+            slomoButton.slomoOn = ply.slowmo;
+//        } else if (oldStatus & RJLPS_Slomo && !(newStatus & RJLPS_Slomo)) {
+//             slomoButton.slomoOn = ply.slowmo;
+//        }
+      
+    }
+
 }
 
 
 -(void)toggleSlowmo:(id)sender
 {
-    if ([_videoPlayer respondsToSelector:@selector(toggleSlowmo)]){
-        [_videoPlayer performSelector:@selector(toggleSlowmo)];
-    } else {
+
         _videoPlayer.slowmo = !_videoPlayer.slowmo;
-    }
-
-
+    ((Slomo*)sender).slomoOn = _videoPlayer.slowmo;
 }
 
 -(SeekButton*)makeSeekButton:(Direction)dir
@@ -263,8 +285,8 @@
             [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,_tagMarkerController.view,_tagMarkerController.currentPositionMarker]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
-            [self _hideAll];//,slomoButton,forwardButton,backwardButton,
-            [self _revealThese:@[_tagMarkerController.view]];
+            [self _hideAll];
+            [self _revealThese:@[_tagMarkerController.view,forwardButton,backwardButton,slomoButton]];     
             break;
         case L2B_VIDEO_BAR_MODE_DISABLE:
             [self _hideAll];

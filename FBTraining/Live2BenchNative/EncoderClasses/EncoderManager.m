@@ -267,13 +267,14 @@
     id                          _masterFoundObserver;
     id                          _encoderReadyObserver;
     id                          _logoutObserver;
+    id                          _liveEventStopped;
     
     
     CheckWiFiAction             * checkWiFiAction;
     CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
     LogoutAction                * logoutAction;
-//    id                          _logoutObserver;
+
 }
 
 @synthesize mode                    = _mode;
@@ -299,6 +300,7 @@
 @synthesize cloudEncoder            = _cloudEncoder;
 @synthesize totalCameraCount        = _totalCameraCount;
 @synthesize localEncoder            = _localEncoder;
+@synthesize primaryEncoder          = _primaryEncoder;
 
 #pragma mark - Encoder Manager Methods
 
@@ -343,6 +345,14 @@
         _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
             [weakSelf.logoutAction start];
         }];
+        
+        _liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
+            // if the current playing event is the live event and its stopped then we have to make it no Event at all
+            if ([self.currentEvent isEqualToString:self.liveEventName]){
+                self.currentEvent = nil;
+            }
+        }];
+        
         
         _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
@@ -399,7 +409,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
 
-                [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
         // making actions
         
         //SAGAR AND BEN NOTIFICATIONS
@@ -534,6 +544,21 @@ static void * builtContext          = &builtContext; // depricated?
 
 }
 
+-(void)setPrimaryEncoder:(id<EncoderProtocol>)primaryEncoder
+{
+    if (_primaryEncoder == primaryEncoder) return;
+    
+    
+    [self willChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
+    _primaryEncoder = primaryEncoder;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
+}
+
+
+-(id <EncoderProtocol>)primaryEncoder
+{
+    return _primaryEncoder;
+}
 
 -(void)setMode:(EncoderManagerMode)mode
 {
@@ -663,7 +688,7 @@ static void * builtContext          = &builtContext; // depricated?
 
 /**
  *  The Encoder manager will tell the server to create the clip then it will get the url where it can be downloaded
- *  it will then ask the Lockal encoder to for a place to place the file then it will start the download and pass the downloader item thru the block
+ *  it will then ask the Local encoder to for a place to place the file then it will start the download and pass the downloader item thru the block
  *
  *
  *  @param note clip request
@@ -698,8 +723,14 @@ static void * builtContext          = &builtContext; // depricated?
         }
 
         
-        NSInteger bookmarkSpace = 1;
-        NSString * pth = [NSString stringWithFormat:@"%@/%d.mp4",[_localEncoder bookmarkPath],bookmarkSpace];
+        // The names should be structured differently
+//        NSInteger bookmarkSpace = 1;
+        
+        
+        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
+        
+        [_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
+        NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
         DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
         dItemBlock(dli);
 
@@ -1063,8 +1094,8 @@ static void * builtContext          = &builtContext; // depricated?
     NSNumber    * nowTime             = GET_NOW_TIME;
     int timeout = [encoders count] * 20;
     [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
-    // ignore local
-        if (obj.event != nil){
+    // ignore local obj.event != nil
+        if (![obj isKindOfClass:[LocalEncoder class]]){
             [obj issueCommand:MAKE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
         }
     }];
@@ -1094,7 +1125,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     // issues mod tag command
     
-    for (id <EncoderCommands> aEncoder  in _authenticatedEncoders) {
+    for (id <EncoderProtocol> aEncoder  in _authenticatedEncoders) {
     
         [aEncoder issueCommand:MODIFY_TAG
                       priority:10
@@ -1115,7 +1146,7 @@ static void * builtContext          = &builtContext; // depricated?
 // whe you set an event it will update the feeds to the correct feeds
 -(void)setCurrentEvent:(NSString *)aCurrentEvent
 {
-    
+    // CHANGE TO BE CONTROLLED FROM PRIMARY ENCODER
     NSMutableSet * typeCollector =  [[NSMutableSet alloc]init];
     
     NSDictionary * eventData;
@@ -1285,6 +1316,9 @@ static void * builtContext          = &builtContext; // depricated?
         }
         
     }
+    
+    
+    
     return tags;
 }
 
@@ -1310,15 +1344,21 @@ static void * builtContext          = &builtContext; // depricated?
     // this collects all the tags from the encoders
     [self willChangeValueForKey:@"currentEventTags"];
     
-    NSMutableArray * tempList  = [[NSMutableArray alloc]init];
-    for (Encoder * encoder in _authenticatedEncoders) {
-        if (encoder.eventType != nil && [encoder isKindOfClass:[LocalEncoder class]]){
-            [tempList addObjectsFromArray:encoder.eventTags];
+    // if its normal encoder get from all connected and authenticated
+    if ([_primaryEncoder isKindOfClass:[Encoder class]]) {
+        NSMutableArray * tempList  = [[NSMutableArray alloc]init];
+        for (Encoder * encoder in _authenticatedEncoders) {
+            if (encoder.eventType != nil && ![encoder isKindOfClass:[LocalEncoder class]]){
+                [tempList addObjectsFromArray:encoder.eventTags];
+            }
+            
         }
-        
-    }
-    _currentEventTags = [tempList copy];
+        _currentEventTags = [tempList copy];
+
+    } else { // if its any other type of encoder then just take the tags from it only
     
+        _currentEventTags = [_primaryEncoder.eventTags copy];
+    }
     [self didChangeValueForKey:@"currentEventTags"];
     
 
@@ -1355,8 +1395,13 @@ static void * builtContext          = &builtContext; // depricated?
 -(NSInteger)totalCameraCount
 {
     NSInteger c = 0;
+    
+    if (_primaryEncoder == _localEncoder) {
+        return 0;
+    }
+    
     for (Encoder * encoder in _authenticatedEncoders) {
-        if (encoder.eventType != nil && [encoder isKindOfClass:[LocalEncoder class]]){
+        if (encoder.eventType != nil && ![encoder isKindOfClass:[LocalEncoder class]]){
             c += encoder.cameraCount;
         }
         

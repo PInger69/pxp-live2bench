@@ -21,8 +21,15 @@
 @synthesize quality     = _quality;
 @synthesize sourceName  =_sourceName;
 @synthesize isAlive;
+@synthesize info;
 
-// this is to be used right from the JSON data
+/**
+ *  this is to be used right from the JSON data
+ *
+ *  @param aDict @"lq":<URL> ,@"hq":<URL>
+ *
+ *  @return instance
+ */
 -(id)initWithURLDict:(NSDictionary *)aDict
 {
     self = [super init];

@@ -670,7 +670,7 @@
         [self eventTagsGetResponce:finishedData eventNameKey:extra];
     }
     
-    if (isAuthenticate && isVersion && _isBuild && isTeamsGet && !_isReady){
+    if (isAuthenticate && 1 && _isBuild && isTeamsGet && !_isReady){
         _isReady         = YES;
         if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
@@ -1005,7 +1005,7 @@
                             // this creates a feed object from just a string with it  source named s1
                             Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
                             self.feeds = @{ @"s1":theFeed};
-                            _liveEventName = dict[@"live"];
+                            _liveEventName = dict[@"name"];
                             
                             [self willChangeValueForKey:@"eventType"];
                             _eventType = [dict objectForKey:@"sport"];
@@ -1164,7 +1164,7 @@
 // This will show name and status
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@" %@: %d - %@   - %@",self.name,self.status,self.event,self.eventType  ];
+    NSString * txt = [NSString stringWithFormat:@" %@(%@): %d - %@   - %@",self.name,version,self.status,self.event,self.eventType  ];
 
     
     

@@ -52,7 +52,12 @@
     return self;
 }
 
-
+/**
+ *  Start the Freeze counter
+ *
+ *  @param interval Time in one cycle 1 = 1 second
+ *  @param max      How many cycles before it runs the send selector
+ */
 -(void)startTimer:(int)interval max:(int)max
 {
     _maxfreeze              = max;
@@ -74,6 +79,7 @@
 
 -(void)timerFireMethod:(NSTimer *)timer
 {
+    NSLog(@"");
     if (_current-- <= 0){
         if (_target && [_target respondsToSelector:_selector]) {
             IMP imp = [_target methodForSelector:_selector];

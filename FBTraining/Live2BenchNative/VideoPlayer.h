@@ -14,7 +14,7 @@
 #import "VideoControlBarSlider.h"
 #import "ExternalScreenButton.h"
 #import "Feed.h"
-#import "LiveIndicatorLight.h"
+#import "LiveLight.h"
 #import "PxpVideoPlayerProtocol.h"
 
 #define NOTIF_READY_TO_PLAY  @"readyToPlay"
@@ -62,7 +62,7 @@ typedef enum playerStatus{
 @property(nonatomic,strong)	    VideoControlBarSlider  * richVideoControlBar;
 @property(nonatomic,strong)     Feed                * feed;
 @property(nonatomic,strong)     NSString            * playerContext;
-@property(nonatomic,strong)     LiveIndicatorLight  * liveIndicatorLight;
+@property(nonatomic,strong)     LiveLight  * LiveLight;
 @property(nonatomic,assign)     float               rate;
 
 

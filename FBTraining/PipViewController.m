@@ -80,6 +80,8 @@ static void * vpFrameContext   = &vpFrameContext;
         
         // video player
         [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
+//        [self.videoPlayer       addObserver:self forKeyPath:@"slowmo" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
+        
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
 
@@ -262,7 +264,10 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)liveEventStopped:(NSNotification*)note
 {
-    if (_encoderManager.liveEventName == nil  && _encoderManager.currentEvent == nil){
+    
+    
+    [_feedSwitchView clear];
+    if ((_encoderManager.currentEvent == nil) || [_encoderManager.liveEventName isEqualToString:_encoderManager.currentEvent]){
         for (Pip * pip in self.pips) {
             [pip clear];
         }
@@ -474,7 +479,25 @@ static void * vpFrameContext   = &vpFrameContext;
     
         weakPip.status = weakPip.status | PIP_Seeking;
         
-        [weakPip.avPlayer seekToTime:self.videoPlayer.avPlayer.currentTime completionHandler:^(BOOL finished) {
+        CMTime pTime = self.videoPlayer.avPlayer.currentTime;
+        CMTime pipTime = [[weakPip.avPlayerItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue].duration;
+        CMTime mySeekToTime = self.videoPlayer.avPlayer.currentTime;
+        
+        
+        if (CMTIME_COMPARE_INLINE(pTime, >, pipTime)) {
+
+//           CMTimeRange tempRange = [[weakPip.avPlayerItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue];
+
+//            CMTime drr = tempRange.duration;
+//            if (CMTIME_COMPARE_INLINE(pTime, >, drr)) {
+                mySeekToTime =  pipTime;
+//            }
+        }
+        
+        
+        
+        
+        [weakPip.avPlayer seekToTime:mySeekToTime completionHandler:^(BOOL finished) {
             if (finished) {
                 [weakPip.avPlayer.currentItem cancelPendingSeeks];
                 weakPip.avPlayer.rate = r;

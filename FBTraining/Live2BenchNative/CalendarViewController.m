@@ -97,7 +97,7 @@
     [tableViewController.view setFrame:CGRectMake(502, 110, 518, 650)];
     [tableViewController.tableView setAutoresizingMask:UIViewAutoresizingNone];
     tableViewController.localPath = localPath;
-    
+
     calendarViewController                      = [[CKViewController alloc] init];
     [calendarViewController setFrame: CGRectMake(5, 110, 485, 400)];
     

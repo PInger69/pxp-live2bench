@@ -7,7 +7,7 @@
 //
 #include <math.h>
 #import "RJLVideoPlayer.h"
-#import "RJLFreezeCounter.h"
+#import "RJLFreezeMonitor.h"
 #import "RJLVideoPlayerResponder.h"
 #import "ValueBuffer.h"
 
@@ -17,15 +17,14 @@
 @implementation RJLVideoPlayer
 {
     float   restoreAfterScrubbingRate;
+    float   restoreAfterPauseRate;
     id      timeObserver;
 
     RJLVideoPlayerResponder * commander;
-//    BOOL    isSeeking;
     NSURL   * mURL;
-    int     seekAttempt;
     
     // Anti Freeze Prop
-    RJLFreezeCounter * freezeCounter;
+    RJLFreezeMonitor * freezeMonitor;
     double  lastSeekTime;
 
     // Looping Prop
@@ -57,7 +56,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 @synthesize feed        = _feed;
 @synthesize mute        = _mute;
 
-@synthesize liveIndicatorLight,playerContext,videoControlBar,playBackView,range;
+@synthesize playerContext = _playerContext;
+@synthesize liveIndicatorLight,videoControlBar,playBackView,range;
 
 @synthesize isAlive;
 
@@ -75,13 +75,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
-        freezeCounter   = [[RJLFreezeCounter alloc]initWithTarget:self selector:@selector(onFreeze) object:nil];
-        
+
+        freezeMonitor = [[RJLFreezeMonitor alloc]initWithPlayer:self];
         commander = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame = frame;
         
         liveBuffer = [[ValueBuffer alloc]initWithValue:5 coolDownValue:10000000 coolDownTick:30];
-        
+        restoreAfterPauseRate = 1;
     }
     return self;
 }
@@ -95,9 +95,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         // This listens to the app if it wants the player to do something
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
-        freezeCounter   = [[RJLFreezeCounter alloc]initWithTarget:self selector:@selector(onFreeze) object:nil];
+
         commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame      = CGRectMake(500, 60, 400, 300);
+        restoreAfterPauseRate = 1;
     }
     return self;
 }
@@ -112,36 +113,28 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self.view                   = self.playBackView;
     self.view.backgroundColor   = [UIColor blackColor];
 
-    liveIndicatorLight          = [[LiveIndicatorLight alloc]init];
+    liveIndicatorLight          = [[LiveLight alloc]init];
     liveIndicatorLight.frame    = CGRectMake(self.view.frame.size.width-30,0,10,10);
 
-    id component                = [[VideoControlBarSlider alloc]initWithFrame:self.view.frame];
     
-    videoControlBar             = component;
-    
+    videoControlBar             = [[VideoControlBarSlider alloc]initWithFrame:self.view.frame];
     [videoControlBar.timeSlider addTarget:self action:@selector(sliderValueChanged)
              forControlEvents:UIControlEventValueChanged];
-    
     [videoControlBar.timeSlider addTarget:self action:@selector(scrubbingStart)
              forControlEvents:UIControlEventTouchDown];
-    
     [videoControlBar.timeSlider addTarget:self action:@selector(willScrubbingEnd)
              forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchDownRepeat|UIControlEventTouchCancel];
-    
-    
     [videoControlBar setupPlay:@selector(play) Pause:@selector(pause) target:self];
-
-
     videoControlBar.enable = NO;
+
     
     [self initBarTimer];
 
-    seekAttempt = 0;
     [self.view addSubview:liveIndicatorLight];
     [self.view addSubview:videoControlBar];
     
     // debugging
-    currentItemTime = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 30)];
+    currentItemTime = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 30)];
     currentItemTime.textColor = [UIColor whiteColor];
    if (DEBUG_MODE) [self.view addSubview:currentItemTime];
     [super viewDidLoad];
@@ -173,13 +166,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 {
     CMTime playerDuration = [self playerItemDuration];
     
-    
     float checkDuration = ( isnan(CMTimeGetSeconds(playerDuration)) )? 0 : CMTimeGetSeconds(playerDuration);
 
-
     self.videoControlBar.timeSlider.maximumValue = checkDuration;
-
-    
+    if (_looping){
+        videoControlBar.timeSlider.minimumValue = CMTimeGetSeconds(range.start);
+        self.videoControlBar.timeSlider.maximumValue = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
+    }
     
     if (CMTIME_IS_INVALID(playerDuration))
     {
@@ -196,7 +189,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
         [self.videoControlBar.timeSlider setValue:time];
 
-
 //        [self.videoControlBar.timeSlider setValue:(maxValue - minValue) * time / duration + minValue];
     }
     
@@ -212,34 +204,39 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 
 
-
-
-
 #pragma mark -
 #pragma mark Control Bar Methods
 
+
+/**
+ *  This method is run during the scrub. There is a check for scrubbing to ensure that this does not get run before -(void)scrubbingStart
+ */
 -(void)sliderValueChanged {
     
-
-    if (!(_status & RJLPS_Seeking)!=0){
+    // not seeking and is Scrubbing    This is to prevent multi seeking
+    if (!(_status & RJLPS_Seeking)!=0 && (_status & RJLPS_Scrubbing)!=0){
 
         self.status = _status | RJLPS_Seeking;
         self.status = _status & ~(RJLPS_Live);
-        self.looping = NO;
+
         
         CMTime playerDuration = [self playerItemDuration];
         if (CMTIME_IS_INVALID(playerDuration)) {
             return;
         }
     
-    
+        if (_looping){
+            playerDuration = range.duration;
+            
+        }
         double duration = CMTimeGetSeconds(playerDuration);
+        
         if (isfinite(duration))
         {
             float minValue  = [self.videoControlBar.timeSlider minimumValue];
             float maxValue  = [self.videoControlBar.timeSlider maximumValue];
             float value     = [self.videoControlBar.timeSlider value];
-//            NSLog(@"Seek Attempt: %i",++seekAttempt);
+
             double time     = duration * (value - minValue) / (maxValue - minValue);
             lastSeekTime    = time;
             __block RJLVideoPlayer      * weakSelf      = self;
@@ -254,7 +251,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                     } else {
                         NSLog(@"Seek CANCELD");
                     }
-//                    NSLog(@"Seek Attempt COMPLETE: %i",seekAttempt);
                      weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
                 });
             }];
@@ -271,10 +267,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(void)scrubbingStart{
     self.status = _status | RJLPS_Scrubbing ; //| RJLPS_Seeking
     
-    restoreAfterScrubbingRate = [self.avPlayer rate];
+    if (!((_status & RJLPS_Seeking)!=0))restoreAfterScrubbingRate = [self.avPlayer rate];
     [self.avPlayer setRate:0.f];
     
-    [self removePlayerTimeObserver];
+    [self removePlayerTimeObserver]; // remove time observers to prevent updating during scrubbing
 }
 
 /**
@@ -286,12 +282,20 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.status = _status | RJLPS_Seeking;
     
         CMTime playerDuration = [self playerItemDuration];
+    
+    if (_looping){
+        playerDuration = range.duration;
+
+    }
+    
         if (CMTIME_IS_INVALID(playerDuration)) {
             return;
         }
         
         
         double duration = CMTimeGetSeconds(playerDuration);
+    
+    
         if (isfinite(duration))
         {
             float minValue  = [self.videoControlBar.timeSlider minimumValue];
@@ -333,6 +337,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     if (!timeObserver)
     {
         CMTime playerDuration = [self playerItemDuration];
+        if (_looping){
+            playerDuration = range.duration;
+            
+        }
         if (CMTIME_IS_INVALID(playerDuration))
         {
             return;
@@ -349,6 +357,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     {
         [self.avPlayer setRate:restoreAfterScrubbingRate];
         restoreAfterScrubbingRate = 0.f;
+    } else {
+    
     }
     
     
@@ -421,6 +431,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         [object removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) context:&FeedAliveContext];
         
     }
+    
+    if (DEBUG_MODE){
+        [currentItemTime setText:[NSString stringWithFormat:@"%f | %@",CMTimeGetSeconds([self.playerItem currentTime]), [self statusString]]];
+    }
 
 }
 
@@ -480,17 +494,17 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 {
     double                      interval        = 0.5f;
     __block RJLVideoPlayer      * weakSelf      = self;
-    __block RJLFreezeCounter    * weakCounter   = freezeCounter;
     __block UILabel             * weakLabel     = currentItemTime;
-    
+
     timeObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
                                                                queue:NULL
                                                           usingBlock:^(CMTime time)
                     {
                         
-                        [weakCounter reset];
-                        [weakLabel setText:[NSString stringWithFormat:@"%f",CMTimeGetSeconds([weakSelf.playerItem currentTime]) ]];
+                        
+                        [weakLabel setText:[NSString stringWithFormat:@"%f | %@",CMTimeGetSeconds([weakSelf.playerItem currentTime]), [weakSelf statusString]]];
                         [weakSelf syncControlBar];
+                        [[NSNotificationCenter defaultCenter]postNotificationName:PLAYER_TICK object:weakSelf];
                         /**
                          *  Should add check life to keep up to date
                          */
@@ -512,25 +526,42 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 #pragma mark -
 #pragma mark Commands
 
-
+/**
+ *  This takes the video right to the end of the current feed and stops all seek or anything else
+ */
 -(void)gotolive{
-   
-    
     [self.videoControlBar setHidden:NO];
     self.looping                                = NO;
     self.videoControlBar.playButton.selected    = FALSE;
-    onReadyBlock                                = nil;
-    __block RJLVideoPlayer  * weakSelf          = self;
+    onReadyBlock                                = nil; //clear out any queued seeking
+   
+    self.status                                 = (_status | RJLPS_Live  | RJLPS_Play) & ~(RJLPS_Slomo) ; // At the end of a live feed
     
-    self.status                                 = _status | RJLPS_Live;
-    self.status                                 = _status & ~(RJLPS_Looping);
-//    self.status                                 = _status | RJLPS_Play;
+    // if it was paused then remove the pause and set the rate
+    if (_status & RJLPS_Paused) {
+        [self.avPlayer setRate:restoreAfterPauseRate];
+        self.status                             = _status & ~(RJLPS_Paused);
+    }
+    
+    // if it was seeking remove the seek and cancel what ever it was seeking too
+    if ( (_status & RJLPS_Seeking) ) {
+        self.status                             = _status & ~(RJLPS_Seeking);
+        [_playerItem cancelPendingSeeks];
+    }
+
+    // seek to the end of the clip
+    [self seekToInSec:[self durationInSeconds]];
+    [self.avPlayer setRate:1];
+    restoreAfterPauseRate = 1;
 }
 
 -(void)play{
-    
+    if (!_feed)return;
     [self.avPlayer play];
+    [freezeMonitor start];
+   if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
     self.status                                 = _status | RJLPS_Play;
+   self.status                                 = _status & ~(RJLPS_Paused);
     [self.videoControlBar setHidden:NO];
     self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil;
@@ -548,6 +579,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 -(void)pause{
+    if (_status & RJLPS_Paused) return;
+    restoreAfterPauseRate = [self.avPlayer rate];
     [self.avPlayer pause];
     self.videoControlBar.playButton.selected    = TRUE;
     self.status                                 = _status & ~( RJLPS_Live | RJLPS_Play);
@@ -556,7 +589,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)playFeed:(Feed*)aFeed
 {
-    [freezeCounter startTimer:1 max:3];
+
     self.feed = aFeed;
     self.URL = [self.feed path];
     [self play];
@@ -564,7 +597,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange
 {
-    [freezeCounter startTimer:1 max:3];
+
     onFeedReadyBlock    = nil;
     range               = aRange;
     
@@ -606,11 +639,15 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)clear
 {
+    self.status = RJLPS_Stop;
     self.feed = nil;
     [self removePlayerTimeObserver];
     self.looping = NO;
     currentItemTime.text = @"";
     videoControlBar.enable = NO;
+    [freezeMonitor stop];
+    
+    [self.player replaceCurrentItemWithPlayerItem:nil];
 //  self.view.layer.sublayers = @[];
 //  self.view.layer.sublayers = nil;
    // self.view.layer.backgroundColor = [[UIColor blackColor]CGColor];
@@ -711,7 +748,19 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     }
     
     // Do the seeking
-    [self.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
+//    [self.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (finished) {
+//                
+//            } else {
+//                NSLog(@"seekBy: CANCELLED");
+//            }
+//            weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+//        });
+//    }];
+
+    
+    [self.avPlayer seekToTime:seekTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (finished) {
                 
@@ -721,6 +770,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
             weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
         });
     }];
+
+    
     
 }
 
@@ -737,6 +788,23 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         NSLog(@"\tSpeed Not found on sender");
         return;
     }
+
+    // This is for frame stepping
+    if (fabsf(seekAmount) < 0.25f){
+        [self pause];
+        
+        double beforeFrame    = CMTimeGetSeconds([self.playerItem currentTime]);
+        [_playerItem stepByCount:(seekAmount>0)? 1 : -1];
+        double acterFrame    = CMTimeGetSeconds([self.playerItem currentTime]);
+        if (beforeFrame == acterFrame) {
+            [self seekBy:(seekAmount>0)? 0.0333 : -0.0333];
+        }
+        
+
+        return;
+    }
+    
+    
 
     if (currentTime+seekAmount > [self durationInSeconds]) {
         [self seekToInSec:[self durationInSeconds]];
@@ -824,23 +892,24 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(BOOL)slowmo
 {
+    if (!self.avPlayer) return NO;
     return ([self.avPlayer rate] >= 1.0)? NO : YES;
 }
 
 -(void)setSlowmo:(BOOL)slowmo
 {
-    
-    // this will compensate for playRate
-    if ([self.avPlayer rate] > 1.0) {
-        self.status = _status & ~(RJLPS_Slomo);
-
-        [self.avPlayer setRate:1.0f];
-    } else if ([self.avPlayer rate] < 1) {
-        self.status = _status | RJLPS_Slomo;
-
+    [self willChangeValueForKey:@"slowmo"];
+    if (slowmo) {
         [self.avPlayer setRate:SLOWMO_SPEED];
+        self.status = _status & ~(RJLPS_Live);
+        self.status = _status | RJLPS_Slomo;
+        
+    } else {
+        [self.avPlayer setRate:1];
+       self.status = _status & ~(RJLPS_Slomo);
+        
     }
-
+    [self didChangeValueForKey:@"slowmo"];
 
 }
 
@@ -925,6 +994,46 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 {
     return mURL;
 }
+
+
+/**
+ *  This is for debugging
+ *
+ *  @param playerContext
+ */
+-(void)setPlayerContext:(NSString *)playerContext
+{
+    _playerContext = playerContext;
+    
+
+    
+}
+
+-(NSString*)playerContext
+{
+    return _playerContext;
+
+}
+
+
+-(float)fps
+{
+
+    float fps=0.00;
+    if (self.player.currentItem.asset) {
+        
+        AVAsset * ch = self.player.currentItem.asset;
+        NSArray *asdf  =[ch tracks];
+        AVAssetTrack * videoATrack = [[self.player.currentItem.asset tracksWithMediaType:AVMediaTypeVideo] lastObject];
+        if(videoATrack)
+        {
+            fps = videoATrack.nominalFrameRate;
+        }
+    }
+    return fps;
+}
+
+
 
 #pragma mark -
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
@@ -1169,35 +1278,104 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)onFreeze
 {
-    if ( !(_status & RJLPS_Thawing) && !(_status & RJLPS_Scrubbing) && ((_status & RJLPS_Play)||(_status & RJLPS_Live)) ) {
-            [_playerItem cancelPendingSeeks];
-            __weak RJLVideoPlayer       * weakSelf      = self;
-            __block RJLFreezeCounter    * weakCounter   = freezeCounter;
-            weakSelf.status = weakSelf.status  | RJLPS_Thawing;
-            double roundedLastTime;// = round (lastSeekTime--);//(round (lastSeekTime * 1000.0) / 1000.0)-1;
-            double noise = 1 + freezeCounter.freezeCounter;//(-1 + (random()*2));
-            roundedLastTime = (videoControlBar.timeSlider.value + noise <= 0)?0:videoControlBar.timeSlider.value + noise;
-            [self.avPlayer seekToTime:CMTimeMakeWithSeconds(roundedLastTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
-//               dispatch_async(dispatch_get_main_queue(), ^{
-                    if (finished) {
-                        NSLog(@"FreezeSeek FINISHED");
-                    } else {
-                        NSLog(@"FreezeSeek CANCELLED");
-                    }
-                       weakSelf.status = weakSelf.status & ~(RJLPS_Thawing);
-//                });
-            }];
-    }
+
+    
+//    if ( !(_status & RJLPS_Thawing) && !(_status & RJLPS_Scrubbing) && ((_status & RJLPS_Play)||(_status & RJLPS_Live)) ) {
+//            [_playerItem cancelPendingSeeks];
+//            __weak RJLVideoPlayer       * weakSelf      = self;
+//            __block RJLFreezeCounter    * weakCounter   = freezeCounter;
+//            weakSelf.status = weakSelf.status  | RJLPS_Thawing;
+//            double roundedLastTime;// = round (lastSeekTime--);//(round (lastSeekTime * 1000.0) / 1000.0)-1;
+//            double noise = 1 + freezeCounter.freezeCounter;//(-1 + (random()*2));
+//            roundedLastTime = (videoControlBar.timeSlider.value + noise <= 0)?0:videoControlBar.timeSlider.value + noise;
+//            [self.avPlayer seekToTime:CMTimeMakeWithSeconds(roundedLastTime, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
+////               dispatch_async(dispatch_get_main_queue(), ^{
+//                    if (finished) {
+//                        NSLog(@"FreezeSeek FINISHED");
+//                        
+//                    } else {
+//                        NSLog(@"FreezeSeek CANCELLED");
+//                    }
+//                    weakSelf.status = weakSelf.status & ~(RJLPS_Thawing);
+//                    [weakCounter reset];
+////                });
+//            }];
+//    }
+//    
+//    [freezeCounter reset];
 }
 
 
 -(void)dealloc
 {
     self.isAlive = NO;
-    [freezeCounter stop];
 }
 
+-(NSString*)statusString
+{
+    NSMutableString * txt = [NSMutableString stringWithFormat:@""];
+    if ((_status & RJLPS_Offline) !=0 ) {
+        [txt appendString:@" Offline "];
+    }
+    if ((_status & RJLPS_Live) !=0 ) {
+        [txt appendString:@" Live "];
+    }
+    
+    if ((_status & RJLPS_Play) !=0 ) {
+        [txt appendString:@" Play "];
+    }
+    
+    if ((_status & RJLPS_Stop) !=0 ) {
+        [txt appendString:@" Stop "];
+    }
+    
+    if ((_status & RJLPS_Paused) !=0 ) {
+        [txt appendString:@" Paused "];
+    }
+    
+    if ((_status & RJLPS_Seeking) !=0 ) {
+        [txt appendString:@" Seeking "];
+    }
+    
+    if ((_status & RJLPS_Scrubbing) !=0 ) {
+        [txt appendString:@" Scrubbing "];
+    }
+    
+    if ((_status & RJLPS_Slomo) !=0 ) {
+        [txt appendString:@" Slomo "];
+    }
+    
+    if ((_status & RJLPS_Error) !=0 ) {
+        [txt appendString:@" Error "];
+    }
+    
+    if ((_status & RJLPS_Mute) !=0 ) {
+        [txt appendString:@" Mute "];
+    }
+    
+    if ((_status & RJLPS_Thawing) !=0 ) {
+        [txt appendString:@" Thawing "];
+    }
+    
+    if ((_status & RJLPS_Looping) !=0 ) {
+        [txt appendString:@" Looping "];
+    }
+    return [NSString stringWithString: txt];
+    
+}
+
+-(NSString*)description
+{
+    NSMutableString * txt = [NSMutableString stringWithFormat:@"RJLPlayer - Feed: %@\n ",_feed.path];
+    [txt appendFormat:@"Rate: %f\n",_avPlayer.rate];
+    [txt appendString:@"Status: "];
+    [txt appendString:[self statusString]];
+    
+    
+    return [NSString stringWithString: txt];
 
 
+    
+}
 
 @end

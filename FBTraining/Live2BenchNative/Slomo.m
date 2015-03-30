@@ -10,7 +10,7 @@
 
 @implementation Slomo
 
-@synthesize slomoOn;
+@synthesize slomoOn = _slomoOn;
 
 static UIImage * normalSpeed;
 static UIImage * slowSpeed;
@@ -28,7 +28,7 @@ static BOOL * isStaticInit;
     self = [super initWithFrame:frame];
     if (self) {
     	if (!isStaticInit) [Slomo staticInit];
-		slomoOn = NO;
+		_slomoOn = NO;
 
 		[self setFrame:frame];
 		[self setContentMode:UIViewContentModeScaleAspectFill];
@@ -39,23 +39,47 @@ static BOOL * isStaticInit;
 }
 
 
--(void)setHighlighted:(BOOL)highlighted
-{
-    [super setHighlighted:highlighted];
-    if (!highlighted) {
-        slomoOn = !slomoOn;
-        if (slomoOn){
-            [self setImage:slowSpeed forState:UIControlStateNormal];
-        } else {
-            [self setImage:normalSpeed forState:UIControlStateNormal];
-        }
-    }
-}
+//-(void)setHighlighted:(BOOL)highlighted
+//{
+//    [super setHighlighted:highlighted];
+//    if (!highlighted) {
+//        slomoOn = !slomoOn;
+//        if (slomoOn){
+//            [self setImage:slowSpeed forState:UIControlStateNormal];
+//            [self setImage:slowSpeed forState:UIControlStateHighlighted];
+//        } else {
+//            [self setImage:normalSpeed forState:UIControlStateNormal];
+//            [self setImage:normalSpeed forState:UIControlStateHighlighted];
+//        }
+//    }
+//}
 
 -(void)tintColorDidChange
 {
     [super tintColorDidChange];
 
 }
+
+
+-(void)setSlomoOn:(BOOL)slomoOn
+{
+    _slomoOn = slomoOn;
+    
+    if (!_slomoOn){
+        [self setImage:normalSpeed forState:UIControlStateNormal];
+    } else {
+         [self setImage:slowSpeed forState:UIControlStateNormal];
+    }
+
+}
+
+
+-(BOOL)slomoOn
+{
+
+    return _slomoOn;
+
+}
+
 
 @end

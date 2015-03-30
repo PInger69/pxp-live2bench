@@ -25,6 +25,7 @@ typedef NS_OPTIONS (NSInteger,AlertType){
 
 @property (assign, nonatomic) AlertType type;
 
++(void)staticInit;
 +(void)dismissAll;
 +(void)addAlert:(UIAlertView*)alert;
 +(void)removeAll;
