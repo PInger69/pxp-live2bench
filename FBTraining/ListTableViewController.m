@@ -252,26 +252,26 @@
         
         NSDictionary *tag = [self.tableData objectAtIndex:indexPath.row];
         
-        //        [self.sourceSelectPopover clear];
-        //
-        //        [self.sourceSelectPopover setListOfButtonNames:[[tag objectForKey:@"url_2"] allKeys]];
+                [self.sourceSelectPopover clear];
         
-        //This is where the Thumbnail images are added to the popover
-        // NSDictionary *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
-        //        NSDictionary *urls = tag[@"url_2"];
-        //        int i = 0;
-        //        for (NSString *url in [urls allValues]){
-        //            //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
-        //
-        //
-        //            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, POP_WIDTH - 10, BUTTON_HEIGHT - 10)];
-        //
-        //
-        //            [imageAssetManager imageForURL: url atImageView:imageView ];
-        //
-        //            [(UIButton *)self.sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
-        //            ++i;
-        //        }
+                [self.sourceSelectPopover setListOfButtonNames:[[tag objectForKey:@"url_2"] allKeys]];
+//        [cell.data objectForKey:@"url_2"] ;
+//        This is where the Thumbnail images are added to the popover
+//         NSDictionary *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+                NSDictionary *urls = tag[@"url_2"];
+                int i = 0;
+                for (NSString *url in [urls allValues]){
+                    //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
+        
+        
+                    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, POP_WIDTH - 10, BUTTON_HEIGHT - 10)];
+        
+        
+                    [imageAssetManager imageForURL: url atImageView:imageView ];
+        
+                    [(UIButton *)self.sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
+                    ++i;
+                }
         
         
         
@@ -279,29 +279,38 @@
         self.definesPresentationContext = YES;
         
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                        @"feed":@"s_00",
-                                                                                                                                        @"time":[tag objectForKey:@"starttime"],
-                                                                                                                                        @"duration":[tag objectForKey:@"duration"],
-                                                                                                                                        @"comment":[tag objectForKey:@"comment"]},
-                                                                                                                           @"forWhole":tag}];
+     
+
         
+        if ( [urls count] >1 ){
+                    [self.sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
+            
+                        NSLog(@"You Picked a feed: %@",pick);
+                        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+            
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                                        @"feed":pick,
+                                                                                                                                                        @"time":[tag objectForKey:@"starttime"],
+                                                                                                                                                        @"duration":[tag objectForKey:@"duration"],
+                                                                                                                                                        @"comment":[tag objectForKey:@"comment"]},
+                                                                                                                                           @"forWhole":tag}];
+                    }];
+            
+                    [self.sourceSelectPopover presentPopoverCenteredIn: [self.tableView cellForRowAtIndexPath:indexPath] animated:YES];
+            
+
         
+        } else {
+            NSString * key =        [urls allKeys][0];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                            @"feed":key,
+                                                                                                                                            @"time":[tag objectForKey:@"starttime"],
+                                                                                                                                            @"duration":[tag objectForKey:@"duration"],
+                                                                                                                                            @"comment":[tag objectForKey:@"comment"]},
+                                                                                                                               @"forWhole":tag}];
+            
+        }
         
-        //        [self.sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
-        //
-        //            NSLog(@"You Picked a feed: %@",pick);
-        //            //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-        //
-        //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-        //                                                                                                                                            @"feed":pick,
-        //                                                                                                                                            @"time":[tag objectForKey:@"starttime"],
-        //                                                                                                                                            @"duration":[tag objectForKey:@"duration"],
-        //                                                                                                                                            @"comment":[tag objectForKey:@"comment"]},
-        //                                                                                                                               @"forWhole":tag}];
-        //        }];
-        //
-        //        [self.sourceSelectPopover presentPopoverCenteredIn: [self.tableView cellForRowAtIndexPath:indexPath] animated:YES];
         
         
         

@@ -37,7 +37,8 @@ static AlertType allowedTypes;
 +(void)addAlert:(UIAlertView*)alert
 {
     if (!alertPool) [CustomAlertView staticInit];
-    [alertPool addObject:alert];
+    if (![alertPool containsObject:self])    [alertPool addObject:alert];
+
 }
 
 +(void)removeAll
@@ -93,8 +94,8 @@ static AlertType allowedTypes;
     if (!alertPool) [CustomAlertView staticInit];
     self = [super init];
     if (self) {
-        [alertPool addObject:self];
-
+//        [alertPool addObject:self];
+        if (![alertPool containsObject:self])    [alertPool addObject:self];
     }
     return self;
 
@@ -106,8 +107,8 @@ static AlertType allowedTypes;
     self = [super initWithTitle:title message:message delegate:delegate cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitles, nil];
     if (self) {
         self.type = AlertNone;
-        [alertPool addObject:self];
-
+//        [alertPool addObject:self];
+            if (![alertPool containsObject:self])    [alertPool addObject:self];
     }
     return self;
 }

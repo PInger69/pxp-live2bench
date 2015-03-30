@@ -360,7 +360,7 @@ static void * eventContext      = &eventContext;
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
-    
+    [_feedSwitch setHidden:!([_encoderManager.feeds count]>1)];
     
     // multi button
     multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];
@@ -370,6 +370,7 @@ static void * eventContext      = &eventContext;
     multiButton.layer.borderWidth = 1;
     [self.view addSubview:multiButton];
     [multiButton setHidden:!([_encoderManager.feeds count]>1)];
+    
     _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.videoPlayer.view.frame.origin.x+32,PADDING + self.videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
     [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     

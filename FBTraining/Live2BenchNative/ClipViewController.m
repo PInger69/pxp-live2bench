@@ -109,7 +109,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
+//    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
     //
     NSMutableArray * tags = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
     for (NSDictionary *tag in tags) {
@@ -197,6 +197,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [filterContainer setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
     [self.view addSubview:filterContainer];
     
+<<<<<<< HEAD
     self.deleteButton = [[UIButton alloc] init];
     self.deleteButton.backgroundColor = [UIColor redColor];
     [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
@@ -212,6 +213,8 @@ static void * masterEncoderContext = &masterEncoderContext;
     //self.edgeSwipeButtons.delegate = self;
     //[self.view addSubview:self.edgeSwipeButtons];
     
+=======
+>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
 }
 
 -(void)deleteAllButtonTarget{
@@ -262,11 +265,18 @@ static void * masterEncoderContext = &masterEncoderContext;
     
     // MUTE THE VIDEOS
     //Richard
+<<<<<<< HEAD
     //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
     //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
     //    [globals.VIDEO_PLAYER_LIST_VIEW pause];
     //    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
     
+=======
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
+
+
+>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
     //if no filter tool box, initialize filter tool box // This is dead code now
     if(!_filterToolBoxView)
     {
@@ -563,7 +573,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     }
     else{
         self.blurView.hidden = YES;
-        [self createBreadCrumbsView];
+
     }
     
     [componentFilter open:YES]; //Richard
@@ -612,7 +622,11 @@ static void * masterEncoderContext = &masterEncoderContext;
     [alert addButtonWithTitle:@"Yes"];
     [alert addButtonWithTitle:@"No"];
     [alert show];
+<<<<<<< HEAD
     //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
+=======
+
+>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
 }
 
 
@@ -773,6 +787,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     
 }
 
+<<<<<<< HEAD
 // TODO dead?
 -(void)createBreadCrumbsView{
     
@@ -931,6 +946,8 @@ static void * masterEncoderContext = &masterEncoderContext;
     //    }
     
 }
+=======
+>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
 
 
 -(NSMutableArray*)sortArrayByTime:(NSMutableArray*)arr
@@ -946,14 +963,6 @@ static void * masterEncoderContext = &masterEncoderContext;
     return (NSMutableArray*)sortedArray;
 }
 
-//find the thumbnail images directory and set them to a global array
--(void)retrieveImages
-{
-    
-    // NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:globals.THUMBNAILS_PATH error:NULL];
-    
-    //self.thumbnails=[directoryContent mutableCopy];
-}
 
 //how many thumbnails?
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section
@@ -967,6 +976,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 }
 
 
+<<<<<<< HEAD
 ///NOTE: when filterbox.view is all the way up, customer goes to another screen and comes back, filterbox.view cannot be interacted with
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -1006,6 +1016,8 @@ static void * masterEncoderContext = &masterEncoderContext;
 }
 
 
+=======
+>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
 //create le thumbnail cell
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -1146,7 +1158,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 
 
 #pragma mark - UICollectionViewDelegate
-//TODO create gloabal dictionary of view controllers
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.isEditing) {
@@ -1191,28 +1203,34 @@ static void * masterEncoderContext = &masterEncoderContext;
         }
         
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        if ( [tagSelect count] >1 ){
+                [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                              @"feed":@"s_00",
-                                                                                                              @"time":[selectedCell.data objectForKey:@"starttime"],
-                                                                                                              @"duration":[selectedCell.data objectForKey:@"duration"],
-                                                                                                              @"state":[NSNumber numberWithInteger:PS_Play]}];
+                    NSLog(@"You Picked a feed: %@",pick);
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                                          @"feed":pick,
+                                                                                                                          @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                                          @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+                }];
+        
+                [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
         
         
-        //        [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
-        //
-        //            NSLog(@"You Picked a feed: %@",pick);
-        //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-        //
-        //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-        //                                                                                                                  @"feed":pick,
-        //                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
-        //                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
-        //                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
-        //        }];
+        } else {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+            
+            NSString * key =        listOfScource[0];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                                  @"feed":key,
+                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
+        }
         
-        //        [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+        
     } else {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
@@ -1227,6 +1245,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 -(void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
     
     [self collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath];
+<<<<<<< HEAD
     
     //    NSDictionary *thumbDict = [[NSDictionary alloc]initWithDictionary:[self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]] copyItems:TRUE];
     //    thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
@@ -1252,13 +1271,14 @@ static void * masterEncoderContext = &masterEncoderContext;
     //
     //  }
     
+=======
+>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
 }
 
 - (NSDictionary*)thumbAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self.tagsToDisplay objectAtIndex:indexPath.row];
 }
-
 
 
 #pragma mark – UICollectionViewDelegateFlowLayout
@@ -1279,6 +1299,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 }
 
 
+<<<<<<< HEAD
 -(BOOL)redownloadImageFromtheServer:(NSDictionary*)dict{
     //    NSFileManager *fileManager= [NSFileManager defaultManager];
     //    //if thumbnail folder not exist, create a new one
@@ -1329,6 +1350,9 @@ static void * masterEncoderContext = &masterEncoderContext;
     //    }
     return false;// added for debugg
 }
+=======
+
+>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
 
 - (void)didReceiveMemoryWarning
 {

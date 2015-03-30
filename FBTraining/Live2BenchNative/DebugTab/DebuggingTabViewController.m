@@ -95,13 +95,13 @@ static void *  debugContext = &debugContext;
     
     
     testPlayer = [[RJLVideoPlayer alloc]init];
-    
-NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"test.plist" ];
-    
-    DOWNLOADITEM = [Downloader downloadURL:@"http://192.168.1.109/min/ajax/teamsget" to:myPath type:DownloadItem_TypePlist];
-    
-    
-    
+//    
+//NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"test.plist" ];
+//    
+//    DOWNLOADITEM = [Downloader downloadURL:@"http://192.168.1.109/min/ajax/teamsget" to:myPath type:DownloadItem_TypePlist];
+//    
+//    
+//    
     // buid video player
 //    videoPlayer     = [[VideoPlayer alloc]init];
 //    [videoPlayer initializeVideoPlayerWithFrame:CGRectMake(0, 60, 400, 300)];
@@ -241,15 +241,15 @@ NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"test.plis
 //    visitTeam = Arsenal;
     
     
-    void(^dItemBlock)(DownloadItem*) =^void(DownloadItem* item) {
-        NSLog(@"a;sdlf;alsdfadskfaldkfalsdkfjasdlf");
-        
-    };
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
-                                                                                                           @"id":@"4",
-                                                                                                           @"event":@"live"}];
-    
+//    void(^dItemBlock)(DownloadItem*) =^void(DownloadItem* item) {
+//        NSLog(@"a;sdlf;alsdfadskfaldkfalsdkfjasdlf");
+//        
+//    };
+//    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
+//                                                                                                           @"id":@"4",
+//                                                                                                           @"event":@"live"}];
+//    
     
 //    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"main.mp4" ];
 //    DOWNLOADITEM  =   [Downloader downloadURL:@"http://192.168.3.100/events/2015-02-26_15-00-50_959bdd31af143f8b2c4b0c4381457e28e7c66049_local/video/main_00hq.mp4" to:myPath];
