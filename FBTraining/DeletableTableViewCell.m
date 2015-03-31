@@ -95,7 +95,6 @@ static CGFloat const kBounceValue = 15.0f;
 
 
 -(void)setCellAccordingToState:(cellState)state {
-    NSLog(@"%i",self.cellState);
     switch (state) {
         case cellStateNormal:
             if (self.cellState == cellStateDeleting) {

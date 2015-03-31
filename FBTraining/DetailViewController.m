@@ -98,6 +98,8 @@
     // be hidden
     cell.button1.hidden = YES;
     cell.button2.hidden = YES;
+    
+    cell.functionalButton.backgroundColor = [UIColor clearColor];
 
     [cell.myTextLabel setText: self.dataDictionary[@"Setting Options"][indexPath.row]];
     
@@ -108,14 +110,29 @@
         [cell.toggoButton setOn: [((NSNumber *)self.dataDictionary[@"Toggle Settings"][indexPath.row]) intValue]];
     }else if(self.dataDictionary[@"Function Labels"]){
         //This is the case when there is a list that has buttons with different functions
-        [cell.functionalButton setTitle: self.dataDictionary[@"Function Labels"][indexPath.row] forState:UIControlStateNormal];
-        cell.functionalButton.hidden = NO;
-        if([((NSNumber *)self.dataDictionary[@"Function Buttons"][indexPath.row]) intValue]){
-            [cell.functionalButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-            cell.functionalButton.enabled = YES;
-        }else{
-            [cell.functionalButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        if( [self.dataDictionary[@"Function Labels"][indexPath.row] isKindOfClass:[UIColor class]]){
+            [cell.functionalButton setTitle: @"" forState:UIControlStateNormal];
+            cell.functionalButton.backgroundColor = (UIColor *)self.dataDictionary[@"Function Labels"][indexPath.row];
+            
+//            CGRect functionalFrame = cell.functionalButton.frame;
+//            functionalFrame.origin.x -= 5;
+//            functionalFrame.origin.y += 5;
+//            functionalFrame.size.height -=5;
+//            
+//            cell.functionalButton.frame = functionalFrame;
+            cell.functionalButton.layer.cornerRadius = 20.0;
+            cell.functionalButton.hidden = NO;
             cell.functionalButton.enabled = NO;
+        }else{
+            [cell.functionalButton setTitle: self.dataDictionary[@"Function Labels"][indexPath.row] forState:UIControlStateNormal];
+            cell.functionalButton.hidden = NO;
+            if([((NSNumber *)self.dataDictionary[@"Function Buttons"][indexPath.row]) intValue]){
+                [cell.functionalButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                cell.functionalButton.enabled = YES;
+            }else{
+                [cell.functionalButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+                cell.functionalButton.enabled = NO;
+            }
         }
         
     }else if([self.dataDictionary[@"Index"] intValue] == indexPath.row){

@@ -61,6 +61,7 @@
 @property (strong, nonatomic) UIView                      *ratingAndCommentingView;
 @property (strong, nonatomic) NSDictionary                *selectedData;
 
+
 @end
 
 @implementation BookmarkViewController{
@@ -169,7 +170,7 @@ int viewWillAppearCalled;
     
     [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
     
-    selectedTag = [self.tagsToDisplay[[self.tableData indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
+    selectedTag = [self.tableData[[self.tableData indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
     
     [commentingField clear];
     commentingField.enabled             = YES;
@@ -205,6 +206,11 @@ int viewWillAppearCalled;
             [info removeFromSuperview];
         }
         [self.ratingAndCommentingView removeFromSuperview];
+    }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_CLIPS" object:nil queue:nil usingBlock:^(NSNotification *note){
+        [self.tableData removeObjectIdenticalTo:note.userInfo];
+        componentFilter.rawTagArray = self.tableData;
+        //[componentFilter refresh];
     }];
     
     uController = [[UtilitiesController alloc]init];
@@ -314,9 +320,11 @@ int viewWillAppearCalled;
         }
         
         if(eventTags){
-            self.tableData =[ NSMutableArray arrayWithArray:[eventTags copy]];
-            _tableViewController.tableData = self.tableData;
-            [_tableViewController.tableView reloadData];
+            if (self.tableData.count == 0) {
+                self.tableData = [NSMutableArray arrayWithArray:[eventTags copy]];
+                _tableViewController.tableData = self.tableData;
+                [_tableViewController.tableView reloadData];
+            }
         }
     }}];
     //
@@ -486,6 +494,7 @@ int viewWillAppearCalled;
     
     
     self.tableViewController = [[BookmarkTableViewController alloc] init];
+    self.tableViewController.contextString = @"CLIPS";
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         [self.tableViewController.view setFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.width - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.height - CGRectGetMaxY(headerBar.frame) - 50.0f)];
     } else {
@@ -726,7 +735,7 @@ int viewWillAppearCalled;
 //return the tag dictionary of each cell
 - (NSMutableDictionary*)tagAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.tagsToDisplay objectAtIndex:indexPath.row];
+    return [self.tableData objectAtIndex:indexPath.row];
 }
 
 #pragma mark - Triple Swipe Table Methods
@@ -1053,7 +1062,7 @@ int viewWillAppearCalled;
     //        [self.edgeSwipeButtons deselectButtonAtIndex:1];
     //    }
     
-    componentFilter.rawTagArray = self.tableData;
+    //componentFilter.rawTagArray = self.tableData;
     componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
     
     [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
@@ -1075,6 +1084,7 @@ int viewWillAppearCalled;
 {
     [_filterToolBoxView close:YES]; // Slide filter close
     blurView.hidden = YES;
+    //blurView = nil;
     [self.edgeSwipeButtons deselectButtonAtIndex:1];
     
     [componentFilter close:YES];
@@ -1430,7 +1440,8 @@ int viewWillAppearCalled;
     
     
     [blurView removeFromSuperview];
-    blurView=nil;
+    //blurView=nil;
+    [self dismissFilterToolbox];
     [self.edgeSwipeButtons deselectButtonAtIndex:1];
     
     [typesOfTags removeAllObjects];
@@ -1861,7 +1872,7 @@ int viewWillAppearCalled;
 {
     NSInteger * buttonTagValue  = ((UIButton*)sender).tag;
     int         nextIndex       = wasPlayingIndexPath.row + (int)buttonTagValue;
-    if(nextIndex > self.tagsToDisplay.count -1 || nextIndex <0){
+    if(nextIndex > self.tableData.count -1 || nextIndex <0){
         return;
     }
     
@@ -2051,9 +2062,9 @@ int viewWillAppearCalled;
 {
     AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
     NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
-    self.tagsToDisplay = [filteredArray mutableCopy];
+    //self.tableData = [filteredArray mutableCopy];
     
-    _tableViewController.tableData = self.tagsToDisplay;
+    _tableViewController.tableData = [filteredArray mutableCopy];
     [self.tableViewController reloadData];
     //[breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
     

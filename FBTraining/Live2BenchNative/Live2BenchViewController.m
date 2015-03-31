@@ -141,7 +141,7 @@ static void * eventContext      = &eventContext;
                                               };
     
     
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"SoccerBottomViewController" ofType:@"plist"];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"HockeyBottomViewController" ofType:@"plist"];
     NSDictionary *plistDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];

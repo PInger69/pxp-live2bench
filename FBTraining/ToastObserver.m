@@ -39,7 +39,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enabledChanged) name:@"Setting - Toast Observer" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enabledChanged:) name:@"Setting - Toast Observer" object:nil];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getToastType" object:self userInfo:@{@"block" : ^(NSInteger *toastType){
             self.toastType = toastType;
@@ -91,6 +91,7 @@
     
     int newValue = [note.userInfo[@"Value"] integerValue];
     self.toastType = newValue;
+    self.enabled = [note.userInfo[@"Value"] boolValue];
 }
 
 -(void)setEnabled:(BOOL)enabled{

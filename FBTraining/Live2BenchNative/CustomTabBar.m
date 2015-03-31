@@ -52,7 +52,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 {
     // Tab Props
     NSMutableDictionary * tabNameReferenceDict;
-    NSArray             * tabBarItems;
+    //NSArray             * tabBarItems;
     NSMutableArray      * tabButtonItems;
     
     // App Start Props
@@ -95,10 +95,8 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 
 /**
  *  This creates the tab buttons based off the supplied TabViewControllers sent in
- *
- *  @param buttonArray list
  */
--(void)createButton:(NSArray*)buttonArray
+-(void)createTabButtons
 {
     int tabCount = [self.viewControllers count];
     tabNameReferenceDict = [[NSMutableDictionary alloc]init]; // this is so the tabs can be ref by name;
@@ -149,6 +147,8 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
         [self addChildViewController:vc];
 
     }
+    
+    //[self createTabButtons];
 
 
 }
@@ -159,21 +159,21 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 {
     [super viewWillAppear:animated];
 
-    //array of tab bar items -- this array is used to create buttons in the tab bar
-   // TabBarButton *welcomeTab    = [[TabBarButton alloc] initWithName:@"Welcome"     andImageName:@"logoTab"];
-    TabBarButton *calendarTab   = [[TabBarButton alloc] initWithName:@"Calendar"    andImageName:@"calendarTab"];
-    TabBarButton *live2BenchTab = [[TabBarButton alloc] initWithName:@"Live2Bench"  andImageName:@"live2BenchTab"];
-    TabBarButton *clipTab       = [[TabBarButton alloc] initWithName:@"Clip View"   andImageName:@"clipTab"];
-    TabBarButton *listTab       = [[TabBarButton alloc] initWithName:@"List View"   andImageName:@"listTab"];
-    TabBarButton *myClipTab     = [[TabBarButton alloc] initWithName:@"My Clip"     andImageName:@"myClipTab"];
-    TabBarButton *statsTab      = [[TabBarButton alloc] initWithName:@"Stats"       andImageName:@"statsTab"];
-
-    NSMutableArray* tabItems = [NSMutableArray arrayWithObjects:/* welcomeTab,*/ calendarTab, live2BenchTab, clipTab, listTab, myClipTab, nil];
-    if(SHOW_STATS_TAB)
-        [tabItems addObject:statsTab];
-    
-    tabBarItems = [tabItems copy];
-    [self createButton:tabBarItems];
+//    //array of tab bar items -- this array is used to create buttons in the tab bar
+//   // TabBarButton *welcomeTab    = [[TabBarButton alloc] initWithName:@"Welcome"     andImageName:@"logoTab"];
+//    TabBarButton *calendarTab   = [[TabBarButton alloc] initWithName:@"Calendar"    andImageName:@"calendarTab"];
+//    TabBarButton *live2BenchTab = [[TabBarButton alloc] initWithName:@"Live2Bench"  andImageName:@"live2BenchTab"];
+//    TabBarButton *clipTab       = [[TabBarButton alloc] initWithName:@"Clip View"   andImageName:@"clipTab"];
+//    TabBarButton *listTab       = [[TabBarButton alloc] initWithName:@"List View"   andImageName:@"listTab"];
+//    TabBarButton *myClipTab     = [[TabBarButton alloc] initWithName:@"My Clip"     andImageName:@"myClipTab"];
+//    TabBarButton *statsTab      = [[TabBarButton alloc] initWithName:@"Stats"       andImageName:@"statsTab"];
+//
+//    NSMutableArray* tabItems = [NSMutableArray arrayWithObjects:/* welcomeTab,*/ calendarTab, live2BenchTab, clipTab, listTab, myClipTab, nil];
+//    if(SHOW_STATS_TAB)
+//        [tabItems addObject:statsTab];
+//    
+//    tabBarItems = [tabItems copy];
+    [self createTabButtons];
 
 }
 

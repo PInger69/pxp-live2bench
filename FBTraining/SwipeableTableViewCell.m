@@ -83,7 +83,7 @@ NS_OPTIONS(NSInteger, style){
         [functionalityButton addTarget:self
                     action:@selector(functionalButtonClicked)
           forControlEvents:UIControlEventTouchUpInside];
-        functionalityButton.frame = CGRectMake(self.myContentView.frame.size.width - 120, 0, 60, self.myContentView.frame.size.height);
+        functionalityButton.frame = CGRectMake(self.myContentView.frame.size.width - 120, 5, 60, self.myContentView.frame.size.height);
         [functionalityButton.titleLabel setTextAlignment: NSTextAlignmentRight];
         [functionalityButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         //button2.backgroundColor =[UIColor colorWithRed:0.95 green:0.01 blue:0.01 alpha:0.75];
@@ -277,6 +277,7 @@ NS_OPTIONS(NSInteger, style){
     
     self.functionalButton.enabled = YES;
     self.functionalButton.hidden = YES;
+    //self.functionalButton.frame =  CGRectMake(self.myContentView.frame.size.width - 120, 0, 60, self.myContentView.frame.size.height);
 
 }
 

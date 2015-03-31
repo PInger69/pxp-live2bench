@@ -354,7 +354,14 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
-
+-(void) resetKnobs{
+    _highestValue = _highestOriginalValue;
+    _lowestValue = 0;
+    
+    _lowerValue = 0;
+    _upperValue = 10;
+    [self setLayerFrames];
+}
 
 #pragma mark - Filter Component Methods
 
@@ -367,6 +374,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 
 -(void)deselectAll
 {
+    [self resetKnobs];
     [self.selectedTags removeAllObjects];
     self.invoked = NO;
     [self update];

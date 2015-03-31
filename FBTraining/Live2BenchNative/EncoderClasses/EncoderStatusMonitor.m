@@ -188,17 +188,20 @@
     syncMePath = [NSString stringWithFormat:@"http://%@/min/ajax/syncme/%@", ipAddress, jsonString];
     syncMeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(syncMe) userInfo:nil repeats:YES];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
-    
-    syncMeConnection = [NSURLConnection connectionWithRequest:request delegate:self];
-    syncMeConnection.connectionType = SYNC_ME;
+//    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
+//    
+//    syncMeConnection = [NSURLConnection connectionWithRequest:request delegate:self];
+//    syncMeConnection.connectionType = SYNC_ME;
 }
 
 -(void) syncMe{
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
-    
-    syncMeConnection = [NSURLConnection connectionWithRequest:request delegate:self];
-    syncMeConnection.connectionType = SYNC_ME;
+    if (statusCode & ENCODER_STATUS_LIVE) {
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
+        
+        syncMeConnection = [NSURLConnection connectionWithRequest:request delegate:self];
+        syncMeConnection.connectionType = SYNC_ME;
+    }
 }
 
 -(NSInvocation * )_buildInvokSel:(SEL)aSelec path:(NSString*)aPath type:(NSString*)aType timeout:(double *)aTimeOut

@@ -81,7 +81,10 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     NSString                * homeTeam;
     NSString                * awayTeam;
     NSString                * league;
-    ListPopoverController   * askUser;
+    
+    NSArray * (^grabNames)(NSDictionary * input);
+    
+    //ListPopoverController   * askUser;
     
 }
 
@@ -335,7 +338,7 @@ SVSignalStatus signalStatus;
     [signalTimer fire];
     
     // block
-    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
+    grabNames = ^NSArray * (NSDictionary *input) {
         NSMutableArray  * collection    = [[NSMutableArray alloc]init];
         NSArray         * keys          = [input allKeys];
         for (NSString * item in keys) {
@@ -346,8 +349,8 @@ SVSignalStatus signalStatus;
     };
     // block end
     
-    teamNames   = grabNames(encoderManager.masterEncoder.teams);
-    leagueNames = grabNames(encoderManager.masterEncoder.league);
+    //teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    //leagueNames = grabNames(encoderManager.masterEncoder.league);
     
 
 }
@@ -477,19 +480,19 @@ SVSignalStatus signalStatus;
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
     
     // block
-    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
-        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
-        NSArray         * keys          = [input allKeys];
-        for (NSString * item in keys) {
-            NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
-            [collection addObject:nam];
-        }
-        return [collection copy];
-    };
+//    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
+//        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+//        NSArray         * keys          = [input allKeys];
+//        for (NSString * item in keys) {
+//            NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
+//            [collection addObject:nam];
+//        }
+//        return [collection copy];
+//    };
     // block end
     
-    teamNames   = grabNames(encoderManager.masterEncoder.teams);
-    leagueNames = grabNames(encoderManager.masterEncoder.league);
+//  teamNames   = grabNames(encoderManager.masterEncoder.teams);
+//  leagueNames = grabNames(encoderManager.masterEncoder.league);
 }
 
 
@@ -606,45 +609,52 @@ SVSignalStatus signalStatus;
 
 -(void)pickHome:(id)sender
 {
-    UIButton *popButton = (UIButton*)sender;
-    popButton.selected  = YES;
-    
-    [homeTeamPick populateWith:teamNames];
-    [homeTeamPick addOnCompletionBlock:^(NSString *pick) {
-        [popButton setTitle:pick forState:UIControlStateNormal];
-        popButton.selected = NO;
-    }];
-    
-    [homeTeamPick presentPopoverFromRect:popButton.frame inView:selectHomeContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    if (teamNames) {
+        UIButton *popButton = (UIButton*)sender;
+        popButton.selected  = YES;
+        
+        [homeTeamPick populateWith:teamNames];
+        [homeTeamPick addOnCompletionBlock:^(NSString *pick) {
+            [popButton setTitle:pick forState:UIControlStateNormal];
+            popButton.selected = NO;
+        }];
+        
+        [homeTeamPick presentPopoverFromRect:popButton.frame inView:selectHomeContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    }
 }
 
 -(void)pickAway:(id)sender
 {
-    UIButton *popButton = (UIButton*)sender;
-    popButton.selected = YES;
-    [visitTeamPick populateWith:teamNames];
-    [visitTeamPick addOnCompletionBlock:^(NSString *pick) {
-        [popButton setTitle:pick forState:UIControlStateNormal];
-        popButton.selected = NO;
-    }];
-    
-    [visitTeamPick presentPopoverFromRect:popButton.frame inView:selectAwayContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    
+    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    if (teamNames) {
+        UIButton *popButton = (UIButton*)sender;
+        popButton.selected = YES;
+        [visitTeamPick populateWith:teamNames];
+        [visitTeamPick addOnCompletionBlock:^(NSString *pick) {
+            [popButton setTitle:pick forState:UIControlStateNormal];
+            popButton.selected = NO;
+        }];
+        
+        [visitTeamPick presentPopoverFromRect:popButton.frame inView:selectAwayContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    }
 }
 
 -(void)pickLeague:(id)sender
 {
-    UIButton *popButton = (UIButton*)sender;
-    popButton.selected = YES;
-    
-    [LeaguePick populateWith:leagueNames];
-    [LeaguePick addOnCompletionBlock:^(NSString *pick) {
-        [popButton setTitle:pick forState:UIControlStateNormal];
-        popButton.selected = NO;
-    }];
-    
-    [LeaguePick presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    
+    leagueNames = grabNames(encoderManager.masterEncoder.league);
+    if (leagueNames) {
+        UIButton *popButton = (UIButton*)sender;
+        popButton.selected = YES;
+        
+        [LeaguePick populateWith:leagueNames];
+        [LeaguePick addOnCompletionBlock:^(NSString *pick) {
+            [popButton setTitle:pick forState:UIControlStateNormal];
+            popButton.selected = NO;
+        }];
+        
+        [LeaguePick presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    }
     
 }
 

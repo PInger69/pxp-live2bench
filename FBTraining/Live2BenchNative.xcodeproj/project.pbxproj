@@ -276,6 +276,8 @@
 		D74E696316B0AE0100D860EF /* tab-bar-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D74E696116B0AE0100D860EF /* tab-bar-right@2x.png */; };
 		D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */ = {isa = PBXBuildFile; fileRef = D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */; };
 		D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D75042B019FA966F00D9851D /* EncoderStatusMonitor.m */; };
+		D753A3AE1ACADF5800D875C1 /* kal_left_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D753A3AC1ACADF5800D875C1 /* kal_left_arrow@2x.png */; };
+		D753A3AF1ACADF5800D875C1 /* kal_left_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D753A3AD1ACADF5800D875C1 /* kal_left_arrow.png */; };
 		D7581EDF196342A50029C5DD /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7581EDE196342A50029C5DD /* Crashlytics.framework */; };
 		D7581EE519634B6D0029C5DD /* NumberedSeekerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */; };
 		D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE419634B6D0029C5DD /* SeekButton.m */; };
@@ -551,6 +553,8 @@
 		D7CCE7FE1AC1FEE500D85095 /* BasketballBottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7CCE7FD1AC1FEE500D85095 /* BasketballBottomViewController.plist */; };
 		D7CCE8041AC5FB0000D85095 /* VideoCuttingTool.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE8031AC5FB0000D85095 /* VideoCuttingTool.m */; };
 		D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE8071AC98B9400D85095 /* VideoTrimItem.m */; };
+		D7CCE80B1AC9B79900D85095 /* kal_right_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D7CCE8091AC9B79900D85095 /* kal_right_arrow.png */; };
+		D7CCE80C1AC9B79900D85095 /* kal_right_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7CCE80A1AC9B79900D85095 /* kal_right_arrow@2x.png */; };
 		D7CF390619DDF2120013E46B /* VideoPlayerFreezeTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CF390519DDF2120013E46B /* VideoPlayerFreezeTimer.m */; };
 		D7D1D47C17F5C73200D5C185 /* extendstartsec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47817F5C73200D5C185 /* extendstartsec@2x.png */; };
 		D7D1D47E17F5C73200D5C185 /* extendendsec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47A17F5C73200D5C185 /* extendendsec@2x.png */; };
@@ -1002,6 +1006,8 @@
 		D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckEncoderShutdown.m; path = EncoderClasses/CheckEncoderShutdown.m; sourceTree = "<group>"; };
 		D75042AF19FA966F00D9851D /* EncoderStatusMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderStatusMonitor.h; path = EncoderClasses/EncoderStatusMonitor.h; sourceTree = "<group>"; };
 		D75042B019FA966F00D9851D /* EncoderStatusMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderStatusMonitor.m; path = EncoderClasses/EncoderStatusMonitor.m; sourceTree = "<group>"; };
+		D753A3AC1ACADF5800D875C1 /* kal_left_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kal_left_arrow@2x.png"; sourceTree = "<group>"; };
+		D753A3AD1ACADF5800D875C1 /* kal_left_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_left_arrow.png; sourceTree = "<group>"; };
 		D7581EDE196342A50029C5DD /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		D7581EE119634B6D0029C5DD /* NumberedSeekerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberedSeekerButton.h; sourceTree = "<group>"; };
 		D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumberedSeekerButton.m; sourceTree = "<group>"; };
@@ -1389,6 +1395,8 @@
 		D7CCE8031AC5FB0000D85095 /* VideoCuttingTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCuttingTool.m; sourceTree = "<group>"; };
 		D7CCE8061AC98B9400D85095 /* VideoTrimItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTrimItem.h; sourceTree = "<group>"; };
 		D7CCE8071AC98B9400D85095 /* VideoTrimItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTrimItem.m; sourceTree = "<group>"; };
+		D7CCE8091AC9B79900D85095 /* kal_right_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_right_arrow.png; sourceTree = "<group>"; };
+		D7CCE80A1AC9B79900D85095 /* kal_right_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kal_right_arrow@2x.png"; sourceTree = "<group>"; };
 		D7CF390419DDF2120013E46B /* VideoPlayerFreezeTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayerFreezeTimer.h; sourceTree = "<group>"; };
 		D7CF390519DDF2120013E46B /* VideoPlayerFreezeTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayerFreezeTimer.m; sourceTree = "<group>"; };
 		D7D1D47717F5C73200D5C185 /* extendstartsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extendstartsec.png; sourceTree = "<group>"; };
@@ -2463,6 +2471,10 @@
 		D7A9399916ADB86C006CBAB2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D753A3AC1ACADF5800D875C1 /* kal_left_arrow@2x.png */,
+				D753A3AD1ACADF5800D875C1 /* kal_left_arrow.png */,
+				D7CCE8091AC9B79900D85095 /* kal_right_arrow.png */,
+				D7CCE80A1AC9B79900D85095 /* kal_right_arrow@2x.png */,
 				D760736419D21AD6000E35C2 /* seeklarge.png */,
 				D760736519D21AD6000E35C2 /* seeklarge@2x.png */,
 				D760736019D21A9F000E35C2 /* seek.png */,
@@ -3040,6 +3052,7 @@
 				D78F68CC18073DC70096C793 /* BlueSettingsButton@2x.png in Resources */,
 				D7A0681316B03BCF002A2892 /* tab-bar-off@2x.png in Resources */,
 				94F9596B1921834D00B7D201 /* playbackRateButtonBack@2x.png in Resources */,
+				D753A3AE1ACADF5800D875C1 /* kal_left_arrow@2x.png in Resources */,
 				D7A0681416B03BCF002A2892 /* tab-bar-off.png in Resources */,
 				D79F9B7C17F5D5F00081C5E9 /* myplayXplay_tagging.png in Resources */,
 				D7A0681716B03C2A002A2892 /* tab-bar.png in Resources */,
@@ -3135,6 +3148,7 @@
 				AA83592F19B10B45009B3ABC /* jsonIcon.png in Resources */,
 				AA83592B19B10B45009B3ABC /* fileIcon.png in Resources */,
 				94F9597C1922B86A00B7D201 /* playbackRateButtonForwardSelected@2x.png in Resources */,
+				D7CCE80B1AC9B79900D85095 /* kal_right_arrow.png in Resources */,
 				D786C22A17F212D50042DD96 /* gotoliveSelect.png in Resources */,
 				94E8DB891939167100B92CD1 /* lineButtonSelect@2x.png in Resources */,
 				BD9BC33C17EBAE00001B67DE /* shiftline_filter_selected@2x.png in Resources */,
@@ -3158,6 +3172,7 @@
 				BDD2D2FA17ECDD11004D5D9A /* clip-back-just@2x.png in Resources */,
 				D78F68D318073DC70096C793 /* OrangeSettingsButtonSelect.png in Resources */,
 				D7DB754417EA09D5009C402F /* lightGreySelect.png in Resources */,
+				D753A3AF1ACADF5800D875C1 /* kal_left_arrow.png in Resources */,
 				BD8C368317F330360094CBAD /* mailselected.png in Resources */,
 				D760736619D21AD6000E35C2 /* seeklarge.png in Resources */,
 				94B28D871935202A0000E804 /* undoButton@2x.png in Resources */,
@@ -3250,6 +3265,7 @@
 				D7DFD4951827F3F600D98BE7 /* red_bar.png in Resources */,
 				D71B46DB170F6B2700D402B5 /* EncoderStart.png in Resources */,
 				D786C1E817EB9BF90042DD96 /* myClipTab@2x.png in Resources */,
+				D7CCE80C1AC9B79900D85095 /* kal_right_arrow@2x.png in Resources */,
 				D786C21517ECFAE00042DD96 /* blueSelect@2x.png in Resources */,
 				D71B46DC170F6B2700D402B5 /* EncoderStart@2x.png in Resources */,
 				D763A018173162F30089D132 /* rating_selected.png in Resources */,

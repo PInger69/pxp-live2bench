@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSMutableSet *setOfSharingCells;
 @property (strong, nonatomic) UIButton *deleteButton;
 @property (strong, nonatomic) UIButton *shareButton;
+@property (strong, nonatomic) NSString *contextString;
 
 //@property (strong, nonatomic) NSMutableDictionary *dictionaryOfObservers;
 
