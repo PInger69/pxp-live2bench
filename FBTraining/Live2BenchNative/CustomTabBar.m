@@ -129,7 +129,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
    ListViewController          *listVC     = [[ListViewController alloc] init];
     BookmarkViewController      *bookmarkVC = [[BookmarkViewController alloc] initWithAppDelegate:appDel];
 //  StatsTabViewController      *statsVC    = [[StatsTabViewController alloc] init];
-  DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
+//  DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
   
     NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects:
                                                settingsVC,
@@ -139,7 +139,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
                                                clipVC,
                                                listVC,
                                                bookmarkVC,
-                                               debugTabView,
+//                                               debugTabView,
                                                nil];
     if(SHOW_STATS_TAB)
         //   [vcArray addObject:statsVC];
