@@ -56,12 +56,38 @@ NS_OPTIONS(NSInteger, style){
         NSString *colorString = [[[NSDictionary alloc] initWithContentsOfFile:self.userCenter.accountInfoPath] objectForKey:@"tagColour"];
         UIColor *tagColor = [Utility colorWithHexString:colorString];
         
-        self.settingsArray =@[ @{@"SettingLabel": @"Encoder Controls" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[SettingsViewController alloc]initWithAppDelegate:appDel]},
+        
+        NSDictionary *setting1 =@{@"SettingLabel": @"Encoder Controls" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[SettingsViewController alloc]initWithAppDelegate:appDel]};
+        
+        NSDictionary *setting2 =@{@"SettingLabel": @"Welcome" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[LogoViewController alloc]initWithAppDelegate:appDel]};
+        
+        NSDictionary *setting3 =@{ @"SettingLabel" : @"Screen Mirroring", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]};
+        
+        NSDictionary *setting4 =@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: toggleIsThere | toggleIsOn] };
+        
+        NSDictionary *setting5 =@{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                    @[@"Some Alert", @"Another Alert", @"Mandarin Alert", @"Italian Alert", @"Korean Alert", @"Hindi Alert", @"Russian", @"Japanese"],
+                                                                                                                                                                                                @"Toggle Settings":
+                                                                                                                                                                                                    @[ @1, @0, @1, @0, @1, @0, @1, @1]}] };
+        NSString *wifiName = [Utility myWifiName];
+        if (!wifiName) {
+            wifiName = @"Not Connected";
+        }
+        
+        NSDictionary *setting6 = @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                          @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail], @"WIFI Connection :", @"Eula :", @"Colour :"],
+                                                                                                                                                                                                      @"Function Buttons":
+                                                                                                                                                                                                          @[ @0, @0, @1, @0, @1, @0]
+                                                                                                                                                                                                      , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout", wifiName, @"View", tagColor] }]};
+        //self.settingsArray = [[NSMutableArray alloc] init];
+        //[self.settingsArray addObject: setting1];
+        
+        self.settingsArray =@[ setting1,
                                
 
-                               @{@"SettingLabel": @"Welcome" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[LogoViewController alloc]initWithAppDelegate:appDel]},
+                               setting2,
                                
-                               @{ @"SettingLabel" : @"Screen Mirroring", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]},
+                               setting3,
                                
 //                               @{ @"SettingLabel" : @"An Unplausible Setting", @"OptionChar":  [NSNumber numberWithChar:oneButton] },
                                
@@ -77,24 +103,17 @@ NS_OPTIONS(NSInteger, style){
 //                               @{ @"SettingLabel" : @"Colors", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
 //                                                                                                                                                                                               @[@"blue", @"red", @"yellow"], @"Index": [NSNumber numberWithInt:1]} ] },
 //                                                                                                                                        
-                                @{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: toggleIsThere | toggleIsOn] },
+                                setting4,
                                
                                    
 //                                @{@"SettingLabel": @"Accounts" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[AccountsViewController alloc]init]},
 //                                
 //                               @{@"SettingLabel": @"Information" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[infoViewController alloc]initWithAppDelegate:appDel]},
                                
-                                @{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                             @[@"Some Alert", @"Another Alert", @"Mandarin Alert", @"Italian Alert", @"Korean Alert", @"Hindi Alert", @"Russian", @"Japanese"],
-                                                                                                                                                                                                @"Toggle Settings":
-                                                                                                                                                                                                    @[ @1, @0, @1, @0, @1, @0, @1, @1]}] },
+                                setting5,
 
-                               @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                        @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail], @"WIFI Connection :", @"Eula :", @"Colour :"],
-                                                                                                                                                                                                    @"Function Buttons":
-                                                                                                                                                                                                        @[ @0, @0, @1, @0, @1, @0]
-                                                                                                                                                                                                    , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout",[Utility myWifiName], @"View", tagColor] }]},
-                               
+                                setting6,
+                        
                                @{ @"SettingLabel" : @"Accounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
                                                                                                                                                                                                     @[@"Dropbox",  @"GoogleDrive"],
                                                                                                                                                                                                 @"Function Buttons":
