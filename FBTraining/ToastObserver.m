@@ -37,6 +37,13 @@
         // By adding the ToastObserver as an observer in the Notification Center, any Notifications that are posted with the name ToastObserver
         // will be recognized by the Toast Observer
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enabledChanged:) name:@"Setting - Toast Observer" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"getToastType" object:self userInfo:@{@"block" : ^(NSInteger *toastType){
+            self.toastType = toastType;
+        }}];
         
         // Refer to ToastObserver.h for an explanation of these following properties:
         self.enabled = YES;
@@ -47,9 +54,57 @@
     return self;
 }
 
+-(void)synchronizedTags:(NSNotification *)note {
+    if (self.toastType && ARSynchronizedTags) {
+        return;
+    }
+    if(self.enabled && note.userInfo){
+        // Each NSNotification is first added to the queue
+        [self.queueOfNotifications addObject:note];
+        // If there is only 1 Notification in the queue, animateView is called
+        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
+        //will keep track of the queue
+        if([self.queueOfNotifications count] == 1){
+            [self animateView];
+        }
+    }
+}
+
+-(void)fileDownloadComplete:(NSNotification *)note {
+    if (self.toastType && ARFileDownloadComplete) {
+        return;
+    }
+    if(self.enabled && note.userInfo){
+        // Each NSNotification is first added to the queue
+        [self.queueOfNotifications addObject:note];
+        // If there is only 1 Notification in the queue, animateView is called
+        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
+        //will keep track of the queue
+        if([self.queueOfNotifications count] == 1){
+            [self animateView];
+        }
+    }
+}
+
+
+-(void)enabledChanged: (NSNotification *) note{
+    
+    int newValue = [note.userInfo[@"Value"] integerValue];
+    self.toastType = newValue;
+    self.enabled = [note.userInfo[@"Value"] boolValue];
+}
+
+-(void)setEnabled:(BOOL)enabled{
+    _enabled = enabled;
+    
+    if (!enabled) {
+        [self.queueOfNotifications removeAllObjects];
+    }
+    
+}
 
 -(void) notificationNoticed: (NSNotification *)receivedNotification{
-
+    
     // This is the check to make sure Toast observer should be on, if
     // ToastObserver is disabled then this code will not execute, and hence
     // the other methods can no longer be called
@@ -63,8 +118,6 @@
             [self animateView];
         }
     }
-
-
 }
 
 
@@ -159,3 +212,4 @@
 }
 
 @end
+

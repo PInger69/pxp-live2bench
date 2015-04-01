@@ -16,6 +16,7 @@
 #import "VideoControlBarSlider.h"
 #import "RJLVideoPlayerPlaybackView.h"
 #import "PxpVideoPlayerProtocol.h"
+#import "VideoZoomManager.h"
 
 
 #define PLAYER_TICK @"tick"
@@ -70,6 +71,8 @@
 @property (nonatomic,copy)       NSURL                      *URL;
 @property (nonatomic,assign)     float                      fps;
 
+
+@property (nonatomic, strong)    VideoZoomManager       *zoomManager;
 
 -(instancetype)initWithFrame:(CGRect)frame;
 

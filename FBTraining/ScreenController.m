@@ -8,7 +8,14 @@
 
 #import "ScreenController.h"
 #import "AirPlayDetector.h"
+#import "PxpVideoPlayerProtocol.h"
+#import "LogoViewController.h"
 
+@interface ScreenController()
+
+@property (strong, nonatomic) LogoViewController *logoViewController;
+
+@end
 
 
 @implementation ScreenController
@@ -19,8 +26,9 @@
     CGRect          screenBounds;
     
     UIView          * debugPanel;
+    UIImageView     *anotherImage;
     
-    VideoPlayer     * videoPlayer;
+    UIViewController<PxpVideoPlayerProtocol> * videoPlayer;
     int             prevDispayIndex;
     CGRect          prevPlayerViewRect;
     CGRect          prevPlayerViewBounds;
@@ -28,16 +36,18 @@
     CGRect          prevPlayerLayerBounds;
     UIView          * prevView;
     UIImageView     * placeHolder;
+//BOOL            doesScreenMirroring;
     
 }
 
-@synthesize view;
+//@synthesize view;
 @synthesize screenDetected;
 
 -(id)init
 {
     self = [super init];
     if (self){
+        self.doesScreenMirroring = YES;
 
         screenDetected = ([UIScreen screens].count > 1)?TRUE:FALSE;
         self.enableDisplay = FALSE;
@@ -49,17 +59,46 @@
                 addObserver:self selector:@selector(screenDidDisconnect:)
                 name:UIScreenDidDisconnectNotification object:nil];
         
-        view = [[UIView alloc]init];
-        view.layer.backgroundColor = [UIColor blueColor].CGColor;
+        self.viewController = [[UIViewController alloc]init];
+        self.viewController.view.layer.backgroundColor = [UIColor blueColor].CGColor;
+        UIImageView *viewControllerView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"Default-Landscape.png"]];
+        self.viewController.view = viewControllerView;
+        self.logoViewController = [[LogoViewController alloc] init];
+        anotherImage = [[UIImageView alloc] init];
+        
+        
           [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTabChange:) name:NOTIF_SWITCH_MAIN_TAB object:nil];
         placeHolder = [self _buildPlaceHolder];
         // faking a notification because if a screen was attached before it could be detected
         if (screenDetected) [self screenDidConnect:[[NSNotification alloc]initWithName:NOTIF_SWITCH_MAIN_TAB object:[[UIScreen screens] objectAtIndex:1] userInfo:nil]];
          [ExternalScreenButton setAllHidden:!screenDetected];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenMirroringValue:) name:@"Setting - Screen Mirroring" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addImageToExternal:) name:NOTIF_POST_ON_EXTERNAL_SCREEN object:nil];
     }
     return self;
 }
 
+-(void)addImageToExternal: (NSNotification *) note{
+    [anotherImage setFrame: screenBounds];
+    [anotherImage setImage: note.object];
+    [self.viewController.view addSubview: anotherImage];
+}
+
+-(void)screenMirroringValue: (NSNotification *)note{
+    BOOL newValue = [note.userInfo[@"Value"] boolValue];
+    self.doesScreenMirroring = newValue;
+    
+    if (self.doesScreenMirroring) {
+        externalWindow = nil;
+        
+    }else if([UIScreen screens].count > 1){
+       [self screenDidConnect:[[NSNotification alloc]initWithName:NOTIF_SWITCH_MAIN_TAB object:screenTwo userInfo:nil]];
+    }
+    
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:@{@"name" : [NSString stringWithFormat:@"%@", newValue?@"True":@"False"]}];
+}
 
 /**
  *  This is the rect that will fill the place of the videoPlayer when it moves, purely asthetic
@@ -82,20 +121,21 @@
     screenTwo     = [aNotification object];
     screenBounds    = screenTwo.bounds;
     
-    [view setFrame:screenBounds];
+    [self.viewController.view setFrame:screenBounds];
     
     if(!detector) detector      = [[AirPlayDetector alloc]init];
     
-    UIAlertView *alert;
-    NSString * msg = ([detector isAirPlayAvailable])?@"-Airplay Found!-":@"-Airplay NOT Found!-";
-    alert = [[UIAlertView alloc] initWithTitle:@"screenDidConnect" message:msg delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Okay",nil];
-    [alert show];
+//    UIAlertView *alert;
+//    NSString * msg = ([detector isAirPlayAvailable])?@"-Airplay Found!-":@"-Airplay NOT Found!-";
+//    alert = [[UIAlertView alloc] initWithTitle:@"screenDidConnect" message:msg delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Okay",nil];
+//    [alert show];
     
     
-    if (!externalWindow) {
-     //   externalWindow    = [self _buildExternalScreen:screenBounds screen:screenTwo];
+    if (!externalWindow && !self.doesScreenMirroring) {
+        externalWindow    = [self _buildExternalScreen:screenBounds screen:screenTwo];
 //        UIAlertView *alert1 = [[UIAlertView alloc] initWithTitle:@"ScreenFound" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Say Hello",nil];
 //        [alert1 show];
+        
 //        externalWindow          = [[UIWindow alloc] initWithFrame:screenBounds];
 //        externalWindow.screen   = screenTwo;
 //        [detector startMonitoring:externalWindow];
@@ -111,8 +151,8 @@
 {
     UIWindow * window           = [[UIWindow alloc] initWithFrame:bounds];
     window.screen               = secondScreen;
-    
-    [window addSubview:view];
+    window.rootViewController = self.viewController;
+    //[window addSubview:view];
     window.hidden = NO;
     [detector startMonitoring:window];
     return window;
@@ -128,7 +168,7 @@
         [detector destroy];
     }
     if (screenDetected) externalWindow = nil;
-    NSString * count = [NSString stringWithFormat:@"%i",[UIScreen screens].count];
+    //NSString * count = [NSString stringWithFormat:@"%i",[UIScreen screens].count];
 //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"screenDidDisconnect" message:count delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Say Hello",nil];
 //    [alert show];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_SWITCH_MAIN_TAB];
@@ -225,48 +265,85 @@
     [self moveVideoToExternalDisplay:videoPlayer];
 }
 
--(void)moveVideoToExternalDisplay:(VideoPlayer *)video
+-(void)moveVideoToExternalDisplay: (UIViewController <PxpVideoPlayerProtocol> *)VideoPlayer
 {
-     if (video.view.superview == view) return;
-    
+     //if (videoPlayer.view.superview == self.viewController.view) return;
+    if([UIScreen screens].count ==1 || self.doesScreenMirroring)return;
     // saving prev data
-    videoPlayer             = video;
-    prevView                = (video.view.superview)?video.view.superview:nil;
-    prevDispayIndex         = [[prevView subviews]indexOfObject:video.view];
-    prevPlayerViewRect      = video.view.frame;
-    prevPlayerViewBounds    = video.view.bounds;
-    prevPlayerLayerRect     = video.playerLayer.frame;
-    prevPlayerLayerBounds   = video.playerLayer.bounds;
+    videoPlayer             = VideoPlayer;
     
-    // Add Place holder
-    [prevView insertSubview:placeHolder atIndex:prevDispayIndex];
-    placeHolder.frame              = prevPlayerViewRect;
-    [placeHolder addSubview:videoPlayer.richVideoControlBar];
+    UIView *videoLayerView =[[UIView alloc]initWithFrame:videoPlayer.playBackView.bounds];
+    [videoLayerView.layer addSublayer:videoPlayer.playBackView.videoLayer];
+    [videoPlayer.playBackView addSubview: videoLayerView];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        CGRect offscreenFrame = videoPlayer.playBackView.bounds;
+        offscreenFrame.origin.y -= 400;
+        videoLayerView.frame = offscreenFrame;
+    } completion:^(BOOL finished) {
+        [self.viewController.view addSubview: videoLayerView];
+        CGRect largeOffScreenFrame = screenBounds;
+        largeOffScreenFrame.origin.y += largeOffScreenFrame.size.height;
+        
+        videoLayerView.frame = largeOffScreenFrame;
+        
+        [CATransaction begin];
+        [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+        videoPlayer.playBackView.videoLayer.frame = screenBounds;
+        [CATransaction commit];
+        
+        
+        [UIView animateWithDuration: 0.25 animations:^{
+            videoLayerView.frame = screenBounds;
+            
+        } completion:^(BOOL finished) {
+            [self.viewController.view.layer addSublayer: videoPlayer.playBackView.videoLayer];
+            [videoLayerView removeFromSuperview];
+        }];
+    }];
 
-
-    // setting to external screen
-    videoPlayer.view.frame              = screenBounds;
-    videoPlayer.view.bounds             = screenBounds;
-    videoPlayer.playerLayer.frame       = screenBounds;
-    videoPlayer.playerLayer.bounds      = screenBounds;
-    [videoPlayer.playerLayer removeAllAnimations];
-    [self.view addSubview:video.view];
     
 }
 
 -(void)returnVideoToPreviousViewFromExternal
 {
-    if (videoPlayer.view.superview == prevView || prevView == nil) return;
+    if([UIScreen screens].count ==1 || self.doesScreenMirroring)return;
+
+    UIView *videoLayerView =[[UIView alloc]initWithFrame: screenBounds];
+    [videoLayerView.layer addSublayer:videoPlayer.playBackView.videoLayer];
+    [self.viewController.view addSubview: videoLayerView];
     
-    [placeHolder removeFromSuperview];
+    [UIView animateWithDuration:0.25 animations:^{
+        CGRect largeOffScreenFrame = screenBounds;
+        largeOffScreenFrame.origin.y += largeOffScreenFrame.size.height;
+        videoLayerView.frame = largeOffScreenFrame;
+    } completion:^(BOOL finished) {
+        CGRect offscreenFrame = videoPlayer.playBackView.bounds;
+        offscreenFrame.origin.y -= 400;
+        videoLayerView.frame = offscreenFrame;
+        
+        [CATransaction begin];
+        [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+        videoPlayer.playBackView.videoLayer.frame = videoPlayer.playBackView.bounds;
+        [CATransaction commit];
+        
+        [videoPlayer.playBackView addSubview: videoLayerView];
+        
+        
+        [UIView animateWithDuration: 0.25 animations:^{
+            videoLayerView.frame = videoPlayer.playBackView.bounds;
+            
+        } completion:^(BOOL finished) {
+            [videoPlayer.playBackView.layer insertSublayer: videoPlayer.playBackView.videoLayer atIndex:0];
+            [videoLayerView removeFromSuperview];
+        }];
+    }];
+
     
-    [prevView insertSubview:videoPlayer.view atIndex:prevDispayIndex];
-    videoPlayer.view.frame              = prevPlayerViewRect;
-    videoPlayer.view.bounds             = prevPlayerViewBounds;
-    videoPlayer.playerLayer.frame       = prevPlayerLayerRect;
-    videoPlayer.playerLayer.bounds      = prevPlayerLayerBounds;
-    prevView                            = nil;
-    [videoPlayer.view addSubview:videoPlayer.richVideoControlBar];
+    //[videoPlayer.playBackView.videoLayer removeFromSuperlayer];
+    //[videoPlayer.playBackView.layer insertSublayer:videoPlayer.playBackView.videoLayer atIndex:0];
+    
+
 }
 
 /**

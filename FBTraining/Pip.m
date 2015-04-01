@@ -581,8 +581,8 @@ static void * seekContext = &seekContext;
 -(void)dealloc
 {
     self.isAlive = NO;
-    [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
-    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
+//    [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+//    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
 }
 
 

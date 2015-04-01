@@ -41,10 +41,13 @@
     NSMutableArray               * tagsDidViewed;
     NSMutableDictionary          * selectedTag;
     NSIndexPath                  * wasPlayingIndexPath;
+    UIView                       * videoControlBar;
     NSDictionary                 * currentPlayingTag;
     NSArray                      * paths;
     NSString                     * documentsDirectory;
     UIView                       * blurView;
+    GDFileUploader               * _GDUploader;
+    DPBFileUploader              * _DPBUploader;
     int                          cellSelectedNumber;
     BOOL                         isEditingClips;
     BOOL                         hasBeenOrdered;
@@ -100,6 +103,14 @@
 @property (nonatomic,strong)   EdgeSwipeEditButtonsView     * edgeSwipeButtons;
 
 
+-(void)receiveFilteredArray:(NSArray*)filteredArray;
+-(void)slideFilterBox;
 -(void)dismissFilterToolbox;
-
+-(void)createAllFullScreenSubviews;
+-(void)removeAllFullScreenSubviews;
+/*TO DELETE seek controlls-(void)setTagEventNameLabelText:(NSString*)name;*/
+-(void)showFullScreenOverlayButtons;
+-(void)hideFullScreenOverlayButtons;
+-(void)showTeleButton;
+-(void)reorderTableView:(JPReorderTableView*)jpTable accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath;
 @end

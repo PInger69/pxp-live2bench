@@ -29,6 +29,7 @@
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UIButton *todayButton;
 @property (nonatomic, strong) UIButton *latestButton;
+@property (nonatomic, strong) UIButton *allEventsButton;
 
 @end
 
@@ -142,18 +143,18 @@
     //
     //    }];
     
-    UIView *pickerArea = [[UIView alloc] initWithFrame:CGRectMake(5, 530, 485, 230)];
+    UIView *pickerArea = [[UIView alloc] initWithFrame:CGRectMake(5, 530, 486, 230)];
     pickerArea.layer.borderWidth = 0.7f;
     pickerArea.layer.borderColor = [UIColor lightGrayColor].CGColor;
     [self.view addSubview:pickerArea];
     
-    self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(5, 540, 485, 200)];
+    self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(5, 540, 486, 200)];
     [self.datePicker addTarget:self action:@selector(fastPick:) forControlEvents:UIControlEventValueChanged];
     self.datePicker.datePickerMode = UIDatePickerModeDate;
     [self.view addSubview:self.datePicker];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(datePicked:) name:@"datePicked" object:nil];
     
-    self.todayButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 720, 245, 40)];
+    self.todayButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 720, 162, 40)];
     [self.todayButton setTitle:@"Today" forState:UIControlStateNormal];
     self.todayButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.todayButton.layer.borderWidth = 0.5f;
@@ -164,7 +165,7 @@
     [self.view addSubview:self.todayButton];
     
     
-    self.latestButton = [[UIButton alloc] initWithFrame:CGRectMake(250, 720, 240, 40)];
+    self.latestButton = [[UIButton alloc] initWithFrame:CGRectMake(167, 720, 162, 40)];
     [self.latestButton setTitle:@"Latest Events" forState:UIControlStateNormal];
     self.latestButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.latestButton.layer.borderWidth = 0.5f;
@@ -174,6 +175,15 @@
     self.latestButton.showsTouchWhenHighlighted = YES;
     [self.view addSubview:self.latestButton];
     
+    self.allEventsButton = [[UIButton alloc] initWithFrame:CGRectMake(329, 720, 162, 40)];
+    [self.allEventsButton setTitle:@"All Events" forState:UIControlStateNormal];
+    self.allEventsButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.allEventsButton.layer.borderWidth = 0.5f;
+    [self.allEventsButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.allEventsButton addTarget:self action:@selector(goToAllEvents:) forControlEvents:UIControlEventTouchUpInside];
+    [self.allEventsButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    self.allEventsButton.showsTouchWhenHighlighted = YES;
+    [self.view addSubview:self.allEventsButton];
     
     
     firstTimeLoad = TRUE;
@@ -185,7 +195,10 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"goToLatestEvent" object:self];
 }
 
-
+-(void) goToAllEvents: (id) sender{
+    [tableViewController showAllData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"goToAllEvents" object:self];
+}
 
 - (void)datePicked:(NSNotification *)note
 {

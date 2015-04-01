@@ -13,9 +13,13 @@
 #import "AccountsViewController.h"
 #import "infoViewController.h"
 #import "UserCenter.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+#import "GTLDrive.h"
 #import "EncoderManager.h"
+#import "SocialSharingManager.h"
+#import "LogoViewController.h"
 
-@interface SettingsPageViewController ()
+@interface SettingsPageViewController () //<SettingsTableDelegate>
 
 @property (strong, nonatomic) UISplitViewController *splitViewController;
 @property (strong, nonatomic) SettingsTableViewController *settingsTable;
@@ -23,8 +27,10 @@
 @property (strong, nonatomic) NSArray *settingsArray;
 @property (strong, nonatomic) EncoderManager *encoderManager;
 @property (strong, nonatomic) UserCenter *userCenter;
+@property (strong, nonatomic) UINavigationController *googleNavigationController;
 
 @end
+
 
 NS_OPTIONS(NSInteger, style){
     toggleIsThere = 1<<0,
@@ -46,13 +52,47 @@ NS_OPTIONS(NSInteger, style){
         self.encoderManager = appDel.encoderManager;
         self.userCenter = appDel.userCenter;
         [self setMainSectionTab:NSLocalizedString(@"Settings",nil)  imageName:@"settingsButton"];
-        self.settingsArray =@[ @{@"SettingLabel": @"Encoder Controls" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[SettingsViewController alloc]initWithAppDelegate:appDel]},
+        
+        NSString *colorString = [[[NSDictionary alloc] initWithContentsOfFile:self.userCenter.accountInfoPath] objectForKey:@"tagColour"];
+        UIColor *tagColor = [Utility colorWithHexString:colorString];
+        
+        
+        NSDictionary *setting1 =@{@"SettingLabel": @"Encoder Controls" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[SettingsViewController alloc]initWithAppDelegate:appDel]};
+        
+        NSDictionary *setting2 =@{@"SettingLabel": @"Welcome" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[LogoViewController alloc]initWithAppDelegate:appDel]};
+        
+        NSDictionary *setting3 =@{ @"SettingLabel" : @"Screen Mirroring", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]};
+        
+        NSDictionary *setting4 =@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: toggleIsThere | toggleIsOn] };
+        
+        NSDictionary *setting5 =@{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                    @[@"Some Alert", @"Another Alert", @"Mandarin Alert", @"Italian Alert", @"Korean Alert", @"Hindi Alert", @"Russian", @"Japanese"],
+                                                                                                                                                                                                @"Toggle Settings":
+                                                                                                                                                                                                    @[ @1, @0, @1, @0, @1, @0, @1, @1]}] };
+        NSString *wifiName = [Utility myWifiName];
+        if (!wifiName) {
+            wifiName = @"Not Connected";
+        }
+        
+        NSDictionary *setting6 = @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                          @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail], @"WIFI Connection :", @"Eula :", @"Colour :"],
+                                                                                                                                                                                                      @"Function Buttons":
+                                                                                                                                                                                                          @[ @0, @0, @1, @0, @1, @0]
+                                                                                                                                                                                                      , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout", wifiName, @"View", tagColor] }]};
+        //self.settingsArray = [[NSMutableArray alloc] init];
+        //[self.settingsArray addObject: setting1];
+        
+        self.settingsArray =@[ setting1,
                                
-//                               @{ @"SettingLabel" : @"Something On or Off", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]},
+
+                               setting2,
+                               
+                               setting3,
                                
 //                               @{ @"SettingLabel" : @"An Unplausible Setting", @"OptionChar":  [NSNumber numberWithChar:oneButton] },
                                
-//                               @{ @"SettingLabel" : @"Social Media", @"OptionChar":  [NSNumber numberWithChar:oneButton | secondButton] },
+                               
+
                                
 //                               @{ @"SettingLabel" : @"Another Toggle", @"OptionChar":  [NSNumber numberWithChar:toggleIsThere] },
                                
@@ -63,26 +103,19 @@ NS_OPTIONS(NSInteger, style){
 //                               @{ @"SettingLabel" : @"Colors", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
 //                                                                                                                                                                                               @[@"blue", @"red", @"yellow"], @"Index": [NSNumber numberWithInt:1]} ] },
 //                                                                                                                                        
-//                                @{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: toggleIsThere | toggleIsOn] },
+                                setting4,
                                
                                    
 //                                @{@"SettingLabel": @"Accounts" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[AccountsViewController alloc]init]},
 //                                
 //                               @{@"SettingLabel": @"Information" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[infoViewController alloc]initWithAppDelegate:appDel]},
                                
-//                                @{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-//                                                                                                                                                                                             @[@"Some Alert", @"Another Alert", @"Mandarin Alert", @"Italian Alert", @"Korean Alert", @"Hindi Alert", @"Russian", @"Japanese"],
-//                                                                                                                                                                                                @"Toggle Settings":
-//                                                                                                                                                                                                    @[ @1, @0, @1, @0, @1, @0, @1, @1]}] },
-//                               
-                               @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                        @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail], @"WIFI Connection :", @"Eula :"],
-                                                                                                                                                                                                    @"Function Buttons":
-                                                                                                                                                                                                        @[ @0, @0, @1, @0, @1]
-                                                                                                                                                                                                    , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout",[Utility myWifiName], @"View"] }]},
-                               
-                               @{ @"SettingLabel" : @"Acounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                    @[@"Dropbox", @"Facebook", @"GoogleDrive"],
+                                setting5,
+
+                                setting6,
+                        
+                               @{ @"SettingLabel" : @"Accounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                    @[@"Dropbox",  @"GoogleDrive"],
                                                                                                                                                                                                 @"Function Buttons":
                                                                                                                                                                                                     @[ @1, @1, @1], @"Function Labels": @[@"Link", @"Link", @"Link"] }]}
 
@@ -94,6 +127,10 @@ NS_OPTIONS(NSInteger, style){
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogout:) name:userName object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogoutCompleted:) name:NOTIF_USER_LOGGED_OUT object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLoginCompleted:) name: NOTIF_CREDENTIALS_VERIFY_RESULT object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPressLink:) name: @"Setting - Accounts" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPressGoogleLink) name: @"Setting - GoogleDrive" object:nil];
+        
+
     }
     return self;
 }
@@ -101,14 +138,15 @@ NS_OPTIONS(NSInteger, style){
 #pragma mark - Notification methods
 
 -(void)viewLicense:(NSNotification *)note {
-    EulaModalViewController *eulaViewController=[[EulaModalViewController   alloc]init];
+    EulaModalViewController *eulaViewController=[[EulaModalViewController alloc]init];
     [self presentViewController:eulaViewController animated:YES completion:nil];
 }
 
 -(void)appLogoutCompleted: (NSNotification *) note{
-    
+
     NSString *userName = [NSString stringWithFormat:@"Setting - User :  %@", self.userCenter.customerEmail];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:userName object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:userName object:nil];
 }
 
 -(void)appLoginCompleted: (NSNotification *) note{
@@ -155,18 +193,7 @@ NS_OPTIONS(NSInteger, style){
     
 }
 
-//- (void)appLogout:(NSNotification *)note {
-//    NSLog(@"Trying to logout");
-//    
-//
-//    CustomAlertView *alert = [[CustomAlertView alloc] init];
-//    [alert setTitle:@"myplayXplay"];
-//    [alert setMessage:@"Are you sure you want to delete this Event?"];
-//    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//    [alert addButtonWithTitle:@"Yes"];
-//    [alert addButtonWithTitle:@"No"];
-//    [alert show];
-//}
+
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -175,13 +202,17 @@ NS_OPTIONS(NSInteger, style){
     if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Yes"])
     {
         [CustomAlertView removeAlert:alertView];
+        
+        
         [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
+       
         return;
     }
     
     [CustomAlertView removeAlert:alertView];
     
 }
+
 
 
 - (void)viewDidLoad {
@@ -192,6 +223,7 @@ NS_OPTIONS(NSInteger, style){
     self.splitViewController = [[UISplitViewController alloc] init];
     SettingsTableViewController *settingsTable = [[SettingsTableViewController alloc] init];
     settingsTable.dataArray = self.settingsArray;
+    //settingsTable.signalReciever = self;
     settingsTable.splitViewController = self.splitViewController;
     self.detailViewController = [[DetailViewController alloc] initViewController];
     
@@ -208,6 +240,24 @@ NS_OPTIONS(NSInteger, style){
     //[self addChildViewController:self.splitViewController];
     
 }
+
+//- (void)settingChanged: (NSDictionary *) settingChangeDictionary fromCell: (id) swipeableTableCell{
+//    NSNotification *settingNotification = [NSNotification notificationWithName:[ @"Setting - " stringByAppendingString:  settingChangeDictionary[@"Name"]] object:nil userInfo:settingChangeDictionary];
+//    
+//    [[NSNotificationCenter defaultCenter] postNotification: settingNotification];
+//}
+
+- (void)didPressLink : (NSNotification *) note {
+    [[SocialSharingManager commonManager] linkSocialObject:@"Dropbox" inViewController:self];
+}
+
+
+- (void)didPressGoogleLink {
+    [[SocialSharingManager commonManager] linkSocialObject:@"GoogleDrive" inViewController:self];
+
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

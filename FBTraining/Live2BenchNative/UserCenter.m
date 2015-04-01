@@ -96,6 +96,11 @@
         
         _checkLoginPlistAction     = [[CheckLoginPlistAction alloc]initWithCenter:self];
         
+        [[NSNotificationCenter defaultCenter] addObserverForName:@"setUserInfo" object:nil queue:nil usingBlock:^(NSNotification *note){
+            void(^userCenterDataBlock)(NSDictionary *userInfo);
+            userCenterDataBlock = note.userInfo[@"block"];
+            userCenterDataBlock(rawResponce);
+        }];
     }
     return self;
 }

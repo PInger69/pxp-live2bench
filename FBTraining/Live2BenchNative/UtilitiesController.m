@@ -1699,8 +1699,8 @@ NSArray *eventsArray;
 ////    [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alertView];
 }
 
--(void)syncMe
-{
+//-(void)syncMe
+//{
 //    if (!globals.HAS_MIN) {
 //        return;
 //    }
@@ -2125,7 +2125,7 @@ NSArray *eventsArray;
 //    }
 //    
 //    //NSLog(@"globals.DURATION_TAGS_TIME: %@, globals.DURATION_TYPE_TIMES: %@",globals.DURATION_TAGS_TIME,globals.DURATION_TYPE_TIMES);
-}
+//}
 
 - (NSString *)stringToSha1:(NSString *)hashkey{
     

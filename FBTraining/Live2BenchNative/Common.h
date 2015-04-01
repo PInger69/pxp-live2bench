@@ -29,6 +29,16 @@
 #define NOTIF_SET_PLAYER_FEED_IN_MYCLIP     @"setPlayerFeedInMyClip"
 // BEN AND SAGAR STUFF END
 #define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER"
+#define NOTIF_POST_ON_EXTERNAL_SCREEN       @"NOTIF_POST_ON_EXTERNAL_SCREEN"
+#define NOTIF_TAG_POSTED                    @"postedTag"    
+
+//TypeDef for ToastObserver
+typedef NS_OPTIONS (NSInteger, toastType) {
+    ARFileDownloadComplete = 1<<1,
+    ARSynchronizedTags = 1<<2,
+    ARTagCreated = 1<<3,
+};
+//End
 
 // Common Classes
 static float APP_WIDTH      = 0;
@@ -132,7 +142,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{@"tabName":@"Live2Bench"}
 #define NOTIF_USER_LOGGED_OUT               @"userLoggedout" // {@"success":<bool>}
-#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER" // this is watched by the encoder manager
+//#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER" // this is watched by the encoder manager
 
 
 

@@ -70,6 +70,8 @@ typedef enum {
 - (BOOL)date:(NSDate *)date1 isSameDayAsDate:(NSDate *)date2;
 - (BOOL)dateIsInCurrentMonth:(NSDate *)date;
 
+@property (nonatomic, assign) BOOL isAllEventsMode;
+
 @end
 
 @protocol CKCalendarDelegate <NSObject>

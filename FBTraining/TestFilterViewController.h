@@ -11,4 +11,6 @@
 
 @interface TestFilterViewController : AbstractFilterViewController
 @property (strong, nonatomic) RangeSlider *rangeSlider;
+
++(TestFilterViewController *) commonFilter;
 @end

@@ -15,6 +15,8 @@
 @property (strong, nonatomic) UILabel *eventDate;
 @property (strong, nonatomic) UILabel *indexNum;
 
+@property (strong, nonatomic) UIView  *translucentEditingView;
+
 //-(void)updateIndexWith:(int)newIndex;
 
 @end

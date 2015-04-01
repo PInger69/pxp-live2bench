@@ -24,6 +24,7 @@
 
 @property NSMutableArray *queueOfConnections;
 
+
 @end
 
 
@@ -42,17 +43,7 @@
 -(void)imageForURL: (NSString *) imageURLString atImageView: (UIImageView *) viewReference{
     NSURL *imageURL =[NSURL URLWithString:imageURLString];
     viewReference.image = [UIImage imageNamed:@"live.png"];
-    /*viewReference.animationImages = [NSArray arrayWithObjects:
-                                              [UIImage imageNamed:@"tmp-0.gif"],
-                                              [UIImage imageNamed:@"tmp-1.gif"],
-                                              [UIImage imageNamed:@"tmp-2.gif"],
-                                              [UIImage imageNamed:@"tmp-3.gif"],
-                                            [UIImage imageNamed:@"tmp-4.gif"],
-                                            [UIImage imageNamed:@"tmp-5.gif"],
-                                            [UIImage imageNamed:@"tmp-6.gif"],
-                                            [UIImage imageNamed:@"tmp-7.gif"],nil];*/
-    //viewReference.animationDuration = 1.5f;
-    //[viewReference startAnimating];
+
     UIImage *theImage = [self checkImageCacheForImageURL:imageURLString];
     if(theImage){
         viewReference.image = theImage;
@@ -60,11 +51,18 @@
         
         // load image from the server
         NSURLRequest *theRequest = [[NSURLRequest alloc] initWithURL:imageURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(NSTimeInterval)self.timeOutInterval];
+
+        NSURLImageConnection *imageConnection = [[NSURLImageConnection alloc] initWithRequest: theRequest delegate:self  startImmediately:NO];
+               // NSURLImageConnection *imageConnection = [[NSURLImageConnection alloc]initWithRequest: theRequest delegate:self];
         
-        NSURLImageConnection *imageConnection = [[NSURLImageConnection alloc]initWithRequest: theRequest delegate:self];
         imageConnection.imageData = [[NSMutableData alloc]init];
         imageConnection.imageViewReference = viewReference;
         [self.queueOfConnections addObject: imageConnection ];
+       // [imageConnection start];
+        
+        [imageConnection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+        [imageConnection start];
+
         
     }
     
@@ -84,10 +82,9 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLImageConnection *)connection {
-
     UIImage *receivedImage = [UIImage imageWithData:connection.imageData];
     //[connection.imageViewReference stopAnimating];
-    connection.imageViewReference.image = receivedImage;
+    [connection.imageViewReference setImage: receivedImage];
     [self.queueOfConnections removeObject:connection];
 
 }

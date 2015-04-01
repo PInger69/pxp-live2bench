@@ -11,6 +11,7 @@
 #import "RJLVideoPlayerResponder.h"
 #import "ValueBuffer.h"
 
+
 #define LIVE_BUFFER     5
 #define SLOWMO_SPEED    0.5f
 
@@ -41,6 +42,7 @@
     
     BOOL  isFeedReady;
     ValueBuffer * liveBuffer;
+
 }
 static void *ViewControllerRateObservationContext           = &ViewControllerRateObservationContext;
 static void *ViewControllerStatusObservationContext         = &ViewControllerStatusObservationContext;
@@ -108,8 +110,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 {
     // every second, after 3 seconds fire if not reset
 
-    
     self.playBackView           = [[RJLVideoPlayerPlaybackView alloc]initWithFrame:videoFrame];//CGRectMake(500, 60, 400, 300)
+    
+   
+    
+    self.zoomManager = [[VideoZoomManager alloc]init];
+    self.zoomManager.videoPlayer = self;
+    
     self.view                   = self.playBackView;
     self.view.backgroundColor   = [UIColor blackColor];
 
@@ -1304,6 +1311,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //    
 //    [freezeCounter reset];
 }
+
 
 
 -(void)dealloc

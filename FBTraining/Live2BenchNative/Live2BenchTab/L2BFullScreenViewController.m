@@ -44,6 +44,7 @@
     self            = [super initWithVideoPlayer:videoPlayer];
     if (self){
         self.mode   = L2B_FULLSCREEN_MODE_DISABLE;
+        self.teleViewController = [[TeleViewController alloc] initWithController:self];
     }
     return self;
 }
@@ -169,6 +170,8 @@
     [btn setContentMode:    UIViewContentModeScaleAspectFill];
     [btn setImage:          [UIImage imageNamed:@"teleButton"] forState:UIControlStateNormal];
     [btn setImage:          [UIImage imageNamed:@"teleButtonSelect"] forState:UIControlStateHighlighted];
+    
+    [btn addTarget:self action:@selector(teleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     return btn;
 }
@@ -322,13 +325,28 @@
 -(void)_saveButtonClicked
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SAVE_TELE object:nil];
+    [self.player play];
+    [self.teleViewController saveTeles];
+    [self setMode: L2B_FULLSCREEN_MODE_LIVE];
 }
 
 //clear button clicked, send notification to the teleview controller
 -(void)_clearButtonClicked
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLEAR_TELE object:nil];
+    [self setMode: L2B_FULLSCREEN_MODE_LIVE];
+    [self.teleViewController forceCloseTele];
+    [self.player play];
 }
+
+-(void)teleButtonPressed{
+    [self setMode: L2B_FULLSCREEN_MODE_TELE];
+    [self.player pause];
+    //self.teleViewController = [[TeleViewController alloc] initWithController:self];
+    //[self.teleViewController viewDidLoad];
+    [self.teleViewController startTelestration];
+}
+
 
 
 

@@ -117,7 +117,7 @@ EncoderManager      * encoderManager;
     
     welcomeToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, self.view.bounds.size.height - 60.0f, self.view.bounds.size.width, 60.0f)];
     welcomeToolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    [welcomeToolBar setItems:@[flex, hardwareTab, flex, taggingTab, flex, contactTab, flex, dropboxTab,fix,googleDriveTab,fix, settingsTab, fix]];
+    [welcomeToolBar setItems:@[flex, hardwareTab, flex, taggingTab, flex, contactTab, flex/*, dropboxTab,fix,googleDriveTab,fix, settingsTab, fix*/]];
     [self.view addSubview:welcomeToolBar];
     
     tabContentView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 65.0f, self.view.bounds.size.width, self.view.bounds.size.height - 65.0f - welcomeToolBar.bounds.size.height)];
@@ -132,7 +132,7 @@ EncoderManager      * encoderManager;
     [tabContentView addSubview:self.tabContentImage];
     
     self.tabContentTitle = [BorderlessButton buttonWithType:UIButtonTypeSystem];
-    self.tabContentTitle.frame = CGRectMake(50.0f, 110.0f, 500.0f, 100.0f);
+    self.tabContentTitle.frame = CGRectMake(30.0f, -40.0f, 500.0f, 100.0f);
     [self.tabContentTitle.titleLabel setShadowOffset:CGSizeMake(10.0f, 10.0f)];
     [self.tabContentTitle.titleLabel setShadowColor:[UIColor whiteColor]];
     self.tabContentTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
@@ -146,7 +146,7 @@ EncoderManager      * encoderManager;
     NSLog(@"float for width is %f", self.view.frame.size.width);
     NSLog(@"float for width is %f", self.tabContentImage.frame.size.width);
     
-    self.tabContentDescription = [[UITextView alloc] initWithFrame:CGRectMake(self.tabContentTitle.frame.origin.x, CGRectGetMaxY(self.tabContentTitle.frame) + 50.0f, 500, 185.0f)];
+    self.tabContentDescription = [[UITextView alloc] initWithFrame:CGRectMake(self.tabContentTitle.frame.origin.x + 30, CGRectGetMaxY(self.tabContentTitle.frame) + 130.0f, 500, 185.0f)];
     self.tabContentDescription.editable = NO;
     self.tabContentDescription.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.8f];
     self.tabContentDescription.scrollEnabled = NO;
@@ -177,7 +177,7 @@ EncoderManager      * encoderManager;
     
     self.tabContentLink = [IconButton buttonWithType:UIButtonTypeCustom];
     self.tabContentLink.iconLocation = IconRight;
-    self.tabContentLink.frame = CGRectMake(self.tabContentDescription.frame.origin.x + 20.0f, tabContentView.bounds.size.height - 90.0f, 180.0f, 30.0f);
+    self.tabContentLink.frame = CGRectMake(self.tabContentDescription.frame.origin.x - 10.0f, tabContentView.bounds.size.height - 90.0f, 180.0f, 30.0f);
     [self.tabContentLink setNeedsDisplay];
     //self.tabContentLink.backgroundColor = [UIColor grayColor];
     self.tabContentLink.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;

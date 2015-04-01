@@ -28,6 +28,7 @@ static NSMutableSet * shareFilterSubtag;
 static NSMutableSet * shareFilterOffence;
 static NSMutableSet * shareFilterDefence;
 static NSMutableSet * shareFilterUser;
+static TestFilterViewController *commonFilter;
 
 - (id)initWithTagArray: (NSMutableArray *)tagArray
 {
@@ -41,11 +42,21 @@ static NSMutableSet * shareFilterUser;
     return self;
 }
 
++(TestFilterViewController *) commonFilter{
+    if (! commonFilter) {
+        commonFilter = [[TestFilterViewController alloc] initWithTagArray:[NSMutableArray array]];
+        return commonFilter;
+    }
+    
+    return commonFilter;
+}
 
 -(void)componentSetup
 {
     
-    
+    if (self.rangeSlider) {
+        return;
+    }
     // This is to make the each instance of this filter share the filtering
     if (!shareFilterPlayer) {
         shareFilterPlayer     =  [[NSMutableSet alloc]init];

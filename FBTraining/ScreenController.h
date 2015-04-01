@@ -17,13 +17,13 @@
 
 
 
-@property (strong, nonatomic) UIView    * view;
+@property (strong, nonatomic) UIViewController    * viewController;
 @property (assign, nonatomic) BOOL      enableDisplay;
 @property (assign, nonatomic) BOOL      screenDetected;
+@property (assign, nonatomic) BOOL      doesScreenMirroring;
 
 -(id)init;
-
 -(UIView*)buildDebugPanel:(VideoPlayer *)video;
--(void)moveVideoToExternalDisplay:(VideoPlayer *)video;
+-(void)moveVideoToExternalDisplay:(UIViewController <PxpVideoPlayerProtocol> *) video;
 -(void)returnVideoToPreviousViewFromExternal;
 @end

@@ -22,6 +22,7 @@
 #import "RJLVideoPlayer.h"
 #import "MultiPip.h"
 #import "CustomAlertView.h"
+#import "ReusableBottomViewController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -43,6 +44,7 @@
     L2BVideoBarViewController           * _videoBarViewController;      // player updated control bar
     Live2BenchTagUIViewController       * _tagButtonController;         // side tags
     L2BFullScreenViewController         * _fullscreenViewController;    // fullscreen class to manage all actions in full
+    ReusableBottomViewController        * _theBottomViewController;
     PipViewController                   * _pipController;
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
@@ -53,6 +55,13 @@
     UILabel                             * durationTagLabel;
     UIButton                            * multiButton;
     UIPinchGestureRecognizer            * pinchGesture;
+    UISwipeGestureRecognizer            * swipeGesture;
+    
+    
+    //TemporaryButton
+//    UIButton                            *zoomButton;
+//    UIButton                            *unZoomButton;
+    
     
 }
 
@@ -106,11 +115,86 @@ static void * eventContext      = &eventContext;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name:NOTIF_MASTER_HAS_LIVE object:nil];
 
+    
+    NSDictionary *theEntireDataDictionary = @{
+                                              @"Half":@{@"initializationArray":@[@{@"Name": @"1", @"Value": @"s_00"},
+                                                                                 @{@"Name": @"2", @"Value": @"s_01"},
+                                                                                 @{@"Name": @"EXTRA", @"Value": @"s_02"},
+                                                                                 @{@"Name": @"PS", @"Value": @"s_02"}],
+                                                        @"segmentName": @"Half",
+                                                        @"segmentQuantity":[NSNumber numberWithInteger:1],
+                                                        @"selectedIndex":@[[NSNumber numberWithInt:1]]},
+                                              
+                                              @" ":@{[NSNumber numberWithInt:0] : @{},
+                                                     [NSNumber numberWithInt:1] : @{},
+                                                     [NSNumber numberWithInt:2] : @{},
+                                                     [NSNumber numberWithInt:3] : @{},
+                                                     [NSNumber numberWithInt:4] : @{},
+                                                     [NSNumber numberWithInt:5] : @{},},
+                                              
+                                              @"Zone":@{@"initializationArray":@[@{@"Name": @"OFF.3RD", @"Value": @"s_00"},
+                                                                                 @{@"Name": @"MID.3RD", @"Value": @"s_01"},
+                                                                                 @{@"Name": @"DEF.3RD", @"Value": @"s_02"},],
+                                                        @"segmentName": @"Zone",
+                                                        @"segmentQuantity":[NSNumber numberWithInteger:1],
+                                                        @"selectedIndex":@[[NSNumber numberWithInt:1]]}
+                                              };
+    
+    
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"HockeyBottomViewController" ofType:@"plist"];
+    NSDictionary *plistDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+    
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    
+    [center addObserverForName:@"BottomViewControllerInit" object:nil queue:nil usingBlock:^(NSNotification *notification)
+     {
+         void(^initBottomViewController)(NSDictionary *dataDictionary, NSDictionary *plistDictionary);
+         initBottomViewController = notification.userInfo[@"Block"];
+         initBottomViewController(theEntireDataDictionary, nil );
+     }];
+    
+    
+    [center addObserverForName:@"BottomViewControllerInit" object:nil queue:nil usingBlock:^(NSNotification *notification)
+     {
+         void(^initBottomViewController)(NSDictionary *dataDictionary, NSDictionary *plistDictionary);
+         initBottomViewController = notification.userInfo[@"Block"];
+         initBottomViewController(nil, plistDictionary);
+     }];
+    
+    // BOTTOM VIEW CONTROLLER CODE!
+    // TO DO:
+    
+    
+    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
+    swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
+    swipeGesture.numberOfTouchesRequired = 2;
+    [self.videoPlayer.view addGestureRecognizer: swipeGesture];
+    [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
+    
     return self;
 }
 
 
-#pragma mark -
+#pragma mark - Swipe Gesture Recognizer methods
+
+-(void)swipeNoticed: (UISwipeGestureRecognizer *) swipeRecognizer{
+    switch (swipeRecognizer.direction) {
+        case UISwipeGestureRecognizerDirectionUp:
+            if ( [((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer].enabled) {
+                [_externalControlScreen moveVideoToExternalDisplay: self.videoPlayer];
+                swipeGesture.direction = UISwipeGestureRecognizerDirectionDown;
+            }
+            break;
+        case UISwipeGestureRecognizerDirectionDown:
+            [_externalControlScreen returnVideoToPreviousViewFromExternal];
+            swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
+            break;
+        default:
+            break;
+    }
+}
+
+
 #pragma mark - Observers and Observer Methods
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -207,6 +291,11 @@ static void * eventContext      = &eventContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    ReusableBottomViewController *bottomViewController = [[ReusableBottomViewController alloc] init];
+    [self.view addSubview:bottomViewController.view];
+    _theBottomViewController = bottomViewController;
+
+    
     
     //label to show current event title
     currentEventTitle                   = [[UILabel alloc] initWithFrame:CGRectMake(156.0f, 71.0f, MEDIA_PLAYER_WIDTH, 21.0f)];
@@ -242,6 +331,7 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
     [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    //_videoBarViewController.tagMarkerController.arrayOfAllTags =
     [self.view addSubview:_videoBarViewController.view];
 
     _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
@@ -289,9 +379,29 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_gotoLiveButton];
         [_gotoLiveButton isActive:NO];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
+    
+//    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
+//    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];
+//    zoomButton.backgroundColor = [UIColor redColor];
+//    [self.view addSubview: zoomButton];
+//    
+//    unZoomButton = [[UIButton alloc]initWithFrame:CGRectMake(250, 600, 100, 50)];
+//    [unZoomButton addTarget:self action:@selector(unZoomPressed) forControlEvents:UIControlEventTouchUpInside];
+//    unZoomButton.backgroundColor = [UIColor blueColor];
+//    [self.view addSubview: unZoomButton];
 }
 
-
+//-(void) zoomPressed{
+//    [_externalControlScreen returnVideoToPreviousViewFromExternal];
+//    //RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
+//    //[videoPlayer zoomIntoView: CGRectMake(20, 30, 300, 300)];
+//}
+//
+//-(void) unZoomPressed{
+//    [_externalControlScreen moveVideoToExternalDisplay: self.videoPlayer];
+////    RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
+////    [videoPlayer zoomIntoView: CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+//}
 
 /**
  *  This is run when the Main Encoder is removed

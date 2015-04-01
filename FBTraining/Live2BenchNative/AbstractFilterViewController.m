@@ -24,12 +24,12 @@
 
 @implementation AbstractFilterViewController
 {
-    id    selectTarget;
-    SEL   onSelect;
+    NSMutableArray   * selectTargets;
+    NSMutableArray   * onSelectSelectors;
     id    swipeTarget;
     SEL   onSwipe;
-    NSMutableDictionary *rawTagData;
-    NSMutableArray      *rawTagArray;
+    //NSMutableDictionary *rawTagData;
+    //NSMutableArray      *rawTagArray;
     CGRect  onScreenRect;
     CGRect  offScreenRect;
     BOOL    isOpen;
@@ -53,7 +53,9 @@
     if (self) {
         // Custom initialization
 
-        rawTagData = tagData;
+        _rawTagData = tagData;
+        selectTargets = [NSMutableArray array];
+        onSelectSelectors = [NSMutableArray array];
     }
     return self;
 }
@@ -65,13 +67,15 @@
     if (self) {
         // Custom initialization
         
-        rawTagArray = tagArray;
+        _rawTagArray = tagArray;
+        selectTargets = [NSMutableArray array];
+        onSelectSelectors = [NSMutableArray array];
     }
     return self;
 }
 
 -(void)setRawTagArray:(NSMutableArray *)newRawTagArray{
-    rawTagArray = newRawTagArray;
+    _rawTagArray = newRawTagArray;
 }
 
 
@@ -232,7 +236,7 @@
 -(void)clearAllTags:(id)sender
 {
     
-    if ([tabManager prefilteredList].count == [tabManager currentTabProcessedList].count)return;
+    //if ([tabManager prefilteredList].count == [tabManager currentTabProcessedList].count)return;
     
     [[tabManager getCurrentTab].componentList makeObjectsPerformSelector:@selector(deselectAll)];
     
@@ -250,9 +254,13 @@
     [numTagsLabel setText:[NSString stringWithFormat:@"%d %@   ",tagCount,tagPlur ]];
     [numTagsLabel setNeedsDisplay];
 
-    if (onSelect){
+    if (onSelectSelectors){
         #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [selectTarget performSelector:onSelect withObject:self];
+        for (int i =0; i < onSelectSelectors.count; ++i) {
+            NSString *selectorString = onSelectSelectors[i];
+            [selectTargets[i] performSelector: NSSelectorFromString(selectorString) withObject:self];
+        }
+        
     }
 
     // This is the list that will be the new display list
@@ -297,8 +305,9 @@
  */
 -(void)onSelectPerformSelector:(SEL)sel addTarget:(id)target
 {
-    selectTarget = target;
-    onSelect = sel;
+    [selectTargets addObject: target];
+    [onSelectSelectors addObject:NSStringFromSelector(sel)];
+    //onSelect = sel;
 }
 
 
@@ -328,48 +337,48 @@
  */
 -(void)refresh
 {
-
-  
+    
+    
     // a sort on view appeared
-    if (rawTagData) {
-        rawTagArray = [[rawTagData allValues] mutableCopy];
+    if (_rawTagData) {
+        _rawTagArray = [[_rawTagData allValues] mutableCopy];
     }
     
-    NSMutableArray *allBookmarkDictArr = [NSMutableArray arrayWithArray:[self formatTagsForDisplay: rawTagArray]];
-
+    NSMutableArray *allBookmarkDictArr = [NSMutableArray arrayWithArray:[self formatTagsForDisplay: _rawTagArray]];
     
-
+    
+    
     // TODO make this a better filter
-    if (exclusionKeys) {
-        // remove all tags with the key of...
-        
-        for (NSString * thekey in exclusionKeys) {
-            
-            int count = [allBookmarkDictArr count]-1;
-            
-            for (int i=count; i>=0; i--) {
-                if ([[allBookmarkDictArr objectAtIndex:i]objectForKey:thekey]){
-
-                    [allBookmarkDictArr removeObjectAtIndex:i];
-                }
-            }
-          
-        }
-    }
-
-    if (exclusionValues) {
-        for (NSString * thekey in exclusionValues) {
-            
-            for (NSMutableDictionary * tagDict in allBookmarkDictArr) {
-                NSArray * allVals = [tagDict allValues];
-                for (id currentValue in allVals)
-                {
-                   if ([currentValue isEqualToString:thekey]) [allBookmarkDictArr removeObject:tagDict];
-                }
-            }
-        }
-    }
-
+    //    if (exclusionKeys) {
+    //        // remove all tags with the key of...
+    //
+    //        for (NSString * thekey in exclusionKeys) {
+    //
+    //            int count = [allBookmarkDictArr count]-1;
+    //
+    //            for (int i=count; i>=0; i--) {
+    //                if ([[allBookmarkDictArr objectAtIndex:i]objectForKey:thekey]){
+    //
+    //                    [allBookmarkDictArr removeObjectAtIndex:i];
+    //                }
+    //            }
+    //
+    //        }
+    //    }
+    //
+    //    if (exclusionValues) {
+    //        for (NSString * thekey in exclusionValues) {
+    //
+    //            for (NSMutableDictionary * tagDict in allBookmarkDictArr) {
+    //                NSArray * allVals = [tagDict allValues];
+    //                for (id currentValue in allVals)
+    //                {
+    //                   if ([currentValue isEqualToString:thekey]) [allBookmarkDictArr removeObject:tagDict];
+    //                }
+    //            }
+    //        }
+    //    }
+    
     if ([self isDifference:[tabManager prefilteredList] and:allBookmarkDictArr])return; // This finds if there is a difference in the new and the old list and only refreshes if there is a difference
     [tabManager inputArray:allBookmarkDictArr];
     [self sortClipsBySelecting];
@@ -381,9 +390,10 @@
     NSSet           * set1      = [NSSet setWithArray:listRaw];
     NSSet           * set2      = [NSSet setWithArray:listProcessed];
     
-
-    return [set2 isSubsetOfSet:set1] ;
+    
+    return [set2 isEqualToSet:set1] ;
 }
+
 
 -(void)autoRefresh:(BOOL)enable
 {
@@ -419,7 +429,7 @@
 
 -(BOOL)rawDataEmpty
 {
-    return !(BOOL)[rawTagData count];
+    return !(BOOL)[_rawTagData count];
 
 }
 

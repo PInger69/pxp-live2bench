@@ -38,7 +38,7 @@
         
         
         background.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
-        [container addSubview:background];
+        [self.view addSubview:background];
         
         // frame does nothign now
          _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
@@ -321,6 +321,7 @@
 {
     for (UIView * v in list) {
         [v setHidden:NO];
+        [background addSubview: v];
     }
 }
 

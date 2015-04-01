@@ -164,7 +164,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.highestValue = 10;
+        _highestValue = 10;
         self.lowestValue = 0;
         
         // Initialization code
@@ -354,7 +354,14 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
-
+-(void) resetKnobs{
+    _highestValue = _highestOriginalValue;
+    _lowestValue = 0;
+    
+    _lowerValue = 0;
+    _upperValue = 10;
+    [self setLayerFrames];
+}
 
 #pragma mark - Filter Component Methods
 
@@ -367,6 +374,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 
 -(void)deselectAll
 {
+    [self resetKnobs];
     [self.selectedTags removeAllObjects];
     self.invoked = NO;
     [self update];
@@ -455,7 +463,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 }
 
 -(void) filter{
-    if (self.arrayOfOriginalTags) {
+    if (self.arrayOfOriginalTags && self.highestValue) {
         self.arrayOfTags = [NSMutableArray arrayWithArray:self.arrayOfOriginalTags];
         NSMutableArray *removingTags = [[NSMutableArray alloc] init];
         for (NSDictionary *tag in self.arrayOfOriginalTags){

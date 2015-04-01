@@ -11,20 +11,44 @@
 //
 //@end
 
+typedef NS_OPTIONS(NSInteger, cellState) {
+    cellStateDeleting = 1<<1,
+    cellStateSharing = 1<<2,
+    cellStateNormal = 1<<3,
+};
+
+
 
 @interface DeletableTableViewCell : UITableViewCell
 
+@property cellState cellState;
+
 @property (nonatomic, strong) UIButton *deleteButton;
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizer;
+@property (nonatomic, strong) UIButton *shareButton;
+
+//@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerForDeleting;
+//@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerForSharing;
+//
+//@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizer;
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerLeft;
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRecognizerRight;
+
 @property (nonatomic, assign) CGFloat startingRightLayoutConstraintConstant;
+@property (nonatomic, assign) CGFloat startingLeftLayoutConstraintConstant;
+
 @property (nonatomic, weak) NSLayoutConstraint *contentViewRightConstraint;
 @property (nonatomic, weak) NSLayoutConstraint *contentViewLeftConstraint;
 @property (nonatomic, strong) UIView *myContentView;
 
 @property (nonatomic, strong) void(^deleteBlock)(UITableViewCell * theCell);
+@property (nonatomic, strong) void(^shareBlock)(UITableViewCell * theCell);
 
--(void) setCellAsDeleting;
-- (void)setupView;
+@property (nonatomic, assign) BOOL sharingEnabled;
+
+//-(void) setCellAsDeleting;
+//-(void) setCellAsSharing;
+-(void)setCellAccordingToState:(cellState)state;
+-(void) setupView;
 
 
 @end

@@ -309,21 +309,21 @@
     
     self = [super init];
     if (self){
-
+        
         foundEncoders           = [[NSMutableArray alloc]init];
         _authenticatedEncoders  = [[NSMutableArray alloc]init];
         dictOfEncoders          = [[NSMutableDictionary alloc]init];
         _openDurationTags       = [[NSMutableDictionary alloc]init];
         _eventTags              = [[NSMutableDictionary alloc]init];
         _liveEventName          = @"None";
-
+        
         // Browse for services
         // Starts Bonjour search for pxp servers
         services                = [[NSMutableArray alloc]init];
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
-//       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-
+        //       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+        
         arrayOfTagSets          = [[NSMutableArray alloc]init];
         _feeds                  = [[NSMutableDictionary alloc]init];
         
@@ -372,7 +372,7 @@
             }
              [weakSelf refresh];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
-
+            
         }];
         
         _masterLostObserver  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -404,11 +404,11 @@
 
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }];
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting:)   name:NOTIF_TAG_POSTED       object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)           name:NOTIF_MASTER_COMMAND   object:nil]; // watch whole app for start or stop events
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:)            name:NOTIF_MASTER_HAS_LIVE  object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
@@ -1345,7 +1345,6 @@ static void * builtContext          = &builtContext; // depricated?
         }
         
     }
-
     return tags;
 }
 

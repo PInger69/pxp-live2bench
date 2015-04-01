@@ -13,17 +13,18 @@
 @interface TagFlagViewController : UIViewController
 {
     NSMutableDictionary     * tagMarkerLeadObjDict;
-    NSMutableDictionary     * tagMarkerObjDict;
+    //NSMutableDictionary     * tagMarkerObjDict;
     
-     TagMarker              * tagMarker; //object indicates the tag position in the total time duration
+    TagMarker              * tagMarker; //object indicates the tag position in the total time duration
     NSMutableArray          * tagMarkerArray; //array of tagmarker objects; used for shifting the positions of all the tagmarkers
-     NSMutableSet           * tagTimesColoured; //array of tag times; used for tagmarker's position
-   
+    NSMutableSet           * tagTimesColoured; //array of tag times; used for tagmarker's position
+    
     
     UIImageView             * currentPositionMarker;
-
+    
 }
 
+@property (strong,nonatomic) NSMutableArray * arrayOfAllTags;
 @property (strong,nonatomic) UILabel        * tagEventName;
 @property (strong,nonatomic) UIView         * background;
 @property (strong,nonatomic) UIImageView    * currentPositionMarker;

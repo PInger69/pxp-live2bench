@@ -43,6 +43,8 @@
 @property (strong, nonatomic) L2BVideoBarViewController *videoBarViewController;
 @property (strong, nonatomic) UIPinchGestureRecognizer *pinchGesture;
 @property (strong, nonatomic) FullScreenViewController *fullScreenViewController;
+@property (strong, nonatomic) UIButton *filterButton;
+@property (strong, nonatomic) UIButton *dismissFilterButton;
 
 
 @end
@@ -59,7 +61,7 @@
     float playbackRateRadius;
     float frameByFrameInterval;
     
-    TestFilterViewController    * componentFilter;
+    TestFilterViewController        * componentFilter;
     BreadCrumbsViewController       * breadCrumbVC;
     HeaderBarForListView            * headerBar;
     CommentingRatingField           * commentingField;
@@ -88,12 +90,13 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
 
         
         self.allTags = [[NSMutableArray alloc]init];
         self.tagsToDisplay = [[NSMutableArray alloc]init];
         _tableViewController = [[ListTableViewController alloc]init];
+        _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
         //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
@@ -102,6 +105,11 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     return self;
 }
 
+-(void)deleteTag: (NSNotification *) note{
+    [self.tagsToDisplay removeObject: note.userInfo];
+    [_tableViewController.tableData removeObject: note.userInfo];
+    [_tableViewController reloadData];
+}
 
 //-(void)listViewTagReceived:(NSNotification*)note{
 //    if (note.userInfo) {
@@ -238,7 +246,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
     
-    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 00, COMMENTBOX_WIDTH +10, SMALL_MEDIA_PLAYER_HEIGHT +50)];
+    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
     //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
     //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
@@ -294,13 +302,13 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
-        if(feeds){
+        if(feeds && !self.feeds){
             self.feeds = feeds;
             Feed *theFeed = [[feeds allValues] firstObject];
             [self.videoPlayer playFeed:theFeed];
         }
         
-        if(eventTags){
+        if(eventTags && self.tagsToDisplay.count < 1){
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             _tableViewController.tableData = self.tagsToDisplay;
             [_tableViewController.tableView reloadData];
@@ -315,22 +323,22 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         [typesOfTags addObject:sectionArray];
     }
     
-    if(!filterToolBoxListViewController)
-    {
-        NSArray *argObjs =[[NSArray alloc]initWithObjects:self,_tableViewController.tableView, nil];
-        NSArray *argKeys = [[NSArray alloc]initWithObjects:@"controller",@"displayArch", nil];
-        NSDictionary *filterArgs = [[NSDictionary alloc]initWithObjects:argObjs forKeys:argKeys];
-        filterToolBoxListViewController = [[FilterToolboxViewController alloc]initWithArgs:filterArgs];
-        // filterToolBoxListViewController.showTelestration = FALSE;
-        [filterToolBoxListViewController.view setUserInteractionEnabled:TRUE];
-        filterToolBoxListViewController.view.layer.masksToBounds = NO;
-        filterToolBoxListViewController.view.layer.cornerRadius = 1; // if you like rounded corners
-        filterToolBoxListViewController.view.layer.shadowOffset = CGSizeMake(1, 1);
-        filterToolBoxListViewController.view.layer.shadowRadius = 2;
-        filterToolBoxListViewController.view.layer.shadowOpacity = 0.4;
-        [filterToolBoxListViewController.view setAlpha:0.95f];
-        [filterToolBoxListViewController.view setFrame: filterContainer.frame];
-    }
+//    if(!filterToolBoxListViewController)
+//    {
+//        NSArray *argObjs =[[NSArray alloc]initWithObjects:self,_tableViewController.tableView, nil];
+//        NSArray *argKeys = [[NSArray alloc]initWithObjects:@"controller",@"displayArch", nil];
+//        NSDictionary *filterArgs = [[NSDictionary alloc]initWithObjects:argObjs forKeys:argKeys];
+//        filterToolBoxListViewController = [[FilterToolboxViewController alloc]initWithArgs:filterArgs];
+//        // filterToolBoxListViewController.showTelestration = FALSE;
+//        [filterToolBoxListViewController.view setUserInteractionEnabled:TRUE];
+//        filterToolBoxListViewController.view.layer.masksToBounds = NO;
+//        filterToolBoxListViewController.view.layer.cornerRadius = 1; // if you like rounded corners
+//        filterToolBoxListViewController.view.layer.shadowOffset = CGSizeMake(1, 1);
+//        filterToolBoxListViewController.view.layer.shadowRadius = 2;
+//        filterToolBoxListViewController.view.layer.shadowOpacity = 0.4;
+//        [filterToolBoxListViewController.view setAlpha:0.95f];
+//        [filterToolBoxListViewController.view setFrame: filterContainer.frame];
+//    }
     
     // Richard ==========================================================================================
     //    if(!componentFilter) {
@@ -609,9 +617,9 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 {
     AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
     NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
-    self.tagsToDisplay = [filteredArray mutableCopy];
+    //self.tagsToDisplay = [filteredArray mutableCopy];
     
-    _tableViewController.tableData = self.tagsToDisplay;
+    _tableViewController.tableData = [filteredArray mutableCopy];
     [_tableViewController reloadData];
     [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
 }
@@ -622,33 +630,33 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 - (void)slideFilterBox
 {
     
-    float boxXValue = filterToolBoxListViewController.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
-    if (boxXValue == 60)
-    {
-        [filterToolBoxListViewController updateDisplayedTagsCount];
-        //clear the previous filter set
-        [breadCrumbsView removeFromSuperview];
-        breadCrumbsView  = nil;
-        
-        if(!self.blurView)
-        {
-            self.blurView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 1024, 768-55)];
-            self.blurView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped)];
-            [self.blurView addGestureRecognizer:tapRec];
-            [self.view addSubview:self.blurView];
-            componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
-        }
-        
-        self.blurView.hidden = NO;
-        [self.view bringSubviewToFront:filterToolBoxListViewController.view];
-        //[self.view bringSubviewToFront:componentFilter.view];
-    }
-    else{
-        self.blurView.hidden = YES;
-        
-        [self createBreadCrumbsView];
-    }
+//    float boxXValue = filterToolBoxListViewController.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
+//    if (boxXValue == 60)
+//    {
+//        [filterToolBoxListViewController updateDisplayedTagsCount];
+//        //clear the previous filter set
+//        [breadCrumbsView removeFromSuperview];
+//        breadCrumbsView  = nil;
+//        
+//        if(!self.blurView)
+//        {
+//            self.blurView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 1024, 768-55)];
+////            self.blurView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+////            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped)];
+////            [self.blurView addGestureRecognizer:tapRec];
+////            [self.view addSubview:self.blurView];
+//            componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+//        }
+//        
+////        self.blurView.hidden = NO;
+//        //[self.view bringSubviewToFront:filterToolBoxListViewController.view];
+//        //[self.view bringSubviewToFront:componentFilter.view];
+//    }
+//    else{
+////        self.blurView.hidden = YES;
+//        
+//        [self createBreadCrumbsView];
+//    }
     
     //    //[componentFilter open:YES]; //Richard
     //    UIButton *dismissButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 1024, 768)];
@@ -658,10 +666,17 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //[componentFilter.view removeFromSuperview];
     //componentFilter= nil;
     //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+    
+    self.dismissFilterButton = [[UIButton alloc] initWithFrame: self.view.bounds];
+    [self.dismissFilterButton addTarget:self action:@selector(dismissFilter:) forControlEvents:UIControlEventTouchUpInside];
+    self.dismissFilterButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6];
+    [self.view addSubview: self.dismissFilterButton];
+    
     componentFilter.rawTagArray = self.tagsToDisplay;
+    //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
     componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
     
-    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    //[componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
     //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
     componentFilter.finishedSwipe = TRUE;
     
@@ -670,35 +685,33 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     [componentFilter setOrigin:CGPointMake(60, 190)];
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
-    
-    
     [componentFilter open:YES];
     
     
     
 }
 
-//-(void)dismissFilter: (UIButton *)dismissButton{
-//    [componentFilter close:YES];
-//    [dismissButton removeFromSuperview];
-//    [self performSelector:@selector(componentNil) withObject:self afterDelay:0.3f];
-//    //[self.edgeSwipeButtons deselectAllButtons];
-//}
+-(void)dismissFilter: (UIButton *)dismissButton{
+    [componentFilter close:YES];
+    [dismissButton removeFromSuperview];
+    //[self performSelector:@selector(componentNil) withObject:self afterDelay:0.3f];
+    //[self.edgeSwipeButtons deselectAllButtons];
+}
 
 -(void) componentNil{
-    [componentFilter.view removeFromSuperview];
-    componentFilter = nil;
+   // [componentFilter.view removeFromSuperview];
+    //componentFilter = nil;
 }
 
-- (void)backgroundTapped
-{
-    
-    //    [self slideFilterBox];
-    [self.edgeSwipeButtons deselectButtonAtIndex:1];
-    [componentFilter close:YES];
-    self.blurView.hidden = YES;
-    //[self performSelector:@selector(componentNil) withObject:self afterDelay:0.3f];
-}
+//- (void)backgroundTapped
+//{
+//    
+//    //    [self slideFilterBox];
+//    [self.edgeSwipeButtons deselectButtonAtIndex:1];
+//    [componentFilter close:YES];
+//    self.blurView.hidden = YES;
+//    //[self performSelector:@selector(componentNil) withObject:self afterDelay:0.3f];
+//}
 
 
 
@@ -2093,7 +2106,21 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
     [self.view addSubview: _tableViewController.tableView];
     
+    self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
+    [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [self.filterButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview: self.filterButton];
     
+    componentFilter = [TestFilterViewController commonFilter];
+    //componentFilter = [[TestFilterViewController alloc] initWithTagArray: self.tagsToDisplay];
+    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    [self.view addSubview:componentFilter.view];
+    [componentFilter setOrigin:CGPointMake(60, 190)];
+    [componentFilter close:NO];
+
+
+
     //    UIImageView *commentBoxTitleBar = [[UIImageView alloc]initWithFrame:CGRectMake(2,SMALL_MEDIA_PLAYER_HEIGHT+140,COMMENTBOX_WIDTH, LABEL_HEIGHT)];
     //    commentBoxTitleBar.backgroundColor = [UIColor clearColor];
     //    [self.view addSubview:commentBoxTitleBar];
@@ -2171,9 +2198,9 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //    [self.view addSubview:clearButton];
     
     
-    self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(TOTAL_WIDTH-44, 55, 44, 768-55)];
-    self.edgeSwipeButtons.delegate = self;
-    [self.view addSubview:self.edgeSwipeButtons];
+//    self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(TOTAL_WIDTH-44, 55, 44, 768-55)];
+//    self.edgeSwipeButtons.delegate = self;
+//    [self.view addSubview:self.edgeSwipeButtons];
     
     
     //    UIButton* exportButton = [[UIButton alloc] initWithFrame:CGRectMake(1024- 45, 60, 30, 30)];
@@ -3332,9 +3359,9 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 }
 
 
--(void)receiveFilteredArray:(NSArray*)filteredArray
-{
-    
+//-(void)receiveFilteredArray:(NSArray*)filteredArray
+//{
+//    
     //    NSMutableArray *tempArr = [[self sortArrayByTime: [NSMutableArray arrayWithArray:filteredArray]]mutableCopy];
     //    self.tagsToDisplay = [tempArr mutableCopy];
     //    for(NSDictionary *tag in tempArr){
@@ -3350,7 +3377,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //    @catch (NSException *exception) {
     //        NSLog(@"downloadedTagIds: %@",exception.reason);
     //    }
-}
+//}
 
 //new tags received from the server while the user is in list view
 -(void)getNewTags:(NSNotification*)notification{
