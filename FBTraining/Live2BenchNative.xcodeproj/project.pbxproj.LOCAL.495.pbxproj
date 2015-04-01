@@ -7,14 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-<<<<<<< HEAD
 		436907411AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 436907401AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib */; };
 		436907451AB86E16003BD1E6 /* GTLCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907461AB86E16003BD1E6 /* GTLNetworking_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907491AB86E5B003BD1E6 /* GTLDrive_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */; };
 		43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */; };
-=======
->>>>>>> fe4d29e73f4ac535a3736b0bc789a6c2dc731f64
 		947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */; };
 		9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9482F269199A59E7000670B0 /* FootballTrainingCollectionViewController.m */; };
 		94B28D7C193380F40000E804 /* teleButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 94B28D78193380F40000E804 /* teleButton.png */; };
@@ -499,8 +496,6 @@
 		D7A9399216ADA933006CBAB2 /* CustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9399116ADA933006CBAB2 /* CustomTabBar.m */; };
 		D7A939B116ADD86F006CBAB2 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A939B016ADD86F006CBAB2 /* MediaPlayer.framework */; };
 		D7A939B316ADD875006CBAB2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A939B216ADD875006CBAB2 /* AVFoundation.framework */; };
-		D7A9C7EB1ABC673100AF9C4A /* RJLFreezeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9C7EA1ABC673100AF9C4A /* RJLFreezeMonitor.m */; };
-		D7A9C7EF1ABC833900AF9C4A /* LiveLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9C7EE1ABC833900AF9C4A /* LiveLight.m */; };
 		D7AA943917F4893E000EDAD5 /* ContactLabelString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */; };
 		D7AB2D1D16B6F44D0093465F /* line-button-grey.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D1B16B6F44D0093465F /* line-button-grey.png */; };
 		D7AB2D1E16B6F44D0093465F /* line-button-grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D1C16B6F44D0093465F /* line-button-grey@2x.png */; };
@@ -636,7 +631,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-<<<<<<< HEAD
 		436907401AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
 		436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLCommon_Sources.m; sourceTree = "<group>"; };
 		436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLNetworking_Sources.m; sourceTree = "<group>"; };
@@ -644,8 +638,6 @@
 		436907481AB86E5B003BD1E6 /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
 		43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveIndicatorLight.h; sourceTree = SOURCE_ROOT; };
 		43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveIndicatorLight.m; sourceTree = SOURCE_ROOT; };
-=======
->>>>>>> fe4d29e73f4ac535a3736b0bc789a6c2dc731f64
 		947F44A419883E150081E81D /* FootballTrainingBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingBottomViewController.h; sourceTree = "<group>"; };
 		947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FootballTrainingBottomViewController.m; sourceTree = "<group>"; };
 		9482F268199A59E7000670B0 /* FootballTrainingCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingCollectionViewController.h; sourceTree = "<group>"; };
@@ -1324,10 +1316,6 @@
 		D7A9399116ADA933006CBAB2 /* CustomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBar.m; sourceTree = "<group>"; };
 		D7A939B016ADD86F006CBAB2 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		D7A939B216ADD875006CBAB2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		D7A9C7E91ABC673100AF9C4A /* RJLFreezeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RJLFreezeMonitor.h; path = RJLVideoPlayerClasses/RJLFreezeMonitor.h; sourceTree = "<group>"; };
-		D7A9C7EA1ABC673100AF9C4A /* RJLFreezeMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RJLFreezeMonitor.m; path = RJLVideoPlayerClasses/RJLFreezeMonitor.m; sourceTree = "<group>"; };
-		D7A9C7ED1ABC833900AF9C4A /* LiveLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveLight.h; path = Live2BenchNative/Kal/src/LiveLight.h; sourceTree = SOURCE_ROOT; };
-		D7A9C7EE1ABC833900AF9C4A /* LiveLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveLight.m; path = Live2BenchNative/Kal/src/LiveLight.m; sourceTree = SOURCE_ROOT; };
 		D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactLabelString.txt; sourceTree = "<group>"; };
 		D7AB2D1B16B6F44D0093465F /* line-button-grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line-button-grey.png"; sourceTree = "<group>"; };
 		D7AB2D1C16B6F44D0093465F /* line-button-grey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line-button-grey@2x.png"; sourceTree = "<group>"; };
@@ -1456,7 +1444,6 @@
 		D7DB754E17EA6068009C402F /* UIFont+Default.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+Default.m"; sourceTree = "<group>"; };
 		D7DB755117EA690F009C402F /* LoginTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginTextField.h; sourceTree = "<group>"; };
 		D7DB755217EA690F009C402F /* LoginTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginTextField.m; sourceTree = "<group>"; };
-		D7DDF2D61AC60DFD00BE1CA2 /* EncoderProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderProtocol.h; path = EncoderClasses/EncoderProtocol.h; sourceTree = "<group>"; };
 		D7DFD4931827F3F600D98BE7 /* red_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_bar.png; sourceTree = "<group>"; };
 		D7DFD4941827F3F600D98BE7 /* red_bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_bar@2x.png"; sourceTree = "<group>"; };
 		D7DFD4A51827FA5F00D98BE7 /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon.png; sourceTree = "<group>"; };
@@ -1968,8 +1955,6 @@
 				D749B7691A800AE800258D63 /* RJLFreezeCounter.m */,
 				D749B7A61A82842200258D63 /* RJLVideoPlayerResponder.h */,
 				D749B7A71A82842200258D63 /* RJLVideoPlayerResponder.m */,
-				D7A9C7E91ABC673100AF9C4A /* RJLFreezeMonitor.h */,
-				D7A9C7EA1ABC673100AF9C4A /* RJLFreezeMonitor.m */,
 			);
 			name = RJLVideoPlayer;
 			sourceTree = "<group>";
@@ -2808,9 +2793,9 @@
 		D7B523581760CEFE00BF92EB /* VideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				D7A9C7ED1ABC833900AF9C4A /* LiveLight.h */,
-				D7A9C7EE1ABC833900AF9C4A /* LiveLight.m */,
 				D749B7A91A82AC0800258D63 /* PxpVideoPlayerProtocol.h */,
+				43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */,
+				43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */,
 				D719869819C8BA6E00122CAA /* VideoControlBar.h */,
 				D719869919C8BA6E00122CAA /* VideoControlBar.m */,
 				D79046AA18F48FD300A58B28 /* VideoPlayer.h */,
@@ -2931,7 +2916,6 @@
 				D7EE84D219F19E0900DEC82B /* Encoder.m */,
 				D781900A1A70649800B964B4 /* EncoderManagerActionPack.h */,
 				D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */,
-				D7DDF2D61AC60DFD00BE1CA2 /* EncoderProtocol.h */,
 			);
 			name = EncoderClasses;
 			sourceTree = "<group>";
@@ -3497,6 +3481,7 @@
 				D7EE84D019F19DC000DEC82B /* EncoderManager.m in Sources */,
 				D7CCE8041AC5FB0000D85095 /* VideoCuttingTool.m in Sources */,
 				D73CDBE11AA8B096002D682D /* DeletableTableViewCell.m in Sources */,
+				43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */,
 				D784EF4D1AA4B6620068D260 /* RangeSlider.m in Sources */,
 				436907451AB86E16003BD1E6 /* GTLCommon_Sources.m in Sources */,
 				BDE05E9017F08AAD00CD6012 /* UIColor+Expanded.m in Sources */,
@@ -3544,7 +3529,6 @@
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,
 				AA83596E19B115D2009B3ABC /* ExportPlayersSync.m in Sources */,
-				D7A9C7EB1ABC673100AF9C4A /* RJLFreezeMonitor.m in Sources */,
 				D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */,
 				D738304F198A94D60053F0A1 /* FilterTabViewController.m in Sources */,
 				D7A2E5C019AF76F000022795 /* CoachFilterProcessor.m in Sources */,
@@ -3632,7 +3616,6 @@
 				D784EF431AA4B0570068D260 /* HeaderBarForListView.m in Sources */,
 				D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */,
 				AA83593A19B10B71009B3ABC /* NSObject+LBCloudConvenience.m in Sources */,
-				D7A9C7EF1ABC833900AF9C4A /* LiveLight.m in Sources */,
 				D72708A51A1BA4B30086BCB8 /* Feed.m in Sources */,
 				D73CDC011AB345FA002D682D /* AlbumShare.m in Sources */,
 				AA8358B919B10A22009B3ABC /* UIColor+RGBValues.m in Sources */,
