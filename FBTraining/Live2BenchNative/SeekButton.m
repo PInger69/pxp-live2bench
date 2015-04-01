@@ -64,11 +64,12 @@ static NSMutableArray   * allSeekButtonsBackward;
     allSeekButtonsBackward               = [[NSMutableArray alloc]init];
     
     listOfSpeeds                = @[ // in seconds
-
+                                    [NSNumber numberWithFloat:0.1f],
                                     [NSNumber numberWithFloat:0.25f],
                                     [NSNumber numberWithFloat:1.00f],
                                     [NSNumber numberWithFloat:5.00f],
                                     [NSNumber numberWithFloat:10.00f],
+                                    [NSNumber numberWithFloat:15.00f],
                                     [NSNumber numberWithFloat:20.00f]
                                     ];
     currentForwardButtonIndex = currentBackwardButtonIndex = (DEFAULT_INDEX >listOfSpeeds.count-1)? listOfSpeeds.count-1:DEFAULT_INDEX;

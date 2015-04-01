@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EncoderProtocol.h"
 #import "EncoderStatusMonitor.h"
-#import "EncoderCommands.h"
-#import "EncoderCommand.h"
+#import "EncoderCommands.h" // Depricated
+#import "EncoderCommand.h" // Depricated
 
 #define OLD_VERSION  @"1.0.13"
 
@@ -40,7 +41,7 @@
 #define RESUME_EVENT    @"resumeEvent:timeStamp:"
 #define START_EVENT     @"startEvent:timeStamp:"
 
-@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands>
+@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol>
 {
     
     

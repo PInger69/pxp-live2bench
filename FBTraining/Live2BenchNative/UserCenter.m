@@ -80,6 +80,10 @@
             _tagNames       = [self convertToL2BReadable: rawResponce key:@"tagnames"];
         }
         
+        
+
+        
+        
         eventHIDs = [[NSArray alloc]initWithContentsOfFile:[_localPath stringByAppendingPathComponent:PLIST_EVENT_HID]];
         
         

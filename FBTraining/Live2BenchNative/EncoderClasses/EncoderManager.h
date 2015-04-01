@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "UtilitiesController.h" // TODO DELETE
 #import "ActionList.h"
+#import "EncoderProtocol.h"
 #import "CloudEncoder.h"
 #import "LocalEncoder.h"
 
@@ -55,10 +56,14 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 @property (nonatomic,strong)            NSMutableDictionary     * openDurationTags;
 @property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
 
-@property (nonatomic,strong)            Encoder                 * masterEncoder;
-@property (nonatomic,strong)            LocalEncoder            * localEncoder;
 
-@property (nonatomic,strong)            CloudEncoder            * cloudEncoder;
+// important encoders
+@property (nonatomic,strong)            Encoder                 * masterEncoder; // Main box encoder
+@property (nonatomic,strong)            LocalEncoder            * localEncoder;  // the device acts like an in app encoder / with clips
+@property (nonatomic,strong)            CloudEncoder            * cloudEncoder;  // 
+@property (nonatomic,strong)            id <EncoderProtocol>    primaryEncoder;
+
+
 @property (nonatomic,assign,readonly)   NSInteger               totalCameraCount;
 
 @property (nonatomic,strong)            NSString                * customerID;

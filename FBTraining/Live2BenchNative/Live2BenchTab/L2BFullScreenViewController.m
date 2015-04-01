@@ -132,20 +132,17 @@
 -(Slomo*)_makeSlomo:(VideoPlayer*)vp
 {
     Slomo *  btn = [[Slomo alloc]initWithFrame:CGRectMake(75, controlOffsetY, 65, 50)];
-    [btn addTarget:self action:  @selector(toggleSlowmo) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:  @selector(toggleSlowmo:) forControlEvents:UIControlEventTouchUpInside];
 
     return btn;
 }
 
 -(void)toggleSlowmo:(id)sender
 {
-    if ([self.player respondsToSelector:@selector(toggleSlowmo)]){
-        [self.player performSelector:@selector(toggleSlowmo)];
-    } else {
-        self.player.slowmo = !self.player.slowmo;
-    }
-    
-    
+    Slomo *  btn = (Slomo*) sender;
+    UIViewController <PxpVideoPlayerProtocol> * p = self.player;
+    p.slowmo = !p.slowmo;
+    [btn setHighlighted:p.slowmo];
 }
 
 

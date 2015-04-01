@@ -109,7 +109,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          0
+#define DEBUG_MODE                          1
 
 //#if DEBUG_MODE == 0
 //#define DebugLog(...)

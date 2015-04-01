@@ -12,11 +12,14 @@
 #import <AVFoundation/AVPlayerItem.h>
 
 #import "Feed.h"
-#import "LiveIndicatorLight.h"
+#import "LiveLight.h"
 #import "VideoControlBarSlider.h"
 #import "RJLVideoPlayerPlaybackView.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "VideoZoomManager.h"
+
+
+#define PLAYER_TICK @"tick"
 
 //typedef NS_OPTIONS (NSInteger,PlayerStatus){
 //    RJLPS_Offline      = 0,
@@ -60,14 +63,14 @@
 @property (nonatomic,assign)    BOOL                        mute;
 @property (nonatomic,assign)    BOOL                        live;
 @property (nonatomic,assign)    CMTimeRange                 range;
-
-@property (nonatomic,assign)            BOOL                isAlive;
+@property (nonatomic,assign)    BOOL                        isAlive;
 
 // Graphic
-@property (nonatomic,strong)     LiveIndicatorLight     * liveIndicatorLight;
-@property (nonatomic,strong)     VideoControlBarSlider  * videoControlBar;
+@property (nonatomic,strong)     LiveLight         * liveIndicatorLight;
+@property (nonatomic,strong)     VideoControlBarSlider      * videoControlBar;
+@property (nonatomic,copy)       NSURL                      *URL;
+@property (nonatomic,assign)     float                      fps;
 
-@property (nonatomic,copy)       NSURL                  *URL;
 
 @property (nonatomic, strong)    VideoZoomManager       *zoomManager;
 

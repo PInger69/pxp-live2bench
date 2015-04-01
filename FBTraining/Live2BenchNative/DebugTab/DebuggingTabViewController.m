@@ -44,12 +44,16 @@
     ListPopoverController       * testPopup;
     L2BFullScreenViewController    * fullScreen;
     
-    
+
     DownloadItem * DOWNLOADITEM;
     DownloadItem * DOWNLOADITEM1;
     DownloadItem * DOWNLOADITEM2;
     UIProgressView * proBar;
     UILabel * lbl;
+    
+    UIButton * playButton;
+    UIButton * pauseButton;
+    UIButton * stepButton;
 }
 @end
 
@@ -83,6 +87,35 @@ static void *  debugContext = &debugContext;
         lbl = [[UILabel alloc]initWithFrame:CGRectMake(100, 120,200, 20)];
 
         
+        
+        
+        NSObject * obj1 = [[NSObject alloc]init];
+        NSObject * obj2 = [[NSObject alloc]init];
+       
+        
+        NSValue * val1 = [NSValue valueWithNonretainedObject:obj1];
+        NSValue * val2 = [NSValue valueWithNonretainedObject:obj2];
+        NSMapTable      * map   = [NSMapTable weakToWeakObjectsMapTable];
+        NSDictionary    * dict;
+        
+        NSMutableString * testString = [NSMutableString stringWithString:@"aKey"];
+       
+        dict = @{val1:@"someValueB" , testString:@"anotherValueB"};
+        [map setObject:@"someValueA" forKey:val2];
+        [map setObject:@"anotherValueA" forKey:testString];
+        
+        
+        testString = [NSMutableString stringWithString:@"bKey"];
+
+        
+        
+        
+        
+        NSLog(@"%@",[dict objectForKey:val1]);
+        NSLog(@"%@",[map objectForKey:val2]);
+        
+        NSLog(@"%@",[dict objectForKey:testString]);
+        NSLog(@"%@",[map objectForKey:testString]);
     }
 
     return self;
@@ -91,10 +124,53 @@ static void *  debugContext = &debugContext;
 
 - (void)viewDidLoad
 {
-   
+   playButton = [[UIButton alloc]initWithFrame:CGRectMake(100, 400, 50, 50)];
+    [playButton addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
+    [playButton setTitle:@"playButton" forState:UIControlStateNormal];
     
+    pauseButton  = [[UIButton alloc]initWithFrame:CGRectMake(200, 400, 50, 50)];
+    [pauseButton addTarget:self action:@selector(pause) forControlEvents:UIControlEventTouchUpInside];
+    [pauseButton setTitle:@"pauseButton" forState:UIControlStateNormal];
+    
+   stepButton = [[UIButton alloc]initWithFrame:CGRectMake(300, 400, 50, 50)];
+    [stepButton addTarget:self action:@selector(step) forControlEvents:UIControlEventTouchUpInside];
+    [stepButton setTitle:@"stepButton" forState:UIControlStateNormal];
+    
+    [self.view addSubview:playButton];
+    [self.view addSubview:pauseButton];
+    [self.view addSubview:stepButton];
     
     testPlayer = [[RJLVideoPlayer alloc]init];
+    
+    
+    pip = [[Pip alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
+    [self.view addSubview:pip];
+
+//    Feed * myFeed = [[Feed alloc]initWithURLString:@"/var/mobile/Applications/0DC1A65A-8396-4F64-860A-40773C3F610F/Documents/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4" quality:1];
+ 
+    NSURL *url = [[NSURL alloc] initFileURLWithPath: @"/Documents/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4"];
+    
+    
+    NSFileManager *filemanager=[ NSFileManager defaultManager ];
+    
+    NSError *error;
+    
+    
+    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4" ];
+    NSURL * asdfasdfaf =     [[NSURL alloc] initFileURLWithPath:myPath];
+    
+    if([filemanager fileExistsAtPath:myPath])
+    {
+        NSLog(@"FILE FOUND");
+        //just check existence of files in document directory
+    } else {
+    
+        NSLog(@"FILE NOT FOUND");    
+    }
+
+    //    [pip playWithFeed:myFeed];
+    [pip playerURL:asdfasdfaf];
+
 //    
 //NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"test.plist" ];
 //    
@@ -210,10 +286,45 @@ static void *  debugContext = &debugContext;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+//    [pip playWithFeed:EM.feeds[@"s1"]];
+//    [pip pause];
     [self.view addSubview:proBar];
     [self.view addSubview:lbl];
     [super viewWillAppear:animated];
+  
 }
+
+
+
+-(void)play
+{
+  [pip play];
+    
+    if (pip.avPlayerItem.asset) {
+        
+        AVAsset * ch = pip.avPlayerItem.asset;
+        NSArray *asdf  =[ch tracks];
+        AVAssetTrack * videoATrack = [[pip.avPlayerItem.asset tracksWithMediaType:AVMediaTypeVideo] lastObject];
+        if(videoATrack)
+        {
+           float  fps = videoATrack.nominalFrameRate;
+        }
+    }
+}
+
+-(void)pause
+{
+      [pip pause];
+}
+
+
+-(void)step
+{
+    double ctime    = CMTimeGetSeconds([pip.avPlayerItem currentTime]);
+    [pip.avPlayerItem stepByCount:4];
+    ctime    = CMTimeGetSeconds([pip.avPlayerItem currentTime]);
+}
+
 
 
 -(void)viewDidAppear:(BOOL)animated
@@ -240,16 +351,16 @@ static void *  debugContext = &debugContext;
 //    user = c255e4e00d1e8081e3b3e0e0f1a6682fb90811f6;
 //    visitTeam = Arsenal;
     
+    NSString * anID = @"6";
+    void(^dItemBlock)(DownloadItem*) =^void(DownloadItem* item) {
+        NSLog(@"a;sdlf;alsdfadskfaldkfalsdkfjasdlf");
+        
+    };
     
-//    void(^dItemBlock)(DownloadItem*) =^void(DownloadItem* item) {
-//        NSLog(@"a;sdlf;alsdfadskfaldkfalsdkfjasdlf");
-//        
-//    };
-//    
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
-//                                                                                                           @"id":@"4",
-//                                                                                                           @"event":@"live"}];
-//    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
+                                                                                                           @"id":anID,
+                                                                                                           @"event":@"live"}];
+    
     
 //    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"main.mp4" ];
 //    DOWNLOADITEM  =   [Downloader downloadURL:@"http://192.168.3.100/events/2015-02-26_15-00-50_959bdd31af143f8b2c4b0c4381457e28e7c66049_local/video/main_00hq.mp4" to:myPath];
@@ -271,19 +382,7 @@ static void *  debugContext = &debugContext;
 //    
     
     
-    //    [Downloader defaultDownloader].pause = NO;
-    
-////    [testPlayer performSelector:@selector(play) withObject:nil afterDelay:5];
-//    NSLog(@"DEBUG APPEAR!");
-//
-////    [self performSelector:@selector(delayed) withObject:nil afterDelay:10];
-//    [super viewDidAppear:animated];
-//    
-//    EM.currentEvent = EM.liveEventName;
-//    [videoPlayer playFeed:feedSwitch.primaryFeed];
-//    
-//    
-//    
+
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

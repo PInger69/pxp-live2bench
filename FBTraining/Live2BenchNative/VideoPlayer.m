@@ -110,7 +110,7 @@ static void * feedContext  = &feedContext;
     _context = @"";
     
     _rate = 0;
-    _liveIndicatorLight =  [[LiveIndicatorLight alloc]initWithFrame:CGRectMake(playerFrame.size.width-32, 0, 32, 32)];
+    _liveIndicatorLight =  [[LiveLight alloc]initWithFrame:CGRectMake(playerFrame.size.width-32, 0, 32, 32)];
     
     [self.view addSubview:_liveIndicatorLight];
 

@@ -408,6 +408,8 @@ static void * eventContext      = &eventContext;
  */
 -(void)masterLost:(NSNotification*)note
 {
+    if (_encoderManager.primaryEncoder != _encoderManager.masterEncoder) return;
+    
     if (_encoderManager.liveEventName == nil  && _encoderManager.currentEvent == nil){
         [self restartPlayer];
         CustomAlertView * alert = [[CustomAlertView alloc]initWithTitle:@"Encoder Status" message:@"Encoder connection lost" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
@@ -422,12 +424,11 @@ static void * eventContext      = &eventContext;
 {
 
     [super viewWillAppear:animated];
-//   _encoderManager.currentEvent = _encoderManager.liveEventName;
+
 
     
-    if (!self.videoPlayer.feed) {
+    if (!self.videoPlayer.feed && _encoderManager.currentEvent != nil) {
      [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-        
     }
 
 //    [currentEventTitle setNeedsDisplay];

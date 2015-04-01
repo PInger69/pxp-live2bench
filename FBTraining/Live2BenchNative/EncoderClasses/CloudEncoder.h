@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "Encoder.h"
 
 #define NOTIF_CLOUD_VERIFY          @"cloudVerify"
@@ -17,7 +18,7 @@
 #define CE_VERIFY_GET               @"verifyGet:timeStamp:" // Activate
 #define CE_LOGOUT               @"logout:timeStamp:" // Logout
 
-@interface CloudEncoder : Encoder
+@interface CloudEncoder : Encoder <EncoderProtocol>
 @property (nonatomic,assign) BOOL   loggedIn;
 
 -(void)startObserving;

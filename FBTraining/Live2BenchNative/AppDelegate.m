@@ -17,6 +17,7 @@
 #import "SpinnerView.h"
 #import "ToastObserver.h"
 #import "SocialSharingManager.h"
+#import "CustomAlertView.h"
 
 @implementation AppDelegate
 {
@@ -191,10 +192,13 @@
 
     }];
     
+    [CustomAlertView staticInit];
+    
     [_actionList start];
     
     _toastObserver = [[ToastObserver alloc]init];
     _toastObserver.parentView = self.window.rootViewController.view;
+    
     
     return YES;
 }

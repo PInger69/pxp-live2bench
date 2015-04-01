@@ -1,16 +1,16 @@
 //
-//  LiveIndicatorLight.m
+//  LiveLight.m
 //  Live2BenchNative
 //
-//  Created by dev on 2014-12-05.
-//  Copyright (c) 2014 DEV. All rights reserved.
+//  Created by dev on 2015-03-20.
+//  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "LiveIndicatorLight.h"
+#import "LiveLight.h"
 
-@implementation LiveIndicatorLight
+@implementation LiveLight
 {
-
+    
     UIBezierPath    * myFirstShape;
     CAShapeLayer    * shapeLayer;
 }
@@ -28,7 +28,7 @@
         shapeLayer.path         = myFirstShape.CGPath;
         [self.layer addSublayer:shapeLayer];
         self.hidden = YES;
-    
+        
     }
     return self;
 }
@@ -65,10 +65,12 @@
                               }
                               completion:^(BOOL finished){
                               }];
-
+        
     }
-
+    
 }
+
+
 
 
 

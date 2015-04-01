@@ -6,15 +6,18 @@
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
+#import "PxpVideoPlayerProtocol.h"
+#import <Foundation/Foundation.h>
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AVFoundation/AVPlayerItem.h>
+
 #import "Feed.h"
-//#import "LiveIndicatorLight.h"
+
+
 #import "VideoControlBarSlider.h"
 #import "RJLVideoPlayerPlaybackView.h"
-#import "PxpVideoPlayerProtocol.h"
-
-@class LiveIndicatorLight;
+#import "LiveLight.h"
 
 typedef NS_OPTIONS (NSInteger,PlayerStatus){
     RJLPS_Offline      = 0,
@@ -47,7 +50,7 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 @property (nonatomic,assign)    BOOL                        mute;
 @property (nonatomic,assign)    BOOL                        live;
 @property (nonatomic,assign)    CMTimeRange                 range;
-@property (nonatomic,strong)    LiveIndicatorLight          * liveIndicatorLight;
+@property (nonatomic,strong)    LiveLight                   * liveIndicatorLight;
 @property (nonatomic,strong)    VideoControlBarSlider       * videoControlBar;
 @property (nonatomic,copy)      NSURL                       *URL;
 

@@ -6,6 +6,16 @@
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 
+/**
+ *   This class will keep a reference to all the local stored videos and clips
+ *   The data stored in the "bookmarks path" will be a collection of plist labeled by number e.g. 1.plist, 2.plist ...
+ *   each plist will have reference to a clip that will be in the bookmakvideos.
+ *
+ *   The reason for this is that one book mark or clip can reference multiple videos (multicam) so its built to be extended
+ */
+
+
+
 #import "LocalEncoder.h"
 #import "Feed.h"
 #import "Downloader.h"
@@ -18,9 +28,12 @@
     NSString        * _localDocsPListPath;
     NSString        * _localPath;
     NSMutableArray  * _bookmarkPlistNames;
+    
+    NSComparisonResult(^plistSort)(id obj1, id obj2);
+    
 }
 
-@synthesize name;
+@synthesize name            = _name;
 @synthesize event           = _event;
 @synthesize eventType       = _eventType;
 @synthesize eventData       = _eventData;
@@ -36,7 +49,7 @@
 {
     self = [super init];
     if (self){
-        name                            = @"Local Encoder";
+        _name                            = @"Local Encoder";
         _localPath                      = aDocsPath;
         _localDocsPListPath             = [aDocsPath stringByAppendingPathComponent:LOCAL_PLIST];
         _status                         = ENCODER_STATUS_LOCAL;
@@ -44,9 +57,12 @@
         _allEventData                   = [[NSArray alloc]initWithContentsOfFile:_localDocsPListPath];
         _eventData                      = @{};
         _eventTagsDict                  = [[NSMutableDictionary alloc]init];
-        _clipFeeds                      = [[NSMutableDictionary alloc]init];
+        
+        _bookmarkPlistNames             = [[NSMutableArray alloc]init];
+        
+        _clipFeeds                      = [self buildClipFeeds];
         NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
-        NSEnumerator *enumerator        = [_allEventData objectEnumerator];
+        NSEnumerator    * enumerator    = [_allEventData objectEnumerator];
         id value;
         
         while ((value = [enumerator nextObject])) {
@@ -65,6 +81,27 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
         
+        // build sorter block
+        
+        plistSort = ^(id obj1, id obj2) {
+        
+            NSString * fn1 = [((NSString*)obj1) componentsSeparatedByString: @"."][0];
+            NSString * fn2 = [((NSString*)obj2) componentsSeparatedByString: @"."][0];
+            
+            int n1 = [fn1 integerValue];
+            int n2 = [fn2 integerValue];
+            if (n1 > n2) {
+                return (NSComparisonResult)NSOrderedDescending;
+            }
+            
+            if (n1 < n2) {
+                return (NSComparisonResult)NSOrderedAscending;
+            }
+            
+            return (NSComparisonResult)NSOrderedSame;
+        };
+        // End sorterblock
+        
         
         
         
@@ -74,6 +111,23 @@
     return self;
 }
 
+
+
+
+
+
+
+
+
+#pragma mark - Event Download
+
+
+
+
+
+
+
+
 -(void)myClipDataRequest: (NSNotification *)note{
     
 }
@@ -82,13 +136,40 @@
 {
 }
 
-
+/**
+ *  This method will build all the plists during start up converting them in to NSDicts
+ *  For Bookmarked Clips, Event, Event Tags, tags to be pushed to cloud
+ */
 -(void)buildEncoderRequest
 {
-    //_allEvents = [[NSArray alloc]initWithContentsOfFile:_localDocsPListPath];
-  //  _allEventData
+
+    // Parse all events plists and add them to the Dictionary
+    
+    
+    
+    //Parse all the bookmarked plists
+    
+    
     
     [self scanPath];
+    
+    NSMutableDictionary * tempFeedDict = [[NSMutableDictionary alloc]init];
+    
+    
+    // loop thru the plists
+    
+    
+    Feed * feed = [[Feed alloc]initWithURLString:@"" quality:1];
+    NSString * feedKey = @"";
+    feed.info   = @{};// Plist data
+    [tempFeedDict setObject:feed forKey:feedKey];
+    
+    
+    
+    
+    
+    
+    _feeds = [tempFeedDict copy];
 }
 
 
@@ -189,12 +270,7 @@
 
 }
 
-// This will show name and status
--(NSString*)description
-{
-    NSString * txt = [NSString stringWithFormat:@" %@: %d - %@   - %@",self.name,self.status,self.event,self.eventType  ];
-    return txt;
-}
+
 
 
 -(void)downloadToClip:(NSString*)clip
@@ -206,10 +282,19 @@
 
 -(NSString*)bookmarkPath
 {
-
     return [NSString stringWithFormat:@"%@/bookmark",_localPath];
 }
 
+-(NSString*)bookmarkedVideosPath
+{
+    return [NSString stringWithFormat:@"%@/bookmark/bookmarkvideo",_localPath];
+}
+
+
+/**
+ *  This get all the plists in the bookmark folder on the device
+ *  the plists are labeled as such 1.plist, 2.plist, 3.plist...
+ */
 -(void)scanPath
 {
 
@@ -219,36 +304,37 @@
     NSMutableArray *mp3Files = [[NSMutableArray alloc] init];
     [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *filename = (NSString *)obj;
-        NSString *extension = [[filename pathExtension] lowercaseString];
-        if ([extension isEqualToString:@"plist"]) {
+
+        
+        if ([self myClipPlistNameCheck:filename]) {
+           
             [_bookmarkPlistNames addObject:filename];
             [mp3Files addObject:[bookmarkPath stringByAppendingPathComponent:filename]];
+            
         }
+        
+        
     }];
 
 
+    
+    
+    _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
+    
+    _bookmarkPlistNames = @[@"0.plist",@"1.plist",@"2.plist",@"3.plist",@"4.plist",@"5.plist"];
+    
+    int n = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
+    
 }
 
--(int)gap:(NSArray*)list first:(int)first last:(int)last
+-(NSArray*)grabAllFiles:(NSString*)aPath ext:(NSString*)ext
 {
-    
-    if ([list count] <1){
-        return 0;
-    }
 
-    if (first >= last){
-        if(first >= list[first]){
-            return last+1;
-        }
-        return last;
-    }
-    int med =  (last+first)>>1;
-    if(med < list[med]){
-        return [self gap:list first:med+1 last:last];
-    }
-    return [self gap:list first:med+1 last:last];
-    
+
+
+    return @[];
 }
+
 
 /**
  *  This will check the bookmark folder on the device and give a number that will be used for the name of the video that will be used
@@ -261,13 +347,126 @@
 }
 
 
--(void)deleteClip:(NSString*)name
+
+-(BOOL)myClipPlistNameCheck:(NSString*)check
 {
+    // Regx
+//    NSRange   searchedRange     = NSMakeRange(0, [check length]);
+//    NSString *pattern           = @".*\\.plist";//@"(?:www\\.)?((?!-)[a-zA-Z0-9-]{2,63}(?<!-))\\.?((?:[a-zA-Z0-9]{2,})?(?:\\.[a-zA-Z0-9]{2,})?)";
+//    NSError  *error             = nil;
+//    NSRegularExpression* regex  = [NSRegularExpression regularExpressionWithPattern: pattern options:0 error:&error];
+//    NSArray* matches            = [regex matchesInString:check options:0 range: searchedRange];
+//    
+//    // name split
+//    
+////    NSArray *lines = [filename componentsSeparatedByString: @"."];
+////    NSString *lineOne = lines[0];
+//
+//    NSString *extension = [[check pathExtension] lowercaseString];
+//
+    NSRange range = [check rangeOfString:@"[0-9]+\\.plist" options:NSRegularExpressionSearch];
+    return range.location != NSNotFound;
+}
+
+
+
+#pragma mark - Bookmark Clip Methods
+
+-(NSMutableDictionary *)buildClipFeeds
+{
+    
 
 
 }
 
 
+-(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData
+{
+    
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:tagData];
+    
+    // add local file name to the plist
+    [dict addEntriesFromDictionary:@{@"fileNames": @[aName]}];
+    
+    
+    // adds the clip to the rest of the feeds
+    NSString * clipPath = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],aName];
+    Feed     * myFeed   = [[Feed alloc]initWithURLString:clipPath quality:0];
+    [_clipFeeds setValue:myFeed forKey:aName];
+    
+    
+    // writes the plist to the harddrive
+    int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
+    // write the plist
+    NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark/%d.plist",_localPath,nextGap];
+    [dict writeToFile:bookmarkPath atomically:YES];
+    
+    // adds the plist to the list of clips
+    
+    [_eventTagsDict setObject:dict forKey:aName];
+}
+
+
+-(void)deleteClip:(NSString*)aName
+{
+    
+    
+    [_clipFeeds removeObjectForKey:aName];
+    
+    // sort list on delete
+    _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
+}
+
+
+-(int)gap:(NSArray*)list first:(int)first last:(int)last
+{
+    // if there is nothing in the list
+    if ([list count] <1){
+        return 0;
+    }
+    
+    if (first >= last){
+        if(first >= [list[first] intValue]){
+            return last+1;
+        }
+        return last;
+    }
+    int med =  (last+first)>>1;//(int)((last+first)*.5);//
+    if(med < [list[med]intValue]){
+        return [self gap:list first:first last:med];
+    }
+    return [self gap:list first:med+1 last:last];
+    
+}
+
+
+
+
+
+//debugging
+#pragma mark - debugging
+
+// This will show name and status
+// This will show name and status
+-(NSString*)description
+{
+    NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark",_localPath];
+    NSString * txt = [NSString stringWithFormat:@" %@: %d - %@   - %@\nBookmark Path:%@",self.name,self.status,self.event,self.eventType,  bookmarkPath ];
+    return txt;
+}
+
+
+-(NSString*)name
+{
+    return _name;
+}
+
+-(void)setName:(NSString *)name
+{
+    [self willChangeValueForKey:@"name"];
+    _name = name;
+    [self didChangeValueForKey:@"name"];
+}
 
 
 @end
