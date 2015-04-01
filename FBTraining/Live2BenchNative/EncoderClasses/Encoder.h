@@ -129,30 +129,5 @@
  */
 -(void)destroy;
 
-//-(void)deleteEvent:(NSString*) eventName;
-//-(int)downloadProgress;
-//-(void)downloadEventToUSB;
-//-(void)checkSpace;
-//
-//-(void)shutdown;
-//-(void)sync;
-//-(void)getCameras;
-//
-//
-////Live commands
-//-(void)startLive;
-//-(void)stopLive;
-//-(void)pauseLive;
-
-
-//mod tags
-//make tags
-//all tags
-
-//get past events
-
-//get cameras
-//create tele set
-//tele vid + catagory
 
 @end

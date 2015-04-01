@@ -479,6 +479,9 @@ static void * vpFrameContext   = &vpFrameContext;
     
         weakPip.status = weakPip.status | PIP_Seeking;
         
+        if ([weakPip.avPlayerItem.seekableTimeRanges count]==0) return;
+            
+        
         CMTime pTime = self.videoPlayer.avPlayer.currentTime;
         CMTime pipTime = [[weakPip.avPlayerItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue].duration;
         CMTime mySeekToTime = self.videoPlayer.avPlayer.currentTime;

@@ -43,6 +43,8 @@
 @synthesize allEventData      = _allEventData;
 @synthesize eventTagsDict   = _eventTagsDict;
 
+
+
 @synthesize clipFeeds       = _clipFeeds;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath
@@ -114,9 +116,115 @@
 
 
 
+#pragma mark - EncoderProtocol
+
+-(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    
+    if ([methodName isEqualToString: TEAMS_GET]) {
+        [self teamsResponse:        tData];
+    } else if ([methodName isEqualToString: MAKE_TAG]) {
+        [self makeTagResponce:      tData];
+    } else if ([methodName isEqualToString: MODIFY_TAG]) {
+        [self modTagResponce:       tData];
+    } else if ([methodName isEqualToString: EVENT_GET_TAGS]) {
+     //   [self eventTagsGetResponce: tData eventNameKey:extra];
+    }
+    
+    
+}
+
+-(void)clearQueueAndCurrent
+{
+
+}
 
 
+#pragma mark - Responces
 
+-(void)teamsResponse:(NSMutableDictionary *)data
+{
+    
+    
+    
+//    NSDictionary    * results =[Utility JSONDatatoDict:data];
+//    if(NSClassFromString(@"NSJSONSerialization"))
+//    {
+//        NSError *error = nil;
+//        id object = [NSJSONSerialization
+//                     JSONObjectWithData:data
+//                     options:0
+//                     error:&error];
+//        
+//        if([object isKindOfClass:[NSDictionary class]])
+//        {
+//            results     = object;
+//            self.teams      = [results objectForKey:@"teams"];
+//            self.playerData = [results objectForKey:@"teamsetup"];
+//            self.league     = [results objectForKey:@"leagues"];
+//        }
+//    }
+//    isTeamsGet = YES;
+}
+
+
+-(void)makeTagResponce:(NSMutableDictionary *)data
+{
+    
+//    NSDictionary    * results;
+//    if(NSClassFromString(@"NSJSONSerialization"))
+//    {
+//        NSError *error = nil;
+//        id object = [NSJSONSerialization
+//                     JSONObjectWithData:data
+//                     options:0
+//                     error:&error];
+//        
+//        if([object isKindOfClass:[NSDictionary class]])
+//        {
+//            results = object;
+//            // add tag to its dic
+//            if ([results objectForKey:@"id"]) {
+//                
+//                NSString * tagId = [[results objectForKey:@"id"]stringValue];
+//                
+//                [_eventTagsDict setObject:results forKey:tagId];
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:results];
+//            }
+//        }
+//    }
+    
+}
+
+
+-(void)modTagResponce:(NSMutableDictionary *)data
+{
+    
+//    NSDictionary    * results;
+//    if(NSClassFromString(@"NSJSONSerialization"))
+//    {
+//        NSError *error = nil;
+//        id object = [NSJSONSerialization
+//                     JSONObjectWithData:data
+//                     options:0
+//                     error:&error];
+//        
+//        if([object isKindOfClass:[NSDictionary class]])
+//        {
+//            results = object;
+//            // add tag to its dic
+//            if ([results objectForKey:@"id"]) {
+//                
+//                NSString * tagId = [[results objectForKey:@"id"]stringValue];
+//                
+//                [_eventTagsDict setObject:results forKey:tagId];
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:results];
+//            }
+//        }
+//    }
+    
+}
 
 
 #pragma mark - Event Download
@@ -132,9 +240,7 @@
     
 }
 
--(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
-{
-}
+
 
 /**
  *  This method will build all the plists during start up converting them in to NSDicts

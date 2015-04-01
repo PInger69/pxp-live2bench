@@ -14,31 +14,40 @@
  */
 
 
-@interface LocalEncoder : NSObject <EncoderCommands,EncoderProtocol>
+@interface LocalEncoder : NSObject <EncoderProtocol>
 
+@property (nonatomic,strong)    NSString                * name;
+@property (nonatomic,assign)    EncoderStatus           status;
+@property (nonatomic,strong)    NSString                * statusAsString;
+@property (nonatomic,strong)    NSString                * event;            // the current event the encoder is looking at
+@property (nonatomic,strong)    NSString                * eventType;        // the current event the encoder is looking at
+@property (nonatomic,strong)    NSArray                 * eventTags;        // the current event the encoder is looking at
+@property (nonatomic,strong)    NSString                * liveEventName;
+@property (nonatomic,strong)    NSDictionary            * eventData;        //raw dict
+@property (nonatomic,strong)    NSArray                 * allEvents;        // all events on the encoder
+@property (nonatomic,strong)    NSArray                 * allEventData;
+@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict;    // keys are event names
+@property (nonatomic,strong)    NSDictionary            * feeds;            // feeds for current event
 
-@property (nonatomic,strong)    NSString            * name;
-@property (nonatomic,strong)    NSString            * event;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSString            * eventType;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSDictionary        * eventData;   //raw dict
-@property (nonatomic,strong)    NSArray             * allEvents;    // all events on the encoder just the event names
-@property (nonatomic,strong)    NSArray             * allEventData; // all the event dicts
-@property (nonatomic,strong)    NSDictionary        * feeds;        // all feeds for current Event
-
-@property (nonatomic,assign)    EncoderStatus       status;
-@property (nonatomic,strong)    NSMutableDictionary * eventTagsDict;
-
-
-@property (nonatomic,strong)    NSMutableDictionary * clipFeeds;    // This is all feeds kept on the device  key:<ClipName> value:<Feed>
-
+@property (nonatomic,strong)    NSDictionary    * teams;
+@property (nonatomic,strong)    NSDictionary    * playerData;
+@property (nonatomic,strong)    NSDictionary    * league;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
+
+#pragma mark - EncoderProtocol Methods
+-(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
+-(void)clearQueueAndCurrent;
+
+
+
+#pragma mark - Bookmark Clip Methods
+
+@property (nonatomic,strong)    NSMutableDictionary * clipFeeds;    // This is all feeds kept on the device  key:<ClipName> value:<Feed>
 
 -(NSInteger)getBookmarkSpace;
 -(NSString*)bookmarkPath;
 -(NSString*)bookmarkedVideosPath;
-
-#pragma mark - Bookmark Clip Methods
 -(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData;//video file
 -(void)deleteClip:(NSString*)aName;
 @end

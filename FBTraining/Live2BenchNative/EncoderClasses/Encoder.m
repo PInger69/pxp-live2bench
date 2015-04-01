@@ -98,12 +98,9 @@
 @implementation Encoder
 {
     // Ready Flags
-  
     BOOL isTeamsGet;
     BOOL isAuthenticate;
     BOOL isVersion;
-//    BOOL isBuild;
-//    BOOL isReady;
 }
 
 
