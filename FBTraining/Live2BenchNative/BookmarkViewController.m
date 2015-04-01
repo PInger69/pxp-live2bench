@@ -252,17 +252,17 @@ int viewWillAppearCalled;
     
     
     //uploadFileResponseLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 180,120 , 25)];
-    [uploadFileResponseLabel setText:@"sharing:"];
-    [uploadFileResponseLabel setBackgroundColor:[UIColor clearColor]];
-    [uploadFileResponseLabel setHidden:TRUE];
-    [self.view addSubview:uploadFileResponseLabel];
-    
-    uploadFileResponse = [[UITextView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(uploadFileResponseLabel.frame)+10, uploadFileResponseLabel.frame.origin.y-5, TABLE_WIDTH+200, 30)];
-    [uploadFileResponse setFont:[UIFont systemFontOfSize:15.0f]];
-    [uploadFileResponse setBackgroundColor:[UIColor clearColor]];
-    [uploadFileResponse setUserInteractionEnabled:FALSE];
-    [uploadFileResponse setHidden:TRUE];
-    [self.view addSubview:uploadFileResponse];
+//    [uploadFileResponseLabel setText:@"sharing:"];
+//    [uploadFileResponseLabel setBackgroundColor:[UIColor clearColor]];
+//    [uploadFileResponseLabel setHidden:TRUE];
+//    [self.view addSubview:uploadFileResponseLabel];
+//    
+//    uploadFileResponse = [[UITextView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(uploadFileResponseLabel.frame)+10, uploadFileResponseLabel.frame.origin.y-5, TABLE_WIDTH+200, 30)];
+//    [uploadFileResponse setFont:[UIFont systemFontOfSize:15.0f]];
+//    [uploadFileResponse setBackgroundColor:[UIColor clearColor]];
+//    [uploadFileResponse setUserInteractionEnabled:FALSE];
+//    [uploadFileResponse setHidden:TRUE];
+//    [self.view addSubview:uploadFileResponse];
     
     
     
@@ -356,23 +356,23 @@ int viewWillAppearCalled;
     fullScreenMode = FALSE;
     //firstTimeStartMoviePlayer = TRUE;
     //set the right play back rate in the case: pause viedo,then switch between full screen and normal screen, then resume to play with proper play back rate
-    [updatePlayRateTimer invalidate];
-    updatePlayRateTimer = nil;
-    updatePlayRateTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
-                                                         target:self
-                                                       selector:@selector(updatePlayRate:)
-                                                       userInfo:nil
-                                                        repeats:YES];
+//    [updatePlayRateTimer invalidate];
+//    updatePlayRateTimer = nil;
+//    updatePlayRateTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
+//                                                         target:self
+//                                                       selector:@selector(updatePlayRate:)
+//                                                       userInfo:nil
+//                                                        repeats:YES];
     
     
     //when new bookmark tag is created, reload the table view
-    [updateTableViewTimer invalidate];
-    updateTableViewTimer = nil;
-    updateTableViewTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
-                                                          target:self
-                                                        selector:@selector(updateTableView:)
-                                                        userInfo:nil
-                                                         repeats:YES];
+//    [updateTableViewTimer invalidate];
+//    updateTableViewTimer = nil;
+//    updateTableViewTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
+//                                                          target:self
+//                                                        selector:@selector(updateTableView:)
+//                                                        userInfo:nil
+//                                                         repeats:YES];
     
     
     //if all the new bookmark tags are received from the server or no new bookmark tag is processed, hide the progress bar;Otherwise display the progress bar to indicate the process of loading new bookmark tags
@@ -1471,7 +1471,9 @@ int viewWillAppearCalled;
 //{
 //    return nil;
 //}
-- (void)didReceiveMemoryWarning
+- (void)didReceiveMemoryWarning{
+    [super didReceiveMemoryWarning];
+}
 
 
 #pragma mark Twitter Share
@@ -1480,36 +1482,36 @@ int viewWillAppearCalled;
 //    [self socialShareWithMethod:2];
 //}
 
-- (void)socialShareWithMethod: (NSInteger)service
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
-    [super didReceiveMemoryWarning];
-    if ([self.view window] == nil) self.view = nil;
-    if(_currentSharingMethod > 0)
-        return;
-    
-    // Dispose of any resources that can be recreated.
-    NSArray* methodStrings = @[@"None", @"Facebook", @"Twitter"];
-    
-    //    if(!_GDUploader)
-    //    {
-    //        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
-    //        _GDUploader.delegate = self;
-    //    }
-    //
-    //    if(![_GDUploader isAuthorized])
-    //    {
-    //        [[[UIAlertView alloc] initWithTitle:@"Cannot Share" message:[NSString stringWithFormat:@"You must also be linked to Google Drive in order to share the video link(s) on %@",methodStrings[service]] delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles: nil] show];
-    //        return;
-    //    }
-    
-    //    _currentSharingMethod = service;
-    //    [self uploadToGoogleDrive];
-    //
-    //    [popoverController dismissPopoverAnimated:YES];
-    //    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-    
-}
+//- (void)socialShareWithMethod: (NSInteger)service
+//{
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
+//    [super didReceiveMemoryWarning];
+//    if ([self.view window] == nil) self.view = nil;
+//    if(_currentSharingMethod > 0)
+//        return;
+//    
+//    // Dispose of any resources that can be recreated.
+//    NSArray* methodStrings = @[@"None", @"Facebook", @"Twitter"];
+//    
+//    //    if(!_GDUploader)
+//    //    {
+//    //        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
+//    //        _GDUploader.delegate = self;
+//    //    }
+//    //
+//    //    if(![_GDUploader isAuthorized])
+//    //    {
+//    //        [[[UIAlertView alloc] initWithTitle:@"Cannot Share" message:[NSString stringWithFormat:@"You must also be linked to Google Drive in order to share the video link(s) on %@",methodStrings[service]] delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles: nil] show];
+//    //        return;
+//    //    }
+//    
+//    //    _currentSharingMethod = service;
+//    //    [self uploadToGoogleDrive];
+//    //
+//    //    [popoverController dismissPopoverAnimated:YES];
+//    //    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
+//    
+//}
 
 
 @end

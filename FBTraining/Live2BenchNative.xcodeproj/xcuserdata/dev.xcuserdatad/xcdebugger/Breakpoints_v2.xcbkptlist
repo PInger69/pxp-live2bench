@@ -168,7 +168,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
@@ -177,8 +177,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1231"
             endingLineNumber = "1231"
-            landmarkName = "@implementation RJLVideoPlayer"
-            landmarkType = "3">
+            landmarkName = "-seekClamp:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

@@ -137,7 +137,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
                                                clipVC,
                                                listVC,
                                                bookmarkVC,
-                                               debugTabView,
+                                               //debugTabView,
                                                nil];
     if(SHOW_STATS_TAB)
         //   [vcArray addObject:statsVC];
