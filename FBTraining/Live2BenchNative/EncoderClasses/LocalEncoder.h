@@ -44,7 +44,7 @@
 #pragma mark - Bookmark Clip Methods
 
 @property (nonatomic,strong)    NSMutableDictionary * clipFeeds;    // This is all feeds kept on the device  key:<ClipName> value:<Feed>
-@property (nonatomic,strong)    NSMutableDictionary * clipFeedsDict;
+//@property (nonatomic,strong)    NSMutableDictionary * clipFeedsDict;
 
 -(NSInteger)getBookmarkSpace;
 -(NSString*)bookmarkPath;

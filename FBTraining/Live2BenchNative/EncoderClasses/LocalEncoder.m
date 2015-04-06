@@ -53,7 +53,7 @@
 
 
 @synthesize clipFeeds       = _clipFeeds;
-@synthesize clipFeedsDict   = _clipFeedsDict;
+//@synthesize clipFeedsDict   = _clipFeedsDict;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath
 {
@@ -130,6 +130,8 @@
             NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary*)value2];
             [temp addEntriesFromDictionary:@{@"feed":aFeed}];
             [_clipFeeds setObject:temp forKey:[temp objectForKey:@"id"]];
+           // [_clipFeedsDict  setObject:temp forKey:[temp objectForKey:@"id"]];
+            
         }
         
         
@@ -168,6 +170,7 @@
         
         // Observers
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDeleteRequest:) name:@"NOTIF_DELETE_CLIPS" object:nil];
         
         
     }
@@ -410,7 +413,7 @@
  *  This get all the plists in the bookmark folder on the device
  *  the plists are labeled as such 1.plist, 2.plist, 3.plist...
  */
--(void)scanPath
+-(void)scanForBookmarks
 {
 
     NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark",_localPath];
@@ -436,9 +439,9 @@
     
     _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
     
-    _bookmarkPlistNames = @[@"0.plist",@"1.plist",@"2.plist",@"3.plist",@"4.plist",@"5.plist"];
+//    _bookmarkPlistNames = @[@"0.plist",@"1.plist",@"2.plist",@"3.plist",@"4.plist",@"5.plist"];
     
-    int n = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
+//    int n = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
     
 }
 
@@ -499,24 +502,43 @@
     Feed     * myFeed   = [[Feed alloc]initWithURLString:clipPath quality:0];
     [_clipFeeds setValue:myFeed forKey:aName];
     
-    
+    [self scanForBookmarks];
     // writes the plist to the harddrive
     int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
     // write the plist
     NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark/%d.plist",_localPath,nextGap];
-    [dict writeToFile:bookmarkPath atomically:YES];
     
+
+    
+    
+    // give the plist a reference to is self. This is so when the Plist is a dict I can find and delete it self
+    [dict addEntriesFromDictionary:@{@"plistName": [NSString stringWithFormat:@"%d.plist",nextGap] }];
     // adds the plist to the list of clips
+    [dict writeToFile:bookmarkPath atomically:YES];
     
     [_eventTagsDict setObject:dict forKey:aName];
 }
 
 
--(void)deleteClip:(NSString*)aName
+-(void)myClipDeleteRequest:(NSNotification*)note
 {
+
+}
+
+
+-(void)deleteClip:(NSString*)aId
+{
+    NSError  * error        = nil;
+    NSString * plistPath    = [_clipFeeds objectForKey:@"plistPath"];
+    NSString * videoPath    = [_clipFeeds objectForKey:@"fileNames"];
+    
+    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
+    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
     
     
-    [_clipFeeds removeObjectForKey:aName];
+    
+    
+    [_clipFeeds removeObjectForKey:aId];
     
     // sort list on delete
     _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
