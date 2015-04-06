@@ -19,6 +19,7 @@
 #import "LocalEncoder.h"
 #import "Feed.h"
 #import "Downloader.h"
+#import "Event.h"
 
 #define LOCAL_PLIST  @"EventsHid.plist"
 
@@ -30,6 +31,12 @@
     NSMutableArray  * _bookmarkPlistNames;
     
     NSComparisonResult(^plistSort)(id obj1, id obj2);
+
+    // new construction
+    Event           * _myEvent;
+    
+    NSDictionary    * _myEvents; // Key by name;
+    
     
 }
 
@@ -40,49 +47,103 @@
 @synthesize feeds           = _feeds;
 @synthesize status          = _status;
 @synthesize allEvents       = _allEvents;
-@synthesize allEventData      = _allEventData;
+@synthesize allEventData    = _allEventData;
 @synthesize eventTagsDict   = _eventTagsDict;
 
 
 
 @synthesize clipFeeds       = _clipFeeds;
+@synthesize clipFeedsDict   = _clipFeedsDict;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath
 {
     self = [super init];
     if (self){
+        
+        // Build Local Encoder
         _name                            = @"Local Encoder";
         _localPath                      = aDocsPath;
-        _localDocsPListPath             = [aDocsPath stringByAppendingPathComponent:LOCAL_PLIST];
+        _localDocsPListPath             = [aDocsPath stringByAppendingPathComponent:LOCAL_PLIST];// if its not there make it
         _status                         = ENCODER_STATUS_LOCAL;
         _event                          = @"none";
         _allEventData                   = [[NSArray alloc]initWithContentsOfFile:_localDocsPListPath];
         _eventData                      = @{};
         _eventTagsDict                  = [[NSMutableDictionary alloc]init];
         
-        _bookmarkPlistNames             = [[NSMutableArray alloc]init];
+        // new
         
-        _clipFeeds                      = [self buildClipFeeds];
+        _myEvents                       = [[NSMutableDictionary alloc]init];
+        
+        // Build Bookmark Clip sections
+        
+        
+        
+        // this takes the plist files of the Events and adds them to _allEventData
         NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
-        NSEnumerator    * enumerator    = [_allEventData objectEnumerator];
-        id value;
+        NSArray         * plistPaths    = [self grabAllFiles:[aDocsPath stringByAppendingPathComponent:@"events"] ext:@"plist"];
+        for (NSString *pths in plistPaths) {
+            [tempPool addObject:[[NSDictionary alloc]initWithContentsOfFile:pths]];
+        }
+        _allEventData                   = [tempPool copy];
         
+
+        // This builds all the events from the _allEventData
+        NSEnumerator    * enumerator    = [_allEventData objectEnumerator];
+        id              value;
         while ((value = [enumerator nextObject])) {
             NSDictionary * dict = value;
-            if ([dict objectForKey:@"name"]) {
-                [tempPool addObject:[dict objectForKey:@"name"]];
+            NSString * itemName = [dict objectForKey:@"name"];
+            if (itemName) {
+                [tempPool addObject:itemName];
+                [_myEvents setValue:[[Event alloc]initWithDict:dict] forKey:itemName];// this is the new kind of build that events have their own feed
             }
         }
         
-        
+        // gets string names of all the events
         _allEvents                      = [tempPool copy];
-        Feed * test                     = [[Feed alloc]initWithURLString:@"http://192.168.3.100/events/2014-11-13_16-21-16_dff4c99c75cf73a4b374a693f919244648f5aa31_local/video/list.m3u8" quality:0];
-        _feeds                          = @{
-                                            @"t1":test
-                                            };
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
         
+        
+        
+        
+        
+        
+        
+        // this gets all the plists for the book marks
+        NSMutableArray  * tempPoolClips      = [[NSMutableArray alloc]init];
+        NSArray         * clipsPlistPaths    = [self grabAllFiles:[aDocsPath stringByAppendingPathComponent:@"bookmark"] ext:@"plist"];
+        for (NSString *pthss in clipsPlistPaths) {
+            [tempPoolClips addObject:[[NSDictionary alloc]initWithContentsOfFile:pthss]];
+        }
+      
+        
+        
+        // This builds all the events from the _allEventData
+        NSEnumerator    * enumerator2    = [tempPoolClips objectEnumerator];
+        id              value2;
+        
+        
+        // This builds the clips that
+        while ((value2 = [enumerator2 nextObject])) {
+            Feed * aFeed = [[Feed alloc]initWithURLString:@"" quality:0];
+            aFeed.info = (NSDictionary*)value2;
+            NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary*)value2];
+            [temp addEntriesFromDictionary:@{@"feed":aFeed}];
+            [_clipFeeds setObject:temp forKey:[temp objectForKey:@"id"]];
+        }
+        
+        
+        _bookmarkPlistNames             = [[NSMutableArray alloc]init];
+        
+        
+        
+        
+        
+        
+        
+        
+        //_clipFeeds                      = [self buildClipFeeds];
+
         // build sorter block
         
         plistSort = ^(id obj1, id obj2) {
@@ -105,9 +166,9 @@
         // End sorterblock
         
         
+        // Observers
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
         
-        
-        [self buildEncoderRequest];
         
     }
     return self;
@@ -137,7 +198,7 @@
 
 -(void)clearQueueAndCurrent
 {
-
+    // this does nothing
 }
 
 
@@ -167,7 +228,6 @@
 //    }
 //    isTeamsGet = YES;
 }
-
 
 -(void)makeTagResponce:(NSMutableDictionary *)data
 {
@@ -242,58 +302,12 @@
 
 
 
-/**
- *  This method will build all the plists during start up converting them in to NSDicts
- *  For Bookmarked Clips, Event, Event Tags, tags to be pushed to cloud
- */
--(void)buildEncoderRequest
-{
 
-    // Parse all events plists and add them to the Dictionary
-    
-    
-    
-    //Parse all the bookmarked plists
-    
-    
-    
-    [self scanPath];
-    
-    NSMutableDictionary * tempFeedDict = [[NSMutableDictionary alloc]init];
-    
-    
-    // loop thru the plists
-    
-    
-    Feed * feed = [[Feed alloc]initWithURLString:@"" quality:1];
-    NSString * feedKey = @"";
-    feed.info   = @{};// Plist data
-    [tempFeedDict setObject:feed forKey:feedKey];
-    
-    
-    
-    
-    
-    
-    _feeds = [tempFeedDict copy];
+-(NSString*)event
+{
+    return _myEvent.name;
 }
 
-
-/**
- *   This gets all the videos and clips in the bookmarks folder of the device and adds them to dict based off video name key
- */
--(void)buildAllFeeds
-{
-
-//    
-//    for (int i = ; i< list count ; i++) {
-//        Feed * localFeed = [[Feed alloc]initWithURLString:@"http://192.168.3.100/events/2014-11-13_16-21-16_dff4c99c75cf73a4b374a693f919244648f5aa31_local/video/list.m3u8" quality:0];
-//        [_clipFeeds setValue:localFeed forKey:@""];
-//    }
-//    
-//    
-    
-}
 
 
 -(void)setEvent:(NSString *)event
@@ -302,67 +316,69 @@
     if ([event isEqualToString:_event]){
         return;
     }
-    
-    
-    
-    
     [self willChangeValueForKey:@"event"];
     
+    _myEvent    = [_myEvents objectForKey:event];
+    _event      = _myEvent.name;
+    _feeds      = _myEvent.feeds;
     
-    
-    NSArray         * events = _allEventData;
-    for(NSDictionary* dict in events)
-    {
-        if([dict isKindOfClass:[NSDictionary class]]  && [dict[@"name"] isEqualToString: event])
-        {
-            self.eventData = dict;
-            
-            if ([dict[@"vid"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
-                
-                // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
-                // this creates a feed object from just a string with it  source named s1
-                Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"vid"] quality:0];
-                _feeds = @{ @"s1":theFeed};
-                
-            }  else if ([dict[@"vid"] isKindOfClass:[NSDictionary class]]){
-                NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-                
-                for (id key in dict[@"vid"])
-                {
-                    if ([key isEqualToString:@"url"]) continue;
-                    NSDictionary * vidDict      = dict[@"vid"];
-                    NSDictionary * qualities    = [vidDict objectForKey:key];
-                    // This builds a Feed and adds it to the feed pool
-                    Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
-                    createdFeed.sourceName = key;
-                    
-                  
-                    [collect setObject:createdFeed forKey:key];
-                }
-                
-                _feeds = [collect copy];
-                
-                
-            } else {
-                NSLog(@"JSON ERROR");
-            }
-            [self willChangeValueForKey:@"eventType"];
-            _eventType = [dict objectForKey:@"sport"];
-            [self didChangeValueForKey:@"eventType"];
-            break;
-        }
-    }
-    _event =  event;
+    [self willChangeValueForKey:@"eventType"];
+    _eventType  = _myEvent.eventType;
+    [self didChangeValueForKey:@"eventType"];
+    _event      =  event;
     [self didChangeValueForKey:@"event"];
     
+    _eventData  = _myEvent.rawData;
+    
+    
+//    
+//    NSArray         * events = _allEventData;
+//    for(NSDictionary* dict in events)
+//    {
+//        if([dict isKindOfClass:[NSDictionary class]]  && [dict[@"name"] isEqualToString: event])
+//        {
+//            self.eventData = dict;
+//            
+//            if ([dict[@"vid"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
+//                
+//                // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
+//                // this creates a feed object from just a string with it  source named s1
+//                Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"vid"] quality:0];
+//                _feeds = @{ @"s1":theFeed};
+//                
+//            }  else if ([dict[@"vid"] isKindOfClass:[NSDictionary class]]){
+//                NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
+//                
+//                for (id key in dict[@"vid"])
+//                {
+//                    if ([key isEqualToString:@"url"]) continue;
+//                    NSDictionary * vidDict      = dict[@"vid"];
+//                    NSDictionary * qualities    = [vidDict objectForKey:key];
+//                    // This builds a Feed and adds it to the feed pool
+//                    Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+//                    createdFeed.sourceName = key;
+//                    
+//                  
+//                    [collect setObject:createdFeed forKey:key];
+//                }
+//                
+//                _feeds = [collect copy];
+//                
+//                
+//            } else {
+//                NSLog(@"JSON ERROR");
+//            }
+//            [self willChangeValueForKey:@"eventType"];
+//            _eventType = [dict objectForKey:@"sport"];
+//            [self didChangeValueForKey:@"eventType"];
+//            break;
+//        }
+//    }
+//    _event =  event;
+//    [self didChangeValueForKey:@"event"];
+    
 }
 
-
-
--(NSString*)event
-{
-    return _event;
-}
 
 
 /**
@@ -377,13 +393,6 @@
 }
 
 
-
-
--(void)downloadToClip:(NSString*)clip
-{
-
-
-}
 
 
 -(NSString*)bookmarkPath
@@ -435,10 +444,20 @@
 
 -(NSArray*)grabAllFiles:(NSString*)aPath ext:(NSString*)ext
 {
-
-
-
-    return @[];
+    NSArray         * dirs      = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:aPath
+                                                                        error:NULL];
+    NSMutableArray  * files     = [[NSMutableArray alloc] init];
+    
+    [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *filename      = (NSString *)obj;
+        NSString *extension     = [[filename pathExtension] lowercaseString];
+        
+        if ([extension isEqualToString:ext]) {
+            [files addObject:[aPath stringByAppendingPathComponent:filename]];
+        }
+    }];
+    
+    return [files copy];
 }
 
 
@@ -453,26 +472,6 @@
 }
 
 
-
--(BOOL)myClipPlistNameCheck:(NSString*)check
-{
-    // Regx
-//    NSRange   searchedRange     = NSMakeRange(0, [check length]);
-//    NSString *pattern           = @".*\\.plist";//@"(?:www\\.)?((?!-)[a-zA-Z0-9-]{2,63}(?<!-))\\.?((?:[a-zA-Z0-9]{2,})?(?:\\.[a-zA-Z0-9]{2,})?)";
-//    NSError  *error             = nil;
-//    NSRegularExpression* regex  = [NSRegularExpression regularExpressionWithPattern: pattern options:0 error:&error];
-//    NSArray* matches            = [regex matchesInString:check options:0 range: searchedRange];
-//    
-//    // name split
-//    
-////    NSArray *lines = [filename componentsSeparatedByString: @"."];
-////    NSString *lineOne = lines[0];
-//
-//    NSString *extension = [[check pathExtension] lowercaseString];
-//
-    NSRange range = [check rangeOfString:@"[0-9]+\\.plist" options:NSRegularExpressionSearch];
-    return range.location != NSNotFound;
-}
 
 
 
@@ -545,7 +544,34 @@
     
 }
 
+-(BOOL)myClipPlistNameCheck:(NSString*)check
+{
+    // Regx
+    //    NSRange   searchedRange     = NSMakeRange(0, [check length]);
+    //    NSString *pattern           = @".*\\.plist";//@"(?:www\\.)?((?!-)[a-zA-Z0-9-]{2,63}(?<!-))\\.?((?:[a-zA-Z0-9]{2,})?(?:\\.[a-zA-Z0-9]{2,})?)";
+    //    NSError  *error             = nil;
+    //    NSRegularExpression* regex  = [NSRegularExpression regularExpressionWithPattern: pattern options:0 error:&error];
+    //    NSArray* matches            = [regex matchesInString:check options:0 range: searchedRange];
+    //
+    //    // name split
+    //
+    ////    NSArray *lines = [filename componentsSeparatedByString: @"."];
+    ////    NSString *lineOne = lines[0];
+    //
+    //    NSString *extension = [[check pathExtension] lowercaseString];
+    //
+    NSRange range = [check rangeOfString:@"[0-9]+\\.plist" options:NSRegularExpressionSearch];
+    return range.location != NSNotFound;
+}
 
+
+
+
+-(void)downloadToClip:(NSString*)clip
+{
+    
+    
+}
 
 
 

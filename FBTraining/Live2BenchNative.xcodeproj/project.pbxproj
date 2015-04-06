@@ -319,6 +319,7 @@
 		D763A0391731652D0089D132 /* mypxp_app_tagging.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D763A0381731652C0089D132 /* mypxp_app_tagging.jpg */; };
 		D763A03C1731653F0089D132 /* mypxp_devices.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D763A03A1731653E0089D132 /* mypxp_devices.jpg */; };
 		D763A03D1731653F0089D132 /* mypxp_hardware.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D763A03B1731653E0089D132 /* mypxp_hardware.jpg */; };
+		D766F6271ACC8C5E005FC63A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = D766F6261ACC8C5E005FC63A /* Event.m */; };
 		D769AB8919BDFEA900DF68BC /* VideoBarListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8819BDFEA900DF68BC /* VideoBarListViewController.m */; };
 		D769AB8D19BE5E8400DF68BC /* RangeModifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8C19BE5E8400DF68BC /* RangeModifierButton.m */; };
 		D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D76B6DD41A8AC07300601BAF /* ToastObserver.m */; };
@@ -1073,6 +1074,8 @@
 		D763A03F173165520089D132 /* seekforwardfivesecs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "seekforwardfivesecs@2x.png"; sourceTree = "<group>"; };
 		D763A0461731677E0089D132 /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		D763A0471731677F0089D132 /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
+		D766F6251ACC8C5E005FC63A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = EncoderClasses/Event.h; sourceTree = "<group>"; };
+		D766F6261ACC8C5E005FC63A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Event.m; path = EncoderClasses/Event.m; sourceTree = "<group>"; };
 		D767A7D616BC84810050783A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		D767A7D716BC84810050783A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		D769AB8719BDFEA900DF68BC /* VideoBarListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBarListViewController.h; sourceTree = "<group>"; };
@@ -2920,6 +2923,8 @@
 				D7EE84D219F19E0900DEC82B /* Encoder.m */,
 				D781900A1A70649800B964B4 /* EncoderManagerActionPack.h */,
 				D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */,
+				D766F6251ACC8C5E005FC63A /* Event.h */,
+				D766F6261ACC8C5E005FC63A /* Event.m */,
 			);
 			name = EncoderClasses;
 			sourceTree = "<group>";
@@ -3608,6 +3613,7 @@
 				D7CCE7D61AB8A4B300D85095 /* GoogleDriveShare.m in Sources */,
 				D7EE1E4118244DB800CA36CF /* GraphView.m in Sources */,
 				D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */,
+				D766F6271ACC8C5E005FC63A /* Event.m in Sources */,
 				D737F5B817F0DFC40053081F /* GameScheduleDetailViewController.m in Sources */,
 				D72779AE1A38994E0034DD66 /* Live2BenchTagUIViewController.m in Sources */,
 				94B9A582192FEE750009547B /* TeleView.m in Sources */,
