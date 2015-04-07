@@ -303,11 +303,11 @@
     if (!self.thumbDeleteButton.hidden && CGRectContainsPoint(self.thumbDeleteButton.frame, point)) {
         return self.thumbDeleteButton;
     }
-    for (UIView *subview in self.subviews) {
-        if (CGRectContainsPoint(subview.frame, point)) {
-            return subview;
-        }
-    }
+//    //for (UIView *subview in self.subviews) {
+//        if (CGRectContainsPoint(self.frame, point)) {
+//            return self;
+//        }
+//    //}
     
     // use this to pass the 'touch' onward in case no subviews trigger the touch
     return [super hitTest:point withEvent:event];

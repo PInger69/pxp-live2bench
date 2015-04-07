@@ -16,29 +16,36 @@
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
+        self.secondLayer = [AVPlayerLayer layer];
+        [self.secondLayer setFrame: self.layer.bounds];
+        [self.layer addSublayer: self.secondLayer];
+        
         self.videoLayer = [AVPlayerLayer layer];
         [self.videoLayer setFrame: self.layer.bounds];
         [self.layer addSublayer: self.videoLayer];
         
-        
+        self.maskView = [[UIView alloc] initWithFrame:self.bounds];
+        self.maskView.backgroundColor =[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
     }
     return self;
 }
 
 -(void)setFrame:(CGRect)frame{
-    [super setFrame:frame];
     
-    CGRect videoLayerFrame = frame;
-    videoLayerFrame.origin.x = 0;
-    videoLayerFrame.origin.y = 0;
+    CGRect videoLayerFrame = self.videoLayer.frame;
+    videoLayerFrame.size.width += frame.size.width - self.frame.size.width;
+    videoLayerFrame.size.height += frame.size.height - self.frame.size.height;
+    
+    [super setFrame:frame];
+    [self didChangeValueForKey:@"frame"];
     
     self.videoLayer.frame = videoLayerFrame;
     
-    CALayer *maskLayer = [CALayer layer];
-    maskLayer.frame = self.bounds;
-    maskLayer.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
+    if (self.secondLayer.superlayer == self.videoLayer.superlayer) {
+        self.secondLayer.frame = videoLayerFrame;
+    }
     
-    self.layer.mask = maskLayer;
+    self.maskView.frame = self.bounds;
 }
 
 //+ (Class)layerClass
@@ -55,7 +62,7 @@
 - (void)setPlayer:(AVPlayer*)player
 {
     [self.videoLayer setPlayer:player];
-    
+    [self.secondLayer setPlayer: player];
     
 }
 

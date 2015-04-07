@@ -86,7 +86,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.title = self.swipeableTableViewCell.myTextLabel.text;
+    //self.title = self.swipeableTableViewCell.myTextLabel.text;
     // Initiating the Cell
     SwipeableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"SwipeableCell"];
     
@@ -100,6 +100,7 @@
     cell.button2.hidden = YES;
     
     cell.functionalButton.backgroundColor = [UIColor clearColor];
+    cell.functionalButton.enabled = NO;
 
     [cell.myTextLabel setText: self.dataDictionary[@"Setting Options"][indexPath.row]];
     
@@ -110,9 +111,11 @@
         [cell.toggoButton setOn: [((NSNumber *)self.dataDictionary[@"Toggle Settings"][indexPath.row]) intValue]];
     }else if(self.dataDictionary[@"Function Labels"]){
         //This is the case when there is a list that has buttons with different functions
-        if( [self.dataDictionary[@"Function Labels"][indexPath.row] isKindOfClass:[UIColor class]]){
+        if( [((NSString *)self.dataDictionary[@"Function Labels"][indexPath.row]) hasPrefix:@"Color"] ){
+            NSArray *bothStrings = [((NSString *)self.dataDictionary[@"Function Labels"][indexPath.row]) componentsSeparatedByString:@"-"];
+            
             [cell.functionalButton setTitle: @"" forState:UIControlStateNormal];
-            cell.functionalButton.backgroundColor = (UIColor *)self.dataDictionary[@"Function Labels"][indexPath.row];
+            cell.functionalButton.backgroundColor = [Utility colorWithHexString: bothStrings[1]];
             
 //            CGRect functionalFrame = cell.functionalButton.frame;
 //            functionalFrame.origin.x -= 5;
@@ -218,14 +221,14 @@
     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell: theCell];
     toggleArray[cellIndexPath.row] = onOrOff ? @1:@0;
     
-    [self.settingsTableViewController settingChangedInDetailViewController: signalPackage];
+    [self.settingsTableViewController settingChangedInDetailViewController: self withSignal:signalPackage];
     
 }
 
 - (void)functionalButtonFromCell: (SwipeableTableViewCell *) cell{
     
     NSDictionary *signalPackage = @{@"Name": cell.functionalButton.titleLabel.text , @"Value": @1, @"Type": @"FunctionalButton"};
-    [self.settingsTableViewController settingChangedInDetailViewController: signalPackage];
+    [self.settingsTableViewController settingChangedInDetailViewController:self withSignal: signalPackage];
     //[[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
 }
 
@@ -250,7 +253,7 @@
     [self.dataDictionary setObject: [NSNumber numberWithInt:indexPath.row] forKey:@"Index"];
     
     NSDictionary *signalPackage = @{@"Name": cell.myTextLabel.text, @"Value": cell.myTextLabel.text, @"Type": @"ListOption"};
-    [self.settingsTableViewController settingChangedInDetailViewController: signalPackage];
+    [self.settingsTableViewController settingChangedInDetailViewController: self withSignal: signalPackage];
 //    // These first lines replace the 
 //    NSIndexPath *oldPath = [self.settingsTableViewController.arrayWithSettingOptionChosen objectAtIndex:self.index];
 //    SwipeableTableViewCell *cell = (SwipeableTableViewCell*)[tableView cellForRowAtIndexPath: oldPath];

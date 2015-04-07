@@ -1,3 +1,4 @@
+
 //
 //  RJLVideoPlayer.m
 //  Live2BenchNative
@@ -1117,7 +1118,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         [self setPlayer:[AVPlayer playerWithPlayerItem:self.playerItem]];
         
         
-        [playBackView setPlayer:self.avPlayer];
+        [self.playBackView setPlayer:self.avPlayer];
         
         /* Observe the AVPlayer "currentItem" property to find out when any
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did

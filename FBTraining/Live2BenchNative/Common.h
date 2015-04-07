@@ -31,6 +31,16 @@
 #define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER"
 #define NOTIF_POST_ON_EXTERNAL_SCREEN       @"NOTIF_POST_ON_EXTERNAL_SCREEN"
 #define NOTIF_TAG_POSTED                    @"postedTag"    
+#define NOTIF_NEW_VIDEO_LAYER               @"NOTIF_NEW_VIDEO_LAYER"
+#define STRING_INJURY_CONTEXT               @"STRING_INJURY_CONTEXT"
+
+//Settings Requests
+#define NOTIF_SETTINGS_ARE_READY            @"NOTIF_SETTINGS_ARE_READY"
+#define NOTIF_REQUEST_SETTINGS              @"NOTIF_REQUEST_SETTINGS"
+
+#define LIST_OF_TOGGLES                     @"LIST_OF_TOGGLES"
+#define LIST_OF_OPTIONS                     @"LIST_OF_OPTIONS"
+
 
 //TypeDef for ToastObserver
 typedef NS_OPTIONS (NSInteger, toastType) {

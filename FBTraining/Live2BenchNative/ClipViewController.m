@@ -91,7 +91,7 @@ static void * masterEncoderContext = &masterEncoderContext;
         self.contextString = @"TAG";
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-
+        
         
     }
     return self;
@@ -123,26 +123,29 @@ static void * masterEncoderContext = &masterEncoderContext;
 
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-//    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
+    //    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
     //
     self.allTagsArray = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
-    if (componentFilter && self.tagsToDisplay) {
-        componentFilter.rawTagArray = self.allTagsArray;
-        [self receiveFilteredArrayFromFilter: componentFilter];
-    }else{
-        self.tagsToDisplay = self.allTagsArray;
-        [_collectionView reloadData];
-    }
-//    componentFilter.rawTagArray = self.allTagsArray;
-//    self.tag
-//    [self receiveFilteredArrayFromFilter: componentFilter];
+    //    if (componentFilter && self.tagsToDisplay) {
+    //        componentFilter.rawTagArray = self.allTagsArray;
+    //        [self receiveFilteredArrayFromFilter: componentFilter];
+    //    }else{
+    //        self.tagsToDisplay = self.allTagsArray;
+    //        [_collectionView reloadData];
+    //    }
+    self.tagsToDisplay = self.allTagsArray;
+    [_collectionView reloadData];
+    componentFilter.rawTagArray = self.allTagsArray;
+    //    componentFilter.rawTagArray = self.allTagsArray;
+    //    self.tag
+    //    [self receiveFilteredArrayFromFilter: componentFilter];
     //_tagsToDisplay = tags;
-//    for (NSDictionary *tag in tags) {
-//        if ([tag[@"success"] integerValue] == 1) {
-//            [_tagsToDisplay addObject:tag];
-//            //[_tagsToDisplay addObject:@"1"];
-//        }
-//    }
+    //    for (NSDictionary *tag in tags) {
+    //        if ([tag[@"success"] integerValue] == 1) {
+    //            [_tagsToDisplay addObject:tag];
+    //            //[_tagsToDisplay addObject:@"1"];
+    //        }
+    //    }
     //_tagsToDisplay = tags;
     //[_collectionView reloadData];
     
@@ -183,7 +186,7 @@ static void * masterEncoderContext = &masterEncoderContext;
 }
 
 -(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
-
+    
     if(longPress.state == UIGestureRecognizerStateBegan){
         self.isEditing = !self.isEditing;
         
@@ -222,7 +225,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [filterContainer setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
     [self.view addSubview:filterContainer];
     
-
+    
     self.deleteButton = [[UIButton alloc] init];
     self.deleteButton.backgroundColor = [UIColor redColor];
     [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
@@ -233,13 +236,13 @@ static void * masterEncoderContext = &masterEncoderContext;
     [self.deleteButton setFrame:CGRectMake(self.collectionView.frame.origin.x , 768, self.collectionView.frame.size.width, 0)];
     
     [self.view addSubview: self.deleteButton];
-
+    
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
     [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
     [self.filterButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
-
+    
     componentFilter = [TestFilterViewController commonFilter];
     //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
     [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
@@ -251,7 +254,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     //self.edgeSwipeButtons.delegate = self;
     //[self.view addSubview:self.edgeSwipeButtons];
     
-
+    
 }
 
 -(void)deleteAllButtonTarget{
@@ -271,7 +274,7 @@ static void * masterEncoderContext = &masterEncoderContext;
         [UIView setAnimationDuration:0.5];
         self.deleteButton.frame = CGRectMake(self.collectionView.frame.origin.x, 700, self.collectionView.frame.size.width, 68);
         [UIView commitAnimations];
-
+        
     }else{
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
@@ -302,46 +305,46 @@ static void * masterEncoderContext = &masterEncoderContext;
     
     // MUTE THE VIDEOS
     //Richard
-//<<<<<<< HEAD
+    //<<<<<<< HEAD
     //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
     //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
     //    [globals.VIDEO_PLAYER_LIST_VIEW pause];
     //    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
     
-//=======
+    //=======
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
-
-
-//>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
+    
+    
+    //>>>>>>> a77bd989f92ff02980dffb1c00db7af28c9a1edb
     //if no filter tool box, initialize filter tool box // This is dead code now
-//    if(!_filterToolBoxView)
-//    {
-//        NSArray *argObjs =[[NSArray alloc]initWithObjects:self,self.collectionView, nil];
-//        NSArray *argKeys = [[NSArray alloc]initWithObjects:@"controller",@"displayArch", nil];
-//        NSDictionary *filterArgs = [[NSDictionary alloc]initWithObjects:argObjs forKeys:argKeys];
-//        
-//        _filterToolBoxView = [[FilterToolboxViewController alloc]initWithArgs:filterArgs];
-//        [_filterToolBoxView.view setUserInteractionEnabled:TRUE];
-//        //_filterToolBoxView.showTelestration = TRUE;
-//        _filterToolBoxView.view.layer.masksToBounds = NO;
-//        _filterToolBoxView.view.layer.cornerRadius = 1; // if you like rounded corners
-//        _filterToolBoxView.view.layer.shadowOffset = CGSizeMake(1, 1);
-//        _filterToolBoxView.view.layer.shadowRadius = 2;
-//        _filterToolBoxView.view.layer.shadowOpacity = 0.4;
-//        [_filterToolBoxView.view setAlpha:0.95f];
-//        
-//    }
+    //    if(!_filterToolBoxView)
+    //    {
+    //        NSArray *argObjs =[[NSArray alloc]initWithObjects:self,self.collectionView, nil];
+    //        NSArray *argKeys = [[NSArray alloc]initWithObjects:@"controller",@"displayArch", nil];
+    //        NSDictionary *filterArgs = [[NSDictionary alloc]initWithObjects:argObjs forKeys:argKeys];
+    //
+    //        _filterToolBoxView = [[FilterToolboxViewController alloc]initWithArgs:filterArgs];
+    //        [_filterToolBoxView.view setUserInteractionEnabled:TRUE];
+    //        //_filterToolBoxView.showTelestration = TRUE;
+    //        _filterToolBoxView.view.layer.masksToBounds = NO;
+    //        _filterToolBoxView.view.layer.cornerRadius = 1; // if you like rounded corners
+    //        _filterToolBoxView.view.layer.shadowOffset = CGSizeMake(1, 1);
+    //        _filterToolBoxView.view.layer.shadowRadius = 2;
+    //        _filterToolBoxView.view.layer.shadowOpacity = 0.4;
+    //        [_filterToolBoxView.view setAlpha:0.95f];
+    //
+    //    }
     
     //componentFilter = [[FBTFilterViewController alloc]initWithTagData:_encoderManager.eventTags];
-//    componentFilter = [[FBTFilterViewController alloc] initWithTagArray:self.tagsToDisplay];
-//    
-//    [componentFilter setOrigin:CGPointMake(60, 190)];
-//    
-//    
-//    [componentFilter close:NO];
-//    [componentFilter viewDidAppear:TRUE];
-//    [self.view addSubview:componentFilter.view];
+    //    componentFilter = [[FBTFilterViewController alloc] initWithTagArray:self.tagsToDisplay];
+    //
+    //    [componentFilter setOrigin:CGPointMake(60, 190)];
+    //
+    //
+    //    [componentFilter close:NO];
+    //    [componentFilter viewDidAppear:TRUE];
+    //    [self.view addSubview:componentFilter.view];
     
     /* TODO This was disabled for Demo
      // Richard
@@ -591,7 +594,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     self.dismissFilterButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6];
     [self.view addSubview: self.dismissFilterButton];
     
-    componentFilter.rawTagArray = self.tagsToDisplay;
+    componentFilter.rawTagArray = self.allTagsArray;
     //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
     //componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
     
@@ -605,34 +608,34 @@ static void * masterEncoderContext = &masterEncoderContext;
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
     [componentFilter open:YES];
-
-//    float boxXValue = _filterToolBoxView.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
-//    
-//    if(boxXValue == 60)
-//    {
-//        if(!self.blurView)
-//        {
-//            self.blurView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 1024, 768-55)];
-//            self.blurView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-//            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFilterToolbox)];
-//            [self.blurView addGestureRecognizer:tapRec];
-//            [self.view insertSubview:self.blurView belowSubview:_filterToolBoxView.view];
-//        }
-//        self.blurView.hidden = NO;
-//        
-//        //        [_filterToolBoxView updateDisplayedTagsCount];
-//        
-//        //clear the previous filter set
-//        [breadCrumbsView removeFromSuperview];
-//        breadCrumbsView  = nil;
-//        
-//    }
-//    else{
-//        self.blurView.hidden = YES;
-//
-//    }
-//    
-//    [componentFilter open:YES]; //Richard
+    
+    //    float boxXValue = _filterToolBoxView.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
+    //
+    //    if(boxXValue == 60)
+    //    {
+    //        if(!self.blurView)
+    //        {
+    //            self.blurView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 1024, 768-55)];
+    //            self.blurView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+    //            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFilterToolbox)];
+    //            [self.blurView addGestureRecognizer:tapRec];
+    //            [self.view insertSubview:self.blurView belowSubview:_filterToolBoxView.view];
+    //        }
+    //        self.blurView.hidden = NO;
+    //
+    //        //        [_filterToolBoxView updateDisplayedTagsCount];
+    //
+    //        //clear the previous filter set
+    //        [breadCrumbsView removeFromSuperview];
+    //        breadCrumbsView  = nil;
+    //
+    //    }
+    //    else{
+    //        self.blurView.hidden = YES;
+    //
+    //    }
+    //
+    //    [componentFilter open:YES]; //Richard
 }
 
 -(void)dismissFilter: (UIButton *)dismissButton{
@@ -684,7 +687,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [alert addButtonWithTitle:@"Yes"];
     [alert addButtonWithTitle:@"No"];
     [alert show];
-
+    
 }
 
 
@@ -881,6 +884,8 @@ static void * masterEncoderContext = &masterEncoderContext;
     for (thumbnailCell *cell in _collectionView.visibleCells) {
         [cell setDeletingMode: NO];
     }
+    [componentFilter close:YES];
+    [self.dismissFilterButton removeFromSuperview];
     return;
     //    globals.IS_IN_CLIP_VIEW = FALSE;
     //    SDImageCache *imageCache = [SDImageCache sharedImageCache];
@@ -938,7 +943,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [cell.thumbName setFont:[UIFont boldSystemFontOfSize:18.0f]];
     [cell.thumbTime setText:[tagSelect objectForKey:@"displaytime"]];
     [cell.thumbDur setText:[NSString stringWithFormat:@"%.02fs",[[tagSelect objectForKey:@"duration"] floatValue]]];
-
+    
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -966,7 +971,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [alert addButtonWithTitle:@"Yes"];
     [alert addButtonWithTitle:@"No"];
     [alert show];
-
+    
     
     
 }
@@ -987,6 +992,19 @@ static void * masterEncoderContext = &masterEncoderContext;
             [self.tagsToDisplay removeObject:tag];
             [self.allTagsArray removeObject: tag];
             
+            //            NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            //            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:nil userInfo:tag];
+            //            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+        }
+        
+        
+        [self.setOfSelectedCells removeAllObjects];
+        [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
+        
+        for (NSDictionary *tag in arrayOfTagsToRemove) {
+            //            [self.tagsToDisplay removeObject:tag];
+            //            [self.allTagsArray removeObject: tag];
+            
             NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
             NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:nil userInfo:tag];
             [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
@@ -997,8 +1015,7 @@ static void * masterEncoderContext = &masterEncoderContext;
         }
         self.isEditing = NO;
         
-        [self.setOfSelectedCells removeAllObjects];
-        [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
+        
         
         //[self.collectionView reloadData];
         
@@ -1034,13 +1051,13 @@ static void * masterEncoderContext = &masterEncoderContext;
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
     [self.setOfSelectedCells removeObject:self.editingIndexPath];
     
-//    if ([self.selectedPath isEqual:self.editingIndexPath]) {
-//        self.selectedPath = nil;
-//    }
-//    if (self.selectedPath && self.selectedPath.row > self.editingIndexPath.row) {
-//        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:self.selectedPath.row - 1 inSection: self.selectedPath.section];
-//        self.selectedPath = newIndexPath;
-//    }
+    //    if ([self.selectedPath isEqual:self.editingIndexPath]) {
+    //        self.selectedPath = nil;x
+    //    }
+    //    if (self.selectedPath && self.selectedPath.row > self.editingIndexPath.row) {
+    //        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:self.selectedPath.row - 1 inSection: self.selectedPath.section];
+    //        self.selectedPath = newIndexPath;
+    //    }
     
     for (NSIndexPath *indexPath in self.setOfSelectedCells) {
         if (indexPath.row > self.editingIndexPath.row) {
@@ -1116,21 +1133,21 @@ static void * masterEncoderContext = &masterEncoderContext;
         
         
         if ( [tagSelect count] >1 ){
-                [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
-        
-                    NSLog(@"You Picked a feed: %@",pick);
-                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-        
-                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                                          @"feed":pick,
-                                                                                                                          @"time":[selectedCell.data objectForKey:@"starttime"],
-                                                                                                                          @"duration":[selectedCell.data objectForKey:@"duration"],
-                                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
-                }];
-        
-                [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
-        
-        
+            [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
+                
+                NSLog(@"You Picked a feed: %@",pick);
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+                
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                                      @"feed":pick,
+                                                                                                                      @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                                      @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                      @"state":[NSNumber numberWithInteger:PS_Play]}];
+            }];
+            
+            [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+            
+            
         } else {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
             
@@ -1182,7 +1199,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     //
     //  }
     
-
+    
 }
 
 - (NSDictionary*)thumbAtIndexPath:(NSIndexPath *)indexPath
@@ -1218,15 +1235,15 @@ static void * masterEncoderContext = &masterEncoderContext;
     //        NSError *cError;
     //        [fileManager createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:TRUE attributes:nil error:&cError];
     //    }
-    //    
+    //
     //    NSURL *jurl = [[NSURL alloc]initWithString:[[dict objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     //    NSString *imageName = [[dict objectForKey:@"url"] lastPathComponent];
     //    //thumbnail data
     //    NSData *imgData= [NSData dataWithContentsOfURL:jurl options:0 error:nil];
-    //    
+    //
     //    //image file path for current image
     //    NSString *filePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-    //    
+    //
     //    NSData *imgTData;
     //    NSString *teleImageFilePath;
     //    //save telesteration thumb
@@ -1237,23 +1254,23 @@ static void * masterEncoderContext = &masterEncoderContext;
     //        NSString *teleImageName = [[dict objectForKey:@"teleurl"] lastPathComponent];
     //        //image file path for telestration
     //        teleImageFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-    //        
+    //
     //    }
-    //    
+    //
     //    if (([[dict objectForKey:@"type"]intValue]!=4 && imgData != nil )||([[dict objectForKey:@"type"]intValue]==4 && imgData != nil && imgTData != nil) ) {
-    //        
+    //
     //        [imgData writeToFile:filePath atomically:YES];
-    //        
+    //
     //        if ([[dict objectForKey:@"type"]intValue]==4) {
     //            [imgTData writeToFile:teleImageFilePath atomically:YES ];
     //        }
-    //        
+    //
     //        if (!globals.DOWNLOADED_THUMBNAILS_SET){
     //            globals.DOWNLOADED_THUMBNAILS_SET = [NSMutableArray arrayWithObject:[dict objectForKey:@"id"]];
     //        } else {
     //            [globals.DOWNLOADED_THUMBNAILS_SET addObject:[dict objectForKey:@"id"]];
     //        }
-    //        
+    //
     //        return TRUE;
     //    }else{
     //        return FALSE;

@@ -532,6 +532,7 @@
 		D7B79CCD182C304900F0876D /* saveToAlbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CCB182C304900F0876D /* saveToAlbum@2x.png */; };
 		D7B79CD4182C398400F0876D /* saveToAlbumSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CD2182C398400F0876D /* saveToAlbumSelected.png */; };
 		D7B79CD5182C398400F0876D /* saveToAlbumSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CD3182C398400F0876D /* saveToAlbumSelected@2x.png */; };
+		D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */; };
 		D7C5F38119BF894A008190CE /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5F38019BF894A008190CE /* ScreenController.m */; };
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C624EB180EE64700C2DDD7 /* play_videoDisabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C624E9180EE64700C2DDD7 /* play_videoDisabled@2x.png */; };
@@ -1362,6 +1363,8 @@
 		D7B79CCB182C304900F0876D /* saveToAlbum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saveToAlbum@2x.png"; sourceTree = "<group>"; };
 		D7B79CD2182C398400F0876D /* saveToAlbumSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = saveToAlbumSelected.png; sourceTree = "<group>"; };
 		D7B79CD3182C398400F0876D /* saveToAlbumSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saveToAlbumSelected@2x.png"; sourceTree = "<group>"; };
+		D7B7C4D41AD32BDD00A5DEC3 /* InjuryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InjuryViewController.h; sourceTree = "<group>"; };
+		D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryViewController.m; sourceTree = "<group>"; };
 		D7C5F37F19BF894A008190CE /* ScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenController.h; sourceTree = "<group>"; };
 		D7C5F38019BF894A008190CE /* ScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenController.m; sourceTree = "<group>"; };
 		D7C624E6180EDBF700C2DDD7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -2246,6 +2249,8 @@
 				D7CCE7D91AB8D41A00D85095 /* ShareOptionsViewController.m */,
 				D7CCE7DE1ABB78AE00D85095 /* VideoZoomManager.h */,
 				D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */,
+				D7B7C4D41AD32BDD00A5DEC3 /* InjuryViewController.h */,
+				D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */,
 				D73CDBF51AB08173002D682D /* SettingsViewControllerProtocol.h */,
 				D73CDBF11AAF3CA8002D682D /* infoViewController.h */,
 				D73CDBF21AAF3CA8002D682D /* infoViewController.m */,
@@ -3636,6 +3641,7 @@
 				D73689A0183BC86100373385 /* TTFadeSwitch.m in Sources */,
 				D75CD0AE17CBF26700DD24E8 /* SoccerBottomViewController.m in Sources */,
 				D727798A1A2FBEBE0034DD66 /* LiveButton.m in Sources */,
+				D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */,
 				D76B6DDB1A8AC13000601BAF /* ListPopoverControllerWithImages.m in Sources */,
 				D70FBA4C17FF7A1E00B606CF /* DownloadButton.m in Sources */,
 				D7383075199416D40053F0A1 /* FilterComponentAbstract.m in Sources */,

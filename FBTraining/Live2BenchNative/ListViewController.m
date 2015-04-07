@@ -76,9 +76,8 @@ NSMutableArray *oldEventNames;
 static const NSInteger kDeleteAlertTag = 242;
 static const NSInteger kCannotDeleteAlertTag = 243;
 
-- (id)init
-{
-    self = [super init];
+-(instancetype)initWithAppDelegate:(AppDelegate *)appDel{
+    self = [super initWithAppDelegate:appDel];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
         //        globals = [Globals instance];
@@ -91,7 +90,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-
+        
         
         self.allTags = [[NSMutableArray alloc]init];
         self.tagsToDisplay = [[NSMutableArray alloc]init];
@@ -99,16 +98,17 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
         //_tableViewController.listViewControllerView = self.view;
-        _tableViewController.tableData = self.tagsToDisplay;
+        //_tableViewController.tableData = self.tagsToDisplay;
         
     }
     return self;
+
 }
 
 -(void)deleteTag: (NSNotification *) note{
     [self.tagsToDisplay removeObject: note.userInfo];
-    [_tableViewController.tableData removeObject: note.userInfo];
-    [_tableViewController reloadData];
+    //    [_tableViewController.tableData removeObject: note.userInfo];
+    //    [_tableViewController reloadData];
 }
 
 //-(void)listViewTagReceived:(NSNotification*)note{
@@ -323,22 +323,22 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         [typesOfTags addObject:sectionArray];
     }
     
-//    if(!filterToolBoxListViewController)
-//    {
-//        NSArray *argObjs =[[NSArray alloc]initWithObjects:self,_tableViewController.tableView, nil];
-//        NSArray *argKeys = [[NSArray alloc]initWithObjects:@"controller",@"displayArch", nil];
-//        NSDictionary *filterArgs = [[NSDictionary alloc]initWithObjects:argObjs forKeys:argKeys];
-//        filterToolBoxListViewController = [[FilterToolboxViewController alloc]initWithArgs:filterArgs];
-//        // filterToolBoxListViewController.showTelestration = FALSE;
-//        [filterToolBoxListViewController.view setUserInteractionEnabled:TRUE];
-//        filterToolBoxListViewController.view.layer.masksToBounds = NO;
-//        filterToolBoxListViewController.view.layer.cornerRadius = 1; // if you like rounded corners
-//        filterToolBoxListViewController.view.layer.shadowOffset = CGSizeMake(1, 1);
-//        filterToolBoxListViewController.view.layer.shadowRadius = 2;
-//        filterToolBoxListViewController.view.layer.shadowOpacity = 0.4;
-//        [filterToolBoxListViewController.view setAlpha:0.95f];
-//        [filterToolBoxListViewController.view setFrame: filterContainer.frame];
-//    }
+    //    if(!filterToolBoxListViewController)
+    //    {
+    //        NSArray *argObjs =[[NSArray alloc]initWithObjects:self,_tableViewController.tableView, nil];
+    //        NSArray *argKeys = [[NSArray alloc]initWithObjects:@"controller",@"displayArch", nil];
+    //        NSDictionary *filterArgs = [[NSDictionary alloc]initWithObjects:argObjs forKeys:argKeys];
+    //        filterToolBoxListViewController = [[FilterToolboxViewController alloc]initWithArgs:filterArgs];
+    //        // filterToolBoxListViewController.showTelestration = FALSE;
+    //        [filterToolBoxListViewController.view setUserInteractionEnabled:TRUE];
+    //        filterToolBoxListViewController.view.layer.masksToBounds = NO;
+    //        filterToolBoxListViewController.view.layer.cornerRadius = 1; // if you like rounded corners
+    //        filterToolBoxListViewController.view.layer.shadowOffset = CGSizeMake(1, 1);
+    //        filterToolBoxListViewController.view.layer.shadowRadius = 2;
+    //        filterToolBoxListViewController.view.layer.shadowOpacity = 0.4;
+    //        [filterToolBoxListViewController.view setAlpha:0.95f];
+    //        [filterToolBoxListViewController.view setFrame: filterContainer.frame];
+    //    }
     
     // Richard ==========================================================================================
     //    if(!componentFilter) {
@@ -630,33 +630,33 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 - (void)slideFilterBox
 {
     
-//    float boxXValue = filterToolBoxListViewController.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
-//    if (boxXValue == 60)
-//    {
-//        [filterToolBoxListViewController updateDisplayedTagsCount];
-//        //clear the previous filter set
-//        [breadCrumbsView removeFromSuperview];
-//        breadCrumbsView  = nil;
-//        
-//        if(!self.blurView)
-//        {
-//            self.blurView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 1024, 768-55)];
-////            self.blurView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-////            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped)];
-////            [self.blurView addGestureRecognizer:tapRec];
-////            [self.view addSubview:self.blurView];
-//            componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
-//        }
-//        
-////        self.blurView.hidden = NO;
-//        //[self.view bringSubviewToFront:filterToolBoxListViewController.view];
-//        //[self.view bringSubviewToFront:componentFilter.view];
-//    }
-//    else{
-////        self.blurView.hidden = YES;
-//        
-//        [self createBreadCrumbsView];
-//    }
+    //    float boxXValue = filterToolBoxListViewController.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
+    //    if (boxXValue == 60)
+    //    {
+    //        [filterToolBoxListViewController updateDisplayedTagsCount];
+    //        //clear the previous filter set
+    //        [breadCrumbsView removeFromSuperview];
+    //        breadCrumbsView  = nil;
+    //
+    //        if(!self.blurView)
+    //        {
+    //            self.blurView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 1024, 768-55)];
+    ////            self.blurView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+    ////            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped)];
+    ////            [self.blurView addGestureRecognizer:tapRec];
+    ////            [self.view addSubview:self.blurView];
+    //            componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+    //        }
+    //
+    ////        self.blurView.hidden = NO;
+    //        //[self.view bringSubviewToFront:filterToolBoxListViewController.view];
+    //        //[self.view bringSubviewToFront:componentFilter.view];
+    //    }
+    //    else{
+    ////        self.blurView.hidden = YES;
+    //
+    //        [self createBreadCrumbsView];
+    //    }
     
     //    //[componentFilter open:YES]; //Richard
     //    UIButton *dismissButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 1024, 768)];
@@ -699,13 +699,13 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 }
 
 -(void) componentNil{
-   // [componentFilter.view removeFromSuperview];
+    // [componentFilter.view removeFromSuperview];
     //componentFilter = nil;
 }
 
 //- (void)backgroundTapped
 //{
-//    
+//
 //    //    [self slideFilterBox];
 //    [self.edgeSwipeButtons deselectButtonAtIndex:1];
 //    [componentFilter close:YES];
@@ -1995,20 +1995,20 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
     NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
     
-        float time              = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"time"] floatValue];
-        float dur               = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"duration"] floatValue];
-        CMTime cmtime           = CMTimeMake(time, 1);
-        CMTime cmDur            = CMTimeMake(dur, 1);
+    float time              = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"time"] floatValue];
+    float dur               = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"duration"] floatValue];
+    CMTime cmtime           = CMTimeMake(time, 1);
+    CMTime cmDur            = CMTimeMake(dur, 1);
     
-        CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
+    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
     
     NSString *pick = [userInfo objectForKey:@"feed"];
     
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
-//                                                                                                          @"feed":pick,
-//                                                                                                          @"time":[userInfo objectForKey:@"time"],
-//                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
-//                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+    //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
+    //                                                                                                          @"feed":pick,
+    //                                                                                                          @"time":[userInfo objectForKey:@"time"],
+    //                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
+    //                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
     self.videoPlayer.looping = NO;
     [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
     self.videoPlayer.looping = YES;
@@ -2118,9 +2118,9 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     [self.view addSubview:componentFilter.view];
     [componentFilter setOrigin:CGPointMake(60, 190)];
     [componentFilter close:NO];
-
-
-
+    
+    
+    
     //    UIImageView *commentBoxTitleBar = [[UIImageView alloc]initWithFrame:CGRectMake(2,SMALL_MEDIA_PLAYER_HEIGHT+140,COMMENTBOX_WIDTH, LABEL_HEIGHT)];
     //    commentBoxTitleBar.backgroundColor = [UIColor clearColor];
     //    [self.view addSubview:commentBoxTitleBar];
@@ -2198,9 +2198,9 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //    [self.view addSubview:clearButton];
     
     
-//    self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(TOTAL_WIDTH-44, 55, 44, 768-55)];
-//    self.edgeSwipeButtons.delegate = self;
-//    [self.view addSubview:self.edgeSwipeButtons];
+    //    self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(TOTAL_WIDTH-44, 55, 44, 768-55)];
+    //    self.edgeSwipeButtons.delegate = self;
+    //    [self.view addSubview:self.edgeSwipeButtons];
     
     
     //    UIButton* exportButton = [[UIButton alloc] initWithFrame:CGRectMake(1024- 45, 60, 30, 30)];
@@ -2224,117 +2224,117 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 
 
 //catch response of deletion alertview and do thigns with it
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(alertView.tag == kCannotDeleteAlertTag)
-    {
-        [self editingClips:NO];
-        return;
-    }
-    
-    else if(alertView.tag == kDeleteAlertTag)
-    {
-        if (buttonIndex == 0)
-        {
-            NSMutableArray *tempArr = [self.tagsToDisplay mutableCopy];
-            // Ok, delete the tags and also sender the information to the server
-            for (NSDictionary *dict in [selectedCellRows allValues] ) {
-                
-                NSMutableDictionary *tag = [dict objectForKey:@"tag"];
-                
-                // if current playing tag is deleted, stop the video
-                if ([[tag objectForKey:@"id"] isEqual: [currentPlayingTag objectForKey:@"id"]]) {
-                    //[self.videoPlayer pause];
-                }
-                
-                //tempArr will used to update displayTags array; if you remove obj directly from displayTags array , [self tagAtIndexPath:indexPath] will have error
-                [tempArr removeObject:tag];
-                
-                //remove  the tag marker
-                //                [[[globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%f",[[tag objectForKey:@"id"] doubleValue] ]] markerView] removeFromSuperview];
-                //
-                //                if (!globals.HAS_MIN ||(globals.HAS_MIN && !globals.eventExistsOnServer)){
-                //
-                //                    //if this tag was created in offline mode, just delete it
-                //                   if ([[tag objectForKey:@"local"] intValue] == 1){
-                //
-                //                        //delete the tag from the global dictionary of tags
-                //
-                //                        [globals.CURRENT_EVENT_THUMBNAILS removeObjectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
-                //
-                //                    }else {
-                //                     //if the tag was created in online mode, modified the tag dictionary; once connecting with the server, send the deleting request to the server and it will be deleted from the server
-                //                        [tag setObject:@"3" forKey:@"type"];
-                //                        [tag setObject:@"1" forKey:@"deleted"];
-                //                        [tag setObject:@"1" forKey:@"edited"];
-                //                        [globals.CURRENT_EVENT_THUMBNAILS setObject:tag forKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
-                //                        //Remove image
-                //                        NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[tag objectForKey:@"id"]];
-                //                        NSString *imagePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-                //                        [[NSFileManager defaultManager] removeItemAtPath:imagePath error:nil];
-                //                    }
-                //
-                //                }else{
-                //                    //current absolute time in seconds
-                //                    double currentSystemTime = CACurrentMediaTime();
-                //                    //now we send the deleted tag information throught the queue to the server
-                //                    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"1",@"delete",globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",[tag objectForKey:@"id"],@"id", nil];
-                //
-                //                    //Remove from global tag array
-                //                    [globals.CURRENT_EVENT_THUMBNAILS removeObjectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
-                //
-                //                    NSError *error;
-                //                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-                //                    NSString *jsonString;
-                //                    if (! jsonData) {
-                //
-                //                    } else {
-                //                        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                //                        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                //                    }
-                //
-                //
-                //                    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-                //
-                //                    //callback method and parent view controller reference for the appqueue
-                //                    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:nil],self, nil];
-                //                    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
-                //                    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-                //                    [globals.APP_QUEUE enqueue:url dict:instObj];
-                //                }
-                
-            }
-            
-            //in offline mode, save all the modified tags locally
-            //            if (!globals.HAS_MIN ||(globals.HAS_MIN && !globals.eventExistsOnServer)){
-            //
-            //                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
-            //                                                         (unsigned long)NULL), ^(void) {
-            ////                    NSString *filePath = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
-            //
-            ////                    [globals.CURRENT_EVENT_THUMBNAILS writeToFile:filePath atomically:YES];
-            //
-            //                });
-            //            }
-            
-            //update the array of tags which will be used to display
-            [self.tagsToDisplay removeAllObjects];
-            self.tagsToDisplay = [tempArr mutableCopy];
-            [selectedCellRows removeAllObjects];
-            [_tableViewController reloadData];
-            //            globals.THUMBNAIL_COUNT_REF_ARRAY = self.tagsToDisplay;
-        }
-        else if (buttonIndex == 1)
-        {
-            // No, cancel the action to delete tags
-        }
-        [self editingClips:NO];
-        
-    }
-    [CustomAlertView removeAlert:alertView];
-    //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
-    
-}
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    if(alertView.tag == kCannotDeleteAlertTag)
+//    {
+//        [self editingClips:NO];
+//        return;
+//    }
+//
+//    else if(alertView.tag == kDeleteAlertTag)
+//    {
+//        if (buttonIndex == 0)
+//        {
+//            NSMutableArray *tempArr = [self.tagsToDisplay mutableCopy];
+//            // Ok, delete the tags and also sender the information to the server
+//            for (NSDictionary *dict in [selectedCellRows allValues] ) {
+//
+//                NSMutableDictionary *tag = [dict objectForKey:@"tag"];
+//
+//                // if current playing tag is deleted, stop the video
+//                if ([[tag objectForKey:@"id"] isEqual: [currentPlayingTag objectForKey:@"id"]]) {
+//                    //[self.videoPlayer pause];
+//                }
+//
+//                //tempArr will used to update displayTags array; if you remove obj directly from displayTags array , [self tagAtIndexPath:indexPath] will have error
+//                [tempArr removeObject:tag];
+//
+//                //remove  the tag marker
+//                //                [[[globals.TAG_MARKER_OBJ_DICT objectForKey:[NSString stringWithFormat:@"%f",[[tag objectForKey:@"id"] doubleValue] ]] markerView] removeFromSuperview];
+//                //
+//                //                if (!globals.HAS_MIN ||(globals.HAS_MIN && !globals.eventExistsOnServer)){
+//                //
+//                //                    //if this tag was created in offline mode, just delete it
+//                //                   if ([[tag objectForKey:@"local"] intValue] == 1){
+//                //
+//                //                        //delete the tag from the global dictionary of tags
+//                //
+//                //                        [globals.CURRENT_EVENT_THUMBNAILS removeObjectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
+//                //
+//                //                    }else {
+//                //                     //if the tag was created in online mode, modified the tag dictionary; once connecting with the server, send the deleting request to the server and it will be deleted from the server
+//                //                        [tag setObject:@"3" forKey:@"type"];
+//                //                        [tag setObject:@"1" forKey:@"deleted"];
+//                //                        [tag setObject:@"1" forKey:@"edited"];
+//                //                        [globals.CURRENT_EVENT_THUMBNAILS setObject:tag forKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
+//                //                        //Remove image
+//                //                        NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[tag objectForKey:@"id"]];
+//                //                        NSString *imagePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
+//                //                        [[NSFileManager defaultManager] removeItemAtPath:imagePath error:nil];
+//                //                    }
+//                //
+//                //                }else{
+//                //                    //current absolute time in seconds
+//                //                    double currentSystemTime = CACurrentMediaTime();
+//                //                    //now we send the deleted tag information throught the queue to the server
+//                //                    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"1",@"delete",globals.EVENT_NAME,@"event",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",[tag objectForKey:@"id"],@"id", nil];
+//                //
+//                //                    //Remove from global tag array
+//                //                    [globals.CURRENT_EVENT_THUMBNAILS removeObjectForKey:[NSString stringWithFormat:@"%@",[tag objectForKey:@"id"]]];
+//                //
+//                //                    NSError *error;
+//                //                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//                //                    NSString *jsonString;
+//                //                    if (! jsonData) {
+//                //
+//                //                    } else {
+//                //                        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//                //                        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//                //                    }
+//                //
+//                //
+//                //                    NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
+//                //
+//                //                    //callback method and parent view controller reference for the appqueue
+//                //                    NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:nil],self, nil];
+//                //                    NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller", nil];
+//                //                    NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//                //                    [globals.APP_QUEUE enqueue:url dict:instObj];
+//                //                }
+//
+//            }
+//
+//            //in offline mode, save all the modified tags locally
+//            //            if (!globals.HAS_MIN ||(globals.HAS_MIN && !globals.eventExistsOnServer)){
+//            //
+//            //                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
+//            //                                                         (unsigned long)NULL), ^(void) {
+//            ////                    NSString *filePath = [[globals.EVENTS_PATH stringByAppendingPathComponent:globals.EVENT_NAME] stringByAppendingPathComponent:@"Thumbnails.plist"];
+//            //
+//            ////                    [globals.CURRENT_EVENT_THUMBNAILS writeToFile:filePath atomically:YES];
+//            //
+//            //                });
+//            //            }
+//
+//            //update the array of tags which will be used to display
+//            [self.tagsToDisplay removeAllObjects];
+//            self.tagsToDisplay = [tempArr mutableCopy];
+//            [selectedCellRows removeAllObjects];
+//            [_tableViewController reloadData];
+//            //            globals.THUMBNAIL_COUNT_REF_ARRAY = self.tagsToDisplay;
+//        }
+//        else if (buttonIndex == 1)
+//        {
+//            // No, cancel the action to delete tags
+//        }
+//        [self editingClips:NO];
+//
+//    }
+//    [CustomAlertView removeAlert:alertView];
+//    //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
+//
+//}
 
 //exit from the editing mode
 -(void)cancelEditingCells
@@ -3303,7 +3303,8 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    
+    [componentFilter close:YES];
+    [self.dismissFilterButton removeFromSuperview];
     //    [teleView removeFromSuperview];
     //    teleView=nil;
     //
@@ -3361,22 +3362,22 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 
 //-(void)receiveFilteredArray:(NSArray*)filteredArray
 //{
-//    
-    //    NSMutableArray *tempArr = [[self sortArrayByTime: [NSMutableArray arrayWithArray:filteredArray]]mutableCopy];
-    //    self.tagsToDisplay = [tempArr mutableCopy];
-    //    for(NSDictionary *tag in tempArr){
-    //        if ([[tag objectForKey:@"type"]integerValue ] ==7 ||[[tag objectForKey:@"type"]integerValue ] ==8 ) {
-    //            [self.tagsToDisplay removeObject:tag];
-    //        }
-    //    }
-    //    [self.myTableView reloadData];
-    //    globals.THUMBNAIL_COUNT_REF_ARRAY = self.tagsToDisplay;
-    //    @try {
-    //        downloadedTagIds = [globals.DOWNLOADED_THUMBNAILS_SET mutableCopy];
-    //    }
-    //    @catch (NSException *exception) {
-    //        NSLog(@"downloadedTagIds: %@",exception.reason);
-    //    }
+//
+//    NSMutableArray *tempArr = [[self sortArrayByTime: [NSMutableArray arrayWithArray:filteredArray]]mutableCopy];
+//    self.tagsToDisplay = [tempArr mutableCopy];
+//    for(NSDictionary *tag in tempArr){
+//        if ([[tag objectForKey:@"type"]integerValue ] ==7 ||[[tag objectForKey:@"type"]integerValue ] ==8 ) {
+//            [self.tagsToDisplay removeObject:tag];
+//        }
+//    }
+//    [self.myTableView reloadData];
+//    globals.THUMBNAIL_COUNT_REF_ARRAY = self.tagsToDisplay;
+//    @try {
+//        downloadedTagIds = [globals.DOWNLOADED_THUMBNAILS_SET mutableCopy];
+//    }
+//    @catch (NSException *exception) {
+//        NSLog(@"downloadedTagIds: %@",exception.reason);
+//    }
 //}
 
 //new tags received from the server while the user is in list view
@@ -4753,7 +4754,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //        }
     //    }
     //    [aCopyOfUnfinishedTags removeObject:tag];
-    //    
+    //
     //    //if the event the tag belongs to is from current encoder, send the bookmark request
     //    if (isEventInCurrentServer) {
     //        [globals.BOOKMARK_TAGS_UNFINISHED removeObject:tag];
@@ -4770,24 +4771,24 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
     //        NSString *jsonString;
     //        if (! jsonData) {
-    //            
+    //
     //        } else {
     //            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     //            jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     //        }
-    //        
+    //
     //        NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    //        
+    //
     //        //callback method and parent view controller reference for the appqueue
     //        NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(tagModCallback:)],self,@"60", nil];
     //        NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller",@"timeout", nil];
     //        NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    //        
+    //
     //        NSMutableDictionary *dictionaryOfObj = [[NSMutableDictionary alloc]init];
     //        [dictionaryOfObj setObject:instObj forKey:url];
     //        //[tag setObject:[NSString stringWithFormat:@"%.0f",[[tag objectForKey:@"duration"]floatValue]+10] forKey:@"duration"];
     //        [dictionaryOfObj setObject:tag forKey:@"tag"];
-    //        
+    //
     //        if (!globals.BOOKMARK_QUEUE){
     //            globals.BOOKMARK_QUEUE = [NSMutableArray arrayWithObject:dictionaryOfObj];
     //        } else {
@@ -4795,7 +4796,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //        }
     //        [self sendTheNextRequest];
     //    }else{
-    //        
+    //
     //        //this the tag is from event in different encoder, then send the next tag
     //        [self sendOneRequest];
     //    }
@@ -4811,15 +4812,15 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //        NSError *cError;
     //        [fileManager createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:TRUE attributes:nil error:&cError];
     //    }
-    //    
+    //
     //    NSURL *jurl = [[NSURL alloc]initWithString:[[dict objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     //    NSString *imageName = [[dict objectForKey:@"url"] lastPathComponent];
     //    //thumbnail data
     //    NSData *imgData= [NSData dataWithContentsOfURL:jurl options:0 error:nil];
-    //    
+    //
     //    //image file path for current image
     //    NSString *filePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-    //    
+    //
     //    NSData *imgTData;
     //    NSString *teleImageFilePath;
     //    //save telesteration thumb
@@ -4830,23 +4831,23 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //        NSString *teleImageName = [[dict objectForKey:@"teleurl"] lastPathComponent];
     //        //image file path for telestration
     //        teleImageFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-    //        
+    //
     //    }
-    //    
+    //
     //    if (([[dict objectForKey:@"type"]intValue]!=4 && imgData != nil )||([[dict objectForKey:@"type"]intValue]==4 && imgData != nil && imgTData != nil) ) {
-    //        
+    //
     //        [imgData writeToFile:filePath atomically:YES];
-    //        
+    //
     //        if ([[dict objectForKey:@"type"]intValue]==4) {
     //            [imgTData writeToFile:teleImageFilePath atomically:YES ];
     //        }
-    //        
+    //
     //        if (!globals.DOWNLOADED_THUMBNAILS_SET){
     //            globals.DOWNLOADED_THUMBNAILS_SET = [NSMutableArray arrayWithObject:[dict objectForKey:@"id"]];
     //        } else {
     //            [globals.DOWNLOADED_THUMBNAILS_SET addObject:[dict objectForKey:@"id"]];
     //        }
-    //        
+    //
     //        return TRUE;
     //    }else{
     return FALSE;
@@ -4857,7 +4858,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 
 ////when scrubbing the slider, need to remove telestration
 //-(void)scrubbingDestroyLoopMode{
-//    
+//
 //    //remove looptagobserver
 //    if (loopTagObserver) {
 //        [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
@@ -4865,13 +4866,13 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 //    }
 //    [tagEventName setHidden:TRUE];
 ////    globals.IS_LOOP_MODE = FALSE;
-//    
+//
 //    if(self.videoPlayer.teleBigView)
 //    {
 //        [self.videoPlayer.teleBigView removeFromSuperview];
 //        self.videoPlayer.teleBigView=nil;
 //    }
-//    
+//
 //}
 
 

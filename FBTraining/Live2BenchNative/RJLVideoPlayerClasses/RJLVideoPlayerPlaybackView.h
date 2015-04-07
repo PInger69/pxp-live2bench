@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) AVPlayer* player;
 @property (nonatomic, strong) AVPlayerLayer *videoLayer;
+@property (nonatomic, strong) AVPlayerLayer *secondLayer;
 
 - (void)setPlayer:(AVPlayer*)player;
 - (void)setVideoFillMode:(NSString *)fillMode;
