@@ -349,6 +349,8 @@ static void * eventContext      = &eventContext;
 - (void)startButtonClicked {
     [self setStateWhenRecording];
     [self.videoPlayer.videoControlBar setEnable:NO];
+    self.videoPlayer.liveIndicatorLight.tintColor = [UIColor redColor];
+    [self.videoPlayer.liveIndicatorLight setHidden:NO];
     //self.startTime = [[NSCalendar currentCalendar] components:NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit fromDate:[NSDate date]];
     self.startTime = CACurrentMediaTime();
     self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateRecodingTime) userInfo:nil repeats:YES];
@@ -376,6 +378,8 @@ static void * eventContext      = &eventContext;
 
 - (void)stopButtonClicked {
     self.recordingTimer = nil;
+    self.videoPlayer.liveIndicatorLight.tintColor = [UIColor greenColor];
+    //self.videoPlayer.liveIndicatorLight setHidden: self.videoPlayer
     [self.videoPlayer.videoControlBar setEnable:YES];
     [self setStateWhenRecording];
     self.timeString = @"00:00:00";

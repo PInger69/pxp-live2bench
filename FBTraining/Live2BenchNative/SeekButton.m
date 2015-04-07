@@ -25,11 +25,11 @@
 #define HEIGHT                      145
 #define FULL_WIDTH                  70
 #define FULL_HEIGHT                 250
-#define DEFAULT_INDEX               0   // This is what the app graphics and speed start at
+#define DEFAULT_INDEX               2   // This is what the app graphics and speed start at
 
 /**
  *  This class will manage all the seeking buttons in the project.
- *  all buttons will have the same velocity in their declared direction. 
+ *  all buttons will have the same velocity in their declared direction.
  *
  *  Usage:
  *  SeekButton * seeker = [SeekButton makeForwardAt:CGPointMake(50, 100)];
@@ -37,7 +37,7 @@
  *  [self.view addSubview:seeker];
  */
 
-@implementation SeekButton 
+@implementation SeekButton
 {
     NumberedSeekerButton *mainButton;
     NSMutableArray *buttonList;
@@ -74,7 +74,7 @@ static NSMutableArray   * allSeekButtonsBackward;
                                     ];
     currentForwardButtonIndex = currentBackwardButtonIndex = (DEFAULT_INDEX >listOfSpeeds.count-1)? listOfSpeeds.count-1:DEFAULT_INDEX;
     
-
+    
 }
 
 
@@ -87,13 +87,13 @@ static NSMutableArray   * allSeekButtonsBackward;
         for(SeekButton* eachButton in allSeekButtonsForward) {
             [eachButton setMainButtonImageIndex:currentForwardButtonIndex];
             [eachButton hideSeekControlView:nil];
-    	} 
+        }
     } else if ([direct isEqualToString:BACKWARD]) {
         for(SeekButton* eachButton in allSeekButtonsBackward) {
             [eachButton setMainButtonImageIndex:currentBackwardButtonIndex];
             [eachButton hideSeekControlView:nil];
-    	}
-
+        }
+        
     } else {
         for(SeekButton* eachButtonF in allSeekButtonsForward) {
             [eachButtonF setMainButtonImageIndex:currentForwardButtonIndex];
@@ -102,7 +102,7 @@ static NSMutableArray   * allSeekButtonsBackward;
         for(SeekButton* eachButtonB in allSeekButtonsBackward) {
             [eachButtonB setMainButtonImageIndex:currentBackwardButtonIndex];
             [eachButtonB hideSeekControlView:nil];
-        } 
+        }
     }
 }
 
@@ -116,7 +116,7 @@ static NSMutableArray   * allSeekButtonsBackward;
     
     CGRect buttonSizing = CGRectMake(pt.x, pt.y - newHeight + NORMAL_MARGIN*2 + LITTLE_ICON_DIMENSIONS ,newWidth,newHeight);
     SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:FORWARD isFullScreen:NO];
-	return mySeeker;
+    return mySeeker;
 }
 
 +(id)makeBackwardAt:(CGPoint)pt
@@ -128,7 +128,7 @@ static NSMutableArray   * allSeekButtonsBackward;
     
     CGRect buttonSizing = CGRectMake(pt.x , pt.y - newHeight  + NORMAL_MARGIN*2 + LITTLE_ICON_DIMENSIONS ,newWidth,newHeight); // this positions the graphic by main Button top left
     SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:BACKWARD isFullScreen:NO];
-	return mySeeker;
+    return mySeeker;
 }
 
 +(id)makeFullScreenForwardAt:(CGPoint)pt
@@ -140,7 +140,7 @@ static NSMutableArray   * allSeekButtonsBackward;
     
     CGRect buttonSizing = CGRectMake(pt.x, pt.y - newHeight+LARGE_MARGIN*2+ LARGE_ICON_DIMENSIONS, newWidth,newHeight); // this positions the graphic by main Button top left
     SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:FORWARD isFullScreen:YES];
-	return mySeeker;
+    return mySeeker;
 }
 
 +(id)makeFullScreenBackwardAt:(CGPoint)pt
@@ -152,7 +152,7 @@ static NSMutableArray   * allSeekButtonsBackward;
     
     CGRect buttonSizing = CGRectMake(pt.x, pt.y - newHeight+LARGE_MARGIN*2+ LARGE_ICON_DIMENSIONS , newWidth,newHeight);// this positions the graphic by main Button top left
     SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:BACKWARD isFullScreen:YES];
-	return mySeeker;
+    return mySeeker;
 }
 
 
@@ -176,7 +176,7 @@ static NSMutableArray   * allSeekButtonsBackward;
         isFullScreen        = isFull;
         float iconSize      = (isFullScreen)? LARGE_ICON_DIMENSIONS : LITTLE_ICON_DIMENSIONS;
         float margin        = (isFullScreen)? LARGE_MARGIN : NORMAL_MARGIN;
-       
+        
         
         for (id object in listOfSpeeds) {
             NumberedSeekerButton * btn ;
@@ -197,7 +197,7 @@ static NSMutableArray   * allSeekButtonsBackward;
         [self addSubview:backPlate];
         
         // set up button size based of full screen or not
-
+        
         CGRect r = CGRectMake(margin, (frame.size.height - (iconSize + margin)) , iconSize, iconSize);
         if (isFullScreen){
             mainButton = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardLargeWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardLargeWithFrame:r];
@@ -205,7 +205,7 @@ static NSMutableArray   * allSeekButtonsBackward;
             mainButton = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardNormalWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardNormalWithFrame:r];
         }
         [self addSubview:mainButton];
-       
+        
         for (int i=0; i<buttonList.count; i++) {
             NumberedSeekerButton * button = ((NumberedSeekerButton*)buttonList[i]);
             button.frame = CGRectMake(margin, (frame.size.height - (iconSize + margin)) - (iconSize + margin)  * (i+1), iconSize, iconSize);
@@ -213,7 +213,7 @@ static NSMutableArray   * allSeekButtonsBackward;
         }
         
         // set up all other buttons
-      
+        
         for (int i=0; i<buttonList.count; i++) {
             NumberedSeekerButton * button = ((NumberedSeekerButton*)buttonList[i]);
             [button addTarget:self action:@selector(onPressSeekButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -221,7 +221,7 @@ static NSMutableArray   * allSeekButtonsBackward;
             button.hidden = YES;
             button.tag = i;
         }
-
+        
         // set up the main button
         [mainButton addTarget:self action:@selector(onPressSeekButton:) forControlEvents:UIControlEventTouchUpInside];
         mainButton.tag = -1;
@@ -233,11 +233,11 @@ static NSMutableArray   * allSeekButtonsBackward;
         
         if ([dir isEqualToString:FORWARD] ) {
             [mainButton setTextNumber:[listOfSpeeds[currentForwardButtonIndex]floatValue]];
-              velocity = [listOfSpeeds[currentForwardButtonIndex] floatValue];
+            velocity = [listOfSpeeds[currentForwardButtonIndex] floatValue];
             [allSeekButtonsForward addObject:self]; // add to static list for update
         } else if ([dir isEqualToString:BACKWARD]) {
             [mainButton setTextNumber:[listOfSpeeds[currentBackwardButtonIndex]floatValue]];
-             velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
+            velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
             [allSeekButtonsBackward addObject:self]; // add to static list for update
         }
         
@@ -284,7 +284,7 @@ static NSMutableArray   * allSeekButtonsBackward;
  */
 -(void)setMainButtonImageIndex:(int)index
 {
-     [ mainButton setTextNumber:[listOfSpeeds[index]  floatValue]];
+    [ mainButton setTextNumber:[listOfSpeeds[index]  floatValue]];
     return;
 }
 
@@ -295,7 +295,7 @@ static NSMutableArray   * allSeekButtonsBackward;
  *  @param sender used (nil)
  */
 -(void)hideSeekControlView:(id)sender{
-	backPlate.hidden = YES;
+    backPlate.hidden = YES;
     for (NumberedSeekerButton * btn in buttonList) {
         btn.hidden = YES;
     }
@@ -333,7 +333,7 @@ static NSMutableArray   * allSeekButtonsBackward;
             velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
         }
     }
-
+    
     if (onSeekSelector) [seekingTarget performSelector:onSeekSelector withObject:self];
     
     [SeekButton updateAll:direction]; //updates all instance graphics
@@ -356,5 +356,17 @@ static NSMutableArray   * allSeekButtonsBackward;
     return ([direction  isEqual: FORWARD])?velocity:-velocity;
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    if (self.isOpen) {
+        return YES;
+    } else if (point.x >= 0 && point.x <=70 && point.y >= 420 && point.y <= 490) {
+        return YES;
+    } else {
+        return NO;
+    }
+    
+}
+
 
 @end
+
