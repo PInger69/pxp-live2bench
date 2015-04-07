@@ -142,7 +142,6 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     NSMutableArray *tabViewControllers = [NSMutableArray array];
     
     SettingsPageViewController  *settingsVC = [[SettingsPageViewController alloc] initWithAppDelegate:appDel];
-
     [tabViewControllers addObject: settingsVC];
     
     __block NSArray *tabsArray;

@@ -142,7 +142,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     NSMutableArray *tabViewControllers = [NSMutableArray array];
     
     SettingsPageViewController  *settingsVC = [[SettingsPageViewController alloc] initWithAppDelegate:appDel];
-
+<<<<<<< HEAD
     [tabViewControllers addObject: settingsVC];
     
     __block NSArray *tabsArray;
@@ -207,6 +207,27 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 //    }
     //self.tabList = nil;
     
+=======
+    //LogoViewController          *logoVC     = [[LogoViewController alloc] initWithAppDelegate:appDel];
+    CalendarViewController      *calendarVC = [[CalendarViewController alloc] initWithAppDelegate:appDel];
+    Live2BenchViewController    *liveVC     = [[Live2BenchViewController alloc] initWithAppDelegate:appDel];
+    ClipViewController          *clipVC     = [[ClipViewController alloc] initWithAppDelegate:appDel];
+   ListViewController          *listVC     = [[ListViewController alloc] init];
+    BookmarkViewController      *bookmarkVC = [[BookmarkViewController alloc] initWithAppDelegate:appDel];
+//  StatsTabViewController      *statsVC    = [[StatsTabViewController alloc] init];
+  DebuggingTabViewController  *debugTabView  = [[DebuggingTabViewController alloc]initWithAppDelegate:appDel];
+  
+    NSMutableArray              *vcArray    = [NSMutableArray arrayWithObjects:
+                                               settingsVC,
+                                            /* logoVC, */
+                                               calendarVC,
+                                               liveVC,
+                                               clipVC,
+                                               listVC,
+                                               bookmarkVC,
+                                               debugTabView,
+                                               nil];
+>>>>>>> 180d6993644871dba07db3010d72592960be9ab5
     if(SHOW_STATS_TAB)
         //   [vcArray addObject:statsVC];
         //    if(SHOW_STATS_TAB)

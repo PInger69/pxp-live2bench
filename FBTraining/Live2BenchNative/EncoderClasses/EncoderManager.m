@@ -756,6 +756,60 @@ static void * builtContext          = &builtContext; // depricated?
 
 
 
+-(void)notificationDownloadEvent:(NSNotification*)note
+{
+//    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+//    
+//    // This gets run when the server responds
+//    void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
+//        
+//        NSData          * data = pooledResponces[0];
+//        NSDictionary    * results;
+//        NSString        * urlForImageOnServer;
+//        
+//        if(NSClassFromString(@"NSJSONSerialization"))
+//        {
+//            NSError *error = nil;
+//            id object = [NSJSONSerialization
+//                         JSONObjectWithData:data
+//                         options:0
+//                         error:&error];
+//            
+//            if([object isKindOfClass:[NSDictionary class]])
+//            {
+//                results = object;
+//                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"] ;
+//                
+//            }
+//        }
+//        
+//        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
+//        
+//        [_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
+//        NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
+//        DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
+//        dItemBlock(dli);
+//        
+//    };
+//    
+//    
+//    
+//    NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
+//                                            @{
+//                                              @"id":note.userInfo[@"id"],
+//                                              @"event":note.userInfo[@"event"],
+//                                              @"requesttime":GET_NOW_TIME_STRING,
+//                                              @"bookmark":@"1",
+//                                              @"user":[_dictOfAccountInfo objectForKey:@"hid"]
+//                                              }];
+//    
+//    
+//    [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:GET_NOW_TIME];
+//    
+//    [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
+
+}
+
 #pragma mark - Bonjour Methods
 // Services Methods     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

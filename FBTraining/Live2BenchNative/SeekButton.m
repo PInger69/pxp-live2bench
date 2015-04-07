@@ -25,7 +25,7 @@
 #define HEIGHT                      145
 #define FULL_WIDTH                  70
 #define FULL_HEIGHT                 250
-#define DEFAULT_INDEX               2   // This is what the app graphics and speed start at
+#define DEFAULT_INDEX               0   // This is what the app graphics and speed start at
 
 /**
  *  This class will manage all the seeking buttons in the project.

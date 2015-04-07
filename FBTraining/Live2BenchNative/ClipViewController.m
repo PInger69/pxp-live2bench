@@ -19,10 +19,10 @@
 
 #define CELLS_ON_SCREEN         12
 #define TOTAL_WIDTH             1024
-#define TOTAL_HEIGHT                600
+#define TOTAL_HEIGHT            600
 
-#define BUTTON_HEIGHT   125
-#define POP_WIDTH       200
+#define BUTTON_HEIGHT           125
+#define POP_WIDTH               200
 
 @interface ClipViewController ()
 

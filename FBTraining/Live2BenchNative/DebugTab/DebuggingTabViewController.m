@@ -291,7 +291,9 @@ static void *  debugContext = &debugContext;
     [self.view addSubview:proBar];
     [self.view addSubview:lbl];
     [super viewWillAppear:animated];
+    
   
+
 }
 
 
@@ -315,13 +317,22 @@ static void *  debugContext = &debugContext;
 -(void)pause
 {
       [pip pause];
+    
+    NSNumber * myNum = [NSNumber numberWithInt:1];
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:self userInfo:@{@"id":myNum,@"event":@"live",@"block": ^(DownloadItem* dItem){
+        
+        NSLog(@"DOWNLOAD CLIP");
+    }}];
+    
 }
 
 
 -(void)step
 {
     double ctime    = CMTimeGetSeconds([pip.avPlayerItem currentTime]);
-    [pip.avPlayerItem stepByCount:4];
+    [pip.avPlayerItem stepByCount:1];
     ctime    = CMTimeGetSeconds([pip.avPlayerItem currentTime]);
 }
 
@@ -357,10 +368,10 @@ static void *  debugContext = &debugContext;
         
     };
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
-                                                                                                           @"id":anID,
-                                                                                                           @"event":@"live"}];
-    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
+//                                                                                                           @"id":anID,
+//                                                                                                           @"event":@"live"}];
+//    
     
 //    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"main.mp4" ];
 //    DOWNLOADITEM  =   [Downloader downloadURL:@"http://192.168.3.100/events/2015-02-26_15-00-50_959bdd31af143f8b2c4b0c4381457e28e7c66049_local/video/main_00hq.mp4" to:myPath];

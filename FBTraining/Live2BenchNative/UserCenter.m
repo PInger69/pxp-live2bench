@@ -71,8 +71,6 @@
         observering     = NO;
         fileManager     = [NSFileManager defaultManager];
         
-        
-        
         if ([fileManager fileExistsAtPath: _accountInfoPath])
         {
             rawResponce     = [[NSMutableDictionary alloc] initWithContentsOfFile: _accountInfoPath];

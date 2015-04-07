@@ -7,26 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
-#import "GameSchedule.h"
-#import <mach/mach.h>
-#import <mach/mach_host.h>
 #import "CustomTabViewController.h"
 #import "EncoderManager.h"
 
-@class GameScheduleJSONDataSource;
-
 @interface CalendarViewController : CustomTabViewController<UITableViewDelegate, UITextViewDelegate>{
-    
-    GameScheduleJSONDataSource *gameScheduleJSONDataSource;
-    GameSchedule *currentSelectedGame;
-    NSString *selectedMonthYear;
-    NSString *selectedMonthDate;
 
 }
 
 @property (nonatomic,strong) UITableView *tableView;
-
-@property (nonatomic,strong) GameScheduleJSONDataSource *gameScheduleJSONDataSource;
 
 @end
