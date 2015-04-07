@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#define DEFAULT_FRAME_BUFFER_SIZE   500
+#define DEFAULT_TIMEOUT             120
 
 typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
     DownloadItemStatusWaiting   = 1<<1,
@@ -25,7 +27,26 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 
 
 @interface DownloadItem : NSObject <NSURLConnectionDataDelegate,NSURLConnectionDelegate>
+{
 
+    NSUInteger      _expectedBytes;
+    NSUInteger      _receivedBytes;
+    NSString        * url;
+    NSURLConnection * theConnection;
+    NSString        * path;
+    NSOutputStream  *stream;
+    NSMutableData   * _data;
+    
+    void(^progressBlock)(float,NSInteger);
+    
+    // For kbsp
+    CFTimeInterval startTime;
+    CFTimeInterval elapsedTime;
+    
+    DownloadType    downloadType;
+
+
+}
 @property (nonatomic,strong) NSString           * name; // this is here for convenience
 @property (nonatomic,assign) DownloadItemStatus status;
 @property (nonatomic,assign) float              progress;

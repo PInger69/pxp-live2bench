@@ -185,6 +185,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_EM_CHANGE_EVENT               @"NOTIF_EM_CHANGE_EVENT"            // userInfo:@{@"name"<NSString>}
 #define NOTIF_EVENT_LOADED                  @"NOTIF_EVENT_LOADED"               // this will be observed so we can ask the user to pick a team.
 #define NOTIF_EM_DOWNLOAD_CLIP              @"NOTIF_EM_DOWNLOAD_CLIP"           // userInfo:// the clip data
+#define NOTIF_EM_DOWNLOAD_EVENT             @"NOTIF_EM_DOWNLOAD_EVENT"           // userInfo:// the event data
 
 
 #define NOTIF_ENCODER_MNG_DATA_REQUEST      @"NOTIF_ENCODER_MNG_DATA_REQUEST"   // userInfo:@{@"type"<type> ,  @"block":<block>}

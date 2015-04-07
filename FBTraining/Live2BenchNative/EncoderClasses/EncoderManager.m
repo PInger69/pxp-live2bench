@@ -414,6 +414,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadEvent:) name:NOTIF_EM_DOWNLOAD_EVENT object:nil];
         // making actions
         
         //SAGAR AND BEN NOTIFICATIONS
@@ -593,6 +594,29 @@ static void * builtContext          = &builtContext; // depricated?
     return _mode;
 }
 
+
+-(Event*)getEventByHID:(NSString*)eventHID
+{
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+   
+        NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
+        
+        return [thisHID isEqualToString:eventHID];
+    }];
+
+
+ //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
+    
+    
+    NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
+    
+    if ([filtered count]==0)return nil;
+    
+    Event * event = [[Event alloc]initWithDict:filtered[0]];
+    return event;
+}
+
+
 #pragma mark -
 #pragma mark Observers
 
@@ -755,58 +779,26 @@ static void * builtContext          = &builtContext; // depricated?
 }
 
 
-
+/**
+ *  <#Description#>
+ *
+ *  @param note <#note description#>
+ */
 -(void)notificationDownloadEvent:(NSNotification*)note
 {
-//    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+    
+    NSDictionary * theEventData = note.userInfo[@"data"];
+    NSString * eventHID = theEventData[@"hid"];
+    
+    Event * theEvent = [self getEventByHID:eventHID];
+    
+    
 //    
-//    // This gets run when the server responds
-//    void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
-//        
-//        NSData          * data = pooledResponces[0];
-//        NSDictionary    * results;
-//        NSString        * urlForImageOnServer;
-//        
-//        if(NSClassFromString(@"NSJSONSerialization"))
-//        {
-//            NSError *error = nil;
-//            id object = [NSJSONSerialization
-//                         JSONObjectWithData:data
-//                         options:0
-//                         error:&error];
-//            
-//            if([object isKindOfClass:[NSDictionary class]])
-//            {
-//                results = object;
-//                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"] ;
-//                
-//            }
-//        }
-//        
-//        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
-//        
-//        [_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
-//        NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
-//        DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
-//        dItemBlock(dli);
-//        
-//    };
+//    DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
+//    dItemBlock(dli);
 //    
 //    
-//    
-//    NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
-//                                            @{
-//                                              @"id":note.userInfo[@"id"],
-//                                              @"event":note.userInfo[@"event"],
-//                                              @"requesttime":GET_NOW_TIME_STRING,
-//                                              @"bookmark":@"1",
-//                                              @"user":[_dictOfAccountInfo objectForKey:@"hid"]
-//                                              }];
-//    
-//    
-//    [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:GET_NOW_TIME];
-//    
-//    [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
 
 }
 

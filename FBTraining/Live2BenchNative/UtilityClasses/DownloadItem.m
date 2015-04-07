@@ -9,28 +9,13 @@
 #import "DownloadItem.h"
 #import "Utility.h"
 
-#define DEFAULT_FRAME_BUFFER_SIZE   500
-#define DEFAULT_TIMEOUT             120
+
 
 
 
 @implementation DownloadItem
 {
-    NSUInteger      _expectedBytes;
-    NSUInteger      _receivedBytes;
-    NSString        * url;
-    NSURLConnection * theConnection;
-    NSString        * path;
-    NSOutputStream  *stream;
-    NSMutableData   * _data;
-    
-    void(^progressBlock)(float,NSInteger);
-    
-    // For kbsp
-    CFTimeInterval startTime;
-    CFTimeInterval elapsedTime;
-    
-    DownloadType    downloadType;
+
 }
 
 

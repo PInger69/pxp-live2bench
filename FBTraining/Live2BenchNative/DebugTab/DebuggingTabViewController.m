@@ -292,6 +292,7 @@ static void *  debugContext = &debugContext;
     [self.view addSubview:lbl];
     [super viewWillAppear:animated];
     
+    [EM getEventByHID:@"15363b2016891fd248181812248633fa644b9e59_local"];
   
 
 }
@@ -334,6 +335,8 @@ static void *  debugContext = &debugContext;
     double ctime    = CMTimeGetSeconds([pip.avPlayerItem currentTime]);
     [pip.avPlayerItem stepByCount:1];
     ctime    = CMTimeGetSeconds([pip.avPlayerItem currentTime]);
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"NOTIF_DELETE_CLIPS" object:self userInfo:@{@"id":@"1"}];
 }
 
 

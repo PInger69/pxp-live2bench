@@ -421,6 +421,7 @@
 		D78F68D918074A500096C793 /* downloading@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = D78F68D718074A500096C793 /* downloading@2x.gif */; };
 		D79046AC18F48FD300A58B28 /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D79046AB18F48FD300A58B28 /* VideoPlayer.m */; };
 		D790CEA31A6F059800700D9D /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D790CEA21A6F059800700D9D /* SettingsViewController.m */; };
+		D79350EA1AD459C500D1751F /* DownloadEventItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D79350E91AD459C500D1751F /* DownloadEventItem.m */; };
 		D797CCF5170DB9CB00A6E62B /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D797CCF4170DB9CB00A6E62B /* Social.framework */; };
 		D797CCF7170DB9D300A6E62B /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D797CCF6170DB9D300A6E62B /* Accounts.framework */; };
 		D797CCFA170DD8D400A6E62B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D797CCF8170DD8D400A6E62B /* logo.png */; };
@@ -1205,6 +1206,8 @@
 		D79046AB18F48FD300A58B28 /* VideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoPlayer.m; path = Live2BenchNative/VideoPlayer.m; sourceTree = SOURCE_ROOT; };
 		D790CEA11A6F059800700D9D /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		D790CEA21A6F059800700D9D /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		D79350E81AD459C500D1751F /* DownloadEventItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadEventItem.h; path = Live2BenchNative/UtilityClasses/DownloadEventItem.h; sourceTree = "<group>"; };
+		D79350E91AD459C500D1751F /* DownloadEventItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadEventItem.m; path = Live2BenchNative/UtilityClasses/DownloadEventItem.m; sourceTree = "<group>"; };
 		D793897117E794B800BEA70B /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBSlider.h; path = Live2BenchNative/OBSlider.h; sourceTree = SOURCE_ROOT; };
 		D793897217E794B800BEA70B /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OBSlider.m; path = Live2BenchNative/OBSlider.m; sourceTree = SOURCE_ROOT; };
 		D797CCF4170DB9CB00A6E62B /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -2232,6 +2235,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D79350E81AD459C500D1751F /* DownloadEventItem.h */,
+				D79350E91AD459C500D1751F /* DownloadEventItem.m */,
 				D75ED4FB1ACC4707003AF856 /* LiveLight.h */,
 				D75ED4FC1ACC4707003AF856 /* LiveLight.m */,
 				D75ED4FE1ACC4713003AF856 /* RJLFreezeMonitor.h */,
@@ -3440,6 +3445,7 @@
 				BD1AEF8C17F0B14E00BD59A9 /* OBSlider.m in Sources */,
 				BDEA630617F0B0330005975C /* UtilitiesController.m in Sources */,
 				BDEC022917F0B002007063EB /* FilterToolboxViewController.m in Sources */,
+				D79350EA1AD459C500D1751F /* DownloadEventItem.m in Sources */,
 				D738304D198A94D60053F0A1 /* FilterScrollView.m in Sources */,
 				D738305E198AEC610053F0A1 /* BreadCrumbsViewController.m in Sources */,
 				D738304C198A94D60053F0A1 /* FilterProcessor.m in Sources */,

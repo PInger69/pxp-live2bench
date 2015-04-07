@@ -165,7 +165,11 @@ static UIColor * selectedColor;
     NSString * txtNum;
     float fntSize;
     
-    if (num < 1){
+    if (num < .25){
+        txtNum = [NSString stringWithFormat:@"%.02f",num];
+        txtNum = @"F";
+        fntSize = [fontSizes[1]floatValue];
+    } else if (num < 1){
         txtNum = [NSString stringWithFormat:@"%.02f",num];
         txtNum = [txtNum substringFromIndex:1];
         fntSize = [fontSizes[0]floatValue];

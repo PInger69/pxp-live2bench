@@ -19,7 +19,7 @@
 #import "LocalEncoder.h"
 #import "Feed.h"
 #import "Downloader.h"
-#import "Event.h"
+
 
 #define LOCAL_PLIST  @"EventsHid.plist"
 
@@ -69,7 +69,7 @@
         _allEventData                   = [[NSArray alloc]initWithContentsOfFile:_localDocsPListPath];
         _eventData                      = @{};
         _eventTagsDict                  = [[NSMutableDictionary alloc]init];
-        
+        _clipFeeds                      = [[NSMutableDictionary alloc]init];
         // new
         
         _myEvents                       = [[NSMutableDictionary alloc]init];
@@ -129,7 +129,8 @@
             aFeed.info = (NSDictionary*)value2;
             NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary*)value2];
             [temp addEntriesFromDictionary:@{@"feed":aFeed}];
-            [_clipFeeds setObject:temp forKey:[temp objectForKey:@"id"]];
+            NSString * anId = [[temp objectForKey:@"id"]stringValue];
+            [_clipFeeds setObject:temp forKey:anId];
            // [_clipFeedsDict  setObject:temp forKey:[temp objectForKey:@"id"]];
             
         }
@@ -137,14 +138,7 @@
         
         _bookmarkPlistNames             = [[NSMutableArray alloc]init];
         
-        
-        
-        
-        
-        
-        
-        
-        //_clipFeeds                      = [self buildClipFeeds];
+
 
         // build sorter block
         
@@ -480,13 +474,6 @@
 
 #pragma mark - Bookmark Clip Methods
 
--(NSMutableDictionary *)buildClipFeeds
-{
-    
-
-
-}
-
 
 -(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData
 {
@@ -523,26 +510,59 @@
 -(void)myClipDeleteRequest:(NSNotification*)note
 {
 
+    [self deleteClip:    [note.userInfo objectForKey:@"id"]];
 }
 
 
 -(void)deleteClip:(NSString*)aId
 {
-    NSError  * error        = nil;
-    NSString * plistPath    = [_clipFeeds objectForKey:@"plistPath"];
-    NSString * videoPath    = [_clipFeeds objectForKey:@"fileNames"];
     
+    NSDictionary * clipDict = [_clipFeeds objectForKey:aId];
+    
+    NSError  * error        = nil;
+    NSString * plistPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkPath],[clipDict objectForKey:@"plistName"]];
+    NSString * videoPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],[clipDict objectForKey:@"fileNames"][0]];
+    NSString * clipID       = [NSString stringWithFormat:@"%@",[clipDict objectForKey:@"id"]];
     [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
     [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
-    
-    
-    
-    
-    [_clipFeeds removeObjectForKey:aId];
-    
+    [_clipFeeds removeObjectForKey:clipID];
+
     // sort list on delete
     _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
 }
+
+
+-(void)saveEvent:(Event*)aEvent
+{
+
+
+}
+
+
+
+/**
+ *  This deletes the event from the device
+ *
+ *  @param aHid <#aHid description#>
+ */
+-(void)deleteEvent:(NSString*)aHid
+{
+//    NSDictionary * clipDict = [_clipFeeds objectForKey:aId];
+//    
+//    NSError  * error        = nil;
+//    NSString * plistPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkPath],[clipDict objectForKey:@"plistName"]];
+//    NSString * videoPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],[clipDict objectForKey:@"fileNames"][0]];
+//    NSString * clipID       = [NSString stringWithFormat:@"%@",[clipDict objectForKey:@"id"]];
+//    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
+//    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
+//    [_clipFeeds removeObjectForKey:clipID];
+//    
+//    // sort list on delete
+//    _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
+
+}
+
+
 
 
 -(int)gap:(NSArray*)list first:(int)first last:(int)last
@@ -586,14 +606,6 @@
     return range.location != NSNotFound;
 }
 
-
-
-
--(void)downloadToClip:(NSString*)clip
-{
-    
-    
-}
 
 
 

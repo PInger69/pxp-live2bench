@@ -332,6 +332,12 @@ static NSMutableArray   * allSeekButtonsBackward;
             currentBackwardButtonIndex = button.tag; //  "-1" is the tag for the main button
             velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
         }
+    } else {
+        if ([direction isEqualToString:FORWARD] ) {
+            velocity = [listOfSpeeds[currentForwardButtonIndex] floatValue];
+        } else if ([direction isEqualToString:BACKWARD]) {
+            velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
+        }
     }
 
     if (onSeekSelector) [seekingTarget performSelector:onSeekSelector withObject:self];
