@@ -15,7 +15,14 @@
 {
     NSMutableArray  * listOfDownloadItems;
     NSArray         * urlList;
+    
+    DownloadItem    * focusItem;
+    
 }
+
+
+static void * isObservedContext     = &isObservedContext;
+static void * statusContext         = &statusContext;
 
 -(instancetype)initWithURL:(NSArray*)aListOfURLAndDestination
 {
@@ -32,9 +39,23 @@
 
         listOfDownloadItems = [[NSMutableArray alloc]init];
 
+        __block DownloadEventItem * weakSelf = self;
+        
         for (NSDictionary* dict in aListOfURLAndDestination) {
-            [listOfDownloadItems addObject:[[DownloadItem alloc]initWithURL:dict[@"path"] destination:dict[@"dest"]]];
+            DownloadItem * dItem = [[DownloadItem alloc]initWithURL:dict[@"path"] destination:dict[@"dest"]];
+            [dItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                // this just gets the progress of all the downloads as one
+                [weakSelf getAllProgress];
+                
+            }];
+            [listOfDownloadItems addObject:dItem];
         }
+        
+        
+        focusItem = [listOfDownloadItems objectAtIndex:0];
+        
+        [focusItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&statusContext];
+        [focusItem addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew context:&isObservedContext];
         
         
     }
@@ -46,12 +67,78 @@
 
 
 
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    DownloadItem    * obj =object;
+  
+    if (context == &statusContext) {
+        
+        if (obj.status == DownloadItemStatusComplete) {
+        
+            // if its done an there is no more itemd in teh list then  SELF will be complete
+            // remove all observers on the current item
+            // add observers to the next item
+            
+        } else {
+        
+        
+        }
+        
+        
+        
+        
+        self.status;
+    }
+    if (context == &isObservedContext) {
+
+        [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive))    context:&isObservedContext];
+    }
+    
+}
+
+
+
+
+-(void)setStatus:(DownloadItemStatus)status
+{
+//    if (_status==status)return;
+    [self willChangeValueForKey:NSStringFromSelector(@selector(status))];
+//    _status = status;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(status))];
+    
+}
+
+
+-(DownloadItemStatus)status
+{
+    return nil;
+}
+
+
 #pragma mark -
 #pragma mark Class Methods
 
+
+-(void)getAllProgress
+{
+    float       poolProgress    = 0;
+    NSInteger   poolkbps        = 0;
+    
+    for (DownloadItem* dli in listOfDownloadItems) {
+        poolkbps        += dli.kbps;
+        poolProgress    += dli.progress;
+    }
+    
+    self.progress       = poolProgress / [listOfDownloadItems count];
+    self.kbps           = poolkbps / [listOfDownloadItems count];
+    if (progressBlock) progressBlock(self.progress, self.kbps);
+}
+
+
 -(void)start
 {
-    [listOfDownloadItems makeObjectsPerformSelector:@selector(start)];
+    [focusItem start];
+//    [listOfDownloadItems makeObjectsPerformSelector:@selector(start)];
     
 }
 
@@ -60,6 +147,15 @@
 {
     [listOfDownloadItems makeObjectsPerformSelector:@selector(cancel)];
 }
+
+
+-(NSString*)stringStatus
+{
+    NSString * txt = @"";
+    
+    return txt;
+}
+
 
 
 @end

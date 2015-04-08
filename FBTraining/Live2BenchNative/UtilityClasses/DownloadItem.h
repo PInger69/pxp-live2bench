@@ -53,6 +53,7 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 @property (nonatomic,assign) NSTimeInterval     timeoutInterval;
 @property (nonatomic,assign) NSInteger          freeSpaceBuffer;
 @property (nonatomic,assign) NSInteger          kbps;
+@property (nonatomic,assign) BOOL               isAlive;
 
 -(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath;
 
@@ -61,5 +62,5 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 -(void)start;
 -(void)cancel;
 -(void)addOnProgressBlock:(void(^)(float progress,NSInteger kbps)) pBlock;
-
+-(NSString*)stringStatus;
 @end

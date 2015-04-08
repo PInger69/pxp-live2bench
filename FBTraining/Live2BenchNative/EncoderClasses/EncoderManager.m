@@ -544,7 +544,7 @@ static void * builtContext          = &builtContext; // depricated?
     [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
         
         [_eventTags setObject:all forKey:_liveEventName];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil];
     }];
 
 

@@ -97,7 +97,7 @@
        [self screenDidConnect:[[NSNotification alloc]initWithName:NOTIF_SWITCH_MAIN_TAB object:screenTwo userInfo:nil]];
     }
     
-    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:@{@"name" : [NSString stringWithFormat:@"%@", newValue?@"True":@"False"]}];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:@{@"name" : [NSString stringWithFormat:@"%@", newValue?@"True":@"False"]}];
 }
 
 /**

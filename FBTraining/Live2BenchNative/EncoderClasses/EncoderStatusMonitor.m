@@ -276,7 +276,7 @@
         id json = [NSJSONSerialization JSONObjectWithData: connection.cumulatedData options:0 error:nil];
         if ( [json objectForKey: @"tags"]) {
             for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:tag];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:tag];
             }
             
         }

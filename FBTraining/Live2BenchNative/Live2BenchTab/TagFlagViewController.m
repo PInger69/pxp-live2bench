@@ -48,7 +48,7 @@
         [self.view addSubview:_currentPositionMarker];
         
         self.arrayOfAllTags = [[NSMutableArray alloc] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
         
     }

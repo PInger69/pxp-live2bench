@@ -22,7 +22,7 @@
 #import "RJLVideoPlayer.h"
 #import "DownloadItem.h"
 #import "Downloader.h"
-
+#import "DownloadEventItem.h"
 #import "UserCenter.h"
 
 @interface DebuggingTabViewController ()
@@ -48,6 +48,7 @@
     DownloadItem * DOWNLOADITEM;
     DownloadItem * DOWNLOADITEM1;
     DownloadItem * DOWNLOADITEM2;
+    DownloadEventItem * dddd;
     UIProgressView * proBar;
     UILabel * lbl;
     
@@ -168,8 +169,7 @@ static void *  debugContext = &debugContext;
         NSLog(@"FILE NOT FOUND");    
     }
 
-    //    [pip playWithFeed:myFeed];
-    [pip playerURL:asdfasdfaf];
+    //    [pip playWithFeed:myFeed];    [pip playerURL:asdfasdfaf];
 
 //    
 //NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"test.plist" ];
@@ -382,20 +382,29 @@ static void *  debugContext = &debugContext;
 //
 //    CustomAlertView * ioAlert = [[CustomAlertView alloc]initWithTitle:@"NO SPACE" message:@"make space" delegate:self cancelButtonTitle:@"alskdfj" otherButtonTitles:@"asdf", nil];
 //    [Downloader defaultDownloader].IOAlertView = ioAlert;
-//    
-//    __block UIProgressView  * weakBar = proBar;
-//    __block UILabel         * weakLbl = lbl;
 //
-//    void (^block)(float ,NSInteger) = ^void(float currentProgress, NSInteger kbps){
-//        weakBar.progress = currentProgress;
-//        weakLbl.text = [NSString stringWithFormat:@"%ld",(long)kbps];
-//    };
-//    
-//    
-//    [DOWNLOADITEM addOnProgressBlock:block];
-//    
     
     
+     dddd = [[DownloadEventItem alloc]initWithURL:@[
+                                                                       @{@"path": @"http://192.168.1.111/events/2015-04-06_13-59-54_73cb9ae46c4a51b46dab900fa47c4babdf1a46aa_local/video/main_02hq.mp4",
+                                                                         @"dest":[NSString stringWithFormat:@"%@/%@",UC.localPath,@"main_02hq.mp4"] },
+                                                                       @{@"path": @"http://192.168.1.111/events/2015-04-06_13-59-54_73cb9ae46c4a51b46dab900fa47c4babdf1a46aa_local/video/main_03hq.mp4",
+                                                                         @"dest":[NSString stringWithFormat:@"%@/%@",UC.localPath,@"main_03hq.mp4"]}
+                                                                       ]];
+//    [dddd   addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&debugContext];
+    __block UIProgressView  * weakBar = proBar;
+    __block UILabel         * weakLbl = lbl;
+
+    void (^block)(float ,NSInteger) = ^void(float currentProgress, NSInteger kbps){
+        weakBar.progress = currentProgress;
+        weakLbl.text = [NSString stringWithFormat:@"%ld",(long)kbps];
+    };
+    
+
+    [dddd addOnProgressBlock:block];
+    
+    
+    [dddd start];
 
 }
 

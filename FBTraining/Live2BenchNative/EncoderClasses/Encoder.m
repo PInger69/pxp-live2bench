@@ -854,7 +854,7 @@
                 NSString * tagId = [[results objectForKey:@"id"]stringValue];
                 
                 [_eventTagsDict setObject:results forKey:tagId];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:results];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
             }
         }
     }
@@ -882,7 +882,7 @@
                 NSString * tagId = [[results objectForKey:@"id"]stringValue];
 
                 [_eventTagsDict setObject:results forKey:tagId];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:results];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:results];
             }
         }
     }
