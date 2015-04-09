@@ -86,7 +86,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         //[self initializeOldEventNames];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initializeOldEventNames) name:@"oldEventsUpdated" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendBookmarkRequest) name:@"sendOldBookmarkRequest" object:nil];
-        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];

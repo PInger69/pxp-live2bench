@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#define DEFAULT_FRAME_BUFFER_SIZE   500
+#define DEFAULT_TIMEOUT             120
 
 typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
     DownloadItemStatusWaiting   = 1<<1,
@@ -25,13 +27,33 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 
 
 @interface DownloadItem : NSObject <NSURLConnectionDataDelegate,NSURLConnectionDelegate>
+{
 
+    NSUInteger      _expectedBytes;
+    NSUInteger      _receivedBytes;
+    NSString        * url;
+    NSURLConnection * theConnection;
+    NSString        * path;
+    NSOutputStream  *stream;
+    NSMutableData   * _data;
+    
+    void(^progressBlock)(float,NSInteger);
+    
+    // For kbsp
+    CFTimeInterval startTime;
+    CFTimeInterval elapsedTime;
+    
+    DownloadType    downloadType;
+
+
+}
 @property (nonatomic,strong) NSString           * name; // this is here for convenience
 @property (nonatomic,assign) DownloadItemStatus status;
 @property (nonatomic,assign) float              progress;
 @property (nonatomic,assign) NSTimeInterval     timeoutInterval;
 @property (nonatomic,assign) NSInteger          freeSpaceBuffer;
 @property (nonatomic,assign) NSInteger          kbps;
+@property (nonatomic,assign) BOOL               isAlive;
 
 -(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath;
 
@@ -40,5 +62,5 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 -(void)start;
 -(void)cancel;
 -(void)addOnProgressBlock:(void(^)(float progress,NSInteger kbps)) pBlock;
-
+-(NSString*)stringStatus;
 @end

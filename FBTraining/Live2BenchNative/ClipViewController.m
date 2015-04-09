@@ -83,7 +83,7 @@ static void * encoderTagContext = &encoderTagContext;
         
         
         
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         [_encoderManager addObserver:self forKeyPath:@"hasLive" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&masterEncoderContext];
         [_encoderManager addObserver:self forKeyPath:@"currentEventTags" options:NSKeyValueObservingOptionNew context: &encoderTagContext];
         _imageAssetManager = appDel.imageAssetManager;

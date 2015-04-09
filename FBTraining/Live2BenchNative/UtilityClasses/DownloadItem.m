@@ -9,28 +9,13 @@
 #import "DownloadItem.h"
 #import "Utility.h"
 
-#define DEFAULT_FRAME_BUFFER_SIZE   500
-#define DEFAULT_TIMEOUT             120
+
 
 
 
 @implementation DownloadItem
 {
-    NSUInteger      _expectedBytes;
-    NSUInteger      _receivedBytes;
-    NSString        * url;
-    NSURLConnection * theConnection;
-    NSString        * path;
-    NSOutputStream  *stream;
-    NSMutableData   * _data;
-    
-    void(^progressBlock)(float,NSInteger);
-    
-    // For kbsp
-    CFTimeInterval startTime;
-    CFTimeInterval elapsedTime;
-    
-    DownloadType    downloadType;
+
 }
 
 
@@ -40,12 +25,13 @@
 @synthesize timeoutInterval = _timeoutInterval;
 @synthesize freeSpaceBuffer = _freeSpaceBuffer;
 @synthesize kbps;
-
+@synthesize isAlive;
 
 - (instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath
 {
     self = [super init];
     if (self) {
+        self.isAlive        = YES;
         url                 = aURL;
         path                = aPath;
         self.status         = DownloadItemStatusWaiting;
@@ -63,6 +49,7 @@
 {
     self = [super init];
     if (self) {
+        self.isAlive        = YES;
         url                 = aURL;
         path                = aPath;
         self.status         = DownloadItemStatusWaiting;
@@ -74,6 +61,8 @@
     }
     return self;
 }
+
+
 
 
 #pragma mark -
@@ -261,6 +250,17 @@
     [toPlist writeToFile: aPath atomically:YES];
 }
 
+-(NSString*)stringStatus
+{
+    NSString * txt = @"";
 
+    return txt;
+}
+
+
+-(void)dealloc
+{
+    self.isAlive = NO;
+}
 
 @end

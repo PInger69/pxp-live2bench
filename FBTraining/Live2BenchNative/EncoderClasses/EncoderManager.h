@@ -12,6 +12,7 @@
 #import "EncoderProtocol.h"
 #import "CloudEncoder.h"
 #import "LocalEncoder.h"
+#import "Event.h"
 
 @class Encoder;
 
@@ -88,7 +89,7 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
-
+-(Event*)getEventByHID:(NSString*)eventHID;
 
 #pragma mark - Commands Methods
 

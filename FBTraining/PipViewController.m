@@ -284,12 +284,12 @@ static void * vpFrameContext   = &vpFrameContext;
 
     for (Pip * pp in self.pips) {
         if ((pp.status |PIP_Live) !=0)return;
-        __block Pip * weakPip = pp;
-        
-        double pipTime       = CMTimeGetSeconds(pp.avPlayer.currentTime);
-        double pipTimeTotal  = CMTimeGetSeconds( [self playerItemDuration:pp.avPlayerItem]);
-        double playerTime    = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
-      
+//        __block Pip * weakPip = pp;
+//        
+//        double pipTime       = CMTimeGetSeconds(pp.avPlayer.currentTime);
+//        double pipTimeTotal  = CMTimeGetSeconds( [self playerItemDuration:pp.avPlayerItem]);
+//        double playerTime    = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
+//      
 //        if (fabs(pipTime - playerTime) > 2){
 //            
 //        

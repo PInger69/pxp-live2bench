@@ -8,6 +8,7 @@
 
 #import "Encoder.h" // what ever is taken from this needs to be moved to the protocol
 #import "EncoderProtocol.h"
+#import "Event.h"
 /**
  *  This class acts like a normal Encoder but all tags and event are local to the device
  *  as well as bookmarked clips for sharing.
@@ -51,4 +52,8 @@
 -(NSString*)bookmarkedVideosPath;
 -(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData;//video file
 -(void)deleteClip:(NSString*)aName;
+
+-(void)saveEvent:(Event*)aEvent;
+-(void)deleteEvent:(NSString*)aHid;
+
 @end

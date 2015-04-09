@@ -111,7 +111,7 @@
         externalWindow = [self _buildExternalScreen:screenBounds screen:screenTwo];
     }
     
-    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil userInfo:@{@"name" : [NSString stringWithFormat:@"%@", newValue?@"True":@"False"]}];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:@{@"name" : [NSString stringWithFormat:@"%@", newValue?@"True":@"False"]}];
 }
 
 /**
