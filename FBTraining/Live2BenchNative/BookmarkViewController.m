@@ -788,12 +788,16 @@ int viewWillAppearCalled;
                   sortDescriptorWithKey:@"name"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(caseInsensitiveCompare:)];
+    }  else if (sortType & RATING_FIELD) {
+        
+        sorter = [NSSortDescriptor sortDescriptorWithKey:@"Rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
     } else {
         return toSort;
     }
     
     return [NSMutableArray arrayWithArray:[toSort sortedArrayUsingDescriptors:@[sorter]]];
 }
+
 
 -(void)viewWillDisappear:(BOOL)animated
 {

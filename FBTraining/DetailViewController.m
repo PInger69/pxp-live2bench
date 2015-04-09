@@ -227,7 +227,7 @@
 
 - (void)functionalButtonFromCell: (SwipeableTableViewCell *) cell{
     
-    NSDictionary *signalPackage = @{@"Name": cell.functionalButton.titleLabel.text , @"Value": @1, @"Type": @"FunctionalButton"};
+    NSDictionary *signalPackage = @{@"Name": cell.myTextLabel.text , @"Value": @1, @"Type": @"FunctionalButton", @"ButtonTitle": cell.functionalButton.titleLabel.text};
     [self.settingsTableViewController settingChangedInDetailViewController:self withSignal: signalPackage];
     //[[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil];
 }

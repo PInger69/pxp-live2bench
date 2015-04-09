@@ -59,6 +59,7 @@
 
 static const NSInteger kDeleteAlertTag = 423;
 static void * masterEncoderContext = &masterEncoderContext;
+static void * encoderTagContext = &encoderTagContext;
 
 - (id)init //controller:(Live2BenchViewController *)lbv
 {
@@ -84,6 +85,7 @@ static void * masterEncoderContext = &masterEncoderContext;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_CLIPVIEW_TAG_RECEIVED object:nil];
         [_encoderManager addObserver:self forKeyPath:@"hasLive" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&masterEncoderContext];
+        [_encoderManager addObserver:self forKeyPath:@"currentEventTags" options:NSKeyValueObservingOptionNew context: &encoderTagContext];
         _imageAssetManager = appDel.imageAssetManager;
         
         _tagsToDisplay = [[NSMutableArray alloc] init];
@@ -101,31 +103,37 @@ static void * masterEncoderContext = &masterEncoderContext;
 -(void) deleteTag: (NSNotification *)note{
     [self.allTagsArray removeObject: note.userInfo];
     [self.tagsToDisplay removeObject: note.userInfo];
+    componentFilter.rawTagArray = self.allTagsArray;
+    [componentFilter refresh];
     [_collectionView reloadData];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (context == &masterEncoderContext) {
-        if ([change objectForKey:@"new"]){
-            
-            BOOL n = [[change objectForKey:@"new"]boolValue];
-            BOOL o = [[change objectForKey:@"old"]boolValue];
-            
-            if (!n && n != o){
-                _tagsToDisplay = [[NSMutableArray alloc]init];
-                [_collectionView reloadData];
-            }
-        }
-    }
+//    if (context == &masterEncoderContext) {
+//        if ([change objectForKey:@"new"]){
+//            
+//            BOOL n = [[change objectForKey:@"new"]boolValue];
+//            BOOL o = [[change objectForKey:@"old"]boolValue];
+//            
+//            if (!n && n != o){
+//                _tagsToDisplay = [[NSMutableArray alloc]init];
+//                [_collectionView reloadData];
+//            }
+//        }
+//    }else if (context == &encoderTagContext){
+//        self.allTagsArray = [change[@"new"] mutableCopy];
+//    }
     
 }
+
+
 
 -(void)clipViewTagReceived:(NSNotification*)note
 {
     //    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
     //
-    self.allTagsArray = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
+    //self.allTagsArray = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
     //    if (componentFilter && self.tagsToDisplay) {
     //        componentFilter.rawTagArray = self.allTagsArray;
     //        [self receiveFilteredArrayFromFilter: componentFilter];
@@ -133,10 +141,16 @@ static void * masterEncoderContext = &masterEncoderContext;
     //        self.tagsToDisplay = self.allTagsArray;
     //        [_collectionView reloadData];
     //    }
-    self.tagsToDisplay = self.allTagsArray;
-    [_collectionView reloadData];
-    componentFilter.rawTagArray = self.allTagsArray;
-    //    componentFilter.rawTagArray = self.allTagsArray;
+    //self.tagsToDisplay = self.allTagsArray;
+    if (note.userInfo) {
+        [self.allTagsArray addObject: note.userInfo];
+        componentFilter.rawTagArray = self.allTagsArray;
+        componentFilter.rangeSlider.highestValue = [self highestTimeInTags: self.allTagsArray ];
+        [self receiveFilteredArrayFromFilter: componentFilter];
+        //[_collectionView reloadData];
+    }
+    
+        //    componentFilter.rawTagArray = self.allTagsArray;
     //    self.tag
     //    [self receiveFilteredArrayFromFilter: componentFilter];
     //_tagsToDisplay = tags;
@@ -149,6 +163,16 @@ static void * masterEncoderContext = &masterEncoderContext;
     //_tagsToDisplay = tags;
     //[_collectionView reloadData];
     
+}
+
+-(Float64) highestTimeInTags: (NSArray *) arrayOfTags{
+    Float64 highestTime = 0;
+    for (NSDictionary *tag in arrayOfTags) {
+        if ([tag[@"time"] floatValue] > highestTime) {
+            highestTime = [tag[@"time"] floatValue];
+        }
+    }
+    return highestTime;
 }
 
 - (void)viewDidLoad
@@ -293,10 +317,16 @@ static void * masterEncoderContext = &masterEncoderContext;
     
     //clean the image cache to make sure each thumbnail displays the right image ;
     //otherwise the images from the old event will stay there
-    SDImageCache *imageCache = [SDImageCache sharedImageCache];
-    [imageCache clearMemory];
-    [imageCache clearDisk];
-    [imageCache cleanDisk];
+//    SDImageCache *imageCache = [SDImageCache sharedImageCache];
+//    [imageCache clearMemory];
+//    [imageCache clearDisk];
+//    [imageCache cleanDisk];
+    
+//    if (!self.allTagsArray.count) {
+//        self.allTagsArray = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
+//        self.tagsToDisplay = [self.allTagsArray mutableCopy];
+//        [_collectionView reloadData];
+//    }
     
     //pause the video palyer in live2bench view and my clip view
     for (thumbnailCell *cell in _collectionView.visibleCells) {
@@ -595,6 +625,7 @@ static void * masterEncoderContext = &masterEncoderContext;
     [self.view addSubview: self.dismissFilterButton];
     
     componentFilter.rawTagArray = self.allTagsArray;
+    componentFilter.rangeSlider.highestValue = [self highestTimeInTags:self.allTagsArray];
     //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
     //componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
     
@@ -608,6 +639,20 @@ static void * masterEncoderContext = &masterEncoderContext;
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
     [componentFilter open:YES];
+    
+    if (self.isEditing) {
+        self.isEditing = !self.isEditing;
+        
+        for (thumbnailCell *cell in _collectionView.visibleCells) {
+            [cell setDeletingMode: self.isEditing];
+        }
+        
+        if( !self.isEditing ){
+            [self.setOfSelectedCells removeAllObjects];
+            [self checkDeleteAllButton];
+        }
+        
+    }
     
     //    float boxXValue = _filterToolBoxView.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
     //
@@ -881,11 +926,26 @@ static void * masterEncoderContext = &masterEncoderContext;
 ///NOTE: when filterbox.view is all the way up, customer goes to another screen and comes back, filterbox.view cannot be interacted with
 -(void)viewWillDisappear:(BOOL)animated
 {
-    for (thumbnailCell *cell in _collectionView.visibleCells) {
-        [cell setDeletingMode: NO];
-    }
+//    for (thumbnailCell *cell in _collectionView.visibleCells) {
+//        [cell setDeletingMode: NO];
+//    }
     [componentFilter close:YES];
     [self.dismissFilterButton removeFromSuperview];
+    
+    if (self.isEditing) {
+        self.isEditing = !self.isEditing;
+        
+        for (thumbnailCell *cell in _collectionView.visibleCells) {
+            [cell setDeletingMode: self.isEditing];
+        }
+        
+        if( !self.isEditing ){
+            [self.setOfSelectedCells removeAllObjects];
+            [self checkDeleteAllButton];
+        }
+        
+    }
+    
     return;
     //    globals.IS_IN_CLIP_VIEW = FALSE;
     //    SDImageCache *imageCache = [SDImageCache sharedImageCache];

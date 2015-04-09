@@ -68,7 +68,7 @@ NS_OPTIONS(NSInteger, style){
         NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/Setting"];
         NSString *path = [dataPath stringByAppendingPathComponent: plistName];
         
-        if ( [[NSFileManager defaultManager] fileExistsAtPath:path]) {
+       if ( [[NSFileManager defaultManager] fileExistsAtPath:path]) {
             NSDictionary *settingDictionary = [[NSDictionary alloc]initWithContentsOfFile:path];
             self.settingsArray = settingDictionary[@"SettingsArray"];
             for (NSMutableDictionary *setting in self.settingsArray) {
@@ -302,14 +302,9 @@ NS_OPTIONS(NSInteger, style){
 //}
 
 - (void)didPressLink : (NSNotification *) note {
-    [[SocialSharingManager commonManager] linkSocialObject:@"Dropbox" inViewController:self];
+    [[SocialSharingManager commonManager] linkSocialObject:note.userInfo[@"Name"] inViewController:self];
 }
 
-
-- (void)didPressGoogleLink {
-    [[SocialSharingManager commonManager] linkSocialObject:@"GoogleDrive" inViewController:self];
-    
-}
 
 -(void) saveSettings{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

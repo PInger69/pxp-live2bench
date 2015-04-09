@@ -52,5 +52,6 @@
 
 -(void)setDeletingMode: (BOOL) mode;
 
+
 //- (void)didDeleteThumbnail:(id)sender;
 @end

@@ -13,7 +13,7 @@
 #define DATE_FIELD      1<<4
 #define TIME_FIELD      1<<5
 #define OTHER_FIELD     1<<6
-
+#define RATING_FIELD    1<<7
 
 
 
@@ -25,7 +25,9 @@ typedef enum : NSUInteger {
     HBSortDateAscending		    = DATE_FIELD | ASCEND,
     HBSortDateDescending		= DATE_FIELD | DESCEND,
     HBSortTimeAscending		    = TIME_FIELD | ASCEND,
-    HBSortTimeDescending		= TIME_FIELD | DESCEND
+    HBSortTimeDescending		= TIME_FIELD | DESCEND,
+    HBSortRatingAscending       = RATING_FIELD | ASCEND,
+    HBSortRatingDescending      = RATING_FIELD | DESCEND,
 } HBSortType;
 
 @interface HeaderBar : UIView
@@ -40,3 +42,5 @@ typedef enum : NSUInteger {
 -(void)setHeaderBarSortType:(HBSortType)newHeaderBarSortType;
 
 @end
+
+

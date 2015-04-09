@@ -16,6 +16,7 @@ typedef enum : NSUInteger {
 @interface SeekButton : UIView <UIGestureRecognizerDelegate>
 
 @property (nonatomic,assign)    float speed;
+@property (nonatomic,assign)    BOOL enabled;
 
 +(id)makeForwardAt:(CGPoint)pt;
 +(id)makeBackwardAt:(CGPoint)pt;

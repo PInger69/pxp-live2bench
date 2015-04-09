@@ -10,5 +10,5 @@
 #import <Foundation/Foundation.h>
 
 @interface GoogleDriveShare : NSObject <SocialSharingProtocol>
-
+@property (assign, nonatomic) BOOL isLoggedIn;
 @end

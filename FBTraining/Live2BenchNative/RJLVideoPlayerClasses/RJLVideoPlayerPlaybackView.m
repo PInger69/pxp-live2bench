@@ -24,8 +24,15 @@
         [self.videoLayer setFrame: self.layer.bounds];
         [self.layer addSublayer: self.videoLayer];
         
-        self.maskView = [[UIView alloc] initWithFrame:self.bounds];
-        self.maskView.backgroundColor =[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+        if ([[UIDevice currentDevice].systemVersion doubleValue] >= 8.0) {
+            self.maskView = [[UIView alloc] initWithFrame:self.bounds];
+            self.maskView.backgroundColor =[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+        }else{
+            self.layer.mask = [CALayer layer];
+            self.layer.mask.frame = self.bounds;
+            self.layer.mask.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0].CGColor;
+        }
+        
     }
     return self;
 }
@@ -44,8 +51,12 @@
     if (self.secondLayer.superlayer == self.videoLayer.superlayer) {
         self.secondLayer.frame = videoLayerFrame;
     }
+    if ([[UIDevice currentDevice].systemVersion doubleValue] >= 8.0) {
+        self.maskView.frame = self.bounds;
+    }else{
+        self.layer.mask.frame = self.bounds;
+    }
     
-    self.maskView.frame = self.bounds;
 }
 
 //+ (Class)layerClass

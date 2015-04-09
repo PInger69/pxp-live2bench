@@ -241,14 +241,17 @@ static NSMutableArray   * allSeekButtonsBackward;
             [allSeekButtonsBackward addObject:self]; // add to static list for update
         }
         
-        
+        self.enabled = YES;
         
         
     }
     return self;
 }
 
-
+-(void)setEnabled:(BOOL)enabled{
+    _enabled = enabled;
+    mainButton.enabled = enabled;
+}
 /**
  *  This is the default method. Please do not use.
  *

@@ -322,5 +322,19 @@
     return [eventName substringToIndex:10];
 }
 
++(BOOL)hasInternet{
+    SCNetworkReachabilityFlags flags;
+    BOOL receivedFlags;
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
+    
+    receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
+    
+    CFRelease(reachability);
+    
+    return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
+
+}
+
 @end
 

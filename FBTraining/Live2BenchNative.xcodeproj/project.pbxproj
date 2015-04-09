@@ -534,6 +534,7 @@
 		D7B79CD4182C398400F0876D /* saveToAlbumSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CD2182C398400F0876D /* saveToAlbumSelected.png */; };
 		D7B79CD5182C398400F0876D /* saveToAlbumSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CD3182C398400F0876D /* saveToAlbumSelected@2x.png */; };
 		D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */; };
+		D7B7C4DB1AD6CDF800A5DEC3 /* FeedSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */; };
 		D7C5F38119BF894A008190CE /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5F38019BF894A008190CE /* ScreenController.m */; };
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C624EB180EE64700C2DDD7 /* play_videoDisabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C624E9180EE64700C2DDD7 /* play_videoDisabled@2x.png */; };
@@ -1368,6 +1369,8 @@
 		D7B79CD3182C398400F0876D /* saveToAlbumSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saveToAlbumSelected@2x.png"; sourceTree = "<group>"; };
 		D7B7C4D41AD32BDD00A5DEC3 /* InjuryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InjuryViewController.h; sourceTree = "<group>"; };
 		D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryViewController.m; sourceTree = "<group>"; };
+		D7B7C4D91AD6CDF800A5DEC3 /* FeedSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectCell.h; sourceTree = "<group>"; };
+		D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectCell.m; sourceTree = "<group>"; };
 		D7C5F37F19BF894A008190CE /* ScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenController.h; sourceTree = "<group>"; };
 		D7C5F38019BF894A008190CE /* ScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenController.m; sourceTree = "<group>"; };
 		D7C624E6180EDBF700C2DDD7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -2245,6 +2248,8 @@
 				D7CCE8071AC98B9400D85095 /* VideoTrimItem.m */,
 				436907401AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib */,
 				436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */,
+				D7B7C4D91AD6CDF800A5DEC3 /* FeedSelectCell.h */,
+				D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */,
 				436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */,
 				436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */,
 				436907481AB86E5B003BD1E6 /* GTLDrive.h */,
@@ -3532,6 +3537,7 @@
 				D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */,
 				D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */,
 				D7F6973B1811C7E8003EDDDB /* ListViewCell.m in Sources */,
+				D7B7C4DB1AD6CDF800A5DEC3 /* FeedSelectCell.m in Sources */,
 				D749B7671A795AC000258D63 /* RJLVideoPlayerPlaybackView.m in Sources */,
 				D7A188BF19FFE6A200513909 /* FeedSwitchView.m in Sources */,
 				D727798D1A30C5870034DD66 /* UserCenter.m in Sources */,

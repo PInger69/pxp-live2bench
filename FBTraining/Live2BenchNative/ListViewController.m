@@ -102,13 +102,16 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         
     }
     return self;
-
+    
 }
 
 -(void)deleteTag: (NSNotification *) note{
     [self.tagsToDisplay removeObject: note.userInfo];
-    //    [_tableViewController.tableData removeObject: note.userInfo];
-    //    [_tableViewController reloadData];
+    [_tableViewController.tableData removeObject: note.userInfo];
+    [_tableViewController reloadData];
+    
+    componentFilter.rawTagArray = self.tagsToDisplay;
+    [componentFilter refresh];
 }
 
 //-(void)listViewTagReceived:(NSNotification*)note{
@@ -311,6 +314,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         if(eventTags && self.tagsToDisplay.count < 1){
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             _tableViewController.tableData = self.tagsToDisplay;
+            componentFilter.rawTagArray = self.tagsToDisplay;
             [_tableViewController.tableView reloadData];
         }
     }}];
@@ -460,7 +464,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     {
         [self.view addSubview:componentFilter.view];
     }
-    [componentFilter refresh]; // refresh list when View
+    //[componentFilter refresh]; // refresh list when View
     
     // End Richard
     
@@ -686,9 +690,6 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
     [componentFilter open:YES];
-    
-    
-    
 }
 
 -(void)dismissFilter: (UIButton *)dismissButton{
@@ -2012,7 +2013,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     self.videoPlayer.looping = NO;
     [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
     self.videoPlayer.looping = YES;
-    selectedTag = [self.tagsToDisplay[[self.tagsToDisplay indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
+    selectedTag = [self.tagsToDisplay[[self.tagsToDisplay indexOfObjectIdenticalTo: userInfo[@"forWhole"]]] mutableCopy];
     
     [commentingField clear];
     commentingField.enabled             = YES;

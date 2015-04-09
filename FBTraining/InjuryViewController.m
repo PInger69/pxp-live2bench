@@ -379,7 +379,7 @@ static void * eventContext      = &eventContext;
 - (void)stopButtonClicked {
     self.recordingTimer = nil;
     self.videoPlayer.liveIndicatorLight.tintColor = [UIColor greenColor];
-    //self.videoPlayer.liveIndicatorLight setHidden: self.videoPlayer
+    [self.videoPlayer.liveIndicatorLight setHidden: self.videoPlayer.live?NO:YES];
     [self.videoPlayer.videoControlBar setEnable:YES];
     [self setStateWhenRecording];
     self.timeString = @"00:00:00";
@@ -389,10 +389,10 @@ static void * eventContext      = &eventContext;
 - (void)setStateWhenRecording {
     self.startButton.hidden = !self.startButton.hidden;
     self.stopButton.hidden = !self.stopButton.hidden;
-    self.gotoLiveButton.enabled = !self.gotoLiveButton.enabled;
+    self.gotoLiveButton.hidden = !self.gotoLiveButton.hidden;
     self.teleButton.enabled = !self.teleButton.enabled;
-    self.seekForward.hidden = !self.seekForward.hidden;
-    self.seekBackward.hidden = !self.seekBackward.hidden;
+    self.seekForward.enabled = !self.seekForward.enabled;
+    self.seekBackward.enabled = !self.seekBackward.enabled;
     self.slomoButton.enabled = !self.slomoButton.enabled;
 }
 

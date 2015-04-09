@@ -338,7 +338,7 @@ SVSignalStatus signalStatus;
     [signalTimer fire];
     
     // block
-    grabNames = ^NSArray * (NSDictionary *input) {
+    grabNames = ^NSArray *(NSDictionary *input) {
         NSMutableArray  * collection    = [[NSMutableArray alloc]init];
         NSArray         * keys          = [input allKeys];
         for (NSString * item in keys) {

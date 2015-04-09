@@ -51,6 +51,7 @@
     return self;
 }
 
+
 -(CGRect)frameWithAspectRatioForImage:(UIImageView *)value withFrame:(CGRect)screenRect
 {
     float hfactor = value.bounds.size.width / screenRect.size.width;
@@ -79,14 +80,14 @@
     [self addSubview:self.backgroundView];
     
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
-    self.imageView.contentMode = UIViewContentModeCenter;
-    [self.imageView setFrame:CGRectMake(3.0f, 2.0f, self.backgroundView.bounds.size.width-5, 131.0f)];
-    CGRect aspectRect = [self frameWithAspectRatioForImage:self.imageView withFrame:self.imageView.frame];
-    [self.imageView setFrame:aspectRect];
-    [self.imageView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
+    //self.imageView.contentMode = UIViewContentModeCenter;
+    [self.imageView setFrame:CGRectMake(0, 0, self.backgroundView.bounds.size.width, 131.0f)];
+    //CGRect aspectRect = [self frameWithAspectRatioForImage:self.imageView withFrame:self.imageView.frame];
+    //[self.imageView setFrame:aspectRect];
+    //[self.imageView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
     [self.backgroundView addSubview:self.imageView];
     
-    self.thumbColour = [[ClipCornerView alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width-28, 2.0f, 30, 30)];
+    self.thumbColour = [[ClipCornerView alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width-30, 0.0f, 30, 30)];
     [self.thumbColour setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     self.thumbColour.layer.masksToBounds = YES;
     self.thumbColour.layer.cornerRadius = 1; // if you like rounded corners

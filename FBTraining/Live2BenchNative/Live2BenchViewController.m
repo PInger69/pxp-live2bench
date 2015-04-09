@@ -437,7 +437,7 @@ static void * eventContext      = &eventContext;
     
     
     // maybe this should be part of the videoplayer
-     if(![self.view.subviews containsObject:self.videoPlayer.view])
+     if( !(self.videoPlayer.view.superview == self.view) )
      {
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
          [self.view addSubview:self.videoPlayer.view];
@@ -456,7 +456,7 @@ static void * eventContext      = &eventContext;
          
      }
 
-    [self createTagButtons]; // temp place
+    //[self createTagButtons]; // temp place
 
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
