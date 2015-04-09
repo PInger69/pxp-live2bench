@@ -20,11 +20,12 @@
     self = [super initWithFrame:frame];
     if (self){
         [self setContentMode:UIViewContentModeScaleAspectFit];
+        self.tintColor = [UIColor greenColor];
         self.opaque             = NO;
         myFirstShape            = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(5, 5, 20, 20)];
         shapeLayer              = [[CAShapeLayer alloc] initWithLayer:self.layer];
         shapeLayer.lineWidth    = 1.0;
-        shapeLayer.fillColor    = [UIColor greenColor].CGColor;
+        shapeLayer.fillColor    = self.tintColor.CGColor;
         shapeLayer.path         = myFirstShape.CGPath;
         [self.layer addSublayer:shapeLayer];
         self.hidden = YES;
@@ -70,6 +71,15 @@
     
 }
 
+-(void)setTintColor:(UIColor *)tintColor{
+    [super setTintColor:tintColor];
+    myFirstShape            = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(5, 5, 20, 20)];
+    shapeLayer              = [[CAShapeLayer alloc] initWithLayer:self.layer];
+    shapeLayer.lineWidth    = 1.0;
+    shapeLayer.fillColor    = tintColor.CGColor;
+    shapeLayer.path         = myFirstShape.CGPath;
+    [self.layer addSublayer:shapeLayer];
+}
 
 
 

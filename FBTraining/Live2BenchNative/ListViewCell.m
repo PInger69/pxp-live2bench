@@ -18,7 +18,7 @@ static CGFloat const kBounceValue = 10.0f;
 
 @implementation ListViewCell
 
-@synthesize tagname,tagtime,tagImage,coachpickButton,bookmarkButton,tagInfoText,controlButton,tagPlayersView,playersNumberLabel;
+@synthesize tagname,tagtime,tagImage,coachpickButton,tagInfoText,controlButton,tagPlayersView,playersNumberLabel;
 @synthesize translucentEditingView,checkmarkOverlay;
 @synthesize playersLabel;
 
@@ -91,7 +91,7 @@ static CGFloat const kBounceValue = 10.0f;
     [tagInfoText setFont:[UIFont defaultFontOfSize:17.0f]];
     [tagInfoText setEditable:FALSE];
     [tagInfoText setUserInteractionEnabled:FALSE];
-    //[self addSubview:tagInfoText];
+    [self.myContentView addSubview:tagInfoText];
     
     playersLabel = [[UILabel alloc]initWithFrame:CGRectMake(tagname.frame.origin.x+1, CGRectGetMaxY(tagInfoText.frame)-5.0f, 70, 25.0f)];
     [playersLabel setText:@"Player(s):"];
@@ -123,30 +123,7 @@ static CGFloat const kBounceValue = 10.0f;
     [self.tagImage addSubview:tagtime];
     
     //self.tagcolor.frame.size.width - 5*16.0f - 4*9.0f
-    self.tagRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.tagRatingFive setContentMode:UIViewContentModeScaleAspectFit];
-    [self.tagRatingFive setFrame:CGRectMake(20, 110.0f, 16.0f, 16.0f)];
-    [self.myContentView addSubview:self.tagRatingFive];
     
-    self.tagRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.tagRatingFour setContentMode:UIViewContentModeScaleAspectFit];
-    [self.tagRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFive.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self.myContentView addSubview:self.tagRatingFour];
-    
-    self.tagRatingThree = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.tagRatingThree setContentMode:UIViewContentModeScaleAspectFit];
-    [self.tagRatingThree setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFour.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self.myContentView addSubview:self.tagRatingThree];
-    
-    self.tagRatingTwo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.tagRatingTwo setContentMode:UIViewContentModeScaleAspectFit];
-    [self.tagRatingTwo setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingThree.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self.myContentView addSubview:self.tagRatingTwo];
-    
-    self.tagRatingOne = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
-    [self.tagRatingOne setContentMode:UIViewContentModeScaleAspectFit];
-    [self.tagRatingOne setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingTwo.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-    [self.myContentView addSubview:self.tagRatingOne];
     
     coachpickButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [coachpickButton setBackgroundImage:[UIImage imageNamed:@"coach.png"] forState:UIControlStateNormal];
@@ -155,12 +132,18 @@ static CGFloat const kBounceValue = 10.0f;
     //[coachpickButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
     [self.myContentView addSubview:coachpickButton];
     
-    bookmarkButton = [DownloadButton buttonWithType:UIButtonTypeCustom];
-    [bookmarkButton setState:DBDefault];
-    [bookmarkButton setFrame:CGRectMake(CGRectGetMaxX(coachpickButton.frame) + 20.0f, coachpickButton.frame.origin.y, 32.0f, 32.0f)];
-    //[bookmarkButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
-    [self.myContentView addSubview:bookmarkButton];
-    
+//    bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    
+//    //[bookmarkButton setState:DBDefault];
+//    [bookmarkButton setFrame:CGRectMake(CGRectGetMaxX(coachpickButton.frame) + 20.0f, coachpickButton.frame.origin.y + 3, 55.0f, 28.0f)];
+//    //[bookmarkButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
+//    [bookmarkButton setTitle:@"Feeds" forState:UIControlStateNormal];
+//    bookmarkButton.layer.borderColor = [UIColor orangeColor].CGColor;
+//    bookmarkButton.layer.borderWidth = 1.0f;
+//    [bookmarkButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+//    [bookmarkButton addTarget:self action:@selector(showSource:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.myContentView addSubview:bookmarkButton];
+//    
     tagActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [tagActivityIndicator setFrame:CGRectMake((self.tagcolor.frame.size.width - tagActivityIndicator.frame.size.width)/2, CGRectGetMaxY(self.tagcolor.frame) + 62.0f, 37.0f, 37.0f)];
     [self.myContentView addSubview:tagActivityIndicator];
@@ -195,6 +178,22 @@ static CGFloat const kBounceValue = 10.0f;
     //    [self.myContentView addGestureRecognizer:self.swipeRecognizer];
 }
 
+-(void)setSelected:(BOOL)selected{
+    if (selected) {
+        [self.translucentEditingView removeFromSuperview];
+        self.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        [self.translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+        [self.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
+        [self.translucentEditingView setAlpha:0.3];
+        [self.translucentEditingView setUserInteractionEnabled:FALSE];
+        [self addSubview: self.translucentEditingView];
+        
+    }else{
+        [self.translucentEditingView removeFromSuperview];
+        self.translucentEditingView = nil;
+    }
+}
+
 -(CGRect)frameWithAspectRatioForImage:(UIImageView *)value withFrame:(CGRect)screenRect
 {
     float hfactor = value.bounds.size.width / screenRect.size.width;
@@ -214,6 +213,96 @@ static CGFloat const kBounceValue = 10.0f;
     return newRect;
 }
 
+- (void)setRatingStars:(int)number {
+    switch (number) {
+        case 0:
+            [self.tagRatingOne removeFromSuperview];
+            [self.tagRatingTwo removeFromSuperview];
+            [self.tagRatingThree removeFromSuperview];
+            [self.tagRatingFour removeFromSuperview];
+            [self.tagRatingFive removeFromSuperview];
+        case 1:
+            self.tagRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFive setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFive setFrame:CGRectMake(20, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFive];
+            break;
+        case 2:
+            self.tagRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFive setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFive setFrame:CGRectMake(20, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFive];
+            
+            self.tagRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFour setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFive.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFour];
+        case 3:
+            self.tagRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFive setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFive setFrame:CGRectMake(20, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFive];
+            
+            self.tagRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFour setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFive.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFour];
+            
+            self.tagRatingThree = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingThree setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingThree setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFour.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingThree];
+        case 4:
+            self.tagRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFive setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFive setFrame:CGRectMake(20, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFive];
+            
+            self.tagRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFour setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFive.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFour];
+            
+            self.tagRatingThree = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingThree setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingThree setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFour.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingThree];
+            
+            self.tagRatingTwo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingTwo setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingTwo setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingThree.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingTwo];
+        case 5:
+            self.tagRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFive setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFive setFrame:CGRectMake(20, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFive];
+            
+            self.tagRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingFour setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFive.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingFour];
+            
+            self.tagRatingThree = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingThree setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingThree setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingFour.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingThree];
+            
+            self.tagRatingTwo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingTwo setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingTwo setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingThree.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingTwo];
+            
+            self.tagRatingOne = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+            [self.tagRatingOne setContentMode:UIViewContentModeScaleAspectFit];
+            [self.tagRatingOne setFrame:CGRectMake(CGRectGetMaxX(self.tagRatingTwo.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
+            [self.myContentView addSubview:self.tagRatingOne];
+        default:
+            break;
+    }
+}
+
 
 @end
+
 

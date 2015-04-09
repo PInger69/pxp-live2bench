@@ -23,11 +23,11 @@
 //@property (nonatomic, weak) id <SettingsTableDelegate> signalReciever;
 @property (strong, nonatomic) DetailViewController *detailViewController;
 //@property (strong, nonatomic) NSMutableArray *arrayWithSettingOptionChosen;
-@property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) UISplitViewController *splitViewController;
 @property (nonatomic, weak) UINavigationController *navigationController;
 
-- (void) settingChangedInDetailViewController: (NSDictionary *) settingDictionary;
+- (void) settingChangedInDetailViewController: (DetailViewController *)detailView withSignal: (NSDictionary *) settingDictionary;
 //- (void) choseCellWithString: (NSString*)optionLabel;
 //- (void) specificSettingChosen: (NSString *) theSetting fromCell: (SwipeableTableViewCell *)theCell;
 - (void) buttonOneActionForItemText:(NSString *)itemText;

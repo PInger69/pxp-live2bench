@@ -17,7 +17,7 @@
     UILabel *tagtime;
     ClipCornerView *tagcolor;
     UIButton *coachpickButton;
-    DownloadButton *bookmarkButton;
+    //UIButton *bookmarkButton;
     UIImageView *tagImage;
     UIActivityIndicatorView *tagActivityIndicator;
     UIImageView *tagRatingOne;
@@ -37,7 +37,7 @@
 @property (nonatomic, strong) UILabel *tagtime;
 @property (nonatomic, strong) ClipCornerView *tagcolor;
 @property (nonatomic, strong) UIButton *coachpickButton;
-@property (nonatomic, strong) DownloadButton *bookmarkButton;
+//@property (nonatomic, strong) DownloadButton *bookmarkButton;
 @property (nonatomic, strong) UIImageView *tagImage;
 @property (nonatomic, strong) UIActivityIndicatorView *tagActivityIndicator;
 @property (nonatomic, strong) UIImageView *tagRatingOne;
@@ -56,5 +56,6 @@
 
 //@property (nonatomic, strong) NSIndexPath *indexPath;
 //@property (nonatomic, strong) id <UITableViewDataSource> tableViewDataSource;
+
 
 @end

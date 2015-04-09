@@ -13,6 +13,7 @@
 @interface DeletableTableViewController ()
 
 @property (strong, nonatomic) UIPopoverController *sharePop;
+//@property (strong, nonatomic) id previousOne;
 
 @end
 
@@ -41,7 +42,6 @@
         [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.shareButton setFrame:CGRectMake(568, 768, 370, 0)];
         
-        
         self.setOfDeletingCells = [[NSMutableSet alloc] init];
         self.setOfSharingCells = [[NSMutableSet alloc] init];
         //self.dictionaryOfObservers = [[NSMutableDictionary alloc] init];
@@ -52,10 +52,20 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addSharingCell:) name:@"AddSharingCell" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSharingCell:) name:@"RemoveSharingCell" object:nil];
         
-        
+        self.swipeableMode = YES;
     }
     
     return self;
+}
+
+-(void)setSwipeableMode:(BOOL)swipeableMode{
+    _swipeableMode = swipeableMode;
+    
+    for (DeletableTableViewCell *cell in self.tableView.visibleCells){
+        cell.swipeRecognizerRight.enabled = swipeableMode;
+        cell.swipeRecognizerLeft.enabled = swipeableMode;
+    }
+    
 }
 
 
@@ -72,6 +82,15 @@
         [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
+    
+//    if ([self.contextString isEqualToString:@"TAG"]) {
+//        if (self.setOfDeletingCells.count >= 1) {
+//            if (self.downloadEnabled) {
+//                self.downloadEnabled = NO;
+//                [self reloadData];
+//            }
+//        }
+//    }
 }
 
 -(void)removeDeletionCell: (NSNotification *) aNotification{
@@ -86,7 +105,12 @@
         [self.deleteButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
-    
+//    if ([self.contextString isEqualToString:@"TAG"]) {
+//        if (self.setOfDeletingCells.count < 1) {
+//            self.downloadEnabled = YES;
+//            [self reloadData];
+//        }
+//    }
 }
 
 -(void) addSharingCell: (NSNotification *) aNotification{
@@ -116,7 +140,6 @@
         [self.shareButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
-    
 }
 
 -(void)checkDeleteAllButton{
@@ -125,6 +148,12 @@
         [UIView setAnimationDuration:0.5];
         self.deleteButton.frame = self.originalFrame;
         [UIView commitAnimations];
+    }
+}
+
+-(void)checkDownloadButton {
+    if (self.setOfDeletingCells.count < 2) {
+        
     }
 }
 
@@ -345,5 +374,6 @@
  */
 
 @end
+
 
 

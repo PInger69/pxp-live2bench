@@ -141,7 +141,7 @@ static void * eventContext      = &eventContext;
                                               };
     
     
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"HockeyBottomViewController" ofType:@"plist"];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"SoccerBottomViewController" ofType:@"plist"];
     NSDictionary *plistDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -165,11 +165,7 @@ static void * eventContext      = &eventContext;
     // TO DO:
     
     
-    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
-    swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
-    swipeGesture.numberOfTouchesRequired = 2;
-    [self.videoPlayer.view addGestureRecognizer: swipeGesture];
-    [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
+    
     
     return self;
 }
@@ -180,7 +176,7 @@ static void * eventContext      = &eventContext;
 -(void)swipeNoticed: (UISwipeGestureRecognizer *) swipeRecognizer{
     switch (swipeRecognizer.direction) {
         case UISwipeGestureRecognizerDirectionUp:
-            if ( [((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer].enabled) {
+            if ([UIScreen screens].count > 1) {
                 [_externalControlScreen moveVideoToExternalDisplay: self.videoPlayer];
                 swipeGesture.direction = UISwipeGestureRecognizerDirectionDown;
             }
@@ -317,7 +313,11 @@ static void * eventContext      = &eventContext;
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer:pinchGesture];
     
-    
+    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
+    swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
+    swipeGesture.numberOfTouchesRequired = 3;
+    [self.videoPlayer.view addGestureRecognizer: swipeGesture];
+    [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
     
     
     // side tags
@@ -437,7 +437,7 @@ static void * eventContext      = &eventContext;
     
     
     // maybe this should be part of the videoplayer
-     if(![self.view.subviews containsObject:self.videoPlayer.view])
+     if( !(self.videoPlayer.view.superview == self.view) )
      {
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
          [self.view addSubview:self.videoPlayer.view];
@@ -456,7 +456,7 @@ static void * eventContext      = &eventContext;
          
      }
 
-    [self createTagButtons]; // temp place
+    //[self createTagButtons]; // temp place
 
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];

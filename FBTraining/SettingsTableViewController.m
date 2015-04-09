@@ -44,7 +44,7 @@ NS_OPTIONS(NSInteger, style){
 }
 
 
--(void) setDataArray:(NSArray *)dataArray{
+-(void) setDataArray:(NSMutableArray *)dataArray{
     _dataArray = dataArray;
 }
     // This indexPath object is used to instantiate the array with the indexPath objects
@@ -220,9 +220,10 @@ NS_OPTIONS(NSInteger, style){
     //detailViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
     
     self.detailViewController.settingsTableViewController = self;
+    self.detailViewController.indexPath = indexPath;
     //self.detailViewController.arrayOfOptions = [settingsDictionary objectForKey:@"Setting Options"];
     //self.detailViewController.arrayOfToggleOptions = [settingsDictionary objectForKey:@"Toggle Settings"];
-    self.detailViewController.swipeableTableViewCell = (SwipeableTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    //self.detailViewController.swipeableTableViewCell = (SwipeableTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     self.detailViewController.title =[settingsDictionary objectForKey:@"Setting Label"];
     self.detailViewController.dataDictionary = self.dataArray[indexPath.row][@"DataDictionary"];
     [self.detailViewController.tableView reloadData];
@@ -244,8 +245,8 @@ NS_OPTIONS(NSInteger, style){
 // THIS IS WHERE ALL THE SIGNALS ARE SENT
 #pragma mark- Signal from Detail View Controller
 
-- (void) settingChangedInDetailViewController: (NSDictionary *) settingDictionary{
-    NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+- (void) settingChangedInDetailViewController: (DetailViewController *)detailView withSignal: (NSDictionary *) settingDictionary{
+    NSIndexPath *selectedIndexPath = detailView.indexPath;
     NSString *name = self.dataArray[selectedIndexPath.row][@"SettingLabel"];
     
     NSNotification *note = [NSNotification notificationWithName:[@"Setting - " stringByAppendingString:name] object:nil userInfo: settingDictionary];
@@ -269,6 +270,13 @@ NS_OPTIONS(NSInteger, style){
 
     [[NSNotificationCenter defaultCenter] postNotification: settingNotification];
     //[self.signalReciever settingChanged: signalPackage fromCell: theCell ];
+    
+    for (NSMutableDictionary *setting in self.dataArray) {
+        if ([setting[@"SettingLabel"] isEqualToString: theCell.myTextLabel.text]) {
+            NSNumber *optionChar = (onOrOff ? [NSNumber numberWithChar: toggleIsThere | toggleIsOn] :[NSNumber numberWithChar: toggleIsThere]);
+            setting[@"OptionChar"] = optionChar;
+        }
+    }
     
 }
 

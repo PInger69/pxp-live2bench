@@ -19,9 +19,11 @@
     SortArrow * dateArrow;
     SortArrow * nameArrow;
     SortArrow * timeArrow;
+    SortArrow * ratingArrow;
     UIButton  * dateTapArea;
     UIButton  * nameTapArea;
     UIButton  * timeTapArea;
+    UIButton  * ratingTapArea;
     
     SEL onTapSelector;
     id theTarget;
@@ -41,17 +43,14 @@
 
 -(id)initWithFrame:(CGRect)frame defaultSort:(HBSortType)sortType{
     
-
+    
     self = [super initWithFrame:frame];
     if (self) {
-       
+        
         [self setupGraphics];
-         self.headerBarSortType = sortType;
+        self.headerBarSortType = sortType;
     }
     return self;
-
-
-
 }
 
 -(void)onTapPerformSelector:(SEL)sel addTarget:(id)target
@@ -68,6 +67,7 @@
     [self addSubview:[self makeLabel:@"Date"     xPosition:555]];
     [self addSubview:[self makeLabel:@"Tag Time" xPosition:690]];
     [self addSubview:[self makeLabel:@"Name"     xPosition:795]];
+    [self addSubview:[self makeLabel:@"Rating"   xPosition:920]];
     
     float sbh       = 18.0f;
     float sbhSize   = 12.0f;
@@ -75,15 +75,16 @@
     dateArrow = [[SortArrow alloc]initWithFrame:CGRectMake(550+40,sbh,sbhSize,sbhSize)];
     timeArrow = [[SortArrow alloc]initWithFrame:CGRectMake(690+72,sbh,sbhSize,sbhSize)];
     nameArrow = [[SortArrow alloc]initWithFrame:CGRectMake(795+50,sbh,sbhSize,sbhSize)];
-
-
-
+    ratingArrow = [[SortArrow alloc] initWithFrame:CGRectMake(975, sbh, sbhSize, sbhSize)];
+    
+    
+    
     [self addSubview:dateArrow];
     [self addSubview:nameArrow];
     [self addSubview:timeArrow];
-
-
-
+    [self addSubview:ratingArrow];
+    
+    
     
     dateTapArea = [[UIButton alloc]initWithFrame:CGRectMake(550, 0, 105, 40)];
     dateTapArea.tag = DATE_FIELD;
@@ -95,11 +96,15 @@
     [timeTapArea addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:timeTapArea];
     
-    nameTapArea = [[UIButton alloc]initWithFrame:CGRectMake(795, 0, 200, 40)];
+    nameTapArea = [[UIButton alloc]initWithFrame:CGRectMake(795, 0, 70, 40)];
     nameTapArea.tag = NAME_FIELD;
     [nameTapArea addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:nameTapArea];
     
+    ratingTapArea = [[UIButton alloc] initWithFrame:CGRectMake(920, 0, 100, 40)];
+    ratingTapArea.tag = RATING_FIELD;
+    [ratingTapArea addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:ratingTapArea];
 }
 
 
@@ -116,11 +121,13 @@
         case NAME_FIELD:
             arrowGraphic = nameArrow;
             break;
+        case RATING_FIELD:
+            arrowGraphic = ratingArrow;
     }
     
     self.headerBarSortType = button.tag|arrowGraphic.nextState;
     
-    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if (onTapSelector) [theTarget performSelector:onTapSelector withObject:self];
 }
 
@@ -148,15 +155,19 @@
     dateArrow.state = 0;
     nameArrow.state = 0;
     timeArrow.state = 0;
+    ratingArrow.state = 0;
     
     if (newHeaderBarSortType & NAME_FIELD)  nameArrow.state = newHeaderBarSortType;
     if (newHeaderBarSortType & DATE_FIELD)  dateArrow.state = newHeaderBarSortType;
     if (newHeaderBarSortType & TIME_FIELD)  timeArrow.state = newHeaderBarSortType;
-   
-
+    if (newHeaderBarSortType & RATING_FIELD) {
+        ratingArrow.state = newHeaderBarSortType;
+    }
+    
 }
 
 
 
 
 @end
+

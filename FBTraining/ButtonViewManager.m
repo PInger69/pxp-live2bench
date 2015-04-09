@@ -45,22 +45,24 @@
         self.label.text = self.name;
         
         // The -1 accounts for the fact that the data dictionary has a selected index object
-        for (int i = 0; i < ([dataDictionary count] - 1); ++i){
-            UIButton *addingButton = [[UIButton alloc]init] ;
-            [addingButton setTitle:[NSString stringWithFormat:@"%i", (i+1)] forState:UIControlStateNormal];
-            [addingButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-            [addingButton.layer setBorderWidth:1.0f];
-            [addingButton.layer setBorderColor:[UIColor orangeColor].CGColor];
-            
-            
-            addingButton.backgroundColor = [UIColor whiteColor];
-            addingButton.tintColor = [UIColor orangeColor];
-            [addingButton setNeedsDisplay];
-            [self.theButtons addObject:addingButton];
-            [self.viewContainingAllViews addSubview:addingButton];
-            [addingButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
-            [addingButton addTarget:self action:@selector(buttonIsHeld:) forControlEvents:UIControlEventTouchDown];
-            //[addingButton addTarget:self action:@selector(buttonIsHeld:) forControlEvents:UIControlEvent];
+        if (dataDictionary) {
+            for (int i = 0; i < ([dataDictionary count] - 1); ++i){
+                UIButton *addingButton = [[UIButton alloc]init] ;
+                [addingButton setTitle:[NSString stringWithFormat:@"%i", (i+1)] forState:UIControlStateNormal];
+                [addingButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                [addingButton.layer setBorderWidth:1.0f];
+                [addingButton.layer setBorderColor:[UIColor orangeColor].CGColor];
+                
+                
+                addingButton.backgroundColor = [UIColor whiteColor];
+                addingButton.tintColor = [UIColor orangeColor];
+                [addingButton setNeedsDisplay];
+                [self.theButtons addObject:addingButton];
+                [self.viewContainingAllViews addSubview:addingButton];
+                [addingButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+                [addingButton addTarget:self action:@selector(buttonIsHeld:) forControlEvents:UIControlEventTouchDown];
+                //[addingButton addTarget:self action:@selector(buttonIsHeld:) forControlEvents:UIControlEvent];
+            }
         }
         NSDictionary *frameDictionary = plistDictionary[@"Position"];
         NSNumber *xPosition = (NSNumber *) frameDictionary[@"xPosition"];

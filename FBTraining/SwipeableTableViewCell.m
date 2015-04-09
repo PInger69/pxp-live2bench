@@ -275,7 +275,7 @@ NS_OPTIONS(NSInteger, style){
     self.button1.hidden = YES;
     self.button2.hidden = YES;
     
-    self.functionalButton.enabled = YES;
+    self.functionalButton.enabled = NO;
     self.functionalButton.hidden = YES;
     //self.functionalButton.frame =  CGRectMake(self.myContentView.frame.size.width - 120, 0, 60, self.myContentView.frame.size.height);
 

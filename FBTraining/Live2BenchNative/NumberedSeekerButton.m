@@ -65,6 +65,11 @@ static UIColor * selectedColor;
     return self;
 }
 
+-(void)setEnabled:(BOOL)enabled{
+    [super setEnabled:enabled];
+    numberLabel.enabled = enabled;
+}
+
 -(id)initBackwardLargeWithFrame:(CGRect)frame
 {
     CGRect nframe = CGRectMake(frame.origin.x,frame.origin.y,LARGE_ICON_DIMENSIONS,LARGE_ICON_DIMENSIONS);

@@ -10,6 +10,7 @@
 #import "ListViewCell.h"
 #import "ImageAssetManager.h"
 #import "ListPopoverControllerWithImages.h"
+#import "FeedSelectCell.h"
 
 
 
@@ -17,6 +18,7 @@
 
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) ListPopoverControllerWithImages *sourceSelectPopover;
+@property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 //@property (strong, nonatomic) NSMutableSet *setOfDeletingCells;
 //@property (strong, nonatomic) UIButton *deleteButton;
 
@@ -31,11 +33,12 @@
     if(self){
         self.isEditable = YES;
         //self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(1024 - (TABLE_WIDTH+1) - 85 , LABEL_HEIGHT + 60, TABLE_WIDTH, TABLE_HEIGHT) style:UITableViewStyleGrouped];
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(568 , LABEL_HEIGHT + 25, TABLE_WIDTH, TABLE_HEIGHT + 30) style:UITableViewStyleGrouped];
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(568 , LABEL_HEIGHT + 55, TABLE_WIDTH, TABLE_HEIGHT + 30) style:UITableViewStylePlain];
         self.tableView.backgroundColor = [UIColor whiteColor];
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
-        self.tableView.layer.borderWidth = 1.0f;
-        self.tableView.layer.borderColor = [[UIColor grayColor] CGColor];
+        //self.tableView.layer.borderWidth = 1.0f;
+        //self.tableView.layer.borderColor = [[UIColor grayColor] CGColor];
         
         [self.tableView registerClass:[ListViewCell class] forCellReuseIdentifier:@"ListViewCell"];
         self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
@@ -59,6 +62,8 @@
         self.originalFrame = CGRectMake(568, 768, 370, 0);
         [self.deleteButton setFrame: self.originalFrame];
         self.newFrame = CGRectMake(568, 708, 370, 60);
+        
+        self.arrayOfCollapsableIndexPaths = [NSMutableArray array];
         
     }
     return self;
@@ -88,6 +93,7 @@
 }
 
 #pragma mark - Multiple Cell Deletion Methods
+
 
 //-(void) addDeletionCell: (NSNotification *) aNotification{
 //    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:aNotification.object];
@@ -125,8 +131,17 @@
 
 #pragma mark - Table view data source
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    // Return the number of rows in the section.
+    return [self.tableData count] + self.arrayOfCollapsableIndexPaths.count;
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
+        return CELL_HEIGHT/2;
+    }
     return CELL_HEIGHT;
 }
 
@@ -141,11 +156,42 @@
 //}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //fixed the issue: when lots of tags created, couldn't scroll to tableview bottom
-    [self.tableView setContentSize:CGSizeMake(self.tableView.frame.size.width,[self.tableData count]*CELL_HEIGHT )];
     
+    NSDictionary *tag;
+    NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
+    tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
+    
+    if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
+        NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
+        NSDictionary *urls = tag[@"url_2"];
+        NSArray *keys = [urls allKeys];
+        NSString *key = keys[indexPath.row - firstIndexPath.row];
+        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
+        //collapsableCell.backgroundColor = [UIColor redColor];
+        return collapsableCell;
+    }
+    
+    if (firstDownloadCellPath.row < indexPath.row) {
+        tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+    }else{
+        tag = self.tableData[indexPath.row];
+    }
     ListViewCell *cell = (ListViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
     [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
+    
+//    if (!self.downloadEnabled) {
+//        cell.bookmarkButton.enabled = NO;
+//    } else {
+//        cell.bookmarkButton.enabled = YES;
+//    }
+//    
+//    if (self.downloading) {
+//        cell.swipeRecognizerLeft.enabled = NO;
+//    } else {
+//        cell.swipeRecognizerLeft.enabled = YES;
+//    }
+    cell.swipeRecognizerLeft.enabled = self.swipeableMode;
+    cell.swipeRecognizerRight.enabled = self.swipeableMode;
     
     cell.deleteBlock = ^(UITableViewCell *theCell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:theCell];
@@ -188,18 +234,20 @@
     }
     
     
+    
+    
     //Setting the Image
     ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-    NSString *url = [self.tableData[indexPath.row] objectForKey:@"url"];
+    NSString *url = [tag objectForKey:@"url"];
     [imageAssetManager imageForURL:url atImageView:cell.tagImage];
     
-    NSDictionary *tag = self.tableData[indexPath.row];
+    
     
     [cell.tagname setText:[[tag objectForKey:@"name"] stringByRemovingPercentEncoding]];
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
     NSString *durationString = [NSString stringWithFormat:@"%@s",[tag objectForKey:@"duration"]];
-    NSString *periodString = [NSString stringWithFormat:@"%@", [tag objectForKey:@"time"]];
+    NSString *periodString = [NSString stringWithFormat:@"%.02f", [[tag objectForKey:@"time"] floatValue]];
     
     [cell.tagInfoText setText:[NSString stringWithFormat:@"Duration: %@ \nPeriod: %@ ",durationString,periodString]];
     
@@ -216,104 +264,171 @@
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-    ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+    NSDictionary *tag;
+    NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
+    
+    if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
+        tag = self.tableData[firstDownloadCellPath.row -1];
+    }else if (firstDownloadCellPath.row < indexPath.row) {
+        tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+    }else{
+        tag = self.tableData[indexPath.row];
+    }
+    
+    if (self.setOfDeletingCells.count ) {
+        return;
+    }else if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]){
+        FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                                                                                                                                                                                @"feed":cell.feedName.text,
+                                                                                                                                                                                                                                                                                                @"time":[tag objectForKey:@"starttime"],
+                                                                                                                                                                                                                                                                                                @"duration":[tag objectForKey:@"duration"],
+                                                                                                                                                                                                                                                                                                @"comment":[tag objectForKey:@"comment"],
+                                                                                                                                                                                                                                                                                   @"forWhole":tag
+                                                                                                                                        }}];
+
+        return;
+    }
+    
+
+    //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     
     ListViewCell *cell = (ListViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
     
     if(![indexPath isEqual:self.previouslySelectedIndexPath])
     {
-        cell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
-        [cell.translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-        [cell.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
-        [cell.translucentEditingView setAlpha:0.3];
-        [cell.translucentEditingView setUserInteractionEnabled:FALSE];
-        [cell addSubview:cell.translucentEditingView];
+        [cell setSelected: YES];
         
         ListViewCell *lastSelectedCell = (ListViewCell*)[self.tableView cellForRowAtIndexPath: self.previouslySelectedIndexPath];
-        //[lastSelectedCell.backgroundView setBackgroundColor:[UIColor colorWithWhite:0.95f alpha:1.0f]];
-        [lastSelectedCell.backgroundView setBackgroundColor:[UIColor whiteColor]];
-        [lastSelectedCell.translucentEditingView removeFromSuperview];
+        lastSelectedCell.selected = NO;
         
-        //lastSelectedCell.backgroundView.layer.borderWidth = 0.0f;
-        self.previouslySelectedIndexPath = indexPath;
+        NSArray *arrayToRemove = [NSArray array];
+        arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
         
-        //cell.backgroundView.layer.borderWidth = 1.0f;
-        [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
-    }
-    
-    if (self.isEditable) {
+        NSMutableArray *insertionIndexPaths = [NSMutableArray array];
+        if (self.previouslySelectedIndexPath.row < indexPath.row && self.previouslySelectedIndexPath) {
+            for (int i = 0; i < ((NSArray *)tag[@"url_2"]).count ; ++i) {
+                NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
+                [insertionIndexPaths addObject:insertionIndexPath];
+            }
+            
+            self.previouslySelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
+        }else{
+            for (int i = 0; i < ((NSArray *)tag[@"url_2"]).count ; ++i) {
+                NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
+                [insertionIndexPaths addObject:insertionIndexPath];
+            }
+
+            self.previouslySelectedIndexPath = indexPath;
+        }
+        self.swipeableMode = NO;
         
-        
-        
-        
+        [self.arrayOfCollapsableIndexPaths addObjectsFromArray: insertionIndexPaths];
+        [self.tableView insertRowsAtIndexPaths: insertionIndexPaths withRowAnimation:UITableViewRowAnimationRight];
+        [self.tableView scrollToRowAtIndexPath:self.previouslySelectedIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//        NSArray *arrayToRemove = [NSArray array];
+//        if (self.arrayOfCollapsableIndexPaths.count) {
+//            arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+//        }
+//        
+//        NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+//        [self.arrayOfCollapsableIndexPaths addObject: insertionIndexPath];
+//        [self.tableView insertRowsAtIndexPaths:@[insertionIndexPath ] withRowAnimation:UITableViewRowAnimationBottom];
+//        [self.arrayOfCollapsableIndexPaths removeObjectsInArray:arrayToRemove];
+//        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationTop];
         
     }else{
+        [cell setSelected: NO];
         
-        
-        NSDictionary *tag = [self.tableData objectAtIndex:indexPath.row];
-        
-                [self.sourceSelectPopover clear];
-        
-                [self.sourceSelectPopover setListOfButtonNames:[[tag objectForKey:@"url_2"] allKeys]];
-//        [cell.data objectForKey:@"url_2"] ;
-//        This is where the Thumbnail images are added to the popover
-//         NSDictionary *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
-                NSDictionary *urls = tag[@"url_2"];
-                int i = 0;
-                for (NSString *url in [urls allValues]){
-                    //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
-        
-        
-                    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, POP_WIDTH - 10, BUTTON_HEIGHT - 10)];
-        
-        
-                    [imageAssetManager imageForURL: url atImageView:imageView ];
-        
-                    [(UIButton *)self.sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
-                    ++i;
-                }
-        
-        
-        
-        
-        self.definesPresentationContext = YES;
-        
-        
-     
+        //NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+        //[self.arrayOfCollapsableIndexPaths removeObject: insertionIndexPath];
+        NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+        self.previouslySelectedIndexPath = nil;
+        self.swipeableMode = YES;
+        //self.previouslySelectedIndexPath = indexPath;
 
-        
-        if ( [urls count] >1 ){
-                    [self.sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
-            
-                        NSLog(@"You Picked a feed: %@",pick);
-                        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-            
-                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                                        @"feed":pick,
-                                                                                                                                                        @"time":[tag objectForKey:@"starttime"],
-                                                                                                                                                        @"duration":[tag objectForKey:@"duration"],
-                                                                                                                                                        @"comment":[tag objectForKey:@"comment"]},
-                                                                                                                                           @"forWhole":tag}];
-                    }];
-            
-                    [self.sourceSelectPopover presentPopoverCenteredIn: [self.tableView cellForRowAtIndexPath:indexPath] animated:YES];
-            
+    }
+    
 
+    
+    
+//    if (self.isEditable) {
+//        
+//        
+//        
+//        
+//        
+//    }else{
+//        
         
-        } else {
-            NSString * key =        [urls allKeys][0];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                            @"feed":key,
-                                                                                                                                            @"time":[tag objectForKey:@"starttime"],
-                                                                                                                                            @"duration":[tag objectForKey:@"duration"],
-                                                                                                                                            @"comment":[tag objectForKey:@"comment"]},
-                                                                                                                               @"forWhole":tag}];
-            
-        }
-        
-        
-        
-        
+//        NSDictionary *tag = [self.tableData objectAtIndex:indexPath.row];
+//        
+//                [self.sourceSelectPopover clear];
+//        
+//                [self.sourceSelectPopover setListOfButtonNames:[[tag objectForKey:@"url_2"] allKeys]];
+////        [cell.data objectForKey:@"url_2"] ;
+////        This is where the Thumbnail images are added to the popover
+////         NSDictionary *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+//                NSDictionary *urls = tag[@"url_2"];
+//                int i = 0;
+//                for (NSString *url in [urls allValues]){
+//                    //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
+//        
+//        
+//                    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, POP_WIDTH - 10, BUTTON_HEIGHT - 10)];
+//        
+//        
+//                    [imageAssetManager imageForURL: url atImageView:imageView ];
+//        
+//                    [(UIButton *)self.sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
+//                    ++i;
+//                }
+//        
+//        
+//        
+//        
+//        self.definesPresentationContext = YES;
+//        
+//        
+//     
+//
+//        
+//        if ( [urls count] >1 ){
+//                    [self.sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
+//            
+//                        NSLog(@"You Picked a feed: %@",pick);
+//                        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+//            
+//                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+//                                                                                                                                                        @"feed":pick,
+//                                                                                                                                                        @"time":[tag objectForKey:@"starttime"],
+//                                                                                                                                                        @"duration":[tag objectForKey:@"duration"],
+//                                                                                                                                                        @"comment":[tag objectForKey:@"comment"]},
+//                                                                                                                                           @"forWhole":tag}];
+//                    }];
+//            
+//                    [self.sourceSelectPopover presentPopoverCenteredIn: [self.tableView cellForRowAtIndexPath:indexPath] animated:YES];
+//            
+//
+//        
+//        } else {
+//            NSString * key =        [urls allKeys][0];
+//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+//                                                                                                                                            @"feed":key,
+//                                                                                                                                            @"time":[tag objectForKey:@"starttime"],
+//                                                                                                                                            @"duration":[tag objectForKey:@"duration"],
+//                                                                                                                                            @"comment":[tag objectForKey:@"comment"]},
+//                                                                                                                               @"forWhole":tag}];
+//            
+//        }
+//        
+//        
+//        
+
         
         /*//if the cell in the indexPath was not selected before, adding it to the "selectedCellRows" dictionary and display the checkmark and hide bookmark button and coachpick button;
          //else, deselecting the cell, will hide the checkmark and display bookmark button and coachpick button
@@ -333,9 +448,8 @@
          [cell.bookmarkButton setHidden:FALSE];
          [cell.coachpickButton setHidden:FALSE];
          }*/
-    }
+//    }
 }
-
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{

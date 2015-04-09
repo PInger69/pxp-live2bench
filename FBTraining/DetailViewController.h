@@ -16,10 +16,10 @@
 //@property (strong, nonatomic) id detailItem;
 @property (weak, nonatomic) SettingsTableViewController *settingsTableViewController;
 //@property (nonatomic) int index;
-@property (nonatomic, weak) SwipeableTableViewCell *swipeableTableViewCell;
+//@property (nonatomic, weak) SwipeableTableViewCell *swipeableTableViewCell;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIColor *tintColor;
-
+@property (nonatomic, strong) NSIndexPath *indexPath;
 @property (nonatomic, strong) NSMutableDictionary *dataDictionary;
 //@property (strong, nonatomic) NSArray *arrayOfOptions;
 //@property (strong, nonatomic) NSMutableArray *arrayOfToggleOptions;

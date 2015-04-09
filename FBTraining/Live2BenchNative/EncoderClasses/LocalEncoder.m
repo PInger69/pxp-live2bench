@@ -118,9 +118,9 @@
         // this gets all the plists for the book marks
         NSMutableArray  * tempPoolClips      = [[NSMutableArray alloc]init];
         NSArray         * clipsPlistPaths    = [self grabAllFiles:[aDocsPath stringByAppendingPathComponent:@"bookmark"] ext:@"plist"];
-        for (NSString *pthss in clipsPlistPaths) {
-            [tempPoolClips addObject:[[NSDictionary alloc]initWithContentsOfFile:pthss]];
-        }
+//        for (NSString *pthss in clipsPlistPaths) {
+//            [tempPoolClips addObject:[[NSDictionary alloc]initWithContentsOfFile:pthss]];
+//        }
       
         
         

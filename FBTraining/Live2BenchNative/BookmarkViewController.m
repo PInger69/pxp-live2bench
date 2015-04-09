@@ -159,7 +159,7 @@ int viewWillAppearCalled;
     commentingField.enabled             = YES;
     commentingField.text                = [selectedTag objectForKey:@"comment"];
     commentingField.ratingScale.rating  = [[selectedTag objectForKey:@"rating"]integerValue];
-
+    
     [newVideoControlBar setTagName:[selectedTag objectForKey:@"name"]];
 }
 
@@ -220,7 +220,7 @@ int viewWillAppearCalled;
     //array of file paths
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     documentsDirectory = [paths objectAtIndex:0];
-
+    
     
     //Find path to accountInformation plist
     //    NSString *accountInformationPath = [documentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
@@ -252,17 +252,17 @@ int viewWillAppearCalled;
     
     
     //uploadFileResponseLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 180,120 , 25)];
-//    [uploadFileResponseLabel setText:@"sharing:"];
-//    [uploadFileResponseLabel setBackgroundColor:[UIColor clearColor]];
-//    [uploadFileResponseLabel setHidden:TRUE];
-//    [self.view addSubview:uploadFileResponseLabel];
-//    
-//    uploadFileResponse = [[UITextView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(uploadFileResponseLabel.frame)+10, uploadFileResponseLabel.frame.origin.y-5, TABLE_WIDTH+200, 30)];
-//    [uploadFileResponse setFont:[UIFont systemFontOfSize:15.0f]];
-//    [uploadFileResponse setBackgroundColor:[UIColor clearColor]];
-//    [uploadFileResponse setUserInteractionEnabled:FALSE];
-//    [uploadFileResponse setHidden:TRUE];
-//    [self.view addSubview:uploadFileResponse];
+    //    [uploadFileResponseLabel setText:@"sharing:"];
+    //    [uploadFileResponseLabel setBackgroundColor:[UIColor clearColor]];
+    //    [uploadFileResponseLabel setHidden:TRUE];
+    //    [self.view addSubview:uploadFileResponseLabel];
+    //
+    //    uploadFileResponse = [[UITextView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(uploadFileResponseLabel.frame)+10, uploadFileResponseLabel.frame.origin.y-5, TABLE_WIDTH+200, 30)];
+    //    [uploadFileResponse setFont:[UIFont systemFontOfSize:15.0f]];
+    //    [uploadFileResponse setBackgroundColor:[UIColor clearColor]];
+    //    [uploadFileResponse setUserInteractionEnabled:FALSE];
+    //    [uploadFileResponse setHidden:TRUE];
+    //    [self.view addSubview:uploadFileResponse];
     
     
     
@@ -276,7 +276,7 @@ int viewWillAppearCalled;
     [numTagsLabel setFont:[UIFont systemFontOfSize:14.0f]];
     
     [self.view addSubview:numTagsLabel];
- 
+    
     newVideoControlBar = [[VideoBarMyClipViewController alloc]initWithVideoPlayer:videoPlayer];
     [self.view addSubview:newVideoControlBar.view];
     
@@ -305,7 +305,7 @@ int viewWillAppearCalled;
             }
         }
     }}];
-
+    
     //get all the events information which will be used to display home team, visit team
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     documentsDirectory = [paths objectAtIndex:0];
@@ -356,23 +356,23 @@ int viewWillAppearCalled;
     fullScreenMode = FALSE;
     //firstTimeStartMoviePlayer = TRUE;
     //set the right play back rate in the case: pause viedo,then switch between full screen and normal screen, then resume to play with proper play back rate
-//    [updatePlayRateTimer invalidate];
-//    updatePlayRateTimer = nil;
-//    updatePlayRateTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
-//                                                         target:self
-//                                                       selector:@selector(updatePlayRate:)
-//                                                       userInfo:nil
-//                                                        repeats:YES];
+    //    [updatePlayRateTimer invalidate];
+    //    updatePlayRateTimer = nil;
+    //    updatePlayRateTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
+    //                                                         target:self
+    //                                                       selector:@selector(updatePlayRate:)
+    //                                                       userInfo:nil
+    //                                                        repeats:YES];
     
     
     //when new bookmark tag is created, reload the table view
-//    [updateTableViewTimer invalidate];
-//    updateTableViewTimer = nil;
-//    updateTableViewTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
-//                                                          target:self
-//                                                        selector:@selector(updateTableView:)
-//                                                        userInfo:nil
-//                                                         repeats:YES];
+    //    [updateTableViewTimer invalidate];
+    //    updateTableViewTimer = nil;
+    //    updateTableViewTimer=[NSTimer scheduledTimerWithTimeInterval:1.0
+    //                                                          target:self
+    //                                                        selector:@selector(updateTableView:)
+    //                                                        userInfo:nil
+    //                                                         repeats:YES];
     
     
     //if all the new bookmark tags are received from the server or no new bookmark tag is processed, hide the progress bar;Otherwise display the progress bar to indicate the process of loading new bookmark tags
@@ -391,7 +391,7 @@ int viewWillAppearCalled;
     [newVideoControlBar viewDidAppear:NO];
     
     
-
+    
 }
 
 
@@ -695,8 +695,8 @@ int viewWillAppearCalled;
     
     
     //handle offline mode, save comment information in local storage
-//    BOOL addToCurrentEventThumbnails = FALSE;
-
+    //    BOOL addToCurrentEventThumbnails = FALSE;
+    
     
 }
 
@@ -705,12 +705,12 @@ int viewWillAppearCalled;
     [commentingField.textField resignFirstResponder];
     NSString *comment = commentingField.textField.text;
     [selectedTag setValue:comment forKey:@"comment"];
-    }
+}
 
 -(void)tagModCallback:(id)newTagInfo
 {
     //the updated tag
-//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:newTagInfo];
+    //    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:newTagInfo];
     
     //update it in the dictionary
     //note: cannot use newtaginfo objectforkey"id" directly - the value is either integer or string (id) and needs to be converted to nsstring
@@ -788,6 +788,9 @@ int viewWillAppearCalled;
                   sortDescriptorWithKey:@"name"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(caseInsensitiveCompare:)];
+    }  else if (sortType & RATING_FIELD) {
+        
+        sorter = [NSSortDescriptor sortDescriptorWithKey:@"Rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
     } else {
         return toSort;
     }
@@ -795,12 +798,13 @@ int viewWillAppearCalled;
     return [NSMutableArray arrayWithArray:[toSort sortedArrayUsingDescriptors:@[sorter]]];
 }
 
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     //pause video and remove the time observer
     [videoPlayer pause];
-
+    
     //we will remove the filtertoolbox to deallocate mem -- makes sure app does not freeze up
     [_filterToolBoxView.view removeFromSuperview];
     _filterToolBoxView=nil;
@@ -814,10 +818,10 @@ int viewWillAppearCalled;
     [typesOfTags removeAllObjects];
     
     currentPlayingTag = nil;
-
-
-
-
+    
+    
+    
+    
     //Edge Swipe Buttons
     [self.edgeSwipeButtons deselectAllButtons];
     
@@ -829,12 +833,12 @@ int viewWillAppearCalled;
     [super viewDidDisappear:animated];
     //make sure the movieplayer is stoped before going to otherviews, otherwise the app will crash
     [self.videoPlayer pause];
-
+    
     [allTags removeAllObjects];
     //    globals.IS_IN_BOOKMARK_VIEW = FALSE;
     
 }
-    
+
 
 -(void)willExitFullscreen
 {
@@ -1395,7 +1399,7 @@ int viewWillAppearCalled;
 }
 
 /**
- *  This is a getter that returnds the tages To Be displayed 
+ *  This is a getter that returnds the tages To Be displayed
  *  check this
  *
  *  @return tags in the tableview
@@ -1489,10 +1493,10 @@ int viewWillAppearCalled;
 //    if ([self.view window] == nil) self.view = nil;
 //    if(_currentSharingMethod > 0)
 //        return;
-//    
+//
 //    // Dispose of any resources that can be recreated.
 //    NSArray* methodStrings = @[@"None", @"Facebook", @"Twitter"];
-//    
+//
 //    //    if(!_GDUploader)
 //    //    {
 //    //        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
@@ -1504,7 +1508,7 @@ int viewWillAppearCalled;
 //    //        [[[UIAlertView alloc] initWithTitle:@"Cannot Share" message:[NSString stringWithFormat:@"You must also be linked to Google Drive in order to share the video link(s) on %@",methodStrings[service]] delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles: nil] show];
 //    //        return;
 //    //    }
-//    
+//
 //    //    _currentSharingMethod = service;
 //    //    [self uploadToGoogleDrive];
 //    //

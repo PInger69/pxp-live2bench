@@ -22,7 +22,7 @@
 +(NSDictionary*)tagDict;
 +(NSString *)dateFromEvent: (NSString *) eventName;
 //+(NSString*)cmTimeToString:(CMTime)time;
-
++(BOOL)hasInternet;
 +(NSString*)myWifiName;
 
 +(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block;

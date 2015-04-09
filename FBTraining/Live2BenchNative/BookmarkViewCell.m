@@ -8,14 +8,20 @@
 
 #import "BookmarkViewCell.h"
 
+static UIImage *starImage;
 
-@implementation BookmarkViewCell
+@implementation BookmarkViewCell{
+    UILabel *ratingLabel;
+}
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        if (!starImage) {
+            starImage = [self starImage];
+        }
         [self setupView];
         
     }
@@ -56,12 +62,23 @@
     //    [self.indexNum setText: [NSString stringWithFormat:@"%i",rowOfTheCell]];
     [self.myContentView addSubview: self.indexNum];
     
+    self.ratingImage = [[UIImageView alloc] initWithFrame:CGRectMake(390, 4, 36, 36)];
+    [self.ratingImage setImage: starImage];
+    ratingLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, 10, 20, 20)];
+    [ratingLabel setTextColor: [UIColor whiteColor]];
+    [ratingLabel setText: @"5"];
+    [self.ratingImage addSubview: ratingLabel];
+    [self.myContentView addSubview: self.ratingImage];
     //    UIView *seperateLine = [[UIView alloc] initWithFrame:CGRectMake(0, 43, 463, 1)];
     //    [seperateLine setBackgroundColor:[UIColor lightGrayColor]];
     //    [self.myContentView addSubview:seperateLine];
     //self.contentView.layoutMargins = UIEdgeInsetsZero;
 }
 
+-(void)setRating:(int)rating{
+    _rating = rating;
+    [ratingLabel setText: [NSString stringWithFormat:@"%i", rating]];
+}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     //[super setSelected:selected animated:animated];
@@ -91,6 +108,56 @@
     [self.swipeRecognizerLeft setEnabled:!editing];
 }
 
+-(UIImage *) starImage{
+    CGSize imageSize = CGSizeMake(100, 100);
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *starPath = [UIBezierPath bezierPath];
+    UIBezierPath *outLinePath = [UIBezierPath bezierPath];
+    
+    [starPath moveToPoint: CGPointMake(17.5, 100)]; // bottom left
+    [starPath addLineToPoint: CGPointMake(50, 0)];  // top
+    [starPath addLineToPoint: CGPointMake(50 + 32.5, 100)]; // bottom right
+    [starPath addLineToPoint: CGPointMake(0, 38.2)]; //left
+    [starPath addLineToPoint: CGPointMake(100, 38.2)]; //right
+    [starPath addLineToPoint: CGPointMake(17.5, 100)]; // bottom left
+    
+    
+    [outLinePath moveToPoint: CGPointMake(17.5, 100)];
+    [outLinePath addLineToPoint: CGPointMake(50, 100 -23.61 )];
+    [outLinePath addLineToPoint: CGPointMake(50 + 32.5, 100)];
+    [outLinePath addLineToPoint: CGPointMake(70, 61.8)];
+    [outLinePath addLineToPoint: CGPointMake(100, 38.2)];
+    [outLinePath addLineToPoint: CGPointMake(0, 38.2)];
+    [outLinePath addLineToPoint: CGPointMake(50 + 32.5, 100)];
+    [outLinePath addLineToPoint: CGPointMake(50, 0)];
+    [outLinePath addLineToPoint: CGPointMake(17.5, 100)]; // bottom left
+    
+    
+    [[UIColor orangeColor] setFill];
+    [[UIColor blackColor] setStroke];
+    
+    outLinePath.lineWidth = 5.0;
+    [outLinePath stroke];
+    [starPath fill];
+    
+//    UIFont *font = [UIFont fontWithName:@"Palatino-Roman" size:14.0];
+//    
+//    NSDictionary *attributesDict = @{ NSFontAttributeName : font };
+//    
+//    NSAttributedString *numberString = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"%i", rating]];
+//    
+//    UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 35, 60, 60)];
+//    [numberLabel drawTextInRect:CGRectMake(35, 35, 60, 60)];
+////    [numberString drawInRect:CGRectMake(35, 35, 60, 60)];
+////    numberString;
+//                                  // drawInRect:CGRectMake(35, 35, 60, 60) withAttributes:attributesDict];
+
+    
+    UIImage *starImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return starImage;
+}
 //-(void)updateIndexWith:(int)newIndex
 //{
 //    [indexNum setText: [NSString stringWithFormat:@"%i",newIndex]];

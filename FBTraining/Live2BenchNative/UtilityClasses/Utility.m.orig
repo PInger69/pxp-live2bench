@@ -309,17 +309,6 @@
     CFArrayRef myArray = CNCopySupportedInterfaces();
     // Get the dictionary containing the captive network infomation
     CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
-<<<<<<< HEAD
-//    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
-    NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
-    NSString* ssid = [dict objectForKey:@"SSID"];
-//    NSLog(@"network name: %@",ssid);
-    return ssid;
-
-
-}
-
-=======
     //    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
     NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
     NSString* ssid = [dict objectForKey:@"SSID"];
@@ -332,7 +321,39 @@
 +(NSString *) dateFromEvent: (NSString *) eventName{
     return [eventName substringToIndex:10];
 }
->>>>>>> fff9153fd1ea5c5dbc9700ad07dee6b55e7484e4
 
+<<<<<<< HEAD
+/**
+ *  This is a convienience method that makes it easy to fill in the required data need to request an event Download
+ *
+ *  @param data       Event dict that will be made in to a plist
+ *  @param sourceName name of source video that will be downloaded
+ *  @param block      this block will send a DownloadItem of the video
+ *
+ *  @return easy to used data block
+ */
++(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block
+{
+     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:nil userInfo:@{ @"data":data, @"source":sourceName, @"block":block }];
+
+}
+
+
+=======
++(BOOL)hasInternet{
+    SCNetworkReachabilityFlags flags;
+    BOOL receivedFlags;
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
+    
+    receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
+    
+    CFRelease(reachability);
+    
+    return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
+
+}
+
+>>>>>>> c5ed4195ce151171564b42763a2a75b93a30606b
 @end
 

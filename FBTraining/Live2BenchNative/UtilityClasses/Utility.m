@@ -322,6 +322,20 @@
     return [eventName substringToIndex:10];
 }
 
++(BOOL)hasInternet{
+    SCNetworkReachabilityFlags flags;
+    BOOL receivedFlags;
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
+    
+    receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
+    
+    CFRelease(reachability);
+    
+    return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
+
+}
+
 /**
  *  This is a convienience method that makes it easy to fill in the required data need to request an event Download
  *
