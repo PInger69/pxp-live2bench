@@ -322,5 +322,21 @@
     return [eventName substringToIndex:10];
 }
 
+/**
+ *  This is a convienience method that makes it easy to fill in the required data need to request an event Download
+ *
+ *  @param data       Event dict that will be made in to a plist
+ *  @param sourceName name of source video that will be downloaded
+ *  @param block      this block will send a DownloadItem of the video
+ *
+ *  @return easy to used data block
+ */
++(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block
+{
+     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:nil userInfo:@{ @"data":data, @"source":sourceName, @"block":block }];
+
+}
+
+
 @end
 

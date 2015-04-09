@@ -274,6 +274,7 @@
         [self checkFeeds:connection.cumulatedData];
     }else if( [connection.connectionType isEqualToString: SYNC_ME]){
         id json = [NSJSONSerialization JSONObjectWithData: connection.cumulatedData options:0 error:nil];
+        if ([json isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
         if ( [json objectForKey: @"tags"]) {
             for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:tag];

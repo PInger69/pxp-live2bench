@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "DownloadItem.h"
 @interface Utility : NSObject
 +(NSString*)translateTimeFormat:(float)time;
 +(NSString*)encodeSpecialCharacters:(NSString*)inputString;
@@ -24,6 +24,8 @@
 //+(NSString*)cmTimeToString:(CMTime)time;
 
 +(NSString*)myWifiName;
+
++(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block;
 
 @end
 

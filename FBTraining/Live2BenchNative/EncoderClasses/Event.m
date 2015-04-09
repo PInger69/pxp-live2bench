@@ -22,23 +22,23 @@
 @synthesize rawData     = _rawData;
 @synthesize deleted     = _deleted;
 @synthesize local       = _local;
-
+@synthesize downloadedSources       = _downloadedSources;
 
 - (instancetype)initWithDict:(NSDictionary*)data
 {
     self = [super init];
     if (self) {
 
-        _rawData    = data;
-        
-        _name       = [_rawData objectForKey:@"name"];
-        _hid        = [_rawData objectForKey:@"hid"];
-        _eventType  = [_rawData objectForKey:@"sport"];
-        _datapath   = [_rawData objectForKey:@"datapath"];
-        _date       = [_rawData objectForKey:@"date"];
-        _mp4s       = [self buildMP4s:_rawData];
-        _feeds      = [self buildFeeds:_rawData];
-        _deleted    = [[_rawData objectForKey:@"deleted"]boolValue];
+        _rawData            = data;
+        _name               = [_rawData objectForKey:@"name"];
+        _hid                = [_rawData objectForKey:@"hid"];
+        _eventType          = [_rawData objectForKey:@"sport"];
+        _datapath           = [_rawData objectForKey:@"datapath"];
+        _date               = [_rawData objectForKey:@"date"];
+        _mp4s               = [self buildMP4s:_rawData];
+        _feeds              = [self buildFeeds:_rawData];
+        _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
+        _downloadedSources  = @[];
     }
     return self;
 }
@@ -120,6 +120,13 @@
 
 
     return [tempDict copy];
+}
+
+-(NSString*)description
+{
+    NSString * txt = [NSString stringWithFormat:@"Event Name: %@ \nLocal: %@\n", _name,(_local)?@"YES":@"NO"];
+    
+    return txt;
 }
 
 

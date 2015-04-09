@@ -74,23 +74,36 @@ static void * statusContext         = &statusContext;
     if (context == &statusContext) {
         
         if (obj.status == DownloadItemStatusComplete) {
-        
-            // if its done an there is no more itemd in teh list then  SELF will be complete
-            // remove all observers on the current item
-            // add observers to the next item
+            int myindex = [listOfDownloadItems indexOfObject:obj];
+            
+            if (myindex == [listOfDownloadItems indexOfObject:[listOfDownloadItems lastObject]]){
+                [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))    context:&statusContext];
+                [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive))    context:&isObservedContext];
+                self.status = DownloadItemStatusComplete;
+                NSLog(@"Download Complete!!!");
+            } else {
+                [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))    context:&statusContext];
+                [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive))    context:&isObservedContext];
+
+                focusItem = [listOfDownloadItems objectAtIndex:myindex+1];
+                
+                [focusItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&statusContext];
+                [focusItem addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew context:&isObservedContext];
+                [focusItem start];
+            }
             
         } else {
-        
+            self.status = obj.status;
         
         }
         
         
         
         
-        self.status;
+        
     }
     if (context == &isObservedContext) {
-
+        [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))    context:&statusContext];
         [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive))    context:&isObservedContext];
     }
     
@@ -125,12 +138,12 @@ static void * statusContext         = &statusContext;
     NSInteger   poolkbps        = 0;
     
     for (DownloadItem* dli in listOfDownloadItems) {
-        poolkbps        += dli.kbps;
+        
         poolProgress    += dli.progress;
     }
     
     self.progress       = poolProgress / [listOfDownloadItems count];
-    self.kbps           = poolkbps / [listOfDownloadItems count];
+    self.kbps           = focusItem.kbps;
     if (progressBlock) progressBlock(self.progress, self.kbps);
 }
 

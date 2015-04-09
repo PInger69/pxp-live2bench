@@ -142,10 +142,10 @@
     
     
     self.status     = DownloadItemStatusProgress;
-    self.progress   = (float)_receivedBytes / (float)_expectedBytes;
+    self.progress   = (double)_receivedBytes / (double)_expectedBytes;
     if (progressBlock) progressBlock(self.progress, kbps);
     elapsedTime = CACurrentMediaTime() - startTime;
-    kbps = ((float)_receivedBytes /  (float)elapsedTime) * 0.001;
+    kbps = ((double)_receivedBytes /  (double)elapsedTime) * 0.001;
     
  
     

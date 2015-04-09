@@ -29,8 +29,8 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 @interface DownloadItem : NSObject <NSURLConnectionDataDelegate,NSURLConnectionDelegate>
 {
 
-    NSUInteger      _expectedBytes;
-    NSUInteger      _receivedBytes;
+    double          _expectedBytes;
+    double          _receivedBytes;
     NSString        * url;
     NSURLConnection * theConnection;
     NSString        * path;

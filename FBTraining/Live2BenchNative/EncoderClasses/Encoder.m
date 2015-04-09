@@ -356,12 +356,12 @@
         isAuthenticate = YES;
         [self didChangeValueForKey:@"authenticated"];
         isWaitiing      = NO;
-        self.isMaster = YES;
+//        self.isMaster = YES;
 
         [self removeFromQueue:currentCommand];
         [self runNextCommand]; // this line is for testing
         return;
-  }
+    }
     
     
     NSString * json = [Utility dictToJSON:@{@"id":customerID}];
@@ -993,7 +993,7 @@
                         _eventType = [dict objectForKey:@"sport"];
                         [self didChangeValueForKey:@"eventType"];
                         
-                    } else if ([dict objectForKey:@"live"]) { // this is for the new encoder version
+                    } else if ([dict objectForKey:@"live"]) { // this is for the old encoder version
                         /////
                         self.event = [dict objectForKey:@"name"];
                         if ([dict[@"live"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
@@ -1003,7 +1003,7 @@
                             Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
                             self.feeds = @{ @"s1":theFeed};
                             _liveEventName = dict[@"name"];
-                            
+                        self.isMaster = YES;
                             [self willChangeValueForKey:@"eventType"];
                             _eventType = [dict objectForKey:@"sport"];
                             [self didChangeValueForKey:@"eventType"];

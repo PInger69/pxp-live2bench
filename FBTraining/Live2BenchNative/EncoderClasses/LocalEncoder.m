@@ -22,7 +22,7 @@
 
 
 #define LOCAL_PLIST  @"EventsHid.plist"
-
+#define VIDEO_EXT    @"mp4"
 
 @implementation LocalEncoder
 {
@@ -33,8 +33,9 @@
     NSComparisonResult(^plistSort)(id obj1, id obj2);
 
     // new construction
-    Event           * _myEvent;
+    NSMutableDictionary * _bookmarkPlistById;
     
+    Event           * _myEvent;
     NSDictionary    * _myEvents; // Key by name;
     
     
@@ -72,15 +73,16 @@
         _clipFeeds                      = [[NSMutableDictionary alloc]init];
         // new
         
+        _bookmarkPlistById              = [[NSMutableDictionary alloc]init];
         _myEvents                       = [[NSMutableDictionary alloc]init];
         
         // Build Bookmark Clip sections
-        
+        [self scanForBookmarks];
         
         
         // this takes the plist files of the Events and adds them to _allEventData
         NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
-        NSArray         * plistPaths    = [self grabAllFiles:[aDocsPath stringByAppendingPathComponent:@"events"] ext:@"plist"];
+        NSArray         * plistPaths    = [self grabAllFiles:[_localPath stringByAppendingPathComponent:@"events"] ext:@"plist"];
         for (NSString *pths in plistPaths) {
             [tempPool addObject:[[NSDictionary alloc]initWithContentsOfFile:pths]];
         }
@@ -88,6 +90,7 @@
         
 
         // This builds all the events from the _allEventData
+        // and then checks if the videos are downloaded for each source and added to the Event
         NSEnumerator    * enumerator    = [_allEventData objectEnumerator];
         id              value;
         while ((value = [enumerator nextObject])) {
@@ -95,7 +98,10 @@
             NSString * itemName = [dict objectForKey:@"name"];
             if (itemName) {
                 [tempPool addObject:itemName];
-                [_myEvents setValue:[[Event alloc]initWithDict:dict] forKey:itemName];// this is the new kind of build that events have their own feed
+                Event * anEvent = [[Event alloc]initWithDict:dict];
+                anEvent.local   = YES;
+                anEvent.downloadedSources = [self listDownloadSourcesFor:anEvent];
+                [_myEvents setValue:anEvent forKey:itemName];// this is the new kind of build that events have their own feed
             }
         }
         
@@ -423,6 +429,11 @@
             [_bookmarkPlistNames addObject:filename];
             [mp3Files addObject:[bookmarkPath stringByAppendingPathComponent:filename]];
             
+            
+            NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:[bookmarkPath stringByAppendingPathComponent:filename]];
+            
+            NSString * aID = dict[@"id"];
+            [_bookmarkPlistById setObject:dict forKey:aID];
         }
         
         
@@ -433,17 +444,31 @@
     
     _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
     
-//    _bookmarkPlistNames = @[@"0.plist",@"1.plist",@"2.plist",@"3.plist",@"4.plist",@"5.plist"];
-    
-//    int n = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
     
 }
 
+/**
+ *  Grabs all files from a directory with and extention 
+ *  will create a directory if its not there
+ *
+ *  @param aPath <#aPath description#>
+ *  @param ext   <#ext description#>
+ *
+ *  @return <#return value description#>
+ */
 -(NSArray*)grabAllFiles:(NSString*)aPath ext:(NSString*)ext
 {
-    NSArray         * dirs      = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:aPath
-                                                                        error:NULL];
+    
+//    if ( ![[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:YES]){
+//        [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
+//        return @[];
+//    }
+    
+    
+    NSArray         * dirs      = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:aPath error:NULL];
     NSMutableArray  * files     = [[NSMutableArray alloc] init];
+    
+    
     
     [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *filename      = (NSString *)obj;
@@ -475,35 +500,84 @@
 #pragma mark - Bookmark Clip Methods
 
 
+-(Event*)getEventByName:(NSString*)eventName
+{
+    return _myEvents[eventName];
+}
+
+-(Event*)getEventByHID:(NSString*)eventHID
+{
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
+        
+        return [thisHID isEqualToString:eventHID];
+    }];
+    
+    
+    //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
+    
+    
+    NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
+    
+    if ([filtered count]==0)return nil;
+    
+    NSString * eventName = filtered[0][@"name"];
+   
+    
+    return _myEvents[eventName];
+}
+
+
+/**
+ *  This saves the lip
+ *
+ *  @param aName   !!! This name has to change
+ *  @param tagData the data for the raw clip
+ */
 -(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData
 {
     
-    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:tagData];
+    NSString            * clipID        = tagData[@"id"];
+    NSMutableDictionary * mutableDict   = [NSMutableDictionary dictionaryWithDictionary:tagData];
+    NSString            * bookmarkPlistPath;
     
-    // add local file name to the plist
-    [dict addEntriesFromDictionary:@{@"fileNames": @[aName]}];
+    if ([_bookmarkPlistById objectForKey:clipID]) { // if there is a plist there already then just mod the data
+        mutableDict                 = [_bookmarkPlistById objectForKey:clipID];
+        NSMutableArray * list       = [NSMutableArray arrayWithArray:mutableDict[@"fileNames"]];
+        [list addObject:aName];
+        mutableDict[@"fileNames"]   = list;
+        NSString * plistFileName    = mutableDict[@"plistName"];
+        bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@",_localPath,plistFileName];
+    
+    } else { // there is no plist for this clip... make a new plist
+        [mutableDict addEntriesFromDictionary:@{@"fileNames": @[aName]}];
+        [self scanForBookmarks];
+        int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
+        bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%d.plist",_localPath,nextGap];
+    }
+    
+    // make bookmarkvideo path if not there
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:[self bookmarkedVideosPath] isDirectory:&isDir];
+    
+    if ( !isDir){
+        [[NSFileManager defaultManager] createDirectoryAtPath:[self bookmarkedVideosPath] withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+    
+    NSString * clipPath = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],aName]; // is this right
     
     
-    // adds the clip to the rest of the feeds
-    NSString * clipPath = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],aName];
+    // adds the clip to the rest of the clip feeds
+    
     Feed     * myFeed   = [[Feed alloc]initWithURLString:clipPath quality:0];
     [_clipFeeds setValue:myFeed forKey:aName];
     
-    [self scanForBookmarks];
-    // writes the plist to the harddrive
-    int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
-    // write the plist
-    NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark/%d.plist",_localPath,nextGap];
-    
 
+    [mutableDict addEntriesFromDictionary:@{@"plistName": [bookmarkPlistPath lastPathComponent] }];
+    [mutableDict writeToFile:bookmarkPlistPath atomically:YES];
     
-    
-    // give the plist a reference to is self. This is so when the Plist is a dict I can find and delete it self
-    [dict addEntriesFromDictionary:@{@"plistName": [NSString stringWithFormat:@"%d.plist",nextGap] }];
-    // adds the plist to the list of clips
-    [dict writeToFile:bookmarkPath atomically:YES];
-    
-    [_eventTagsDict setObject:dict forKey:aName];
+    [_eventTagsDict setObject:mutableDict forKey:aName];
 }
 
 
@@ -532,10 +606,34 @@
 }
 
 
--(void)saveEvent:(Event*)aEvent
+/**
+ *  This saves sent Events by taking the raw data and then making a dir to store the videos and then writes the plist
+ *
+ *  @param aEvent Event to Save as plist
+ *
+ *  @return returns path of folder to save the videos
+ */
+-(NSString*)saveEvent:(Event*)aEvent
 {
+    // This gets the path and makes a DIR if its not there
+    NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath];
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:&isDir];
 
-
+    
+    if ( !isDir){
+        [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+    NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath]stringByAppendingPathExtension:@"plist"];
+    [aEvent.rawData writeToFile:plistNamePath atomically:YES];
+    
+    // make an instance of event in local
+    Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData];
+    anEvent.local   = YES;
+    anEvent.downloadedSources = [self listDownloadSourcesFor:anEvent];
+    [_myEvents setValue:anEvent forKey:anEvent.name];// this is the new kind of build that events have their own feed
+    
+    return aPath;
 }
 
 
@@ -543,23 +641,33 @@
 /**
  *  This deletes the event from the device
  *
- *  @param aHid <#aHid description#>
+ *  @param aEvent the event you want to delete from the device
  */
--(void)deleteEvent:(NSString*)aHid
+-(void)deleteEvent:(Event*)aEvent
 {
-//    NSDictionary * clipDict = [_clipFeeds objectForKey:aId];
-//    
-//    NSError  * error        = nil;
-//    NSString * plistPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkPath],[clipDict objectForKey:@"plistName"]];
-//    NSString * videoPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],[clipDict objectForKey:@"fileNames"][0]];
-//    NSString * clipID       = [NSString stringWithFormat:@"%@",[clipDict objectForKey:@"id"]];
-//    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
-//    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
-//    [_clipFeeds removeObjectForKey:clipID];
-//    
-//    // sort list on delete
-//    _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
+    
+    if (aEvent == nil || !aEvent.local) {
+        NSLog(@"CAN NOT DELETE NON LOCAL EVENTS");
+        return;
+    }
+    
+    NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath];
 
+
+    [[NSFileManager defaultManager] removeItemAtPath:aPath error:NULL]; // deletes the folder
+    [[NSFileManager defaultManager] removeItemAtPath: [aPath stringByAppendingPathExtension:@"plist"] error:NULL]; // delets the plist
+    
+    NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:_myEvents];
+    [temp removeObjectForKey:aEvent.name];
+    _myEvents = [temp copy];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_MEMORY object:nil];
+    
+    // This is run when the current playing event is deleted
+    if (_myEvent == aEvent){
+        _myEvent = nil;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CURRENT_LOCAL_EVENT_DELETED object:nil];
+    }
 }
 
 
@@ -607,6 +715,18 @@
 }
 
 
+-(NSArray*)listDownloadSourcesFor:(Event*)aEvent
+{
+    NSString        * thePath       = [[_localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:aEvent.datapath];
+    
+    NSArray         * allFiles      = [self grabAllFiles:thePath ext:VIDEO_EXT];
+    NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+    
+    for (NSString * dlFileNames in allFiles) {
+        [collection addObject:[dlFileNames lastPathComponent]];
+    }
+    return [collection copy];
+}
 
 
 //debugging

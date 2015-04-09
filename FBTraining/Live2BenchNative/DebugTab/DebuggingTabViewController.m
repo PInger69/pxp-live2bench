@@ -48,13 +48,14 @@
     DownloadItem * DOWNLOADITEM;
     DownloadItem * DOWNLOADITEM1;
     DownloadItem * DOWNLOADITEM2;
-    DownloadEventItem * dddd;
+    DownloadItem * dddd;
     UIProgressView * proBar;
     UILabel * lbl;
     
     UIButton * playButton;
     UIButton * pauseButton;
     UIButton * stepButton;
+    __block DebuggingTabViewController * weakSelf;
 }
 @end
 
@@ -83,9 +84,9 @@ static void *  debugContext = &debugContext;
         rectOutline = [[UIView alloc]initWithFrame:CGRectMake(100, 100, 10, 10)];
         rectOutline.layer.borderColor = [[UIColor redColor]CGColor];
         rectOutline.layer.borderWidth = 1;
-        proBar = [[UIProgressView alloc]initWithFrame:CGRectMake(100, 100, 700, 10)];
+        proBar = [[UIProgressView alloc]initWithFrame:CGRectMake(100, 300, 700, 10)];
         
-        lbl = [[UILabel alloc]initWithFrame:CGRectMake(100, 120,200, 20)];
+        lbl = [[UILabel alloc]initWithFrame:CGRectMake(100, 320,200, 20)];
 
         
         
@@ -117,6 +118,7 @@ static void *  debugContext = &debugContext;
         
         NSLog(@"%@",[dict objectForKey:testString]);
         NSLog(@"%@",[map objectForKey:testString]);
+        weakSelf = self;
     }
 
     return self;
@@ -292,8 +294,6 @@ static void *  debugContext = &debugContext;
     [self.view addSubview:lbl];
     [super viewWillAppear:animated];
     
-    [EM getEventByHID:@"15363b2016891fd248181812248633fa644b9e59_local"];
-  
 
 }
 
@@ -344,26 +344,7 @@ static void *  debugContext = &debugContext;
 -(void)viewDidAppear:(BOOL)animated
 {
     
-//    colour = 0500ff;
-//    comment = "";
-//    deleted = 0;
-//    displaytime = "0:00:00";
-//    duration = 0;
-//    event = "2015-03-09_15-47-44_b3a3123f7ede56eba54a685a76933fbbf054f218_local";
-//    homeTeam = "Manchester United";
-//    id = 1;
-//    islive = 1;
-//    name = 0;
-//    own = 0;
-//    period = 0;
-//    rating = "";
-//    starttime = "0.01";
-//    success = 1;
-//    time = "0.01";
-//    type = 17;
-//    url = "http://192.168.1.109/events/live/thumbs/tn1.jpg";
-//    user = c255e4e00d1e8081e3b3e0e0f1a6682fb90811f6;
-//    visitTeam = Arsenal;
+
     
     NSString * anID = @"6";
     void(^dItemBlock)(DownloadItem*) =^void(DownloadItem* item) {
@@ -371,10 +352,10 @@ static void *  debugContext = &debugContext;
         
     };
     
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
-//                                                                                                           @"id":anID,
-//                                                                                                           @"event":@"live"}];
-//    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
+                                                                                                           @"id":anID,
+                                                                                                           @"event":@"live"}];
+    
     
 //    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"main.mp4" ];
 //    DOWNLOADITEM  =   [Downloader downloadURL:@"http://192.168.3.100/events/2015-02-26_15-00-50_959bdd31af143f8b2c4b0c4381457e28e7c66049_local/video/main_00hq.mp4" to:myPath];
@@ -383,28 +364,23 @@ static void *  debugContext = &debugContext;
 //    CustomAlertView * ioAlert = [[CustomAlertView alloc]initWithTitle:@"NO SPACE" message:@"make space" delegate:self cancelButtonTitle:@"alskdfj" otherButtonTitles:@"asdf", nil];
 //    [Downloader defaultDownloader].IOAlertView = ioAlert;
 //
-    
-    
-     dddd = [[DownloadEventItem alloc]initWithURL:@[
-                                                                       @{@"path": @"http://192.168.1.111/events/2015-04-06_13-59-54_73cb9ae46c4a51b46dab900fa47c4babdf1a46aa_local/video/main_02hq.mp4",
-                                                                         @"dest":[NSString stringWithFormat:@"%@/%@",UC.localPath,@"main_02hq.mp4"] },
-                                                                       @{@"path": @"http://192.168.1.111/events/2015-04-06_13-59-54_73cb9ae46c4a51b46dab900fa47c4babdf1a46aa_local/video/main_03hq.mp4",
-                                                                         @"dest":[NSString stringWithFormat:@"%@/%@",UC.localPath,@"main_03hq.mp4"]}
-                                                                       ]];
-//    [dddd   addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&debugContext];
-    __block UIProgressView  * weakBar = proBar;
-    __block UILabel         * weakLbl = lbl;
 
-    void (^block)(float ,NSInteger) = ^void(float currentProgress, NSInteger kbps){
-        weakBar.progress = currentProgress;
-        weakLbl.text = [NSString stringWithFormat:@"%ld",(long)kbps];
-    };
+//   Event * somethingCool =     [EM.localEncoder getEventByHID:@"73cb9ae46c4a51b46dab900fa47c4babdf1a46aa_local"];
+//
+//    [EM.localEncoder deleteEvent:somethingCool];
+//    
+//    
+//    NSDictionary * theData = [EM getEventByHID:@"73cb9ae46c4a51b46dab900fa47c4babdf1a46aa_local"].rawData;
+//    
+//    
+//    
+//    [Utility downloadEvent:theData sourceName:@"s_02" returnBlock:^(DownloadItem *item) {
+//        [weakSelf gotDLItem: item];
+//    }];
+//    
+//    
     
-
-    [dddd addOnProgressBlock:block];
-    
-    
-    [dddd start];
+   
 
 }
 
@@ -413,6 +389,30 @@ static void *  debugContext = &debugContext;
 //    DownloadItem * ch = (DownloadItem *) object;
     
     
+
+}
+
+-(void)gotDLItem:(DownloadItem*)dli
+{
+    
+  
+    
+    
+//    dddd = dli;
+    __block UIProgressView  * weakBar = proBar;
+    __block UILabel         * weakLbl = lbl;
+    
+    void (^block)(float ,NSInteger) = ^void(float currentProgress, NSInteger kbps){
+        weakBar.progress = currentProgress;
+        weakLbl.text = [NSString stringWithFormat:@"kbps: %ld",(long)kbps];
+    };
+    
+    
+    [dli addOnProgressBlock:block];
+//    
+//    
+//     [dddd start];
+  [[Downloader defaultDownloader] addToQueue:dli];
 
 }
 

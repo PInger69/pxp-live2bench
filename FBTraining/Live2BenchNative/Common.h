@@ -173,6 +173,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_LIVE_EVENT_PAUSED             @"livePaused"
 #define NOTIF_LIVE_EVENT_RESUMED            @"liveResumed"
 //#define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived" // returnds NSDict
+#define NOTIF_CURRENT_LOCAL_EVENT_DELETED   @"NOTIF_CURRENT_LOCAL_EVENT_DELETED"
 
 #define NOTIF_TAG_RECEIVED         @"NOTIF_TAG_RECEIVED" // returnds NSDict
 #define NOTIF_TAG_MODIFIED         @"NOTIF_TAG_MODIFIED" // returnds NSDict

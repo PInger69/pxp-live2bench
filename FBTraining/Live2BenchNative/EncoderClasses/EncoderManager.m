@@ -789,14 +789,19 @@ static void * builtContext          = &builtContext; // depricated?
     __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
     
     NSDictionary * theEventData = note.userInfo[@"data"];
-    NSString * eventHID = theEventData[@"hid"];
+    NSString     * eventHID     = theEventData[@"hid"];
+    NSString     * source       = note.userInfo[@"source"];
+    
+    NSString     * encoderSource = theEventData[@"mp4_2"][source][@"hq"];
     
     Event * theEvent = [self getEventByHID:eventHID];
     
+    NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+    NSString * savedFileName   =  [encoderSource lastPathComponent];
     
-//    
-//    DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
-//    dItemBlock(dli);
+    
+    DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
+    dItemBlock(dli);
 //    
 //    
 
