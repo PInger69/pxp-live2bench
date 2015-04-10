@@ -135,6 +135,8 @@
 @synthesize isBuild         = _isBuild;
 @synthesize isReady         = _isReady;
 
+@synthesize isAlive;
+
 -(id)initWithIP:(NSString*)ip
 {
     self = [super init];
@@ -154,6 +156,7 @@
         isVersion       = NO;
         _isBuild        = NO;
         _isReady         = NO;
+        isAlive         = YES;
         _cameraCount    = 0;
         _status         = ENCODER_STATUS_INIT;
     }
@@ -1184,5 +1187,10 @@
     [self didChangeValueForKey:@"name"];
 }
 
+
+-(void)dealloc
+{
+    isAlive = NO;
+}
 
 @end

@@ -31,26 +31,54 @@
         _rawData            = data;
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [_rawData objectForKey:@"id"];
-        _rating             =[_rawData objectForKey:@"name"];
-        _comment            =[_rawData objectForKey:@"name"];
-        _feeds              =[_rawData objectForKey:@"name"];
-        _path               =[_rawData objectForKey:@"name"];
+        _rating             = [_rawData objectForKey:@"rating"];
+        _comment            = [_rawData objectForKey:@"comment"];
+        _feeds              = [self buildFeeds:_rawData];
+        _path               = [_rawData objectForKey:@"plistName"];
 
-        
-//        _datapath           = [_rawData objectForKey:@"datapath"];
-//        _date               = [_rawData objectForKey:@"date"];
-//        _mp4s               = [self buildMP4s:_rawData];
-//        _feeds              = [self buildFeeds:_rawData];
-
-        
-        
-        
+    
     }
     return self;
 }
 
 
-
+-(NSDictionary*)buildFeeds:(NSDictionary*)aDict
+{
+    
+    NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
+    
+//    
+//    if ([aDict[@"vid_2"] isKindOfClass:[NSDictionary class]]){ // For new encoder and non live
+//        
+//        for (id key in aDict[@"vid_2"])
+//        {
+//            NSDictionary * vidDict      = aDict[@"vid_2"];
+//            NSDictionary * qualities    = [vidDict objectForKey:key];
+//            
+//            Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+//            createdFeed.sourceName = key;
+//            
+//            [tempDict setObject:createdFeed forKey:key];
+//        }
+//        
+//    } else if ([aDict[@"live_2"] isKindOfClass:[NSDictionary class]]){ // for new encoder and Live
+//        
+//        for (id key in aDict[@"live_2"])
+//        {
+//            NSDictionary * vidDict      = aDict[@"live_2"];
+//            NSDictionary * qualities    = [vidDict objectForKey:key];
+//            
+//            Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+//            createdFeed.sourceName = key;
+//            
+//            [tempDict setObject:createdFeed forKey:key];
+//        }
+//        
+//    }
+    
+    
+    return [tempDict copy];
+}
 
 
 

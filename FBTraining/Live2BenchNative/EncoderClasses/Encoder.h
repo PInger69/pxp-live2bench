@@ -91,6 +91,8 @@
 @property (nonatomic,assign)    BOOL            isBuild;
 @property (nonatomic,assign)    BOOL            isReady;
 
+@property (nonatomic,assign)    BOOL            isAlive;
+
 /**
  *  This will create and instance of an endcoder at inputted ip
  *
