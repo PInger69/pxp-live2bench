@@ -277,7 +277,7 @@
         if ([json isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
         if ( [json objectForKey: @"tags"]) {
             for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:tag];
+                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:tag];
             }
             
         }

@@ -112,9 +112,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     // every second, after 3 seconds fire if not reset
 
     self.playBackView           = [[RJLVideoPlayerPlaybackView alloc]initWithFrame:videoFrame];//CGRectMake(500, 60, 400, 300)
-    
-   
-    
     self.zoomManager = [[VideoZoomManager alloc]init];
     self.zoomManager.videoPlayer = self;
     
@@ -145,6 +142,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     currentItemTime = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 30)];
     currentItemTime.textColor = [UIColor whiteColor];
    if (DEBUG_MODE) [self.view addSubview:currentItemTime];
+    
     [super viewDidLoad];
 }
 

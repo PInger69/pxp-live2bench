@@ -16,7 +16,10 @@
 @interface VideoZoomManager : NSObject
 
 //Only a reference to the video player is needed for this class to be functional
-@property (strong, nonatomic) UIViewController <PxpVideoPlayerProtocol> *videoPlayer;
+@property (weak, nonatomic) UIViewController <PxpVideoPlayerProtocol> *videoPlayer;
+//The zooming will only function within this limitFrame
+@property (assign, nonatomic) BOOL enabled;
+@property (strong, nonatomic) NSMutableArray *viewsToAvoid;
 
 //Although this is the default initialization method, it is still acceptable to use init, but the
 //video player property must still get passed in later.

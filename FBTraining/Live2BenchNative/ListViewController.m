@@ -46,6 +46,7 @@
 @property (strong, nonatomic) UIButton *filterButton;
 @property (strong, nonatomic) UIButton *dismissFilterButton;
 
+//@property (strong, nonatomic) NSDictionary *eventTags;
 
 @end
 
@@ -90,10 +91,11 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
         
-        self.allTags = [[NSMutableArray alloc]init];
-        self.tagsToDisplay = [[NSMutableArray alloc]init];
+        //        self.allTags = [[NSMutableArray alloc]init];
+        //        self.tagsToDisplay = [[NSMutableArray alloc]init];
         _tableViewController = [[ListTableViewController alloc]init];
         _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
@@ -111,7 +113,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     [_tableViewController reloadData];
     
     componentFilter.rawTagArray = self.tagsToDisplay;
-    [componentFilter refresh];
+    //[componentFilter refresh];
 }
 
 //-(void)listViewTagReceived:(NSNotification*)note{
@@ -127,8 +129,8 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 {
     HeaderBar * hBar = (HeaderBar *)sender;
     
-    self.tagsToDisplay = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:hBar.headerBarSortType];
-    _tableViewController.tableData = self.tagsToDisplay;
+    _tableViewController.tableData = [self sortArrayFromHeaderBar:_tableViewController.tableData headerBarState:hBar.headerBarSortType];
+    //_tableViewController.tableData = self.tagsToDisplay;
     [_tableViewController.setOfDeletingCells removeAllObjects];
     [_tableViewController checkDeleteAllButton];
     [_tableViewController reloadData];
@@ -279,12 +281,24 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //    swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(detectSwipe:)];
     //    [swipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     //    [self.videoPlayer.view addGestureRecognizer:swipeGestureRecognizer];
+    
+    
 }
 
 //-(void)viewDidAppear:(BOOL)animated{
 //    [self.videoBarViewController.tagMarkerController cleanTagMarkers];
 //    [self.videoBarViewController.tagMarkerController createTagMarkers];
 //}
+
+-(void)clipViewTagReceived:(NSNotification*)note
+{
+    if (note.userInfo) {
+        [self.tagsToDisplay addObject: note.userInfo];
+        [_tableViewController.tableData addObject:note.userInfo];
+        [_tableViewController reloadData];
+        //[_collectionView reloadData];
+    }
+}
 
 -(void)viewWillAppear:(BOOL)animated{
     
@@ -311,13 +325,17 @@ static const NSInteger kCannotDeleteAlertTag = 243;
             [self.videoPlayer playFeed:theFeed];
         }
         
-        if(eventTags && self.tagsToDisplay.count < 1){
+        if(eventTags.count > 0 && !self.tagsToDisplay){
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             _tableViewController.tableData = self.tagsToDisplay;
-            componentFilter.rawTagArray = self.tagsToDisplay;
+            if (!componentFilter.rawTagArray) {
+                componentFilter.rawTagArray = self.tagsToDisplay;
+                
+            }
             [_tableViewController.tableView reloadData];
         }
     }}];
+    
     
     wasPlayingIndexPath = nil;
     
@@ -2090,7 +2108,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     // Richard
     commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(10,485 -50, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60 +50) title:@"Comment"];
     commentingField.enabled = NO;
-    [commentingField onPressRatePerformSelector:@selector(sendRating:) addTarget:self ];
+    [commentingField onPressRatePerformSelector:@selector(sendRating:) addTarget:self];
     [commentingField onPressSavePerformSelector:@selector(sendComment) addTarget:self];
     [self.view addSubview:commentingField];
     // End
