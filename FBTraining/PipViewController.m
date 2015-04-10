@@ -561,7 +561,7 @@ static void * vpFrameContext   = &vpFrameContext;
     [_multi makePips:[_encoderManager.feeds allValues]];
     [_multi seekTo:_videoPlayer.avPlayer.currentItem.currentTime];
 
-    [_videoPlayer.view insertSubview:_multi atIndex:1];
+    [_videoPlayer.view insertSubview:_multi atIndex:2];
     _selectPip.hidden = YES;
 }
 

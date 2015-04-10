@@ -84,7 +84,7 @@
     activeElements  = [@[]              arrayByAddingObjectsFromArray:liveElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:clipElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:teleElements];
-   // [self _revealThese:@[]];
+    [self _revealThese:@[]];
     
     demoElements    = @[_seekForward, _seekBackward, _slomo];
     

@@ -364,7 +364,6 @@ static void * eventContext      = &eventContext;
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
-    [_feedSwitch setHidden:!([_encoderManager.feeds count]>1)];
     
     // multi button
     multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];

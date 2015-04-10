@@ -21,7 +21,7 @@
 #define NOTIF_ENCODER_MASTER_HAS_FALLEN     @"encoderMasterLost"
 #define NOTIF_ENCODER_MASTER_ENSLAVED       @"encoderMasterEnslaved"
 #define NOTIF_THIS_ENCODER_IS_READY         @"encoderIsReady"
-#define NOTIF_LIVE_EVENT_FOUND              @"encoderLiveFound"
+
 
 #define AUTHENTICATE    @"authenticate:timeStamp:"
 #define BUILD           @"buildEncoder:timeStamp:"

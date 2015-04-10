@@ -22,6 +22,7 @@
 @synthesize rawData     = _rawData;
 @synthesize deleted     = _deleted;
 @synthesize local       = _local;
+@synthesize live        = _live;
 @synthesize downloadedSources       = _downloadedSources;
 
 - (instancetype)initWithDict:(NSDictionary*)data

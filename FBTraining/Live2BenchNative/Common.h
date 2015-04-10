@@ -119,7 +119,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          0
+#define DEBUG_MODE                          1
 
 //#if DEBUG_MODE == 0
 //#define DebugLog(...)
@@ -183,6 +183,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_LIVE_EVENT_STARTED            @"NOTIF_LIVE_EVENT_STARTED"
 #define NOTIF_LIVE_EVENT_PAUSED             @"NOTIF_LIVE_EVENT_PAUSED"
 #define NOTIF_LIVE_EVENT_RESUMED            @"NOTIF_LIVE_EVENT_RESUMED"
+#define NOTIF_LIVE_EVENT_FOUND              @"NOTIF_LIVE_EVENT_FOUND"
 
 //#define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived" // returnds NSDict
 #define NOTIF_CURRENT_LOCAL_EVENT_DELETED   @"NOTIF_CURRENT_LOCAL_EVENT_DELETED"
