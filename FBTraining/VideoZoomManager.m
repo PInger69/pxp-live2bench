@@ -54,14 +54,15 @@
 -(instancetype)init{
     self = [super init];
     if (self) {
+        self.tintColor = [UIColor colorWithRed:1.0 green:0.6 blue:0.0 alpha:1.0];
         self.gestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(gestureRecognizerReceivedTouch:)];
         self.gestureRecognizer.enabled = YES;
         self.gestureRecognizer.maximumNumberOfTouches = 1;
         self.gestureRecognizer.delegate = self;
         
         self.zoomView = [[UIView alloc]init];
-        self.zoomView.backgroundColor = [UIColor colorWithRed:1.0 green:0.6 blue:0.0 alpha:0.25];
-        self.zoomView.layer.borderColor = [UIColor orangeColor].CGColor;
+        self.zoomView.backgroundColor = [self.tintColor colorWithAlphaComponent:0.25];
+        self.zoomView.layer.borderColor = self.tintColor.CGColor;
         self.zoomView.layer.borderWidth = 1.0;
         
         self.arrayOfPreviousFrames = [NSMutableArray array];
@@ -91,6 +92,9 @@
     [self.arrayOfVideoLayers addObject: note.object];
 }
 
+-(void)setEnabled:(BOOL)enabled{
+    self.gestureRecognizer.enabled = enabled;
+}
 
 
 -(void)setVideoPlayer:(UIViewController<PxpVideoPlayerProtocol> *)videoPLayer{
@@ -133,6 +137,9 @@
         return NO;
     }
     
+    if (self.videoLayer.frame.size.width > 1000000) {
+        return NO;
+    }
     return YES;
 }
 

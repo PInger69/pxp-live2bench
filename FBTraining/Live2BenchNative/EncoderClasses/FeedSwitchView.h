@@ -21,6 +21,8 @@
 
 -(id)initWithFrame:(CGRect)frame encoderManager:(EncoderManager*)encoderManager;
 
+-(instancetype) initWithFrame:(CGRect)frame andClipData: (NSDictionary *) clipData;
+
 -(void)buildButtonsWithData:(NSDictionary*)list;
 /**
  *  Primary to secondary, secondary to primary

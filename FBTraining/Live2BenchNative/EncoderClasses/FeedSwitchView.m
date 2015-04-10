@@ -69,6 +69,41 @@
     return self;
 }
 
+-(instancetype) initWithFrame:(CGRect)frame andClipData: (NSDictionary *) clipData{
+    self = [super initWithFrame:frame];
+    if (self) {
+        //_encoderManager     = encoderManager;
+        _buttonArray        = [[NSMutableArray alloc]init];
+        _primaryPosition    = 0;
+        _secondaryPosition  = -1;
+        _buttonToFeedDict   = [[NSMutableDictionary alloc]init];
+        _buttonDict         = [[NSMutableDictionary alloc]init];
+        _buttonSize         = CGSizeMake(frame.size.width, frame.size.height);
+        _secondarySelected  = NO;
+//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:nil];
+//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
+//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMovmentCheck:)       name:NOTIF_MOTION_ALARM object:nil];
+    }
+    return self;
+}
+
+//-(instancetype) initWithFrame:(CGRect)frame{
+//    self = [super initWithFrame:frame];
+//    if (self) {
+//        //_encoderManager     = encoderManager;
+//        _buttonArray        = [[NSMutableArray alloc]init];
+//        _primaryPosition    = 0;
+//        _secondaryPosition  = -1;
+//        _buttonToFeedDict   = [[NSMutableDictionary alloc]init];
+//        _buttonDict         = [[NSMutableDictionary alloc]init];
+//        _buttonSize         = CGSizeMake(frame.size.width, frame.size.height);
+//        _secondarySelected  = NO;
+//        //        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:nil];
+//        //        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
+//        //        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMovmentCheck:)       name:NOTIF_MOTION_ALARM object:nil];
+//    }
+//    return self;
+//}
 
 -(void)onMovmentCheck:(NSNotification*)note
 {
@@ -275,10 +310,22 @@
 }
 
 
+
+/**
+ *  The removes all buttons
+ */
 -(void)clear
 {
+    [_buttonArray makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_buttonArray removeAllObjects];
+    [_buttonToFeedDict removeAllObjects];
+    
+    _primaryFeed    = nil;
+  
+    
     [_buttonArray enumerateObjectsUsingBlock:^(UIButton *obj, NSUInteger idx, BOOL *stop) {
-        [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
+        [obj removeFromSuperview];
+//        [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
 //        obj.layer.borderColor = [DESELECT_COLOR CGColor];
         
     }];

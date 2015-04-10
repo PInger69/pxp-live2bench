@@ -25,7 +25,6 @@
 }
 
 
-
 -(void)setupView{
     [super setupView];
     self.deleteButton.frame = CGRectMake(448, 0, 70 , 80);
@@ -48,7 +47,7 @@
     
     self.downloadButton = [DownloadButton buttonWithType:UIButtonTypeCustom];
     [self.downloadButton setAutoresizingMask:UIViewAutoresizingNone];
-    [self.downloadButton setFrame:CGRectMake(460, 15, 30,35)];
+    [self.downloadButton setFrame:CGRectMake(400, 15, 30,35)];
     [self.downloadButton setTag:98];
     [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
@@ -79,8 +78,22 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
     
+    UIColor * color = [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
+    UIColor * colorForTesting = [UIColor orangeColor];
+    UIColor * textColor = [UIColor colorWithWhite:0.224 alpha:1.0f];
+    
+    if (selected) {
+        self.myContentView.backgroundColor = color;
+        [self.dateLabel setTextColor:textColor];
+        [self.timeLabel setTextColor:textColor];
+        self.backgroundColor = color;
+    }else{
+        self.myContentView.backgroundColor = [UIColor whiteColor];
+        [self.dateLabel setTextColor:[UIColor blackColor]];
+        [self.timeLabel setTextColor:[UIColor blackColor]];
+        [self.titleLabel setTextColor:[UIColor blackColor]];
+    }
     // Configure the view for the selected state
 }
 
 @end
-

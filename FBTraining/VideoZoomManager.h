@@ -19,6 +19,9 @@
 @property (weak, nonatomic) UIViewController <PxpVideoPlayerProtocol> *videoPlayer;
 //The zooming will only function within this limitFrame
 @property (assign, nonatomic) BOOL enabled;
+// This property will control the color of the border of the zoomView
+// as well as the undo zoom button color
+@property (strong, nonatomic) UIColor *tintColor;
 @property (strong, nonatomic) NSMutableArray *viewsToAvoid;
 
 //Although this is the default initialization method, it is still acceptable to use init, but the

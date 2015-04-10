@@ -11,6 +11,7 @@
 @implementation DownloadButton
 {
     BOOL downloadCancelled;
+    BOOL downloadComplete;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -28,9 +29,10 @@
     if (_downloadItem) {
         [_downloadItem removeObserver:self forKeyPath:@"status"];
     }
-
+    
     _downloadItem = downloadItem;
     downloadCancelled = NO;
+    downloadComplete = NO;
     
     if (downloadItem) {
         [downloadItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
@@ -45,6 +47,10 @@
         [self setNeedsDisplay];
         if (downloadItem.status == DownloadItemStatusError) {
             downloadCancelled = YES;
+        }
+        if (downloadItem.progress == 1) {
+            self.progress = 1;
+            downloadComplete = YES;
         }
     }else{
         self.enabled = YES;
@@ -81,82 +87,96 @@
 
 
 
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect
- {
-     if(self.progress == 1.0){
-         self.hidden = YES;
-     }
-     
-     CGContextRef currentContext = UIGraphicsGetCurrentContext();
-     
-     UIBezierPath *path = [[UIBezierPath alloc]init];
-     
-     [path moveToPoint:CGPointMake(7, 1)];
-     [path addLineToPoint:CGPointMake(23, 1)];
-     [path addLineToPoint:CGPointMake(23, 11)];
-     [path addLineToPoint:CGPointMake(30, 11)];
-     [path addLineToPoint:CGPointMake(15, 25)];
-     [path addLineToPoint:CGPointMake(0, 11)];
-     [path addLineToPoint:CGPointMake(7, 11)];
-     [path addLineToPoint:CGPointMake(7, 1)];
-     
-     UIBezierPath *boxPath = [[UIBezierPath alloc] init];
-     
-     [boxPath moveToPoint:CGPointMake(0, 28)];
-     [boxPath addLineToPoint:CGPointMake(29, 28)];
-     [boxPath addLineToPoint:CGPointMake(29, 32)];
-     [boxPath addLineToPoint:CGPointMake(1, 32)];
-     [boxPath addLineToPoint:CGPointMake(1, 28)];
-     
-     
-     path.lineWidth = 1.0;
-     boxPath.lineWidth = 2.0;
-     [[UIColor orangeColor] setStroke];
-     
-     if (self.highlighted || self.progress) {
-         [[UIColor orangeColor] setFill];
-     }else{
-         [[UIColor whiteColor] setFill];
-     }
-     
-     
-     [path fill];
-     [path stroke];
-     [boxPath stroke];
-     [[UIColor whiteColor]setFill];
-     [boxPath fill];
-
-     UIBezierPath *downloadPath = [[UIBezierPath alloc] init];
-     
-     [downloadPath moveToPoint:CGPointMake(0, 30)];
-     [downloadPath addLineToPoint:CGPointMake(30*self.progress, 30)];
-     downloadPath.lineWidth = 4.0;
-     [downloadPath stroke];
-     
-     
-     if (downloadCancelled) {
-         UIBezierPath *cancelPath = [UIBezierPath bezierPath];
-         [cancelPath moveToPoint: CGPointMake(3, 3)];
-         [cancelPath addLineToPoint: CGPointMake(27, 27)];
-         [cancelPath moveToPoint:CGPointMake(27, 3)];
-         [cancelPath addLineToPoint: CGPointMake(3, 27)];
-         
-         cancelPath.lineCapStyle = kCGLineCapRound;
-         cancelPath.lineWidth = 2.0;
-         
-         [[UIColor redColor] setStroke];
-         
-         [cancelPath stroke];
-     }
-     
-     CGContextSaveGState(currentContext);
-     //UIView *backgroundView = [[UIView alloc]initWithFrame:self.frame];
-     
-
- 
- }
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
+{
+    //     if(self.progress == 1.0){
+    //         self.hidden = YES;
+    //     }
+    
+    CGContextRef currentContext = UIGraphicsGetCurrentContext();
+    
+    UIBezierPath *path = [[UIBezierPath alloc]init];
+    
+    [path moveToPoint:CGPointMake(7, 1)];
+    [path addLineToPoint:CGPointMake(23, 1)];
+    [path addLineToPoint:CGPointMake(23, 11)];
+    [path addLineToPoint:CGPointMake(30, 11)];
+    [path addLineToPoint:CGPointMake(15, 25)];
+    [path addLineToPoint:CGPointMake(0, 11)];
+    [path addLineToPoint:CGPointMake(7, 11)];
+    [path addLineToPoint:CGPointMake(7, 1)];
+    
+    UIBezierPath *boxPath = [[UIBezierPath alloc] init];
+    
+    [boxPath moveToPoint:CGPointMake(0, 28)];
+    [boxPath addLineToPoint:CGPointMake(29, 28)];
+    [boxPath addLineToPoint:CGPointMake(29, 32)];
+    [boxPath addLineToPoint:CGPointMake(1, 32)];
+    [boxPath addLineToPoint:CGPointMake(1, 28)];
+    
+    
+    path.lineWidth = 1.0;
+    boxPath.lineWidth = 2.0;
+    [[UIColor orangeColor] setStroke];
+    
+    if (self.highlighted || self.progress) {
+        [[UIColor orangeColor] setFill];
+    }else{
+        [[UIColor whiteColor] setFill];
+    }
+    
+    
+    [path fill];
+    [path stroke];
+    [boxPath stroke];
+    [[UIColor whiteColor]setFill];
+    [boxPath fill];
+    
+    UIBezierPath *downloadPath = [[UIBezierPath alloc] init];
+    
+    [downloadPath moveToPoint:CGPointMake(0, 30)];
+    [downloadPath addLineToPoint:CGPointMake(30*self.progress, 30)];
+    downloadPath.lineWidth = 4.0;
+    [downloadPath stroke];
+    
+    
+    if (downloadCancelled) {
+        UIBezierPath *cancelPath = [UIBezierPath bezierPath];
+        [cancelPath moveToPoint: CGPointMake(3, 3)];
+        [cancelPath addLineToPoint: CGPointMake(27, 27)];
+        [cancelPath moveToPoint:CGPointMake(27, 3)];
+        [cancelPath addLineToPoint: CGPointMake(3, 27)];
+        
+        cancelPath.lineCapStyle = kCGLineCapRound;
+        cancelPath.lineWidth = 2.0;
+        
+        [[UIColor redColor] setStroke];
+        
+        [cancelPath stroke];
+    }
+    
+    if (downloadComplete) {
+        self.enabled = NO;
+        UIBezierPath *completePath = [UIBezierPath bezierPath];
+        [completePath moveToPoint:CGPointMake(1, 17)];
+        [completePath addLineToPoint:CGPointMake(12, 30)];
+        [completePath moveToPoint:CGPointMake(12, 30)];
+        [completePath addLineToPoint:CGPointMake(31, 3)];
+        
+        completePath.lineCapStyle = kCGLineCapRound;
+        completePath.lineWidth = 2.0;
+        [[UIColor greenColor] setStroke];
+        [completePath stroke];
+    }
+    
+    CGContextSaveGState(currentContext);
+    //UIView *backgroundView = [[UIView alloc]initWithFrame:self.frame];
+    
+    
+    
+}
 
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     switch (self.downloadItem.status) {
@@ -166,10 +186,13 @@
             downloadCancelled = YES;
             [self setNeedsDisplay];
             break;
-            
+        case DownloadItemStatusComplete:
+            downloadComplete = YES;
+            [self setNeedsDisplay];
         default:
             break;
     }
 }
 
 @end
+

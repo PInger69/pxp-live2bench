@@ -178,10 +178,12 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_MOTION_ALARM                  @"motionAlarm"
 #define NOTIF_USER_CENTER_UPDATE            @"updateUserCenterData"
 #define NOTIF_MASTER_COMMAND                @"masterEncoderCommand"
-#define NOTIF_LIVE_EVENT_STOPPED            @"liveStopped"  
-#define NOTIF_LIVE_EVENT_STARTED            @"liveStarted"
-#define NOTIF_LIVE_EVENT_PAUSED             @"livePaused"
-#define NOTIF_LIVE_EVENT_RESUMED            @"liveResumed"
+
+#define NOTIF_LIVE_EVENT_STOPPED            @"NOTIF_LIVE_EVENT_STOPPED"
+#define NOTIF_LIVE_EVENT_STARTED            @"NOTIF_LIVE_EVENT_STARTED"
+#define NOTIF_LIVE_EVENT_PAUSED             @"NOTIF_LIVE_EVENT_PAUSED"
+#define NOTIF_LIVE_EVENT_RESUMED            @"NOTIF_LIVE_EVENT_RESUMED"
+
 //#define NOTIF_CLIPVIEW_TAG_RECEIVED         @"clipViewTagReceived" // returnds NSDict
 #define NOTIF_CURRENT_LOCAL_EVENT_DELETED   @"NOTIF_CURRENT_LOCAL_EVENT_DELETED"
 

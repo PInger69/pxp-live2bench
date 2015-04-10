@@ -22,6 +22,9 @@
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
+#define STARTING_UP_LIVE_EVENT @"starting up live event"
+
+
 // HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
 @interface EncoderDataSync : NSObject
 @property (nonatomic,assign)  BOOL            complete;
@@ -268,7 +271,7 @@
     id                          _encoderReadyObserver;
     id                          _logoutObserver;
     id                          _liveEventStopped;
-    
+    id                          _liveEventStarted;
     
     CheckWiFiAction             * checkWiFiAction;
     CheckForACloudAction        * checkForACloudAction;
@@ -348,10 +351,16 @@
         
         _liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             // if the current playing event is the live event and its stopped then we have to make it no Event at all
-            if ([self.currentEvent isEqualToString:self.liveEventName]){
-                self.currentEvent = nil;
+            if ([weakSelf.currentEvent isEqualToString:weakSelf.liveEventName]){
+                weakSelf.currentEvent = nil;
             }
         }];
+        
+        _liveEventStarted         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STARTED     object:nil queue:nil usingBlock:^(NSNotification *note) {
+                weakSelf.currentEvent = STARTING_UP_LIVE_EVENT;
+        }];
+        
+        
         
         
         _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -905,6 +914,7 @@ static void * builtContext          = &builtContext; // depricated?
             [_masterEncoder issueCommand:STOP_EVENT     priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
         } else if ([data objectForKey:@"start"]) {
             [_masterEncoder issueCommand:START_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
+            [_masterEncoder issueCommand:BUILD    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];// this just rebuilds so it can find the live
         } else if ([data objectForKey:@"pause"]) {
             [_masterEncoder issueCommand:PAUSE_EVENT    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
         } else if ([data objectForKey:@"resume"]) {
@@ -1206,6 +1216,27 @@ static void * builtContext          = &builtContext; // depricated?
 // whe you set an event it will update the feeds to the correct feeds
 -(void)setCurrentEvent:(NSString *)aCurrentEvent
 {
+    // if the event is nil then clear out all the data for the encoder
+    if (!aCurrentEvent) {
+        [_feeds removeAllObjects];
+        _currentEventData = @{};
+
+        [self willChangeValueForKey:@"currentEvent"];
+            _currentEvent = aCurrentEvent;
+        [self didChangeValueForKey:@"currentEvent"];
+        
+        [self willChangeValueForKey:@"currentEventType"];
+            _currentEventType = nil;
+        [self didChangeValueForKey:@"currentEventType"];
+     
+        [self willChangeValueForKey:@"currentEventTags"];
+            _currentEventTags = nil;
+        [self didChangeValueForKey:@"currentEventTags"];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
+      
+        return;
+    } //
+    
     // CHANGE TO BE CONTROLLED FROM PRIMARY ENCODER
     NSMutableSet * typeCollector =  [[NSMutableSet alloc]init];
     
@@ -1220,7 +1251,7 @@ static void * builtContext          = &builtContext; // depricated?
             eventData = encoder.eventData;
         }
     }
-    _feeds = [temp copy];
+    _feeds = [temp mutableCopy];
     
     
     if (_masterEncoder && [_masterEncoder.event isEqualToString:aCurrentEvent]) eventData = _masterEncoder.eventData;
@@ -1415,9 +1446,6 @@ static void * builtContext          = &builtContext; // depricated?
  */
 -(void)refresh
 {
-
-    
-    
     // this collects all the tags from the encoders
     [self willChangeValueForKey:@"currentEventTags"];
     
