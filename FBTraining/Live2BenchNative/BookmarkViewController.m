@@ -35,6 +35,9 @@
 #import "ShareOptionsViewController.h"
 #import "SocialSharingManager.h"
 #import "TestFilterViewController.h"
+#import "Pip.h"
+#import "PipViewController.h"
+#import "FeedSwitchView.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -86,6 +89,10 @@
     FullVideoBarMyClipViewController    * newFullScreenVideoControlBar;
     FullScreenViewController            * testFullScreen;
     ScreenController                    * externalControlScreen;
+    PipViewController                   * _pipController;
+    Pip                                 * _pip;
+    FeedSwitchView                      * _feedSwitch;
+
 }
 
 @synthesize startTime;
@@ -212,10 +219,27 @@ int viewWillAppearCalled;
         }
     }
     
-    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, COMMENTBOX_HEIGHT+LABEL_HEIGHT*3.5, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
+    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
     
     allTags = [[NSMutableArray alloc]init];
+    
+    _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
+    _pip.isDragAble  = YES;
+    _pip.hidden      = YES;
+    _pip.muted       = YES;
+    _pip.dragBounds  = self.videoPlayer.view.frame;
+    [self.videoPlayer.view addSubview:_pip];
+    
+//    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
+//    
+//    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
+    _pipController.context = STRING_LIVE2BENCH_CONTEXT;
+    
+    [_pipController addPip:_pip];
+    [_pipController viewDidLoad];
+    [self.view addSubview:_feedSwitch];
+    //[_feedSwitch setHidden:!([_encoderManager.feeds count]>1)];
     
     //array of file paths
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -324,7 +348,7 @@ int viewWillAppearCalled;
     
     if(![self.view.subviews containsObject:self.videoPlayer.view])
     {
-        [self.videoPlayer.view setFrame:CGRectMake(1, COMMENTBOX_HEIGHT+LABEL_HEIGHT*3.5, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
+        [self.videoPlayer.view setFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT - 32, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
         [self.view addSubview:self.videoPlayer.view];
         
         UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(detectSwipe:)];

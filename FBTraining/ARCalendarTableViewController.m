@@ -11,7 +11,7 @@
 #import "ARCalendarTableViewCell.h"
 #import "Downloader.h"
 #import "DownloadItem.h"
-#import "ListPopoverController.h"
+#import "ListPopoverControllerWithImages.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -245,15 +245,17 @@
         
         cell.downloadButton.downloadItem = nil;
         cell.downloadButtonBlock = ^(){
-            DownloadItem *downloadItem = [Downloader downloadURL:event[@"mp4"] to: [self.localPath stringByAppendingString:event[@"name"]]];
-            downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]];
-            weakCell.downloadButton.downloadItem = downloadItem;
-            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                weakCell.downloadButton.progress = progress;
-                [weakCell.downloadButton setNeedsDisplay];
-                weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
-            }];
-            [weakSelf.downloadingItemsDictionary setObject:downloadItem forKey: dateString];
+//            ListPopoverControllerWithImages *sourceSelect= [[[ListPopoverControllerWithImages alloc]initWithContentViewController:<#(UIViewController *)#>]]
+            //[Utility downloadEvent:event sourceName:<#(NSString *)#> returnBlock:<#^(DownloadItem *item)block#>]
+//            DownloadItem *downloadItem = [Downloader downloadURL:event[@"mp4"] to: [self.localPath stringByAppendingString:event[@"name"]]];
+//            downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]];
+//            weakCell.downloadButton.downloadItem = downloadItem;
+//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+//                weakCell.downloadButton.progress = progress;
+//                [weakCell.downloadButton setNeedsDisplay];
+//                weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
+//            }];
+//            [weakSelf.downloadingItemsDictionary setObject:downloadItem forKey: dateString];
         };
         cell.playButton.hidden = YES;
     }

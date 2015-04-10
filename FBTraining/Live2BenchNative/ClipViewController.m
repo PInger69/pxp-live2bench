@@ -88,7 +88,7 @@ static void * encoderTagContext = &encoderTagContext;
         [_encoderManager addObserver:self forKeyPath:@"currentEventTags" options:NSKeyValueObservingOptionNew context: &encoderTagContext];
         _imageAssetManager = appDel.imageAssetManager;
         
-        _tagsToDisplay = [[NSMutableArray alloc] init];
+        //_tagsToDisplay = [[NSMutableArray alloc] init];
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
@@ -104,26 +104,26 @@ static void * encoderTagContext = &encoderTagContext;
     [self.allTagsArray removeObject: note.userInfo];
     [self.tagsToDisplay removeObject: note.userInfo];
     componentFilter.rawTagArray = self.allTagsArray;
-    [componentFilter refresh];
+    //[componentFilter refresh];
     [_collectionView reloadData];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-//    if (context == &masterEncoderContext) {
-//        if ([change objectForKey:@"new"]){
-//            
-//            BOOL n = [[change objectForKey:@"new"]boolValue];
-//            BOOL o = [[change objectForKey:@"old"]boolValue];
-//            
-//            if (!n && n != o){
-//                _tagsToDisplay = [[NSMutableArray alloc]init];
-//                [_collectionView reloadData];
-//            }
-//        }
-//    }else if (context == &encoderTagContext){
-//        self.allTagsArray = [change[@"new"] mutableCopy];
-//    }
+    //    if (context == &masterEncoderContext) {
+    //        if ([change objectForKey:@"new"]){
+    //
+    //            BOOL n = [[change objectForKey:@"new"]boolValue];
+    //            BOOL o = [[change objectForKey:@"old"]boolValue];
+    //
+    //            if (!n && n != o){
+    //                _tagsToDisplay = [[NSMutableArray alloc]init];
+    //                [_collectionView reloadData];
+    //            }
+    //        }
+    //    }else if (context == &encoderTagContext){
+    //        self.allTagsArray = [change[@"new"] mutableCopy];
+    //    }
     
 }
 
@@ -131,38 +131,12 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    //    NSString * event = ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName])?@"live":_encoderManager.currentEvent;
-    //
-    //self.allTagsArray = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
-    //    if (componentFilter && self.tagsToDisplay) {
-    //        componentFilter.rawTagArray = self.allTagsArray;
-    //        [self receiveFilteredArrayFromFilter: componentFilter];
-    //    }else{
-    //        self.tagsToDisplay = self.allTagsArray;
-    //        [_collectionView reloadData];
-    //    }
-    //self.tagsToDisplay = self.allTagsArray;
     if (note.userInfo) {
         [self.allTagsArray addObject: note.userInfo];
-        componentFilter.rawTagArray = self.allTagsArray;
-        componentFilter.rangeSlider.highestValue = [self highestTimeInTags: self.allTagsArray ];
-        [self receiveFilteredArrayFromFilter: componentFilter];
+        [self.tagsToDisplay addObject:note.userInfo];
+        [self.collectionView reloadData];
         //[_collectionView reloadData];
     }
-    
-        //    componentFilter.rawTagArray = self.allTagsArray;
-    //    self.tag
-    //    [self receiveFilteredArrayFromFilter: componentFilter];
-    //_tagsToDisplay = tags;
-    //    for (NSDictionary *tag in tags) {
-    //        if ([tag[@"success"] integerValue] == 1) {
-    //            [_tagsToDisplay addObject:tag];
-    //            //[_tagsToDisplay addObject:@"1"];
-    //        }
-    //    }
-    //_tagsToDisplay = tags;
-    //[_collectionView reloadData];
-    
 }
 
 -(Float64) highestTimeInTags: (NSArray *) arrayOfTags{
@@ -313,20 +287,30 @@ static void * encoderTagContext = &encoderTagContext;
 {
     [super viewWillAppear:animated];
     
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
+        
+        if(eventTags.count > 0 && !self.tagsToDisplay){
+            self.allTagsArray = [NSMutableArray arrayWithArray:[eventTags copy]];
+            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+            if (!componentFilter.rawTagArray) {
+                componentFilter.rawTagArray = self.tagsToDisplay;
+            }
+            [self.collectionView reloadData];
+        }
+    }}];
     
     //clean the image cache to make sure each thumbnail displays the right image ;
     //otherwise the images from the old event will stay there
-//    SDImageCache *imageCache = [SDImageCache sharedImageCache];
-//    [imageCache clearMemory];
-//    [imageCache clearDisk];
-//    [imageCache cleanDisk];
+    //    SDImageCache *imageCache = [SDImageCache sharedImageCache];
+    //    [imageCache clearMemory];
+    //    [imageCache clearDisk];
+    //    [imageCache cleanDisk];
     
-//    if (!self.allTagsArray.count) {
-//        self.allTagsArray = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
-//        self.tagsToDisplay = [self.allTagsArray mutableCopy];
-//        [_collectionView reloadData];
-//    }
+    //    if (!self.allTagsArray.count) {
+    //        self.allTagsArray = [NSMutableArray arrayWithArray:[_encoderManager.eventTags allValues]];
+    //        self.tagsToDisplay = [self.allTagsArray mutableCopy];
+    //        [_collectionView reloadData];
+    //    }
     
     //pause the video palyer in live2bench view and my clip view
     for (thumbnailCell *cell in _collectionView.visibleCells) {
@@ -926,9 +910,9 @@ static void * encoderTagContext = &encoderTagContext;
 ///NOTE: when filterbox.view is all the way up, customer goes to another screen and comes back, filterbox.view cannot be interacted with
 -(void)viewWillDisappear:(BOOL)animated
 {
-//    for (thumbnailCell *cell in _collectionView.visibleCells) {
-//        [cell setDeletingMode: NO];
-//    }
+    //    for (thumbnailCell *cell in _collectionView.visibleCells) {
+    //        [cell setDeletingMode: NO];
+    //    }
     [componentFilter close:YES];
     [self.dismissFilterButton removeFromSuperview];
     

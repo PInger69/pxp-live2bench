@@ -9,7 +9,7 @@
 #import "VideoZoomManager.h"
 #import "RJLVideoPlayer.h"
 
-@interface VideoZoomManager()
+@interface VideoZoomManager()<UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UIPanGestureRecognizer *gestureRecognizer;
 
@@ -57,6 +57,7 @@
         self.gestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(gestureRecognizerReceivedTouch:)];
         self.gestureRecognizer.enabled = YES;
         self.gestureRecognizer.maximumNumberOfTouches = 1;
+        self.gestureRecognizer.delegate = self;
         
         self.zoomView = [[UIView alloc]init];
         self.zoomView.backgroundColor = [UIColor colorWithRed:1.0 green:0.6 blue:0.0 alpha:0.25];
@@ -79,6 +80,7 @@
         self.debugLabel2.textColor = [UIColor redColor];
         self.debugLabel2.numberOfLines = 0;
         
+        self.viewsToAvoid = [NSMutableArray array];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newVideoLayer:) name:NOTIF_NEW_VIDEO_LAYER object: nil];
         
     }
@@ -88,6 +90,8 @@
 -(void)newVideoLayer: (NSNotification *) note{
     [self.arrayOfVideoLayers addObject: note.object];
 }
+
+
 
 -(void)setVideoPlayer:(UIViewController<PxpVideoPlayerProtocol> *)videoPLayer{
     _videoPlayer = videoPLayer;
@@ -103,6 +107,33 @@
 
 -(UIPanGestureRecognizer *) panGestureRecognizer{
     return self.gestureRecognizer;
+}
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+    beginningPoint = [touch locationInView:self.videoPlayer.view];
+    for (UIView *viewToAvoid in self.viewsToAvoid) {
+        if (CGRectContainsPoint(viewToAvoid.frame, beginningPoint) && !viewToAvoid.hidden) {
+            beginningPoint.x = 0;
+            beginningPoint.y = 0;
+            return NO;
+        }
+    }
+    
+    CGRect f = self.videoPlayer.videoControlBar.frame;
+    CGRect frameToAvoid = CGRectMake(f.origin.x, f.origin.y, f.size.width, self.videoPlayer.view.frame.size.height - f.origin.y);
+    if ( CGRectContainsPoint(frameToAvoid, beginningPoint)) {
+        beginningPoint.x = 0;
+        beginningPoint.y = 0;
+        return NO;
+    }
+    
+    if ( CGRectContainsPoint(self.undoZoomButton.frame, beginningPoint) && !self.undoZoomButton.hidden) {
+        beginningPoint.x = 0;
+        beginningPoint.y = 0;
+        return NO;
+    }
+    
+    return YES;
 }
 
 -(void)gestureRecognizerReceivedTouch: (UIPanGestureRecognizer *) gestureRecognizer{
@@ -249,7 +280,7 @@
     
     //CGRect newFrame = CGRectMake(0, 0, 0, 0);
     CGRect partialView = self.zoomView.frame;
-    float partialViewRatio = partialView.size.width / partialView.size.height;
+    //float partialViewRatio = partialView.size.width / partialView.size.height;
     
     //This is to ensure that the width or height does not become infinite
     if (partialView.size.height == 0 || partialView.size.width == 0) {
@@ -317,7 +348,12 @@
 
     NSString *debugString = [NSString stringWithFormat: @"VideoLayer: newVideoLayerFrame - %@,   relativeOrigin - %@, partialView - %@", NSStringFromCGRect(newVideoLayerFrame), NSStringFromCGPoint(relativeOrigin), NSStringFromCGRect(partialView)];
     [self.debugLabel setText: debugString];
-    [self.videoPlayer.view addSubview: self.debugLabel];
+    
+    self.debugLabel.hidden = YES;
+    if (DEBUG_MODE){
+        [self.videoPlayer.view addSubview: self.debugLabel];
+        self.debugLabel.hidden = NO;
+    }
     //[NSThread sleepForTimeInterval:2];
 }
 
@@ -328,7 +364,7 @@
     
     //CGRect newFrame = CGRectMake(0, 0, 0, 0);
     CGRect partialView = self.zoomView.frame;
-    float partialViewRatio = partialView.size.width / partialView.size.height;
+    //float partialViewRatio = partialView.size.width / partialView.size.height;
     
     //This is to ensure that the width or height does not become infinite
     if (partialView.size.height == 0 || partialView.size.width == 0) {
@@ -422,8 +458,12 @@
         self.secondLayer.frame = newVideoLayerFrame;
     }
     
-    
-    [self.videoPlayer.view addSubview: self.debugLabel2];
+    self.debugLabel2.hidden = YES;
+    if ( DEBUG_MODE) {
+        self.debugLabel2.hidden = NO;
+        [self.videoPlayer.view addSubview: self.debugLabel2];
+    }
+
     
     NSString *debugString = [NSString stringWithFormat: @"SecondLayer: newVideoLayerFrame - %@,   relativeOrigin - %@, partialView - %@, superLayer - %@, tempFrame - %@", NSStringFromCGRect(newVideoLayerFrame), NSStringFromCGPoint(relativeOrigin), NSStringFromCGRect(partialView),  NSStringFromCGRect(superLayerFrame), NSStringFromCGRect(tempNewVideoFrame)];
     [self.debugLabel2 setText: debugString];

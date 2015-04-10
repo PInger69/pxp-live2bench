@@ -161,6 +161,10 @@ static void * eventContext      = &eventContext;
          initBottomViewController(nil, plistDictionary);
      }];
     
+    // side tags
+    _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
+    [self addChildViewController:_tagButtonController];
+    [_tagButtonController didMoveToParentViewController:self];
     // BOTTOM VIEW CONTROLLER CODE!
     // TO DO:
     
@@ -310,6 +314,7 @@ static void * eventContext      = &eventContext;
     
     
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer:pinchGesture];
     
@@ -320,10 +325,7 @@ static void * eventContext      = &eventContext;
     [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
     
     
-    // side tags
-    _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
-    [self addChildViewController:_tagButtonController];
-    [_tagButtonController didMoveToParentViewController:self];
+    
     
     // Richard
     
@@ -379,6 +381,9 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_gotoLiveButton];
         [_gotoLiveButton isActive:NO];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
+    
+    ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;
+    
     
 //    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
 //    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];
