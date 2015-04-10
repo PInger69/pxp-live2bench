@@ -113,6 +113,7 @@
         return; // messy clean up later
     }
 
+    if ([aList count]>1) self.hidden = NO;
 
     // Clean up previous buttons
     [_buttonArray makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -287,13 +288,7 @@
     
     _primaryFeed    = nil;
   
-    
-    [_buttonArray enumerateObjectsUsingBlock:^(UIButton *obj, NSUInteger idx, BOOL *stop) {
-        [obj removeFromSuperview];
-//        [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
-//        obj.layer.borderColor = [DESELECT_COLOR CGColor];
-        
-    }];
+
 }
 
 

@@ -23,6 +23,7 @@
 @property (nonatomic,strong) NSDictionary   * rawData;
 @property (nonatomic,assign) BOOL           deleted;
 @property (nonatomic,assign) BOOL           local;
+@property (nonatomic,assign) BOOL           live;
 @property (nonatomic,strong) NSArray        * downloadedSources; // this is a list of strings of videos that are on the device
 
 -(instancetype)initWithDict:(NSDictionary*)data;

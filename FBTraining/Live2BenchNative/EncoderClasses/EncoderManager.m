@@ -22,7 +22,6 @@
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
-#define STARTING_UP_LIVE_EVENT @"starting up live event"
 
 
 // HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
@@ -271,7 +270,7 @@
     id                          _encoderReadyObserver;
     id                          _logoutObserver;
     id                          _liveEventStopped;
-    id                          _liveEventStarted;
+    id                          _liveEventFound;
     
     CheckWiFiAction             * checkWiFiAction;
     CheckForACloudAction        * checkForACloudAction;
@@ -353,11 +352,13 @@
             // if the current playing event is the live event and its stopped then we have to make it no Event at all
             if ([weakSelf.currentEvent isEqualToString:weakSelf.liveEventName]){
                 weakSelf.currentEvent = nil;
+                weakSelf.liveEventName = nil;
             }
         }];
         
-        _liveEventStarted         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STARTED     object:nil queue:nil usingBlock:^(NSNotification *note) {
-                weakSelf.currentEvent = STARTING_UP_LIVE_EVENT;
+        _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
+                weakSelf.liveEventName = ((Encoder*) note.object).liveEventName;
+            weakSelf.currentEvent = weakSelf.liveEventName; // should live be live no matter what??
         }];
         
         

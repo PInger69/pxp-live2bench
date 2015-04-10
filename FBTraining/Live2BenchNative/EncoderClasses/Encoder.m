@@ -989,7 +989,7 @@
 
                         self.event = [dict objectForKey:@"name"]; // LIVE
                         _liveEventName = self.event;
-                        
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
                         [self willChangeValueForKey:@"eventType"];
                         _eventType = [dict objectForKey:@"sport"];
                         [self didChangeValueForKey:@"eventType"];
@@ -1004,6 +1004,7 @@
                             Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
                             self.feeds = @{ @"s1":theFeed};
                             _liveEventName = dict[@"name"];
+                            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
                         self.isMaster = YES;
                             [self willChangeValueForKey:@"eventType"];
                             _eventType = [dict objectForKey:@"sport"];
