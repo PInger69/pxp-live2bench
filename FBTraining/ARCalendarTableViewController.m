@@ -338,7 +338,7 @@
             
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-            
+            self.editingIndexPath = nil;
         }else if (buttonIndex == alertView.numberOfButtons - 3){
             
         }else if (buttonIndex == alertView.numberOfButtons - 2){
@@ -356,6 +356,7 @@
 }
 
 -(void)removeIndexPathFromDeletion{
+    if (!self.editingIndexPath) return;
     NSMutableSet *indexPathsToRemove = [[NSMutableSet alloc]init];
     [self.setOfDeletingCells removeObject:self.editingIndexPath];
     
