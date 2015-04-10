@@ -275,10 +275,22 @@
 }
 
 
+
+/**
+ *  The removes all buttons
+ */
 -(void)clear
 {
+    [_buttonArray makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_buttonArray removeAllObjects];
+    [_buttonToFeedDict removeAllObjects];
+    
+    _primaryFeed    = nil;
+  
+    
     [_buttonArray enumerateObjectsUsingBlock:^(UIButton *obj, NSUInteger idx, BOOL *stop) {
-        [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
+        [obj removeFromSuperview];
+//        [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
 //        obj.layer.borderColor = [DESELECT_COLOR CGColor];
         
     }];
