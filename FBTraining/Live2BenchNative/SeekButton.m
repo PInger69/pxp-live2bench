@@ -368,7 +368,7 @@ static NSMutableArray   * allSeekButtonsBackward;
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     if (self.isOpen) {
         return YES;
-    } else if (point.x >= 0 && point.x <=70 && point.y >= 420 && point.y <= 490) {
+    } else if (point.x >= 0 && point.x <= self.frame.size.width && point.y >= self.frame.size.height *7/8 && point.y <= self.frame.size.height) {
         return YES;
     } else {
         return NO;

@@ -495,7 +495,4 @@
     
 }
 
--(void)setEnabled:(BOOL)enabled{
-    self.gestureRecognizer.enabled = enabled;
-}
 @end
