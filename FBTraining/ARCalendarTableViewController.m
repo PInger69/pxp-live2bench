@@ -16,11 +16,11 @@
 
 @interface ARCalendarTableViewController ()
 
-@property (strong, nonatomic) NSMutableArray *tableData;
+//@property (strong, nonatomic) NSMutableArray *tableData;
 @property (strong, nonatomic) NSIndexPath *lastSelectedIndexPath;
 @property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) NSMutableDictionary *downloadingItemsDictionary;
-
+@property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 @property (strong, nonatomic) ListPopoverController* teamPick;
 
 @end
@@ -34,6 +34,7 @@
         //[self.tableView registerClass:[CalendarTableCell class] forCellReuseIdentifier: @"CalendarTableCell"];
         [self.tableView registerClass:[ARCalendarTableViewCell class] forCellReuseIdentifier: @"ARCalendarTableViewCell"];
         self.downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
+        self.arrayOfCollapsableIndexPaths = [NSMutableArray array];
         //        self.originalFrame = CGRectMake(568, 768, 370, 0);
         //        [self.deleteButton setFrame: self.originalFrame];
         //        self.newFrame = CGRectMake(568, 708, 370, 60);
@@ -42,7 +43,9 @@
     return self;
 }
 
-
+- (void)viewWillAppear:(BOOL)animated {
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -160,38 +163,102 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return self.tableData.count + 1;
+    return self.tableData.count + self.arrayOfCollapsableIndexPaths.count + 1;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // This condition is to add an empty cell at the end of the tableview
-    if (indexPath.row >= self.tableData.count || !self.tableData) {
+    if (indexPath.row >= (self.tableData.count + self.arrayOfCollapsableIndexPaths.count) || !self.tableData) {
         ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
         [cell.timeLabel setText: @" "];
         [cell.dateLabel setText: @" "];
         [cell.titleLabel setText: @" "];
-        cell.downloadButton.hidden = YES;
-        cell.playButton.hidden = YES;
+//        cell.downloadButton.hidden = YES;
+//        cell.playButton.hidden = YES;
         cell.swipeRecognizerLeft.enabled = NO;
         cell.swipeRecognizerRight.enabled = NO;
         [cell setCellAccordingToState:cellStateNormal];
         return cell;
     }
     
-    
-//    if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
-//        NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
-//        NSDictionary *urls = tag[@"url_2"];
-//        NSArray *keys = [urls allKeys];
-//        NSString *key = keys[indexPath.row - firstIndexPath.row];
-//        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
-//        //collapsableCell.backgroundColor = [UIColor redColor];
-//        return collapsableCell;
-//    }
+    NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
+    if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
+        NSDictionary *event = self.tableData[firstIndexPath.row - 1];
+        NSDictionary *urls = event[@"url_2"];
+        NSString *key;
+        NSString *data;
+        
+        if (urls) {
+            key = [urls allKeys][indexPath.row - firstIndexPath.row];
+            data = urls[key];
+        } else {
+            key = @"mp4";
+            data = self.tableData[firstIndexPath.row - 1][key];
+        }
+        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
+        
+        [collapsableCell positionWithFrame:CGRectMake(0, 0, 518, 40)];
+        __block ARCalendarTableViewController *weakSelf = self;
+        collapsableCell.sendUserInfo = ^(){
+            _teamPick = nil;
+            
+            NSString *homeName = event[@"homeTeam"];
+            NSString *visitName = event[@"visitTeam"];
+            NSString *eventName = event[@"name"];
+            
+            _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
+                                                      buttonListNames:@[homeName, visitName]];
+            
+            _teamPick.contentViewController.modalInPopover = NO;
+            
+            
+            [_teamPick addOnCompletionBlock:^(NSString *pick) {
+                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
+                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
+            }];
+            [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                       animated:YES];
+        };
+        
+        collapsableCell.event = event;
+        collapsableCell.downloadButton.enabled = YES;
+        NSString *name = event[@"name"];
+        
+        __block FeedSelectCell *weakCell = collapsableCell;
+        if([self.downloadingItemsDictionary objectForKey:name]){
+            collapsableCell.downloadButton.downloadItem = [self.downloadingItemsDictionary objectForKey:name];
+            [collapsableCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                weakCell.downloadButton.progress = progress;
+                [weakCell.downloadButton setNeedsDisplay];
+            }];
+            [collapsableCell.downloadButton setNeedsDisplay];
+        }else{
+            
+            collapsableCell.downloadButton.downloadItem = nil;
+            collapsableCell.downloadButtonBlock = ^(DownloadItem *item){
+                DownloadItem *downloadItem = item;
+                downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]];
+                weakCell.downloadButton.downloadItem = downloadItem;
+                [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                    weakCell.downloadButton.progress = progress;
+                    [weakCell.downloadButton setNeedsDisplay];
+                }];
+                [weakSelf.downloadingItemsDictionary setObject:downloadItem forKey:name];
+            };
+        }
+        return collapsableCell;
+    }
     
     ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
+    [cell isSelected:NO];
+    if ([indexPath isEqual:self.lastSelectedIndexPath]) {
+        [cell isSelected:YES];
+    }
+    
+    cell.swipeRecognizerLeft.enabled = self.swipeableMode;
     
     cell.deleteBlock = ^(UITableViewCell *theCell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:theCell];
@@ -208,66 +275,20 @@
     cell.backgroundColor = [UIColor whiteColor];
     cell.layer.borderWidth = 0.0f;
     
-    NSDictionary *event = self.tableData[indexPath.row];
+    NSDictionary *event;
+    
+    if (firstIndexPath.row < indexPath.row) {
+        event = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+    }else{
+        event = self.tableData[indexPath.row];
+    }
+    
     NSString *dateString = [event objectForKey:@"date"];
     NSArray *bothStrings = [dateString componentsSeparatedByString:@" "];
     
-    cell.downloadButton.hidden = NO;
-    cell.playButton.hidden = NO;
-    
-    
-    __block ARCalendarTableViewController *weakSelf = self;
-    cell.sendUserInfo = ^(){
-        _teamPick = nil;
-        
-        NSString *homeName = event[@"homeTeam"];
-        NSString *visitName = event[@"visitTeam"];
-        NSString *eventName = event[@"name"];
-        
-        _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
-                                                  buttonListNames:@[homeName, visitName]];
-        
-        _teamPick.contentViewController.modalInPopover = NO;
-        
-        
-        [_teamPick addOnCompletionBlock:^(NSString *pick) {
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
-        }];
-        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
-                                   animated:YES];
-    };
-    
-    __block ARCalendarTableViewCell *weakCell = cell;
-    cell.downloadButton.enabled = YES;
-    if([self.downloadingItemsDictionary objectForKey:dateString]){
-        cell.downloadButton.downloadItem = [self.downloadingItemsDictionary objectForKey: dateString];
-        [cell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-            weakCell.downloadButton.progress = progress;
-            [weakCell.downloadButton setNeedsDisplay];
-            //weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
-        }];
-        //cell.downloadButton.progress = cell.downloadButton.downloadItem.progress;
-        [cell.downloadButton setNeedsDisplay];
-        //cell.playButton.hidden = (cell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
-    }else{
-        
-        cell.downloadButton.downloadItem = nil;
-        cell.downloadButtonBlock = ^(){
-            DownloadItem *downloadItem = [Downloader downloadURL:event[@"mp4"] to: [self.localPath stringByAppendingString:event[@"name"]]];
-            downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]];
-            weakCell.downloadButton.downloadItem = downloadItem;
-            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                weakCell.downloadButton.progress = progress;
-                [weakCell.downloadButton setNeedsDisplay];
-                //weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
-            }];
-            [weakSelf.downloadingItemsDictionary setObject:downloadItem forKey: dateString];
-        };
-        //cell.playButton.hidden = YES;
-    }
-    
+//    cell.downloadButton.hidden = NO;
+//    cell.playButton.hidden = NO;
+
     [cell.timeLabel setText: [bothStrings[1] substringToIndex: 5]];
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]]];
@@ -280,8 +301,6 @@
     } else {
         [cell setCellAccordingToState:cellStateNormal];
     }
-    
-    
     
     return cell;
 }
@@ -380,19 +399,97 @@
 }
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row >= self.tableData.count || !self.tableData) {
+    if (indexPath.row >= self.tableData.count + self.arrayOfCollapsableIndexPaths.count || !self.tableData) {
         return nil;
     }
     return indexPath;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ARCalendarTableViewCell *lastCell = (ARCalendarTableViewCell *)[self.tableView cellForRowAtIndexPath: self.lastSelectedIndexPath];
-    [lastCell setSelected:NO animated:NO];
+    NSDictionary *event;
+    NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
     
+    if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
+        event = self.tableData[firstDownloadCellPath.row -1];
+    }else if (firstDownloadCellPath.row < indexPath.row) {
+        event = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+    }else{
+        event = self.tableData[indexPath.row];
+    }
+    
+    if (self.setOfDeletingCells.count ) {
+        return;
+    }else if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]){
+//        FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+//                                                                                                                                        @"feed":cell.feedName.text,
+//                                                                                                                                        @"time":[event objectForKey:@"starttime"],
+//                                                                                                                                        @"duration":[event objectForKey:@"duration"],
+//                                                                                                                                        @"comment":[event objectForKey:@"comment"],
+//                                                                                                                                        @"forWhole":event
+//                                                                                                                                        }}];
+//        
+        return;
+    }
+
+    
+    ARCalendarTableViewCell *lastCell = (ARCalendarTableViewCell *)[self.tableView cellForRowAtIndexPath: self.lastSelectedIndexPath];
+    [lastCell isSelected:NO];
     ARCalendarTableViewCell *currentCell = (ARCalendarTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    [currentCell setSelected:YES animated:NO];
-    self.lastSelectedIndexPath = indexPath;
+    [currentCell isSelected:YES];
+    
+    if(![indexPath isEqual:self.lastSelectedIndexPath])
+    {
+        NSArray *arrayToRemove = [NSArray array];
+        arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+        
+        NSMutableArray *insertionIndexPaths = [NSMutableArray array];
+        if (event[@"url_2"]) {
+            if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
+                for (int i = 0; i < ((NSArray *)event[@"url_2"]).count ; ++i) {
+                    NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
+                    [insertionIndexPaths addObject:insertionIndexPath];
+                }
+                
+                self.lastSelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
+            }else{
+                for (int i = 0; i < ((NSArray *)event[@"url_2"]).count ; ++i) {
+                    NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
+                    [insertionIndexPaths addObject:insertionIndexPath];
+                }
+                
+                self.lastSelectedIndexPath = indexPath;
+            }
+        } else {
+            if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
+                NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + 1 inSection:indexPath.section];
+                [insertionIndexPaths addObject:insertionIndexPath];
+                self.lastSelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
+            }else{
+                NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+                [insertionIndexPaths addObject:insertionIndexPath];
+                self.lastSelectedIndexPath = indexPath;
+            }
+        }
+        self.swipeableMode = NO;
+        
+        [self.arrayOfCollapsableIndexPaths addObjectsFromArray: insertionIndexPaths];
+        [self.tableView insertRowsAtIndexPaths: insertionIndexPaths withRowAnimation:UITableViewRowAnimationRight];
+        [self.tableView scrollToRowAtIndexPath:self.lastSelectedIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    }else{
+        [currentCell isSelected: NO];
+        NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+        NSIndexPath *temp = self.lastSelectedIndexPath;
+        self.lastSelectedIndexPath = nil;
+        [self.tableView reloadRowsAtIndexPaths:@[temp] withRowAnimation:NO];
+        self.swipeableMode = YES;
+    }
+    
+    
     
 }
 
@@ -411,6 +508,9 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
+        return 40;
+    }
     return 80;
 }
 

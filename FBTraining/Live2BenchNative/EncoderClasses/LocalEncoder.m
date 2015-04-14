@@ -108,13 +108,6 @@
         // gets string names of all the events
         _allEvents                      = [tempPool copy];
         
-        
-        
-        
-        
-        
-        
-        
         // this gets all the plists for the book marks
         NSMutableArray  * tempPoolClips      = [[NSMutableArray alloc]init];
         NSArray         * clipsPlistPaths    = [self grabAllFiles:[aDocsPath stringByAppendingPathComponent:@"bookmark"] ext:@"plist"];

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #define DEFAULT_FRAME_BUFFER_SIZE   500
-#define DEFAULT_TIMEOUT             120
+#define DEFAULT_TIMEOUT             20
 
 typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
     DownloadItemStatusWaiting   = 1<<1,

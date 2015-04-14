@@ -802,7 +802,13 @@ static void * builtContext          = &builtContext; // depricated?
     NSString     * eventHID     = theEventData[@"hid"];
     NSString     * source       = note.userInfo[@"source"];
     
-    NSString     * encoderSource = theEventData[@"mp4_2"][source][@"hq"];
+    NSString *encoderSource;
+    if (theEventData[@"mp4_2"]) {
+        encoderSource = theEventData[@"mp4_2"][source][@"hq"];
+    } else {
+        encoderSource = theEventData[@"mp4"];
+    }
+    
     
     Event * theEvent = [self getEventByHID:eventHID];
     

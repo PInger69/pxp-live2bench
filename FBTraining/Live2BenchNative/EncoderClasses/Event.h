@@ -27,6 +27,4 @@
 @property (nonatomic,strong) NSArray        * downloadedSources; // this is a list of strings of videos that are on the device
 
 -(instancetype)initWithDict:(NSDictionary*)data;
-
-
 @end

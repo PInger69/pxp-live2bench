@@ -135,7 +135,7 @@ NS_OPTIONS(NSInteger, style){
                                                                    ]];
         }
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewLicense:) name:@"Setting - Eula :" object:nil];
-        _userName = [NSString stringWithFormat:@"Setting - User :  %@", appDel.userCenter.customerEmail];
+        _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];
         //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogout:) name:userName object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(operationInInformation:) name:@"Setting - Information" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogoutCompleted:) name:NOTIF_USER_LOGGED_OUT object:nil];
@@ -364,4 +364,3 @@ NS_OPTIONS(NSInteger, style){
  */
 
 @end
-

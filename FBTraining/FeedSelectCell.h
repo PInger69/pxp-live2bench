@@ -8,15 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "DownloadButton.h"
+#import "CustomButton.h"
+//#import "DowloadItem.h"
 
 @interface FeedSelectCell : UITableViewCell
 
 @property (strong, nonatomic) UIImageView *feedView;
 @property (strong, nonatomic) UILabel *feedName;
-@property (strong, nonatomic) DownloadButton *downloadButton;
 
-@property (nonatomic, copy) void(^downloadButtonBlock)();
+@property (strong, nonatomic) DownloadButton *downloadButton;
+@property (strong, nonatomic) CustomButton *playButton;
+@property (nonatomic, copy) void(^downloadButtonBlock)(DownloadItem *item);
+@property (nonatomic, copy) void(^sendUserInfo)();
+
+@property (nonatomic, strong) NSDictionary *event;
 
 - (instancetype)initWithImageData:(NSString *)url andName: (NSString *)name;
+
+- (void)positionWithFrame:(CGRect)frame;
 @end
 
