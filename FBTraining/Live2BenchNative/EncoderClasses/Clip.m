@@ -21,7 +21,14 @@
 @synthesize path        = _path;
 
 
-
+/**
+ *  This is used when making a new plist from scatch
+ *
+ *  @param aPath <#aPath description#>
+ *  @param data  <#data description#>
+ *
+ *  @return <#return value description#>
+ */
 -(instancetype)initWithPlistPath:(NSString*)aPath data:(NSDictionary*)data
 {
     self = [super init];
@@ -46,7 +53,13 @@
 }
 
 
-
+/**
+ *  This is used to make a clip from a existing plist
+ *
+ *  @param data <#data description#>
+ *
+ *  @return <#return value description#>
+ */
 -(instancetype)initWithDict:(NSDictionary*)data
 {
     self = [super init];
