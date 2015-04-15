@@ -10,30 +10,59 @@
 #import "ImageAssetManager.h"
 #import "DownloadItem.h"
 
+
+
 @implementation FeedSelectCell
 
 - (instancetype)initWithImageData:(NSString *)url andName: (NSString *)name{
     self = [super init];
     if (self) {
-        _feedName = [[UILabel alloc] initWithFrame:CGRectMake(160, 22.25, 100, 33)];
-        _feedView = [[UIImageView alloc] initWithFrame:CGRectMake(30, 0, 115, 155/2)];
+        _feedName = [[UILabel alloc] init];
+        _feedView = [[UIImageView alloc] init];
         _feedName.text = name;
         ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
         [imageAssetManager imageForURL:url atImageView:self.feedView];
         
-        _downloadButton = [[DownloadButton alloc] initWithFrame:CGRectMake(320, 22.25, 33, 33)];
+        _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
-        [self addSubview: self.feedName];
-        [self addSubview:self.feedView];
-        [self addSubview: self.downloadButton];
+        self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+        [self.playButton setBackgroundImage:[UIImage imageNamed:@"play_video"] forState:UIControlStateNormal];
+        //don't set tag to 0, by default, uiview's tag is 0
+        [self.playButton setTag:101];
+        [self.playButton setEnabled:YES];
+        [self.playButton setPlayButton];
+        [self.playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.playButton setShowsTouchWhenHighlighted: YES];
+        
+        
+        [self.contentView addSubview: self.feedName];
+        [self.contentView addSubview:self.feedView];
+        [self.contentView addSubview: self.downloadButton];
+        [self.contentView addSubview:self.playButton];
+        
+        [self setSelectionStyle:UITableViewCellEditingStyleNone];
     }
     return self;
 }
 
 - (void)downloadButtonPressed:(id)sender {
-    self.downloadButtonBlock();
+    [Utility downloadEvent:self.event sourceName:self.feedName.text returnBlock:self.downloadButtonBlock];
 }
 
+- (void)playButtonPressed:(id)sender {
+    self.sendUserInfo();
+}
+
+- (void)positionWithFrame:(CGRect)frame {
+    [_feedName setFrame:CGRectMake(0.3*frame.size.width, 0.1*frame.size.height, 80, 0.8*frame.size.height)];
+    [_feedView setFrame:CGRectMake(0.1*frame.size.width, 0, 1.5*frame.size.height, frame.size.height)];
+    [_downloadButton setFrame:CGRectMake(0.6*frame.size.width, 0.05*frame.size.height, 0.9*frame.size.height, 0.9*frame.size.height)];
+    [_playButton setFrame:CGRectMake(0.8*frame.size.width, 5, 30, 30)];
+}
+
+
+
 @end
+
 

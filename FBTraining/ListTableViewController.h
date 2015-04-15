@@ -26,6 +26,4 @@
 @property (assign, nonatomic) BOOL isEditable;
 @property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
 
-
-
 @end

@@ -17,6 +17,7 @@
 #import "RJLVideoPlayerPlaybackView.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "VideoZoomManager.h"
+#import "ClipControlBarSlider.h"
 
 
 #define PLAYER_TICK @"tick"
@@ -68,6 +69,7 @@
 // Graphic
 @property (nonatomic,strong)     LiveLight         * liveIndicatorLight;
 @property (nonatomic,strong)     VideoControlBarSlider      * videoControlBar;
+@property (nonatomic,strong)     ClipControlBarSlider       * clipControlBar;
 @property (nonatomic,copy)       NSURL                      *URL;
 @property (nonatomic,assign)     float                      fps;
 

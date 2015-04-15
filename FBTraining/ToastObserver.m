@@ -41,8 +41,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enabledChanged:) name:@"Setting - Toast Observer" object:nil];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"getToastType" object:self userInfo:@{@"block" : ^(NSInteger *toastType){
-            self.toastType = toastType;
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:self userInfo:@{@"name": @"Toast Observer" ,@"block" : ^(NSDictionary *settingDictionary){
+            self.enabled = [settingDictionary[@"Value"] boolValue];
         }}];
         
         // Refer to ToastObserver.h for an explanation of these following properties:

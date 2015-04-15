@@ -56,12 +56,7 @@ NS_OPTIONS(NSInteger, style){
         self.userCenter = appDel.userCenter;
         [self setMainSectionTab:NSLocalizedString(@"Settings",nil)  imageName:@"settingsButton"];
         
-        NSString *wifiName = [Utility myWifiName];
-        if (!wifiName) {
-            wifiName = @"Not Connected";
-        }
         
-        NSString *colorString = [[[NSDictionary alloc] initWithContentsOfFile:self.userCenter.accountInfoPath] objectForKey:@"tagColour"];
         //UIColor *tagColor = [Utility colorWithHexString:colorString];
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -94,10 +89,10 @@ NS_OPTIONS(NSInteger, style){
             
             
             NSMutableDictionary *setting6 =[NSMutableDictionary dictionaryWithDictionary: @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                                                                                   @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail], @"WIFI Connection :", @"Eula :", @"Colour :"],
+                                                                                                                                                                                                                                                                   @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", @"Not Signed In"], @"WIFI Connection :", @"Eula :", @"Colour :"],
                                                                                                                                                                                                                                                                @"Function Buttons":
                                                                                                                                                                                                                                                                    @[ @0, @0, @1, @0, @1, @0]
-                                                                                                                                                                                                                                                               , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout", wifiName, @"View", [@"Color-" stringByAppendingString:colorString]] }]}];
+                                                                                                                                                                                                                                                               , @"Function Labels": @[@"Unknown", @"2.0.0", @"Logout", @"Not Connected", @"View", [@"Color-" stringByAppendingString:@"nil"]] }]}];
             
             NSMutableDictionary *setting7 = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Accounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
                                                                                                                                                                                                                                                                 @[@"Dropbox",  @"GoogleDrive"],
@@ -145,10 +140,31 @@ NS_OPTIONS(NSInteger, style){
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSettings) name:UIApplicationWillTerminateNotification object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPressGoogleLink) name: @"Setting - GoogleDrive" object:nil];
+        [self refreshSettings];
         
         
     }
     return self;
+}
+
+-(void)refreshSettings{
+    NSString *wifiName = [Utility myWifiName];
+    if (!wifiName) {
+        wifiName = @"Not Connected";
+    }
+    
+    NSString *colorString = [[[NSDictionary alloc] initWithContentsOfFile:self.userCenter.accountInfoPath] objectForKey:@"tagColour"];
+    if (!colorString) {
+        colorString = @"nil";
+    }
+    
+    NSMutableDictionary *setting6 =[NSMutableDictionary dictionaryWithDictionary: @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                                                                           @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", self.userCenter.customerEmail], @"WIFI Connection :", @"Eula :", @"Colour :"],
+                                                                                                                                                                                                                                                       @"Function Buttons":
+                                                                                                                                                                                                                                                           @[ @0, @0, @1, @0, @1, @0]
+                                                                                                                                                                                                                                                       , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout", wifiName, @"View", [@"Color-" stringByAppendingString:colorString]] }]}];
+    
+    self.settingsArray[5] = setting6;
 }
 
 #pragma mark - Notification methods
@@ -186,6 +202,7 @@ NS_OPTIONS(NSInteger, style){
                     blockName(setting[@"DataDictionary"][@"Setting Options"], setting[@"DataDictionary"][@"Toggle Settings"]);
                     break;
                 }
+                case (toggleIsThere | toggleIsOn):
                 case (toggleIsThere):
                 {
                     void(^blockName)(NSDictionary *settingDictionary) = note.userInfo[@"block"];

@@ -308,14 +308,16 @@
 {
     CFArrayRef myArray = CNCopySupportedInterfaces();
     // Get the dictionary containing the captive network infomation
-    CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
-    //    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
-    NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
-    NSString* ssid = [dict objectForKey:@"SSID"];
-    //    NSLog(@"network name: %@",ssid);
-    return ssid;
+    if (myArray) {
+        CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
+        //    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
+        NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
+        NSString* ssid = [dict objectForKey:@"SSID"];
+        //    NSLog(@"network name: %@",ssid);
+        return ssid;
+    }
     
-    
+    return @"No Wifi";
 }
 
 +(NSString *) dateFromEvent: (NSString *) eventName{

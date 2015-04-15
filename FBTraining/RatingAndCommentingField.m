@@ -49,7 +49,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendComment:) name:[NSString stringWithFormat:@"Save in %@", self.commentingField.context] object:nil];
         
     
-        self.commentingArea = [[UITextView alloc] initWithFrame:CGRectMake(124, 71, 200, 100)];
+        self.commentingArea = [[UITextView alloc] initWithFrame:CGRectMake(124, 71, 200, 80)];
         [self.commentingArea setFont:[UIFont systemFontOfSize:18.0f]];
         //[self.commentingArea setBackgroundColor:[UIColor blackColor]];
         if ([self.data[@"comment"] isEqualToString:@" "]) {

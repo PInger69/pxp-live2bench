@@ -101,6 +101,43 @@ static void * vpFrameContext   = &vpFrameContext;
 
 }
 
+-(instancetype)initWithVideoPlayer:(UIViewController<PxpVideoPlayerProtocol> *)aVideoPlayer f:(FeedSwitchView *)f{
+    self = [super init];
+    if (self) {
+        self.videoPlayer                    = aVideoPlayer;
+        // _selectPip.selected                 = YES;
+        _selectPip.hidden                   = YES;
+        self.pips                           = [[NSMutableArray alloc]init];
+        _gesturePool                        = [[NSMutableArray alloc]init];
+        
+        // Feed switch
+        self.feedSwitchView                 = f;
+        [self.feedSwitchView    addObserver:self forKeyPath:@"primaryPosition" options:(NSKeyValueObservingOptionNew) context:&changeContextPri];
+        [self.feedSwitchView    addObserver:self forKeyPath:@"secondaryPosition" options:(NSKeyValueObservingOptionNew) context:&changeContextSec];
+        
+        // video player
+        [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
+        //        [self.videoPlayer       addObserver:self forKeyPath:@"slowmo" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
+        
+        [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
+        [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
+        
+        
+        NSTimeInterval  inter   =  2;
+        syncTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(syncTimerMethod) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:syncTimer forMode:NSDefaultRunLoopMode];
+        
+        
+        // hides all added pips
+        for (Pip * pip in self.pips) {
+            [pip setHidden:YES];
+        }
+        _multi = [[MultiPip alloc]initWithFrame:self.videoPlayer.view.frame];
+    }
+    
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

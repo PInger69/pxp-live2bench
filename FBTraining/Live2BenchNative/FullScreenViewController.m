@@ -148,6 +148,8 @@
     _player.liveIndicatorLight.frame                = [((NSValue *)[fullScreenFramesParts objectForKey:@"light"]) CGRectValue];
     _player.videoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
     _player.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+    _player.clipControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
+    _player.clipControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
     if (animated){
         [UIView commitAnimations];
     }
@@ -179,12 +181,17 @@
     _player.liveIndicatorLight.frame                = [((NSValue *)[smallScreenFramesParts objectForKey:@"light"]) CGRectValue];
     _player.videoControlBar.frame               = [((NSValue *)[smallScreenFramesParts objectForKey:@"bar"]) CGRectValue];
     _player.videoControlBar.timeSlider.frame    = [((NSValue *)[smallScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+    
+    _player.clipControlBar.frame               = [((NSValue *)[smallScreenFramesParts objectForKey:@"bar"]) CGRectValue];
+    _player.clipControlBar.timeSlider.frame    = [((NSValue *)[smallScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+    
     if (animated){
         [UIView commitAnimations];
     }
     
     prevView                        = nil;
     [_player.view addSubview:_player.videoControlBar];
+    [_player.view addSubview: _player.clipControlBar];
 }
 
 

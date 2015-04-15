@@ -190,6 +190,7 @@
    
     }
     [self setFrame:CGRectMake(myXY.x, myXY.y, buttonWidth*count, buttonHeight)];
+
     
 }
 

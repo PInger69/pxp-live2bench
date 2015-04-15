@@ -65,13 +65,13 @@
 {
     UIButton * button = sender;
     if (!button.selected) {
-        button.selected = NO;
+        button.selected = YES;
         IMP imp = [player methodForSelector:pauseSEL];
         void (*func)(id, SEL) = (void *)imp;
         func(player, pauseSEL);
    
        } else if (button.selected) {
-           button.selected = YES;
+           button.selected = NO;
         IMP imp = [player methodForSelector:playSEL];
         void (*func)(id, SEL) = (void *)imp;
         func(player, playSEL);

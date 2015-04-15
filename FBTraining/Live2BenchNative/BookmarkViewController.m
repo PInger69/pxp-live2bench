@@ -16,12 +16,12 @@
 #import "HeaderBar.h"
 #import "CommentingRatingField.h"
 #import "RatingInput.h"
-#import "JPReorderTableView.h"
-#import "JPTripleSwipeCell.h"
+//#import "JPReorderTableView.h"
+//#import "JPTripleSwipeCell.h"
 #import "MyClipFilterViewController.h"
-#import "TagPopOverContent.h"
-#import "SVStatusHUD.h"
-#import "DPBFileUploader.h"
+//#import "TagPopOverContent.h"
+//#import "SVStatusHUD.h"
+//#import "DPBFileUploader.h"
 #import "NSObject+LBCloudConvenience.h"
 #import "CustomAlertView.h"
 #import "VideoBarMyClipViewController.h"
@@ -44,7 +44,7 @@
 #define LABEL_HEIGHT                 40
 #define TABLE_WIDTH                 390
 #define TABLE_WIDTH2                 390
-#define COMMENTBOX_HEIGHT           210
+#define COMMENTBOX_HEIGHT           200
 #define COMMENTBOX_WIDTH            530//560
 
 @interface BookmarkViewController ()
@@ -160,6 +160,8 @@ int viewWillAppearCalled;
     self.videoPlayer.looping = YES;
     [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
     
+    [_feedSwitch buildButtonsWithData: self.feeds];
+    
     selectedTag = [self.tableData[[self.tableData indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
     [self.videoPlayer play];
     
@@ -184,8 +186,8 @@ int viewWillAppearCalled;
         [self.ratingAndCommentingView removeFromSuperview];
         
         self.selectedData = note.userInfo;
-        self.ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, 100, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+60)) andData:[note.userInfo mutableCopy]].view;
-        [self.informationarea addSubview:[[TagPopOverContent alloc] initWithData:note.userInfo frame:CGRectMake(0, 0, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+60))]];
+        self.ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, 100, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20)) andData:[note.userInfo mutableCopy]].view;
+        [self.informationarea addSubview:[[TagPopOverContent alloc] initWithData:note.userInfo frame:CGRectMake(0, 0, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20))]];
         [self.informationarea addSubview:self.ratingAndCommentingView];
     }];
     [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){
@@ -232,13 +234,13 @@ int viewWillAppearCalled;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
     
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT - 32, COMMENTBOX_WIDTH, 20)];
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT - 73, COMMENTBOX_WIDTH, 40)];
 //    
-//    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
-    _pipController.context = STRING_LIVE2BENCH_CONTEXT;
-    
+    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch];
+    _pipController.context = STRING_MYCLIP_CONTEXT;
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
+    
     [self.view addSubview:_feedSwitch];
     //[_feedSwitch setHidden:!([_encoderManager.feeds count]>1)];
     

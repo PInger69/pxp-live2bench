@@ -13,16 +13,18 @@
 
 @interface ARCalendarTableViewCell : DeletableTableViewCell
 
-@property (nonatomic,strong) DownloadButton     * downloadButton;
-@property (nonatomic,strong) CustomButton       * playButton;
+//@property (nonatomic,strong) DownloadButton     * downloadButton;
+//@property (nonatomic,strong) CustomButton       * playButton;
 
 @property (strong, nonatomic) UILabel *dateLabel;
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UILabel *titleLabel;
-@property (strong, nonatomic) DownloadItem *downloadItem;
+//@property (strong, nonatomic) DownloadItem *downloadItem;
 
-@property (nonatomic, copy) void(^sendUserInfo)();
-@property (nonatomic, copy) void(^downloadButtonBlock)();
+//@property (nonatomic, copy) void(^sendUserInfo)();
+//@property (nonatomic, copy) void(^downloadButtonBlock)();
+
+- (void)isSelected:(BOOL)selected;
 
 @end
 

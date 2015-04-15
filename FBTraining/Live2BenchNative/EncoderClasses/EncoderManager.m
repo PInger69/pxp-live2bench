@@ -43,7 +43,7 @@
     void            * _context;
     NSNumber        * _timeStamp;
     BOOL            _earlyBirdMode;
-
+    
 }
 
 @synthesize complete = _complete;
@@ -65,7 +65,7 @@
 
 
 /**
- *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished 
+ *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
  *  passing the data thru the block as an Array of each of the responeses
  *
  *  @param aToObserve  list of encoders
@@ -88,11 +88,11 @@
         _timeStamp              = aTime;
         
         for (id <EncoderProtocol> edS in _encodersBeingWatched) {
-             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
         }
         
-
-
+        
+        
     }
     return self;
 }
@@ -177,7 +177,7 @@
     for ( id <EncoderProtocol> edS in _encodersBeingWatched) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
     }
-
+    
     
 }
 
@@ -191,9 +191,9 @@
 -(void)recievedNotifcation:(NSNotification *)note
 {
     if (_timeStamp != [NSNumber numberWithDouble:[[note.userInfo objectForKey:@"timeStamp"]doubleValue]])
-    
-    _countOfLeftToComplete--;
-   if (_onComplete)   [_colletedResponce addObject: [note.userInfo objectForKey:@"responce"] ];
+        
+        _countOfLeftToComplete--;
+    if (_onComplete)   [_colletedResponce addObject: [note.userInfo objectForKey:@"responce"] ];
     if (_onCompleteDict){
         NSDictionary * collect = [note.userInfo objectForKey:@"responce"];
         [_colletedResponceDict addEntriesFromDictionary:collect];
@@ -223,11 +223,11 @@
 // cancel current command
 -(void)cancel
 {
- //   NSLog(@"Cancel Sync: %@",_name);
+    //   NSLog(@"Cancel Sync: %@",_name);
     _onComplete = nil;
     [_colletedResponce removeAllObjects];
     _name                   = @"";
-
+    
     [_encodersBeingWatched enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
         [[NSNotificationCenter defaultCenter] removeObserver:self name:_name object:obj];
         
@@ -235,7 +235,7 @@
     }];
     _countOfLeftToComplete  = 0;
     
-
+    
 }
 
 
@@ -252,7 +252,7 @@
 
 @implementation EncoderManager
 {
-
+    
     NSMutableArray              * foundEncoders;
     NSNetServiceBrowser         * serviceBrowser;   //serviceBrowser searches for services
     NSMutableArray              * services;         //array of netservices which are detected
@@ -261,9 +261,9 @@
     NSMutableArray              * arrayOfTagSets;
     NSMutableDictionary         * _dictOfAccountInfo; // this will take in the from the global ACCOUNT_INFO, to cut down access to the global
     EncoderDataSync             * encoderSync;
-   
-
-
+    
+    
+    
     id                          _userDataObserver;
     id                          _masterLostObserver;
     id                          _masterFoundObserver;
@@ -276,7 +276,7 @@
     CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
     LogoutAction                * logoutAction;
-
+    
 }
 
 @synthesize mode                    = _mode;
@@ -333,7 +333,7 @@
         [_cloudEncoder startObserving];
         
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
-//        [_authenticatedEncoders addObject:_localEncoder]; // does this really need to be in the list of encoders
+        //        [_authenticatedEncoders addObject:_localEncoder]; // does this really need to be in the list of encoders
         
         _currentEventType       = SPORT_HOCKEY;
         _searchForEncoders      = NO;
@@ -357,7 +357,7 @@
         }];
         
         _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
-                weakSelf.liveEventName = ((Encoder*) note.object).liveEventName;
+            weakSelf.liveEventName = ((Encoder*) note.object).liveEventName;
             weakSelf.currentEvent = weakSelf.liveEventName; // should live be live no matter what??
         }];
         
@@ -372,15 +372,15 @@
         
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;
-           
-           
+            
+            
             if (_masterEncoder.liveEventName) {
                 weakSelf.liveEventName = _masterEncoder.liveEventName;
-//                [weakSelf refresh];
+                //                [weakSelf refresh];
                 weakSelf.primaryEncoder = _masterEncoder;
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
             }
-             [weakSelf refresh];
+            [weakSelf refresh];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
             
         }];
@@ -388,15 +388,15 @@
         _masterLostObserver  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
             
             [weakSelf.authenticatedEncoders removeObject:weakSelf.masterEncoder];
- 
-              if (weakSelf.masterEncoder !=nil) [weakSelf unRegisterEncoder:weakSelf.masterEncoder];
-
-              if ( [weakSelf.liveEventName isEqualToString:weakSelf.currentEvent]){
-                  weakSelf.currentEvent = nil;
-              }
-                 
-              weakSelf.liveEventName = nil;
-              
+            
+            if (weakSelf.masterEncoder !=nil) [weakSelf unRegisterEncoder:weakSelf.masterEncoder];
+            
+            if ( [weakSelf.liveEventName isEqualToString:weakSelf.currentEvent]){
+                weakSelf.currentEvent = nil;
+            }
+            
+            weakSelf.liveEventName = nil;
+            
             [weakSelf.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
                     Encoder * anEncoder = (Encoder *) obj;
@@ -408,10 +408,10 @@
         _encoderReadyObserver     = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_THIS_ENCODER_IS_READY    object:nil queue:nil usingBlock:^(NSNotification *note) {
             
             
-//            Encoder * anEncoder = (Encoder *) note.object; // was _masterEncoder. before
+            //            Encoder * anEncoder = (Encoder *) note.object; // was _masterEncoder. before
             
-
-
+            
+            
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }];
         
@@ -422,7 +422,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:)            name:NOTIF_MASTER_HAS_LIVE  object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadEvent:) name:NOTIF_EM_DOWNLOAD_EVENT object:nil];
         // making actions
@@ -481,7 +481,7 @@ static void * builtContext          = &builtContext; // depricated?
         newEncoder.name         = name;
         [newEncoder requestVersion];
         [newEncoder authenticateWithCustomerID:_customerID];
-        if (_masterEncoder == nil) [newEncoder searchForMaster];        
+        if (_masterEncoder == nil) [newEncoder searchForMaster];
         [dictOfEncoders setValue:newEncoder forKey:name];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForFeedChange:) name:NOTIF_ENCODER_FEEDS_UPDATED object:newEncoder];
         // test
@@ -506,10 +506,10 @@ static void * builtContext          = &builtContext; // depricated?
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
     [aEncoder destroy];
     if (_masterEncoder == aEncoder){
-       
+        
         _masterEncoder = nil;
         NSLog(@"Master Linched!");
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self];
+        //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self];
     }
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];
@@ -518,10 +518,10 @@ static void * builtContext          = &builtContext; // depricated?
 // depricated
 -(void)updateUserInfo:(NSNotification*)note
 {
-     _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
+    _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
     
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_USER_INFO_RETRIEVED object:nil];
-
+    
 }
 
 // depricated
@@ -542,23 +542,23 @@ static void * builtContext          = &builtContext; // depricated?
 //            [anEncoder searchForMaster];
 //        }
 //    }];
-//    
+//
 //}
 
 -(void)masterHasLive:(NSNotification *)note
 {
-//    self.liveEventName  = _masterEncoder.liveEventName;
+    //    self.liveEventName  = _masterEncoder.liveEventName;
     
     self.currentEvent   = self.liveEventName;
-//    [self deleteAllThumbs];
+    //    [self deleteAllThumbs];
     [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
         
         [_eventTags setObject:all forKey:_liveEventName];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil];
     }];
-
-
-
+    
+    
+    
 }
 
 -(void)setPrimaryEncoder:(id<EncoderProtocol>)primaryEncoder
@@ -587,7 +587,7 @@ static void * builtContext          = &builtContext; // depricated?
             
             break;
         case EncoderManagerModeOffline:
-//            _masterEncoder = _localEncoder;
+            //            _masterEncoder = _localEncoder;
             break;
         default:
             break;
@@ -608,14 +608,14 @@ static void * builtContext          = &builtContext; // depricated?
 -(Event*)getEventByHID:(NSString*)eventHID
 {
     NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-   
+        
         NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
         
         return [thisHID isEqualToString:eventHID];
     }];
-
-
- //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
+    
+    
+    //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
     
     
     NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
@@ -669,9 +669,9 @@ static void * builtContext          = &builtContext; // depricated?
         default:
             break;
     }
-
-
-
+    
+    
+    
 }
 
 
@@ -685,10 +685,10 @@ static void * builtContext          = &builtContext; // depricated?
         if (encoder.authenticated  && ![_authenticatedEncoders containsObject:encoder]) {
             [_authenticatedEncoders addObject:encoder];
             [encoder buildEncoderRequest]; // its authenticated... now collect all data from the encoder
-         //   [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+            //   [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }
     }
-
+    
 }
 
 
@@ -706,7 +706,7 @@ static void * builtContext          = &builtContext; // depricated?
 {
     NSString * eventName = note.userInfo[@"name"];
     self.currentEvent = eventName;
-
+    
 }
 
 
@@ -718,12 +718,12 @@ static void * builtContext          = &builtContext; // depricated?
     if ([requestType isEqualToString:EM_REQUEST_TAG_DATA_FOR_EVENT]){
         NSString * eventName = note.userInfo[@"eventName"];
         [self requestTagDataForEvent:eventName onComplete:[note.userInfo objectForKey:@"block"]];
-    
+        
     } else if ([requestType isEqualToString:EM_REQUEST_ALL_EVENT_DATA]) {
-    
+        
     }
-
-
+    
+    
 }
 
 /**
@@ -740,7 +740,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     // This gets run when the server responds
     void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
-
+        
         NSData          * data = pooledResponces[0];
         NSDictionary    * results;
         NSString        * urlForImageOnServer;
@@ -760,14 +760,14 @@ static void * builtContext          = &builtContext; // depricated?
                 
             }
         }
-
+        
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
         [_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
         NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
         DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
         dItemBlock(dli);
-
+        
     };
     
     
@@ -781,9 +781,9 @@ static void * builtContext          = &builtContext; // depricated?
                                               @"user":[_dictOfAccountInfo objectForKey:@"hid"]
                                               }];
     
-
+    
     [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:GET_NOW_TIME];
-
+    
     [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
     
 }
@@ -802,7 +802,13 @@ static void * builtContext          = &builtContext; // depricated?
     NSString     * eventHID     = theEventData[@"hid"];
     NSString     * source       = note.userInfo[@"source"];
     
-    NSString     * encoderSource = theEventData[@"mp4_2"][source][@"hq"];
+    NSString *encoderSource;
+    if (theEventData[@"mp4_2"]) {
+        encoderSource = theEventData[@"mp4_2"][source][@"hq"];
+    } else {
+        encoderSource = theEventData[@"mp4"];
+    }
+    
     
     Event * theEvent = [self getEventByHID:eventHID];
     
@@ -812,9 +818,9 @@ static void * builtContext          = &builtContext; // depricated?
     
     DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
     dItemBlock(dli);
-//    
-//    
-
+    //
+    //
+    
 }
 
 #pragma mark - Bonjour Methods
@@ -840,7 +846,7 @@ static void * builtContext          = &builtContext; // depricated?
 
 //---managed to resolve---
 -(void)netServiceDidResolveAddress:(NSNetService *)service {
-
+    
     if (!_searchForEncoders)return; // disable the ability to search
     
     NSString *name          = nil;
@@ -878,7 +884,7 @@ static void * builtContext          = &builtContext; // depricated?
             [dictOfIPs setValue:[NSString stringWithFormat:@"http://%@:%d",ipString,htons(port)] forKey:[arrayOfStrings objectAtIndex:0]];
             //globals.URL=[NSString stringWithFormat:@"http://%@:%d",ipString,htons(port)];//set the global url parameter to our ipstring:port -- we need to use htons to flip the bytes returned by the port
             //globals.CURRENT_PLAYBACK_EVENT=[NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-
+            
             NSString *hostName = [service hostName];
             if ([[service hostName] hasSuffix:@".local."]){
                 hostName = [[service hostName] stringByReplacingOccurrencesOfString:@".local." withString:@""];
@@ -888,9 +894,9 @@ static void * builtContext          = &builtContext; // depricated?
             [self registerEncoder:hostName ip:ipString];
         }
     }
-
     
-
+    
+    
     
     
 }
@@ -924,7 +930,7 @@ static void * builtContext          = &builtContext; // depricated?
             [_masterEncoder issueCommand:SHUTDOWN    priority:3 timeoutInSec:6 tagData:requestData timeStamp:GET_NOW_TIME];
         }
     }
-
+    
 }
 
 #pragma mark - Command Methods
@@ -953,7 +959,7 @@ static void * builtContext          = &builtContext; // depricated?
     CFRelease(reachability);
     
     return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
-
+    
 }
 
 
@@ -1012,7 +1018,7 @@ static void * builtContext          = &builtContext; // depricated?
     CFRelease(reachability);
     return NO;
     
-//    return [uController hasConnectivity];
+    //    return [uController hasConnectivity];
 }
 
 
@@ -1028,10 +1034,10 @@ static void * builtContext          = &builtContext; // depricated?
 {
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                             @{
-                                             @"id":aId,
-                                             @"type":aType,
-                                             @"requesttime":GET_NOW_TIME_STRING,
-                                             @"user":[_dictOfAccountInfo objectForKey:@"hid"]
+                                              @"id":aId,
+                                              @"type":aType,
+                                              @"requesttime":GET_NOW_TIME_STRING,
+                                              @"user":[_dictOfAccountInfo objectForKey:@"hid"]
                                               }];
     
     NSArray     * encoders          = [dictOfEncoders allValues];
@@ -1039,9 +1045,9 @@ static void * builtContext          = &builtContext; // depricated?
     [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
         [obj issueCommand:SUMMARY_GET priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:nowTime];
     }];
-   
+    
     [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
-
+    
 }
 
 -(void)updateSummaryId:(NSString*)aId type:(NSString*)aType summary:(NSString*)aSummary onComplete:(void(^)(NSArray*pooled))onCompleteGet
@@ -1061,11 +1067,11 @@ static void * builtContext          = &builtContext; // depricated?
         //[sumRequestData setObject:GET_NOW_TIME_STRING forKey:@"requesttime"];
         NSArray         * encoders          = [dictOfEncoders allValues];
         NSMutableArray  * encodersWithGame  =  [[NSMutableArray alloc]init];
-       [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
-           if ([obj.allEvents containsObject:aId]) {
-               [obj issueCommand:SUMMARY_PUT priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:nowTime];
-               [encodersWithGame addObject:obj];
-           }
+        [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
+            if ([obj.allEvents containsObject:aId]) {
+                [obj issueCommand:SUMMARY_PUT priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:nowTime];
+                [encodersWithGame addObject:obj];
+            }
         }];
         
         [_masterEncoder issueCommand:SUMMARY_PUT priority:1 timeoutInSec:10 tagData:sumRequestData timeStamp:nowTime];
@@ -1077,18 +1083,18 @@ static void * builtContext          = &builtContext; // depricated?
     } else if ([aType isEqualToString:@"month"] && !_masterEncoder){
         // Alert the user that there is not master encoder
     }
-
+    
 }
 
 
 -(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet
 {
-
-     if (_primaryEncoder) {
-         NSNumber    * nowTime             = GET_NOW_TIME;
+    
+    if (_primaryEncoder) {
+        NSNumber    * nowTime             = GET_NOW_TIME;
         [_primaryEncoder issueCommand:TEAMS_GET priority:1 timeoutInSec:10 tagData:nil timeStamp:nowTime];
-//        encoderSync =  [[EncoderDataSync alloc]initWith:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
-         [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
+        //        encoderSync =  [[EncoderDataSync alloc]initWith:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
+        [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
     } else {
         // Alert the user that there is not master encoder
     }
@@ -1112,43 +1118,43 @@ static void * builtContext          = &builtContext; // depricated?
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-                                             @{
-                                               @"event"         : eventNm,
-                                               @"colour"        : [_dictOfAccountInfo objectForKey:@"tagColour"],
-                                               @"user"          : [_dictOfAccountInfo objectForKey:@"hid"],
-                                               @"time"          : tagTime,
-                                               @"name"          : tagName,
-//                                               @"comment"       : @"",
-//                                               @"rating"        : @"0",
-//                                               @"coachpick"     : @"0",
-//                                               @"bookmark"      : @"0",
-//                                               @"deleted"       : @"0",
-//                                               @"edited"        : @"0",
-                                               @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
-                                               }];
+                                     @{
+                                       @"event"         : eventNm,
+                                       @"colour"        : [_dictOfAccountInfo objectForKey:@"tagColour"],
+                                       @"user"          : [_dictOfAccountInfo objectForKey:@"hid"],
+                                       @"time"          : tagTime,
+                                       @"name"          : tagName,
+                                       //                                               @"comment"       : @"",
+                                       //                                               @"rating"        : @"0",
+                                       //                                               @"coachpick"     : @"0",
+                                       //                                               @"bookmark"      : @"0",
+                                       //                                               @"deleted"       : @"0",
+                                       //                                               @"edited"        : @"0",
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       }];
     if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
-                                               @"starttime"     : tagTime
+                                              @"starttime"     : tagTime
                                               };
         [tagData addEntriesFromDictionary:durationData];
     }
-
+    
     [tagData addEntriesFromDictionary:data];//
     
     
     
-//    // Check if tag is open for this already, if so close it
-//    if ([_openDurationTags objectForKey:tagName] != nil)
-//    {
-//        
-//        [self closeDurationTag:tagName];
-//        
-//        
-//    } else {
-//        
-//        [_openDurationTags setObject:tagData forKey:tagName];
-//        // issues new tag command
-//    }
+    //    // Check if tag is open for this already, if so close it
+    //    if ([_openDurationTags objectForKey:tagName] != nil)
+    //    {
+    //
+    //        [self closeDurationTag:tagName];
+    //
+    //
+    //    } else {
+    //
+    //        [_openDurationTags setObject:tagData forKey:tagName];
+    //        // issues new tag command
+    //    }
     
     
     // issue command to all encoder with events
@@ -1192,12 +1198,12 @@ static void * builtContext          = &builtContext; // depricated?
     
     NSMutableDictionary * tag = [_openDurationTags objectForKey:tagName];
     [_openDurationTags removeObjectForKey:tagName];
-
+    
     
     // issues mod tag command
     
     for (id <EncoderProtocol> aEncoder  in _authenticatedEncoders) {
-    
+        
         [aEncoder issueCommand:MODIFY_TAG
                       priority:10
                   timeoutInSec:5
@@ -1221,20 +1227,20 @@ static void * builtContext          = &builtContext; // depricated?
     if (!aCurrentEvent) {
         [_feeds removeAllObjects];
         _currentEventData = @{};
-
+        
         [self willChangeValueForKey:@"currentEvent"];
-            _currentEvent = aCurrentEvent;
+        _currentEvent = aCurrentEvent;
         [self didChangeValueForKey:@"currentEvent"];
         
         [self willChangeValueForKey:@"currentEventType"];
-            _currentEventType = nil;
+        _currentEventType = nil;
         [self didChangeValueForKey:@"currentEventType"];
-     
+        
         [self willChangeValueForKey:@"currentEventTags"];
-            _currentEventTags = nil;
+        _currentEventTags = nil;
         [self didChangeValueForKey:@"currentEventTags"];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
-      
+        
         return;
     } //
     
@@ -1275,8 +1281,8 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
     
-
-        
+    
+    
     [self refresh];
     
     
@@ -1285,8 +1291,8 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(NSString*)currentEventType
 {
-
-  return [_currentEventType lowercaseString];
+    
+    return [_currentEventType lowercaseString];
 }
 
 
@@ -1306,7 +1312,7 @@ static void * builtContext          = &builtContext; // depricated?
 // this gets all Events, Masters Event take priority and all events are unique.
 -(NSMutableArray*)allEventData
 {
-
+    
     // Collects all data from encoders into a temp array
     NSMutableArray * temp1  = [[NSMutableArray alloc]init];
     for (id <EncoderProtocol> encoder in _authenticatedEncoders) {
@@ -1317,7 +1323,7 @@ static void * builtContext          = &builtContext; // depricated?
     // This filters the data so its all unique
     NSMutableSet    * uniqueHIDS  = [[NSMutableSet alloc]init];
     NSPredicate     * makeUniquie = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-
+        
         if (![evaluatedObject isKindOfClass:[NSDictionary class]]) return NO; // quick filter.. if not a dict... remove
         
         NSDictionary * thisDict = evaluatedObject;
@@ -1332,7 +1338,7 @@ static void * builtContext          = &builtContext; // depricated?
         }
     }];
     temp1  = [NSMutableArray arrayWithArray:[temp1 filteredArrayUsingPredicate:makeUniquie]];
-   
+    
     
     // convert data to a dict to make it easier to add/overwrite data from the master encoder
     NSMutableDictionary * uniqueDict = [[NSMutableDictionary alloc]init];
@@ -1342,15 +1348,15 @@ static void * builtContext          = &builtContext; // depricated?
         NSDictionary * dict = value;
         [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
     }
-
+    
     // this adds the data from the master encoder and overwrites slave data
     if (_masterEncoder != nil){
-            NSEnumerator * masterEnum = [_masterEncoder.allEventData objectEnumerator];
-            id value2;
-            while ((value2 = [masterEnum nextObject])) {
-                NSDictionary * dict = value2;
-                [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
-            }
+        NSEnumerator * masterEnum = [_masterEncoder.allEventData objectEnumerator];
+        id value2;
+        while ((value2 = [masterEnum nextObject])) {
+            NSDictionary * dict = value2;
+            [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
+        }
     }
     
     
@@ -1370,13 +1376,13 @@ static void * builtContext          = &builtContext; // depricated?
                                                                                         @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
                                                                                         @"event"       : myEvent
                                                                                         }];
-
+    
     NSArray     * encoders;
     
     if (![_primaryEncoder isKindOfClass:[Encoder class]] && _primaryEncoder) {
-       encoders    = @[_primaryEncoder];
+        encoders    = @[_primaryEncoder];
     } else {
-         encoders    = [_authenticatedEncoders copy];
+        encoders    = [_authenticatedEncoders copy];
         
     }
     
@@ -1390,7 +1396,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     
     [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:^(NSArray *pooledResponces) {
-//        this is where you collect all the raw data and convert it all in to one dict
+        //        this is where you collect all the raw data and convert it all in to one dict
         NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
         for (NSData * rData in pooledResponces) {
             NSDictionary * tags =[[Utility JSONDatatoDict:rData] objectForKey:@"tags"];
@@ -1403,15 +1409,15 @@ static void * builtContext          = &builtContext; // depricated?
     
     
     
-//    [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinishDict:onCompleteGet];
-
+    //    [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinishDict:onCompleteGet];
+    
 }
 
 
 
 -(NSMutableDictionary*)eventTags
 {
-
+    
     NSMutableDictionary * tags = [[NSMutableDictionary alloc]init];
     NSArray             * encoders;
     
@@ -1471,7 +1477,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     [self didChangeValueForKey:@"currentEventTags"];
     
-
+    
 }
 
 -(BOOL)hasLive
@@ -1483,7 +1489,7 @@ static void * builtContext          = &builtContext; // depricated?
 {
     
     if (hasLive == _hasLive) return;
-
+    
     
     [self willChangeValueForKey:@"hasLive"];
     _hasLive = hasLive;
@@ -1492,7 +1498,7 @@ static void * builtContext          = &builtContext; // depricated?
     }
     [self didChangeValueForKey:@"hasLive"];
     
- 
+    
 }
 
 
@@ -1560,13 +1566,13 @@ static void * builtContext          = &builtContext; // depricated?
     NSLog(@"Encoders to Removed: %i", [self.authenticatedEncoders count]);
     NSLog(@"master?: %@", _masterEncoder);
     [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    //    if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
-            Encoder * anEncoder = (Encoder *) obj;
-            [self unRegisterEncoder:anEncoder];
-      //  }
+        //    if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
+        Encoder * anEncoder = (Encoder *) obj;
+        [self unRegisterEncoder:anEncoder];
+        //  }
     }];
-
-
+    
+    
 }
 
 //-(void)deleteAllThumbs
@@ -1575,14 +1581,14 @@ static void * builtContext          = &builtContext; // depricated?
 //    [imageCache clearMemory];
 //    [imageCache clearDisk];
 //    [imageCache cleanDisk];
-//    
+//
 //    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    
+//
 //    NSString * path = [documentsDirectory stringByAppendingPathComponent:@"events/thumbnails"];
-//   
-//    
-//    
+//
+//
+//
 //    NSFileManager *fileManager = [NSFileManager defaultManager];
 //    if([fileManager fileExistsAtPath:path])
 //    {
@@ -1612,9 +1618,9 @@ static void * builtContext          = &builtContext; // depricated?
         }
         
         encoderStats = [NSString stringWithFormat:@"%@ %@   %@",encoderStats, socialStatus,encoderStatus];
-
+        
         txt = [NSString stringWithFormat:@"%@%@\n",txt,encoderStats];
-    }   
+    }
     return txt;
 }
 
@@ -1635,9 +1641,9 @@ static void * builtContext          = &builtContext; // depricated?
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"type":UC_REQUEST_USER_INFO, @"block":onRecieveData}];
     }
-
     
-
+    
+    
 }
 
 
@@ -1717,5 +1723,4 @@ static void * builtContext          = &builtContext; // depricated?
 }
 
 @end
-
 

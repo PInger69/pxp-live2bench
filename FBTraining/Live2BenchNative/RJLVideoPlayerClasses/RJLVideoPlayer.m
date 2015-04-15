@@ -131,12 +131,24 @@ static void *FeedAliveContext                               = &FeedAliveContext;
              forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchDownRepeat|UIControlEventTouchCancel];
     [videoControlBar setupPlay:@selector(play) Pause:@selector(pause) target:self];
     videoControlBar.enable = NO;
+    
+    self.clipControlBar = [[ClipControlBarSlider alloc] initWithFrame: self.view.frame];
+    [self.clipControlBar.timeSlider addTarget:self action:@selector(sliderValueChanged)
+                         forControlEvents:UIControlEventValueChanged];
+    [self.clipControlBar.timeSlider addTarget:self action:@selector(scrubbingStart)
+                         forControlEvents:UIControlEventTouchDown];
+    [self.clipControlBar.timeSlider addTarget:self action:@selector(willScrubbingEnd)
+                         forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchDownRepeat|UIControlEventTouchCancel];
+    [self.clipControlBar setupPlay:@selector(play) Pause:@selector(pause) onCancelClip:@selector(cancelClip) target:self];
+    self.clipControlBar.enable = NO;
+    self.clipControlBar.hidden = YES;
 
     
     [self initBarTimer];
 
     [self.view addSubview:liveIndicatorLight];
     [self.view addSubview:videoControlBar];
+    [self.view addSubview: self.clipControlBar];
     
     // debugging
     currentItemTime = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 30)];
@@ -164,6 +176,18 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     }
 }
 
+-(void)playClipTimeRange:(CMTimeRange)aRange{
+    self.clipControlBar.hidden = NO;
+    self.clipControlBar.minimumClipTime = (aRange.start.value / aRange.start.timescale);
+    self.clipControlBar.maximumClipTime = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);
+    
+    self.videoControlBar.hidden = YES;
+}
+
+-(void)cancelClip{
+    self.clipControlBar.hidden = YES;
+    self.videoControlBar.hidden = YES;
+}
 
 /**
  *  This makes sure the bar matches the data at all time when a video is running
@@ -194,6 +218,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         double time = CMTimeGetSeconds([self.playerItem currentTime]);
     
         [self.videoControlBar.timeSlider setValue:time];
+        double clipControlBarValue =(time - self.clipControlBar.minimumClipTime) / ( self.clipControlBar.maximumClipTime - self.clipControlBar.minimumClipTime);
+        self.clipControlBar.value = clipControlBarValue;
 
 //        [self.videoControlBar.timeSlider setValue:(maxValue - minValue) * time / duration + minValue];
     }
@@ -569,7 +595,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self.status                                 = _status | RJLPS_Play;
    self.status                                 = _status & ~(RJLPS_Paused);
     [self.videoControlBar setHidden:NO];
-    self.videoControlBar.playButton.selected    = FALSE;
+    //self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil;
     __block RJLVideoPlayer  * weakSelf          = self;
     if (self.playerItem.status == AVPlayerItemStatusUnknown){ // This delays the seek if its not ready
@@ -588,7 +614,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     if (_status & RJLPS_Paused) return;
     restoreAfterPauseRate = [self.avPlayer rate];
     [self.avPlayer pause];
-    self.videoControlBar.playButton.selected    = TRUE;
+    //self.videoControlBar.playButton.selected    = TRUE;
     self.status                                 = _status & ~( RJLPS_Live | RJLPS_Play);
     self.status                                 = _status | RJLPS_Paused;
 }

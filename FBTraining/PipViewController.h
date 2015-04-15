@@ -28,6 +28,7 @@ static void * isObservedContext2 = &isObservedContext2;
 
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager;
+-(instancetype)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f ;
 //-(id)initWithPip:(Pip *)aMainPip pip:(Pip*)aPip f:(FeedSwitchView *)f;
 -(void)addPip:(Pip*)aPip;
 -(void)removePip:(Pip *)aPip;

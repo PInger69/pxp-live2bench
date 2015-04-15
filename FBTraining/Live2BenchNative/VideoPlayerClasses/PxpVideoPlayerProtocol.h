@@ -16,6 +16,7 @@
 
 
 #import "VideoControlBarSlider.h"
+#import "ClipControlBarSlider.h"
 #import "RJLVideoPlayerPlaybackView.h"
 #import "LiveLight.h"
 
@@ -52,6 +53,7 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 @property (nonatomic,assign)    CMTimeRange                 range;
 @property (nonatomic,strong)    LiveLight                   * liveIndicatorLight;
 @property (nonatomic,strong)    VideoControlBarSlider       * videoControlBar;
+@property (nonatomic,strong)     ClipControlBarSlider       * clipControlBar;
 @property (nonatomic,copy)      NSURL                       *URL;
 
 @property (nonatomic,assign)    BOOL                isAlive;
@@ -67,6 +69,7 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 -(void)seekWithSeekerButton:(id)sender;
 -(void)playFeed:(Feed*)aFeed;
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange;
+-(void)playClipTimeRange: (CMTimeRange)aRange;
 
 
 @end
