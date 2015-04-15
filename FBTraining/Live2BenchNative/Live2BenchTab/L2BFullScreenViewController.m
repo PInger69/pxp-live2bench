@@ -86,7 +86,7 @@
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:teleElements];
     [self _revealThese:@[]];
     
-    demoElements    = @[_seekForward, _seekBackward, _slomo];
+    demoElements    = @[_seekForward, _seekBackward, _slomo,_liveButton];
     
     // Tele init
 //    _teleViewController

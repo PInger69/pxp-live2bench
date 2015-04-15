@@ -9,10 +9,10 @@
 #import "DownloadButton.h"
 
 @implementation DownloadButton
-{
-    BOOL downloadCancelled;
-    BOOL downloadComplete;
-}
+//{
+//    BOOL downloadCancelled;
+//    BOOL downloadComplete;
+//}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -31,8 +31,8 @@
     }
     
     _downloadItem = downloadItem;
-    downloadCancelled = NO;
-    downloadComplete = NO;
+    self.downloadCancelled = NO;
+    self.downloadComplete = NO;
     
     if (downloadItem) {
         [downloadItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
@@ -46,11 +46,11 @@
         self.progress = 0.001;
         [self setNeedsDisplay];
         if (downloadItem.status == DownloadItemStatusError) {
-            downloadCancelled = YES;
+            self.downloadCancelled = YES;
         }
         if (downloadItem.progress == 1) {
             self.progress = 1;
-            downloadComplete = YES;
+            self.downloadComplete = YES;
         }
     }else{
         self.enabled = YES;
@@ -142,7 +142,7 @@
     [downloadPath stroke];
     
     
-    if (downloadCancelled) {
+    if (self.downloadCancelled) {
         UIBezierPath *cancelPath = [UIBezierPath bezierPath];
         [cancelPath moveToPoint: CGPointMake(3, 3)];
         [cancelPath addLineToPoint: CGPointMake(27, 27)];
@@ -157,7 +157,7 @@
         [cancelPath stroke];
     }
     
-    if (downloadComplete) {
+    if (self.downloadComplete) {
         self.enabled = NO;
         UIBezierPath *completePath = [UIBezierPath bezierPath];
         [completePath moveToPoint:CGPointMake(1, 17)];
@@ -183,11 +183,12 @@
         case DownloadItemStatusIOError:
         case DownloadItemStatusCancel:
         case DownloadItemStatusError:
-            downloadCancelled = YES;
+            self.downloadCancelled = YES;
             [self setNeedsDisplay];
             break;
         case DownloadItemStatusComplete:
-            downloadComplete = YES;
+            self.downloadComplete = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_EVENT_DOWNLOADED" object:self userInfo:@{@"Finish":self.downloadItem}];
             [self setNeedsDisplay];
         default:
             break;

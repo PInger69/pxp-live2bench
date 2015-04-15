@@ -298,8 +298,23 @@
     return [self feedFromKey:key];
 }
 
--(void)deselectByIndex:(NSUInteger)index
+
+/**
+ *  Deselect buttons
+ *
+ *  @param index if you pass -1 it will deselect all
+ */
+-(void)deselectByIndex:(NSInteger)index
 {
+    
+    if (index < 0){
+        [_buttonArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            UIButton *butt = (UIButton *)obj;
+            [butt setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
+        }];
+        return;
+    }
+    
     UIButton *obj =[_buttonArray objectAtIndex:index];
    [obj setTitleColor:DESELECT_COLOR forState:UIControlStateNormal];
 //    obj.layer.borderColor = [DESELECT_COLOR CGColor];

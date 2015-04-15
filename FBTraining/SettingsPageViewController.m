@@ -109,9 +109,9 @@ NS_OPTIONS(NSInteger, style){
                                                                                                                                                                                                                                                           [NSNumber numberWithInt:5]} ] }];
             
             NSMutableDictionary *setting9 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Tabs", @"OptionChar":  [NSNumber numberWithChar: listOfToggles], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{ @"Setting Options":
-                                                                                                                                                                                                                                                          @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip"],
+                                                                                                                                                                                                                                                          @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip",@"Debug"],
                                                                                                                                                                                                                                                       @"Toggle Settings":
-                                                                                                                                                                                                                                                          @[ @1, @1, @1, @1, @1, @1]}] }];
+                                                                                                                                                                                                                                                          @[ @1, @1, @1, @1, @1, @1, @1]}] }];
             
             self.settingsArray = [NSMutableArray arrayWithArray:@[ setting1,
                                                                    

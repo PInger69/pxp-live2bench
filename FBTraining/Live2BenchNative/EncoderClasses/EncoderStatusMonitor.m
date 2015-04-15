@@ -8,6 +8,7 @@
 
 #import "EncoderStatusMonitor.h"
 #import "Encoder.h"
+#import "Event.h"
 #import <objc/runtime.h>
 #define SHUTDOWN_RESPONCE   @"shutdown responce"
 #define STATUS              @"status"
@@ -380,7 +381,7 @@
             }
         
             if ([results objectForKey:@"alarms"]) {
-                NSArray * feedsChecked = (checkedEncoder.feeds)?[checkedEncoder.feeds allKeys]:@[];
+                NSArray * feedsChecked = (checkedEncoder.event.feeds)?[checkedEncoder.event.feeds allKeys]:@[];
                 NSArray * alarmedFeeds = [results objectForKey:@"alarms"];
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MOTION_ALARM object:checkedEncoder userInfo:@{
                                                                                                                               @"feeds"    : feedsChecked,
@@ -418,7 +419,7 @@
 // This section is to check feed changes
 -(void)checkFeeds:(NSData *)data
 {
-    NSString        * currentEvent = checkedEncoder.event;
+    NSString        * currentEvent = checkedEncoder.event.name;
     NSDictionary    * tempFeeds    = @{};
     if (currentEvent == nil ||[currentEvent isEqualToString:@""]){
         return;
@@ -471,7 +472,7 @@
             
             // If the feeds are different... update and using  .feeds the encoder will dispatch an event about the chnage
            // if ( !(tempFeeds == nil) && (checkedEncoder.feeds == nil)){
-                if (![tempFeeds isEqualToDictionary:checkedEncoder.feeds]){
+                if (![tempFeeds isEqualToDictionary:checkedEncoder.event.feeds]){
                  //   checkedEncoder.feeds = tempFeeds;
                 }
            // }

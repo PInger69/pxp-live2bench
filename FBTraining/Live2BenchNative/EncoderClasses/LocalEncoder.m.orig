@@ -79,11 +79,16 @@
             }
         }
         
+<<<<<<< HEAD
+        // gets string names of all the events
+        _allEvents                      = [tempPool copy];
+=======
         
         
         /**
          Book mark Section!!!
          */
+>>>>>>> c8e799e9e4c6a235d3f2a6ece8cfc8ddcf9f6da
         
         // this gets all the plists for the book marks
         NSMutableArray  * tempPoolClips      = [[NSMutableArray alloc]init];
@@ -93,7 +98,7 @@
         
         for (NSString *pthss in clipsPlistPaths) {
             Clip * clip =[[Clip alloc]initWithDict:[[NSDictionary alloc]initWithContentsOfFile:pthss]];
-            //[_clips setObject:clip forKey:clip.clipId];
+            [_clips setObject:clip forKey:clip.clipId];
         }
       
         
@@ -111,6 +116,8 @@
             [temp addEntriesFromDictionary:@{@"feed":aFeed}];
             NSString * anId = [[temp objectForKey:@"id"]stringValue];
             [_clips setObject:temp forKey:anId];
+         
+            
         }
         
         _bookmarkPlistNames             = [[NSMutableArray alloc]init];

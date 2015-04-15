@@ -50,6 +50,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filterArray:) name:@"datePicked" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
+        NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
+        [self.downloadingItemsDictionary removeObjectForKey:key[0]];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -185,17 +189,17 @@
     
     NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
-        NSDictionary *event = self.tableData[firstIndexPath.row - 1];
-        NSDictionary *urls = event[@"url_2"];
+        Event *event = self.tableData[firstIndexPath.row - 1];
+        NSDictionary *urls = event.mp4s;
         NSString *key;
         NSString *data;
         
-        if (urls) {
+        if (urls.count > 1) {
             key = [urls allKeys][indexPath.row - firstIndexPath.row];
             data = urls[key];
         } else {
             key = @"mp4";
-            data = self.tableData[firstIndexPath.row - 1][key];
+            data = event.mp4s[@"mp4"];
         }
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
         
@@ -204,9 +208,9 @@
         collapsableCell.sendUserInfo = ^(){
             _teamPick = nil;
             
-            NSString *homeName = event[@"homeTeam"];
-            NSString *visitName = event[@"visitTeam"];
-            NSString *eventName = event[@"name"];
+            NSString *homeName = event.rawData[@"homeTeam"];
+            NSString *visitName = event.rawData[@"visitTeam"];
+            NSString *eventName = event.rawData[@"name"];
             
             _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
                                                       buttonListNames:@[homeName, visitName]];
@@ -223,9 +227,9 @@
                                        animated:YES];
         };
         
-        collapsableCell.event = event;
+        collapsableCell.event = event.rawData;
         collapsableCell.downloadButton.enabled = YES;
-        NSString *name = event[@"name"];
+        NSString *name = event.name;
         
         __block FeedSelectCell *weakCell = collapsableCell;
         if([self.downloadingItemsDictionary objectForKey:name]){
@@ -235,12 +239,15 @@
                 [weakCell.downloadButton setNeedsDisplay];
             }];
             [collapsableCell.downloadButton setNeedsDisplay];
-        }else{
-            
+        } else if ([self.encoderManager.localEncoder getEventByName:name]) {
+            weakCell.downloadButton.downloadComplete = YES;
+            weakCell.downloadButton.progress = 1;
+            [weakCell setNeedsDisplay];
+        } else {
             collapsableCell.downloadButton.downloadItem = nil;
             collapsableCell.downloadButtonBlock = ^(DownloadItem *item){
                 DownloadItem *downloadItem = item;
-                downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]];
+                downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
                 weakCell.downloadButton.downloadItem = downloadItem;
                 [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
                     weakCell.downloadButton.progress = progress;
@@ -406,7 +413,7 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *event;
+    Event *event;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
     
     if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
@@ -446,16 +453,16 @@
         [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
-        if (event[@"url_2"]) {
+        if ([event.mp4s allValues].count > 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
-                for (int i = 0; i < ((NSArray *)event[@"url_2"]).count ; ++i) {
+                for (int i = 0; i < ((NSArray *)[event.mp4s allValues]).count ; ++i) {
                     NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
                     [insertionIndexPaths addObject:insertionIndexPath];
                 }
                 
                 self.lastSelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
             }else{
-                for (int i = 0; i < ((NSArray *)event[@"url_2"]).count ; ++i) {
+                for (int i = 0; i < ((NSArray *)[event.mp4s allValues]).count ; ++i) {
                     NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
                     [insertionIndexPaths addObject:insertionIndexPath];
                 }

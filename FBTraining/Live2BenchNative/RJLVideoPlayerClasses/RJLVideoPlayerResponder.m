@@ -30,6 +30,9 @@
 -(void)processCommand:(NSDictionary* )dict
 {
     NSString            * thisContext   = ([dict objectForKey:@"context"])?[dict objectForKey:@"context"]:@"all";
+    
+    if (![dict objectForKey:@"command"]) return;
+    
     VideoPlayerCommand  command         = [[dict objectForKey:@"command"]integerValue];
     
     

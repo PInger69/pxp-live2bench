@@ -23,6 +23,8 @@
 @synthesize deleted     = _deleted;
 @synthesize local       = _local;
 @synthesize live        = _live;
+@synthesize tags        = _tags;
+
 @synthesize downloadedSources       = _downloadedSources;
 
 - (instancetype)initWithDict:(NSDictionary*)data
@@ -78,48 +80,43 @@
    
     NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
     
-
-        if ([aDict[@"vid_2"] isKindOfClass:[NSDictionary class]]){ // For new encoder and non live
-           
-            for (id key in aDict[@"vid_2"])
-            {
-                NSDictionary * vidDict      = aDict[@"vid_2"];
-                NSDictionary * qualities    = [vidDict objectForKey:key];
-                
-                Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
-                createdFeed.sourceName = key;
-                
-                [tempDict setObject:createdFeed forKey:key];
-            }
+    if ([aDict[@"vid_2"] isKindOfClass:[NSDictionary class]]){ // For new encoder and non live
+        
+        for (id key in aDict[@"vid_2"])
+        {
+            NSDictionary * vidDict      = aDict[@"vid_2"];
+            NSDictionary * qualities    = [vidDict objectForKey:key];
             
-        } else if ([aDict[@"live_2"] isKindOfClass:[NSDictionary class]]){ // for new encoder and Live
+            Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+            createdFeed.sourceName = key;
             
-            for (id key in aDict[@"live_2"])
-            {
-                NSDictionary * vidDict      = aDict[@"live_2"];
-                NSDictionary * qualities    = [vidDict objectForKey:key];
-                
-                Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
-                createdFeed.sourceName = key;
-                
-                [tempDict setObject:createdFeed forKey:key];
-            }
-
-        } else { // for old encoder
-            
-            Feed * theFeed;
-            if (aDict[@"live"]) { // This is for backwards compatibility
-                theFeed =  [[Feed alloc]initWithURLString:aDict[@"live"] quality:0];
-            } else if (aDict[@"vid"]) {
-                theFeed =  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0];
-            } else {
-                NSLog(@"Event Class issue");
-                return @{};
-            }
-            [tempDict setObject:theFeed forKey:@"s1"];
+            [tempDict setObject:createdFeed forKey:key];
         }
-
-
+        
+    } else if ([aDict[@"live_2"] isKindOfClass:[NSDictionary class]]){ // for new encoder and Live
+        
+        for (id key in aDict[@"live_2"])
+        {
+            NSDictionary * vidDict      = aDict[@"live_2"];
+            NSDictionary * qualities    = [vidDict objectForKey:key];
+            
+            Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+            createdFeed.sourceName = key;
+            
+            [tempDict setObject:createdFeed forKey:key];
+        }
+    } else { // for old encoder
+        Feed * theFeed;
+        if (aDict[@"live"]) { // This is for backwards compatibility
+            theFeed =  [[Feed alloc]initWithURLString:aDict[@"live"] quality:0];
+        } else if (aDict[@"vid"]) {
+            theFeed =  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0];
+        } else {
+            NSLog(@"Event Class issue");
+            return @{};
+        }
+        [tempDict setObject:theFeed forKey:@"s1"];
+    }
     return [tempDict copy];
 }
 

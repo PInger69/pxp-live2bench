@@ -8,8 +8,8 @@
 
 #import "Encoder.h" // what ever is taken from this needs to be moved to the protocol
 #import "EncoderProtocol.h"
-#import "Event.h"
-#import "Clip.h"
+@class Event;
+@class Clip;
 /**
  *  This class acts like a normal Encoder but all tags and event are local to the device
  *  as well as bookmarked clips for sharing.
@@ -21,42 +21,30 @@
 @property (nonatomic,strong)    NSString                * name;
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
-@property (nonatomic,strong)    NSString                * event;            // the current event the encoder is looking at
-@property (nonatomic,strong)    NSString                * eventType;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSArray                 * eventTags;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSString                * liveEventName;
-@property (nonatomic,strong)    NSDictionary            * eventData;        //raw dict
-@property (nonatomic,strong)    NSArray                 * allEvents;        // all events on the encoder
-@property (nonatomic,strong)    NSArray                 * allEventData;
-@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict;    // keys are event names
-@property (nonatomic,strong)    NSDictionary            * feeds;            // feeds for current event
-
-@property (nonatomic,strong)    NSDictionary    * teams;
-@property (nonatomic,strong)    NSDictionary    * playerData;
-@property (nonatomic,strong)    NSDictionary    * league;
+@property (nonatomic,strong)    Event                   * event;            // the current event the encoder is looking at
+@property (nonatomic,strong)    Event                   * liveEvent;
+@property (nonatomic,strong)    NSDictionary            * allEvents;        // all events on the encoder
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 
 #pragma mark - EncoderProtocol Methods
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
--(void)clearQueueAndCurrent;
 
 
 
 #pragma mark - Bookmark Clip Methods
-
-@property (nonatomic,strong)    NSMutableDictionary * clipFeeds;    // This is all feeds kept on the device  key:<ClipName> value:<Feed>
-//@property (nonatomic,strong)    NSMutableDictionary * clipFeedsDict;
+@property (nonatomic,strong)    NSMutableDictionary * clips;    // This is all feeds kept on the device  key:<id> value:<Clip>
 
 -(NSInteger)getBookmarkSpace;
--(NSString*)bookmarkPath;
--(NSString*)bookmarkedVideosPath;
+-(NSString*)bookmarkPath;  // make readonly Props
+-(NSString*)bookmarkedVideosPath; // make readonly Props
 -(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData;//video file
 -(void)deleteClip:(NSString*)aName;
+
 
 -(NSString*)saveEvent:(Event*)aEvent;
 -(void)deleteEvent:(Event*)aEvent;
 -(Event*)getEventByName:(NSString*)eventName;
--(Event*)getEventByHID:(NSString*)eventHID;
+
 
 @end
