@@ -619,7 +619,7 @@ SVSignalStatus signalStatus;
 
 -(void)pickHome:(id)sender
 {
-    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    teamNames   = grabNames(encoderManager.masterEncoder.event.teams);
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected  = YES;
@@ -636,7 +636,7 @@ SVSignalStatus signalStatus;
 
 -(void)pickAway:(id)sender
 {
-    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    teamNames   = grabNames(encoderManager.masterEncoder.event.teams);
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected = YES;
@@ -652,7 +652,7 @@ SVSignalStatus signalStatus;
 
 -(void)pickLeague:(id)sender
 {
-    leagueNames = grabNames(encoderManager.masterEncoder.league);
+    leagueNames = grabNames(encoderManager.masterEncoder.event.league);
     if (leagueNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected = YES;

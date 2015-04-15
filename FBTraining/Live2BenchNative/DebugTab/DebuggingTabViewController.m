@@ -24,6 +24,7 @@
 #import "Downloader.h"
 #import "DownloadEventItem.h"
 #import "UserCenter.h"
+#import "PxpLog.h"
 
 @interface DebuggingTabViewController ()
 {
@@ -56,6 +57,7 @@
     UIButton * pauseButton;
     UIButton * stepButton;
     __block DebuggingTabViewController * weakSelf;
+    PxpLog * l;
 }
 @end
 
@@ -119,6 +121,9 @@ static void *  debugContext = &debugContext;
         NSLog(@"%@",[dict objectForKey:testString]);
         NSLog(@"%@",[map objectForKey:testString]);
         weakSelf = self;
+        
+        
+
     }
 
     return self;
@@ -127,91 +132,91 @@ static void *  debugContext = &debugContext;
 
 - (void)viewDidLoad
 {
-   playButton = [[UIButton alloc]initWithFrame:CGRectMake(100, 400, 50, 50)];
-    [playButton addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
-    [playButton setTitle:@"playButton" forState:UIControlStateNormal];
-    
-    pauseButton  = [[UIButton alloc]initWithFrame:CGRectMake(200, 400, 50, 50)];
-    [pauseButton addTarget:self action:@selector(pause) forControlEvents:UIControlEventTouchUpInside];
-    [pauseButton setTitle:@"pauseButton" forState:UIControlStateNormal];
-    
-   stepButton = [[UIButton alloc]initWithFrame:CGRectMake(300, 400, 50, 50)];
-    [stepButton addTarget:self action:@selector(step) forControlEvents:UIControlEventTouchUpInside];
-    [stepButton setTitle:@"stepButton" forState:UIControlStateNormal];
-    
-    [self.view addSubview:playButton];
-    [self.view addSubview:pauseButton];
-    [self.view addSubview:stepButton];
-    
-    testPlayer = [[RJLVideoPlayer alloc]init];
-    
-    
-    pip = [[Pip alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
-    [self.view addSubview:pip];
-
-//    Feed * myFeed = [[Feed alloc]initWithURLString:@"/var/mobile/Applications/0DC1A65A-8396-4F64-860A-40773C3F610F/Documents/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4" quality:1];
- 
-    NSURL *url = [[NSURL alloc] initFileURLWithPath: @"/Documents/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4"];
-    
-    
-    NSFileManager *filemanager=[ NSFileManager defaultManager ];
-    
-    NSError *error;
-    
-    
-    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4" ];
-    NSURL * asdfasdfaf =     [[NSURL alloc] initFileURLWithPath:myPath];
-    
-    if([filemanager fileExistsAtPath:myPath])
-    {
-        NSLog(@"FILE FOUND");
-        //just check existence of files in document directory
-    } else {
-    
-        NSLog(@"FILE NOT FOUND");    
-    }
-
-    //    [pip playWithFeed:myFeed];    [pip playerURL:asdfasdfaf];
-
+//   playButton = [[UIButton alloc]initWithFrame:CGRectMake(100, 400, 50, 50)];
+//    [playButton addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
+//    [playButton setTitle:@"playButton" forState:UIControlStateNormal];
 //    
-//NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"test.plist" ];
+//    pauseButton  = [[UIButton alloc]initWithFrame:CGRectMake(200, 400, 50, 50)];
+//    [pauseButton addTarget:self action:@selector(pause) forControlEvents:UIControlEventTouchUpInside];
+//    [pauseButton setTitle:@"pauseButton" forState:UIControlStateNormal];
 //    
-//    DOWNLOADITEM = [Downloader downloadURL:@"http://192.168.1.109/min/ajax/teamsget" to:myPath type:DownloadItem_TypePlist];
+//   stepButton = [[UIButton alloc]initWithFrame:CGRectMake(300, 400, 50, 50)];
+//    [stepButton addTarget:self action:@selector(step) forControlEvents:UIControlEventTouchUpInside];
+//    [stepButton setTitle:@"stepButton" forState:UIControlStateNormal];
+//    
+//    [self.view addSubview:playButton];
+//    [self.view addSubview:pauseButton];
+//    [self.view addSubview:stepButton];
+//    
+//    testPlayer = [[RJLVideoPlayer alloc]init];
 //    
 //    
-//    
-    // buid video player
-//    videoPlayer     = [[VideoPlayer alloc]init];
-//    [videoPlayer initializeVideoPlayerWithFrame:CGRectMake(0, 60, 400, 300)];
-//    [self.view addSubview:videoPlayer.view];
-//    videoPlayer.playerContext = @"debug";
-//    Feed * testFeed = [[Feed alloc]initWithURLString:@"http://myplayxplay.net/events/evt-08743582456b52abe1182f5a5a3e12b457ba28b8/video/list_01hq.m3u8" quality:1];
-//    [videoPlayer playFeed:testFeed];
-    
-//     Build pip
-//    pip             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
-//    pip.isDragAble  = YES;
-//    pip.hidden      = YES;
-//    pip.dragBounds  = videoPlayer.playerLayer.frame;
+//    pip = [[Pip alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
+//    [self.view addSubview:pip];
 //
-//   [videoPlayer.view addSubview:pip];
+////    Feed * myFeed = [[Feed alloc]initWithURLString:@"/var/mobile/Applications/0DC1A65A-8396-4F64-860A-40773C3F610F/Documents/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4" quality:1];
+// 
+//    NSURL *url = [[NSURL alloc] initFileURLWithPath: @"/Documents/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4"];
 //    
 //    
-//    feedSwitch = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 80, 100, 100) encoderManager:EM];
+//    NSFileManager *filemanager=[ NSFileManager defaultManager ];
+//    
+//    NSError *error;
+//    
+//    
+//    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"/bookmark/bookmarkvideo/2015-03-10_14-46-56_89b83b667964eb20d4ee2feef88311580b47a25e_local_00hq_vid_3.mp4" ];
+//    NSURL * asdfasdfaf =     [[NSURL alloc] initFileURLWithPath:myPath];
+//    
+//    if([filemanager fileExistsAtPath:myPath])
+//    {
+//        NSLog(@"FILE FOUND");
+//        //just check existence of files in document directory
+//    } else {
+//    
+//        NSLog(@"FILE NOT FOUND");    
+//    }
 //
-//   [videoPlayer.view addSubview:feedSwitch];
+//    //    [pip playWithFeed:myFeed];    [pip playerURL:asdfasdfaf];
+//
+////    
+////NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"test.plist" ];
+////    
+////    DOWNLOADITEM = [Downloader downloadURL:@"http://192.168.1.109/min/ajax/teamsget" to:myPath type:DownloadItem_TypePlist];
+////    
+////    
+////    
+//    // buid video player
+////    videoPlayer     = [[VideoPlayer alloc]init];
+////    [videoPlayer initializeVideoPlayerWithFrame:CGRectMake(0, 60, 400, 300)];
+////    [self.view addSubview:videoPlayer.view];
+////    videoPlayer.playerContext = @"debug";
+////    Feed * testFeed = [[Feed alloc]initWithURLString:@"http://myplayxplay.net/events/evt-08743582456b52abe1182f5a5a3e12b457ba28b8/video/list_01hq.m3u8" quality:1];
+////    [videoPlayer playFeed:testFeed];
 //    
-////     build pip controller
-//    pipController = [[PipViewController alloc]initWithVideoPlayer:videoPlayer f:feedSwitch encoderManager:EM];
-//    [pipController addPip:pip];
-//    
-
-
-//     build full screen
-//    fullScreen = [[L2BFullScreenViewController alloc]initWithVideoPlayer:videoPlayer];
-//    fullScreen.context = @"debug";
-//    [self.view addSubview:fullScreen.view];
-
+////     Build pip
+////    pip             = [[Pip alloc]initWithFrame:CGRectMake(300, 300, 200, 150)];
+////    pip.isDragAble  = YES;
+////    pip.hidden      = YES;
+////    pip.dragBounds  = videoPlayer.playerLayer.frame;
+////
+////   [videoPlayer.view addSubview:pip];
+////    
+////    
+////    feedSwitch = [[FeedSwitchView alloc]initWithFrame:CGRectMake(100, 80, 100, 100) encoderManager:EM];
+////
+////   [videoPlayer.view addSubview:feedSwitch];
+////    
+//////     build pip controller
+////    pipController = [[PipViewController alloc]initWithVideoPlayer:videoPlayer f:feedSwitch encoderManager:EM];
+////    [pipController addPip:pip];
+////    
+//
+//
+////     build full screen
+////    fullScreen = [[L2BFullScreenViewController alloc]initWithVideoPlayer:videoPlayer];
+////    fullScreen.context = @"debug";
+////    [self.view addSubview:fullScreen.view];
+//
 
     [super viewDidLoad];
 //    [pipController viewDidLoad];
@@ -346,16 +351,18 @@ static void *  debugContext = &debugContext;
     
 
     
-    NSString * anID = @"6";
-    void(^dItemBlock)(DownloadItem*) =^void(DownloadItem* item) {
-        NSLog(@"a;sdlf;alsdfadskfaldkfalsdkfjasdlf");
-        
-    };
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
-                                                                                                           @"id":anID,
-                                                                                                           @"event":@"live"}];
-    
+//    NSString * anID = @"6";
+//    NSString * scr = @"s_00";
+//    void(^dItemBlock)(DownloadItem*) =^void(DownloadItem* item) {
+//        NSLog(@"a;sdlf;alsdfadskfaldkfalsdkfjasdlf");
+//        
+//    };
+//    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block":dItemBlock,
+//                                                                                                           @"id":anID,
+//                                                                                                           @"source":scr,
+//                                                                                                           @"event":@"live"}];
+//    
     
 //    NSString * myPath = [NSString stringWithFormat:@"%@/%@",UC.localPath,@"main.mp4" ];
 //    DOWNLOADITEM  =   [Downloader downloadURL:@"http://192.168.3.100/events/2015-02-26_15-00-50_959bdd31af143f8b2c4b0c4381457e28e7c66049_local/video/main_00hq.mp4" to:myPath];
@@ -388,7 +395,7 @@ static void *  debugContext = &debugContext;
 {
 //    DownloadItem * ch = (DownloadItem *) object;
     
-    
+    NSLog(@"Change made");
 
 }
 

@@ -11,6 +11,7 @@
 #import "EncoderStatusMonitor.h"
 #import "EncoderCommands.h" // Depricated
 #import "EncoderCommand.h" // Depricated
+#import "Event.h"
 
 #define OLD_VERSION  @"1.0.13"
 
@@ -65,18 +66,9 @@
 @property (nonatomic,strong)    NSString        * ipAddress;
 @property (nonatomic,strong)    NSString        * customerID;
 @property (nonatomic,strong)    NSString        * URL;
-@property (nonatomic,strong)    NSString        * event;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSString        * eventType;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSArray         * eventTags;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSString        * liveEventName;
-@property (nonatomic,strong)    NSDictionary    * eventData;   //raw dict
-@property (nonatomic,strong)    NSArray         * allEvents;    // all events on the encoder
-@property (nonatomic,strong)    NSArray         * allEventData;
-@property (nonatomic,strong)    NSDictionary    * feeds;// feeds for current event
-
-@property (nonatomic,strong)    NSDictionary    * teams;
-@property (nonatomic,strong)    NSDictionary    * playerData;
-@property (nonatomic,strong)    NSDictionary    * league;
+@property (nonatomic,strong)    Event           * event;        // the current event the encoder is looking at
+@property (nonatomic,strong)    Event           * liveEvent;
+@property (nonatomic,strong)    NSDictionary    * allEvents;    // all events on the encoder
 
 @property (nonatomic,assign)    EncoderStatus   status;
 @property (nonatomic,strong)    NSString        * statusAsString;
@@ -90,7 +82,6 @@
 
 @property (nonatomic,assign)    BOOL            isBuild;
 @property (nonatomic,assign)    BOOL            isReady;
-
 @property (nonatomic,assign)    BOOL            isAlive;
 
 /**

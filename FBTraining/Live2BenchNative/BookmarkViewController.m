@@ -150,6 +150,7 @@ int viewWillAppearCalled;
     
     NSString *pick = [userInfo objectForKey:@"feed"];
     
+    
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_MYCLIP_CONTEXT,
                                                                                                           @"feed":pick,
                                                                                                           @"time":[userInfo objectForKey:@"time"],
@@ -198,26 +199,26 @@ int viewWillAppearCalled;
         componentFilter.rawTagArray = self.tableData;
         //[componentFilter refresh];
     }];
-    
-    //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
-    
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    if (!appDelegate.session.isOpen) {
-        // create a fresh session object
-        appDelegate.session = [[FBSession alloc] init];
-        // if we don't have a cached token, a call to open here would cause UX for login to
-        // occur; we don't want that to happen unless the user clicks the login button, and so
-        // we check here to make sure we have a token before calling open
-        if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
-            // even though we had a cached token, we need to login to make the session usable
-            [appDelegate.session openWithCompletionHandler:^(FBSession *session,
-                                                             FBSessionState status,
-                                                             NSError *error) {
-                //// we recurse here, in order to update buttons and labels
-                //[self updateView];
-            }];
-        }
-    }
+//    
+//    //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
+//    
+//    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+//    if (!appDelegate.session.isOpen) {
+//        // create a fresh session object
+//        appDelegate.session = [[FBSession alloc] init];
+//        // if we don't have a cached token, a call to open here would cause UX for login to
+//        // occur; we don't want that to happen unless the user clicks the login button, and so
+//        // we check here to make sure we have a token before calling open
+//        if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
+//            // even though we had a cached token, we need to login to make the session usable
+//            [appDelegate.session openWithCompletionHandler:^(FBSession *session,
+//                                                             FBSessionState status,
+//                                                             NSError *error) {
+//                //// we recurse here, in order to update buttons and labels
+//                //[self updateView];
+//            }];
+//        }
+//    }
     
     self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
@@ -231,7 +232,7 @@ int viewWillAppearCalled;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
     
-//    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT - 32, COMMENTBOX_WIDTH, 20)];
 //    
 //    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;

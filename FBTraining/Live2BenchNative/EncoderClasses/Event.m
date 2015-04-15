@@ -23,6 +23,8 @@
 @synthesize deleted     = _deleted;
 @synthesize local       = _local;
 @synthesize live        = _live;
+@synthesize tags        = _tags;
+
 @synthesize downloadedSources       = _downloadedSources;
 
 - (instancetype)initWithDict:(NSDictionary*)data

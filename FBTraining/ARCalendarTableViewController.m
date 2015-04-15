@@ -11,7 +11,8 @@
 #import "ARCalendarTableViewCell.h"
 #import "Downloader.h"
 #import "DownloadItem.h"
-#import "ListPopoverControllerWithImages.h"
+#import "ListPopoverController.h"
+#import "FeedSelectCell.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -176,10 +177,19 @@
         cell.swipeRecognizerLeft.enabled = NO;
         cell.swipeRecognizerRight.enabled = NO;
         [cell setCellAccordingToState:cellStateNormal];
-        
         return cell;
     }
     
+    
+//    if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
+//        NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
+//        NSDictionary *urls = tag[@"url_2"];
+//        NSArray *keys = [urls allKeys];
+//        NSString *key = keys[indexPath.row - firstIndexPath.row];
+//        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
+//        //collapsableCell.backgroundColor = [UIColor redColor];
+//        return collapsableCell;
+//    }
     
     ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
     
@@ -236,28 +246,26 @@
         [cell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
             weakCell.downloadButton.progress = progress;
             [weakCell.downloadButton setNeedsDisplay];
-            weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
+            //weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
         }];
         //cell.downloadButton.progress = cell.downloadButton.downloadItem.progress;
         [cell.downloadButton setNeedsDisplay];
-        cell.playButton.hidden = (cell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
+        //cell.playButton.hidden = (cell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
     }else{
         
         cell.downloadButton.downloadItem = nil;
         cell.downloadButtonBlock = ^(){
-//            ListPopoverControllerWithImages *sourceSelect= [[[ListPopoverControllerWithImages alloc]initWithContentViewController:<#(UIViewController *)#>]]
-            //[Utility downloadEvent:event sourceName:<#(NSString *)#> returnBlock:<#^(DownloadItem *item)block#>]
-//            DownloadItem *downloadItem = [Downloader downloadURL:event[@"mp4"] to: [self.localPath stringByAppendingString:event[@"name"]]];
-//            downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]];
-//            weakCell.downloadButton.downloadItem = downloadItem;
-//            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-//                weakCell.downloadButton.progress = progress;
-//                [weakCell.downloadButton setNeedsDisplay];
-//                weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
-//            }];
-//            [weakSelf.downloadingItemsDictionary setObject:downloadItem forKey: dateString];
+            DownloadItem *downloadItem = [Downloader downloadURL:event[@"mp4"] to: [self.localPath stringByAppendingString:event[@"name"]]];
+            downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]];
+            weakCell.downloadButton.downloadItem = downloadItem;
+            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                weakCell.downloadButton.progress = progress;
+                [weakCell.downloadButton setNeedsDisplay];
+                //weakCell.playButton.hidden = (weakCell.downloadButton.downloadItem.progress == 1.0)?NO:YES;
+            }];
+            [weakSelf.downloadingItemsDictionary setObject:downloadItem forKey: dateString];
         };
-        cell.playButton.hidden = YES;
+        //cell.playButton.hidden = YES;
     }
     
     [cell.timeLabel setText: [bothStrings[1] substringToIndex: 5]];
@@ -379,30 +387,11 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    UIColor * color = [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
-    UIColor * colorForTesting = [UIColor orangeColor];
-    UIColor * textColor = [UIColor colorWithWhite:0.224 alpha:1.0f];
-    
-    
-    
-    
     ARCalendarTableViewCell *lastCell = (ARCalendarTableViewCell *)[self.tableView cellForRowAtIndexPath: self.lastSelectedIndexPath];
-    lastCell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
-    lastCell.selectedBackgroundView.backgroundColor = [UIColor whiteColor];
-    [lastCell.dateLabel setTextColor:[UIColor blackColor]];
-    [lastCell.timeLabel setTextColor:[UIColor blackColor]];
-    [lastCell.titleLabel setTextColor:[UIColor blackColor]];
-    lastCell.backgroundColor = [UIColor whiteColor];
-    lastCell.layer.borderWidth = 0.0f;
+    [lastCell setSelected:NO animated:NO];
     
     ARCalendarTableViewCell *currentCell = (ARCalendarTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    currentCell.selectedBackgroundView.backgroundColor = colorForTesting;
-    [currentCell.dateLabel setTextColor:textColor];
-    [currentCell.timeLabel setTextColor:textColor];
-    [currentCell.titleLabel setTextColor:textColor];
-    currentCell.backgroundColor = color;
-    //[currentCell setSelectionStyle: UITableViewCellSelectionStyleNone];
+    [currentCell setSelected:YES animated:NO];
     self.lastSelectedIndexPath = indexPath;
     
 }
@@ -426,4 +415,5 @@
 }
 
 @end
+
 

@@ -21,6 +21,8 @@
 
 -(id)initWithFrame:(CGRect)frame encoderManager:(EncoderManager*)encoderManager;
 
+-(instancetype) initWithFrame:(CGRect)frame andClipData: (NSDictionary *) clipData;
+
 -(void)buildButtonsWithData:(NSDictionary*)list;
 /**
  *  Primary to secondary, secondary to primary
@@ -31,7 +33,7 @@
 
 -(Feed*)primaryFeed;
 -(Feed*)secondaryFeed;
--(void)deselectByIndex:(NSUInteger)index;
+-(void)deselectByIndex:(NSInteger)index;
 -(BOOL)secondarySelected;
 -(void)clear;
 -(void)setPrimaryPositionByName:(NSString*)btnName;

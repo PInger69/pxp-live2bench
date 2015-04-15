@@ -23,7 +23,46 @@
 @property (nonatomic,strong)            NSString       * path;
 
 
+/**
+ *  This is used to make a new Clip from a non existing Plist
+ *
+ *  @param aPath path of the new plist
+ *  @param data build the Clip
+ *  @return data build the Clip
+ */
+-(instancetype)initWithPlistPath:(NSString*)aPath data:(NSDictionary*)data;
+
+/**
+ *  There was already a plist on the device and ist just needs to be init
+ *
+ *  @param data build the Clip
+ *
+ *  @return
+ */
 -(instancetype)initWithDict:(NSDictionary*)data;
+
+
+/**
+ *  Will modify the clip and save the plist
+ *
+ *  @param aDict eg @{KeyIsPropToChange:value}
+ */
+-(void)modClipData:(NSDictionary*)aDict;
+
+/**
+ *  Add another source to the Clip
+ *
+ *  @param aDict
+ */
+-(void)addSourceToClip:(NSDictionary*)aDict;
+
+/**
+ *  Deletes all mp4s and selfPlist
+ */
+-(void)destroy;
+
+
+
 
 @end
 
