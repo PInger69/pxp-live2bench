@@ -21,27 +21,30 @@
 @synthesize path        = _path;
 
 
-
-
--(instancetype)initWithDict:(NSDictionary*)data
+/**
+ *  This is used when making a new plist from scatch
+ *
+ *  @param aPath <#aPath description#>
+ *  @param data  <#data description#>
+ *
+ *  @return <#return value description#>
+ */
+-(instancetype)initWithPlistPath:(NSString*)aPath data:(NSDictionary*)data
 {
     self = [super init];
     if (self) {
         
+        NSDictionary * data = [[NSDictionary alloc]initWithContentsOfFile:aPath];
+    
         _rawData            = data;
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [_rawData objectForKey:@"id"];
-        _rating             =[_rawData objectForKey:@"name"];
-        _comment            =[_rawData objectForKey:@"name"];
-        _feeds              =[_rawData objectForKey:@"name"];
-        _path               =[_rawData objectForKey:@"name"];
-
+        _rating             = [_rawData objectForKey:@"rating"];
+        _comment            = [_rawData objectForKey:@"comment"];
+        _feeds              = [self buildFeeds:_rawData];
+        _path               = [_rawData objectForKey:@"plistName"];
         
-//        _datapath           = [_rawData objectForKey:@"datapath"];
-//        _date               = [_rawData objectForKey:@"date"];
-//        _mp4s               = [self buildMP4s:_rawData];
-//        _feeds              = [self buildFeeds:_rawData];
-
+        
         
         
         
@@ -50,8 +53,179 @@
 }
 
 
+/**
+ *  This is used to make a clip from a existing plist
+ *
+ *  @param data <#data description#>
+ *
+ *  @return <#return value description#>
+ */
+-(instancetype)initWithDict:(NSDictionary*)data
+{
+    self = [super init];
+    if (self) {
+        
+        _rawData            = data;
+        _name               = [_rawData objectForKey:@"name"];
+        _clipId             = [_rawData objectForKey:@"id"];
+        _rating             = [_rawData objectForKey:@"rating"];
+        _comment            = [_rawData objectForKey:@"comment"];
+        _feeds              = [self buildFeeds:_rawData];
+        _path               = [_rawData objectForKey:@"plistName"];
+
+    
+    }
+    return self;
+}
 
 
+-(NSDictionary*)buildFeeds:(NSDictionary*)aDict
+{
+    
+    NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
+    
+    
+//    if ([aDict[@"vid_2"] isKindOfClass:[NSDictionary class]]){ // For new encoder and non live
+//        
+//        for (id key in aDict[@"vid_2"])
+//        {
+//            NSDictionary * vidDict      = aDict[@"vid_2"];
+//            NSDictionary * qualities    = [vidDict objectForKey:key];
+//            
+//            Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+//            createdFeed.sourceName = key;
+//            
+//            [tempDict setObject:createdFeed forKey:key];
+//        }
+//        
+//    } else if ([aDict[@"live_2"] isKindOfClass:[NSDictionary class]]){ // for new encoder and Live
+//        
+//        for (id key in aDict[@"live_2"])
+//        {
+//            NSDictionary * vidDict      = aDict[@"live_2"];
+//            NSDictionary * qualities    = [vidDict objectForKey:key];
+//            
+//            Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
+//            createdFeed.sourceName = key;
+//            
+//            [tempDict setObject:createdFeed forKey:key];
+//        }
+//        
+//    }
+    
+    
+    return [tempDict copy];
+}
+
+-(void)write
+{
+    // check the device if the clip is there.. if not then make a new clip from and make get an Id
+//    
+//    
+//    NSString            * clipID        = tagData[@"id"];
+//    NSMutableDictionary * mutableDict   = [NSMutableDictionary dictionaryWithDictionary:tagData];
+//    NSString            * bookmarkPlistPath;
+//    
+//    if ([_bookmarkPlistById objectForKey:clipID]) { // if there is a plist there already then just mod the data
+//        mutableDict                 = [_bookmarkPlistById objectForKey:clipID];
+//        NSMutableArray * list       = [NSMutableArray arrayWithArray:mutableDict[@"fileNames"]];
+//        [list addObject:aName];
+//        mutableDict[@"fileNames"]   = list;
+//        NSString * plistFileName    = mutableDict[@"plistName"];
+//        bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@",_localPath,plistFileName];
+//        
+//    } else { // there is no plist for this clip... make a new plist
+//        [mutableDict addEntriesFromDictionary:@{@"fileNames": @[aName]}];
+//        [self scanForBookmarks];
+//        int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
+//        bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%d.plist",_localPath,nextGap];
+//    }
+//    
+//    // make bookmarkvideo path if not there
+//    BOOL isDir = NO;
+//    [[NSFileManager defaultManager] fileExistsAtPath:[self bookmarkedVideosPath] isDirectory:&isDir];
+//    
+//    if ( !isDir){
+//        [[NSFileManager defaultManager] createDirectoryAtPath:[self bookmarkedVideosPath] withIntermediateDirectories:YES attributes:nil error:NULL];
+//    }
+//    
+//    NSString * clipPath = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],aName]; // is this right
+//    
+//    
+//    // adds the clip to the rest of the clip feeds
+//    
+//    Feed     * myFeed   = [[Feed alloc]initWithURLString:clipPath quality:0];
+//    [_clipFeeds setValue:myFeed forKey:aName];
+//    
+//    
+//    [mutableDict addEntriesFromDictionary:@{@"plistName": [bookmarkPlistPath lastPathComponent] }];
+//    [mutableDict writeToFile:bookmarkPlistPath atomically:YES];
+//    
+//    [_eventTagsDict setObject:mutableDict forKey:aName];
+}
+
+
+-(void)modClipData:(NSDictionary*)aDict
+{
+}
+
+-(void)addSourceToClip:(NSDictionary*)aDict
+{
+    
+//    NSMutableArray * list       = [NSMutableArray arrayWithArray:mutableDict[@"fileNames"]];
+//    [list addObject:aName];
+//    mutableDict[@"fileNames"]   = list;
+//    NSString * plistFileName    = mutableDict[@"plistName"];
+//    bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@",_localPath,plistFileName];
+//
+//    
+//    
+//    
+//    
+//    
+//    // make bookmarkvideo path if not there
+//    BOOL isDir = NO;
+//    [[NSFileManager defaultManager] fileExistsAtPath:[self bookmarkedVideosPath] isDirectory:&isDir];
+//    
+//    if ( !isDir){
+//        [[NSFileManager defaultManager] createDirectoryAtPath:[self bookmarkedVideosPath] withIntermediateDirectories:YES attributes:nil error:NULL];
+//    }
+//    
+//    NSString * clipPath = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],aName]; // is this right
+//    
+//    
+//    // adds the clip to the rest of the clip feeds
+//    
+//    Feed     * myFeed   = [[Feed alloc]initWithURLString:clipPath quality:0];
+//    [_clipFeeds setValue:myFeed forKey:aName];
+//    
+//    
+//    [mutableDict addEntriesFromDictionary:@{@"plistName": [bookmarkPlistPath lastPathComponent] }];
+//    [mutableDict writeToFile:bookmarkPlistPath atomically:YES];
+//    
+//    [_eventTagsDict setObject:mutableDict forKey:aName];
+//
+//    
+    
+}
+
+
+-(void)destroy
+{
+//    NSDictionary * clipDict = [_clips objectForKey:aId];
+//    
+//    NSError  * error        = nil;
+//    NSString * plistPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkPath],[clipDict objectForKey:@"plistName"]];
+//    NSString * videoPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],[clipDict objectForKey:@"fileNames"][0]];
+//    NSString * clipID       = [NSString stringWithFormat:@"%@",[clipDict objectForKey:@"id"]];
+//    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
+//    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
+//    [_clips removeObjectForKey:clipID];
+//    
+//    // sort list on delete
+//    _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
+//    // BOOM!
+}
 
 
 

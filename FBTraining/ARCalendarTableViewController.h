@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "DeletableTableViewController.h"
+#import "EncoderManager.h"
 
 @interface ARCalendarTableViewController : DeletableTableViewController
 
 @property (strong, nonatomic) NSMutableArray *arrayOfAllData;
 @property (strong, nonatomic) NSString       *localPath;
+
+@property (strong, nonatomic) EncoderManager *encoderManager;
 
 -(void)showAllData;
 

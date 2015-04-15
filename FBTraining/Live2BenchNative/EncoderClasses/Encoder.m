@@ -118,22 +118,24 @@
 @synthesize statusAsString  = _statusAsString;
 @synthesize bitrate         = _bitrate;     // To be used with KVO
 @synthesize event           = _event;
-@synthesize eventType       = _eventType;
-@synthesize eventTags       = _eventTags;
-@synthesize eventData       = _eventData;
-@synthesize feeds           = _feeds;
-@synthesize isMaster        = _isMaster;
-@synthesize allEventData    = _allEventData;
-@synthesize liveEventName   = _liveEventName;
 
-@synthesize teams           = _teams;
-@synthesize playerData      = _playerData;
-@synthesize league          = _league;
+@synthesize isMaster        = _isMaster;
+//@synthesize allEventData    = _allEventData;
+@synthesize liveEvent   = _liveEvent;
+//@synthesize eventType       = _eventType;
+//@synthesize eventTags       = _eventTags;
+//@synthesize eventData       = _eventData;
+//@synthesize feeds           = _feeds;
+//@synthesize teams           = _teams;
+//@synthesize playerData      = _playerData;
+//@synthesize league          = _league;
 @synthesize cameraCount     = _cameraCount;
 @synthesize eventTagsDict   = _eventTagsDict;
 
 @synthesize isBuild         = _isBuild;
 @synthesize isReady         = _isReady;
+
+@synthesize isAlive;
 
 -(id)initWithIP:(NSString*)ip
 {
@@ -154,6 +156,7 @@
         isVersion       = NO;
         _isBuild        = NO;
         _isReady         = NO;
+        isAlive         = YES;
         _cameraCount    = 0;
         _status         = ENCODER_STATUS_INIT;
     }
@@ -161,13 +164,17 @@
 }
 
 
--(void)setEvent:(NSString *)event
+-(void)setEvent:(Event *)event
 {
-    // Is it the same event or the event is not on the encoder
-    if ([event isEqualToString:_event]){
+    if (event ==_event){
         return;
     }
-
+    
+    [self willChangeValueForKey:@"event"];
+    _event      =  event;
+    [self didChangeValueForKey:@"event"];
+    
+    /*
     [self willChangeValueForKey:@"event"];
     
     NSArray         * events = [rawEncoderData objectForKey:@"events"];
@@ -241,12 +248,10 @@
     }
  
    [self didChangeValueForKey:@"event"];
-    
+    */
 }
 
-
-
--(NSString*)event
+-(Event*)event
 {
     return _event;
 }
@@ -255,7 +260,6 @@
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp
 {
-
     EncoderCommand *cmd    = [[EncoderCommand alloc]init];
     cmd.selector    = NSSelectorFromString(methodName);
     cmd.target      = self;
@@ -803,11 +807,7 @@
     isVersion = YES;
 }
 
-/**
- *  This gets the version of the linked Encoder
- *
- *  @param data responce json from encoder
- */
+
 -(void)teamsResponse:(NSData *)data
 {
     
@@ -825,9 +825,9 @@
         if([object isKindOfClass:[NSDictionary class]])
         {
             results     = object;
-            self.teams      = [results objectForKey:@"teams"];
-            self.playerData = [results objectForKey:@"teamsetup"];
-            self.league     = [results objectForKey:@"leagues"];
+//            self.teams      = [results objectForKey:@"teams"];
+//            self.playerData = [results objectForKey:@"teamsetup"];
+//            self.league     = [results objectForKey:@"leagues"];
         }
     }
     isTeamsGet = YES;
@@ -948,7 +948,7 @@
     
     if(NSClassFromString(@"NSJSONSerialization"))
     {
-        _liveEventName = nil;
+        _liveEvent = nil;
         NSError *error = nil;
         id object = [NSJSONSerialization
                      JSONObjectWithData:data
@@ -957,24 +957,33 @@
         
         if([object isKindOfClass:[NSDictionary class]])
         {
-            
             rawEncoderData                  = object;
             
             NSArray         * events        = [rawEncoderData objectForKey:@"events"];
             NSMutableArray  * pool          = [[NSMutableArray alloc]init];
-            NSMutableArray  * dataPool          = [[NSMutableArray alloc]init];
             
             @try {
                 NSEnumerator *enumerator = [events objectEnumerator];
                 id value;
                 
                 while ((value = [enumerator nextObject])) {
-                    NSDictionary * dict = value;
-                    if ([dict objectForKey:@"hid"]) {
-                        [pool addObject:[dict objectForKey:@"hid"]];
-                        [dataPool addObject:dict];
+                
+                    // make event with the data
+                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value];
+
+                    
+                    if (anEvent.live){ // live event FOUND!
+                        _liveEvent = anEvent;
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
+                        
+//                        [self willChangeValueForKey:@"eventType"];
+//                        _eventType = [dict objectForKey:@"sport"];
+//                        [self didChangeValueForKey:@"eventType"];
                     }
                     
+                    [pool addObject:anEvent];
+                    
+                    /*
                     if ([dict objectForKey:@"live_2"]){
                         
                         NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
@@ -1030,7 +1039,7 @@
 
                     
                     }
-                    
+                    */
                     
                 }
             }
@@ -1038,18 +1047,128 @@
                 NSLog(@"error parsing json data: %@",exception);
             }
             @finally {
-           
+                
             }
             
             self.allEvents      = [pool copy];
-            self.allEventData   = [dataPool copy];
-            
-            if (_feeds == nil) _feeds     = @{};
             
         }
     }
     _isBuild = YES;
 }
+
+
+/* old code
+ -(void)getAllEventsResponse:(NSData *)data
+ {
+ 
+ if(NSClassFromString(@"NSJSONSerialization"))
+ {
+ _liveEventName = nil;
+ NSError *error = nil;
+ id object = [NSJSONSerialization
+ JSONObjectWithData:data
+ options:0
+ error:&error];
+ 
+ if([object isKindOfClass:[NSDictionary class]])
+ {
+ 
+ rawEncoderData                  = object;
+ 
+ NSArray         * events        = [rawEncoderData objectForKey:@"events"];
+ NSMutableArray  * pool          = [[NSMutableArray alloc]init];
+ NSMutableArray  * dataPool          = [[NSMutableArray alloc]init];
+ 
+ @try {
+ NSEnumerator *enumerator = [events objectEnumerator];
+ id value;
+ 
+ while ((value = [enumerator nextObject])) {
+ NSDictionary * dict = value;
+ if ([dict objectForKey:@"hid"]) {
+ [pool addObject:[dict objectForKey:@"hid"]];
+ [dataPool addObject:dict];
+ }
+ 
+ if ([dict objectForKey:@"live_2"]){
+ 
+ NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
+ 
+ for (id key in dict[@"live_2"])
+ {
+ NSDictionary * qualities = [((NSDictionary *)dict[@"live_2"]) objectForKey:key];
+ [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+ }
+ 
+ self.feeds = [collect copy];
+ 
+ self.event = [dict objectForKey:@"name"]; // LIVE
+ _liveEventName = self.event;
+ [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
+ [self willChangeValueForKey:@"eventType"];
+ _eventType = [dict objectForKey:@"sport"];
+ [self didChangeValueForKey:@"eventType"];
+ 
+ } else if ([dict objectForKey:@"live"]) { // this is for the old encoder version
+ /////
+ self.event = [dict objectForKey:@"name"];
+ if ([dict[@"live"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
+ 
+ // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
+ // this creates a feed object from just a string with it  source named s1
+ Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
+ self.feeds = @{ @"s1":theFeed};
+ _liveEventName = dict[@"name"];
+ [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
+ self.isMaster = YES;
+ [self willChangeValueForKey:@"eventType"];
+ _eventType = [dict objectForKey:@"sport"];
+ [self didChangeValueForKey:@"eventType"];
+ 
+ }  else if ([dict[@"live"] isKindOfClass:[NSDictionary class]]){
+ //                            NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
+ //
+ //                            for (id key in dict[@"live"])
+ //                            {
+ //                                if ([key isEqualToString:@"url"])continue;
+ //                                NSDictionary * qualities = [((NSDictionary *)dict[@"live"]) objectForKey:key];
+ //                                [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
+ //                            }
+ //
+ //                            _feeds = [collect copy];
+ 
+ 
+ } else {
+ NSLog(@"JSON ERROR");
+ }
+ 
+ 
+ 
+ }
+ 
+ 
+ }
+ }
+ @catch (NSException *exception) {
+ NSLog(@"error parsing json data: %@",exception);
+ }
+ @finally {
+ 
+ }
+ 
+ self.allEvents      = [pool copy];
+ self.allEventData   = [dataPool copy];
+ 
+ if (_feeds == nil) _feeds     = @{};
+ 
+ }
+ }
+ _isBuild = YES;
+ }
+
+ */
+
 
 
 #pragma mark - Queue methods
@@ -1123,19 +1242,19 @@
     
 }
 
--(NSDictionary*)feeds
-{
-    return _feeds;
-}
-
--(void)setFeeds:(NSDictionary *)feeds
-{
-    if ([_feeds count]==0 && !feeds) return;
-    
-    _feeds = feeds;
-    if(_feeds == nil) _feeds = @{};
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEEDS_UPDATED object:self];
-}
+//-(NSDictionary*)feeds
+//{
+//    return _feeds;
+//}
+//
+//-(void)setFeeds:(NSDictionary *)feeds
+//{
+//    if ([_feeds count]==0 && !feeds) return;
+//    
+//    _feeds = feeds;
+//    if(_feeds == nil) _feeds = @{};
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEEDS_UPDATED object:self];
+//}
 
 -(void)setIsMaster:(BOOL)isMaster
 {
@@ -1163,11 +1282,7 @@
 // This will show name and status
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@" %@(%@): %d - %@   - %@",self.name,version,self.status,self.event,self.eventType  ];
-
-    
-    
-    
+    NSString * txt = [NSString stringWithFormat:@" %@(%@): %d - %@   - %@",self.name,version,self.status,self.event.name,self.event.eventType  ];
     return txt;
 }
 
@@ -1184,5 +1299,10 @@
     [self didChangeValueForKey:@"name"];
 }
 
+
+-(void)dealloc
+{
+    isAlive = NO;
+}
 
 @end

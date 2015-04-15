@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+@class Event;
+
 
 typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
     ENCODER_STATUS_UNKNOWN        = 0,
@@ -29,22 +31,31 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    NSString                * name;
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
-@property (nonatomic,strong)    NSString                * event;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSString                * eventType;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSArray                 * eventTags;        // the current event the encoder is looking at
-@property (nonatomic,strong)    NSString                * liveEventName;
-@property (nonatomic,strong)    NSDictionary            * eventData;   //raw dict
-@property (nonatomic,strong)    NSArray                 * allEvents;    // all events on the encoder
-@property (nonatomic,strong)    NSArray                 * allEventData;
-@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
-@property (nonatomic,strong)    NSDictionary            * feeds;// feeds for current event
-
-@property (nonatomic,strong)    NSDictionary    * teams; // all teams on encoder
-@property (nonatomic,strong)    NSDictionary    * playerData; 
-@property (nonatomic,strong)    NSDictionary    * league;
-
+@property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
+@property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
+
+@optional
+@property (nonatomic,strong)    Event                * liveEvent;
 -(void)clearQueueAndCurrent;
+
+
+
+
+// depricated
+//@property (nonatomic,strong)    NSString                * eventType;        // the current event the encoder is looking at
+//@property (nonatomic,strong)    NSArray                 * eventTags;        // the current event the encoder is looking at
+//@property (nonatomic,strong)    NSDictionary            * eventData;   //raw dict
+//@property (nonatomic,strong)    NSArray                 * allEventData;
+//@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
+//@property (nonatomic,strong)    NSDictionary            * feeds;// feeds for current event
+//@property (nonatomic,strong)    NSDictionary    * teams; // all teams on encoder
+//@property (nonatomic,strong)    NSDictionary    * playerData;
+//@property (nonatomic,strong)    NSDictionary    * league;
+
+
+
+
 
 @end

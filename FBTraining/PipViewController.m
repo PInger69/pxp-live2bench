@@ -413,7 +413,7 @@ static void * vpFrameContext   = &vpFrameContext;
     }
     // set feeds highlight
     
-    [_feedSwitchView clear];
+    [_feedSwitchView deselectByIndex:-1];
     [_feedSwitchView setPrimaryPositionByName:[rick objectForKey:@"feed"]];
     
     

@@ -34,7 +34,7 @@
         [self.playButton setPlayButton];
         [self.playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.playButton setShowsTouchWhenHighlighted: YES];
-        
+
         
         [self.contentView addSubview: self.feedName];
         [self.contentView addSubview:self.feedView];

@@ -21,6 +21,8 @@
 @property (nonatomic, strong) UIButton      * latestButton;
 @property (nonatomic, strong) UIButton      * allEventsButton;
 
+@property (nonatomic, strong) NSMutableArray  *allEvents;
+
 @end
 
 @implementation CalendarViewController
@@ -102,6 +104,12 @@
     [self.view addSubview:self.allEventsButton];
     
     [self.view addSubview:memoryBar];
+    
+    tableViewController.arrayOfAllData = [[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy];
+    [tableViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+    calendarViewController.arrayOfAllData = [[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy];
+    [calendarViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+    tableViewController.encoderManager = _appDel.encoderManager;
 }
 
 - (void)goToLatestEvent:(id)sender
@@ -133,19 +141,15 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CALENDAR_DATA object:nil userInfo:@{@"block": ^(NSMutableArray *eventArray){
-  
-        NSMutableArray *notliveEvents = [NSMutableArray array];
-        for (NSDictionary *event in eventArray) {
-            if (!event[@"live"]) {
-                [notliveEvents addObject:event];
-            }
-        }
-        
-        tableViewController.arrayOfAllData = notliveEvents;
-        calendarViewController.arrayOfAllData = notliveEvents;
-    }}];
-    
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CALENDAR_DATA object:nil userInfo:@{@"block": ^(NSMutableArray *eventArray){
+//  
+//        NSMutableArray *notliveEvents = [NSMutableArray array];
+//        for (NSDictionary *event in eventArray) {
+//            if (!event[@"live"]) {
+//                [notliveEvents addObject:event];
+//            }
+//        }
+//    }}];
 }
 
 - (void)didReceiveMemoryWarning

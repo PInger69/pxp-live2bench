@@ -21,6 +21,9 @@ typedef enum{
 @property (assign, nonatomic) float progress;
 @property (strong, nonatomic) DownloadItem *downloadItem;
 
+@property (assign, nonatomic) BOOL downloadCancelled;
+@property (assign, nonatomic) BOOL downloadComplete;
+
 -(void)setState:(DBDownloadState)state;
 
 @end

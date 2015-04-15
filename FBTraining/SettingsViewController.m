@@ -139,8 +139,9 @@ SVSignalStatus signalStatus;
                 [weakStateLable setHidden:YES];
                 
                 
-                [weakMasterEncoder removeObserver:self forKeyPath:@"status" context:&masterContext];
+               
             }
+            weakHomeLable.text = @"Encoder is not available.";
         }];
         
         
@@ -410,8 +411,16 @@ SVSignalStatus signalStatus;
         //[[change objectForKey:@"new"]integerValue]
         [self masterEncoderStatusObserver:(Encoder*)object];
     }
+
+    
+    if ([keyPath isEqualToString:@"isAlive"]) {
+        Encoder * enc = (Encoder *)object;
+        [enc removeObserver:self forKeyPath:@"status" context:&masterContext];
+        [enc removeObserver:self forKeyPath:@"isAlive" context:nil];
+    }
     
 }
+
 
 -(void)masterEncoderStatusObserver:(Encoder*)master
 {
@@ -478,6 +487,7 @@ SVSignalStatus signalStatus;
     [encStateLabel setHidden:NO];
     [encoderHomeText setAlpha:1];
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
+    [masterEncoder addObserver:self forKeyPath:@"isAlive" options:NSKeyValueObservingOptionNew context:nil];
     
     // block
 //    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
@@ -609,7 +619,7 @@ SVSignalStatus signalStatus;
 
 -(void)pickHome:(id)sender
 {
-    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    teamNames   = grabNames(encoderManager.masterEncoder.event.teams);
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected  = YES;
@@ -626,7 +636,7 @@ SVSignalStatus signalStatus;
 
 -(void)pickAway:(id)sender
 {
-    teamNames   = grabNames(encoderManager.masterEncoder.teams);
+    teamNames   = grabNames(encoderManager.masterEncoder.event.teams);
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected = YES;
@@ -642,7 +652,7 @@ SVSignalStatus signalStatus;
 
 -(void)pickLeague:(id)sender
 {
-    leagueNames = grabNames(encoderManager.masterEncoder.league);
+    leagueNames = grabNames(encoderManager.masterEncoder.event.league);
     if (leagueNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected = YES;

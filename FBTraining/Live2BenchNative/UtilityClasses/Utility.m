@@ -350,7 +350,6 @@
 +(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block
 {
      [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:nil userInfo:@{ @"data":data, @"source":sourceName, @"block":block }];
-
 }
 
 

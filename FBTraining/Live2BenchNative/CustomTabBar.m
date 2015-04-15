@@ -137,7 +137,13 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
  */
 -(void)setupView
 {
-    NSDictionary *nameToClass = @{@"Calendar":@"CalendarViewController", @"Injury":@"InjuryViewController", @"Live2Bench":@"Live2BenchViewController", @"My Clip":@"BookmarkViewController", @"Clip View":@"ClipViewController", @"List View":@"ListViewController"};
+    NSDictionary *nameToClass = @{@"Calendar":@"CalendarViewController",
+                                  @"Injury":@"InjuryViewController",
+                                  @"Live2Bench":@"Live2BenchViewController",
+                                  @"My Clip":@"BookmarkViewController",
+                                  @"Clip View":@"ClipViewController",
+                                  @"List View":@"ListViewController",
+                                  @"Debug":@"DebuggingTabViewController"};
 
     NSMutableArray *tabViewControllers = [NSMutableArray array];
     
@@ -221,7 +227,13 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 -(void)toggleTabs:(NSNotification *)note {
     NSString *nameOfTab = note.userInfo[@"Name"];
     BOOL onOrOff = [note.userInfo[@"Value"] boolValue];
-    NSDictionary *nameToClass = @{@"Calendar":@"CalendarViewController", @"Injury":@"InjuryViewController", @"Live2Bench":@"Live2BenchViewController", @"My Clip":@"BookmarkViewController", @"Clip View":@"ClipViewController", @"List View":@"ListViewController"};
+    NSDictionary *nameToClass = @{@"Calendar":@"CalendarViewController",
+                                  @"Injury":@"InjuryViewController",
+                                  @"Live2Bench":@"Live2BenchViewController",
+                                  @"My Clip":@"BookmarkViewController",
+                                  @"Clip View":@"ClipViewController",
+                                  @"List View":@"ListViewController",
+                                  @"Debug":@"DebuggingTabViewController"};
     NSDictionary *nameToIndex = @{@"Calendar":@1, @"Injury":@2, @"Live2Bench":@3, @"My Clip":@6, @"Clip View":@4, @"List View":@5};
 
     

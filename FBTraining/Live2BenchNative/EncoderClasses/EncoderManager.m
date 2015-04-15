@@ -8,14 +8,14 @@
 
 #import "EncoderManager.h"
 #import "Encoder.h"
-
-
 #import "EncoderCommands.h"
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
 #import "EncoderManagerActionPack.h" // All actions are in here!
 #import "Downloader.h"
 #import "DownloadItem.h"
+#import "Event.h"
+
 
 #import <SDWebImage/SDImageCache.h>
 
@@ -261,9 +261,7 @@
     NSMutableArray              * arrayOfTagSets;
     NSMutableDictionary         * _dictOfAccountInfo; // this will take in the from the global ACCOUNT_INFO, to cut down access to the global
     EncoderDataSync             * encoderSync;
-    
-    
-    
+
     id                          _userDataObserver;
     id                          _masterLostObserver;
     id                          _masterFoundObserver;
@@ -357,7 +355,9 @@
         }];
         
         _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            weakSelf.liveEventName = ((Encoder*) note.object).liveEventName;
+            
+            weakSelf.liveEventName = ((Encoder*) note.object).liveEvent;
+
             weakSelf.currentEvent = weakSelf.liveEventName; // should live be live no matter what??
         }];
         
@@ -373,10 +373,10 @@
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = (Encoder *)note.object;
             
-            
-            if (_masterEncoder.liveEventName) {
-                weakSelf.liveEventName = _masterEncoder.liveEventName;
+            if (_masterEncoder.liveEvent) {
+                weakSelf.liveEventName = _masterEncoder.liveEvent;
                 //                [weakSelf refresh];
+
                 weakSelf.primaryEncoder = _masterEncoder;
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
             }
@@ -1062,28 +1062,31 @@ static void * builtContext          = &builtContext; // depricated?
                                               }];
     NSNumber    * nowTime               = GET_NOW_TIME;
     
-    // updating game summary only on the encoder that has the game
-    if ([aType isEqualToString:@"game"]){
-        //[sumRequestData setObject:GET_NOW_TIME_STRING forKey:@"requesttime"];
-        NSArray         * encoders          = [dictOfEncoders allValues];
-        NSMutableArray  * encodersWithGame  =  [[NSMutableArray alloc]init];
-        [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
-            if ([obj.allEvents containsObject:aId]) {
-                [obj issueCommand:SUMMARY_PUT priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:nowTime];
-                [encodersWithGame addObject:obj];
-            }
-        }];
-        
-        [_masterEncoder issueCommand:SUMMARY_PUT priority:1 timeoutInSec:10 tagData:sumRequestData timeStamp:nowTime];
-        [encoderSync syncAll:[encodersWithGame copy] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
-        
-    } else if ([aType isEqualToString:@"month"] && _masterEncoder) {
-        [_masterEncoder issueCommand:SUMMARY_PUT priority:1 timeoutInSec:10 tagData:sumRequestData timeStamp:nowTime];
-        [encoderSync syncAll:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
-    } else if ([aType isEqualToString:@"month"] && !_masterEncoder){
-        // Alert the user that there is not master encoder
-    }
-    
+
+
+
+//    // updating game summary only on the encoder that has the game
+//    if ([aType isEqualToString:@"game"]){
+//        //[sumRequestData setObject:GET_NOW_TIME_STRING forKey:@"requesttime"];
+//        NSArray         * encoders          = [dictOfEncoders allValues];
+//        NSMutableArray  * encodersWithGame  =  [[NSMutableArray alloc]init];
+//       [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
+//           if ([obj.allEvents containsObject:aId]) {
+//               [obj issueCommand:SUMMARY_PUT priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:nowTime];
+//               [encodersWithGame addObject:obj];
+//           }
+//        }];
+//        
+//        [_masterEncoder issueCommand:SUMMARY_PUT priority:1 timeoutInSec:10 tagData:sumRequestData timeStamp:nowTime];
+//        [encoderSync syncAll:[encodersWithGame copy] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
+//        
+//    } else if ([aType isEqualToString:@"month"] && _masterEncoder) {
+//        [_masterEncoder issueCommand:SUMMARY_PUT priority:1 timeoutInSec:10 tagData:sumRequestData timeStamp:nowTime];
+//        [encoderSync syncAll:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
+//    } else if ([aType isEqualToString:@"month"] && !_masterEncoder){
+//        // Alert the user that there is not master encoder
+//    }
+
 }
 
 
@@ -1215,7 +1218,8 @@ static void * builtContext          = &builtContext; // depricated?
 // Getters and setters
 -(NSString*)currentEvent
 {
-    return _currentEvent;
+//    return _currentEvent;
+    return _primaryEncoder.event.name;
     
 }
 
@@ -1251,17 +1255,17 @@ static void * builtContext          = &builtContext; // depricated?
     
     NSMutableDictionary * temp  = [[NSMutableDictionary alloc]init];
     for (Encoder * encoder in _authenticatedEncoders) {
-        encoder.event       = aCurrentEvent;
-        if (encoder.eventType != nil){
-            [typeCollector addObject:encoder.eventType];
-            [temp addEntriesFromDictionary:encoder.feeds];
-            eventData = encoder.eventData;
+        encoder.event.name       = aCurrentEvent;
+        if (encoder.event.eventType != nil){
+            [typeCollector addObject:encoder.event.eventType];
+            [temp addEntriesFromDictionary:encoder.event.feeds];
+            eventData = encoder.event.rawData;
         }
     }
     _feeds = [temp mutableCopy];
     
     
-    if (_masterEncoder && [_masterEncoder.event isEqualToString:aCurrentEvent]) eventData = _masterEncoder.eventData;
+    if (_masterEncoder && [_masterEncoder.event.name isEqualToString:aCurrentEvent]) eventData = _masterEncoder.event.rawData;
     
     
     _currentEventData = eventData;
@@ -1291,12 +1295,24 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(NSString*)currentEventType
 {
+//<<<<<<< HEAD
     
     return [_currentEventType lowercaseString];
+//=======
+//
+////  return [_currentEventType lowercaseString];
+//    return [_primaryEncoder.event.eventType lowercaseString];
+//>>>>>>> 435467b893e8e556edc8fc74e3f1eb2366c6689d
 }
 
 
 
+
+/**
+ *  This gets all Event Classes from all encoders in a group
+ *
+ *  @return Array of Event Classes
+ */
 -(NSMutableArray*)allEvents
 {
     NSMutableArray * temp  = [[NSMutableArray alloc]init];
@@ -1315,8 +1331,16 @@ static void * builtContext          = &builtContext; // depricated?
     
     // Collects all data from encoders into a temp array
     NSMutableArray * temp1  = [[NSMutableArray alloc]init];
+    NSMutableArray * eventPool  = [[NSMutableArray alloc]init];
+   
+    
     for (id <EncoderProtocol> encoder in _authenticatedEncoders) {
-        [temp1 addObjectsFromArray:encoder.allEventData];
+        [eventPool addObjectsFromArray:encoder.allEvents];
+    }
+    
+    for (Event * anEvent in eventPool) {
+//        [temp1 addObjectsFromArray:anEvent.rawData];
+        [temp1 addObjectsFromArray:[anEvent.rawData allValues]];
     }
     
     
@@ -1351,12 +1375,13 @@ static void * builtContext          = &builtContext; // depricated?
     
     // this adds the data from the master encoder and overwrites slave data
     if (_masterEncoder != nil){
-        NSEnumerator * masterEnum = [_masterEncoder.allEventData objectEnumerator];
+        NSEnumerator * masterEnum = [_masterEncoder.allEvents objectEnumerator];
         id value2;
         while ((value2 = [masterEnum nextObject])) {
             NSDictionary * dict = value2;
             [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
         }
+
     }
     
     
@@ -1429,8 +1454,8 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
     for (id <EncoderProtocol> encoder in _authenticatedEncoders) {
-        if (encoder.eventTagsDict != nil ){
-            [tags  addEntriesFromDictionary:encoder.eventTagsDict];
+        if (encoder.event.tags != nil ){
+            [tags  addEntriesFromDictionary:encoder.event.tags];
         }
         
     }
@@ -1459,19 +1484,17 @@ static void * builtContext          = &builtContext; // depricated?
     
     if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) { // if its any other type of encoder then just take the tags from it only
         
-        _currentEventTags = [_primaryEncoder.eventTags copy];
+        _currentEventTags = [[_primaryEncoder.event.tags allValues] copy];
         
     } else {// if its normal encoder get from all connected and authenticated
         NSMutableArray * tempList  = [[NSMutableArray alloc]init];
         for (Encoder * encoder in _authenticatedEncoders) {
-            if (encoder.eventType != nil && ![encoder isKindOfClass:[LocalEncoder class]]){
-                [tempList addObjectsFromArray:encoder.eventTags];
+            if (encoder.event.eventType != nil && ![encoder isKindOfClass:[LocalEncoder class]]){
+                [tempList addObjectsFromArray:[encoder.event.tags allValues]];
             }
             
         }
         _currentEventTags = [tempList copy];
-        
-        
     }
     
     
@@ -1517,7 +1540,7 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
     for (Encoder * encoder in _authenticatedEncoders) {
-        if (encoder.eventType != nil && ![encoder isKindOfClass:[LocalEncoder class]]){
+        if (encoder.event.eventType != nil && ![encoder isKindOfClass:[LocalEncoder class]]){
             c += encoder.cameraCount;
         }
         

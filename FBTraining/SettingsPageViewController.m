@@ -104,9 +104,9 @@ NS_OPTIONS(NSInteger, style){
                                                                                                                                                                                                                                                           [NSNumber numberWithInt:5]} ] }];
             
             NSMutableDictionary *setting9 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Tabs", @"OptionChar":  [NSNumber numberWithChar: listOfToggles], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{ @"Setting Options":
-                                                                                                                                                                                                                                                          @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip"],
+                                                                                                                                                                                                                                                          @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip",@"Debug"],
                                                                                                                                                                                                                                                       @"Toggle Settings":
-                                                                                                                                                                                                                                                          @[ @1, @1, @1, @1, @1, @1]}] }];
+                                                                                                                                                                                                                                                          @[ @1, @1, @1, @1, @1, @1, @1]}] }];
             
             self.settingsArray = [NSMutableArray arrayWithArray:@[ setting1,
                                                                    
@@ -130,7 +130,7 @@ NS_OPTIONS(NSInteger, style){
                                                                    ]];
         }
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewLicense:) name:@"Setting - Eula :" object:nil];
-        _userName = [NSString stringWithFormat:@"Setting - User :  %@", appDel.userCenter.customerEmail];
+        _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];
         //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogout:) name:userName object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(operationInInformation:) name:@"Setting - Information" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogoutCompleted:) name:NOTIF_USER_LOGGED_OUT object:nil];
@@ -381,4 +381,3 @@ NS_OPTIONS(NSInteger, style){
  */
 
 @end
-

@@ -26,5 +26,7 @@
 
 - (void)isSelected:(BOOL)selected;
 
+- (void)isSelected:(BOOL)selected;
+
 @end
 

@@ -396,6 +396,8 @@
 		D7AA943917F4893E000EDAD5 /* ContactLabelString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */; };
 		D7AB2D1D16B6F44D0093465F /* line-button-grey.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D1B16B6F44D0093465F /* line-button-grey.png */; };
 		D7AB2D2416B6F4AD0093465F /* ToolBarValues.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */; };
+		D7AC062E1ADC13F10005EA73 /* Clip.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EB50AF1AD721F500CFB200 /* Clip.m */; };
+		D7AC06311ADD68B60005EA73 /* PxpLog.m in Sources */ = {isa = PBXBuildFile; fileRef = D7AC06301ADD5A730005EA73 /* PxpLog.m */; };
 		D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D7AC70EA1A9691A2000E5648 /* ValueBuffer.m */; };
 		D7AFD98116D412C1000CA781 /* normalsp.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AFD97D16D412C1000CA781 /* normalsp.png */; };
 		D7AFD98216D412C1000CA781 /* normalsp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AFD97E16D412C1000CA781 /* normalsp@2x.png */; };
@@ -1085,6 +1087,8 @@
 		D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactLabelString.txt; sourceTree = "<group>"; };
 		D7AB2D1B16B6F44D0093465F /* line-button-grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line-button-grey.png"; sourceTree = "<group>"; };
 		D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ToolBarValues.plist; sourceTree = "<group>"; };
+		D7AC062F1ADD5A730005EA73 /* PxpLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PxpLog.h; path = Live2BenchNative/UtilityClasses/PxpLog.h; sourceTree = "<group>"; };
+		D7AC06301ADD5A730005EA73 /* PxpLog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PxpLog.m; path = Live2BenchNative/UtilityClasses/PxpLog.m; sourceTree = "<group>"; };
 		D7AC70E91A9691A2000E5648 /* ValueBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ValueBuffer.h; path = Live2BenchNative/UtilityClasses/ValueBuffer.h; sourceTree = "<group>"; };
 		D7AC70EA1A9691A2000E5648 /* ValueBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ValueBuffer.m; path = Live2BenchNative/UtilityClasses/ValueBuffer.m; sourceTree = "<group>"; };
 		D7AFD97D16D412C1000CA781 /* normalsp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = normalsp.png; sourceTree = "<group>"; };
@@ -2450,6 +2454,8 @@
 		D7CF390819DF213F0013E46B /* UtilityClasses */ = {
 			isa = PBXGroup;
 			children = (
+				D7AC062F1ADD5A730005EA73 /* PxpLog.h */,
+				D7AC06301ADD5A730005EA73 /* PxpLog.m */,
 				D7A391701A6959DF00BFD353 /* ActionList.h */,
 				D7A391711A6959DF00BFD353 /* ActionList.m */,
 				D700801919DF2456000144CF /* Utility.h */,
@@ -2915,6 +2921,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7AC06311ADD68B60005EA73 /* PxpLog.m in Sources */,
+				D7AC062E1ADC13F10005EA73 /* Clip.m in Sources */,
 				D73FE3331A41DBF000341D57 /* L2BFullScreenViewController.m in Sources */,
 				BD9209A817F0B1A1005E8648 /* LoginViewController.m in Sources */,
 				D73FE3301A40882600341D57 /* L2BVideoBarViewController.m in Sources */,

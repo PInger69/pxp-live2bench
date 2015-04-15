@@ -33,7 +33,7 @@
 
 -(Feed*)primaryFeed;
 -(Feed*)secondaryFeed;
--(void)deselectByIndex:(NSUInteger)index;
+-(void)deselectByIndex:(NSInteger)index;
 -(BOOL)secondarySelected;
 -(void)clear;
 -(void)setPrimaryPositionByName:(NSString*)btnName;
