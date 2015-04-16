@@ -556,9 +556,6 @@ static void * builtContext          = &builtContext; // depricated?
         [_eventTags setObject:all forKey:_liveEventName];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil];
     }];
-    
-    
-    
 }
 
 -(void)setPrimaryEncoder:(id<EncoderProtocol>)primaryEncoder
@@ -1295,14 +1292,7 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(NSString*)currentEventType
 {
-//<<<<<<< HEAD
-    
-    return [_currentEventType lowercaseString];
-//=======
-//
-////  return [_currentEventType lowercaseString];
-//    return [_primaryEncoder.event.eventType lowercaseString];
-//>>>>>>> 435467b893e8e556edc8fc74e3f1eb2366c6689d
+    return [_primaryEncoder.event.eventType lowercaseString];
 }
 
 
@@ -1378,14 +1368,12 @@ static void * builtContext          = &builtContext; // depricated?
         NSEnumerator * masterEnum = [_masterEncoder.allEvents objectEnumerator];
         id value2;
         while ((value2 = [masterEnum nextObject])) {
-            NSDictionary * dict = value2;
+            Event *event = value2;
+            NSDictionary * dict = event.rawData;
             [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
         }
 
     }
-    
-    
-    
     return [[uniqueDict allValues]copy];
 }
 

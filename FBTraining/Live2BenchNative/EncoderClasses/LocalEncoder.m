@@ -51,6 +51,7 @@
         _status                         = ENCODER_STATUS_LOCAL;
         _event                          = nil;
         _clips              = [[NSMutableDictionary alloc]init];
+        _allEvents          = [[NSMutableDictionary alloc] init];
         
         // Build Bookmark Clip sections
         [self scanForBookmarks];

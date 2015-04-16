@@ -1,6 +1,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "CKViewController.h"
 #import "CKCalendarView.h"
+#import "Event.h"
 
 @interface CKViewController () <CKCalendarDelegate>
 
@@ -115,8 +116,8 @@
     self.dateArray = [[NSMutableArray alloc]init];
     NSDateFormatter *aDateFormatter = [[NSDateFormatter alloc]init];
     aDateFormatter.dateFormat = @"yyyy-MM-dd";
-    for (NSDictionary *event in arrayOfAllData) {
-        NSArray *bothStrings = [event[@"date"]componentsSeparatedByString:@" "];
+    for (Event *event in arrayOfAllData) {
+        NSArray *bothStrings = [event.date componentsSeparatedByString:@" "];
         
         NSArray *dateByComponents = [bothStrings[0] componentsSeparatedByString:@"-"];
         NSString *dateString = [NSString stringWithFormat:@"%@/%@/%@", dateByComponents[2], dateByComponents[1], dateByComponents[0] ];

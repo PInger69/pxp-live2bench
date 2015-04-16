@@ -11,6 +11,7 @@
 		436907451AB86E16003BD1E6 /* GTLCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907461AB86E16003BD1E6 /* GTLNetworking_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907491AB86E5B003BD1E6 /* GTLDrive_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */; };
+		43B2C5C21AE006E500C1B776 /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 43B2C5C11AE006E500C1B776 /* ClipControlBarSlider.m */; };
 		43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */; };
 		947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */; };
 		9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9482F269199A59E7000670B0 /* FootballTrainingCollectionViewController.m */; };
@@ -479,7 +480,6 @@
 		D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EF106217B4088A00CD4786 /* AutoScrollLabel.m */; };
 		D7F6973B1811C7E8003EDDDB /* ListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F697381811C7E8003EDDDB /* ListViewCell.m */; };
 		D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6973A1811C7E8003EDDDB /* ListViewController.m */; };
-		D7F6A1881ADD58BC000B97DA /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6A1871ADD58BC000B97DA /* ClipControlBarSlider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -512,6 +512,8 @@
 		436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLNetworking_Sources.m; sourceTree = "<group>"; };
 		436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDrive_Sources.m; sourceTree = "<group>"; };
 		436907481AB86E5B003BD1E6 /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
+		43B2C5C01AE006E500C1B776 /* ClipControlBarSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipControlBarSlider.h; sourceTree = "<group>"; };
+		43B2C5C11AE006E500C1B776 /* ClipControlBarSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipControlBarSlider.m; sourceTree = "<group>"; };
 		43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveIndicatorLight.h; sourceTree = SOURCE_ROOT; };
 		43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveIndicatorLight.m; sourceTree = SOURCE_ROOT; };
 		947F44A419883E150081E81D /* FootballTrainingBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingBottomViewController.h; sourceTree = "<group>"; };
@@ -1214,8 +1216,6 @@
 		D7F697381811C7E8003EDDDB /* ListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewCell.m; sourceTree = "<group>"; };
 		D7F697391811C7E8003EDDDB /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
 		D7F6973A1811C7E8003EDDDB /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
-		D7F6A1861ADD58BC000B97DA /* ClipControlBarSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClipControlBarSlider.h; path = ../../../Documents/ClipControlBarSlider.h; sourceTree = "<group>"; };
-		D7F6A1871ADD58BC000B97DA /* ClipControlBarSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ClipControlBarSlider.m; path = ../../../Documents/ClipControlBarSlider.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1979,6 +1979,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				43B2C5C01AE006E500C1B776 /* ClipControlBarSlider.h */,
+				43B2C5C11AE006E500C1B776 /* ClipControlBarSlider.m */,
 				D7EB50AE1AD721F500CFB200 /* Clip.h */,
 				D7EB50AF1AD721F500CFB200 /* Clip.m */,
 				D79350E81AD459C500D1751F /* DownloadEventItem.h */,
@@ -2426,8 +2428,6 @@
 				94F9596F192272C100B7D201 /* AVPlayerRewindableItem.m */,
 				D719869519C8B83900122CAA /* VideoControlBarSlider.h */,
 				D719869619C8B83900122CAA /* VideoControlBarSlider.m */,
-				D7F6A1861ADD58BC000B97DA /* ClipControlBarSlider.h */,
-				D7F6A1871ADD58BC000B97DA /* ClipControlBarSlider.m */,
 			);
 			name = VideoPlayer;
 			path = "/Users/dev/code/pxp-live2BenchNative/Live2BenchNative";
@@ -3004,7 +3004,6 @@
 				D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */,
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
-				D7F6A1881ADD58BC000B97DA /* ClipControlBarSlider.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,
 				D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */,
@@ -3099,6 +3098,7 @@
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
+				43B2C5C21AE006E500C1B776 /* ClipControlBarSlider.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				AA83593C19B10B71009B3ABC /* LBCloudPlayerView.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
