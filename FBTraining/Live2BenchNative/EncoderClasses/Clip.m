@@ -171,15 +171,17 @@
 
 -(void)addSourceToClip:(NSDictionary*)aDict
 {
+    NSMutableDictionary *mutableDict = [_rawData mutableCopy];
     
-//    NSMutableArray * list       = [NSMutableArray arrayWithArray:mutableDict[@"fileNames"]];
-//    [list addObject:aName];
-//    mutableDict[@"fileNames"]   = list;
+    NSMutableArray * list       = [NSMutableArray arrayWithArray: mutableDict[@"fileNames"]];
+    NSString *aName = [[aDict objectForKey:@"fileNames"] firstObject];
+    [list addObject: aName];
+    mutableDict[@"fileNames"]   = list;
 //    NSString * plistFileName    = mutableDict[@"plistName"];
 //    bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@",_localPath,plistFileName];
+    _rawData = mutableDict;
+    
 //
-//    
-//    
 //    
 //    
 //    
@@ -204,27 +206,37 @@
 //    [mutableDict writeToFile:bookmarkPlistPath atomically:YES];
 //    
 //    [_eventTagsDict setObject:mutableDict forKey:aName];
-//
-//    
+
+    
     
 }
 
 
 -(void)destroy
 {
-//    NSDictionary * clipDict = [_clips objectForKey:aId];
+    //NSDictionary * clipDict = [_clips objectForKey:aId];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *plistName = [_rawData objectForKey:@"plistName"];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
+    
+    NSString *plistPath = [dataPath stringByAppendingPathComponent: plistName];
+    NSError  * error        = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
+    
+    for (NSString *videoFileName in [_rawData objectForKey:@"fileNames"]) {
+        dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmarkVideos"];
+        NSString * videoPath    = [dataPath stringByAppendingPathComponent: videoFileName];
+        [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
+    }
+//       NSString * clipID       = [NSString stringWithFormat:@"%@",[clipDict objectForKey:@"id"]];
 //    
-//    NSError  * error        = nil;
-//    NSString * plistPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkPath],[clipDict objectForKey:@"plistName"]];
-//    NSString * videoPath    = [NSString stringWithFormat:@"%@/%@",[self bookmarkedVideosPath],[clipDict objectForKey:@"fileNames"][0]];
-//    NSString * clipID       = [NSString stringWithFormat:@"%@",[clipDict objectForKey:@"id"]];
-//    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
-//    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
-//    [_clips removeObjectForKey:clipID];
+//    
+////[_clips removeObjectForKey:clipID];
 //    
 //    // sort list on delete
 //    _bookmarkPlistNames = [NSMutableArray arrayWithArray:[_bookmarkPlistNames sortedArrayUsingComparator: plistSort]];
-//    // BOOM!
+    // BOOM!
 }
 
 

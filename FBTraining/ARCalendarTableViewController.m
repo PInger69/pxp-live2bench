@@ -129,8 +129,8 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd";
     
-    for (NSDictionary *event in self.arrayOfAllData) {
-        NSArray *bothStrings = [event[@"date"]componentsSeparatedByString:@" "];
+    for (Event *event in self.arrayOfAllData) {
+        NSArray *bothStrings = [event.date componentsSeparatedByString:@" "];
         NSDate *date = [formatter dateFromString:bothStrings[0]];
         
         if ([self date: date isSameDayAsDate:note.userInfo[@"date"]]) {

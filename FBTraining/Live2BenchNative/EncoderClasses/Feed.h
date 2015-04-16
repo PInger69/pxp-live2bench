@@ -16,6 +16,7 @@
 @property (nonatomic, strong)            NSString       * sourceName;   // raw source name
 @property (nonatomic,assign)             BOOL           isAlive;        // for observering
 @property (nonatomic, strong)            NSDictionary   * info;         // any extra data that needs to be associated with the feed e.g. tag plist
+@property (nonatomic, strong)            NSArray        *allPaths;
 
 -(id)initWithURLDict:(NSDictionary *)aDict;
 -(id)initWithURLString:(NSString *)aPath quality:(int)qlty;
