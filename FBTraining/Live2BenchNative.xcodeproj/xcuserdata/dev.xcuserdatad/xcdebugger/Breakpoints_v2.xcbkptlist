@@ -148,11 +148,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
-            timestampString = "450741133.356414"
+            timestampString = "450909843.697321"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1256"
-            endingLineNumber = "1256"
+            startingLineNumber = "1257"
+            endingLineNumber = "1257"
             landmarkName = "-seekClamp:"
             landmarkType = "5">
          </BreakpointContent>
@@ -282,7 +282,7 @@
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
-            continueAfterRunningActions = "No"
+            continueAfterRunningActions = "Yes"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
             timestampString = "450890009.292135"
             startingColumnNumber = "9223372036854775807"

@@ -402,8 +402,8 @@ static void * vpFrameContext   = &vpFrameContext;
 //    [vid playFeed:f];
     vid.looping         = NO;
     vid.live            = NO;
-    [vid playFeed:f withRange:timeRange];
-
+    //[vid playFeed:f withRange:timeRange];
+    [vid playClipWithFeed:f andTimeRange:timeRange];
     vid.looping         = YES;
 
     
