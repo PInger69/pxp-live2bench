@@ -69,7 +69,7 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 -(void)seekWithSeekerButton:(id)sender;
 -(void)playFeed:(Feed*)aFeed;
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange;
--(void)playClipTimeRange: (CMTimeRange)aRange;
+-(void)playClipWithFeed: (Feed*)aFeed andTimeRange:(CMTimeRange)aRange;
 
 
 @end

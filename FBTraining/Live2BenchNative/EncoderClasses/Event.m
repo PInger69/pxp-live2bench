@@ -101,13 +101,14 @@
             
             Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
             createdFeed.sourceName = key;
-            
+            _live = YES;
             [tempDict setObject:createdFeed forKey:key];
         }
     } else { // for old encoder
         Feed * theFeed;
         if (aDict[@"live"]) { // This is for backwards compatibility
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"live"] quality:0];
+            _live = YES;
         } else if (aDict[@"vid"]) {
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0];
         } else {

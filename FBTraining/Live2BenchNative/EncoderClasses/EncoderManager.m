@@ -356,7 +356,7 @@
         
         _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
             
-            weakSelf.liveEventName = ((Encoder*) note.object).liveEvent;
+            weakSelf.liveEventName = ((Encoder*) note.object).liveEvent.name;
 
             weakSelf.currentEvent = weakSelf.liveEventName; // should live be live no matter what??
         }];
@@ -374,7 +374,7 @@
             _masterEncoder = (Encoder *)note.object;
             
             if (_masterEncoder.liveEvent) {
-                weakSelf.liveEventName = _masterEncoder.liveEvent;
+                weakSelf.liveEventName = _masterEncoder.liveEvent.name;
                 //                [weakSelf refresh];
 
                 weakSelf.primaryEncoder = _masterEncoder;
@@ -1248,24 +1248,29 @@ static void * builtContext          = &builtContext; // depricated?
     // CHANGE TO BE CONTROLLED FROM PRIMARY ENCODER
     NSMutableSet * typeCollector =  [[NSMutableSet alloc]init];
     
-    NSDictionary * eventData;
+    NSMutableDictionary * eventData = [[NSMutableDictionary alloc]init];;
     
     NSMutableDictionary * temp  = [[NSMutableDictionary alloc]init];
     for (Encoder * encoder in _authenticatedEncoders) {
-        encoder.event.name       = aCurrentEvent;
-        if (encoder.event.eventType != nil){
-            [typeCollector addObject:encoder.event.eventType];
-            [temp addEntriesFromDictionary:encoder.event.feeds];
-            eventData = encoder.event.rawData;
+        
+        if ( [encoder.allEvents objectForKey:aCurrentEvent]){
+            Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
+          
+            //if (encoder.event.eventType != nil){
+                [typeCollector addObject:curEvent.eventType];
+                [temp addEntriesFromDictionary:curEvent.feeds];
+                [eventData addEntriesFromDictionary: curEvent.rawData];
+           // }
+            encoder.event = curEvent;
         }
     }
     _feeds = [temp mutableCopy];
     
     
-    if (_masterEncoder && [_masterEncoder.event.name isEqualToString:aCurrentEvent]) eventData = _masterEncoder.event.rawData;
+    if (_masterEncoder && [_masterEncoder.event.name isEqualToString:aCurrentEvent]) [eventData addEntriesFromDictionary: _masterEncoder.event.rawData];
     
     
-    _currentEventData = eventData;
+    _currentEventData = [eventData copy];
     
     [self willChangeValueForKey:@"currentEvent"];
     _currentEvent = aCurrentEvent;
@@ -1292,7 +1297,9 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(NSString*)currentEventType
 {
-    return [_primaryEncoder.event.eventType lowercaseString];
+
+   return [_primaryEncoder.event.eventType lowercaseString];
+
 }
 
 

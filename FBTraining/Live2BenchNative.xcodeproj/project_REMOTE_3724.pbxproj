@@ -11,7 +11,6 @@
 		436907451AB86E16003BD1E6 /* GTLCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907461AB86E16003BD1E6 /* GTLNetworking_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907491AB86E5B003BD1E6 /* GTLDrive_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */; };
-		43B2C5C21AE006E500C1B776 /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 43B2C5C11AE006E500C1B776 /* ClipControlBarSlider.m */; };
 		43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */; };
 		947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */; };
 		9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9482F269199A59E7000670B0 /* FootballTrainingCollectionViewController.m */; };
@@ -513,8 +512,6 @@
 		436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLNetworking_Sources.m; sourceTree = "<group>"; };
 		436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDrive_Sources.m; sourceTree = "<group>"; };
 		436907481AB86E5B003BD1E6 /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
-		43B2C5C01AE006E500C1B776 /* ClipControlBarSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipControlBarSlider.h; sourceTree = "<group>"; };
-		43B2C5C11AE006E500C1B776 /* ClipControlBarSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipControlBarSlider.m; sourceTree = "<group>"; };
 		43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveIndicatorLight.h; sourceTree = SOURCE_ROOT; };
 		43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveIndicatorLight.m; sourceTree = SOURCE_ROOT; };
 		947F44A419883E150081E81D /* FootballTrainingBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingBottomViewController.h; sourceTree = "<group>"; };

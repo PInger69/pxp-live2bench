@@ -72,7 +72,9 @@
 }
 
 
-
+-(NSArray *)allPaths{
+    return [_qualities allValues];
+}
 
 
 -(NSURL *)path

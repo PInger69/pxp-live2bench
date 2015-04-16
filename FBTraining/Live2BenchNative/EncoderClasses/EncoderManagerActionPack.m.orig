@@ -32,7 +32,11 @@
 
 -(void)start {
     NSURL * checkURL                        = [NSURL URLWithString:   @"http://myplayxplay.net/max/ping/ajax"  ];
+<<<<<<< HEAD
+    NSURLRequest * urlRequest               = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:6];
+=======
     NSURLRequest * urlRequest               = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5];
+>>>>>>> a639af948078773cf8c95f1c7921e685384232f7
     NSURLConnection * connnect              = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     [connnect start];
 }
