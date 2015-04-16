@@ -960,7 +960,7 @@
             rawEncoderData                  = object;
             
             NSArray         * events        = [rawEncoderData objectForKey:@"events"];
-            NSMutableArray  * pool          = [[NSMutableArray alloc]init];
+            NSMutableDictionary  * pool     = [[NSMutableDictionary alloc]init];
             
             @try {
                 NSEnumerator *enumerator = [events objectEnumerator];
@@ -981,8 +981,8 @@
 //                        [self didChangeValueForKey:@"eventType"];
                     }
                     
-                    [pool addObject:anEvent];
-                    
+
+                     [pool setObject:anEvent forKey:anEvent.name];
                     /*
                     if ([dict objectForKey:@"live_2"]){
                         
