@@ -130,7 +130,7 @@
 //@synthesize playerData      = _playerData;
 //@synthesize league          = _league;
 @synthesize cameraCount     = _cameraCount;
-@synthesize eventTagsDict   = _eventTagsDict;
+//@synthesize eventTagsDict   = _eventTagsDict;
 
 @synthesize isBuild         = _isBuild;
 @synthesize isReady         = _isReady;
@@ -145,7 +145,7 @@
         _authenticated  = NO;
         timeOut         = 15.0f;
         queue           = [[NSMutableDictionary alloc]init];
-        _eventTagsDict  = [[NSMutableDictionary alloc]init];
+//        _eventTagsDict  = [[NSMutableDictionary alloc]init];
         isWaitiing      = NO;
         log             = [NSMutableString stringWithString:@"Encoder Log: \r"];
         version         = @"?";
@@ -788,47 +788,24 @@
  */
 -(void)versionResponse:(NSData *)data
 {
-    NSDictionary    * results;
-    if(NSClassFromString(@"NSJSONSerialization"))
-    {
-        NSError *error = nil;
-        id object = [NSJSONSerialization
-                     JSONObjectWithData:data
-                     options:0
-                     error:&error];
-        
-        if([object isKindOfClass:[NSDictionary class]])
-        {
-            results = object;
-            version = (NSString *)[results objectForKey:@"version"] ;
-
-        }
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    if([results isKindOfClass:[NSDictionary class]]){
+        version = (NSString *)[results objectForKey:@"version"] ;
     }
+
     isVersion = YES;
 }
 
 
 -(void)teamsResponse:(NSData *)data
 {
-    
-    
-    
     NSDictionary    * results =[Utility JSONDatatoDict:data];
-    if(NSClassFromString(@"NSJSONSerialization"))
+    
+    if([results isKindOfClass:[NSDictionary class]])
     {
-        NSError *error = nil;
-        id object = [NSJSONSerialization
-                     JSONObjectWithData:data
-                     options:0
-                     error:&error];
-        
-        if([object isKindOfClass:[NSDictionary class]])
-        {
-            results     = object;
 //            self.teams      = [results objectForKey:@"teams"];
 //            self.playerData = [results objectForKey:@"teamsetup"];
 //            self.league     = [results objectForKey:@"leagues"];
-        }
     }
     isTeamsGet = YES;
 }
@@ -836,57 +813,29 @@
 -(void)modTagResponce:(NSData *)data
 {
     
-    NSDictionary    * results;
-    if(NSClassFromString(@"NSJSONSerialization"))
-    {
-        NSError *error = nil;
-        id object = [NSJSONSerialization
-                     JSONObjectWithData:data
-                     options:0
-                     error:&error];
-        
-        if([object isKindOfClass:[NSDictionary class]])
-        {
-            results = object;
-            // add tag to its dic
-            if ([results objectForKey:@"id"]) {
-                
-                NSString * tagId = [[results objectForKey:@"id"]stringValue];
-                
-                [_eventTagsDict setObject:results forKey:tagId];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
-            }
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    if([results isKindOfClass:[NSDictionary class]])    {
+        if ([results objectForKey:@"id"]) {
+            NSString * tagId = [[results objectForKey:@"id"]stringValue];
+            [_event.tags setObject:results forKey:tagId];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
         }
+    
     }
     
 }
 
 -(void)makeTagResponce:(NSData *)data
 {
-
-    NSDictionary    * results;
-    if(NSClassFromString(@"NSJSONSerialization"))
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    if([results isKindOfClass:[NSDictionary class]])
     {
-        NSError *error = nil;
-        id object = [NSJSONSerialization
-                     JSONObjectWithData:data
-                     options:0
-                     error:&error];
-        
-        if([object isKindOfClass:[NSDictionary class]])
-        {
-            results = object;
-          // add tag to its dic
-            if ([results objectForKey:@"id"]) {
-                
-                NSString * tagId = [[results objectForKey:@"id"]stringValue];
-
-                [_eventTagsDict setObject:results forKey:tagId];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:results];
-            }
+        if ([results objectForKey:@"id"]) {
+            NSString * tagId = [[results objectForKey:@"id"]stringValue];
+            [_event.tags setObject:results forKey:tagId];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:results];
         }
     }
-
 }
 
 -(void)eventTagsGetResponce:(NSData *)data eventNameKey:(NSString*)eventName
@@ -895,15 +844,17 @@
     
     if (results){
         NSDictionary    * tags = [results objectForKey:@"tags"];
-       if (tags) _eventTagsDict = [NSMutableDictionary dictionaryWithDictionary:tags];
+        if (tags) {
+            
+            _event.tags =[NSMutableDictionary dictionaryWithDictionary:tags];
+        }
     }
+    
 }
 
 -(void)camerasGetResponce:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
-
-
     _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
 }
 
@@ -941,10 +892,14 @@
  *  This class is what buils the rest of the data from the encoder
  *
  *
- *  @param data <#data description#>
+ *  @param data
  */
 -(void)getAllEventsResponse:(NSData *)data
 {
+    
+    
+    
+    
     
     if(NSClassFromString(@"NSJSONSerialization"))
     {
@@ -1058,118 +1013,6 @@
 }
 
 
-/* old code
- -(void)getAllEventsResponse:(NSData *)data
- {
- 
- if(NSClassFromString(@"NSJSONSerialization"))
- {
- _liveEventName = nil;
- NSError *error = nil;
- id object = [NSJSONSerialization
- JSONObjectWithData:data
- options:0
- error:&error];
- 
- if([object isKindOfClass:[NSDictionary class]])
- {
- 
- rawEncoderData                  = object;
- 
- NSArray         * events        = [rawEncoderData objectForKey:@"events"];
- NSMutableArray  * pool          = [[NSMutableArray alloc]init];
- NSMutableArray  * dataPool          = [[NSMutableArray alloc]init];
- 
- @try {
- NSEnumerator *enumerator = [events objectEnumerator];
- id value;
- 
- while ((value = [enumerator nextObject])) {
- NSDictionary * dict = value;
- if ([dict objectForKey:@"hid"]) {
- [pool addObject:[dict objectForKey:@"hid"]];
- [dataPool addObject:dict];
- }
- 
- if ([dict objectForKey:@"live_2"]){
- 
- NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
- 
- for (id key in dict[@"live_2"])
- {
- NSDictionary * qualities = [((NSDictionary *)dict[@"live_2"]) objectForKey:key];
- [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
- }
- 
- self.feeds = [collect copy];
- 
- self.event = [dict objectForKey:@"name"]; // LIVE
- _liveEventName = self.event;
- [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
- [self willChangeValueForKey:@"eventType"];
- _eventType = [dict objectForKey:@"sport"];
- [self didChangeValueForKey:@"eventType"];
- 
- } else if ([dict objectForKey:@"live"]) { // this is for the old encoder version
- /////
- self.event = [dict objectForKey:@"name"];
- if ([dict[@"live"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
- 
- // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
- // this creates a feed object from just a string with it  source named s1
- Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
- self.feeds = @{ @"s1":theFeed};
- _liveEventName = dict[@"name"];
- [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
- self.isMaster = YES;
- [self willChangeValueForKey:@"eventType"];
- _eventType = [dict objectForKey:@"sport"];
- [self didChangeValueForKey:@"eventType"];
- 
- }  else if ([dict[@"live"] isKindOfClass:[NSDictionary class]]){
- //                            NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
- //
- //                            for (id key in dict[@"live"])
- //                            {
- //                                if ([key isEqualToString:@"url"])continue;
- //                                NSDictionary * qualities = [((NSDictionary *)dict[@"live"]) objectForKey:key];
- //                                [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
- //                            }
- //
- //                            _feeds = [collect copy];
- 
- 
- } else {
- NSLog(@"JSON ERROR");
- }
- 
- 
- 
- }
- 
- 
- }
- }
- @catch (NSException *exception) {
- NSLog(@"error parsing json data: %@",exception);
- }
- @finally {
- 
- }
- 
- self.allEvents      = [pool copy];
- self.allEventData   = [dataPool copy];
- 
- if (_feeds == nil) _feeds     = @{};
- 
- }
- }
- _isBuild = YES;
- }
-
- */
-
-
 
 #pragma mark - Queue methods
 // Queue methods
@@ -1242,19 +1085,6 @@
     
 }
 
-//-(NSDictionary*)feeds
-//{
-//    return _feeds;
-//}
-//
-//-(void)setFeeds:(NSDictionary *)feeds
-//{
-//    if ([_feeds count]==0 && !feeds) return;
-//    
-//    _feeds = feeds;
-//    if(_feeds == nil) _feeds = @{};
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEEDS_UPDATED object:self];
-//}
 
 -(void)setIsMaster:(BOOL)isMaster
 {

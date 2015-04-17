@@ -52,7 +52,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filterArray:) name:@"datePicked" object:nil];
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
         NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
-        [self.downloadingItemsDictionary removeObjectForKey:key[0]];
+        if (key.count > 0) {
+            [self.downloadingItemsDictionary removeObjectForKey:key[0]];
+        }
     }];
 }
 
@@ -71,8 +73,8 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd";
     
-    for (NSDictionary *event in self.arrayOfAllData) {
-        NSArray *bothStrings = [event[@"date"]componentsSeparatedByString:@" "];
+    for (Event *event in self.arrayOfAllData) {
+        NSArray *bothStrings = [event.date componentsSeparatedByString:@" "];
         NSDate *date = [formatter dateFromString:bothStrings[0]];
         
         
@@ -83,7 +85,8 @@
         }
         
         for (int i = 0; i < sortedArray.count; ++i) {
-            NSArray *bothStringsOfSortedEvent = [sortedArray[i][@"date"] componentsSeparatedByString:@" "];
+            Event *temp = sortedArray[i];
+            NSArray *bothStringsOfSortedEvent = [temp.date componentsSeparatedByString:@" "];
             NSDate *dateOfSortedEvent = [formatter dateFromString:bothStringsOfSortedEvent[0]];
             
             if ([date compare: dateOfSortedEvent] == NSOrderedAscending) {
@@ -116,7 +119,7 @@
     }
     
     NSMutableArray *newestFirstSortedArray = [NSMutableArray array];
-    for (NSDictionary *event in sortedArray) {
+    for (Event *event in sortedArray) {
         [newestFirstSortedArray insertObject:event atIndex:0];
     }
     
@@ -282,7 +285,7 @@
     cell.backgroundColor = [UIColor whiteColor];
     cell.layer.borderWidth = 0.0f;
     
-    NSDictionary *event;
+    Event *event;
     
     if (firstIndexPath.row < indexPath.row) {
         event = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
@@ -290,7 +293,7 @@
         event = self.tableData[indexPath.row];
     }
     
-    NSString *dateString = [event objectForKey:@"date"];
+    NSString *dateString = event.date;
     NSArray *bothStrings = [dateString componentsSeparatedByString:@" "];
     
 //    cell.downloadButton.hidden = NO;
@@ -298,7 +301,7 @@
 
     [cell.timeLabel setText: [bothStrings[1] substringToIndex: 5]];
     [cell.dateLabel setText: bothStrings[0]];
-    [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event[@"visitTeam"], event[@"homeTeam"]]];
+    [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     
     [cell setSelectionStyle: UITableViewCellSelectionStyleNone];
     
@@ -327,8 +330,8 @@
         // Delete the row from the data source
         self.editingIndexPath = indexPath;
         
-        NSDictionary *event = self.tableData[indexPath.row];
-        NSString *dateString = [event objectForKey:@"date"];
+        Event *event = self.tableData[indexPath.row];
+        NSString *dateString = event.date;
         
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         [alert setTitle:@"myplayXplay"];
