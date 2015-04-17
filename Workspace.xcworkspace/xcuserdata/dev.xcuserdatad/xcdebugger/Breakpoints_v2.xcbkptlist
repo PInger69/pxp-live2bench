@@ -614,8 +614,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "726"
             endingLineNumber = "726"
-            landmarkName = "-notificationDataRequest:"
-            landmarkType = "5">
+            landmarkName = "@implementation EncoderManager"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -710,7 +710,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "562"
             endingLineNumber = "562"
-            landmarkName = "-masterHasLive:"
+            landmarkName = "-setPrimaryEncoder:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1340,7 +1340,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1217"
             endingLineNumber = "1217"
-            landmarkName = "-closeDurationTag:"
+            landmarkName = "-currentEvent"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1772,7 +1772,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1297"
             endingLineNumber = "1297"
-            landmarkName = "-setCurrentEvent:"
+            landmarkName = "-currentEventType"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

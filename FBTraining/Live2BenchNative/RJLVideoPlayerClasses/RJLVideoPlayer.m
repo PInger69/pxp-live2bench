@@ -176,7 +176,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     }
 }
 
--(void)playClipTimeRange:(CMTimeRange)aRange{
+-(void)playClipWithFeed: (Feed*)aFeed andTimeRange:(CMTimeRange)aRange{
+    [self playFeed:aFeed withRange:aRange];
     self.clipControlBar.hidden = NO;
     self.clipControlBar.minimumClipTime = (aRange.start.value / aRange.start.timescale);
     self.clipControlBar.maximumClipTime = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);

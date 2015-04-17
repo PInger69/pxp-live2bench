@@ -105,6 +105,7 @@
     
     [self.view addSubview:memoryBar];
     
+<<<<<<< HEAD
     tableViewController.arrayOfAllData = [[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy];
     //tableViewController.arrayOfAllData = _appDel.encoderManager.masterEncoder.allEvents;
     [tableViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
@@ -112,6 +113,21 @@
     //calendarViewController.arrayOfAllData = _appDel.encoderManager.masterEncoder.allEvents;
     [calendarViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
     tableViewController.encoderManager = _appDel.encoderManager;
+=======
+//    tableViewController.arrayOfAllData = [_appDel.encoderManager.masterEncoder.allEvents mutableCopy];
+//    [tableViewController.arrayOfAllData addObjectsFromArray:[_appDel.encoderManager.localEncoder.allEvents mutableCopy]];
+//    calendarViewController.arrayOfAllData = [_appDel.encoderManager.masterEncoder.allEvents mutableCopy];
+//    [calendarViewController.arrayOfAllData addObjectsFromArray:[_appDel.encoderManager.localEncoder.allEvents  mutableCopy]];
+//    tableViewController.encoderManager = _appDel.encoderManager;
+    
+//    tableViewController.arrayOfAllData = [[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy];
+//    [tableViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+//    calendarViewController.arrayOfAllData = [[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy];
+//    [calendarViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+//    tableViewController.encoderManager = _appDel.encoderManager;
+    
+    
+>>>>>>> a639af948078773cf8c95f1c7921e685384232f7
 }
 
 - (void)goToLatestEvent:(id)sender

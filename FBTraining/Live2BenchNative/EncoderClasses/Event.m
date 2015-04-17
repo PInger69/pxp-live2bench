@@ -31,7 +31,6 @@
 {
     self = [super init];
     if (self) {
-
         _rawData            = data;
         _name               = [_rawData objectForKey:@"name"];
         _hid                = [_rawData objectForKey:@"hid"];
