@@ -73,6 +73,8 @@
 @property (nonatomic,copy)       NSURL                      *URL;
 @property (nonatomic,assign)     float                      fps;
 
+@property (nonatomic,assign)     BOOL                       isInClipMode;
+
 
 @property (nonatomic, strong)    VideoZoomManager       *zoomManager;
 

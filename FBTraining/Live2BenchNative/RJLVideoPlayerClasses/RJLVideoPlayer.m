@@ -178,6 +178,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)playClipWithFeed: (Feed*)aFeed andTimeRange:(CMTimeRange)aRange{
     [self playFeed:aFeed withRange:aRange];
+    self.isInClipMode = YES;
     self.clipControlBar.hidden = NO;
     self.clipControlBar.minimumClipTime = (aRange.start.value / aRange.start.timescale);
     self.clipControlBar.maximumClipTime = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);
@@ -186,6 +187,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 -(void)cancelClip{
+    self.isInClipMode = NO;
     self.clipControlBar.hidden = YES;
     self.videoControlBar.hidden = YES;
 }
@@ -266,27 +268,52 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         if (isfinite(duration))
         {
-            float minValue  = [self.videoControlBar.timeSlider minimumValue];
-            float maxValue  = [self.videoControlBar.timeSlider maximumValue];
-            float value     = [self.videoControlBar.timeSlider value];
-
-            double time     = duration * (value - minValue) / (maxValue - minValue);
-            lastSeekTime    = time;
-            __block RJLVideoPlayer      * weakSelf      = self;
-            
-            CMTime accuraccy = [self precisionOfScrub:self.videoControlBar.timeSlider.scrubbingSpeed];
-         
-            [self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:accuraccy toleranceAfter:accuraccy completionHandler:^(BOOL finished) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    if (finished) {
+            if (self.isInClipMode) {
+//                float minValue  = [self.clipControlBar.timeSlider minimumValue];
+//                float maxValue  = [self.clipControlBar.timeSlider maximumValue];
+//                float value     = [self.clipControlBar.timeSlider value];
+                
+                //double time     = duration * (value - minValue) / (maxValue - minValue);
+                double time = self.clipControlBar.value *(self.clipControlBar.maximumClipTime - self.clipControlBar.minimumClipTime) + self.clipControlBar.minimumClipTime;
+                lastSeekTime    = time;
+                __block RJLVideoPlayer      * weakSelf      = self;
+                
+                CMTime accuraccy = [self precisionOfScrub:self.clipControlBar.timeSlider.scrubbingSpeed];
+                
+                [self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:accuraccy toleranceAfter:accuraccy completionHandler:^(BOOL finished) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        if (finished) {
+                            weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                        } else {
+                            NSLog(@"Seek CANCELD");
+                        }
                         weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
-                    } else {
-                        NSLog(@"Seek CANCELD");
-                    }
-                     weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
-                });
-            }];
+                    });
+                }];
+            }else{
+                float minValue  = [self.videoControlBar.timeSlider minimumValue];
+                float maxValue  = [self.videoControlBar.timeSlider maximumValue];
+                float value     = [self.videoControlBar.timeSlider value];
+                
+                double time     = duration * (value - minValue) / (maxValue - minValue);
+                lastSeekTime    = time;
+                __block RJLVideoPlayer      * weakSelf      = self;
+                
+                CMTime accuraccy = [self precisionOfScrub:self.videoControlBar.timeSlider.scrubbingSpeed];
+                
+                [self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:accuraccy toleranceAfter:accuraccy completionHandler:^(BOOL finished) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        if (finished) {
+                            weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                        } else {
+                            NSLog(@"Seek CANCELD");
+                        }
+                        weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                    });
+                }];
+            }
             
         }
     
@@ -331,28 +358,53 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
         if (isfinite(duration))
         {
-            float minValue  = [self.videoControlBar.timeSlider minimumValue];
-            float maxValue  = [self.videoControlBar.timeSlider maximumValue];
-            float value     = [self.videoControlBar.timeSlider value];
-            double time     = duration * (value - minValue) / (maxValue - minValue);
-            lastSeekTime    = time;
-            __block RJLVideoPlayer      * weakSelf      = self;
-            
-            CMTime accuraccy = [self precisionOfScrub:self.videoControlBar.timeSlider.scrubbingSpeed];
-            
-            [self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:accuraccy toleranceAfter:accuraccy completionHandler:^(BOOL finished) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    if (finished) {
+            if (self.isInClipMode) {
+                //                float minValue  = [self.clipControlBar.timeSlider minimumValue];
+                //                float maxValue  = [self.clipControlBar.timeSlider maximumValue];
+                //                float value     = [self.clipControlBar.timeSlider value];
+                
+                //double time     = duration * (value - minValue) / (maxValue - minValue);
+                double time = self.clipControlBar.value *(self.clipControlBar.maximumClipTime - self.clipControlBar.minimumClipTime) + self.clipControlBar.minimumClipTime;
+                lastSeekTime    = time;
+                __block RJLVideoPlayer      * weakSelf      = self;
+                
+                CMTime accuraccy = [self precisionOfScrub:self.clipControlBar.timeSlider.scrubbingSpeed];
+                
+                [self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:accuraccy toleranceAfter:accuraccy completionHandler:^(BOOL finished) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        if (finished) {
+                            weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                        } else {
+                            NSLog(@"Seek CANCELD");
+                        }
+                        weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                    });
+                }];
+            }else{
 
-                    } else {
-                        NSLog(@"Seek CANCELD");
-                    }
-                    [weakSelf scrubbingEnd];
-                    weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
-                });
-            }];
-            
+                float minValue  = [self.videoControlBar.timeSlider minimumValue];
+                float maxValue  = [self.videoControlBar.timeSlider maximumValue];
+                float value     = [self.videoControlBar.timeSlider value];
+                double time     = duration * (value - minValue) / (maxValue - minValue);
+                lastSeekTime    = time;
+                __block RJLVideoPlayer      * weakSelf      = self;
+                
+                CMTime accuraccy = [self precisionOfScrub:self.videoControlBar.timeSlider.scrubbingSpeed];
+                
+                [self.avPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:accuraccy toleranceAfter:accuraccy completionHandler:^(BOOL finished) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        if (finished) {
+                            
+                        } else {
+                            NSLog(@"Seek CANCELD");
+                        }
+                        [weakSelf scrubbingEnd];
+                        weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                    });
+                }];
+            }
         }
         
         
@@ -564,6 +616,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
  */
 -(void)gotolive{
     [self.videoControlBar setHidden:NO];
+    [self.clipControlBar setHidden:YES];
     self.looping                                = NO;
     self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil; //clear out any queued seeking

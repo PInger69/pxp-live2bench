@@ -506,6 +506,13 @@ static void * eventContext      = &eventContext;
  */
 - (void)createTagButtons
 {
+    [_tagButtonController.view removeFromSuperview];
+    // side tags
+    _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
+    [self addChildViewController:_tagButtonController];
+    [_tagButtonController didMoveToParentViewController:self];
+    _tagButtonController.enabled = YES;
+    
     NSArray * tNames = [_userCenter.tagNames copy]; //self.tagNames;
     [_tagButtonController inputTagData:tNames];
     

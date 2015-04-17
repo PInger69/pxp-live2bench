@@ -20,7 +20,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "CKCalendarView.h"
 
-#define BUTTON_MARGIN 4
+#define BUTTON_MARGIN 8
 #define CALENDAR_MARGIN 5
 #define TOP_HEIGHT 44
 #define DAYS_HEADER_HEIGHT 22
@@ -171,14 +171,14 @@
     self.titleLabel = titleLabel;
     
     UIButton *prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [prevButton setImage:[UIImage imageNamed:@"kal_left_arrow.png"] forState:UIControlStateNormal];
+    [prevButton setImage:[self previousMonthButtonImage] forState:UIControlStateNormal];
     prevButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [prevButton addTarget:self action:@selector(_moveCalendarToPreviousMonth) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:prevButton];
     self.prevButton = prevButton;
     
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nextButton setImage:[UIImage imageNamed:@"kal_right_arrow.png"] forState:UIControlStateNormal];
+    [nextButton setImage:[self nextMonthButtonImage] forState:UIControlStateNormal];
     nextButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     [nextButton addTarget:self action:@selector(_moveCalendarToNextMonth) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:nextButton];
@@ -272,8 +272,8 @@
     
     self.titleLabel.text = [self.dateFormatter stringFromDate:_monthShowing];
     self.titleLabel.frame = CGRectMake(0, 0, self.bounds.size.width, TOP_HEIGHT);
-    self.prevButton.frame = CGRectMake(BUTTON_MARGIN, BUTTON_MARGIN, 48, 38);
-    self.nextButton.frame = CGRectMake(self.bounds.size.width - 48 - BUTTON_MARGIN, BUTTON_MARGIN, 48, 38);
+    self.prevButton.frame = CGRectMake(BUTTON_MARGIN, BUTTON_MARGIN, 16, 20);
+    self.nextButton.frame = CGRectMake(self.bounds.size.width - 16 - BUTTON_MARGIN, BUTTON_MARGIN, 16, 20);
     
     self.calendarContainer.frame = CGRectMake(/*CALENDAR_MARGIN*/0, CGRectGetMaxY(self.titleLabel.frame), containerWidth , containerHeight );
     self.daysHeader.frame = CGRectMake(0, 0, self.calendarContainer.frame.size.width, DAYS_HEADER_HEIGHT);
@@ -694,6 +694,44 @@
     UIGraphicsEndImageContext();
     
     return coloredImg;
+}
+
+-(UIImage *) nextMonthButtonImage{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(50, 60), NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *trianglePath = [UIBezierPath bezierPath];
+    [trianglePath moveToPoint: CGPointMake(2, 2)];
+    [trianglePath addLineToPoint:CGPointMake(46, 25)];
+    [trianglePath addQuadCurveToPoint:CGPointMake(46, 31) controlPoint:CGPointMake(50, 28)];
+    [trianglePath addLineToPoint:CGPointMake(2, 58)];
+    [trianglePath addLineToPoint:CGPointMake(2, 2)];
+    
+    [[UIColor grayColor] setFill];
+    [trianglePath fill];
+    
+    UIImage *returnImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return returnImage;
+}
+
+-(UIImage *) previousMonthButtonImage{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(50, 60), NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *trianglePath = [UIBezierPath bezierPath];
+    [trianglePath moveToPoint: CGPointMake(50 - 2, 2)];
+    [trianglePath addLineToPoint:CGPointMake(4, 25)];
+    [trianglePath addQuadCurveToPoint:CGPointMake(4, 31) controlPoint:CGPointMake(0, 28)];
+    [trianglePath addLineToPoint:CGPointMake(48, 58)];
+    [trianglePath addLineToPoint:CGPointMake(48, 2)];
+    
+    [[UIColor grayColor] setFill];
+    [trianglePath fill];
+    
+    UIImage *returnImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return returnImage;
 }
 
 @end

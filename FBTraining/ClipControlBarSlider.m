@@ -79,6 +79,7 @@
 }
 
 -(void)setValue:(double)value{
+    _value = value;
     self.leftClipTimeLabel.text = [self translateTimeFormat: value *(self.maximumClipTime - self.minimumClipTime)];
     self.leftVideoTimeLabel.text = [self translateTimeFormat:(self.minimumClipTime + value *(self.maximumClipTime - self.minimumClipTime))];
     self.rightClipTimeLabel.text = [self translateTimeFormat: (self.maximumClipTime - self.minimumClipTime)];
