@@ -13,18 +13,18 @@
 @interface Event : NSObject
 
 
-@property (nonatomic,strong) NSString       * name;
-@property (nonatomic,strong) NSString       * eventType;
-@property (nonatomic,strong) NSString       * datapath;
-@property (nonatomic,strong) NSString       * date;
-@property (nonatomic,strong) NSString       * hid;
-@property (nonatomic,strong) NSDictionary   * feeds;
-@property (nonatomic,strong) NSDictionary   * mp4s;
-@property (nonatomic,strong) NSDictionary   * rawData;
-@property (nonatomic,strong) NSDictionary   * tags;
-@property (nonatomic,assign) BOOL           deleted;
-@property (nonatomic,assign) BOOL           local;
-@property (nonatomic,assign) BOOL           live;
+@property (nonatomic,strong) NSString               * name;
+@property (nonatomic,strong) NSString               * eventType;
+@property (nonatomic,strong) NSString               * datapath;
+@property (nonatomic,strong) NSString               * date;
+@property (nonatomic,strong) NSString               * hid;
+@property (nonatomic,strong) NSDictionary           * feeds;
+@property (nonatomic,strong) NSDictionary           * mp4s;
+@property (nonatomic,strong) NSDictionary           * rawData;
+@property (nonatomic,strong) NSMutableDictionary    * tags;
+@property (nonatomic,assign) BOOL                   deleted;
+@property (nonatomic,assign) BOOL                   local;
+@property (nonatomic,assign) BOOL                   live;
 
 @property (nonatomic,strong) NSArray        * downloadedSources; // this is a list of strings of videos that are on the device
 

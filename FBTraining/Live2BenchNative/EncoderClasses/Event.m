@@ -41,6 +41,7 @@
         _mp4s               = [self buildMP4s:_rawData];
         _feeds              = [self buildFeeds:_rawData];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
+        _tags               = [[NSMutableDictionary alloc]init];// this needs to be pop
         _downloadedSources  = @[];
     }
     return self;

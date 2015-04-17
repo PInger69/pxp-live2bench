@@ -77,7 +77,7 @@
 @property (nonatomic,readonly)  NSMutableString * log;
 @property (nonatomic,assign)    BOOL            isMaster;
 @property (nonatomic,assign)    NSInteger       cameraCount;
-@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
+//@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 
 
 @property (nonatomic,assign)    BOOL            isBuild;
