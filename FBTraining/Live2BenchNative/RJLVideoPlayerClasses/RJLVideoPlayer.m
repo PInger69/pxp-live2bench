@@ -180,16 +180,18 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     [self playFeed:aFeed withRange:aRange];
     self.isInClipMode = YES;
     self.clipControlBar.hidden = NO;
-    self.clipControlBar.minimumClipTime = (aRange.start.value / aRange.start.timescale);
-    self.clipControlBar.maximumClipTime = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);
+    self.clipControlBar.enable = YES;
+    self.clipControlBar.timeSlider.minimumValue = (aRange.start.value / aRange.start.timescale);
+    self.clipControlBar.timeSlider.maximumValue = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);
     
     self.videoControlBar.hidden = YES;
 }
 
 -(void)cancelClip{
     self.isInClipMode = NO;
+    self.looping = NO;
     self.clipControlBar.hidden = YES;
-    self.videoControlBar.hidden = YES;
+    self.videoControlBar.hidden = NO;
 }
 
 /**
@@ -220,8 +222,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //        float maxValue = [self.videoControlBar.timeSlider maximumValue];
         double time = CMTimeGetSeconds([self.playerItem currentTime]);
     
+        self.videoControlBar.timeSlider.maximumValue = duration;
+        videoControlBar.timeSlider.minimumValue = 0.0;
         [self.videoControlBar.timeSlider setValue:time];
-        double clipControlBarValue =(time - self.clipControlBar.minimumClipTime) / ( self.clipControlBar.maximumClipTime - self.clipControlBar.minimumClipTime);
+        
+        double clipControlBarValue = time;
         self.clipControlBar.value = clipControlBarValue;
 
 //        [self.videoControlBar.timeSlider setValue:(maxValue - minValue) * time / duration + minValue];
@@ -272,9 +277,16 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //                float minValue  = [self.clipControlBar.timeSlider minimumValue];
 //                float maxValue  = [self.clipControlBar.timeSlider maximumValue];
 //                float value     = [self.clipControlBar.timeSlider value];
+//                
+//                double time     = duration * (value - minValue) / (maxValue - minValue);
+
+//                float minValue  = [self.clipControlBar.timeSlider minimumValue];
+//                float maxValue  = [self.clipControlBar.timeSlider maximumValue];
+//                float value     = [self.clipControlBar.timeSlider value];
                 
                 //double time     = duration * (value - minValue) / (maxValue - minValue);
-                double time = self.clipControlBar.value *(self.clipControlBar.maximumClipTime - self.clipControlBar.minimumClipTime) + self.clipControlBar.minimumClipTime;
+                double time = self.clipControlBar.timeSlider.value ;//- self.clipControlBar.timeSlider.minimumValue ;
+                NSLog(@"The time is %f", time);
                 lastSeekTime    = time;
                 __block RJLVideoPlayer      * weakSelf      = self;
                 
@@ -359,12 +371,17 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         if (isfinite(duration))
         {
             if (self.isInClipMode) {
+//                float minValue  = [self.clipControlBar.timeSlider minimumValue];
+//                float maxValue  = [self.clipControlBar.timeSlider maximumValue];
+//                float value     = [self.clipControlBar.timeSlider value];
+//                
+//                double time     = duration * (value - minValue) / (maxValue - minValue);
                 //                float minValue  = [self.clipControlBar.timeSlider minimumValue];
                 //                float maxValue  = [self.clipControlBar.timeSlider maximumValue];
                 //                float value     = [self.clipControlBar.timeSlider value];
                 
                 //double time     = duration * (value - minValue) / (maxValue - minValue);
-                double time = self.clipControlBar.value *(self.clipControlBar.maximumClipTime - self.clipControlBar.minimumClipTime) + self.clipControlBar.minimumClipTime;
+                double time = self.clipControlBar.timeSlider.value;// - self.clipControlBar.timeSlider.minimumValue ;
                 lastSeekTime    = time;
                 __block RJLVideoPlayer      * weakSelf      = self;
                 
@@ -378,6 +395,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                         } else {
                             NSLog(@"Seek CANCELD");
                         }
+                        [weakSelf scrubbingEnd];
                         weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
                     });
                 }];

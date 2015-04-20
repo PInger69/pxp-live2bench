@@ -475,7 +475,7 @@ static void * eventContext      = &eventContext;
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
-    [self onEventChange];
+   // [self onEventChange];
 
 }
 

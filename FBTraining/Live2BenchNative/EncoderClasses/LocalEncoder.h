@@ -10,20 +10,23 @@
 #import "EncoderProtocol.h"
 @class Event;
 @class Clip;
+
 /**
  *  This class acts like a normal Encoder but all tags and event are local to the device
  *  as well as bookmarked clips for sharing.
  */
 
 
-@interface LocalEncoder : NSObject <EncoderProtocol>
+@interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate>
 
+@property (nonatomic, weak)     EncoderManager          *encoderManager;
 @property (nonatomic,strong)    NSString                * name;
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;            // the current event the encoder is looking at
 @property (nonatomic,strong)    Event                   * liveEvent;
 @property (nonatomic,strong)    NSDictionary            * allEvents;        // all events on the encoder
+@property (nonatomic,strong)    NSMutableArray     * localTags;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 

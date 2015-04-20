@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 @class Event;
+@class EncoderManager;
 
 
 typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
@@ -29,6 +30,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @protocol EncoderProtocol <NSObject>
 
 @property (nonatomic,strong)    NSString                * name;
+@property (nonatomic, weak)     EncoderManager          *encoderManager;
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at

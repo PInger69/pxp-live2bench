@@ -896,11 +896,6 @@
  */
 -(void)getAllEventsResponse:(NSData *)data
 {
-    
-    
-    
-    
-    
     if(NSClassFromString(@"NSJSONSerialization"))
     {
         _liveEvent = nil;

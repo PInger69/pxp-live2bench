@@ -21,8 +21,8 @@
 @property (strong,nonatomic)    UILabel         * rightVideoTimeLabel;
 @property (assign,nonatomic)    BOOL            enable;
 @property (assign, nonatomic) double value;
-@property (assign, nonatomic) double maximumClipTime;
-@property (assign, nonatomic) double minimumClipTime;
+//@property (assign, nonatomic) double maximumClipTime;
+//@property (assign, nonatomic) double minimumClipTime;
 
 -(void)setupPlay:(SEL)onPlaySel Pause:(SEL)onPauseSel onCancelClip: (SEL)cancelClipSel target:(id)target;
 

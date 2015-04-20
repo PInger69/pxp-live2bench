@@ -15,15 +15,27 @@
  */
 
 
-
+#import "EncoderManager.h"
 #import "LocalEncoder.h"
 #import "Feed.h"
 #import "Downloader.h"
 #import "Event.h"
 #import "Clip.h"
+#import "Tag.h"
 
 #define LOCAL_PLIST  @"EventsHid.plist"
 #define VIDEO_EXT    @"mp4"
+
+#define TAG_SYNC        1
+#define ENCODER_COMMAND 2
+
+// PRIVATE CLASS
+@interface NSURLDataConnection : NSURLConnection
+@property (strong, nonatomic) NSMutableData *cumulatedData;
+@property (assign, nonatomic) int context;
+@end
+@implementation NSURLDataConnection
+@end
 
 @implementation LocalEncoder
 {
@@ -31,6 +43,8 @@
     NSString        * _localPath;
     NSMutableArray  * _bookmarkPlistNames;
     NSComparisonResult(^plistSort)(id obj1, id obj2);
+    //NSURLDataConnection *tagSyncConnection;
+    NSURLDataConnection *encoderConnection;
 }
 
 @synthesize name            = _name;
@@ -52,6 +66,7 @@
         _event                          = nil;
         _clips              = [[NSMutableDictionary alloc]init];
         _allEvents          = [[NSMutableDictionary alloc] init];
+        _localTags          = [[NSMutableArray alloc] init];
         
         // Build Bookmark Clip sections
         [self scanForBookmarks];
@@ -77,8 +92,12 @@
                 anEvent.local   = YES;
                 anEvent.downloadedSources = [self listDownloadSourcesFor:anEvent];
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
+                
+                [self.localTags addObjectsFromArray: [anEvent.localTags allValues]];
             }
         }
+        
+        
         
         
         
@@ -142,7 +161,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDeleteRequest:) name:@"NOTIF_DELETE_CLIPS" object:nil];
         
-        
+        [self checkLocalTags];
     }
     return self;
 }
@@ -159,7 +178,7 @@
     if ([methodName isEqualToString: TEAMS_GET]) {
         [self teamsResponse:        tData];
     } else if ([methodName isEqualToString: MAKE_TAG]) {
-        [self makeTagResponce:      tData];
+        [self makeTag: tData timeStamp: aTimeStamp];
     } else if ([methodName isEqualToString: MODIFY_TAG]) {
         [self modTagResponce:       tData];
     } else if ([methodName isEqualToString: EVENT_GET_TAGS]) {
@@ -169,6 +188,54 @@
     
 }
 
+#pragma mark - Command Methods
+-(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
+    
+    //over write name and add request time
+    [tData addEntriesFromDictionary:@{
+                                      @"name"           : encodedName,
+                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      }];
+
+    Tag *newTag = [[Tag alloc] initWithData:tData];
+    newTag.uniqueID = self.event.tags.count + self.event.localTags.count;
+    newTag.startTime = newTag.time - 5.0;
+    newTag.displayTime = [Utility translateTimeFormat: newTag.time];
+    newTag.own = YES;
+    newTag.homeTeam = self.event.rawData[@"homeTeam"];
+    newTag.visitTeam = self.event.rawData[@"visitTeam"];
+    newTag.synced = NO;
+    //newTag.requestTime = tData[@"requesttime"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag];
+    
+    [self.localTags addObject: newTag];
+    [self.event.localTags addEntriesFromDictionary: @{[NSString stringWithFormat:@"%i", newTag.uniqueID]: newTag}];
+    
+//    NSString *jsonString                    = [Utility dictToJSON:tData];
+//    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
+//    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+//    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+//    encoderConnection.connectionType        = MAKE_TAG;
+//    encoderConnection.timeStamp             = aTimeStamp;
+}
+
+-(void)checkLocalTags{
+    if (self.localTags.count >= 1) {
+        Tag *tagToSend = [self.localTags firstObject];
+        NSDictionary *tData = [tagToSend makeTagData];
+        NSString *jsonString                    = [Utility dictToJSON:tData];
+        NSString *ipAddress                     = self.encoderManager.masterEncoder.ipAddress;
+        NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@", ipAddress ,jsonString]  ];
+        NSURLRequest *urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5.0];
+        encoderConnection                       = [[NSURLDataConnection alloc] initWithRequest:urlRequest delegate:self];
+        encoderConnection.context        = TAG_SYNC;
+    }
+}
+
+
 #pragma mark - Responces
 
 -(void)teamsResponse:(NSMutableDictionary *)data
@@ -176,9 +243,9 @@
 
 }
 
--(void)makeTagResponce:(NSMutableDictionary *)data
-{
-}
+//-(void)makeTagResponce:(NSMutableDictionary *)data
+//{
+//}
 
 
 -(void)modTagResponce:(NSMutableDictionary *)data
@@ -186,8 +253,44 @@
     
 }
 
+#pragma mark - NSURLConnection Delegate methods
+
+-(void)connection:(NSURLDataConnection *)connection didReceiveData:(NSData *)data{
+    if (connection.cumulatedData == nil){
+        connection.cumulatedData = [NSMutableData dataWithData:data];
+    } else {
+        [connection.cumulatedData appendData:data];
+    }
+}
+
+-(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
+    NSDictionary    * results =[Utility JSONDatatoDict: connection.cumulatedData];
+    if([results isKindOfClass:[NSDictionary class]])
+    {
+        Tag *localTag = [self.localTags firstObject];
+        [localTag replaceDataWithDictionary: results];
+        for (Event *event in [self.allEvents allValues]) {
+            if ([[event.localTags allValues] containsObject: localTag]){
+                [event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
+                [event.localTags removeObjectForKey:[[event.localTags allKeysForObject: localTag] firstObject]];
+            }
+        }
+        [self.localTags removeObject: localTag];
+    }
+
+    [self checkLocalTags];
+}
+
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    [self.localTags removeObjectAtIndex:0];
+    [self checkLocalTags];
+}
 
 #pragma mark - Event Download
+-(void)syncEvents{
+    
+}
+
 // Depricated?
 -(void)myClipDataRequest: (NSNotification *)note{
     

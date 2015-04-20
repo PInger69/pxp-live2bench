@@ -392,13 +392,17 @@ static void * vpFrameContext   = &vpFrameContext;
     CMTime cmDur            = CMTimeMake(dur, 1);
     
     CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
-
     
-    Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
+    Feed * f;
+    if ([rick objectForKey:@"feed"]) {
+   
+        //Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
 //    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
 
-    f = _encoderManager.feeds[[rick objectForKey:@"feed"]];
- 
+        f = _encoderManager.feeds[[rick objectForKey:@"feed"]];
+    }else{
+        f = [[_encoderManager.feeds allValues]firstObject];
+    }
 //    [vid playFeed:f];
     vid.looping         = NO;
     vid.live            = NO;

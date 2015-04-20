@@ -15,7 +15,10 @@
 
 @end
 
-@implementation ShareOptionsViewController
+@implementation ShareOptionsViewController{
+    id buttonTarget;
+    SEL selectorToCall;
+}
 
 - (instancetype)initWithArray:(NSArray *)Options andIcons:(NSArray *)optionIcons andSelectedIcons: (NSArray *)selectedIcons {
     self = [super init];
@@ -48,9 +51,14 @@
     return self;
 }
 
+- (void)setOnSelectTarget: (id)target andSelector: (SEL) selector{
+    buttonTarget = target;
+    selectorToCall = selector;
+}
+
 - (void)shareOptionChosen:(UIButton *)sender {
     NSString *optionChosen = sender.titleLabel.text;
-    [[NSNotificationCenter defaultCenter] postNotificationName:optionChosen object:nil];
+    [buttonTarget performSelector:selectorToCall withObject:optionChosen];
 }
 
 

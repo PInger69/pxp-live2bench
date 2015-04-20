@@ -80,10 +80,13 @@
 
 -(void)setValue:(double)value{
     _value = value;
-    self.leftClipTimeLabel.text = [self translateTimeFormat: value *(self.maximumClipTime - self.minimumClipTime)];
-    self.leftVideoTimeLabel.text = [self translateTimeFormat:(self.minimumClipTime + value *(self.maximumClipTime - self.minimumClipTime))];
-    self.rightClipTimeLabel.text = [self translateTimeFormat: (self.maximumClipTime - self.minimumClipTime)];
-    self.rightVideoTimeLabel.text = [self translateTimeFormat: self.maximumClipTime];   
+    [self.timeSlider setValue: (float) value animated: YES];
+//    self.timeSlider.minimumValue = 0.0;
+//    self.timeSlider.maximumValue = 1.0;
+    self.leftClipTimeLabel.text = [self translateTimeFormat: (value - self.timeSlider.minimumValue)];
+    self.leftVideoTimeLabel.text = [self translateTimeFormat: value];
+    self.rightClipTimeLabel.text = [self translateTimeFormat: (self.timeSlider.maximumValue - self.timeSlider.minimumValue)];
+    self.rightVideoTimeLabel.text = [self translateTimeFormat: self.timeSlider.maximumValue];
 }
 -(void)cancelClip{
     [player performSelector:cancelSEL];

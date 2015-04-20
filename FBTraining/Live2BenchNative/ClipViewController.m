@@ -942,6 +942,13 @@ static void * encoderTagContext = &encoderTagContext;
     } else {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
+        //NSString * key =        listOfScource[0];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+                                                                                                              //@"feed":key,
+                                                                                                              @"time":[selectedCell.data objectForKey:@"starttime"],
+                                                                                                              @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                              @"state":[NSNumber numberWithInteger:PS_Play]}];
+        
     }
     
     [selectedCell setSelected:NO];

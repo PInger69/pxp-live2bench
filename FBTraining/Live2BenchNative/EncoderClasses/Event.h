@@ -25,6 +25,7 @@
 @property (nonatomic,assign) BOOL                   deleted;
 @property (nonatomic,assign) BOOL                   local;
 @property (nonatomic,assign) BOOL                   live;
+@property (nonatomic,strong) NSMutableDictionary    * localTags;
 
 @property (nonatomic,strong) NSArray        * downloadedSources; // this is a list of strings of videos that are on the device
 

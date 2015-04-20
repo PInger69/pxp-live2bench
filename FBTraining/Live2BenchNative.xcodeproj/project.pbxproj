@@ -11,7 +11,6 @@
 		436907451AB86E16003BD1E6 /* GTLCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907461AB86E16003BD1E6 /* GTLNetworking_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		436907491AB86E5B003BD1E6 /* GTLDrive_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */; };
-		43B2C5C21AE006E500C1B776 /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 43B2C5C11AE006E500C1B776 /* ClipControlBarSlider.m */; };
 		43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */; };
 		947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */; };
 		9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9482F269199A59E7000670B0 /* FootballTrainingCollectionViewController.m */; };
@@ -475,6 +474,7 @@
 		D7EE84D019F19DC000DEC82B /* EncoderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EE84CF19F19DC000DEC82B /* EncoderManager.m */; };
 		D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EE84D219F19E0900DEC82B /* Encoder.m */; };
 		D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D7EF106217B4088A00CD4786 /* AutoScrollLabel.m */; };
+		D7F04ED71AE1A5CC0028FBE4 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F04ED61AE1A5CC0028FBE4 /* Tag.m */; };
 		D7F6973B1811C7E8003EDDDB /* ListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F697381811C7E8003EDDDB /* ListViewCell.m */; };
 		D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6973A1811C7E8003EDDDB /* ListViewController.m */; };
 		D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6A1901ADFF7F1000B97DA /* ClipControlBarSlider.m */; };
@@ -496,8 +496,6 @@
 		436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLNetworking_Sources.m; sourceTree = "<group>"; };
 		436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDrive_Sources.m; sourceTree = "<group>"; };
 		436907481AB86E5B003BD1E6 /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
-		43B2C5C01AE006E500C1B776 /* ClipControlBarSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipControlBarSlider.h; sourceTree = "<group>"; };
-		43B2C5C11AE006E500C1B776 /* ClipControlBarSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipControlBarSlider.m; sourceTree = "<group>"; };
 		43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveIndicatorLight.h; sourceTree = SOURCE_ROOT; };
 		43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveIndicatorLight.m; sourceTree = SOURCE_ROOT; };
 		947F44A419883E150081E81D /* FootballTrainingBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingBottomViewController.h; sourceTree = "<group>"; };
@@ -1192,6 +1190,8 @@
 		D7EE84D219F19E0900DEC82B /* Encoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Encoder.m; path = EncoderClasses/Encoder.m; sourceTree = "<group>"; };
 		D7EF106117B4088A00CD4786 /* AutoScrollLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoScrollLabel.h; sourceTree = "<group>"; };
 		D7EF106217B4088A00CD4786 /* AutoScrollLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoScrollLabel.m; sourceTree = "<group>"; };
+		D7F04ED51AE1A5CC0028FBE4 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
+		D7F04ED61AE1A5CC0028FBE4 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 		D7F697371811C7E8003EDDDB /* ListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewCell.h; sourceTree = "<group>"; };
 		D7F697381811C7E8003EDDDB /* ListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewCell.m; sourceTree = "<group>"; };
 		D7F697391811C7E8003EDDDB /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
@@ -1946,6 +1946,8 @@
 				D7F6A1901ADFF7F1000B97DA /* ClipControlBarSlider.m */,
 				D7EB50AE1AD721F500CFB200 /* Clip.h */,
 				D7EB50AF1AD721F500CFB200 /* Clip.m */,
+				D7F04ED51AE1A5CC0028FBE4 /* Tag.h */,
+				D7F04ED61AE1A5CC0028FBE4 /* Tag.m */,
 				D79350E81AD459C500D1751F /* DownloadEventItem.h */,
 				D79350E91AD459C500D1751F /* DownloadEventItem.m */,
 				D75ED4FB1ACC4707003AF856 /* LiveLight.h */,
@@ -2902,6 +2904,7 @@
 				D7CCE7F81AC1E48500D85095 /* SegmentedView.m in Sources */,
 				D781900F1A70697D00B964B4 /* UserCenterActionPack.m in Sources */,
 				D790CEA31A6F059800700D9D /* SettingsViewController.m in Sources */,
+				D7F04ED71AE1A5CC0028FBE4 /* Tag.m in Sources */,
 				D7CF390619DDF2120013E46B /* VideoPlayerFreezeTimer.m in Sources */,
 				D7A2E5B919AE226A00022795 /* UserSettings.m in Sources */,
 				D7A5E5A91A9F7A1F00E3D4DB /* DownloadItem.m in Sources */,

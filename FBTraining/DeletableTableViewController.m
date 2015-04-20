@@ -168,11 +168,18 @@
 
 -(void)shareAllButtonTarget{
     ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
+    [shareOptions setOnSelectTarget:self andSelector:@selector(shareOptionChosen:)];
     self.sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
     self.sharePop.popoverContentSize = CGSizeMake(280, 180);
     [self.sharePop presentPopoverFromRect:self.shareButton.frame inView:self.parentViewController.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     
 }
+
+-(void)shareOptionChosen:(NSString *)optionChosen{
+    [self.sharePop dismissPopoverAnimated:YES];
+    
+}
+
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
     [alert setTitle:@"myplayXplay"];

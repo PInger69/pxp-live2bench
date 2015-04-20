@@ -331,6 +331,7 @@
         [_cloudEncoder startObserving];
         
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
+        _localEncoder.encoderManager = self;
         //        [_authenticatedEncoders addObject:_localEncoder]; // does this really need to be in the list of encoders
         
         _currentEventType       = SPORT_HOCKEY;

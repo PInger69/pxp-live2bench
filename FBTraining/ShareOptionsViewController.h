@@ -10,6 +10,7 @@
 
 @interface ShareOptionsViewController : UIViewController
 
-- (instancetype)initWithArray:(NSArray *)Options andIcons:(NSArray *)optionIcons andSelectedIcons: (NSArray *)selectedIcons; 
+- (instancetype)initWithArray:(NSArray *)Options andIcons:(NSArray *)optionIcons andSelectedIcons: (NSArray *)selectedIcons;
+- (void)setOnSelectTarget: (id)target andSelector: (SEL) selector;
 
 @end
