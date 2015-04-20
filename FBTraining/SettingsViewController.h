@@ -73,5 +73,5 @@
 -(void)pauseEnc:(id)sender;
 -(void)stopEnc:(id)sender;
 -(void)shutdownEnc:(id)sender;
--(void)encCallback:(id)json;
+//-(void)encCallback:(id)json;
 @end

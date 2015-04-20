@@ -126,12 +126,13 @@
 //@synthesize eventTags       = _eventTags;
 //@synthesize eventData       = _eventData;
 //@synthesize feeds           = _feeds;
-//@synthesize teams           = _teams;
+
 //@synthesize playerData      = _playerData;
-//@synthesize league          = _league;
+
 @synthesize cameraCount     = _cameraCount;
 //@synthesize eventTagsDict   = _eventTagsDict;
-
+@synthesize encoderTeams    = _encoderTeams;
+@synthesize encoderLeagues  = _encoderLeagues;
 @synthesize isBuild         = _isBuild;
 @synthesize isReady         = _isReady;
 
@@ -611,23 +612,20 @@
 // Connections // Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections
 #pragma mark - Connections
 
--(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    
-}
+//-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+//{
+//    
+//}
 
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-
-    
     if (connection.cumulatedData == nil){
         connection.cumulatedData = [NSMutableData dataWithData:data];
     } else {
         [connection.cumulatedData appendData:data];
     }
     
-
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_PROGRESS object:self userInfo:nil];
 }
 
@@ -683,7 +681,6 @@
     
     NSLog(@"Connection finished: %@",connectionType);
     if ([connectionType isEqualToString:SHUTDOWN]){
-//        [self shuttingDown];
         __weak Encoder * weakSelf = self;
         [statusMonitor startShutdownChecker:^(void){
             NSLog(@"Server has shutdown");
@@ -720,7 +717,11 @@
  */
 -(void)authenticateResponse:(NSData *)data
 {
+    
     NSDictionary    * results;
+    
+    //NSDictionary    * results =[Utility JSONDatatoDict:data];
+    
     if(NSClassFromString(@"NSJSONSerialization"))
     {
         NSError *error = nil;
@@ -779,8 +780,6 @@
     isAuthenticate = YES;
 }
 
-
-
 /**
  *  This gets the version of the linked Encoder
  *
@@ -796,16 +795,15 @@
     isVersion = YES;
 }
 
-
 -(void)teamsResponse:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     
     if([results isKindOfClass:[NSDictionary class]])
     {
-//            self.teams      = [results objectForKey:@"teams"];
+        self.encoderTeams      = [results objectForKey:@"teams"];
 //            self.playerData = [results objectForKey:@"teamsetup"];
-//            self.league     = [results objectForKey:@"leagues"];
+        self.encoderLeagues     = [results objectForKey:@"leagues"];
     }
     isTeamsGet = YES;
 }
@@ -845,7 +843,6 @@
     if (results){
         NSDictionary    * tags = [results objectForKey:@"tags"];
         if (tags) {
-            
             _event.tags =[NSMutableDictionary dictionaryWithDictionary:tags];
         }
     }
@@ -1051,14 +1048,6 @@
 
     return nextObj;
 }
-
-
-
-
--(void)cancelCommand
-{
-}
-
 
 /**
  *  this will clear all commands in the queue and cancel current command

@@ -31,6 +31,7 @@
 {
     self = [super init];
     if (self) {
+        _live               = NO;
         _rawData            = data;
         _name               = [_rawData objectForKey:@"name"];
         _hid                = [_rawData objectForKey:@"hid"];

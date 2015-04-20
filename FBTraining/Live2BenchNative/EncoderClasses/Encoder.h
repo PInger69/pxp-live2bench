@@ -79,6 +79,8 @@
 @property (nonatomic,assign)    NSInteger       cameraCount;
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 
+@property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
+@property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 
 @property (nonatomic,assign)    BOOL            isBuild;
 @property (nonatomic,assign)    BOOL            isReady;
@@ -113,8 +115,6 @@
 -(void)clearQueueAndCurrent;
 
 -(void)searchForMaster;
-
-
 
 
 /**

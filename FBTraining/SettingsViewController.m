@@ -53,7 +53,9 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 //
 //}EventButtonControlStates;
 
-
+#define DEFAULT_LEAGUE @"League"
+#define DEFAULT_HOME_TEAM @"Home Team"
+#define DEFAULT_AWAY_TEAM @"Away Team"
 
 @end
 
@@ -145,9 +147,9 @@ SVSignalStatus signalStatus;
         }];
         
         
-        homeTeam            = @"Home Team";
-        awayTeam            = @"Away Team";
-        league              = @"League";
+        homeTeam            = DEFAULT_HOME_TEAM;
+        awayTeam            = DEFAULT_AWAY_TEAM;
+        league              = DEFAULT_LEAGUE;
         
     }
     return self;
@@ -346,14 +348,15 @@ SVSignalStatus signalStatus;
             NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
             [collection addObject:nam];
         }
-        return [collection copy];
+
+        return [[NSSet setWithArray:collection]allObjects];
     };
     // block end
     
     //teamNames   = grabNames(encoderManager.masterEncoder.teams);
     //leagueNames = grabNames(encoderManager.masterEncoder.league);
     
-
+    
 }
 
 
@@ -516,9 +519,9 @@ SVSignalStatus signalStatus;
     
     NSString * buttonTitle = ((UIButton*)sender).titleLabel.text;
     
-    NSString *ahomeTeam=[selectHomeTeam.titleLabel.text isEqualToString:@"Home Team"] ? nil : selectHomeTeam.titleLabel.text;
-    NSString *aawayTeam=[selectAwayTeam.titleLabel.text isEqualToString:@"Away Team"] ? nil : selectAwayTeam.titleLabel.text;
-    NSString *aleague=[selectLeague.titleLabel.text isEqualToString:@"League"] ? nil : selectLeague.titleLabel.text;
+    NSString *ahomeTeam=[selectHomeTeam.titleLabel.text isEqualToString:DEFAULT_HOME_TEAM] ? nil : selectHomeTeam.titleLabel.text;
+    NSString *aawayTeam=[selectAwayTeam.titleLabel.text isEqualToString:DEFAULT_AWAY_TEAM] ? nil : selectAwayTeam.titleLabel.text;
+    NSString *aleague=[selectLeague.titleLabel.text isEqualToString:DEFAULT_LEAGUE] ? nil : selectLeague.titleLabel.text;
     
     if(!(ahomeTeam && aawayTeam && aleague))//only allow user to start enc if they have selected all three, home team, away team, league
     {
@@ -619,15 +622,38 @@ SVSignalStatus signalStatus;
 
 -(void)pickHome:(id)sender
 {
-    teamNames   = grabNames(encoderManager.masterEncoder.event.teams);
+    
+    if ([league isEqualToString:DEFAULT_LEAGUE]){
+        teamNames   = grabNames(encoderManager.masterEncoder.encoderTeams);
+    } else {
+        NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
+        NSArray * myList1        = [[tempDict1 allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]];
+        NSString * leagueHID     = myList1[0][@"hid"];
+        
+        NSDictionary * tempDict = [encoderManager.masterEncoder.encoderTeams copy];
+        
+        NSArray * myList = [[tempDict allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"league == %@",leagueHID ]];
+
+        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+
+        for (NSDictionary * item in myList) {
+            NSString    * nam  = [item objectForKey:@"name"];
+            [collection addObject:nam];
+        }
+
+        
+        teamNames   = [[NSSet setWithArray:collection]allObjects];
+    }
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected  = YES;
         
         [homeTeamPick populateWith:teamNames];
+        __block SettingsViewController * weakSelf = self;
         [homeTeamPick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
             popButton.selected = NO;
+            weakSelf -> awayTeam = pick;
         }];
         
         [homeTeamPick presentPopoverFromRect:popButton.frame inView:selectHomeContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -636,14 +662,37 @@ SVSignalStatus signalStatus;
 
 -(void)pickAway:(id)sender
 {
-    teamNames   = grabNames(encoderManager.masterEncoder.event.teams);
+    if ([league isEqualToString:DEFAULT_LEAGUE]){
+        teamNames   = grabNames(encoderManager.masterEncoder.encoderTeams);
+    } else {
+        NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
+        NSArray * myList1        = [[tempDict1 allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]];
+        NSString * leagueHID     = myList1[0][@"hid"];
+        
+        NSDictionary * tempDict = [encoderManager.masterEncoder.encoderTeams copy];
+        
+        NSArray * myList = [[tempDict allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"league == %@",leagueHID ]];
+        
+        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+        
+        for (NSDictionary * item in myList) {
+            NSString    * nam  = [item objectForKey:@"name"];
+            [collection addObject:nam];
+        }
+        
+        
+        teamNames   = [[NSSet setWithArray:collection]allObjects];
+    }
+    
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected = YES;
         [visitTeamPick populateWith:teamNames];
+        __block SettingsViewController * weakSelf = self;
         [visitTeamPick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
             popButton.selected = NO;
+            weakSelf -> awayTeam = pick;
         }];
         
         [visitTeamPick presentPopoverFromRect:popButton.frame inView:selectAwayContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -652,23 +701,53 @@ SVSignalStatus signalStatus;
 
 -(void)pickLeague:(id)sender
 {
-    leagueNames = grabNames(encoderManager.masterEncoder.event.league);
+    leagueNames = grabNames(encoderManager.masterEncoder.encoderLeagues);
     if (leagueNames) {
         UIButton *popButton = (UIButton*)sender;
         popButton.selected = YES;
-        
+        __block SettingsViewController * weakSelf = self;
         [LeaguePick populateWith:leagueNames];
         [LeaguePick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
             popButton.selected = NO;
+            weakSelf -> league = pick;
+            [weakSelf checkUserSelection];
         }];
         
         [LeaguePick presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     }
     
+
+
+    
+
 }
 
+-(void)checkUserSelection
+{
+    NSString * leagueHid = [[[encoderManager.masterEncoder.encoderLeagues copy] allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]][0][@"hid"];
+    
+    NSArray * teamsDataList =[[encoderManager.masterEncoder.encoderTeams copy] allValues];
+    
+    NSArray * filter1 = [teamsDataList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",homeTeamPick.userPick ]];
+    NSArray * filter2 = [teamsDataList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",visitTeamPick.userPick ]];
+    NSString * homeTeamLeagueHid = ([filter1 count])?filter1[0][@"league"]:@"";
+    NSString * awayTeamLeagueHid = ([filter2 count])?filter1[0][@"league"]:@"";
+    
+    
+    // check the other buttons if the teams match or make them go to default
+    if (![homeTeamLeagueHid isEqualToString:leagueHid]) {
+        homeTeamPick.userPick = DEFAULT_HOME_TEAM;
+        [selectAwayTeam  setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
+    }
+    
+    
+    if (![awayTeamLeagueHid isEqualToString:leagueHid]) {
+        visitTeamPick.userPick = DEFAULT_AWAY_TEAM;
+        [selectHomeTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
+    }
 
+}
 
 -(void)initialiseLayout
 {
