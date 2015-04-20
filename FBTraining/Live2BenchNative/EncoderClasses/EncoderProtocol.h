@@ -38,6 +38,8 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 
 @optional
 @property (nonatomic,strong)    Event                * liveEvent;
+@property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
+@property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 -(void)clearQueueAndCurrent;
 
 
@@ -50,9 +52,9 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 //@property (nonatomic,strong)    NSArray                 * allEventData;
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 //@property (nonatomic,strong)    NSDictionary            * feeds;// feeds for current event
-//@property (nonatomic,strong)    NSDictionary    * teams; // all teams on encoder
+
 //@property (nonatomic,strong)    NSDictionary    * playerData;
-//@property (nonatomic,strong)    NSDictionary    * league;
+
 
 
 
