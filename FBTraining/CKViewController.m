@@ -182,12 +182,12 @@
 
 - (void)calendar:(CKCalendarView *)calendar configureDateItem:(CKDateItem *)dateItem forDate:(NSDate *)date {
     // TODO: play with the coloring if we want to...
-//    if ([self dateIsDisabled:date]) {
-//        //dateItem.backgroundColor = [UIColor lightGrayColor];
-//        dateItem.textColor = [UIColor lightGrayColor];
-//       // dateItem.numberOfDots = 1;
-//    
-//    }
+    //    if ([self dateIsDisabled:date]) {
+    //        //dateItem.backgroundColor = [UIColor lightGrayColor];
+    //        dateItem.textColor = [UIColor lightGrayColor];
+    //       // dateItem.numberOfDots = 1;
+    //
+    //    }
     
     dateItem.numberOfDots = [self numberOfEventsOnDate: date];
     if (dateItem.numberOfDots >= 10) {

@@ -122,4 +122,18 @@
     }
 
 }
+
+-(BOOL) isEqual:(id)object{
+    Tag *comparingTag;
+    if ([object isKindOfClass:[Tag class]]) {
+        comparingTag = (Tag *) object;
+    }
+    return (comparingTag.uniqueID == self.uniqueID);
+}
+
+-(NSString *)description{
+    //NSDictionary *tagDictionary = [self tagDictionary];
+    //return [NSString stringWithFormat:@"%@", [self tagDictionary]];
+    return [NSString stringWithFormat:@"name: %@, displayTime: %@, thumbnails: %@", self.name, self.displayTime, self.thumbnails];
+}
 @end

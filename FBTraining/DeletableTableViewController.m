@@ -83,14 +83,14 @@
         [UIView commitAnimations];
     }
     
-//    if ([self.contextString isEqualToString:@"TAG"]) {
-//        if (self.setOfDeletingCells.count >= 1) {
-//            if (self.downloadEnabled) {
-//                self.downloadEnabled = NO;
-//                [self reloadData];
-//            }
-//        }
-//    }
+    //    if ([self.contextString isEqualToString:@"TAG"]) {
+    //        if (self.setOfDeletingCells.count >= 1) {
+    //            if (self.downloadEnabled) {
+    //                self.downloadEnabled = NO;
+    //                [self reloadData];
+    //            }
+    //        }
+    //    }
 }
 
 -(void)removeDeletionCell: (NSNotification *) aNotification{
@@ -105,12 +105,12 @@
         [self.deleteButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         [UIView commitAnimations];
     }
-//    if ([self.contextString isEqualToString:@"TAG"]) {
-//        if (self.setOfDeletingCells.count < 1) {
-//            self.downloadEnabled = YES;
-//            [self reloadData];
-//        }
-//    }
+    //    if ([self.contextString isEqualToString:@"TAG"]) {
+    //        if (self.setOfDeletingCells.count < 1) {
+    //            self.downloadEnabled = YES;
+    //            [self reloadData];
+    //        }
+    //    }
 }
 
 -(void) addSharingCell: (NSNotification *) aNotification{

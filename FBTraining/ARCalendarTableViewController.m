@@ -19,7 +19,6 @@
 //@property (strong, nonatomic) NSMutableArray *tableData;
 @property (strong, nonatomic) NSIndexPath *lastSelectedIndexPath;
 @property (strong, nonatomic) NSIndexPath *editingIndexPath;
-@property (strong, nonatomic) NSMutableDictionary *downloadingItemsDictionary;
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 @property (strong, nonatomic) ListPopoverController* teamPick;
 
@@ -33,12 +32,11 @@
     if(self){
         //[self.tableView registerClass:[CalendarTableCell class] forCellReuseIdentifier: @"CalendarTableCell"];
         [self.tableView registerClass:[ARCalendarTableViewCell class] forCellReuseIdentifier: @"ARCalendarTableViewCell"];
-        self.downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
         self.arrayOfCollapsableIndexPaths = [NSMutableArray array];
-        //        self.originalFrame = CGRectMake(568, 768, 370, 0);
-        //        [self.deleteButton setFrame: self.originalFrame];
-        //        self.newFrame = CGRectMake(568, 708, 370, 60);
-        
+        self.originalFrame = CGRectMake(568, 768, 370, 0);
+        [self.deleteButton setFrame: self.originalFrame];
+        self.newFrame = CGRectMake(568, 708, 370, 60);
+        self.contextString = @"Event";
     }
     return self;
 }
@@ -50,12 +48,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filterArray:) name:@"datePicked" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
-        NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
-        if (key.count > 0) {
-            [self.downloadingItemsDictionary removeObjectForKey:key[0]];
-        }
-    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,7 +56,9 @@
 }
 
 -(void)showAllData{
-    self.tableData = [self arrayOfAllEventsSorted];
+    [self.arrayOfCollapsableIndexPaths removeAllObjects];
+    self.lastSelectedIndexPath = nil;
+    self.tableData = [[self arrayOfAllEventsSorted] mutableCopy];
     [self.tableView reloadData];
 }
 
@@ -143,6 +137,8 @@
     
     self.tableData = eventsOfTheDay;
     [self.setOfDeletingCells removeAllObjects];
+    [self.arrayOfCollapsableIndexPaths removeAllObjects];
+    self.lastSelectedIndexPath = nil;
     [self checkDeleteAllButton];
     [self.tableView reloadData];
 }
@@ -182,14 +178,14 @@
         [cell.timeLabel setText: @" "];
         [cell.dateLabel setText: @" "];
         [cell.titleLabel setText: @" "];
-//        cell.downloadButton.hidden = YES;
-//        cell.playButton.hidden = YES;
         cell.swipeRecognizerLeft.enabled = NO;
         cell.swipeRecognizerRight.enabled = NO;
         [cell setCellAccordingToState:cellStateNormal];
+        [cell isSelected:NO];
         return cell;
     }
     
+    NSString *data;
     NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         Event *event = self.tableData[firstIndexPath.row - 1];
@@ -197,13 +193,9 @@
         NSString *key;
         NSString *data;
         
-        if (urls.count > 1) {
-            key = [urls allKeys][indexPath.row - firstIndexPath.row];
-            data = urls[key];
-        } else {
-            key = @"mp4";
-            data = event.mp4s[@"mp4"];
-        }
+        key = [urls allKeys][indexPath.row - firstIndexPath.row];
+        data = urls[key];
+        
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
         
         [collapsableCell positionWithFrame:CGRectMake(0, 0, 518, 40)];
@@ -230,19 +222,26 @@
                                        animated:YES];
         };
         
+        
+        
         collapsableCell.event = event.rawData;
         collapsableCell.downloadButton.enabled = YES;
         NSString *name = event.name;
+        //        NSString *path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:event.datapath] stringByAppendingString:@".plist"];
+        //        NSDictionary *plistForEvent = [[NSDictionary alloc] initWithContentsOfFile:path];
+        
+        
+        Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:name];
         
         __block FeedSelectCell *weakCell = collapsableCell;
-        if([self.downloadingItemsDictionary objectForKey:name]){
-            collapsableCell.downloadButton.downloadItem = [self.downloadingItemsDictionary objectForKey:name];
+        if([event.downloadingItemsDictionary objectForKey:data]) {
+            collapsableCell.downloadButton.downloadItem = [event.downloadingItemsDictionary objectForKey:data];
             [collapsableCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
                 weakCell.downloadButton.progress = progress;
                 [weakCell.downloadButton setNeedsDisplay];
             }];
             [collapsableCell.downloadButton setNeedsDisplay];
-        } else if ([self.encoderManager.localEncoder getEventByName:name]) {
+        } else if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
             weakCell.downloadButton.downloadComplete = YES;
             weakCell.downloadButton.progress = 1;
             [weakCell setNeedsDisplay];
@@ -256,7 +255,7 @@
                     weakCell.downloadButton.progress = progress;
                     [weakCell.downloadButton setNeedsDisplay];
                 }];
-                [weakSelf.downloadingItemsDictionary setObject:downloadItem forKey:name];
+                [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
             };
         }
         return collapsableCell;
@@ -296,9 +295,9 @@
     NSString *dateString = event.date;
     NSArray *bothStrings = [dateString componentsSeparatedByString:@" "];
     
-//    cell.downloadButton.hidden = NO;
-//    cell.playButton.hidden = NO;
-
+    //    cell.downloadButton.hidden = NO;
+    //    cell.playButton.hidden = NO;
+    
     [cell.timeLabel setText: [bothStrings[1] substringToIndex: 5]];
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
@@ -333,57 +332,82 @@
         Event *event = self.tableData[indexPath.row];
         NSString *dateString = event.date;
         
+        Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         [alert setTitle:@"myplayXplay"];
         [alert setMessage:@"Are you sure you want to delete this Event?"];
-        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-        [alert addButtonWithTitle:@"Yes"];
-        if([self.downloadingItemsDictionary objectForKey: dateString]){
-            [alert addButtonWithTitle:@"Yes (local)"];
-            [alert addButtonWithTitle:@"Yes (remote)"];
+        if ((localCounterpart && localCounterpart.downloadedSources.count > 0) || event.downloadedSources.count > 0) {
+            [alert addButtonWithTitle:@"Yes(From server and local device)"];
+            [alert addButtonWithTitle:@"Yes(Only local)"];
+            [alert addButtonWithTitle:@"No"];
+        } else {
+            [alert addButtonWithTitle:@"Yes(From server)"];
+            [alert addButtonWithTitle:@"No"];
         }
-        [alert addButtonWithTitle:@"No"];
+        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert show];
-        
     }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
+    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these events?"] && (buttonIndex == 0 || buttonIndex == 1)) {
         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
         NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
         
         for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
             [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
             [indexPathsArray addObject: cellIndexPath];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_EVENT" object:nil userInfo:@{@"Event" : self.tableData[cellIndexPath.row]}];
+            [((Event *)self.tableData[cellIndexPath.row]).downloadedSources removeAllObjects];
+            if (buttonIndex == 0) {
+                //Post a notification to delete it from server.
+            }
         }
-        
-        [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
-        [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
+        if (buttonIndex == 0) {
+            [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
+            [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
+            [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+        }
         
         [self.setOfDeletingCells removeAllObjects];
-        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-        
-    }else{
-        if (buttonIndex == 0)
-        {
-            [self removeIndexPathFromDeletion];
-            [self.arrayOfAllData removeObject: self.tableData[self.editingIndexPath.row]];
-            [self.tableData removeObject: self.tableData[self.editingIndexPath.row]];
-            
-            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-            
-        }else if (buttonIndex == alertView.numberOfButtons - 3){
-            
-        }else if (buttonIndex == alertView.numberOfButtons - 2){
-            
+        if (buttonIndex == 1) {
+            [self.tableView reloadData];
         }
-        else if (buttonIndex == alertView.numberOfButtons - 1)
-        {
-            // No, cancel the action to delete tags
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
+    } else{
+        if (alertView.numberOfButtons == 3) {
+            if (buttonIndex == 2) {
+                return;
+            }
+            Event *eventToRemove = self.tableData[self.editingIndexPath.row];
+            
+            if (buttonIndex == 0) {
+                [self.arrayOfAllData removeObject:eventToRemove];
+                [self.tableData removeObject: eventToRemove];
+                [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_EVENT" object:nil userInfo:@{@"Event" : eventToRemove}];
+            [eventToRemove.downloadedSources removeAllObjects];
+            [self removeIndexPathFromDeletion];
+            
+            if (buttonIndex == 1) {
+                [self.tableView reloadData];
+            }
+        } else {
+            if (buttonIndex == 0) {
+                Event *eventToRemove = self.tableData[self.editingIndexPath.row];
+                [self removeIndexPathFromDeletion];
+                [self.arrayOfAllData removeObject:eventToRemove];
+                [self.tableData removeObject: eventToRemove];
+                [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
+                [self removeIndexPathFromDeletion];
+            } else {
+                return;
+            }
         }
     }
     
@@ -430,18 +454,18 @@
     if (self.setOfDeletingCells.count ) {
         return;
     }else if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]){
-//        FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-//                                                                                                                                        @"feed":cell.feedName.text,
-//                                                                                                                                        @"time":[event objectForKey:@"starttime"],
-//                                                                                                                                        @"duration":[event objectForKey:@"duration"],
-//                                                                                                                                        @"comment":[event objectForKey:@"comment"],
-//                                                                                                                                        @"forWhole":event
-//                                                                                                                                        }}];
-//        
+        //        FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+        //                                                                                                                                        @"feed":cell.feedName.text,
+        //                                                                                                                                        @"time":[event objectForKey:@"starttime"],
+        //                                                                                                                                        @"duration":[event objectForKey:@"duration"],
+        //                                                                                                                                        @"comment":[event objectForKey:@"comment"],
+        //                                                                                                                                        @"forWhole":event
+        //                                                                                                                                        }}];
+        //
         return;
     }
-
+    
     
     ARCalendarTableViewCell *lastCell = (ARCalendarTableViewCell *)[self.tableView cellForRowAtIndexPath: self.lastSelectedIndexPath];
     [lastCell isSelected:NO];

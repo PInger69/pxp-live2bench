@@ -41,21 +41,32 @@
         _mp4s               = [self buildMP4s:_rawData];
         _feeds              = [self buildFeeds:_rawData];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
+        _downloadedSources  = [NSMutableArray array];
+        _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
         _tags               = [[NSMutableDictionary alloc]init];// this needs to be pop
-        _downloadedSources  = @[];
+        //_downloadedSources  = @[];
     }
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
+        NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
+        if (key.count > 0) {
+            [self.downloadingItemsDictionary removeObjectForKey:key[0]];
+            [self.downloadedSources addObject:[(NSString *)key[0] lastPathComponent]];
+        }
+    }];
     return self;
 }
 
 
 
-
+-(void)setDownloadedSources:(NSMutableArray *)downloadedSources{
+    _downloadedSources = downloadedSources;
+}
 
 
 -(NSDictionary*)buildMP4s:(NSDictionary*)aDict
 {
     NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
-
+    
     if ([aDict objectForKey:@"mp4_2"]) {
         tempDict = [aDict objectForKey:@"mp4_2"];
     } else if ([aDict objectForKey:@"mp4"]) {
@@ -78,7 +89,7 @@
  */
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict
 {
-   
+    
     NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
     
     if ([aDict[@"vid_2"] isKindOfClass:[NSDictionary class]]){ // For new encoder and non live

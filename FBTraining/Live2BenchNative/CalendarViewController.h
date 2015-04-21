@@ -11,7 +11,7 @@
 #import "EncoderManager.h"
 
 @interface CalendarViewController : CustomTabViewController<UITableViewDelegate, UITextViewDelegate>{
-
+    
 }
 
 @property (nonatomic,strong) UITableView *tableView;

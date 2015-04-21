@@ -13,6 +13,7 @@
 #import "CKViewController.h"
 #import "ARCalendarTableViewController.h"
 #import "UserCenter.h"
+#import "Utility.h"
 
 @interface CalendarViewController ()
 
@@ -49,19 +50,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     tableViewController      = [[ARCalendarTableViewController alloc]init];
     [tableViewController.view setFrame:CGRectMake(502, 110, 518, 650)];
     [tableViewController.tableView setAutoresizingMask:UIViewAutoresizingNone];
     tableViewController.localPath = localPath;
-
+    
     calendarViewController                      = [[CKViewController alloc] init];
     [calendarViewController setFrame: CGRectMake(5, 110, 485, 400)];
     
     [self addChildViewController:tableViewController];
     [self.view addSubview: tableViewController.tableView];
     [self.view addSubview:calendarViewController.view];
-
+    
     UIView *pickerArea = [[UIView alloc] initWithFrame:CGRectMake(5, 530, 486, 230)];
     pickerArea.layer.borderWidth = 0.7f;
     pickerArea.layer.borderColor = [UIColor lightGrayColor].CGColor;
@@ -105,12 +106,24 @@
     
     [self.view addSubview:memoryBar];
     
-    tableViewController.arrayOfAllData = [[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy];
-    //tableViewController.arrayOfAllData = _appDel.encoderManager.masterEncoder.allEvents;
-    [tableViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
-    calendarViewController.arrayOfAllData = [[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy];
-    //calendarViewController.arrayOfAllData = _appDel.encoderManager.masterEncoder.allEvents;
-    [calendarViewController.arrayOfAllData addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+    
+    NSMutableArray *temp = [[NSMutableArray alloc] init];
+    if (_appDel.encoderManager.masterEncoder) {
+        [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];
+    } else {
+        [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+    }
+    NSMutableArray *liveEvents = [NSMutableArray array];
+    for (Event *event in temp) {
+        if (event.live) {
+            [liveEvents addObject:event];
+        }
+    }
+    [temp removeObjectsInArray:liveEvents];
+    
+    tableViewController.arrayOfAllData = [temp mutableCopy];
+    calendarViewController.arrayOfAllData = tableViewController.arrayOfAllData;
+    
     tableViewController.encoderManager = _appDel.encoderManager;
 }
 
@@ -143,15 +156,15 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CALENDAR_DATA object:nil userInfo:@{@"block": ^(NSMutableArray *eventArray){
-//  
-//        NSMutableArray *notliveEvents = [NSMutableArray array];
-//        for (NSDictionary *event in eventArray) {
-//            if (!event[@"live"]) {
-//                [notliveEvents addObject:event];
-//            }
-//        }
-//    }}];
+    //    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CALENDAR_DATA object:nil userInfo:@{@"block": ^(NSMutableArray *eventArray){
+    //
+    //        NSMutableArray *notliveEvents = [NSMutableArray array];
+    //        for (NSDictionary *event in eventArray) {
+    //            if (!event[@"live"]) {
+    //                [notliveEvents addObject:event];
+    //            }
+    //        }
+    //    }}];
 }
 
 - (void)didReceiveMemoryWarning

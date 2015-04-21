@@ -11,7 +11,7 @@
 #import "ImageAssetManager.h"
 #import "ListPopoverControllerWithImages.h"
 #import "FeedSelectCell.h"
-
+#import "Tag.h"
 
 
 @interface ListTableViewController ()
@@ -157,13 +157,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSDictionary *tag;
+    Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
     tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
-        NSDictionary *urls = tag[@"url_2"];
+        NSDictionary *urls = tag.thumbnails;
         NSArray *keys = [urls allKeys];
         NSString *key = keys[indexPath.row - firstIndexPath.row];
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
@@ -238,22 +238,22 @@
     
     //Setting the Image
     ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-    NSString *url = [tag objectForKey:@"url"];
+    NSString *url = [[tag.thumbnails allValues] firstObject];
     [imageAssetManager imageForURL:url atImageView:cell.tagImage];
     
     
     
-    [cell.tagname setText:[[tag objectForKey:@"name"] stringByRemovingPercentEncoding]];
+    [cell.tagname setText:[tag.name stringByRemovingPercentEncoding]];
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
-    NSString *durationString = [NSString stringWithFormat:@"%@s",[tag objectForKey:@"duration"]];
-    NSString *periodString = [NSString stringWithFormat:@"%.02f", [[tag objectForKey:@"time"] floatValue]];
+    NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
+    NSString *periodString = [NSString stringWithFormat:@"%.02f", tag.time];
     
     [cell.tagInfoText setText:[NSString stringWithFormat:@"Duration: %@ \nPeriod: %@ ",durationString,periodString]];
     
-    [cell.tagtime setText: [tag objectForKey:@"displaytime"]];
+    [cell.tagtime setText: tag.displayTime];
     
-    UIColor *thumbColour = [Utility colorWithHexString:[tag objectForKey:@"colour"]];
+    UIColor *thumbColour = [Utility colorWithHexString:tag.colour];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
     
     [cell removeGestureRecognizer:cell.swipeRecognizerRight];

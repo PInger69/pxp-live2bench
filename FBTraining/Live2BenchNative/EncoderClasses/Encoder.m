@@ -11,6 +11,7 @@
 #import "Utility.h"
 #import <objc/runtime.h>
 #import "Feed.h"
+#import "Tag.h"
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 
@@ -664,7 +665,7 @@
     else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
-        NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
+        //NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
         
         [self eventTagsGetResponce:finishedData eventNameKey:extra];
     }
@@ -842,8 +843,14 @@
     
     if (results){
         NSDictionary    * tags = [results objectForKey:@"tags"];
+        NSMutableDictionary *tagsDictionary = [NSMutableDictionary dictionary];
         if (tags) {
-            _event.tags =[NSMutableDictionary dictionaryWithDictionary:tags];
+            for (NSString *idKey in [tags allKeys]) {
+                Tag *newTag = [[Tag alloc] initWithData: tags[idKey]];
+                [tagsDictionary addEntriesFromDictionary:@{idKey:newTag}];
+            }
+            
+            _event.tags =tagsDictionary;
         }
     }
     

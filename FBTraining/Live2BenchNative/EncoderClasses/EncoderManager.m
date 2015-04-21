@@ -1330,14 +1330,15 @@ static void * builtContext          = &builtContext; // depricated?
     // Collects all data from encoders into a temp array
     NSMutableArray * temp1  = [[NSMutableArray alloc]init];
     NSMutableArray * eventPool  = [[NSMutableArray alloc]init];
-   
     
-    for (id <EncoderProtocol> encoder in _authenticatedEncoders) {
-        [eventPool addObjectsFromArray:encoder.allEvents];
+    
+    //Why doesn't the protocol have allEvents?
+    for (Encoder <EncoderProtocol> *encoder in _authenticatedEncoders) {
+        [eventPool addObjectsFromArray:[encoder.allEvents allValues]];
     }
     
     for (Event * anEvent in eventPool) {
-//        [temp1 addObjectsFromArray:anEvent.rawData];
+        //        [temp1 addObjectsFromArray:anEvent.rawData];
         [temp1 addObjectsFromArray:[anEvent.rawData allValues]];
     }
     
@@ -1380,7 +1381,7 @@ static void * builtContext          = &builtContext; // depricated?
             NSDictionary * dict = event.rawData;
             [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
         }
-
+        
     }
     return [[uniqueDict allValues]copy];
 }

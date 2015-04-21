@@ -8,6 +8,7 @@
 
 #import "TagFlagViewController.h"
 #import "Utility.h"
+#import "Tag.h"
 //#import "Globals.h"
 
 
@@ -122,7 +123,7 @@
     //NSMutableDictionary *UIColourDict;
     //UIColor *tagColour;
     
-    for(NSMutableDictionary *oneTag in self.arrayOfAllTags){
+    for(Tag *oneTag in self.arrayOfAllTags){
         //if the tag was deleted(type == 3) or type == 8 , don't create marker
         //if  ( YES){//[oneTag objectForKey:@"time"] && [[oneTag objectForKey:@"type"]integerValue]!=3 && [[oneTag objectForKey:@"type"]integerValue]!=8 && [[oneTag objectForKey:@"type"]integerValue]!=18 && [[oneTag objectForKey:@"type"]integerValue]!=22 && !([[oneTag objectForKey:@"type"]integerValue]&1)) {
         //UIColor *color = [Utility colorWithHexString: [oneTag objectForKey:@"colour"]];
@@ -138,11 +139,11 @@
          }*/
         
         //tagColour = [UIColourDict objectForKey:color];
-        float tagTime = [[oneTag objectForKey:@"time"] floatValue];
+        float tagTime = oneTag.time;
         
         //create tag marker for this tag
         //isCreatingAllTagMarkers = FALSE;
-        [self markTagAtTime:tagTime colour: [Utility colorWithHexString:[oneTag objectForKey:@"colour"]]tagID:[NSString stringWithFormat:@"%@",[oneTag objectForKey:@"id"]]];
+        [self markTagAtTime:tagTime colour: [Utility colorWithHexString:oneTag.colour]tagID:[NSString stringWithFormat:@"%d",oneTag.uniqueID]];
         //isCreatingAllTagMarkers = FALSE;
         //}
     }

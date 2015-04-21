@@ -27,7 +27,7 @@
 #define VIDEO_EXT    @"mp4"
 
 #define TAG_SYNC        1
-#define ENCODER_COMMAND 2
+#define TAG_UPLOAD      2
 
 // PRIVATE CLASS
 @interface NSURLDataConnection : NSURLConnection
@@ -43,6 +43,7 @@
     NSString        * _localPath;
     NSMutableArray  * _bookmarkPlistNames;
     NSComparisonResult(^plistSort)(id obj1, id obj2);
+    NSMutableArray  * tagSyncConnections;
     //NSURLDataConnection *tagSyncConnection;
     NSURLDataConnection *encoderConnection;
 }
@@ -67,6 +68,7 @@
         _clips              = [[NSMutableDictionary alloc]init];
         _allEvents          = [[NSMutableDictionary alloc] init];
         _localTags          = [[NSMutableArray alloc] init];
+        tagSyncConnections  = [NSMutableArray array];
         
         // Build Bookmark Clip sections
         [self scanForBookmarks];
@@ -90,7 +92,7 @@
             if (itemHid) {
                 Event * anEvent = [[Event alloc]initWithDict:dict];
                 anEvent.local   = YES;
-                anEvent.downloadedSources = [self listDownloadSourcesFor:anEvent];
+                anEvent.downloadedSources = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
                 
                 [self.localTags addObjectsFromArray: [anEvent.localTags allValues]];
@@ -160,6 +162,13 @@
         // Observers
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDeleteRequest:) name:@"NOTIF_DELETE_CLIPS" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_EVENT" object:nil queue:nil usingBlock:^(NSNotification *note){
+            Event *localCounterpart = [self getEventByName:((Event *)note.userInfo[@"Event"]).name];
+            if (localCounterpart) {
+                [self deleteEvent:localCounterpart];
+            }
+        }];
         
         [self checkLocalTags];
     }
@@ -231,10 +240,34 @@
         NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@", ipAddress ,jsonString]  ];
         NSURLRequest *urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5.0];
         encoderConnection                       = [[NSURLDataConnection alloc] initWithRequest:urlRequest delegate:self];
-        encoderConnection.context        = TAG_SYNC;
+        encoderConnection.context        = TAG_UPLOAD;
     }
 }
 
+#pragma mark - Event Download
+-(void)syncEvents{
+//    NSArray *allEvents = [self.allEvents allValues];
+//    for (int i = 0; i < self.allEvents.count; ++i) {
+//        Event *eventToSync = allEvents[i];
+//        NSDictionary *tData = @{@"device":
+//                                @"event":
+//                                @"requesttime": CACurrentMediaTime(),
+//                                @"user":
+//                                    };
+//                                
+//                                
+//        NSString *jsonString                    = [Utility dictToJSON:tData];
+//        
+//        NSString *ipAddress                     = self.encoderManager.masterEncoder.ipAddress;
+//        NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/gametags/%@", ipAddress,jsonString]  ];
+//        NSURLRequest *urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5.0];
+//        NSURLDataConnection *urlConnection                    = [[NSURLDataConnection alloc]initWithRequest:urlRequest delegate:self];
+//        urlConnection.context = TAG_SYNC;
+//        
+//    
+//
+//    }
+}
 
 #pragma mark - Responces
 
@@ -264,32 +297,56 @@
 }
 
 -(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
-    NSDictionary    * results =[Utility JSONDatatoDict: connection.cumulatedData];
-    if([results isKindOfClass:[NSDictionary class]])
-    {
-        Tag *localTag = [self.localTags firstObject];
-        [localTag replaceDataWithDictionary: results];
-        for (Event *event in [self.allEvents allValues]) {
-            if ([[event.localTags allValues] containsObject: localTag]){
-                [event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
-                [event.localTags removeObjectForKey:[[event.localTags allKeysForObject: localTag] firstObject]];
+    if (connection.context == TAG_UPLOAD) {
+        NSDictionary    * results =[Utility JSONDatatoDict: connection.cumulatedData];
+        if([results isKindOfClass:[NSDictionary class]])
+        {
+            Tag *localTag = [self.localTags firstObject];
+            [localTag replaceDataWithDictionary: results];
+            for (Event *event in [self.allEvents allValues]) {
+                if ([[event.localTags allValues] containsObject: localTag]){
+                    [event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
+                    [event.localTags removeObjectForKey:[[event.localTags allKeysForObject: localTag] firstObject]];
+                }
+            }
+            [self.localTags removeObject: localTag];
+        }
+        
+        [self checkLocalTags];
+
+    }else if (connection.context == TAG_SYNC){
+        NSDictionary    * results =[Utility JSONDatatoDict:connection.cumulatedData];
+        
+        if (results){
+            NSDictionary    * tags = [results objectForKey:@"tags"];
+            if (tags) {
+                Event *theEvent;
+                Tag *firstTag = [[Tag alloc] initWithData:[[tags allValues]firstObject]];
+                for (Event *event in [self.allEvents allValues]) {
+                    if ([event.rawData[@"hid"] isEqualToString: firstTag.event]) {
+                        theEvent = event;
+                    }
+                }
+                
+                for (NSDictionary *tag in tags) {
+                    Tag *newTag = [[Tag alloc]initWithData:tag];
+                    if (![[theEvent.tags allValues] containsObject: newTag]) {
+                        [theEvent.tags addEntriesFromDictionary:@{[NSString stringWithFormat:@"%d", newTag.uniqueID]: newTag}];
+                    }
+                }
+                
+                
             }
         }
-        [self.localTags removeObject: localTag];
+
     }
-
-    [self checkLocalTags];
 }
-
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     [self.localTags removeObjectAtIndex:0];
     [self checkLocalTags];
 }
 
-#pragma mark - Event Download
--(void)syncEvents{
-    
-}
+
 
 // Depricated?
 -(void)myClipDataRequest: (NSNotification *)note{
@@ -502,7 +559,7 @@
     NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath];
     BOOL isDir = NO;
     [[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:&isDir];
-
+    
     
     if ( !isDir){
         [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
@@ -513,7 +570,7 @@
     // make an instance of event in local
     Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData];
     anEvent.local   = YES;
-    anEvent.downloadedSources = [self listDownloadSourcesFor:anEvent];
+    //anEvent.downloadedSources = [[self listDownloadSourcesFor:anEvent] mutableCopy];
     
     
     NSMutableDictionary            * allEventsMutable =  [_allEvents mutableCopy];
@@ -538,13 +595,14 @@
     }
     
     NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath];
-
-
+    
+    
     [[NSFileManager defaultManager] removeItemAtPath:aPath error:NULL]; // deletes the folder
     [[NSFileManager defaultManager] removeItemAtPath: [aPath stringByAppendingPathExtension:@"plist"] error:NULL]; // delets the plist
     
     NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:_allEvents];
-    [temp removeObjectForKey:aEvent.name];
+    [temp removeObjectForKey:aEvent.hid];
+    
     _allEvents = [temp copy];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_MEMORY object:nil];
