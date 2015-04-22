@@ -198,6 +198,12 @@
         
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
         
+        collapsableCell.event = event.rawData;
+        collapsableCell.downloadButton.enabled = YES;
+        NSString *name = event.name;
+        
+        Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:name];
+        
         [collapsableCell positionWithFrame:CGRectMake(0, 0, 518, 40)];
         __block ARCalendarTableViewController *weakSelf = self;
         collapsableCell.sendUserInfo = ^(){
@@ -217,21 +223,20 @@
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
                 [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
+                if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
+                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
+                } else {
+                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
+                }
+                
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                        animated:YES];
         };
         
-        
-        
-        collapsableCell.event = event.rawData;
-        collapsableCell.downloadButton.enabled = YES;
-        NSString *name = event.name;
         //        NSString *path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:event.datapath] stringByAppendingString:@".plist"];
         //        NSDictionary *plistForEvent = [[NSDictionary alloc] initWithContentsOfFile:path];
         
-        
-        Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:name];
         
         __block FeedSelectCell *weakCell = collapsableCell;
         if([event.downloadingItemsDictionary objectForKey:data]) {
@@ -245,17 +250,21 @@
             weakCell.downloadButton.downloadComplete = YES;
             weakCell.downloadButton.progress = 1;
             [weakCell setNeedsDisplay];
-        } else {
+        }else {
             collapsableCell.downloadButton.downloadItem = nil;
-            collapsableCell.downloadButtonBlock = ^(DownloadItem *item){
-                DownloadItem *downloadItem = item;
-                downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
-                weakCell.downloadButton.downloadItem = downloadItem;
-                [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                    weakCell.downloadButton.progress = progress;
-                    [weakCell.downloadButton setNeedsDisplay];
-                }];
-                [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
+            
+            collapsableCell.downloadButtonBlock = ^(){
+                [Utility downloadEvent:weakCell.event sourceName:weakCell.feedName.text returnBlock:
+                 ^(DownloadItem *item){
+                     DownloadItem *downloadItem = item;
+                     downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
+                     weakCell.downloadButton.downloadItem = downloadItem;
+                     [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                         weakCell.downloadButton.progress = progress;
+                         [weakCell.downloadButton setNeedsDisplay];
+                     }];
+                     [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
+                 }];
             };
         }
         return collapsableCell;

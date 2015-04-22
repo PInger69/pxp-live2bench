@@ -18,7 +18,7 @@
 
 @property (strong, nonatomic) DownloadButton *downloadButton;
 @property (strong, nonatomic) CustomButton *playButton;
-@property (nonatomic, copy) void(^downloadButtonBlock)(DownloadItem *item);
+@property (nonatomic, copy) void(^downloadButtonBlock)();
 @property (nonatomic, copy) void(^sendUserInfo)();
 
 @property (nonatomic, strong) NSDictionary *event;

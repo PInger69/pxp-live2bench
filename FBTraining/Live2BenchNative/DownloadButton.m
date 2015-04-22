@@ -35,7 +35,8 @@
     self.downloadComplete = NO;
     
     if (downloadItem) {
-        [downloadItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+        [_downloadItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    
         __block DownloadButton *weakself = self;
         [_downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
             weakself.progress = progress;
@@ -53,6 +54,9 @@
             self.downloadComplete = YES;
         }
     }else{
+        if (self.downloadComplete) {
+            return;
+        }
         self.enabled = YES;
         self.progress = 0;
         [self setNeedsDisplay];
@@ -192,6 +196,13 @@
             [self setNeedsDisplay];
         default:
             break;
+    }
+}
+
+- (void)dealloc {
+    //Or we can change the property isAlive on downloadItem and observe it
+    if (self.downloadItem) {
+        [self.downloadItem removeObserver:self forKeyPath:@"status"];
     }
 }
 
