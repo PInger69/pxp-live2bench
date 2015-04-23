@@ -40,7 +40,7 @@
 @implementation LocalEncoder
 {
     NSString        * _localDocsPListPath;
-    NSString        * _localPath;
+    //NSString        * _localPath;
     NSMutableArray  * _bookmarkPlistNames;
     NSComparisonResult(^plistSort)(id obj1, id obj2);
     NSMutableArray  * tagSyncConnections;

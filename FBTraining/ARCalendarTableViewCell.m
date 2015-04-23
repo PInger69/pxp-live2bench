@@ -35,6 +35,11 @@
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 35, 400, 40)];
     [self.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     
+    self.downloadInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(350, 15, 200, 50)];
+    [self.downloadInfoLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
+    self.downloadInfoLabel.numberOfLines = 2;
+    self.downloadInfoLabel.lineBreakMode = NSLineBreakByClipping;
+    
 //    self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
 //    //[self.playButton setBackgroundImage:[UIImage imageNamed:@"play_video"] forState:UIControlStateNormal];
 //    [self.playButton setFrame:CGRectMake(460, 15, 30,30)];
@@ -51,6 +56,7 @@
 //    [self.downloadButton setTag:98];
 //    [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
+    [self.myContentView addSubview: self.downloadInfoLabel];
     [self.myContentView addSubview: self.dateLabel];
     [self.myContentView addSubview: self.timeLabel];
     [self.myContentView addSubview: self.titleLabel];
@@ -77,7 +83,6 @@
     UIColor * color = [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
     UIColor * colorForTesting = [UIColor orangeColor];
     UIColor * textColor = [UIColor colorWithWhite:0.224 alpha:1.0f];
-    
     if (selected) {
         self.myContentView.backgroundColor = color;
         [self.dateLabel setTextColor:textColor];

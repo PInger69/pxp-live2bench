@@ -224,7 +224,6 @@ static void * eventContext      = &eventContext;
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:NO];
         _tagButtonController.enabled = NO;
-
     } else if ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName]){      // LIVE
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         self.videoPlayer.live   = YES;
@@ -234,7 +233,6 @@ static void * eventContext      = &eventContext;
             [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
             [self.videoPlayer play];
         }
-        
     } else if (_encoderManager.currentEvent == nil) { // CLIPs and playing back old events
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
         self.videoPlayer.live   = NO;
@@ -343,7 +341,7 @@ static void * eventContext      = &eventContext;
     [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
     
 
-    self.videoPlayer.playerContext      = STRING_LIVE2BENCH_CONTEXT;
+    self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
     
     [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
     // so get buttons are connected to full screen

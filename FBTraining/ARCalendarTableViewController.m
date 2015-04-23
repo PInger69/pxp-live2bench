@@ -13,6 +13,7 @@
 #import "DownloadItem.h"
 #import "ListPopoverController.h"
 #import "FeedSelectCell.h"
+#import "Feed.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -33,9 +34,11 @@
         //[self.tableView registerClass:[CalendarTableCell class] forCellReuseIdentifier: @"CalendarTableCell"];
         [self.tableView registerClass:[ARCalendarTableViewCell class] forCellReuseIdentifier: @"ARCalendarTableViewCell"];
         self.arrayOfCollapsableIndexPaths = [NSMutableArray array];
+        //Set the frame for deleteAllButton
         self.originalFrame = CGRectMake(568, 768, 370, 0);
         [self.deleteButton setFrame: self.originalFrame];
         self.newFrame = CGRectMake(568, 708, 370, 60);
+        //The context string is used to determine in which tableViewController you delete a cell
         self.contextString = @"Event";
     }
     return self;
@@ -48,6 +51,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filterArray:) name:@"datePicked" object:nil];
+    //To reload the number of downloaded sources
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
+        [self.tableView reloadData];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,9 +62,12 @@
     // Dispose of any resources that can be recreated.
 }
 
+//This method is getting called when you press "All Events Button" of datePicker.
 -(void)showAllData{
+    //To remove those collapsible cells and selected effect(orange background).
     [self.arrayOfCollapsableIndexPaths removeAllObjects];
     self.lastSelectedIndexPath = nil;
+    
     self.tableData = [[self arrayOfAllEventsSorted] mutableCopy];
     [self.tableView reloadData];
 }
@@ -70,8 +80,6 @@
     for (Event *event in self.arrayOfAllData) {
         NSArray *bothStrings = [event.date componentsSeparatedByString:@" "];
         NSDate *date = [formatter dateFromString:bothStrings[0]];
-        
-        
         
         if (!sortedArray.count) {
             [sortedArray addObject:event];
@@ -178,6 +186,7 @@
         [cell.timeLabel setText: @" "];
         [cell.dateLabel setText: @" "];
         [cell.titleLabel setText: @" "];
+        [cell.downloadInfoLabel setText:@" "];
         cell.swipeRecognizerLeft.enabled = NO;
         cell.swipeRecognizerRight.enabled = NO;
         [cell setCellAccordingToState:cellStateNormal];
@@ -218,16 +227,22 @@
             
             _teamPick.contentViewController.modalInPopover = NO;
             
+            NSString *path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
             
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
                 [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
+                
+                Feed *source;
                 if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
+                    source = [[Feed alloc] initWithURLString:path quality:0];
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                 } else {
+                    source = [[Feed alloc] initWithURLString:data quality:0];
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
                 }
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                 
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
@@ -250,7 +265,7 @@
             weakCell.downloadButton.downloadComplete = YES;
             weakCell.downloadButton.progress = 1;
             [weakCell setNeedsDisplay];
-        }else {
+        } else {
             collapsableCell.downloadButton.downloadItem = nil;
             
             collapsableCell.downloadButtonBlock = ^(){
@@ -300,6 +315,7 @@
     }else{
         event = self.tableData[indexPath.row];
     }
+    Event *localOne = [self.encoderManager.localEncoder getEventByName:event.name];
     
     NSString *dateString = event.date;
     NSArray *bothStrings = [dateString componentsSeparatedByString:@" "];
@@ -310,6 +326,13 @@
     [cell.timeLabel setText: [bothStrings[1] substringToIndex: 5]];
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
+    [cell.downloadInfoLabel setText:@"0 / 0"];
+    if (localOne) {
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+    } else {
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+    }
+    
     
     [cell setSelectionStyle: UITableViewCellSelectionStyleNone];
     
@@ -485,8 +508,6 @@
     {
         NSArray *arrayToRemove = [NSArray array];
         arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
-        [self.arrayOfCollapsableIndexPaths removeAllObjects];
-        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
         if ([event.mp4s allValues].count > 1) {
@@ -505,7 +526,7 @@
                 
                 self.lastSelectedIndexPath = indexPath;
             }
-        } else {
+        } else if (event.mp4s.count == 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];
@@ -515,9 +536,20 @@
                 [insertionIndexPaths addObject:insertionIndexPath];
                 self.lastSelectedIndexPath = indexPath;
             }
+        } else {
+            [currentCell isSelected:NO];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:NO];
+            self.lastSelectedIndexPath = nil;
+            [self.arrayOfCollapsableIndexPaths removeAllObjects];
+            [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+            self.swipeableMode = YES;
+            return;
         }
-        self.swipeableMode = NO;
         
+        
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+        self.swipeableMode = NO;
         [self.arrayOfCollapsableIndexPaths addObjectsFromArray: insertionIndexPaths];
         [self.tableView insertRowsAtIndexPaths: insertionIndexPaths withRowAnimation:UITableViewRowAnimationRight];
         [self.tableView scrollToRowAtIndexPath:self.lastSelectedIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
