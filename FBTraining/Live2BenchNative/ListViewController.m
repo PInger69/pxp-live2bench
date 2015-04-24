@@ -26,6 +26,7 @@
 #import "L2BVideoBarViewController.h"
 
 #import "FullScreenViewController.h"
+#import "Tag.h"
 
 
 
@@ -91,7 +92,8 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
         
         //        self.allTags = [[NSMutableArray alloc]init];
@@ -102,28 +104,51 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         //_tableViewController.listViewControllerView = self.view;
         //_tableViewController.tableData = self.tagsToDisplay;
         
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+            self.tagsToDisplay =[ NSMutableArray arrayWithArray: [appDel.encoderManager.eventTags allValues]];
+            _tableViewController.tableData = self.tagsToDisplay;
+            if (!componentFilter.rawTagArray) {
+                componentFilter.rawTagArray = self.tagsToDisplay;
+            }
+            [_tableViewController.tableView reloadData];
+            
+        }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
+            selectedTag = note.object;
+        
+            [commentingField clear];
+            commentingField.enabled             = YES;
+            commentingField.text                = selectedTag.comment;
+            commentingField.ratingScale.rating  = selectedTag.rating;
+            
+            [newVideoControlBar setTagName: selectedTag.name];
+        }];
+
+        
     }
     return self;
     
 }
 
 -(void)deleteTag: (NSNotification *) note{
-    [self.tagsToDisplay removeObject: note.userInfo];
-    [_tableViewController.tableData removeObject: note.userInfo];
+    [self.tagsToDisplay removeObject: note.object];
+    //[_tableViewController.tableData removeObject: note.userInfo];
     [_tableViewController reloadData];
     
     componentFilter.rawTagArray = self.tagsToDisplay;
     //[componentFilter refresh];
 }
 
-//-(void)listViewTagReceived:(NSNotification*)note{
-//    if (note.userInfo) {
-//        NSMutableDictionary *mutableUserInfo = [[NSMutableDictionary alloc] initWithDictionary:note.userInfo];
-//        [self.tagsToDisplay addObject:mutableUserInfo];
-//        [_tableViewController reloadData];
-//    }
-//
-//}
+-(void)listViewTagReceived:(NSNotification*)note{
+    if (note.object) {
+        [self.tagsToDisplay addObject: note.object];
+        //[_tableViewController.tableData addObject:note.object];
+        [_tableViewController reloadData];
+        //[_collectionView reloadData];
+    }
+
+}
 
 -(void)sortFromHeaderBar:(id)sender
 {
@@ -290,15 +315,15 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 //    [self.videoBarViewController.tagMarkerController createTagMarkers];
 //}
 
--(void)clipViewTagReceived:(NSNotification*)note
-{
-    if (note.userInfo) {
-        [self.tagsToDisplay addObject: note.userInfo];
-        [_tableViewController.tableData addObject:note.userInfo];
-        [_tableViewController reloadData];
-        //[_collectionView reloadData];
-    }
-}
+//-(void)clipViewTagReceived:(NSNotification*)note
+//{
+//    if (note.object) {
+//        [self.tagsToDisplay addObject: note.object];
+//        [_tableViewController.tableData addObject:note.object];
+//        [_tableViewController reloadData];
+//        //[_collectionView reloadData];
+//    }
+//}
 
 -(void)viewWillAppear:(BOOL)animated{
     
@@ -2028,15 +2053,15 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //                                                                                                          @"time":[userInfo objectForKey:@"time"],
     //                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
     //                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+    
+    [self.videoPlayer playFeed:[userInfo objectForKey:@"feed"] withRange:timeRange];
     self.videoPlayer.looping = NO;
-    [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
-    self.videoPlayer.looping = YES;
-    selectedTag = [self.tagsToDisplay[[self.tagsToDisplay indexOfObjectIdenticalTo: userInfo[@"forWhole"]]] mutableCopy];
+    selectedTag = userInfo[@"forWhole"];
     
     [commentingField clear];
     commentingField.enabled             = YES;
-    commentingField.text                = [selectedTag objectForKey:@"comment"];
-    commentingField.ratingScale.rating  = [[selectedTag objectForKey:@"rating"]integerValue];
+    commentingField.text                = selectedTag.comment;
+    commentingField.ratingScale.rating  = selectedTag.rating;
     
     [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
 }
@@ -2372,16 +2397,16 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 {
     
     RatingInput * cmtRateField = (RatingInput *) sender;
-    NSString *ratingValue = [NSString stringWithFormat:@"%d",cmtRateField.rating];
+    //NSString *ratingValue = [NSString stringWithFormat:@"%d",cmtRateField.rating];
     
     
     
-    [selectedTag setValue:ratingValue forKey:@"rating"];
+    selectedTag.rating = cmtRateField.rating;
     
-    if ([[selectedTag objectForKey:@"bookmark"]integerValue] ==1) {
+    //if ([[selectedTag objectForKey:@"bookmark"]integerValue] ==1) {
         //        [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]]  setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];
         //        [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
-    }
+    //}
     
     //    if (globals.HAS_MIN && globals.eventExistsOnServer){
     //        //current absolute time in seconds
@@ -2452,7 +2477,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     //        comment = @"";
     //    }
     
-    [selectedTag setValue:comment forKey:@"comment"];
+    selectedTag.comment = comment;
     
     //    if ([[selectedTag objectForKey:@"bookmark"]integerValue] ==1) {
     //        [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]] setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];

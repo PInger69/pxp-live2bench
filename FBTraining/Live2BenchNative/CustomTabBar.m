@@ -158,7 +158,18 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
             tabsArray = settingNames;
             togglesArray = toggleValues;
         }
-                                                                                                          }];
+        
+    }];
+    
+    if (DEBUG_MODE) {
+        NSMutableArray *addingTabsArray = [NSMutableArray arrayWithArray: tabsArray];
+        [addingTabsArray addObject: @"Debug"];
+        tabsArray = addingTabsArray;
+        
+        NSMutableArray *addingTogglesArray = [NSMutableArray arrayWithArray: togglesArray];
+        [addingTogglesArray addObject: @1];
+        togglesArray = addingTogglesArray;
+    }
     
     for (int i = 0; i < tabsArray.count; ++i) {
         NSString *tabString = tabsArray[i];

@@ -11,6 +11,6 @@
 
 @interface VideoTrimItem : DownloadItem
 
--(instancetype)initWithVideoFilePath:(NSString*)videoPath destination:(NSString*)aPath andTimeRange: (CMTimeRange) range;
+-(instancetype)initWithVideoURLString:(NSString*)URLString destination:(NSString*)aPath andTimeRange: (CMTimeRange) range;
 
 @end

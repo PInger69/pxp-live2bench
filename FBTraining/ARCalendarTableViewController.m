@@ -247,15 +247,20 @@
             [weakCell setNeedsDisplay];
         } else {
             collapsableCell.downloadButton.downloadItem = nil;
-            collapsableCell.downloadButtonBlock = ^(DownloadItem *item){
-                DownloadItem *downloadItem = item;
-                downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
-                weakCell.downloadButton.downloadItem = downloadItem;
-                [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+            
+            collapsableCell.downloadButtonBlock = ^(){
+                [Utility downloadEvent:collapsableCell.event sourceName:collapsableCell.feedName.text returnBlock:
+                ^(DownloadItem *item){
+                    DownloadItem *downloadItem = item;
+                    downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
+                    weakCell.downloadButton.downloadItem = downloadItem;
+                    [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
                     weakCell.downloadButton.progress = progress;
                     [weakCell.downloadButton setNeedsDisplay];
+                    }];
+                    [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
                 }];
-                [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
+                
             };
         }
         return collapsableCell;

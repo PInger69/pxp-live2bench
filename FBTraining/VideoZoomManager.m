@@ -19,6 +19,7 @@
 
 // This is the button that is used to reset the zoom of the video player
 @property (strong, nonatomic) UIButton *undoZoomButton;
+@property (strong, nonatomic) UIButton *videoShiftingButton;
 
 @property (strong, nonatomic) NSMutableArray *arrayOfPreviousFrames;
 @property (strong, nonatomic) NSMutableArray *secondArrayOfPreviousFrames;
@@ -30,12 +31,21 @@
 @property (strong, nonatomic) UILabel *debugLabel;
 @property (strong, nonatomic) UILabel *debugLabel2;
 
+@property (assign, nonatomic) BOOL shiftMode;
+
 @end
 
 @implementation VideoZoomManager{
+    //These values are important for
+    //the gesture recognizer and for shifting
+    //the video.
     CGPoint beginningPoint;
-    CGRect newVideoLayerFramee;
     CGPoint currentPoint;
+    CGPoint previousPoint;
+    
+    CGRect newVideoLayerFramee;
+    
+    //This is used for zooming
     CGPoint relativePartialOrigin;
 }
 
@@ -54,6 +64,7 @@
 -(instancetype)init{
     self = [super init];
     if (self) {
+        
         self.tintColor = [UIColor colorWithRed:1.0 green:0.6 blue:0.0 alpha:1.0];
         self.gestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(gestureRecognizerReceivedTouch:)];
         self.gestureRecognizer.enabled = YES;
@@ -72,6 +83,12 @@
         self.undoZoomButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 25, 30, 30)];
         [self.undoZoomButton addTarget:self action:@selector(undoZoomButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.undoZoomButton setImage:[self undoZoomButtonImage] forState:UIControlStateNormal];
+        
+        self.videoShiftingButton = [[UIButton alloc] initWithFrame:CGRectMake(30, 25, 30, 30)];
+        [self.videoShiftingButton addTarget:self action:@selector(toggleShiftingMode:) forControlEvents:UIControlEventTouchUpInside];
+        [self.videoShiftingButton setImage: [UIImage imageNamed:@"videoTouch.png"] forState:UIControlStateNormal];
+        //self.videoShiftingButton.backgroundColor = [UIColor redColor];
+        self.shiftMode = NO;
         
         self.debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 650, 150)];
         self.debugLabel.textColor = [UIColor redColor];
@@ -113,6 +130,8 @@
     return self.gestureRecognizer;
 }
 
+#pragma mark - Gesture Recognizer methods
+
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
     beginningPoint = [touch locationInView:self.videoPlayer.view];
     for (UIView *viewToAvoid in self.viewsToAvoid) {
@@ -149,12 +168,17 @@
     {
         case UIGestureRecognizerStateBegan:
             beginningPoint = [gestureRecognizer locationInView:self.videoPlayer.view];
+            currentPoint = beginningPoint;
+            previousPoint = beginningPoint;
             newVideoLayerFramee = CGRectMake(beginningPoint.x, beginningPoint.y, 0, 0);
             self.zoomView.frame = newVideoLayerFramee;
-            [self.videoPlayer.view addSubview: self.zoomView];
+            if (!self.shiftMode) {
+                [self.videoPlayer.view addSubview: self.zoomView];
+            }
             break;
             
         case UIGestureRecognizerStateChanged:
+            previousPoint = currentPoint;
             currentPoint = [gestureRecognizer locationInView:self.videoPlayer.view];
             //By calculating the frame based on minimum and maximum values,
             // the zoom view will adjust to any direction the user swipes
@@ -163,17 +187,28 @@
             newVideoLayerFramee.size.width = MAX(currentPoint.x - beginningPoint.x, beginningPoint.x - currentPoint.x);
             newVideoLayerFramee.size.height = MAX(currentPoint.y - beginningPoint.y, beginningPoint.y - currentPoint.y);
             self.zoomView.frame = newVideoLayerFramee;
+            
+            if (self.shiftMode) {
+                [self shiftThePlayers];
+            }
             break;
             
         case UIGestureRecognizerStateEnded:
+            previousPoint = currentPoint;
+            currentPoint = [gestureRecognizer locationInView:self.videoPlayer.view];
             [self.zoomView removeFromSuperview];
             
-            [self zoomThePlayer];
-            [self zoomTheSecondPlayer];
+            if (!self.shiftMode) {
+                [self zoomThePlayer];
+                [self zoomTheSecondPlayer];
+            }else{
+                [self continueShiftingPlayersWithVelocity: [gestureRecognizer velocityInView:self.videoPlayer.view]];
+            }
             //self.zoomFrame = viewFrame;
             // The extra and condition
             if (self.arrayOfPreviousFrames.count > 0) {
                 [self.videoPlayer.view addSubview: self.undoZoomButton];
+                [self.videoPlayer.view addSubview: self.videoShiftingButton];
             }
             
             break;
@@ -188,8 +223,9 @@
     }
 }
 
+#pragma mark - button targets
+
 -(void)undoZoomButtonPressed: (UIButton *)undoZoomButton{
-    //((RJLVideoPlayer *)self.videoPlayer).playBackView.videoLayer.frame = ((RJLVideoPlayer *)self.videoPlayer).playBackView.videoLayer.superlayer.bounds;
     self.videoLayer.frame = [(NSValue *)[self.arrayOfPreviousFrames lastObject] CGRectValue];
     self.secondLayer.frame = [(NSValue *)[self.secondArrayOfPreviousFrames lastObject] CGRectValue];
     
@@ -197,17 +233,21 @@
         self.videoLayer.frame = self.videoPlayer.view.bounds;
         self.secondLayer.frame = self.secondLayer.superlayer.bounds;
         [self.undoZoomButton removeFromSuperview];
+        [self.videoShiftingButton removeFromSuperview];
+        self.shiftMode = NO;
         [self.arrayOfPreviousFrames removeLastObject];
         [self.secondArrayOfPreviousFrames removeLastObject];
     }else{
         [self.arrayOfPreviousFrames removeLastObject];
         [self.secondArrayOfPreviousFrames removeLastObject];
     }
-    
-    //self.gestureRecognizer.enabled = YES;
 }
 
+-(void)toggleShiftingMode: (UIButton *) shiftModeButton{
+    self.shiftMode = !self.shiftMode;
+}
 
+#pragma mark - Graphics methods
 -(UIImage *)undoZoomButtonImage{
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 35), NO, [UIScreen mainScreen].scale);
     UIBezierPath *path = [[UIBezierPath alloc]init];
@@ -221,8 +261,6 @@
     [path addLineToPoint: CGPointMake(15, 2)];
     [path addLineToPoint: CGPointMake(15, 7)];
     
-
-
     path.lineWidth = 2.0;
     
     [[UIColor orangeColor] setStroke];
@@ -236,49 +274,10 @@
     
 }
 
-//-(void)zoomThePlayer{
-//    CGRect newFrame = CGRectMake(0, 0, 0, 0);
-//    CGRect partialView = self.zoomView.frame;
-//    
-//    newFrame.size.width = (((RJLVideoPlayer *)self.videoPlayer).playBackView.videoLayer.frame.size.width / partialView.size.width) * ((RJLVideoPlayer *)self.videoPlayer).playBackView.frame.size.width;
-//    newFrame.size.height = (((RJLVideoPlayer *)self.videoPlayer).playBackView.frame.size.width / partialView.size.width) * ((RJLVideoPlayer *)self.videoPlayer).playBackView.frame.size.height;
-//    
-//    CGFloat xPositionMultiplier = partialView.origin.x / ((RJLVideoPlayer *)self.videoPlayer).playBackView.frame.size.width;
-//    CGFloat yPositionMultiplier = partialView.origin.y / ((RJLVideoPlayer *)self.videoPlayer).playBackView.frame.size.width;
-//    
-//    newFrame.origin.x = - xPositionMultiplier * newFrame.size.width;
-//    newFrame.origin.y = - yPositionMultiplier * newFrame.size.height;
-//    
-//    //All these conditions ensure that the videoLayer
-//    // does not end up leaving the view of the videoPLayer's frame
-//    
-//    // If the x value is greater than 0,
-//    // then it is too far too the right
-//    if (newFrame.origin.x > 0) {
-//        newFrame.origin.x = 0;
-//    }
-//    
-//    // If the y value is greater than 0,
-//    // then it is too far too the down
-//    if (newFrame.origin.y > 0) {
-//        newFrame.origin.y = 0;
-//    }
-//
-//    CGRect superLayerFrame = ((RJLVideoPlayer *)self.videoPlayer).playBackView.videoLayer.superlayer.frame;
-//    
-//    // This is the case where it is too far to the left
-//    if ((newFrame.origin.x + newFrame.size.width) < superLayerFrame.size.width) {
-//        newFrame.origin.x += superLayerFrame.size.width - (newFrame.origin.x + newFrame.size.width);
-//    }
-//    
-//    // This is the case where it is too far up
-//    if ((newFrame.origin.y + newFrame.size.height) < superLayerFrame.size.height) {
-//        newFrame.origin.y += superLayerFrame.size.height - (newFrame.origin.y + newFrame.size.height);
-//    }
-//    
-//    ((RJLVideoPlayer *)self.videoPlayer).playBackView.videoLayer.frame = newFrame;
-//}
+#pragma mark - Video Zooming Methods
 
+//The fact that there are 2 methods instead of 1 might be a bit unnecessary
+//This is code that could be optimized although it might be a bit difficult to do
 -(void)zoomThePlayer{
     
     //CGRect originalVideoFrame = [(NSValue *)[self.arrayOfPreviousFrames firstObject] CGRectValue];
@@ -476,21 +475,79 @@
     [self.debugLabel2 setText: debugString];
 }
 
+#pragma mark - Method to shift the players
+
+-(void)shiftThePlayers{
+    CGFloat xAmountToShift = currentPoint.x - previousPoint.x;
+    CGFloat yAmountToShift = currentPoint.y - previousPoint.y;
+    
+    float relativeMultiplier = 1;
+    
+    CGRect newRect = self.videoLayer.frame;
+    newRect.origin.x += xAmountToShift * relativeMultiplier;
+    newRect.origin.y += yAmountToShift * relativeMultiplier;
+    
+    if (newRect.origin.x > 0) {
+        newRect.origin.x = 0;
+    }
+    
+    // If the y value is greater than 0,
+    // then it is too far too the down
+    if (newRect.origin.y > 0) {
+        newRect.origin.y = 0;
+    }
+    
+    
+    CGRect superLayerFrame = self.videoLayer.superlayer.frame;
+    
+    // This is the case where it is too far to the left
+    if ((newRect.origin.x + newRect.size.width) < superLayerFrame.size.width) {
+        newRect.origin.x += superLayerFrame.size.width - (newRect.origin.x + newRect.size.width);
+    }
+    
+    // This is the case where it is too far up
+    if ((newRect.origin.y + newRect.size.height) < superLayerFrame.size.height) {
+        newRect.origin.y += superLayerFrame.size.height - (newRect.origin.y + newRect.size.height);
+    }
+
+    
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    self.secondLayer.frame = newRect;
+    self.videoLayer.frame = newRect;
+    [CATransaction commit];
+    
+}
+
+-(void)continueShiftingPlayersWithVelocity: (CGPoint) velocity{
+    
+    CGFloat xAmountToShift = currentPoint.x - previousPoint.x;
+    CGFloat yAmountToShift = currentPoint.y - previousPoint.y;
+    
+    float relativeMultiplier = 1;
+    
+    CGRect newRect = self.videoLayer.frame;
+    newRect.origin.x += xAmountToShift * relativeMultiplier * velocity.x;
+    newRect.origin.y += yAmountToShift * relativeMultiplier * velocity.y;
+
+    self.videoLayer.frame = newRect;
+}
+
+#pragma mark - Key Value Observing
+
+// The main reason for this method is due to the fact that there is no definite frame position
+// for the buttons
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     
     CGRect anotherFrame = [((NSValue *)[change objectForKey:@"new"]) CGRectValue];
     if (anotherFrame.size.width == 1024) {
-        
-//        CGRect zoomViewFrame = self.zoomView.frame;
-//        zoomViewFrame.size.width *=
-//        self.zoomView.frame = zoomViewFrame;
-//        [self zoomThePlayer];
-
-        self.undoZoomButton.frame = CGRectMake(5, 610, 30, 30);
+        self.undoZoomButton.frame = CGRectMake(5, 600, 40, 40);
         self.undoZoomButton.enabled = YES;
+        self.videoShiftingButton.frame = CGRectMake(45, 610, 40, 40);
         
     }else{
-         self.undoZoomButton.frame = CGRectMake(5, anotherFrame.size.height - 72, 30, 30);
+        self.undoZoomButton.frame = CGRectMake(5, anotherFrame.size.height - 82, 40, 40);
+        self.videoShiftingButton.frame = CGRectMake(45, anotherFrame.size.height - 82, 40, 40);
     }
     
 }

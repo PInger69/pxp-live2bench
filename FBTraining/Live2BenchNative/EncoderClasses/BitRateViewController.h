@@ -12,7 +12,7 @@
 @interface BitRateViewController : UIViewController
 
 
--(id)initWithEncoderManager:(EncoderManager *)aEncoderManager;
+-(instancetype)initWithAppDelegate:(AppDelegate*)appDel;
 
 
 @end

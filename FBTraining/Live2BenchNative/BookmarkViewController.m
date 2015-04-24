@@ -1,4 +1,4 @@
-////
+ ////
 //  BookmarkViewController.m
 //  Live2BenchNative
 //
@@ -38,6 +38,7 @@
 #import "Pip.h"
 #import "PipViewController.h"
 #import "FeedSwitchView.h"
+#import "Clip.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -96,15 +97,15 @@
 }
 
 @synthesize startTime;
-@synthesize allTags;
-@synthesize typesOfTags;
+//@synthesize allTags;
+//@synthesize typesOfTags;
 @synthesize selectedTag;
 @synthesize popoverController;
 @synthesize progressLabel;
 @synthesize progressBar;
 @synthesize progressBarIndex;
 @synthesize allEvents;
-@synthesize tagsToDisplay=_tagsToDisplay;
+//@synthesize tagsToDisplay=_tagsToDisplay;
 @synthesize videoPlayer;
 @synthesize teleButton;
 @synthesize teleViewController;
@@ -162,7 +163,7 @@ int viewWillAppearCalled;
     
     [_feedSwitch buildButtonsWithData: self.feeds];
     
-    selectedTag = [self.tableData[[self.tableData indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
+    selectedTag = [self.allClips[[self.allClips indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
     [self.videoPlayer play];
     
     [commentingField clear];
@@ -197,8 +198,8 @@ int viewWillAppearCalled;
         [self.ratingAndCommentingView removeFromSuperview];
     }];
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_CLIPS" object:nil queue:nil usingBlock:^(NSNotification *note){
-        [self.tableData removeObjectIdenticalTo:note.userInfo];
-        componentFilter.rawTagArray = self.tableData;
+        [self.allClips removeObjectIdenticalTo:note.userInfo];
+        componentFilter.rawTagArray = self.allClips;
         //[componentFilter refresh];
     }];
 //    
@@ -225,7 +226,7 @@ int viewWillAppearCalled;
     self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
     
-    allTags = [[NSMutableArray alloc]init];
+    //allTags = [[NSMutableArray alloc]init];
     
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
     _pip.isDragAble  = YES;
@@ -258,8 +259,8 @@ int viewWillAppearCalled;
     [self setupView];
     
     
-    typesOfTags = [[NSMutableArray alloc]init];
-    tagsDidViewed = [[NSMutableArray alloc]init];
+    //typesOfTags = [[NSMutableArray alloc]init];
+    //tagsDidViewed = [[NSMutableArray alloc]init];
     
     fullScreenMode = FALSE;
     //progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 110,200 ,25)];
@@ -317,21 +318,29 @@ int viewWillAppearCalled;
 {
     
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
-        if(feeds){
-            self.feeds = feeds;
-            //            Feed *theFeed = [[feeds allValues] firstObject];
-            //            [self.videoPlayer playFeed:theFeed];
-        }
-        
-        if(eventTags){
-            if (self.tableData.count == 0) {
-                self.tableData = [NSMutableArray arrayWithArray:[eventTags copy]];
-                _tableViewController.tableData = self.tableData;
-                [_tableViewController.tableView reloadData];
-            }
-        }
-    }}];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
+//        if(feeds){
+//            self.feeds = feeds;
+//            //            Feed *theFeed = [[feeds allValues] firstObject];
+//            //            [self.videoPlayer playFeed:theFeed];
+//        }
+//        
+//        if(eventTags){
+//            if (self.allClips.count == 0) {
+//                self.allClips = [NSMutableArray arrayWithArray:[eventTags copy]];
+//                _tableViewController.tableData = self.allClips;
+//                [_tableViewController.tableView reloadData];
+//            }
+//        }
+//    }}];
+    if (self.allClips.count == 0) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
+            self.allClips = [NSMutableArray arrayWithArray: clips];
+            _tableViewController.tableData = self.allClips;
+            [_tableViewController.tableView reloadData];
+        }];
+    }
+    
     
     //get all the events information which will be used to display home team, visit team
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -631,7 +640,7 @@ int viewWillAppearCalled;
 //return the tag dictionary of each cell
 - (NSMutableDictionary*)tagAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.tableData objectAtIndex:indexPath.row];
+    return [self.allClips objectAtIndex:indexPath.row];
 }
 
 #pragma mark - Triple Swipe Table Methods
@@ -675,7 +684,7 @@ int viewWillAppearCalled;
         [blurView addGestureRecognizer:tapRec];
         
         blurView.hidden = YES;
-        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tableData];
+        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.allClips];
     }
     [self.view insertSubview:blurView aboveSubview:newVideoControlBar.view];
     [self.view insertSubview:_filterToolBoxView.view aboveSubview:blurView];
@@ -683,7 +692,7 @@ int viewWillAppearCalled;
     blurView.hidden = NO;
     [_filterToolBoxView open:YES]; // Slide filter open
     
-    componentFilter.rawTagArray = self.tableData;
+    componentFilter.rawTagArray = self.allClips;
     componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
     
     [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
@@ -784,8 +793,8 @@ int viewWillAppearCalled;
 {
     HeaderBar * hBar = (HeaderBar *)sender;
     
-    self.tableData = [self sortArrayFromHeaderBar:self.tableData headerBarState:hBar.headerBarSortType];
-    self.tableViewController.tableData = self.tableData;
+    self.allClips = [self sortArrayFromHeaderBar:self.allClips headerBarState:hBar.headerBarSortType];
+    self.tableViewController.tableData = self.allClips;
     [self.tableViewController.tableView reloadData];
     //[self.tableView reloadData];
     
@@ -842,7 +851,7 @@ int viewWillAppearCalled;
     [self dismissFilterToolbox];
     [self.edgeSwipeButtons deselectButtonAtIndex:1];
     
-    [typesOfTags removeAllObjects];
+    //[typesOfTags removeAllObjects];
     
     currentPlayingTag = nil;
     
@@ -861,7 +870,7 @@ int viewWillAppearCalled;
     //make sure the movieplayer is stoped before going to otherviews, otherwise the app will crash
     [self.videoPlayer pause];
     
-    [allTags removeAllObjects];
+    //[allTags removeAllObjects];
     //    globals.IS_IN_BOOKMARK_VIEW = FALSE;
     
 }
@@ -1179,7 +1188,7 @@ int viewWillAppearCalled;
 {
     NSInteger * buttonTagValue  = ((UIButton*)sender).tag;
     int         nextIndex       = wasPlayingIndexPath.row + (int)buttonTagValue;
-    if(nextIndex > self.tableData.count -1 || nextIndex <0){
+    if(nextIndex > self.allClips.count -1 || nextIndex <0){
         return;
     }
     
@@ -1425,33 +1434,33 @@ int viewWillAppearCalled;
     //[self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
 }
 
-/**
- *  This is a getter that returnds the tages To Be displayed
- *  check this
- *
- *  @return tags in the tableview
- */
--(NSMutableArray *)tagsToDisplay
-{
-    return _tagsToDisplay;
-}
-
--(void)setTagsToDisplay:(NSMutableArray *)newToDisplay
-{
-    _tagsToDisplay = newToDisplay;
-    // update tag display
-    int tagCount = [_tagsToDisplay count];
-    NSString * tagPlur = (tagCount==1)?@"Tag":@"Tags";
-    UIEdgeInsets insets = {10, 50, 0, 50};
-    [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets)];
-    
-    
-    [numTagsLabel setText:[NSString stringWithFormat:@"%d %@   ",tagCount,tagPlur ]];
-    [numTagsLabel setNeedsDisplay];
-    
-    UIEdgeInsets insets2 = {10, 50, 0, 50};
-    [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets2)];
-}
+///**
+// *  This is a getter that returnds the tages To Be displayed
+// *  check this
+// *
+// *  @return tags in the tableview
+// */
+//-(NSMutableArray *)tagsToDisplay
+//{
+//    return _tagsToDisplay;
+//}
+//
+//-(void)setTagsToDisplay:(NSMutableArray *)newToDisplay
+//{
+//    _tagsToDisplay = newToDisplay;
+//    // update tag display
+//    int tagCount = [_tagsToDisplay count];
+//    NSString * tagPlur = (tagCount==1)?@"Tag":@"Tags";
+//    UIEdgeInsets insets = {10, 50, 0, 50};
+//    [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets)];
+//    
+//    
+//    [numTagsLabel setText:[NSString stringWithFormat:@"%d %@   ",tagCount,tagPlur ]];
+//    [numTagsLabel setNeedsDisplay];
+//    
+//    UIEdgeInsets insets2 = {10, 50, 0, 50};
+//    [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets2)];
+//}
 
 
 

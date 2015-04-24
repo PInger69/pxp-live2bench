@@ -28,7 +28,7 @@
 //video player property must still get passed in later.
 -(instancetype)initForVideoPlayer: (UIViewController <PxpVideoPlayerProtocol> *) videoPlayer;
 -(UIPanGestureRecognizer *) panGestureRecognizer;
--(void)addVideoPlayerLayer: (AVPlayerLayer *)videoLayer;
+//-(void)addVideoPlayerLayer: (AVPlayerLayer *)videoLayer;
 
 
 @end

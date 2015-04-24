@@ -261,7 +261,7 @@
                                    _buttonSize.width,
                                    CGRectGetMaxY(((UIButton*)[tagButtonsLeft lastObject]).frame ))];
     
-    [_rightTray setFrame:CGRectMake(placementView.frame.size.width - _buttonSize.width,
+    [_rightTray setFrame:CGRectMake(1024 - _buttonSize.width,
                                     _topOffset,
                                     _buttonSize.width,
                                     CGRectGetMaxY(((UIButton*)[tagButtonsRight lastObject]).frame ))];
@@ -339,6 +339,12 @@
 //        }
         // TODO DEPREICATED END
     
+    }
+    
+    //This check is to make the filler buttons blank
+    
+    if ([[dict objectForKey:@"name"] isEqualToString:@"--"] || [[dict objectForKey:@"name"] isEqualToString:@"-"]) {
+        btn.hidden = YES;
     }
     
     return btn;

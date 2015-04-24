@@ -12,13 +12,13 @@
 
 @implementation Clip
 
-@synthesize name        = _name;
-@synthesize clipId      = _clipId;
-@synthesize rating      = _rating;
-@synthesize comment     = _comment;
-@synthesize feeds       = _feeds;
-@synthesize rawData     = _rawData;
-@synthesize path        = _path;
+//@synthesize name        = _name;
+//@synthesize clipId      = _clipId;
+//@synthesize rating      = _rating;
+//@synthesize comment     = _comment;
+//@synthesize feeds       = _feeds;
+//@synthesize rawData     = _rawData;
+//@synthesize path        = _path;
 
 
 /**
@@ -34,7 +34,7 @@
     self = [super init];
     if (self) {
         
-        NSDictionary * data = [[NSDictionary alloc]initWithContentsOfFile:aPath];
+        //NSDictionary * data = [[NSDictionary alloc]initWithContentsOfFile:aPath];
     
         _rawData            = data;
         _name               = [_rawData objectForKey:@"name"];
@@ -43,11 +43,6 @@
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = [_rawData objectForKey:@"plistName"];
-        
-        
-        
-        
-        
     }
     return self;
 }
@@ -92,7 +87,12 @@
 
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict
 {
-    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *plistName = @"Setting.plist";
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/Setting"];
+    NSString *path = [dataPath stringByAppendingPathComponent: plistName];
+
     NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
     
     

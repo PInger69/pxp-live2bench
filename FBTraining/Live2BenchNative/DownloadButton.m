@@ -190,8 +190,15 @@
             self.downloadComplete = YES;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_EVENT_DOWNLOADED" object:self userInfo:@{@"Finish":self.downloadItem}];
             [self setNeedsDisplay];
+
         default:
             break;
+    }
+}
+
+-(void)dealloc{
+    if (self.downloadItem) {
+        [self.downloadItem removeObserver:self forKeyPath:@"status"];
     }
 }
 

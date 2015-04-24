@@ -32,24 +32,24 @@
 #import "VideoPlayer.h"
 
 @class EdgeSwipeEditButtonsView, TeleViewController, BookmarkFilterViewController, FilterToolboxViewController, GDFileUploader, DPBFileUploader;
-@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,MFMailComposeViewControllerDelegate,UIGestureRecognizerDelegate, DBSessionDelegate,DBNetworkRequestDelegate,DBRestClientDelegate,UIDocumentInteractionControllerDelegate, EdgeSwipeButtonDelegate, UIPopoverControllerDelegate, JPReorderTableViewDataSource, JPReorderTableViewDelegate>
+@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate>
 {
-    NSMutableArray               * allTags;
-    NSMutableArray               * typesOfTags;
+    //NSMutableArray               * allTags;
+    //NSMutableArray               * typesOfTags;
 //    NSString                     * userIdd;
 //    NSString                     * tagId;
-    NSMutableArray               * tagsDidViewed;
-    NSMutableDictionary          * selectedTag;
+    //NSMutableArray               * tagsDidViewed;
+    //NSMutableDictionary          * selectedTag;
     NSIndexPath                  * wasPlayingIndexPath;
     UIView                       * videoControlBar;
     NSDictionary                 * currentPlayingTag;
     NSArray                      * paths;
     NSString                     * documentsDirectory;
     UIView                       * blurView;
-    GDFileUploader               * _GDUploader;
-    DPBFileUploader              * _DPBUploader;
+//    GDFileUploader               * _GDUploader;
+//    DPBFileUploader              * _DPBUploader;
     int                          cellSelectedNumber;
-    BOOL                         isEditingClips;
+    BOOL                         isEditing;
     BOOL                         hasBeenOrdered;
     BOOL                         working; //dead?
     NSInteger                    _currentSharingMethod;
@@ -57,11 +57,12 @@
     
 }
 
-@property (nonatomic, strong)  NSMutableArray               *tableData;
+//@property (nonatomic, strong)  NSMutableArray               *tableData;
+@property (nonatomic, strong)  NSMutableArray               * allClips;
 @property (nonatomic,strong)   BorderButton                 * tableActionButton;
-@property (nonatomic,strong)   NSMutableArray               * tagsToDisplay;
-@property (nonatomic,strong)   NSMutableArray               * allTags;
-@property (nonatomic,strong)   NSMutableArray               * typesOfTags;
+//@property (nonatomic,strong)   NSMutableArray               * tagsToDisplay;
+//@property (nonatomic,strong)   NSMutableArray               * allTags;
+//@property (nonatomic,strong)   NSMutableArray               * typesOfTags;
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 @property (nonatomic)          float                        startTime; // is dead?
 @property (nonatomic,strong)   NSMutableDictionary          * selectedTag;

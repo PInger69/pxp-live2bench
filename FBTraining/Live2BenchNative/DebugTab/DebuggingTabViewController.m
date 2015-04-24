@@ -293,8 +293,8 @@ static void *  debugContext = &debugContext;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-//    [pip playWithFeed:EM.feeds[@"s1"]];
-//    [pip pause];
+    [pip playWithFeed:EM.feeds[@"s1"]];
+    [pip pause];
     [self.view addSubview:proBar];
     [self.view addSubview:lbl];
     [super viewWillAppear:animated];

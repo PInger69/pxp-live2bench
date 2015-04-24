@@ -15,6 +15,7 @@
 #import "Downloader.h"
 #import "DownloadItem.h"
 #import "Event.h"
+#import "Tag.h"
 
 
 #import <SDWebImage/SDImageCache.h>
@@ -434,6 +435,15 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDataRequest:) name:NOTIF_REQUEST_CALENDAR_DATA object:nil];
         
         
+        [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_TAG" object:nil queue:nil usingBlock:^(NSNotification *note) {
+            Tag *tagToDelete = note.object;
+            tagToDelete.type = 3;
+            if (tagToDelete.own) {
+                [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: [tagToDelete tagDictionary]]];
+            }
+            
+        }];
+        
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
         checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
         checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
@@ -477,6 +487,7 @@ static void * builtContext          = &builtContext; // depricated?
 {
     if ([dictOfEncoders objectForKey:name] == nil) {
         Encoder * newEncoder    = [[Encoder alloc]initWithIP:ip];
+        newEncoder.encoderManager = self;
         [newEncoder addObserver:self forKeyPath:@"authenticated"    options:0 context:authenticatContext];
         [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
         newEncoder.name         = name;
@@ -733,7 +744,12 @@ static void * builtContext          = &builtContext; // depricated?
  */
 -(void)notificationDownloadClip:(NSNotification*)note
 {
-    
+//    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+    Tag *tag = note.userInfo[@"tag"];
+//    NSString *feedName = note.userInfo[@"feedName"];
+//
+//    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4", tag.event, tag.ID];
+//    dItemBlock([_localEncoder saveClip:videoName withData: tag ]);
     __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
     
     // This gets run when the server responds
@@ -761,7 +777,7 @@ static void * builtContext          = &builtContext; // depricated?
         
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
-        [_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
+        [_localEncoder saveClip:videoName withData: results]; // this is the data used to make the plist
         NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
         DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
         dItemBlock(dli);
@@ -772,8 +788,8 @@ static void * builtContext          = &builtContext; // depricated?
     
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                             @{
-                                              @"id":note.userInfo[@"id"],
-                                              @"event":note.userInfo[@"event"],
+                                              @"id": tag.ID,
+                                              @"event": tag.event,
                                               @"requesttime":GET_NOW_TIME_STRING,
                                               @"bookmark":@"1",
                                               @"user":[_dictOfAccountInfo objectForKey:@"hid"]

@@ -10,6 +10,7 @@
 #import "EncoderProtocol.h"
 @class Event;
 @class Clip;
+@class Tag;
 
 /**
  *  This class acts like a normal Encoder but all tags and event are local to the device

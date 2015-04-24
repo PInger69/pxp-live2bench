@@ -46,8 +46,14 @@
     return self;
 }
 
+-(void)setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    [self positionWithFrame:frame];
+}
+
 - (void)downloadButtonPressed:(id)sender {
-    [Utility downloadEvent:self.event sourceName:self.feedName.text returnBlock:self.downloadButtonBlock];
+    self.downloadButtonBlock();
+    //[Utility downloadEvent:self.event sourceName:self.feedName.text returnBlock:self.downloadButtonBlock];
 }
 
 - (void)playButtonPressed:(id)sender {
@@ -55,8 +61,8 @@
 }
 
 - (void)positionWithFrame:(CGRect)frame {
-    [_feedName setFrame:CGRectMake(0.3*frame.size.width, 0.1*frame.size.height, 80, 0.8*frame.size.height)];
     [_feedView setFrame:CGRectMake(0.1*frame.size.width, 0, 1.5*frame.size.height, frame.size.height)];
+    [_feedName setFrame:CGRectMake(0.1*frame.size.width + 1.5*frame.size.height + 10, frame.size.height - 0.6*frame.size.height , 100, 0.6*frame.size.height)];
     [_downloadButton setFrame:CGRectMake(0.6*frame.size.width, 0.05*frame.size.height, 0.9*frame.size.height, 0.9*frame.size.height)];
     [_playButton setFrame:CGRectMake(0.8*frame.size.width, 5, 30, 30)];
 }

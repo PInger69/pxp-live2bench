@@ -9,7 +9,7 @@
 #import "BookmarkTableViewController.h"
 #import "BookmarkViewcell.h"
 #import "Utility.h"
-
+#import "Clip.h"
 #import "SocialSharingManager.h"
 #import "ShareOptionsViewController.h"
 
@@ -97,14 +97,14 @@
 {
     
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    NSDictionary *tag = [self.tableData objectAtIndex:indexPath.row];
+    Clip *clip = [self.tableData objectAtIndex:indexPath.row];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
-                                                                                                                                 @"feed":@"s_00",
-                                                                                                                                 @"time":[tag objectForKey:@"starttime"],
-                                                                                                                                 @"duration":[tag objectForKey:@"duration"],
-                                                                                                                                 @"comment":[tag objectForKey:@"comment"]},
-                                                                                                                    @"forWhole":tag}];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"tagSelected" object:self userInfo:tag];
+                                                                                                                                 @"feed": clip,
+                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
+                                                                                                                                 @"duration":[clip.rawData objectForKey:@"duration"],
+                                                                                                                                 @"comment":[clip.rawData objectForKey:@"comment"]},
+                                                                                                                                 @"forWhole":clip.rawData}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"tagSelected" object:self userInfo: clip];
     if(![indexPath isEqual:self.selectedPath])
     {
         selectedCell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, selectedCell.frame.size.width, selectedCell.frame.size.height)];
@@ -128,13 +128,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     BookmarkViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookmarkViewCell" forIndexPath:indexPath];
-    NSDictionary *cellDictionary = self.tableData[indexPath.row];
+    Clip *clip = self.tableData[indexPath.row];
     
     
     
-    [cell.eventDate setText: [Utility dateFromEvent: cellDictionary[@"event"]]];
-    [cell.tagTime setText:cellDictionary[@"displaytime"]];
-    [cell.tagName setText: [cellDictionary[@"name"] stringByRemovingPercentEncoding] ];
+    [cell.eventDate setText: [Utility dateFromEvent: clip.rawData[@"event"]]];
+    [cell.tagTime setText: clip.rawData[ @"displaytime"]];
+    [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
     [cell.indexNum setText: [NSString stringWithFormat:@"%i",indexPath.row + 1]];
     
     

@@ -24,11 +24,11 @@
     NSString *destinationPath;
 }
 
--(instancetype)initWithVideoFilePath:(NSString*)videoPath destination:(NSString*)aPath andTimeRange: (CMTimeRange) range
+-(instancetype)initWithVideoURLString:(NSString*)URLString destination:(NSString*)aPath andTimeRange: (CMTimeRange) range
 {
     self = [super init];
     if (self) {
-        videoFilePath = videoPath;
+        videoFilePath = URLString;
         destinationPath = aPath;
         timeRange = range;
     }
@@ -37,13 +37,19 @@
 
 -(void)createClip{
     
-    NSURL *videoToTrimURL = [[NSURL alloc] initFileURLWithPath: videoFilePath];
+    //videoFilePath =
+    NSURL *videoToTrimURL = [[NSURL alloc] initWithString: videoFilePath];
+    //NSURL *anotherURL = [[NSURL alloc] ini]
     
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoToTrimURL options:nil];
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetLowQuality];
     
-    [self addObserver:exportSession forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];
+    [exportSession addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];
+    NSLog(@"%@", [AVAssetExportSession exportPresetsCompatibleWithAsset:asset]);
     
+    [exportSession determineCompatibleFileTypesWithCompletionHandler:^(NSArray *compatibleFileTypes) {
+        NSLog(@"%@", compatibleFileTypes);
+    }];
 //    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //    NSString *outputURL = paths[0];
 //    NSFileManager *manager = [NSFileManager defaultManager];
@@ -52,6 +58,9 @@
     // Remove Existing File
     //[manager removeItemAtPath:outputURL error:nil];
     
+    [AVAssetExportSession determineCompatibilityOfExportPreset:AVAssetExportPresetLowQuality withAsset:asset outputFileType:AVFileTypeMPEG4 completionHandler:^(BOOL compatible) {
+        NSLog(@"%i", compatible);
+    }];
     
     exportSession.outputURL = [NSURL fileURLWithPath: destinationPath];
     exportSession.shouldOptimizeForNetworkUse = YES;
@@ -81,6 +90,7 @@
     
     self.videoAsset = asset;
     self.videoTrimSession = exportSession;
+
     //return [NSData dataWithContentsOfFile: destinationPath];
 }
 

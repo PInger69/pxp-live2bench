@@ -7,6 +7,7 @@
 //
 
 #import "Tag.h"
+#import "Feed.h"
 
 @implementation Tag
 
@@ -48,31 +49,40 @@
     return self;
 }
 
+-(void)setFeeds:(NSDictionary *)feeds{
+    _feeds = feeds;
+    if (feeds.count == 1) {
+        self.thumbnails = @{ [[feeds allKeys] firstObject]: [[self.thumbnails allValues] firstObject]};
+    }
+}
+
+
 -(NSDictionary *)tagDictionary{
     return @{@"colour": self.colour,
              @"comment": self.comment,
              @"deleted": @0,
-             @"deviceid":self.deviceID,
+             @"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              @"displaytime":self.displayTime,
              @"duration": [NSNumber numberWithInt:self.duration],
              @"event":self.event,
              @"homeTeam":self.homeTeam,
-             @"id": [NSNumber numberWithInt: self.uniqueID],
+             @"id": [NSString stringWithFormat: @"%i", self.uniqueID],
              @"isLive": [NSNumber numberWithBool:self.isLive],
              @"name":self.name,
              @"newTagID" : [NSNumber numberWithInt: self.uniqueID],
              @"own": [NSNumber numberWithBool:self.own],
              @"rating" : [NSNumber numberWithInt: self.rating],
-             @"requrl": self.requestURL,
+             @"requrl": (self.requestURL? self.requestURL: @"nil"),
              @"sender":@".min",
              @"starttime": [NSString stringWithFormat:@"%f", self.startTime],
              @"success": @1,
              @"time": [NSString stringWithFormat:@"%f", self.time],
-             @"type": [NSNumber numberWithInt: self.type],
-             @"url": self.requestURL,
+             @"type": [NSString stringWithFormat:@"%i", self.type],
+             @"url": self.thumbnails,
              @"user": self.user,
              @"visitTeam": self.visitTeam,
              @"synced": [NSNumber numberWithBool: self.synced]
+             //@"feeds" : (self.feeds ? self.feeds: @"nil")
              };
 }
 
@@ -121,6 +131,10 @@
         self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
     }
 
+}
+
+-(NSString *)ID{
+    return [NSString stringWithFormat: @"%i" ,self.uniqueID];
 }
 
 -(BOOL) isEqual:(id)object{

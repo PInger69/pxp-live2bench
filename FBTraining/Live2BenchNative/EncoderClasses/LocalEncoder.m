@@ -114,8 +114,12 @@
         // build the clips by sending the plist paths in
         
         for (NSString *pthss in clipsPlistPaths) {
-            Clip * clip =[[Clip alloc]initWithDict:[[NSDictionary alloc]initWithContentsOfFile:pthss]];
-            //[_clips setObject:clip forKey:clip.clipId];
+            NSDictionary *theDict = [[[[[[NSDictionary alloc]initWithContentsOfFile:pthss] allValues] firstObject] allValues] firstObject];
+            if (theDict) {
+                Clip * clip =[[Clip alloc]initWithDict: theDict];
+                [_clips setObject:clip forKey:clip.clipId];
+            }
+            
         }
       
         
@@ -169,6 +173,12 @@
                 [self deleteEvent:localCounterpart];
             }
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REQUEST_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
+            void(^blockName)(NSArray *clips) = note.object;
+            blockName([self.clips allValues]);
+        }];
+        
         
         [self checkLocalTags];
     }
@@ -498,18 +508,18 @@
  *  @param aName   !!! This name has to change
  *  @param tagData the data for the raw clip
  */
--(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData
+-(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData
 {
     
     // check the device if the clip is there.. if not then make a new clip from and make get an Id
     
-    NSString * clipID = tagData[@"id"];
+    NSString * clipID = [tagData objectForKey:@"id"];
     
     if ([_clips objectForKey:clipID]) { // if there is a plist there already then just mod the data
         Clip * selectedClip         = [_clips objectForKey:clipID];
         
         [selectedClip addSourceToClip:@{}];
-    
+      //  return [[VideoTrimItem alloc] init];
     } else { // there is no plist for this clip... make a new plist
        
         // fina available plist path
@@ -517,11 +527,16 @@
         int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
         NSString * bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%d.plist",_localPath,nextGap];
         
-        Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data:tagData];
+        Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: tagData];
         [buildClip addSourceToClip:@{@"fileNames": @[aName]}];
         [_clips setObject:buildClip forKey:buildClip.clipId];
+//        CMTimeRange clipTimeRange = CMTimeRangeMake(CMTimeMake(tagData.startTime, 1), CMTimeMake(tagData.duration, 1));
+//        Feed * feed = [[tagData.feeds allValues] firstObject];
+//        
+//        return [Downloader trimVideoURL: [feed path].absoluteString  to: [bookmarkPlistPath stringByAppendingPathComponent:aName] withTimeRange: clipTimeRange] ;
     }
     
+   
 }
 
 
