@@ -15,20 +15,13 @@ static NSMutableArray * alertPool;
 @implementation CustomAlertView
 
 static AlertType    allowedTypes;
-static id           typeChangeObserver;
+
 
 
 +(void)staticInit {
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
     allowedTypes        = AlertAll;
-    typeChangeObserver  =  [[NSNotificationCenter defaultCenter]addObserverForName:@"alertTest" object:nil queue:nil usingBlock:^(NSNotification *note) {
-                            // take the value from dict
-                            // change "allowedTypes" to the value sent
-                            NSLog(@"Alert Test!!!!!!!");
-                        }];
-
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"" object:nil userInfo:@{}];
 }
 
 
@@ -104,7 +97,6 @@ static id           typeChangeObserver;
     if (!alertPool) [CustomAlertView staticInit];
     self = [super init];
     if (self) {
-//        [alertPool addObject:self];
         if (![alertPool containsObject:self])    [alertPool addObject:self];
     }
     return self;
@@ -116,7 +108,7 @@ static id           typeChangeObserver;
     if (!alertPool) [CustomAlertView staticInit];
     self = [super initWithTitle:title message:message delegate:delegate cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitles, nil];
     if (self) {
-        self.type = AlertNone;
+        self.type = AlertAll;
 //        [alertPool addObject:self];
             if (![alertPool containsObject:self])    [alertPool addObject:self];
     }
@@ -125,10 +117,21 @@ static id           typeChangeObserver;
 
 -(void)show
 {
-   // if (allowedTypes & self.type) {
+   if (allowedTypes & self.type) {
      [super show];   
-   // }
+   }
 }
+
+-(BOOL)display
+{
+    if (allowedTypes & self.type) {
+        [super show];
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 
 -(CustomAlertView*)alertType:(AlertType)type
 {

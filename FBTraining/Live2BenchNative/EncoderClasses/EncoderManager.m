@@ -739,24 +739,9 @@ static void * builtContext          = &builtContext; // depricated?
     // This gets run when the server responds
     void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
         
-        NSData          * data = pooledResponces[0];
-        NSDictionary    * results;
-        NSString        * urlForImageOnServer;
-        
-        if(NSClassFromString(@"NSJSONSerialization"))
-        {
-            NSError *error = nil;
-            id object = [NSJSONSerialization
-                         JSONObjectWithData:data
-                         options:0
-                         error:&error];
-            
-            if([object isKindOfClass:[NSDictionary class]])
-            {
-                results = object;
-                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"];
-            }
-        }
+        NSData          * data                  = pooledResponces[0];
+        NSDictionary    * results               = [Utility JSONDatatoDict: data];
+        NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
         
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
