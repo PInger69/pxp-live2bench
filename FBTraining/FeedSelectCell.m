@@ -21,7 +21,7 @@
         _feedView = [[UIImageView alloc] init];
         _feedName.text = name;
         ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-        [imageAssetManager imageForURL:url atImageView:self.feedView];
+        //[imageAssetManager imageForURL:url atImageView:self.feedView];
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -47,7 +47,7 @@
 }
 
 - (void)downloadButtonPressed:(id)sender {
-    [Utility downloadEvent:self.event sourceName:self.feedName.text returnBlock:self.downloadButtonBlock];
+    self.downloadButtonBlock();
 }
 
 - (void)playButtonPressed:(id)sender {

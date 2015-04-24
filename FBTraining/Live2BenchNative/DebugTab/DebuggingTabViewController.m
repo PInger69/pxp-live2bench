@@ -45,7 +45,7 @@
     ListPopoverController       * testPopup;
     L2BFullScreenViewController    * fullScreen;
     
-
+    
     DownloadItem * DOWNLOADITEM;
     DownloadItem * DOWNLOADITEM1;
     DownloadItem * DOWNLOADITEM2;
@@ -81,13 +81,13 @@ static void *  debugContext = &debugContext;
         EM = _appDel.encoderManager;
         [self setMainSectionTab:@"DEBUG" imageName:@""];
         [self.view setBackgroundColor:[UIColor lightGrayColor]];
-
-        weakSelf = self;
-
         
-
+        weakSelf = self;
+        
+        
+        
     }
-
+    
     return self;
     
 }
@@ -95,11 +95,8 @@ static void *  debugContext = &debugContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
 }
-
-
-
 
 
 
@@ -110,10 +107,8 @@ static void *  debugContext = &debugContext;
     [self .view addSubview:testPlayer.view];
     Feed * fff =[[Feed alloc]initWithURLString:@"http://192.168.1.154/events/2015-04-21_09-38-18_3dc550ff6dfb7df9cc4668cdcbf8bb779758c36b_local/video/main.mp4" quality:0];
     [testPlayer playFeed:fff];
-
+    
 }
-
-
 
 
 
@@ -124,7 +119,6 @@ static void *  debugContext = &debugContext;
     if ([self.view window] == nil) self.view = nil;
     
 }
-
 
 
 @end

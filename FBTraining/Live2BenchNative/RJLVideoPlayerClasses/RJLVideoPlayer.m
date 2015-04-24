@@ -679,7 +679,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
             [weakSelf play];
         };
     }
-    
 }
 
 -(void)pause{

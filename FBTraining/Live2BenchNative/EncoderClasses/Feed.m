@@ -47,7 +47,6 @@
             } else if ([[k lowercaseString] isEqualToString:LOW_QUALITY]) {   // The default is LOW_QUALITY
                 defaultURL = [tempDict objectForKey:[k lowercaseString]];
             }
-            
         }
         _qualities = [tempDict copy];
         _urlPath = [defaultURL copy];

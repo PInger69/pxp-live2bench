@@ -146,9 +146,6 @@
     if (progressBlock) progressBlock(self.progress, kbps);
     elapsedTime = CACurrentMediaTime() - startTime;
     kbps = ((double)_receivedBytes /  (double)elapsedTime) * 0.001;
-    
- 
-    
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
