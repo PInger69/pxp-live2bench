@@ -285,6 +285,8 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_TAG" object:newTag];
                 }else if (newTag.type == 99){
                     
+                }else if(newTag.modified){
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:newTag];
                 }else{
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object: newTag userInfo:tag];
                 }

@@ -770,8 +770,7 @@ static void * builtContext          = &builtContext; // depricated?
             if([object isKindOfClass:[NSDictionary class]])
             {
                 results = object;
-                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"] ;
-                
+                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"];
             }
         }
         

@@ -52,11 +52,6 @@
         [player pause];
     }
     
-    
-    if ( command | VideoPlayerCommandPlayFeed ) {
-        [self playFeed:dict];
-    }
-    
     if ( command | VideoPlayerCommandLive ) {
         [player gotolive];
     }
@@ -92,18 +87,16 @@
 {
     Feed * feed = [dict objectForKey:@"feed"];
     
-    
-    CMTimeRange range = [((NSValue*)[dict objectForKey:@"range"])CMTimeRangeValue];
-    
-    
-    if (CMTIMERANGE_IS_EMPTY(range)){
-        player.looping = NO;
-        [player playFeed:feed withRange:range];
-        player.looping = YES;
+    if ([dict objectForKey:@"range"]) {
+        CMTimeRange range = [((NSValue*)[dict objectForKey:@"range"])CMTimeRangeValue];
+        if (CMTIMERANGE_IS_EMPTY(range)){
+            player.looping = NO;
+            [player playFeed:feed withRange:range];
+            player.looping = YES;
+        }
     } else {
         [player playFeed:feed];
     }
-
 }
 
 

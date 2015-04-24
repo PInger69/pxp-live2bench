@@ -9,7 +9,9 @@
 #import "Tag.h"
 #import "Feed.h"
 
-@implementation Tag
+@implementation Tag{
+    id tagModifyObserver;
+}
 
 -(instancetype) initWithData: (NSDictionary *)tagData{
     self = [super init];
@@ -27,12 +29,14 @@
         self.isLive = tagData[@"islive"];
         self.name = tagData[@"name"];
         self.own = [tagData[@"own"] boolValue];
-        self.rating = tagData[@"rating"];
+        self.rating = [tagData[@"rating"] intValue];
         self.requestURL = tagData[@"requrl"];
         self.startTime = [tagData[@"starttime"] doubleValue];
         self.time = [tagData[@"time"] doubleValue];
         self.type = [tagData[@"type"] intValue];
         self.user = tagData[@"user"];
+        self.modified = [tagData[@"modified"] boolValue];
+        self.coachPick = [tagData[@"coachpick"] boolValue];
         //self.requestTime = tagData [@"requettime"];
         if ([tagData objectForKey: @"urls_2"]) {
             NSDictionary *images = [tagData objectForKey: @"urls_2"];
@@ -45,6 +49,23 @@
         }else{
             self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
         }
+        
+        tagModifyObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAG_MODIFIED object:nil queue:nil usingBlock:^(NSNotification *note) {
+            Tag *modifiedTag = note.object;
+            if (modifiedTag.uniqueID == self.uniqueID) {
+                if (modifiedTag.comment) {
+                    self.comment = modifiedTag.comment;
+                }
+                
+                if (modifiedTag.rating) {
+                    self.rating = modifiedTag.rating;
+                }
+                
+                self.coachPick = modifiedTag.coachPick;
+                self.duration = modifiedTag.duration;
+                self.startTime = modifiedTag.startTime;
+            }
+        }];
     }
     return self;
 }
@@ -60,17 +81,17 @@
 -(NSDictionary *)tagDictionary{
     return @{@"colour": self.colour,
              @"comment": self.comment,
-             @"deleted": @0,
+             @"deleted": @"0",
              @"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              @"displaytime":self.displayTime,
-             @"duration": [NSNumber numberWithInt:self.duration],
+             @"duration": [NSString stringWithFormat: @"%i", self.duration],
              @"event":self.event,
              @"homeTeam":self.homeTeam,
              @"id": [NSString stringWithFormat: @"%i", self.uniqueID],
-             @"isLive": [NSNumber numberWithBool:self.isLive],
+             @"isLive": [NSString stringWithFormat: @"%i", self.isLive],
              @"name":self.name,
-             @"newTagID" : [NSNumber numberWithInt: self.uniqueID],
-             @"own": [NSNumber numberWithBool:self.own],
+             @"newTagID" : [NSString stringWithFormat: @"%i",self.uniqueID],
+             @"own": [NSString stringWithFormat: @"%i",self.own],
              @"rating" : [NSNumber numberWithInt: self.rating],
              @"requrl": (self.requestURL? self.requestURL: @"nil"),
              @"sender":@".min",
@@ -149,5 +170,9 @@
     //NSDictionary *tagDictionary = [self tagDictionary];
     //return [NSString stringWithFormat:@"%@", [self tagDictionary]];
     return [NSString stringWithFormat:@"name: %@, displayTime: %@, thumbnails: %@", self.name, self.displayTime, self.thumbnails];
+}
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver: tagModifyObserver];
 }
 @end

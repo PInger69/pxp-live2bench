@@ -33,6 +33,8 @@
 @property (strong, nonatomic) NSDictionary  *thumbnails;
 @property (strong, nonatomic) NSString      *user;
 @property (assign, nonatomic) BOOL          synced;
+@property (assign, nonatomic) BOOL          modified;
+@property (assign, nonatomic) BOOL          coachPick;
 @property (strong, nonatomic) NSDictionary  *feeds;
 //@property (strong, nonatomic) NSString *requestTime;
 
