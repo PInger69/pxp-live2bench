@@ -26,7 +26,7 @@
 
 //@synthesize l2bVC=_l2bVC;
 @synthesize teleButton=_teleButton;
-@synthesize pausedTime;
+//@synthesize pausedTime;
 //@synthesize lvController;
 //@synthesize bmvController;
 @synthesize offsetTime;
@@ -55,8 +55,7 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
         
         // Custom initialization
     }
-    
-    uController = [[UtilitiesController alloc]init];
+
     return self;
 }
 

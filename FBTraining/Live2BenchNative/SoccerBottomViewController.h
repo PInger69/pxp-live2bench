@@ -7,11 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import <QuartzCore/QuartzCore.h>
 #import "Live2BenchViewController.h"
-//#import "AppQueue.h"
-//#import "Globals.h"
-#import "UtilitiesController.h"
 #import "CustomLabel.h"
 
 @class Live2BenchViewController;
@@ -23,7 +19,7 @@
     //AppQueue *appQueue;
 //    Globals *globals;
     NSString *thumbId;
-    UtilitiesController *uController;
+//    UtilitiesController *uController;
     NSString *nameforZone;
     NSString *oldNameforZone;
     NSDictionary *dictforZone;
@@ -34,9 +30,7 @@
     NSDictionary *oldDictforHalf;
     //NSTimer *updateControlInfoTimer;
     NSMutableArray *playerButtons;
-    CustomLabel *subsLabel;
-    CustomLabel *zoneLabel;
-    CustomLabel *halfLabel;
+
     BOOL isUpdatingSeek;
     NSTimer *updateSeekInfoTimer;
 }
@@ -49,7 +43,7 @@
 @property (strong, nonatomic) CustomButton *playerbuttonWasSelected;
 @property (strong, nonatomic) NSMutableData *responseData;
 
-- (void)viewWillAppear:(BOOL)animated;
+
 - (id)initWithController:(Live2BenchViewController *)l2b;
 - (void)halfValueChanged:(id)sender;
 - (void)zoneValueChanged:(id)sender;

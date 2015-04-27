@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/AppDelegate.m"
-            timestampString = "448315755.175214"
+            timestampString = "451856132.154686"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "436"
-            endingLineNumber = "436"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
             landmarkName = "-actionListBlock"
             landmarkType = "5">
          </BreakpointContent>
@@ -84,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/AppDelegate.m"
-            timestampString = "448315755.175214"
+            timestampString = "451856132.154686"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "427"
-            endingLineNumber = "427"
+            startingLineNumber = "392"
+            endingLineNumber = "392"
             landmarkName = "-actionListBlock"
             landmarkType = "5">
          </BreakpointContent>
@@ -153,7 +153,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1328"
             endingLineNumber = "1328"
-            landmarkName = "-seekClamp:"
+            landmarkName = "-durationInSeconds"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -196,11 +196,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "451405712.967273"
+            timestampString = "451857784.12709"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "382"
-            endingLineNumber = "382"
+            startingLineNumber = "389"
+            endingLineNumber = "389"
             landmarkName = "-initWithLocalDocPath:"
             landmarkType = "5">
             <Actions>
@@ -220,11 +220,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "Live2BenchNative/EncoderClasses/LocalEncoder.m"
-            timestampString = "451414607.787019"
+            timestampString = "451845339.015098"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "207"
+            endingLineNumber = "207"
             landmarkName = "-initWithDocsPath:"
             landmarkType = "5">
             <Actions>
@@ -244,11 +244,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "451591476.183373"
+            timestampString = "451859132.663379"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1262"
-            endingLineNumber = "1262"
+            startingLineNumber = "1229"
+            endingLineNumber = "1229"
             landmarkName = "-setCurrentEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -260,11 +260,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "451405200.212295"
+            timestampString = "451861255.19188"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "530"
-            endingLineNumber = "530"
+            startingLineNumber = "528"
+            endingLineNumber = "528"
             landmarkName = "-allEventsGet:timeStamp:"
             landmarkType = "5">
          </BreakpointContent>
@@ -372,11 +372,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/ListViewController.m"
-            timestampString = "451511050.328148"
+            timestampString = "451861637.933029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "663"
-            endingLineNumber = "663"
+            startingLineNumber = "549"
+            endingLineNumber = "549"
             landmarkName = "-receiveFilteredArrayFromFilter:"
             landmarkType = "5">
          </BreakpointContent>

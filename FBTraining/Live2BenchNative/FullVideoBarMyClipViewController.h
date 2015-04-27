@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "VideoPlayer.h"
+#import "PxpVideoPlayerProtocol.h"
+
 @interface FullVideoBarMyClipViewController : UIViewController
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer;

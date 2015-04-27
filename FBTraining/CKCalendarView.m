@@ -299,7 +299,8 @@
     NSDate *endDate = [self _firstDayOfNextMonthContainingDate:self.monthShowing];
     if (!self.onlyShowCurrentMonth) {
         NSDateComponents *comps = [[NSDateComponents alloc] init];
-        [comps setWeek:numberOfWeeksToShow];
+//        [comps setWeek:numberOfWeeksToShow]; // depricated
+        comps.weekOfYear=numberOfWeeksToShow;
         endDate = [self.calendar dateByAddingComponents:comps toDate:date options:0];
     }
     

@@ -8,16 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "TagMarker.h"
-#import "VideoPlayer.h"
+#import "PxpVideoPlayerProtocol.h"
+
 
 @interface TagFlagViewController : UIViewController
 {
     NSMutableDictionary     * tagMarkerLeadObjDict;
-    //NSMutableDictionary     * tagMarkerObjDict;
-    
-    TagMarker              * tagMarker; //object indicates the tag position in the total time duration
-    NSMutableArray          * tagMarkerArray; //array of tagmarker objects; used for shifting the positions of all the tagmarkers
-    NSMutableSet           * tagTimesColoured; //array of tag times; used for tagmarker's position
+    TagMarker               * tagMarker;        //object indicates the tag position in the total time duration
+    NSMutableArray          * tagMarkerArray;   //array of tagmarker objects; used for shifting the positions of all the tagmarkers
+    NSMutableSet            * tagTimesColoured; //array of tag times; used for tagmarker's position
     
     
     UIImageView             * currentPositionMarker;
@@ -29,10 +28,9 @@
 @property (strong,nonatomic) UIView         * background;
 @property (strong,nonatomic) UIImageView    * currentPositionMarker;
 
--(id)initWithFrame:(CGRect)frame videoPlayer:(VideoPlayer*)aVideoPlayer;
+-(id)initWithFrame:(CGRect)frame videoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer;
 
 -(void)createTagMarkers;
-
 
 -(void)cleanTagMarkers;
 

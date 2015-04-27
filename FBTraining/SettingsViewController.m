@@ -115,7 +115,7 @@ SVSignalStatus signalStatus;
         encoderHomeText         = [CustomLabel labelWithStyle:CLStyleOrange];
         encoderHomeText.text    = @"Encoder is not available.";
         
-        __block SettingsViewController * weakSelf = self;
+//        __block SettingsViewController * weakSelf = self;
         __block UILabel * weakStateLable    =  encStateLabel;
         __block UILabel * weakHomeLable     =  encoderHomeText;
         __block Encoder * weakMasterEncoder =  masterEncoder;

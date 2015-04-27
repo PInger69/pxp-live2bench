@@ -19,7 +19,7 @@
 
 //@property (strong, nonatomic) NSMutableArray *tableData;
 @property (strong, nonatomic) NSIndexPath *lastSelectedIndexPath;
-@property (strong, nonatomic) NSIndexPath *editingIndexPath;
+//@property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 @property (strong, nonatomic) ListPopoverController* teamPick;
 
@@ -195,7 +195,7 @@
         return cell;
     }
     
-    NSString *data;
+//    NSString *data;
     NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         Event *event = self.tableData[firstIndexPath.row - 1];
@@ -367,7 +367,7 @@
         self.editingIndexPath = indexPath;
         
         Event *event = self.tableData[indexPath.row];
-        NSString *dateString = event.date;
+//        NSString *dateString = event.date;
         
         Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];

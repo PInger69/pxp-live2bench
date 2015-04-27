@@ -192,10 +192,10 @@
  */
 -(void)segmentTapped: (UISegmentedControl *) sender{
     
-    void (^notificationBlock)(float time) = ^void(float time){
-        NSDictionary *userInfo = @{ @"type": [NSNumber numberWithInt: self.type], @"name": [self segmentItemsArray][sender.selectedSegmentIndex] , @"time": [NSNumber numberWithFloat:time], @"period": [NSNumber numberWithInt: sender.selectedSegmentIndex]};
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_POSTED object:nil userInfo:userInfo];
-    };
+//    void (^notificationBlock)(float time) = ^void(float time){
+//        NSDictionary *userInfo = @{ @"type": [NSNumber numberWithInt: self.type], @"name": [self segmentItemsArray][sender.selectedSegmentIndex] , @"time": [NSNumber numberWithFloat:time], @"period": [NSNumber numberWithInt: sender.selectedSegmentIndex]};
+//        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_POSTED object:nil userInfo:userInfo];
+//    };
     
     
     //NSDictionary *videoPlayerUserInfo = @{@"Context": STRING_LIVE2BENCH_CONTEXT , @"notificationBlock": notificationBlock};

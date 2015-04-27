@@ -7,20 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "Live2BenchViewController.h"
-//#import <QuartzCore/QuartzCore.h>
-//#import "AppQueue.h"
-#import "UtilitiesController.h"
-#import "WBImage.h"
-//#import "Globals.h"
-//#import "ListViewController.h"
-//#import "BookmarkViewController.h"
 #import "BorderButton.h"
 #import "TeleView.h"
 
-//@class Live2BenchViewController;
-//@class ListViewController;
-//@class BookmarkViewController;
 @class FullScreenViewController;
 @class TeleView;
 
@@ -40,7 +29,6 @@
     CGFloat opacity;
     BOOL mouseSwiped;
     UIButton *_cancelButton;
-    Live2BenchViewController *_l2bVC;
     CustomButton *_teleButton;
     UIBezierPath *path;
     BOOL isStraight;
@@ -48,11 +36,7 @@
     CGPoint touchCurrent;
     CGPoint savedShapeStartpoint;
     CGPoint savedShapeEndpoint;
-    //BorderButton *clearButton;
-    //BorderButton *saveButton;
-    //AppQueue *appQueue;
     NSString *documentsDirectory;
-    UtilitiesController *uController;
     CGPoint originPoint;
     UIImage *teleImage;
 }
@@ -71,7 +55,7 @@
 @property (nonatomic, strong) FullScreenViewController *fullScreenViewController;
 @property (nonatomic,strong)TeleView *teleView;
 @property (nonatomic,strong)UIView *colourIndicator;
-@property (nonatomic)CMTime pausedTime;
+//@property (nonatomic)CMTime pausedTime;
 //@property (nonatomic,strong)ListViewController *lvController;
 //@property (nonatomic,strong)BookmarkViewController *bmvController;
 @property (nonatomic,strong) UIButton *saveButton;

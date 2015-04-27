@@ -16,6 +16,13 @@
 #import "DownloadItem.h"
 #import "Event.h"
 #import "Tag.h"
+#import "sys/socket.h"
+#import "netinet/in.h"
+#import "SystemConfiguration/SystemConfiguration.h"
+#import <CommonCrypto/CommonDigest.h>
+#import <ifaddrs.h>
+#import <arpa/inet.h>
+
 
 
 #import <SDWebImage/SDImageCache.h>
@@ -1061,46 +1068,6 @@ static void * builtContext          = &builtContext; // depricated?
     
 }
 
--(void)updateSummaryId:(NSString*)aId type:(NSString*)aType summary:(NSString*)aSummary onComplete:(void(^)(NSArray*pooled))onCompleteGet
-{
-    NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
-                                            @{
-                                              @"id":aId,
-                                              @"type":aType,
-                                              @"summary":aSummary,
-                                              @"requesttime":GET_NOW_TIME_STRING,
-                                              @"user":[_dictOfAccountInfo objectForKey:@"hid"]
-                                              }];
-    NSNumber    * nowTime               = GET_NOW_TIME;
-    
-
-
-
-//    // updating game summary only on the encoder that has the game
-//    if ([aType isEqualToString:@"game"]){
-//        //[sumRequestData setObject:GET_NOW_TIME_STRING forKey:@"requesttime"];
-//        NSArray         * encoders          = [dictOfEncoders allValues];
-//        NSMutableArray  * encodersWithGame  =  [[NSMutableArray alloc]init];
-//       [encoders enumerateObjectsUsingBlock:^(Encoder *obj, NSUInteger idx, BOOL *stop){
-//           if ([obj.allEvents containsObject:aId]) {
-//               [obj issueCommand:SUMMARY_PUT priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:nowTime];
-//               [encodersWithGame addObject:obj];
-//           }
-//        }];
-//        
-//        [_masterEncoder issueCommand:SUMMARY_PUT priority:1 timeoutInSec:10 tagData:sumRequestData timeStamp:nowTime];
-//        [encoderSync syncAll:[encodersWithGame copy] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
-//        
-//    } else if ([aType isEqualToString:@"month"] && _masterEncoder) {
-//        [_masterEncoder issueCommand:SUMMARY_PUT priority:1 timeoutInSec:10 tagData:sumRequestData timeStamp:nowTime];
-//        [encoderSync syncAll:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
-//    } else if ([aType isEqualToString:@"month"] && !_masterEncoder){
-//        // Alert the user that there is not master encoder
-//    }
-
-}
-
-
 -(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet
 {
     
@@ -1328,7 +1295,8 @@ static void * builtContext          = &builtContext; // depricated?
 {
     NSMutableArray * temp  = [[NSMutableArray alloc]init];
     for (id <EncoderProtocol> encoder in _authenticatedEncoders) {
-        [temp addObjectsFromArray:encoder.allEvents];
+        
+        [temp addObjectsFromArray:[encoder.allEvents allValues]];
     }
     
     return temp;

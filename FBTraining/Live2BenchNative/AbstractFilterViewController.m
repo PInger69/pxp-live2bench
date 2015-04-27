@@ -8,7 +8,6 @@
 
 #import "AbstractFilterViewController.h"
 #import "FilterScrollView.h"
-#import "UtilitiesController.h"
 #import "FilterComponent.h"
 #define ROWS_IN_EVENTS                 6
 #define PADDING                        3

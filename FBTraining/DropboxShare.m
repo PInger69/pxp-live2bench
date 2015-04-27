@@ -49,6 +49,7 @@
 
 -(void)shareItems: (NSArray *) itemsToShare{
     for (NSDictionary *tagDict in itemsToShare) {
+        (void)tagDict; // to suppress warning
         // Write a file to the local documents directory
         NSString *localDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
         NSString *filename = @"somename";

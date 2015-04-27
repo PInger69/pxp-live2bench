@@ -9,7 +9,8 @@
 #import "TagFlagViewController.h"
 #import "Utility.h"
 #import "Tag.h"
-//#import "Globals.h"
+#import "PxpVideoPlayerProtocol.h"
+
 
 
 // this is what manages all the little colored notches in the player bar
@@ -17,8 +18,8 @@
 {
     BOOL        isCreatingAllTagMarkers;
     int         updateTagmarkerCounter;
-    //    Globals     * globals;
-    VideoPlayer * videoPlayer;
+
+    UIViewController <PxpVideoPlayerProtocol> * videoPlayer;
     NSTimer     *adjustTagTimer;
 }
 
@@ -27,7 +28,7 @@
 @synthesize background              = _background;
 @synthesize currentPositionMarker   = _currentPositionMarker;
 
--(id)initWithFrame:(CGRect)frame videoPlayer:(VideoPlayer*)aVideoPlayer;
+-(id)initWithFrame:(CGRect)frame videoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer;
 {
     self = [super init];
     if (self) {
@@ -56,41 +57,6 @@
     return self;
 }
 
-
-
-/*//create tag markers for all the tags
- -(void)createTagMarkersFromData:(NSMutableDictionary *)data
- {
- isCreatingAllTagMarkers = TRUE;
- 
- for(NSMutableDictionary *oneTag in [data allValues]){
- //if the tag was deleted(type == 3) or type == 8 , don't create marker
- NSInteger tagType = [[oneTag objectForKey:@"type"]integerValue];
- 
- if (tagType &&
- tagType!=3 &&
- tagType!=8 &&
- tagType!=18 &&
- tagType!=22 &&
- !(tagType&1)) {
- 
- float       tagTime         = [[oneTag objectForKey:@"time"] floatValue];
- UIColor     * tagColour     = [Utility colorWithHexString: [[oneTag objectForKey:@"colour"]stringValue] ];
- NSString    * tagID         = [[oneTag objectForKey:@"id"]stringValue];
- 
- [self markTagAtTime:tagTime colour:tagColour tagID:tagID];            //create tag marker for this tag
- }
- }
- 
- //go through all the tag marker leads and create all the tag maker views
- [self createAllTagmarkerViews];
- 
- }
- 
- //create tag markers for all the tags
- /**
- *  globals.CURRENT_EVENT_THUMBNAILS needs to come from the encodermanager
- */
 -(void)createTagMarkers
 {
     isCreatingAllTagMarkers = TRUE;

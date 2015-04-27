@@ -84,7 +84,7 @@
 /**
  *  This is meant to be overriden to allow for customization
  */
--(void)buildAddSubview:(VideoPlayer*)player {
+-(void)buildAddSubview:(UIViewController <PxpVideoPlayerProtocol>*)player {
 
 }
 
@@ -213,7 +213,7 @@
         // to true
         [self.view setHidden:NO];
         [self viewDidAppear:NO];
-        [self buildAddSubview: (VideoPlayer *) self.player];
+        [self buildAddSubview: (UIViewController <PxpVideoPlayerProtocol> *) self.player];
         [self moveVideoToFullScreen:_animated];
 //        _player.isFullScreen = YES;
     }

@@ -280,7 +280,7 @@ static void * eventContext      = &eventContext;
 }
 
 
--(SeekButton*)_makeSeekButton:(Direction)dir targetVideoPlayer:(VideoPlayer*)vp
+-(SeekButton*)_makeSeekButton:(Direction)dir targetVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vp
 {
     SeekButton  * btn;
     switch ( dir ) {

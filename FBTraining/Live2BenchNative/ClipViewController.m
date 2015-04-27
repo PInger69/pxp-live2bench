@@ -165,8 +165,6 @@ static void * encoderTagContext = &encoderTagContext;
     
     sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
     sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
-    
-    uController = [[UtilitiesController alloc]init];
     typesOfTags = [[NSMutableArray alloc]init];
     downloadedTagIds = [[NSMutableArray alloc] init];
     [self setupView];
@@ -177,7 +175,6 @@ static void * encoderTagContext = &encoderTagContext;
     //set the collectionview's properties
     [self.collectionView setAllowsSelection:TRUE];
     [self.collectionView setAllowsMultipleSelection:TRUE];
-    uController = [[UtilitiesController alloc]init];
     typesOfTags = [[NSMutableArray alloc]init];
     
     //[[NSNotificationCenter defaultCenter] addObserver:self.collectionView selector:@selector(reloadData) name:@"NewClip" object:nil];
@@ -256,12 +253,7 @@ static void * encoderTagContext = &encoderTagContext;
     [self.view addSubview:componentFilter.view];
     [componentFilter setOrigin:CGPointMake(60, 190)];
     [componentFilter close:NO];
-    
-    //self.edgeSwipeButtons = [[EdgeSwipeEditButtonsView alloc] initWithFrame:CGRectMake(1024-44, 55, 44, 768-55)];
-    //self.edgeSwipeButtons.delegate = self;
-    //[self.view addSubview:self.edgeSwipeButtons];
-    
-    
+
 }
 
 -(void)deleteAllButtonTarget{
@@ -930,7 +922,7 @@ static void * encoderTagContext = &encoderTagContext;
                                                                                                                       @"feed":pick,
                                                                                                                       @"time": [NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
                                                                                                                       @"duration": [NSString stringWithFormat:@"%d", selectedCell.data.duration ],
-                                                                                                                      @"state":[NSNumber numberWithInteger:PS_Play]}];
+                                                                                                                      @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
             }];
             
             [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
@@ -944,7 +936,7 @@ static void * encoderTagContext = &encoderTagContext;
                                                                                                                   @"feed":key,
                                                                                                                   @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
                                                                                                                   @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration],
-                                                                                                                  @"state":[NSNumber numberWithInteger:PS_Play]}];
+                                                                                                                  @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
         }
         
         
@@ -956,7 +948,7 @@ static void * encoderTagContext = &encoderTagContext;
                                                                                                               //@"feed":key,
                                                                                                               @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
                                                                                                               @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration ],
-                                                                                                              @"state":[NSNumber numberWithInteger:PS_Play]}];
+                                                                                                              @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
         
     }
     

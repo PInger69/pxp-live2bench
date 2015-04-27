@@ -5,7 +5,7 @@
 //  Created by dev on 2015-04-07.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
-
+// TODO this Class might be reduntant
 #import "DownloadEventItem.h"
 
 // PRIVATE CLASS
@@ -135,7 +135,7 @@ static void * statusContext         = &statusContext;
 -(void)getAllProgress
 {
     float       poolProgress    = 0;
-    NSInteger   poolkbps        = 0;
+//    NSInteger   poolkbps        = 0;
     
     for (DownloadItem* dli in listOfDownloadItems) {
         

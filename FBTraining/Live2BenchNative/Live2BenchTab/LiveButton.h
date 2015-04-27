@@ -11,7 +11,7 @@
 @interface LiveButton : CustomButton
 
 
-@property (nonatomic,assign) BOOL enabled;
+//@property (nonatomic,assign) BOOL enabled;
 
 -(id)initWithFrame:(CGRect)frame;
 -(void)isActive:(BOOL)enabled;

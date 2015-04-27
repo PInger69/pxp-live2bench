@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "TabBarButton.h"
+#import "AppDelegate.h"
 
-@class AppDelegate;
 @interface CustomTabViewController : UIViewController
 {
     AppDelegate * _appDel;

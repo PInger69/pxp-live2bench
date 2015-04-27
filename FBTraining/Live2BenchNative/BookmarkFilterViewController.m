@@ -42,7 +42,7 @@
 -(void)setupView
 {
     UIView *bgview = [[UIView alloc] init];
-    [bgview setBackgroundColor:[UIColor colorWithHexString:@"#e6e6e6"]];
+    [bgview setBackgroundColor:[Utility colorWithHexString:@"#e6e6e6"]];
     [bgview setFrame:CGRectMake(0.0f, 44.0f, self.view.bounds.size.width, self.view.bounds.size.height - 44.0f)];
     [bgview setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
     [self.view addSubview:bgview];

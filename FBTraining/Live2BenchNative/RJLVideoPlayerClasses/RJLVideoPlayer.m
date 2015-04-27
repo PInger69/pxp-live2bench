@@ -1143,8 +1143,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     float fps=0.00;
     if (self.player.currentItem.asset) {
         
-        AVAsset * ch = self.player.currentItem.asset;
-        NSArray *asdf  =[ch tracks];
+//        AVAsset * ch = self.player.currentItem.asset;
+//        NSArray *asdf  =[ch tracks];
         AVAssetTrack * videoATrack = [[self.player.currentItem.asset tracksWithMediaType:AVMediaTypeVideo] lastObject];
         if(videoATrack)
         {

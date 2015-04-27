@@ -15,16 +15,15 @@
     
     UILabel *tagname;
     UILabel *tagtime;
-    ClipCornerView *tagcolor;
+//    ClipCornerView *tagcolor;
     UIButton *coachpickButton;
-    //UIButton *bookmarkButton;
     UIImageView *tagImage;
-    UIActivityIndicatorView *tagActivityIndicator;
-    UIImageView *tagRatingOne;
-    UIImageView *tagRatingTwo;
-    UIImageView *tagRatingThree;
-    UIImageView *tagRatingFour;
-    UIImageView *tagRatingFive;
+//    UIActivityIndicatorView *tagActivityIndicator;
+//    UIImageView *tagRatingOne;
+//    UIImageView *tagRatingTwo;
+//    UIImageView *tagRatingThree;
+//    UIImageView *tagRatingFour;
+//    UIImageView *tagRatingFive;
     UITextView *tagInfoText;
     UIScrollView *tagPlayersView;
     UILabel *playersNumberLabel;

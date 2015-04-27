@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UtilitiesController.h" // TODO DELETE
 #import "ActionList.h"
 #import "EncoderProtocol.h"
 #import "CloudEncoder.h"
@@ -77,7 +76,6 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 
 
 -(void)reqestSummaryId:(NSString*)aId type:(NSString*)aType onComplete:(void(^)(NSArray*pooled))onCompleteGet;
--(void)updateSummaryId:(NSString*)aId type:(NSString*)aType summary:(NSString*)aSummary onComplete:(void(^)(NSArray*pooled))onCompleteGet;
 
 -(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet;
 

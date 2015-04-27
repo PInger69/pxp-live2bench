@@ -256,38 +256,10 @@
     [self.label removeFromSuperview];
 }
 
+-(void)sendNotificationWithName:(NSString *)notificationName
+{
+    // for protocol
+}
+
 @end
 
-
-
-/*
-@interface UIPopoverBackgroundViewCustom : UIPopoverBackgroundView
-
-@property(nonatomic, readwrite) CGFloat arrowOffset;
-@property(nonatomic, readwrite) UIPopoverArrowDirection arrowDirection;
-+ (BOOL)wantsDefaultContentAppearance;
-+ (UIEdgeInsets)contentViewInsets;
-+ (CGFloat)arrowBase;
-+ (CGFloat)arrowHeight;
-@end
-
-@implementation UIPopoverBackgroundView
-
-+ (BOOL)wantsDefaultContentAppearance{
-    return  NO;
-}
-
-+ (UIEdgeInsets)contentViewInsets{
-    NSLog(@"Does it get to here?");
-    return UIEdgeInsetsMake(0, 0, 0, 0);
-}
-
-+ (CGFloat)arrowBase{
-    return 0.0;
-}
-
-+ (CGFloat)arrowHeight{
-    return 1.0;
-}
-
-@end*/

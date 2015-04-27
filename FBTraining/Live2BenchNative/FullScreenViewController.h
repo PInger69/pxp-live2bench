@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "VideoPlayer.h"
+
 #import "PxpVideoPlayerProtocol.h"
 
 @interface FullScreenViewController : UIViewController
@@ -36,6 +36,6 @@
  *
  *  @param player 
  */
--(void)buildAddSubview:(VideoPlayer*)player;
+-(void)buildAddSubview:(UIViewController <PxpVideoPlayerProtocol>*)player;
 
 @end

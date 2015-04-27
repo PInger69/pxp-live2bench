@@ -16,7 +16,7 @@
 -(id)initWithDraggedView:(UIView*)dragged_view{
     self = [super init];
     if (self) {
-        draggedView = draggedView;
+        draggedView = dragged_view;
         originalPosition = draggedView.frame.origin;
         originalView = draggedView.superview;
         

@@ -294,14 +294,12 @@
         currentCommand = nextInQueue;
         id controller   = nextInQueue.target;
         SEL sel         = nextInQueue.selector;
+        #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [controller performSelector:sel withObject:nextInQueue.tagData withObject:nextInQueue.timeStamp];
         isWaitiing = YES;
         
         
-//        [log appendFormat:@"%@  %@ - "
-//                        ,[NSDateFormatter localizedStringFromDate:[NSDate date] dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle]
-//                        ,NSStringFromSelector(currentCommand.selector)
-//                        ];
+
     }
     
 }
@@ -816,7 +814,7 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([results objectForKey:@"id"]) {
-            NSString * tagId = [[results objectForKey:@"id"]stringValue];
+//            NSString * tagId = [[results objectForKey:@"id"]stringValue];
             //[_event.tags setObject:results forKey:tagId];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
         }

@@ -157,8 +157,10 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     self = [self initWithFrame: frame];
     
     [self redrawLayers];
-    
+    if (self) {
+    }
     //UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake( 50 + frame.origin.x, frame.origin.y - frame.size.height, frame.size.width - 50, frame.size.height)];
+    return self;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -438,6 +440,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
         [self.next inputArray: self.arrayOfTags];//[self.filterP processedList]];
         [self.next update];
     } else {
+        #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         if (self.onSelectSelector) [self.selTarget performSelector: self.onSelectSelector withObject:self];
     }
     

@@ -10,10 +10,7 @@
 #import "ListViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ExportPlayersPopoverController.h"
-#import "EdgeSwipeButton.h"
-#import "EdgeSwipeEditButtonsView.h"
 #import "ExportPlayersPopoverController.h"
-#import "EdgeSwipeButton.h"
 #import "AbstractFilterViewController.h"
 #import "FBTFilterViewController.h"
 #import "BreadCrumbsViewController.h"
@@ -69,14 +66,13 @@
     CommentingRatingField           * commentingField;
     VideoBarListViewController      * newVideoControlBar;
 }
-@synthesize filterToolBoxListViewController;
 @synthesize breadCrumbsView;
 @synthesize selectedCellRows;
 NSMutableArray *oldEventNames;
 
 
-static const NSInteger kDeleteAlertTag = 242;
-static const NSInteger kCannotDeleteAlertTag = 243;
+//static const NSInteger kDeleteAlertTag = 242;
+//static const NSInteger kCannotDeleteAlertTag = 243;
 
 -(instancetype)initWithAppDelegate:(AppDelegate *)appDel{
     self = [super initWithAppDelegate:appDel];
@@ -236,31 +232,11 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
     
     
-    //uController                     = [[UtilitiesController alloc]init];
-    //downloadedTagIds                = [[NSMutableArray alloc] init];
-    //selectedCellRows                = [[NSMutableDictionary alloc]init];
-    //array of file paths
-    //NSArray *paths                  = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    //NSString *documentsDirectory    = [paths objectAtIndex:0];
-    //fileManager                     = [NSFileManager defaultManager];
-    
-    //Find path to accountInformation plist
-    //    NSString *accountInformationPath = [documentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
-    //    NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
-    //    userId = [accountInfo objectForKey:@"hid"];
-    
     [self setupView];
-    //myTableView.dataSource = self;
-    //myTableView.delegate = self;
-    _tableViewController.tableView.delaysContentTouches = NO;
-    //self.myTableView.delaysContentTouches = FALSE;
-    //typesOfTags = [[NSMutableArray alloc]init];
-    //[self.myTableView registerClass:[ListViewCell class] forCellReuseIdentifier:@"ListViewCell"];
-    fullScreenMode = FALSE;
-    //receivedTagArr = [[NSMutableArray alloc]init];
-    //downloadingTagsDict = [[NSMutableDictionary alloc]init];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Entering FullScreen" object:nil];
+
+     _tableViewController.tableView.delaysContentTouches = NO;
+     fullScreenMode = FALSE;
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Entering FullScreen" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Exiting FullScreen" object:nil];
     [self initialVideoControlBar];
     
@@ -369,97 +345,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         NSMutableArray *sectionArray = [[NSMutableArray alloc]init];
         [typesOfTags addObject:sectionArray];
     }
-    
-    //    if(!filterToolBoxListViewController)
-    //    {
-    //        NSArray *argObjs =[[NSArray alloc]initWithObjects:self,_tableViewController.tableView, nil];
-    //        NSArray *argKeys = [[NSArray alloc]initWithObjects:@"controller",@"displayArch", nil];
-    //        NSDictionary *filterArgs = [[NSDictionary alloc]initWithObjects:argObjs forKeys:argKeys];
-    //        filterToolBoxListViewController = [[FilterToolboxViewController alloc]initWithArgs:filterArgs];
-    //        // filterToolBoxListViewController.showTelestration = FALSE;
-    //        [filterToolBoxListViewController.view setUserInteractionEnabled:TRUE];
-    //        filterToolBoxListViewController.view.layer.masksToBounds = NO;
-    //        filterToolBoxListViewController.view.layer.cornerRadius = 1; // if you like rounded corners
-    //        filterToolBoxListViewController.view.layer.shadowOffset = CGSizeMake(1, 1);
-    //        filterToolBoxListViewController.view.layer.shadowRadius = 2;
-    //        filterToolBoxListViewController.view.layer.shadowOpacity = 0.4;
-    //        [filterToolBoxListViewController.view setAlpha:0.95f];
-    //        [filterToolBoxListViewController.view setFrame: filterContainer.frame];
-    //    }
-    
-    // Richard ==========================================================================================
-    //    if(!componentFilter) {
-    //        NSString            * checkSport   = encoder;
-    //        NSMutableDictionary * tagData      = globals.CURRENT_EVENT_THUMBNAILS;
-    //        if ([checkSport isEqualToString:SPORT_HOCKEY]){
-    //            componentFilter = [[FBTFilterViewController alloc]initWithTagData:tagData];
-    //        }
-    //        else if ([checkSport isEqualToString:SPORT_FOOTBALL]){
-    //            componentFilter = [[FBTFilterViewController alloc]initWithTagData:tagData];
-    //        }
-    //        else if ([checkSport isEqualToString:SPORT_SOCCER]){
-    //            componentFilter = [[FBTFilterViewController alloc]initWithTagData:tagData];
-    //        }
-    //        else if ([checkSport isEqualToString:SPORT_RUGBY]){
-    //            componentFilter = [[FBTFilterViewController alloc]initWithTagData:tagData];
-    //        }
-    //        else if ([checkSport isEqualToString:SPORT_FOOTBALL_TRAINING]){
-    //            componentFilter = [[FBTFilterViewController alloc]initWithTagData:tagData];
-    //        }
-    //        else {
-    //            componentFilter = [[FBTFilterViewController alloc]initWithTagData:tagData];
-    //        }
-    //
-    //        [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-    //        [componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
-    //        componentFilter.finishedSwipe = TRUE;
-    //        [componentFilter exclusionKeys:@[@"telefull"]];
-    //        [self.view addSubview:componentFilter.view];
-    //        [componentFilter setOrigin:CGPointMake(60, 190)];
-    //        [componentFilter close:NO];
-    //        [componentFilter viewDidAppear:TRUE];
-    //
-    //
-    //    }else if ([componentFilter rawDataEmpty]) {
-    //        // fix this
-    //        [componentFilter.view removeFromSuperview];
-    //        componentFilter = [[FBTFilterViewController alloc]initWithTagData:globals.CURRENT_EVENT_THUMBNAILS];
-    //        [self.view addSubview:componentFilter.view];
-    //        [componentFilter setOrigin:CGPointMake(60, 190)];
-    //        [componentFilter close:NO];
-    //        [componentFilter viewDidAppear:TRUE];
-    //    }
-    // End Richard ==========================================================================================
-    //    [self.videoPlayer.view setFrame:CGRectMake(2, 113, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
-    //    if(![self.view.subviews containsObject:self.videoPlayer.view])
-    //    {
-    //        self.videoPlayer = [[VideoPlayer alloc] init];
-    //
-    //        [self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, 530, 340)];
-    //        self.videoPlayer.playerContext = @"ListView Tab";
-    //        [self.videoPlayer.view setFrame:CGRectMake(2, 113, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
-    //        [self.view addSubview:self.videoPlayer.view];
-    //
-    //
-    //
-    //    }else{
-    ////        if (![self.videoPlayer.videoURL isEqual:[NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT]]) {
-    ////            NSURL *videoURL = [NSURL URLWithString:globals.CURRENT_PLAYBACK_EVENT];
-    ////            [self.videoPlayer setVideoURL:videoURL];
-    ////            //AVPlayer *myPlayer = [AVPlayer playerWithURL:videoURL];
-    ////            [self.videoPlayer setPlayerWithURL:videoURL];
-    ////        }
-    ////        if ([globals.EVENT_NAME isEqualToString:@"live"]) {
-    ////            [self.videoPlayer goToLive];
-    ////        }
-    //
-    //        [self.videoPlayer prepareToPlay];
-    //        [videoPlayer play];
-    //
-    //    }
-    //get all the tags of current playing event
-    //[self fetchedData];
-    
+     
     cellCounter     = 0;
     fullScreenMode  = FALSE;
     _tableViewController.isEditable = FALSE;
@@ -721,14 +607,14 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
     componentFilter.rawTagArray = self.tagsToDisplay;
     //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
-    componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
+    componentFilter.rangeSlider.highestValue = [(UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer durationInSeconds];
     
     //[componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
     //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
     componentFilter.finishedSwipe = TRUE;
     
     [self.view addSubview:componentFilter.view];
-    componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
+    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
     [componentFilter setOrigin:CGPointMake(60, 190)];
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
@@ -770,67 +656,15 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     else
     {
         _tableViewController.isEditable = FALSE;
-        [self.edgeSwipeButtons deselectButtonAtIndex:2];
+//        [self.edgeSwipeButtons deselectButtonAtIndex:2];
         [self cancelEditingCells];
     }
     
 }
 
 
-//pop up an alert view when trying to delete a tag
-//-(void)deleteCells
-//{
-//    if ([selectedCellRows count])
-//    {
-//        for (NSDictionary *dict in [selectedCellRows allValues] )
-//        {
-//            NSMutableDictionary *tag = [dict objectForKey:@"tag"];
-//
-//            if ([[tag objectForKey:@"own"] intValue] < 1 && globals.HAS_MIN){
-//                CustomAlertView *alert = [[CustomAlertView alloc] init];
-//                [alert setTitle:@"myplayXplay"];
-//                alert.tag = kCannotDeleteAlertTag;
-//                [alert setMessage:@"You cannot delete tags made by another user"];
-//                [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//                [alert addButtonWithTitle:@"OK"];
-//                [alert show];
-////                [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-//                return;
-//            }
-//        }
-//
-//        CustomAlertView *alert = [[CustomAlertView alloc] init];
-//        [alert setTitle:@"myplayXplay"];
-//        alert.tag = kDeleteAlertTag;
-//        [alert setMessage:@"Are you sure you want to delete these tags?"];
-//        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-//        [alert addButtonWithTitle:@"Yes"];
-//        [alert addButtonWithTitle:@"No"];
-//        [alert show];
-////        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-//    }
-//
-//}
-
-
-- (void)shareTagsFormatTwo:(EdgeSwipeButton *)eButton
-{
-    //Different from what My Clips is doing, shareTags Method dismiss the popover since the share popover is already presented in editing clips
-    
-    ExportPlayersPopoverController* playersController = [[ExportPlayersPopoverController alloc] initWithStyle:UITableViewStyleGrouped];
-    
-    _popover = [[UIPopoverController alloc] initWithContentViewController:playersController];
-    _popover.delegate = self;
-    [_popover presentPopoverFromRect:CGRectMake(-24, 435, 5, 5) inView:self.edgeSwipeButtons permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    [self.edgeSwipeButtons deselectAllButtons];
-    
-    
-}
-
-
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
-    [self.edgeSwipeButtons deselectAllButtons];
 }
 
 
@@ -1795,244 +1629,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
 
 
 
-/*//when selecting a cell, if it is not in editing mode, loop the tag video, enable the comment box for reviewing or editing comment and rating;
- //if it is in editing mode, added the tag in the dictionary selectedCellRows or removed from the dictionary; And the dictionary will be used
- //for deleting tags.
- - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath
- {
- //if the edit button is not selected, will play the tag video of the selected cell;
- //else is in editing mode,selected cells will be added to an dictionary(selectedCellRows) for editing later
- if(!_tableViewController.isEditable){
- /*  globals.IS_LOOP_MODE = TRUE;
- 
- //[tagEventName setHidden:FALSE];
- if (wasPlayingIndexPath && ![wasPlayingIndexPath isEqual:indexPath]) {
- ListViewCell *lastSelectedCell = (ListViewCell*)[myTableView cellForRowAtIndexPath:wasPlayingIndexPath];
- [lastSelectedCell.backgroundView setBackgroundColor:[UIColor colorWithWhite:0.95f alpha:1.0f]];
- lastSelectedCell.backgroundView.layer.borderWidth = 0.0f;
- }
- wasPlayingIndexPath = indexPath;
- ListViewCell *cell = (ListViewCell*)[myTableView cellForRowAtIndexPath:indexPath];
- cell.backgroundView.layer.borderWidth = 1.0f;
- [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
- //        [self clearButtonSelected];
- cellSelectedNumber = 1;
- //        globals.PLAYBACK_SPEED = 1.0f;
- [videoPlayer play];
- 
- NSDictionary *data = [self.tagsToDisplay objectAtIndex:indexPath.row];
- //        selectedTag = [[globals.CURRENT_EVENT_THUMBNAILS objectForKey:[NSString stringWithFormat:@"%@",[data objectForKey:@"id"]]]mutableCopy];
- currentPlayingTag = [selectedTag mutableCopy];
- tagEventName.text = [currentPlayingTag objectForKey:@"name"];
- NSString *tag_id = [NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]];
- //        [globals.CURRENT_EVENT_THUMBNAILS setObject:selectedTag forKey:tag_id];
- tagId = [selectedTag objectForKey:@"id"];
- 
- // Richard
- [commentingField clear];
- commentingField.enabled             = YES;
- commentingField.text                = [selectedTag objectForKey:@"comment"];
- commentingField.ratingScale.rating  = [[selectedTag objectForKey:@"rating"]integerValue];
- 
- [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
- 
- // End Richard
- 
- 
- 
- coachPickMode = cell.coachpickButton.isSelected;
- [cell.coachpickButton setContentMode:UIViewContentModeScaleAspectFill];
- //if it is not coach pick, coachPickMode is equal to 0, otherwise equals to 1
- if (coachPickMode == 0) {
- [cell.coachpickButton setSelected:FALSE];
- }else{
- [cell.coachpickButton setSelected:TRUE];
- [cell.coachpickButton setBackgroundImage:[UIImage imageNamed:@"coachPicked.png"] forState:5];
- }
- 
- 
- //        if ([selectedTag objectForKey:@"comment"]) {
- //            self.commentTextView.text = [selectedTag objectForKey:@"comment"];
- //        }else{
- //            self.commentTextView.text = @"";
- //        }
- //        ratingButtonIndex = [[selectedTag objectForKey:@"rating"]integerValue] - 1;
- //        if (ratingButtonIndex > (int)[ratingButtonArray count] - 1) {
- //            ratingButtonIndex = (int)[ratingButtonArray count] - 1;
- //        } else if (ratingButtonIndex < 0) {
- //         //   ratingButtonIndex = 0;
- //        }
- //        if (ratingButtonIndex >=0) {
- //            for(int i=0;i<=ratingButtonIndex;i++){
- //                CustomButton *oneButton = [ratingButtonArray objectAtIndex:i];
- //                [oneButton setImage:[UIImage imageNamed:@"rating_selected.png"] forState:UIControlStateNormal];
- //                [oneButton setAccessibilityLabel:@"1"];
- //            }
- //        }
- 
- 
- if(self.videoPlayer.teleBigView)
- {
- [self.videoPlayer.teleBigView removeFromSuperview];
- self.videoPlayer.teleBigView=nil;
- }
- 
- if([[selectedTag objectForKey:@"type"] integerValue]==4)
- {
- 
- //NSLog(@"starttime %f, globals.HOME_START_TIME %f",videoPlayer.startTime, globals.HOME_START_TIME);
- //            globals.HOME_START_TIME=[[selectedTag objectForKey:@"time"] doubleValue]+ videoPlayer.startTime;
- 
- //get the current time scale
- int timeScale = self.videoPlayer.avPlayer.currentTime.timescale;//[[tag objectForKey:@"timescale"]integerValue];
- if(timeScale <= 0){
- timeScale = 600;
- }
- videoPlayer.avPlayer.currentItem.seekingWaitsForVideoCompositionRendering = YES;
- //NSLog(@"Play tele ---------------- starttime %f, globals.HOME_START_TIME %f timeScale %d",videoPlayer.startTime, globals.HOME_START_TIME ,timeScale);
- //            [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, timeScale) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero ];// completionHandler:^(BOOL finished) {
- //show telestration
- 
- //globals.IS_TELE=TRUE;
- [self.videoPlayer pause];
- 
- if (!videoPlayer.isFullScreen) {
- teleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, -17, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height+40)];
- 
- }else{
- teleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 20, videoPlayer.view.frame.size.width, 740)];//CGRectMake(0, 80, self.videoPlayer.view.frame.size.width, 600)];
- }
- 
- if ([[selectedTag objectForKey:@"teleurl"] rangeOfString:@"http://"].location != NSNotFound) {
- //telestration generated when server is on
- 
- NSURL *teleUrl = [NSURL URLWithString:[selectedTag objectForKey:@"teleurl"]];
- [teleView setImageWithURL:teleUrl placeholderImage:nil options:nil completed: ^(UIImage *image, NSError *error, SDImageCacheType cacheType) {}];
- }else{
- //telestration generated in offline mode
- 
- UIImage *teleImage = [UIImage imageWithContentsOfFile:[selectedTag objectForKey:@"teleurl"]];
- [teleView setImage:teleImage];
- }
- 
- self.videoPlayer.teleBigView=teleView;
- //            globals.CURRENT_PLAYBACK_TAG=selectedTag;
- [self.videoPlayer.view addSubview:self.videoPlayer.teleBigView];
- 
- if (teleButton) {
- teleButton.hidden = TRUE;
- }
- 
- //            globals.IS_PLAYBACK_TELE = YES;
- 
- 
- }else{
- //             globals.IS_PLAYBACK_TELE = FALSE;
- //play video
- int duration = [[selectedTag objectForKey:@"duration"] integerValue];
- //            globals.HOME_START_TIME = [[selectedTag objectForKey:@"starttime"] floatValue] +videoPlayer.startTime;
- //            if (globals.HOME_START_TIME < 0) {
- //                globals.HOME_START_TIME = 0.1;
- //            }
- //            globals.HOME_END_TIME = globals.HOME_START_TIME + duration;
- //            if (globals.HOME_END_TIME>self.videoPlayer.durationInSeconds){
- //                globals.HOME_END_TIME = self.videoPlayer.durationInSeconds;
- //            }
- 
- //remove the old time observer before adding the new one
- if (loopTagObserver) {
- [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
- loopTagObserver = nil;
- }
- 
- //start playing tag from tag start time
- //            [videoPlayer.avPlayer seekToTime:CMTimeMakeWithSeconds(globals.HOME_START_TIME, 600) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero ];// completionHandler:^(BOOL finished) {
- /*
- * Use addBoundaryTimeObserverForTimes: to loop the tag instread of timer;
- * When avplayer plays to the tag end time, the block will be invoked and will call loopTag method
- 
- 
- //            NSArray *times = [NSArray arrayWithObjects:[NSValue valueWithCMTime:CMTimeMakeWithSeconds(globals.HOME_END_TIME, 600)], nil];
- //            __weak ListViewController *weakRef = self;
- //            //set queue: NULL will use the default queue which is the main queue
- //            loopTagObserver = [videoPlayer.avPlayer addBoundaryTimeObserverForTimes:times queue:NULL usingBlock:^{
- //                // if the video plays to the tag end time, seek back to the start time for looping
- //                [weakRef loopTag];
- //
- //            }];
- 
- }
- 
- 
- //        [slowMoButton setHidden:FALSE];
- //        [startRangeModifierButton setHidden:FALSE];
- //        [endRangeModifierButton setHidden:FALSE];
- //        [currentSeekBackButton setHidden:FALSE];
- //        [currentSeekForwardButton setHidden:FALSE];
- 
- //        if (![globals.THUMBS_WERE_SELECTED_LISTVIEW containsObject:[selectedTag objectForKey:@"id"]]) {
- //            [globals.THUMBS_WERE_SELECTED_LISTVIEW addObject:[selectedTag objectForKey:@"id"]];
- //        }
- //
- //
- //        globals.THUMB_WAS_SELECTED_LISTVIEW = [selectedTag objectForKey:@"id"];
- //        globals.CURRENT_PLAYBACK_TAG=selectedTag;
- //
- 
- }else{
- ListViewCell *cell = (ListViewCell*)[myTableView cellForRowAtIndexPath:indexPath];
- NSDictionary *tag = [self.tagsToDisplay objectAtIndex:indexPath.row];
- 
- if(!selectedCellRows)
- {
- selectedCellRows =[[NSMutableDictionary alloc] init];
- }
- 
- //if the cell in the indexPath was not selected before, adding it to the "selectedCellRows" dictionary and display the checkmark and hide bookmark button and coachpick button;
- //else, deselecting the cell, will hide the checkmark and display bookmark button and coachpick button
- if(![[selectedCellRows allKeys] containsObject:[NSString stringWithFormat:@"%d",indexPath.row]])
- {
- [cell.translucentEditingView setHidden:FALSE];
- [cell.checkmarkOverlay setHidden:FALSE];
- [cell.bookmarkButton setHidden:TRUE];
- [cell.coachpickButton setHidden:TRUE];
- //save the indexpath of the cell and the check box button in the selectedCellRows array
- NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc] initWithObjects:tag,indexPath, nil] forKeys:[[NSArray alloc]initWithObjects:@"tag",@"indexpath", nil]];
- [selectedCellRows setObject:dict forKey:[NSString stringWithFormat:@"%d",indexPath.row]];
- }else{
- [selectedCellRows removeObjectForKey:[NSString stringWithFormat:@"%d",indexPath.row]];
- [cell.translucentEditingView setHidden:TRUE];
- [cell.checkmarkOverlay setHidden:TRUE];
- [cell.bookmarkButton setHidden:FALSE];
- [cell.coachpickButton setHidden:FALSE];
- }
- }
- 
- 
- }
- */
-//-(void) cellSelected: (NSNotification *) notification{
-//    float time              = [[notification.userInfo objectForKey:@"time"]floatValue];
-//    float dur               = [[notification.userInfo objectForKey:@"duration"]floatValue];
-//    CMTime cmtime           = CMTimeMake(time, 1);
-//    CMTime cmDur            = CMTimeMake(dur, 1);
-//
-//    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
-//
-//    [self.videoPlayer playFeed:self.videoPlayer.feed withRange:timeRange];
-//
-//
-//    selectedTag = self.tagsToDisplay[[self.tagsToDisplay indexOfObjectIdenticalTo:notification.userInfo]];
-//
-//    [commentingField clear];
-//    commentingField.enabled             = YES;
-//    commentingField.text                = [selectedTag objectForKey:@"comment"];
-//    commentingField.ratingScale.rating  = [[selectedTag objectForKey:@"rating"]integerValue];
-//
-//    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
-//
-//
-//}
+
 
 -(void) feedSelected: (NSNotification *) notification
 {
@@ -2046,7 +1643,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     
     CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
     
-    NSString *pick = [userInfo objectForKey:@"feed"];
+//    NSString *pick = [userInfo objectForKey:@"feed"];
     
     //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
     //                                                                                                          @"feed":pick,
@@ -4770,8 +4367,8 @@ static const NSInteger kCannotDeleteAlertTag = 243;
     if ([tag isKindOfClass:[NSArray class]]) {
         return;
     }
-    BOOL isEventInCurrentServer = FALSE;
-    NSString *eventNameStr;
+//    BOOL isEventInCurrentServer = FALSE;
+//    NSString *eventNameStr;
     //check if the tag from live event or not. If it is, the event value is the request url will be @"live", else it will be [tag objectForKey:@"event"].
     //    if ([globals.EVENT_NAME isEqualToString:@"live"]) {
     //        if (globals.CURRENT_EVENT_THUMBNAILS.count > 0) {

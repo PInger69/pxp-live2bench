@@ -8,7 +8,7 @@
 
 #import "ListViewCell.h"
 
-static CGFloat const kBounceValue = 10.0f;
+//static CGFloat const kBounceValue = 10.0f;
 
 @interface ListViewCell() <UIGestureRecognizerDelegate>
 
@@ -146,9 +146,9 @@ static CGFloat const kBounceValue = 10.0f;
 //    [bookmarkButton addTarget:self action:@selector(showSource:) forControlEvents:UIControlEventTouchUpInside];
 //    [self.myContentView addSubview:bookmarkButton];
 //    
-    tagActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [tagActivityIndicator setFrame:CGRectMake((self.tagcolor.frame.size.width - tagActivityIndicator.frame.size.width)/2, CGRectGetMaxY(self.tagcolor.frame) + 62.0f, 37.0f, 37.0f)];
-    [self.myContentView addSubview:tagActivityIndicator];
+    _tagActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [_tagActivityIndicator setFrame:CGRectMake((self.tagcolor.frame.size.width - _tagActivityIndicator.frame.size.width)/2, CGRectGetMaxY(self.tagcolor.frame) + 62.0f, 37.0f, 37.0f)];
+    [self.myContentView addSubview:_tagActivityIndicator];
     
     /*translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
      [translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];

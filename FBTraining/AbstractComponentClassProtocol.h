@@ -18,7 +18,7 @@
 @property (nonatomic) BOOL selectable;
 
 -(instancetype)initWithDataDictionary: (NSDictionary *)dataDictionary andPlistDictionary: (NSDictionary *)plistDictionary;
--(void)notificationAction: (id) notificationValue;
 -(void)removeFromSuperview;
-
+@optional
+-(void)notificationAction: (id) notificationValue;
 @end

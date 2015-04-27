@@ -20,7 +20,7 @@
         _feedName = [[UILabel alloc] init];
         _feedView = [[UIImageView alloc] init];
         _feedName.text = name;
-        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+//        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
         //[imageAssetManager imageForURL:url atImageView:self.feedView];
         
         _downloadButton = [[DownloadButton alloc] init];;

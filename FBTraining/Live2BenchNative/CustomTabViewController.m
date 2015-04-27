@@ -8,7 +8,6 @@
 
 #import "CustomTabViewController.h"
 
-
 // All main tabs will base class for all tabs
 
 @interface CustomTabViewController ()

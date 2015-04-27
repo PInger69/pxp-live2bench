@@ -188,12 +188,12 @@
 
 
 
--(void)setData:(NSDictionary *)data
+-(void)setData:(Tag *)data
 {
     _data = data;
 }
 
--(NSDictionary *)data
+-(Tag *)data
 {
 
     return _data;

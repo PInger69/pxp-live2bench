@@ -9,19 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "LoginViewController.h"
 #import "SpinnerView.h"
-#import "UtilitiesController.h"
 #import "BorderlessButton.h"
 #import "BorderButton.h"
 #import "CustomLabel.h"
 #import "DropdownButton.h"
-
 #import <DropboxSDK/DropboxSDK.h>
-
+#import "AppDelegate.h"
 @class EncoderManager;
 
 @interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,DBRestClientDelegate,UIGestureRecognizerDelegate>/*Removed: DBNetworkRequestDelegate no imp found*/
 {
-    UtilitiesController *uController;
     UILabel *userName;
     UILabel *wifi;
     UIScrollView *scrollView;
