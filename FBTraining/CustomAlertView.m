@@ -20,14 +20,12 @@ static AlertType    allowedTypes;
 +(void)staticInit {
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
-    allowedTypes        = AlertNone;
+    allowedTypes        = AlertImportant;
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:nil userInfo:@{@"name":@"Alerts", @"block":^(NSArray *settingOptions, NSArray *onOrOff){
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i < [settingOptions count]; i++) {
             if ([((NSNumber *)onOrOff[i]) integerValue] == 1) {
-                if ([settingOptions[i] isEqualToString:@"Important Alerts"]) {
-                    allowedTypes = allowedTypes | AlertImportant;
-                } else if ([settingOptions[i] isEqualToString:@"Notification Alerts"]){
+                if ([settingOptions[i] isEqualToString:@"Notification Alerts"]){
                     allowedTypes = allowedTypes | AlertNotification;
                 } else if ([settingOptions[i] isEqualToString:@"Encoder Alerts"]){
                     allowedTypes = allowedTypes | AlertEncoder;
@@ -40,19 +38,13 @@ static AlertType    allowedTypes;
         }
     }}];
     
-    [[NSNotificationCenter defaultCenter] addObserver:nil selector:@selector(allowedTypesChanged:) name:@"Setting - Alerts" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(allowedTypesChanged:) name:@"Setting - Alerts" object:nil];
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"" object:nil userInfo:@{}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{}];
 }
 
 +(void)allowedTypesChanged:(NSNotification *)note {
-    if ([note.userInfo[@"Name"] isEqualToString:@"Important Alerts"]) {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            allowedTypes = allowedTypes & (~AlertImportant);
-        } else {
-            allowedTypes = allowedTypes | AlertImportant;
-        }
-    } else if ([note.userInfo[@"Name"] isEqualToString:@"Notification Alerts"]) {
+    if ([note.userInfo[@"Name"] isEqualToString:@"Notification Alerts"]) {
         if (![note.userInfo[@"Value"] boolValue]) {
             allowedTypes = allowedTypes & (~AlertNotification);
         } else {
