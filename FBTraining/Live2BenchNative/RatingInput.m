@@ -41,9 +41,9 @@ static UIImage* rateUnSelected;
         
         enabled = TRUE;
         if (!rateSelected){
-            UIImage *image = [UIImage imageNamed:@"rating_selected.png"];
+            UIImage *image = [self starImage:YES];
             rateSelected = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-            rateUnSelected = [UIImage imageNamed:@"rating_unselected.png"];
+            rateUnSelected = [self starImage:NO];
         }
         
         
@@ -172,5 +172,62 @@ static UIImage* rateUnSelected;
 }
 
 
+-(UIImage *) starImage: (BOOL) selected{
+    CGSize imageSize = CGSizeMake(100 /2, 100/2);
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *starPath = [UIBezierPath bezierPath];
+    UIBezierPath *outLinePath = [UIBezierPath bezierPath];
+    
+    [starPath moveToPoint: CGPointMake(17.5/2, 100/2)]; // bottom left
+    [starPath addLineToPoint: CGPointMake(50/2, 0)];  // top
+    [starPath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)]; // bottom right
+    [starPath addLineToPoint: CGPointMake(0, 38.2/2)]; //left
+    [starPath addLineToPoint: CGPointMake(100/2, 38.2/2)]; //right
+    [starPath addLineToPoint: CGPointMake(17.5/2, 100/2)]; // bottom left
+    
+    
+    [outLinePath moveToPoint: CGPointMake(17.5/2, 100/2)];
+    [outLinePath addLineToPoint: CGPointMake(50/2, (100 -23.61)/2 )];
+    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+    [outLinePath addLineToPoint: CGPointMake(70/2, 61.8/2)];
+    [outLinePath addLineToPoint: CGPointMake(100/2, 38.2/2)];
+    [outLinePath addLineToPoint: CGPointMake(0, 38.2/2)];
+    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+    [outLinePath addLineToPoint: CGPointMake(50/2, 0)];
+    [outLinePath addLineToPoint: CGPointMake(17.5/2, 100/2)]; // bottom left
+    
+    
+    if (selected) {
+        [[UIColor orangeColor] setFill];
+        [[UIColor orangeColor] setStroke];
+    }else{
+        [[UIColor lightGrayColor] setFill];
+        [[UIColor lightGrayColor] setStroke];
+    }
+    
+    
+    
+    outLinePath.lineWidth = 5.0;
+    [outLinePath stroke];
+    [starPath fill];
+    
+    //    UIFont *font = [UIFont fontWithName:@"Palatino-Roman" size:14.0];
+    //
+    //    NSDictionary *attributesDict = @{ NSFontAttributeName : font };
+    //
+    //    NSAttributedString *numberString = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"%i", rating]];
+    //
+    //    UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 35, 60, 60)];
+    //    [numberLabel drawTextInRect:CGRectMake(35, 35, 60, 60)];
+    ////    [numberString drawInRect:CGRectMake(35, 35, 60, 60)];
+    ////    numberString;
+    //                                  // drawInRect:CGRectMake(35, 35, 60, 60) withAttributes:attributesDict];
+    
+    
+    UIImage *starImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return starImage;
+}
 
 @end

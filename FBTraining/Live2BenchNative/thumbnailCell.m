@@ -7,6 +7,7 @@
 //
 
 #import "thumbnailCell.h"
+#import "Tag.h"
 
 #define PADDING             5
 
@@ -77,11 +78,12 @@
     self.backgroundView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
 //    [self.backgroundView setFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
     [self.backgroundView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
+    [self.backgroundView setImage:[UIImage imageNamed:@"clip-back-just.png"]];
     [self addSubview:self.backgroundView];
     
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
     //self.imageView.contentMode = UIViewContentModeCenter;
-    [self.imageView setFrame:CGRectMake(0, 0, self.backgroundView.bounds.size.width, 131.0f)];
+    [self.imageView setFrame:CGRectMake(2, 2, self.backgroundView.bounds.size.width - 5, 131.0f)];
     //CGRect aspectRect = [self frameWithAspectRatioForImage:self.imageView withFrame:self.imageView.frame];
     //[self.imageView setFrame:aspectRect];
     //[self.imageView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
@@ -94,7 +96,7 @@
     self.thumbColour.layer.shadowOffset = CGSizeMake(-1, 0);
     self.thumbColour.layer.shadowRadius = 2;
     self.thumbColour.layer.shadowOpacity = 0.8;
-    [self addSubview:self.thumbColour];
+    [self.imageView addSubview:self.thumbColour];
    
     self.thumbName = [[UILabel alloc] initWithFrame:CGRectMake(self.imageView.frame.origin.x+PADDING, 140.0f, self.imageView.bounds.size.width*3/4, 18.0f)];
     [self.thumbName setText:@"Name"];
@@ -173,8 +175,8 @@
     [checkmarkOverlay setUserInteractionEnabled:TRUE];
     [checkmarkOverlay setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self addSubview:checkmarkOverlay];
-    self.layer.borderWidth = 1;
-    self.layer.borderColor = [[UIColor grayColor]CGColor];
+//    self.layer.borderWidth = 1;
+//    self.layer.borderColor = [[UIColor grayColor]CGColor];
     
     self.thumbDeleteButton = [[CustomButton alloc] initWithFrame: CGRectMake(-22, -17, 45, 45)];
     [self.thumbDeleteButton setImage: [self deleteImage] forState:UIControlStateNormal];

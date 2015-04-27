@@ -19,6 +19,7 @@
 #import "EncoderManager.h"
 #import "SocialSharingManager.h"
 #import "LogoViewController.h"
+#import "BitRateViewController.h"
 
 @interface SettingsPageViewController () //<SettingsTableDelegate>
 
@@ -78,6 +79,9 @@ NS_OPTIONS(NSInteger, style){
             
             NSMutableDictionary *setting2 =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Welcome" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[LogoViewController alloc]initWithAppDelegate:appDel]}];
             
+            NSMutableDictionary *setting11 =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Bit Rate" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[BitRateViewController alloc]initWithAppDelegate:appDel]}];
+
+            
             NSMutableDictionary *setting3 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Screen Mirroring", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]}];
             
             NSMutableDictionary *setting4 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: listOfToggles],@"DataDictionary":[NSMutableDictionary dictionaryWithDictionary:@{@"Setting Options":@[@"Download Complete", @"Tag Synchronized", @"Tag Received"], @"Toggle Settings":@[@1,@1,@1]}] }];
@@ -104,14 +108,15 @@ NS_OPTIONS(NSInteger, style){
                                                                                                                                                                                                                                                           [NSNumber numberWithInt:0]} ] }];
             
             NSMutableDictionary *setting9 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Tabs", @"OptionChar":  [NSNumber numberWithChar: listOfToggles], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{ @"Setting Options":
-                                                                                                                                                                                                                                                          @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip",@"Debug"],
+                                                                                                                                                                                                                                                          @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip"],
                                                                                                                                                                                                                                                       @"Toggle Settings":
                                                                                                                                                                                                                                                           @[ @1, @1, @1, @1, @1, @1, @1]}] }];
             
             self.settingsArray = [NSMutableArray arrayWithArray:@[ setting1,
                                                                    
-                                                                   
                                                                    setting2,
+                                                                   
+                                                                   setting11,
                                                                    
                                                                    setting3,
                                                                    
@@ -125,9 +130,7 @@ NS_OPTIONS(NSInteger, style){
                                                                    
                                                                    setting8,
                                                                    
-                                                                   setting9
-                                                                   
-                                                                   ]];
+                                                                   setting9  ]];
         }
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewLicense:) name:@"Setting - Eula :" object:nil];
         _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];

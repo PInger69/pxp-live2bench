@@ -33,6 +33,10 @@
 #define NOTIF_TAG_POSTED                    @"postedTag"    
 #define NOTIF_NEW_VIDEO_LAYER               @"NOTIF_NEW_VIDEO_LAYER"
 #define STRING_INJURY_CONTEXT               @"STRING_INJURY_CONTEXT"
+#define NOTIF_REQUEST_CLIPS                 @"NOTIF_REQUEST_CLIPS"
+#define NOTIF_EVENTS_ARE_READY              @"NOTIF_EVENTS_ARE_READY"
+#define NOTIF_TAGS_ARE_READY                @"NOTIF_TAGS_ARE_READY"
+#define NOTIF_LIST_VIEW_TAG                 @"21"
 
 //Settings Requests
 #define NOTIF_SETTINGS_ARE_READY            @"NOTIF_SETTINGS_ARE_READY"
@@ -120,7 +124,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          0
+#define DEBUG_MODE                          1
 
 //#if DEBUG_MODE == 0
 //#define DebugLog(...)
@@ -191,6 +195,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_TAG_RECEIVED         @"NOTIF_TAG_RECEIVED" // returnds NSDict
 #define NOTIF_TAG_MODIFIED         @"NOTIF_TAG_MODIFIED" // returnds NSDict
+//#define
 
 
 #define NOTIF_ENCODER_STAT                  @"encoderStatusMonitor"

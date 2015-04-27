@@ -24,14 +24,22 @@
 
 
 
--(id)initWithEncoderManager:(EncoderManager *)aEncoderManager
+-(instancetype)initWithAppDelegate:(AppDelegate*)appDel
 {
     self = [super init];
     if (self) {
-        encoderManager  = aEncoderManager;
-        monitorSize     = CGSizeMake(300, 30);
+        encoderManager  = appDel.encoderManager;
+        monitorSize     = CGSizeMake(400, 100);
         builtMonitors   = [[NSMutableDictionary alloc]init];
         self.view       = [[UIView alloc]initWithFrame:CGRectMake(10, 200,400, 400)];
+        self.view.backgroundColor = [UIColor redColor];
+        
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, 10, 303, 50)];
+        [titleLabel setText: @"Encoder Statuses"];
+        [titleLabel setFont: [UIFont fontWithName:@"Helvetica" size:28.0]];
+        [titleLabel setTextAlignment: NSTextAlignmentCenter];
+        [self.view addSubview: titleLabel];
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
     }
     return self;
@@ -78,7 +86,7 @@
         }
     }
     
-    
+    [self rearrange];
 }
 
 -(BitrateMonitor*)buildMonitorWithFrame:(CGRect)aFrame encoder:(Encoder*)aEncoder
@@ -95,16 +103,17 @@
 -(void)rearrange
 {
     
-    float   yOffset = 0;
+    float   yOffset = 20;
     int     count   = 0;
     NSArray * list = [builtMonitors allValues];
     
     for (BitrateMonitor * monitor in list){
         
-        [monitor setFrame:CGRectMake(0, yOffset* count, monitorSize.width, monitorSize.height)];
+        [monitor setFrame:CGRectMake(75, yOffset* count + 150, 703 - 150, monitorSize.height)];
         count++;
     }
 }
+
 
 - (void)viewDidLoad
 {

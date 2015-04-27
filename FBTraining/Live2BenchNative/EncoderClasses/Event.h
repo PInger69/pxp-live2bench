@@ -26,18 +26,8 @@
 @property (nonatomic,assign) BOOL           local;
 @property (nonatomic,assign) BOOL           live;
 @property (nonatomic, strong) NSMutableDictionary  * downloadingItemsDictionary;
-//@property (nonatomic,strong) NSString               * name;
-//@property (nonatomic,strong) NSString               * eventType;
-//@property (nonatomic,strong) NSString               * datapath;
-//@property (nonatomic,strong) NSString               * date;
-//@property (nonatomic,strong) NSString               * hid;
-//@property (nonatomic,strong) NSDictionary           * feeds;
-//@property (nonatomic,strong) NSDictionary           * mp4s;
-//@property (nonatomic,strong) NSDictionary           * rawData;
-//@property (nonatomic,strong) NSMutableDictionary    * tags;
-//@property (nonatomic,assign) BOOL                   deleted;
-//@property (nonatomic,assign) BOOL                   local;
-//@property (nonatomic,assign) BOOL                   live;
+
+//This property contains tags that have not yet been uploaded to the server
 @property (nonatomic,strong) NSMutableDictionary    * localTags;
 
 @property (nonatomic,strong) NSMutableArray        * downloadedSources; // this is a list of strings of videos that are on the device

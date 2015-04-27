@@ -65,6 +65,7 @@
     }
     return self;
 }
+<<<<<<< HEAD
 
 -(void)synchronizedTags:(NSNotification *)note {
     if (self.toastType & ARTagSynchronized) {
@@ -90,6 +91,40 @@
         }
     }
 }
+=======
+//
+//-(void)synchronizedTags:(NSNotification *)note {
+//    if (self.toastType && ARSynchronizedTags) {
+//        return;
+//    }
+//    if(self.enabled && note.userInfo){
+//        // Each NSNotification is first added to the queue
+//        [self.queueOfNotifications addObject:note];
+//        // If there is only 1 Notification in the queue, animateView is called
+//        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
+//        //will keep track of the queue
+//        if([self.queueOfNotifications count] == 1){
+//            [self animateView];
+//        }
+//    }
+//}
+//
+//-(void)fileDownloadComplete:(NSNotification *)note {
+//    if (self.toastType && ARFileDownloadComplete) {
+//        return;
+//    }
+//    if(self.enabled && note.userInfo){
+//        // Each NSNotification is first added to the queue
+//        [self.queueOfNotifications addObject:note];
+//        // If there is only 1 Notification in the queue, animateView is called
+//        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
+//        //will keep track of the queue
+//        if([self.queueOfNotifications count] == 1){
+//            [self animateView];
+//        }
+//    }
+//}
+>>>>>>> f5670461f001ccbf5cbf83ec761a857141379f77
 
 
 -(void)toastTypeChanged: (NSNotification *) note{

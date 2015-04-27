@@ -12,6 +12,7 @@
 #import <objc/runtime.h>
 #import "Feed.h"
 #import "Tag.h"
+#import "EncoderManager.h"
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 
@@ -434,7 +435,7 @@
     if (!encodedName) encodedName = @"";
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
-                                    //  @"name"           : encodedName,
+                                      @"name"           : encodedName,
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
@@ -831,8 +832,10 @@
     {
         if ([results objectForKey:@"id"]) {
             NSString * tagId = [[results objectForKey:@"id"]stringValue];
-            [_event.tags setObject:results forKey:tagId];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:results];
+            Tag *newTag = [[Tag alloc] initWithData: results];
+            newTag.feeds = self.encoderManager.feeds;
+            [_event.tags setObject:newTag forKey:tagId];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
         }
     }
 }
@@ -847,10 +850,12 @@
         if (tags) {
             for (NSString *idKey in [tags allKeys]) {
                 Tag *newTag = [[Tag alloc] initWithData: tags[idKey]];
+                newTag.feeds = self.encoderManager.feeds;
                 [tagsDictionary addEntriesFromDictionary:@{idKey:newTag}];
             }
             
             _event.tags =tagsDictionary;
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
         }
     }
     

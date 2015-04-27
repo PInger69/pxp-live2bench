@@ -40,6 +40,8 @@ static CGFloat const kBounceValue = 10.0f;
 - (void)setupView
 {
     [super setupView];
+    
+//    [self.myContentView addSubview:[[UIImageView alloc] initWithImage: [UIImage imageNamed:@"clip-back-just.png"]]];
     //UIView *anExtraView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 370, 155)];
     //    UIView *anExtraView = [UIView new];
     //    anExtraView.backgroundColor = [UIColor whiteColor];

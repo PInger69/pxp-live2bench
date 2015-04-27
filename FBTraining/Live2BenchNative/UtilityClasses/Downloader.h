@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CustomAlertView.h"
 #import "DownloadItem.h"
+#import "VideoTrimItem.h"
 
 @interface Downloader : NSObject
 
@@ -20,6 +21,7 @@
 +(Downloader*)defaultDownloader;
 +(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path;
 +(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path type:(DownloadType)aType;
++(VideoTrimItem *)trimVideoURL: (NSString*)url to:(NSString*)path withTimeRange: (CMTimeRange) range;
 
 -(void)addToQueue:(DownloadItem *)item;
 -(void)removeFromQueue:(DownloadItem *)item;
