@@ -354,7 +354,7 @@
 {
 
     
-    NSLog(@"Encoder: Version check in Authenticate Disabled");
+    PXPLog(@"Encoder: Version check in Authenticate Disabled");
     if ([self.version isEqualToString:@"0.94.5"]){
 
 //    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
@@ -435,8 +435,8 @@
     if (!encodedName) encodedName = @"";
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
-                                      @"name"           : encodedName,
-                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      //@"name"           : encodedName,
+                                      //@"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
@@ -681,11 +681,11 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:@{@"responce":finishedData}];
     
     
-    NSLog(@"Connection finished: %@",connectionType);
+    PXPLog(@"Connection finished: %@",connectionType);
     if ([connectionType isEqualToString:SHUTDOWN]){
         __weak Encoder * weakSelf = self;
         [statusMonitor startShutdownChecker:^(void){
-            NSLog(@"Server has shutdown");
+            PXPLog(@"Server has shutdown");
             if (weakSelf.isMaster) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:weakSelf userInfo:nil];
          }];
     }
@@ -700,8 +700,8 @@
     
     NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
     isWaitiing = NO;
-    NSLog(@"%@ FAIL %@ \n%@",self.name,[connection originalRequest],connection.connectionType);
-    NSLog(@"FAIL TYPE: %@ ",failType);
+    PXPLog(@"%@ FAIL %@ \n%@",self.name,[connection originalRequest],connection.connectionType);
+    PXPLog(@"FAIL TYPE: %@ ",failType);
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:nil];//
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
@@ -817,7 +817,7 @@
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([results objectForKey:@"id"]) {
             NSString * tagId = [[results objectForKey:@"id"]stringValue];
-            [_event.tags setObject:results forKey:tagId];
+            //[_event.tags setObject:results forKey:tagId];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
         }
     
@@ -835,7 +835,7 @@
             Tag *newTag = [[Tag alloc] initWithData: results];
             newTag.feeds = self.encoderManager.feeds;
             [_event.tags setObject:newTag forKey:tagId];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+           // [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
         }
     }
 }
@@ -872,26 +872,26 @@
 -(void)stopResponce:(NSData *)data
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
-    NSLog(@"Event Stopped          !!!");
+    PXPLog(@"Event Stopped          !!!");
 }
 
 -(void)startResponce:(NSData *)data
 {
 
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STARTED object:self];
-    NSLog(@"Event Started          !!!");
+    PXPLog(@"Event Started          !!!");
 }
 
 -(void)pauseResponce:(NSData *)data
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_PAUSED object:self];
-    NSLog(@"Event Paused          !!!");
+    PXPLog(@"Event Paused          !!!");
 }
 
 -(void)resumeResponce:(NSData *)data
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_RESUMED object:self];
-    NSLog(@"Event Resumed          !!!");
+    PXPLog(@"Event Resumed          !!!");
 }
 
 
@@ -1003,7 +1003,7 @@
                 }
             }
             @catch (NSException *exception) {
-                NSLog(@"error parsing json data: %@",exception);
+                PXPLog(@"error parsing json data: %@",exception);
             }
             @finally {
                 

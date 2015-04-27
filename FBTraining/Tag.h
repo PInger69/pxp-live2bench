@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FilterItemProtocol.h"
 
-@interface Tag : NSObject
+@interface Tag : NSObject<FilterItemProtocol>
 
 //@property (strong, nonatomic) NSDictionary *rawData;
 @property (strong, nonatomic) NSString      *colour;

@@ -44,7 +44,7 @@ static void *  downLoaderContext = &downLoaderContext;
     NSDictionary            * fileSystemDictionary      = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[fileSystemPaths lastObject] error: &error];
     NSNumber                * freeFileSystemSizeInBytes = [fileSystemDictionary objectForKey:NSFileSystemFreeSize];
     totalFreeSpace                                      = [freeFileSystemSizeInBytes unsignedLongLongValue];
-    NSLog(@"The totalFreeSpace is %llu", totalFreeSpace / (1024 * 1024));
+    PXPLog(@"The totalFreeSpace is %llu", totalFreeSpace / (1024 * 1024));
     return (totalFreeSpace > 500 * 1048576);
 }
 
@@ -132,7 +132,7 @@ static void *  downLoaderContext = &downLoaderContext;
         if (_IOAlertView) [_IOAlertView show];
         isDownloading = NO;
         [self removeFromQueue: [_queue lastObject]];
-        NSLog(@"Device needs more space");
+        PXPLog(@"Device needs more space");
         return;
     }
     

@@ -151,9 +151,9 @@ const NSString* kExportPlayerDirectoryName = @"PlayerExports";
     
     if(saveSuccess)
     {
-        NSLog(@"Successfully Saved File: %@", fileName);
+        PXPLog(@"Successfully Saved File: %@", fileName);
     } else {
-        NSLog(@"File Save Error: %d - message: %s", errno, strerror(errno));
+        PXPLog(@"File Save Error: %d - message: %s", errno, strerror(errno));
     }
     
     return [fileUrl path];

@@ -20,24 +20,28 @@ static PxpLog * instance;
 @synthesize text = _text;
 
 
-+(void)log:(NSString*)log
++(void)log:(NSString*)log,...
 {
+    va_list args;
+    va_start(args, log);
     if (!instance) {
         instance = [[PxpLog alloc]init];
         [instance willChangeValueForKey:@"text"];
-        instance.text = [[NSMutableString alloc]initWithFormat:@"\n%@",log];
+        
+        instance.text = [[NSMutableString alloc]initWithFormat:log arguments:args];
         [instance didChangeValueForKey:@"text"];
     } else {
         
         [instance willChangeValueForKey:@"text"];
-        [instance.text appendFormat:@"\n%@",log ];
+        NSString * tmp = [[NSString alloc]initWithFormat:log arguments:args];
+        [instance.text appendFormat:@"\n%@",tmp ];
         [instance didChangeValueForKey:@"text"];
     }
+    va_end(args);
 }
 
 +(NSMutableString*)output
 {
-    
     return instance.text;
 }
 
@@ -49,20 +53,13 @@ static PxpLog * instance;
     return instance;
 }
 
-
-
-
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        
+        self.text = [[NSMutableString alloc] init];
     }
     return self;
 }
-
-
-
-
 
 @end

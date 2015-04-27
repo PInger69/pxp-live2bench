@@ -93,7 +93,16 @@ static void * encoderTagContext = &encoderTagContext;
         self.contextString = @"TAG";
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+            self.tagsToDisplay = [NSMutableArray arrayWithArray: [appDel.encoderManager.eventTags allValues]];
+            self.allTagsArray = [NSMutableArray arrayWithArray: [appDel.encoderManager.eventTags allValues]];
+            [_collectionView reloadData];
+            if (!componentFilter.rawTagArray) {
+                componentFilter.rawTagArray = self.tagsToDisplay;
+            }
+        }];
         
     }
     return self;
@@ -132,10 +141,10 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)clipViewTagReceived:(NSNotification*)note
 {
     if (note.object) {
-        [self.allTagsArray addObject: note.object];
-        [self.tagsToDisplay addObject: note.object];
-        [self.collectionView reloadData];
-        //[_collectionView reloadData];
+        
+        [self.allTagsArray insertObject:note.object atIndex:0];
+        [self.tagsToDisplay insertObject:note.object atIndex:0];
+        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]]];
     }
 }
 
@@ -914,7 +923,7 @@ static void * encoderTagContext = &encoderTagContext;
         if ( [tagSelect count] >1 ){
             [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
                 
-                NSLog(@"You Picked a feed: %@",pick);
+                PXPLog(@"You Picked a feed: %@",pick);
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,

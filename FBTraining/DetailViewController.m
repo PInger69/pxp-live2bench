@@ -140,9 +140,9 @@
         
     }else if([self.dataDictionary[@"Index"] intValue] == indexPath.row){
         // This is the case where there is a list of choices
-        NSLog(@"%@", self.dataDictionary);
-        NSLog(@"%i", [self.dataDictionary[@"Index"] intValue]);
-        NSLog(@"The indexPath is %@", indexPath);
+        PXPLog(@"%@", self.dataDictionary);
+        PXPLog(@"%i", [self.dataDictionary[@"Index"] intValue]);
+        PXPLog(@"The indexPath is %@", indexPath);
         cell.myTextLabel.textColor = self.tintColor;
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
@@ -215,7 +215,7 @@
 - (void)switchStateSignal:(BOOL)onOrOff fromCell: (SwipeableTableViewCell *) theCell{
     
     NSDictionary *signalPackage = @{@"Name": theCell.myTextLabel.text, @"Value": (onOrOff ? @YES:@NO), @"Type": @"Toggle"};
-    NSLog(@"%@", signalPackage);
+    PXPLog(@"%@", signalPackage);
     
     NSMutableArray *toggleArray = (NSMutableArray *) self.dataDictionary[@"Toggle Settings"];
     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell: theCell];

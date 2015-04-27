@@ -43,6 +43,9 @@
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = [_rawData objectForKey:@"plistName"];
+        self.time           = [[_rawData objectForKey:@"time"]doubleValue];
+        self.duration       = [[_rawData objectForKey:@"duration"] intValue];
+        self.user           = [_rawData objectForKey:@"user"];
     }
     return self;
 }
@@ -67,7 +70,9 @@
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = [_rawData objectForKey:@"plistName"];
-
+        self.time           = [[_rawData objectForKey:@"time"]doubleValue];
+        self.duration       = [[_rawData objectForKey:@"duration"] intValue];
+        self.user           = [_rawData objectForKey:@"user"];
     
     }
     return self;
@@ -82,7 +87,12 @@
 
 -(void)setComment:(NSString *)comment{
     _comment = comment;
-    [self modClipData: @{@"comment": comment}];
+    if (comment) {
+        [self modClipData: @{@"comment": comment}];
+    }else{
+        [self modClipData: @{@"comment": @""}];
+    }
+    
 }
 
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict

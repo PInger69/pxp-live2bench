@@ -80,7 +80,7 @@ static void * statusContext         = &statusContext;
                 [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))    context:&statusContext];
                 [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive))    context:&isObservedContext];
                 self.status = DownloadItemStatusComplete;
-                NSLog(@"Download Complete!!!");
+                PXPLog(@"Download Complete!!!");
             } else {
                 [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))    context:&statusContext];
                 [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive))    context:&isObservedContext];

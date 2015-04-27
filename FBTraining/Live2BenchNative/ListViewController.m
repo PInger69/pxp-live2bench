@@ -92,6 +92,7 @@ static const NSInteger kCannotDeleteAlertTag = 243;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
@@ -121,7 +122,6 @@ static const NSInteger kCannotDeleteAlertTag = 243;
             commentingField.enabled             = YES;
             commentingField.text                = selectedTag.comment;
             commentingField.ratingScale.rating  = selectedTag.rating;
-            
             [newVideoControlBar setTagName: selectedTag.name];
         }];
 

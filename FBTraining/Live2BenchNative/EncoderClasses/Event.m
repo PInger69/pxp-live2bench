@@ -125,7 +125,7 @@
         } else if (aDict[@"vid"]) {
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0];
         } else {
-            NSLog(@"Event Class issue");
+            PXPLog(@"Event Class issue");
             return @{};
         }
         [tempDict setObject:theFeed forKey:@"s1"];

@@ -38,7 +38,7 @@
 }
 
 -(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
-    NSLog(@"%@", longPress);
+    PXPLog(@"%@", longPress);
     if(longPress.state == UIGestureRecognizerStateBegan){
         if (!self.editing) {
             [self setEditing:YES animated:YES];
@@ -98,13 +98,15 @@
     
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
-                                                                                                                                 @"feed": clip,
-                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
-                                                                                                                                 @"duration":[clip.rawData objectForKey:@"duration"],
-                                                                                                                                 @"comment":[clip.rawData objectForKey:@"comment"]},
-                                                                                                                                 @"forWhole":clip.rawData}];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"tagSelected" object:self userInfo: clip];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_CLIP_SELECTED" object:clip];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
+//                                                                                                                                 @"feed": clip,
+//                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
+//                                                                                                                                 @"duration":[clip.rawData objectForKey:@"duration"],
+//                                                                                                                                 @"comment":[clip.rawData objectForKey:@"comment"]},
+//                                                                                                                                 @"forWhole":clip.rawData}];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"tagSelected" object:self userInfo: clip];
     if(![indexPath isEqual:self.selectedPath])
     {
         selectedCell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, selectedCell.frame.size.width, selectedCell.frame.size.height)];
@@ -136,7 +138,7 @@
     [cell.tagTime setText: clip.rawData[ @"displaytime"]];
     [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
     [cell.indexNum setText: [NSString stringWithFormat:@"%i",indexPath.row + 1]];
-    
+    cell.rating = clip.rating;
     
     
     cell.deleteBlock = ^(UITableViewCell *cell){

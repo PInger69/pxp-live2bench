@@ -8,6 +8,7 @@
 
 #import "RangeSlider.h"
 #import "QuartzCore/QuartzCore.h"
+#import "FilterItemProtocol.h"
 
 
 RangeSlider *theRangeSlider;
@@ -466,11 +467,11 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     if (self.arrayOfOriginalTags && self.highestValue) {
         self.arrayOfTags = [NSMutableArray arrayWithArray:self.arrayOfOriginalTags];
         NSMutableArray *removingTags = [[NSMutableArray alloc] init];
-        for (NSDictionary *tag in self.arrayOfOriginalTags){
-            NSString *time = tag[@"time"];
-            if([time doubleValue] > self.highestValue || [time doubleValue] < self.lowestValue){
+        for (id <FilterItemProtocol> filterItem in self.arrayOfOriginalTags){
+            
+            if(filterItem.time  > self.highestValue || filterItem.time < self.lowestValue){
 
-                [removingTags addObject:tag];
+                [removingTags addObject: filterItem];
             }
             
         }

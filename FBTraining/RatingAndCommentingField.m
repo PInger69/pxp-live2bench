@@ -11,7 +11,7 @@
 @interface RatingAndCommentingField ()
 
 @property (strong, nonatomic) UIViewController *tool;
-@property (nonatomic, copy) void(^tagUpdate)(NSMutableDictionary *tag);
+
 
 @end
 
@@ -62,9 +62,9 @@
         self.commentingArea.selectable = NO;
         [self.view addSubview:self.commentingArea];
         
-        self.tagUpdate = ^(NSMutableDictionary *tag){
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_TAG_UPDATE" object:nil userInfo:tag];
-        };
+//        self.tagUpdate = ^(NSMutableDictionary *tag){
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_TAG_UPDATE" object:nil userInfo:tag];
+//        };
     }
     return self;
 }

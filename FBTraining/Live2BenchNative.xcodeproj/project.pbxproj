@@ -332,6 +332,7 @@
 		D790CEA31A6F059800700D9D /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D790CEA21A6F059800700D9D /* SettingsViewController.m */; };
 		D79350EA1AD459C500D1751F /* DownloadEventItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D79350E91AD459C500D1751F /* DownloadEventItem.m */; };
 		D79779041AE94375008A99E0 /* videoTouch.png in Resources */ = {isa = PBXBuildFile; fileRef = D79779031AE94375008A99E0 /* videoTouch.png */; };
+		D797790B1AEAF26B008A99E0 /* PxpLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D797790A1AEAF26B008A99E0 /* PxpLogViewController.m */; };
 		D797CCF5170DB9CB00A6E62B /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D797CCF4170DB9CB00A6E62B /* Social.framework */; };
 		D797CCF7170DB9D300A6E62B /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D797CCF6170DB9D300A6E62B /* Accounts.framework */; };
 		D797CCFA170DD8D400A6E62B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D797CCF8170DD8D400A6E62B /* logo.png */; };
@@ -969,6 +970,9 @@
 		D793897117E794B800BEA70B /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBSlider.h; path = Live2BenchNative/OBSlider.h; sourceTree = SOURCE_ROOT; };
 		D793897217E794B800BEA70B /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OBSlider.m; path = Live2BenchNative/OBSlider.m; sourceTree = SOURCE_ROOT; };
 		D79779031AE94375008A99E0 /* videoTouch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = videoTouch.png; sourceTree = "<group>"; };
+		D79779081AEACDD2008A99E0 /* FilterItemProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterItemProtocol.h; sourceTree = "<group>"; };
+		D79779091AEAF26B008A99E0 /* PxpLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpLogViewController.h; sourceTree = "<group>"; };
+		D797790A1AEAF26B008A99E0 /* PxpLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpLogViewController.m; sourceTree = "<group>"; };
 		D797CCF4170DB9CB00A6E62B /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		D797CCF6170DB9D300A6E62B /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		D797CCF8170DD8D400A6E62B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
@@ -1950,8 +1954,11 @@
 				D7EB50AF1AD721F500CFB200 /* Clip.m */,
 				D7F04ED51AE1A5CC0028FBE4 /* Tag.h */,
 				D7F04ED61AE1A5CC0028FBE4 /* Tag.m */,
+				D79779081AEACDD2008A99E0 /* FilterItemProtocol.h */,
 				D79350E81AD459C500D1751F /* DownloadEventItem.h */,
 				D79350E91AD459C500D1751F /* DownloadEventItem.m */,
+				D79779091AEAF26B008A99E0 /* PxpLogViewController.h */,
+				D797790A1AEAF26B008A99E0 /* PxpLogViewController.m */,
 				D75ED4FB1ACC4707003AF856 /* LiveLight.h */,
 				D75ED4FC1ACC4707003AF856 /* LiveLight.m */,
 				D75ED4FE1ACC4713003AF856 /* RJLFreezeMonitor.h */,
@@ -3055,6 +3062,7 @@
 				D7EE1E4118244DB800CA36CF /* GraphView.m in Sources */,
 				D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */,
 				D766F6271ACC8C5E005FC63A /* Event.m in Sources */,
+				D797790B1AEAF26B008A99E0 /* PxpLogViewController.m in Sources */,
 				D737F5B817F0DFC40053081F /* GameScheduleDetailViewController.m in Sources */,
 				D72779AE1A38994E0034DD66 /* Live2BenchTagUIViewController.m in Sources */,
 				94B9A582192FEE750009547B /* TeleView.m in Sources */,

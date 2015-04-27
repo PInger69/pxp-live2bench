@@ -282,7 +282,7 @@
             for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
                 Tag *newTag = [[Tag alloc]initWithData: tag];
                 if (newTag.type == 3) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_TAG" object:newTag];
+                    [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
                 }else if (newTag.type == 99){
                     
                 }else if(newTag.modified){
@@ -476,7 +476,7 @@
                 }
             }
             @catch (NSException *exception) {
-                NSLog(@"error parsing json data: %@",exception);
+                PXPLog(@"error parsing json data: %@",exception);
             }
             @finally {
                 

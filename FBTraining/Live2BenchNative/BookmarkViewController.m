@@ -59,7 +59,7 @@
 
 @property (strong, nonatomic) UIView                      *informationarea;
 
-@property (strong, nonatomic) UIView                      *ratingAndCommentingView;
+@property (strong, nonatomic) RatingAndCommentingField    *ratingAndCommentingView;
 @property (strong, nonatomic) NSDictionary                *selectedData;
 
 
@@ -93,6 +93,7 @@
     PipViewController                   * _pipController;
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
+    TagPopOverContent                   *tagPopoverContent;
 
 }
 
@@ -137,65 +138,88 @@ int viewWillAppearCalled;
     return self;
 }
 
--(void) feedSelected: (NSNotification *) notification
-{
-    
-    NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
-    
-    float time              = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"time"] floatValue];
-    float dur               = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"duration"] floatValue];
-    CMTime cmtime           = CMTimeMake(time, 1);
-    CMTime cmDur            = CMTimeMake(dur, 1);
-    
-    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
-    
-    NSString *pick = [userInfo objectForKey:@"feed"];
-    
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_MYCLIP_CONTEXT,
-                                                                                                          @"feed":pick,
-                                                                                                          @"time":[userInfo objectForKey:@"time"],
-                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
-                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
-    
-    self.videoPlayer.looping = YES;
-    [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
-    
-    [_feedSwitch buildButtonsWithData: self.feeds];
-    
-    selectedTag = [self.allClips[[self.allClips indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
-    [self.videoPlayer play];
-    
-    [commentingField clear];
-    commentingField.enabled             = YES;
-    commentingField.text                = [selectedTag objectForKey:@"comment"];
-    commentingField.ratingScale.rating  = [[selectedTag objectForKey:@"rating"]integerValue];
-    
-    [newVideoControlBar setTagName:[selectedTag objectForKey:@"name"]];
-}
+//-(void) feedSelected: (NSNotification *) notification
+//{
+//    
+//    NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
+//    
+//    float time              = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"time"] floatValue];
+//    float dur               = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"duration"] floatValue];
+//    CMTime cmtime           = CMTimeMake(time, 1);
+//    CMTime cmDur            = CMTimeMake(dur, 1);
+//    
+//    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
+//    
+//    NSString *pick = [userInfo objectForKey:@"feed"];
+//    
+//    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_MYCLIP_CONTEXT,
+//                                                                                                          @"feed":pick,
+//                                                                                                          @"time":[userInfo objectForKey:@"time"],
+//                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
+//                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+//    
+//    self.videoPlayer.looping = YES;
+//    [self.videoPlayer playFeed:self.feeds[pick] withRange:timeRange];
+//    
+//    [_feedSwitch buildButtonsWithData: self.feeds];
+//    
+//    selectedTag = [self.allClips[[self.allClips indexOfObjectIdenticalTo:notification.userInfo[@"forWhole"]]] mutableCopy];
+//    [self.videoPlayer play];
+//    
+//    [commentingField clear];
+//    commentingField.enabled             = YES;
+//    commentingField.text                = [selectedTag objectForKey:@"comment"];
+//    commentingField.ratingScale.rating  = [[selectedTag objectForKey:@"rating"]integerValue];
+//    
+//    [newVideoControlBar setTagName:[selectedTag objectForKey:@"name"]];
+//}
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil];
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"tagSelected" object:nil queue:nil usingBlock:^(NSNotification *note) {
-        for (TagPopOverContent *info in self.informationarea.subviews) {
-            [info removeFromSuperview];
-        }
-        [self.ratingAndCommentingView removeFromSuperview];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserverForName:@"tagSelected" object:nil queue:nil usingBlock:^(NSNotification *note) {
+//        for (TagPopOverContent *info in self.informationarea.subviews) {
+//            [info removeFromSuperview];
+//        }
+//        [self.ratingAndCommentingView removeFromSuperview];
+//        
+//        self.selectedData = note.userInfo;
+//        self.ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, 100, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20)) andData:[note.userInfo mutableCopy]].view;
+//        [self.informationarea addSubview:[[TagPopOverContent alloc] initWithData:note.userInfo frame:CGRectMake(0, 0, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20))]];
+//        [self.informationarea addSubview:self.ratingAndCommentingView];
+//    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_CLIP_SELECTED" object:nil queue:nil usingBlock:^(NSNotification *note) {
+        Clip *clipToPlay = note.object;
+        [tagPopoverContent removeFromSuperview];
+        tagPopoverContent = nil;
+        tagPopoverContent = [[TagPopOverContent alloc] initWithData: clipToPlay.rawData frame:CGRectMake(0, 0, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20))];
         
-        self.selectedData = note.userInfo;
-        self.ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, 100, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20)) andData:[note.userInfo mutableCopy]].view;
-        [self.informationarea addSubview:[[TagPopOverContent alloc] initWithData:note.userInfo frame:CGRectMake(0, 0, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20))]];
-        [self.informationarea addSubview:self.ratingAndCommentingView];
+        [self.ratingAndCommentingView.view removeFromSuperview];
+        self.ratingAndCommentingView = nil;
+        self.ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, 100, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20)) andData: [clipToPlay.rawData mutableCopy]];
+        
+        __block BookmarkViewController *weakSelf = self;
+        self.ratingAndCommentingView.tagUpdate = ^(NSDictionary *tagData){
+            clipToPlay.rating = [[tagData objectForKey:@"rating"] intValue];
+            clipToPlay.comment = [tagData objectForKey:@"comment"];
+            [weakSelf.tableViewController reloadData];
+        };
+        
+        [self.informationarea addSubview: tagPopoverContent];
+        [self.informationarea addSubview: self.ratingAndCommentingView.view];
+        
     }];
+    
     [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){
         for (TagPopOverContent *info in self.informationarea.subviews) {
             [info removeFromSuperview];
         }
-        [self.ratingAndCommentingView removeFromSuperview];
+        [self.ratingAndCommentingView.view removeFromSuperview];
     }];
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_CLIPS" object:nil queue:nil usingBlock:^(NSNotification *note){
         [self.allClips removeObjectIdenticalTo:note.userInfo];

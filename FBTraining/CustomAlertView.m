@@ -25,7 +25,7 @@ static id           typeChangeObserver;
     typeChangeObserver  =  [[NSNotificationCenter defaultCenter]addObserverForName:@"alertTest" object:nil queue:nil usingBlock:^(NSNotification *note) {
                             // take the value from dict
                             // change "allowedTypes" to the value sent
-                            NSLog(@"Alert Test!!!!!!!");
+                            PXPLog(@"Alert Test!!!!!!!");
                         }];
 
     [[NSNotificationCenter defaultCenter]postNotificationName:@"" object:nil userInfo:@{}];
