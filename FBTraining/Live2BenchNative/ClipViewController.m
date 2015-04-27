@@ -949,7 +949,8 @@ static void * encoderTagContext = &encoderTagContext;
         
         
     } else {
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
+                                                           object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
         //NSString * key =        listOfScource[0];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,

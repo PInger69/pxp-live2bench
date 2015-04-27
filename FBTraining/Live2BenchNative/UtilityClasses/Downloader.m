@@ -92,6 +92,7 @@ static void *  downLoaderContext = &downLoaderContext;
         isDownloading           = NO;
         
         _IOAlertView            = [[CustomAlertView alloc]init];
+        _IOAlertView.type = AlertNotification;
         
         [_IOAlertView setTitle:@"myplayXplay"];
         [_IOAlertView setMessage:@"There isn't enough space on the device."];
@@ -129,7 +130,11 @@ static void *  downLoaderContext = &downLoaderContext;
     // check again for space, if none... pause and show an alert if it has one
     if (![Downloader deviceHasFreeSpace]) {
         self.pause = NO;
-        if (_IOAlertView) [_IOAlertView show];
+        if (_IOAlertView) {
+            if (![_IOAlertView display]) {
+                [CustomAlertView removeAlert:_IOAlertView];
+            }
+        }
         isDownloading = NO;
         [self removeFromQueue: [_queue lastObject]];
         PXPLog(@"Device needs more space");

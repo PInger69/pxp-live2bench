@@ -204,7 +204,11 @@
         NSString *data;
         
         key = [urls allKeys][indexPath.row - firstIndexPath.row];
-        data = urls[key];
+        if (event.rawData[@"mp4_2"]) {
+            data = urls[key][@"hq"];
+        } else {
+            data = urls[key];
+        }
         
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
         
@@ -371,6 +375,7 @@
         
         Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];
+        alert.type = AlertImportant;
         [alert setTitle:@"myplayXplay"];
         [alert setMessage:@"Are you sure you want to delete this Event?"];
         if ((localCounterpart && localCounterpart.downloadedSources.count > 0) || event.downloadedSources.count > 0) {
@@ -382,7 +387,7 @@
             [alert addButtonWithTitle:@"No"];
         }
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-        [alert show];
+        [alert display];
     }
 }
 

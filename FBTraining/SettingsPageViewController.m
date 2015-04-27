@@ -88,9 +88,9 @@ NS_OPTIONS(NSInteger, style){
             NSMutableDictionary *setting4 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: listOfToggles],@"DataDictionary":[NSMutableDictionary dictionaryWithDictionary:@{@"Setting Options":@[@"Download Complete", @"Tag Synchronized", @"Tag Received"], @"Toggle Settings":@[@1,@1,@1]}] }];
             
             NSMutableDictionary *setting5 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar: listOfToggles] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                                                                                   @[@"Important Alerts", @"Notification Alerts", @"Encoder Alerts", @"Device Alerts", @"Indecisive Alert"],
+                                                                                                                                                                                                                                                                   @[@"Notification Alerts", @"Encoder Alerts", @"Device Alerts", @"Indecisive Alert"],
                                                                                                                                                                                                                                                                @"Toggle Settings":
-                                                                                                                                                                                                                                                                   @[ @1, @1, @1, @1, @1]}] }];
+                                                                                                                                                                                                                                                                   @[@1, @1, @1, @1]}] }];
             
             
             NSMutableDictionary *setting6 =[NSMutableDictionary dictionaryWithDictionary: @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
@@ -137,6 +137,7 @@ NS_OPTIONS(NSInteger, style){
                                                                    
                                                                    setting10
                                                                    ]];
+            
         }
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewLicense:) name:@"Setting - Eula :" object:nil];
         _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];
@@ -173,7 +174,7 @@ NS_OPTIONS(NSInteger, style){
                                                                                                                                                                                                                                                            @[ @0, @0, @1, @0, @1, @0]
                                                                                                                                                                                                                                                        , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout", wifiName, @"View", [@"Color-" stringByAppendingString:colorString]] }]}];
     
-    self.settingsArray[5] = setting6;
+    self.settingsArray[6] = setting6;
 }
 
 #pragma mark - Notification methods
