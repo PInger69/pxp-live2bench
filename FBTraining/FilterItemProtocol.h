@@ -11,6 +11,7 @@
 
 @protocol FilterItemProtocol <NSObject>
 
+@property (nonatomic) NSDictionary *rawData;
 @property (assign, nonatomic) double time;
 @property (assign, nonatomic) int duration;
 @property (strong, nonatomic) NSString *name;

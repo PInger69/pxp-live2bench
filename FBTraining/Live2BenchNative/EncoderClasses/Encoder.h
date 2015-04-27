@@ -32,6 +32,7 @@
 #define SHUTDOWN        @"shutdown:timeStamp:"
 #define MODIFY_TAG      @"modifyTag:timeStamp:"
 #define MAKE_TAG        @"makeTag:timeStamp:"
+#define MAKE_TELE_TAG   @"makeTeleTag:timeStamp:"
 #define SUMMARY_GET     @"summaryGet:timeStamp:"
 #define SUMMARY_PUT     @"summaryPut:timeStamp:"
 #define TEAMS_GET       @"teamsGet:timeStamp:"

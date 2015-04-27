@@ -67,7 +67,7 @@ NS_OPTIONS(NSInteger, style){
         NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/Setting"];
         NSString *path = [dataPath stringByAppendingPathComponent: plistName];
         
-        if ( [[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
             NSDictionary *settingDictionary = [[NSDictionary alloc]initWithContentsOfFile:path];
             self.settingsArray = settingDictionary[@"SettingsArray"];
             for (NSMutableDictionary *setting in self.settingsArray) {
@@ -173,7 +173,7 @@ NS_OPTIONS(NSInteger, style){
                                                                                                                                                                                                                                                            @[ @0, @0, @1, @0, @1, @0]
                                                                                                                                                                                                                                                        , @"Function Labels": @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [UIDevice currentDevice].systemVersion, @"Logout", wifiName, @"View", [@"Color-" stringByAppendingString:colorString]] }]}];
     
-    self.settingsArray[5] = setting6;
+    self.settingsArray[6] = setting6;
 }
 
 #pragma mark - Notification methods

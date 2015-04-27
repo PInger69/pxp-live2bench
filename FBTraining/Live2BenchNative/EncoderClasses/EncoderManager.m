@@ -418,6 +418,7 @@
         }];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting:)   name:NOTIF_TAG_POSTED       object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(observerForTelestrationTag:)   name:NOTIF_CREATE_TELE_TAG  object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)           name:NOTIF_MASTER_COMMAND   object:nil]; // watch whole app for start or stop events
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
         
@@ -456,6 +457,30 @@
             [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: dict]];
             
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName: NOTIF_MODIFY_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
+            Tag *tagToModify = note.object;
+            __block NSString *userHID;
+            
+            void(^userBlock)(NSDictionary *data) = ^(NSDictionary *data){
+                PXPLog(@"%@", data);
+                userHID = [data objectForKey:@"hid"];
+            };
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"block": userBlock, @"type": UC_REQUEST_USER_INFO}];
+            
+            NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys: tagToModify.event,@"event",[NSString stringWithFormat:@"%f", CACurrentMediaTime()], @"requesttime", userHID, @"user", tagToModify.ID, @"id", nil];
+            
+            [dict addEntriesFromDictionary: [tagToModify modifiedData]];
+            
+            if (tagToModify.isLive) {
+                [dict setObject:@"live" forKey:@"event"];
+            }
+            
+            [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: dict]];
+            
+        }];
+
         
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
         checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
@@ -722,7 +747,13 @@ static void * builtContext          = &builtContext; // depricated?
     [self createTag:tagData isDuration:isDuration];
 }
 
+-(void)observerForTelestrationTag: (NSNotification *)note{
+    PXPLog(@"Recieved a telestration tag");
+    NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+    //BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
+    [self createTeleTag:tagData isDuration:NO];
 
+}
 
 -(void)changeCurrentEvent:(NSNotification*)note
 {
@@ -1112,6 +1143,85 @@ static void * builtContext          = &builtContext; // depricated?
     } else {
         // Alert the user that there is not master encoder
     }
+}
+
+/**
+ *  This creates tags on the server or local
+ *
+ *
+ *  @param data          this is the custom data that will be added to the tag
+ *  @param isDuration    if YES then it will be stored in a open Duration tag dict
+ */
+-(void)createTeleTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration
+{
+    
+    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+    NSString *eventNm = ([_currentEvent isEqualToString:_liveEventName])?@"live":_currentEvent;
+    
+    // This is the starndard info that is collected from the encoder
+    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{
+                                       @"event"         : eventNm,
+                                       @"colour"        : [_dictOfAccountInfo objectForKey:@"tagColour"],
+                                       @"user"          : [_dictOfAccountInfo objectForKey:@"hid"],
+                                       @"time"          : tagTime,
+                                       @"name"          : tagName,
+                                       //                                               @"comment"       : @"",
+                                       //                                               @"rating"        : @"0",
+                                       //                                               @"coachpick"     : @"0",
+                                       //                                               @"bookmark"      : @"0",
+                                       //                                               @"deleted"       : @"0",
+                                       //                                               @"edited"        : @"0",
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       }];
+    if (isDuration){ // Add extra data for duration Tags
+        NSDictionary *durationData =        @{
+                                              @"starttime"     : tagTime
+                                              };
+        [tagData addEntriesFromDictionary:durationData];
+    }
+    
+    [tagData addEntriesFromDictionary:data];//
+    
+    
+    
+    //    // Check if tag is open for this already, if so close it
+    //    if ([_openDurationTags objectForKey:tagName] != nil)
+    //    {
+    //
+    //        [self closeDurationTag:tagName];
+    //
+    //
+    //    } else {
+    //
+    //        [_openDurationTags setObject:tagData forKey:tagName];
+    //        // issues new tag command
+    //    }
+    
+    
+    // issue command to all encoder with events
+    
+    
+    NSArray     * encoders;
+    
+    if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) {
+        encoders    = @[_primaryEncoder];
+    } else {
+        encoders    = [_authenticatedEncoders copy];
+        
+    }
+    
+    
+    
+    NSNumber    * nowTime             = GET_NOW_TIME;
+    int timeout = [encoders count] * 20;
+    [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
+        [obj issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
+    }];
+    
+    
+    
 }
 
 

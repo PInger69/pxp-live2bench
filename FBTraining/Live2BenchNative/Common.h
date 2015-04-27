@@ -39,6 +39,10 @@
 #define NOTIF_EVENTS_ARE_READY              @"NOTIF_EVENTS_ARE_READY"
 #define NOTIF_TAGS_ARE_READY                @"NOTIF_TAGS_ARE_READY"
 #define NOTIF_LIST_VIEW_TAG                 @"21"
+#define NOTIF_MODIFY_TAG                    @"NOTIF_MODIFY_TAG"
+#define NOTIF_CREATE_TELE_TAG               @"TELE_TAG"
+
+
 
 //Settings Requests
 #define NOTIF_SETTINGS_ARE_READY            @"NOTIF_SETTINGS_ARE_READY"

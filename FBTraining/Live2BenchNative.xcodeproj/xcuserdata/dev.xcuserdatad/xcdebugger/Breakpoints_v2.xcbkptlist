@@ -235,6 +235,38 @@
                   </ActionContent>
                </BreakpointActionProxy>
             </Actions>
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__33-[LocalEncoder initWithDocsPath:]_block_invoke"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Desktop/pxp-live2bench/FBTraining/Live2BenchNative/EncoderClasses/LocalEncoder.m"
+                  timestampString = "451865297.627969"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184"
+                  offsetFromSymbolStart = "376">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__33-[LocalEncoder initWithDocsPath:]_block_invoke"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Desktop/pxp-live2bench/FBTraining/Live2BenchNative/EncoderClasses/LocalEncoder.m"
+                  timestampString = "451865297.628214"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184"
+                  offsetFromSymbolStart = "400">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -244,11 +276,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "451591476.183373"
+            timestampString = "451865297.435853"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1262"
-            endingLineNumber = "1262"
+            startingLineNumber = "1372"
+            endingLineNumber = "1372"
             landmarkName = "-setCurrentEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -260,28 +292,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "451405200.212295"
+            timestampString = "451865297.435853"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "530"
-            endingLineNumber = "530"
+            startingLineNumber = "553"
+            endingLineNumber = "553"
             landmarkName = "-allEventsGet:timeStamp:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Tag.m"
-            timestampString = "451585765.438136"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
-            landmarkName = "-description"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -345,7 +361,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "212"
             endingLineNumber = "212"
-            landmarkName = "-addSourceToClip:"
+            landmarkName = "-modClipData:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -371,13 +387,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Live2BenchNative/ListViewController.m"
-            timestampString = "451511050.328148"
+            filePath = "Live2BenchNative/ClipViewController.m"
+            timestampString = "451858647.540567"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "663"
-            endingLineNumber = "663"
-            landmarkName = "-receiveFilteredArrayFromFilter:"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "-clipViewTagReceived:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Live2BenchNative/ClipViewController.m"
+            timestampString = "451858853.330239"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "449"
+            endingLineNumber = "449"
+            landmarkName = "-deleteCells"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

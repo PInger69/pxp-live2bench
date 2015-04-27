@@ -7,7 +7,7 @@
 //
 
 #import "FilterProcessor.h"
-
+#import "FilterItemProtocol.h"
 
 /**
  *  This class is made to taking in a Dictionary or Array and return an array based of keys that have been selected
@@ -69,8 +69,8 @@
     }
     //This is using the myType as the key to the evaluated Tag Dict
     else if (filterBlock == NULL){
-        NSPredicate *scrubber1 = [NSPredicate predicateWithBlock:^BOOL(NSDictionary * evaluatedObject, NSDictionary *bindings){
-            NSString * tagValue = evaluatedObject[myType];
+        NSPredicate *scrubber1 = [NSPredicate predicateWithBlock:^BOOL(id<FilterItemProtocol> evaluatedObject, NSDictionary *bindings){
+            NSString * tagValue = evaluatedObject.rawData[myType];
             return [filters containsObject:tagValue];
         }];
         

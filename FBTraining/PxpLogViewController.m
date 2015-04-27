@@ -26,6 +26,7 @@
         self.view = self.textView;
         self.textView.backgroundColor = [UIColor blackColor];
         self.textView.font = [UIFont fontWithName:@"Courier" size:18.0];
+        self.textView.editable = NO;
         [self.textView setTextColor:[UIColor greenColor]];
         
         [[PxpLog getInstance] addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];

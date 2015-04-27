@@ -140,7 +140,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    if (note.object) {
+    if (note.object && self.allTagsArray) {
         
         [self.allTagsArray insertObject:note.object atIndex:0];
         [self.tagsToDisplay insertObject:note.object atIndex:0];
@@ -150,9 +150,9 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(Float64) highestTimeInTags: (NSArray *) arrayOfTags{
     Float64 highestTime = 0;
-    for (NSDictionary *tag in arrayOfTags) {
-        if ([tag[@"time"] floatValue] > highestTime) {
-            highestTime = [tag[@"time"] floatValue];
+    for (Tag *tag in arrayOfTags) {
+        if (tag.time > highestTime) {
+            highestTime = tag.time;
         }
     }
     return highestTime;

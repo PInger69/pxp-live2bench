@@ -9,6 +9,7 @@
 #import "UserColourView.h"
 #import "CustomButton.h"
 #import "UserColorButton.h"
+#import "FilterItemProtocol.h"
 
 #define USER_BUTTON_CONTAINER_WIDTH     200
 #define USER_BUTTON_HEIGHT              40
@@ -92,8 +93,8 @@
     
     
     NSMutableArray * pool = [[NSMutableArray alloc]init];
-    for(NSDictionary *tag in list){
-        NSString * tagValue = (filterBlock != NULL)? filterBlock(tag): tag[accessLable];
+    for(id <FilterItemProtocol> tag in list){
+        NSString * tagValue = (filterBlock != NULL)? filterBlock(tag.rawData): tag.rawData[accessLable];
         if ([pool containsObject:tagValue]) continue;
         [pool addObject:tagValue];
     }

@@ -21,11 +21,11 @@ static AlertType    allowedTypes;
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
     allowedTypes        = AlertNone;
-    typeChangeObserver  =  [[NSNotificationCenter defaultCenter]addObserverForName:@"alertTest" object:nil queue:nil usingBlock:^(NSNotification *note) {
+    //typeChangeObserver  =  [[NSNotificationCenter defaultCenter]addObserverForName:@"alertTest" object:nil queue:nil usingBlock:^(NSNotification *note) {
                             // take the value from dict
                             // change "allowedTypes" to the value sent
-                            NSLog(@"Alert Test!!!!!!!");
-                        }];
+    //                        NSLog(@"Alert Test!!!!!!!");
+     //                   }];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:nil userInfo:@{@"name":@"Alerts", @"block":^(NSArray *settingOptions, NSArray *onOrOff){
         for (int i = 0; i <= 4; i++) {
             if ([((NSNumber *)onOrOff[i]) integerValue] == 1) {
