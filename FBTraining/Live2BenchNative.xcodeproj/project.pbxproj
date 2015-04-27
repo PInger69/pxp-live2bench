@@ -2102,8 +2102,6 @@
 				D769AB8C19BE5E8400DF68BC /* RangeModifierButton.m */,
 				D7A2E5BE19AF76F000022795 /* CoachFilterProcessor.h */,
 				D7A2E5BF19AF76F000022795 /* CoachFilterProcessor.m */,
-				D7A2E5B019A7EB8C00022795 /* CustomAlertView.h */,
-				D7A2E5B119A7EB8C00022795 /* CustomAlertView.m */,
 				D7581EDE196342A50029C5DD /* Crashlytics.framework */,
 				BD3104F818358E020094AE6D /* DropboxSDK.framework */,
 				D7B5235A1760D4C100BF92EB /* CoreMedia.framework */,
@@ -2426,6 +2424,8 @@
 		D7CF390819DF213F0013E46B /* UtilityClasses */ = {
 			isa = PBXGroup;
 			children = (
+				D7A2E5B019A7EB8C00022795 /* CustomAlertView.h */,
+				D7A2E5B119A7EB8C00022795 /* CustomAlertView.m */,
 				D7AC062F1ADD5A730005EA73 /* PxpLog.h */,
 				D7AC06301ADD5A730005EA73 /* PxpLog.m */,
 				D7A391701A6959DF00BFD353 /* ActionList.h */,

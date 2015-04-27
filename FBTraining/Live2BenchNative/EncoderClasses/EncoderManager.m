@@ -768,25 +768,10 @@ static void * builtContext          = &builtContext; // depricated?
     // This gets run when the server responds
     void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
         
-        NSData          * data = pooledResponces[0];
-        NSDictionary    * results;
-        NSString        * urlForImageOnServer;
-        
-        if(NSClassFromString(@"NSJSONSerialization"))
-        {
-            NSError *error = nil;
-            id object = [NSJSONSerialization
-                         JSONObjectWithData:data
-                         options:0
-                         error:&error];
-            
-            if([object isKindOfClass:[NSDictionary class]])
-            {
-                results = object;
-                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"];
-            }
-        }
-        
+        NSData          * data                  = pooledResponces[0];
+        NSDictionary    * results               = [Utility JSONDatatoDict: data];
+        NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+        // if in the data success is 0 then there is an error!
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
         [_localEncoder saveClip:videoName withData: results]; // this is the data used to make the plist
@@ -801,7 +786,7 @@ static void * builtContext          = &builtContext; // depricated?
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                             @{
                                               @"id": tag.ID,
-                                              @"event": tag.event,
+                                              @"event": (tag.isLive)?@"live":tag.event,
                                               @"requesttime":GET_NOW_TIME_STRING,
                                               @"bookmark":@"1",
                                               @"user":[_dictOfAccountInfo objectForKey:@"hid"]

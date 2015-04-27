@@ -42,10 +42,17 @@
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
+<<<<<<< HEAD
+        _path               = [_rawData objectForKey:@"plistName"];
+        self.time           = [[_rawData objectForKey:@"time"]doubleValue];
+        self.duration       = [[_rawData objectForKey:@"duration"] intValue];
+        self.user           = [_rawData objectForKey:@"user"];
+=======
         _path               = aPath;
            [_rawData writeToFile:self.path atomically:YES];
         
         // just save
+>>>>>>> 9d5a31071e2fa7a4c43d8297ee0e84684bbf2d74
     }
     return self;
 }
@@ -70,8 +77,15 @@
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = [_rawData objectForKey:@"plistName"];
+<<<<<<< HEAD
+        self.time           = [[_rawData objectForKey:@"time"]doubleValue];
+        self.duration       = [[_rawData objectForKey:@"duration"] intValue];
+        self.user           = [_rawData objectForKey:@"user"];
+    
+=======
 
 
+>>>>>>> 9d5a31071e2fa7a4c43d8297ee0e84684bbf2d74
     }
     return self;
 }
