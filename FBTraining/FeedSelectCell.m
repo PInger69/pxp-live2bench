@@ -34,7 +34,7 @@
         [self.playButton setPlayButton];
         [self.playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.playButton setShowsTouchWhenHighlighted: YES];
-
+        [self.contentView setBackgroundColor:[UIColor colorWithRed:0.955 green:0.955 blue:0.955 alpha:0.8]];
         
         [self.contentView addSubview: self.feedName];
         [self.contentView addSubview:self.feedView];

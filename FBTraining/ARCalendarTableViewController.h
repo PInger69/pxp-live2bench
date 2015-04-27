@@ -15,6 +15,8 @@
 @property (strong, nonatomic) NSMutableArray *arrayOfAllData;
 @property (strong, nonatomic) NSString       *localPath;
 
+@property (strong, nonatomic) NSMutableArray *arrayOfSelectedEvent;
+
 @property (strong, nonatomic) EncoderManager *encoderManager;
 
 -(void)showAllData;

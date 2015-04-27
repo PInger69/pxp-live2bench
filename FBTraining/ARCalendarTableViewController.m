@@ -40,6 +40,7 @@
         self.newFrame = CGRectMake(568, 708, 370, 60);
         //The context string is used to determine in which tableViewController you delete a cell
         self.contextString = @"Event";
+        self.arrayOfSelectedEvent = [NSMutableArray array];
     }
     return self;
 }
@@ -232,6 +233,8 @@
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                //[[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Injury"}];
+
                 [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
                 
                 Feed *source;
@@ -243,6 +246,7 @@
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
                 
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
@@ -286,10 +290,6 @@
     }
     
     ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
-    [cell isSelected:NO];
-    if ([indexPath isEqual:self.lastSelectedIndexPath]) {
-        [cell isSelected:YES];
-    }
     
     cell.swipeRecognizerLeft.enabled = self.swipeableMode;
     
@@ -316,6 +316,11 @@
         event = self.tableData[indexPath.row];
     }
     Event *localOne = [self.encoderManager.localEncoder getEventByName:event.name];
+    
+    [cell isSelected:NO];
+    if ([self.arrayOfSelectedEvent containsObject:event.name]) {
+        [cell isSelected:YES];
+    }
     
     NSString *dateString = event.date;
     NSArray *bothStrings = [dateString componentsSeparatedByString:@" "];
@@ -472,17 +477,6 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Event *event;
-    NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
-    
-    if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
-        event = self.tableData[firstDownloadCellPath.row -1];
-    }else if (firstDownloadCellPath.row < indexPath.row) {
-        event = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
-    }else{
-        event = self.tableData[indexPath.row];
-    }
-    
     if (self.setOfDeletingCells.count ) {
         return;
     }else if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]){
@@ -498,11 +492,26 @@
         return;
     }
     
+    Event *event;
+    NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
     
-    ARCalendarTableViewCell *lastCell = (ARCalendarTableViewCell *)[self.tableView cellForRowAtIndexPath: self.lastSelectedIndexPath];
-    [lastCell isSelected:NO];
+    if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
+        event = self.tableData[firstDownloadCellPath.row -1];
+    }else if (firstDownloadCellPath.row < indexPath.row) {
+        event = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+    }else{
+        event = self.tableData[indexPath.row];
+    }
+    
+   
+    
+//    ARCalendarTableViewCell *lastCell = (ARCalendarTableViewCell *)[self.tableView cellForRowAtIndexPath: self.lastSelectedIndexPath];
+//    [lastCell isSelected:NO];
     ARCalendarTableViewCell *currentCell = (ARCalendarTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     [currentCell isSelected:YES];
+    if (event.mp4s.count >= 1) {
+        [self.arrayOfSelectedEvent addObject:event.name];
+    }
     
     if(![indexPath isEqual:self.lastSelectedIndexPath])
     {
@@ -540,6 +549,7 @@
             [currentCell isSelected:NO];
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:NO];
             self.lastSelectedIndexPath = nil;
+            [self.arrayOfSelectedEvent removeObject:event.name];
             [self.arrayOfCollapsableIndexPaths removeAllObjects];
             [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
             self.swipeableMode = YES;
@@ -554,7 +564,7 @@
         [self.tableView insertRowsAtIndexPaths: insertionIndexPaths withRowAnimation:UITableViewRowAnimationRight];
         [self.tableView scrollToRowAtIndexPath:self.lastSelectedIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     }else{
-        [currentCell isSelected: NO];
+        //[currentCell isSelected: NO];
         NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         [self.arrayOfCollapsableIndexPaths removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];

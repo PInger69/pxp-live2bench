@@ -39,10 +39,21 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enabledChanged:) name:@"Setting - Toast Observer" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toastTypeChanged:) name:@"Setting - Toast Observer" object:nil];
+        self.toastType = ARNone;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:self userInfo:@{@"name": @"Toast Observer" ,@"block" : ^(NSDictionary *settingDictionary){
-            self.enabled = [settingDictionary[@"Value"] boolValue];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:self userInfo:@{@"name": @"Toast Observer" ,@"block" : ^(NSArray *settingOptions, NSArray *onOrOff){
+            for (int i = 0; i <= 2; i++) {
+                if ([((NSNumber *)onOrOff[i]) integerValue] == 1) {
+                    if ([settingOptions[i] isEqualToString:@"Tag Synchronized"]) {
+                        self.toastType = self.toastType | ARTagSynchronized;
+                    } else if ([settingOptions[i] isEqualToString:@"Download Complete"]){
+                        self.toastType = self.toastType | ARFileDownloadComplete;
+                    } else {
+                        self.toastType = self.toastType | ARTagCreated;
+                    }
+                }
+            }
         }}];
         
         // Refer to ToastObserver.h for an explanation of these following properties:
@@ -55,11 +66,7 @@
 }
 
 -(void)synchronizedTags:(NSNotification *)note {
-    if (self.toastType && ARSynchronizedTags) {
-        return;
-    }
-    if(self.enabled && note.userInfo){
-        // Each NSNotification is first added to the queue
+    if (self.toastType & ARTagSynchronized) {
         [self.queueOfNotifications addObject:note];
         // If there is only 1 Notification in the queue, animateView is called
         // Otherwise the other 2 methods ( dequeueTheArray and animateView)
@@ -71,10 +78,7 @@
 }
 
 -(void)fileDownloadComplete:(NSNotification *)note {
-    if (self.toastType && ARFileDownloadComplete) {
-        return;
-    }
-    if(self.enabled && note.userInfo){
+    if (self.toastType & ARFileDownloadComplete) {
         // Each NSNotification is first added to the queue
         [self.queueOfNotifications addObject:note];
         // If there is only 1 Notification in the queue, animateView is called
@@ -87,11 +91,28 @@
 }
 
 
--(void)enabledChanged: (NSNotification *) note{
+-(void)toastTypeChanged: (NSNotification *) note{
+
+    if ([note.userInfo[@"Name"] isEqualToString:@"Download Complete"]) {
+        if (![note.userInfo[@"Value"] boolValue]) {
+            self.toastType = self.toastType & (~ARFileDownloadComplete);
+        } else {
+            self.toastType = self.toastType | ARFileDownloadComplete;
+        }
+    } else if ([note.userInfo[@"Name"] isEqualToString:@"Tag Synchronized"]) {
+        if (![note.userInfo[@"Value"] boolValue]) {
+            self.toastType = self.toastType & (~ARTagSynchronized);
+        } else {
+            self.toastType = self.toastType | ARTagSynchronized;
+        }
+    } else {
+        if (![note.userInfo[@"Value"] boolValue]) {
+            self.toastType = self.toastType & (~ARTagCreated);
+        } else {
+            self.toastType = self.toastType | ARTagCreated;
+        }
+    }
     
-    int newValue = [note.userInfo[@"Value"] integerValue];
-    self.toastType = newValue;
-    self.enabled = [note.userInfo[@"Value"] boolValue];
 }
 
 -(void)setEnabled:(BOOL)enabled{
@@ -108,7 +129,7 @@
     // This is the check to make sure Toast observer should be on, if
     // ToastObserver is disabled then this code will not execute, and hence
     // the other methods can no longer be called
-    if(self.enabled && receivedNotification.userInfo){
+    if (self.toastType & ARTagCreated) {
         // Each NSNotification is first added to the queue
         [self.queueOfNotifications addObject:receivedNotification];
         // If there is only 1 Notification in the queue, animateView is called

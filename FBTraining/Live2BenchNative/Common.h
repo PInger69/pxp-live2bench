@@ -44,8 +44,9 @@
 
 //TypeDef for ToastObserver
 typedef NS_OPTIONS (NSInteger, toastType) {
+    ARNone = 0,
     ARFileDownloadComplete = 1<<1,
-    ARSynchronizedTags = 1<<2,
+    ARTagSynchronized = 1<<2,
     ARTagCreated = 1<<3,
 };
 //End

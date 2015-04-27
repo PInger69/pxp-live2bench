@@ -35,7 +35,7 @@
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 35, 400, 40)];
     [self.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     
-    self.downloadInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(350, 15, 200, 50)];
+    self.downloadInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(350, 0, 200, 50)];
     [self.downloadInfoLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
     self.downloadInfoLabel.numberOfLines = 2;
     self.downloadInfoLabel.lineBreakMode = NSLineBreakByClipping;

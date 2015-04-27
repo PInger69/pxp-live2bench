@@ -85,6 +85,10 @@ static void *  debugContext = &debugContext;
         weakSelf = self;
         
         
+        testPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
+        testPlayer.playerContext = @"Test";
+        [self .view addSubview:testPlayer.view];
+
         
     }
     
@@ -103,11 +107,11 @@ static void *  debugContext = &debugContext;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    testPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
-    [self .view addSubview:testPlayer.view];
-    Feed * fff =[[Feed alloc]initWithURLString:@"http://192.168.1.154/events/2015-04-21_09-38-18_3dc550ff6dfb7df9cc4668cdcbf8bb779758c36b_local/video/main.mp4" quality:0];
-    [testPlayer playFeed:fff];
-    
+//        testPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
+//    [self .view addSubview:testPlayer.view];
+//        Feed * fff =[[Feed alloc]initWithURLString:@"http://192.168.1.154/events/2015-04-21_09-38-18_3dc550ff6dfb7df9cc4668cdcbf8bb779758c36b_local/video/main.mp4" quality:0];
+//    [testPlayer playFeed:fff];
+
 }
 
 

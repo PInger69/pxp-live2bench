@@ -750,7 +750,26 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     videoControlBar.enable = NO;
     [freezeMonitor stop];
     
-    [self.player replaceCurrentItemWithPlayerItem:nil];
+    if (self.playerItem)
+    {
+        /* Remove existing player item key value observers and notifications. */
+        
+        [self.playerItem removeObserver:self forKeyPath:@"status"];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemDidPlayToEndTimeNotification
+                                                      object:self.playerItem];
+        self.playerItem = nil;
+    }
+    
+    if (self.avPlayer) {
+        [self.avPlayer removeObserver:self forKeyPath:@"currentItem"];
+        [self.avPlayer removeObserver:self forKeyPath:@"rate"];
+        self.avPlayer = nil;
+    }
+    
+    
+    //[self.player replaceCurrentItemWithPlayerItem:nil];
 //  self.view.layer.sublayers = @[];
 //  self.view.layer.sublayers = nil;
    // self.view.layer.backgroundColor = [[UIColor blackColor]CGColor];
@@ -1115,7 +1134,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(NSString*)playerContext
 {
     return _playerContext;
-
 }
 
 
@@ -1203,7 +1221,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                                              selector:@selector(playerItemDidReachEnd:)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
                                                object:self.playerItem];
-    
+    //Why????????????????????????No?????????
     seekToZeroBeforePlay = NO;
     
     /* Create new player, if we don't already have one. */
@@ -1249,7 +1267,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
     _status = _status | RJLPS_Play;
 
-    if (onFeedReadyBlock) onFeedReadyBlock(); // if there is a place to seek to when ready
+    if (onFeedReadyBlock) {
+        onFeedReadyBlock();
+    }// if there is a place to seek to when ready
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error

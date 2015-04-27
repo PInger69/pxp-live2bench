@@ -21,16 +21,68 @@ static id           typeChangeObserver;
 +(void)staticInit {
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
-    allowedTypes        = AlertAll;
+    allowedTypes        = AlertNone;
     typeChangeObserver  =  [[NSNotificationCenter defaultCenter]addObserverForName:@"alertTest" object:nil queue:nil usingBlock:^(NSNotification *note) {
                             // take the value from dict
                             // change "allowedTypes" to the value sent
                             NSLog(@"Alert Test!!!!!!!");
                         }];
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:nil userInfo:@{@"name":@"Alerts", @"block":^(NSArray *settingOptions, NSArray *onOrOff){
+        for (int i = 0; i <= 4; i++) {
+            if ([((NSNumber *)onOrOff[i]) integerValue] == 1) {
+                if ([settingOptions[i] isEqualToString:@"Important Alerts"]) {
+                    allowedTypes = allowedTypes | AlertImportant;
+                } else if ([settingOptions[i] isEqualToString:@"Notification Alerts"]){
+                    allowedTypes = allowedTypes | AlertNotification;
+                } else if ([settingOptions[i] isEqualToString:@"Encoder Alerts"]){
+                    allowedTypes = allowedTypes | AlertEncoder;
+                } else if ([settingOptions[i] isEqualToString:@"Device Alerts"]){
+                    allowedTypes = allowedTypes | AlertDevice;
+                } else {
+                    allowedTypes = allowedTypes | AlertIndecisive;
+                }
+            }
+        }
+    }}];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:nil selector:@selector(allowedTypesChanged:) name:@"Setting - Alerts" object:nil];
+    
     [[NSNotificationCenter defaultCenter]postNotificationName:@"" object:nil userInfo:@{}];
 }
 
++(void)allowedTypesChanged:(NSNotification *)note {
+    if ([note.userInfo[@"Name"] isEqualToString:@"Important Alerts"]) {
+        if (![note.userInfo[@"Value"] boolValue]) {
+            allowedTypes = allowedTypes & (~AlertImportant);
+        } else {
+            allowedTypes = allowedTypes | AlertImportant;
+        }
+    } else if ([note.userInfo[@"Name"] isEqualToString:@"Notification Alerts"]) {
+        if (![note.userInfo[@"Value"] boolValue]) {
+            allowedTypes = allowedTypes & (~AlertNotification);
+        } else {
+            allowedTypes = allowedTypes | AlertNotification;
+        }
+    } else if ([note.userInfo[@"Name"] isEqualToString:@"Encoder Alerts"]){
+        if (![note.userInfo[@"Value"] boolValue]) {
+            allowedTypes = allowedTypes & (~AlertEncoder);
+        } else {
+            allowedTypes = allowedTypes | AlertEncoder;
+        }
+    } else if ([note.userInfo[@"Name"] isEqualToString:@"Device Alerts"]){
+        if (![note.userInfo[@"Value"] boolValue]) {
+            allowedTypes = allowedTypes & (~AlertDevice);
+        } else {
+            allowedTypes = allowedTypes | AlertDevice;
+        }
+    } else {
+        if (![note.userInfo[@"Value"] boolValue]) {
+            allowedTypes = allowedTypes & (~AlertIndecisive);
+        } else {
+            allowedTypes = allowedTypes | AlertIndecisive;
+        }
+    }
+}
 
 +(void)dismissAll
 {
@@ -48,7 +100,6 @@ static id           typeChangeObserver;
 {
     if (!alertPool) [CustomAlertView staticInit];
     if (![alertPool containsObject:self])    [alertPool addObject:alert];
-
 }
 
 +(void)removeAll
@@ -57,7 +108,7 @@ static id           typeChangeObserver;
     [alertPool removeAllObjects];
 }
 
-+(void)removeAlert:(UIAlertView*)alert
++ (void)removeAlert:(UIAlertView*)alert
 {
     if (!alertPool) [CustomAlertView staticInit];
     [alertPool removeObject:alert];
@@ -108,7 +159,6 @@ static id           typeChangeObserver;
         if (![alertPool containsObject:self])    [alertPool addObject:self];
     }
     return self;
-
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id /*<UIAlertViewDelegate>*/)delegate cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION
@@ -118,16 +168,26 @@ static id           typeChangeObserver;
     if (self) {
         self.type = AlertNone;
 //        [alertPool addObject:self];
-            if (![alertPool containsObject:self])    [alertPool addObject:self];
+        if (![alertPool containsObject:self])    [alertPool addObject:self];
     }
     return self;
 }
 
--(void)show
+//-(void)show
+//{
+//    if (allowedTypes & self.type) {
+//        [super show];
+//    }
+//}
+
+-(BOOL)display
 {
-   // if (allowedTypes & self.type) {
-     [super show];   
-   // }
+    if (allowedTypes & self.type) {
+        [super show];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 -(CustomAlertView*)alertType:(AlertType)type

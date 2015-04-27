@@ -445,7 +445,7 @@ static void * eventContext      = &eventContext;
          [self.view addSubview:self.videoPlayer.view];
          [_videoBarViewController viewDidAppear:animated];
          
-         [self.videoPlayer play];
+         //[self.videoPlayer play];
          [self.view addSubview:_fullscreenViewController.view];
 //         //add swipe gesture: swipe left: seek back ; swipe right: seek forward
 //         UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];

@@ -80,12 +80,12 @@ NS_OPTIONS(NSInteger, style){
             
             NSMutableDictionary *setting3 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Screen Mirroring", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]}];
             
-            NSMutableDictionary *setting4 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: toggleIsThere | toggleIsOn] }];
+            NSMutableDictionary *setting4 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: listOfToggles],@"DataDictionary":[NSMutableDictionary dictionaryWithDictionary:@{@"Setting Options":@[@"Download Complete", @"Tag Synchronized", @"Tag Received"], @"Toggle Settings":@[@1,@1,@1]}] }];
             
             NSMutableDictionary *setting5 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar: listOfToggles] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                                                                                   @[@"Some Alert", @"Another Alert", @"Mandarin Alert", @"Italian Alert", @"Korean Alert", @"Hindi Alert", @"Russian", @"Japanese"],
+                                                                                                                                                                                                                                                                   @[@"Important Alerts", @"Notification Alerts", @"Encoder Alerts", @"Device Alerts", @"Indecisive Alert"],
                                                                                                                                                                                                                                                                @"Toggle Settings":
-                                                                                                                                                                                                                                                                   @[ @1, @0, @1, @0, @1, @0, @1, @1]}] }];
+                                                                                                                                                                                                                                                                   @[ @1, @1, @1, @1, @1]}] }];
             
             
             NSMutableDictionary *setting6 =[NSMutableDictionary dictionaryWithDictionary: @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
@@ -94,14 +94,14 @@ NS_OPTIONS(NSInteger, style){
                                                                                                                                                                                                                                                                    @[ @0, @0, @1, @0, @1, @0]
                                                                                                                                                                                                                                                                , @"Function Labels": @[@"Unknown", @"2.0.0", @"Logout", @"Not Connected", @"View", [@"Color-" stringByAppendingString:@"nil"]] }]}];
             
-            NSMutableDictionary *setting7 = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Accounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+            NSMutableDictionary *setting7 = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Accounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
                                                                                                                                                                                                                                                                 @[@"Dropbox",  @"GoogleDrive"],
                                                                                                                                                                                                                                                             @"Function Buttons":
                                                                                                                                                                                                                                                                 @[ @1, @1], @"Function Labels": @[@"Link", @"Link"] }]}];
             
             NSMutableDictionary *setting8 = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Languages", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
-                                                                                                                                                                                                                                                          @[@"English", @"French", @"Mandarin", @"Italian", @"Korean", @"Hindi", @"Russian", @"Japanese"], @"Index":
-                                                                                                                                                                                                                                                          [NSNumber numberWithInt:5]} ] }];
+                                                                                                                                                                                                                                                          @[@"English"], @"Index":
+                                                                                                                                                                                                                                                          [NSNumber numberWithInt:0]} ] }];
             
             NSMutableDictionary *setting9 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Tabs", @"OptionChar":  [NSNumber numberWithChar: listOfToggles], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{ @"Setting Options":
                                                                                                                                                                                                                                                           @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip",@"Debug"],
@@ -214,8 +214,6 @@ NS_OPTIONS(NSInteger, style){
                     break;
                 }
             }
-            
-            
         }
     }
 }

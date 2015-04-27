@@ -40,43 +40,43 @@
         return;
     }
     
-    if ( command | VideoPlayerCommandPlayFeed ) {
+    if ( command & VideoPlayerCommandPlayFeed ) {
         [self playFeed:dict];
     }
     
-    if ( command | VideoPlayerCommandPlay ) {
+    if ( command & VideoPlayerCommandPlay ) {
         [player play];
     }
     
-    if ( command | VideoPlayerCommandPause | VideoPlayerCommandStop) {
+    if ( command & (VideoPlayerCommandPause | VideoPlayerCommandStop)) {
         [player pause];
     }
     
-    if ( command | VideoPlayerCommandLive ) {
+    if ( command & VideoPlayerCommandLive ) {
         [player gotolive];
     }
     
-    if ( command | VideoPlayerCommandLooping ) {
+    if ( command & VideoPlayerCommandLooping ) {
         player.looping = YES;
     }
-    if ( command | VideoPlayerCommandNoLooping ) {
+    if ( command & VideoPlayerCommandNoLooping ) {
         player.looping = NO;
     }
     
-    if ( command | VideoPlayerCommandSlowmo ) {
+    if ( command & VideoPlayerCommandSlowmo ) {
         player.slowmo  = YES;
     }
     
-    if ( command | VideoPlayerCommandNoSlomo ) {
+    if ( command & VideoPlayerCommandNoSlomo ) {
         player.slowmo = NO;
     }
     
     
-    if ( command | VideoPlayerCommandMute ) {
+    if ( command & VideoPlayerCommandMute ) {
         player.mute  = YES;
     }
     
-    if ( command | VideoPlayerCommandUnmute ) {
+    if ( command & VideoPlayerCommandUnmute ) {
         player.mute = NO;
     }
     
@@ -85,6 +85,7 @@
 
 -(void)playFeed:(NSDictionary*)dict
 {
+    [player clear];
     Feed * feed = [dict objectForKey:@"feed"];
     
     if ([dict objectForKey:@"range"]) {
