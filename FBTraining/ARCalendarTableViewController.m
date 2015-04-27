@@ -19,7 +19,7 @@
 
 //@property (strong, nonatomic) NSMutableArray *tableData;
 @property (strong, nonatomic) NSIndexPath *lastSelectedIndexPath;
-@property (strong, nonatomic) NSIndexPath *editingIndexPath;
+//@property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 @property (strong, nonatomic) ListPopoverController* teamPick;
 
@@ -195,7 +195,7 @@
         return cell;
     }
     
-    NSString *data;
+//    NSString *data;
     NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         Event *event = self.tableData[firstIndexPath.row - 1];
@@ -204,7 +204,11 @@
         NSString *data;
         
         key = [urls allKeys][indexPath.row - firstIndexPath.row];
-        data = urls[key];
+        if (event.rawData[@"mp4_2"]) {
+            data = urls[key][@"hq"];
+        } else {
+            data = urls[key];
+        }
         
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
         
@@ -278,9 +282,10 @@
                      DownloadItem *downloadItem = item;
                      downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
                      weakCell.downloadButton.downloadItem = downloadItem;
+                     __block FeedSelectCell *weakerCell = weakCell;
                      [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                         weakCell.downloadButton.progress = progress;
-                         [weakCell.downloadButton setNeedsDisplay];
+                         weakerCell.downloadButton.progress = progress;
+                         [weakerCell.downloadButton setNeedsDisplay];
                      }];
                      [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
                  }];
@@ -367,10 +372,11 @@
         self.editingIndexPath = indexPath;
         
         Event *event = self.tableData[indexPath.row];
-        NSString *dateString = event.date;
+//        NSString *dateString = event.date;
         
         Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];
+        alert.type = AlertImportant;
         [alert setTitle:@"myplayXplay"];
         [alert setMessage:@"Are you sure you want to delete this Event?"];
         if ((localCounterpart && localCounterpart.downloadedSources.count > 0) || event.downloadedSources.count > 0) {
@@ -382,7 +388,7 @@
             [alert addButtonWithTitle:@"No"];
         }
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-        [alert show];
+        [alert display];
     }
 }
 

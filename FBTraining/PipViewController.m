@@ -231,61 +231,30 @@ static void * vpFrameContext   = &vpFrameContext;
     int newStatus = [[change objectForKey:@"new"]intValue];
     if (oldStatus == newStatus) return;
     
-    if ([object isKindOfClass:[VideoPlayer class]]){
+  
+    RJLVideoPlayer * ply = (RJLVideoPlayer * )object;
     
-        switch (newStatus) {
-            case PS_Paused: // PAUSE ALL PIPS
-                
-                [self.pips makeObjectsPerformSelector:@selector(pause)];
-    //            [_selectPip pause];
-                break;
-            case PS_Slomo: // SLOW MO
-                for (Pip * pip in self.pips) {
-                    [pip playRate:self.videoPlayer.avPlayer.rate];
-
-                }
-    //            [_selectPip playRate:self.videoPlayer.avPlayer.rate];
-                break;
-            case PS_Play:
-                for (Pip * pip in self.pips) {
-                    [pip playRate:self.videoPlayer.avPlayer.rate];
-                    [pip play];
-                }
-
-                break;
-            default:
-                [self.pips makeObjectsPerformSelector:@selector(pause)];
-                break;
+    if (ply.status & RJLPS_Paused) {
+        [self.pips makeObjectsPerformSelector:@selector(pause)];
+    }
+    if (ply.status & RJLPS_Slomo) {
+        for (Pip * pip in self.pips) {
+            [pip playRate:self.videoPlayer.avPlayer.rate];
         }
-    } else if ([object isKindOfClass:[RJLVideoPlayer class]]){
-        RJLVideoPlayer * ply = (RJLVideoPlayer * )object;
-        
-        if (ply.status & RJLPS_Paused) {
-            [self.pips makeObjectsPerformSelector:@selector(pause)];
+    }
+    if (ply.status & RJLPS_Play) {
+        for (Pip * pip in self.pips) {
+            [pip playRate:self.videoPlayer.avPlayer.rate];
+            [pip play];
         }
-        if (ply.status & RJLPS_Slomo) {
-            for (Pip * pip in self.pips) {
-                [pip playRate:self.videoPlayer.avPlayer.rate];
-            }
-        }
-        if (ply.status & RJLPS_Play) {
-            for (Pip * pip in self.pips) {
-                [pip playRate:self.videoPlayer.avPlayer.rate];
-                [pip play];
-            }
-        }
-        
-        // was main Player Finished Seeking
-        if ( (oldStatus & RJLPS_Seeking) && !((newStatus & RJLPS_Seeking)!=0)) {
-            [self syncToPlayer];
-            
-            
-            
-        }
-        
-    
     }
     
+    // was main Player Finished Seeking
+    if ( (oldStatus & RJLPS_Seeking) && !((newStatus & RJLPS_Seeking)!=0)) {
+        [self syncToPlayer];
+        
+    }
+
 
 }
 
@@ -616,7 +585,7 @@ static void * vpFrameContext   = &vpFrameContext;
 -(Pip*)addAntiFreezeOnPip:(Pip*)aPip
 {
     
-    __weak Pip                  * weakPip      = aPip;
+//    __weak Pip                  * weakPip      = aPip;
     __weak PipViewController    * weakSelf     = self;
 
     void (^onFreeze)(BOOL) = ^void(BOOL isSubzero) {

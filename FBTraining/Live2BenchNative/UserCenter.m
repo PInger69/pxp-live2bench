@@ -262,25 +262,19 @@
 }
 
 
-/**
- *  This converts the tag data in to a format that is comsumable to the Live2Bench
- *
- *  @param aLocalPath <#aLocalPath description#>
- *
- *  @return <#return value description#>
- */
--(NSMutableArray*)_buildTagNames:(NSString*)aLocalPath
-{
 
-    
-    
-    
-    
-    NSString        * tagFilePath   = [aLocalPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
-    NSDictionary    * userInfo      =  [[NSDictionary alloc] initWithContentsOfFile:tagFilePath];
-    NSDictionary    * tagnames      = [userInfo objectForKey:@"tagnames"];
-    return  tagnames;
-}
+//-(NSMutableArray*)_buildTagNames:(NSString*)aLocalPath
+//{
+//
+//    
+//    
+//    
+//    
+//    NSString        * tagFilePath   = [aLocalPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
+//    NSDictionary    * userInfo      =  [[NSDictionary alloc] initWithContentsOfFile:tagFilePath];
+//    NSDictionary    * tagnames      = [userInfo objectForKey:@"tagnames"];
+//    return  tagnames;
+//}
 
 
 -(NSMutableArray*)convertToL2BReadable:(NSDictionary *)toConvert key:(NSString*)key

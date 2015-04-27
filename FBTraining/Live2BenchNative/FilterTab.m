@@ -10,8 +10,6 @@
 #import "CustomButton.h"
 #import "FilterScrollView.h"
 #import "FilterComponent.h"
-
-#import "UtilitiesController.h"
 #import <QuartzCore/QuartzCore.h>
 #define FILTER_FRAME_RECT   CGRectMake(0, 44, 925, 330)
 #define TAB_BUTTON_HEIGHT   44

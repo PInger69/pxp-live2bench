@@ -335,8 +335,7 @@ static void * seekContext = &seekContext;
 -(void)addPeriodicTimeObserver
 {
     double                      interval            = 0.5f;
-    __block UITextField        * weakLabel         = debugLabel;
-//    __block AVPlayerItem        * weakPlayerItem    = avPlayerItem;
+    __block UITextView        * weakLabel         = debugLabel;
     __block RJLFreezeCounter    * weakCounter       = _freezeCounter;
     __block Pip                 * weakSelf          = self;
     timeObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)

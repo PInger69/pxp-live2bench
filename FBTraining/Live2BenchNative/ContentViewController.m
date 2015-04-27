@@ -266,4 +266,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return nil; // to supress warning
+}
+
+
 @end

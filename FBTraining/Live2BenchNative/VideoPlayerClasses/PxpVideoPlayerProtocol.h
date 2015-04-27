@@ -70,6 +70,6 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 -(void)playFeed:(Feed*)aFeed;
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange;
 -(void)playClipWithFeed: (Feed*)aFeed andTimeRange:(CMTimeRange)aRange;
-
+-(Float64)durationInSeconds;
 
 @end

@@ -10,7 +10,7 @@
 #import "AirPlayDetector.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "LogoViewController.h"
-
+#import "ExternalScreenButton.h"
 
 //@interface UIViewController (rotationStuff)
 //
@@ -240,38 +240,38 @@
  }
  */
 
--(UIView*)buildDebugPanel:(VideoPlayer *)video
-{
-    
-    videoPlayer         = video;
-    debugPanel = [[UIView alloc]initWithFrame:CGRectMake(0, 50, 300, 100)];
-    debugPanel.layer.borderWidth = 2;
-    [debugPanel setBackgroundColor:[UIColor grayColor]];
-    
-    ExternalScreenButton * togg = [[ExternalScreenButton alloc]initWithFrame:CGRectMake(10, 10, 80, 50)];
-    // [togg setFrame:CGRectMake(10, 10, 80, 50)];
-    togg.layer.borderWidth = 2;
-    [togg setTitle:@"ON/OFF" forState:UIControlStateNormal];
-    [togg addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
-    [debugPanel addSubview:togg];
-    
-    
-    UIButton * btn2 = [UIButton buttonWithType:UIButtonTypeSystem];
-    [btn2 setFrame:CGRectMake(100, 10, 80, 50)];
-    btn2.layer.borderWidth = 2;
-    [btn2 setTitle:@"Normal" forState:UIControlStateNormal];
-    [btn2 addTarget:self action:@selector(returnVideoToPreviousViewFromExternal) forControlEvents:UIControlEventTouchUpInside];
-    [debugPanel addSubview:btn2];
-    
-    UIButton * btn3 = [UIButton buttonWithType:UIButtonTypeSystem];
-    [btn3 setFrame:CGRectMake(200, 10, 80, 50)];
-    btn3.layer.borderWidth = 2;
-    [btn3 setTitle:@"Push" forState:UIControlStateNormal];
-    [btn3 addTarget:self action:@selector(debugMethodToPushVideoToExternal) forControlEvents:UIControlEventTouchUpInside];
-    [debugPanel addSubview:btn3];
-    
-    return debugPanel;
-}
+//-(UIView*)buildDebugPanel:(VideoPlayer *)video
+//{
+//    
+//    videoPlayer         = video;
+//    debugPanel = [[UIView alloc]initWithFrame:CGRectMake(0, 50, 300, 100)];
+//    debugPanel.layer.borderWidth = 2;
+//    [debugPanel setBackgroundColor:[UIColor grayColor]];
+//    
+//    ExternalScreenButton * togg = [[ExternalScreenButton alloc]initWithFrame:CGRectMake(10, 10, 80, 50)];
+//    // [togg setFrame:CGRectMake(10, 10, 80, 50)];
+//    togg.layer.borderWidth = 2;
+//    [togg setTitle:@"ON/OFF" forState:UIControlStateNormal];
+//    [togg addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
+//    [debugPanel addSubview:togg];
+//    
+//    
+//    UIButton * btn2 = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [btn2 setFrame:CGRectMake(100, 10, 80, 50)];
+//    btn2.layer.borderWidth = 2;
+//    [btn2 setTitle:@"Normal" forState:UIControlStateNormal];
+//    [btn2 addTarget:self action:@selector(returnVideoToPreviousViewFromExternal) forControlEvents:UIControlEventTouchUpInside];
+//    [debugPanel addSubview:btn2];
+//    
+//    UIButton * btn3 = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [btn3 setFrame:CGRectMake(200, 10, 80, 50)];
+//    btn3.layer.borderWidth = 2;
+//    [btn3 setTitle:@"Push" forState:UIControlStateNormal];
+//    [btn3 addTarget:self action:@selector(debugMethodToPushVideoToExternal) forControlEvents:UIControlEventTouchUpInside];
+//    [debugPanel addSubview:btn3];
+//    
+//    return debugPanel;
+//}
 
 -(void)toggle
 {

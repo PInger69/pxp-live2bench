@@ -51,7 +51,6 @@
     id                                  tagsReadyObserver;
     
     // some old stuff
-    TTSwitch                            * durationTagSwitch;
     UILabel                             * durationTagLabel;
     UIButton                            * multiButton;
     UIPinchGestureRecognizer            * pinchGesture;

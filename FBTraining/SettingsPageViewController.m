@@ -67,7 +67,11 @@ NS_OPTIONS(NSInteger, style){
         NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/Setting"];
         NSString *path = [dataPath stringByAppendingPathComponent: plistName];
         
+<<<<<<< HEAD
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+=======
+        if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) {
+>>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
             NSDictionary *settingDictionary = [[NSDictionary alloc]initWithContentsOfFile:path];
             self.settingsArray = settingDictionary[@"SettingsArray"];
             for (NSMutableDictionary *setting in self.settingsArray) {
@@ -88,9 +92,9 @@ NS_OPTIONS(NSInteger, style){
             NSMutableDictionary *setting4 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: listOfToggles],@"DataDictionary":[NSMutableDictionary dictionaryWithDictionary:@{@"Setting Options":@[@"Download Complete", @"Tag Synchronized", @"Tag Received"], @"Toggle Settings":@[@1,@1,@1]}] }];
             
             NSMutableDictionary *setting5 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar: listOfToggles] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                                                                                   @[@"Important Alerts", @"Notification Alerts", @"Encoder Alerts", @"Device Alerts", @"Indecisive Alert"],
+                                                                                                                                                                                                                                                                   @[@"Notification Alerts", @"Encoder Alerts", @"Device Alerts", @"Indecisive Alert"],
                                                                                                                                                                                                                                                                @"Toggle Settings":
-                                                                                                                                                                                                                                                                   @[ @1, @1, @1, @1, @1]}] }];
+                                                                                                                                                                                                                                                                   @[@1, @1, @1, @1]}] }];
             
             
             NSMutableDictionary *setting6 =[NSMutableDictionary dictionaryWithDictionary: @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
@@ -137,6 +141,7 @@ NS_OPTIONS(NSInteger, style){
                                                                    
                                                                    setting10
                                                                    ]];
+            
         }
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewLicense:) name:@"Setting - Eula :" object:nil];
         _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];

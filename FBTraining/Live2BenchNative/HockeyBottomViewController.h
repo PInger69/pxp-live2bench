@@ -7,19 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-////#import <QuartzCore/QuartzCore.h>
 #import "ContentViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
-//#import "AppQueue.h"
-#import "UtilitiesController.h"
 #import "Live2BenchViewController.h"
-//#import "Globals.h"
 #import "CustomButton.h"
 #import "CustomLabel.h"
 
 @class ContentViewController;
 @class Live2BenchViewController;
-@class UtilitiesController;
 
 @interface HockeyBottomViewController : UIViewController
 {
@@ -37,16 +32,13 @@
     UISegmentedControl *_homeSegControl;
     UISegmentedControl *_awaySegControl;
     MPMoviePlayerController *_moviePlayer;
-    ///AppQueue *appQueue;
     NSString *oldName;
     NSDictionary *oldDict;
     NSDictionary *dict;
     NSString *thumbId;
     NSArray *paths;
     NSString *documentsDirectory;
-    UtilitiesController *uController;
     Live2BenchViewController *live2BenchViewController;
-//    Globals *globals;
     CustomLabel *strengthHomeLabel;
     CustomLabel *strengthAwayLabel;
     CustomButton *leftLineButtonWasSelected;
@@ -76,7 +68,6 @@
 @property (nonatomic,strong) UIView *rightView;
 @property (nonatomic,strong) MPMoviePlayerController *moviePlayer;
 @property (nonatomic,strong) NSString *oldName;
-@property (nonatomic,strong) UtilitiesController *uController;
 @property (nonatomic,strong)NSMutableData *responseData;
 - (void)segmentValueChanged:(id)sender;
 - (void)periodSegmentValueChanged:(id)sender;

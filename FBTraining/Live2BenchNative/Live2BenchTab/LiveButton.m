@@ -41,20 +41,6 @@ UIColor *accentColor;
     return self;
 }
 
-//-(void)setEnabled:(BOOL)enabled
-//{
-//    if (enabled && !_enabled) {
-//        [self setEnabled:TRUE];
-//        [self setAlpha:1.0];
-//        _enabled = enabled;
-//    } else if (!enabled && _enabled){
-//        [self setEnabled:FALSE];
-//        [self setAlpha:0.6];
-//        _enabled = enabled;
-//    }
-//
-//
-//}
 
 
 -(void)isActive:(BOOL)enabled

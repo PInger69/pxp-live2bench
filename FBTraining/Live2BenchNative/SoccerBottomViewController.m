@@ -7,6 +7,7 @@
 //
 
 #import "SoccerBottomViewController.h"
+#import "NSArray+BinarySearch.h"
 #define PLAYERBUTTON_X              190
 #define PLAYERBUTTON_Y              100
 #define PLAYERBUTTON_WIDTH           42
@@ -55,7 +56,7 @@
     isUpdatingSeek=FALSE;
     [self setupView];
     [self initLayout];
-    uController = [[UtilitiesController alloc]init];
+//    uController = [[UtilitiesController alloc]init];
     [self updateControlInfo];
     
     // Do any additional setup after loading the view from its nib.
@@ -842,7 +843,7 @@
     
 
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; //[NSURLConnection connectionWithRequest:urlRequest delegate:self];
-  
+    [connection start];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {

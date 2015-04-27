@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VideoPlayer.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVPlayerItem.h>
+#import "PxpVideoPlayerProtocol.h"
 
 #define SCREEN_CONNECTED ([UIScreen screens].count > 1)
 
@@ -23,7 +24,6 @@
 @property (assign, nonatomic) BOOL      doesScreenMirroring;
 
 -(id)init;
--(UIView*)buildDebugPanel:(VideoPlayer *)video;
 -(void)moveVideoToExternalDisplay:(UIViewController <PxpVideoPlayerProtocol> *) video;
 -(void)returnVideoToPreviousViewFromExternal;
 @end

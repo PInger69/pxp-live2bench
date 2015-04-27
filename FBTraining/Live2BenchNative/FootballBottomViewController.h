@@ -22,10 +22,10 @@
     UILabel *teamSelectionLabel;
     
     UISlider *fieldPosSlider;
-    UIPickerView *playCallOppPickerView;
-    UIPickerView *playCallPickerView;
-    NSMutableArray *playCallOppArray;
-    NSMutableArray *playCallArray;
+//    UIPickerView *playCallOppPickerView;
+//    UIPickerView *playCallPickerView;
+//    NSMutableArray *playCallOppArray;
+//    NSMutableArray *playCallArray;
     UILabel *fieldPosSliderPos;
     
 }
@@ -37,7 +37,7 @@
 @property (nonatomic,strong) NSMutableArray *playCallArray;
 @property (strong, nonatomic) IBOutlet UIView *offLayoutView;
 @property (strong, nonatomic) Live2BenchViewController *live2BenchViewController;
-//@property (strong, nonatomic) Globals *globals;
+
 @property (strong, nonatomic) CustomButton *offButton;
 @property (strong, nonatomic) CustomButton *defButton;
 @property (strong, nonatomic) CustomButton *stButton;

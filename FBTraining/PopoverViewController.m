@@ -20,7 +20,7 @@
 {
     if (self = [super init]) {
         self.players = [[NSMutableArray alloc]init];
-        self.selectedPlayers = selectedPlayers;
+        self.selectedPlayers = [NSMutableArray arrayWithArray:selectedPlayers];
         self.buttonNameArray = info;
         self.view.frame = frame;
 

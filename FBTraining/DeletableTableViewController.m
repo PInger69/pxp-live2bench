@@ -177,12 +177,12 @@
 
 -(void)shareOptionChosen:(NSString *)optionChosen{
     [self.sharePop dismissPopoverAnimated:YES];
-    
 }
 
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
     [alert setTitle:@"myplayXplay"];
+    alert.type = AlertImportant;
     [alert setMessage:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
     [alert addButtonWithTitle:@"Yes(From server and local device)"];

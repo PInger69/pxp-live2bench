@@ -85,7 +85,7 @@
     
     _encoderManager = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 
-    [[SocialSharingManager alloc]initWithSocialOptions: @[@"Mail", @"Album", @"Dropbox", @"Facebook", @"GoogleDrive"]];
+    (void)[[SocialSharingManager alloc]initWithSocialOptions: @[@"Mail", @"Album", @"Dropbox", @"Facebook", @"GoogleDrive"]];
 
     
     self.tabBarController           = [[CustomTabBar alloc]init];
@@ -98,41 +98,6 @@
     
     NSFileManager                * fileManager;
     fileManager = [NSFileManager defaultManager];
-    
-//    uController                     = [[UtilitiesController alloc]init];
-
-//    BOOL isDir;
-//    if(![[NSFileManager defaultManager] fileExistsAtPath:globals.EVENTS_PATH isDirectory:&isDir])
-//    {
-//        [[NSFileManager defaultManager] createDirectoryAtPath:globals.EVENTS_PATH withIntermediateDirectories:YES attributes:nil error:NULL];
-//    }
-//    //make sure live folder is cleared when start the app
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"]]) {
-//        [[NSFileManager defaultManager]removeItemAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"] error:nil];
-//    }
-    //get all the local events which have offline tags
-    //LocalEvents.plist saved all the local events which have offline tags
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"LocalEvents.plist"]]) {
-//        globals.LOCAL_MODIFIED_EVENTS = [[NSMutableArray alloc]initWithContentsOfFile:[globals.EVENTS_PATH stringByAppendingPathComponent:@"LocalEvents.plist"]];
-//    }
-//    
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:globals.LOG_PATH]) {
-//        globals.LOG_INFO = [[NSMutableDictionary alloc]initWithContentsOfFile:globals.LOG_PATH];
-//    }else{
-//        globals.LOG_INFO = [[NSMutableDictionary alloc]init];
-//    }
-//    NSMutableDictionary *bookmarkTags;
-//    NSString *bookmarkTagPath = globals.BOOKMARK_TAGS_PATH;
-//    if ([[NSFileManager defaultManager] fileExistsAtPath: bookmarkTagPath])
-//    {
-//        bookmarkTags = [[NSMutableDictionary alloc]initWithContentsOfFile:bookmarkTagPath];
-//    }else{
-//        bookmarkTags = [[NSMutableDictionary alloc]init];
-//    }
-//    globals.BOOKMARK_TAGS = bookmarkTags;
-    
-    //check if user has already logged in on this device at least once
-//    globals.ACCOUNT_FIELDS = [[NSArray alloc]initWithObjects:@"emailAddress",@"password",@"authorization",@"customer",@"hid",@"tagColour",nil];
     
     // Set these variables before launching the app
     NSString* appKey = @"huc2enjbl496cq8";

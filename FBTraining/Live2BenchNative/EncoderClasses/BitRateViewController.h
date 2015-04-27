@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EncoderManager.h"
-
+#import "AppDelegate.h"
 @interface BitRateViewController : UIViewController
 
 

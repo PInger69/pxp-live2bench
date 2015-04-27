@@ -14,7 +14,6 @@
 #define L2B_FULLSCREEN_MODE_DEMO     4
 
 #import "FullScreenViewController.h"
-#import "VideoPlayer.h"
 #import "TeleViewController.h"
 #import "Slomo.h"
 #import "SeekButton.h"
@@ -32,14 +31,12 @@
 @property (nonatomic,assign) int                mode;
 
 
-@property (weak,  nonatomic) UIViewController <PxpVideoPlayerProtocol>*         player;
+
 @property (strong,nonatomic) SeekButton         * seekForward;
 @property (strong,nonatomic) SeekButton         * seekBackward;
 @property (strong,nonatomic) Slomo              * slomo;
 @property (strong,nonatomic) CustomButton       * teleButton;
 @property (strong,nonatomic) LiveButton         * liveButton;
-@property (strong,nonatomic) NSString           * context;
-@property (assign,nonatomic) BOOL               enable;
 @property (strong,nonatomic) UILabel            * tagEventName;
 @property (strong,nonatomic) BorderButton       * continuePlay;
 @property (strong,nonatomic) CustomButton       * startRangeModifierButton;         //extends duration button (old start time - 5)

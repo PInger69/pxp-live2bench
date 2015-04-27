@@ -6,6 +6,35 @@
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 
+
+//#default			= 0
+//
+//#deleted			= 3 - this one shouldn't happen on tagSet
+//#telestration 		= 4
+//
+//#start o-line     	= 1 - hockey
+//#stop o-line     	= 2 - hockey
+//#start d-line		= 5 - hockey
+//#stop  d-line		= 6 - hockey
+//#period start		= 7 - hockey
+//#period	stop		= 8 - hockey
+//#opp. o-line start 	= 11 - hockey
+//#opp. o-line stop 	= 12- hockey
+//#opp. d-line start 	= 13- hockey
+//#opp. d-line stop 	= 14- hockey
+//#strength start 	= 9- hockey
+//#strength stop 		= 10- hockey
+//
+//#half start 		= 17- soccer
+//#half stop 			= 18- soccer
+//#zone start 		= 15- soccer
+//#zone stop 			= 16- soccer
+//
+//#down start 		= 19- football
+//#down stop 			= 20- football
+//#quarter start 		= 21- football
+//#quarter stop 		= 22- football
+
 #import <UIKit/UIKit.h>
 #import "FilterComponent.h"
 #import "FilterProcessor.h"

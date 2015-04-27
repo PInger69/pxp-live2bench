@@ -10,28 +10,21 @@
 #import "CustomTabViewController.h"
 #import "thumbnailCell.h"
 #import "Live2BenchViewController.h"
-#import "FilterToolboxViewController.h"
 #import "CustomTabBar.h"
-#import "UtilitiesController.h"
 #import "SDWebImage/UIImageView+WebCache.h"
-//#import "Globals.h"
 #import "CustomButton.h"
 #import "ClipCornerView.h"
-#import "EdgeSwipeEditButtonsView.h"
 #import "UIColor+Expanded.h"
 
 
 @class Live2BenchViewController;
-@class FilterToolboxViewController;
 @class CustomTabBar;
 @class thumbnailCell;
-@class UtilitiesController;
 
-@interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, EdgeSwipeButtonDelegate>
+@interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate>
 {
     //    Globals *globals;
     UIScrollView *breadCrumbsView;
-    UtilitiesController *uController;
     UICollectionView *_collectionView; //collection view for displaying thumbnails in clip view
     CustomTabBar *customTab;
     
@@ -39,7 +32,6 @@
     //this array will be used for creating filter buttons in filter tool box
     NSMutableArray *typesOfTags;
     
-    FilterToolboxViewController *_filterToolBoxView;
     NSMutableArray *_tagsToDisplay; //array of tags which will display in clip view
     UIView *filterContainer; //uiview used for filter tool box view position and detecting swipe gestrue for the filter view
     NSMutableArray *thumbRatingArray; //array of uiviews(star shape) for tag rating
@@ -73,7 +65,6 @@
 //if this boolean value is true, donot call the "reloadData"
 @property (nonatomic)BOOL thumbnailsLoaded;
 
-@property (nonatomic, strong) EdgeSwipeEditButtonsView* edgeSwipeButtons;
 @property (nonatomic, strong) UIView* blurView;
 
 

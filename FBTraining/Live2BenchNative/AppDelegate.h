@@ -14,12 +14,8 @@
 #include <arpa/inet.h>
 #import <FacebookSDK/FacebookSDK.h>
 #import <DropboxSDK/DropboxSDK.h>
-
 #import "ScreenController.h"
-
-//#import "UtilitiesController.h"
 #import "ImageAssetManager.h"
-
 #import "LoginViewController.h"
 #import "EulaModalViewController.h"
 

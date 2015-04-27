@@ -7,6 +7,7 @@
 //
 
 #import "HockeyBottomViewController.h"
+#import "NSArray+BinarySearch.h"
 
 @interface HockeyBottomViewController ()
 
@@ -27,7 +28,7 @@
 @synthesize homeSegControl=_homeSegControl;
 @synthesize awaySegControl =_awaySegControl;
 @synthesize moviePlayer=_moviePlayer;
-@synthesize oldName,uController;
+@synthesize oldName;
 @synthesize responseData;
 
 
@@ -70,8 +71,6 @@
     NSMutableArray *lineThree = [[NSMutableArray alloc]init];
     NSMutableArray *lineFour = [[NSMutableArray alloc]init];
     arrayOfLines = [[NSMutableArray alloc]initWithObjects:lineOne,lineTwo,lineThree,lineFour, nil];
-    //appQueue = [[AppQueue alloc]init];
-    uController = [[UtilitiesController alloc]init];
    leftLineButtonWasSelected = nil;//[[CustomButton alloc]init];
     rightLineButtonWasSelected =nil;// [[CustomButton alloc]init];
     [self updateControlInfo];
@@ -123,13 +122,13 @@
     [self.strengthLabel setText:@"Strength"];
     [self.segmentControlView addSubview:self.strengthLabel];
     
-    [self.homeSegControl setSegmentedControlStyle:UISegmentedControlStyleBezeled];
+//    [self.homeSegControl setSegmentedControlStyle:UISegmentedControlStyleBezeled];
     [self.homeSegControl setFrame:CGRectMake(self.strengthLabel.frame.origin.x + 45.0f, CGRectGetMaxY(self.strengthLabel.frame) + 5.0f, self.homeSegControl.numberOfSegments*50.0f, 30.0f)];
     [self.homeSegControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [self.homeSegControl addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
     [self.segmentControlView addSubview:self.homeSegControl];
     
-    [self.awaySegControl setSegmentedControlStyle:UISegmentedControlStyleBar];
+//    [self.awaySegControl setSegmentedControlStyle:UISegmentedControlStyleBar];
     [self.awaySegControl setFrame:CGRectMake(self.homeSegControl.frame.origin.x, CGRectGetMaxY(self.homeSegControl.frame) + 10.0f, self.awaySegControl.numberOfSegments*50.0f, 30.0f)];
     [self.awaySegControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [self.awaySegControl addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -579,12 +578,12 @@
 - (void)buttonSelected:(id)sender{
        [[NSNotificationCenter defaultCenter ]postNotificationName:@"StopUpdate" object:nil];
     
-    CustomButton *button = (CustomButton*)sender;
-    NSString *name;
-    NSString *tagTime;
-    NSString *offlineType;
-    
-    int type=0;
+//    CustomButton *button = (CustomButton*)sender;
+//    NSString *name;
+//    NSString *tagTime;
+//    NSString *offlineType;
+//    
+//    int type=0;
 
 //    if([button.accessibilityLabel isEqualToString:@"left"])
 //    {

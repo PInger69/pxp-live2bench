@@ -37,8 +37,8 @@
 @property (nonatomic, strong) NSMutableDictionary *allEvents;
 @property (nonatomic) BOOL finishedSwipe;
 - (IBAction)swipeFilter:(id)sender;
-- (void)showHideFilterInfo:(BOOL)show;
--(void)viewWillAppear:(BOOL)animated;
+//- (void)showHideFilterInfo:(BOOL)show;
+//-(void)viewWillAppear:(BOOL)animated;
 - (id)initWithArgs:filterArgs;
 
 @end

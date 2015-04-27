@@ -96,8 +96,8 @@
         [gainPickerViewDataArr addObject:[NSString stringWithFormat:@"%d",(i-55)]];
         
     }
-    playCallOppArray = [[NSMutableArray alloc] initWithObjects:@" ", nil];
-    playCallArray = [[NSMutableArray alloc] initWithObjects:@" ", nil];
+    _playCallOppArray = [[NSMutableArray alloc] initWithObjects:@" ", nil];
+    _playCallArray = [[NSMutableArray alloc] initWithObjects:@" ", nil];
     [self initLayout];
     [self updateInfo];
     isNewTurn = TRUE;
@@ -373,43 +373,43 @@
     [playcallOppLabel setBackgroundColor:[UIColor clearColor]];
     [offLayoutView addSubview:playcallOppLabel];
     
-    if(!playCallOppPickerView)
+    if(!_playCallOppPickerView)
     {
-        playCallOppPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(playcallOppLabel.frame.origin.x-20, playcallOppLabel.frame.origin.y + playcallOppLabel.frame.size.height -7, playcallOppLabel.frame.size.width+50, 180)];
-        [playCallOppPickerView setDataSource:self];
-        [playCallOppPickerView setDelegate:self];
+        _playCallOppPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(playcallOppLabel.frame.origin.x-20, playcallOppLabel.frame.origin.y + playcallOppLabel.frame.size.height -7, playcallOppLabel.frame.size.width+50, 180)];
+        [_playCallOppPickerView setDataSource:self];
+        [_playCallOppPickerView setDelegate:self];
 
-        [playCallOppPickerView setBackgroundColor:[UIColor clearColor]];
-        playCallOppPickerView.showsSelectionIndicator = TRUE;
+        [_playCallOppPickerView setBackgroundColor:[UIColor clearColor]];
+        _playCallOppPickerView.showsSelectionIndicator = TRUE;
         CALayer* playCallOppMask = [[CALayer alloc] init];
         [playCallOppMask setBackgroundColor: [UIColor whiteColor].CGColor];
         [playCallOppMask setFrame:  CGRectMake(10.0f, 10.0f, 100.0f, 160.f)];
         [playCallOppMask setCornerRadius: 5.0f];
-        [playCallOppPickerView.layer setMask: playCallOppMask];
-        [playCallOppPickerView selectRow:55 inComponent:0 animated:YES];
+        [_playCallOppPickerView.layer setMask: playCallOppMask];
+        [_playCallOppPickerView selectRow:55 inComponent:0 animated:YES];
     }
     
-    if(!playCallPickerView)
+    if(!_playCallPickerView)
     {
-       playCallPickerView =  [[UIPickerView alloc] initWithFrame:CGRectMake(playcallLabel.frame.origin.x-25, playcallLabel.frame.origin.y + playcallLabel.frame.size.height -7, playcallLabel.frame.size.width+50, 180)];
-        [playCallPickerView setDataSource:self];
-        [playCallPickerView setDelegate:self];
+       _playCallPickerView =  [[UIPickerView alloc] initWithFrame:CGRectMake(playcallLabel.frame.origin.x-25, playcallLabel.frame.origin.y + playcallLabel.frame.size.height -7, playcallLabel.frame.size.width+50, 180)];
+        [_playCallPickerView setDataSource:self];
+        [_playCallPickerView setDelegate:self];
         
-        [playCallPickerView setBackgroundColor:[UIColor clearColor]];
-        playCallPickerView.showsSelectionIndicator = TRUE;
+        [_playCallPickerView setBackgroundColor:[UIColor clearColor]];
+       _playCallPickerView.showsSelectionIndicator = TRUE;
         CALayer* playCallMask = [[CALayer alloc] init];
         [playCallMask setBackgroundColor: [UIColor whiteColor].CGColor];
         [playCallMask setFrame:  CGRectMake(10.0f, 10.0f, 100.0f, 160.f)];
         [playCallMask setCornerRadius: 5.0f];
-        [playCallPickerView.layer setMask: playCallMask];
-        [playCallPickerView selectRow:55 inComponent:0 animated:YES];
+        [_playCallPickerView.layer setMask: playCallMask];
+        [_playCallPickerView selectRow:55 inComponent:0 animated:YES];
       
     }
-    [offLayoutView addSubview:playCallOppPickerView];
+    [offLayoutView addSubview:_playCallOppPickerView];
 
-      [offLayoutView addSubview:playCallPickerView];
+      [offLayoutView addSubview:_playCallPickerView];
     CustomButton *nextPlayButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [nextPlayButton setFrame:CGRectMake(playCallOppPickerView.frame.origin.x +playCallOppPickerView.frame.size.width-55, playcallOppLabel.frame.origin.y+90,160 , offButton.frame.size.height)];
+    [nextPlayButton setFrame:CGRectMake(_playCallOppPickerView.frame.origin.x +_playCallOppPickerView.frame.size.width-55, playcallOppLabel.frame.origin.y+90,160 , offButton.frame.size.height)];
     [nextPlayButton setTitle:@"NEXT PLAY" forState:UIControlStateNormal];
     [nextPlayButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
     [nextPlayButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -429,7 +429,7 @@
     fieldPosSlider.value = newStep;
     
     UISlider *slider = (UISlider*)sender;
-    float fieldPosToDisplay = slider.value >= 0 ? 55-slider.value : abs(slider.value)-55;
+    float fieldPosToDisplay = slider.value >= 0 ? 55-slider.value : fabsf(slider.value)-55;
     [fieldPosSliderPos setText:[NSString stringWithFormat:@"%.0f",fieldPosToDisplay]];
     [fieldPosSliderPos setFrame:CGRectMake(fieldPosSliderPos.frame.origin.x, fieldPosSlider.value+fieldPosSlider.frame.origin.y+55, fieldPosSliderPos.bounds.size.width, fieldPosSliderPos.bounds.size.height)];
     
@@ -888,10 +888,10 @@
     }else if ([pickerView isEqual:sTPickerView])
     {
         return [specialTeamsArray count];
-    }else if ([pickerView isEqual:playCallOppPickerView]){
-        return [playCallOppArray count];
-    }else if ([pickerView isEqual:playCallPickerView]){
-        return [playCallArray count];
+    }else if ([pickerView isEqual:_playCallOppPickerView]){
+        return [_playCallOppArray count];
+    }else if ([pickerView isEqual:_playCallPickerView]){
+        return [_playCallArray count];
     }else{
         return [gainPickerViewDataArr count];
     }
@@ -955,10 +955,10 @@
         return [pickerViewDataArr objectAtIndex: row];
     }else if ([pickerView isEqual:sTPickerView]){
         return [specialTeamsArray objectAtIndex:row];
-    }else if ([pickerView isEqual:playCallOppPickerView]){
-        return [playCallOppArray objectAtIndex:row];
-    }else if ([pickerView isEqual:playCallPickerView]){
-        return [playCallArray objectAtIndex:row];
+    }else if ([pickerView isEqual:_playCallOppPickerView]){
+        return [_playCallOppArray objectAtIndex:row];
+    }else if ([pickerView isEqual:_playCallPickerView]){
+        return [_playCallArray objectAtIndex:row];
     }else{
         return [gainPickerViewDataArr objectAtIndex: row];
     }
@@ -1029,12 +1029,12 @@
     }else if([pickerView isEqual:sTPickerView]){
         selectedRow = 0;
         dataArr = [specialTeamsArray copy];
-    }else if([pickerView isEqual:playCallOppPickerView]){
+    }else if([pickerView isEqual:_playCallOppPickerView]){
         selectedRow = 0;
-        dataArr = [playCallOppArray copy];
-    }else if([pickerView isEqual:playCallPickerView]){
+        dataArr = [_playCallOppArray copy];
+    }else if([pickerView isEqual:_playCallPickerView]){
         selectedRow = 0;
-        dataArr = [playCallArray copy];
+        dataArr = [_playCallArray copy];
     }else{
         
         selectedRow = selectedRowforGain;

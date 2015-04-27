@@ -92,6 +92,7 @@ static void *  downLoaderContext = &downLoaderContext;
         isDownloading           = NO;
         
         _IOAlertView            = [[CustomAlertView alloc]init];
+        _IOAlertView.type = AlertNotification;
         
         [_IOAlertView setTitle:@"myplayXplay"];
         [_IOAlertView setMessage:@"There isn't enough space on the device."];
@@ -129,7 +130,11 @@ static void *  downLoaderContext = &downLoaderContext;
     // check again for space, if none... pause and show an alert if it has one
     if (![Downloader deviceHasFreeSpace]) {
         self.pause = NO;
-        if (_IOAlertView) [_IOAlertView show];
+        if (_IOAlertView) {
+            if (![_IOAlertView display]) {
+                [CustomAlertView removeAlert:_IOAlertView];
+            }
+        }
         isDownloading = NO;
         [self removeFromQueue: [_queue lastObject]];
         PXPLog(@"Device needs more space");
@@ -152,7 +157,11 @@ static void *  downLoaderContext = &downLoaderContext;
     
     switch (cItem.status) {
         case DownloadItemStatusIOError:
-            if (_IOAlertView) [_IOAlertView show];
+            if (_IOAlertView) {
+                if (![_IOAlertView display]) {
+                    [CustomAlertView removeAlert:_IOAlertView];
+                }
+            };
             self.pause = YES;
             break;
         case DownloadItemStatusComplete:
@@ -166,7 +175,9 @@ static void *  downLoaderContext = &downLoaderContext;
             [_IOAlertView setMessage:[NSString stringWithFormat:@"Can't download the event %@", cItem.name]];
             //[_IOAlertView addButtonWithTitle:@"Ok"];
             [_IOAlertView setDelegate:self];
-            [_IOAlertView show];
+            if (![_IOAlertView display]) {
+                [CustomAlertView removeAlert:_IOAlertView];
+            }
             [self removeFromQueue:cItem];
             [self process];
             break;

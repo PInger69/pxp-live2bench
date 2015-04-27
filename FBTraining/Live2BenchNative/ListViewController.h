@@ -9,49 +9,33 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "CustomTabViewController.h"
-#import "FilterToolboxViewController.h"
 #import "ListViewCell.h"
 #import "Live2BenchViewController.h"
-#import "UtilitiesController.h"
-//#import "Globals.h"
 #import "TeleViewController.h"
 #import "UIFont+Default.h"
 #import "BorderButton.h"
-#import "EdgeSwipeEditButtonsView.h"
-#import "VideoPlayer.h"
 #import "ImageAssetManager.h"
 #import "ListTableViewController.h"
 #import "PxpVideoPlayerProtocol.h"
-
 #import "TestFilterViewController.h"
+#import "Tag.h"
 
-
-@class FilterToolboxViewController;
 @class TeleViewController, ExportPlayersPopoverController;
 
-@interface ListViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate,UIGestureRecognizerDelegate, EdgeSwipeButtonDelegate, UIPopoverControllerDelegate>{
+@interface ListViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate>{
     BOOL fullScreenMode;
     int cellCounter;            //number of cells created in list view
     int coachPickMode;          //if it is a coach pick tag, this value is equal to 1; else is 0
     int cellSelectedNumber;     //number of list view cell has been selected (0 or 1), used for enabling the comment box
-    //    Globals                     *globals;
-    //    NSString                    *userId;                             // user's hid
     NSString                    *tagId;                              //tag's id
-    //    NSFileManager               *fileManager;
     NSIndexPath                 *wasPlayingIndexPath;                //the index path of the cell which was just selected
     NSMutableData               *_responseData;                      //data received from the server when try to download a tag
-    //    NSMutableArray              *allTags;                            //array of all the tags from current event
     NSMutableArray              *typesOfTags;
     NSDictionary                *currentPlayingTag;                  //dictionary of current playing tag
     Tag                         *selectedTag;                        //the tag currently selected playing
-    //    NSMutableDictionary         *newTagInfoDict;                     //dictionary for new generated bookmark tag
-    //    NSMutableDictionary         *downloadingTagsDict;                //array of tags which have selected to download
-    //    UtilitiesController         *uController;
     UILabel                     *tagEventName;                       //UILabel for the name of the current playing tag
     UILabel                     *tagEventNameFullScreen;             //lable for current playing tag's name in fullscreen
     UIPopoverController         * _popover;
-    //    AVAssetExportSession        *exportSession;                      //export session used for downloading tags in offline mode
-    //    UITableView                 *myTableView;
     ListTableViewController     *_tableViewController;
     UIView                      *filterContainer;                    //UIView used for positioning filter view
     CustomButton                *startRangeModifierButton;           //duration extension button which adding 5 secs at the beginning of the tag
@@ -67,7 +51,6 @@
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 @property (nonatomic,strong) NSDictionary                * feeds;
 
-@property (nonatomic,strong) FilterToolboxViewController * filterToolBoxListViewController;
 @property (nonatomic,strong) NSMutableDictionary         * selectedCellRows; //dictionary of all the information of the cells which have been viewed
 @property (nonatomic,strong) CustomButton                * teleButton;
 //@property (nonatomic,strong) TeleViewController          * teleViewController;
@@ -80,7 +63,6 @@
 @property (nonatomic,strong) UIView                      * seekBackControlView; //uiview which contains three buttons for controlling the video seeks back 5secs/1sec/0.25s
 @property (nonatomic,strong) UIView                      * seekBackControlViewinFullScreen;
 @property (nonatomic,strong) UIView                      * seekForwardControlViewinFullScreen;
-@property (nonatomic,strong) EdgeSwipeEditButtonsView    * edgeSwipeButtons;
 @property (nonatomic,strong) UIView                      * blurView;
 @property (nonatomic,strong) UIScrollView                * breadCrumbsView; //scrollview used to show which filter elements are selected currently
 @property (nonatomic,strong) NSMutableArray              * aCopyOfUnfinishedTags;

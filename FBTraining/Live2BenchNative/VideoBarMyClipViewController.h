@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "VideoPlayer.h"
+#import "PxpVideoPlayerProtocol.h"
 #import "Slomo.h"
 #import "SeekButton.h"
 #import "VideoBarContainerView.h"

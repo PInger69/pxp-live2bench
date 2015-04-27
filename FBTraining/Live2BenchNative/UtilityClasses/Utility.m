@@ -244,35 +244,6 @@
     return result;
 }
 
-//+(NSString*)cmTimeToString:(CMTime)time
-//{
-//    NSString * txt;
-//
-//    return txt;
-//}
-
-+(NSComparisonResult)compareVersion:(NSString *)versionNum1 with:(NSString*)versionNum2
-{
-    //    NSInteger (^cmpGroup)(NSString *grp1,NSString *grp2) = ^NSInteger(NSString *grp1,NSString *grp2) {
-    //
-    //        NSInteger n1 = [string componentsSeparatedByString: @";"]
-    //
-    //        return
-    //    };
-    //
-    //
-    //    return (NSComparisonResult)1;
-}
-
-
-
-/**
- *  This makes a NSDictionary of basic data for taging
- */
-+(NSDictionary*)tagDict
-{}
-
-
 
 
 

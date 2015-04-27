@@ -68,7 +68,7 @@
     UIImageView *squareImageView = [[UIImageView alloc]initWithImage:squareImage];
     [self addSubview:squareImageView];
     
-    CGColorRef color = [colorToChange CGColor];
+//    CGColorRef color = [colorToChange CGColor];
  
 }
 /*

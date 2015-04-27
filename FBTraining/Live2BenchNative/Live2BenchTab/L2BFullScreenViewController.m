@@ -7,6 +7,7 @@
 //
 
 #import "L2BFullScreenViewController.h"
+#import "PxpVideoPlayerProtocol.h"
 
 
 
@@ -49,7 +50,7 @@
     return self;
 }
 
--(void)buildAddSubview:(VideoPlayer *)player {
+-(void)buildAddSubview:(UIViewController <PxpVideoPlayerProtocol> *)player {
     _seekForward                = [self _makeSeekButton:SEEK_DIRECTION_RIGHT targetVideoPlayer:player];
     _seekBackward               = [self _makeSeekButton:SEEK_DIRECTION_LEFT targetVideoPlayer:player];
     _slomo                      = [self _makeSlomo:player];
@@ -129,7 +130,7 @@
 }
 
 
--(Slomo*)_makeSlomo:(VideoPlayer*)vp
+-(Slomo*)_makeSlomo:(UIViewController <PxpVideoPlayerProtocol>*)vp
 {
     Slomo *  btn = [[Slomo alloc]initWithFrame:CGRectMake(75, controlOffsetY, 65, 50)];
     [btn addTarget:self action:  @selector(toggleSlowmo:) forControlEvents:UIControlEventTouchUpInside];
@@ -221,7 +222,7 @@
     return btn;
 }
 
--(SeekButton*)_makeSeekButton:(Direction)dir targetVideoPlayer:(VideoPlayer*)vp
+-(SeekButton*)_makeSeekButton:(Direction)dir targetVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vp
 {
     SeekButton  * btn;
     switch ( dir ) {

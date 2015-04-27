@@ -17,7 +17,6 @@
 #import "BorderButton.h"
 #import "PopoverButton.h"
 #import "CustomTabBar.h"
-#import "TTSwitch.h"
 #import "PxpVideoPlayerProtocol.h"
 
 

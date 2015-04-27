@@ -10,12 +10,13 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import <QuartzCore/QuartzCore.h>a
+#import <QuartzCore/QuartzCore.h>
 #import "PxpVideoPlayerProtocol.h"
 #import "Slomo.h"
 #import "TeleViewController.h"
 #import "CustomButton.h"
 #import "TeleViewController.h"
+#import "PxpVideoPlayerProtocol.h"
 
 @interface InjuryViewController : CustomTabViewController
 

@@ -58,6 +58,7 @@
 
 - (void)shareOptionChosen:(UIButton *)sender {
     NSString *optionChosen = sender.titleLabel.text;
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [buttonTarget performSelector:selectorToCall withObject:optionChosen];
 }
 

@@ -89,6 +89,7 @@
     self.rightVideoTimeLabel.text = [self translateTimeFormat: self.timeSlider.maximumValue];
 }
 -(void)cancelClip{
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [player performSelector:cancelSEL];
 }
 

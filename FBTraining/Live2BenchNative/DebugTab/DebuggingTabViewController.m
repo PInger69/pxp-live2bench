@@ -9,7 +9,6 @@
 #import "DebuggingTabViewController.h"
 #import "Pip.h"
 #import "EncoderManager.h"
-//#import "Globals.h"
 #import "FeedSwitchView.h"
 #import "PipViewController.h"
 #import "BitrateMonitor.h"
@@ -18,7 +17,6 @@
 #import "ListPopoverController.h"
 #import "FullScreenViewController.h"
 #import "L2BFullScreenViewController.h"
-#import "VideoPlayer.h"
 #import "RJLVideoPlayer.h"
 #import "DownloadItem.h"
 #import "Downloader.h"
@@ -26,12 +24,12 @@
 #import "UserCenter.h"
 #import "PxpLog.h"
 
+
 @interface DebuggingTabViewController ()
 {
     RJLVideoPlayer              * testPlayer;
     
-    
-    VideoPlayer                 * videoPlayer;
+
     Pip    * pip;
     Pip    * pip2;
     UIView * rectOutline;

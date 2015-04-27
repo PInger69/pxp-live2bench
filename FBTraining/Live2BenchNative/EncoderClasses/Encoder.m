@@ -294,14 +294,12 @@
         currentCommand = nextInQueue;
         id controller   = nextInQueue.target;
         SEL sel         = nextInQueue.selector;
+        #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [controller performSelector:sel withObject:nextInQueue.tagData withObject:nextInQueue.timeStamp];
         isWaitiing = YES;
         
         
-//        [log appendFormat:@"%@  %@ - "
-//                        ,[NSDateFormatter localizedStringFromDate:[NSDate date] dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle]
-//                        ,NSStringFromSelector(currentCommand.selector)
-//                        ];
+
     }
     
 }
@@ -839,8 +837,12 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([results objectForKey:@"id"]) {
+<<<<<<< HEAD
             //NSString * tagId = [[results objectForKey:@"id"]stringValue];
             PXPLog(@"Tag Modification succeded: %@", results);
+=======
+//            NSString * tagId = [[results objectForKey:@"id"]stringValue];
+>>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
             //[_event.tags setObject:results forKey:tagId];
             //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
         }
@@ -859,7 +861,7 @@
             Tag *newTag = [[Tag alloc] initWithData: results];
             newTag.feeds = self.encoderManager.feeds;
             [_event.tags setObject:newTag forKey:tagId];
-           // [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+            // [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
         }
     }
 }
@@ -887,7 +889,6 @@
     }
     
 }
-
 -(void)camerasGetResponce:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];

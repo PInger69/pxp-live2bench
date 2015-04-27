@@ -35,4 +35,5 @@ static void * isObservedContext2 = &isObservedContext2;
 -(void)swapVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer withPip:(Pip*)aPip;
 -(void)syncToPlayer;
 -(void)pipsAndVideoPlayerToLive;
+-(Float64)durationInSeconds;
 @end

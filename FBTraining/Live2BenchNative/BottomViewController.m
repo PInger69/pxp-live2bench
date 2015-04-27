@@ -27,7 +27,7 @@
 @synthesize homeSegControl=_homeSegControl;
 @synthesize awaySegControl =_awaySegControl;
 @synthesize moviePlayer=_moviePlayer;
-@synthesize oldName,uController;
+@synthesize oldName;
 
 
 - (id)initWithController:(Live2BenchViewController *)l2b
@@ -64,12 +64,10 @@
     NSMutableArray *lineThree = [[NSMutableArray alloc]init];
     NSMutableArray *lineFour = [[NSMutableArray alloc]init];
     arrayOfLines = [[NSMutableArray alloc]initWithObjects:lineOne,lineTwo,lineThree,lineFour, nil];
-    //appQueue = [[AppQueue alloc]init];
-    uController = [[UtilitiesController alloc]init];
-   leftLineButtonWasSelected = nil;//[[CustomButton alloc]init];
-    rightLineButtonWasSelected =nil;// [[CustomButton alloc]init];
+    leftLineButtonWasSelected = nil;
+    rightLineButtonWasSelected =nil;
     [self updateControlInfo];
-    // Do any additional setup after loading the view from its nib.
+    
 }
 //TODO: create a timer that highlights lines, period, strength
 //TODO: put line buttons in a global array to access later on in the code
@@ -89,7 +87,7 @@
     [self.periodLabel setBackgroundColor:[UIColor clearColor]];
     [segmentControlView addSubview:self.periodLabel];
     
-    [self.periodSegmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
+//    [self.periodSegmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
     [self.periodSegmentedControl setFrame:CGRectMake(self.periodLabel.frame.origin.x, CGRectGetMaxY(self.periodLabel.frame) + 5.0f, self.periodSegmentedControl.numberOfSegments*50.0f, 30.0f)];
     [self.periodSegmentedControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [self.periodSegmentedControl addTarget:self action:@selector(halfValueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -101,13 +99,13 @@
     [strengthHomeLabel setBackgroundColor:[UIColor clearColor]];
     [segmentControlView addSubview:strengthHomeLabel];
     
-    [self.homeSegControl setSegmentedControlStyle:UISegmentedControlStyleBar];
+//    [self.homeSegControl setSegmentedControlStyle:UISegmentedControlStyleBar];
     [self.homeSegControl setFrame:CGRectMake(strengthHomeLabel.frame.origin.x, CGRectGetMaxY(strengthHomeLabel.frame) + 5.0f, self.homeSegControl.numberOfSegments*50.0f, 30.0f)];
     [self.homeSegControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [self.homeSegControl addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
     [segmentControlView addSubview:self.homeSegControl];
     
-    [self.awaySegControl setSegmentedControlStyle:UISegmentedControlStyleBar];
+//    [self.awaySegControl setSegmentedControlStyle:UISegmentedControlStyleBar];
     [self.awaySegControl setFrame:CGRectMake(strengthHomeLabel.frame.origin.x, CGRectGetMaxY(self.homeSegControl.frame) + 15.0f, self.awaySegControl.numberOfSegments*50.0f, 30.0f)];
     [self.awaySegControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [self.awaySegControl addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -396,7 +394,7 @@
 - (void)buttonSelected:(id)sender{
     CustomButton *button = (CustomButton*)sender;
     NSString *name;
-    NSString *tagTime;
+//    NSString *tagTime;
 
     if([button.accessibilityLabel isEqualToString:@"left"])
     {
@@ -456,7 +454,7 @@
 //    dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
     
     //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
+//    double currentSystemTime = CACurrentMediaTime();
     //TEMPORARY BUG FIX BY CHANGING USER INFO
 //    dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",@"123",@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
 //
@@ -555,7 +553,7 @@
         //NSString *tagTime = [NSString stringWithFormat:@"%f",live2BenchViewController.moviePlayer.currentPlaybackTime];
 //        NSString *tagTime= [NSString stringWithFormat:@"%f",[live2BenchViewController.videoPlayer currentTimeInSeconds]];
     //current absolute time in seconds
-    double currentSystemTime = CACurrentMediaTime();
+//    double currentSystemTime = CACurrentMediaTime();
 //       dict = [[NSDictionary alloc]initWithObjectsAndKeys:globals.EVENT_NAME,@"event",name,@"name",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",[globals.ACCOUNT_INFO objectForKey:@"hid"],@"user",tagTime,@"tagtime",[globals.ACCOUNT_INFO objectForKey:@"tagColour"],@"colour",name,@"line", @"1",@"type", nil];//,nil];
 //        
 //        [self sendTagInfo:dict];

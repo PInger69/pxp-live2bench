@@ -13,7 +13,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "VideoPlayer.h"
+
 #import "Slomo.h"
 #import "SeekButton.h"
 #import "VideoBarContainerView.h"

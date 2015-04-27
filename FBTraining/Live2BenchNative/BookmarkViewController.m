@@ -7,21 +7,13 @@
 //
 
 #import "RatingAndCommentingField.h"
-
 #import "BookmarkViewController.h"
 #import "AppDelegate.h"
 #import "ClipSharePopoverViewController.h"
-#import "EdgeSwipeButton.h"
-#import "EdgeSwipeEditButtonsView.h"
 #import "HeaderBar.h"
 #import "CommentingRatingField.h"
 #import "RatingInput.h"
-//#import "JPReorderTableView.h"
-//#import "JPTripleSwipeCell.h"
 #import "MyClipFilterViewController.h"
-//#import "TagPopOverContent.h"
-//#import "SVStatusHUD.h"
-//#import "DPBFileUploader.h"
 #import "NSObject+LBCloudConvenience.h"
 #import "CustomAlertView.h"
 #import "VideoBarMyClipViewController.h"
@@ -717,14 +709,14 @@ int viewWillAppearCalled;
     [_filterToolBoxView open:YES]; // Slide filter open
     
     componentFilter.rawTagArray = self.allClips;
-    componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
+    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
     
     [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
     //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
     componentFilter.finishedSwipe = TRUE;
     
     [self.view addSubview:componentFilter.view];
-    componentFilter.rangeSlider.highestValue = [(VideoPlayer *)self.videoPlayer durationInSeconds];
+    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
     [componentFilter setOrigin:CGPointMake(60, 190)];
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
@@ -739,8 +731,7 @@ int viewWillAppearCalled;
     [_filterToolBoxView close:YES]; // Slide filter close
     blurView.hidden = YES;
     //blurView = nil;
-    [self.edgeSwipeButtons deselectButtonAtIndex:1];
-    
+   
     [componentFilter close:YES];
     
 }
@@ -873,17 +864,12 @@ int viewWillAppearCalled;
     [blurView removeFromSuperview];
     //blurView=nil;
     [self dismissFilterToolbox];
-    [self.edgeSwipeButtons deselectButtonAtIndex:1];
-    
-    //[typesOfTags removeAllObjects];
-    
+   
+ 
     currentPlayingTag = nil;
     
     
-    
-    
-    //Edge Swipe Buttons
-    [self.edgeSwipeButtons deselectAllButtons];
+
     
 }
 
@@ -1216,7 +1202,7 @@ int viewWillAppearCalled;
         return;
     }
     
-    NSIndexPath *nextPath = [NSIndexPath indexPathForRow:nextIndex inSection:wasPlayingIndexPath.section];
+//    NSIndexPath *nextPath = [NSIndexPath indexPathForRow:nextIndex inSection:wasPlayingIndexPath.section];
     //[self reorderTableView:self.tableView didSelectRowAtIndexPath:nextPath];
 }
 
@@ -1237,55 +1223,6 @@ int viewWillAppearCalled;
     [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:teleButton];
 }
 
-
-////create telestration screen
-//-(void)initTele:(id)sender
-//{
-//    [self.videoPlayer pause];
-//    [self hideFullScreenOverlayButtons];
-//
-//    CMTime currentCMTime            = self.videoPlayer.avPlayer.currentTime;
-////    globals.TELE_TIME               = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
-//    ////////NSLog(@"initTele tele time %f, current time %f",globals.TELE_TIME,CMTimeGetSeconds(currentCMTime));
-//    teleViewController              = [[TeleViewController alloc] initWithController:self];
-//    [teleViewController.view setFrame:CGRectMake(0, 10, 1024, 768)];
-//    self.videoPlayer.playerFrame    = CGRectMake(0, 0, 1024, 748);
-//    [self.teleButton setHidden:TRUE];
-//
-//    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self.teleViewController.view];
-//
-//}
-
-/**
- *  This method is used byt the teleViewController
- */
--(void)hideFullScreenOverlayButtons
-{
-    [playbackRateBackButton setHidden:TRUE];
-    [playbackRateBackLabel setHidden:TRUE];
-    [playbackRateBackGuide setHidden:TRUE];
-    [playbackRateForwardButton setHidden:TRUE];
-    [playbackRateForwardLabel setHidden:TRUE];
-    [playbackRateForwardGuide setHidden:TRUE];
-    
-    [newFullScreenVideoControlBar.view setHidden:YES]; // Richard
-}
-
-
-/**
- *  This method is used byt the teleViewController
- */
--(void)showFullScreenOverlayButtons
-{
-    [playbackRateBackButton setHidden:FALSE];
-    [playbackRateBackLabel setHidden:FALSE];
-    [playbackRateBackGuide setHidden:FALSE];
-    [playbackRateForwardButton setHidden:FALSE];
-    [playbackRateForwardLabel setHidden:FALSE];
-    [playbackRateForwardGuide setHidden:FALSE];
-    
-    [newFullScreenVideoControlBar.view setHidden:NO]; // Richard
-}
 
 
 -(void)removeAllFullScreenSubviews
@@ -1319,73 +1256,6 @@ int viewWillAppearCalled;
     
 }
 
-// IS this dead?
-//press the cell for more than 2 seconds, pop up the details of the tag and the event
-- (void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer
-{
-    if (!fullScreenMode){
-        BookmarkViewCell *cell;
-        if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-            
-            //            CGPoint p = [gestureRecognizer locationInView:self.tableView];
-            ////                CGPoint q = [gestureRecognizer locationInView:self.view];
-            //
-            //            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:p];
-            //            if (indexPath == nil) {
-            //                return;
-            //            }
-            //
-            //            [self reorderTableView:self.tableView didSelectRowAtIndexPath:indexPath];
-            //            cell = (BookmarkViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
-            //            NSDictionary *data = [self tagAtIndexPath:indexPath];
-            
-            //show popover view to show the tag's details information,ie: event date,event time, home/visit teams, league, tag name and tag time
-            //
-            //            UIViewController* popoverContent = [[UIViewController alloc] init];
-            //            UIView *popoverView = [[UIView alloc] init];
-            //            popoverView.backgroundColor = [UIColor whiteColor];
-            //            UITextView *tagDetailsView = [[UITextView alloc]initWithFrame:CGRectMake(10, 5, 340, 280)];
-            //            if([[data objectForKey:@"event" ] isEqualToString:@"live"])
-            //            {
-            //                return;
-            //            }
-            //            NSArray *tempArr = [[data objectForKey:@"event" ] componentsSeparatedByString:@"_"];
-            //            NSString *eventDate =  [NSString stringWithString:[tempArr objectAtIndex:0] ];
-            //            NSArray *tempTime = [[NSString stringWithFormat:@"%@",[tempArr objectAtIndex:1]]componentsSeparatedByString:@"-"] ;
-            //            NSString *eventTime = [NSString stringWithFormat:@"%@ : %@ : %@",[tempTime objectAtIndex:0],[tempTime objectAtIndex:1],[tempTime objectAtIndex:2]];
-            //
-            //            NSDictionary *teamInfo = [[allEvents objectForKey:[data objectForKey:@"event"]] copy];
-            //            NSString *homeTeam;
-            //            NSString *visitTeam;
-            //            NSString *leagueName;
-            //            if (teamInfo){
-            //                homeTeam = [teamInfo objectForKey:@"homeTeam"];
-            //                visitTeam = [teamInfo objectForKey:@"visitTeam"];
-            //                leagueName = [teamInfo objectForKey:@"league"];
-            //            } else {
-            //                homeTeam = [data objectForKey:@"homeTeam"];
-            //                visitTeam = [data objectForKey:@"visitTeam"];
-            //                leagueName = @"";
-            //            }
-            //
-            //            [tagDetailsView setText:[NSString stringWithFormat:@"event date: %@ \nevent time: %@ \nhome team: %@ \nvisit team: %@ \nleague: %@\ntag name: %@ \ntag time: %@",eventDate,eventTime,homeTeam,visitTeam,leagueName,[data objectForKey:@"name"],           [data objectForKey:@"displaytime"]]];
-            //            [tagDetailsView setFont:[UIFont boldSystemFontOfSize:18.f]];
-            //            [tagDetailsView setUserInteractionEnabled:FALSE];
-            //            [popoverView addSubview:tagDetailsView];
-            //            popoverContent.view = popoverView;
-            //            popoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-            //            [popoverController setPopoverContentSize:CGSizeMake(300, 220) animated:YES];
-            //            //pop over the view based on the cell's position
-            //            [popoverController presentPopoverFromRect:cell.bounds inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-            
-            // [[self.tableView cellForRowAtIndexPath:wasPlayingIndexPath] setBackgroundColor:[UIColor colorWithWhite:0.9f alpha:1.0f]];
-            //            }
-            // wasPlayingIndexPath = indexPath;
-        }
-        
-        [videoPlayer play];
-    }
-}
 
 #pragma mark - Richard Filtering
 -(void)receiveFilteredArrayFromFilter:(id)filter
@@ -1458,68 +1328,8 @@ int viewWillAppearCalled;
     //[self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
 }
 
-///**
-// *  This is a getter that returnds the tages To Be displayed
-// *  check this
-// *
-// *  @return tags in the tableview
-// */
-//-(NSMutableArray *)tagsToDisplay
-//{
-//    return _tagsToDisplay;
-//}
-//
-//-(void)setTagsToDisplay:(NSMutableArray *)newToDisplay
-//{
-//    _tagsToDisplay = newToDisplay;
-//    // update tag display
-//    int tagCount = [_tagsToDisplay count];
-//    NSString * tagPlur = (tagCount==1)?@"Tag":@"Tags";
-//    UIEdgeInsets insets = {10, 50, 0, 50};
-//    [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets)];
-//    
-//    
-//    [numTagsLabel setText:[NSString stringWithFormat:@"%d %@   ",tagCount,tagPlur ]];
-//    [numTagsLabel setNeedsDisplay];
-//    
-//    UIEdgeInsets insets2 = {10, 50, 0, 50};
-//    [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets2)];
-//}
 
 
-
-#pragma mark - Sharing Methods
-
-//send clip to dropbox
-//-(void)sendVideoToDropbox:(id)sender
-//{
-//    DBSession* dropboxSession = [[DBSession alloc] initWithAppKey:kDropboxAppKey appSecret:kDropboxAppSecret root:kDropboxAppRoot];
-//    [DBSession setSharedSession:dropboxSession];
-//
-//    if(![dropboxSession isLinked])
-//    {
-//        [[DBSession sharedSession] linkFromController:self];
-//        return;
-//    }
-//
-//    _DPBUploader = [[DPBFileUploader alloc] initWithSession:dropboxSession];
-//    _DPBUploader.expectedUploadNum = [self.tableView.selectedRows count];
-//
-//    for(NSNumber* rowNum in self.tableView.selectedRows)
-//    {
-//        NSInteger selectedRow = [rowNum integerValue];
-//        NSDictionary* tag = [self.tagsToDisplay objectAtIndex:selectedRow];
-//
-//        NSString* fileName = [self cloudFileNameWithTag:tag];
-//        NSData* fileData = [self cloudFileDataWithTag:tag];
-//
-//        [_DPBUploader uploadFileAsyncWithFileName:fileName data:fileData destPath:[self dropboxTodayFolderPath]];
-//    }
-//
-//    [popoverController dismissPopoverAnimated:YES];
-//    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-//}
-//
 
 - (NSString*)cloudFileNameWithTag: (NSDictionary*)tag
 {
@@ -1538,44 +1348,6 @@ int viewWillAppearCalled;
 - (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
 }
-
-
-#pragma mark Twitter Share
-//-(void)twitterShare
-//{
-//    [self socialShareWithMethod:2];
-//}
-
-//- (void)socialShareWithMethod: (NSInteger)service
-//{
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
-//    [super didReceiveMemoryWarning];
-//    if ([self.view window] == nil) self.view = nil;
-//    if(_currentSharingMethod > 0)
-//        return;
-//
-//    // Dispose of any resources that can be recreated.
-//    NSArray* methodStrings = @[@"None", @"Facebook", @"Twitter"];
-//
-//    //    if(!_GDUploader)
-//    //    {
-//    //        _GDUploader = [[GDFileUploader alloc] initWithDriveService:nil];
-//    //        _GDUploader.delegate = self;
-//    //    }
-//    //
-//    //    if(![_GDUploader isAuthorized])
-//    //    {
-//    //        [[[UIAlertView alloc] initWithTitle:@"Cannot Share" message:[NSString stringWithFormat:@"You must also be linked to Google Drive in order to share the video link(s) on %@",methodStrings[service]] delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles: nil] show];
-//    //        return;
-//    //    }
-//
-//    //    _currentSharingMethod = service;
-//    //    [self uploadToGoogleDrive];
-//    //
-//    //    [popoverController dismissPopoverAnimated:YES];
-//    //    [self.tableView selectAllCellsWithSelectionType:JPTripleSwipeCellSelectionNone];
-//    
-//}
 
 
 @end
