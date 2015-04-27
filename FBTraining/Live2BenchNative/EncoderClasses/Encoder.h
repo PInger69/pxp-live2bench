@@ -13,6 +13,8 @@
 #import "EncoderCommand.h" // Depricated
 #import "Event.h"
 
+@class EncoderManager;
+
 #define OLD_VERSION  @"1.0.13"
 
 #define NOTIF_ENCODER_CONNECTION_PROGRESS   @"encoderConnectionProgress"
@@ -69,7 +71,7 @@
 @property (nonatomic,strong)    Event           * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    Event           * liveEvent;
 @property (nonatomic,strong)    NSDictionary    * allEvents;    // all events on the encoder
-
+@property (nonatomic,weak)    EncoderManager  *encoderManager;
 @property (nonatomic,assign)    EncoderStatus   status;
 @property (nonatomic,strong)    NSString        * statusAsString;
 @property (nonatomic,assign)    double          bitrate;

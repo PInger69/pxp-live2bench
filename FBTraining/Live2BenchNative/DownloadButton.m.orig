@@ -200,8 +200,12 @@
     }
 }
 
+<<<<<<< HEAD
+-(void)dealloc{
+=======
 - (void)dealloc {
     //Or we can change the property isAlive on downloadItem and observe it
+>>>>>>> 458a23302802717a99cd160c4088dd50d7d2befe
     if (self.downloadItem) {
         [self.downloadItem removeObserver:self forKeyPath:@"status"];
     }

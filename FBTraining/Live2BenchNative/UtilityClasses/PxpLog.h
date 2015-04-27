@@ -8,21 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-
-// Please make PxpLog(@"words") work
-
-//#ifdef DEBUG
-//#   define PxpLog(...) NSLog(__VA_ARGS__)
-//#else
-//#   define PxpLog(...)
-//#endif
-
+#define PXPLog(s,...) [PxpLog log:(s),##__VA_ARGS__]
 
 @interface PxpLog : NSObject
 
 @property (nonatomic,strong) NSMutableString * text;
 
-+(void)log:(NSString*)log;
++(void)log:(NSString*)log,...;
 +(instancetype)getInstance;
 +(NSMutableString*)output;
 @end

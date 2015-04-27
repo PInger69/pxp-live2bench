@@ -10,6 +10,8 @@
 #import "CustomButton.h"
 #import "ClipCornerView.h"
 
+@class Tag;
+
 @interface thumbnailCell : UICollectionViewCell
 {
     UIImageView *imageView;
@@ -48,7 +50,7 @@
 @property (nonatomic) BOOL imageLoaded;
 @property (nonatomic,strong) UIView *translucentEditingView;
 @property (nonatomic,strong) UIImageView *checkmarkOverlay;
-@property (nonatomic,strong) NSDictionary *data;
+@property (nonatomic,strong) Tag *data;
 
 -(void)setDeletingMode: (BOOL) mode;
 

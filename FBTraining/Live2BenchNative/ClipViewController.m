@@ -14,7 +14,7 @@
 #import "EncoderManager.h"
 #import "ImageAssetManager.h"
 #import "TestFilterViewController.h"
-
+#import "Tag.h"
 
 
 #define CELLS_ON_SCREEN         12
@@ -101,8 +101,8 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 -(void) deleteTag: (NSNotification *)note{
-    [self.allTagsArray removeObject: note.userInfo];
-    [self.tagsToDisplay removeObject: note.userInfo];
+    [self.allTagsArray removeObject: note.object];
+    [self.tagsToDisplay removeObject: note.object];
     componentFilter.rawTagArray = self.allTagsArray;
     //[componentFilter refresh];
     [_collectionView reloadData];
@@ -131,9 +131,9 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    if (note.userInfo) {
-        [self.allTagsArray addObject: note.userInfo];
-        [self.tagsToDisplay addObject:note.userInfo];
+    if (note.object) {
+        [self.allTagsArray addObject: note.object];
+        [self.tagsToDisplay addObject: note.object];
         [self.collectionView reloadData];
         //[_collectionView reloadData];
     }
@@ -707,26 +707,26 @@ static void * encoderTagContext = &encoderTagContext;
 {
     
     // Get the data from the array
-    NSDictionary *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+    Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
     
     
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
     cell.backgroundView = nil;
     cell.data           = tagSelect;
     //    cell.thumbColour.backgroundColor = [Utility colorWithHexString:[tagSelect objectForKey:@"colour"]];
-    [cell.thumbColour changeColor:[Utility colorWithHexString:[tagSelect objectForKey:@"colour"]] withRect:cell.thumbColour.frame];
+    [cell.thumbColour changeColor:[Utility colorWithHexString: tagSelect.colour] withRect:cell.thumbColour.frame];
     
-    NSString *thumbNameStr = [tagSelect  objectForKey:@"name"];
+    NSString *thumbNameStr = tagSelect.name;
     
     [cell.thumbName setText:[[thumbNameStr stringByRemovingPercentEncoding] stringByReplacingOccurrencesOfString:@"%" withString:@""]];
     [cell.thumbName setFont:[UIFont boldSystemFontOfSize:18.0f]];
-    [cell.thumbTime setText:[tagSelect objectForKey:@"displaytime"]];
-    [cell.thumbDur setText:[NSString stringWithFormat:@"%.02fs",[[tagSelect objectForKey:@"duration"] floatValue]]];
+    [cell.thumbTime setText: tagSelect.displayTime];
+    [cell.thumbDur setText:[NSString stringWithFormat:@"%.2ds",tagSelect.duration]];
     
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_imageAssetManager imageForURL: tagSelect[@"url"] atImageView: cell.imageView ];
+    [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView ];
     
     [cell setDeletingMode: self.isEditing];
     
@@ -808,7 +808,7 @@ static void * encoderTagContext = &encoderTagContext;
             [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
             
             NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:nil userInfo:tag];
+            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
             [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
             
             [self removeIndexPathFromDeletion];
@@ -885,8 +885,8 @@ static void * encoderTagContext = &encoderTagContext;
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     [sourceSelectPopover clear];
     
-    if ([selectedCell.data objectForKey:@"url_2"]) { // if is new
-        NSArray * listOfScource = [[[selectedCell.data objectForKey:@"url_2"] allKeys]sortedArrayUsingSelector:@selector(compare:)];
+    if (selectedCell.data.thumbnails.count >=2) { // if is new
+        NSArray * listOfScource = [[selectedCell.data.thumbnails allKeys]sortedArrayUsingSelector:@selector(compare:)];
         
         
         
@@ -894,7 +894,7 @@ static void * encoderTagContext = &encoderTagContext;
         [sourceSelectPopover setListOfButtonNames:listOfScource];
         
         //This is where the Thumbnail images are added to the popover
-        NSDictionary *tagSelect = [selectedCell.data objectForKey:@"url_2"] ;
+        NSDictionary *tagSelect = selectedCell.data.thumbnails ;
         
         int i = 0;
         for (NSString *url in listOfScource){
@@ -919,8 +919,8 @@ static void * encoderTagContext = &encoderTagContext;
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
                                                                                                                       @"feed":pick,
-                                                                                                                      @"time":[selectedCell.data objectForKey:@"starttime"],
-                                                                                                                      @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                      @"time": [NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
+                                                                                                                      @"duration": [NSString stringWithFormat:@"%d", selectedCell.data.duration ],
                                                                                                                       @"state":[NSNumber numberWithInteger:PS_Play]}];
             }];
             
@@ -933,8 +933,8 @@ static void * encoderTagContext = &encoderTagContext;
             NSString * key =        listOfScource[0];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
                                                                                                                   @"feed":key,
-                                                                                                                  @"time":[selectedCell.data objectForKey:@"starttime"],
-                                                                                                                  @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                                  @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
+                                                                                                                  @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration],
                                                                                                                   @"state":[NSNumber numberWithInteger:PS_Play]}];
         }
         
@@ -945,8 +945,8 @@ static void * encoderTagContext = &encoderTagContext;
         //NSString * key =        listOfScource[0];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
                                                                                                               //@"feed":key,
-                                                                                                              @"time":[selectedCell.data objectForKey:@"starttime"],
-                                                                                                              @"duration":[selectedCell.data objectForKey:@"duration"],
+                                                                                                              @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
+                                                                                                              @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration ],
                                                                                                               @"state":[NSNumber numberWithInteger:PS_Play]}];
         
     }

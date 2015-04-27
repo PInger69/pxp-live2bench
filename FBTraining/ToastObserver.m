@@ -9,6 +9,7 @@
 #import "ToastObserver.h"
 #import "UIKit/UIKit.h"
 #import "Utility.h"
+#import "Tag.h"
 
 
 
@@ -53,38 +54,38 @@
     }
     return self;
 }
-
--(void)synchronizedTags:(NSNotification *)note {
-    if (self.toastType && ARSynchronizedTags) {
-        return;
-    }
-    if(self.enabled && note.userInfo){
-        // Each NSNotification is first added to the queue
-        [self.queueOfNotifications addObject:note];
-        // If there is only 1 Notification in the queue, animateView is called
-        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
-        //will keep track of the queue
-        if([self.queueOfNotifications count] == 1){
-            [self animateView];
-        }
-    }
-}
-
--(void)fileDownloadComplete:(NSNotification *)note {
-    if (self.toastType && ARFileDownloadComplete) {
-        return;
-    }
-    if(self.enabled && note.userInfo){
-        // Each NSNotification is first added to the queue
-        [self.queueOfNotifications addObject:note];
-        // If there is only 1 Notification in the queue, animateView is called
-        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
-        //will keep track of the queue
-        if([self.queueOfNotifications count] == 1){
-            [self animateView];
-        }
-    }
-}
+//
+//-(void)synchronizedTags:(NSNotification *)note {
+//    if (self.toastType && ARSynchronizedTags) {
+//        return;
+//    }
+//    if(self.enabled && note.userInfo){
+//        // Each NSNotification is first added to the queue
+//        [self.queueOfNotifications addObject:note];
+//        // If there is only 1 Notification in the queue, animateView is called
+//        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
+//        //will keep track of the queue
+//        if([self.queueOfNotifications count] == 1){
+//            [self animateView];
+//        }
+//    }
+//}
+//
+//-(void)fileDownloadComplete:(NSNotification *)note {
+//    if (self.toastType && ARFileDownloadComplete) {
+//        return;
+//    }
+//    if(self.enabled && note.userInfo){
+//        // Each NSNotification is first added to the queue
+//        [self.queueOfNotifications addObject:note];
+//        // If there is only 1 Notification in the queue, animateView is called
+//        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
+//        //will keep track of the queue
+//        if([self.queueOfNotifications count] == 1){
+//            [self animateView];
+//        }
+//    }
+//}
 
 
 -(void)enabledChanged: (NSNotification *) note{
@@ -147,6 +148,63 @@
     // to the toast view
     NSNotification *currentNotification = (self.queueOfNotifications[0]);
     
+    if (currentNotification.object) {
+        Tag *tag = (Tag *) currentNotification.object;
+        //Creating of the ToastView
+        UIView *presentingView = [[UIView alloc] init];
+        presentingView.layer.borderColor = [UIColor orangeColor].CGColor;
+        presentingView.backgroundColor = [UIColor whiteColor];
+        presentingView.layer.borderWidth = 1.0f;
+        
+        // These lines are to create the label and add it onto the view
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(50, 0, 150, 50)];
+        // This line set the text to be alignmented at the center of the lable
+        label.textAlignment = NSTextAlignmentCenter;
+        [presentingView addSubview:label];
+        
+        // These lines are to set the text for the label and the text color
+        label.text = [tag.name stringByRemovingPercentEncoding];
+        label.textColor = [UIColor blackColor];
+        
+        // These lines are to create a subview which is on the left of the infoView
+        // and set its color to be the same as the color of the trigger button
+        UIView *smallView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        smallView.backgroundColor = [Utility colorWithHexString: tag.colour ];
+        [presentingView addSubview:smallView];
+        
+        CGRect originalFrame = CGRectMake(20, self.parentView.bounds.size.height, 200, 50);
+        presentingView.frame = originalFrame;
+        // By keeping a reference to the view in this manner, dequeueTheArray can later remove the
+        // view from its superview (the view controller)
+        self.animatingView = presentingView;
+        [self.parentView addSubview:self.animatingView];
+        
+        // This frame is the new frame, the place where the view will
+        // show up on the screen
+        CGRect theNewFrame = self.animatingView.frame;
+        theNewFrame.origin.y = self.parentView.bounds.size.height - 70;
+        
+        double entireAnimationTime = ((self.easeTime * 2) + self.delayTime);
+        double relativeEaseTime = self.easeTime/entireAnimationTime;
+        
+        [UIView animateKeyframesWithDuration: entireAnimationTime delay:0.0 options:nil animations:^{
+            [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:relativeEaseTime animations:^{
+                presentingView.frame = theNewFrame;
+            }];
+            
+            [UIView addKeyframeWithRelativeStartTime: 1 - relativeEaseTime relativeDuration:relativeEaseTime animations:^{
+                presentingView.frame = originalFrame;
+            }];
+        }completion:NULL];
+        
+        
+        
+        // This line passes control to dequeueTheArray, which is most likely to pass control back to animateView, and that will create a
+        // cycle of methods that occur until the queue is empty.
+        [self performSelector: @selector(dequeueTheArray) withObject:self afterDelay: entireAnimationTime + 0.5];
+        return;
+    }
+    
     if (currentNotification.userInfo) {
         //Creating of the ToastView
         UIView *presentingView = [[UIView alloc] init];
@@ -157,7 +215,7 @@
         // These lines are to create the label and add it onto the view
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(50, 0, 150, 50)];
         // This line set the text to be alignmented at the center of the lable
-        label.textAlignment = UITextAlignmentCenter;
+        label.textAlignment = NSTextAlignmentCenter;
         [presentingView addSubview:label];
         
         // These lines are to set the text for the label and the text color

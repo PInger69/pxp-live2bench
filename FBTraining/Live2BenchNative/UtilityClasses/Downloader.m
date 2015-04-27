@@ -71,6 +71,12 @@ static void *  downLoaderContext = &downLoaderContext;
     return item;
 }
 
++(VideoTrimItem *)trimVideoURL: (NSString*)url to:(NSString*)path withTimeRange: (CMTimeRange) range{
+    VideoTrimItem *item = [[VideoTrimItem alloc] initWithVideoURLString:url destination:path andTimeRange:range];
+    [[Downloader defaultDownloader] addToQueue:item];
+    return item;
+}
+
 +(DownloadItem *)downloadEvent:(NSString*)eventName
 {
     return nil;

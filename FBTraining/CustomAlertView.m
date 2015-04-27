@@ -124,7 +124,7 @@ static AlertType    allowedTypes;
 
 -(BOOL)display
 {
-    if (allowedTypes & self.type) {
+    if (self.type & AlertImportant ) {
         [super show];
         return YES;
     } else {

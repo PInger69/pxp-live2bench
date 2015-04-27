@@ -23,6 +23,9 @@
 #import "Clip.h"
 #import "Tag.h"
 
+
+
+
 #define LOCAL_PLIST  @"EventsHid.plist"
 #define VIDEO_EXT    @"mp4"
 
@@ -65,10 +68,30 @@
         _localDocsPListPath             = [aDocsPath stringByAppendingPathComponent:LOCAL_PLIST];// if its not there make it
         _status                         = ENCODER_STATUS_LOCAL;
         _event                          = nil;
-        _clips              = [[NSMutableDictionary alloc]init];
-        _allEvents          = [[NSMutableDictionary alloc] init];
-        _localTags          = [[NSMutableArray alloc] init];
-        tagSyncConnections  = [NSMutableArray array];
+        _clips                          = [[NSMutableDictionary alloc]init];
+        _allEvents                      = [[NSMutableDictionary alloc] init];
+        _localTags                      = [[NSMutableArray alloc] init];
+        tagSyncConnections              = [NSMutableArray array];
+        
+        // build folder structue if not there
+        
+        BOOL isDir = NO;
+        
+        [[NSFileManager defaultManager] fileExistsAtPath:[self bookmarkPath] isDirectory:&isDir];
+        
+        if ( !isDir){
+            [[NSFileManager defaultManager] createDirectoryAtPath:[self bookmarkPath] withIntermediateDirectories:YES attributes:nil error:NULL];
+
+        }
+        
+        BOOL isDir2 = NO;
+        [[NSFileManager defaultManager] fileExistsAtPath:[self bookmarkedVideosPath] isDirectory:&isDir2];
+        
+        if ( !isDir2){
+            [[NSFileManager defaultManager] createDirectoryAtPath:[self bookmarkedVideosPath] withIntermediateDirectories:YES attributes:nil error:NULL];
+        }
+        
+        
         
         // Build Bookmark Clip sections
         [self scanForBookmarks];
@@ -114,8 +137,12 @@
         // build the clips by sending the plist paths in
         
         for (NSString *pthss in clipsPlistPaths) {
-            Clip * clip =[[Clip alloc]initWithDict:[[NSDictionary alloc]initWithContentsOfFile:pthss]];
-            //[_clips setObject:clip forKey:clip.clipId];
+            NSDictionary *theDict = [[NSDictionary alloc]initWithContentsOfFile:pthss] ;
+            if (theDict) {
+                Clip * clip =[[Clip alloc]initWithDict: theDict];
+                [_clips setObject:clip forKey:clip.clipId];
+            }
+            
         }
       
         
@@ -169,6 +196,12 @@
                 [self deleteEvent:localCounterpart];
             }
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REQUEST_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
+            void(^blockName)(NSArray *clips) = note.object;
+            blockName([self.clips allValues]);
+        }];
+        
         
         [self checkLocalTags];
     }
@@ -404,9 +437,19 @@
 {
     [_bookmarkPlistNames removeAllObjects];
     
-    NSString * bookmarkPath     = [NSString stringWithFormat:@"%@/bookmark",_localPath];
-    NSArray* dirs               = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:bookmarkPath error:NULL];
+//    NSString * bookmarkPath     = [NSString stringWithFormat:@"%@/bookmark",_localPath];
+    NSArray* dirs;
     
+    NSString * bookmarkPath = [_localPath stringByAppendingPathComponent:@"bookmark"];
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:bookmarkPath isDirectory:&isDir];
+    
+    if ( !isDir){
+        [[NSFileManager defaultManager] createDirectoryAtPath:bookmarkPath withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+    
+    dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:bookmarkPath error:NULL];
+
     // go thru all found files
     [dirs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *filename = (NSString *)obj;
@@ -498,18 +541,18 @@
  *  @param aName   !!! This name has to change
  *  @param tagData the data for the raw clip
  */
--(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData
+-(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData
 {
     
     // check the device if the clip is there.. if not then make a new clip from and make get an Id
     
-    NSString * clipID = tagData[@"id"];
+    NSString * clipID = [tagData objectForKey:@"id"];
     
     if ([_clips objectForKey:clipID]) { // if there is a plist there already then just mod the data
         Clip * selectedClip         = [_clips objectForKey:clipID];
         
-        [selectedClip addSourceToClip:@{}];
-    
+        [selectedClip addSourceToClip:@{@"fileNames": @[aName]}];
+      //  return [[VideoTrimItem alloc] init];
     } else { // there is no plist for this clip... make a new plist
        
         // fina available plist path
@@ -517,11 +560,16 @@
         int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
         NSString * bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%d.plist",_localPath,nextGap];
         
-        Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data:tagData];
+        Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: tagData];
         [buildClip addSourceToClip:@{@"fileNames": @[aName]}];
         [_clips setObject:buildClip forKey:buildClip.clipId];
+//        CMTimeRange clipTimeRange = CMTimeRangeMake(CMTimeMake(tagData.startTime, 1), CMTimeMake(tagData.duration, 1));
+//        Feed * feed = [[tagData.feeds allValues] firstObject];
+//        
+//        return [Downloader trimVideoURL: [feed path].absoluteString  to: [bookmarkPlistPath stringByAppendingPathComponent:aName] withTimeRange: clipTimeRange] ;
     }
     
+   
 }
 
 

@@ -12,6 +12,7 @@
 #import "ListPopoverControllerWithImages.h"
 #import "FeedSelectCell.h"
 #import "Tag.h"
+#import "DownloadItem.h"
 
 
 @interface ListTableViewController ()
@@ -64,6 +65,8 @@
         self.newFrame = CGRectMake(568, 708, 370, 60);
         
         self.arrayOfCollapsableIndexPaths = [NSMutableArray array];
+        
+        
         
     }
     return self;
@@ -168,6 +171,30 @@
         NSString *key = keys[indexPath.row - firstIndexPath.row];
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
         //collapsableCell.backgroundColor = [UIColor redColor];
+        __block FeedSelectCell *weakCell = collapsableCell;
+        collapsableCell.downloadButtonBlock = ^(){
+            //__block DownloadItem *videoItem;
+            
+            void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
+                //videoItem = downloadItem;
+                weakCell.downloadButton.downloadItem = downloadItem;
+            };
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName, @"tag": tag }];
+            
+            
+        };
+        
+        collapsableCell.sendUserInfo = ^(){
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                            @"feed":tag.feeds[key],
+                                                                                                                                            @"time": [NSString stringWithFormat:@"%f",tag.startTime],
+                                                                                                                                            @"duration": [NSString stringWithFormat:@"%d",tag.duration],
+                                                                                                                                            @"comment": tag.comment,
+                                                                                                                                            @"forWhole":tag
+                                                                                                                                            }}];
+  
+        };
         return collapsableCell;
     }
     
@@ -184,7 +211,7 @@
 //    } else {
 //        cell.bookmarkButton.enabled = YES;
 //    }
-//    
+//
 //    if (self.downloading) {
 //        cell.swipeRecognizerLeft.enabled = NO;
 //    } else {
@@ -264,7 +291,7 @@
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
-    NSDictionary *tag;
+    Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
     
     if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
@@ -275,17 +302,18 @@
         tag = self.tableData[indexPath.row];
     }
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
     if (self.setOfDeletingCells.count ) {
         return;
     }else if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]){
-        FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                                                                                                                                                                                @"feed":cell.feedName.text,
-                                                                                                                                                                                                                                                                                                @"time":[tag objectForKey:@"starttime"],
-                                                                                                                                                                                                                                                                                                @"duration":[tag objectForKey:@"duration"],
-                                                                                                                                                                                                                                                                                                @"comment":[tag objectForKey:@"comment"],
-                                                                                                                                                                                                                                                                                   @"forWhole":tag
-                                                                                                                                        }}];
+       // FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+//                                                                                                                                                                                                                                                                                                @"feed":cell.feedName.text,
+//                                                                                                                                                                                                                                                                                                @"time": [NSString stringWithFormat:@"%f",tag.startTime],
+//                                                                                                                                                                                                                                                                                                @"duration": [NSString stringWithFormat:@"%d",tag.duration],
+//                                                                                                                                                                                                                                                                                                @"comment": tag.comment,
+//                                                                                                                                                                                                                                                                                   @"forWhole":tag
+//                                                                                                                                        }}];
 
         return;
     }
@@ -309,14 +337,14 @@
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
         if (self.previouslySelectedIndexPath.row < indexPath.row && self.previouslySelectedIndexPath) {
-            for (int i = 0; i < ((NSArray *)tag[@"url_2"]).count ; ++i) {
+            for (int i = 0; i < tag.thumbnails.count ; ++i) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];
             }
             
             self.previouslySelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
         }else{
-            for (int i = 0; i < ((NSArray *)tag[@"url_2"]).count ; ++i) {
+            for (int i = 0; i < tag.thumbnails.count ; ++i) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];
             }

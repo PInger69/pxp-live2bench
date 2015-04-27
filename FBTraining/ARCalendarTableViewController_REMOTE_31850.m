@@ -269,20 +269,6 @@
             collapsableCell.downloadButton.downloadItem = nil;
             
             collapsableCell.downloadButtonBlock = ^(){
-<<<<<<< HEAD
-                [Utility downloadEvent:collapsableCell.event sourceName:collapsableCell.feedName.text returnBlock:
-                ^(DownloadItem *item){
-                    DownloadItem *downloadItem = item;
-                    downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
-                    weakCell.downloadButton.downloadItem = downloadItem;
-                    [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                    weakCell.downloadButton.progress = progress;
-                    [weakCell.downloadButton setNeedsDisplay];
-                    }];
-                    [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
-                }];
-                
-=======
                 [Utility downloadEvent:weakCell.event sourceName:weakCell.feedName.text returnBlock:
                  ^(DownloadItem *item){
                      DownloadItem *downloadItem = item;
@@ -294,7 +280,6 @@
                      }];
                      [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
                  }];
->>>>>>> 458a23302802717a99cd160c4088dd50d7d2befe
             };
         }
         return collapsableCell;

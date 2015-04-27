@@ -10,6 +10,8 @@
 #import "Encoder.h"
 #import "Event.h"
 #import <objc/runtime.h>
+#import "Tag.h"
+
 #define SHUTDOWN_RESPONCE   @"shutdown responce"
 #define STATUS              @"status"
 #define FEED_CHECK          @"feed check"
@@ -278,7 +280,17 @@
         if ([json isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
         if ( [json objectForKey: @"tags"]) {
             for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
-                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:tag];
+                Tag *newTag = [[Tag alloc]initWithData: tag];
+                if (newTag.type == 3) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_TAG" object:newTag];
+                }else if (newTag.type == 99){
+                    
+                }else if(newTag.modified){
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:newTag];
+                }else{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object: newTag userInfo:tag];
+                }
+                
             }
             
         }

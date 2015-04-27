@@ -43,7 +43,7 @@
     //    NSMutableArray              *allTags;                            //array of all the tags from current event
     NSMutableArray              *typesOfTags;
     NSDictionary                *currentPlayingTag;                  //dictionary of current playing tag
-    NSMutableDictionary         *selectedTag;                        //the tag currently selected playing
+    Tag                         *selectedTag;                        //the tag currently selected playing
     //    NSMutableDictionary         *newTagInfoDict;                     //dictionary for new generated bookmark tag
     //    NSMutableDictionary         *downloadingTagsDict;                //array of tags which have selected to download
     //    UtilitiesController         *uController;

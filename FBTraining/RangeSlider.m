@@ -2,7 +2,7 @@
 //  RangeSlider.m
 //  RangeSlider
 //
-//  Created by dev on 2015-02-02.
+//  Crea0ted by dev on 2015-02-02.
 //  Copyright (c) 2015 Avoca Technologies. All rights reserved.
 //
 

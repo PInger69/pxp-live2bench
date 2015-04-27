@@ -13,10 +13,18 @@
 #define MID_COLOR [UIColor yellowColor]
 #define MIN_COLOR [UIColor redColor]
 
+@interface BitrateMonitor ()
+
+@property (strong, nonatomic) UILabel *nameLabel;
+@property (strong, nonatomic) UILabel *statusLabel;
+@property (strong, nonatomic) UILabel *rateLabel;
+@property (strong, nonatomic) UILabel *camerasLabel;
+
+@end
+
 
 @implementation BitrateMonitor
 {
-
    __weak Encoder   * encoder;
     UILabel         * label;
     GraphView       * graphView;
@@ -54,6 +62,9 @@ static void * bitrateContext         = &bitrateContext;
         graphView.layer.borderColor = [[UIColor colorWithWhite:0.7f alpha:1.0f] CGColor];
         graphView.layer.borderWidth = 1.0f;
         [graphView setFillColor: [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.3f]];
+        
+        [self setupView];
+    
     }
     return self;
 }
@@ -63,11 +74,33 @@ static void * bitrateContext         = &bitrateContext;
     if (context == bitrateContext){
         double val = ((Encoder*) object).bitrate;
         [self setBackgroundColorBasedOnRate:val];
+        [self.statusLabel setText: [NSString stringWithFormat:@"Status:  %@", encoder.statusAsString ]];
+        [self.rateLabel setText:[NSString stringWithFormat:@"Rate:  %0.4f", val ]];
+        [self.camerasLabel setText:[NSString stringWithFormat:@"Cameras:  %i", encoder.cameraCount ]];
     }
 }
 
 
-
+-(void)setupView{
+    self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, -20, 100, 20)];
+    self.nameLabel.textColor = [UIColor blueColor];
+    [self.nameLabel setText: [NSString stringWithFormat:@"Name:  %@", encoder.name ]];
+    
+    self.statusLabel = [[UILabel alloc]initWithFrame:CGRectMake(130, -20, 100, 20)];
+    [self.statusLabel setText: [NSString stringWithFormat:@"Status:  %@", encoder.statusAsString ]];
+    
+    self.rateLabel = [[UILabel alloc] initWithFrame: CGRectMake(260, -20, 120, 20)];
+    
+    self.camerasLabel = [[UILabel alloc] initWithFrame: CGRectMake(390, -20, 100, 20)];
+    
+    
+    
+    [self addSubview: self.nameLabel];
+    [self addSubview: self.statusLabel];
+    [self addSubview: self.rateLabel];
+    [self addSubview: self.camerasLabel];
+    
+}
 /**
  *  The range is between 0.1 is max and 4.0 is min 2.0 is around mid
  

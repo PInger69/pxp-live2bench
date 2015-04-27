@@ -331,6 +331,7 @@
 		D79046AC18F48FD300A58B28 /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D79046AB18F48FD300A58B28 /* VideoPlayer.m */; };
 		D790CEA31A6F059800700D9D /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D790CEA21A6F059800700D9D /* SettingsViewController.m */; };
 		D79350EA1AD459C500D1751F /* DownloadEventItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D79350E91AD459C500D1751F /* DownloadEventItem.m */; };
+		D79779041AE94375008A99E0 /* videoTouch.png in Resources */ = {isa = PBXBuildFile; fileRef = D79779031AE94375008A99E0 /* videoTouch.png */; };
 		D797CCF5170DB9CB00A6E62B /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D797CCF4170DB9CB00A6E62B /* Social.framework */; };
 		D797CCF7170DB9D300A6E62B /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D797CCF6170DB9D300A6E62B /* Accounts.framework */; };
 		D797CCFA170DD8D400A6E62B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D797CCF8170DD8D400A6E62B /* logo.png */; };
@@ -967,6 +968,7 @@
 		D79350E91AD459C500D1751F /* DownloadEventItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadEventItem.m; path = Live2BenchNative/UtilityClasses/DownloadEventItem.m; sourceTree = "<group>"; };
 		D793897117E794B800BEA70B /* OBSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBSlider.h; path = Live2BenchNative/OBSlider.h; sourceTree = SOURCE_ROOT; };
 		D793897217E794B800BEA70B /* OBSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OBSlider.m; path = Live2BenchNative/OBSlider.m; sourceTree = SOURCE_ROOT; };
+		D79779031AE94375008A99E0 /* videoTouch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = videoTouch.png; sourceTree = "<group>"; };
 		D797CCF4170DB9CB00A6E62B /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		D797CCF6170DB9D300A6E62B /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		D797CCF8170DD8D400A6E62B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
@@ -2197,6 +2199,7 @@
 		D7A9399916ADB86C006CBAB2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D79779031AE94375008A99E0 /* videoTouch.png */,
 				D7CCE8091AC9B79900D85095 /* kal_right_arrow.png */,
 				D7CCE80A1AC9B79900D85095 /* kal_right_arrow@2x.png */,
 				D760736419D21AD6000E35C2 /* seeklarge.png */,
@@ -2718,6 +2721,7 @@
 				D7B1AF841704E86C00013C95 /* Default-Landscape@2x.png in Resources */,
 				D7DB754817EA0EFC009C402F /* gotolive.png in Resources */,
 				D7B1AF861704EBC600013C95 /* Default-568.png in Resources */,
+				D79779041AE94375008A99E0 /* videoTouch.png in Resources */,
 				D737F5DF17F382B20053081F /* sliderthumb@2x.png in Resources */,
 				D7B1AF8B1704EC2500013C95 /* cline.png in Resources */,
 				D78F68D518073DC70096C793 /* OrangeSettingsButton.png in Resources */,

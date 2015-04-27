@@ -62,6 +62,7 @@
     [self addSubview:ratingBox];
     
     ratingScale = [[RatingInput alloc]initWithFrame:CGRectMake(0, 0,270, 30)];
+
     [self addSubview:ratingScale];
     ratingScale.center = ratingBox.center;
     
