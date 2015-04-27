@@ -835,7 +835,7 @@
             Tag *newTag = [[Tag alloc] initWithData: results];
             newTag.feeds = self.encoderManager.feeds;
             [_event.tags setObject:newTag forKey:tagId];
-           // [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+            // [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
         }
     }
 }
@@ -849,9 +849,12 @@
         NSMutableDictionary *tagsDictionary = [NSMutableDictionary dictionary];
         if (tags) {
             for (NSString *idKey in [tags allKeys]) {
-                Tag *newTag = [[Tag alloc] initWithData: tags[idKey]];
-                newTag.feeds = self.encoderManager.feeds;
-                [tagsDictionary addEntriesFromDictionary:@{idKey:newTag}];
+                if ([tags[idKey] objectForKey:@"id"]) {
+                    Tag *newTag = [[Tag alloc] initWithData: tags[idKey]];
+                    newTag.feeds = self.encoderManager.feeds;
+                    [tagsDictionary addEntriesFromDictionary:@{idKey:newTag}];
+                }
+                
             }
             
             _event.tags =tagsDictionary;
@@ -860,7 +863,6 @@
     }
     
 }
-
 -(void)camerasGetResponce:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];

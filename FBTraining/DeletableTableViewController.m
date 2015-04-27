@@ -177,7 +177,6 @@
 
 -(void)shareOptionChosen:(NSString *)optionChosen{
     [self.sharePop dismissPopoverAnimated:YES];
-    
 }
 
 -(void)deleteAllButtonTarget{

@@ -157,7 +157,11 @@ static void *  downLoaderContext = &downLoaderContext;
     
     switch (cItem.status) {
         case DownloadItemStatusIOError:
-            if (_IOAlertView) [_IOAlertView show];
+            if (_IOAlertView) {
+                if (![_IOAlertView display]) {
+                    [CustomAlertView removeAlert:_IOAlertView];
+                }
+            };
             self.pause = YES;
             break;
         case DownloadItemStatusComplete:
@@ -171,7 +175,9 @@ static void *  downLoaderContext = &downLoaderContext;
             [_IOAlertView setMessage:[NSString stringWithFormat:@"Can't download the event %@", cItem.name]];
             //[_IOAlertView addButtonWithTitle:@"Ok"];
             [_IOAlertView setDelegate:self];
-            [_IOAlertView show];
+            if (![_IOAlertView display]) {
+                [CustomAlertView removeAlert:_IOAlertView];
+            }
             [self removeFromQueue:cItem];
             [self process];
             break;

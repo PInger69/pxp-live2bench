@@ -282,9 +282,10 @@
                      DownloadItem *downloadItem = item;
                      downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
                      weakCell.downloadButton.downloadItem = downloadItem;
+                     __block FeedSelectCell *weakerCell = weakCell;
                      [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                         weakCell.downloadButton.progress = progress;
-                         [weakCell.downloadButton setNeedsDisplay];
+                         weakerCell.downloadButton.progress = progress;
+                         [weakerCell.downloadButton setNeedsDisplay];
                      }];
                      [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
                  }];
