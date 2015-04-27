@@ -41,6 +41,7 @@
 
 -(instancetype) initWithData: (NSDictionary *)tagData;
 -(NSDictionary *) tagDictionary;
+-(NSDictionary *) modifiedData;
 -(NSDictionary *) makeTagData;
 -(void) replaceDataWithDictionary: (NSDictionary *) tagData;
 

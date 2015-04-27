@@ -427,6 +427,29 @@
     encoderConnection.timeStamp             = aTimeStamp;
 }
 
+-(void)makeTeleTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    NSData *imageData = [tData objectForKey:@"image"];
+    [tData removeObjectForKey:@"image"];
+    
+    NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
+    
+    //over write name and add request time
+    [tData addEntriesFromDictionary:@{
+                                      @"name"           : encodedName,
+                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      }];
+    
+    NSString *jsonString                    = [Utility dictToJSON:tData];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
+    NSMutableURLRequest *someUrlRequest     = [NSMutableURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    [someUrlRequest setHTTPBody: imageData];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:someUrlRequest delegate:self];
+    encoderConnection.connectionType        = MAKE_TAG;
+    encoderConnection.timeStamp             = aTimeStamp;
+}
+
+
 -(void)modifyTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
@@ -814,9 +837,14 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([results objectForKey:@"id"]) {
+<<<<<<< HEAD
+            //NSString * tagId = [[results objectForKey:@"id"]stringValue];
+            PXPLog(@"Tag Modification succeded: %@", results);
+=======
 //            NSString * tagId = [[results objectForKey:@"id"]stringValue];
+>>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
             //[_event.tags setObject:results forKey:tagId];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
+            //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
         }
     
     }

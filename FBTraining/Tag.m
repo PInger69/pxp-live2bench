@@ -18,7 +18,7 @@
     if (self) {
         //self.rawData = tagData;
         self.colour = tagData[@"colour"];
-        self.comment = tagData[@"comment"];
+        _comment = tagData[@"comment"];
         self.deviceID = tagData[@"deviceid"];
         self.displayTime = tagData[@"displaytime"];
         self.duration = [tagData[@"duration"]intValue];
@@ -29,14 +29,14 @@
         self.isLive = [tagData[@"islive"] boolValue];
         self.name = tagData[@"name"];
         self.own = [tagData[@"own"] boolValue];
-        self.rating = [tagData[@"rating"] intValue];
+        _rating = [tagData[@"rating"] intValue];
         self.requestURL = tagData[@"requrl"];
         self.startTime = [tagData[@"starttime"] doubleValue];
         self.time = [tagData[@"time"] doubleValue];
         self.type = [tagData[@"type"] intValue];
         self.user = tagData[@"user"];
         self.modified = [tagData[@"modified"] boolValue];
-        self.coachPick = [tagData[@"coachpick"] boolValue];
+        _coachPick = [tagData[@"coachpick"] boolValue];
         //self.requestTime = tagData [@"requettime"];
         if ([tagData objectForKey: @"urls_2"]) {
             NSDictionary *images = [tagData objectForKey: @"urls_2"];
@@ -46,7 +46,7 @@
                 [thumbnails addEntriesFromDictionary:@{key: images[key]}];
             }
             self.thumbnails = thumbnails;
-        }else{
+        }else if([tagData objectForKey:@"url"]){
             self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
         }
         
@@ -62,8 +62,8 @@
                 }
                 
                 self.coachPick = modifiedTag.coachPick;
-                self.duration = modifiedTag.duration;
-                self.startTime = modifiedTag.startTime;
+//                self.duration = modifiedTag.duration;
+//                self.startTime = modifiedTag.startTime;
             }
         }];
     }
@@ -71,12 +71,41 @@
 }
 
 -(void)setFeeds:(NSDictionary *)feeds{
-    _feeds = feeds;
+    _feeds = [feeds copy];
     if (feeds.count == 1) {
         self.thumbnails = @{ [[feeds allKeys] firstObject]: [[self.thumbnails allValues] firstObject]};
     }
 }
 
+-(void)setCoachPick:(BOOL)coachPick{
+    _coachPick = coachPick;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_MODIFY_TAG object:self];
+}
+
+-(void)setComment:(NSString *)comment{
+    _comment = comment;
+    if (comment) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_MODIFY_TAG object:self];
+    }
+    
+}
+
+-(void)setRating:(int)rating{
+    _rating = rating;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_MODIFY_TAG object:self];
+}
+
+-(NSDictionary *)rawData{
+    return [self tagDictionary];
+}
+
+-(NSDictionary *)modifiedData{
+    return @{ @"coachpick":(self.coachPick?@"1":@"0"),
+              @"comment": (self.comment?self.comment:@""),
+              @"rating": [NSString stringWithFormat:@"%i", self.rating]
+              };
+    
+}
 
 -(NSDictionary *)tagDictionary{
     NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];

@@ -67,7 +67,11 @@ NS_OPTIONS(NSInteger, style){
         NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/Setting"];
         NSString *path = [dataPath stringByAppendingPathComponent: plistName];
         
+<<<<<<< HEAD
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+=======
         if (! [[NSFileManager defaultManager] fileExistsAtPath:path]) {
+>>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
             NSDictionary *settingDictionary = [[NSDictionary alloc]initWithContentsOfFile:path];
             self.settingsArray = settingDictionary[@"SettingsArray"];
             for (NSMutableDictionary *setting in self.settingsArray) {

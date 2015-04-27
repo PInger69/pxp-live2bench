@@ -9,6 +9,7 @@
 #import "FilterScrollView.h"
 #import "CustomButton.h"
 #import "FilterProcessor.h"
+#import "FilterItemProtocol.h"
 
 
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -105,7 +106,7 @@
     // get all unique
     NSMutableSet * uniqueSet = [[NSMutableSet alloc]init];
    
-    for(NSDictionary *tag in list){
+    for(id <FilterItemProtocol> tag in list){
         
         // This check the tag for a direct key to a String using a block
         if (filterBlock != NULL){
@@ -116,15 +117,15 @@
         }
         
         // This check the tag for a direct key to a String
-        else if ([tag[accessLable] isKindOfClass:[NSString class]]) {
-            NSString * tagValueB = tag[accessLable];
+        else if ([tag.rawData[accessLable] isKindOfClass:[NSString class]]) {
+            NSString * tagValueB = tag.rawData[accessLable];
             if ([uniqueSet containsObject:tagValueB] || [tagValueB isEqualToString:@""]) continue;
             [uniqueSet addObject:tagValueB];
         }
         
         // This sees if the value of the key is an array and adds each to the unique search
-        else if ([tag[accessLable] isKindOfClass:[NSArray class]]) {
-            NSArray * checkArray = tag[accessLable];
+        else if ([tag.rawData[accessLable] isKindOfClass:[NSArray class]]) {
+            NSArray * checkArray = tag.rawData[accessLable];
             for (id item in checkArray) {
                 NSNumber * tagValueC = item;
                 if ([uniqueSet containsObject:tagValueC]) continue;
