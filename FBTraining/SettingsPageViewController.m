@@ -20,6 +20,7 @@
 #import "SocialSharingManager.h"
 #import "LogoViewController.h"
 #import "BitRateViewController.h"
+#import "PxpLogViewController.h"
 
 @interface SettingsPageViewController () //<SettingsTableDelegate>
 
@@ -112,6 +113,8 @@ NS_OPTIONS(NSInteger, style){
                                                                                                                                                                                                                                                       @"Toggle Settings":
                                                                                                                                                                                                                                                           @[ @1, @1, @1, @1, @1, @1, @1]}] }];
             
+            NSMutableDictionary *setting10 =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Log" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[PxpLogViewController alloc]initWithAppDelegate:appDel]}];
+            
             self.settingsArray = [NSMutableArray arrayWithArray:@[ setting1,
                                                                    
                                                                    setting2,
@@ -130,7 +133,10 @@ NS_OPTIONS(NSInteger, style){
                                                                    
                                                                    setting8,
                                                                    
-                                                                   setting9  ]];
+                                                                   setting9,
+                                                                   
+                                                                   setting10
+                                                                   ]];
         }
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewLicense:) name:@"Setting - Eula :" object:nil];
         _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];

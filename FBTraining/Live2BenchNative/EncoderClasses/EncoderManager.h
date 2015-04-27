@@ -14,6 +14,7 @@
 #import "LocalEncoder.h"
 #import "Event.h"
 
+
 @class Encoder;
 
 
@@ -29,7 +30,7 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 #define NOTIF_ENCODER_AUTHENTICATED         @"encoderAuthenticated"
 #define NOTIF_ENCODER_FEED_HAVE_CHANGED     @"encoderFeedHaveChanged"
 #define NOTIF_TAG_POSTED                    @"postedTag"        // to post tages up to the server also sends the data in userInfo
-#define NOTIF_TAG_RECIEVED                  @"recievedTag"      // when new tags are recieved from the encoder also passes the data in userInfo
+//#define NOTIF_TAG_RECIEVED                  @"recievedTag"      // when new tags are recieved from the encoder also passes the data in userInfo
 #define NOTIF_TAG_NAMES_FROM_CLOUD          @"tagNamesFromCloud"
 
 #define SUMMARY_TYPE_MONTH  @"month"

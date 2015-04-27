@@ -130,7 +130,7 @@
             left -= nwr;
         } while (left > 0);
         if (left) {
-            NSLog(@"stream error: %@", [stream streamError]);
+            PXPLog(@"stream error: %@", [stream streamError]);
         }
     } else if (downloadType == DownloadItem_TypePlist) {
         [_data appendData:data];

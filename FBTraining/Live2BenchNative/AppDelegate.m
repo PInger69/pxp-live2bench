@@ -406,8 +406,8 @@ static int outstandingRequests;
                                                            object:nil
                                                          userInfo:[SpinnerView message:@"Checking for WiFi..." progress:.1 animated:YES]];
     } onItemFinish:^(BOOL succsess) {
-        NSLog(@"WIFI Check");
-        NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+        PXPLog(@"WIFI Check");
+        PXPLog(succsess?@"   SUCCSESS":@"    FAIL");
     }];
 
     //Check Cloud
@@ -416,8 +416,8 @@ static int outstandingRequests;
                                                            object:nil
                                                          userInfo:[SpinnerView message:@"Checking for Cloud..." progress:.2 animated:YES]];
     } onItemFinish:^(BOOL succsess) {
-        NSLog(@"Cloud Check");
-        NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+        PXPLog(@"Cloud Check");
+        PXPLog(succsess?@"   SUCCSESS":@"    FAIL");
         weakSelf.loginController.hasInternet = succsess;
     }];
     
@@ -428,8 +428,8 @@ static int outstandingRequests;
                                                          userInfo:[SpinnerView message:@"Checking user credentials plist..." progress:.3 animated:YES]];
         
     } onItemFinish:^(BOOL succsess) {
-        NSLog(@"User Plist Check");
-        NSLog(succsess?@"   SUCCSESS":@"    FAIL");
+        PXPLog(@"User Plist Check");
+        PXPLog(succsess?@"   SUCCSESS":@"    FAIL");
         
         if(succsess){ // get the ID from the userCenter and sets it to the Manager so it can look for encoders
             weakEM.customerID = weakSelf.userCenter.customerID;

@@ -26,7 +26,7 @@
         self.homeTeam = tagData[@"homeTeam"];
         self.visitTeam = tagData[@"visitTeam"];
         self.uniqueID = [tagData[@"id"] intValue];
-        self.isLive = tagData[@"islive"];
+        self.isLive = [tagData[@"islive"] boolValue];
         self.name = tagData[@"name"];
         self.own = [tagData[@"own"] boolValue];
         self.rating = [tagData[@"rating"] intValue];
@@ -79,9 +79,12 @@
 
 
 -(NSDictionary *)tagDictionary{
-    return @{@"colour": self.colour,
+    NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];
+    
+    
+    [tagDict addEntriesFromDictionary: @{@"colour": self.colour,
              @"comment": self.comment,
-             @"deleted": @"0",
+             @"deleted": @"1",
              @"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              @"displaytime":self.displayTime,
              @"duration": [NSString stringWithFormat: @"%i", self.duration],
@@ -92,19 +95,29 @@
              @"name":self.name,
              @"newTagID" : [NSString stringWithFormat: @"%i",self.uniqueID],
              @"own": [NSString stringWithFormat: @"%i",self.own],
-             @"rating" : [NSNumber numberWithInt: self.rating],
-             @"requrl": (self.requestURL? self.requestURL: @"nil"),
+             @"rating" :[NSString stringWithFormat:@"%i", self.rating],
+             //@"requrl": (self.requestURL? self.requestURL: @"nil"),
              @"sender":@".min",
              @"starttime": [NSString stringWithFormat:@"%f", self.startTime],
-             @"success": @1,
+             @"success": @"1",
              @"time": [NSString stringWithFormat:@"%f", self.time],
              @"type": [NSString stringWithFormat:@"%i", self.type],
              @"url": self.thumbnails,
              @"user": self.user,
              @"visitTeam": self.visitTeam,
-             @"synced": [NSNumber numberWithBool: self.synced]
+             @"synced": [NSString stringWithFormat:@"%i", self.synced]
              //@"feeds" : (self.feeds ? self.feeds: @"nil")
-             };
+             }];
+    
+    if (self.requestURL) {
+        [tagDict addEntriesFromDictionary:@{@"requrl":self.requestURL}];
+    }
+    
+    if (self.deviceID) {
+        [tagDict addEntriesFromDictionary:@{@"deviceid": self.deviceID}];
+    }
+    
+    return tagDict;
 }
 
 -(NSDictionary *) makeTagData{

@@ -46,11 +46,11 @@
 }
 
 -(void)downloadButtonPressed: (id) sender{
-    NSLog(@"DownloadButtonPressed");
+    PXPLog(@"DownloadButtonPressed");
 }
 
 -(void)openButtonPressed: (id) sender{
-    NSLog(@"OpenButtonPressed");
+    PXPLog(@"OpenButtonPressed");
 }
 
 #pragma mark - Table view data source

@@ -85,12 +85,7 @@
 
 -(void)setComment:(NSString *)comment{
     _comment = comment;
-    if (comment) {
-        [self modClipData: @{@"comment": comment}];
-    }else{
-        [self modClipData: @{@"comment": @""}];
-    }
-    
+    [self modClipData: @{@"comment": comment}];
 }
 
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict

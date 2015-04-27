@@ -164,7 +164,7 @@ static AlertType    allowedTypes;
     if (!alertPool) [CustomAlertView staticInit];
     self = [super initWithTitle:title message:message delegate:delegate cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitles, nil];
     if (self) {
-        self.type = AlertAll;
+        self.type = AlertNone;
 //        [alertPool addObject:self];
         if (![alertPool containsObject:self])    [alertPool addObject:self];
     }

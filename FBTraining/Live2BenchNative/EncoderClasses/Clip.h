@@ -7,20 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FilterItemProtocol.h"
 
 /**
  Its kinda like the Event Class but is used to only manage the sources for local content
  */
 
-@interface Clip : NSObject
+@interface Clip : NSObject<FilterItemProtocol>
 
 @property (nonatomic,strong)            NSString       * name;
+@property (assign,nonatomic)            double         time;
+@property (assign,nonatomic)            int            duration;
 @property (nonatomic,strong)            NSString       * clipId;
 @property (nonatomic,assign)            int            rating;
 @property (nonatomic,strong)            NSString       * comment;
 @property (nonatomic,strong)            NSDictionary   * feeds;
 @property (nonatomic,strong)            NSDictionary   * rawData;
 @property (nonatomic,strong)            NSString       * path;
+@property (nonatomic,strong)            NSString       * user;
 
 
 /**

@@ -13,11 +13,14 @@
 
 
 typedef NS_OPTIONS (NSInteger,AlertType){
+<<<<<<< HEAD
     AlertNone       = 0,
 //    AlertImportant  = 1<<0,
 //    AlertMinor      = 1<<1,
 //    AlertCritical   = 1<<2,
 //    AlertAll        = 4255
+=======
+>>>>>>> 9d00f6a3ce71cc888c1b97e29b0167241778ed24
     AlertImportant      = 1<<0,
     AlertNotification   = 1<<1,
     AlertEncoder        = 1<<2,

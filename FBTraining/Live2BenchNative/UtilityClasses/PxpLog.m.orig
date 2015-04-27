@@ -27,7 +27,11 @@ static PxpLog * instance;
     if (!instance) {
         instance = [[PxpLog alloc]init];
         [instance willChangeValueForKey:@"text"];
+<<<<<<< HEAD
+        
+=======
        
+>>>>>>> 9d5a31071e2fa7a4c43d8297ee0e84684bbf2d74
         instance.text = [[NSMutableString alloc]initWithFormat:log arguments:args];
         [instance didChangeValueForKey:@"text"];
     } else {
@@ -37,7 +41,11 @@ static PxpLog * instance;
         [instance.text appendFormat:@"\n%@",tmp ];
         [instance didChangeValueForKey:@"text"];
     }
+<<<<<<< HEAD
+    va_end(args);
+=======
      va_end(args);
+>>>>>>> 9d5a31071e2fa7a4c43d8297ee0e84684bbf2d74
 }
 
 +(NSMutableString*)output

@@ -438,9 +438,22 @@
         [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_TAG" object:nil queue:nil usingBlock:^(NSNotification *note) {
             Tag *tagToDelete = note.object;
             tagToDelete.type = 3;
-            if (tagToDelete.own) {
-                [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: [tagToDelete tagDictionary]]];
+            __block NSString *userHID;
+            
+            void(^userBlock)(NSDictionary *data) = ^(NSDictionary *data){
+                PXPLog(@"%@", data);
+                userHID = [data objectForKey:@"hid"];
+            };
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"block": userBlock, @"type": UC_REQUEST_USER_INFO}];
+            
+            NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"1",@"delete",tagToDelete.event,@"event",[NSString stringWithFormat:@"%f",CACurrentMediaTime()],@"requesttime",userHID,@"user",tagToDelete.ID,@"id", nil];
+            
+            if (tagToDelete.isLive) {
+                [dict setObject:@"live" forKey:@"event"];
             }
+
+            [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: dict]];
             
         }];
         
@@ -510,7 +523,7 @@ static void * builtContext          = &builtContext; // depricated?
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {
     
-    NSLog(@"   ENCODER REMOVED: %@",aEncoder.name);
+    PXPLog(@"   ENCODER REMOVED: %@",aEncoder.name);
     
     [aEncoder removeObserver:self forKeyPath:@"authenticated"];
     [aEncoder removeObserver:self forKeyPath:@"status"];
@@ -520,7 +533,7 @@ static void * builtContext          = &builtContext; // depricated?
     if (_masterEncoder == aEncoder){
         
         _masterEncoder = nil;
-        NSLog(@"Master Linched!");
+        PXPLog(@"Master Linched!");
         //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self];
     }
     [_authenticatedEncoders removeObject:aEncoder];
@@ -566,7 +579,7 @@ static void * builtContext          = &builtContext; // depricated?
     [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
         
         [_eventTags setObject:all forKey:_liveEventName];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:nil];
     }];
 }
 
@@ -651,7 +664,7 @@ static void * builtContext          = &builtContext; // depricated?
 {
     Encoder * encoder = (Encoder * )note.object;
     
-    NSLog(@"status !!!!!");
+    PXPLog(@"status !!!!!");
     switch (encoder.status) {
         case ENCODER_STATUS_UNKNOWN: // Disconnected
             [self unRegisterEncoder:encoder];
@@ -703,7 +716,7 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(void)_observerForTagPosting:(NSNotification*)note
 {
-    NSLog(@"Recieved a tage from the bottom view controller or some where");
+    PXPLog(@"Recieved a tage from the bottom view controller or some where");
     NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
     BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
     [self createTag:tagData isDuration:isDuration];
@@ -755,25 +768,10 @@ static void * builtContext          = &builtContext; // depricated?
     // This gets run when the server responds
     void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
         
-        NSData          * data = pooledResponces[0];
-        NSDictionary    * results;
-        NSString        * urlForImageOnServer;
-        
-        if(NSClassFromString(@"NSJSONSerialization"))
-        {
-            NSError *error = nil;
-            id object = [NSJSONSerialization
-                         JSONObjectWithData:data
-                         options:0
-                         error:&error];
-            
-            if([object isKindOfClass:[NSDictionary class]])
-            {
-                results = object;
-                urlForImageOnServer = (NSString *)[results objectForKey:@"vidurl"];
-            }
-        }
-        
+        NSData          * data                  = pooledResponces[0];
+        NSDictionary    * results               = [Utility JSONDatatoDict: data];
+        NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+        // if in the data success is 0 then there is an error!
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
         [_localEncoder saveClip:videoName withData: results]; // this is the data used to make the plist
@@ -788,7 +786,7 @@ static void * builtContext          = &builtContext; // depricated?
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                             @{
                                               @"id": tag.ID,
-                                              @"event": tag.event,
+                                              @"event": (tag.isLive)?@"live":tag.event,
                                               @"requesttime":GET_NOW_TIME_STRING,
                                               @"bookmark":@"1",
                                               @"user":[_dictOfAccountInfo objectForKey:@"hid"]
@@ -1598,8 +1596,8 @@ static void * builtContext          = &builtContext; // depricated?
     _searchForEncoders  = NO;
     _masterEncoder      = nil;
     
-    NSLog(@"Encoders to Removed: %i", [self.authenticatedEncoders count]);
-    NSLog(@"master?: %@", _masterEncoder);
+    PXPLog(@"Encoders to Removed: %i", [self.authenticatedEncoders count]);
+    PXPLog(@"master?: %@", _masterEncoder);
     [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         //    if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
         Encoder * anEncoder = (Encoder *) obj;

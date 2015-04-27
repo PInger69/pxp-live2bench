@@ -42,10 +42,7 @@
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
-        _path               = aPath;
-           [_rawData writeToFile:self.path atomically:YES];
-        
-        // just save
+        _path               = [_rawData objectForKey:@"plistName"];
     }
     return self;
 }
@@ -65,13 +62,13 @@
         
         _rawData            = data;
         _name               = [_rawData objectForKey:@"name"];
-        _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
+        _clipId             = [_rawData objectForKey:@"id"];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = [_rawData objectForKey:@"plistName"];
 
-
+    
     }
     return self;
 }
@@ -85,23 +82,20 @@
 
 -(void)setComment:(NSString *)comment{
     _comment = comment;
-    if (comment) {
-        [self modClipData: @{@"comment": comment}];
-    }else{
-        [self modClipData: @{@"comment": @""}];
-    }
-    
+    [self modClipData: @{@"comment": comment}];
 }
 
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict
 {
-//
-//    
-//    if ([aDict objectForKey:@"fileNames"]){
-//    
-//    
-//    }
-//    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *plistName = @"Setting.plist";
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/Setting"];
+    NSString *path = [dataPath stringByAppendingPathComponent: plistName];
+
+    NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
+    
+    
 //    if ([aDict[@"vid_2"] isKindOfClass:[NSDictionary class]]){ // For new encoder and non live
 //        
 //        for (id key in aDict[@"vid_2"])
@@ -129,33 +123,27 @@
 //        }
 //        
 //    }
-//    
-//    
-//    return [tempDict copy];
-    return nil;
+    
+    
+    return [tempDict copy];
 }
 
 -(void)write
 {
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-
-//    NSString *plistName = [_rawData objectForKey:@"plistName"];
-//    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
-//    NSString *plistPath = [dataPath stringByAppendingPathComponent: plistName];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *plistName = [_rawData objectForKey:@"plistName"];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
     
+    NSString *plistPath = [dataPath stringByAppendingPathComponent: plistName];
+    NSError  * error        = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
     
-    [_rawData writeToFile:self.path atomically:YES];
-    
-    return ;
-//    NSError  * error        = nil;
-//    [[NSFileManager defaultManager] removeItemAtPath:plistPath error:&error];
-//    
-//    for (NSString *videoFileName in [_rawData objectForKey:@"fileNames"]) {
-//        dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmarkVideos"];
-//        NSString * videoPath    = [dataPath stringByAppendingPathComponent: videoFileName];
-//        [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
-//    }
+    for (NSString *videoFileName in [_rawData objectForKey:@"fileNames"]) {
+        dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmarkVideos"];
+        NSString * videoPath    = [dataPath stringByAppendingPathComponent: videoFileName];
+        [[NSFileManager defaultManager] removeItemAtPath:videoPath error:&error];
+    }
     // check the device if the clip is there.. if not then make a new clip from and make get an Id
 //    
 //    
@@ -215,10 +203,6 @@
 {
     NSMutableDictionary *mutableDict = [_rawData mutableCopy];
     
-    if (![mutableDict objectForKey:@"fileNames"]){
-        [mutableDict setObject:[[NSMutableArray alloc]init] forKey:@"fileNames"];
-    }
-    
     NSMutableArray * list       = [NSMutableArray arrayWithArray: mutableDict[@"fileNames"]];
     NSString *aName = [[aDict objectForKey:@"fileNames"] firstObject];
     [list addObject: aName];
@@ -226,7 +210,7 @@
 //    NSString * plistFileName    = mutableDict[@"plistName"];
 //    bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@",_localPath,plistFileName];
     _rawData = mutableDict;
-    [_rawData writeToFile:self.path atomically:YES];
+    
 //
 //    
 //    
