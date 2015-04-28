@@ -809,6 +809,7 @@ static void * builtContext          = &builtContext; // depricated?
         NSData          * data                  = pooledResponces[0];
         NSDictionary    * results               = [Utility JSONDatatoDict: data];
         NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+         if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
         // if in the data success is 0 then there is an error!
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
@@ -835,6 +836,8 @@ static void * builtContext          = &builtContext; // depricated?
     
     [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
     
+    PXPLog(@"Downloading Clip!");
+   
 }
 
 

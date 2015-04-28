@@ -171,15 +171,24 @@ static void *  downLoaderContext = &downLoaderContext;
         case DownloadItemStatusCancel:
             break;
         case DownloadItemStatusError:
-            [_IOAlertView setTitle:@"myplayXplay"];
-            [_IOAlertView setMessage:[NSString stringWithFormat:@"Can't download the event %@", cItem.name]];
-            //[_IOAlertView addButtonWithTitle:@"Ok"];
-            [_IOAlertView setDelegate:self];
-            if (![_IOAlertView display]) {
-                [CustomAlertView removeAlert:_IOAlertView];
+            {
+                [_IOAlertView setTitle:@"myplayXplay"];
+                NSString * msg;
+                if (cItem.name) {
+                    msg = [NSString stringWithFormat:@"Can't download the event/clip %@", cItem.name];
+                } else {
+                    msg = [NSString stringWithFormat:@"Can't download the event/clip"];
+                }
+                
+                [_IOAlertView setMessage:msg];
+                //[_IOAlertView addButtonWithTitle:@"Ok"];
+                [_IOAlertView setDelegate:self];
+                if (![_IOAlertView display]) {
+                    [CustomAlertView removeAlert:_IOAlertView];
+                }
+                [self removeFromQueue:cItem];
+                [self process];
             }
-            [self removeFromQueue:cItem];
-            [self process];
             break;
         case DownloadItemStatusWaiting:
             break;

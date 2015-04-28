@@ -124,7 +124,6 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
         [btn setClipsToBounds:TRUE];
         [btn setTag:i];
         [self.view addSubview:btn];
-        PXPLog(@"%i", self.view.subviews.count);
         [self.arrayOfTabButtons addObject:btn];
         
         [btn addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
