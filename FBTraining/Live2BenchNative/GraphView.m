@@ -32,7 +32,7 @@
         
         strokeColor = [UIColor redColor];
         
-        fillColor = [UIColor orangeColor];
+        fillColor = PRIMARY_APP_COLOR;
         
         zeroLineStrokeColor = [UIColor greenColor];
         

@@ -26,7 +26,7 @@
 +(NSString*)myWifiName;
 
 +(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block;
-
++(NSString*)removeSubString:(NSString*)substring in:(NSString*)main;
 @end
 
 

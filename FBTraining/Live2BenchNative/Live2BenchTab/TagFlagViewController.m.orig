@@ -52,6 +52,9 @@
         self.arrayOfAllTags = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
+<<<<<<< HEAD
+
+=======
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
@@ -62,10 +65,9 @@
             [self createTagMarkers];
         }];
 
-        [[NSNotificationCenter defaultCenter] addObserverForName:@"ReadyToCreateTagMarkers" object:nil queue:nil usingBlock:^(NSNotification *note){
-            [self createTagMarkers];
-        }];
         
+        
+>>>>>>> 8df0e15dee5d095b3480b7c71509193702d545a7
     }
     return self;
 }
@@ -83,20 +85,20 @@
 //        }
 //    }}];
     
-    /*self.arrayOfAllTags = @[@{@"time":@5, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
-                            @{@"time":@10, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
+    /*self.arrayOfAllTags = @[@{@"time":@5, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
+                            @{@"time":@10, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
                             @{@"time":@15, @"type":@99, @"colour" : [UIColor greenColor], @"id" : @"test1"},
                             @{@"time":@1600, @"type":@99, @"colour" : [UIColor redColor], @"id" : @"test1"},
                             @{@"time":@1054, @"type":@99, @"colour" : [UIColor blueColor], @"id" : @"test1"},
                             @{@"time":@16, @"type":@99, @"colour" : [UIColor purpleColor], @"id" : @"test1"},
-                            @{@"time":@20, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"} ];*/
+                            @{@"time":@20, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"} ];*/
     
     /*tagMarkerLeadObjDict =[NSMutableDictionary dictionaryWithDictionary:
      
-     @{@"tag1" : @{@"time":@5, @"type":@99, @"colour" :PRIMARY_APP_COLOR, @"id" : @"test1"},
-     @"tag2" : @{@"time":@10, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
-     @"tag3" : @{@"time":@15, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
-     @"tag4" : @{@"time":@20, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},} ];*/
+     @{@"tag1" : @{@"time":@5, @"type":@99, @"colour" :[UIColor orangeColor], @"id" : @"test1"},
+     @"tag2" : @{@"time":@10, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
+     @"tag3" : @{@"time":@15, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
+     @"tag4" : @{@"time":@20, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},} ];*/
     //NSString *color;
     //float tagTime;
     //NSMutableDictionary *UIColourDict;

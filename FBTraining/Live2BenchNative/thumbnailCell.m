@@ -161,7 +161,7 @@
     [self addSubview:self.activityInd];
     
     translucentEditingView = [[UIView alloc] initWithFrame:self.bounds];
-    [translucentEditingView setBackgroundColor:[UIColor orangeColor]];
+    [translucentEditingView setBackgroundColor:PRIMARY_APP_COLOR];
     [translucentEditingView setAlpha:0.3];
     //[translucentEditingView setUserInteractionEnabled:FALSE];
     [translucentEditingView setTag:998];

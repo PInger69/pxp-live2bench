@@ -71,9 +71,9 @@
 
         [self setItems:@[playButtonItem,leftTimeLabelItem, self.timeSliderItem, rightTimeLabelItem, cancelClipButton]];
         
-        self.backgroundColor = [UIColor orangeColor];
+        self.backgroundColor = PRIMARY_APP_COLOR;
         self.tintColor = [UIColor blueColor];
-        self.barTintColor = [UIColor orangeColor];
+        self.barTintColor = PRIMARY_APP_COLOR;
     }
     return self;
 }

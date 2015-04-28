@@ -42,8 +42,8 @@
         [[NSNotificationCenter defaultCenter]postNotification: thatNotification];
         
         UISwitch *durationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(50, 600, 100, 30)];
-        [durationSwitch setOnTintColor:[UIColor orangeColor]];
-        [durationSwitch setTintColor:[UIColor orangeColor]];
+        [durationSwitch setOnTintColor:PRIMARY_APP_COLOR];
+        [durationSwitch setTintColor:PRIMARY_APP_COLOR];
         [durationSwitch setThumbTintColor:[UIColor grayColor]];
         [durationSwitch setOn:YES];
         [durationSwitch addTarget:self action:@selector(switchPressed:) forControlEvents:UIControlEventValueChanged];

@@ -140,9 +140,9 @@
 //    [bookmarkButton setFrame:CGRectMake(CGRectGetMaxX(coachpickButton.frame) + 20.0f, coachpickButton.frame.origin.y + 3, 55.0f, 28.0f)];
 //    //[bookmarkButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
 //    [bookmarkButton setTitle:@"Feeds" forState:UIControlStateNormal];
-//    bookmarkButton.layer.borderColor = [UIColor orangeColor].CGColor;
+//    bookmarkButton.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
 //    bookmarkButton.layer.borderWidth = 1.0f;
-//    [bookmarkButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+//    [bookmarkButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
 //    [bookmarkButton addTarget:self action:@selector(showSource:) forControlEvents:UIControlEventTouchUpInside];
 //    [self.myContentView addSubview:bookmarkButton];
 //    

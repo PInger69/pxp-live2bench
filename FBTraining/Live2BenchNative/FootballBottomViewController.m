@@ -1052,7 +1052,7 @@
     ////////NSLog(@"[seriesPickerView selectedRowInComponent:0] %d, row %d, selectedrow %d",[seriesPickerView selectedRowInComponent:0],row,selectedRow);
     if (row == selectedRow && ((selectedRow != 0 && ![pickerView isEqual:gainPickerView]) || (selectedRow != 55 && [pickerView isEqual:gainPickerView])) ) {
         customView.font = [UIFont boldSystemFontOfSize:32.f];
-        customView.textColor = [UIColor orangeColor];
+        customView.textColor = PRIMARY_APP_COLOR;
     }else{
         customView.font = [UIFont boldSystemFontOfSize:20.f];
         customView.textColor = [UIColor grayColor];

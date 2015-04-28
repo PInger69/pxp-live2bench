@@ -16,8 +16,7 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-//#define PxpLog
-//extern int pxpLog(NSString *formatString, ... );
+
 
 
 //BEN AND SAGAR STUFF BEGINNING
@@ -126,11 +125,11 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 /**
  *  Graphics Commons
  */
-#define PRIMARY_APP_COLOR   [UIColor orangeColor]
+#define PRIMARY_APP_COLOR   [UIColor blueColor]
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          1
+#define DEBUG_MODE                          0
 
 //#if DEBUG_MODE == 0
 //#define DebugLog(...)

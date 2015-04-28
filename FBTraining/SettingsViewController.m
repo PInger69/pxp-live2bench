@@ -229,7 +229,7 @@ SVSignalStatus signalStatus;
     
     //Width of this frame represents the strength of the signal
     signalStrengthView = [[UIView alloc] initWithFrame:CGRectMake(signalStrengthBG.frame.origin.x + 1.0f, signalStrengthBG.frame.origin.y, 0.0f, signalStrengthBG.bounds.size.height)];
-    signalStrengthView.backgroundColor = [UIColor orangeColor];
+    signalStrengthView.backgroundColor = PRIMARY_APP_COLOR;
     signalStrengthView.autoresizingMask = signalStrengthBG.autoresizingMask;
     signalStatus = SVSignalShowing;
     //    [scrollView addSubview:signalStrengthView];
@@ -594,7 +594,7 @@ SVSignalStatus signalStatus;
     //        double strength = globals.BIT_RATE/1000;
     //        if (strength > 1.0)
     //            strength = 1.0;
-    //        signalStrengthView.backgroundColor = [UIColor orangeColor];
+    //        signalStrengthView.backgroundColor = PRIMARY_APP_COLOR;
     //        [signalStrengthOverlay setImage:[UIImage imageNamed:@"signalStrength"]];
     //        //1px whitespace on overlay
     //        float maxWidth = signalStrengthOverlay.bounds.size.width - 2.0f;
@@ -845,7 +845,7 @@ SVSignalStatus signalStatus;
     encHomeButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
     [encHomeButton setFrame:CGRectMake(0.0f, 5.0f, 140, 45)];
     [encHomeButton setTitle:@"Encoder Home" forState:UIControlStateNormal];
-    [encHomeButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [encHomeButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [encHomeButton addTarget:self action:@selector(openEncoderHomeInSafari:) forControlEvents:UIControlEventTouchUpInside];
     [encHomeButton setUserInteractionEnabled:YES];
     
@@ -882,7 +882,7 @@ SVSignalStatus signalStatus;
     //        backToGeneral = [UIButton buttonWithType:UIButtonTypeCustom];
     //        [backToGeneral setFrame:CGRectMake(scrollView.bounds.size.width, 15,150 ,30  )];
     //        [backToGeneral setImage:[UIImage imageNamed:@"dropdownleft"] forState:UIControlStateNormal];
-    //        [backToGeneral setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    //        [backToGeneral setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     //        [backToGeneral addTarget:self action:@selector(backToGeneralView:) forControlEvents:UIControlEventTouchUpInside];
     //        [backToGeneral setTitleEdgeInsets:UIEdgeInsetsMake(0.0, 20.0, 0.0, 0.0)];
     //        [backToGeneral setTitle:@"Accounts" forState:UIControlStateNormal];

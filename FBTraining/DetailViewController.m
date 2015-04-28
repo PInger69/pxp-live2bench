@@ -35,7 +35,7 @@
         self.navigationItem.leftItemsSupplementBackButton = YES;
         
         [self.tableView registerClass:[SwipeableTableViewCell class] forCellReuseIdentifier:@"SwipeableCell"];
-        self.tintColor = [UIColor orangeColor];
+        self.tintColor = PRIMARY_APP_COLOR;
     }
     return self;
 }
@@ -130,7 +130,7 @@
             [cell.functionalButton setTitle: self.dataDictionary[@"Function Labels"][indexPath.row] forState:UIControlStateNormal];
             cell.functionalButton.hidden = NO;
             if([((NSNumber *)self.dataDictionary[@"Function Buttons"][indexPath.row]) intValue]){
-                [cell.functionalButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                [cell.functionalButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
                 cell.functionalButton.enabled = YES;
             }else{
                 [cell.functionalButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
@@ -180,7 +180,7 @@
 //        
     //This line makes the DetailViewController the delegate for each cell
     cell.delegate = self;
-    cell.tintColor = [UIColor orangeColor];
+    cell.tintColor = PRIMARY_APP_COLOR;
     return cell;
 }
 

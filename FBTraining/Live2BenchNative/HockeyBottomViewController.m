@@ -249,7 +249,7 @@
 //                
 //                self.playerDrawerLeft = [[ContentViewController alloc] initWithIndex:button.tag side:@"Forward"];
 //                [self.playerDrawerLeft.view setBackgroundColor:[UIColor clearColor]];
-//                [self.playerDrawerLeft.view.layer setBorderColor:[UIColor orangeColor].CGColor];
+//                [self.playerDrawerLeft.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
 //                [self.playerDrawerLeft.view.layer setBorderWidth:1.0f];
 //                [self.playerDrawerLeft.view setFrame:CGRectMake(45,CGRectGetMaxY(self.leftArrow.frame),300,110)];
 //                [self.leftView addSubview:self.playerDrawerLeft.view];
@@ -294,7 +294,7 @@
 //                
 //                self.playerDrawerRight = [[ContentViewController alloc] initWithIndex:button.tag side:@"Defense"];
 //                [self.playerDrawerRight.view setBackgroundColor:[UIColor clearColor]];
-//                [self.playerDrawerRight.view.layer setBorderColor:[UIColor orangeColor].CGColor];
+//                [self.playerDrawerRight.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
 //                [self.playerDrawerRight.view.layer setBorderWidth:1.0f];
 //                [self.playerDrawerRight.view setFrame:CGRectMake(0,CGRectGetMaxY(self.rightArrow.frame),300,110)];
 //                [self.rightView addSubview:self.playerDrawerRight.view];
@@ -927,7 +927,7 @@
         self.playerDrawerLeft = [[ContentViewController alloc] initWithIndex:button.tag side:@"Forward"];
          //[self.playerDrawerLeft.view setBackgroundColor:[UIColor colorWithRed:224/255.0f green:229/255.0f blue:240/255.0f alpha:1.0f]];
         [self.playerDrawerLeft.view setBackgroundColor:[UIColor clearColor]];
-        [self.playerDrawerLeft.view.layer setBorderColor:[UIColor orangeColor].CGColor];
+        [self.playerDrawerLeft.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
         [self.playerDrawerLeft.view.layer setBorderWidth:1.0f];
         [self.playerDrawerLeft.view setFrame:CGRectMake(45,CGRectGetMaxY(self.leftArrow.frame),300,110)];
 
@@ -969,7 +969,7 @@
         
         self.playerDrawerRight = [[ContentViewController alloc] initWithIndex:button.tag side:@"Defense"];
         [self.playerDrawerRight.view setBackgroundColor:[UIColor clearColor]];
-        [self.playerDrawerRight.view.layer setBorderColor:[UIColor orangeColor].CGColor];
+        [self.playerDrawerRight.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
         [self.playerDrawerRight.view.layer setBorderWidth:1.0f];
         [self.playerDrawerRight.view setFrame:CGRectMake(0,CGRectGetMaxY(self.rightArrow.frame),300,110)];
 

@@ -55,7 +55,7 @@
         [self.arrayOfLabels addObject:self.wifiLable];
         
         self.eula = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, 300, 50)];
-        [self.eula setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [self.eula setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         [self.eula setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [self.eula addTarget:self action:@selector(viewLicense:) forControlEvents:UIControlEventTouchUpInside];
         [self.eula setTitle:@"View Eula" forState:UIControlStateNormal];
@@ -152,7 +152,7 @@
     if (indexPath.row == 2) {
         self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(500, 0, 100, 50)];
         [self.logoutButton setTitle:@"LOGOUT" forState:UIControlStateNormal];
-        [self.logoutButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [self.logoutButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         [self.logoutButton addTarget:self action:@selector(appLogOut:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:self.logoutButton];
     }

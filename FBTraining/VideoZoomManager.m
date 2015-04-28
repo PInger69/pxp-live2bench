@@ -263,7 +263,7 @@
     
     path.lineWidth = 2.0;
     
-    [[UIColor orangeColor] setStroke];
+    [PRIMARY_APP_COLOR setStroke];
     [path stroke];
     
     UIImage *returnImage = UIGraphicsGetImageFromCurrentImageContext();

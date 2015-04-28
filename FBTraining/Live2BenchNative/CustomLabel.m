@@ -33,7 +33,7 @@
     switch (style) {
         case 1:
         case 4:
-            label.textColor = [UIColor orangeColor];
+            label.textColor = PRIMARY_APP_COLOR;
             break;
         case 2:
         case 5:

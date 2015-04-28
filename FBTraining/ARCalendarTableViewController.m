@@ -236,7 +236,7 @@
             
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
-                
+             
                 //[[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Injury"}];
 
                 [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
@@ -252,7 +252,6 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-                
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                        animated:YES];

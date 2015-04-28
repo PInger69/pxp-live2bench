@@ -34,7 +34,7 @@
         [self.deleteButton setFrame:CGRectMake(568, 768, 370, 0)];
         
         self.shareButton = [[UIButton alloc] init];
-        self.shareButton.backgroundColor = [UIColor orangeColor];
+        self.shareButton.backgroundColor = PRIMARY_APP_COLOR;
         [self.shareButton addTarget:self action:@selector(shareAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
         [self.shareButton setTitle: @"Share All" forState: UIControlStateNormal];
         [self.shareButton.titleLabel setTextColor:[UIColor whiteColor]];
@@ -172,7 +172,6 @@
     self.sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
     self.sharePop.popoverContentSize = CGSizeMake(280, 180);
     [self.sharePop presentPopoverFromRect:self.shareButton.frame inView:self.parentViewController.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-    
 }
 
 -(void)shareOptionChosen:(NSString *)optionChosen{
@@ -197,6 +196,7 @@
         self.editingIndexPath = indexPath;
         
         CustomAlertView *alert = [[CustomAlertView alloc] init];
+        alert.type = AlertImportant;
         [alert setTitle:@"myplayXplay"];
         [alert setMessage:@"Are you sure you want to delete this tag?"];
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
@@ -206,7 +206,7 @@
         
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        //Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
 

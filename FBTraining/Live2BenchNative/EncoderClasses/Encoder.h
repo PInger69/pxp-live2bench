@@ -77,7 +77,6 @@
 @property (nonatomic,strong)    NSString        * statusAsString;
 @property (nonatomic,assign)    double          bitrate;
 
-@property (nonatomic,readonly)  NSMutableString * log;
 @property (nonatomic,assign)    BOOL            isMaster;
 @property (nonatomic,assign)    NSInteger       cameraCount;
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names

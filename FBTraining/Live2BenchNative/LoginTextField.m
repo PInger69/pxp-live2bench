@@ -25,7 +25,7 @@
 }
 
 - (void)layoutSubviews{
-    [self setTextColor:[UIColor orangeColor]];
+    [self setTextColor:PRIMARY_APP_COLOR];
     [self setContentVerticalAlignment: UIControlContentVerticalAlignmentCenter];
     [self setAutocapitalizationType: UITextAutocapitalizationTypeNone];
     [self setAutocorrectionType: UITextAutocorrectionTypeNo];

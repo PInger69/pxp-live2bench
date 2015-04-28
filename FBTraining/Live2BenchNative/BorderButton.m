@@ -16,7 +16,7 @@ UIColor *accentColor;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        accentColor = [UIColor orangeColor];
+        accentColor = PRIMARY_APP_COLOR;
         [self setBackgroundColor:[UIColor clearColor]];
         [self setBorderColour:accentColor];
         [self setBorderWidth:1.0f];
@@ -43,7 +43,7 @@ UIColor *accentColor;
     accentColor = colour;
     [self setBorderColour:accentColor];
     [self setTitleColor:accentColor forState:UIControlStateNormal];
-    if (accentColor == [UIColor orangeColor]){
+    if (accentColor == PRIMARY_APP_COLOR){
         [self setBackgroundImage:[UIImage imageNamed:@"orangeSelect"] forState:UIControlStateHighlighted];
     } else if (accentColor == [UIColor redColor]){
         [self setBackgroundImage:[UIImage imageNamed:@"redSelect"] forState:UIControlStateHighlighted];

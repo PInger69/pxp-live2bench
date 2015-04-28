@@ -33,7 +33,7 @@
         
         
         self.segmentView = [[UISegmentedControl alloc]initWithItems: [self segmentItemsArray]];
-        self.tintColor = [UIColor orangeColor];
+        self.tintColor = PRIMARY_APP_COLOR;
         [self.segmentView addTarget:self action:@selector(segmentTapped:) forControlEvents:UIControlEventValueChanged];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:@"Selection" object:nil];
         
@@ -45,7 +45,7 @@
         if (self.segmentQuantity == 2) {
             self.secondSegmentView = [[UISegmentedControl alloc]initWithItems: [self segmentItemsArray]];
             //[self.secondSegmentView addTarget:self action:@selector(segmentTapped:) forControlEvents:UIControlEventValueChanged];
-            self.secondSegmentView.tintColor = [UIColor orangeColor];
+            self.secondSegmentView.tintColor = PRIMARY_APP_COLOR;
             self.secondSegmentView.selectedSegmentIndex = [[dataDictionary[@"selectedIndex"] objectAtIndex:1] intValue];
         }
         

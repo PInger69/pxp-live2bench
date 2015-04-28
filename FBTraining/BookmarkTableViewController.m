@@ -38,7 +38,6 @@
 }
 
 -(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
-    PXPLog(@"%@", longPress);
     if(longPress.state == UIGestureRecognizerStateBegan){
         if (!self.editing) {
             [self setEditing:YES animated:YES];

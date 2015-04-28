@@ -546,7 +546,7 @@
     
     // check the device if the clip is there.. if not then make a new clip from and make get an Id
     
-    NSString * clipID = [tagData objectForKey:@"id"];
+    NSString * clipID = [NSString stringWithFormat:@"%@",[tagData objectForKey:@"id"]];
     
     if ([_clips objectForKey:clipID]) { // if there is a plist there already then just mod the data
         Clip * selectedClip         = [_clips objectForKey:clipID];

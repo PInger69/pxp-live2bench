@@ -3018,18 +3018,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
-				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/Live2BenchNative/Kal/src";
 				INFOPLIST_FILE = "Live2BenchNative/Live2BenchNative-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					"copy/Source/build/Debug-iphoneos",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					"copy/Source/build/Debug-iphoneos",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only/Source/build/Debug-iphoneos",
-				);
-				"LIBRARY_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/Live2BenchNative/Kal/src";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3070,18 +3060,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
-				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/Live2BenchNative/Kal/src";
 				INFOPLIST_FILE = "Live2BenchNative/Live2BenchNative-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					"copy/Source/build/Debug-iphoneos",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					"copy/Source/build/Debug-iphoneos",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only/Source/build/Debug-iphoneos",
-				);
-				"LIBRARY_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/Live2BenchNative/Kal/src";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",

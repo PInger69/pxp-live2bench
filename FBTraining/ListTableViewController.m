@@ -241,7 +241,7 @@
     
     UIView* backgroundView = [ [ UIView alloc ] initWithFrame:cell.frame ];
     backgroundView.backgroundColor = [UIColor clearColor];
-    backgroundView.layer.borderColor = [[UIColor orangeColor] CGColor];
+    backgroundView.layer.borderColor = [PRIMARY_APP_COLOR CGColor];
     cell.backgroundView = backgroundView;
     
     //This is the condition where a cell that is selected is reused

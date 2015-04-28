@@ -134,7 +134,7 @@ static UIImage *starImage;
     [outLinePath addLineToPoint: CGPointMake(17.5, 100)]; // bottom left
     
     
-    [[UIColor orangeColor] setFill];
+    [PRIMARY_APP_COLOR setFill];
     [[UIColor blackColor] setStroke];
     
     outLinePath.lineWidth = 5.0;

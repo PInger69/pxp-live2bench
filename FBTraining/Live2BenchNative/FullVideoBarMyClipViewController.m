@@ -117,10 +117,10 @@
 {
     UILabel * tagEventName = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)- (150/2), 0, 150, 30)];
     [tagEventName setBackgroundColor:[UIColor clearColor]];
-    tagEventName.layer.borderColor = [UIColor orangeColor].CGColor;
+    tagEventName.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
     tagEventName.layer.borderWidth = 1;
     [tagEventName setText:@"Event Name"];
-    [tagEventName setTextColor:[UIColor orangeColor]];
+    [tagEventName setTextColor:PRIMARY_APP_COLOR];
     [tagEventName setTextAlignment:NSTextAlignmentCenter];
     
     return tagEventName;
