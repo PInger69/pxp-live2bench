@@ -83,20 +83,20 @@
 //        }
 //    }}];
     
-    /*self.arrayOfAllTags = @[@{@"time":@5, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
-                            @{@"time":@10, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
+    /*self.arrayOfAllTags = @[@{@"time":@5, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
+                            @{@"time":@10, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
                             @{@"time":@15, @"type":@99, @"colour" : [UIColor greenColor], @"id" : @"test1"},
                             @{@"time":@1600, @"type":@99, @"colour" : [UIColor redColor], @"id" : @"test1"},
                             @{@"time":@1054, @"type":@99, @"colour" : [UIColor blueColor], @"id" : @"test1"},
                             @{@"time":@16, @"type":@99, @"colour" : [UIColor purpleColor], @"id" : @"test1"},
-                            @{@"time":@20, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"} ];*/
+                            @{@"time":@20, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"} ];*/
     
     /*tagMarkerLeadObjDict =[NSMutableDictionary dictionaryWithDictionary:
      
-     @{@"tag1" : @{@"time":@5, @"type":@99, @"colour" :[UIColor orangeColor], @"id" : @"test1"},
-     @"tag2" : @{@"time":@10, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
-     @"tag3" : @{@"time":@15, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
-     @"tag4" : @{@"time":@20, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},} ];*/
+     @{@"tag1" : @{@"time":@5, @"type":@99, @"colour" :PRIMARY_APP_COLOR, @"id" : @"test1"},
+     @"tag2" : @{@"time":@10, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
+     @"tag3" : @{@"time":@15, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},
+     @"tag4" : @{@"time":@20, @"type":@99, @"colour" : PRIMARY_APP_COLOR, @"id" : @"test1"},} ];*/
     //NSString *color;
     //float tagTime;
     //NSMutableDictionary *UIColourDict;

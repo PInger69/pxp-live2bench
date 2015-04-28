@@ -199,8 +199,8 @@ static UIImage* rateUnSelected;
     
     
     if (selected) {
-        [[UIColor orangeColor] setFill];
-        [[UIColor orangeColor] setStroke];
+        [PRIMARY_APP_COLOR setFill];
+        [PRIMARY_APP_COLOR setStroke];
     }else{
         [[UIColor lightGrayColor] setFill];
         [[UIColor lightGrayColor] setStroke];

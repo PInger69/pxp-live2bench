@@ -33,7 +33,7 @@
         
         self.commentingButton = [[UIButton alloc] initWithFrame:CGRectMake(8, 65, 100, 50)];
         [self.commentingButton setTitle:@"Comment:" forState:UIControlStateNormal];
-        [self.commentingButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [self.commentingButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         [self.commentingButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0f]];
         [self.commentingButton addTarget:self action:@selector(showCommentEdit:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.commentingButton];

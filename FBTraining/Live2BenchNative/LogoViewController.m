@@ -83,7 +83,7 @@ EncoderManager      * encoderManager;
                      nil];
     tabSelectAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                            [UIFont defaultFontOfSize:35.0f], NSFontAttributeName,
-                           [UIColor orangeColor], NSForegroundColorAttributeName,
+                           PRIMARY_APP_COLOR, NSForegroundColorAttributeName,
                            nil];
     
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];

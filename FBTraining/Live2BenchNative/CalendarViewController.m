@@ -78,7 +78,7 @@
     [self.todayButton setTitle:@"Today" forState:UIControlStateNormal];
     self.todayButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.todayButton.layer.borderWidth = 0.5f;
-    [self.todayButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.todayButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.todayButton addTarget:self action:@selector(goBackToday:) forControlEvents:UIControlEventTouchUpInside];
     [self.todayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     self.todayButton.showsTouchWhenHighlighted = YES;
@@ -88,7 +88,7 @@
     [self.latestButton setTitle:@"Latest Events" forState:UIControlStateNormal];
     self.latestButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.latestButton.layer.borderWidth = 0.5f;
-    [self.latestButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.latestButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.latestButton addTarget:self action:@selector(goToLatestEvent:) forControlEvents:UIControlEventTouchUpInside];
     [self.latestButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     self.latestButton.showsTouchWhenHighlighted = YES;
@@ -98,7 +98,7 @@
     [self.allEventsButton setTitle:@"All Events" forState:UIControlStateNormal];
     self.allEventsButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.allEventsButton.layer.borderWidth = 0.5f;
-    [self.allEventsButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.allEventsButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.allEventsButton addTarget:self action:@selector(goToAllEvents:) forControlEvents:UIControlEventTouchUpInside];
     [self.allEventsButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     self.allEventsButton.showsTouchWhenHighlighted = YES;

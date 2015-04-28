@@ -46,9 +46,9 @@
             for (UIButton *button in self.arrayOfButtonsInBar) {
                 [self addSubview:button];
                 button.titleLabel.textAlignment = NSTextAlignmentCenter;
-                //button.titleLabel.textColor = [UIColor orangeColor];
+                //button.titleLabel.textColor = PRIMARY_APP_COLOR;
                 [button setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-                //button.titleLabel.tintColor = [UIColor orangeColor];
+                //button.titleLabel.tintColor = PRIMARY_APP_COLOR;
                 //button.titleLabel.font = [UIFont systemFontOfSize:17.0];
                 [button.titleLabel setFont:[UIFont systemFontOfSize:22.0]];
                 button.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
@@ -69,7 +69,7 @@
                 [self addSubview:button];
                 button.titleLabel.textAlignment = NSTextAlignmentCenter;
                 button.titleLabel.textColor = PRIMARY_APP_COLOR;
-                //button.titleLabel.tintColor = [UIColor orangeColor];
+                //button.titleLabel.tintColor = PRIMARY_APP_COLOR;
                 //button.titleLabel.font = [UIFont systemFontOfSize:17.0];
                 [button.titleLabel setFont:[UIFont systemFontOfSize:22.0]];
                 [button setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];

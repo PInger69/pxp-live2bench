@@ -123,7 +123,7 @@
 ////        [zoneLabel setText:zone];
 ////        [cell addSubview:zoneLabel];
 //        [cell setAccessibilityLabel:@"zone"];
-////        [cell.layer setBorderColor:[UIColor orangeColor].CGColor];
+////        [cell.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
 ////        [cell.layer setBorderWidth:1.0];
 //        [cell setTitle:zone forState:UIControlStateNormal];
 //        [cell addTarget:self action:@selector(didSelectCell:) forControlEvents:UIControlEventTouchUpInside];

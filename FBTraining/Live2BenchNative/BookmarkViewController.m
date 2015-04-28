@@ -526,13 +526,13 @@ int viewWillAppearCalled;
     
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
     [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
-    [self.filterButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
 //    self.shareButton = [[UIButton alloc] initWithFrame:CGRectMake(850, 710, 74, 58)];
 //    [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
-//    [self.shareButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+//    [self.shareButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
 //    [self.shareButton addTarget:self action:@selector(popShareOptions:) forControlEvents:UIControlEventTouchUpInside];
 //    [self.view addSubview:self.shareButton];
     

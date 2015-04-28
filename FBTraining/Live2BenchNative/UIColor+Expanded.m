@@ -1610,9 +1610,9 @@ static NSDictionary *colorNameDictionaries = nil;
 - (UIColor *) closestMensColor
 {   
     // Even more limited
-    // NSArray *baseColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor yellowColor], [UIColor orangeColor], [UIColor purpleColor]];
+    // NSArray *baseColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor yellowColor], PRIMARY_APP_COLOR, [UIColor purpleColor]];
     
-    NSArray *baseColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor cyanColor], [UIColor yellowColor], [UIColor magentaColor], [UIColor orangeColor], [UIColor purpleColor], [UIColor brownColor]];
+    NSArray *baseColors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor cyanColor], [UIColor yellowColor], [UIColor magentaColor], PRIMARY_APP_COLOR, [UIColor purpleColor], [UIColor brownColor]];
     
     NSArray *grayColors = @[[UIColor blackColor], [UIColor lightGrayColor], [UIColor grayColor], [UIColor darkGrayColor]];
     

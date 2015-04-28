@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setBackgroundColor:[UIColor clearColor]];
-        [self setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [self setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         [self setTitleColor:[UIColor colorWithRed:0.8f green:0.4f blue:0.0f alpha:1.0f] forState:UIControlStateHighlighted];
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateHighlighted];

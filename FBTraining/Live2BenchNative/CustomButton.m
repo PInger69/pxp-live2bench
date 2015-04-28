@@ -127,12 +127,12 @@ UIView *border;
 //    [path addLineToPoint:CGPointMake(7, 1)];
 //    
 //    path.lineWidth = 2.0;
-//    //[[UIColor orangeColor] setStroke];
+//    //[PRIMARY_APP_COLOR setStroke];
 //    
 //    //[path fill];
 //    [path stroke];
 //    downloadLayer.strokeColor = PRIMARY_APP_COLOR.CGColor;
-//    //[[UIColor orangeColor] setStroke];
+//    //[PRIMARY_APP_COLOR setStroke];
 //    
 //    if (self.highlighted) {
 //        downloadLayer.path = path.CGPath;
@@ -161,7 +161,7 @@ UIView *border;
 //    //[path fill];
 //    [boxPath stroke];
 //    progressLayer.strokeColor = PRIMARY_APP_COLOR.CGColor;
-//    //[[UIColor orangeColor] setStroke];
+//    //[PRIMARY_APP_COLOR setStroke];
 //    
 //    progressLayer.path = boxPath.CGPath;
 //    progressLayer.fillColor = [UIColor whiteColor].CGColor;

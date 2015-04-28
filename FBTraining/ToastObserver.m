@@ -173,7 +173,7 @@
         Tag *tag = (Tag *) currentNotification.object;
         //Creating of the ToastView
         UIView *presentingView = [[UIView alloc] init];
-        presentingView.layer.borderColor = [UIColor orangeColor].CGColor;
+        presentingView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
         presentingView.backgroundColor = [UIColor whiteColor];
         presentingView.layer.borderWidth = 1.0f;
         
@@ -229,7 +229,7 @@
     if (currentNotification.userInfo) {
         //Creating of the ToastView
         UIView *presentingView = [[UIView alloc] init];
-        presentingView.layer.borderColor = [UIColor orangeColor].CGColor;
+        presentingView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
         presentingView.backgroundColor = [UIColor whiteColor];
         presentingView.layer.borderWidth = 1.0f;
         

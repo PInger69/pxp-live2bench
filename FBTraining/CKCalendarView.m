@@ -97,7 +97,7 @@
         //        self.backgroundColor = UIColorFromRGB(0xF2F2F2);
         //        self.selectedBackgroundColor = UIColorFromRGB(0x88B6DB);
         self.backgroundColor = [UIColor whiteColor];
-        self.selectedBackgroundColor = [UIColor orangeColor];
+        self.selectedBackgroundColor = PRIMARY_APP_COLOR;
         self.textColor = UIColorFromRGB(0x393B40);
         self.selectedTextColor = UIColorFromRGB(0xF2F2F2);
     }
@@ -313,7 +313,7 @@
         if ([self _dateIsToday:dateButton.date]) {
             item.textColor = UIColorFromRGB(0xF2F2F2);
             item.backgroundColor = [UIColor lightGrayColor];
-            //item.backgroundColor = [UIColor orangeColor];
+            //item.backgroundColor = PRIMARY_APP_COLOR;
         } else if (!self.onlyShowCurrentMonth && [self _compareByMonth:date toDate:self.monthShowing] != NSOrderedSame) {
             item.textColor = [UIColor lightGrayColor];
         }

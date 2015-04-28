@@ -65,15 +65,15 @@
             [buttonForPlayer setTitle:info[i] forState:UIControlStateNormal];
             if([self.selectedPlayers[i]  isEqual: @YES]){
                 [buttonForPlayer setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                buttonForPlayer.backgroundColor = [UIColor orangeColor];
+                buttonForPlayer.backgroundColor = PRIMARY_APP_COLOR;
             }else{
-                [buttonForPlayer setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                [buttonForPlayer setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
                 buttonForPlayer.backgroundColor = [UIColor whiteColor];
                 
             }
 
             [buttonForPlayer.layer setBorderWidth:1.0f];
-            [buttonForPlayer.layer setBorderColor:[UIColor orangeColor].CGColor];
+            [buttonForPlayer.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
             [buttonForPlayer.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:15]];
             [buttonForPlayer addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -124,13 +124,13 @@
 -(void)buttonPressed:(UIButton *)sender{
     int index = (int)[self.players indexOfObject:sender];
     if ([sender.backgroundColor isEqual:[UIColor whiteColor]]){
-        sender.backgroundColor = [UIColor orangeColor];
+        sender.backgroundColor = PRIMARY_APP_COLOR;
         [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         self.selectedPlayers[index] = @YES;
         
     }else{
         sender.backgroundColor = [UIColor whiteColor];
-        [sender setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [sender setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         self.selectedPlayers[index] = @NO;
     }
     [self.theButtonViewManager sendNotificationWithName:sender.titleLabel.text];
@@ -140,13 +140,13 @@
 /*-(void)buttonIsHeld: (UIButton *)sender{
     int index = (int)[self.players indexOfObject:sender];
     if ([sender.backgroundColor isEqual:[UIColor whiteColor]]){
-        sender.backgroundColor = [UIColor orangeColor];
+        sender.backgroundColor = PRIMARY_APP_COLOR;
         [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         self.selectedPlayers[index] = @YES;
     
     }else{
         sender.backgroundColor = [UIColor whiteColor];
-        [sender setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [sender setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         self.selectedPlayers[index] = @NO;
     }
 }*/

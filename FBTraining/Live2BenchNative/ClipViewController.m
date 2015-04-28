@@ -243,7 +243,7 @@ static void * encoderTagContext = &encoderTagContext;
     
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
     [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
-    [self.filterButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     

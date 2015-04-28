@@ -123,10 +123,10 @@
     
     path.lineWidth = 1.0;
     boxPath.lineWidth = 2.0;
-    [[UIColor orangeColor] setStroke];
+    [PRIMARY_APP_COLOR setStroke];
     
     if (self.highlighted || self.progress) {
-        [[UIColor orangeColor] setFill];
+        [PRIMARY_APP_COLOR setFill];
     }else{
         [[UIColor whiteColor] setFill];
     }

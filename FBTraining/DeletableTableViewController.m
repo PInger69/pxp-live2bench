@@ -34,7 +34,7 @@
         [self.deleteButton setFrame:CGRectMake(568, 768, 370, 0)];
         
         self.shareButton = [[UIButton alloc] init];
-        self.shareButton.backgroundColor = [UIColor orangeColor];
+        self.shareButton.backgroundColor = PRIMARY_APP_COLOR;
         [self.shareButton addTarget:self action:@selector(shareAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
         [self.shareButton setTitle: @"Share All" forState: UIControlStateNormal];
         [self.shareButton.titleLabel setTextColor:[UIColor whiteColor]];

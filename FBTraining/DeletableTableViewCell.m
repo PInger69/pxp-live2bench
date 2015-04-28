@@ -49,7 +49,7 @@ static CGFloat const kBounceValue = 15.0f;
     [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
     [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.shareButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-    [self.shareButton setBackgroundColor:[UIColor orangeColor]];
+    [self.shareButton setBackgroundColor:PRIMARY_APP_COLOR];
     [self.contentView addSubview:self.shareButton];
     [self.shareButton addTarget:self action:@selector(shareButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     

@@ -25,7 +25,7 @@
         CGRect subviewRect =CGRectMake(0, 0, frame.size.width, frame.size.height);
         
         self.progressView = [[UIProgressView alloc] initWithFrame: subviewRect];
-        self.progressView.tintColor = [UIColor orangeColor];
+        self.progressView.tintColor = PRIMARY_APP_COLOR;
         [self.progressView setProgress:0.0];
         [self addSubview: self.progressView];
         

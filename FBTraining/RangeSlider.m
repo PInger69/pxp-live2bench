@@ -177,7 +177,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
         _lowerValue = 0.0;
         _knobBorderThickness = 0.5;
         
-        _trackHighlightColour = [UIColor orangeColor];//colorWithRed:0.0 green:0.45 blue:0.94 alpha:1.0];
+        _trackHighlightColour = PRIMARY_APP_COLOR;//colorWithRed:0.0 green:0.45 blue:0.94 alpha:1.0];
         _trackColour = [UIColor colorWithWhite:0.9 alpha:1.0];
         _knobColour = [UIColor whiteColor];
         _curvaceousness = 1.0;

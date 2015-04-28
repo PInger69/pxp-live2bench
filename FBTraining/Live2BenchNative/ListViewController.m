@@ -715,7 +715,7 @@ NSMutableArray *oldEventNames;
  
  UIView* backgroundView = [ [ UIView alloc ] initWithFrame:cell.frame ];
  backgroundView.backgroundColor = [UIColor clearColor];
- backgroundView.layer.borderColor = [[UIColor orangeColor] CGColor];
+ backgroundView.layer.borderColor = [PRIMARY_APP_COLOR CGColor];
  cell.backgroundView = backgroundView;
  ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
  NSString *url = [self.tagsToDisplay[indexPath.row] objectForKey:@"url"];
@@ -1750,7 +1750,7 @@ NSMutableArray *oldEventNames;
     
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
     [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
-    [self.filterButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
@@ -1818,7 +1818,7 @@ NSMutableArray *oldEventNames;
     //    savedMsgLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, commentTextView.frame.size.height/2.0 - 20, commentTextView.frame.size.width, 40)];
     //    [savedMsgLabel setText:@"Comment was saved!"];
     //    [savedMsgLabel setFont:[UIFont defaultFontOfSize:18.0f]];
-    //    [savedMsgLabel setTextColor:[UIColor orangeColor]];
+    //    [savedMsgLabel setTextColor:PRIMARY_APP_COLOR];
     //    [savedMsgLabel setTextAlignment:NSTextAlignmentCenter];
     //    [savedMsgLabel setHidden:TRUE];
     //    [commentTextView addSubview:savedMsgLabel];
@@ -2620,10 +2620,10 @@ NSMutableArray *oldEventNames;
     //
     //    tagEventName = [[UILabel alloc] initWithFrame:CGRectMake(COMMENTBOX_WIDTH/2.0 -50, 0, 150, 30)];
     //    [tagEventName setBackgroundColor:[UIColor clearColor]];
-    //    tagEventName.layer.borderColor = [UIColor orangeColor].CGColor;
+    //    tagEventName.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
     //    tagEventName.layer.borderWidth = 1;
     //    [tagEventName setText:@"Event Name"];
-    //    [tagEventName setTextColor:[UIColor orangeColor]];
+    //    [tagEventName setTextColor:PRIMARY_APP_COLOR];
     //    [tagEventName setTextAlignment:NSTextAlignmentCenter];
     //    [tagEventName setAlpha:1.0];
     //    [tagEventName setHidden:TRUE];
@@ -3734,10 +3734,10 @@ NSMutableArray *oldEventNames;
 //    //current playing tag name
 //    tagEventNameFullScreen =[[UILabel alloc]init];
 //    [tagEventNameFullScreen setBackgroundColor:[UIColor clearColor]];
-//    tagEventNameFullScreen.layer.borderColor = [UIColor orangeColor].CGColor;
+//    tagEventNameFullScreen.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
 //    tagEventNameFullScreen.layer.borderWidth = 1;
 //    [tagEventNameFullScreen setText:[currentPlayingTag objectForKey:@"name"]];
-//    [tagEventNameFullScreen setTextColor:[UIColor orangeColor]];
+//    [tagEventNameFullScreen setTextColor:PRIMARY_APP_COLOR];
 //    [tagEventNameFullScreen setFont:[UIFont boldFontOfSize:20.f]];
 //    [tagEventNameFullScreen setTextAlignment:NSTextAlignmentCenter];
 //    tagEventNameFullScreen.alpha = 1.0f;

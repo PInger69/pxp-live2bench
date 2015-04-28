@@ -70,7 +70,7 @@ UIView *horizontalDivider;
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    [self.view.layer setBorderColor:[UIColor orangeColor].CGColor];
+    [self.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
     [self.view.layer setBorderWidth:1.0f];
     
     [self.view addSubview:subtagsView];
@@ -82,7 +82,7 @@ UIView *horizontalDivider;
     [subtagsView addSubview:noSubtagsLabel];
     
     [horizontalDivider setFrame:CGRectMake(20.0f, CGRectGetMaxY(subtagsView.frame), self.view.frame.size.width - 40.0f, 1.0f)];
-    [horizontalDivider setBackgroundColor:[UIColor orangeColor]];
+    [horizontalDivider setBackgroundColor:PRIMARY_APP_COLOR];
     [self.view addSubview:horizontalDivider];
     
     [self.view addSubview:playersView];

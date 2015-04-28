@@ -49,13 +49,13 @@
             for (int i = 0; i < ([dataDictionary count] - 1); ++i){
                 UIButton *addingButton = [[UIButton alloc]init] ;
                 [addingButton setTitle:[NSString stringWithFormat:@"%i", (i+1)] forState:UIControlStateNormal];
-                [addingButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                [addingButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
                 [addingButton.layer setBorderWidth:1.0f];
-                [addingButton.layer setBorderColor:[UIColor orangeColor].CGColor];
+                [addingButton.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
                 
                 
                 addingButton.backgroundColor = [UIColor whiteColor];
-                addingButton.tintColor = [UIColor orangeColor];
+                addingButton.tintColor = PRIMARY_APP_COLOR;
                 [addingButton setNeedsDisplay];
                 [self.theButtons addObject:addingButton];
                 [self.viewContainingAllViews addSubview:addingButton];
@@ -73,7 +73,7 @@
         self.frame = theFrame;
         NSNumber *selectedIndex = (NSNumber *)dataDictionary[@"SelectedIndex"];
         UIButton *selectedButton = self.theButtons[[selectedIndex intValue]];
-        selectedButton.backgroundColor = [UIColor orangeColor];
+        selectedButton.backgroundColor = PRIMARY_APP_COLOR;
         [selectedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     return self;
@@ -86,7 +86,7 @@
     _selectable = selectable;
     for (UIButton *theButton in self.theButtons){
         theButton.backgroundColor = [UIColor whiteColor];
-        [theButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [theButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     }
 
 }
@@ -159,19 +159,19 @@
 
 -(void)buttonIsHeld: (UIButton *)sender{
     
-        if( [sender.backgroundColor isEqual: [UIColor orangeColor]]){
+        if( [sender.backgroundColor isEqual: PRIMARY_APP_COLOR]){
 
                 sender.backgroundColor = [UIColor whiteColor];
-                [sender setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                [sender setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
                 
             
         }else{
             for (UIButton *theButton in self.theButtons){
                 theButton.backgroundColor = [UIColor whiteColor];
-                [theButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                [theButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
                 
             }
-            sender.backgroundColor = [UIColor orangeColor];
+            sender.backgroundColor = PRIMARY_APP_COLOR;
             [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         }
     
@@ -196,7 +196,7 @@
         
         int buttonIndex = (int)[self.theButtons indexOfObject:sender];
         CGSize popSize = CGSizeMake(300, 200);
-        //sender.backgroundColor = [UIColor orangeColor];
+        //sender.backgroundColor = PRIMARY_APP_COLOR;
         //[sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         if( [self.players[buttonIndex] count] >= 1){
             PopoverViewController *popoverContent = [[PopoverViewController alloc] initWithArray:self.players[buttonIndex] andSelectInfo:self.selectedPlayers[buttonIndex] andFrame:CGRectMake(0, 0, popSize.width, popSize.height) withGap: self.gap];
@@ -204,7 +204,7 @@
             popoverContent.theButtonViewManager = self;
             popoverContent.view.backgroundColor = [UIColor whiteColor];
             popoverContent.view.frame = CGRectMake(10, 10, 180, 180);
-            popoverContent.view.layer.borderColor = [UIColor orangeColor].CGColor;
+            popoverContent.view.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
             popoverContent.view.layer.borderWidth = 1.2f;
             popoverContent.view.layer.cornerRadius = 10;
             popoverContent.view.layer.masksToBounds = YES;
@@ -215,7 +215,7 @@
             
             [self.popover setPopoverContentSize:popSize animated:YES];
             
-            self.popover.backgroundColor = [UIColor orangeColor];
+            self.popover.backgroundColor = PRIMARY_APP_COLOR;
             //self.popover.popoverBackgroundViewClass = [UIPopoverBackgroundView class];
             self.popover.passthroughViews = [NSArray arrayWithObject:self.viewContainingAllViews];
             
@@ -223,7 +223,7 @@
         }
     }else{
         sender.backgroundColor = [UIColor whiteColor];
-        [sender setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [sender setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     }
     
     
@@ -240,12 +240,12 @@
 -(void)notificationAction: (id) notificationValue{
     for (UIButton *theButton in self.theButtons){
         theButton.backgroundColor = [UIColor whiteColor];
-        [theButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [theButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     }
     int index = (int)notificationValue;
     UIButton *theButtonSelected = (UIButton *)self.theButtons[index];
     theButtonSelected.backgroundColor = [UIColor whiteColor];
-    [theButtonSelected setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [theButtonSelected setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
 }
 
 -(void)removeFromSuperview{

@@ -50,8 +50,8 @@ static NSString * lastViewed;
 {
     _viewed                                     = NO;
     _textScrollView.text                        = @"";
-    self.selectedBackgroundView.backgroundColor = [UIColor orangeColor];
-    self.layer.borderColor                      = [[UIColor orangeColor] CGColor];
+    self.selectedBackgroundView.backgroundColor = PRIMARY_APP_COLOR;
+    self.layer.borderColor                      = [PRIMARY_APP_COLOR CGColor];
     self.layer.borderWidth                      = 0.0f;
     backgroundView.backgroundColor              = [UIColor clearColor];
     return self;

@@ -64,7 +64,7 @@
 // set the color of the zero line. default = [UIColor greenColor].
 -(void)setZeroLineStrokeColor:(UIColor*)color;
 
-// set the filled space below graph. default = [UIColor orangeColor].
+// set the filled space below graph. default = PRIMARY_APP_COLOR.
 -(void)setFillColor:(UIColor*)color;
 
 // set the color of the graph line. default = 2.
