@@ -19,7 +19,7 @@
 +(NSString*)sha256HashFor:(NSString*)input;
 +(UIColor*)colorWithHexString:(NSString*)hex;
 +(NSString*)encoderStatusToString:(int)status;
-
++(NSComparisonResult)compareVersion: (NSString *)version1 withVersion: (NSString *)version2;
 +(NSString *)dateFromEvent: (NSString *) eventName;
 
 +(BOOL)hasInternet;

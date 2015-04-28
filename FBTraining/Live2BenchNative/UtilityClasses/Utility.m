@@ -244,6 +244,36 @@
     return result;
 }
 
++(NSComparisonResult)compareVersion: (NSString *)version1 withVersion: (NSString *)version2{
+    NSArray *version1Array = [version1 componentsSeparatedByString:@"."];
+    NSArray *version2Array = [version2 componentsSeparatedByString:@"."];
+    
+    int maxCount = MAX(version1Array.count, version2Array.count);
+    
+    for (int i = 0; i < maxCount; ++i) {
+        int version1Number = [version1Array[i] intValue];
+        int version2Number = [version1Array[i] intValue];
+        
+        if (version1Number > version2Number) {
+            return NSOrderedDescending;
+        }else if (version1Number < version2Number){
+            return NSOrderedAscending;
+        }
+        
+        if (i == (maxCount - 1)) {
+            return NSOrderedSame;
+        }
+        
+        if (i == (version1Array.count - 1) && !(i == (version2Array.count - 1))) {
+            return NSOrderedAscending;
+        }else if (i == (version2Array.count - 1) && !(i == (version1Array.count - 1))){
+            return NSOrderedDescending;
+        }
+    }
+    
+    return NSOrderedSame;
+}
+
 
 
 
