@@ -449,7 +449,7 @@
             __block NSString *userHID;
             
             void(^userBlock)(NSDictionary *data) = ^(NSDictionary *data){
-                PXPLog(@"%@", data);
+//                PXPLog(@"%@", data);
                 userHID = [data objectForKey:@"hid"];
             };
             
@@ -470,7 +470,7 @@
             __block NSString *userHID;
             
             void(^userBlock)(NSDictionary *data) = ^(NSDictionary *data){
-                PXPLog(@"%@", data);
+//                PXPLog(@"%@", data);
                 userHID = [data objectForKey:@"hid"];
             };
             
@@ -541,8 +541,10 @@ static void * builtContext          = &builtContext; // depricated?
         if (_masterEncoder == nil) [newEncoder searchForMaster];
         [dictOfEncoders setValue:newEncoder forKey:name];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForFeedChange:) name:NOTIF_ENCODER_FEEDS_UPDATED object:newEncoder];
-        // test
         
+        PXPLog(@"*** Registered Encoder ***");
+        PXPLog(@"    %@ - %@",newEncoder.name,ip);
+        PXPLog(@"**************************");
     }
 }
 
@@ -554,8 +556,7 @@ static void * builtContext          = &builtContext; // depricated?
  */
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {
-    
-    PXPLog(@"   ENCODER REMOVED: %@",aEncoder.name);
+    PXPLog(@"!!! ENCODER REMOVED !!! %@",aEncoder.name);
     
     [aEncoder removeObserver:self forKeyPath:@"authenticated"];
     [aEncoder removeObserver:self forKeyPath:@"status"];
@@ -565,7 +566,7 @@ static void * builtContext          = &builtContext; // depricated?
     if (_masterEncoder == aEncoder){
         
         _masterEncoder = nil;
-        PXPLog(@"Master Linched!");
+        PXPLog(@"Master Encoder Linched!");
         //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self];
     }
     [_authenticatedEncoders removeObject:aEncoder];
@@ -696,7 +697,6 @@ static void * builtContext          = &builtContext; // depricated?
 {
     Encoder * encoder = (Encoder * )note.object;
     
-    PXPLog(@"status !!!!!");
     switch (encoder.status) {
         case ENCODER_STATUS_UNKNOWN: // Disconnected
             [self unRegisterEncoder:encoder];
@@ -1685,32 +1685,6 @@ static void * builtContext          = &builtContext; // depricated?
     
     
 }
-
-//-(void)deleteAllThumbs
-//{
-//    SDImageCache *imageCache = [SDImageCache sharedImageCache];
-//    [imageCache clearMemory];
-//    [imageCache clearDisk];
-//    [imageCache cleanDisk];
-//
-//    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//
-//    NSString * path = [documentsDirectory stringByAppendingPathComponent:@"events/thumbnails"];
-//
-//
-//
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    if([fileManager fileExistsAtPath:path])
-//    {
-//        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-//    }
-//    NSError *cError;
-//    [fileManager createDirectoryAtPath:path withIntermediateDirectories:TRUE attributes:nil error:&cError];
-//
-//}
-
-
 
 -(NSString*)description
 {

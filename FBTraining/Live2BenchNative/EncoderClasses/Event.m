@@ -125,7 +125,8 @@
         } else if (aDict[@"vid"]) {
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0];
         } else {
-            PXPLog(@"Event Class issue");
+            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
+            PXPLog(@"   HID: %@",aDict[@"hid"]);
             return @{};
         }
         [tempDict setObject:theFeed forKey:@"s1"];

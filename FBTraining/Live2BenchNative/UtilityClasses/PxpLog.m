@@ -7,6 +7,7 @@
 //
 
 #import "PxpLog.h"
+#import "Utility.h"
 /**
  *  This class is meant to be a singleton that will record what is going on in the app
  l = [PxpLog getInstance];
@@ -15,6 +16,7 @@
  */
 
 static PxpLog * instance;
+
 @implementation PxpLog
 
 @synthesize text = _text;
@@ -57,7 +59,7 @@ static PxpLog * instance;
 {
     self = [super init];
     if (self) {
-        self.text = [[NSMutableString alloc] init];
+        self.text = [[NSMutableString alloc] initWithFormat:@"Application Start... %@",[NSDate date]];
     }
     return self;
 }

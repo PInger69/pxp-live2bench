@@ -323,6 +323,12 @@
      [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:nil userInfo:@{ @"data":data, @"source":sourceName, @"block":block }];
 }
 
++(NSString*)removeSubString:(NSString*)substring in:(NSString*)main
+{
+    NSMutableString * temp =     [[NSMutableString alloc]initWithString:main];
+    [temp deleteCharactersInRange:[main rangeOfString:substring]];
+    return temp;
+}
 
 
 @end

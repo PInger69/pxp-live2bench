@@ -64,7 +64,7 @@ UIView *border;
     
     //CGContextRef ctx = UIGraphicsGetCurrentContext();
     
-    self.layer.backgroundColor = [UIColor orangeColor].CGColor;
+    self.layer.backgroundColor = PRIMARY_APP_COLOR.CGColor;
     for (int i  = 0; i <self.layer.sublayers.count; ++i){
         CALayer *layer = self.layer.sublayers[i];
         [layer removeFromSuperlayer];
@@ -84,7 +84,7 @@ UIView *border;
     
     if (self.highlighted) {
         playLayer.path = path.CGPath;
-        playLayer.fillColor = [UIColor orangeColor].CGColor;
+        playLayer.fillColor = PRIMARY_APP_COLOR.CGColor;
         self.layer.backgroundColor = [UIColor clearColor].CGColor;
     }else{
         playLayer.path = path.CGPath;

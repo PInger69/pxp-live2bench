@@ -15,7 +15,7 @@
 #import "EncoderManager.h"
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
-
+#define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
 
 
 
@@ -113,8 +113,6 @@
 @synthesize URL;
 @synthesize customerID;
 
-@synthesize log;
-
 @synthesize authenticated   = _authenticated;
 @synthesize status          = _status;
 @synthesize statusAsString  = _statusAsString;
@@ -150,7 +148,6 @@
         queue           = [[NSMutableDictionary alloc]init];
 //        _eventTagsDict  = [[NSMutableDictionary alloc]init];
         isWaitiing      = NO;
-        log             = [NSMutableString stringWithString:@"Encoder Log: \r"];
         version         = @"?";
         _statusAsString = @"";
         _isMaster       = NO;
@@ -352,7 +349,7 @@
 {
 
     
-    PXPLog(@"Encoder: Version check in Authenticate Disabled");
+    PXPLog(@"Encoder Warning: Version check in Authenticate Disabled");
     if ([self.version isEqualToString:@"0.94.5"]){
 
 //    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
@@ -702,11 +699,11 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:@{@"responce":finishedData}];
     
     
-    PXPLog(@"Connection finished: %@",connectionType);
+    PXPLog(@"%@ Connection finished: %@",self.name,trim(connectionType));
     if ([connectionType isEqualToString:SHUTDOWN]){
         __weak Encoder * weakSelf = self;
         [statusMonitor startShutdownChecker:^(void){
-            PXPLog(@"Server has shutdown");
+            PXPLog(@"%@ has shutdown!",weakSelf.name);
             if (weakSelf.isMaster) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:weakSelf userInfo:nil];
          }];
     }
@@ -721,13 +718,15 @@
     
     NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
     isWaitiing = NO;
-    PXPLog(@"%@ FAIL %@ \n%@",self.name,[connection originalRequest],connection.connectionType);
-    PXPLog(@"FAIL TYPE: %@ ",failType);
+    
+    PXPLog(@"%@ Error!",self.name);
+    PXPLog(@"  connection type: %@ ",trim(connection.connectionType));
+    PXPLog(@"  url: %@ ",[[connection originalRequest]URL]);
+    PXPLog(@"  reason: %@ ",failType);
+    
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:nil];//
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
-
-//    [log appendString:@"FAIL! \\n"];
 }
 
 
@@ -757,6 +756,7 @@
             /* JSON was malformed, act appropriately here */
             [self willChangeValueForKey:@"authenticated"];
             _authenticated = YES;
+            PXPLog(@"Warning: JSON was malformed");
             [self didChangeValueForKey:@"authenticated"];
         }
         
@@ -813,8 +813,9 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]]){
         version = (NSString *)[results objectForKey:@"version"] ;
+        PXPLog(@"%@ is version %@",self.name ,version);
     }
-
+    
     isVersion = YES;
 }
 
@@ -838,7 +839,7 @@
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([results objectForKey:@"id"]) {
             //NSString * tagId = [[results objectForKey:@"id"]stringValue];
-            PXPLog(@"Tag Modification succeded: %@", results);
+            PXPLog(@"Tag Modification succeded: %@", @"");
 
             //[_event.tags setObject:results forKey:tagId];
             //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
@@ -889,7 +890,14 @@
 -(void)camerasGetResponce:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
-    _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
+    NSArray * list = [results[@"camlist"]allValues];
+    _cameraCount = 0;
+    for (NSDictionary *dic in list) {
+        if ([dic[@"cameraPresent"]boolValue])_cameraCount++;
+    }
+ //   _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
+    
+    PXPLog(@"%@ has %@ cameras",self.name ,[NSString stringWithFormat:@"%ld",(long)_cameraCount ]);
 }
 
 #pragma mark - Master Responce

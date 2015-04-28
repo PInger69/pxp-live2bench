@@ -24,7 +24,7 @@
         [self setBackgroundColor:[UIColor colorWithWhite:0.9f alpha:1.0f]];
         [self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor colorWithWhite:0.2f alpha:1.0f] forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
+        [self setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateSelected];
         [self setTitleEdgeInsets:UIEdgeInsetsMake(0.0f, 10.0f, 0.0f, 0.0f)];
         [self setImageEdgeInsets:UIEdgeInsetsMake(0.0f, -10.0f, 0.0f, 0.0f)];
         [self setFont:[UIFont defaultFontOfSize:20.0f]];

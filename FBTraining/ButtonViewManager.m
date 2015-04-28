@@ -72,7 +72,6 @@
         CGRect theFrame = CGRectMake([xPosition floatValue], [yPosition floatValue], [width floatValue], [height floatValue]);
         self.frame = theFrame;
         NSNumber *selectedIndex = (NSNumber *)dataDictionary[@"SelectedIndex"];
-        PXPLog(@"The index is %i", [selectedIndex intValue]);
         UIButton *selectedButton = self.theButtons[[selectedIndex intValue]];
         selectedButton.backgroundColor = [UIColor orangeColor];
         [selectedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

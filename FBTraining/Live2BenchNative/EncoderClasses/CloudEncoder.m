@@ -121,6 +121,7 @@
     self = [super init];
     if (self) {
         _loggedIn = NO;
+
     }
     return self;
 }
@@ -131,6 +132,7 @@
 
 -(void)startObserving
 {
+    self.name = @"Cloud Encoder";
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(verifyUser:) name:NOTIF_CLOUD_VERIFY object:nil];// UserCenter is what is dispatching
 
 }

@@ -90,7 +90,7 @@
     
     self.tabBarController           = [[CustomTabBar alloc]init];
     self.window.rootViewController  = self.tabBarController;
-    self.window.tintColor           = [UIColor orangeColor];
+    self.window.tintColor           = PRIMARY_APP_COLOR;
     [self.window makeKeyAndVisible];
     
     
@@ -200,6 +200,7 @@
       initWithTitle:@"myplayXplay" message:@"Error authenticating DropBox please try to relink the account in the MyplayXplay settings page." delegate:self
       cancelButtonTitle:@"Ok" otherButtonTitles:nil]
 	 show];
+    PXPLog(@"Error authenticating DropBox");
 }
 
 
@@ -371,8 +372,8 @@ static int outstandingRequests;
                                                            object:nil
                                                          userInfo:[SpinnerView message:@"Checking for WiFi..." progress:.1 animated:YES]];
     } onItemFinish:^(BOOL succsess) {
-        PXPLog(@"WIFI Check");
-        PXPLog(succsess?@"   SUCCSESS":@"    FAIL");
+        PXPLog(@"WIFI Checking...");
+        PXPLog(succsess?@"   SUCCSESS":@"   FAIL");
     }];
 
     //Check Cloud
@@ -381,8 +382,8 @@ static int outstandingRequests;
                                                            object:nil
                                                          userInfo:[SpinnerView message:@"Checking for Cloud..." progress:.2 animated:YES]];
     } onItemFinish:^(BOOL succsess) {
-        PXPLog(@"Cloud Check");
-        PXPLog(succsess?@"   SUCCSESS":@"    FAIL");
+        PXPLog(@"Cloud Connection Checking...");
+        PXPLog(succsess?@"   SUCCSESS":@"   FAIL");
         weakSelf.loginController.hasInternet = succsess;
     }];
     
@@ -390,11 +391,11 @@ static int outstandingRequests;
     [_actionList addItem:[_userCenter checkLoginPlistAction]    onItemStart:^{
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_SPINNER
                                                            object:nil
-                                                         userInfo:[SpinnerView message:@"Checking user credentials plist..." progress:.3 animated:YES]];
+                                                         userInfo:[SpinnerView message:@"Checking user credentials..." progress:.3 animated:YES]];
         
     } onItemFinish:^(BOOL succsess) {
-        PXPLog(@"User Plist Check");
-        PXPLog(succsess?@"   SUCCSESS":@"    FAIL");
+        PXPLog(@"User Plist Checking...");
+        PXPLog(succsess?@"   SUCCSESS":@"   FAIL");
         
         if(succsess){ // get the ID from the userCenter and sets it to the Manager so it can look for encoders
             weakEM.customerID = weakSelf.userCenter.customerID;

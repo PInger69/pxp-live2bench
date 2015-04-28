@@ -174,7 +174,7 @@ NS_OPTIONS(NSInteger, style){
     // The list option is dealt with in another method
     
     cell.delegate = self;
-    cell.tintColor = [UIColor orangeColor];
+    cell.tintColor = PRIMARY_APP_COLOR;
     return cell;
     
 

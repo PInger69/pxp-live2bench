@@ -22,7 +22,7 @@
 #import "Downloader.h"
 #import "DownloadEventItem.h"
 #import "UserCenter.h"
-#import "PxpLog.h"
+
 
 
 @interface DebuggingTabViewController ()
@@ -55,7 +55,7 @@
     UIButton * pauseButton;
     UIButton * stepButton;
     __block DebuggingTabViewController * weakSelf;
-    PxpLog * l;
+
 }
 @end
 

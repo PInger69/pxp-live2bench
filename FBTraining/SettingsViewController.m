@@ -845,7 +845,7 @@ SVSignalStatus signalStatus;
     encHomeButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
     [encHomeButton setFrame:CGRectMake(0.0f, 5.0f, 140, 45)];
     [encHomeButton setTitle:@"Encoder Home" forState:UIControlStateNormal];
-    [encHomeButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [encHomeButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [encHomeButton addTarget:self action:@selector(openEncoderHomeInSafari:) forControlEvents:UIControlEventTouchUpInside];
     [encHomeButton setUserInteractionEnabled:YES];
     
