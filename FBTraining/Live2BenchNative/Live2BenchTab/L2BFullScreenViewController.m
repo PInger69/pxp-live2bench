@@ -85,7 +85,7 @@
     activeElements  = [@[]              arrayByAddingObjectsFromArray:liveElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:clipElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:teleElements];
-    [self _revealThese:@[]];
+    [self _revealThese: activeElements];
     
     demoElements    = @[_seekForward, _seekBackward, _slomo,_liveButton];
     
@@ -325,7 +325,7 @@
 //save button clicked, send notification to the teleview controller
 -(void)_saveButtonClicked
 {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SAVE_TELE object:nil];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SAVE_TELE object:nil];
     [self.player play];
     [self.teleViewController saveTeles];
     [self setMode: L2B_FULLSCREEN_MODE_LIVE];
@@ -346,6 +346,8 @@
     //self.teleViewController = [[TeleViewController alloc] initWithController:self];
     //[self.teleViewController viewDidLoad];
     [self.teleViewController startTelestration];
+    [self.view addSubview: self.saveTeleButton];
+    [self.view addSubview: self.clearTeleButton];
 }
 
 

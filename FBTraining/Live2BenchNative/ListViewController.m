@@ -264,8 +264,9 @@ NSMutableArray *oldEventNames;
     [self.videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
     [self.videoBarViewController viewDidAppear: YES];
     //[self.videoBarViewController createTagMarkers];
-    [self.view addSubview:self.videoBarViewController.view];
+    
     [self.view addSubview:self.videoPlayer.view];
+    [self.view addSubview:self.videoBarViewController.view];
     
     self.fullScreenViewController = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     self.fullScreenViewController.context = @"ListView Tab";

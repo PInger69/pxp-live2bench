@@ -52,6 +52,17 @@
         self.arrayOfAllTags = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
+                    if(eventTags){
+                        self.arrayOfAllTags = [NSMutableArray arrayWithArray: eventTags];
+                    }
+            }}];
+            [self createTagMarkers];
+        }];
+
+        
         
     }
     return self;
@@ -63,12 +74,12 @@
     
     adjustTagTimer = [NSTimer timerWithTimeInterval:5.0 target:self selector:@selector(update) userInfo:nil repeats:YES];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
-        
-        if(eventTags){
-            self.arrayOfAllTags = [NSMutableArray arrayWithArray: eventTags];
-        }
-    }}];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
+//        
+//        if(eventTags){
+//            self.arrayOfAllTags = [NSMutableArray arrayWithArray: eventTags];
+//        }
+//    }}];
     
     /*self.arrayOfAllTags = @[@{@"time":@5, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},
                             @{@"time":@10, @"type":@99, @"colour" : [UIColor orangeColor], @"id" : @"test1"},

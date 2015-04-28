@@ -1333,6 +1333,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     return duration;
 }
 
+-(Float64)currentTimeInSeconds{
+    Float64 returnTime = [self.avPlayer currentTime].value / [self.avPlayer currentTime].timescale;
+    return returnTime;
+}
+
 
 -(float)seekClamp:(float)seekTime
 {

@@ -418,7 +418,7 @@ static void * eventContext      = &eventContext;
 
 -(void)_saveButtonClicked
 {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SAVE_TELE object:nil];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SAVE_TELE object:nil];
     [self.videoPlayer play];
     [self.teleViewController saveTeles];
     

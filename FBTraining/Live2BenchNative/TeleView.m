@@ -62,7 +62,9 @@ BOOL touchEnded = NO;
     }
     return self;
 }
-
+-(void)setFrame:(CGRect)frame{
+    [super setFrame:frame];
+}
 - (void)layoutSubviews{
     [super layoutSubviews];
     [self initContextWithTag:0 withSize:self.bounds.size];
@@ -440,6 +442,7 @@ BOOL touchEnded = NO;
     self.teleImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_POST_ON_EXTERNAL_SCREEN object:nil];
+    [self clearTelestration];
     if (self.teleImage) {
         return YES;
     } else {

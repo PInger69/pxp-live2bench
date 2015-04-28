@@ -1140,7 +1140,9 @@ static void * builtContext          = &builtContext; // depricated?
                                        //                                               @"bookmark"      : @"0",
                                        //                                               @"deleted"       : @"0",
                                        //                                               @"edited"        : @"0",
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       @"duration"      : @"1",
+                                       @"type"          : @"4",
+                                       //@"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
     if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
