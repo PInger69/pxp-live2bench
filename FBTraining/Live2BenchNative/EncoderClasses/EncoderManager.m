@@ -1140,7 +1140,9 @@ static void * builtContext          = &builtContext; // depricated?
                                        //                                               @"bookmark"      : @"0",
                                        //                                               @"deleted"       : @"0",
                                        //                                               @"edited"        : @"0",
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       @"duration"      : @"1",
+                                       @"type"          : @"4",
+                                       //@"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
     if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
@@ -1541,11 +1543,12 @@ static void * builtContext          = &builtContext; // depricated?
         
     }
     
-    for (id <EncoderProtocol> encoder in _authenticatedEncoders) {
+    for (id <EncoderProtocol> encoder in /*_authenticatedEncoders*/encoders) {
+        NSLog(@"%@", encoder.event);
         if (encoder.event.tags != nil ){
+            NSLog(@"%@", encoder.event);
             [tags  addEntriesFromDictionary:encoder.event.tags];
         }
-        
     }
     return tags;
 }

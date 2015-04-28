@@ -345,7 +345,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     [self.tabBarController setSelectedIndex:tabNum];
     
     //In the event the Tele is fullscreened and the tab is changed, get rid of the tele interface
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Close Tele" object:nil];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"Close Tele" object:nil];
 }
 
 - (void)setSelectedViewController:(UIViewController *)selectedViewController

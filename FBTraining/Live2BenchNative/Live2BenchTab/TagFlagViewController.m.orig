@@ -52,6 +52,9 @@
         self.arrayOfAllTags = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
+<<<<<<< HEAD
+
+=======
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
@@ -62,10 +65,9 @@
             [self createTagMarkers];
         }];
 
-        [[NSNotificationCenter defaultCenter] addObserverForName:@"ReadyToCreateTagMarkers" object:nil queue:nil usingBlock:^(NSNotification *note){
-            [self createTagMarkers];
-        }];
         
+        
+>>>>>>> 8df0e15dee5d095b3480b7c71509193702d545a7
     }
     return self;
 }

@@ -426,7 +426,7 @@
 
 -(void)makeTeleTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    NSData *imageData = [tData objectForKey:@"image"];
+    NSData *imageData = UIImagePNGRepresentation([tData objectForKey:@"image"]) ;
     [tData removeObjectForKey:@"image"];
     
     NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
@@ -438,11 +438,35 @@
                                       }];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
+    jsonString = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress]  ];
     NSMutableURLRequest *someUrlRequest     = [NSMutableURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
-    [someUrlRequest setHTTPBody: imageData];
+    [someUrlRequest setHTTPMethod:@"POST"];
+
+    NSString *boundary = @"----WebKitFormBoundarycC4YiaUFwM44F6rT";
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+    [someUrlRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
+    NSMutableData *body = [NSMutableData data];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=tag\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
+    // Now we need to append the different data 'segments'. We first start by adding the boundary.
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=file; filename=picture.png\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // We now need to tell the receiver what content type we have
+    // In my case it's a png image. If you have a jpg, set it to 'image/jpg'
+    [body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // Now we append the actual image data
+    [body appendData:[NSData dataWithData:imageData]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    // and again the delimiting boundary
+    //NSString *tempstr =[[NSString alloc]initWithData:body encoding:NSStringEncodingConversionAllowLossy];
+    [someUrlRequest setHTTPBody:body];
+
+    urlRequest                              = someUrlRequest;
     encoderConnection                       = [NSURLConnection connectionWithRequest:someUrlRequest delegate:self];
-    encoderConnection.connectionType        = MAKE_TAG;
+    encoderConnection.connectionType        = MAKE_TELE_TAG;
     encoderConnection.timeStamp             = aTimeStamp;
 }
 
@@ -677,11 +701,11 @@
         [self resumeResponce:    finishedData];
     } else if ([connectionType isEqualToString: MAKE_TAG]) {
         [self makeTagResponce:    finishedData];
-    }else if ([connectionType isEqualToString: MODIFY_TAG]) {
+    } else if ([connectionType isEqualToString: MAKE_TELE_TAG]) {
+        [self makeTagResponce:    finishedData];
+    } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         [self modTagResponce:    finishedData];
-    }
-    
-    else if ([connectionType isEqualToString: CAMERAS_GET]) {
+    } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
         //NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
@@ -852,6 +876,8 @@
 -(void)makeTagResponce:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
+    PXPLog(@"Tag Response has been received");
+    PXPLog(@"The tag response is %@", results);
     if([results isKindOfClass:[NSDictionary class]])
     {
         if ([results objectForKey:@"id"]) {
