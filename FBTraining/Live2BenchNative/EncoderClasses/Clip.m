@@ -95,8 +95,18 @@
 
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict
 {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
+    NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
+    
+    for (NSString *fileName in [aDict objectForKey:@"filenames"]) {
+        NSString *filePath = [path stringByAppendingPathComponent: fileName];
+        
+        
+    }
 //
-//    
+//
 //    if ([aDict objectForKey:@"fileNames"]){
 //    
 //    
