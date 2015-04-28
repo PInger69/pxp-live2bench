@@ -420,10 +420,6 @@
 		D7CCE7FE1AC1FEE500D85095 /* BasketballBottomViewController.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7CCE7FD1AC1FEE500D85095 /* BasketballBottomViewController.plist */; };
 		D7CCE8041AC5FB0000D85095 /* VideoCuttingTool.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE8031AC5FB0000D85095 /* VideoCuttingTool.m */; };
 		D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE8071AC98B9400D85095 /* VideoTrimItem.m */; };
-<<<<<<< HEAD
-		D7CF390619DDF2120013E46B /* VideoPlayerFreezeTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CF390519DDF2120013E46B /* VideoPlayerFreezeTimer.m */; };
-=======
->>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
 		D7D1D47C17F5C73200D5C185 /* extendstartsec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47817F5C73200D5C185 /* extendstartsec@2x.png */; };
 		D7D1D47E17F5C73200D5C185 /* extendendsec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47A17F5C73200D5C185 /* extendendsec@2x.png */; };
 		D7D1EBD416EA9D8A0005CBC0 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1EBD316EA9D8A0005CBC0 /* settings.png */; };
@@ -1078,11 +1074,6 @@
 		D7CCE8031AC5FB0000D85095 /* VideoCuttingTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCuttingTool.m; sourceTree = "<group>"; };
 		D7CCE8061AC98B9400D85095 /* VideoTrimItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTrimItem.h; sourceTree = "<group>"; };
 		D7CCE8071AC98B9400D85095 /* VideoTrimItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTrimItem.m; sourceTree = "<group>"; };
-<<<<<<< HEAD
-		D7CF390419DDF2120013E46B /* VideoPlayerFreezeTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayerFreezeTimer.h; sourceTree = "<group>"; };
-		D7CF390519DDF2120013E46B /* VideoPlayerFreezeTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayerFreezeTimer.m; sourceTree = "<group>"; };
-=======
->>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
 		D7D1D47717F5C73200D5C185 /* extendstartsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extendstartsec.png; sourceTree = "<group>"; };
 		D7D1D47817F5C73200D5C185 /* extendstartsec@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "extendstartsec@2x.png"; sourceTree = "<group>"; };
 		D7D1D47917F5C73200D5C185 /* extendendsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = extendendsec.png; sourceTree = "<group>"; };
@@ -2049,18 +2040,11 @@
 		D7A9399916ADB86C006CBAB2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
 				D797791C1AEEB4AF008A99E0 /* orangeSelect.png */,
 				D797791D1AEEB4B0008A99E0 /* orangeSelect@2x.png */,
 				D79779181AEEB40C008A99E0 /* num-button.png */,
 				D79779191AEEB40C008A99E0 /* num-button@2x.png */,
-				D797790F1AEEB353008A99E0 /* tab-bar-right.png */,
-				D79779101AEEB353008A99E0 /* tab-bar-right@2x.png */,
-				D79779111AEEB353008A99E0 /* tab-bar.png */,
-				D79779121AEEB353008A99E0 /* tab-bar@2x.png */,
 				D79779031AE94375008A99E0 /* videoTouch.png */,
-=======
->>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
 				D760736419D21AD6000E35C2 /* seeklarge.png */,
 				D760736519D21AD6000E35C2 /* seeklarge@2x.png */,
 				D760736019D21A9F000E35C2 /* seek.png */,
@@ -2467,7 +2451,6 @@
 				94F9596B1921834D00B7D201 /* playbackRateButtonBack@2x.png in Resources */,
 				D79F9B7C17F5D5F00081C5E9 /* myplayXplay_tagging.png in Resources */,
 				BD18B6FB17F22A270089873C /* bookmarkedit@2x.png in Resources */,
-				D79779151AEEB353008A99E0 /* tab-bar.png in Resources */,
 				D760736319D21A9F000E35C2 /* seek@2x.png in Resources */,
 				AA222B51195B836600820BCD /* filter.png in Resources */,
 				D7B79CD5182C398400F0876D /* saveToAlbumSelected@2x.png in Resources */,
@@ -2496,7 +2479,6 @@
 				D786C1E917EB9BF90042DD96 /* settingsButtonSelect@2x.png in Resources */,
 				D7DA235516B82E5B00143102 /* arrow.png in Resources */,
 				BDD2D30017ECF343004D5D9A /* chevbothpoints@2x.png in Resources */,
-				D79779131AEEB353008A99E0 /* tab-bar-right.png in Resources */,
 				D7DA235616B82E5B00143102 /* arrow@2x.png in Resources */,
 				BD9BC32317EB96B3001B67DE /* clip-back.png in Resources */,
 				AA83592A19B10B45009B3ABC /* pngIcon2.png in Resources */,
@@ -2565,7 +2547,6 @@
 				D7DB754817EA0EFC009C402F /* gotolive.png in Resources */,
 				D7B1AF861704EBC600013C95 /* Default-568.png in Resources */,
 				D737F5DF17F382B20053081F /* sliderthumb@2x.png in Resources */,
-				D79779141AEEB353008A99E0 /* tab-bar-right@2x.png in Resources */,
 				D7B1AF8B1704EC2500013C95 /* cline.png in Resources */,
 				D78F68D518073DC70096C793 /* OrangeSettingsButton.png in Resources */,
 				D7B1AF8C1704EC2500013C95 /* cline@2x.png in Resources */,
@@ -2591,11 +2572,6 @@
 				AA83589019B10967009B3ABC /* downloadFailedHUD.png in Resources */,
 				AA83589119B10967009B3ABC /* downloadHUD.png in Resources */,
 				D7CCE7FC1AC1EA3B00D85095 /* SoccerBottomViewController.plist in Resources */,
-<<<<<<< HEAD
-				D73689AD183BC91C00373385 /* square-switch-mask.png in Resources */,
-				D797791F1AEEB4B0008A99E0 /* orangeSelect@2x.png in Resources */,
-=======
->>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
 				BD3104FF183590A80094AE6D /* dropboxicoSel@2x.png in Resources */,
 				D78F68D218073DC70096C793 /* OrangeSettingsButtonSelect@2x.png in Resources */,
 				D76B6DE01A8AC6A900601BAF /* imageNotAvailable.png in Resources */,
@@ -2662,7 +2638,6 @@
 				D786C24817F3A6E30042DD96 /* TaggingString.txt in Resources */,
 				D786C1F917EBA6BE0042DD96 /* live2BenchTabSelect@2x.png in Resources */,
 				D786C23B17F3904A0042DD96 /* HardwareString.txt in Resources */,
-				D79779161AEEB353008A99E0 /* tab-bar@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

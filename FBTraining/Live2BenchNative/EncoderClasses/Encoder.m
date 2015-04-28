@@ -837,12 +837,9 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([results objectForKey:@"id"]) {
-<<<<<<< HEAD
             //NSString * tagId = [[results objectForKey:@"id"]stringValue];
             PXPLog(@"Tag Modification succeded: %@", results);
-=======
-//            NSString * tagId = [[results objectForKey:@"id"]stringValue];
->>>>>>> 002cc8652ee3b8dc46452d479cffa50a208552d5
+
             //[_event.tags setObject:results forKey:tagId];
             //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
         }
