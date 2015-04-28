@@ -52,7 +52,7 @@
         self.arrayOfAllTags = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
-        
+
     }
     return self;
 }

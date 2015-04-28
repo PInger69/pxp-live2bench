@@ -388,9 +388,6 @@ static void * vpFrameContext   = &vpFrameContext;
     
     [_feedSwitchView deselectByIndex:-1];
     [_feedSwitchView setPrimaryPositionByName:[rick objectForKey:@"feed"]];
-    
-    
-
 }
 
 -(void)videoPlayerStartScrub:(NSNotification *)note
@@ -547,7 +544,12 @@ static void * vpFrameContext   = &vpFrameContext;
 #pragma mark LIVE
 -(void)pipsAndVideoPlayerToLive
 {
-    _videoPlayer.feed = _feedSwitchView.primaryFeed;
+    
+    //_videoPlayer.feed = _feedSwitchView.primaryFeed;
+    if (![_videoPlayer.feed isEqual:_feedSwitchView.primaryFeed]) {
+        [_videoPlayer clear];
+    }
+    [_videoPlayer playFeed:_feedSwitchView.primaryFeed];
     
     [_videoPlayer gotolive];
     

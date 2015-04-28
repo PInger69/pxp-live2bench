@@ -435,6 +435,14 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)scrubbingEnd{
     
+    if (restoreAfterScrubbingRate)
+    {
+        [self.avPlayer setRate:restoreAfterScrubbingRate];
+        restoreAfterScrubbingRate = 0.f;
+    } else {
+        
+    }
+    
     self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
 
     if (!timeObserver)
@@ -455,16 +463,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
             [self addPeriodicTimeObserver];
         }
     }
-    
-    if (restoreAfterScrubbingRate)
-    {
-        [self.avPlayer setRate:restoreAfterScrubbingRate];
-        restoreAfterScrubbingRate = 0.f;
-    } else {
-    
-    }
-    
-    
 }
 
 #pragma mark -
@@ -494,12 +492,12 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                      [self initBarTimer];
                  }
                  
-
                  
-                if(onReadyBlock) onReadyBlock();
-                self.videoControlBar.timeSlider.minimumValue = 0;
-                self.videoControlBar.timeSlider.maximumValue = [self durationInSeconds];
                  
+                 if(onReadyBlock) onReadyBlock();
+                 self.videoControlBar.timeSlider.minimumValue = 0;
+                 self.videoControlBar.timeSlider.maximumValue = [self durationInSeconds];
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
              }
                  break;
                  
@@ -657,6 +655,12 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     [self seekToInSec:[self durationInSeconds]];
     [self.avPlayer setRate:1];
     restoreAfterPauseRate = 1;
+    if (self.playerItem.status == AVPlayerItemStatusUnknown){
+        __block RJLVideoPlayer *weakSelf = self;
+        onReadyBlock = ^void(){
+            [weakSelf gotolive];
+        };
+    }
 }
 
 -(void)play{
@@ -742,8 +746,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)clear
 {
-    self.status = RJLPS_Stop;
-    self.feed = nil;
+    self.status = RJLPS_Offline;
+    //self.feed = nil;
     [self removePlayerTimeObserver];
     self.looping = NO;
     currentItemTime.text = @"";
@@ -756,9 +760,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         [self.playerItem removeObserver:self forKeyPath:@"status"];
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:AVPlayerItemDidPlayToEndTimeNotification
-                                                      object:self.playerItem];
+//        [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                        name:AVPlayerItemDidPlayToEndTimeNotification
+//                                                      object:self.playerItem];
         self.playerItem = nil;
     }
     
@@ -1217,10 +1221,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
     /* When the player item has played to its end time we'll toggle
      the movie controller Pause button to be the Play button */
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemDidReachEnd:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:self.playerItem];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(playerItemDidReachEnd:)
+//                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+//                                               object:self.playerItem];
+    
     //Why????????????????????????No?????????
     seekToZeroBeforePlay = NO;
     
