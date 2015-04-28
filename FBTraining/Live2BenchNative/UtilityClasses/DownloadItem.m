@@ -163,6 +163,14 @@
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     self.status = DownloadItemStatusError;
+    
+    
+    NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
+    PXPLog(@"Clip/Event Download FAILED!");
+    PXPLog(@"  url: %@ ",url);
+    PXPLog(@"  reason: %@ ",failType);
+    
+    
     if (stream) [stream close];
     // delete file if partly downloaded
     if([[NSFileManager defaultManager] fileExistsAtPath:path])

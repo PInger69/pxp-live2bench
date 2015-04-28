@@ -29,7 +29,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.layer.borderColor = [UIColor orangeColor].CGColor;
+        self.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
         self.layer.borderWidth = 1.0f;
         
         if (index == 1) {
@@ -47,11 +47,11 @@
                 [self addSubview:button];
                 button.titleLabel.textAlignment = NSTextAlignmentCenter;
                 //button.titleLabel.textColor = [UIColor orangeColor];
-                [button setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                [button setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
                 //button.titleLabel.tintColor = [UIColor orangeColor];
                 //button.titleLabel.font = [UIFont systemFontOfSize:17.0];
                 [button.titleLabel setFont:[UIFont systemFontOfSize:22.0]];
-                button.layer.borderColor = [UIColor orangeColor].CGColor;
+                button.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
                 button.layer.borderWidth = 0.5f;
                 
                 button.backgroundColor = [UIColor whiteColor];
@@ -68,12 +68,12 @@
             for (UIButton *button in self.arrayOfButtonsInBar) {
                 [self addSubview:button];
                 button.titleLabel.textAlignment = NSTextAlignmentCenter;
-                button.titleLabel.textColor = [UIColor orangeColor];
+                button.titleLabel.textColor = PRIMARY_APP_COLOR;
                 //button.titleLabel.tintColor = [UIColor orangeColor];
                 //button.titleLabel.font = [UIFont systemFontOfSize:17.0];
                 [button.titleLabel setFont:[UIFont systemFontOfSize:22.0]];
-                [button setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-                button.layer.borderColor = [UIColor orangeColor].CGColor;
+                [button setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+                button.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
                 button.layer.borderWidth = 0.5f;
                 
                 button.backgroundColor = [UIColor whiteColor];
