@@ -497,7 +497,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                  if(onReadyBlock) onReadyBlock();
                  self.videoControlBar.timeSlider.minimumValue = 0;
                  self.videoControlBar.timeSlider.maximumValue = [self durationInSeconds];
-                 [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
+                 
              }
                  break;
                  
@@ -659,6 +659,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         __block RJLVideoPlayer *weakSelf = self;
         onReadyBlock = ^void(){
             [weakSelf gotolive];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
         };
     }
 }
@@ -681,6 +682,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //            weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
 //            [weakSelf addPeriodicTimeObserver];
             [weakSelf play];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
         };
     }
 }
@@ -1275,6 +1277,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     if (onFeedReadyBlock) {
         onFeedReadyBlock();
     }// if there is a place to seek to when ready
+    
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error
@@ -1336,6 +1339,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         duration = 0;
     }
     return duration;
+}
+
+-(Float64)currentTimeInSeconds{
+    Float64 returnTime = [self.avPlayer currentTime].value / [self.avPlayer currentTime].timescale;
+    return returnTime;
 }
 
 

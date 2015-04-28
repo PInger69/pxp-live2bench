@@ -151,7 +151,7 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 -(void)forceCloseTele
 {
     self.teleView.isBlank = YES;
-    [self clearAll];
+    //[self clearAll];
     [self.view removeFromSuperview];
     [self.teleView clearTelestration];
     //self.teleView = nil;
@@ -296,6 +296,10 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     [self.fullScreenViewController.player play];
 //    globals.IS_TELE=FALSE;
     [self.view removeFromSuperview];
+    NSDictionary *dict = @{@"name":@"Telestration", @"time":[NSString stringWithFormat:@"%f", [self.fullScreenViewController.player currentTimeInSeconds] + 0.3], @"image": teleImage};
+    PXPLog(@"The dict to create the tele image is %@", dict);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_TELE_TAG object:nil userInfo:dict];
 //    if (globals.IS_IN_FIRST_VIEW) {
 //        [self.l2bVC.videoPlayer play];
 //        [self.l2bVC showFullScreenOverlayButtons];
@@ -751,8 +755,8 @@ CGPoint midPoint(CGPoint p1, CGPoint p2)
 -(void) startTelestration{
     [self.fullScreenViewController.view addSubview: self.view];
     //[self.fullScreenViewController.player.playBackView.videoLayer addSublayer: self.teleView.layer];
-    CGRect teleViewframe = CGRectMake(0, 0, 1064, 680);
-    [self.view setFrame: teleViewframe];
+    //CGRect teleViewframe = CGRectMake(0, 0, 1064, 680);
+    //[self.view setFrame: teleViewframe];
     //NSLog(@"%@", NSStringFromCGRect(self.fullScreenViewController.player.playBackView.videoLayer.frame));
 }
 

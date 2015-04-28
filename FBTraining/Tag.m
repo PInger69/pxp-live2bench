@@ -54,14 +54,14 @@
             Tag *modifiedTag = note.object;
             if (modifiedTag.uniqueID == self.uniqueID) {
                 if (modifiedTag.comment) {
-                    self.comment = modifiedTag.comment;
+                    _comment = modifiedTag.comment;
                 }
                 
                 if (modifiedTag.rating) {
-                    self.rating = modifiedTag.rating;
+                    _rating = modifiedTag.rating;
                 }
                 
-                self.coachPick = modifiedTag.coachPick;
+                _coachPick = modifiedTag.coachPick;
 //                self.duration = modifiedTag.duration;
 //                self.startTime = modifiedTag.startTime;
             }

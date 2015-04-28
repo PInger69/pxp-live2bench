@@ -44,11 +44,11 @@
     for (NSInteger i =tounchCount; i >= 0 ; i--){
         object = [touchables objectAtIndex:i];
         
-        // This removes it from touchables if its not on the view
-        if ( object.superview == nil || object.superview != self) {
-            [touchables removeObject:object];
-            continue;
-        }
+//        // This removes it from touchables if its not on the view
+//        if ( object.superview == nil || object.superview != self) {
+//            [touchables removeObject:object];
+//            continue;
+//        }
         
         // check the tap
         pointForTargetView = [object convertPoint:point fromView:self];
