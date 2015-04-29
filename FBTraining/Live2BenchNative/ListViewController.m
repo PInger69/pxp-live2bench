@@ -164,7 +164,7 @@ NSMutableArray *oldEventNames;
     //Fields are from HeaderBar.h
     if(sortType & TIME_FIELD){
         sorter = [NSSortDescriptor
-                  sortDescriptorWithKey:@"displaytime"
+                  sortDescriptorWithKey:@"displayTime"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(compare:)];
         

@@ -33,6 +33,7 @@
 
 //- (void)addObserverForCell:(id)cell atIndexPath:(NSIndexPath *)indexPath;
 
+-(void)removeIndexPathFromDeletion;
 -(void)checkDeleteAllButton;
 -(void)checkShareAllButton;
 -(void) reloadData;

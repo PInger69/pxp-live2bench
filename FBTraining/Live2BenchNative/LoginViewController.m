@@ -55,7 +55,7 @@ UIScrollView *scrollView;
     self = [super init];
     if (self) {
         _hasInternet = NO;
-        loginBackback = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 1024.0f, 768.0f)];
+        loginBackback = [[UIView alloc]initWithFrame:CGRectMake(0, -100, 1024.0f, 868.0f)];
         [loginBackback setBackgroundColor:[UIColor whiteColor]];
         eulaModalViewController =[[EulaModalViewController alloc]init];
         [self setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -98,11 +98,14 @@ UIScrollView *scrollView;
     self.passwordTextField.secureTextEntry = TRUE;
     [scrollView addSubview:self.passwordTextField];
     
+    self.emailAddressTextField.delegate = self;
+    self.passwordTextField.delegate = self;
+    
     self.submitButton = [CustomButton buttonWithType:UIButtonTypeSystem];
     [self.submitButton setTitle:@"Sign In" forState:UIControlStateNormal];
     self.submitButton.titleLabel.font = [UIFont defaultFontOfSize:30.0f];
     [self.submitButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-    self.submitButton.frame = CGRectMake((self.view.bounds.size.width - 80.0f)/2, CGRectGetMaxY(self.passwordTextField.frame) + 15.0f , 100.0f, 50.0f);
+    self.submitButton.frame = CGRectMake((self.view.bounds.size.width - 100.0f)/2, CGRectGetMaxY(self.passwordTextField.frame) + 15.0f , 100.0f, 50.0f);
     self.submitButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.submitButton addTarget:self action:@selector(submitAccountInfo:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:self.submitButton];
@@ -199,24 +202,40 @@ UIScrollView *scrollView;
 
 - (void)keyboardWillShow:(NSNotification*)notification
 {
-    CGRect keyboardFrame = [self.view.window convertRect:[[[notification userInfo] valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] toView:self.view];
-    CGFloat insetHeight = keyboardFrame.size.height;
-    insetHeight -= self.passwordTextField.isFirstResponder ? 50.0f : 0.0f;
-    [scrollView setContentSize:self.view.bounds.size];
-    [scrollView setContentInset:UIEdgeInsetsMake(0, 0, insetHeight, 0)];
+//    CGRect keyboardFrame = [self.view.window convertRect:[[[notification userInfo] valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] toView:self.view];
+//    CGFloat insetHeight = keyboardFrame.size.height;
+//    insetHeight -= self.passwordTextField.isFirstResponder ? 100.0f : 100.0f;
+//    [scrollView setContentSize:self.view.bounds.size];
+    //[scrollView setContentInset:UIEdgeInsetsMake(0, 0, 180, 0)];
+    CGRect scrollFrame = scrollView.frame;
+    scrollFrame.origin.y = scrollFrame.origin.y - 50;
+    [scrollView setFrame: scrollFrame];
+//    
+//    CGRect selfFrame = self.view.frame;
+//    selfFrame.origin.y = selfFrame.origin.y - 180;
+//    [self.view setFrame: selfFrame];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification
 {
     [UIView animateWithDuration:[[[notification userInfo] valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
-        [scrollView setContentInset:UIEdgeInsetsZero];
+        CGRect scrollFrame = scrollView.frame;
+        scrollFrame.origin.y = scrollFrame.origin.y + 50;
+        [scrollView setFrame: scrollFrame];
     }];
 }
 
-
-- (BOOL)textFiledShouldReturn:(UITextField*)textfield {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    [self submitAccountInfo: self.submitButton];
+    //[self checkRun:nil];
     return YES;
 }
+
+//- (BOOL)textFiledShouldReturn:(UITextField*)textfield {
+//    return YES;
+//}
 
 -(void)viewWillAppear:(BOOL)animated
 {
