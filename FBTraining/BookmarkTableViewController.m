@@ -143,6 +143,7 @@
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
         [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
+        //[clip destroy];
     };
     
     cell.shareBlock = ^(UITableViewCell *cell){
@@ -244,6 +245,79 @@
     return YES;
 }
 
+#pragma mark - Deletion Methods
+-(void)deleteAllButtonTarget{
+    CustomAlertView *alert = [[CustomAlertView alloc] init];
+    [alert setTitle:@"myplayXplay"];
+    alert.type = AlertImportant;
+    [alert setMessage:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]];
+    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+    //[alert addButtonWithTitle:@"Yes(From server and local device)"];
+    [alert addButtonWithTitle:@"Yes"];
+    [alert addButtonWithTitle:@"No"];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if ([alertView.message isEqualToString:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]] && buttonIndex == 0) {
+        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
+        NSMutableArray *arrayOfClipsToRemove = [[NSMutableArray alloc]init];
+        
+        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
+            [arrayOfClipsToRemove addObject:self.tableData[cellIndexPath.row]];
+            [indexPathsArray addObject: cellIndexPath];
+        }
+        
+        for (NSIndexPath *path in self.setOfDeletingCells) {
+            if ([path isEqual:self.selectedPath]) {
+                //NSDictionary *tag = self.tableData[self.selectedPath.row];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:nil];
+                self.selectedPath = nil;
+            }
+        }
+        
+        for (Clip *clip in arrayOfClipsToRemove) {
+            [self.tableData removeObject:clip];
+            [clip destroy];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
+        }
+        
+        [self.setOfDeletingCells removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+        [self.tableView reloadData];
+        
+//        for (NSDictionary *tag in arrayOfClipsToRemove) {
+//            //[self.tableData removeObject:tag];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
+//        }
+        
+    }else{
+        if (buttonIndex == 0)
+        {
+            Clip *clipToRemove = self.tableData[self.editingIndexPath.row];
+            [self.tableData removeObject:clipToRemove];
+            [clipToRemove destroy];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tagToRemove];
+            
+            [self removeIndexPathFromDeletion];
+            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadData];
+            
+//            [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:clipToRemove userInfo:clipToRemove];
+        }
+        else if (buttonIndex == 1)
+        {
+            // No, cancel the action to delete tags
+        }
+        
+    }
+    [CustomAlertView removeAlert:alertView];
+    
+    [self checkDeleteAllButton];
+    //[self.tableView reloadData];
+}
 
 /*
  #pragma mark - Navigation

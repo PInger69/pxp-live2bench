@@ -140,6 +140,7 @@
             NSDictionary *theDict = [[NSDictionary alloc]initWithContentsOfFile:pthss] ;
             if (theDict) {
                 Clip * clip =[[Clip alloc]initWithDict: theDict];
+                clip.path = pthss;
                 [_clips setObject:clip forKey:clip.clipId];
             }
             
@@ -459,6 +460,7 @@
             [_bookmarkPlistNames addObject:filename]; // add names to clean list
             NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:[bookmarkPath stringByAppendingPathComponent:filename]];
             Clip * clipFromPlist = [[Clip alloc]initWithDict:dict];
+            clipFromPlist.path = filename;
             [_clips setObject:clipFromPlist forKey:clipFromPlist.clipId];
         }
     }];

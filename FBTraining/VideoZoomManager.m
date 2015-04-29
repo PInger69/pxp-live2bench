@@ -487,6 +487,11 @@
     newRect.origin.x += xAmountToShift * relativeMultiplier;
     newRect.origin.y += yAmountToShift * relativeMultiplier;
     
+    float relativeMultiplierHeight = self.secondLayer.frame.size.height / self.videoLayer.frame.size.height;
+    float relativeMultiplierWidth = self.secondLayer.frame.size.width / self.videoLayer.frame.size.width;
+    PXPLog(@"The relativeMultiplier for the secondLayer is %f", relativeMultiplier);
+
+
     if (newRect.origin.x > 0) {
         newRect.origin.x = 0;
     }
@@ -499,6 +504,7 @@
     
     
     CGRect superLayerFrame = self.videoLayer.superlayer.frame;
+    //CGRect secondSuperLayerFrame = self.secondLayer.superlayer.frame;
     
     // This is the case where it is too far to the left
     if ((newRect.origin.x + newRect.size.width) < superLayerFrame.size.width) {
@@ -509,11 +515,16 @@
     if ((newRect.origin.y + newRect.size.height) < superLayerFrame.size.height) {
         newRect.origin.y += superLayerFrame.size.height - (newRect.origin.y + newRect.size.height);
     }
+    
+    CGRect newSecondRect = CGRectMake(newRect.origin.x * relativeMultiplierWidth, newRect.origin.y * relativeMultiplierHeight, newRect.size.width * relativeMultiplierWidth, newRect.size.height * relativeMultiplierHeight);
 
     
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-    self.secondLayer.frame = newRect;
+//    if (self.secondLayer.superlayer == self.videoLayer.superlayer) {
+//        self.secondLayer.frame = newRect;
+//    }
+    self.secondLayer.frame = newSecondRect;
     self.videoLayer.frame = newRect;
     [CATransaction commit];
     

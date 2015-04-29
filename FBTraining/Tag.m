@@ -70,6 +70,19 @@
     return self;
 }
 
+#pragma mark - custom setters and getters
+-(NSString *)name{
+    return _name;
+}
+
+-(NSString *)displayTime{
+    return _displayTime;
+}
+
+-(NSString *)event{
+    return _event;
+}
+
 -(void)setFeeds:(NSDictionary *)feeds{
     _feeds = [feeds copy];
     if (feeds.count == 1) {

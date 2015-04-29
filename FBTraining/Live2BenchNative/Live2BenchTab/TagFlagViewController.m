@@ -402,7 +402,7 @@
 
 -(void) tagReceived: (NSNotification *)notification{
     if( notification.userInfo){
-        [self.arrayOfAllTags addObject:notification.userInfo];
+        [self.arrayOfAllTags addObject:notification.object];
     }
     
 }

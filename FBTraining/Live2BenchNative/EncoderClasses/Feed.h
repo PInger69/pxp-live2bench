@@ -20,6 +20,7 @@
 
 -(id)initWithURLDict:(NSDictionary *)aDict;
 -(id)initWithURLString:(NSString *)aPath quality:(int)qlty;
+-(instancetype) initWithFileURL: (NSString *) fileURL;
 -(NSURL *)path;
 
 

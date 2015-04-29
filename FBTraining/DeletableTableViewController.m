@@ -198,7 +198,7 @@
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         alert.type = AlertImportant;
         [alert setTitle:@"myplayXplay"];
-        [alert setMessage:@"Are you sure you want to delete this tag?"];
+        [alert setMessage:[NSString stringWithFormat:@"Are you sure you want to delete this %@?", [self.contextString lowercaseString]]];
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert addButtonWithTitle:@"Yes"];
         [alert addButtonWithTitle:@"No"];
