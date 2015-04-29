@@ -351,37 +351,6 @@ NSMutableArray *oldEventNames;
     fullScreenMode  = FALSE;
     _tableViewController.isEditable = FALSE;
     
-    // [selectAllButton setHidden:TRUE];
-    
-    //    if (globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS == 0) {
-    //        [receivedTagArr removeAllObjects];
-    //    }
-    
-    
-    
-    //update seek back&forward buttons
-    //    if (globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackQuarterSecond:)) {
-    //        [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackquartersec.png"] forState:UIControlStateNormal];
-    //    }else if(globals.CURRENT_SEEK_BACK_ACTION == @selector(seekBackOneSecond:)){
-    //        [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackonesec.png"] forState:UIControlStateNormal];
-    //    }else {
-    //        [currentSeekBackButton setImage:[UIImage imageNamed:@"seekbackfivesecs.png"] forState:UIControlStateNormal];
-    //        globals.CURRENT_SEEK_BACK_ACTION = @selector(seekBackFiveSeconds:);
-    //    }
-    //    [currentSeekBackButton addTarget:self action:globals.CURRENT_SEEK_BACK_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //
-    //    if (globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardQuarterSecond:)) {
-    //        [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardquartersec.png"] forState:UIControlStateNormal];
-    //    }else if(globals.CURRENT_SEEK_FORWARD_ACTION == @selector(seekForwardOneSecond:)){
-    //        [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardonesec.png"] forState:UIControlStateNormal];
-    //    }else {
-    //        [currentSeekForwardButton setImage:[UIImage imageNamed:@"seekforwardfivesecs.png"] forState:UIControlStateNormal];
-    //        globals.CURRENT_SEEK_FORWARD_ACTION = @selector(seekForwardFiveSeconds:);
-    //    }
-    //    [currentSeekForwardButton addTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
-    //
-    //    globals.TYPES_OF_TAGS = typesOfTags;
-    
     [tagEventName setHidden:TRUE];
     //NSLog(@"testing");
     //[self makeLocalBookmark];
