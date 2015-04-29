@@ -180,7 +180,7 @@
                 weakCell.downloadButton.downloadItem = downloadItem;
             };
             
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName, @"tag": tag }];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName, @"tag": tag, @"src":@"s_01hq"}];
             
             
         };

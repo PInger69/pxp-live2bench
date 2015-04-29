@@ -29,7 +29,7 @@
 
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
-
+#define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
 
 // HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
@@ -831,6 +831,7 @@ static void * builtContext          = &builtContext; // depricated?
                                               @"user":[_dictOfAccountInfo objectForKey:@"hid"]
                                               }];
     
+    [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
     
     [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:GET_NOW_TIME];
     
