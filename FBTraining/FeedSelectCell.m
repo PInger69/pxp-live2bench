@@ -27,7 +27,6 @@
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-        [self.playButton setBackgroundImage:[UIImage imageNamed:@"play_video"] forState:UIControlStateNormal];
         //don't set tag to 0, by default, uiview's tag is 0
         [self.playButton setTag:101];
         [self.playButton setEnabled:YES];
