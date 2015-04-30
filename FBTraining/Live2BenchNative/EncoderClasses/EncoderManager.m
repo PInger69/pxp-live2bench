@@ -1362,7 +1362,10 @@ static void * builtContext          = &builtContext; // depricated?
     NSMutableDictionary * eventData = [[NSMutableDictionary alloc]init];;
     
     NSMutableDictionary * temp  = [[NSMutableDictionary alloc]init];
-    for (Encoder * encoder in _authenticatedEncoders) {
+    
+    NSArray * encodersToCheck = [[NSArray arrayWithArray:_authenticatedEncoders] arrayByAddingObject:self.localEncoder];
+    
+    for (id <EncoderProtocol> encoder in encodersToCheck) {
         
         if ( [encoder.allEvents objectForKey:aCurrentEvent]){
             Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];

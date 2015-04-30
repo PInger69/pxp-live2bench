@@ -167,7 +167,7 @@ SVSignalStatus signalStatus;
     [self.view addSubview:scrollView];
     
     wifi = [[UILabel alloc]initWithFrame:CGRectMake(20.0f, 86.0f, 300.0f, 23.0f)];
-    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",[Utility myWifiName] ];
+    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",([Utility myWifiName])?[Utility myWifiName]: @"Unavailable" ];
     [scrollView addSubview:wifi];
     
     CustomLabel *encoderControlsLabel = [CustomLabel labelWithStyle:CLStyleBlackHeader];
@@ -332,7 +332,7 @@ SVSignalStatus signalStatus;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",[Utility myWifiName] ];
+    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",([Utility myWifiName])?[Utility myWifiName]: @"Unavailable" ];
     [super viewWillAppear:animated];
     
     [self setButtonImagesAndLabels];
