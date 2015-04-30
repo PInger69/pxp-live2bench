@@ -991,8 +991,8 @@
                 while ((value = [enumerator nextObject])) {
                 
                     // make event with the data
-                    BOOL isLive  = (value[@"live"] || value[@"live_2"])? YES:NO;
-                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLive:isLive isLocal:NO];
+                  
+                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO];
 
                     
                     if (anEvent.live){ // live event FOUND!

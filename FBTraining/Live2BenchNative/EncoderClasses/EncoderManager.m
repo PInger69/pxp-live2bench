@@ -678,7 +678,7 @@ static void * builtContext          = &builtContext; // depricated?
     if ([filtered count]==0)return nil;
     
     // this is an issues
-    Event * event = [[Event alloc]initWithDict:filtered[0] isLive:NO isLocal:YES];
+    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:YES];
     return event;
 }
 
