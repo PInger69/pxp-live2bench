@@ -16,7 +16,7 @@
 -(instancetype) initWithData: (NSDictionary *)tagData{
     self = [super init];
     if (self) {
-        //self.rawData = tagData;
+        self.rawData = tagData;
         self.colour = tagData[@"colour"];
         _comment = tagData[@"comment"];
         self.deviceID = tagData[@"deviceid"];

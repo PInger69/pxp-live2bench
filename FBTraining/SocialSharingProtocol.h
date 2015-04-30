@@ -20,10 +20,12 @@
 @property (assign, nonatomic) int tasksToComplete;
 @property (assign, nonatomic) int tasksCompleted;
 
--(void) linkInViewController: (UIViewController *)viewController;
--(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController;
--(void)cancel;
 
+-(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController;
+//-(void)cancel;
+
+@optional
+-(void) linkInViewController: (UIViewController *)viewController;
 
 @end
 

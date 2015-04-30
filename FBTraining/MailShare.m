@@ -36,7 +36,7 @@
 
 
 
--(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController withProgressFrame: (CGRect) progressFrame{
+-(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController{
     for (NSData *videoClip in itemsToShare) {
         [self.mailViewController addAttachmentData:videoClip mimeType:@"video/mp4" fileName:@"fileNameNeedsReplacement"];
     }

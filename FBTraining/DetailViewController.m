@@ -13,7 +13,7 @@
 
 @interface DetailViewController () <SwipeableCellDelegate> {
 }
-@property (strong, nonatomic) NSString * title;
+//@property (strong, nonatomic) NSString * title;
 //@property (strong, nonatomic) NSMutableDictionary *dataDictionary;
 
 
@@ -212,6 +212,15 @@
     
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark -Swipeable Cell Delegate methods
+- (void)buttonOneActionForItemText:(NSString *)itemText{
+    return;
+}
+- (void)buttonTwoActionForItemText:(NSString *)itemText{
+    return;
+}
+
 - (void)switchStateSignal:(BOOL)onOrOff fromCell: (SwipeableTableViewCell *) theCell{
     
     NSDictionary *signalPackage = @{@"Name": theCell.myTextLabel.text, @"Value": (onOrOff ? @YES:@NO), @"Type": @"Toggle"};
