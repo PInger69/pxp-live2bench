@@ -56,7 +56,7 @@
     UIPinchGestureRecognizer            * pinchGesture;
     UISwipeGestureRecognizer            * swipeGesture;
     
-    
+    UILabel                             *informationLabel;
     //TemporaryButton
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
@@ -174,7 +174,13 @@ static void * eventContext      = &eventContext;
     // TO DO:
     
     
-    
+    informationLabel = [[UILabel alloc] initWithFrame:CGRectMake(156, 50, MEDIA_PLAYER_WIDTH, 50)];
+    [informationLabel setTextAlignment:NSTextAlignmentRight];
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"UpdateInfoLabel" object:nil queue:nil usingBlock:^(NSNotification *note){
+        NSString *content = [NSString stringWithFormat:@"%@ - Tagging team: %@", note.userInfo[@"info"], _appDel.userCenter.userPick];
+        [informationLabel setText:content];
+    }];
+    [self.view addSubview:informationLabel];
     
     return self;
 }
@@ -444,7 +450,7 @@ static void * eventContext      = &eventContext;
     
     
     // maybe this should be part of the videoplayer
-     if( !(self.videoPlayer.view.superview == self.view) )
+     if(!(self.videoPlayer.view.superview == self.view))
      {
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
          [self.view addSubview:self.videoPlayer.view];
@@ -469,7 +475,6 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController.tagMarkerController createTagMarkers];
     
     // just to update UI
-
 }
 
 
@@ -499,6 +504,10 @@ static void * eventContext      = &eventContext;
  */
 - (void)goToLive
 {
+    if (![_appDel.encoderManager.currentEvent isEqualToString:_appDel.encoderManager.liveEventName]) {
+        _appDel.encoderManager.currentEvent = _appDel.encoderManager.liveEventName;
+
+    }
     [_pipController pipsAndVideoPlayerToLive];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
