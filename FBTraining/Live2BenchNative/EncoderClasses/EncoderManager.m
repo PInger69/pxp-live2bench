@@ -1377,13 +1377,36 @@ static void * builtContext          = &builtContext; // depricated?
     
     NSMutableDictionary * temp  = [[NSMutableDictionary alloc]init];
     
-    NSArray * encodersToCheck = [[NSArray arrayWithArray:_authenticatedEncoders] arrayByAddingObject:self.localEncoder];
     
-    for (id <EncoderProtocol> encoder in encodersToCheck) {
-        
+    
+    
+//    NSArray * encodersToCheck = [[NSArray arrayWithArray:_authenticatedEncoders] arrayByAddingObject:self.localEncoder];
+//    
+//    for (id <EncoderProtocol> encoder in encodersToCheck) {
+//        
+//        if ( [encoder.allEvents objectForKey:aCurrentEvent]){
+//            Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
+//          
+//            if (encoder.event.eventType != nil){
+//                [typeCollector addObject:curEvent.eventType];
+//                [temp addEntriesFromDictionary:curEvent.feeds];
+//                [eventData addEntriesFromDictionary: curEvent.rawData];
+//                _feeds = [temp mutableCopy];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_FEEDS_READY object:nil];
+//            }
+//            encoder.event = curEvent;
+//        }
+//    }
+ 
+
+    NSArray * encodersToCheck = [@[self.localEncoder] arrayByAddingObjectsFromArray:_authenticatedEncoders];
+    
+    for (int i=0; i<[encodersToCheck count]; i++) {
+        id <EncoderProtocol> encoder = encodersToCheck[i];
+
         if ( [encoder.allEvents objectForKey:aCurrentEvent]){
             Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
-          
+
             if (encoder.event.eventType != nil){
                 [typeCollector addObject:curEvent.eventType];
                 [temp addEntriesFromDictionary:curEvent.feeds];
@@ -1394,6 +1417,7 @@ static void * builtContext          = &builtContext; // depricated?
             encoder.event = curEvent;
         }
     }
+    
     _feeds = [temp mutableCopy];
     
     
