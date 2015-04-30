@@ -41,7 +41,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1318"
             endingLineNumber = "1318"
-            landmarkName = "-setCurrentEvent:"
+            landmarkName = "-currentEvent"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

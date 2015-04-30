@@ -23,6 +23,7 @@
 #import "MultiPip.h"
 #import "CustomAlertView.h"
 #import "ReusableBottomViewController.h"
+#import "ListPopoverController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -57,6 +58,7 @@
     UISwipeGestureRecognizer            * swipeGesture;
     
     UILabel                             *informationLabel;
+    ListPopoverController               *_teamPick;
     //TemporaryButton
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
@@ -506,8 +508,11 @@ static void * eventContext      = &eventContext;
 {
     if (![_appDel.encoderManager.currentEvent isEqualToString:_appDel.encoderManager.liveEventName]) {
         _appDel.encoderManager.currentEvent = _appDel.encoderManager.liveEventName;
-
     }
+//    _appDel.encoderManager.
+//    _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
+//                                              buttonListNames:@[, ]];
+    
     [_pipController pipsAndVideoPlayerToLive];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
