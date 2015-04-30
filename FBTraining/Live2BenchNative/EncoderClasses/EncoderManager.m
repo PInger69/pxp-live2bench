@@ -1323,6 +1323,20 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
 }
+
+-(void)deleteEvent:(NSMutableDictionary *)data{
+
+    for (id <EncoderProtocol> aEncoder  in _authenticatedEncoders) {
+        [aEncoder issueCommand:DELETE_EVENT
+                      priority:10
+                  timeoutInSec:5
+                       tagData:data
+                     timeStamp:GET_NOW_TIME];
+    }
+    
+
+}
+
 // Getters and setters
 -(NSString*)currentEvent
 {
@@ -1370,11 +1384,13 @@ static void * builtContext          = &builtContext; // depricated?
         if ( [encoder.allEvents objectForKey:aCurrentEvent]){
             Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
           
-            //if (encoder.event.eventType != nil){
+            if (encoder.event.eventType != nil){
                 [typeCollector addObject:curEvent.eventType];
                 [temp addEntriesFromDictionary:curEvent.feeds];
                 [eventData addEntriesFromDictionary: curEvent.rawData];
-           // }
+                _feeds = [temp mutableCopy];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_FEEDS_READY object:nil];
+            }
             encoder.event = curEvent;
         }
     }
@@ -1413,6 +1429,8 @@ static void * builtContext          = &builtContext; // depricated?
 
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
 }
+
+
 
 -(NSString*)currentEventType
 {

@@ -207,6 +207,9 @@ static void * eventContext      = &eventContext;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name:NOTIF_MASTER_HAS_LIVE object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_FEEDS_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+    }];
     return self;
 }
 
