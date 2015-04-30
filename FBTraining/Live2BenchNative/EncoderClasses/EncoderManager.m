@@ -29,7 +29,7 @@
 
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
-
+#define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
 
 // HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
@@ -677,7 +677,8 @@ static void * builtContext          = &builtContext; // depricated?
     
     if ([filtered count]==0)return nil;
     
-    Event * event = [[Event alloc]initWithDict:filtered[0]];
+    // this is an issues
+    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:YES];
     return event;
 }
 
@@ -809,6 +810,7 @@ static void * builtContext          = &builtContext; // depricated?
         NSData          * data                  = pooledResponces[0];
         NSDictionary    * results               = [Utility JSONDatatoDict: data];
         NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+         if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
         // if in the data success is 0 then there is an error!
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
@@ -830,11 +832,14 @@ static void * builtContext          = &builtContext; // depricated?
                                               @"user":[_dictOfAccountInfo objectForKey:@"hid"]
                                               }];
     
+    [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
     
     [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:GET_NOW_TIME];
     
     [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
     
+    PXPLog(@"Downloading Clip!");
+   
 }
 
 

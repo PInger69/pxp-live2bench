@@ -113,7 +113,7 @@
             NSDictionary * dict = value;
             NSString * itemHid = [dict objectForKey:@"hid"];
             if (itemHid) {
-                Event * anEvent = [[Event alloc]initWithDict:dict];
+                Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES];
                 anEvent.local   = YES;
                 anEvent.downloadedSources = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
@@ -140,6 +140,7 @@
             NSDictionary *theDict = [[NSDictionary alloc]initWithContentsOfFile:pthss] ;
             if (theDict) {
                 Clip * clip =[[Clip alloc]initWithDict: theDict];
+                clip.path = pthss;
                 [_clips setObject:clip forKey:clip.clipId];
             }
             
@@ -459,6 +460,7 @@
             [_bookmarkPlistNames addObject:filename]; // add names to clean list
             NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:[bookmarkPath stringByAppendingPathComponent:filename]];
             Clip * clipFromPlist = [[Clip alloc]initWithDict:dict];
+            clipFromPlist.path = filename;
             [_clips setObject:clipFromPlist forKey:clipFromPlist.clipId];
         }
     }];
@@ -616,8 +618,8 @@
     [aEvent.rawData writeToFile:plistNamePath atomically:YES];
     
     // make an instance of event in local
-    Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData];
-    anEvent.local   = YES;
+    Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData isLocal:YES];
+//    anEvent.local   = YES;
     //anEvent.downloadedSources = [[self listDownloadSourcesFor:anEvent] mutableCopy];
     
     

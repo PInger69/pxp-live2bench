@@ -260,6 +260,9 @@ NS_OPTIONS(NSInteger, style){
 
 #pragma mark - SwipeableCellDelegate
 
+- (void)functionalButtonFromCell: (UITableViewCell *) cell{
+    return;
+}
 
 // This function is called upon when the cells toggle is switched
 - (void)switchStateSignal:(BOOL)onOrOff fromCell: (SwipeableTableViewCell *) theCell{

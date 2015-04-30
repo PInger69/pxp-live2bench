@@ -160,6 +160,12 @@ static void * eventContext      = &eventContext;
          initBottomViewController(nil, plistDictionary);
      }];
     
+    //center addObserverForName:NOTIF_LIVE_EVENT_STARTED object:nil queue:nil usingBlo
+    
+    [center addObserverForName:NOTIF_LIVE_EVENT_STARTED object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [self restartPlayer];
+        [self createTagButtons];
+    }];
     // side tags
     _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
     [self addChildViewController:_tagButtonController];

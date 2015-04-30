@@ -16,7 +16,7 @@
 -(instancetype) initWithData: (NSDictionary *)tagData{
     self = [super init];
     if (self) {
-        //self.rawData = tagData;
+        self.rawData = tagData;
         self.colour = tagData[@"colour"];
         _comment = tagData[@"comment"];
         self.deviceID = tagData[@"deviceid"];
@@ -68,6 +68,19 @@
         }];
     }
     return self;
+}
+
+#pragma mark - custom setters and getters
+-(NSString *)name{
+    return _name;
+}
+
+-(NSString *)displayTime{
+    return _displayTime;
+}
+
+-(NSString *)event{
+    return _event;
 }
 
 -(void)setFeeds:(NSDictionary *)feeds{

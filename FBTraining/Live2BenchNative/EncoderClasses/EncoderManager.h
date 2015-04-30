@@ -73,8 +73,6 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 #pragma mark - Encoder Manager Methods
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
 
-
-
 -(void)reqestSummaryId:(NSString*)aId type:(NSString*)aType onComplete:(void(^)(NSArray*pooled))onCompleteGet;
 
 -(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet;

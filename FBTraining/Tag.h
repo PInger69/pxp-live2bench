@@ -11,7 +11,7 @@
 
 @interface Tag : NSObject<FilterItemProtocol>
 
-//@property (strong, nonatomic) NSDictionary *rawData;
+@property (strong, nonatomic) NSDictionary *rawData;
 @property (strong, nonatomic) NSString      *colour;
 @property (strong, nonatomic) NSString      *comment;
 //@property (strong, assign)

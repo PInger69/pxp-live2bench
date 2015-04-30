@@ -205,6 +205,7 @@ int viewWillAppearCalled;
         [self.informationarea addSubview: tagPopoverContent];
         [self.informationarea addSubview: self.ratingAndCommentingView.view];
         
+        [self.videoPlayer playFeed: [[clipToPlay.feeds allValues] firstObject]];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){
@@ -501,7 +502,7 @@ int viewWillAppearCalled;
     
     
     self.tableViewController = [[BookmarkTableViewController alloc] init];
-    self.tableViewController.contextString = @"CLIPS";
+    self.tableViewController.contextString = @"CLIP";
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         [self.tableViewController.view setFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.width - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.height - CGRectGetMaxY(headerBar.frame) - 50.0f)];
     } else {

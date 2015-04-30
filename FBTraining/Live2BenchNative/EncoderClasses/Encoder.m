@@ -849,6 +849,10 @@
     
     if([results isKindOfClass:[NSDictionary class]])
     {
+        if (![[results objectForKey:@"success"]boolValue]) {
+            PXPLog(@"Encoder Error!");
+            PXPLog(@"  reason: %@",results[@"msg"]);
+        }
         self.encoderTeams      = [results objectForKey:@"teams"];
 //            self.playerData = [results objectForKey:@"teamsetup"];
         self.encoderLeagues     = [results objectForKey:@"leagues"];
@@ -931,26 +935,26 @@
 -(void)stopResponce:(NSData *)data
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
-    PXPLog(@"Event Stopped          !!!");
+    PXPLog(@"!!!Event Stopped on %@",self.name);
 }
 
 -(void)startResponce:(NSData *)data
 {
 
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STARTED object:self];
-    PXPLog(@"Event Started          !!!");
+    PXPLog(@"!!!Event Started on %@",self.name);
 }
 
 -(void)pauseResponce:(NSData *)data
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_PAUSED object:self];
-    PXPLog(@"Event Paused          !!!");
+    PXPLog(@"!!!Event Paused on %@",self.name);
 }
 
 -(void)resumeResponce:(NSData *)data
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_RESUMED object:self];
-    PXPLog(@"Event Resumed          !!!");
+    PXPLog(@"!!!Event Resumed on %@",self.name);
 }
 
 
@@ -987,78 +991,18 @@
                 while ((value = [enumerator nextObject])) {
                 
                     // make event with the data
-                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value];
+                  
+                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO];
 
                     
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
                         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
-                        
-//                        [self willChangeValueForKey:@"eventType"];
-//                        _eventType = [dict objectForKey:@"sport"];
-//                        [self didChangeValueForKey:@"eventType"];
+
                     }
                     
 
-                     [pool setObject:anEvent forKey:anEvent.name];
-                    /*
-                    if ([dict objectForKey:@"live_2"]){
-                        
-                        NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-                        
-                        for (id key in dict[@"live_2"])
-                        {
-                            NSDictionary * qualities = [((NSDictionary *)dict[@"live_2"]) objectForKey:key];
-                            [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
-                        }
-                        
-                        self.feeds = [collect copy];
-
-                        self.event = [dict objectForKey:@"name"]; // LIVE
-                        _liveEventName = self.event;
-                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
-                        [self willChangeValueForKey:@"eventType"];
-                        _eventType = [dict objectForKey:@"sport"];
-                        [self didChangeValueForKey:@"eventType"];
-                        
-                    } else if ([dict objectForKey:@"live"]) { // this is for the old encoder version
-                        /////
-                        self.event = [dict objectForKey:@"name"];
-                        if ([dict[@"live"] isKindOfClass:[NSString class]]) { // This is for backwards compatibility
-                            
-                            // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
-                            // this creates a feed object from just a string with it  source named s1
-                            Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
-                            self.feeds = @{ @"s1":theFeed};
-                            _liveEventName = dict[@"name"];
-                            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
-                        self.isMaster = YES;
-                            [self willChangeValueForKey:@"eventType"];
-                            _eventType = [dict objectForKey:@"sport"];
-                            [self didChangeValueForKey:@"eventType"];
-                            
-                        }  else if ([dict[@"live"] isKindOfClass:[NSDictionary class]]){
-                            //                            NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-                            //
-                            //                            for (id key in dict[@"live"])
-                            //                            {
-                            //                                if ([key isEqualToString:@"url"])continue;
-                            //                                NSDictionary * qualities = [((NSDictionary *)dict[@"live"]) objectForKey:key];
-                            //                                [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
-                            //                            }
-                            //
-                            //                            _feeds = [collect copy];
-                            
-                            
-                        } else {
-                            NSLog(@"JSON ERROR");
-                        }
-                        
-
-                    
-                    }
-                    */
-                    
+                    [pool setObject:anEvent forKey:anEvent.name];
                 }
             }
             @catch (NSException *exception) {
@@ -1136,7 +1080,6 @@
     [statusMonitor destroy];
     [self clearQueueAndCurrent];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_ENCODER_MASTER_FOUND object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_foundMaster:) name:NOTIF_ENCODER_MASTER_FOUND object:nil];
     
 }
 

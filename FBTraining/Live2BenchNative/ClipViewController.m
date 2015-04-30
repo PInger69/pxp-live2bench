@@ -104,6 +104,8 @@ static void * encoderTagContext = &encoderTagContext;
             }
         }];
         
+        //[[NSNotificationCenter defaultCenter]
+        
     }
     return self;
     
@@ -912,7 +914,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
         
         
-        if ( [tagSelect count] >1 ){
+        //if ( [tagSelect count] >1 ){
             [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
                 
                 PXPLog(@"You Picked a feed: %@",pick);
@@ -928,16 +930,16 @@ static void * encoderTagContext = &encoderTagContext;
             [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
             
             
-        } else {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-            
-            NSString * key =        listOfScource[0];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                                  @"feed":key,
-                                                                                                                  @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
-                                                                                                                  @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration],
-                                                                                                                  @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
-        }
+//        } else {
+//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+//            
+//            NSString * key =        listOfScource[0];
+//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
+//                                                                                                                  @"feed":key,
+//                                                                                                                  @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
+//                                                                                                                  @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration],
+//                                                                                                                  @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
+//        }
         
         
     } else {

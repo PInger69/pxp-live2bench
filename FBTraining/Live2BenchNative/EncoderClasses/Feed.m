@@ -20,6 +20,7 @@
 
 @synthesize quality     = _quality;
 @synthesize sourceName  =_sourceName;
+@synthesize type;
 @synthesize isAlive;
 @synthesize info;
 
@@ -70,6 +71,16 @@
     return self;
 }
 
+-(instancetype) initWithFileURL: (NSString *) fileURL{
+    self = [super init];
+    if (self) {
+        self.isAlive = YES;
+        _qualities = @{HIGH_QUALITY: [NSURL fileURLWithPath: fileURL]};
+        _urlPath = [_qualities objectForKey: HIGH_QUALITY];
+    }
+    return self;
+
+}
 
 -(NSArray *)allPaths{
     return [_qualities allValues];

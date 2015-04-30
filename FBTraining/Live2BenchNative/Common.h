@@ -125,7 +125,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 /**
  *  Graphics Commons
  */
-#define PRIMARY_APP_COLOR   [UIColor blueColor]
+#define PRIMARY_APP_COLOR   [UIColor orangeColor]
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
@@ -212,7 +212,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 // Encoder Manager
 #define NOTIF_EM_CHANGE_EVENT               @"NOTIF_EM_CHANGE_EVENT"            // userInfo:@{@"name"<NSString>}
 #define NOTIF_EVENT_LOADED                  @"NOTIF_EVENT_LOADED"               // this will be observed so we can ask the user to pick a team.
-#define NOTIF_EM_DOWNLOAD_CLIP              @"NOTIF_EM_DOWNLOAD_CLIP"           // userInfo:// the clip data
+#define NOTIF_EM_DOWNLOAD_CLIP              @"NOTIF_EM_DOWNLOAD_CLIP"           // userInfo:@{@"block": ^(DownloadItem){}, @"tag": <Tag>, @"src":@"Source Key" }
 #define NOTIF_EM_DOWNLOAD_EVENT             @"NOTIF_EM_DOWNLOAD_EVENT"           // userInfo:// the event data
 
 
