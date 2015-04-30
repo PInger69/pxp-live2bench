@@ -1384,7 +1384,12 @@ static void * builtContext          = &builtContext; // depricated?
     
     [self refresh];
     
-    
+    [self requestTagDataForEvent:aCurrentEvent onComplete:^(NSDictionary *all) {
+        
+        [_eventTags setObject:all forKey:aCurrentEvent];
+        
+    }];
+
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
 }
 
@@ -1590,8 +1595,6 @@ static void * builtContext          = &builtContext; // depricated?
     
     
     [self didChangeValueForKey:@"currentEventTags"];
-    
-    
 }
 
 -(BOOL)hasLive
@@ -1658,7 +1661,6 @@ static void * builtContext          = &builtContext; // depricated?
     [self willChangeValueForKey:@"searchForEncoders"];
     _searchForEncoders = searchForEncoders;
     [self didChangeValueForKey:@"searchForEncoders"];
-    
 }
 
 

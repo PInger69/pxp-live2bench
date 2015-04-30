@@ -96,8 +96,8 @@ static void * encoderTagContext = &encoderTagContext;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
-            self.tagsToDisplay = [NSMutableArray arrayWithArray: [appDel.encoderManager.eventTags allValues]];
-            self.allTagsArray = [NSMutableArray arrayWithArray: [appDel.encoderManager.eventTags allValues]];
+            self.tagsToDisplay = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+            self.allTagsArray = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
             [_collectionView reloadData];
             if (!componentFilter.rawTagArray) {
                 componentFilter.rawTagArray = self.tagsToDisplay;

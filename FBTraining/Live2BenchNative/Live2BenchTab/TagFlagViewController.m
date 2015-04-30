@@ -401,8 +401,8 @@
 }
 
 -(void) tagReceived: (NSNotification *)notification{
-    if( notification.userInfo){
-        [self.arrayOfAllTags addObject:notification.userInfo];
+    if( notification.object){
+        [self.arrayOfAllTags addObject:notification.object];
     }
     
 }

@@ -559,7 +559,7 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
     encoderConnection.timeStamp             = aTimeStamp;
-    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key that will be used when making the dict
+    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key th   at will be used when making the dict
 }
 
 

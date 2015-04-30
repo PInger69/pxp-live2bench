@@ -551,6 +551,7 @@ static void * vpFrameContext   = &vpFrameContext;
     }
     [_videoPlayer playFeed:_feedSwitchView.primaryFeed];
     
+    
     [_videoPlayer gotolive];
     
     
