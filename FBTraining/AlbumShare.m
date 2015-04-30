@@ -18,7 +18,7 @@
     return [UIImage imageNamed:@"saveToAlbumSelected.png"];
 }
 
--(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController withProgressFrame: (CGRect) progressFrame{
+-(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController{
     SEL completionSelector = @selector(video: didFinishSavingWithError: contextInfo:);
     for (NSDictionary *videoClip in itemsToShare) {
         BOOL videoCompatibilty = UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoClip[@"mp4"]);

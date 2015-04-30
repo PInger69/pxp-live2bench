@@ -47,7 +47,7 @@
 
 
 
--(void)shareItems: (NSArray *) itemsToShare{
+-(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController{
     for (NSDictionary *tagDict in itemsToShare) {
         (void)tagDict; // to suppress warning
         // Write a file to the local documents directory

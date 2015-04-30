@@ -16,8 +16,8 @@
 - (void)buttonTwoActionForItemText:(NSString *)itemText;
 - (void)functionalButtonFromCell: (UITableViewCell *) cell;
 - (void)switchStateSignal:(BOOL)onOrOff fromCell: (id) theCell;
-- (void)specificSettingChosen: (NSString *) theSetting;
-- (void)choseCellWithString: (NSString*)optionLabel;
+//- (void)specificSettingChosen: (NSString *) theSetting;
+//- (void)choseCellWithString: (NSString*)optionLabel;
 
 
 @end
@@ -37,8 +37,8 @@
 @property (nonatomic, weak) NSLayoutConstraint *contentViewLeftConstraint;
 
 
--(instancetype) initForSettingsTableViewController;
--(instancetype) initForDetailController;
-- (NSDictionary *) cellInfoDictionary;
+//-(instancetype) initForSettingsTableViewController;
+//-(instancetype) initForDetailController;
+//- (NSDictionary *) cellInfoDictionary;
 
 @end

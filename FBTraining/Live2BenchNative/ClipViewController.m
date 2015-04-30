@@ -104,6 +104,8 @@ static void * encoderTagContext = &encoderTagContext;
             }
         }];
         
+        //[[NSNotificationCenter defaultCenter]
+        
     }
     return self;
     
