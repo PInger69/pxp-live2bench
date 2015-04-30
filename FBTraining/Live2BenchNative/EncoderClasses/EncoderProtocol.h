@@ -37,6 +37,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
+-(Event*)getEventByName:(NSString*)eventName;
 
 @optional
 @property (nonatomic,strong)    Event                * liveEvent;

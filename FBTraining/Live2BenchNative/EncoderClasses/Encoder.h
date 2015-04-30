@@ -118,6 +118,8 @@
 
 -(void)searchForMaster;
 
+-(Event*)getEventByName:(NSString*)eventName;
+
 
 /**
  *  removes all observers and checker and release memory if possible

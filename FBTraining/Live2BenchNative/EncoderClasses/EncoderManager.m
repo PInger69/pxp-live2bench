@@ -682,6 +682,19 @@ static void * builtContext          = &builtContext; // depricated?
     return event;
 }
 
+-(Event*)getEventByName:(NSString*)eventName
+{
+    for (Encoder * enc in self.authenticatedEncoders) {
+        
+        if ([enc getEventByName:eventName]){
+            return [enc getEventByName:eventName];
+        }
+    }
+    
+    return [self.localEncoder getEventByName:eventName];
+    
+}
+
 
 #pragma mark -
 #pragma mark Observers

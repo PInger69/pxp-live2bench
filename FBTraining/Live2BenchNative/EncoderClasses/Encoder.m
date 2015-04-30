@@ -302,6 +302,21 @@
 }
 
 
+-(Event*)getEventByName:(NSString*)eventName
+{
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        Event* obj = evaluatedObject;
+        return [obj.name isEqualToString:eventName];
+    }];
+    
+    NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents]allValues] filteredArrayUsingPredicate:pred ]];
+    
+    if ([filtered count]==0)return nil;
+    
+    return (Event*)filtered[0];
+}
+
 // Commands
 #pragma mark - Commands
 -(void)authenticateWithCustomerID:(NSString*)custID

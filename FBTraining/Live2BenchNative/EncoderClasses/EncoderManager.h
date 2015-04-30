@@ -87,7 +87,7 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
 -(Event*)getEventByHID:(NSString*)eventHID;
-
+-(Event*)getEventByName:(NSString*)eventName;
 #pragma mark - Commands Methods
 
 -(void)refresh;
