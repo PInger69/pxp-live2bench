@@ -20,6 +20,7 @@
 
 @synthesize quality     = _quality;
 @synthesize sourceName  =_sourceName;
+@synthesize type;
 @synthesize isAlive;
 @synthesize info;
 

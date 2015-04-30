@@ -62,7 +62,6 @@ static NSString * lastViewed;
 -(CustomButton *)_buildPlayButton
 {
     CustomButton * button = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [button setBackgroundImage:[UIImage imageNamed:@"play_video"] forState:UIControlStateNormal];
     [button setFrame:CGRectMake(480, 7, 30,30)];
     //don't set tag to 0, by default, uiview's tag is 0
     [button setTag:101];

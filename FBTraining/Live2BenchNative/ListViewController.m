@@ -102,7 +102,7 @@ NSMutableArray *oldEventNames;
         //_tableViewController.tableData = self.tagsToDisplay;
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
-            self.tagsToDisplay =[ NSMutableArray arrayWithArray: [appDel.encoderManager.eventTags allValues]];
+            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
             _tableViewController.tableData = self.tagsToDisplay;
             if (!componentFilter.rawTagArray) {
                 componentFilter.rawTagArray = self.tagsToDisplay;

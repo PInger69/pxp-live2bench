@@ -20,21 +20,24 @@
         _feedName = [[UILabel alloc] init];
         _feedView = [[UIImageView alloc] init];
         _feedName.text = name;
-        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+//        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
         //[imageAssetManager imageForURL:url atImageView:self.feedView];
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-        [self.playButton setBackgroundImage:[UIImage imageNamed:@"play_video"] forState:UIControlStateNormal];
+<<<<<<< HEAD
+        //[self.playButton setBackgroundImage:[UIImage imageNamed:@"play_video"] forState:UIControlStateNormal];
+=======
+>>>>>>> aa6266a504d860717f75dc25b88eed830471687b
         //don't set tag to 0, by default, uiview's tag is 0
         [self.playButton setTag:101];
         [self.playButton setEnabled:YES];
         [self.playButton setPlayButton];
         [self.playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.playButton setShowsTouchWhenHighlighted: YES];
-
+        [self.contentView setBackgroundColor:[UIColor colorWithRed:0.955 green:0.955 blue:0.955 alpha:0.8]];
         
         [self.contentView addSubview: self.feedName];
         [self.contentView addSubview:self.feedView];
@@ -53,10 +56,6 @@
 
 - (void)downloadButtonPressed:(id)sender {
     self.downloadButtonBlock();
-<<<<<<< HEAD
-    //[Utility downloadEvent:self.event sourceName:self.feedName.text returnBlock:self.downloadButtonBlock];
-=======
->>>>>>> 458a23302802717a99cd160c4088dd50d7d2befe
 }
 
 - (void)playButtonPressed:(id)sender {

@@ -677,8 +677,22 @@ static void * builtContext          = &builtContext; // depricated?
     
     if ([filtered count]==0)return nil;
     
-    Event * event = [[Event alloc]initWithDict:filtered[0]];
+    // this is an issues
+    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:YES];
     return event;
+}
+
+-(Event*)getEventByName:(NSString*)eventName
+{
+    for (Encoder * enc in self.authenticatedEncoders) {
+        
+        if ([enc getEventByName:eventName]){
+            return [enc getEventByName:eventName];
+        }
+    }
+    
+    return [self.localEncoder getEventByName:eventName];
+    
 }
 
 
@@ -1404,7 +1418,12 @@ static void * builtContext          = &builtContext; // depricated?
     
     [self refresh];
     
-    
+    [self requestTagDataForEvent:aCurrentEvent onComplete:^(NSDictionary *all) {
+        
+        [_eventTags setObject:all forKey:aCurrentEvent];
+        
+    }];
+
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
 }
 
@@ -1612,8 +1631,6 @@ static void * builtContext          = &builtContext; // depricated?
     
     
     [self didChangeValueForKey:@"currentEventTags"];
-    
-    
 }
 
 -(BOOL)hasLive
@@ -1680,7 +1697,6 @@ static void * builtContext          = &builtContext; // depricated?
     [self willChangeValueForKey:@"searchForEncoders"];
     _searchForEncoders = searchForEncoders;
     [self didChangeValueForKey:@"searchForEncoders"];
-    
 }
 
 

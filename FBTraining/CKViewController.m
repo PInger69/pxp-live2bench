@@ -216,7 +216,7 @@
 }
 
 - (void)calendar:(CKCalendarView *)calendar didLayoutInRect:(CGRect)frame {
-    PXPLog(@"calendar layout: %@", NSStringFromCGRect(frame));
+//    PXPLog(@"calendar layout: %@", NSStringFromCGRect(frame));
 }
 
 -(int)numberOfEventsOnDate: (NSDate *)date{

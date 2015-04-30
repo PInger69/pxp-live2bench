@@ -302,6 +302,21 @@
 }
 
 
+-(Event*)getEventByName:(NSString*)eventName
+{
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        Event* obj = evaluatedObject;
+        return [obj.name isEqualToString:eventName];
+    }];
+    
+    NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents]allValues] filteredArrayUsingPredicate:pred ]];
+    
+    if ([filtered count]==0)return nil;
+    
+    return (Event*)filtered[0];
+}
+
 // Commands
 #pragma mark - Commands
 -(void)authenticateWithCustomerID:(NSString*)custID
@@ -569,7 +584,7 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
     encoderConnection.timeStamp             = aTimeStamp;
-    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key that will be used when making the dict
+    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key th   at will be used when making the dict
 }
 
 
@@ -1001,7 +1016,8 @@
                 while ((value = [enumerator nextObject])) {
                 
                     // make event with the data
-                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value];
+                  
+                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO];
 
                     
                     if (anEvent.live){ // live event FOUND!

@@ -40,5 +40,5 @@
 
 
 
--(instancetype)initWithDict:(NSDictionary*)data;
+-(instancetype)initWithDict:(NSDictionary*)data isLocal:(BOOL)isLocal;
 @end

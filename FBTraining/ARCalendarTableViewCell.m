@@ -41,7 +41,6 @@
     self.downloadInfoLabel.lineBreakMode = NSLineBreakByClipping;
     
 //    self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-//    //[self.playButton setBackgroundImage:[UIImage imageNamed:@"play_video"] forState:UIControlStateNormal];
 //    [self.playButton setFrame:CGRectMake(460, 15, 30,30)];
 //    //don't set tag to 0, by default, uiview's tag is 0
 //    [self.playButton setTag:101];

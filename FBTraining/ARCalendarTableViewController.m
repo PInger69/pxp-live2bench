@@ -232,17 +232,22 @@
             
             _teamPick.contentViewController.modalInPopover = NO;
             
-            NSString *path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
+            NSString *path;
+            if (event.rawData[@"mp4_2"]) {
+                path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
+                //path = @"/Documents/events/2015-04-16_16-17-13_368156f1cc13acdf43d265c420b4d2956ed0f645_local/main_00hq.mp4";
+            } else {
+                path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
+            }
             
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
              
-                //[[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Injury"}];
-
-                [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
+                //[[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
+                weakSelf.encoderManager.currentEvent = eventName;
                 
                 Feed *source;
-                if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
+                if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {                    
                     source = [[Feed alloc] initWithURLString:path quality:0];
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                 } else {
@@ -252,6 +257,9 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                
+                NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", event.rawData[@"date"], event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                        animated:YES];
