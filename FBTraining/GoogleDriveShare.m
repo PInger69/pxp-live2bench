@@ -64,7 +64,7 @@ static NSString *const kClientSecret = @"7h1YuOnofrjAesnOG1TOpj7W";
         for (NSDictionary *itemToShare in itemsToShare) {
             NSString *filePath = itemToShare[@"mp4"];
             NSData *videoData = [NSData dataWithContentsOfFile: filePath];
-            [self uploadData: videoData withFolderName:itemToShare[@"name"]];
+            [self uploadData: videoData withFolderName:@"somename.mp4"];
         }
     }else{
         NSLog(@"This person is not signed in");
@@ -73,13 +73,15 @@ static NSString *const kClientSecret = @"7h1YuOnofrjAesnOG1TOpj7W";
 
 - (void)uploadData:(NSData *)videoData withFolderName:(NSString *)name
 {
+    //THIS CODE CREATES A FOLDER
+    // FOLDER STRUCTURING IS NOT YET COMPLETED!
     GTLDriveFile *folder = [GTLDriveFile object];
-    folder.title = name;
+    folder.title = @"MyPlayXPlay";
     folder.mimeType = @"application/vnd.google-apps.folder";
-    NSString *resourceIdforFolder = @"Avoca";
-    GTLDriveParentReference *parentRef = [GTLDriveParentReference object];
-    parentRef.identifier = resourceIdforFolder;
-    folder.parents = [NSArray arrayWithObject:parentRef];
+//    NSString *resourceIdforFolder = @"Avoca";
+//    GTLDriveParentReference *parentRef = [GTLDriveParentReference object];
+//    parentRef.identifier = resourceIdforFolder;
+    //folder.parents = [NSArray arrayWithObject:parentRef];
     GTLQueryDrive *queryForFolder = [GTLQueryDrive queryForFilesInsertWithObject:folder uploadParameters:nil];
     [self.driveService executeQuery:queryForFolder completionHandler:^(GTLServiceTicket *ticket,
                                                                        GTLDriveFile *insertedFile, NSError *error) {
@@ -106,9 +108,9 @@ static NSString *const kClientSecret = @"7h1YuOnofrjAesnOG1TOpj7W";
     file.descriptionProperty = @"Uploaded from the myplayXplay";
     file.mimeType = @"video/mp4";
     
-    NSString *resourceIdForFile = name;
+    NSString *resourceIdForFile = @"MyPlayXPlay";
     GTLDriveParentReference *parentRefForFile = [GTLDriveParentReference object];
-    parentRef.identifier = resourceIdForFile;
+    parentRefForFile.identifier = resourceIdForFile;
     file.parents = [NSArray arrayWithObject:parentRefForFile];
     
     //NSData *data = UIImagePNGRepresentation((UIImage *)image);
