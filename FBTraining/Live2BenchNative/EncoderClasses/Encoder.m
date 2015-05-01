@@ -1085,7 +1085,7 @@
         thePriorityKey = [allKeys lastObject];
     }
     
-    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) lastObject];
+    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) objectAtIndex:0];
 
     return nextObj;
 }
