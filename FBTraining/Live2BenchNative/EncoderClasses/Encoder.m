@@ -1007,7 +1007,7 @@
                 
                     // make event with the data
                   
-                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO];
+                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
 
                     
                     if (anEvent.live){ // live event FOUND!

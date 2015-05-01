@@ -253,6 +253,7 @@ static void * eventContext      = &eventContext;
 {
     self.videoPlayer.live   = YES;
     [_gotoLiveButton isActive:YES];
+    
 }
 
 - (void)goToLive

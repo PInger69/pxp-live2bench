@@ -678,7 +678,7 @@ static void * builtContext          = &builtContext; // depricated?
     if ([filtered count]==0)return nil;
     
     // this is an issues
-    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:YES];
+    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:YES andlocalPath:nil];
     return event;
 }
 
@@ -692,7 +692,6 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
     return [self.localEncoder getEventByName:eventName];
-    
 }
 
 
@@ -1362,17 +1361,22 @@ static void * builtContext          = &builtContext; // depricated?
     NSMutableDictionary * eventData = [[NSMutableDictionary alloc]init];;
     
     NSMutableDictionary * temp  = [[NSMutableDictionary alloc]init];
-    for (Encoder * encoder in _authenticatedEncoders) {
+    NSArray * encodersToCheck = [@[self.localEncoder] arrayByAddingObjectsFromArray:_authenticatedEncoders];
+    
+    for (int i=0; i<[encodersToCheck count]; i++) {
+        id <EncoderProtocol> encoder = encodersToCheck[i];
         
-        if ( [encoder.allEvents objectForKey:aCurrentEvent]){
-            Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
-          
-            //if (encoder.event.eventType != nil){
+        if (/*[encoder.allEvents objectForKey:aCurrentEvent]*/[encoder getEventByName:aCurrentEvent]){
+//            Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
+            Event *curEvent = [encoder getEventByName:aCurrentEvent];
+            encoder.event = curEvent;
+            if (encoder.event.eventType != nil){
                 [typeCollector addObject:curEvent.eventType];
                 [temp addEntriesFromDictionary:curEvent.feeds];
                 [eventData addEntriesFromDictionary: curEvent.rawData];
-           // }
-            encoder.event = curEvent;
+                _feeds = [temp mutableCopy];
+                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_FEEDS_READY object:nil];
+            }
         }
     }
     _feeds = [temp mutableCopy];
@@ -1385,6 +1389,8 @@ static void * builtContext          = &builtContext; // depricated?
     
     [self willChangeValueForKey:@"currentEvent"];
     _currentEvent = aCurrentEvent;
+    NSLog(@"%@", _currentEvent);
+    
     [self didChangeValueForKey:@"currentEvent"];
     
     [typeCollector removeObject:@"none"]; // just incase

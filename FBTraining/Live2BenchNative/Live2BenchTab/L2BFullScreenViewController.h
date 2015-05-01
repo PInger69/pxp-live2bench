@@ -12,6 +12,7 @@
 #define L2B_FULLSCREEN_MODE_CLIP     2
 #define L2B_FULLSCREEN_MODE_TELE     3
 #define L2B_FULLSCREEN_MODE_DEMO     4
+#define L2B_FULLSCREEN_MODE_EVENT    5
 
 #import "FullScreenViewController.h"
 #import "TeleViewController.h"

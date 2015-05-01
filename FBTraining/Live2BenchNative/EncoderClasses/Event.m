@@ -10,7 +10,9 @@
 #import "Feed.h"
 
 
-@implementation Event
+@implementation Event {
+    NSString *localPath;
+}
 
 @synthesize name        = _name;
 @synthesize eventType   = _eventType;
@@ -27,7 +29,7 @@
 
 @synthesize downloadedSources       = _downloadedSources;
 
-- (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal
+- (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
     self = [super init];
     if (self) {
@@ -40,6 +42,7 @@
         _datapath           = [_rawData objectForKey:@"datapath"];
         _date               = [_rawData objectForKey:@"date"];
         _mp4s               = [self buildMP4s:_rawData];
+        localPath           = path;
 //        _feeds              = [self buildFeeds:_rawData];
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
@@ -94,8 +97,10 @@
         {
             NSDictionary * vidDict      = aDict[toypKey];
             NSDictionary * qualities    = [vidDict objectForKey:key];
+            NSString *filePath = [[[localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
             
-            Feed * createdFeed = (isLocal)? [[Feed alloc]initWithFileURL:qualities[@"hq"]] : [[Feed alloc] initWithURLDict:qualities];
+            Feed * createdFeed = (isLocal)? [[Feed alloc]initWithFileURL:filePath] : [[Feed alloc] initWithURLDict:qualities];
+            
             createdFeed.sourceName = key;
             if (self.live){
                 createdFeed.type = FEED_TYPE_LIVE;

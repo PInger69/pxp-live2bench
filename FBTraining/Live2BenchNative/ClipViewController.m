@@ -68,7 +68,7 @@ static void * encoderTagContext = &encoderTagContext;
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
         _encoderManager = _appDel.encoderManager;
-        
+    
     }
     return self;
 }
@@ -105,7 +105,8 @@ static void * encoderTagContext = &encoderTagContext;
         }];
         
         //[[NSNotificationCenter defaultCenter]
-        
+        self.allTagsArray = [NSMutableArray array];
+        self.tagsToDisplay = [NSMutableArray array];
     }
     return self;
     
