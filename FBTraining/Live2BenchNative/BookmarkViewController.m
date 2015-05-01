@@ -287,8 +287,8 @@ int viewWillAppearCalled;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Entering FullScreen" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Exiting FullScreen" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
     
     
     progressBar = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -842,7 +842,7 @@ int viewWillAppearCalled;
                   selector:@selector(caseInsensitiveCompare:)];
     }  else if (sortType & RATING_FIELD) {
         
-        sorter = [NSSortDescriptor sortDescriptorWithKey:@"Rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
+        sorter = [NSSortDescriptor sortDescriptorWithKey:@"rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
     } else {
         return toSort;
     }

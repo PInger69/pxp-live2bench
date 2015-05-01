@@ -487,6 +487,15 @@
             [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: dict]];
             
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_EVENT_SERVER object:nil queue:nil usingBlock:^(NSNotification *note) {
+            Event *eventToDelete = note.object;
+            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
+                                   @"name": eventToDelete.name,
+                                   @"hid": eventToDelete.hid
+                                   }];
+            [self deleteEvent: dict];
+        }];
 
         
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];

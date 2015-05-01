@@ -52,7 +52,7 @@ static NSString *const kClientSecret = @"7h1YuOnofrjAesnOG1TOpj7W";
 }
 
 -(UIImage *)icon{
-    return [UIImage imageNamed:@"arrowButton.png"];
+    return [UIImage imageNamed:@"googleDriveIconHUD.png"];
 }
 
 -(UIImage *)selectedIcon{

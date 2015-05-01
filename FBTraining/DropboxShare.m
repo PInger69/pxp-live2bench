@@ -32,6 +32,7 @@
         
         self.restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
         self.restClient.delegate = self;
+        
 
     }
     return self;
@@ -48,17 +49,24 @@
 
 
 -(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController{
-    for (NSDictionary *tagDict in itemsToShare) {
-        (void)tagDict; // to suppress warning
-        // Write a file to the local documents directory
-        NSString *localDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-        NSString *filename = @"somename";
-        NSString *localPath = [localDir stringByAppendingPathComponent:filename];
+    if ([[DBSession sharedSession] isLinked]) {
+      
+        //[self.restClient createFolder:@"/Live2BenchNative/"];
+        for (NSDictionary *tagDict in itemsToShare) {
+            (void)tagDict; // to suppress warning
+            // Write a file to the local documents directory
+//          NSString *localDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+            NSString *filename = @"somename.mp4";
+            NSString *localPath = [tagDict objectForKey:@"mp4"];
 
         
-        // Upload file to Dropbox
-        NSString *destDir = @"/";
-        [self.restClient uploadFile:filename toPath:destDir withParentRev:nil fromPath:localPath];
+            // Upload file to Dropbox
+            NSString *destDir = @"/Live2BenchNative/";
+            destDir = @"/";
+            [self.restClient uploadFile:filename toPath:destDir withParentRev:nil fromPath:localPath];
+        }
+        
+        
     }
 }
 

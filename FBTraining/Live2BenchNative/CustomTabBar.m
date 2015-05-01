@@ -193,7 +193,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
                                   @"Clip View":@"ClipViewController",
                                   @"List View":@"ListViewController",
                                   @"Debug":@"DebuggingTabViewController"};
-    NSDictionary *nameToIndex = @{@"Calendar":@1, @"Injury":@2, @"Live2Bench":@3, @"My Clip":@6, @"Clip View":@4, @"List View":@5};
+   // NSDictionary *nameToIndex = @{@"Calendar":@1, @"Injury":@2, @"Live2Bench":@3, @"My Clip":@6, @"Clip View":@4, @"List View":@5};
 
     
     //if ([nameOfTab isEqualToString:@"ListView"]) {

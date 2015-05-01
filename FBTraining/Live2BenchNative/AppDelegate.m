@@ -49,7 +49,7 @@
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     if ([[DBSession sharedSession] handleOpenURL:url]) {
         if ([[DBSession sharedSession] isLinked]) {
-            //NSLog(@"App linked successfully!");
+            NSLog(@"App linked successfully!");
             // At this point you can start making API calls
         }
         return YES;
@@ -101,8 +101,8 @@
     
     // Set these variables before launching the app
     NSString* appKey = @"huc2enjbl496cq8";
-	NSString* appSecret = @"0w4addrpazk3p9n";
-	NSString *root = kDBRootDropbox; // Should be set to either kDBRootAppFolder or kDBRootDropbox
+    NSString* appSecret = @"0w4addrpazk3p9n";
+    NSString *root = kDBRootDropbox; // Should be set to either kDBRootAppFolder or kDBRootDropbox
 	// You can determine if you have App folder access or Full Dropbox along with your consumer key/secret
 	// from https://dropbox.com/developers/apps
 	

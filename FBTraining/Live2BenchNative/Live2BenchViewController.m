@@ -562,68 +562,68 @@ static void * eventContext      = &eventContext;
 -(void)restartPlayer
 {
     
-    [self.videoPlayer.view removeFromSuperview];
-    self.videoPlayer                        = nil;
-    self.videoPlayer                        = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-    self.videoPlayer.playerContext          = STRING_LIVE2BENCH_CONTEXT;
-
-    _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
-    _pip.isDragAble  = YES;
-    _pip.hidden      = YES;
-    _pip.muted       = YES;
-    _pip.dragBounds  = self.videoPlayer.view.frame;
-    [self.videoPlayer.view addSubview:_pip];
-    
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
-    
-    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
-    _pipController.context = STRING_LIVE2BENCH_CONTEXT;
-    
-    [_pipController addPip:_pip];
-    [_pipController viewDidLoad];
-    [self.view addSubview:_feedSwitch];
-
-    
-    _videoBarViewController.videoPlayer     = self.videoPlayer;
-    _pipController.videoPlayer              = self.videoPlayer;
-    _fullscreenViewController.player        = self.videoPlayer;
-
-    [self.videoPlayer.view addSubview:_pip];
-    [self.view addSubview:self.videoPlayer.view];
-    
+//    [self.videoPlayer.view removeFromSuperview];
+//    self.videoPlayer                        = nil;
+//    self.videoPlayer                        = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+//    self.videoPlayer.playerContext          = STRING_LIVE2BENCH_CONTEXT;
+//
+//    _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
+//    _pip.isDragAble  = YES;
+//    _pip.hidden      = YES;
+//    _pip.muted       = YES;
+//    _pip.dragBounds  = self.videoPlayer.view.frame;
+//    [self.videoPlayer.view addSubview:_pip];
+//    
+//    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
+//    
+//    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
+//    _pipController.context = STRING_LIVE2BENCH_CONTEXT;
+//    
+//    [_pipController addPip:_pip];
+//    [_pipController viewDidLoad];
+//    [self.view addSubview:_feedSwitch];
+//
+//    
+//    _videoBarViewController.videoPlayer     = self.videoPlayer;
+//    _pipController.videoPlayer              = self.videoPlayer;
+//    _fullscreenViewController.player        = self.videoPlayer;
+//
+//    [self.videoPlayer.view addSubview:_pip];
+//    [self.view addSubview:self.videoPlayer.view];
+//    
     [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-    [self.videoPlayer play];
-    
-    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
-    swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
-    swipeGesture.numberOfTouchesRequired = 3;
-    [self.videoPlayer.view addGestureRecognizer: swipeGesture];
-    [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
-    
-    
-    
-    
-    // Richard
-    
-    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
-    [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    //_videoBarViewController.tagMarkerController.arrayOfAllTags =
-    [self.view addSubview:_videoBarViewController.view];
-    
-//    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-//    _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
-//    [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
-//    [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
-//    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    //self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
-    
-    [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
-    // so get buttons are connected to full screen
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+//    [self.videoPlayer play];
+//    
+//    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
+//    swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
+//    swipeGesture.numberOfTouchesRequired = 3;
+//    [self.videoPlayer.view addGestureRecognizer: swipeGesture];
+//    [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
+//    
+//    
+//    
+//    
+//    // Richard
+//    
+//    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
+//    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
+//    [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+//    [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+//    //_videoBarViewController.tagMarkerController.arrayOfAllTags =
+//    [self.view addSubview:_videoBarViewController.view];
+//    
+////    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+////    _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
+////    [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
+////    [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
+////    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
+//    
+//    
+//    //self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
+//    
+//    [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
+//    // so get buttons are connected to full screen
+//    _tagButtonController.fullScreenViewController = _fullscreenViewController;
 
 }
 

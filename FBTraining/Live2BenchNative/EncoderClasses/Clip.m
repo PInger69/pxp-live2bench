@@ -94,6 +94,17 @@
     [self write];
 }
 
+-(NSArray *)videoFiles{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
+    NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
+    NSString *filePath = [path stringByAppendingPathComponent: [[_rawData objectForKey:@"fileNames"] firstObject]];
+    
+    NSArray *returningArray = @[filePath];
+    return returningArray;
+}
+
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

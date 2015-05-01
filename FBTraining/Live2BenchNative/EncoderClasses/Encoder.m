@@ -268,7 +268,12 @@
     cmd.tagData     = tData;
     cmd.timeStamp   = aTimeStamp;
     [self addToQueue:cmd];
-    if (queue.count == 1) {
+    int count =0;
+    for (NSArray * arrayinQueue in [queue allValues]) {
+        count += arrayinQueue.count;
+    }
+    
+    if (count == 1) {
         isWaitiing  = NO;
         [self runNextCommand]; // run command as soon as issued if there is non in the queue
     }
@@ -506,11 +511,12 @@
 
 -(void)deleteEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp{
     
-    NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
+   // NSString *jsonString                    = [Utility dictToJSON:tData];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/evtdelete/?name=%@&event=%@",self.ipAddress,[tData objectForKey:@"name"],[tData objectForKey:@"hid"]]  ];
+    
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    encoderConnection.connectionType        = MODIFY_TAG;
+    encoderConnection.connectionType        = DELETE_EVENT;
     encoderConnection.timeStamp             = aTimeStamp;
 
 }
@@ -736,6 +742,8 @@
         //NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
         
         [self eventTagsGetResponce:finishedData eventNameKey:extra];
+    }else if ([connectionType isEqualToString: DELETE_EVENT]){
+        [self deleteEventResponse: finishedData];
     }
     
     if (isAuthenticate && 1 && _isBuild && isTeamsGet && !_isReady){
@@ -942,6 +950,16 @@
     }
     
 }
+
+-(void)deleteEventResponse: (NSData *) data{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    
+    if (results){
+        NSLog( @"The results");
+        PXPLog(@"The event has been deleted %@" , results);
+    }
+    
+}
 -(void)camerasGetResponce:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
@@ -1020,6 +1038,7 @@
                     Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO];
 
                     
+                    
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
                         [pool setObject:anEvent forKey:anEvent.name];
@@ -1028,6 +1047,10 @@
                         
                     }else{
                         [pool setObject:anEvent forKey:anEvent.name];
+                    }
+                    
+                    if ([[anEvent.rawData objectForKey:@"deleted"] intValue] == 1) {
+                        [pool removeObjectForKey:anEvent.name];
                     }
                 }
             }
@@ -1085,11 +1108,10 @@
         thePriorityKey = [allKeys lastObject];
     }
     
-    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) lastObject];
-
+    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) objectAtIndex:0];
+    
     return nextObj;
 }
-
 /**
  *  this will clear all commands in the queue and cancel current command
  */

@@ -25,6 +25,7 @@
 @property (nonatomic,strong)            NSDictionary   * rawData;
 @property (nonatomic,strong)            NSString       * path;
 @property (nonatomic,strong)            NSString       * user;
+@property (nonatomic, readonly)         NSArray        * videoFiles;
 
 
 /**
