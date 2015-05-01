@@ -249,6 +249,7 @@ static void * eventContext      = &eventContext;
     } else if (_encoderManager.currentEvent == nil) { // CLIPs and playing back old events
         NSLog(@"%@", _encoderManager.currentEvent);
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:NO]; // TODO
         _tagButtonController.enabled = NO;

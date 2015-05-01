@@ -1405,7 +1405,7 @@ static void * builtContext          = &builtContext; // depricated?
     _currentEvent = aCurrentEvent;
     NSLog(@"%@", _currentEvent);
     
-    [self didChangeValueForKey:@"currentEvent"];
+    
     
     [typeCollector removeObject:@"none"]; // just incase
     [typeCollector removeObject:@""]; // just incase
@@ -1427,7 +1427,7 @@ static void * builtContext          = &builtContext; // depricated?
         [_eventTags setObject:all forKey:aCurrentEvent];
         
     }];
-
+    [self didChangeValueForKey:@"currentEvent"];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
 }
 
