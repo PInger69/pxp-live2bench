@@ -504,6 +504,16 @@
     encoderConnection.timeStamp             = aTimeStamp;
 }
 
+-(void)deleteEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp{
+    
+    NSString *jsonString                    = [Utility dictToJSON:tData];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = MODIFY_TAG;
+    encoderConnection.timeStamp             = aTimeStamp;
+
+}
 
 -(void)summaryGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
@@ -1012,12 +1022,13 @@
                     
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
+                        [pool setObject:anEvent forKey:anEvent.name];
+                        self.allEvents      = [pool copy];
                         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
-
+                        
+                    }else{
+                        [pool setObject:anEvent forKey:anEvent.name];
                     }
-                    
-
-                    [pool setObject:anEvent forKey:anEvent.name];
                 }
             }
             @catch (NSException *exception) {

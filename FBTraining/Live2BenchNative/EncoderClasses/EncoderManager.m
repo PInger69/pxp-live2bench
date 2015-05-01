@@ -1322,6 +1322,20 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
 }
+
+-(void)deleteEvent:(NSMutableDictionary *)data{
+
+    for (id <EncoderProtocol> aEncoder  in _authenticatedEncoders) {
+        [aEncoder issueCommand:DELETE_EVENT
+                      priority:10
+                  timeoutInSec:5
+                       tagData:data
+                     timeStamp:GET_NOW_TIME];
+    }
+    
+
+}
+
 // Getters and setters
 -(NSString*)currentEvent
 {
