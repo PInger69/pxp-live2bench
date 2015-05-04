@@ -1,3 +1,4 @@
+
 //
 //  LocalEncoder.m
 //  Live2BenchNative
@@ -113,7 +114,7 @@
             NSDictionary * dict = value;
             NSString * itemHid = [dict objectForKey:@"hid"];
             if (itemHid) {
-                Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES];
+                Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
                 anEvent.local   = YES;
                 anEvent.downloadedSources = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
@@ -618,7 +619,7 @@
     [aEvent.rawData writeToFile:plistNamePath atomically:YES];
     
     // make an instance of event in local
-    Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData isLocal:YES];
+    Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData isLocal:YES andlocalPath:self.localPath];
 //    anEvent.local   = YES;
     //anEvent.downloadedSources = [[self listDownloadSourcesFor:anEvent] mutableCopy];
     
