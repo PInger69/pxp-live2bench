@@ -113,7 +113,7 @@ SVSignalStatus signalStatus;
         LeaguePick              = [[TablePopoverController alloc]init];
         
         encoderHomeText         = [CustomLabel labelWithStyle:CLStyleOrange];
-        encoderHomeText.text    = @"Encoder is not available.";
+        encoderHomeText.text    = NSLocalizedString(@"Encoder is not available.",nil);
         
 //        __block SettingsViewController * weakSelf = self;
         __block UILabel * weakStateLable    =  encStateLabel;
@@ -137,13 +137,13 @@ SVSignalStatus signalStatus;
         
         observerForLostMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (weakMasterEncoder != nil){
-                weakHomeLable.text = @"Encoder is not available.";
+                weakHomeLable.text = NSLocalizedString(@"Encoder is not available.",nil);
                 [weakStateLable setHidden:YES];
                 
                 
                
             }
-            weakHomeLable.text = @"Encoder is not available.";
+            weakHomeLable.text = NSLocalizedString(@"Encoder is not available.",nil);
         }];
         
         
@@ -219,7 +219,7 @@ SVSignalStatus signalStatus;
     signalStrengthLabel.frame = CGRectMake(self.view.bounds.size.width - 150.0f, encoderHomeLabel.frame.origin.y, 70.0f, 55.0f);
     signalStrengthLabel.textAlignment = NSTextAlignmentRight;
     signalStrengthLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-    signalStrengthLabel.text = @"Signal:";
+    signalStrengthLabel.text = NSLocalizedString(@"Signal",nil);
     //    [scrollView addSubview:signalStrengthLabel];
     
     UIView *signalStrengthBG = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(signalStrengthLabel.frame) + 5.0f, CGRectGetMaxY(line1.frame) + 6.0f, 31.0f, 28.0f)];
@@ -486,7 +486,7 @@ SVSignalStatus signalStatus;
 -(void)onMasterFound:(NSNotification*)note
 {
     masterEncoder = encoderManager.masterEncoder;
-    encoderHomeText.text = @"Encoder Home";
+    encoderHomeText.text = NSLocalizedString(@"Encoder Home",nil);
     [encStateLabel setHidden:NO];
     [encoderHomeText setAlpha:1];
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
@@ -529,10 +529,10 @@ SVSignalStatus signalStatus;
             //        if([globals.CURRENT_ENC_STATUS isEqualToString:encStateReady] || [globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped])
         {
             CustomAlertView *alert = [[CustomAlertView alloc]
-                                      initWithTitle: @"myplayXplay"
-                                      message: @"Please select Home team, Away team and League to start the encoder"
+                                      initWithTitle: NSLocalizedString(@"myplayXplay",nil)
+                                      message: NSLocalizedString(@"Please select Home team, Away team and League to start the encoder",nil)
                                       delegate: nil
-                                      cancelButtonTitle:@"OK"
+                                      cancelButtonTitle:NSLocalizedString(@"OK",nil)
                                       otherButtonTitles:nil];
             [alert show];
             //            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
@@ -780,7 +780,7 @@ SVSignalStatus signalStatus;
     
     startButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
     
-    [startButton setTitle:@"Start" forState:UIControlStateNormal];
+    [startButton setTitle:NSLocalizedString(@"Start",nil)  forState:UIControlStateNormal];
     [startButton setTitleColor:[UIColor colorWithRed:57.0f/255.0f green:181.0f/255.0f blue:74.0f/255.0f alpha:1.0f] forState:UIControlStateNormal];
     [startButton setBackgroundImage:[UIImage imageNamed:@"GreenSettingsButton"] forState:UIControlStateNormal];
     [startButton setBackgroundImage:[UIImage imageNamed:@"GreenSettingsButtonSelect"] forState:UIControlStateHighlighted];
@@ -790,7 +790,7 @@ SVSignalStatus signalStatus;
     [firstEncButton addSubview:startButton];
     
     resumeButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
-    [resumeButton setTitle:@"Resume" forState:UIControlStateNormal];
+    [resumeButton setTitle:NSLocalizedString(@"Resume",nil) forState:UIControlStateNormal];
     [resumeButton setTitleColor:[UIColor colorWithRed:57.0f/255.0f green:181.0f/255.0f blue:74.0f/255.0f alpha:1.0f] forState:UIControlStateNormal];
     [resumeButton setBackgroundImage:[UIImage imageNamed:@"GreenSettingsButton"] forState:UIControlStateNormal];
     [resumeButton setBackgroundImage:[UIImage imageNamed:@"GreenSettingsButtonSelect"] forState:UIControlStateHighlighted];
@@ -805,7 +805,7 @@ SVSignalStatus signalStatus;
     [pauseButton setBackgroundImage:[UIImage imageNamed:@"BlueSettingsButtonSelect"] forState:UIControlStateHighlighted];
     [pauseButton setFrame: startButton.frame];
     pauseButton.autoresizingMask = startButton.autoresizingMask;
-    [pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
+    [pauseButton setTitle:NSLocalizedString(@"Pause",nil) forState:UIControlStateNormal];
     [pauseButton addTarget:self action:@selector(pauseEnc:) forControlEvents:UIControlEventTouchUpInside];
     [firstEncButton addSubview:pauseButton];
     
@@ -815,7 +815,7 @@ SVSignalStatus signalStatus;
     [shutdownButton setBackgroundImage:[UIImage imageNamed:@"BlueSettingsButtonSelect"] forState:UIControlStateHighlighted];
     [shutdownButton setFrame:secondEncButton.bounds];
     shutdownButton.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [shutdownButton setTitle:@"Shutdown" forState:UIControlStateNormal];
+    [shutdownButton setTitle:NSLocalizedString(@"Shutdown",nil)  forState:UIControlStateNormal];
     [shutdownButton addTarget:self action:@selector(shutdownEnc:) forControlEvents:UIControlEventTouchUpInside];
     [secondEncButton addSubview:shutdownButton];
     
@@ -826,7 +826,7 @@ SVSignalStatus signalStatus;
     [stopButton setBackgroundImage:[UIImage imageNamed:@"RedSettingsButtonSelect"] forState:UIControlStateHighlighted];
     [stopButton setFrame: shutdownButton.frame];
     stopButton.autoresizingMask = shutdownButton.autoresizingMask;
-    [stopButton setTitle:@"Stop" forState:UIControlStateNormal];
+    [stopButton setTitle:NSLocalizedString(@"Stop",nil) forState:UIControlStateNormal];
     [stopButton addTarget:self action:@selector(stopEnc:) forControlEvents:UIControlEventTouchUpInside];
     [secondEncButton addSubview:stopButton];
     
@@ -844,7 +844,7 @@ SVSignalStatus signalStatus;
     
     encHomeButton = [BorderlessButton buttonWithType:UIButtonTypeSystem];
     [encHomeButton setFrame:CGRectMake(0.0f, 5.0f, 140, 45)];
-    [encHomeButton setTitle:@"Encoder Home" forState:UIControlStateNormal];
+    [encHomeButton setTitle:NSLocalizedString(@"Encoder Home",nil) forState:UIControlStateNormal];
     [encHomeButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [encHomeButton addTarget:self action:@selector(openEncoderHomeInSafari:) forControlEvents:UIControlEventTouchUpInside];
     [encHomeButton setUserInteractionEnabled:YES];
@@ -1052,8 +1052,8 @@ SVSignalStatus signalStatus;
     
     
     if (!encoderManager.hasWiFi) {
-        encoderHomeText.text = @"Encoder is not available.";
-        [encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
+        encoderHomeText.text = NSLocalizedString(@"Encoder is not available.",nil);
+        [encHomeButton setTitle:NSLocalizedString(@"Encoder is not available.",nil) forState:UIControlStateSelected];
         [encStateLabel setText:@""];
         [encHomeButton removeFromSuperview];
         [encHomeButton setUserInteractionEnabled:NO];
@@ -1083,20 +1083,20 @@ SVSignalStatus signalStatus;
     if (!hasInternet) {
         CustomAlertView *errorView;
         errorView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"Please connect to the internet to log out."
+                     initWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                     message: NSLocalizedString(@"Please connect to the internet to log out.",nil)
                      delegate: self
-                     cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                     cancelButtonTitle:NSLocalizedString(@"OK",nil) otherButtonTitles:nil, nil];
         [errorView show];
         //        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:errorView];
     }else{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
         CustomAlertView *alertView;
         alertView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"If you log out, you need internet to log in. Are you sure you want to log out?"
+                     initWithTitle: NSLocalizedString(@"myplayXplay",nil)
+                     message: NSLocalizedString(@"If you log out, you need internet to log in. Are you sure you want to log out?",nil)
                      delegate: self
-                     cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
+                     cancelButtonTitle:NSLocalizedString(@"Yes",nil) otherButtonTitles:NSLocalizedString(@"Cancel",nil), nil];
         alertView.accessibilityValue = @"appLogOut";
         [alertView show];
         alertView.delegate = self;

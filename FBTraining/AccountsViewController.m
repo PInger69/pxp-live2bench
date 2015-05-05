@@ -71,7 +71,7 @@
     [fbAndEmailNote setNumberOfLines:2];
     [fbAndEmailNote setLineBreakMode:NSLineBreakByWordWrapping];
     [fbAndEmailNote setTextColor:[Utility colorWithHexString:@"#575757"]];
-    [fbAndEmailNote setText:@"Note: Login settings for Facebook and Email are available in your iPad's settings app."];
+    [fbAndEmailNote setText:NSLocalizedString(@"Note: Login settings for Facebook and Email are available in your iPad's settings app.",nil)];
     [self.view addSubview:fbAndEmailNote];
     
     //    CustomLabel *userLabel = [CustomLabel labelWithStyle:CLStyleBlack];

@@ -260,11 +260,11 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:@"myplayXplay"];
-    [alert setMessage:@"Are you sure you want to delete all these clips?"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete all these clips?",nil)];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
 }
 
@@ -448,11 +448,11 @@ static void * encoderTagContext = &encoderTagContext;
     
     CustomAlertView *alert = [[CustomAlertView alloc] init];
     alert.tag = kDeleteAlertTag;
-    [alert setTitle:@"myplayXplay"];
-    [alert setMessage:@"Are you sure you want to delete these tags?"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete these tags?",nil)];
     [alert setDelegate:self];
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
     
 }
@@ -747,11 +747,11 @@ static void * encoderTagContext = &encoderTagContext;
     NSIndexPath *pathToDelete = [_collectionView indexPathForCell: cell];
     self.editingIndexPath = pathToDelete;
     CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:@"myplayXplay"];
-    [alert setMessage:@"Are you sure you want to delete this tag?"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this tag?",nil)];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
     
     

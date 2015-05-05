@@ -76,7 +76,7 @@ static void * eventContext      = &eventContext;
 {
     self = [super init];
     if (self) {
-        [self setMainSectionTab:@"Live2Bench" imageName:@"live2BenchTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Live2Bench",nil) imageName:@"live2BenchTab"];
     }
     return self;
 }
@@ -376,7 +376,7 @@ static void * eventContext      = &eventContext;
     
     // multi button
     multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];
-    [multiButton setTitle:@"Multi" forState:UIControlStateNormal];
+    [multiButton setTitle:NSLocalizedString(@"Multi",nil) forState:UIControlStateNormal];
     [multiButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [multiButton addTarget:_pipController action:@selector(onButtonPressMulti:) forControlEvents:UIControlEventTouchUpInside];
     multiButton.layer.borderWidth = 1;
@@ -427,7 +427,7 @@ static void * eventContext      = &eventContext;
     
     if (_encoderManager.liveEventName == nil  && _encoderManager.currentEvent == nil){
         [self restartPlayer];
-        CustomAlertView * alert = [[CustomAlertView alloc]initWithTitle:@"Encoder Status" message:@"Encoder connection lost" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+        CustomAlertView * alert = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"Encoder Status",nil) message:NSLocalizedString(@"Encoder connection lost",nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ok",nil) otherButtonTitles:nil, nil];
         [[alert alertType:AlertAll] show];
         
         [multiButton setHidden:!([_encoderManager.feeds count]>1)];
