@@ -18,6 +18,11 @@
 
 // Progress bars
 
+//Welcome
+"Hardware" = "Hardware";
+"Tagging" = "Tagging";
+"Contact Us" = "Contact Us";
+
 // Settings popup
 "Wi-Fi" = "Wi-Fi";
 "Encoder Controls" = "Encoder Controls";
@@ -50,9 +55,9 @@
 "Delete All" = "Delete All";
 
 // List View Tab
-"Date" = "Date";
-"Tag Time" = "Tag Time";
-"Name" = "Name";
+    //"Date" = "Date";
+    //"Tag Time" = "Tag Time";
+    //"Name" = "Name";
 
 // My Clip Tab
 "Comment" = "Comment";
