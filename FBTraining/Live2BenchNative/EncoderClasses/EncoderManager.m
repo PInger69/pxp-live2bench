@@ -11,7 +11,7 @@
 #import "EncoderCommands.h"
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
-#import "EncoderManagerActionPack.h" // All actions are in here!
+#import "EncoderManagerActionPack.h" // All actions are in here!!
 #import "Downloader.h"
 #import "DownloadItem.h"
 #import "Event.h"
@@ -22,8 +22,6 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <ifaddrs.h>
 #import <arpa/inet.h>
-
-
 
 #import <SDWebImage/SDImageCache.h>
 
@@ -885,8 +883,6 @@ static void * builtContext          = &builtContext; // depricated?
     
     DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
     dItemBlock(dli);
-    //
-    //
     
 }
 

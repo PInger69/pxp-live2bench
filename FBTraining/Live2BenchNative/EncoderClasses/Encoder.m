@@ -938,6 +938,10 @@
             
             _event.tags =tagsDictionary;
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
+        } else  if (![[results objectForKey:@"success"]boolValue]) {
+            PXPLog(@"Encoder Error!");
+            PXPLog(@"  ajax: %@",@"gametags");
+            PXPLog(@"  reason: %@",results[@"msg"]);
         }
     }
     
