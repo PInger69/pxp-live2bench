@@ -213,31 +213,30 @@ NS_OPTIONS(NSInteger, style){
         } else {
             self.splitViewController.viewControllers = @[self, (UIViewController *)[settingsDictionary objectForKey:@"CustomViewController"]];
         }
-        return;
-    }
-    
-    //self.detailViewController.index = index;
-    //detailViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-    
-    self.detailViewController.settingsTableViewController = self;
-    self.detailViewController.indexPath = indexPath;
-    //self.detailViewController.arrayOfOptions = [settingsDictionary objectForKey:@"Setting Options"];
-    //self.detailViewController.arrayOfToggleOptions = [settingsDictionary objectForKey:@"Toggle Settings"];
-    //self.detailViewController.swipeableTableViewCell = (SwipeableTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    self.detailViewController.title =[settingsDictionary objectForKey:@"Setting Label"];
-    self.detailViewController.dataDictionary = self.dataArray[indexPath.row][@"DataDictionary"];
-    [self.detailViewController.tableView reloadData];
-    
-    
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        [self.splitViewController showDetailViewController: self.detailViewController sender:self];
     } else {
-        self.splitViewController.viewControllers = @[self, self.detailViewController];
+        
+        //self.detailViewController.index = index;
+        //detailViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+        
+        self.detailViewController.settingsTableViewController = self;
+        self.detailViewController.indexPath = indexPath;
+        //self.detailViewController.arrayOfOptions = [settingsDictionary objectForKey:@"Setting Options"];
+        //self.detailViewController.arrayOfToggleOptions = [settingsDictionary objectForKey:@"Toggle Settings"];
+        //self.detailViewController.swipeableTableViewCell = (SwipeableTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        self.detailViewController.title =[settingsDictionary objectForKey:@"Setting Label"];
+        self.detailViewController.dataDictionary = self.dataArray[indexPath.row][@"DataDictionary"];
+        [self.detailViewController.tableView reloadData];
+        
+        
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+            [self.splitViewController showDetailViewController: self.detailViewController sender:self];
+        } else {
+            self.splitViewController.viewControllers = @[self, self.detailViewController];
+        }
+        //[self.splitViewController showViewController: detailViewController sender: self];
+        //[self.navigationController pushViewController:detailViewController animated:YES];
+        
     }
-    //[self.splitViewController showViewController: detailViewController sender: self];
-    //[self.navigationController pushViewController:detailViewController animated:YES];
-    
-    
 }
 
 

@@ -24,6 +24,8 @@
 
 @interface SettingsPageViewController () //<SettingsTableDelegate>
 
+@property (strong, nonatomic) NSArray *defaultSettings;
+
 @property (strong, nonatomic) UISplitViewController *splitViewController;
 @property (strong, nonatomic) SettingsTableViewController *settingsTable;
 @property (strong, nonatomic) DetailViewController *detailViewController;
@@ -58,7 +60,6 @@ NS_OPTIONS(NSInteger, style){
         self.userCenter = appDel.userCenter;
         [self setMainSectionTab:NSLocalizedString(@"Settings",nil)  imageName:@"settingsButton"];
         
-        
         //UIColor *tagColor = [Utility colorWithHexString:colorString];
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -67,80 +68,85 @@ NS_OPTIONS(NSInteger, style){
         NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/Setting"];
         NSString *path = [dataPath stringByAppendingPathComponent: plistName];
         
+        //We need to define all of the default settings so that when the plist is loaded we can add any missing settings
+        
+        NSMutableDictionary *encoderControlsSetting =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Encoder Controls" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[SettingsViewController alloc]initWithAppDelegate:appDel]}];
+        
+        NSMutableDictionary *welcomeSetting =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Welcome" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[LogoViewController alloc]initWithAppDelegate:appDel]}];
+        
+        NSMutableDictionary *bitRateSetting =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Bit Rate" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[BitRateViewController alloc]initWithAppDelegate:appDel]}];
+        
+        NSMutableDictionary *screenMirroringSetting =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Screen Mirroring", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]}];
+        
+        NSMutableDictionary *toastObserverSetting =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: listOfToggles],@"DataDictionary":[NSMutableDictionary dictionaryWithDictionary:@{@"Setting Options":@[@"Download Complete", @"Tag Synchronized", @"Tag Received"], @"Toggle Settings":@[@1,@1,@1]}] }];
+        
+        NSMutableDictionary *alertsSetting =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar: listOfToggles] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                                                                                    @[@"Notification Alerts", @"Encoder Alerts", @"Device Alerts", @"Indecisive Alert"],
+                                                                                                                                                                                                                                                                @"Toggle Settings":
+                                                                                                                                                                                                                                                                    @[@1, @1, @1, @1]}] }];
+        
+        NSMutableDictionary *informationSetting =[NSMutableDictionary dictionaryWithDictionary: @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                                                                                         @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", @"Not Signed In"], @"WIFI Connection :", @"Eula :", @"Colour :"],
+                                                                                                                                                                                                                                                                     @"Function Buttons":
+                                                                                                                                                                                                                                                                         @[ @0, @0, @1, @0, @1, @0]
+                                                                                                                                                                                                                                                                     , @"Function Labels": @[@"Unknown", @"2.0.0", @"Logout", @"Not Connected", @"View", [@"Color-" stringByAppendingString:@"nil"]] }]}];
+        
+        NSMutableDictionary *accountsSetting = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Accounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
+                                                                                                                                                                                                                                                                  @[@"Dropbox",  @"GoogleDrive"],
+                                                                                                                                                                                                                                                              @"Function Buttons":
+                                                                                                                                                                                                                                                                  @[ @1, @1], @"Function Labels": @[@"Link", @"Link"] }]}];
+        
+        NSMutableDictionary *languagesSetting = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Languages", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
+                                                                                                                                                                                                                                                              @[@"English"], @"Index":
+                                                                                                                                                                                                                                                              [NSNumber numberWithInt:0]} ] }];
+        
+        
+        NSMutableDictionary *tabsSetting =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Tabs", @"OptionChar":  [NSNumber numberWithChar: listOfToggles], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{ @"Setting Options":
+                                                                                                                                                                                                                                                         @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip"],
+                                                                                                                                                                                                                                                     @"Toggle Settings":
+                                                                                                                                                                                                                                                         @[@1, @1, @1, @1, @1, @1]}] }];
+        
+        NSMutableDictionary *logSetting =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Log" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[PxpLogViewController alloc]initWithAppDelegate:appDel]}];
+        
+        self.defaultSettings = @[
+                                 encoderControlsSetting,
+                                 welcomeSetting,
+                                 bitRateSetting,
+                                 screenMirroringSetting,
+                                 toastObserverSetting,
+                                 alertsSetting,
+                                 informationSetting,
+                                 accountsSetting,
+                                 languagesSetting,
+                                 tabsSetting,
+                                 logSetting,
+                                 ];
+        
+        // We initialize the setting array with the default settings first to account for any new settings
+        self.settingsArray = [NSMutableArray arrayWithArray:self.defaultSettings];
+        
 
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
 
             NSDictionary *settingDictionary = [[NSDictionary alloc]initWithContentsOfFile:path];
+            
+            [self loadSettingsFromArray:settingDictionary[@"SettingsArray"]];
+            
+             /*
             self.settingsArray = settingDictionary[@"SettingsArray"];
             for (NSMutableDictionary *setting in self.settingsArray) {
+                
+                // extract setting information
+                NSString *label = setting[@"SettingLabel"];
+                NSInteger optionType = [setting[@"OptionChar"] integerValue];
+                
                 if ([(NSNumber *)setting[@"OptionChar"] intValue] & customViewController) {
                     setting[@"CustomViewController"] = [[NSClassFromString(setting[@"CustomViewController"]) alloc]  initWithAppDelegate: appDel];
                 }
             }
-        }else{
-            NSMutableDictionary *setting1 =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Encoder Controls" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[SettingsViewController alloc]initWithAppDelegate:appDel]}];
-            
-            NSMutableDictionary *setting2 =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Welcome" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[LogoViewController alloc]initWithAppDelegate:appDel]}];
-            
-            NSMutableDictionary *setting11 =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Bit Rate" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[BitRateViewController alloc]initWithAppDelegate:appDel]}];
-
-            
-            NSMutableDictionary *setting3 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Screen Mirroring", @"OptionChar": [NSNumber numberWithChar:toggleIsThere|toggleIsOn]}];
-            
-            NSMutableDictionary *setting4 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Toast Observer", @"OptionChar":  [NSNumber numberWithChar: listOfToggles],@"DataDictionary":[NSMutableDictionary dictionaryWithDictionary:@{@"Setting Options":@[@"Download Complete", @"Tag Synchronized", @"Tag Received"], @"Toggle Settings":@[@1,@1,@1]}] }];
-            
-            NSMutableDictionary *setting5 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Alerts", @"OptionChar":  [NSNumber numberWithChar: listOfToggles] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                                                                                   @[@"Notification Alerts", @"Encoder Alerts", @"Device Alerts", @"Indecisive Alert"],
-                                                                                                                                                                                                                                                               @"Toggle Settings":
-                                                                                                                                                                                                                                                                   @[@1, @1, @1, @1]}] }];
-            
-            
-            NSMutableDictionary *setting6 =[NSMutableDictionary dictionaryWithDictionary: @{ @"SettingLabel" : @"Information", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                                                                                   @[@"App Version :", @"System Version :", [NSString stringWithFormat:@"User :  %@", @"Not Signed In"], @"WIFI Connection :", @"Eula :", @"Colour :"],
-                                                                                                                                                                                                                                                               @"Function Buttons":
-                                                                                                                                                                                                                                                                   @[ @0, @0, @1, @0, @1, @0]
-                                                                                                                                                                                                                                                               , @"Function Labels": @[@"Unknown", @"2.0.0", @"Logout", @"Not Connected", @"View", [@"Color-" stringByAppendingString:@"nil"]] }]}];
-            
-            NSMutableDictionary *setting7 = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Accounts", @"OptionChar":  [NSNumber numberWithChar:listIsOn], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{       @"Setting Options":
-                                                                                                                                                                                                                                                                @[@"Dropbox",  @"GoogleDrive"],
-                                                                                                                                                                                                                                                            @"Function Buttons":
-                                                                                                                                                                                                                                                                @[ @1, @1], @"Function Labels": @[@"Link", @"Link"] }]}];
-            
-            NSMutableDictionary *setting8 = [NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Languages", @"OptionChar":  [NSNumber numberWithChar:listIsOn] , @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{@"Setting Options":
-                                                                                                                                                                                                                                                          @[@"English"], @"Index":
-                                                                                                                                                                                                                                                          [NSNumber numberWithInt:0]} ] }];
-            
-            NSMutableDictionary *setting9 =[NSMutableDictionary dictionaryWithDictionary:@{ @"SettingLabel" : @"Tabs", @"OptionChar":  [NSNumber numberWithChar: listOfToggles], @"DataDictionary": [NSMutableDictionary dictionaryWithDictionary: @{ @"Setting Options":
-                                                                                                                                                                                                                                                          @[@"Calendar", @"Injury", @"Live2Bench", @"Clip View", @"List View", @"My Clip"],
-                                                                                                                                                                                                                                                      @"Toggle Settings":
-                                                                                                                                                                                                                                                          @[ @1, @1, @1, @1, @1, @1, @1]}] }];
-            
-            NSMutableDictionary *setting10 =[NSMutableDictionary dictionaryWithDictionary:@{@"SettingLabel": @"Log" , @"OptionChar" :[NSNumber numberWithChar:customViewController], @"CustomViewController" : [[PxpLogViewController alloc]initWithAppDelegate:appDel]}];
-            
-            self.settingsArray = [NSMutableArray arrayWithArray:@[ setting1,
-                                                                   
-                                                                   setting2,
-                                                                   
-                                                                   setting11,
-                                                                   
-                                                                   setting3,
-                                                                   
-                                                                   setting4,
-                                                                   
-                                                                   setting5,
-                                                                   
-                                                                   setting6,
-                                                                   
-                                                                   setting7,
-                                                                   
-                                                                   setting8,
-                                                                   
-                                                                   setting9,
-                                                                   
-                                                                   setting10
-                                                                   ]];
-            
+              */
         }
+        
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewLicense:) name:@"Setting - Eula :" object:nil];
         _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];
         //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLogout:) name:userName object:nil];
@@ -157,6 +163,40 @@ NS_OPTIONS(NSInteger, style){
         
     }
     return self;
+}
+
+-(void)loadSettingsFromArray:(NSArray *)settingsArray {
+    NSMutableDictionary *availableSettings = [NSMutableDictionary dictionary];
+    for (NSMutableDictionary *setting in self.settingsArray) {
+        availableSettings[setting[@"SettingLabel"]] = setting;
+    }
+    
+    for (NSMutableDictionary *loadSetting in settingsArray) {
+        
+        // it must be in the defaults for it to be extracted
+        NSMutableDictionary *currentSetting;
+        if ((currentSetting = [availableSettings objectForKey:loadSetting[@"SettingLabel"]])) {
+            
+            NSInteger currentOption = [currentSetting[@"OptionChar"] integerValue];
+            NSInteger loadOption = [loadSetting[@"OptionChar"] integerValue];
+            
+            // option type must be identical to be extracted
+            if (currentOption == loadOption) {
+                
+                NSArray *currentSettingOptions = currentSetting[@"DataDictionary"][@"Setting Options"];
+                NSArray *loadSettingOptions = loadSetting[@"DataDictionary"][@"Setting Options"];
+                
+                if (loadOption & listOfToggles) {
+                    for (NSUInteger i = 0; i < currentSettingOptions.count && i < loadSettingOptions.count; i++) {
+                        if ([currentSettingOptions[i] isEqualToString:loadSettingOptions[i]]) {
+                            currentSetting[@"DataDictionary"][@"Toggle Settings"] = loadSetting[@"DataDictionary"][@"Toggle Settings"];
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
 }
 
 -(void)refreshSettings{
