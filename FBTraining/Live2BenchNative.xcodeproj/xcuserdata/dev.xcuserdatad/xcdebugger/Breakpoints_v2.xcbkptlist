@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "451928557.64514"
+            timestampString = "452531989.997496"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1178"
-            endingLineNumber = "1178"
+            startingLineNumber = "1174"
+            endingLineNumber = "1174"
             landmarkName = "-createTeleTag:isDuration:"
             landmarkType = "5">
          </BreakpointContent>
@@ -132,11 +132,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "452122758.157155"
+            timestampString = "452531989.997496"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1336"
-            endingLineNumber = "1336"
+            startingLineNumber = "1332"
+            endingLineNumber = "1332"
             landmarkName = "-deleteEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -164,11 +164,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "452122758.157155"
+            timestampString = "452531989.997496"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1368"
-            endingLineNumber = "1368"
+            startingLineNumber = "1364"
+            endingLineNumber = "1364"
             landmarkName = "-setCurrentEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -180,11 +180,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "452122758.157155"
+            timestampString = "452531989.997496"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1365"
-            endingLineNumber = "1365"
+            startingLineNumber = "1361"
+            endingLineNumber = "1361"
             landmarkName = "-setCurrentEvent:"
             landmarkType = "5">
          </BreakpointContent>
