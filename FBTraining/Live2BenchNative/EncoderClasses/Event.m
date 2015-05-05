@@ -10,7 +10,9 @@
 #import "Feed.h"
 
 
-@implementation Event
+@implementation Event {
+    NSString *localPath;
+}
 
 @synthesize name        = _name;
 @synthesize eventType   = _eventType;
@@ -27,11 +29,11 @@
 
 @synthesize downloadedSources       = _downloadedSources;
 
-- (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal
+- (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
     self = [super init];
     if (self) {
-
+        
         _rawData            = data;
         _live               = (_rawData[@"live"] || _rawData[@"live_2"])? YES:NO;
         _name               = [_rawData objectForKey:@"name"];
@@ -40,7 +42,8 @@
         _datapath           = [_rawData objectForKey:@"datapath"];
         _date               = [_rawData objectForKey:@"date"];
         _mp4s               = [self buildMP4s:_rawData];
-//        _feeds              = [self buildFeeds:_rawData];
+        localPath           = path;
+        //        _feeds              = [self buildFeeds:_rawData];
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
         _downloadedSources  = [NSMutableArray array];
@@ -86,7 +89,7 @@
 {
     NSString            * toypKey   = (isLive)?@"live_2":@"mp4_2";
     NSMutableDictionary * tempDict  = [[NSMutableDictionary alloc]init];
-
+    
     // this is a check for the new encoder vs the old
     if ([aDict[toypKey] isKindOfClass:[NSDictionary class]]) {
         
@@ -94,8 +97,10 @@
         {
             NSDictionary * vidDict      = aDict[toypKey];
             NSDictionary * qualities    = [vidDict objectForKey:key];
+            NSString *filePath = [[[localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
             
-            Feed * createdFeed = (isLocal)? [[Feed alloc]initWithFileURL:qualities[@"hq"]] : [[Feed alloc] initWithURLDict:qualities];
+            Feed * createdFeed = (isLocal)? [[Feed alloc]initWithFileURL:filePath] : [[Feed alloc] initWithURLDict:qualities];
+            
             createdFeed.sourceName = key;
             if (self.live){
                 createdFeed.type = FEED_TYPE_LIVE;
@@ -104,11 +109,11 @@
             } else {
                 createdFeed.type = FEED_TYPE_ENCODER;
             }
-                
+            
             
             [tempDict setObject:createdFeed forKey:key];
         }
-
+        
     } else { // old encoder
         Feed * theFeed;
         if (aDict[@"live"]) { // This is for backwards compatibility
@@ -205,3 +210,4 @@
 
 
 @end
+

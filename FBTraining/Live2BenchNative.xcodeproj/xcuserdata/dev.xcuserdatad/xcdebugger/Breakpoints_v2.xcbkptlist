@@ -112,22 +112,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Live2BenchNative/Live2BenchViewController.m"
-            timestampString = "452100809.880633"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "-initWithAppDelegate:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -153,23 +137,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1336"
             endingLineNumber = "1336"
-            landmarkName = "-setCurrentEvent:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "452101212.309686"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "606"
-            endingLineNumber = "606"
-            landmarkName = "-masterHasLive:"
+            landmarkName = "-deleteEvent:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -244,11 +212,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "452122758.157155"
+            timestampString = "452469096.546429"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "979"
-            endingLineNumber = "979"
+            startingLineNumber = "983"
+            endingLineNumber = "983"
             landmarkName = "-resumeResponce:"
             landmarkType = "5">
          </BreakpointContent>
@@ -260,27 +228,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "452122758.157155"
+            timestampString = "452469096.546429"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1004"
-            endingLineNumber = "1004"
-            landmarkName = "-getAllEventsResponse:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "452122758.157155"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1011"
-            endingLineNumber = "1011"
+            startingLineNumber = "1008"
+            endingLineNumber = "1008"
             landmarkName = "-getAllEventsResponse:"
             landmarkType = "5">
          </BreakpointContent>
@@ -292,11 +244,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "452122758.157155"
+            timestampString = "452469096.546429"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1025"
-            endingLineNumber = "1025"
+            startingLineNumber = "1029"
+            endingLineNumber = "1029"
             landmarkName = "-getAllEventsResponse:"
             landmarkType = "5">
          </BreakpointContent>

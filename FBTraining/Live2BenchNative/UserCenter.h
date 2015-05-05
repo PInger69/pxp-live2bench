@@ -18,7 +18,6 @@
 @property (nonatomic,assign) BOOL                   isLoggedIn;
 @property (nonatomic,assign) BOOL                   isEULA;
 
-
 @property (nonatomic,strong) NSString               * customerID;
 @property (nonatomic,strong) NSString               * customerAuthorization;
 @property (nonatomic,strong) NSString               * customerEmail;

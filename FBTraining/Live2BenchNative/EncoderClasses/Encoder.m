@@ -938,6 +938,10 @@
             
             _event.tags =tagsDictionary;
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
+        } else  if (![[results objectForKey:@"success"]boolValue]) {
+            PXPLog(@"Encoder Error!");
+            PXPLog(@"  ajax: %@",@"gametags");
+            PXPLog(@"  reason: %@",results[@"msg"]);
         }
     }
     
@@ -1017,7 +1021,7 @@
                 
                     // make event with the data
                   
-                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO];
+                    Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
 
                     
                     if (anEvent.live){ // live event FOUND!
@@ -1085,7 +1089,7 @@
         thePriorityKey = [allKeys lastObject];
     }
     
-    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) lastObject];
+    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) objectAtIndex:0];
 
     return nextObj;
 }
