@@ -19,6 +19,22 @@
 // Progress bars
 
 // Settings popup
+"Wi-Fi" = "Wi-Fi";
+"Encoder Controls" = "Encoder Controls";
+"DropBox" = "DropBox";
+"Unlink" = "Unlink";
+"Link" = "Link";
+
+//Bit Rate
+"Encoder Statuses" = "Encoder Statuses";
+
+// Information
+"App Version" = "App Version";
+"System Version" = "System Version";
+"User" = "User";
+"WIFI Connection" = "WIFI Connection";
+"Logout" = "Logout";
+"View Eula" = "View Eula";
 
 // Welcome Tab
 // Calendar Tab
@@ -28,6 +44,19 @@
 "Save"       =   "Save";
 "Close"      =   "Close";
 "Live"       =   "Live";
+
 // Clip View Tab
+"Filter" = "Filter";
+"Delete All" = "Delete All";
+
 // List View Tab
+"Date" = "Date";
+"Tag Time" = "Tag Time";
+"Name" = "Name";
+
 // My Clip Tab
+"Comment" = "Comment";
+"Date" = "Date";
+"Tag Time" = "Tag Time";
+"Name" = "Name";
+"Rating" = "Rating";

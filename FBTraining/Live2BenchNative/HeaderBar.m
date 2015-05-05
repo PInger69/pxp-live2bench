@@ -63,11 +63,11 @@
 {
     self.backgroundColor = [UIColor lightGrayColor];
     
-    [self addSubview:[self makeLabel:@"Comment"  xPosition:5]];
-    [self addSubview:[self makeLabel:@"Date"     xPosition:555]];
-    [self addSubview:[self makeLabel:@"Tag Time" xPosition:690]];
-    [self addSubview:[self makeLabel:@"Name"     xPosition:795]];
-    [self addSubview:[self makeLabel:@"Rating"   xPosition:920]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Comment", nil)  xPosition:5]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Date", nil)  xPosition:555]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Tag Time", nil)  xPosition:690]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Name", nil)   xPosition:795]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Rating", nil)   xPosition:920]];
     
     float sbh       = 18.0f;
     float sbhSize   = 12.0f;

@@ -235,7 +235,7 @@ static void * encoderTagContext = &encoderTagContext;
     self.deleteButton = [[UIButton alloc] init];
     self.deleteButton.backgroundColor = [UIColor redColor];
     [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
-    [self.deleteButton setTitle: @"Delete All" forState: UIControlStateNormal];
+    [self.deleteButton setTitle: NSLocalizedString(@"Delete All", nil) forState: UIControlStateNormal];
     [self.deleteButton.titleLabel setTextColor:[UIColor whiteColor]];
     [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -244,7 +244,7 @@ static void * encoderTagContext = &encoderTagContext;
     [self.view addSubview: self.deleteButton];
     
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
-    [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [self.filterButton setTitle:NSLocalizedString(@"Filter", nil) forState:UIControlStateNormal];
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];

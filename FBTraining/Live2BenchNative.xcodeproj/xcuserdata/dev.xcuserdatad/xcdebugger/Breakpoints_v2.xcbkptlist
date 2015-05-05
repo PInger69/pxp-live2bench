@@ -105,7 +105,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "476"
             endingLineNumber = "476"
-            landmarkName = "-modifyTag:timeStamp:"
+            landmarkName = "-makeTeleTag:timeStamp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -249,7 +249,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "979"
             endingLineNumber = "979"
-            landmarkName = "-getAllEventsResponse:"
+            landmarkName = "-resumeResponce:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

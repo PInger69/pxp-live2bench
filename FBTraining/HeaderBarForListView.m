@@ -38,9 +38,9 @@
     self.backgroundColor = [UIColor lightGrayColor];
     
     //[self addSubview:[self makeLabel:@"Comment"  xPosition:5]];
-    [self addSubview:[self makeLabel:@"Date"     xPosition:55]];
-    [self addSubview:[self makeLabel:@"Tag Time" xPosition:190]];
-    [self addSubview:[self makeLabel:@"Name"     xPosition:295]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Date", nil)     xPosition:55]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Tag Time", nil) xPosition:190]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Name", nil)     xPosition:295]];
     
     float sbh       = 18.0f;
     float sbhSize   = 12.0f;

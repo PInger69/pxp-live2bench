@@ -630,7 +630,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "648"
             endingLineNumber = "648"
-            landmarkName = "-startEvent:timeStamp:"
+            landmarkName = "-resumeEvent:timeStamp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1556,7 +1556,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "883"
             endingLineNumber = "883"
-            landmarkName = "-modTagResponce:"
+            landmarkName = "-teamsResponse:"
             landmarkType = "5">
             <Actions>
                <BreakpointActionProxy

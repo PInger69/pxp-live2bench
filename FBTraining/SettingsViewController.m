@@ -167,12 +167,12 @@ SVSignalStatus signalStatus;
     [self.view addSubview:scrollView];
     
     wifi = [[UILabel alloc]initWithFrame:CGRectMake(20.0f, 86.0f, 300.0f, 23.0f)];
-    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",[Utility myWifiName] ];
+    wifi.text =[NSString stringWithFormat: @"%@: %@", NSLocalizedString(@"Wi-Fi", nil), [Utility myWifiName] ];
     [scrollView addSubview:wifi];
     
     CustomLabel *encoderControlsLabel = [CustomLabel labelWithStyle:CLStyleBlackHeader];
     encoderControlsLabel.frame = CGRectMake(20.0f, 20.0f, 200.0f, 23.0f);
-    encoderControlsLabel.text = @"Encoder Controls";
+    encoderControlsLabel.text = NSLocalizedString(@"Encoder Controls", nil);
     //    [scrollView addSubview:encoderControlsLabel];
     //
     //    CustomLabel *versionLabel = [CustomLabel labelWithStyle:CLStyleBlack];
@@ -332,7 +332,7 @@ SVSignalStatus signalStatus;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    wifi.text =[NSString stringWithFormat: @"Wi-Fi: %@",[Utility myWifiName] ];
+    wifi.text =[NSString stringWithFormat: @"%@: %@", NSLocalizedString(@"Wi-Fi", nil), [Utility myWifiName] ];
     [super viewWillAppear:animated];
     
     [self setButtonImagesAndLabels];
@@ -945,7 +945,7 @@ SVSignalStatus signalStatus;
 
 - (void)restClient:(DBRestClient*)client loadedAccountInfo:(DBAccountInfo*)info
 {
-    [dropBoxLabel setTitle:[NSString stringWithFormat:@"DropBox: %@",[info displayName]] forState:UIControlStateNormal];
+    [dropBoxLabel setTitle:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"DropBox", nil), [info displayName]] forState:UIControlStateNormal];
 }
 
 
@@ -956,7 +956,7 @@ SVSignalStatus signalStatus;
         [self restClient];
         [updateDBLabelTimer invalidate];
         updateDBLabelTimer =nil;
-        [dropboxLogout setTitle:@"Unlink" forState:UIControlStateNormal];
+        [dropboxLogout setTitle:NSLocalizedString(@"Unlink", nil) forState:UIControlStateNormal];
         
         [restClient loadAccountInfo];
     }
@@ -976,8 +976,8 @@ SVSignalStatus signalStatus;
         if ([[DBSession sharedSession] isLinked]) {
             [[DBSession sharedSession] unlinkAll];
         }
-        [b setTitle:@"Link" forState:UIControlStateNormal];
-        [dropBoxLabel setTitle:@"DropBox" forState:UIControlStateNormal];
+        [b setTitle:NSLocalizedString(@"Link", nil) forState:UIControlStateNormal];
+        [dropBoxLabel setTitle:NSLocalizedString(@"DropBox", nil) forState:UIControlStateNormal];
         
     }else{
         if (![[DBSession sharedSession] isLinked]) {
