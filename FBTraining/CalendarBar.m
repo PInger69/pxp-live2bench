@@ -34,13 +34,13 @@
         
         if (index == 1) {
             UIButton *game = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
-            [game setTitle:@"Recent Games" forState:UIControlStateNormal];
+            [game setTitle:NSLocalizedString(@"Recent Games",nil) forState:UIControlStateNormal];
             UIButton *date = [[UIButton alloc] initWithFrame:CGRectMake(300, 0, 180, 50)];
-            [date setTitle:@"Date" forState:UIControlStateNormal];
+            [date setTitle:NSLocalizedString(@"Date",nil) forState:UIControlStateNormal];
             UIButton *download = [[UIButton alloc] initWithFrame:CGRectMake(480, 0, 170, 50)];
-            [download setTitle:@"Download" forState:UIControlStateNormal];
+            [download setTitle:NSLocalizedString(@"Download",nil) forState:UIControlStateNormal];
             UIButton *open = [[UIButton alloc] initWithFrame:CGRectMake(650, 0, 150, 50)];
-            [open setTitle:@"Open" forState:UIControlStateNormal];
+            [open setTitle:NSLocalizedString(@"Open",nil) forState:UIControlStateNormal];
             
             self.arrayOfButtonsInBar = [NSMutableArray arrayWithObjects:game, date, download, open, nil];
             for (UIButton *button in self.arrayOfButtonsInBar) {
@@ -58,11 +58,11 @@
             }
         } else {
             UIButton *game = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 380, 50)];
-            [game setTitle:@"Previous Games" forState:UIControlStateNormal];
+            [game setTitle:NSLocalizedString(@"Previous Games",nil) forState:UIControlStateNormal];
             UIButton *download = [[UIButton alloc] initWithFrame:CGRectMake(380, 0, 280, 50)];
-            [download setTitle:@"Download" forState:UIControlStateNormal];
+            [download setTitle:NSLocalizedString(@"Download",nil) forState:UIControlStateNormal];
             UIButton *open = [[UIButton alloc] initWithFrame:CGRectMake(660, 0, 140, 50)];
-            [open setTitle:@"Open" forState:UIControlStateNormal];
+            [open setTitle:NSLocalizedString(@"Open",nil) forState:UIControlStateNormal];
             
             self.arrayOfButtonsInBar = [NSMutableArray arrayWithObjects:game, download, open, nil];
             for (UIButton *button in self.arrayOfButtonsInBar) {

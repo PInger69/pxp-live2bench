@@ -38,7 +38,7 @@ static CGFloat const kBounceValue = 15.0f;
     self.myContentView = anExtraView;
     
     self.deleteButton = [[UIButton alloc] init];
-    [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
+    [self.deleteButton setTitle:NSLocalizedString(@"Delete",nil) forState:UIControlStateNormal];
     [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     [self.deleteButton setBackgroundColor:[UIColor redColor]];
@@ -46,7 +46,7 @@ static CGFloat const kBounceValue = 15.0f;
     [self.deleteButton addTarget:self action:@selector(deleteButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     self.shareButton = [[UIButton alloc] init];
-    [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
+    [self.shareButton setTitle:NSLocalizedString(@"Share",nil) forState:UIControlStateNormal];
     [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.shareButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     [self.shareButton setBackgroundColor:PRIMARY_APP_COLOR];

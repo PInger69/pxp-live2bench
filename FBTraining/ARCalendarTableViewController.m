@@ -385,15 +385,15 @@
         Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         alert.type = AlertImportant;
-        [alert setTitle:@"myplayXplay"];
-        [alert setMessage:@"Are you sure you want to delete this Event?"];
+        [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+        [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this Event?",nil)];
         if ((localCounterpart && localCounterpart.downloadedSources.count > 0) || event.downloadedSources.count > 0) {
-            [alert addButtonWithTitle:@"Yes(From server and local device)"];
-            [alert addButtonWithTitle:@"Yes(Only local)"];
-            [alert addButtonWithTitle:@"No"];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server and local device)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(Only local)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         } else {
-            [alert addButtonWithTitle:@"Yes(From server)"];
-            [alert addButtonWithTitle:@"No"];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         }
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert display];

@@ -248,13 +248,13 @@
 #pragma mark - Deletion Methods
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:@"myplayXplay"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
     alert.type = AlertImportant;
-    [alert setMessage:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]];
+    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
     //[alert addButtonWithTitle:@"Yes(From server and local device)"];
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
 }
 

@@ -74,9 +74,9 @@ static void * bitrateContext         = &bitrateContext;
     if (context == bitrateContext){
         double val = ((Encoder*) object).bitrate;
         [self setBackgroundColorBasedOnRate:val];
-        [self.statusLabel setText: [NSString stringWithFormat:@"Status:  %@", encoder.statusAsString ]];
-        [self.rateLabel setText:[NSString stringWithFormat:@"Rate:  %0.4f", val ]];
-        [self.camerasLabel setText:[NSString stringWithFormat:@"Cameras:  %i", encoder.cameraCount ]];
+        [self.statusLabel setText: [NSString stringWithFormat:@"%@:  %@", NSLocalizedString(@"Status",nil),encoder.statusAsString ]];
+        [self.rateLabel setText:[NSString stringWithFormat:@"%@:  %0.4f", NSLocalizedString(@"Rate",nil),val ]];
+        [self.camerasLabel setText:[NSString stringWithFormat:@"%@:  %i",NSLocalizedString(@"Cameras",nil) ,encoder.cameraCount ]];
     }
 }
 
@@ -84,10 +84,10 @@ static void * bitrateContext         = &bitrateContext;
 -(void)setupView{
     self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, -20, 100, 20)];
     self.nameLabel.textColor = [UIColor blueColor];
-    [self.nameLabel setText: [NSString stringWithFormat:@"Name:  %@", encoder.name ]];
+    [self.nameLabel setText: [NSString stringWithFormat:@"%@:  %@", NSLocalizedString(@"Name",nil), encoder.name ]];
     
     self.statusLabel = [[UILabel alloc]initWithFrame:CGRectMake(130, -20, 100, 20)];
-    [self.statusLabel setText: [NSString stringWithFormat:@"Status:  %@", encoder.statusAsString ]];
+    [self.statusLabel setText: [NSString stringWithFormat:@"%@:  %@", NSLocalizedString(@"Status",nil), encoder.statusAsString ]];
     
     self.rateLabel = [[UILabel alloc] initWithFrame: CGRectMake(260, -20, 120, 20)];
     

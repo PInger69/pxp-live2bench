@@ -89,13 +89,13 @@ EncoderManager      * encoderManager;
     UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     UIBarButtonItem *fix = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     fix.width = 5.0f;
-    hardwareTab = [[UIBarButtonItem alloc] initWithTitle:@"Hardware" style:UIBarButtonItemStylePlain target:self action:@selector(selectTab:)];
+    hardwareTab = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Hardware",nil) style:UIBarButtonItemStylePlain target:self action:@selector(selectTab:)];
     hardwareTab.tag = 0;
     [hardwareTab setTitleTextAttributes:tabSelectAttributes forState:UIControlStateNormal];
-    taggingTab = [[UIBarButtonItem alloc] initWithTitle:@"Tagging" style:UIBarButtonItemStylePlain target:self action:@selector(selectTab:)];
+    taggingTab = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Tagging",nil)  style:UIBarButtonItemStylePlain target:self action:@selector(selectTab:)];
     taggingTab.tag = 1;
     [taggingTab setTitleTextAttributes:tabAttributes forState:UIControlStateNormal];
-    contactTab = [[UIBarButtonItem alloc] initWithTitle:@"Contact Us" style:UIBarButtonItemStylePlain target:self action:@selector(selectTab:)];
+    contactTab = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Contact Us",nil) style:UIBarButtonItemStylePlain target:self action:@selector(selectTab:)];
     contactTab.tag = 2;
     [contactTab setTitleTextAttributes:tabAttributes forState:UIControlStateNormal];
     
@@ -136,7 +136,7 @@ EncoderManager      * encoderManager;
     [self.tabContentTitle.titleLabel setShadowOffset:CGSizeMake(10.0f, 10.0f)];
     [self.tabContentTitle.titleLabel setShadowColor:[UIColor whiteColor]];
     self.tabContentTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    [self.tabContentTitle setTitle:@"Hardware" forState:UIControlStateNormal];
+    [self.tabContentTitle setTitle:NSLocalizedString(@"Hardware",nil) forState:UIControlStateNormal];
     [self.tabContentTitle setTitleEdgeInsets:UIEdgeInsetsMake(0.0f, 20.0f, 0.0f, 0.0f)];
     [self.tabContentTitle addTarget:self action:@selector(goToTabLink:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabContentTitle setFont:[UIFont lightFontOfSize:100.0f]];
@@ -185,7 +185,7 @@ EncoderManager      * encoderManager;
     [self.tabContentLink setImage:[UIImage imageNamed:@"youtube"] forState:UIControlStateNormal];
     [self.tabContentLink setImage:[UIImage imageNamed:@"youtubeSelect"] forState:UIControlStateHighlighted];
     //self.tabContentLink.titleLabel.backgroundColor = [UIColor blueColor];
-    [self.tabContentLink setTitle:@"Learn more" forState:UIControlStateNormal];
+    [self.tabContentLink setTitle:NSLocalizedString(@"Learn more",nil) forState:UIControlStateNormal];
     [self.tabContentLink setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     self.tabContentLink.adjustsImageWhenHighlighted = NO;
     [tabContentView addSubview:self.tabContentLink];
@@ -224,7 +224,7 @@ EncoderManager      * encoderManager;
             {
                 [self.tabContentImage setImage:[UIImage imageNamed:@"vertical_myplayXplay_case"]];
                 [self.tabContentImage setHidden:NO];
-                [self.tabContentTitle setTitle:@"Hardware" forState:UIControlStateNormal];
+                [self.tabContentTitle setTitle:NSLocalizedString(@"Hardware",nil) forState:UIControlStateNormal];
                 NSString *hardwareTextPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"HardwareString" ofType:@"txt"];
                 [self.tabContentDescription setText:[NSString stringWithContentsOfFile:hardwareTextPath encoding:NSUTF8StringEncoding error:nil]];
                 if (!self.contactLeftSide.hidden)
@@ -239,7 +239,7 @@ EncoderManager      * encoderManager;
             {
                 [self.tabContentImage setImage:[UIImage imageNamed:@"myplayXplay_tagging"]];
                 [self.tabContentImage setHidden:NO];
-                [self.tabContentTitle setTitle:@"Tagging" forState:UIControlStateNormal];
+                [self.tabContentTitle setTitle:NSLocalizedString(@"Tagging",nil) forState:UIControlStateNormal];
                 NSString *taggingTextPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TaggingString" ofType:@"txt"];
                 [self.tabContentDescription setText:[NSString stringWithContentsOfFile:taggingTextPath encoding:NSUTF8StringEncoding error:nil]];
                 if (!self.contactLeftSide.hidden)
@@ -253,7 +253,7 @@ EncoderManager      * encoderManager;
             case 2:
             {
                 [self.tabContentImage setImage:[UIImage imageNamed:@"myplayXplay_phonecall"]];
-                [self.tabContentTitle setTitle:@"Contact Us" forState:UIControlStateNormal];
+                [self.tabContentTitle setTitle:NSLocalizedString(@"Contact Us",nil)  forState:UIControlStateNormal];
                 NSString *contactTextPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ContactString" ofType:@"txt"];
                 [self.tabContentDescription setText:[NSString stringWithContentsOfFile:contactTextPath encoding:NSUTF8StringEncoding error:nil]];
                 if (self.contactLeftSide.hidden)

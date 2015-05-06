@@ -59,7 +59,7 @@
     
     UILabel *eventLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 66.0f, 50.0f, 21.0f)];
     [eventLabel setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
-    [eventLabel setText:@"Event"];
+    [eventLabel setText:NSLocalizedString(@"Event",nil)];
     [eventLabel setTextColor:[UIColor darkGrayColor]];
     [eventLabel setBackgroundColor:[UIColor clearColor]];
     [eventLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -67,7 +67,7 @@
     
     UILabel *teamsLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(eventDivider.frame) + 10.0f, eventLabel.frame.origin.y, 52.0f, eventLabel.bounds.size.height)];
     [teamsLabel setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
-    [teamsLabel setText:@"Teams"];
+    [teamsLabel setText:NSLocalizedString(@"Teams",nil)];
     [teamsLabel setTextColor:[UIColor darkGrayColor]];
     [teamsLabel setBackgroundColor:[UIColor clearColor]];
     [teamsLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -75,7 +75,7 @@
     
     UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(teamsDivider.frame) + 10.0f, teamsLabel.frame.origin.y, 36.0f, teamsLabel.bounds.size.height)];
     [dateLabel setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin];
-    [dateLabel setText:@"Date"];
+    [dateLabel setText:NSLocalizedString(@"Date",nil)];
     [dateLabel setTextColor:[UIColor darkGrayColor]];
     [dateLabel setBackgroundColor:[UIColor clearColor]];
     [dateLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -99,7 +99,7 @@
     numTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(bgview.bounds.size.width - 110.0f, 257.0f, 100.0f, 21.0f)];
     [numTagsLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
     [numTagsLabel setTextAlignment:NSTextAlignmentRight];
-    [numTagsLabel setText:@"Tags"];
+    [numTagsLabel setText:NSLocalizedString(@"Tags",nil)];
     [numTagsLabel setTextColor:[UIColor darkGrayColor]];
     [numTagsLabel setBackgroundColor:[UIColor clearColor]];
     [numTagsLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -352,7 +352,7 @@
     [clearAll setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
     [clearAll setAccessibilityLabel:@"allclear"];
     [clearAll addTarget:self action:@selector(clearAllTags:) forControlEvents:UIControlEventTouchUpInside];
-    [clearAll setTitle:@"clear all" forState:UIControlStateNormal];
+    [clearAll setTitle:NSLocalizedString(@"clear all",nil) forState:UIControlStateNormal];
     [clearAll setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [clearAll setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
     clearAll.titleLabel.font=[UIFont systemFontOfSize:14.0f];

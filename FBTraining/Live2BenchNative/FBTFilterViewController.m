@@ -49,18 +49,18 @@ static NSMutableSet * shareFilterUser;
     float footerLine        = 290;
     
     // Build tabs
-    FilterTab * tab1 = [[FilterTab alloc]initWithName:@"Filter"];
+    FilterTab * tab1 = [[FilterTab alloc]initWithName:NSLocalizedString(@"Filter", nil)];
     // This floats above all tabs... same with the tag count
     clearAll.frame      = CGRectMake(800, 55, 100, 30);
     numTagsLabel.frame  = CGRectMake(800, 300, 100, 30);
 
   
     //------------------------------------------
-    UserColourView * userColours    = [[UserColourView alloc]initWithFrame:CGRectMake(700, footerLine, 200, 40) Name:@"USER" AccessLable:@"colour"];
+    UserColourView * userColours    = [[UserColourView alloc]initWithFrame:CGRectMake(700, footerLine, 200, 40) Name:NSLocalizedString(@"USER", nil) AccessLable:@"colour"];
     userColours.selectedTags     = shareFilterUser;
     //------------------------------------------
     FilterButtonBlockView * off = [[FilterButtonBlockView alloc]initWithFrame:CGRectMake(55, footerLine-20, 290, 60)
-                                                                         Name:@"OFF."
+                                                                         Name:NSLocalizedString(@"OFF.", nil)
                                                                         AccessLable:@"offense"];
     
     off.label.frame     = CGRectMake(-45, 0, 45, 30);
@@ -79,7 +79,7 @@ static NSMutableSet * shareFilterUser;
  
     //------------------------------------------
     FilterButtonBlockView * def = [[FilterButtonBlockView alloc]initWithFrame:CGRectMake(400, footerLine-20, 290, 60)
-                                                                         Name:@"DEF."
+                                                                         Name:NSLocalizedString(@"DEF.", nil)
                                                                   AccessLable:@"defense"];
     def.label.frame     = CGRectMake(-45, 0, 45, 30);
     def.buttonSize      = CGSizeMake(30, 60);
@@ -145,7 +145,7 @@ static NSMutableSet * shareFilterUser;
     //------------------------------------------
     FilterScrollView *  subTagScrollViewNew = [[FilterScrollView alloc]
                                               initWithFrame:CGRectMake(5.0f, headerLine+7, 300.0f, 206.0f)
-                                              Name:@"Sub Tag"
+                                              Name:NSLocalizedString(@"Sub Tag", nil)
                                               AccessLable:@"subtag"];
     
     subTagScrollViewNew.rowCount         = 7;
@@ -154,7 +154,7 @@ static NSMutableSet * shareFilterUser;
     //------------------------------------------
     FilterScrollView *  periodScrollViewNew = [[FilterScrollView alloc]
                                               initWithFrame:CGRectMake(300+5.0f, headerLine+7, 290.0f, 206.0f)
-                                              Name:@"Period"
+                                              Name:NSLocalizedString(@"Period", nil)
                                               AccessLable:@"period"];
     
     periodScrollViewNew.rowCount         = 7;
@@ -165,7 +165,7 @@ static NSMutableSet * shareFilterUser;
     FilterScrollView *  playerScrollViewNew = [[FilterScrollView alloc]
                                                initWithFrame:CGRectMake(600+8.0f, headerLine+7,
                                                                                             300.0f, 206.0f)
-                                               Name:@"Players"
+                                               Name:NSLocalizedString(@"Players", nil)
                                                AccessLable:@"player"];
     
     playerScrollViewNew.rowCount         = 7;

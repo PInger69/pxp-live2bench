@@ -52,7 +52,7 @@ static UIImage* rateUnSelected;
         // this makes the text field
         _ratingLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 60 , 25)];
         [_ratingLabel setTextAlignment:NSTextAlignmentRight];
-        [_ratingLabel setText:@"Rating"];
+        [_ratingLabel setText:NSLocalizedString(@"Rating",nil)];
         [_ratingLabel setFont:[UIFont defaultFontOfSize:18.0f]];
         
         [_ratingLabel setTextColor:[UIColor darkGrayColor]];//[UIColor blackColor]
