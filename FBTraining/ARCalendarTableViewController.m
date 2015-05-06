@@ -248,7 +248,8 @@
                 
                 Feed *source;
                 if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {                    
-                    source = [[Feed alloc] initWithURLString:path quality:0];
+                    source = [[Feed alloc] initWithFileURL:path];
+                    //source = [[Feed alloc] initWithURLString:path quality:1];
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                 } else {
                     source = [[Feed alloc] initWithURLString:data quality:0];
@@ -345,12 +346,15 @@
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
-    if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+    if (event.local) {
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", localOne.downloadedSources.count,event.mp4s.count]];
     } else {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+        if (localOne) {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+        } else {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+        }
     }
-    
     
     [cell setSelectionStyle: UITableViewCellSelectionStyleNone];
     

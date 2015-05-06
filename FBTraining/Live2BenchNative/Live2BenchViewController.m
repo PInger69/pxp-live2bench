@@ -23,6 +23,7 @@
 #import "MultiPip.h"
 #import "CustomAlertView.h"
 #import "ReusableBottomViewController.h"
+#import "ListPopoverController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -57,6 +58,7 @@
     UISwipeGestureRecognizer            * swipeGesture;
     
     UILabel                             *informationLabel;
+    ListPopoverController               *_teamPick;
     //TemporaryButton
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
@@ -215,7 +217,6 @@ static void * eventContext      = &eventContext;
     } else if (context == &eventContext){
         [self onEventChange];
     }
-
 }
 
 
@@ -229,7 +230,7 @@ static void * eventContext      = &eventContext;
 // when the event changes mod these
 -(void)onEventChange
 {
-
+    
     if ([_encoderManager.currentEvent isEqualToString:@"None"]){
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
         self.videoPlayer.live   = NO;
@@ -237,6 +238,7 @@ static void * eventContext      = &eventContext;
         _tagButtonController.enabled = NO;
     } else if ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName]){      // LIVE
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         self.videoPlayer.live   = YES;
         [_gotoLiveButton isActive:YES];
         _tagButtonController.enabled = YES;
@@ -245,19 +247,20 @@ static void * eventContext      = &eventContext;
             [self.videoPlayer play];
         }
     } else if (_encoderManager.currentEvent == nil) { // CLIPs and playing back old events
+        NSLog(@"%@", _encoderManager.currentEvent);
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:NO]; // TODO
         _tagButtonController.enabled = NO;
     } else { // CLIPs and playing back old events
-        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
+        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_EVENT];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:YES]; // TODO
         _tagButtonController.enabled = YES;
     }
-    
     [multiButton setHidden:!([_encoderManager.feeds count]>1)];
-    
 }
 
 -(void)gotLiveEvent
@@ -266,6 +269,18 @@ static void * eventContext      = &eventContext;
     self.videoPlayer.live   = YES;
     [_gotoLiveButton isActive:YES];
     _tagButtonController.enabled = YES;
+    
+    Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
+    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
+    [_teamPick addOnCompletionBlock:^(NSString *pick){
+        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
+        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
+                                                         userInfo:@{@"tabName":@"Live2Bench"}];
+        NSString *info = @"Live";
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+    }];
+    [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                               animated:YES];
 }
 
 #pragma mark -
@@ -506,8 +521,17 @@ static void * eventContext      = &eventContext;
 {
     if (![_appDel.encoderManager.currentEvent isEqualToString:_appDel.encoderManager.liveEventName]) {
         _appDel.encoderManager.currentEvent = _appDel.encoderManager.liveEventName;
-
+        Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
+        _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
+        [_teamPick addOnCompletionBlock:^(NSString *pick){
+            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
+            NSString *info = @"Live";
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+        }];
+        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                   animated:YES];
     }
+    
     [_pipController pipsAndVideoPlayerToLive];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];

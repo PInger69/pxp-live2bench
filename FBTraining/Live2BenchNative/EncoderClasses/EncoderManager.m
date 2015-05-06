@@ -690,7 +690,6 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
     return [self.localEncoder getEventByName:eventName];
-    
 }
 
 
