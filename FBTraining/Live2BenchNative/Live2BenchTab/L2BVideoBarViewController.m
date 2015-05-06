@@ -34,7 +34,7 @@
         container   = [[VideoBarContainerView alloc]init];
         self.view   = container;
         
-        background = [[UIView alloc]init];
+        background = [[UIView alloc]initWithFrame:CGRectMake(100, 100, 800, 30)];
         
         
         background.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
@@ -90,7 +90,7 @@
         [_startRangeModifierButton setContentMode:UIViewContentModeScaleAspectFill];
         [_startRangeModifierButton setImage:[UIImage imageNamed:@"extendstartsec.png"] forState:UIControlStateNormal];
         [_startRangeModifierButton setAccessibilityValue:@"extend"];
-        [background addSubview:_startRangeModifierButton];
+//        [background addSubview:_startRangeModifierButton];
 
         
         
@@ -168,7 +168,8 @@
 
 -(UILabel *)makeTagLabel
 {
-    UILabel * tagEventName = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(background.frame)- (LABEL_WIDTH/2), 5, LABEL_WIDTH, BAR_HEIGHT-10)];
+//    UILabel * tagEventName = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(background.frame)- (LABEL_WIDTH/2), 5, LABEL_WIDTH, BAR_HEIGHT-10)];
+        UILabel * tagEventName = [[UILabel alloc] initWithFrame:CGRectMake(100,100,500,30)];
     tagEventName.layer.borderColor      = [UIColor darkGrayColor].CGColor;
     tagEventName.layer.borderWidth      = .5;
     tagEventName.layer.cornerRadius     = 5;

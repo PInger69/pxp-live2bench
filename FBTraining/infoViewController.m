@@ -36,29 +36,29 @@
         
         self.appVersionLabel = [[CustomLabel alloc] init];
         self.appVersionLabel.frame = CGRectMake(20, 0, 200, 50);
-        self.appVersionLabel.text = [NSString stringWithFormat:@"App Version:  %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+        self.appVersionLabel.text = [NSString stringWithFormat:@"%@:  %@", NSLocalizedString(@"App Version", nil),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
         [self.arrayOfLabels addObject:self.appVersionLabel];
         
         self.systemVersionLabel = [[CustomLabel alloc] init];
         self.systemVersionLabel.frame = CGRectMake(20, 0, 200, 50);
-        self.systemVersionLabel.text = [NSString stringWithFormat:@"System Version:  %@", [UIDevice currentDevice].systemVersion];
+        self.systemVersionLabel.text = [NSString stringWithFormat:@"%@:  %@", NSLocalizedString(@"System Version", nil),[UIDevice currentDevice].systemVersion];
         [self.arrayOfLabels addObject:self.systemVersionLabel];
         
         self.userCenter = appDel.userCenter;
         self.userLabel = [[CustomLabel alloc] init];
         self.userLabel.frame = CGRectMake(20, 0, 200, 50);
-        self.userLabel.text = [NSString stringWithFormat:@"User:  %@", self.userCenter.customerEmail];
+        self.userLabel.text = [NSString stringWithFormat:@"%@:  %@", NSLocalizedString(@"User", nil), self.userCenter.customerEmail];
         [self.arrayOfLabels addObject:self.userLabel];
         
         self.wifiLable = [[CustomLabel alloc] initWithFrame:CGRectMake(20, 0, 300, 50)];
-        self.wifiLable.text = [NSString stringWithFormat:@"WIFI Connection:  %@", [Utility myWifiName]];
+        self.wifiLable.text = [NSString stringWithFormat:@"%@:  %@", NSLocalizedString(@"WIFI Connection", nil) , [Utility myWifiName]];
         [self.arrayOfLabels addObject:self.wifiLable];
         
         self.eula = [[UIButton alloc] initWithFrame:CGRectMake(20, 0, 300, 50)];
         [self.eula setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         [self.eula setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [self.eula addTarget:self action:@selector(viewLicense:) forControlEvents:UIControlEventTouchUpInside];
-        [self.eula setTitle:@"View Eula" forState:UIControlStateNormal];
+        [self.eula setTitle:NSLocalizedString(@"View Eula", nil) forState:UIControlStateNormal];
         self.eula.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [self.arrayOfLabels addObject:self.eula];
         
@@ -151,7 +151,7 @@
     [cell.contentView addSubview:self.arrayOfLabels[indexPath.row]];
     if (indexPath.row == 2) {
         self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(500, 0, 100, 50)];
-        [self.logoutButton setTitle:@"LOGOUT" forState:UIControlStateNormal];
+        [self.logoutButton setTitle:NSLocalizedString(@"LOGOUT", nil) forState:UIControlStateNormal];
         [self.logoutButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
         [self.logoutButton addTarget:self action:@selector(appLogOut:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:self.logoutButton];

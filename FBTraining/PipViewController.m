@@ -51,7 +51,7 @@ static void * vpFrameContext   = &vpFrameContext;
 @synthesize selectPip       = _selectPip;
 @synthesize videoPlayer     = _videoPlayer;
 @synthesize multi           = _multi;
-
+@synthesize videoControlBar = _videoControlBar;
 
 /**
  *  In future the pip maybe be a part of the video player class
@@ -122,6 +122,7 @@ static void * vpFrameContext   = &vpFrameContext;
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerCancelClip:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
         NSTimeInterval  inter   =  2;
         syncTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(syncTimerMethod) userInfo:nil repeats:YES];
@@ -147,6 +148,15 @@ static void * vpFrameContext   = &vpFrameContext;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:)               name:NOTIF_LIVE_EVENT_STOPPED object:nil];
 }
+
+-(void)videoPlayerCancelClip:(NSNotification*)note
+{
+
+    if (_videoControlBar) {
+        [_videoControlBar setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+    }
+}
+
 
 #pragma mark - Observers
 
@@ -368,6 +378,11 @@ static void * vpFrameContext   = &vpFrameContext;
         //Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
 //    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
 
+        if (_videoControlBar) {
+            [_videoControlBar setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
+            [_videoControlBar setTagName:[rick objectForKey:@"feed"]];
+        }
+        
         f = _encoderManager.feeds[[rick objectForKey:@"feed"]];
     }else{
         f = [[_encoderManager.feeds allValues]firstObject];

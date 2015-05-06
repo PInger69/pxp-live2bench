@@ -369,7 +369,7 @@ static void * eventContext      = &eventContext;
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
-    
+    _pipController.videoControlBar = _videoBarViewController;
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
