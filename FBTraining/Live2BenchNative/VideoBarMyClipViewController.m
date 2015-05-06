@@ -1,3 +1,4 @@
+
 //
 //  VideoBarMyClipViewController.m
 //  Live2BenchNative

@@ -11,7 +11,7 @@
 #import "EncoderCommands.h"
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
-#import "EncoderManagerActionPack.h" // All actions are in here!
+#import "EncoderManagerActionPack.h" // All actions are in here!!
 #import "Downloader.h"
 #import "DownloadItem.h"
 #import "Event.h"
@@ -22,8 +22,6 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <ifaddrs.h>
 #import <arpa/inet.h>
-
-
 
 #import <SDWebImage/SDImageCache.h>
 
@@ -884,8 +882,6 @@ static void * builtContext          = &builtContext; // depricated?
     
     DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
     dItemBlock(dli);
-    //
-    //
     
 }
 
@@ -1381,7 +1377,7 @@ static void * builtContext          = &builtContext; // depricated?
         id <EncoderProtocol> encoder = encodersToCheck[i];
         
         if (/*[encoder.allEvents objectForKey:aCurrentEvent]*/[encoder getEventByName:aCurrentEvent]){
-//            Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
+            //            Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
             Event *curEvent = [encoder getEventByName:aCurrentEvent];
             encoder.event = curEvent;
             if (encoder.event.eventType != nil){
@@ -1430,6 +1426,7 @@ static void * builtContext          = &builtContext; // depricated?
     [self didChangeValueForKey:@"currentEvent"];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
 }
+
 
 -(NSString*)currentEventType
 {

@@ -264,20 +264,20 @@ NS_OPTIONS(NSInteger, style){
     if (!hasInternet) {
         CustomAlertView *errorView;
         errorView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"Please connect to the internet to log out."
+                     initWithTitle: NSLocalizedString(@"myplayXplay",nil)
+                     message: NSLocalizedString(@"Please connect to the internet to log out.",nil)
                      delegate: self
-                     cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                     cancelButtonTitle:NSLocalizedString(@"OK",nil) otherButtonTitles:nil, nil];
         [errorView show];
         //        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:errorView];
     }else{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
         CustomAlertView *alertView;
         alertView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"If you log out, you need internet to log in. Are you sure you want to log out?"
+                     initWithTitle: NSLocalizedString(@"myplayXplay",nil)
+                     message: NSLocalizedString(@"If you log out, you need internet to log in. Are you sure you want to log out?",nil)
                      delegate: self
-                     cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
+                     cancelButtonTitle:NSLocalizedString(@"Yes",nil) otherButtonTitles:NSLocalizedString(@"Cancel",nil), nil];
         alertView.accessibilityValue = @"appLogOut";
         [alertView show];
         alertView.delegate = self;

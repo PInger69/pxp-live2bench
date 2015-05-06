@@ -33,7 +33,7 @@
 {
     self = [super init];
     if (self) {
-
+        
         _rawData            = data;
         _live               = (_rawData[@"live"] || _rawData[@"live_2"])? YES:NO;
         _name               = [_rawData objectForKey:@"name"];
@@ -43,7 +43,7 @@
         _date               = [_rawData objectForKey:@"date"];
         _mp4s               = [self buildMP4s:_rawData];
         localPath           = path;
-//        _feeds              = [self buildFeeds:_rawData];
+        //        _feeds              = [self buildFeeds:_rawData];
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
         _downloadedSources  = [NSMutableArray array];
@@ -89,7 +89,7 @@
 {
     NSString            * toypKey   = (isLive)?@"live_2":@"mp4_2";
     NSMutableDictionary * tempDict  = [[NSMutableDictionary alloc]init];
-
+    
     // this is a check for the new encoder vs the old
     if ([aDict[toypKey] isKindOfClass:[NSDictionary class]]) {
         
@@ -109,11 +109,11 @@
             } else {
                 createdFeed.type = FEED_TYPE_ENCODER;
             }
-                
+            
             
             [tempDict setObject:createdFeed forKey:key];
         }
-
+        
     } else { // old encoder
         Feed * theFeed;
         if (aDict[@"live"]) { // This is for backwards compatibility
@@ -210,3 +210,4 @@
 
 
 @end
+

@@ -236,7 +236,7 @@ static void * encoderTagContext = &encoderTagContext;
     self.deleteButton = [[UIButton alloc] init];
     self.deleteButton.backgroundColor = [UIColor redColor];
     [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
-    [self.deleteButton setTitle: @"Delete All" forState: UIControlStateNormal];
+    [self.deleteButton setTitle: NSLocalizedString(@"Delete All", nil) forState: UIControlStateNormal];
     [self.deleteButton.titleLabel setTextColor:[UIColor whiteColor]];
     [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -245,7 +245,7 @@ static void * encoderTagContext = &encoderTagContext;
     [self.view addSubview: self.deleteButton];
     
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
-    [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [self.filterButton setTitle:NSLocalizedString(@"Filter", nil) forState:UIControlStateNormal];
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
@@ -261,11 +261,11 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:@"myplayXplay"];
-    [alert setMessage:@"Are you sure you want to delete all these clips?"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete all these clips?",nil)];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
 }
 
@@ -449,11 +449,11 @@ static void * encoderTagContext = &encoderTagContext;
     
     CustomAlertView *alert = [[CustomAlertView alloc] init];
     alert.tag = kDeleteAlertTag;
-    [alert setTitle:@"myplayXplay"];
-    [alert setMessage:@"Are you sure you want to delete these tags?"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete these tags?",nil)];
     [alert setDelegate:self];
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
     
 }
@@ -748,11 +748,11 @@ static void * encoderTagContext = &encoderTagContext;
     NSIndexPath *pathToDelete = [_collectionView indexPathForCell: cell];
     self.editingIndexPath = pathToDelete;
     CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:@"myplayXplay"];
-    [alert setMessage:@"Are you sure you want to delete this tag?"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this tag?",nil)];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
     
     

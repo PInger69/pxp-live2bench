@@ -77,7 +77,7 @@ UIScrollView *scrollView;
     [self.view addSubview:scrollView];
     
     UILabel *pxpLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 40.0f, self.view.bounds.size.width, 70.0f)];
-    [pxpLabel setText:@"myplayXplay"];
+    [pxpLabel setText:NSLocalizedString(@"myplayXplay",nil)];
     [pxpLabel setFont:[UIFont lightFontOfSize:60.0f]];
     [pxpLabel setTextColor:PRIMARY_APP_COLOR];
     [pxpLabel setTextAlignment:NSTextAlignmentCenter];
@@ -86,14 +86,14 @@ UIScrollView *scrollView;
     
     self.emailAddressTextField = [[LoginTextField alloc] initWithFrame:CGRectMake(70.0f, 350.0f, self.view.bounds.size.width - 140.0f, 50.0f)];
     self.emailAddressTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    self.emailAddressTextField.placeholder = @"Email";
+    self.emailAddressTextField.placeholder = NSLocalizedString(@"Email",nil);
     [self.emailAddressTextField setBackground:[[UIImage imageNamed:@"groupedTop"] resizableImageWithCapInsets:UIEdgeInsetsMake(6.0f, 6.0f, 6.0f, 6.0f)]];
     self.emailAddressTextField.keyboardType = UIKeyboardTypeEmailAddress;
     [scrollView addSubview:self.emailAddressTextField];
     
     self.passwordTextField = [[LoginTextField alloc] initWithFrame:CGRectMake(70.0f, CGRectGetMaxY(self.emailAddressTextField.frame) - 1.0f, self.view.bounds.size.width - 140.0f, 50.0f)];
     self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    self.passwordTextField.placeholder = @"Password";
+    self.passwordTextField.placeholder = NSLocalizedString(@"Password",nil);
     [self.passwordTextField setBackground:[[UIImage imageNamed:@"groupedBottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(6.0f, 6.0f, 6.0f, 6.0f)]];
     self.passwordTextField.secureTextEntry = TRUE;
     [scrollView addSubview:self.passwordTextField];
@@ -102,7 +102,7 @@ UIScrollView *scrollView;
     self.passwordTextField.delegate = self;
     
     self.submitButton = [CustomButton buttonWithType:UIButtonTypeSystem];
-    [self.submitButton setTitle:@"Sign In" forState:UIControlStateNormal];
+    [self.submitButton setTitle:NSLocalizedString(@"Sign In",nil) forState:UIControlStateNormal];
     self.submitButton.titleLabel.font = [UIFont defaultFontOfSize:30.0f];
     [self.submitButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     self.submitButton.frame = CGRectMake((self.view.bounds.size.width - 100.0f)/2, CGRectGetMaxY(self.passwordTextField.frame) + 15.0f , 100.0f, 50.0f);
@@ -111,7 +111,7 @@ UIScrollView *scrollView;
     [scrollView addSubview:self.submitButton];
     
     noInternetLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0f, 350.0f, self.view.bounds.size.width - 140.0f, 50.0f)];
-    noInternetLabel.text = @"No internet available, play video from local storage.";
+    noInternetLabel.text = NSLocalizedString(@"No internet available, play video from local storage.",nil);
     noInternetLabel.textColor = PRIMARY_APP_COLOR;
     noInternetLabel.backgroundColor = [UIColor clearColor];
     noInternetLabel.font = [UIFont defaultFontOfSize:19.0f];
@@ -329,7 +329,7 @@ UIScrollView *scrollView;
     }
     else
     {
-        [noInternetLabel setText:@"Please Connect to the Internet"];
+        [noInternetLabel setText:NSLocalizedString(@"Please Connect to the Internet",nil)];
         [noInternetLabel setHidden:FALSE];
     }
 

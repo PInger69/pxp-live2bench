@@ -172,6 +172,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
         if ([(NSNumber *)togglesArray[i] intValue]) {
             NSString *classString = nameToClass[tabString];
             [tabViewControllers addObject: [[NSClassFromString(classString) alloc]initWithAppDelegate:appDel]];
+       
         }
         
     }

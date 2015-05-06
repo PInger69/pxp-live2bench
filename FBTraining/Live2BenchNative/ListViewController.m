@@ -1698,7 +1698,7 @@ NSMutableArray *oldEventNames;
 {
     
     // Richard
-    commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(10,485 -50, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60 +50) title:@"Comment"];
+    commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(10,485 -50, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60 +50) title:NSLocalizedString(@"Comment",nil)];
     commentingField.enabled = NO;
     [commentingField onPressRatePerformSelector:@selector(sendRating:) addTarget:self];
     [commentingField onPressSavePerformSelector:@selector(sendComment) addTarget:self];
@@ -1718,7 +1718,7 @@ NSMutableArray *oldEventNames;
     [self.view addSubview: _tableViewController.tableView];
     
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
-    [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [self.filterButton setTitle:NSLocalizedString(@"Filter",nil) forState:UIControlStateNormal];
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];

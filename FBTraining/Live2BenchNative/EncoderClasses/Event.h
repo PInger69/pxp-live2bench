@@ -41,5 +41,5 @@
 
 
 
--(instancetype)initWithDict:(NSDictionary*)data isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
+- (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
 @end

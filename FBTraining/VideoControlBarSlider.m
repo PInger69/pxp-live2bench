@@ -95,17 +95,19 @@
     [slider setBackgroundColor:[UIColor clearColor]];
     
     
-    UIImage *currentImage = [UIImage imageNamed:@"sliderthumb.png"];
+    UIImage *currentImage = [UIImage imageNamed:@"sliderthumb"];
     [slider setThumbImage:currentImage forState:UIControlStateNormal];
     [slider setThumbImage:currentImage forState:UIControlStateHighlighted];
+    [slider setThumbImage:[[UIImage alloc] init] forState:UIControlStateDisabled];
+
     return slider;
 }
 -(UIButton *)buildPlayButton
 {
     UIButton * pb = [UIButton buttonWithType:UIButtonTypeCustom];
     //set different image for different control state
-    [pb setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateSelected];
-    [pb setImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+    [pb setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
+    [pb setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
     //by default, the button is not seleted and the button image is pause image
     pb.selected = FALSE;
     //set play button frame
