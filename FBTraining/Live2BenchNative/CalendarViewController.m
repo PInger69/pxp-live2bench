@@ -39,7 +39,7 @@
     _appDel = appDel;
     self = [super init];
     if (self) {
-        [self setMainSectionTab:@"Calendar" imageName:@"calendarTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Calendar",nil) imageName:@"calendarTab"];
         localPath = _appDel.userCenter.localPath;
         memoryBar = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
         
@@ -96,7 +96,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(datePicked:) name:@"datePicked" object:nil];
     
     self.todayButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 720, 162, 40)];
-    [self.todayButton setTitle:@"Today" forState:UIControlStateNormal];
+    [self.todayButton setTitle:NSLocalizedString(@"Today",nil) forState:UIControlStateNormal];
     self.todayButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.todayButton.layer.borderWidth = 0.5f;
     [self.todayButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
@@ -106,7 +106,7 @@
     [self.view addSubview:self.todayButton];
     
     self.latestButton = [[UIButton alloc] initWithFrame:CGRectMake(167, 720, 162, 40)];
-    [self.latestButton setTitle:@"Latest Events" forState:UIControlStateNormal];
+    [self.latestButton setTitle:NSLocalizedString(@"Latest Events",nil) forState:UIControlStateNormal];
     self.latestButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.latestButton.layer.borderWidth = 0.5f;
     [self.latestButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
@@ -116,7 +116,7 @@
     [self.view addSubview:self.latestButton];
     
     self.allEventsButton = [[UIButton alloc] initWithFrame:CGRectMake(329, 720, 162, 40)];
-    [self.allEventsButton setTitle:@"All Events" forState:UIControlStateNormal];
+    [self.allEventsButton setTitle:NSLocalizedString(@"All Events",nil) forState:UIControlStateNormal];
     self.allEventsButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.allEventsButton.layer.borderWidth = 0.5f;
     [self.allEventsButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];

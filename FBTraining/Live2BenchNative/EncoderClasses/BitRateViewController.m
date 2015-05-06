@@ -35,7 +35,7 @@
         self.view.backgroundColor = [UIColor redColor];
         
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, 10, 303, 50)];
-        [titleLabel setText: @"Encoder Statuses"];
+        [titleLabel setText: NSLocalizedString(@"Encoder Statuses", nil)];
         [titleLabel setFont: [UIFont fontWithName:@"Helvetica" size:28.0]];
         [titleLabel setTextAlignment: NSTextAlignmentCenter];
         [self.view addSubview: titleLabel];

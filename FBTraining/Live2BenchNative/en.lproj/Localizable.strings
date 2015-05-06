@@ -6,28 +6,159 @@
   Copyright (c) 2014 DEV. All rights reserved.
 */
 
+"Rating"            =           "Rating";
+"Delete"            =           "Delete";
+"Share"             =           "Share";
+"Email"             =           "Email";
+"Sign In"           =           "Sign In";
+"Please Connect to the Internet"                              =               "Please Connect to the Internet";
+"No internet available, play video from local storage."       =               "No internet available, play video from local storage.";
+
+
+
 // Custom Tab Bar
-"Welcome"       =   "Welcome";
-"Calendar"      =   "Calendar";
-"Live2Bench"    =   "Live2Bench";
-"Clip View"     =   "Clip View";
-"List View"     =   "List View";
-"My Clip"       =   "My Clip";
+"Welcome"           =        "Welcome";
+"Calendar"          =        "Calendar";
+"Live2Bench"        =        "Live2Bench";
+"Clip View"         =        "Clip View";
+"List View"         =        "List View";
+"My Clip"           =        "My Clip";
 
-// Alerts
 
-// Progress bars
+
+// Tags
+"Event Date"          =          "Event Date";
+"Event Time"          =          "Event Time";
+"Home Team"           =          "Home Team";
+"Visit Team"          =          "Visit Team";
+"League"              =          "League";
+"Tag Name"            =          "Tag Name";
+"Tag Time"            =          "Tag Time";
+
+
+
+// Encoder Controls
+"Encoder Home"        =          "Encoder Home";
+"Start"               =          "Start";
+"Resume"              =          "Resume";
+"Pause"               =          "Pause";
+"Shutdown"            =          "Shutdown";
+"Stop"                =          "Stop";
+
+
+
+//Progress Bar
+
+
+
+//Welcome Tab
+"Hardware"          =         "Hardware";
+"Tagging"           =         "Tagging";
+"Contact Us"        =         "Contact Us";
+
+//Accounts
+"Note: Login settings for Facebook and Email are available in your iPad's settings app."       =        "Note: Login settings for Facebook and Email are available in your iPade's settings app.";
 
 // Settings popup
+"Wi-Fi"                  =          "Wi-Fi";
+"Encoder Controls"       =          "Encoder Controls";
+"DropBox"                =          "DropBox";
+"Unlink"                 =          "Unlink";
+"Link"                   =          "Link";
 
-// Welcome Tab
+
+
+//Aler popups
+"myplayXplay"            =         "myplayXplay";
+"OK"                     =         "OK";
+"Yes"                    =         "Yes";
+"No"                     =         "No";
+"Cancel"                 =         "Cancel";
+"TintTest"               =         "TintTest";
+"was Change?"            =         "was Change?";
+"Yes(Only local)"        =         "Yes(Only local)";
+"Yes(From server)"       =         "Yes(From server)";
+
+
+
+"Encoder is not available."                                                                     =               "Encoder is not available.";
+"Please connect to the internet to log out."                                                    =               "Please connect to the internet to log out.";
+"Are you sure you want to delete all these clips?"                                              =               "Are you sure you want to delete all these clips?";
+"Are you sure you want to delete these tags?"                                                   =               "Are you sure you want to delete these tags?";
+"Are you sure you want to delete this tag?"                                                     =               "Are you sure you want to delete this tag?";
+"Are you sure you want to delete this Event?"                                                   =               "Are you sure you want to delete this Event?";
+"Yes(From server and local device)"                                                             =               "Yes(From server and local device)";
+"Please select Home team, Away team and League to start the encoder"                            =               "Please select Home team, Away team and League to start the encoder";
+"If you log out, you need internet to log in. Are you sure you want to log out?"                =               "If you log out, you need internet to log in. Are you sure you want to log out?";
+
+
+
+//Bit Rate
+"Encoder Statuses"        =        "Encoder Statuses";
+"Signal"                  =         "Signal";
+"Status"                  =         "Status";
+"Rate"                    =         "Rate";
+"Cameras"                 =         "Cameras";
+
+// Information
+"App Version"        =      "App Version";
+"System Version"     =      "System Version";
+"User"               =      "User";
+"WIFI Connection"    =      "WIFI Connection";
+"Logout"             =      "Logout";
+"View Eula"          =      "View Eula";
+
+
 // Calendar Tab
-"Please select the team you want to tag:" = "Please select the team you want to tag:";
+"Recent Games"          =           "Recent Games";
+"Download"              =           "Download";
+"Open"                  =           "Open";
+"Previous Games"        =           "Previous Games";
+"Today"                 =           "Today";
+"Latest Events"         =           "Latest Events";
+"All Events"            =           "All Events";
+"Please select the team you want to tag:"        =          "Please select the team you want to tag:";
+
+
 
 // Live2Bench Tab
-"Save"       =   "Save";
-"Close"      =   "Close";
-"Live"       =   "Live";
+"Save"       =      "Save";
+"Close"      =      "Close";
+"Live"       =      "Live";
+"Multi"      =      "Multi";
+"ok"         =      "ok";
+"Encoder Status"              =       "Encoder Status";
+"Encoder connection lost"     =       "Encoder connection lost";
+
+
+
 // Clip View Tab
-// List View Tab
+"Filter"          =         "Filter";
+"Delete All"      =         "Delete All";
+
+
+
 // My Clip Tab
+"Comment"         =          "Comment";
+"Date"            =          "Date";
+"Tag Time"        =          "Tag Time";
+"Name"            =          "Name";
+"Rating"          =          "Rating";
+"Processing"      =          "Processing";
+"Tags"            =          "Tags";
+"Comment"         =          "Comment";
+"Event"           =          "Event";
+"Teams"           =          "Teams";
+"Date"            =          "Date";
+"clear all"       =          "clear all";
+"Are you sure you want to delete all these"      =         "Are you sure you want to delete all these";
+
+
+
+// Tags
+"Players"         =          "Players";
+"Period"          =          "Period";
+"Sub Tag"         =          "Sub Tag";
+"USER"            =          "USER";
+"OFF."            =          "OFF.";
+"DEF."            =          "DEF.";

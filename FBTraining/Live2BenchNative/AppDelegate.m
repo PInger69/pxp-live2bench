@@ -354,7 +354,7 @@ static int outstandingRequests;
 -(void)actionListBlock
 {
  
-    //Richard
+    //Richard I really don't know what to do anymore, at the moment i'm just praciting typing which i'm pretty sure i don't need practice doing, but i need to do something, theis is work. I'm typing to type with my eyes closed. since this is the only chanllange that I can think of/ Please somenoe . give me an task/ please please please/ I'm gpoing to type the alphabet. abcdefghijkl,mp[qrstuvwxyz/ now l's see if i'm orrect/not too bad/ 
     [SpinnerView initTheGlobalSpinner];
  
     __block EncoderManager * weakEM             = _encoderManager;

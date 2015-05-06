@@ -47,7 +47,7 @@ typedef enum : NSUInteger {
             leagueName = @"";
         }
         
-        [tagDetailsView setText:[NSString stringWithFormat:@"Event Date: %@ \nEvent Time: %@ \nHome Team: %@ \nVisit Team: %@ \nLeague: %@\nTag Name: %@ \nTag Time: %@",eventDate,eventTime,homeTeam,visitTeam,leagueName,[data objectForKey:@"name"],           [data objectForKey:@"displaytime"]]];
+        [tagDetailsView setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@ \n%@: %@ \n%@: %@ \n%@: %@\n%@: %@ \n%@: %@",NSLocalizedString(@"Event Date",nil),eventDate,NSLocalizedString(@"Event Time",nil),eventTime,NSLocalizedString(@"Home Team",nil),homeTeam,NSLocalizedString(@"Visit Team",nil),visitTeam,NSLocalizedString(@"League",nil),leagueName,NSLocalizedString(@"Tag Name",nil),[data objectForKey:@"name"],NSLocalizedString(@"Tag Time",nil) ,[data objectForKey:@"displaytime"]]];
         [tagDetailsView setFont:[UIFont boldSystemFontOfSize:18.f]];
         [tagDetailsView setUserInteractionEnabled:FALSE];
         [self addSubview:tagDetailsView];
@@ -72,15 +72,15 @@ typedef enum : NSUInteger {
         contentText = [[NSMutableAttributedString alloc]init];
         // Create the attributed string (text + attributes)
 
-        [self addText: @"Event Date:\t"     style:Bold];          [self addText: eventDate style:Normal];
-        [self addText: @"\nEvent Time:\t"   style:Bold];          [self addText: eventTime style:Normal];
-        [self addText: @"\nHome Team:\t"    style:Bold];          [self addText: homeTeam style:Normal];
-        [self addText: @"\nVisit Team:\t"   style:Bold];          [self addText: visitTeam style:Normal];
+        [self addText: [NSString stringWithFormat:@"%@:\t", NSLocalizedString(@"Event Date", nil)]     style:Bold];          [self addText: eventDate style:Normal];
+        [self addText: [NSString stringWithFormat:@"\n%@:\t", NSLocalizedString(@"Event Time", nil)]   style:Bold];          [self addText: eventTime style:Normal];
+        [self addText: [NSString stringWithFormat:@"\n%@:\t", NSLocalizedString(@"Home Team", nil)]    style:Bold];          [self addText: homeTeam style:Normal];
+        [self addText: [NSString stringWithFormat:@"\n%@:\t", NSLocalizedString(@"Visit Team", nil)]   style:Bold];          [self addText: visitTeam style:Normal];
         if(![leagueName isEqualToString:@""]){
-            [self addText: @"\nLeague:\t"       style:Bold];          [self addText: leagueName style:Normal];
+            [self addText: [NSString stringWithFormat:@"\n%@:\t", NSLocalizedString(@"League", nil)]       style:Bold];          [self addText: leagueName style:Normal];
         }
-        [self addText: @"\nTag Name:\t"     style:Bold];          [self addText: [data objectForKey:@"name"] style:Normal];
-        [self addText: @"\nTag Time:\t\t"     style:Bold];          [self addText: [data objectForKey:@"displaytime"] style:Normal];
+        [self addText: [NSString stringWithFormat:@"\n%@:\t", NSLocalizedString(@"Tag Name", nil)]     style:Bold];          [self addText: [data objectForKey:@"name"] style:Normal];
+        [self addText: [NSString stringWithFormat:@"\n%@:\t\t", NSLocalizedString(@"Tag Time", nil)]   style:Bold];          [self addText: [data objectForKey:@"displaytime"] style:Normal];
         
         
         

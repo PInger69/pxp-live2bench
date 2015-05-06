@@ -248,7 +248,8 @@
                 
                 Feed *source;
                 if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {                    
-                    source = [[Feed alloc] initWithURLString:path quality:0];
+                    source = [[Feed alloc] initWithFileURL:path];
+                    //source = [[Feed alloc] initWithURLString:path quality:1];
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                 } else {
                     source = [[Feed alloc] initWithURLString:data quality:0];
@@ -345,12 +346,15 @@
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
-    if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+    if (event.local) {
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", localOne.downloadedSources.count,event.mp4s.count]];
     } else {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+        if (localOne) {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+        } else {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+        }
     }
-    
     
     [cell setSelectionStyle: UITableViewCellSelectionStyleNone];
     
@@ -385,15 +389,15 @@
         Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         alert.type = AlertImportant;
-        [alert setTitle:@"myplayXplay"];
-        [alert setMessage:@"Are you sure you want to delete this Event?"];
+        [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+        [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this Event?",nil)];
         if ((localCounterpart && localCounterpart.downloadedSources.count > 0) || event.downloadedSources.count > 0) {
-            [alert addButtonWithTitle:@"Yes(From server and local device)"];
-            [alert addButtonWithTitle:@"Yes(Only local)"];
-            [alert addButtonWithTitle:@"No"];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server and local device)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(Only local)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         } else {
-            [alert addButtonWithTitle:@"Yes(From server)"];
-            [alert addButtonWithTitle:@"No"];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         }
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert display];

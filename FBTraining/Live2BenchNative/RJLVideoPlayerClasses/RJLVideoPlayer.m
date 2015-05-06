@@ -618,7 +618,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                                 [weakSelf seekToInSec:duration];
                             }
                         }
-                        
                     }];
 
 }
@@ -668,9 +667,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     if (!_feed)return;
     [self.avPlayer play];
     [freezeMonitor start];
-   if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
+    if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
     self.status                                 = _status | RJLPS_Play;
-   self.status                                 = _status & ~(RJLPS_Paused);
+    self.status                                 = _status & ~(RJLPS_Paused);
     [self.videoControlBar setHidden:NO];
     //self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil;

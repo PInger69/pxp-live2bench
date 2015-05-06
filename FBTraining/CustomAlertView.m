@@ -135,7 +135,7 @@ static AlertType    allowedTypes;
  */
 +(void)tintAlertTest
 {
-    UIAlertView * alertTint = [[UIAlertView alloc] initWithTitle:@"TintTest" message:@"was Change?" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:@"ok", nil];
+    UIAlertView * alertTint = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"TintTest",nil) message:NSLocalizedString(@"was Change?",nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"Close",nil) otherButtonTitles:NSLocalizedString(@"ok",nil), nil];
     [alertTint show];
 }
 

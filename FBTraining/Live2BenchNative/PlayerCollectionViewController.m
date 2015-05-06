@@ -199,7 +199,7 @@
 }
 
 -(NSMutableDictionary*)getAllSelectedPlayers{
-    NSMutableArray *tempArr = [playersDidSelected mutableCopy];
+//    NSMutableArray *tempArr = [playersDidSelected mutableCopy];
 //    NSString *tempStr = [zoneDidSelected mutableCopy];
 //    NSMutableDictionary *selectedData = [[NSMutableDictionary alloc]init];
 //    if ([globals.WHICH_SPORT isEqualToString:@"hockey"]) {
@@ -214,7 +214,7 @@
 //    [playersDidSelected removeAllObjects];
 //    zoneDidSelected = @"";
 //    return selectedData;
-
+    return nil;
 }
 
 
