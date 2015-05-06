@@ -11,8 +11,8 @@
 "Share"             =           "Share";
 "Email"             =           "Email";
 "Sign In"           =           "Sign In";
-"Please Connect to the Internet"                              =               "Please Connect to the Internet"
-"No internet available, play video from local storage."       =               "No internet available, play video from local storage."
+"Please Connect to the Internet"                              =               "Please Connect to the Internet";
+"No internet available, play video from local storage."       =               "No internet available, play video from local storage.";
 
 
 
@@ -152,3 +152,13 @@
 "Date"            =          "Date";
 "clear all"       =          "clear all";
 "Are you sure you want to delete all these"      =         "Are you sure you want to delete all these";
+
+
+
+// Tags
+"Players"         =          "Players";
+"Period"          =          "Period";
+"Sub Tag"         =          "Sub Tag";
+"USER"            =          "USER";
+"OFF."            =          "OFF.";
+"DEF."            =          "DEF.";
