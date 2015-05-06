@@ -52,7 +52,7 @@
     [super viewWillAppear:animated];
     
     //Add Logout bar button item
-    self.contentController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+    self.contentController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", nil) style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
 
 
 }
@@ -102,7 +102,7 @@
     else
     {
         [self showLinkButton: NO];
-        [DejalActivityView activityViewForView:self.view withLabel:@"Loading myplayXplay Dropbox"];
+        [DejalActivityView activityViewForView:self.view withLabel:NSLocalizedString(@"Loading myplayXplay Dropbox", nil)];
         [uploader loadDirectoryContentsAsyncWithPath:@"/"];
         
         if(_checkLinkStatusTimer)
@@ -128,7 +128,7 @@
     }
     else
     {
-        [[[UIAlertView alloc] initWithTitle:@"Already Linked" message:@"You are already linked to your Dropbox" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Already Linked", nil) message:NSLocalizedString(@"You are already linked to your Dropbox", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", nil) otherButtonTitles:nil] show];
     }
 }
 
@@ -194,7 +194,7 @@
     if(error)
         return;
     
-    [DejalActivityView activityViewForView:self.view withLabel:@"Reloading Folder"];
+    [DejalActivityView activityViewForView:self.view withLabel:NSLocalizedString(@"Reloading Folder", nil)];
     _isReloadingCurrentView = YES;
     [uploaderl loadDirectoryContentsAsyncWithPath:self.currentPath];
 }
@@ -219,7 +219,7 @@
 {
     NSString* path = [self.currentPath stringByAppendingPathComponent:folderName];
     
-    [DejalActivityView activityViewForView:self.view withLabel:[NSString stringWithFormat:@"Loading %@", folderName]];
+    [DejalActivityView activityViewForView:self.view withLabel:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"Loading", nil),folderName]];
     
     DPBContentViewController* contentController = [[DPBContentViewController alloc] initWithNibName:nil bundle:nil];
     
@@ -233,7 +233,7 @@
 
 - (void)uploadTextDataToTodayFolder //Remove Any Time
 {
-    [DejalActivityView activityViewForView:self.view withLabel:@"Uploading Data"];
+    [DejalActivityView activityViewForView:self.view withLabel:NSLocalizedString(@"Uploading Data", nil)];
     if(!_todayFolderVerified)
     {
         uploader.state = DPBFileUploaderStateUploadingFile;
@@ -250,7 +250,7 @@
 
 - (void)deleteFileWithName:(NSString *)fileName
 {
-    [DejalActivityView activityViewForView:self.view withLabel:@"Deleting Item"];
+    [DejalActivityView activityViewForView:self.view withLabel:NSLocalizedString(@"Deleting Item", nil)];
     NSString* path = [self.currentPath stringByAppendingPathComponent:fileName];
     
     [uploader deletePath:path];
@@ -259,7 +259,7 @@
 
 - (void)pushFileViewWithName: (NSString*)name
 {
-    [DejalActivityView activityViewForView:self.view withLabel:@"Loading File"];
+    [DejalActivityView activityViewForView:self.view withLabel:NSLocalizedString(@"Loading File", nil)];
     
     self.currentPath = [self.currentPath stringByAppendingPathComponent:name];
     

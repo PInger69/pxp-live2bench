@@ -15,11 +15,13 @@
     
     UILabel *tagname;
     UILabel *tagtime;
+    UIImageView *ratingshown;
+    UILabel *ratingnumber;
 //    ClipCornerView *tagcolor;
     UIButton *coachpickButton;
     UIImageView *tagImage;
 //    UIActivityIndicatorView *tagActivityIndicator;
-//    UIImageView *tagRatingOne;
+    UIImageView *tagRatingOne;
 //    UIImageView *tagRatingTwo;
 //    UIImageView *tagRatingThree;
 //    UIImageView *tagRatingFour;
@@ -53,7 +55,9 @@
 @property (nonatomic, strong) UIImageView *checkmarkOverlay;
 @property (nonatomic, strong) UILabel *playersLabel;
 
-//@property (nonatomic, strong) NSIndexPath *indexPath;
+
+@property (nonatomic,strong) UIImageView                *ratingshown; //display rating on tag image//@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic,strong) UILabel *ratingnumber;
 //@property (nonatomic, strong) id <UITableViewDataSource> tableViewDataSource;
 
 

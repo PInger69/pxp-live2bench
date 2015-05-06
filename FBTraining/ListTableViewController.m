@@ -13,6 +13,7 @@
 #import "FeedSelectCell.h"
 #import "Tag.h"
 #import "DownloadItem.h"
+#import "RatingOutput.h"
 
 
 @interface ListTableViewController ()
@@ -276,9 +277,11 @@
     NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
     NSString *periodString = [NSString stringWithFormat:@"%.02f", tag.time];
     
-    [cell.tagInfoText setText:[NSString stringWithFormat:@"Duration: %@ \nPeriod: %@ ",durationString,periodString]];
+    [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@ ", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString]];
     
     [cell.tagtime setText: tag.displayTime];
+    
+    
     
     UIColor *thumbColour = [Utility colorWithHexString:tag.colour];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];

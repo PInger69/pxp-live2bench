@@ -67,6 +67,8 @@
 @property (nonatomic,strong) UIScrollView                * breadCrumbsView; //scrollview used to show which filter elements are selected currently
 @property (nonatomic,strong) NSMutableArray              * aCopyOfUnfinishedTags;
 
+
+
 -(void)slideFilterBox; //swipe to slide out/in the filter view
 
 -(void)showTeleButton; //show the tele button in fullscreen

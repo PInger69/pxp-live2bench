@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface RatingInput : UIView
 {
     int rating;
@@ -20,3 +21,4 @@
 -(void)onPressRatePerformSelector:(SEL)sel addTarget:(id)target;
 
 @end
+

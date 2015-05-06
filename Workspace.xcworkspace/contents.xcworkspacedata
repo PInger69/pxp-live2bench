@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:RatingOutput.h">
+   </FileRef>
+   <FileRef
       location = "group:FBTraining/Live2BenchNative.xcodeproj">
    </FileRef>
 </Workspace>
