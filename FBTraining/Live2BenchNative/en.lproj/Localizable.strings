@@ -6,20 +6,32 @@
   Copyright (c) 2014 DEV. All rights reserved.
 */
 
-"Rating"            =           "Rating";
-"Delete"            =           "Delete";
-"Share"             =           "Share";
-"Email"             =           "Email";
-"Sign In"           =           "Sign In";
-"Dismiss"           =           "Dismiss";
-"Reloading Folder"  =           "Reloading Folder";
-"Loading"           =           "Loading";
-"Uploading Data"    =           "Uploading Data";
-"Deleting Item"     =           "Deleting Item";
-"Loading File"      =           "Loading File";
+"Rating"                  =               "Rating";
+"Delete"                  =               "Delete";
+"Share"                   =               "Share";
+"Sources"                 =               "Sources";
+"Downloaded"              =               "Downloaded";
+"Share All"               =               "Share All";
+"Email"                   =               "Email";
+"Sign In"                 =               "Sign In";
+"Dismiss"                 =               "Dismiss";
+"Reloading Folder"        =               "Reloading Folder";
+"Loading"                 =               "Loading";
+"Uploading Data"          =               "Uploading Data";
+"Deleting Item"           =               "Deleting Item";
+"Loading File"            =               "Loading File";
+"Progress Completed"      =               "Progress Completed";
+"Select Sources:"         =               "Select Sources:";
 "Please Connect to the Internet"                              =               "Please Connect to the Internet";
 "No internet available, play video from local storage."       =               "No internet available, play video from local storage.";
 "Loading myplayXplay Dropbox"                                 =               "Loading myplayXplay Dropbox";
+"Note: Login settings for Facebook and Email are available in your iPad's settings app."           =              "Note: Login settings for Facebook and Email are available in your iPad's settings app."
+
+
+//Comment Field
+"was saved!" = "was saved!";
+"Save" = "Save";
+"Clear" = "Clear";
 
 
 
@@ -99,6 +111,8 @@
 "Are you sure you want to delete this Event?"                                                   =               "Are you sure you want to delete this Event?";
 "Yes(From server and local device)"                                                             =               "Yes(From server and local device)";
 "You are already linked to your Dropbox"                                                        =               "You are already linked to your Dropbox";
+"Are you sure you want to delete all these"                                                     =               "Are you sure you want to delete all these";
+"Are you sure you want to delete this"                                                          =               "Are you sure you want to delete this"
 "Please select Home team, Away team and League to start the encoder"                            =               "Please select Home team, Away team and League to start the encoder";
 "If you log out, you need internet to log in. Are you sure you want to log out?"                =               "If you log out, you need internet to log in. Are you sure you want to log out?";
 

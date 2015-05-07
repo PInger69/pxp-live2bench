@@ -82,7 +82,7 @@
     
     saveMessage = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, textViewFrame.size.width, 25)];
     saveMessage.center = textField.center;
-    [saveMessage setText: [NSString stringWithFormat:@"%@ %@",title, @"was saved!"]];
+    [saveMessage setText: [NSString stringWithFormat:@"%@ %@",title,NSLocalizedString(@"was saved!", nil) ]];
     [saveMessage setFont:[UIFont defaultFontOfSize:18.0f]];
     [saveMessage setTextColor:PRIMARY_APP_COLOR];
     [saveMessage setBackgroundColor:[UIColor clearColor]];
@@ -94,13 +94,13 @@
     // Setting up buttons
     saveButton = [BorderButton buttonWithType:UIButtonTypeCustom];
     [saveButton setFrame:CGRectMake(thisFrame.size.width - DEFALT_BUTTON_WIDTH -5, textViewFrame.size.height+5, DEFALT_BUTTON_WIDTH, DEFALT_BUTTON_HEIGHT)];
-    [saveButton setTitle:@"Save" forState:UIControlStateNormal];
+    [saveButton setTitle:NSLocalizedString(@"Save", nil)  forState:UIControlStateNormal];
     [saveButton addTarget:self action:@selector(onSave:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:saveButton];
     
     clearButton = [BorderButton  buttonWithType:UIButtonTypeCustom];
     [clearButton setFrame:CGRectMake(5, textViewFrame.size.height+5, DEFALT_BUTTON_WIDTH, DEFALT_BUTTON_HEIGHT)];
-    [clearButton setTitle:@"Clear" forState:UIControlStateNormal];
+    [clearButton setTitle:NSLocalizedString(@"Clear", nil)  forState:UIControlStateNormal];
     [clearButton addTarget:self action:@selector(onClear:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:clearButton];
     

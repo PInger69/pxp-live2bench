@@ -15,13 +15,11 @@
     
     UILabel *tagname;
     UILabel *tagtime;
-    UIImageView *ratingshown;
-    UILabel *ratingnumber;
 //    ClipCornerView *tagcolor;
     UIButton *coachpickButton;
     UIImageView *tagImage;
 //    UIActivityIndicatorView *tagActivityIndicator;
-    UIImageView *tagRatingOne;
+//    UIImageView *tagRatingOne;
 //    UIImageView *tagRatingTwo;
 //    UIImageView *tagRatingThree;
 //    UIImageView *tagRatingFour;
@@ -32,7 +30,7 @@
     UILabel *playersLabel;
     UIButton *controlButton;
     UIView *translucentEditingView;
-    UIImageView *checkmarkOverlay;
+//    UIImageView *checkmarkOverlay;
 }
 @property (nonatomic, strong) UILabel *tagname;
 @property (nonatomic, strong) UILabel *tagtime;
@@ -41,23 +39,21 @@
 //@property (nonatomic, strong) DownloadButton *bookmarkButton;
 @property (nonatomic, strong) UIImageView *tagImage;
 @property (nonatomic, strong) UIActivityIndicatorView *tagActivityIndicator;
-@property (nonatomic, strong) UIImageView *tagRatingOne;
-@property (nonatomic, strong) UIImageView *tagRatingTwo;
-@property (nonatomic, strong) UIImageView *tagRatingThree;
-@property (nonatomic, strong) UIImageView *tagRatingFour;
-@property (nonatomic, strong) UIImageView *tagRatingFive;
+//@property (nonatomic, strong) UIImageView *tagRatingOne;
+//@property (nonatomic, strong) UIImageView *tagRatingTwo;
+//@property (nonatomic, strong) UIImageView *tagRatingThree;
+//@property (nonatomic, strong) UIImageView *tagRatingFour;
+//@property (nonatomic, strong) UIImageView *tagRatingFive;
 @property (nonatomic) BOOL imageLoaded;
 @property (nonatomic, strong) UITextView *tagInfoText;
 @property (nonatomic, strong) UIScrollView *tagPlayersView;
 @property (nonatomic, strong) UIButton *controlButton;
 @property (nonatomic, strong) UILabel *playersNumberLabel;
 @property (nonatomic, strong) UIView *translucentEditingView;
-@property (nonatomic, strong) UIImageView *checkmarkOverlay;
+//@property (nonatomic, strong) UIImageView *checkmarkOverlay;
 @property (nonatomic, strong) UILabel *playersLabel;
 
 
-@property (nonatomic,strong) UIImageView                *ratingshown; //display rating on tag image//@property (nonatomic, strong) NSIndexPath *indexPath;
-@property (nonatomic,strong) UILabel *ratingnumber;
 //@property (nonatomic, strong) id <UITableViewDataSource> tableViewDataSource;
 
 

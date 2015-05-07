@@ -16,6 +16,7 @@
 #import "RatingOutput.h"
 
 
+
 @interface ListTableViewController ()
 
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
@@ -43,7 +44,7 @@
         //self.tableView.layer.borderColor = [[UIColor grayColor] CGColor];
         
         [self.tableView registerClass:[ListViewCell class] forCellReuseIdentifier:@"ListViewCell"];
-        self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
+        self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:NSLocalizedString(@"Select Sources:", nil)  buttonListNames:@[]];
         self.sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
         
         //        self.deleteButton = [[UIButton alloc] init];
@@ -281,7 +282,8 @@
     
     [cell.tagtime setText: tag.displayTime];
     
-    
+    RatingOutput *ratingoutput = [ [RatingOutput alloc] init];
+    ratingoutput.rating = tag.rating;
     
     UIColor *thumbColour = [Utility colorWithHexString:tag.colour];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];

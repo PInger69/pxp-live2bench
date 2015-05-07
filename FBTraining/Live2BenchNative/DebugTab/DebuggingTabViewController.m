@@ -98,8 +98,8 @@ static void *  debugContext = &debugContext;
         
       
         
-        RatingOutput *ratingoutput = [[RatingOutput alloc] initWithFrame:CGRectMake(100, 100, 400, 400) ];
-        ratingoutput.rating = -40;
+        RatingOutput *ratingoutput = [[RatingOutput alloc] initWithFrame:CGRectMake(400, 400, 400, 400) ];
+        ratingoutput.rating = 2;
 
          [self.view addSubview:ratingoutput];
     }

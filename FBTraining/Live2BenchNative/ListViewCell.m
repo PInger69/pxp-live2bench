@@ -8,7 +8,7 @@
 
 #import "ListViewCell.h"
 #import "RatingOutput.h"
-#import "RatingInput.h"
+
 
 
 
@@ -23,7 +23,8 @@
 @implementation ListViewCell
 
 @synthesize tagname,tagtime,tagImage,coachpickButton,tagInfoText,controlButton,tagPlayersView,playersNumberLabel;
-@synthesize translucentEditingView,checkmarkOverlay;
+@synthesize translucentEditingView;
+//checkmarkOverlay;
 @synthesize playersLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -52,7 +53,7 @@
     //
     //    self.myContentView = anExtraView;
     //
-    self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
+    //self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
     //    [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
     //    [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     //    [self.deleteButton setBackgroundColor:[UIColor redColor]];
@@ -129,6 +130,8 @@
     [self.tagImage addSubview:tagtime];
     
     
+    RatingOutput *ratingoutput = [ [RatingOutput alloc] initWithFrame:CGRectMake(tagImage.frame.size.width -32, tagImage.frame.size.height - 18.0f, 70.0f, 17.0f)];
+    [self.tagImage addSubview:ratingoutput];
     
     
 
@@ -224,7 +227,7 @@
     return newRect;*/
 }
 
-- (void)setRatingStars:(int)number {
+/*- (void)setRatingStars:(int)number {
     switch (number) {
         case 0:
             [self.tagRatingOne removeFromSuperview];
@@ -311,7 +314,7 @@
         default:
             break;
     }
-}
+}*/
 
 
 @end

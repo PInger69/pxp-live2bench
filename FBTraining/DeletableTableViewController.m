@@ -27,7 +27,7 @@
         self.deleteButton = [[UIButton alloc] init];
         self.deleteButton.backgroundColor = [UIColor redColor];
         [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
-        [self.deleteButton setTitle: @"Delete All" forState: UIControlStateNormal];
+        [self.deleteButton setTitle:NSLocalizedString(@"Delete All", nil)  forState: UIControlStateNormal];
         [self.deleteButton.titleLabel setTextColor:[UIColor whiteColor]];
         [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -36,7 +36,7 @@
         self.shareButton = [[UIButton alloc] init];
         self.shareButton.backgroundColor = PRIMARY_APP_COLOR;
         [self.shareButton addTarget:self action:@selector(shareAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
-        [self.shareButton setTitle: @"Share All" forState: UIControlStateNormal];
+        [self.shareButton setTitle:NSLocalizedString(@"Share All", nil) forState: UIControlStateNormal];
         [self.shareButton.titleLabel setTextColor:[UIColor whiteColor]];
         [self.shareButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -180,13 +180,13 @@
 
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:@"myplayXplay"];
+    [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
     alert.type = AlertImportant;
-    [alert setMessage:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]];
+    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these", nil), [self.contextString lowercaseString]]];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:@"Yes(From server and local device)"];
-    [alert addButtonWithTitle:@"Yes(Only local)"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle: NSLocalizedString(@"Yes(From server and local device)", nil)];
+    [alert addButtonWithTitle: NSLocalizedString(@"Yes(Only local)", nil)];
+    [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
     [alert show];
 }
 
@@ -197,11 +197,11 @@
         
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         alert.type = AlertImportant;
-        [alert setTitle:@"myplayXplay"];
-        [alert setMessage:[NSString stringWithFormat:@"Are you sure you want to delete this %@?", [self.contextString lowercaseString]]];
+        [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
+        [alert setMessage:[NSString stringWithFormat:@"%@ %@?", NSLocalizedString(@"Are you sure you want to delete this", nil), [self.contextString lowercaseString]]];
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-        [alert addButtonWithTitle:@"Yes"];
-        [alert addButtonWithTitle:@"No"];
+        [alert addButtonWithTitle: NSLocalizedString(@"Yes", nil)];
+        [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
         [alert show];
         
         

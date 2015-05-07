@@ -300,7 +300,7 @@
         [fbAndEmailNote setLineBreakMode:NSLineBreakByWordWrapping];
         [fbAndEmailNote setTextAlignment: NSTextAlignmentCenter];
         [fbAndEmailNote setTextColor:[Utility colorWithHexString:@"#575757"]];
-        [fbAndEmailNote setText:@"Note: Login settings for Facebook and Email are available in your iPad's settings app."];
+        [fbAndEmailNote setText:NSLocalizedString(@"Note: Login settings for Facebook and Email are available in your iPad's settings app.", nil) ];
         
         return fbAndEmailNote;
     }

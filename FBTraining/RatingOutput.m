@@ -33,8 +33,8 @@ static UIImage* rateSelected;
             for(int i = 0;i<5;i++) {
                     
                 
-                UIImageView * star = [[ UIImageView alloc] initWithFrame:CGRectMake(110 + 40*i, 3, STAR_SIZE, STAR_SIZE)];
-                [star setBackgroundColor:[UIColor blackColor]];
+                UIImageView * star = [[ UIImageView alloc] initWithFrame:CGRectMake(110 + 30*i, 3, STAR_SIZE, STAR_SIZE)];
+                //[star setBackgroundColor:[UIColor blackColor]];
                 [star setImage: rateSelected];
                 [star setContentMode:UIViewContentModeScaleAspectFit];
                 [star setHidden:true];

@@ -346,7 +346,7 @@
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
     if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i %@\n%i %@", (localOne.downloadedSources.count + event.downloadedSources.count), NSLocalizedString(@"Downloaded", nil), event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
     } else {
         [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
     }
