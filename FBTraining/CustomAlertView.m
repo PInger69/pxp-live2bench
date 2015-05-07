@@ -7,6 +7,7 @@
 //
 
 #import "CustomAlertView.h"
+#import "AlertsSettingViewController.h"
 
 static NSMutableArray * alertPool;
 
@@ -20,56 +21,40 @@ static AlertType    allowedTypes;
 +(void)staticInit {
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
-
-    allowedTypes        = AlertImportant;
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:nil userInfo:@{@"name":@"Alerts", @"block":^(NSArray *settingOptions, NSArray *onOrOff){
-        for (int i = 0; i < [settingOptions count]; i++) {
-            if ([((NSNumber *)onOrOff[i]) integerValue] == 1) {
-                if ([settingOptions[i] isEqualToString:@"Notification Alerts"]){
-                    allowedTypes = allowedTypes | AlertNotification;
-                } else if ([settingOptions[i] isEqualToString:@"Encoder Alerts"]){
-                    allowedTypes = allowedTypes | AlertEncoder;
-                } else if ([settingOptions[i] isEqualToString:@"Device Alerts"]){
-                    allowedTypes = allowedTypes | AlertDevice;
-                } else {
-                    allowedTypes = allowedTypes | AlertIndecisive;
-                }
-            }
-        }
-    }}];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(allowedTypesChanged:) name:@"Setting - Alerts" object:nil];
+    __block NSDictionary *alertSettings;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS
+                                                        object:nil
+                                                      userInfo:@{ @"Class": [AlertsSettingViewController class],
+                                                                  @"Block": ^(NSDictionary *settings)
+    {
+        alertSettings = settings;
+    }
+                                                                  }];
+    
+    allowedTypes = AlertImportant;
+    
+    if ([alertSettings[ALERT_NOTIFICATION] boolValue]) allowedTypes |= AlertNotification;
+    if ([alertSettings[ALERT_ENCODER] boolValue]) allowedTypes |= AlertEncoder;
+    if ([alertSettings[ALERT_DEVICE] boolValue]) allowedTypes |= AlertDevice;
+    if ([alertSettings[ALERT_INDECISIVE] boolValue]) allowedTypes |= AlertIndecisive;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertsSettingChanged:) name:NOTIF_ALERTS_SETTING_CHANGED object:nil];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{}];
+    
 }
 
-+(void)allowedTypesChanged:(NSNotification *)note {
-    if ([note.userInfo[@"Name"] isEqualToString:@"Notification Alerts"]) {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            allowedTypes = allowedTypes & (~AlertNotification);
-        } else {
-            allowedTypes = allowedTypes | AlertNotification;
-        }
-    } else if ([note.userInfo[@"Name"] isEqualToString:@"Encoder Alerts"]){
-        if (![note.userInfo[@"Value"] boolValue]) {
-            allowedTypes = allowedTypes & (~AlertEncoder);
-        } else {
-            allowedTypes = allowedTypes | AlertEncoder;
-        }
-    } else if ([note.userInfo[@"Name"] isEqualToString:@"Device Alerts"]){
-        if (![note.userInfo[@"Value"] boolValue]) {
-            allowedTypes = allowedTypes & (~AlertDevice);
-        } else {
-            allowedTypes = allowedTypes | AlertDevice;
-        }
-    } else {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            allowedTypes = allowedTypes & (~AlertIndecisive);
-        } else {
-            allowedTypes = allowedTypes | AlertIndecisive;
-        }
-    }
++ (void)alertsSettingChanged:(NSNotification *)note {
+    NSDictionary *alertSettings = note.userInfo;
+    
+    allowedTypes = AlertImportant;
+    
+    if ([alertSettings[ALERT_NOTIFICATION] boolValue]) allowedTypes |= AlertNotification;
+    if ([alertSettings[ALERT_ENCODER] boolValue]) allowedTypes |= AlertEncoder;
+    if ([alertSettings[ALERT_DEVICE] boolValue]) allowedTypes |= AlertDevice;
+    if ([alertSettings[ALERT_INDECISIVE] boolValue]) allowedTypes |= AlertIndecisive;
 }
 
 +(void)dismissAll
