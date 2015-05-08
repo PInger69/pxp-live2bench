@@ -214,7 +214,9 @@ int viewWillAppearCalled;
         // Setup shareController
         
         // take first feed
-        Feed *feed = clipToPlay.feeds[@"s_00"];
+        
+        Feed *feed = clipToPlay.feeds[@"source0"];
+        
         self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
         self.shareButton.hidden = NO;
     }];
@@ -560,7 +562,7 @@ int viewWillAppearCalled;
     self.sharePop.popoverContentSize = CGSizeMake(280, 180);
     [self.sharePop presentPopoverFromRect:self.shareButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
      */
-    [self.shareController presentOptionsMenuFromRect:self.view.frame inView:self.view animated:YES];
+    [self.shareController presentOptionsMenuFromRect:CGRectZero inView:self.shareButton animated:YES];
 }
 
 
