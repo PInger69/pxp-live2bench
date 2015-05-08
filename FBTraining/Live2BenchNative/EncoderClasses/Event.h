@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "EncoderProtocol.h"
 
 
 @interface Event : NSObject
@@ -38,6 +38,8 @@
 @property (nonatomic,strong) NSDictionary        * teams;
 @property (nonatomic,strong) NSDictionary        * playerData;
 @property (nonatomic,strong) NSDictionary        * league;
+
+@property (nonatomic,strong) id <EncoderProtocol> parentEncoder;
 
 
 

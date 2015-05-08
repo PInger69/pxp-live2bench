@@ -256,7 +256,7 @@
     return _event;
 }
 
-#pragma - Make COmmands
+#pragma - Make Commands
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp
 {
@@ -510,7 +510,7 @@
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    encoderConnection.connectionType        = MODIFY_TAG;
+    encoderConnection.connectionType        = DELETE_EVENT;
     encoderConnection.timeStamp             = aTimeStamp;
 
 }
@@ -788,6 +788,18 @@
  */
 -(void)authenticateResponse:(NSData *)data
 {
+    
+    PXPLog(@"Encoder Authentication DISABLED!!!");
+    [self willChangeValueForKey:@"authenticated"];
+    _authenticated = YES;
+    PXPLog(@"Warning: JSON was malformed");
+    [self didChangeValueForKey:@"authenticated"];
+    isAuthenticate = YES;
+    return;
+    
+    
+    
+    
     
     NSDictionary    * results;
     
