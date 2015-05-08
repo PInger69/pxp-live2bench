@@ -16,7 +16,7 @@
 
 @interface ToggleSettingViewController : SettingViewController
 
-@property (strong, nonatomic, nonnull) NSArray *toggles;
+@property (readonly, nonatomic, nonnull) NSArray *toggles;
 @property (weak, nonatomic, nullable) id<ToggleSettingViewControllerDelegate> delegate;
 
 // toggles = @[@{ @"Name": NSString, @"Identifier": NSString}, ...]

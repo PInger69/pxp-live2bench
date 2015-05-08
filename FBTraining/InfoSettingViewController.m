@@ -8,7 +8,9 @@
 
 #import "InfoSettingViewController.h"
 
-@interface InfoSettingViewController () <SwipeableCellDelegate, UIAlertViewDelegate>
+@interface InfoSettingViewController () <SwipeableCellDelegate, UITableViewDataSource, UIAlertViewDelegate>
+
+@property (strong, nonatomic, nonnull) UITableView *tableView;
 
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *appVersionCell;
 @property (strong, nonatomic, nonnull) SwipeableTableViewCell *systemVersionCell;
@@ -26,6 +28,13 @@
 - (instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel name:NSLocalizedString(@"Information", nil) identifier:@"Information"];
     if (self) {
+        
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
+        self.tableView.dataSource = self;
+        self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+        self.navigationItem.leftItemsSupplementBackButton = YES;
+        [self.tableView registerClass:[SwipeableTableViewCell class] forCellReuseIdentifier:@"SwipeableCell"];
+        [self.view addSubview:self.tableView];
         
         NSInteger nCells = 6;
         NSMutableArray *cells = [NSMutableArray arrayWithCapacity:6];
@@ -136,6 +145,12 @@
     [self presentViewController:eulaViewController animated:YES completion:nil];
 }
 
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.cells.count;
 }
@@ -144,7 +159,7 @@
     return self.cells[indexPath.row];
 }
 
-#pragma mark - SwipeableTableViewCell methods
+#pragma mark - SwipeableTableViewCellDelegate
 
 - (void)buttonOneActionForItemText:(NSString *)itemText {
     

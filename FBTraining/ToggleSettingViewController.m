@@ -8,18 +8,30 @@
 
 #import "ToggleSettingViewController.h"
 
-@interface ToggleSettingViewController () <SwipeableCellDelegate>
+@interface ToggleSettingViewController () <UITableViewDataSource, SwipeableCellDelegate>
+
+@property (strong, nonatomic, nonnull) UITableView *tableView;
 
 @end
 
 @implementation ToggleSettingViewController
 
+@synthesize delegate = _delegate;
 @synthesize toggles = _toggles;
+@synthesize tableView = _tableView;
 
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel name:(nonnull NSString *)name identifier:(nonnull NSString *)identifier toggles:(nonnull NSArray *)toggles {
     self = [super initWithAppDelegate:appDel name:name identifier:identifier];
     if (self) {
-        self.toggles = toggles;
+        
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
+        self.tableView.dataSource = self;
+        self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+        self.navigationItem.leftItemsSupplementBackButton = YES;
+        [self.tableView registerClass:[SwipeableTableViewCell class] forCellReuseIdentifier:@"SwipeableCell"];
+        [self.view addSubview:self.tableView];
+        
+        _toggles = toggles;
     }
     return self;
 }
@@ -34,7 +46,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - UITableViewControllerDataSource
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.toggles.count;

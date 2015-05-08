@@ -13,7 +13,7 @@
 #import "EncoderManager.h"
 #import "SwipeableTableViewCell.h"
 
-@interface SettingViewController: UITableViewController<UITableViewDelegate, UITableViewDataSource>
+@interface SettingViewController: UIViewController
 
 // the display name under settings
 @property (readonly, nonatomic, nonnull) NSString *name;

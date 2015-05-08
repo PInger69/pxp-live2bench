@@ -570,6 +570,7 @@
 		AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToastObserverSettingViewController.m; sourceTree = "<group>"; };
 		AE5073A61AFC1DCE002C361D /* ToggleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleSettingViewController.h; sourceTree = "<group>"; };
 		AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToggleSettingViewController.m; sourceTree = "<group>"; };
+		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		BD18B6F817F22A270089873C /* bookmarkedit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bookmarkedit.png; sourceTree = "<group>"; };
 		BD18B6F917F22A270089873C /* bookmarkedit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmarkedit@2x.png"; sourceTree = "<group>"; };
 		BD18B70017F23A6F0089873C /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -1288,6 +1289,7 @@
 		AE50739C1AFC1DBF002C361D /* SettingViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */,
 				AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */,
 				AE50739E1AFC1DCE002C361D /* InfoSettingViewController.h */,
 				AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */,
