@@ -248,7 +248,8 @@
                 
                 Feed *source;
                 if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {                    
-                    source = [[Feed alloc] initWithURLString:path quality:0];
+                    source = [[Feed alloc] initWithFileURL:path];
+                    //source = [[Feed alloc] initWithURLString:path quality:1];
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                 } else {
                     source = [[Feed alloc] initWithURLString:data quality:0];
@@ -345,12 +346,20 @@
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
+<<<<<<< HEAD
     if (localOne) {
         [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i %@\n%i %@", (localOne.downloadedSources.count + event.downloadedSources.count), NSLocalizedString(@"Downloaded", nil), event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
+=======
+    if (event.local) {
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", localOne.downloadedSources.count,event.mp4s.count]];
+>>>>>>> fee369a9635b8618768e70b80ec13ec61cfe186b
     } else {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+        if (localOne) {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+        } else {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+        }
     }
-    
     
     [cell setSelectionStyle: UITableViewCellSelectionStyleNone];
     
@@ -419,6 +428,10 @@
             [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
             [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
             [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+            
+            for (Event *eventToDelete in arrayOfTagsToRemove) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToDelete];
+            }
         }
         
         [self.setOfDeletingCells removeAllObjects];
@@ -434,6 +447,7 @@
             Event *eventToRemove = self.tableData[self.editingIndexPath.row];
             
             if (buttonIndex == 0) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];
                 [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -450,6 +464,7 @@
         } else {
             if (buttonIndex == 0) {
                 Event *eventToRemove = self.tableData[self.editingIndexPath.row];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self removeIndexPathFromDeletion];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];

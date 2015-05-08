@@ -25,6 +25,7 @@
 @property (nonatomic,assign) BOOL           deleted;
 @property (nonatomic,assign) BOOL           local;
 @property (nonatomic,assign) BOOL           live;
+
 @property (nonatomic, strong) NSMutableDictionary  * downloadingItemsDictionary;
 
 //This property contains tags that have not yet been uploaded to the server

@@ -42,6 +42,9 @@
 
 @interface BookmarkViewController ()
 
+@property (strong, nonatomic) Clip *currentClip;
+@property (strong, nonatomic) UIDocumentInteractionController *shareController;
+
 @property (strong, nonatomic) BookmarkTableViewController *tableViewController;
 @property (strong, nonatomic) NSDictionary                *feeds;
 @property (strong, nonatomic) UIButton                    * filterButton;
@@ -186,6 +189,7 @@ int viewWillAppearCalled;
 //    }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_CLIP_SELECTED" object:nil queue:nil usingBlock:^(NSNotification *note) {
+        
         Clip *clipToPlay = note.object;
         [tagPopoverContent removeFromSuperview];
         tagPopoverContent = nil;
@@ -206,6 +210,13 @@ int viewWillAppearCalled;
         [self.informationarea addSubview: self.ratingAndCommentingView.view];
         
         [self.videoPlayer playFeed: [[clipToPlay.feeds allValues] firstObject]];
+        
+        // Setup shareController
+        
+        // take first feed
+        Feed *feed = clipToPlay.feeds[@"s_00"];
+        self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
+        self.shareButton.hidden = NO;
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){
@@ -287,8 +298,8 @@ int viewWillAppearCalled;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Entering FullScreen" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Exiting FullScreen" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
     
     
     progressBar = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -531,21 +542,25 @@ int viewWillAppearCalled;
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
-//    self.shareButton = [[UIButton alloc] initWithFrame:CGRectMake(850, 710, 74, 58)];
-//    [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
-//    [self.shareButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-//    [self.shareButton addTarget:self action:@selector(popShareOptions:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:self.shareButton];
+    self.shareButton = [[UIButton alloc] initWithFrame:CGRectMake(850, 710, 74, 58)];
+    [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [self.shareButton addTarget:self action:@selector(popShareOptions:) forControlEvents:UIControlEventTouchUpInside];
+    self.shareButton.hidden = YES;
+    [self.view addSubview:self.shareButton];
     
     /////////////////////////////////////////////////////////////////
 }
 
 - (void)popShareOptions:(id)sender {
+    /*
     //ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray:[[SocialSharingManager CommonManager] arrayOfSharingOptions]];
     ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
     self.sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
     self.sharePop.popoverContentSize = CGSizeMake(280, 180);
     [self.sharePop presentPopoverFromRect:self.shareButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+     */
+    [self.shareController presentOptionsMenuFromRect:self.view.frame inView:self.view animated:YES];
 }
 
 
@@ -842,7 +857,7 @@ int viewWillAppearCalled;
                   selector:@selector(caseInsensitiveCompare:)];
     }  else if (sortType & RATING_FIELD) {
         
-        sorter = [NSSortDescriptor sortDescriptorWithKey:@"Rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
+        sorter = [NSSortDescriptor sortDescriptorWithKey:@"rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
     } else {
         return toSort;
     }

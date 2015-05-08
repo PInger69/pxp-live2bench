@@ -190,8 +190,9 @@
    
     }
     [self setFrame:CGRectMake(myXY.x, myXY.y, buttonWidth*count, buttonHeight)];
-
-    
+    if (_buttonArray.count <= 1) {
+        self.hidden = YES;
+    }
 }
 
 -(UIButton*)makeButton:(NSString*)aName key:(NSString*)aKey

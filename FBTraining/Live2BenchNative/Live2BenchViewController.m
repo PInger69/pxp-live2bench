@@ -22,6 +22,7 @@
 #import "MultiPip.h"
 #import "CustomAlertView.h"
 #import "ReusableBottomViewController.h"
+#import "ListPopoverController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -56,6 +57,7 @@
     UISwipeGestureRecognizer            * swipeGesture;
     
     UILabel                             *informationLabel;
+    ListPopoverController               *_teamPick;
     //TemporaryButton
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
@@ -214,7 +216,6 @@ static void * eventContext      = &eventContext;
     } else if (context == &eventContext){
         [self onEventChange];
     }
-
 }
 
 
@@ -228,7 +229,7 @@ static void * eventContext      = &eventContext;
 // when the event changes mod these
 -(void)onEventChange
 {
-
+    
     if ([_encoderManager.currentEvent isEqualToString:@"None"]){
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
         self.videoPlayer.live   = NO;
@@ -236,6 +237,7 @@ static void * eventContext      = &eventContext;
         _tagButtonController.enabled = NO;
     } else if ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName]){      // LIVE
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         self.videoPlayer.live   = YES;
         [_gotoLiveButton isActive:YES];
         _tagButtonController.enabled = YES;
@@ -244,19 +246,20 @@ static void * eventContext      = &eventContext;
             [self.videoPlayer play];
         }
     } else if (_encoderManager.currentEvent == nil) { // CLIPs and playing back old events
+        NSLog(@"%@", _encoderManager.currentEvent);
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:NO]; // TODO
         _tagButtonController.enabled = NO;
     } else { // CLIPs and playing back old events
-        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
+        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_EVENT];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live   = NO;
         [_gotoLiveButton isActive:YES]; // TODO
         _tagButtonController.enabled = YES;
     }
-    
     [multiButton setHidden:!([_encoderManager.feeds count]>1)];
-    
 }
 
 -(void)gotLiveEvent
@@ -265,6 +268,18 @@ static void * eventContext      = &eventContext;
     self.videoPlayer.live   = YES;
     [_gotoLiveButton isActive:YES];
     _tagButtonController.enabled = YES;
+    
+    Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
+    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
+    [_teamPick addOnCompletionBlock:^(NSString *pick){
+        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
+        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
+                                                         userInfo:@{@"tabName":@"Live2Bench"}];
+        NSString *info = @"Live";
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+    }];
+    [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                               animated:YES];
 }
 
 #pragma mark -
@@ -505,8 +520,17 @@ static void * eventContext      = &eventContext;
 {
     if (![_appDel.encoderManager.currentEvent isEqualToString:_appDel.encoderManager.liveEventName]) {
         _appDel.encoderManager.currentEvent = _appDel.encoderManager.liveEventName;
-
+        Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
+        _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
+        [_teamPick addOnCompletionBlock:^(NSString *pick){
+            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
+            NSString *info = @"Live";
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+        }];
+        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                   animated:YES];
     }
+    
     [_pipController pipsAndVideoPlayerToLive];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
@@ -561,68 +585,68 @@ static void * eventContext      = &eventContext;
 -(void)restartPlayer
 {
     
-    [self.videoPlayer.view removeFromSuperview];
-    self.videoPlayer                        = nil;
-    self.videoPlayer                        = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-    self.videoPlayer.playerContext          = STRING_LIVE2BENCH_CONTEXT;
-
-    _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
-    _pip.isDragAble  = YES;
-    _pip.hidden      = YES;
-    _pip.muted       = YES;
-    _pip.dragBounds  = self.videoPlayer.view.frame;
-    [self.videoPlayer.view addSubview:_pip];
-    
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
-    
-    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
-    _pipController.context = STRING_LIVE2BENCH_CONTEXT;
-    
-    [_pipController addPip:_pip];
-    [_pipController viewDidLoad];
-    [self.view addSubview:_feedSwitch];
-
-    
-    _videoBarViewController.videoPlayer     = self.videoPlayer;
-    _pipController.videoPlayer              = self.videoPlayer;
-    _fullscreenViewController.player        = self.videoPlayer;
-
-    [self.videoPlayer.view addSubview:_pip];
-    [self.view addSubview:self.videoPlayer.view];
-    
+//    [self.videoPlayer.view removeFromSuperview];
+//    self.videoPlayer                        = nil;
+//    self.videoPlayer                        = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+//    self.videoPlayer.playerContext          = STRING_LIVE2BENCH_CONTEXT;
+//
+//    _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
+//    _pip.isDragAble  = YES;
+//    _pip.hidden      = YES;
+//    _pip.muted       = YES;
+//    _pip.dragBounds  = self.videoPlayer.view.frame;
+//    [self.videoPlayer.view addSubview:_pip];
+//    
+//    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
+//    
+//    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
+//    _pipController.context = STRING_LIVE2BENCH_CONTEXT;
+//    
+//    [_pipController addPip:_pip];
+//    [_pipController viewDidLoad];
+//    [self.view addSubview:_feedSwitch];
+//
+//    
+//    _videoBarViewController.videoPlayer     = self.videoPlayer;
+//    _pipController.videoPlayer              = self.videoPlayer;
+//    _fullscreenViewController.player        = self.videoPlayer;
+//
+//    [self.videoPlayer.view addSubview:_pip];
+//    [self.view addSubview:self.videoPlayer.view];
+//    
     [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-    [self.videoPlayer play];
-    
-    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
-    swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
-    swipeGesture.numberOfTouchesRequired = 3;
-    [self.videoPlayer.view addGestureRecognizer: swipeGesture];
-    [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
-    
-    
-    
-    
-    // Richard
-    
-    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
-    [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    //_videoBarViewController.tagMarkerController.arrayOfAllTags =
-    [self.view addSubview:_videoBarViewController.view];
-    
-//    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-//    _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
-//    [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
-//    [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
-//    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    //self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
-    
-    [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
-    // so get buttons are connected to full screen
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+//    [self.videoPlayer play];
+//    
+//    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
+//    swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
+//    swipeGesture.numberOfTouchesRequired = 3;
+//    [self.videoPlayer.view addGestureRecognizer: swipeGesture];
+//    [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
+//    
+//    
+//    
+//    
+//    // Richard
+//    
+//    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
+//    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
+//    [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+//    [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+//    //_videoBarViewController.tagMarkerController.arrayOfAllTags =
+//    [self.view addSubview:_videoBarViewController.view];
+//    
+////    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+////    _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
+////    [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
+////    [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
+////    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
+//    
+//    
+//    //self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
+//    
+//    [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
+//    // so get buttons are connected to full screen
+//    _tagButtonController.fullScreenViewController = _fullscreenViewController;
 
 }
 

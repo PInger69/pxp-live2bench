@@ -87,7 +87,7 @@
         if (screenDetected) [self screenDidConnect:[[NSNotification alloc]initWithName:NOTIF_SWITCH_MAIN_TAB object:[[UIScreen screens] objectAtIndex:1] userInfo:nil]];
         [ExternalScreenButton setAllHidden:!screenDetected];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenMirroringValue:) name:@"Setting - Screen Mirroring" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenMirroringValue:) name:@"Setting - ScreenMirroring" object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addImageToExternal:) name:NOTIF_POST_ON_EXTERNAL_SCREEN object:nil];
     }
@@ -107,11 +107,9 @@
     if (self.doesScreenMirroring) {
         externalWindow = nil;
         
-    }else if([UIScreen screens].count > 1){
+    } else if([UIScreen screens].count > 1){
         externalWindow = [self _buildExternalScreen:screenBounds screen:screenTwo];
     }
-    
-    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:nil userInfo:@{@"name" : [NSString stringWithFormat:@"%@", newValue?@"True":@"False"]}];
 }
 
 /**

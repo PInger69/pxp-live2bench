@@ -11,8 +11,7 @@
 #import "Utility.h"
 #import "Tag.h"
 
-
-
+#import "ToastObserverSettingViewController.h"
 
 @interface ToastObserver ()
 
@@ -40,22 +39,24 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toastTypeChanged:) name:@"Setting - Toast Observer" object:nil];
-        self.toastType = ARNone;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NOTIF_TOAST_SETTING_CHANGED object:nil];
+    
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:self userInfo:@{@"name": @"Toast Observer" ,@"block" : ^(NSArray *settingOptions, NSArray *onOrOff){
-            for (int i = 0; i <= 2; i++) {
-                if ([((NSNumber *)onOrOff[i]) integerValue] == 1) {
-                    if ([settingOptions[i] isEqualToString:@"Tag Synchronized"]) {
-                        self.toastType = self.toastType | ARTagSynchronized;
-                    } else if ([settingOptions[i] isEqualToString:@"Download Complete"]){
-                        self.toastType = self.toastType | ARFileDownloadComplete;
-                    } else {
-                        self.toastType = self.toastType | ARTagCreated;
-                    }
-                }
-            }
-        }}];
+        __block NSDictionary *toastSettings;
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS
+                                                            object:nil
+                                                          userInfo:@{
+                                                                     @"Class": [ToastObserverSettingViewController class],
+                                                                     @"Block": ^(NSDictionary *settings)
+        {
+            toastSettings = settings;
+        }
+                                                                     }];
+        
+        self.toastType = ARNone;
+        if ([toastSettings[TOAST_DOWNLOAD_COMPLETE] boolValue]) self.toastType |= ARFileDownloadComplete;
+        if ([toastSettings[TOAST_TAG_SYNCHRONIZED] boolValue]) self.toastType |= ARTagSynchronized;
+        if ([toastSettings[TOAST_TAG_RECEIVED] boolValue]) self.toastType |= ARTagCreated;
         
         // Refer to ToastObserver.h for an explanation of these following properties:
         self.enabled = YES;
@@ -91,29 +92,13 @@
     }
 }
 
-
--(void)toastTypeChanged: (NSNotification *) note{
-
-    if ([note.userInfo[@"Name"] isEqualToString:@"Download Complete"]) {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            self.toastType = self.toastType & (~ARFileDownloadComplete);
-        } else {
-            self.toastType = self.toastType | ARFileDownloadComplete;
-        }
-    } else if ([note.userInfo[@"Name"] isEqualToString:@"Tag Synchronized"]) {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            self.toastType = self.toastType & (~ARTagSynchronized);
-        } else {
-            self.toastType = self.toastType | ARTagSynchronized;
-        }
-    } else {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            self.toastType = self.toastType & (~ARTagCreated);
-        } else {
-            self.toastType = self.toastType | ARTagCreated;
-        }
-    }
+- (void)settingsChanged: (NSNotification *)note {
+    NSDictionary *toastSettings = note.userInfo;
     
+    self.toastType = ARNone;
+    if ([toastSettings[TOAST_DOWNLOAD_COMPLETE] boolValue]) self.toastType |= ARFileDownloadComplete;
+    if ([toastSettings[TOAST_TAG_SYNCHRONIZED] boolValue]) self.toastType |= ARTagSynchronized;
+    if ([toastSettings[TOAST_TAG_RECEIVED] boolValue]) self.toastType |= ARTagCreated;
 }
 
 -(void)setEnabled:(BOOL)enabled{
@@ -136,7 +121,7 @@
         // If there is only 1 Notification in the queue, animateView is called
         // Otherwise the other 2 methods ( dequeueTheArray and animateView)
         //will keep track of the queue
-        if([self.queueOfNotifications count] == 1){
+        if([self.queueOfNotifications count] == 1) {
             [self animateView];
         }
     }

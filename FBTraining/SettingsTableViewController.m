@@ -7,12 +7,14 @@
 //
 
 #import "SettingsTableViewController.h"
-#import "DetailViewController.h"
 #import "SwipeableTableViewCell.h"
 
 @interface SettingsTableViewController () <SwipeableCellDelegate> {
 
 }
+
+@property (strong, nonatomic) NSArray *settingDefinitions;
+@property (strong, nonatomic) NSMutableDictionary *settingDictionary;
 
 - (void)showDetailWithText:(NSString *)detailText;
 
@@ -34,11 +36,13 @@ NS_OPTIONS(NSInteger, style){
 
 @implementation SettingsTableViewController
 
-- (instancetype)init {
+- (instancetype)initWithSettingDefinitions:(NSArray *)definitions settings:(NSMutableDictionary *)settings {
     self = [super init];
     if (self) {
+        self.settingDefinitions = definitions;
+        self.settingDictionary = settings;
+        
         [self.tableView registerClass:[SwipeableTableViewCell class] forCellReuseIdentifier:@"SwipeableCell"];
-
     }
     return self;
 }
@@ -127,18 +131,49 @@ NS_OPTIONS(NSInteger, style){
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _dataArray.count;
+    return self.settingDefinitions.count;
+    //return _dataArray.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    SwipeableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"SwipeableCell" forIndexPath:indexPath];
+    cell.contentView.translatesAutoresizingMaskIntoConstraints = YES;
+    cell.indexPath = indexPath;
+    cell.delegate = self;
+    cell.button1.hidden = YES;
+    cell.button2.hidden = YES;
+    cell.functionalButton.hidden = YES;
+    
+    // New Cell For Row At Index Path
+    
+    NSDictionary *settingDefinition = self.settingDefinitions[indexPath.row];
+    NSString *name = settingDefinition[@"Name"];
+    UIViewController *vc = settingDefinition[@"ViewController"];
+    NSString *identifier = settingDefinition[@"Identifier"];
+    
+    cell.myTextLabel.text = name;
+    
+    if (vc) {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    } else if ([self.settingDictionary[identifier] isKindOfClass:[NSNumber class]]) {
+        cell.toggoButton.on = [self.settingDictionary[identifier] boolValue];
+        cell.toggoButton.hidden = NO;
+        cell.toggoButton.enabled = YES;
+        cell.toggoButton.onTintColor = PRIMARY_APP_COLOR;
+        cell.toggoButton.tintColor = PRIMARY_APP_COLOR;
+    }
+    
+    // End New Cell For Row At Index Path
+    
+    /*
     // This is because the dictionary was instatiated with NSNumber's that start off at 1
     int index = indexPath.row;
     ++index;
    
     // This is the initialization of the cell
-    SwipeableTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"SwipeableCell" forIndexPath:indexPath];
     
     NSDictionary *cellDictionary = self.dataArray[indexPath.row];
     
@@ -175,6 +210,7 @@ NS_OPTIONS(NSInteger, style){
     
     cell.delegate = self;
     cell.tintColor = PRIMARY_APP_COLOR;
+     */
     return cell;
     
 
@@ -182,6 +218,15 @@ NS_OPTIONS(NSInteger, style){
 
 // This method is only here to make sure that only the cells that segue to other tables can be selected
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    // New Will Select
+    NSDictionary *settingDefinition = self.settingDefinitions[indexPath.row];
+    return settingDefinition[@"ViewController"] ? indexPath : nil;
+    
+    
+    // End New Select
+    /*
+    
     // This is because the dictionary was instatiated with NSNumber's that start off at 1
     int index = indexPath.row;
     ++index;
@@ -195,10 +240,27 @@ NS_OPTIONS(NSInteger, style){
     
     // returning nil means this specific cell cannot be selected
     return nil;
+     //*/
 }
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    // New Settings Table Stuff
+    NSDictionary *settingDefinition = self.settingDefinitions[indexPath.row];
+    if ([settingDefinition[@"ViewController"] isKindOfClass:[UIViewController class]]) {
+        UIViewController *vc = settingDefinition[@"ViewController"];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+            [self.splitViewController showDetailViewController:vc sender:self];
+        } else {
+            self.splitViewController.viewControllers = @[self, vc];
+        }
+    }
+    
+    // End New Setting Table Stuff
+    
+    
+    /*
     // This is because the dictionary was instatiated with NSNumber's that start off at 1
     int index = indexPath.row;
     ++index;
@@ -213,60 +275,55 @@ NS_OPTIONS(NSInteger, style){
         } else {
             self.splitViewController.viewControllers = @[self, (UIViewController *)[settingsDictionary objectForKey:@"CustomViewController"]];
         }
-        return;
-    }
-    
-    //self.detailViewController.index = index;
-    //detailViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-    
-    self.detailViewController.settingsTableViewController = self;
-    self.detailViewController.indexPath = indexPath;
-    //self.detailViewController.arrayOfOptions = [settingsDictionary objectForKey:@"Setting Options"];
-    //self.detailViewController.arrayOfToggleOptions = [settingsDictionary objectForKey:@"Toggle Settings"];
-    //self.detailViewController.swipeableTableViewCell = (SwipeableTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    self.detailViewController.title =[settingsDictionary objectForKey:@"Setting Label"];
-    self.detailViewController.dataDictionary = self.dataArray[indexPath.row][@"DataDictionary"];
-    [self.detailViewController.tableView reloadData];
-    
-    
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        [self.splitViewController showDetailViewController: self.detailViewController sender:self];
     } else {
-        self.splitViewController.viewControllers = @[self, self.detailViewController];
+        
+        //self.detailViewController.index = index;
+        //detailViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+        
+        self.detailViewController.settingsTableViewController = self;
+        self.detailViewController.indexPath = indexPath;
+        //self.detailViewController.arrayOfOptions = [settingsDictionary objectForKey:@"Setting Options"];
+        //self.detailViewController.arrayOfToggleOptions = [settingsDictionary objectForKey:@"Toggle Settings"];
+        //self.detailViewController.swipeableTableViewCell = (SwipeableTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        self.detailViewController.title =[settingsDictionary objectForKey:@"Setting Label"];
+        self.detailViewController.dataDictionary = self.dataArray[indexPath.row][@"DataDictionary"];
+        [self.detailViewController.tableView reloadData];
+        
+        
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+            [self.splitViewController showDetailViewController: self.detailViewController sender:self];
+        } else {
+            self.splitViewController.viewControllers = @[self, self.detailViewController];
+        }
+        //[self.splitViewController showViewController: detailViewController sender: self];
+        //[self.navigationController pushViewController:detailViewController animated:YES];
+        
     }
-    //[self.splitViewController showViewController: detailViewController sender: self];
-    //[self.navigationController pushViewController:detailViewController animated:YES];
-    
-    
+     
+     //*/
 }
 
-
-
-// THIS IS WHERE ALL THE SIGNALS ARE SENT
-#pragma mark- Signal from Detail View Controller
-
-- (void) settingChangedInDetailViewController: (DetailViewController *)detailView withSignal: (NSDictionary *) settingDictionary{
-    NSIndexPath *selectedIndexPath = detailView.indexPath;
-    NSString *name = self.dataArray[selectedIndexPath.row][@"SettingLabel"];
-    
-    NSNotification *note = [NSNotification notificationWithName:[@"Setting - " stringByAppendingString:name] object:nil userInfo: settingDictionary];
-    [[NSNotificationCenter defaultCenter] postNotification: note];
-    NSLog(@"%@", settingDictionary);
-}
-
-//- (void)choseCellWithString: (NSString*)optionLabel{
-//    NSLog(@"The chosen cell was %@", optionLabel);
-//}
 
 #pragma mark - SwipeableCellDelegate
 
 - (void)functionalButtonFromCell: (UITableViewCell *) cell{
-    return;
+    
 }
 
 // This function is called upon when the cells toggle is switched
 - (void)switchStateSignal:(BOOL)onOrOff fromCell: (SwipeableTableViewCell *) theCell{
     
+    NSDictionary *settingDefinition = self.settingDefinitions[theCell.indexPath.row];
+    NSString *identifier = settingDefinition[@"Identifier"];
+    
+    self.settingDictionary[identifier] = [NSNumber numberWithBool:onOrOff];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"Setting - %@", identifier]
+                                                        object:nil
+                                                      userInfo:@{ @"Value": [NSNumber numberWithBool:onOrOff]
+                                                                  }];
+    
+    /*
     NSDictionary *signalPackage = @{@"Name": theCell.myTextLabel.text, @"Value": (onOrOff ? @YES:@NO), @"Type": @"Toggle"};
     
     NSNotification *settingNotification = [NSNotification notificationWithName:[ @"Setting - " stringByAppendingString:  theCell.myTextLabel.text] object:nil userInfo:signalPackage];
@@ -280,6 +337,7 @@ NS_OPTIONS(NSInteger, style){
             setting[@"OptionChar"] = optionChar;
         }
     }
+     */
     
 }
 
@@ -287,14 +345,14 @@ NS_OPTIONS(NSInteger, style){
 - (void)buttonOneActionForItemText:(NSString *)itemText
 {
     // Passing control to another method that opens up a new window
-    [self showDetailWithText:[NSString stringWithFormat:@"%@", itemText]];
+    //[self showDetailWithText:[NSString stringWithFormat:@"%@", itemText]];
 }
 
 // This function is called when the leftmost button is called upon
 - (void)buttonTwoActionForItemText:(NSString *)itemText
 {
     // Passing control to another method that opens up a new window
-    [self showDetailWithText:[NSString stringWithFormat: @"%@", itemText]];
+    //[self showDetailWithText:[NSString stringWithFormat: @"%@", itemText]];
 }
 
 //-(void)specificSettingChosen: (NSString *) theSetting fromCell: (SwipeableTableViewCell *)theCell{
