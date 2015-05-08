@@ -14,7 +14,7 @@
     
 }
 
-static int STAR_SIZE = 20;
+static int STAR_SIZE = 13;
 static UIImage* rateSelected;
 @synthesize rating = _rating;
 
@@ -33,7 +33,7 @@ static UIImage* rateSelected;
             for(int i = 0;i<5;i++) {
                     
                 
-                UIImageView * star = [[ UIImageView alloc] initWithFrame:CGRectMake(110 + 30*i, 3, STAR_SIZE, STAR_SIZE)];
+                UIImageView * star = [[ UIImageView alloc] initWithFrame:CGRectMake(110 + 25*i, 3, STAR_SIZE, STAR_SIZE)];
                 //[star setBackgroundColor:[UIColor blackColor]];
                 [star setImage: rateSelected];
                 [star setContentMode:UIViewContentModeScaleAspectFit];
@@ -55,6 +55,10 @@ static UIImage* rateSelected;
         _rating = rate;
     }
 
+    for (UIImageView *star in starArray) {
+        [star setHidden:true];
+    }
+    
     for( int i=0; i < _rating; i++)
     {
         [starArray[i] setHidden:false];

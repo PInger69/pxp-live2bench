@@ -13,7 +13,6 @@
 #import "FeedSelectCell.h"
 #import "Tag.h"
 #import "DownloadItem.h"
-#import "RatingOutput.h"
 
 
 
@@ -73,7 +72,6 @@
     }
     return self;
 }
-
 
 
 
@@ -282,8 +280,11 @@
     
     [cell.tagtime setText: tag.displayTime];
     
-    RatingOutput *ratingoutput = [ [RatingOutput alloc] init];
-    ratingoutput.rating = tag.rating;
+    
+
+    cell.ratingscale.rating = tag.rating;
+    
+
     
     UIColor *thumbColour = [Utility colorWithHexString:tag.colour];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];

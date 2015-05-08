@@ -199,7 +199,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     
-    [_videoPlayer.liveIndicatorLight setHidden:NO];
+  //  [_videoPlayer.liveIndicatorLight setHidden:NO];
     
     [self.view setFrame:CGRectMake(_videoPlayer.view.frame.origin.x,
                                    _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height,

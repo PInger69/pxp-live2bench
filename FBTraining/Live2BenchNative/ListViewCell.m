@@ -8,6 +8,7 @@
 
 #import "ListViewCell.h"
 #import "RatingOutput.h"
+#import "ListTableViewController.h"
 
 
 
@@ -26,6 +27,7 @@
 @synthesize translucentEditingView;
 //checkmarkOverlay;
 @synthesize playersLabel;
+@synthesize ratingscale;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -40,7 +42,26 @@
 }
 //-(void)deleteButtonPressed{
 //    self.deleteBlock(self);
-//}
+
+
+- (void) prepareForReuse
+{
+    
+    self.tagImage.image = [UIImage imageNamed:@"live.png"];
+    self.tagname.text = @"";
+    self.tagtime.text = @"";
+    self.tagInfoText.text = @"";
+    self.tagcolor.backgroundColor = nil;
+    self.myContentView = nil;
+    self.playersLabel.text = @"";
+    self.playersNumberLabel.text = @"";
+    self.ratingscale.rating = 0;
+    
+    [super prepareForReuse];
+    
+}
+
+
 
 - (void)setupView
 {
@@ -129,11 +150,9 @@
     [tagtime setFont:[UIFont defaultFontOfSize:17.0f]];
     [self.tagImage addSubview:tagtime];
     
-    
-    RatingOutput *ratingoutput = [ [RatingOutput alloc] initWithFrame:CGRectMake(tagImage.frame.size.width -32, tagImage.frame.size.height - 18.0f, 70.0f, 17.0f)];
-    [self.tagImage addSubview:ratingoutput];
-    
-    
+   
+    self.ratingscale = [ [RatingOutput alloc] initWithFrame:CGRectMake(tagImage.frame.size.width - 332, tagImage.frame.size.height - 26.0f, 70.0f, 17.0f)];
+    [self.tagImage addSubview:ratingscale];
 
     
     //self.tagcolor.frame.size.width - 5*16.0f - 4*9.0f

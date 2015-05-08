@@ -10,8 +10,10 @@
 #import "UIFont+Default.h"
 #import "ClipCornerView.h"
 #import "DownloadButton.h"
+#import "RatingOutput.h"
 
 @interface ListViewCell : DeletableTableViewCell<UIScrollViewDelegate>{
+    
     
     UILabel *tagname;
     UILabel *tagtime;
@@ -52,6 +54,7 @@
 @property (nonatomic, strong) UIView *translucentEditingView;
 //@property (nonatomic, strong) UIImageView *checkmarkOverlay;
 @property (nonatomic, strong) UILabel *playersLabel;
+@property (nonatomic,strong) RatingOutput *ratingscale;
 
 
 //@property (nonatomic, strong) id <UITableViewDataSource> tableViewDataSource;

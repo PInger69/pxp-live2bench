@@ -8,6 +8,7 @@
 
 #import "thumbnailCell.h"
 #import "Tag.h"
+#import "RatingOutput.h"
 
 #define PADDING             5
 
@@ -20,11 +21,11 @@
 @synthesize thumbColour=_thumbColour;
 @synthesize activityInd=_activityInd;
 @synthesize thumbPeriod = _thumbPeriod;
-@synthesize thumbRatingOne = _thumbRatingOne;
-@synthesize thumbRatingTwo = _thumbRatingTwo;
-@synthesize thumbRatingThree = _thumbRatingThree;
-@synthesize thumbRatingFour = _thumbRatingFour;
-@synthesize thumbRatingFive = _thumbRatingFive;
+//@synthesize thumbRatingOne = _thumbRatingOne;
+//@synthesize thumbRatingTwo = _thumbRatingTwo;
+//@synthesize thumbRatingThree = _thumbRatingThree;
+//@synthesize thumbRatingFour = _thumbRatingFour;
+//@synthesize thumbRatingFive = _thumbRatingFive;
 @synthesize thumbDeleteButton=_thumbDeleteButton;
 @synthesize iPath=_iPath;
 @synthesize imageLoaded;
@@ -32,6 +33,7 @@
 @synthesize translucentEditingView;
 @synthesize checkmarkOverlay;
 @synthesize data = _data;
+@synthesize ratingscale;
 
 - (id)init
 {
@@ -99,14 +101,14 @@
     [self.imageView addSubview:self.thumbColour];
    
     self.thumbName = [[UILabel alloc] initWithFrame:CGRectMake(self.imageView.frame.origin.x+PADDING, 140.0f, self.imageView.bounds.size.width*3/4, 18.0f)];
-    [self.thumbName setText:@"Name"];
+    [self.thumbName setText:NSLocalizedString(@"Name", nil)];
     [self.thumbName setTextColor:[UIColor darkGrayColor]];
     [self.thumbName setBackgroundColor:[UIColor clearColor]];
     [self.thumbName setFont:[UIFont systemFontOfSize:17.0f]];
     [self addSubview:self.thumbName];
     
     self.thumbPeriod = [[UILabel alloc] initWithFrame:CGRectMake(self.thumbName.frame.origin.x+PADDING, CGRectGetMaxY(self.thumbName.frame), self.imageView.bounds.size.width/2, 18.0f)];
-    [self.thumbPeriod setText:@"Period"];
+    [self.thumbPeriod setText:NSLocalizedString(@"Period", nil)];
     [self.thumbPeriod setTextColor:[UIColor darkGrayColor]];
     [self.thumbPeriod setBackgroundColor:[UIColor clearColor]];
     [self.thumbPeriod setFont:[UIFont systemFontOfSize:17.0f]];
@@ -122,39 +124,45 @@
     
     
     self.thumbTime = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbPeriod.frame)-(3*PADDING), CGRectGetMaxY(self.thumbDur.frame), self.imageView.bounds.size.width/2, 18.0f)];
-    [self.thumbTime setText:@"Time"];
+    [self.thumbTime setText: NSLocalizedString(@"Time", nil)];
     [self.thumbTime setTextAlignment:NSTextAlignmentRight];
     [self.thumbTime setTextColor:[UIColor darkGrayColor]];
     [self.thumbTime setBackgroundColor:[UIColor clearColor]];
     [self.thumbTime setFont:[UIFont systemFontOfSize:17.0f]];
     [self addSubview:self.thumbTime];
     
+    
+
+    ratingscale = [[RatingOutput alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width -300, self.imageView.frame.size.height -18.0f, 16.0f, 16.0f)];
+    [self.imageView addSubview:ratingscale];
+    
+    
     //self.thumbColour.frame.size.width - 5*16.0f - 4*9.0f
-    self.thumbRatingOne = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
+    /*self.thumbRatingOne = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingOne setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingOne setFrame:CGRectMake(50, 110.0f, 16.0f, 16.0f)];
-//    [self addSubview:self.thumbRatingOne];
+    [self addSubview:self.thumbRatingOne];
     
     self.thumbRatingTwo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingTwo setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingTwo setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingOne.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-//    [self addSubview:self.thumbRatingTwo];
+    [self addSubview:self.thumbRatingTwo];
     
     self.thumbRatingThree = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingThree setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingThree setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingTwo.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-//    [self addSubview:self.thumbRatingThree];
+    [self addSubview:self.thumbRatingThree];
     
     self.thumbRatingFour = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingFour setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingFour setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingThree.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-//    [self addSubview:self.thumbRatingFour];
+    [self addSubview:self.thumbRatingFour];
 
     self.thumbRatingFive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rating_selected"]];
     [self.thumbRatingFive setContentMode:UIViewContentModeScaleAspectFit];
     [self.thumbRatingFive setFrame:CGRectMake(CGRectGetMaxX(self.thumbRatingFour.frame) + 9.0f, 110.0f, 16.0f, 16.0f)];
-//    [self addSubview:self.thumbRatingFive];
-    imageLoaded = FALSE;
+    [self addSubview:self.thumbRatingFive];*/
+     imageLoaded = FALSE;
     
     self.activityInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [self.activityInd setFrame:CGRectMake((self.thumbColour.frame.size.width - self.activityInd.frame.size.width)/2, CGRectGetMaxY(self.thumbColour.frame) + 62.0f, 37.0f, 37.0f)];
@@ -210,6 +218,8 @@
     self.thumbColour.backgroundColor = nil;
     self.backgroundView = nil;
     self.data = nil;
+    self.ratingscale.rating = 0;
+
     
     self.checkmarkOverlay.hidden = YES;
     self.translucentEditingView.hidden = YES;

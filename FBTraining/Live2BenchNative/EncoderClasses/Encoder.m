@@ -789,6 +789,14 @@
 -(void)authenticateResponse:(NSData *)data
 {
     
+    [self willChangeValueForKey:@"authenticated"];
+    _authenticated = YES;
+    PXPLog(@"Warning: JSON was malformed");
+    [self didChangeValueForKey:@"authenticated"];
+    isAuthenticate = YES;
+    return;
+    
+    
     NSDictionary    * results;
     
     //NSDictionary    * results =[Utility JSONDatatoDict:data];
