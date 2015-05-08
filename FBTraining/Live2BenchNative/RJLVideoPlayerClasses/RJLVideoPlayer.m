@@ -618,7 +618,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                                 [weakSelf seekToInSec:duration];
                             }
                         }
-                        
                     }];
 
 }

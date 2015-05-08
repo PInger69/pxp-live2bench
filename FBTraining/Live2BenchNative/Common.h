@@ -41,7 +41,7 @@
 #define NOTIF_MODIFY_TAG                    @"NOTIF_MODIFY_TAG"
 #define NOTIF_CREATE_TELE_TAG               @"TELE_TAG"
 #define NOTIF_EVENT_FEEDS_READY             @"EVENT_FEEDS_READY"
-#define NOTIF_DELETE_EVENT                  @"NOTIF_DELETE_EVENT"
+#define NOTIF_DELETE_EVENT_SERVER           @"NOTIF_DELETE_EVENT_SERVER"
 
 
 

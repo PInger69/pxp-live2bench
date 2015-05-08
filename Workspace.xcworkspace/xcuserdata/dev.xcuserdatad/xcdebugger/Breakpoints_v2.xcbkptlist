@@ -582,7 +582,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "442"
             endingLineNumber = "442"
-            landmarkName = "-makeTeleTag:timeStamp:"
+            landmarkName = "-makeTag:timeStamp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -598,7 +598,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "424"
             endingLineNumber = "424"
-            landmarkName = "-makeTag:timeStamp:"
+            landmarkName = "-shutdown:timeStamp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -702,7 +702,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "521"
             endingLineNumber = "521"
-            landmarkName = "-summaryGet:timeStamp:"
+            landmarkName = "-deleteEvent:timeStamp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1204,8 +1204,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "398"
             endingLineNumber = "398"
-            landmarkName = "-buildEncoder:timeStamp:"
-            landmarkType = "5">
+            landmarkName = "@implementation Encoder"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1580,7 +1580,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "491"
             endingLineNumber = "491"
-            landmarkName = "-modifyTag:timeStamp:"
+            landmarkName = "-makeTeleTag:timeStamp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1598,6 +1598,53 @@
             endingLineNumber = "812"
             landmarkName = "-notificationDownloadClip:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EncoderManager notificationDownloadClip:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "452611920.590571"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "816"
+                  endingLineNumber = "816"
+                  offsetFromSymbolStart = "174">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__Block_byref_object_copy_480"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "452611920.590906"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "816"
+                  endingLineNumber = "816"
+                  offsetFromSymbolStart = "18">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__Block_byref_object_dispose_481"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "452611920.591218"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "816"
+                  endingLineNumber = "816"
+                  offsetFromSymbolStart = "14">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

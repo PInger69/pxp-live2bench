@@ -10,6 +10,7 @@
 #define L2B_VIDEO_BAR_MODE_DISABLE  0
 #define L2B_VIDEO_BAR_MODE_LIVE     1
 #define L2B_VIDEO_BAR_MODE_CLIP     2
+#define L2B_VIDEO_BAR_MODE_EVENT    3
 
 
 #import <UIKit/UIKit.h>

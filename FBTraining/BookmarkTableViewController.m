@@ -16,6 +16,7 @@
 @interface BookmarkTableViewController ()
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressRecognizer;
 @property (strong, nonatomic) UIPopoverController *sharePop;
+@property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 
 
 @end
@@ -147,7 +148,9 @@
     };
     
     cell.shareBlock = ^(UITableViewCell *cell){
+        self.sharingIndexPath = indexPath;
         ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
+        [shareOptions setOnSelectTarget: self andSelector:@selector(shareWithOption:)];
         UIPopoverController *sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
         sharePop.popoverContentSize = CGSizeMake(280, 180);
         BookmarkViewCell *cellCasted = (BookmarkViewCell *)cell;
@@ -248,13 +251,13 @@
 #pragma mark - Deletion Methods
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:@"myplayXplay"];
+    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
     alert.type = AlertImportant;
-    [alert setMessage:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]];
+    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
     //[alert addButtonWithTitle:@"Yes(From server and local device)"];
-    [alert addButtonWithTitle:@"Yes"];
-    [alert addButtonWithTitle:@"No"];
+    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
 }
 
@@ -319,6 +322,17 @@
     //[self.tableView reloadData];
 }
 
+#pragma mark - Sharing Methods
+-(void)shareWithOption: (NSString *)shareOption{
+    [self.sharePop dismissPopoverAnimated:NO];
+    Clip *clipToShare = self.tableData[self.sharingIndexPath.row];
+    NSArray *arrayToShare = @[@{@"mp4": [clipToShare.videoFiles firstObject]}];
+    [[SocialSharingManager commonManager] shareItems:arrayToShare forSocialObject:shareOption inViewController:self withProgressFrame:self.shareButton.frame];
+    
+    //[self.sharePop dismissPopoverAnimated:YES];
+    BookmarkViewCell *cellToClose = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:self.sharingIndexPath];
+    [cellToClose setCellAccordingToState: cellStateNormal];
+}
 /*
  #pragma mark - Navigation
  

@@ -79,7 +79,6 @@
         _urlPath = [_qualities objectForKey: HIGH_QUALITY];
     }
     return self;
-
 }
 
 -(NSArray *)allPaths{

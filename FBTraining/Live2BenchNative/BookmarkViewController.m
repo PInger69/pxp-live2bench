@@ -281,14 +281,14 @@ int viewWillAppearCalled;
     
     fullScreenMode = FALSE;
     //progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.tableView.frame.origin.x + 12,self.tableView.frame.size.height + 110,200 ,25)];
-    [progressLabel setText:@"Processing"];
+    [progressLabel setText:NSLocalizedString(@"Processing",nil)];
     [progressLabel setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:progressLabel];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Entering FullScreen" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Exiting FullScreen" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
     
     
     progressBar = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -315,7 +315,7 @@ int viewWillAppearCalled;
     numTagsLabel = [[CustomLabel alloc] init];
     [numTagsLabel setMargin:CGRectMake(0, 5, 0, 5)];
     [numTagsLabel setTextAlignment:NSTextAlignmentRight];
-    [numTagsLabel setText:@"Tags"];
+    [numTagsLabel setText:NSLocalizedString(@"Tags",nil)];
     [numTagsLabel setTextColor:[UIColor whiteColor]];
     [numTagsLabel setBackgroundColor:[UIColor lightGrayColor]];
     [numTagsLabel setFont:[UIFont systemFontOfSize:14.0f]];
@@ -486,7 +486,7 @@ int viewWillAppearCalled;
     
     
     
-    commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(1,74, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60) title:@"Comment"];
+    commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(1,74, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60) title:NSLocalizedString(@"Comment",nil)];
     commentingField.enabled = NO;
     [commentingField onPressRatePerformSelector:@selector(sendRatingNew:) addTarget:self ];
     [commentingField onPressSavePerformSelector:@selector(sendComment2) addTarget:self];
@@ -526,7 +526,7 @@ int viewWillAppearCalled;
     [self.view addSubview: self.tableActionButton];
     
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
-    [self.filterButton setTitle:@"Filter" forState:UIControlStateNormal];
+    [self.filterButton setTitle:NSLocalizedString(@"Filter",nil) forState:UIControlStateNormal];
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
@@ -842,7 +842,7 @@ int viewWillAppearCalled;
                   selector:@selector(caseInsensitiveCompare:)];
     }  else if (sortType & RATING_FIELD) {
         
-        sorter = [NSSortDescriptor sortDescriptorWithKey:@"Rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
+        sorter = [NSSortDescriptor sortDescriptorWithKey:@"rating" ascending:(sortType & ASCEND)? YES:NO selector:@selector(compare:)];
     } else {
         return toSort;
     }

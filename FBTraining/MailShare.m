@@ -37,14 +37,21 @@
 
 
 -(void)shareItems: (NSArray *) itemsToShare inViewController: (UIViewController *) viewController{
-    for (NSData *videoClip in itemsToShare) {
-        [self.mailViewController addAttachmentData:videoClip mimeType:@"video/mp4" fileName:@"fileNameNeedsReplacement"];
+    self.mailViewController = [[MFMailComposeViewController alloc] init];
+    self.mailViewController.mailComposeDelegate = self;
+    for (NSDictionary *videoClip in itemsToShare) {
+        [self.mailViewController addAttachmentData: [NSData dataWithContentsOfFile: [videoClip objectForKey: @"mp4" ]] mimeType:@"video/mp4" fileName:[videoClip objectForKey: @"mp4" ]];
     }
+    
+    //[viewController.parentViewController presentModalViewController:self.mailViewController animated:YES];
+    [viewController.parentViewController presentViewController:self.mailViewController animated:YES completion:nil];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error{
-    
+    //[viewControllerRef dismissViewControllerAnimated:controller completion:nil];
+    [controller dismissViewControllerAnimated:YES completion:nil];
+    self.mailViewController = nil;
 }
 @end
