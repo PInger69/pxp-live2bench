@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "Encoder.h"
+#import "EncoderProtocol.h"
 
 @interface BitrateMonitor : UIView
 
 @property (nonatomic,strong) NSString * name;
 
--(id)initWithFrame:(CGRect)frame encoder:(Encoder*)aEncoder;
+-(id)initWithFrame:(CGRect)frame encoder: ( id <EncoderProtocol> )aEncoder;
+
 
 @end

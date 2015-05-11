@@ -23,7 +23,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    UIBarButtonItem* dismissItem = [[UIBarButtonItem alloc] initWithTitle:@"Dismiss" style:UIBarButtonSystemItemDone target:self action:@selector(dismissButtonPressed)];
+    UIBarButtonItem* dismissItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Dismiss", nil)  style:UIBarButtonSystemItemDone target:self action:@selector(dismissButtonPressed)];
     self.navigationItem.rightBarButtonItem = dismissItem;
     
 //    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kiPadWidthFormSheetLandscape, kiPadHeightFormSheetLandscape) style:UITableViewStyleGrouped];

@@ -346,8 +346,14 @@
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
+
+    if (localOne) {
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i %@\n%i %@", (localOne.downloadedSources.count + event.downloadedSources.count), NSLocalizedString(@"Downloaded", nil), event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
+    }
+
     if (event.local) {
         [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", localOne.downloadedSources.count,event.mp4s.count]];
+
     } else {
         if (localOne) {
             [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
@@ -369,7 +375,7 @@
 }
 
 // Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     if (indexPath.row >= self.tableData.count || !self.tableData) {
         return NO;

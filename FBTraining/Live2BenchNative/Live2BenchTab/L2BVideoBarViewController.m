@@ -9,11 +9,17 @@
 #import "L2BVideoBarViewController.h"
 #import "VideoBarContainerView.h"
 
+#import "TagView.h"
+
 #define BAR_HEIGHT      40
 #define LABEL_WIDTH     150
 #define LITTLE_ICON_DIMENSIONS 40
 
-@interface L2BVideoBarViewController ()
+@interface L2BVideoBarViewController () <TagViewDataSource>
+
+@property (strong, nonatomic, nonnull) NSMutableArray *arrayOfAllTags;
+@property (strong, nonatomic, nonnull) TagView *tagView;
+@property (strong, nonatomic, nonnull) NSTimer *tagViewRefreshTimer;
 
 @end
 
@@ -25,6 +31,10 @@
 @synthesize endRangeModifierButton      = _endRangeModifierButton;
 @synthesize tagMarkerController         = _tagMarkerController;
 @synthesize videoPlayer                 = _videoPlayer;
+
+@synthesize arrayOfAllTags = _arrayOfAllTags;
+@synthesize tagView = _tagView;
+
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer
 {
     
@@ -40,9 +50,17 @@
         background.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
         [self.view addSubview:background];
         
+        
+        self.arrayOfAllTags = [NSMutableArray array];
+        self.tagView = [[TagView alloc] init];
+        self.tagView.backgroundColor = [UIColor clearColor];
+        self.tagView.dataSource = self;
+        [background addSubview:self.tagView];
+         
+        
         // frame does nothign now
          _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
-        [background addSubview:_tagMarkerController.view];
+        //[background addSubview:_tagMarkerController.view];
         
         
         forwardButton   = [self makeSeekButton:SEEK_DIRECTION_RIGHT];
@@ -113,9 +131,30 @@
         
         
         [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew  | NSKeyValueObservingOptionOld context:nil];
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
+                if(eventTags){
+                    self.arrayOfAllTags = [NSMutableArray arrayWithArray: eventTags];
+                }
+            }}];
+        }];
+        
+        
+        self.tagViewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self.tagView selector:@selector(setNeedsDisplay) userInfo:nil repeats:YES];
     }
     return self;
 }
+
+- (void)dealloc
+{
+    [self.tagViewRefreshTimer invalidate];
+}
+
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     int oldStatus = [[change objectForKey:@"old"]intValue];
@@ -175,7 +214,7 @@
     tagEventName.layer.cornerRadius     = 5;
     tagEventName.layer.backgroundColor  = [UIColor colorWithWhite:1.0f alpha:0.9f].CGColor;
     [tagEventName setText:@"Event Name"];
-    [tagEventName setTextColor:[UIColor darkGrayColor]];//self.view.tintColor
+    [tagEventName setTextColor:[UIColor darkGrayColor]]; //self.view.tintColor
     [tagEventName setTextAlignment:NSTextAlignmentCenter];
     
     return tagEventName;
@@ -200,7 +239,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     
-    [_videoPlayer.liveIndicatorLight setHidden:NO];
+  //  [_videoPlayer.liveIndicatorLight setHidden:NO];
     
     [self.view setFrame:CGRectMake(_videoPlayer.view.frame.origin.x,
                                    _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height,
@@ -242,6 +281,8 @@
                                                  5 ,
                                                  LITTLE_ICON_DIMENSIONS-5,
                                                  LITTLE_ICON_DIMENSIONS-10)];
+    
+    [self.tagView setFrame:background.frame];
     
 
     
@@ -327,7 +368,14 @@
     }
 }
 
+#pragma mark - TagViewDataSource
 
+- (NSTimeInterval)durationInTagView:(nonnull TagView *)tagView {
+    return _videoPlayer.durationInSeconds;
+}
 
+- (nonnull NSArray *)tagsInTagView:(nonnull TagView *)tagView {
+    return self.arrayOfAllTags;
+}
 
 @end

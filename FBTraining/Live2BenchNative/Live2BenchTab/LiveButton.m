@@ -21,7 +21,7 @@ UIColor *accentColor;
         [self setFrame:frame];
         [self setBackgroundImage:[UIImage imageNamed:@"gotolive"]       forState:UIControlStateNormal];
         [self setBackgroundImage:[UIImage imageNamed:@"gotoliveSelect"] forState:UIControlStateHighlighted];
-        [self setTitle:@"Live" forState:UIControlStateNormal];
+        [self setTitle:NSLocalizedString(@"Live", nil)  forState:UIControlStateNormal];
         _enabled = YES;
         
         accentColor = PRIMARY_APP_COLOR;

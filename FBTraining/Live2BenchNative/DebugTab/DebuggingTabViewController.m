@@ -22,6 +22,7 @@
 #import "Downloader.h"
 #import "DownloadEventItem.h"
 #import "UserCenter.h"
+#import "RatingOutput.h"
 
 
 
@@ -71,6 +72,10 @@ static void *  debugContext = &debugContext;
  *
  *  @return
  */
+
+@synthesize debug;
+@synthesize string;
+
 -(id)initWithAppDelegate:(AppDelegate *)mainappDelegate
 {
     self = [super initWithAppDelegate:mainappDelegate];
@@ -83,11 +88,20 @@ static void *  debugContext = &debugContext;
         weakSelf = self;
         
         
-        testPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
+        
+        
+        /*testPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
         testPlayer.playerContext = @"Test";
-        [self .view addSubview:testPlayer.view];
+        [self .view addSubview:testPlayer.view];*/
 
         
+        
+      
+        
+        RatingOutput *ratingoutput = [[RatingOutput alloc] initWithFrame:CGRectMake(400, 400, 400, 400) ];
+        ratingoutput.rating = 2;
+
+         [self.view addSubview:ratingoutput];
     }
     
     return self;
@@ -99,6 +113,7 @@ static void *  debugContext = &debugContext;
     [super viewDidLoad];
     
 }
+
 
 
 

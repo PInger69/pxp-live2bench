@@ -7,7 +7,7 @@
 //
 
 #import "Encoder.h"
-#import "CheckEncoderShutdown.h" // is this even used?!?
+#import "CheckEncoderShutdown.h"
 #import "Utility.h"
 #import <objc/runtime.h>
 #import "Feed.h"

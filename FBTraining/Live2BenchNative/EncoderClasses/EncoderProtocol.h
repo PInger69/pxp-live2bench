@@ -40,12 +40,11 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 -(Event*)getEventByName:(NSString*)eventName;
 
 @optional
-@property (nonatomic,assign)    NSInteger           cameraCount;
+@property (nonatomic,assign)    double               bitrate;
+@property (nonatomic,assign)    NSInteger       cameraCount;
 @property (nonatomic,strong)    Event                * liveEvent;
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
-@property (nonatomic,assign)    double               bitrate;
-
 -(void)clearQueueAndCurrent;
 
 

@@ -10,6 +10,12 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVPlayerItem.h>
 
-@interface DebuggingTabViewController : CustomTabViewController
+@interface DebuggingTabViewController : CustomTabViewController{
+UIImageView *debug;
+    NSString *string;
+}
+
+@property UIImageView *debug;
+@property NSString *string;
 
 @end

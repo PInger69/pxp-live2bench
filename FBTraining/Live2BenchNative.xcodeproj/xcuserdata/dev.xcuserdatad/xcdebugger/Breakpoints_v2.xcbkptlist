@@ -96,6 +96,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+<<<<<<< HEAD
+=======
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -112,6 +114,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+>>>>>>> fee369a9635b8618768e70b80ec13ec61cfe186b
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -135,8 +138,11 @@
             timestampString = "453065948.471046"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1339"
-            endingLineNumber = "1339"
+            startingLineNumber = "1336"
+            endingLineNumber = "1336"
+<<<<<<< HEAD
+            landmarkName = "-currentEvent"
+=======
             landmarkName = "-deleteEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -378,6 +384,7 @@
             startingLineNumber = "129"
             endingLineNumber = "129"
             landmarkName = "-uploadData:withFolderName:"
+>>>>>>> fee369a9635b8618768e70b80ec13ec61cfe186b
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

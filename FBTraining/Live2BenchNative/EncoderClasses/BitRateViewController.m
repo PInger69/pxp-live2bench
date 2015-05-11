@@ -32,7 +32,7 @@
         monitorSize     = CGSizeMake(400, 100);
         builtMonitors   = [[NSMutableDictionary alloc]init];
         self.view       = [[UIView alloc]initWithFrame:CGRectMake(10, 200,400, 400)];
-        self.view.backgroundColor = [UIColor redColor];
+        self.view.backgroundColor = [UIColor colorWithWhite:0.95f alpha: 1.0f];
         
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, 10, 303, 50)];
         [titleLabel setText: NSLocalizedString(@"Encoder Statuses", nil)];
@@ -40,10 +40,15 @@
         [titleLabel setTextAlignment: NSTextAlignmentCenter];
         [self.view addSubview: titleLabel];
         
+
+        
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
+        
     }
     return self;
 }
+
 
 /**
  *  This adds encoders to the list

@@ -42,7 +42,7 @@
     if (_tasksCompleted == _tasksToComplete) {
         _tasksToComplete = 0;
         _tasksCompleted = 0;
-        [self.taskLabel setText: @"Progress Completed"];
+        [self.taskLabel setText: NSLocalizedString(@"Progress Completed", nil) ];
     }
 }
 

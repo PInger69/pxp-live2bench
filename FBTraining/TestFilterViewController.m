@@ -72,14 +72,14 @@ static TestFilterViewController *commonFilter;
     float footerLine        = 290;
     
     // Build tabs
-    FilterTab * tab1 = [[FilterTab alloc]initWithName:@"Filter"];
+    FilterTab * tab1 = [[FilterTab alloc]initWithName:NSLocalizedString(@"Filter", nil)];
     // This floats above all tabs... same with the tag count
     clearAll.frame      = CGRectMake(800, 55, 100, 30);
     numTagsLabel.frame  = CGRectMake(800, 300, 100, 30);
     
     
     //------------------------------------------
-    UserColourView * userColours    = [[UserColourView alloc]initWithFrame:CGRectMake(700, footerLine, 200, 40) Name:@"USER" AccessLable:@"colour"];
+    UserColourView * userColours    = [[UserColourView alloc]initWithFrame:CGRectMake(700, footerLine, 200, 40) Name:NSLocalizedString(@"USER", nil) AccessLable:@"colour"];
     userColours.selectedTags     = shareFilterUser;
     //------------------------------------------
 //    FilterButtonBlockView * off = [[FilterButtonBlockView alloc]initWithFrame:CGRectMake(55, footerLine-20, 290, 60)
@@ -134,7 +134,7 @@ static TestFilterViewController *commonFilter;
     
     FilterScrollView *  playerScrollViewNew = [[FilterScrollView alloc]
                                                initWithFrame:CGRectMake(605, headerLine+7, 320.0f, 206.0f)
-                                               Name:@"Players"
+                                               Name:NSLocalizedString(@"Players", nil)
                                                AccessLable:@"player"];
     
     playerScrollViewNew.rowCount         = 7;
@@ -168,7 +168,7 @@ static TestFilterViewController *commonFilter;
     //------------------------------------------
     FilterScrollView *  subTagScrollViewNew = [[FilterScrollView alloc]
                                                initWithFrame:CGRectMake(5.0f, headerLine+7, 292.0f, 206.0f)
-                                               Name:@"Sub Tag"
+                                               Name:NSLocalizedString(@"Sub Tag", nil)
                                                AccessLable:@"name"];
     
     subTagScrollViewNew.rowCount         = 7;
@@ -177,7 +177,7 @@ static TestFilterViewController *commonFilter;
     //------------------------------------------
     FilterScrollView *  periodScrollViewNew = [[FilterScrollView alloc]
                                                initWithFrame:CGRectMake(300+5.0f, headerLine+7, 290.0f, 206.0f)
-                                               Name:@"Period"
+                                               Name:NSLocalizedString(@"Period", nil) 
                                                AccessLable:@"period"];
     
     periodScrollViewNew.rowCount         = 7;
@@ -201,7 +201,7 @@ static TestFilterViewController *commonFilter;
     
     self.rangeSlider = [[RangeSlider alloc]initWithFrame:CGRectMake(50, 300, 250, 30)];
     UILabel *rangeSliderLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 265, 250, 30)];
-    [rangeSliderLabel setText: @"Time"];
+    [rangeSliderLabel setText: NSLocalizedString(@"Time", nil)];
     [rangeSliderLabel setFont:[UIFont systemFontOfSize:18]];
     [rangeSliderLabel setTextColor: [UIColor whiteColor]];
     [rangeSliderLabel setTextAlignment:NSTextAlignmentCenter];

@@ -285,6 +285,7 @@ NSMutableArray *oldEventNames;
     //    [self.videoPlayer.view addGestureRecognizer:swipeGestureRecognizer];
     
     
+    
 }
 
 //-(void)viewDidAppear:(BOOL)animated{
@@ -1969,6 +1970,9 @@ NSMutableArray *oldEventNames;
     
     
     selectedTag.rating = cmtRateField.rating;
+    [_tableViewController reloadData];
+    
+    
     
     //if ([[selectedTag objectForKey:@"bookmark"]integerValue] ==1) {
         //        [[globals.BOOKMARK_TAGS objectForKey:[selectedTag objectForKey:@"event"]]  setObject:selectedTag forKey:[NSString stringWithFormat:@"%@",[selectedTag objectForKey:@"id"]]];

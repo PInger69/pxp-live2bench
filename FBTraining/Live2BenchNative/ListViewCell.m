@@ -7,6 +7,11 @@
 //
 
 #import "ListViewCell.h"
+#import "RatingOutput.h"
+#import "ListTableViewController.h"
+
+
+
 
 //static CGFloat const kBounceValue = 10.0f;
 
@@ -19,8 +24,10 @@
 @implementation ListViewCell
 
 @synthesize tagname,tagtime,tagImage,coachpickButton,tagInfoText,controlButton,tagPlayersView,playersNumberLabel;
-@synthesize translucentEditingView,checkmarkOverlay;
+@synthesize translucentEditingView;
+//checkmarkOverlay;
 @synthesize playersLabel;
+@synthesize ratingscale;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -35,7 +42,26 @@
 }
 //-(void)deleteButtonPressed{
 //    self.deleteBlock(self);
-//}
+
+
+- (void) prepareForReuse
+{
+    
+    self.tagImage.image = [UIImage imageNamed:@"live.png"];
+    self.tagname.text = @"";
+    self.tagtime.text = @"";
+    self.tagInfoText.text = @"";
+    self.tagcolor.backgroundColor = nil;
+    self.myContentView = nil;
+    self.playersLabel.text = @"";
+    self.playersNumberLabel.text = @"";
+    self.ratingscale.rating = 0;
+    
+    [super prepareForReuse];
+    
+}
+
+
 
 - (void)setupView
 {
@@ -48,7 +74,7 @@
     //
     //    self.myContentView = anExtraView;
     //
-    self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
+    //self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
     //    [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
     //    [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     //    [self.deleteButton setBackgroundColor:[UIColor redColor]];
@@ -56,7 +82,7 @@
     //    [self.deleteButton addTarget:self action:@selector(deleteButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     //[self.contentView addSubview:anExtraView];
-    
+
     self.tagImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
     //self.tagImage.contentMode = UIViewContentModeCenter;
     self.tagImage.layer.borderColor = [[UIColor colorWithWhite:0.7f alpha:1.0f] CGColor];
@@ -79,7 +105,7 @@
     
     tagname = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.origin.x + tagImage.frame.size.width + 10, tagImage.frame.origin.y +13, 150.0f, 18.0f)];
     //[self.tagtime setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
-    [tagname setText:@"Name"];
+    [tagname setText:NSLocalizedString(@"Name", nil)];
     [tagname setBackgroundColor:[UIColor clearColor]];
     [tagname setFont:[UIFont defaultFontOfSize:17.0f]];
     [self.myContentView addSubview:tagname];
@@ -88,7 +114,7 @@
     tagInfoText = [[UITextView alloc]initWithFrame:CGRectMake(tagname.frame.origin.x - 4, tagname.frame.origin.y + tagname.frame.size.height -5.0f, self.frame.size.width, 50)];
     //[self.tagInfoText setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleRightMargin];
     [tagInfoText setBackgroundColor:[UIColor clearColor]];
-    [tagInfoText setText:@"Duration: \nPeriod: "];
+    [tagInfoText setText: [NSString stringWithFormat:@"%@: \n%@: ", NSLocalizedString(@"Duration", nil), NSLocalizedString(@"Period", nil)]];
     [tagInfoText setTextAlignment:NSTextAlignmentLeft];
     [tagInfoText setFont:[UIFont defaultFontOfSize:17.0f]];
     [tagInfoText setEditable:FALSE];
@@ -96,10 +122,10 @@
     [self.myContentView addSubview:tagInfoText];
     
     playersLabel = [[UILabel alloc]initWithFrame:CGRectMake(tagname.frame.origin.x+1, CGRectGetMaxY(tagInfoText.frame)-5.0f, 70, 25.0f)];
-    [playersLabel setText:@"Player(s):"];
+    [playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
     [playersLabel setTextAlignment:NSTextAlignmentLeft];
     [playersLabel setFont:[UIFont defaultFontOfSize:17.0f]];
-    //[self addSubview:playersLabel];
+    [self addSubview:playersLabel];
     
     tagPlayersView = [[UIScrollView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(playersLabel.frame), CGRectGetMaxY(tagInfoText.frame)-5.0f ,self.frame.size.width - tagImage.frame.size.width-playersLabel.frame.size.width-20, 25.0f)];
     tagPlayersView.delegate = self;
@@ -117,12 +143,17 @@
     
     tagtime = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.size.width -72, tagImage.frame.size.height - 18.0f, 70.0f, 17.0f)];
     [self.tagtime setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
-    [tagtime setText:@"Time"];
+    [tagtime setText:NSLocalizedString(@"Time", nil)];
     [tagtime setTextAlignment:NSTextAlignmentCenter];
     [tagtime setBackgroundColor:[UIColor blackColor]];
     [tagtime setTextColor:[UIColor whiteColor]];
     [tagtime setFont:[UIFont defaultFontOfSize:17.0f]];
     [self.tagImage addSubview:tagtime];
+    
+   
+    self.ratingscale = [ [RatingOutput alloc] initWithFrame:CGRectMake(tagImage.frame.size.width - 332, tagImage.frame.size.height - 26.0f, 70.0f, 17.0f)];
+    [self.tagImage addSubview:ratingscale];
+
     
     //self.tagcolor.frame.size.width - 5*16.0f - 4*9.0f
     
@@ -134,18 +165,18 @@
     //[coachpickButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
     [self.myContentView addSubview:coachpickButton];
     
-//    bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    
-//    //[bookmarkButton setState:DBDefault];
-//    [bookmarkButton setFrame:CGRectMake(CGRectGetMaxX(coachpickButton.frame) + 20.0f, coachpickButton.frame.origin.y + 3, 55.0f, 28.0f)];
-//    //[bookmarkButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
-//    [bookmarkButton setTitle:@"Feeds" forState:UIControlStateNormal];
-//    bookmarkButton.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
-//    bookmarkButton.layer.borderWidth = 1.0f;
-//    [bookmarkButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-//    [bookmarkButton addTarget:self action:@selector(showSource:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.myContentView addSubview:bookmarkButton];
-//    
+   /*_bookmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+   [_bookmarkButton setState:DBDefault];
+   [_bookmarkButton setFrame:CGRectMake(CGRectGetMaxX(coachpickButton.frame) + 20.0f, coachpickButton.frame.origin.y + 3, 55.0f, 28.0f)];
+     [_bookmarkButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
+ [_bookmarkButton setTitle:@"Feeds" forState:UIControlStateNormal];
+    _bookmarkButton.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    _bookmarkButton.layer.borderWidth = 1.0f;
+    [_bookmarkButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [_bookmarkButton addTarget:self action:@selector(showSource:) forControlEvents:UIControlEventTouchUpInside];
+    [self.myContentView addSubview:bookmarkButton];*/
+    
     _tagActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [_tagActivityIndicator setFrame:CGRectMake((self.tagcolor.frame.size.width - _tagActivityIndicator.frame.size.width)/2, CGRectGetMaxY(self.tagcolor.frame) + 62.0f, 37.0f, 37.0f)];
     [self.myContentView addSubview:_tagActivityIndicator];
@@ -163,7 +194,7 @@
      [checkmarkOverlay setAlpha:1.0];
      [self addSubview:checkmarkOverlay];*/
     
-    //    NSArray *theConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
+   /* //    NSArray *theConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
     //    [self.contentView addConstraints: theConstraints];
     //    self.contentViewLeftConstraint = theConstraints[0];
     //    self.contentViewRightConstraint = theConstraints[1];
@@ -212,10 +243,10 @@
     float topOffset = 2;//(screenRect.size.height - newHeight) / 2;
     
     CGRect newRect = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
-    return newRect;
+    return newRect;*/
 }
 
-- (void)setRatingStars:(int)number {
+/*- (void)setRatingStars:(int)number {
     switch (number) {
         case 0:
             [self.tagRatingOne removeFromSuperview];
@@ -302,7 +333,7 @@
         default:
             break;
     }
-}
+}*/
 
 
 @end

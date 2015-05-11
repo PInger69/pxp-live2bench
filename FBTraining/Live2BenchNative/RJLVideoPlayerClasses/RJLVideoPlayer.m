@@ -120,7 +120,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
     liveIndicatorLight          = [[LiveLight alloc]init];
     liveIndicatorLight.frame    = CGRectMake(self.view.frame.size.width-30,0,10,10);
-
+    liveIndicatorLight.hidden   = YES;
     
     videoControlBar             = [[VideoControlBarSlider alloc]initWithFrame:self.view.frame];
     [videoControlBar.timeSlider addTarget:self action:@selector(sliderValueChanged)

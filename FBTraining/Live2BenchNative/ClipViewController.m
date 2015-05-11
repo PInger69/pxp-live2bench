@@ -15,6 +15,7 @@
 #import "ImageAssetManager.h"
 #import "TestFilterViewController.h"
 #import "Tag.h"
+#import "RatingOutput.h"
 
 
 #define CELLS_ON_SCREEN         12
@@ -159,6 +160,14 @@ static void * encoderTagContext = &encoderTagContext;
         }
     }
     return highestTime;
+}
+
+
+
+- (void) viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:true];
+    [_collectionView reloadData];
+    
 }
 
 - (void)viewDidLoad
@@ -421,7 +430,7 @@ static void * encoderTagContext = &encoderTagContext;
 //}
 
 
--(void)editingClips:(BOOL)isEditing
+-(void):(BOOL)isEditing
 {
     if (isEditing)
     {
@@ -727,6 +736,13 @@ static void * encoderTagContext = &encoderTagContext;
     [cell.thumbTime setText: tagSelect.displayTime];
     [cell.thumbDur setText:[NSString stringWithFormat:@"%.2ds",tagSelect.duration]];
     
+    
+    
+    cell.ratingscale.rating = tagSelect.rating;
+  
+    
+    
+    
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -803,6 +819,7 @@ static void * encoderTagContext = &encoderTagContext;
         //[self.collectionView reloadData];
         
         
+        
     }else{
         if (buttonIndex == 0)
         {
@@ -827,7 +844,10 @@ static void * encoderTagContext = &encoderTagContext;
     [CustomAlertView removeAlert:alertView];
     
     [self checkDeleteAllButton];
+
     //[self.tableView reloadData];
+
+    
 }
 
 -(void)removeIndexPathFromDeletion{

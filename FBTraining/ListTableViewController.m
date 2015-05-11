@@ -15,6 +15,7 @@
 #import "DownloadItem.h"
 
 
+
 @interface ListTableViewController ()
 
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
@@ -42,7 +43,7 @@
         //self.tableView.layer.borderColor = [[UIColor grayColor] CGColor];
         
         [self.tableView registerClass:[ListViewCell class] forCellReuseIdentifier:@"ListViewCell"];
-        self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:@"Select Source:" buttonListNames:@[]];
+        self.sourceSelectPopover = [[ListPopoverControllerWithImages alloc]initWithMessage:NSLocalizedString(@"Select Sources:", nil)  buttonListNames:@[]];
         self.sourceSelectPopover.contentViewController.modalInPopover = NO; // this lets you tap out to dismiss
         
         //        self.deleteButton = [[UIButton alloc] init];
@@ -71,7 +72,6 @@
     }
     return self;
 }
-
 
 
 
@@ -276,9 +276,15 @@
     NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
     NSString *periodString = [NSString stringWithFormat:@"%.02f", tag.time];
     
-    [cell.tagInfoText setText:[NSString stringWithFormat:@"Duration: %@ \nPeriod: %@ ",durationString,periodString]];
+    [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@ ", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString]];
     
     [cell.tagtime setText: tag.displayTime];
+    
+    
+
+    cell.ratingscale.rating = tag.rating;
+    
+
     
     UIColor *thumbColour = [Utility colorWithHexString:tag.colour];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];

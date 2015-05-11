@@ -10,8 +10,10 @@
 #import "UIFont+Default.h"
 #import "ClipCornerView.h"
 #import "DownloadButton.h"
+#import "RatingOutput.h"
 
 @interface ListViewCell : DeletableTableViewCell<UIScrollViewDelegate>{
+    
     
     UILabel *tagname;
     UILabel *tagtime;
@@ -30,7 +32,7 @@
     UILabel *playersLabel;
     UIButton *controlButton;
     UIView *translucentEditingView;
-    UIImageView *checkmarkOverlay;
+//    UIImageView *checkmarkOverlay;
 }
 @property (nonatomic, strong) UILabel *tagname;
 @property (nonatomic, strong) UILabel *tagtime;
@@ -39,21 +41,22 @@
 //@property (nonatomic, strong) DownloadButton *bookmarkButton;
 @property (nonatomic, strong) UIImageView *tagImage;
 @property (nonatomic, strong) UIActivityIndicatorView *tagActivityIndicator;
-@property (nonatomic, strong) UIImageView *tagRatingOne;
-@property (nonatomic, strong) UIImageView *tagRatingTwo;
-@property (nonatomic, strong) UIImageView *tagRatingThree;
-@property (nonatomic, strong) UIImageView *tagRatingFour;
-@property (nonatomic, strong) UIImageView *tagRatingFive;
+//@property (nonatomic, strong) UIImageView *tagRatingOne;
+//@property (nonatomic, strong) UIImageView *tagRatingTwo;
+//@property (nonatomic, strong) UIImageView *tagRatingThree;
+//@property (nonatomic, strong) UIImageView *tagRatingFour;
+//@property (nonatomic, strong) UIImageView *tagRatingFive;
 @property (nonatomic) BOOL imageLoaded;
 @property (nonatomic, strong) UITextView *tagInfoText;
 @property (nonatomic, strong) UIScrollView *tagPlayersView;
 @property (nonatomic, strong) UIButton *controlButton;
 @property (nonatomic, strong) UILabel *playersNumberLabel;
 @property (nonatomic, strong) UIView *translucentEditingView;
-@property (nonatomic, strong) UIImageView *checkmarkOverlay;
+//@property (nonatomic, strong) UIImageView *checkmarkOverlay;
 @property (nonatomic, strong) UILabel *playersLabel;
+@property (nonatomic,strong) RatingOutput *ratingscale;
 
-//@property (nonatomic, strong) NSIndexPath *indexPath;
+
 //@property (nonatomic, strong) id <UITableViewDataSource> tableViewDataSource;
 
 

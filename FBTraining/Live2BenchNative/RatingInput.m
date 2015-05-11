@@ -69,7 +69,7 @@ static UIImage* rateUnSelected;
             [self addSubview:ratingButton];
             [ratingButtonArray addObject:ratingButton];
         }
-        
+        //self.layer.borderWidth = 1;
     }
     return self;
 }

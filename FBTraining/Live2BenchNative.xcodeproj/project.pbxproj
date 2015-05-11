@@ -91,6 +91,7 @@
 		AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */; };
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
+		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
 		BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F817F22A270089873C /* bookmarkedit.png */; };
 		BD18B6FB17F22A270089873C /* bookmarkedit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F917F22A270089873C /* bookmarkedit@2x.png */; };
 		BD1AEF8C17F0B14E00BD59A9 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D793897217E794B800BEA70B /* OBSlider.m */; };
@@ -151,6 +152,7 @@
 		D72779AE1A38994E0034DD66 /* Live2BenchTagUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779AD1A38994E0034DD66 /* Live2BenchTagUIViewController.m */; };
 		D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779B01A38DBE30034DD66 /* TagFlagViewController.m */; };
 		D72B833517CFDBAE0035A1C4 /* EulaString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D72B833417CFDBAE0035A1C4 /* EulaString.txt */; };
+		D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = D72CC2891AFA858100E26B60 /* RatingOutput.m */; };
 		D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72FA56B180ECDAE009ACA87 /* BookmarkFilterViewController.m */; };
 		D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D735290417CBEEDD003E3722 /* FootballBottomViewController.m */; };
 		D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D737F5AF17F0DFC40053081F /* CalendarViewController.m */; };
@@ -572,6 +574,8 @@
 		AE5073A61AFC1DCE002C361D /* ToggleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleSettingViewController.h; sourceTree = "<group>"; };
 		AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToggleSettingViewController.m; sourceTree = "<group>"; };
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
+		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
+		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
 		BD18B6F817F22A270089873C /* bookmarkedit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bookmarkedit.png; sourceTree = "<group>"; };
 		BD18B6F917F22A270089873C /* bookmarkedit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmarkedit@2x.png"; sourceTree = "<group>"; };
 		BD18B70017F23A6F0089873C /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -662,6 +666,8 @@
 		D72779AF1A38DBE30034DD66 /* TagFlagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagFlagViewController.h; path = Live2BenchTab/TagFlagViewController.h; sourceTree = "<group>"; };
 		D72779B01A38DBE30034DD66 /* TagFlagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagFlagViewController.m; path = Live2BenchTab/TagFlagViewController.m; sourceTree = "<group>"; };
 		D72B833417CFDBAE0035A1C4 /* EulaString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = EulaString.txt; path = Live2BenchNative/EulaString.txt; sourceTree = SOURCE_ROOT; };
+		D72CC2891AFA858100E26B60 /* RatingOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatingOutput.m; sourceTree = "<group>"; };
+		D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RatingOutput.h; sourceTree = "<group>"; };
 		D72FA56A180ECDAE009ACA87 /* BookmarkFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkFilterViewController.h; sourceTree = "<group>"; };
 		D72FA56B180ECDAE009ACA87 /* BookmarkFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkFilterViewController.m; sourceTree = "<group>"; };
 		D735290317CBEEDD003E3722 /* FootballBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballBottomViewController.h; sourceTree = "<group>"; };
@@ -1308,6 +1314,15 @@
 			name = SettingViewControllers;
 			sourceTree = "<group>";
 		};
+		AE76FFBF1B01063F0089F53F /* TagView */ = {
+			isa = PBXGroup;
+			children = (
+				AE76FFC01B01065B0089F53F /* TagView.h */,
+				AE76FFC11B01065B0089F53F /* TagView.m */,
+			);
+			name = TagView;
+			sourceTree = "<group>";
+		};
 		BD9BC31D17EB6409001B67DE /* ClipCornerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1811,8 +1826,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
-				D700F9041B011550008152E8 /* FakeEncoder.h */,
-				D700F9051B011550008152E8 /* FakeEncoder.m */,
+				D72CC2891AFA858100E26B60 /* RatingOutput.m */,
+				D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */,
 				D7B5E3561AF2B3CF00924BFA /* Media.xcassets */,
 				D7F6A18F1ADFF7F1000B97DA /* ClipControlBarSlider.h */,
 				D7F6A1901ADFF7F1000B97DA /* ClipControlBarSlider.m */,
@@ -1953,6 +1968,7 @@
 				D7A188C11A013E2D00513909 /* PipViewController.m */,
 				D79BC1D719E836F800ECD8DB /* DebuggingTabViewController.h */,
 				D79BC1D819E836F800ECD8DB /* DebuggingTabViewController.m */,
+				AE76FFBF1B01063F0089F53F /* TagView */,
 				D7CF390819DF213F0013E46B /* UtilityClasses */,
 				D79D709019DD8ED2001FBE16 /* ExternalScreenButton.h */,
 				D79D709119DD8ED2001FBE16 /* ExternalScreenButton.m */,
@@ -2726,6 +2742,7 @@
 				D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */,
 				AA83595B19B10C1B009B3ABC /* DPBContentViewController.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
+				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
 				D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */,
 				D7C5F38119BF894A008190CE /* ScreenController.m in Sources */,
 				D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */,
@@ -2787,6 +2804,7 @@
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,
 				D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */,
+				AE76FFC41B01065B0089F53F /* TagView.m in Sources */,
 				D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */,
 				D73CDC041AB36EFF002D682D /* DropboxShare.m in Sources */,
 				D7E4AC7616B3225B00129222 /* TagMarker.m in Sources */,
