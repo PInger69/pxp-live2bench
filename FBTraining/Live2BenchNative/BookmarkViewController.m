@@ -218,6 +218,7 @@ int viewWillAppearCalled;
         Feed *feed = clipToPlay.feeds[@"source0"];
         
         self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
+        self.shareController.name = clipToPlay.name;
         self.shareButton.hidden = NO;
     }];
     
