@@ -704,6 +704,26 @@ static void * builtContext          = &builtContext; // depricated?
     return [self.localEncoder getEventByName:eventName];
 }
 
+-(void)makeFakeEncoder
+{
+
+        FakeEncoder * newEncoder    = [[FakeEncoder alloc]init];
+        newEncoder.encoderManager = self;
+        [newEncoder addObserver:self forKeyPath:@"authenticated"    options:0 context:authenticatContext];
+        [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
+        newEncoder.name         = [NSString stringWithFormat:@"Fake %d",[FakeEncoder fakeCount] ];
+//        [newEncoder requestVersion];
+//        [newEncoder authenticateWithCustomerID:_customerID];
+//        if (_masterEncoder == nil) [newEncoder searchForMaster];
+        [dictOfEncoders setValue:newEncoder forKey:newEncoder.name];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForFeedChange:) name:NOTIF_ENCODER_FEEDS_UPDATED object:newEncoder];
+        
+        PXPLog(@"*** Registered FAKE Encoder ***");
+        PXPLog(@"    %@ ",newEncoder.name);
+        PXPLog(@"**************************");
+
+}
+
 
 #pragma mark -
 #pragma mark Observers

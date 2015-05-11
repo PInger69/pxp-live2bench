@@ -21,6 +21,6 @@
 
 -(instancetype)init;
 +(instancetype)make;
-
++(int)fakeCount;
 
 @end

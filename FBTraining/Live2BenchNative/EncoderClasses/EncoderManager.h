@@ -84,10 +84,13 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 -(void)closeDurationTag:(NSString *)tagName;
 
 
+
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
 -(Event*)getEventByHID:(NSString*)eventHID;
 -(Event*)getEventByName:(NSString*)eventName;
+
+-(void)makeFakeEncoder;
 #pragma mark - Commands Methods
 
 -(void)refresh;
