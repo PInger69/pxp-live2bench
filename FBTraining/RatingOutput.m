@@ -59,12 +59,15 @@ static UIImage* rateSelected;
         [star setHidden:true];
     }
     
+    
     for( int i=0; i < _rating; i++)
     {
         [starArray[i] setHidden:false];
     }
     
 }
+
+
 
 - (int) getRating{
     return _rating;
