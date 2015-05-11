@@ -185,13 +185,15 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self.clipControlBar.timeSlider.maximumValue = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);
     
     self.videoControlBar.hidden = YES;
+
 }
 
 -(void)cancelClip{
-    self.isInClipMode = NO;
-    self.looping = NO;
-    self.clipControlBar.hidden = YES;
+    self.isInClipMode           = NO;
+    self.looping                = NO;
+    self.clipControlBar.hidden  = YES;
     self.videoControlBar.hidden = NO;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIP_CANCELED object:self];
 }
 
 /**

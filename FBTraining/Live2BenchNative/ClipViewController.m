@@ -969,7 +969,7 @@ static void * encoderTagContext = &encoderTagContext;
         
         //NSString * key =        listOfScource[0];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                              //@"feed":key,
+                                                                                                              @"feed":selectedCell.data.name,
                                                                                                               @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
                                                                                                               @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration ],
                                                                                                               @"state":[NSNumber numberWithInteger:RJLPS_Play]}];

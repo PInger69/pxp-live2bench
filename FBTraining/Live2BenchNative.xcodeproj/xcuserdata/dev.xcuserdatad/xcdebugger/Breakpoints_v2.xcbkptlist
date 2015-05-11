@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "452124116.586502"
+            timestampString = "453065948.471046"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1187"
-            endingLineNumber = "1187"
+            startingLineNumber = "1190"
+            endingLineNumber = "1190"
             landmarkName = "-createTeleTag:isDuration:"
             landmarkType = "5">
          </BreakpointContent>
@@ -41,7 +41,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "743"
             endingLineNumber = "743"
-            landmarkName = "-sendRatingNew:"
+            landmarkName = "-slideFilterBox"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,8 +57,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "755"
             endingLineNumber = "755"
-            landmarkName = "-sendComment2"
-            landmarkType = "5">
+            landmarkName = "@implementation BookmarkViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -135,7 +135,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "452124116.586502"
+            timestampString = "453065948.471046"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1336"
@@ -159,8 +159,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "210"
             endingLineNumber = "210"
-            landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
-            landmarkType = "5">
+            landmarkName = "@implementation Live2BenchViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "452124116.586502"
+            timestampString = "453065948.471046"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1374"
-            endingLineNumber = "1374"
+            startingLineNumber = "1377"
+            endingLineNumber = "1377"
             landmarkName = "-setCurrentEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -191,7 +191,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "997"
             endingLineNumber = "997"
-            landmarkName = "-resumeResponce:"
+            landmarkName = "-stopResponce:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -223,7 +223,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "983"
             endingLineNumber = "983"
-            landmarkName = "-resumeResponce:"
+            landmarkName = "-camerasGetResponce:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -239,7 +239,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1008"
             endingLineNumber = "1008"
-            landmarkName = "-getAllEventsResponse:"
+            landmarkName = "-pauseResponce:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -288,54 +288,6 @@
             startingLineNumber = "60"
             endingLineNumber = "60"
             landmarkName = "-shareItems:inViewController:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Live2BenchNative/AppDelegate.m"
-            timestampString = "452204016.444439"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "-application:handleOpenURL:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Live2BenchNative/AppDelegate.m"
-            timestampString = "452204228.66708"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "-application:handleOpenURL:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Live2BenchNative/AppDelegate.m"
-            timestampString = "452204230.9642"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "-application:handleOpenURL:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

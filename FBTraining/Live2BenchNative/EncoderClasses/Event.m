@@ -10,6 +10,7 @@
 #import "Feed.h"
 
 
+
 @implementation Event {
     NSString *localPath;
 }
@@ -28,6 +29,8 @@
 @synthesize tags        = _tags;
 
 @synthesize downloadedSources       = _downloadedSources;
+@synthesize parentEncoder           = _parentEncoder;
+
 
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {

@@ -12,6 +12,7 @@
 #import "MultiPip.h"
 #import "EncoderManager.h"
 #import "PxpVideoPlayerProtocol.h"
+#import "L2BVideoBarViewController.h"
 
 static void * isObservedContext2 = &isObservedContext2;
 
@@ -24,7 +25,7 @@ static void * isObservedContext2 = &isObservedContext2;
 @property (nonatomic,strong) NSMutableArray                 * pips;// for when you have more then one pip
 @property (nonatomic,strong) NSString                       * context;
 @property (nonatomic,strong) MultiPip                       * multi;
-
+@property (nonatomic,strong) L2BVideoBarViewController      * videoControlBar;
 
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager;
@@ -35,5 +36,5 @@ static void * isObservedContext2 = &isObservedContext2;
 -(void)swapVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer withPip:(Pip*)aPip;
 -(void)syncToPlayer;
 -(void)pipsAndVideoPlayerToLive;
--(Float64)durationInSeconds;
+
 @end

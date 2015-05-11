@@ -233,6 +233,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_START_SCRUB                   @"startScrubbing"
 #define NOTIF_FINISH_SCRUB                  @"finishedScrubbing"
 #define NOTIF_CURRENT_TIME_REQUEST          @"currentTimeRequest"
+#define NOTIF_CLIP_CANCELED                 @"NOTIF_CLIP_CANCELED"
 
 typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
     VideoPlayerCommandStop      = 1<<1,

@@ -256,7 +256,7 @@
     return _event;
 }
 
-#pragma - Make COmmands
+#pragma - Make Commands
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp
 {
@@ -797,12 +797,16 @@
 -(void)authenticateResponse:(NSData *)data
 {
     
+    PXPLog(@"Encoder Authentication DISABLED!!!");
     [self willChangeValueForKey:@"authenticated"];
     _authenticated = YES;
     PXPLog(@"Warning: JSON was malformed");
     [self didChangeValueForKey:@"authenticated"];
     isAuthenticate = YES;
     return;
+    
+    
+    
     
     
     NSDictionary    * results;

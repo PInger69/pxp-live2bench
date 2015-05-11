@@ -25,6 +25,8 @@
 
 #import <SDWebImage/SDImageCache.h>
 
+#import "FakeEncoder.h"
+
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
@@ -322,6 +324,7 @@
         _openDurationTags       = [[NSMutableDictionary alloc]init];
         _eventTags              = [[NSMutableDictionary alloc]init];
         _liveEventName          = @"None";
+        
         
         // Browse for services
         // Starts Bonjour search for pxp servers
@@ -685,7 +688,7 @@ static void * builtContext          = &builtContext; // depricated?
     if ([filtered count]==0)return nil;
     
     // this is an issues
-    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:YES andlocalPath:nil];
+    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:NO andlocalPath:nil];
     return event;
 }
 
