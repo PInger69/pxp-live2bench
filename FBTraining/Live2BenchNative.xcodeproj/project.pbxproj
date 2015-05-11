@@ -85,6 +85,12 @@
 		AAFCA6FF195B84B000D0F0E6 /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA6FD195B84B000D0F0E6 /* share@2x.png */; };
 		AAFCA702195B84DE00D0F0E6 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA700195B84DE00D0F0E6 /* trash.png */; };
 		AAFCA703195B84DE00D0F0E6 /* trash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA701195B84DE00D0F0E6 /* trash@2x.png */; };
+		AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */; };
+		AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */; };
+		AE5073AA1AFC1DCE002C361D /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A11AFC1DCE002C361D /* SettingViewController.m */; };
+		AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */; };
+		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
+		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F817F22A270089873C /* bookmarkedit.png */; };
 		BD18B6FB17F22A270089873C /* bookmarkedit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F917F22A270089873C /* bookmarkedit@2x.png */; };
 		BD1AEF8C17F0B14E00BD59A9 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D793897217E794B800BEA70B /* OBSlider.m */; };
@@ -123,6 +129,7 @@
 		BDF9C2DF1836D87100F6661E /* dropboxico.png in Resources */ = {isa = PBXBuildFile; fileRef = BDF9C2DD1836D87100F6661E /* dropboxico.png */; };
 		BDF9C2E01836D87100F6661E /* dropboxico@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BDF9C2DE1836D87100F6661E /* dropboxico@2x.png */; };
 		D700801B19DF2456000144CF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D700801A19DF2456000144CF /* Utility.m */; };
+		D700F9061B011550008152E8 /* FakeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D700F9051B011550008152E8 /* FakeEncoder.m */; };
 		D70FBA3C17FE0DFA00B606CF /* EulaModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD9BC31317EB4855001B67DE /* EulaModalViewController.m */; };
 		D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */; };
 		D70FBA4C17FF7A1E00B606CF /* DownloadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D70FBA4B17FF7A1E00B606CF /* DownloadButton.m */; };
@@ -235,7 +242,6 @@
 		D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF271AA4B0560068D260 /* CKCalendarView.m */; };
 		D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF291AA4B0560068D260 /* CKViewController.m */; };
 		D784EF3D1AA4B0570068D260 /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */; };
-		D784EF3E1AA4B0570068D260 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF2E1AA4B0570068D260 /* DetailViewController.m */; };
 		D784EF3F1AA4B0570068D260 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF301AA4B0570068D260 /* SettingsTableViewController.m */; };
 		D784EF401AA4B0570068D260 /* SwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF321AA4B0570068D260 /* SwipeableTableViewCell.m */; };
 		D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF341AA4B0570068D260 /* CalendarTableViewController.m */; };
@@ -554,6 +560,18 @@
 		AAFCA6FD195B84B000D0F0E6 /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		AAFCA700195B84DE00D0F0E6 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash.png; sourceTree = "<group>"; };
 		AAFCA701195B84DE00D0F0E6 /* trash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash@2x.png"; sourceTree = "<group>"; };
+		AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertsSettingViewController.m; sourceTree = "<group>"; };
+		AE50739E1AFC1DCE002C361D /* InfoSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSettingViewController.h; sourceTree = "<group>"; };
+		AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
+		AE5073A01AFC1DCE002C361D /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		AE5073A11AFC1DCE002C361D /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		AE5073A21AFC1DCE002C361D /* TabsSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabsSettingViewController.h; sourceTree = "<group>"; };
+		AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabsSettingViewController.m; sourceTree = "<group>"; };
+		AE5073A41AFC1DCE002C361D /* ToastObserverSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToastObserverSettingViewController.h; sourceTree = "<group>"; };
+		AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToastObserverSettingViewController.m; sourceTree = "<group>"; };
+		AE5073A61AFC1DCE002C361D /* ToggleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleSettingViewController.h; sourceTree = "<group>"; };
+		AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToggleSettingViewController.m; sourceTree = "<group>"; };
+		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		BD18B6F817F22A270089873C /* bookmarkedit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bookmarkedit.png; sourceTree = "<group>"; };
 		BD18B6F917F22A270089873C /* bookmarkedit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmarkedit@2x.png"; sourceTree = "<group>"; };
 		BD18B70017F23A6F0089873C /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -602,6 +620,8 @@
 		BDF9C2DE1836D87100F6661E /* dropboxico@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dropboxico@2x.png"; sourceTree = "<group>"; };
 		D700801919DF2456000144CF /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = Live2BenchNative/UtilityClasses/Utility.h; sourceTree = "<group>"; };
 		D700801A19DF2456000144CF /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utility.m; path = Live2BenchNative/UtilityClasses/Utility.m; sourceTree = "<group>"; };
+		D700F9041B011550008152E8 /* FakeEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FakeEncoder.h; path = Live2BenchNative/EncoderClasses/FakeEncoder.h; sourceTree = "<group>"; };
+		D700F9051B011550008152E8 /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FakeEncoder.m; path = Live2BenchNative/EncoderClasses/FakeEncoder.m; sourceTree = "<group>"; };
 		D70FBA3D17FE0E3600B606CF /* PlayerCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerCollectionViewController.h; sourceTree = "<group>"; };
 		D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCollectionViewController.m; sourceTree = "<group>"; };
 		D70FBA4A17FF7A1E00B606CF /* DownloadButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadButton.h; sourceTree = "<group>"; };
@@ -695,7 +715,6 @@
 		D73CDBEF1AAF283C002D682D /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
 		D73CDBF11AAF3CA8002D682D /* infoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = infoViewController.h; sourceTree = "<group>"; };
 		D73CDBF21AAF3CA8002D682D /* infoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = infoViewController.m; sourceTree = "<group>"; };
-		D73CDBF51AB08173002D682D /* SettingsViewControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewControllerProtocol.h; sourceTree = "<group>"; };
 		D73CDBF81AB33103002D682D /* SocialSharingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialSharingManager.h; sourceTree = "<group>"; };
 		D73CDBF91AB33103002D682D /* SocialSharingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialSharingManager.m; sourceTree = "<group>"; };
 		D73CDBFB1AB33149002D682D /* SocialSharingProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocialSharingProtocol.h; sourceTree = "<group>"; };
@@ -808,8 +827,6 @@
 		D784EF2A1AA4B0560068D260 /* ARCalendarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARCalendarTableViewCell.h; sourceTree = "<group>"; };
 		D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARCalendarTableViewCell.m; sourceTree = "<group>"; };
 		D784EF2C1AA4B0560068D260 /* CKViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKViewController.h; sourceTree = "<group>"; };
-		D784EF2D1AA4B0570068D260 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		D784EF2E1AA4B0570068D260 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		D784EF2F1AA4B0570068D260 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		D784EF301AA4B0570068D260 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		D784EF311AA4B0570068D260 /* SwipeableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeableTableViewCell.h; sourceTree = "<group>"; };
@@ -1270,6 +1287,25 @@
 				AA83595619B10C1B009B3ABC /* DPBContentViewController.m */,
 			);
 			name = "Dropbox Integration";
+			sourceTree = "<group>";
+		};
+		AE50739C1AFC1DBF002C361D /* SettingViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */,
+				AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */,
+				AE50739E1AFC1DCE002C361D /* InfoSettingViewController.h */,
+				AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */,
+				AE5073A01AFC1DCE002C361D /* SettingViewController.h */,
+				AE5073A11AFC1DCE002C361D /* SettingViewController.m */,
+				AE5073A21AFC1DCE002C361D /* TabsSettingViewController.h */,
+				AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */,
+				AE5073A41AFC1DCE002C361D /* ToastObserverSettingViewController.h */,
+				AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */,
+				AE5073A61AFC1DCE002C361D /* ToggleSettingViewController.h */,
+				AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */,
+			);
+			name = SettingViewControllers;
 			sourceTree = "<group>";
 		};
 		BD9BC31D17EB6409001B67DE /* ClipCornerView */ = {
@@ -1775,6 +1811,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D700F9041B011550008152E8 /* FakeEncoder.h */,
+				D700F9051B011550008152E8 /* FakeEncoder.m */,
 				D7B5E3561AF2B3CF00924BFA /* Media.xcassets */,
 				D7F6A18F1ADFF7F1000B97DA /* ClipControlBarSlider.h */,
 				D7F6A1901ADFF7F1000B97DA /* ClipControlBarSlider.m */,
@@ -1785,6 +1823,7 @@
 				D79779081AEACDD2008A99E0 /* FilterItemProtocol.h */,
 				D79350E81AD459C500D1751F /* DownloadEventItem.h */,
 				D79350E91AD459C500D1751F /* DownloadEventItem.m */,
+				AE50739C1AFC1DBF002C361D /* SettingViewControllers */,
 				D79779091AEAF26B008A99E0 /* PxpLogViewController.h */,
 				D797790A1AEAF26B008A99E0 /* PxpLogViewController.m */,
 				D75ED4FB1ACC4707003AF856 /* LiveLight.h */,
@@ -1808,7 +1847,6 @@
 				D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */,
 				D7B7C4D41AD32BDD00A5DEC3 /* InjuryViewController.h */,
 				D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */,
-				D73CDBF51AB08173002D682D /* SettingsViewControllerProtocol.h */,
 				D73CDBF11AAF3CA8002D682D /* infoViewController.h */,
 				D73CDBF21AAF3CA8002D682D /* infoViewController.m */,
 				D7CCE7EA1AC1E48500D85095 /* ReusableBottomViewController.h */,
@@ -1859,8 +1897,6 @@
 				D784EF451AA4B3090068D260 /* ARCalendarTableViewController.h */,
 				D784EF461AA4B3090068D260 /* ARCalendarTableViewController.m */,
 				D784EF2C1AA4B0560068D260 /* CKViewController.h */,
-				D784EF2D1AA4B0570068D260 /* DetailViewController.h */,
-				D784EF2E1AA4B0570068D260 /* DetailViewController.m */,
 				D784EF2F1AA4B0570068D260 /* SettingsTableViewController.h */,
 				D784EF301AA4B0570068D260 /* SettingsTableViewController.m */,
 				D784EF311AA4B0570068D260 /* SwipeableTableViewCell.h */,
@@ -2731,9 +2767,9 @@
 				AA83595A19B10C1B009B3ABC /* DPBContentNavigationController.m in Sources */,
 				D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */,
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
-				D784EF3E1AA4B0570068D260 /* DetailViewController.m in Sources */,
 				D73CDC0E1AB716C7002D682D /* FacebookShare.m in Sources */,
 				D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */,
+				AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */,
 				D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */,
 				D7A188C21A013E2D00513909 /* PipViewController.m in Sources */,
 				AA83596D19B115D2009B3ABC /* ExportPlayersPopoverController.m in Sources */,
@@ -2787,6 +2823,7 @@
 				D7581EE519634B6D0029C5DD /* NumberedSeekerButton.m in Sources */,
 				D7DB755317EA690F009C402F /* LoginTextField.m in Sources */,
 				D786C24617F39F3F0042DD96 /* IconButton.m in Sources */,
+				AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */,
 				D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */,
 				436907461AB86E16003BD1E6 /* GTLNetworking_Sources.m in Sources */,
 				94B9A516192521CD0009547B /* SnapshotView.m in Sources */,
@@ -2794,6 +2831,7 @@
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
 				D7A2E5BD19AE39F900022795 /* ToggleButton.m in Sources */,
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
+				D700F9061B011550008152E8 /* FakeEncoder.m in Sources */,
 				AA8358B819B10A22009B3ABC /* LDProgressView.m in Sources */,
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
 				D79D709219DD8ED2001FBE16 /* ExternalScreenButton.m in Sources */,
@@ -2806,8 +2844,10 @@
 				D72779931A30F0D50034DD66 /* EncoderCommand.m in Sources */,
 				AA83589619B10967009B3ABC /* SVStatusHUD.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
+				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
+				AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */,
 				D7A7B61216D3C6C3000D3A84 /* LogoViewController.m in Sources */,
 				D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */,
 				D73CDBE41AA8BF66002D682D /* DeletableTableViewController.m in Sources */,
@@ -2847,10 +2887,12 @@
 				94B9A582192FEE750009547B /* TeleView.m in Sources */,
 				D769AB8D19BE5E8400DF68BC /* RangeModifierButton.m in Sources */,
 				D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */,
+				AE5073AA1AFC1DCE002C361D /* SettingViewController.m in Sources */,
 				D7A2E5F119B7711E00022795 /* FullVideoBarMyClipViewController.m in Sources */,
 				D7A2E5EB19B6498200022795 /* Slomo.m in Sources */,
 				D749B7641A7931A200258D63 /* RJLVideoPlayer.m in Sources */,
 				D7A673DA180EC8A1001C68D1 /* BookmarkViewCell.m in Sources */,
+				AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */,
 				D784EF431AA4B0570068D260 /* HeaderBarForListView.m in Sources */,
 				D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */,
 				AA83593A19B10B71009B3ABC /* NSObject+LBCloudConvenience.m in Sources */,

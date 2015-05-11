@@ -423,6 +423,10 @@
             [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
             [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
             [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+            
+            for (Event *eventToDelete in arrayOfTagsToRemove) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToDelete];
+            }
         }
         
         [self.setOfDeletingCells removeAllObjects];
@@ -438,6 +442,7 @@
             Event *eventToRemove = self.tableData[self.editingIndexPath.row];
             
             if (buttonIndex == 0) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];
                 [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -454,6 +459,7 @@
         } else {
             if (buttonIndex == 0) {
                 Event *eventToRemove = self.tableData[self.editingIndexPath.row];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self removeIndexPathFromDeletion];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];

@@ -27,6 +27,8 @@
 @property (nonatomic, strong) UISplitViewController *splitViewController;
 @property (nonatomic, weak) UINavigationController *navigationController;
 
+- (instancetype)initWithSettingDefinitions:(NSArray *)definitions settings:(NSMutableDictionary *)settings;
+
 - (void) settingChangedInDetailViewController: (DetailViewController *)detailView withSignal: (NSDictionary *) settingDictionary;
 //- (void) choseCellWithString: (NSString*)optionLabel;
 //- (void) specificSettingChosen: (NSString *) theSetting fromCell: (SwipeableTableViewCell *)theCell;

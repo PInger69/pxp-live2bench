@@ -42,6 +42,27 @@
         [self setMainSectionTab:NSLocalizedString(@"Calendar",nil) imageName:@"calendarTab"];
         localPath = _appDel.userCenter.localPath;
         memoryBar = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENTS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+            NSMutableArray *temp = [[NSMutableArray alloc] init];
+            if (_appDel.encoderManager.masterEncoder) {
+                [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];
+            } else {
+                [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+            }
+            NSMutableArray *liveEvents = [NSMutableArray array];
+            for (Event *event in temp) {
+                if (event.live) {
+                    [liveEvents addObject:event];
+                }
+            }
+            [temp removeObjectsInArray:liveEvents];
+            
+            tableViewController.arrayOfAllData = [temp mutableCopy];
+            calendarViewController.arrayOfAllData = tableViewController.arrayOfAllData;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
+
+        }];
     }
     return self;
 }

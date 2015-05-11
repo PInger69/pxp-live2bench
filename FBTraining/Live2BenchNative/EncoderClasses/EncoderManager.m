@@ -25,6 +25,8 @@
 
 #import <SDWebImage/SDImageCache.h>
 
+#import "FakeEncoder.h"
+
 #define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
@@ -323,6 +325,7 @@
         _eventTags              = [[NSMutableDictionary alloc]init];
         _liveEventName          = @"None";
         
+        
         // Browse for services
         // Starts Bonjour search for pxp servers
         services                = [[NSMutableArray alloc]init];
@@ -484,6 +487,15 @@
             
             [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: dict]];
             
+        }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_EVENT_SERVER object:nil queue:nil usingBlock:^(NSNotification *note) {
+            Event *eventToDelete = note.object;
+            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
+                                   @"name": eventToDelete.name,
+                                   @"hid": eventToDelete.hid
+                                   }];
+            [self deleteEvent: dict];
         }];
 
         

@@ -29,6 +29,8 @@
 #import "SettingsPageViewController.h"
 #import "InjuryViewController.h"
 
+#import "TabsSettingViewController.h"
+
 #import "UserCenter.h"
 //#import "StatsTabViewController.h"
 
@@ -100,7 +102,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     
     // Add Observers
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationSelectTab:)   name:NOTIF_SELECT_TAB object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTabs:) name:@"Setting - Tabs" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTabs:) name:NOTIF_TABS_SETTING_CHANGED object:nil];
 }
 
 /**
@@ -133,49 +135,24 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
  */
 -(void)setupView
 {
-    NSDictionary *nameToClass = @{@"Calendar":@"CalendarViewController",
-                                  @"Injury":@"InjuryViewController",
-                                  @"Live2Bench":@"Live2BenchViewController",
-                                  @"My Clip":@"BookmarkViewController",
-                                  @"Clip View":@"ClipViewController",
-                                  @"List View":@"ListViewController",
-                                  @"Debug":@"DebuggingTabViewController"};
-
     NSMutableArray *tabViewControllers = [NSMutableArray array];
     
     SettingsPageViewController  *settingsVC = [[SettingsPageViewController alloc] initWithAppDelegate:appDel];
 
     [tabViewControllers addObject: settingsVC];
     
-    __block NSArray *tabsArray;
-    __block NSArray *togglesArray;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_REQUEST_SETTINGS object:nil userInfo:@{
-        @"name":@"Tabs", @"block":^(NSArray * settingNames, NSArray *toggleValues){
-            tabsArray = settingNames;
-            togglesArray = toggleValues;
-        }
-        
-    }];
+    __block NSArray *enabledTabs;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS
+                                                        object:nil
+                                                      userInfo:@{
+                                                                 @"Class": [TabsSettingViewController class],
+                                                                 @"Block":^(NSArray *tabs) {enabledTabs = tabs;}
+                                                                 }];
     
-    if (DEBUG_MODE) {
-        NSMutableArray *addingTabsArray = [NSMutableArray arrayWithArray: tabsArray];
-        [addingTabsArray addObject: @"Debug"];
-        tabsArray = addingTabsArray;
-        
-        NSMutableArray *addingTogglesArray = [NSMutableArray arrayWithArray: togglesArray];
-        [addingTogglesArray addObject: @1];
-        togglesArray = addingTogglesArray;
+    for (Class tabClass in enabledTabs) {
+        [tabViewControllers addObject:[[tabClass alloc] initWithAppDelegate:appDel]];
     }
     
-    for (int i = 0; i < tabsArray.count; ++i) {
-        NSString *tabString = tabsArray[i];
-        if ([(NSNumber *)togglesArray[i] intValue]) {
-            NSString *classString = nameToClass[tabString];
-            [tabViewControllers addObject: [[NSClassFromString(classString) alloc]initWithAppDelegate:appDel]];
-       
-        }
-        
-    }
     
     self.tabs = tabViewControllers;
  
@@ -184,56 +161,39 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     }
 }
 
--(void)toggleTabs:(NSNotification *)note {
-    NSString *nameOfTab = note.userInfo[@"Name"];
-    BOOL onOrOff = [note.userInfo[@"Value"] boolValue];
-    NSDictionary *nameToClass = @{@"Calendar":@"CalendarViewController",
-                                  @"Injury":@"InjuryViewController",
-                                  @"Live2Bench":@"Live2BenchViewController",
-                                  @"My Clip":@"BookmarkViewController",
-                                  @"Clip View":@"ClipViewController",
-                                  @"List View":@"ListViewController",
-                                  @"Debug":@"DebuggingTabViewController"};
-    NSDictionary *nameToIndex = @{@"Calendar":@1, @"Injury":@2, @"Live2Bench":@3, @"My Clip":@6, @"Clip View":@4, @"List View":@5};
-
+- (void)refreshTabs {
     
-    //if ([nameOfTab isEqualToString:@"ListView"]) {
-        if (!onOrOff) {
-            for (int i = 0; i < self.tabs.count; ++i) {
-                CustomTabViewController *vc = self.tabs[i];
-                if ([vc isKindOfClass:NSClassFromString(nameToClass[nameOfTab])]) {
-                    [vc removeFromParentViewController];
-                    [self.tabs removeObject:vc];
-                    [self createTabButtons];
-                }
-            }
-        } else {
-            CustomTabViewController *vc = [[NSClassFromString(nameToClass[nameOfTab]) alloc] initWithAppDelegate:appDel];
-            [self addViewController:vc withName:nameOfTab];
-            [self createTabButtons];
-            
-        }
-    //}
-}
-
--(void)addViewController: (CustomTabViewController *)vc withName: (NSString *) name{
-    NSDictionary *nameToDistance = @{@"SettingsPageViewController": @0, @"CalendarViewController":@1, @"InjuryViewController":@2, @"Live2BenchViewController":@3, @"BookmarkViewController":@6, @"ClipViewController":@4, @"ListViewController":@5};
-    NSDictionary *nameToIndex = @{@"Calendar":@1, @"Injury":@2, @"Live2Bench":@3, @"My Clip":@6, @"Clip View":@4, @"List View":@5};
-    NSInteger index = [nameToIndex[name] intValue];
-    
-    for (int i = 0; i < self.tabs.count; ++i) {
-        NSInteger indexOfController =  [nameToDistance[NSStringFromClass([self.tabs[i] class])]  intValue];
-        if (indexOfController > index) {
-            [self.tabs insertObject:vc atIndex:i];
-            self.viewControllers = [self.tabs copy];
-            return;
+    // Remove all tabs except for the settings tab
+    for (CustomTabViewController *vc in [self.tabs copy]) {
+        if (![vc isKindOfClass:[SettingsPageViewController class]]) {
+            [vc removeFromParentViewController];
+            [self.tabs removeObject:vc];
         }
     }
     
-    [self.tabs addObject: vc];
-    self.viewControllers = [self.tabs copy];
-    return;
+    // Obtain enabled tabs
+    __block NSArray *enabledTabs;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS
+                                                        object:nil
+                                                      userInfo:@{
+                                                                 @"Class": [TabsSettingViewController class],
+                                                                 @"Block":^(NSArray *tabs) {enabledTabs = tabs;}
+                                                                 }];
     
+    // Add the enabled tabs
+    for (Class tabClass in enabledTabs) {
+        CustomTabViewController *vc = [[tabClass alloc] initWithAppDelegate:appDel];
+        [self.tabs addObject:vc];
+        [self addChildViewController:vc];
+    }
+    
+    [self createTabButtons];
+    
+}
+
+-(void)toggleTabs:(NSNotification *)note {
+    
+    [self refreshTabs];
 }
 
 -(void)viewDidAppear:(BOOL)animated
