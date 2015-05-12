@@ -32,10 +32,11 @@
     CGRect  onScreenRect;
     CGRect  offScreenRect;
     BOOL    isOpen;
-    BOOL    isAuto;
-    NSTimer *timer; /// TODO this should be removed when a notifier is created
     NSArray *exclusionKeys;
     NSArray *exclusionValues;
+    UILabel *totalTagNumber;
+    UILabel *filteredTagNumber;
+
     
 }
 
@@ -83,6 +84,8 @@
     [super viewDidLoad];
     [self setupView];
     [self componentSetup];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh) name:NOTIF_TAG_RECEIVED object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refresh) name:@"NOTIF_DELETE_SYNCED_TAG"object:nil];
 }
 
 /**
@@ -119,7 +122,7 @@
         [self.view setFrame:onScreenRect];
         isOpen = YES;
     }
-    [self autoRefresh:YES];
+    
  
 }
 
@@ -139,7 +142,6 @@
           [self.view setFrame:offScreenRect];
           isOpen = NO;
       }
-    [self autoRefresh:NO];
 }
 
 -(void)setupView
@@ -169,14 +171,15 @@
     [self.view addSubview:tabManager.view];
     
     // this will show the total number of tabs
-    numTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(backplate.bounds.size.width - 110.0f, 300.0f, 100.0f, 21.0f)];
+    /*numTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(backplate.bounds.size.width - 110.0f, 300.0f, 100.0f, 21.0f)];
 //    [numTagsLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
+    numTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width -100, self.view.frame.size.height - 20.0f, 300.0f, 100.0f)];
     [numTagsLabel setTextAlignment:NSTextAlignmentRight];
     [numTagsLabel setText:@"Tags"];
     [numTagsLabel setTextColor:[UIColor darkGrayColor]];
     [numTagsLabel setBackgroundColor:[UIColor clearColor]];
     [numTagsLabel setFont:[UIFont systemFontOfSize:17.0f]];
-    //[self.view addSubview:numTagsLabel];
+    //[self.view addSubview:numTagsLabel];*/
 
     // Filter clear button, this will always sit on top of all tabs but control the active tab unless connected
     clearAll = [CustomButton buttonWithType:UIButtonTypeCustom];
@@ -192,6 +195,20 @@
     clearAll.titleLabel.font=[UIFont systemFontOfSize:14.0f];
     [self.view addSubview:clearAll];
     [self.view setAutoresizingMask: UIViewAutoresizingNone];
+    
+    totalTagNumber = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width -560, self.view.frame.size.height -55, 160.0f, 20.0f)];
+    [totalTagNumber setBackgroundColor:[UIColor clearColor]];
+    [totalTagNumber setTextColor:[UIColor blackColor]];
+    [totalTagNumber setFont:[UIFont systemFontOfSize:17.0f]];
+    [self.view addSubview:totalTagNumber];
+    
+    filteredTagNumber = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width -420, self.view.frame.size.height -55, 160.0f, 20.0f)];
+    [filteredTagNumber setBackgroundColor:[UIColor clearColor]];
+    [filteredTagNumber setTextColor:[UIColor blackColor]];
+    [filteredTagNumber setFont:[UIFont systemFontOfSize:17.0f]];
+    [self.view addSubview:filteredTagNumber];
+    
+    
     
 
 }
@@ -213,7 +230,7 @@
     [super viewDidAppear:animated];
     [self refresh];
     [tabManager onSelectPerformSelector:@selector(sortClipsBySelecting) addTarget:self];
-
+    
 }
 
 
@@ -246,12 +263,13 @@
 //sorting mechanism
 -(void)sortClipsBySelecting
 {
+
+    int filteredTagCount = [self countOfFiltededTags];
+    [filteredTagNumber setText:[NSString stringWithFormat:@"%@: %d", NSLocalizedString(@"Filtered Tag", nil), filteredTagCount]];
     
-    // update tag display
-    int tagCount = [self countOfFiltededTags];
-    NSString * tagPlur = (tagCount==1)?@"Tag":@"Tags";
-    [numTagsLabel setText:[NSString stringWithFormat:@"%d %@   ",tagCount,tagPlur ]];
-    [numTagsLabel setNeedsDisplay];
+    int totalTagCount = [_rawTagArray count];
+    [totalTagNumber setText:[NSString stringWithFormat:@"%@: %d", NSLocalizedString(@"Total Tags", nil),totalTagCount]];
+    
 
     if (onSelectSelectors){
         #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -393,20 +411,6 @@
     return [set2 isEqualToSet:set1] ;
 }
 
-
--(void)autoRefresh:(BOOL)enable
-{
-    if (isAuto && !enable){
-        isAuto = NO;
-        [timer invalidate];
-        timer = nil;
-        
-    } else if (!isAuto && enable) {
-        isAuto = YES;
-
-        timer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self selector:@selector(refresh) userInfo:nil repeats:YES];
-    }
-}
 
 -(void)exclusionKeys:(NSArray *)listOfKeys
 {

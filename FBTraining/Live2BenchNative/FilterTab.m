@@ -1,3 +1,9 @@
+
+
+
+
+
+
 //
 //  FilterTab.m
 //  Live2BenchNative
@@ -24,6 +30,7 @@
     // These are for when a tab is pressed the filterin is run
     SEL onSelectSelector;
     id selTarget;
+
     
 }
 @synthesize tabLabel;
@@ -38,6 +45,7 @@
         clearOnLeaveTab     = NO;
         componentList       = [[NSArray alloc]init];
         tabLabel            = [UIButton buttonWithType:UIButtonTypeCustom];
+        
         
         [tabLabel setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         [tabLabel setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateSelected];

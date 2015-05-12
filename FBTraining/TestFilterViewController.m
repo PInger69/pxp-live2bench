@@ -75,7 +75,7 @@ static TestFilterViewController *commonFilter;
     FilterTab * tab1 = [[FilterTab alloc]initWithName:NSLocalizedString(@"Filter", nil)];
     // This floats above all tabs... same with the tag count
     clearAll.frame      = CGRectMake(800, 55, 100, 30);
-    numTagsLabel.frame  = CGRectMake(800, 300, 100, 30);
+    //numTagsLabel.frame  = CGRectMake(800, 300, 100, 30);
     
     
     //------------------------------------------

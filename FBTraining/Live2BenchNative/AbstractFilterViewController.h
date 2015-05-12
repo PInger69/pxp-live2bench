@@ -49,7 +49,6 @@
 -(void)close:(BOOL)animated;//TODO Names this better
 -(void)setOrigin:(CGPoint)origin;
 -(void)refresh;
--(void)autoRefresh:(BOOL)enable;
 -(BOOL)rawDataEmpty; //TODO fix this. it is do make sure it synced with the global kinda
 
 @end
