@@ -19,7 +19,7 @@
 
 @property (strong, nonatomic, nonnull) NSMutableArray *arrayOfAllTags;
 @property (strong, nonatomic, nonnull) TagView *tagView;
-//@property (strong, nonatomic, nonnull) NSTimer *tagViewRefreshTimer;
+@property (strong, nonatomic, nonnull) NSTimer *tagViewRefreshTimer;
 
 @end
 
@@ -147,7 +147,7 @@
         }];
         
         
-        //self.tagViewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self.tagView selector:@selector(setNeedsDisplay) userInfo:nil repeats:YES];
+        self.tagViewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self.tagView selector:@selector(setNeedsDisplay) userInfo:nil repeats:YES];
         
     }
     return self;
@@ -157,7 +157,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
     [_videoPlayer removeObserver:self forKeyPath:@"durationInSeconds"];
-    //[self.tagViewRefreshTimer invalidate];
+    [self.tagViewRefreshTimer invalidate];
 }
 
 - (void)tagReceived:(NSNotification *)note {
