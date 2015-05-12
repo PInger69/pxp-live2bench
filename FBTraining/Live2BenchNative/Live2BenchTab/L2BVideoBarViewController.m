@@ -21,6 +21,8 @@
 @property (strong, nonatomic, nonnull) TagView *tagView;
 @property (strong, nonatomic, nonnull) NSTimer *tagViewRefreshTimer;
 
+@property (strong, nonatomic, nonnull) CADisplayLink *displayLink;
+
 @end
 
 @implementation L2BVideoBarViewController
@@ -29,7 +31,7 @@
 @synthesize barMode                     =_barMode;
 @synthesize startRangeModifierButton    = _startRangeModifierButton;
 @synthesize endRangeModifierButton      = _endRangeModifierButton;
-@synthesize tagMarkerController         = _tagMarkerController;
+//@synthesize tagMarkerController         = _tagMarkerController;
 @synthesize videoPlayer                 = _videoPlayer;
 
 @synthesize arrayOfAllTags = _arrayOfAllTags;
@@ -59,7 +61,7 @@
          
         
         // frame does nothign now
-         _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
+        // _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
         //[background addSubview:_tagMarkerController.view];
         
         
@@ -118,8 +120,9 @@
                            backwardButton,
                            tagLabel,
                            slomoButton,
-                           _tagMarkerController.view,
-                           _tagMarkerController.currentPositionMarker];
+                           //_tagMarkerController.view,
+                           //_tagMarkerController.currentPositionMarker
+                           ];
         
         
         
@@ -130,7 +133,8 @@
         
         
         
-        [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew  | NSKeyValueObservingOptionOld context:nil];
+        [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+        //[_videoPlayer addObserver:self forKeyPath:@"avPlayer.currentItem.duration" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
         
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
@@ -139,30 +143,53 @@
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
                 if(eventTags){
-                    self.arrayOfAllTags = [NSMutableArray arrayWithArray: eventTags];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [self.arrayOfAllTags addObjectsFromArray:eventTags];
+                        [self.tagView setNeedsDisplay];
+                    });
+                    
                 }
             }}];
         }];
         
-        
-        self.tagViewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self.tagView selector:@selector(setNeedsDisplay) userInfo:nil repeats:YES];
+        self.displayLink = [CADisplayLink displayLinkWithTarget:self.tagView selector:@selector(setNeedsDisplay)];
+        [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [self.tagViewRefreshTimer invalidate];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
+    //[_videoPlayer removeObserver:self forKeyPath:@"avPlayer.currentItem.duration"];
+    [self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+}
+
+- (void)tagReceived:(NSNotification *)note {
+    if ([note.object isKindOfClass:[Tag class]]) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"Tag");
+            [self.arrayOfAllTags addObject:note.object];
+            [self.tagView setNeedsDisplay];
+        });
+         
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    int oldStatus = [[change objectForKey:@"old"]intValue];
-    int newStatus = [[change objectForKey:@"new"]intValue];
-    if (oldStatus == newStatus) return;
+    id old = [change objectForKey:@"old"];
+    id new = [change objectForKey:@"new"];
     
     if ([keyPath isEqualToString:@"status"]) {
-       UIViewController <PxpVideoPlayerProtocol>* ply = (UIViewController <PxpVideoPlayerProtocol>* )object;
+        
+        int oldStatus = [old intValue];
+        int newStatus = [new intValue];
+        if (oldStatus == newStatus) return;
+        
+        UIViewController <PxpVideoPlayerProtocol>* ply = (UIViewController <PxpVideoPlayerProtocol>* )object;
        // watching for only change in slomo
 //        if (newStatus & RJLPS_Slomo && !(oldStatus & RJLPS_Slomo)) {
 //           NSLog(@"slomow");
@@ -171,6 +198,9 @@
 //             slomoButton.slomoOn = ply.slowmo;
 //        }
       
+    } else if ([keyPath isEqualToString:@"avPlayer.currentItem.duration"]) {
+        PXPLog(@"Duration changed from: %@ to: %@", old, new);
+        [self.tagView setNeedsDisplay];
     }
 
 }
@@ -253,7 +283,7 @@
                                     self.view.frame.size.width ,
                                     self.view.frame.size.height)];
     
-    [_tagMarkerController.background setFrame:background.frame];
+    //[_tagMarkerController.background setFrame:background.frame];
     
     [tagLabel setFrame:CGRectMake(CGRectGetMidX(background.frame)- (LABEL_WIDTH/2), 5, LABEL_WIDTH, BAR_HEIGHT-10)];
     
@@ -282,16 +312,14 @@
                                                  LITTLE_ICON_DIMENSIONS-5,
                                                  LITTLE_ICON_DIMENSIONS-10)];
     
-    [self.tagView setFrame:background.frame];
-    
-
+    [self.tagView setFrame:CGRectMake(130, 0, background.frame.size.width - 240, background.frame.size.height)];
     
     //    for (UIView * item in activeElements){
 //        [item setHidden:NO];
 //    }
     
   //  [self _hideAll];
-    [_tagMarkerController viewDidAppear:animated];
+    //[_tagMarkerController viewDidAppear:animated];
     return [super viewDidAppear:animated];
 }
 - (void)didReceiveMemoryWarning
@@ -312,7 +340,7 @@
 
 -(void)createTagMarkers
 {
-    [_tagMarkerController createTagMarkers];
+    //[_tagMarkerController createTagMarkers];
 }
 
 
@@ -324,12 +352,12 @@
     switch (_barMode) {
         case L2B_VIDEO_BAR_MODE_CLIP:
             [self _hideAll];//,slomoButton
-            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,_tagMarkerController.view,_tagMarkerController.currentPositionMarker]];
+            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker*/]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
         case L2B_VIDEO_BAR_MODE_EVENT:
             [self _hideAll];
-            [self _revealThese:@[_tagMarkerController.view,forwardButton,backwardButton,slomoButton]];     
+            [self _revealThese:@[/*_tagMarkerController.view */forwardButton,backwardButton,slomoButton]];
             break;
         case L2B_VIDEO_BAR_MODE_DISABLE:
             [self _hideAll];
