@@ -21,6 +21,8 @@
 @property (strong, nonatomic, nonnull) TagView *tagView;
 @property (strong, nonatomic, nonnull) NSTimer *tagViewRefreshTimer;
 
+@property (strong, nonatomic, nonnull) CADisplayLink *displayLink;
+
 @end
 
 @implementation L2BVideoBarViewController
@@ -29,7 +31,7 @@
 @synthesize barMode                     =_barMode;
 @synthesize startRangeModifierButton    = _startRangeModifierButton;
 @synthesize endRangeModifierButton      = _endRangeModifierButton;
-@synthesize tagMarkerController         = _tagMarkerController;
+//@synthesize tagMarkerController         = _tagMarkerController;
 @synthesize videoPlayer                 = _videoPlayer;
 
 @synthesize arrayOfAllTags = _arrayOfAllTags;
@@ -59,7 +61,7 @@
          
         
         // frame does nothign now
-         _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
+        // _tagMarkerController    = [[TagFlagViewController alloc]initWithFrame:background.frame videoPlayer:_videoPlayer];
         //[background addSubview:_tagMarkerController.view];
         
         
@@ -118,8 +120,9 @@
                            backwardButton,
                            tagLabel,
                            slomoButton,
-                           _tagMarkerController.view,
-                           _tagMarkerController.currentPositionMarker];
+                           //_tagMarkerController.view,
+                           //_tagMarkerController.currentPositionMarker
+                           ];
         
         
         
@@ -140,17 +143,18 @@
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
                 if(eventTags){
-                    dispatch_sync(dispatch_get_main_queue(), ^(){
-                        self.arrayOfAllTags = [NSMutableArray arrayWithArray: eventTags];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [self.arrayOfAllTags addObjectsFromArray:eventTags];
                         [self.tagView setNeedsDisplay];
                     });
+                    
                 }
             }}];
         }];
         
-        
-        self.tagViewRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self.tagView selector:@selector(setNeedsDisplay) userInfo:nil repeats:YES];
-        
+        self.displayLink = [CADisplayLink displayLinkWithTarget:self.tagView selector:@selector(setNeedsDisplay)];
+        [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     }
     return self;
 }
@@ -159,15 +163,18 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
     //[_videoPlayer removeObserver:self forKeyPath:@"avPlayer.currentItem.duration"];
-    [self.tagViewRefreshTimer invalidate];
+    [self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
 - (void)tagReceived:(NSNotification *)note {
     if ([note.object isKindOfClass:[Tag class]]) {
-        dispatch_sync(dispatch_get_main_queue(), ^(){
+        
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"Tag");
             [self.arrayOfAllTags addObject:note.object];
             [self.tagView setNeedsDisplay];
         });
+         
     }
 }
 
@@ -276,7 +283,7 @@
                                     self.view.frame.size.width ,
                                     self.view.frame.size.height)];
     
-    [_tagMarkerController.background setFrame:background.frame];
+    //[_tagMarkerController.background setFrame:background.frame];
     
     [tagLabel setFrame:CGRectMake(CGRectGetMidX(background.frame)- (LABEL_WIDTH/2), 5, LABEL_WIDTH, BAR_HEIGHT-10)];
     
@@ -312,7 +319,7 @@
 //    }
     
   //  [self _hideAll];
-    [_tagMarkerController viewDidAppear:animated];
+    //[_tagMarkerController viewDidAppear:animated];
     return [super viewDidAppear:animated];
 }
 - (void)didReceiveMemoryWarning
@@ -333,7 +340,7 @@
 
 -(void)createTagMarkers
 {
-    [_tagMarkerController createTagMarkers];
+    //[_tagMarkerController createTagMarkers];
 }
 
 
@@ -345,12 +352,12 @@
     switch (_barMode) {
         case L2B_VIDEO_BAR_MODE_CLIP:
             [self _hideAll];//,slomoButton
-            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,_tagMarkerController.view,_tagMarkerController.currentPositionMarker]];
+            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker*/]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
         case L2B_VIDEO_BAR_MODE_EVENT:
             [self _hideAll];
-            [self _revealThese:@[_tagMarkerController.view,forwardButton,backwardButton,slomoButton]];     
+            [self _revealThese:@[/*_tagMarkerController.view */forwardButton,backwardButton,slomoButton]];
             break;
         case L2B_VIDEO_BAR_MODE_DISABLE:
             [self _hideAll];
