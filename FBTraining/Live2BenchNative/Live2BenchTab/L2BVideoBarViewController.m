@@ -133,7 +133,7 @@
         [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew  | NSKeyValueObservingOptionOld context:nil];
         
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
+        // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             
