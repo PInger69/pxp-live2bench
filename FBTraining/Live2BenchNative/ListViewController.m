@@ -537,7 +537,7 @@ NSMutableArray *oldEventNames;
     //    float boxXValue = filterToolBoxListViewController.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
     //    if (boxXValue == 60)
     //    {
-    //        [filterToolBoxListViewController updateDisplayedTagsCount];
+    //        [filterToolBoxListViewController updateDisplayedTagsCount];boo
     //        //clear the previous filter set
     //        [breadCrumbsView removeFromSuperview];
     //        breadCrumbsView  = nil;
