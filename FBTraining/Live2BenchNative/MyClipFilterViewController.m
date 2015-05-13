@@ -105,7 +105,7 @@
     [tab1 linkComponents:@[oppScrollViewNew,userColours,eventScrollViewNew,dateScrollViewNew,coachPick]];
     
     [clearAll setFrame:CGRectMake(dateX+2,          footerLine+70, 100, 40)];
-    [numTagsLabel setFrame:CGRectMake(dateX+2+105,  footerLine+70, 70, 40)];
+    //[numTagsLabel setFrame:CGRectMake(dateX+2+105,  footerLine+70, 70, 40)];
     
     
     

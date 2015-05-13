@@ -14,7 +14,7 @@
 
 @property (nonatomic,strong) NSString * name;
 
--(id)initWithFrame:(CGRect)frame encoder: ( id <EncoderProtocol> )aEncoder;
+-(id)initWithFrame:(CGRect)frame encoder: ( Encoder * )aEncoder;
 
 
 @end
