@@ -120,7 +120,9 @@
 
 
 //Bit Rate
-"Encoder Statuses"        =        "Encoder Statuses";
+"Name"                    =         "Name";
+"Version"                 =         "Version";
+"Encoder Statuses"        =         "Encoder Statuses";
 "Signal"                  =         "Signal";
 "Status"                  =         "Status";
 "Rate"                    =         "Rate";
@@ -190,6 +192,8 @@
 
 // Tags
 "Players"         =          "Players";
+"Total Tags"      =          "Total Tags";
+"Filtered Tag"    =          "Filtered Tag";
 "Period"          =          "Period";
 "Sub Tag"         =          "Sub Tag";
 "USER"            =          "USER";

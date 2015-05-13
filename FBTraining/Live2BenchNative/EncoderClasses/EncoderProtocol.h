@@ -40,6 +40,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 -(Event*)getEventByName:(NSString*)eventName;
 
 @optional
+@property (nonatomic,assign)    NSString             * version;
 @property (nonatomic,assign)    double               bitrate;
 @property (nonatomic,assign)    NSInteger       cameraCount;
 @property (nonatomic,strong)    Event                * liveEvent;
