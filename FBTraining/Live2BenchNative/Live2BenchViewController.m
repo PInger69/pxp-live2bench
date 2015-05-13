@@ -318,7 +318,9 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:bottomViewController.view];
     _theBottomViewController = bottomViewController;
 
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(goToLive) name:NOTIF_MASTER_HAS_LIVE object:nil];
     
+
     
     //label to show current event title
     currentEventTitle                   = [[UILabel alloc] initWithFrame:CGRectMake(156.0f, 71.0f, MEDIA_PLAYER_WIDTH, 21.0f)];
@@ -403,6 +405,8 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_gotoLiveButton];
         [_gotoLiveButton isActive:NO];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
+    
+    
     
     ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;
     
