@@ -237,7 +237,8 @@
                 path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
                 //path = @"/Documents/events/2015-04-16_16-17-13_368156f1cc13acdf43d265c420b4d2956ed0f645_local/main_00hq.mp4";
             } else {
-                path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
+                path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main.mp4"];
+//                path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
             }
             
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
@@ -248,12 +249,14 @@
                 
                 Feed *source;
                 if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {                    
+                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                     source = [[Feed alloc] initWithFileURL:path];
                     //source = [[Feed alloc] initWithURLString:path quality:1];
-                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
+
                 } else {
-                    source = [[Feed alloc] initWithURLString:data quality:0];
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
+                    source = [[Feed alloc] initWithURLString:data quality:0];
+//                    source = weakSelf.encoderManager.primaryEncoder getEventByName:<#(NSString *)#>
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
