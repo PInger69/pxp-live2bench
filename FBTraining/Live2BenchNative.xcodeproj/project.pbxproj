@@ -624,7 +624,6 @@
 		BDF9C2DE1836D87100F6661E /* dropboxico@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dropboxico@2x.png"; sourceTree = "<group>"; };
 		D700801919DF2456000144CF /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = Live2BenchNative/UtilityClasses/Utility.h; sourceTree = "<group>"; };
 		D700801A19DF2456000144CF /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utility.m; path = Live2BenchNative/UtilityClasses/Utility.m; sourceTree = "<group>"; };
-		D700F9041B011550008152E8 /* FakeEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FakeEncoder.h; path = Live2BenchNative/EncoderClasses/FakeEncoder.h; sourceTree = "<group>"; };
 		D700F9051B011550008152E8 /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FakeEncoder.m; path = Live2BenchNative/EncoderClasses/FakeEncoder.m; sourceTree = "<group>"; };
 		D70FBA3D17FE0E3600B606CF /* PlayerCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerCollectionViewController.h; sourceTree = "<group>"; };
 		D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCollectionViewController.m; sourceTree = "<group>"; };

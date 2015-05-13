@@ -217,9 +217,16 @@ int viewWillAppearCalled;
         
         Feed *feed = clipToPlay.feeds[@"source0"];
         
-        self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
-        self.shareController.name = clipToPlay.name;
-        self.shareButton.hidden = NO;
+        @try {
+            self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
+            self.shareController.name = clipToPlay.name;
+            self.shareButton.hidden = NO;
+        }
+        @catch (NSException *exception) {
+            PXPLog(@"Exception: %@", exception);
+        }
+        
+        
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){

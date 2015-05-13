@@ -65,7 +65,6 @@
 
 -(id)initWithAppDelegate:(AppDelegate*)appDel;
 
--(void)appLogOut:(id)sender;
 -(void)startEnc:(id)sender;
 -(void)pauseEnc:(id)sender;
 -(void)stopEnc:(id)sender;

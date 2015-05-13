@@ -53,6 +53,10 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 //
 //}EventButtonControlStates;
 
+@property (strong, nonatomic, nonnull) CustomAlertView *pauseAlertView;
+@property (strong, nonatomic, nonnull) CustomAlertView *stopAlertView;
+@property (strong, nonatomic, nonnull) CustomAlertView *shutdownAlertView;
+
 #define DEFAULT_LEAGUE @"League"
 #define DEFAULT_HOME_TEAM @"Home Team"
 #define DEFAULT_AWAY_TEAM @"Away Team"
@@ -150,6 +154,16 @@ SVSignalStatus signalStatus;
         homeTeam            = DEFAULT_HOME_TEAM;
         awayTeam            = DEFAULT_AWAY_TEAM;
         league              = DEFAULT_LEAGUE;
+        
+        
+        self.pauseAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Pause Event", nil) message:NSLocalizedString(@"Are you sure you want to pause the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
+        self.pauseAlertView.type = AlertIndecisive;
+        
+        self.stopAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Stop Event", nil) message:NSLocalizedString(@"Are you sure you want to stop the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
+        self.stopAlertView.type = AlertIndecisive;
+        
+        self.shutdownAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Shutdown Encoder", nil) message:NSLocalizedString(@"Are you sure you want to shutdown the encoder?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
+        self.shutdownAlertView.type = AlertIndecisive;
         
     }
     return self;
@@ -555,17 +569,21 @@ SVSignalStatus signalStatus;
 
 
 - (void)shutdownEnc:(id)sender {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"shutdown"  : [NSNumber numberWithBool:YES]}];
+    if(![self.shutdownAlertView display]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"shutdown"  : [NSNumber numberWithBool:YES]}];
+    }
 }
 
 - (void)pauseEnc:(id)sender {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
+    if(![self.pauseAlertView display]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
+    }
 }
 
 - (void)stopEnc:(id)sender {
-    // Richard
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop":[NSNumber numberWithBool:YES] }];
-    
+    if(![self.stopAlertView display]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop"  : [NSNumber numberWithBool:YES]}];
+    }
 }
 
 
@@ -1078,54 +1096,17 @@ SVSignalStatus signalStatus;
     }
 }
 
-- (void)appLogOut:(id)sender {
-    BOOL hasInternet = encoderManager.hasInternet;
-    if (!hasInternet) {
-        CustomAlertView *errorView;
-        errorView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"Please connect to the internet to log out."
-                     delegate: self
-                     cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [errorView show];
-        //        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:errorView];
-    }else{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
-        CustomAlertView *alertView;
-        alertView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"If you log out, you need internet to log in. Are you sure you want to log out?"
-                     delegate: self
-                     cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
-        alertView.accessibilityValue = @"appLogOut";
-        [alertView show];
-        alertView.delegate = self;
-        //        [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alertView];
-    }
-    
-}
-
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    switch (buttonIndex) {
-        case 0:
-            [self sendAppLogoutRequest];
-            break;
-            
-        default:
-            break;
+    if (buttonIndex == 0) {
+        if (alertView == self.pauseAlertView) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
+        } else if (alertView == self.stopAlertView) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop"  : [NSNumber numberWithBool:YES]}];
+        } else if (alertView == self.shutdownAlertView) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"shutdown"  : [NSNumber numberWithBool:YES]}];
+        }
     }
-}
-
-
--(void)sendAppLogoutRequest{
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LOGOUT_USER object:nil];
-    
-    [encoderManager.logoutAction start];
-    dismissEnabled = YES;
-    [self dismiss];
-    
-    
 }
 
 

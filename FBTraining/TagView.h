@@ -16,6 +16,8 @@
 
 - (NSTimeInterval)durationInTagView:(nonnull TagView *)tagView;
 - (nonnull NSArray *)tagsInTagView:(nonnull TagView *)tagView;
+- (NSTimeInterval)selectedTimeInTagView:(nonnull TagView *)tagView;
+- (BOOL)shouldDisplaySelectedTimeInTagView:(nonnull TagView *)tagView;
 
 @end
 
@@ -24,5 +26,8 @@
 @property (weak, nonatomic, nullable) id<TagViewDataSource> dataSource;
 @property (assign, nonatomic) CGFloat tagAlpha;
 @property (assign, nonatomic) CGFloat tagWidth;
+@property (strong, nonatomic, nonnull) UIColor *selectionFillColor;
+@property (strong, nonatomic, nonnull) UIColor *selectionStrokeColor;
+@property (assign, nonatomic) CGFloat selectionStrokeWidth;
 
 @end
