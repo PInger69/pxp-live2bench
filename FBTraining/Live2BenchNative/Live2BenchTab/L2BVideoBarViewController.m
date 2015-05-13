@@ -134,7 +134,6 @@
         
         
         [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-        //[_videoPlayer addObserver:self forKeyPath:@"avPlayer.currentItem.duration" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
         
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
@@ -153,6 +152,8 @@
             }}];
         }];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        
         self.displayLink = [CADisplayLink displayLinkWithTarget:self.tagView selector:@selector(setNeedsDisplay)];
         [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     }
@@ -162,7 +163,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
-    //[_videoPlayer removeObserver:self forKeyPath:@"avPlayer.currentItem.duration"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
     [self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
@@ -170,12 +171,15 @@
     if ([note.object isKindOfClass:[Tag class]]) {
         
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"Tag");
             [self.arrayOfAllTags addObject:note.object];
             [self.tagView setNeedsDisplay];
         });
          
     }
+}
+
+- (void)deleteTag:(NSNotification *)note {
+    [self.arrayOfAllTags removeObject:note.object];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -197,10 +201,6 @@
 //        } else if (oldStatus & RJLPS_Slomo && !(newStatus & RJLPS_Slomo)) {
 //             slomoButton.slomoOn = ply.slowmo;
 //        }
-      
-    } else if ([keyPath isEqualToString:@"avPlayer.currentItem.duration"]) {
-        PXPLog(@"Duration changed from: %@ to: %@", old, new);
-        [self.tagView setNeedsDisplay];
     }
 
 }
@@ -404,6 +404,14 @@
 
 - (nonnull NSArray *)tagsInTagView:(nonnull TagView *)tagView {
     return self.arrayOfAllTags;
+}
+
+- (NSTimeInterval)selectedTimeInTagView:(nonnull TagView *)tagView {
+    return _videoPlayer.currentTimeInSeconds;
+}
+
+- (BOOL)shouldDisplaySelectedTimeInTagView:(nonnull TagView *)tagView {
+    return YES;
 }
 
 @end

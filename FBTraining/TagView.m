@@ -17,15 +17,22 @@
 @synthesize dataSource = _dataSource;
 @synthesize tagAlpha = _tagAlpha;
 @synthesize tagWidth = _tagWidth;
+@synthesize selectionFillColor = _selectionFillColor;
+@synthesize selectionStrokeColor = _selectionStrokeColor;
+@synthesize selectionStrokeWidth = _selectionStrokeWidth;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // set defaults
+        
         self.dataSource = nil;
         self.tagAlpha = 1.0;
         self.tagWidth = 5.0;
+        self.selectionFillColor = [PRIMARY_APP_COLOR colorWithAlphaComponent:0.5];
+        self.selectionStrokeColor = PRIMARY_APP_COLOR;
+        self.selectionStrokeWidth = 2.0;
     }
     return self;
 }
@@ -51,6 +58,8 @@
         // obtain data source information
         NSArray *tags = [self.dataSource tagsInTagView:self];
         NSTimeInterval duration = [self.dataSource durationInTagView:self];
+        NSTimeInterval selectedTime = [self.dataSource selectedTimeInTagView:self];
+        BOOL shouldDisplaySelectedTime = [self.dataSource shouldDisplaySelectedTimeInTagView:self];
         
         // set up draw info
         NSMutableArray *drawInfo = [NSMutableArray arrayWithCapacity:pixelWidth];
@@ -61,15 +70,16 @@
         // populate draw info
         for (Tag *tag in tags) {
             // calculate tag dimensions
-            NSUInteger tagX = pixelWidth * (tag.time) / duration - self.tagWidth / 2.0;
-            NSUInteger tagWidth = self.tagWidth;
+            NSInteger tagX = pixelWidth * (tag.time) / duration - self.tagWidth / 2.0;
             
-            for (NSUInteger i = 0; i < tagWidth; i++) {
+            for (NSInteger i = 0; i < self.tagWidth; i++) {
+                
                 // only insert tag if it will fit in the frame
-                if (tagX + i < pixelWidth) {
+                NSInteger x = tagX + i;
+                if (0 <= x && x < pixelWidth) {
                     
                     // we only need to store the color information
-                    NSMutableSet *colorSet = drawInfo[tagX + i];
+                    NSMutableSet *colorSet = drawInfo[x];
                     
                     // add color to set
                     [colorSet addObject:tag.colour];
@@ -89,9 +99,7 @@
             for (NSString *hex in tagColors) {
                 
                 // get tag color and apply alpha
-                CGFloat tagColor[4] = { [3] = self.tagAlpha };
-                [[Utility colorWithHexString:hex] getRed:&tagColor[0] green:&tagColor[1] blue:&tagColor[2] alpha:nil];
-                UIColor *color = [UIColor colorWithRed:tagColor[0] green:tagColor[1] blue:tagColor[2] alpha:tagColor[3]];
+                UIColor *color = [[Utility colorWithHexString:hex] colorWithAlphaComponent:self.tagAlpha];
                 
                 CGContextSetFillColorWithColor(context, color.CGColor);
                 CGContextFillRect(context, CGRectMake(x, i * tagHeight, 1, tagHeight));
@@ -100,9 +108,23 @@
             
         }
         
+        // only draw selection if we need to
+        if (shouldDisplaySelectedTime) {
+            
+            // create selection rect
+            CGFloat selectionX = pixelWidth * selectedTime / duration - self.tagWidth / 2.0;
+            CGRect selectionRect = CGRectMake(selectionX, 0, self.tagWidth, rect.size.height);
+            
+            // draw selection
+            CGContextSetFillColorWithColor(context, self.selectionFillColor.CGColor);
+            CGContextFillRect(context, selectionRect);
+            
+            CGContextSetStrokeColorWithColor(context, self.selectionStrokeColor.CGColor);
+            CGContextStrokeRectWithWidth(context, selectionRect, self.selectionStrokeWidth);
+        }
+        
     }
     
 }
-
 
 @end

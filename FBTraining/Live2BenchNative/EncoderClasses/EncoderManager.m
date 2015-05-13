@@ -672,23 +672,56 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(Event*)getEventByHID:(NSString*)eventHID
 {
-    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+//    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+//        
+//        NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
+//        
+//        return [thisHID isEqualToString:eventHID];
+//    }];
+//    
+//    
+//    //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
+//    
+//    
+//    NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
+//    
+//    if ([filtered count]==0)return nil;
+//    
+//    // this is an issues
+//    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:NO andlocalPath:nil];
+//    
+    
+    
+    /////
+    Event * event;
+    
+    // collects all events
+    NSMutableArray * collection = [[NSMutableArray alloc]init];
+    
+    for (Encoder * enc in self.authenticatedEncoders) {
+        [collection addObjectsFromArray:[enc.allEvents allValues]];
+    }
+    
+    
+    for (Event * evt in collection) {
+        if ([evt.hid isEqualToString:eventHID]) {
+            event = evt;
+            break;
+        };
+    }
+    
+    // If there is no exteral events check the local
+    if (!event){
+        collection = [NSMutableArray arrayWithArray:[self.localEncoder.allEvents allValues]];
         
-        NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
-        
-        return [thisHID isEqualToString:eventHID];
-    }];
-    
-    
-    //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
-    
-    
-    NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
-    
-    if ([filtered count]==0)return nil;
-    
-    // this is an issues
-    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:NO andlocalPath:nil];
+        for (Event * evt in collection) {
+            if ([evt.hid isEqualToString:eventHID]) {
+                event = evt;
+                break;
+            };
+        }
+    }
+
     return event;
 }
 
@@ -702,6 +735,26 @@ static void * builtContext          = &builtContext; // depricated?
     }
     
     return [self.localEncoder getEventByName:eventName];
+}
+
+-(void)makeFakeEncoder
+{
+
+        FakeEncoder * newEncoder    = [[FakeEncoder alloc]init];
+        newEncoder.encoderManager = self;
+        [newEncoder addObserver:self forKeyPath:@"authenticated"    options:0 context:authenticatContext];
+        [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
+        newEncoder.name         = [NSString stringWithFormat:@"Fake %d",[FakeEncoder fakeCount] ];
+//        [newEncoder requestVersion];
+//        [newEncoder authenticateWithCustomerID:_customerID];
+//        if (_masterEncoder == nil) [newEncoder searchForMaster];
+        [dictOfEncoders setValue:newEncoder forKey:newEncoder.name];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForFeedChange:) name:NOTIF_ENCODER_FEEDS_UPDATED object:newEncoder];
+        
+        PXPLog(@"*** Registered FAKE Encoder ***");
+        PXPLog(@"    %@ ",newEncoder.name);
+        PXPLog(@"**************************");
+
 }
 
 

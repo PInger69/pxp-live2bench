@@ -100,11 +100,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "453065948.471046"
+            timestampString = "453225347.417184"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "864"
-            endingLineNumber = "864"
+            startingLineNumber = "917"
+            endingLineNumber = "917"
             landmarkName = "-notificationDownloadClip:"
             landmarkType = "5">
          </BreakpointContent>
@@ -123,6 +123,7 @@
             endingLineNumber = "674"
             landmarkName = "-getEventByHID:"
             landmarkType = "5">
+<<<<<<< HEAD
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -155,6 +156,8 @@
                   offsetFromSymbolStart = "72">
                </Location>
             </Locations>
+=======
+>>>>>>> fd4472cc03701732a55d26f76f9e2e5a8a9db5a2
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -251,6 +254,7 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
             filePath = "FBTraining/Live2BenchNative/Live2BenchViewController.m"
             timestampString = "453227184.316248"
             startingColumnNumber = "9223372036854775807"
@@ -307,6 +311,48 @@
             endingLineNumber = "265"
             landmarkName = "-gotLiveEvent"
             landmarkType = "5">
+=======
+            filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
+            timestampString = "453069197.521705"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[BookmarkViewController viewDidLoad]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/BookmarkViewController.m"
+                  timestampString = "453225347.510725"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "191"
+                  endingLineNumber = "191"
+                  offsetFromSymbolStart = "50">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__37-[BookmarkViewController viewDidLoad]_block_invoke"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/BookmarkViewController.m"
+                  timestampString = "453225347.510879"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "191"
+                  endingLineNumber = "191"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+>>>>>>> fd4472cc03701732a55d26f76f9e2e5a8a9db5a2
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

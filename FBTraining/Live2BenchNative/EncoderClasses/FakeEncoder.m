@@ -7,7 +7,7 @@
 //
 
 #import "FakeEncoder.h"
-
+#import "Encoder.h"
 static int fakeCounter;
 @implementation FakeEncoder
 
@@ -24,11 +24,17 @@ static int fakeCounter;
     return [[FakeEncoder alloc]init];
 }
 
++(int)fakeCount
+{
+    return (!fakeCounter)?0:fakeCounter;
+}
+
+
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        
+        _status = ENCODER_STATUS_READY;
         fakeCounter = (!fakeCounter)?0:fakeCounter+1;
         _name =@"Fake";
     }
