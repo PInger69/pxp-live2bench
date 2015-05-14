@@ -246,7 +246,8 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
     VideoPlayerCommandLooping   = 1<<8,
     VideoPlayerCommandNoLooping = 1<<9,
     VideoPlayerCommandSlowmo    = 1<<10,
-    VideoPlayerCommandNoSlomo   = 1<<11
+    VideoPlayerCommandNoSlomo   = 1<<11,
+    VideoPlayerCommandClear     = 1<<12
 };
 
 

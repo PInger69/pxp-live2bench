@@ -64,8 +64,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-<<<<<<< HEAD
-=======
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -114,7 +112,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
->>>>>>> df334fe82a2ab131047fb2092fe97c28df827488
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -185,15 +182,11 @@
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-<<<<<<< HEAD
-            symbolName = "obj_exception_throw"
-            moduleName = "">
-=======
             filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
             timestampString = "453067053.11029"
             startingColumnNumber = "9223372036854775807"
@@ -472,8 +465,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "44"
             endingLineNumber = "44"
-            landmarkName = "-initWithPlistPath:data:"
-            landmarkType = "5">
+            landmarkName = "@implementation Clip"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -487,9 +480,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "291"
-            endingLineNumber = "291"
-            landmarkName = "-destroy"
-            landmarkType = "5">
+            endingLineNumber = "291">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -504,7 +495,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "73"
             endingLineNumber = "73"
-            landmarkName = "-initWithDict:"
+            landmarkName = "-setRating:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -531,11 +522,11 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/BookmarkViewController.m"
-                  timestampString = "453327631.730681"
+                  timestampString = "453329716.80266"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "389"
-                  endingLineNumber = "389"
+                  startingLineNumber = "385"
+                  endingLineNumber = "385"
                   offsetFromSymbolStart = "136">
                </Location>
                <Location
@@ -546,11 +537,11 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/BookmarkViewController.m"
-                  timestampString = "453327631.730838"
+                  timestampString = "453329716.802809"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "389"
-                  endingLineNumber = "389"
+                  startingLineNumber = "385"
+                  endingLineNumber = "385"
                   offsetFromSymbolStart = "54">
                </Location>
             </Locations>
@@ -602,7 +593,6 @@
             endingLineNumber = "582"
             landmarkName = "-myClipDeleteRequest:"
             landmarkType = "5">
->>>>>>> df334fe82a2ab131047fb2092fe97c28df827488
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -618,22 +608,6 @@
             startingLineNumber = "542"
             endingLineNumber = "542"
             landmarkName = "-applyLayoutAttributes:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/ClipViewController.m"
-            timestampString = "453327229.357699"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "-longPressDetected:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
