@@ -71,7 +71,7 @@ static void * eventContext      = &eventContext;
 
 
 @synthesize videoPlaybackFailedAlertView;
-@synthesize hasWentInGotLiveEvent;
+@synthesize hasWentInGotLiveEvent = _hasWentInGotLiveEvent;
 
 #pragma mark - View Controller Methods
 
@@ -102,7 +102,7 @@ static void * eventContext      = &eventContext;
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEventType))  options:NSKeyValueObservingOptionNew context:&eventTypeContext];
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEvent))      options:NSKeyValueObservingOptionNew context:&eventContext];
 
-    hasWentInGotLiveEvent = false;
+    _hasWentInGotLiveEvent = false;
     
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
@@ -264,11 +264,26 @@ static void * eventContext      = &eventContext;
     [multiButton setHidden:!([_encoderManager.feeds count]>1)];
 }
 
+- (void) setHasWentInGotLiveEvent:(BOOL)hasWentInGotLiveEvent
+{
+    _hasWentInGotLiveEvent = false;
+}
+
+- (BOOL) hasWentInGotLiveEvent
+{
+    return _hasWentInGotLiveEvent;
+}
+
 -(void)gotLiveEventForStart
 {
-    if (!hasWentInGotLiveEvent) {
-        hasWentInGotLiveEvent = true;
+    if (!_hasWentInGotLiveEvent) {
+        _hasWentInGotLiveEvent = true;
         [self gotLiveEvent];
+        return;
+    }
+    if(_hasWentInGotLiveEvent){
+        _hasWentInGotLiveEvent = false;
+        return;
     }
 }
 
@@ -279,7 +294,10 @@ static void * eventContext      = &eventContext;
     [_gotoLiveButton isActive:YES];
     _tagButtonController.enabled = YES;
     
-     _appDel.encoderManager.primaryEncoder = _appDel.encoderManager.masterEncoder;
+    if (_appDel.encoderManager.primaryEncoder != _appDel.encoderManager.masterEncoder) {
+        _appDel.encoderManager.primaryEncoder = _appDel.encoderManager.masterEncoder;
+    }
+    
     Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
 
     _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];

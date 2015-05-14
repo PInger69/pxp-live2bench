@@ -13,6 +13,7 @@
 #import "Feed.h"
 #import "Tag.h"
 #import "EncoderManager.h"
+#import "Live2BenchViewController.h"
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
@@ -612,6 +613,7 @@
 #pragma mark -  Master Commands
 -(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
+    
     NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%@",aTimeStamp],@"requesttime", nil];
     
     NSError *error;
