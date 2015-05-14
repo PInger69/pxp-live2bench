@@ -69,7 +69,9 @@
 static void * eventTypeContext  = &eventTypeContext;
 static void * eventContext      = &eventContext;
 
+
 @synthesize videoPlaybackFailedAlertView;
+@synthesize hasWentInGotLiveEvent;
 
 #pragma mark - View Controller Methods
 
@@ -99,7 +101,8 @@ static void * eventContext      = &eventContext;
     // observers //@"currentEventType"
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEventType))  options:NSKeyValueObservingOptionNew context:&eventTypeContext];
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEvent))      options:NSKeyValueObservingOptionNew context:&eventContext];
- 
+
+    hasWentInGotLiveEvent = false;
     
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
@@ -113,8 +116,7 @@ static void * eventContext      = &eventContext;
         [weakSelf createTagButtons];
     }];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name:NOTIF_MASTER_HAS_LIVE object:nil];
-
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEventForStart) name:NOTIF_LIVE_EVENT_FOUND object:nil];
     
     NSDictionary *theEntireDataDictionary = @{
                                               @"Half":@{@"initializationArray":@[@{@"Name": @"1", @"Value": @"s_00"},
@@ -262,6 +264,14 @@ static void * eventContext      = &eventContext;
     [multiButton setHidden:!([_encoderManager.feeds count]>1)];
 }
 
+-(void)gotLiveEventForStart
+{
+    if (!hasWentInGotLiveEvent) {
+        hasWentInGotLiveEvent = true;
+        [self gotLiveEvent];
+    }
+}
+
 -(void)gotLiveEvent
 {
     [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
@@ -269,17 +279,21 @@ static void * eventContext      = &eventContext;
     [_gotoLiveButton isActive:YES];
     _tagButtonController.enabled = YES;
     
+     _appDel.encoderManager.primaryEncoder = _appDel.encoderManager.masterEncoder;
     Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
+
     _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
     [_teamPick addOnCompletionBlock:^(NSString *pick){
         [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
         [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
                                                          userInfo:@{@"tabName":@"Live2Bench"}];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed": dic,  @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
         NSString *info = @"Live";
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
     }];
     [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                animated:YES];
+    
 }
 
 #pragma mark -
@@ -318,10 +332,7 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:bottomViewController.view];
     _theBottomViewController = bottomViewController;
 
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(goToLive) name:NOTIF_MASTER_HAS_LIVE object:nil];
-    
 
-    
     //label to show current event title
     currentEventTitle                   = [[UILabel alloc] initWithFrame:CGRectMake(156.0f, 71.0f, MEDIA_PLAYER_WIDTH, 21.0f)];
     currentEventTitle.textAlignment     = NSTextAlignmentRight;
@@ -405,6 +416,7 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_gotoLiveButton];
         [_gotoLiveButton isActive:NO];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
+  
     
     
     
@@ -521,6 +533,8 @@ static void * eventContext      = &eventContext;
  *  This sets the video player and all its pip to live
  */
 - (void)goToLive
+
+
 {
     if (![_appDel.encoderManager.currentEvent isEqualToString:_appDel.encoderManager.liveEventName]) {
         _appDel.encoderManager.currentEvent = _appDel.encoderManager.liveEventName;
