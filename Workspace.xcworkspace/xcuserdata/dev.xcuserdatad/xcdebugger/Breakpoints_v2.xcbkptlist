@@ -64,6 +64,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+<<<<<<< HEAD
+=======
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -112,6 +114,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+>>>>>>> df334fe82a2ab131047fb2092fe97c28df827488
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -182,11 +185,15 @@
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            symbolName = "obj_exception_throw"
+            moduleName = "">
+=======
             filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
             timestampString = "453067053.11029"
             startingColumnNumber = "9223372036854775807"
@@ -595,6 +602,7 @@
             endingLineNumber = "582"
             landmarkName = "-myClipDeleteRequest:"
             landmarkType = "5">
+>>>>>>> df334fe82a2ab131047fb2092fe97c28df827488
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
