@@ -217,15 +217,16 @@ int viewWillAppearCalled;
         
         Feed *feed = clipToPlay.feeds[@"source0"];
         
-        @try {
-            self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
-            self.shareController.name = clipToPlay.name;
-            self.shareButton.enabled = YES;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:feed.path.path]) {
+            @try {
+                self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
+                self.shareController.name = clipToPlay.name;
+                self.shareButton.enabled = YES;
+            }
+            @catch (NSException *exception) {
+                PXPLog(@"Exception: %@", exception);
+            }
         }
-        @catch (NSException *exception) {
-            PXPLog(@"Exception: %@", exception);
-        }
-        
         
     }];
     
