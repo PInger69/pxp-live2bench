@@ -21,7 +21,6 @@
 @property (nonatomic,strong)            NSString       * clipId;
 @property (nonatomic,assign)            int            rating;
 @property (nonatomic,strong)            NSString       * comment;
-@property (nonatomic,strong)            NSDictionary   * feeds;
 @property (nonatomic,strong)            NSMutableDictionary   * rawData;
 @property (nonatomic,strong)            NSString       * path;
 @property (nonatomic,strong)            NSString       * user;

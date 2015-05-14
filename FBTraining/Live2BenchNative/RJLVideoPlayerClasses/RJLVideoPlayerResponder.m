@@ -80,6 +80,10 @@
         player.mute = NO;
     }
     
+    if ( command & VideoPlayerCommandClear ) {
+        [player clear];
+    }
+    
     
 }
 

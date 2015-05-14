@@ -209,15 +209,15 @@ int viewWillAppearCalled;
         [self.informationarea addSubview: tagPopoverContent];
         [self.informationarea addSubview: self.ratingAndCommentingView.view];
         
-        [self.videoPlayer playFeed: [[clipToPlay.feeds allValues] firstObject]];
+        // single cam (take first video for now)
+        NSString *clipVideoPath = [clipToPlay.videoFiles firstObject];
         
-        // Setup shareController
-        
-        // take first feed
-        
-        Feed *feed = clipToPlay.feeds[@"source0"];
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath:feed.path.path]) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:clipVideoPath]) {
+            Feed *feed = [[Feed alloc] initWithFileURL:clipVideoPath];
+            
+            [self.videoPlayer playFeed: [[Feed alloc]initWithFileURL:clipVideoPath]];
+            
+            // Setup shareController
             @try {
                 self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
                 self.shareController.name = clipToPlay.name;
@@ -227,6 +227,10 @@ int viewWillAppearCalled;
                 PXPLog(@"Exception: %@", exception);
             }
         }
+        
+        
+        
+        
         
     }];
     
@@ -245,15 +249,7 @@ int viewWillAppearCalled;
         componentFilter.rawTagArray = self.allClips;
         //[componentFilter refresh];
     }];
-    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
-            self.allClips = [NSMutableArray arrayWithArray: clips];
-            _tableViewController.tableData = self.allClips;
-            [_tableViewController.tableView reloadData];
-        }];
-        
-    }];
+    
 //    
 //    //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
 //    
