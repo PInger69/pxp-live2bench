@@ -27,6 +27,7 @@
 @property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
 
+@property (readonly, nonatomic) NSString *globalID;
 
 /**
  *  This is used to make a new Clip from a non existing Plist
@@ -65,9 +66,6 @@
  *  Deletes all mp4s and selfPlist
  */
 -(void)destroy;
-
-
-
 
 @end
 

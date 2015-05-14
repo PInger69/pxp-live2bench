@@ -340,5 +340,9 @@
 
 }
 
+- (NSString *)globalID {
+    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
+}
+
 
 @end
