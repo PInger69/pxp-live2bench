@@ -49,7 +49,10 @@
 
 @property (nonatomic,strong)    UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 @property (nonatomic,strong)    NSString                                     * currentEventName;
-@property (nonatomic,strong)    UIAlertView                                  * videoPlaybackFailedAlertView;
+@property (nonatomic,strong)    UIAlertView
+* videoPlaybackFailedAlertView;
+
+@property (nonatomic,assign)   BOOL hasWentInGotLiveEvent;
 
 //@property (nonatomic, strong)   TagMarker                                    * currentPlayingTagMarker;
 //@property (nonatomic,strong)    TagMarker                                    * tagMarker;

@@ -657,6 +657,9 @@
 -(void)startEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     
+    [self buildEncoderRequest];
+
+    
     NSString * homeTeam = [tData objectForKey:@"homeTeam"];
     NSString * awayTeam = [tData objectForKey:@"awayTeam"];
     NSString * league   = [tData objectForKey:@"league"];

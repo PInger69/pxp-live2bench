@@ -156,7 +156,6 @@
 
 -(void)clearAllTags:(id)sender
 {
-    
     [componentList makeObjectsPerformSelector:@selector(deselectAll)];
 }
 
