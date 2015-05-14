@@ -22,7 +22,7 @@
 @property (nonatomic,assign)            int            rating;
 @property (nonatomic,strong)            NSString       * comment;
 @property (nonatomic,strong)            NSDictionary   * feeds;
-@property (nonatomic,strong)            NSDictionary   * rawData;
+@property (nonatomic,strong)            NSMutableDictionary   * rawData;
 @property (nonatomic,strong)            NSString       * path;
 @property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;

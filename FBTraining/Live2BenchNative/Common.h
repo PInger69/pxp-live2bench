@@ -167,8 +167,8 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 //#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER" // this is watched by the encoder manager
 
 
-
-
+#define NOTIF_DOWNLOAD_COMPLETE @"downloadComplete"
+//object = DownloaderItem
 
 // User Center
 #define NOTIF_SIDE_TAGS_READY_FOR_L2B       @"tagsReadyForLive2Bench"

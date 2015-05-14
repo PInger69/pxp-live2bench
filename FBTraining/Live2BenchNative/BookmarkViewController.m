@@ -245,6 +245,15 @@ int viewWillAppearCalled;
         componentFilter.rawTagArray = self.allClips;
         //[componentFilter refresh];
     }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
+            self.allClips = [NSMutableArray arrayWithArray: clips];
+            _tableViewController.tableData = self.allClips;
+            [_tableViewController.tableView reloadData];
+        }];
+        
+    }];
 //    
 //    //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
 //    
@@ -376,13 +385,13 @@ int viewWillAppearCalled;
 //            }
 //        }
 //    }}];
-    if (self.allClips.count == 0) {
+    //if (self.allClips.count == 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
             self.allClips = [NSMutableArray arrayWithArray: clips];
             _tableViewController.tableData = self.allClips;
             [_tableViewController.tableView reloadData];
         }];
-    }
+    //}
     
     
     //get all the events information which will be used to display home team, visit team
