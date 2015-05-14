@@ -36,14 +36,15 @@
         
         //NSDictionary * data = [[NSDictionary alloc]initWithContentsOfFile:aPath];
     
-        _rawData            = data;
+        _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [_rawData objectForKey:@"id"];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = aPath;
-           [_rawData writeToFile:self.path atomically:YES];
+        _rawData[@"plistPath"] = aPath;
+        [_rawData writeToFile:self.path atomically:YES];
         
         // just save
     }
@@ -63,14 +64,14 @@
     self = [super init];
     if (self) {
         
-        _rawData            = data;
+        _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = [_rawData objectForKey:@"plistName"];
-
+        
 
     }
     return self;
@@ -254,10 +255,12 @@
 //    NSString * plistFileName    = mutableDict[@"plistName"];
 //    bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@",_localPath,plistFileName];
     _rawData = mutableDict;
+    [self buildFeeds:_rawData];
     [_rawData writeToFile:self.path atomically:YES];
+    
 //
 //    
-//    
+//
 //    
 //    // make bookmarkvideo path if not there
 //    BOOL isDir = NO;
@@ -306,7 +309,7 @@
         BOOL vidDestroyed = [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
         
         if (vidDestroyed) {
-            NSLog(@"The plist has been destroyed");
+            NSLog(@"The video has been destroyed");
         }
 
     }
@@ -338,6 +341,10 @@
 
 -(void)dealloc{
 
+}
+
+- (NSString *)globalID {
+    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
 }
 
 

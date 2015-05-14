@@ -325,7 +325,6 @@
         _eventTags              = [[NSMutableDictionary alloc]init];
         _liveEventName          = @"None";
         
-        
         // Browse for services
         // Starts Bonjour search for pxp servers
         services                = [[NSMutableArray alloc]init];
@@ -341,7 +340,6 @@
         
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
         _localEncoder.encoderManager = self;
-        //        [_authenticatedEncoders addObject:_localEncoder]; // does this really need to be in the list of encoders
         
         _currentEventType       = SPORT_HOCKEY;
         _searchForEncoders      = NO;
@@ -367,7 +365,6 @@
         _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
             
             weakSelf.liveEventName = ((Encoder*) note.object).liveEvent.name;
-
             weakSelf.currentEvent = weakSelf.liveEventName; // should live be live no matter what??
         }];
         
@@ -1634,7 +1631,7 @@ static void * builtContext          = &builtContext; // depricated?
 }
 
 
-
+// This will be depricated soon with the construction of a new MasterSlaveEncoder
 -(NSMutableDictionary*)eventTags
 {
     
@@ -1679,7 +1676,6 @@ static void * builtContext          = &builtContext; // depricated?
     
     
     if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) { // if its any other type of encoder then just take the tags from it only
-        
         _currentEventTags = [[_primaryEncoder.event.tags allValues] copy];
         
     } else {// if its normal encoder get from all connected and authenticated
@@ -1693,7 +1689,6 @@ static void * builtContext          = &builtContext; // depricated?
         _currentEventTags = [tempList copy];
     }
     
-    
     [self didChangeValueForKey:@"currentEventTags"];
 }
 
@@ -1704,9 +1699,7 @@ static void * builtContext          = &builtContext; // depricated?
 
 -(void)setHasLive:(BOOL)hasLive
 {
-    
     if (hasLive == _hasLive) return;
-    
     
     [self willChangeValueForKey:@"hasLive"];
     _hasLive = hasLive;
@@ -1714,7 +1707,6 @@ static void * builtContext          = &builtContext; // depricated?
         self.currentEvent = @"None";
     }
     [self didChangeValueForKey:@"hasLive"];
-    
     
 }
 

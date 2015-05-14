@@ -46,22 +46,10 @@
         
         self.delegate = self;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestSettings:) name:NOTIF_REQUEST_SETTINGS object:nil];
+        // notify alert views of settings
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_ALERTS_SETTING_CHANGED object:nil userInfo:self.settingData];
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REQUEST_SETTINGS object:nil];
-}
-         
-- (void)requestSettings:(NSNotification *)note {
-    if ([self isKindOfClass:note.userInfo[@"Class"]]) {
-        void(^block)(NSDictionary *) = note.userInfo[@"Block"];
-        
-        block(self.settingData);
-    }
 }
 
 - (void)viewDidLoad {

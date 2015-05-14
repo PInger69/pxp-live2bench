@@ -22,11 +22,12 @@
 @property (nonatomic,assign)            int            rating;
 @property (nonatomic,strong)            NSString       * comment;
 @property (nonatomic,strong)            NSDictionary   * feeds;
-@property (nonatomic,strong)            NSDictionary   * rawData;
+@property (nonatomic,strong)            NSMutableDictionary   * rawData;
 @property (nonatomic,strong)            NSString       * path;
 @property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
 
+@property (readonly, nonatomic) NSString *globalID;
 
 /**
  *  This is used to make a new Clip from a non existing Plist
@@ -65,9 +66,6 @@
  *  Deletes all mp4s and selfPlist
  */
 -(void)destroy;
-
-
-
 
 @end
 

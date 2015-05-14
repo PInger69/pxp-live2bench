@@ -217,15 +217,16 @@ int viewWillAppearCalled;
         
         Feed *feed = clipToPlay.feeds[@"source0"];
         
-        @try {
-            self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
-            self.shareController.name = clipToPlay.name;
-            self.shareButton.hidden = NO;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:feed.path.path]) {
+            @try {
+                self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
+                self.shareController.name = clipToPlay.name;
+                self.shareButton.enabled = YES;
+            }
+            @catch (NSException *exception) {
+                PXPLog(@"Exception: %@", exception);
+            }
         }
-        @catch (NSException *exception) {
-            PXPLog(@"Exception: %@", exception);
-        }
-        
         
     }];
     
@@ -236,9 +237,22 @@ int viewWillAppearCalled;
         [self.ratingAndCommentingView.view removeFromSuperview];
     }];
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_CLIPS" object:nil queue:nil usingBlock:^(NSNotification *note){
+        
+        self.shareController = nil;
+        self.shareButton.enabled = NO;
+        
         [self.allClips removeObjectIdenticalTo:note.userInfo];
         componentFilter.rawTagArray = self.allClips;
         //[componentFilter refresh];
+    }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
+            self.allClips = [NSMutableArray arrayWithArray: clips];
+            _tableViewController.tableData = self.allClips;
+            [_tableViewController.tableView reloadData];
+        }];
+        
     }];
 //    
 //    //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
@@ -371,13 +385,13 @@ int viewWillAppearCalled;
 //            }
 //        }
 //    }}];
-    if (self.allClips.count == 0) {
+    //if (self.allClips.count == 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
             self.allClips = [NSMutableArray arrayWithArray: clips];
             _tableViewController.tableData = self.allClips;
             [_tableViewController.tableView reloadData];
         }];
-    }
+    //}
     
     
     //get all the events information which will be used to display home team, visit team
@@ -555,8 +569,10 @@ int viewWillAppearCalled;
     self.shareButton = [[UIButton alloc] initWithFrame:CGRectMake(850, 710, 74, 58)];
     [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
     [self.shareButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
     [self.shareButton addTarget:self action:@selector(popShareOptions:) forControlEvents:UIControlEventTouchUpInside];
-    self.shareButton.hidden = YES;
+    self.shareButton.hidden = NO;
+    self.shareButton.enabled = NO;
     [self.view addSubview:self.shareButton];
     
     /////////////////////////////////////////////////////////////////

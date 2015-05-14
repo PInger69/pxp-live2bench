@@ -85,6 +85,7 @@ static void * vpFrameContext   = &vpFrameContext;
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
 
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerCancelClip:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
         NSTimeInterval  inter   =  2;
         syncTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(syncTimerMethod) userInfo:nil repeats:YES];
