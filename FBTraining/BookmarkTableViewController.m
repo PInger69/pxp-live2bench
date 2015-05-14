@@ -302,7 +302,7 @@
             Clip *clipToRemove = self.tableData[self.editingIndexPath.row];
             [self.tableData removeObject:clipToRemove];
             [clipToRemove destroy];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tagToRemove];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_CLIPS"  object:nil userInfo:nil];
             
             [self removeIndexPathFromDeletion];
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
