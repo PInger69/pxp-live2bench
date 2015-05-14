@@ -564,7 +564,10 @@
         //int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
         NSString *bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@.plist",_localPath, globalID];
         
-        Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: tagData];
+        NSMutableDictionary *clipData = [NSMutableDictionary dictionaryWithDictionary:tagData];
+        clipData[@"plistPath"] = bookmarkPlistPath;
+        
+        Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: clipData];
         [buildClip addSourceToClip:@{@"fileNames": @[aName]}];
         [_clips setObject:buildClip forKey:buildClip.globalID];
 //        CMTimeRange clipTimeRange = CMTimeRangeMake(CMTimeMake(tagData.startTime, 1), CMTimeMake(tagData.duration, 1));

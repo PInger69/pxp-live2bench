@@ -886,11 +886,18 @@ static void * builtContext          = &builtContext; // depricated?
         // if in the data success is 0 then there is an error!
         NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
-        [_localEncoder saveClip:videoName withData: results]; // this is the data used to make the plist
         NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
         DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
         dItemBlock(dli);
         
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
+            // is the object what we ware downloading
+            if (note.object == dli) {
+                NSLog(@"Download Complete");
+                [_localEncoder saveClip:videoName withData: results]; // this is the data used to make the plist
+            }
+        }];
     };
     
     
