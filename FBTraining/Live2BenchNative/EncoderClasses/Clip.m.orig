@@ -36,23 +36,17 @@
         
         //NSDictionary * data = [[NSDictionary alloc]initWithContentsOfFile:aPath];
     
-        _rawData            = data;
+        _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [_rawData objectForKey:@"id"];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
-<<<<<<< HEAD
-        _path               = [_rawData objectForKey:@"plistName"];
-        self.time           = [[_rawData objectForKey:@"time"]doubleValue];
-        self.duration       = [[_rawData objectForKey:@"duration"] intValue];
-        self.user           = [_rawData objectForKey:@"user"];
-=======
         _path               = aPath;
-           [_rawData writeToFile:self.path atomically:YES];
+        _rawData[@"plistPath"] = aPath;
+        [_rawData writeToFile:self.path atomically:YES];
         
         // just save
->>>>>>> 9d5a31071e2fa7a4c43d8297ee0e84684bbf2d74
     }
     return self;
 }
@@ -70,22 +64,15 @@
     self = [super init];
     if (self) {
         
-        _rawData            = data;
+        _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _feeds              = [self buildFeeds:_rawData];
         _path               = [_rawData objectForKey:@"plistName"];
-<<<<<<< HEAD
-        self.time           = [[_rawData objectForKey:@"time"]doubleValue];
-        self.duration       = [[_rawData objectForKey:@"duration"] intValue];
-        self.user           = [_rawData objectForKey:@"user"];
-    
-=======
+        
 
-
->>>>>>> 9d5a31071e2fa7a4c43d8297ee0e84684bbf2d74
     }
     return self;
 }
@@ -95,6 +82,7 @@
 -(void)setRating:(int)rating{
     _rating = rating;
     [self modClipData: @{@"rating": [NSNumber numberWithInt: rating]}];
+    [self write];
 }
 
 -(void)setComment:(NSString *)comment{
@@ -104,13 +92,40 @@
     }else{
         [self modClipData: @{@"comment": @""}];
     }
+    [self write];
+}
+
+-(NSArray *)videoFiles{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
+    NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
+    NSString *filePath = [path stringByAppendingPathComponent: [[_rawData objectForKey:@"fileNames"] firstObject]];
     
+    NSArray *returningArray = @[filePath];
+    return returningArray;
 }
 
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict
 {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
+    NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
+    
+    NSMutableDictionary *returningDict = [[NSMutableDictionary alloc] init];
+    int i = 0;
+    for (NSString *fileName in [aDict objectForKey:@"fileNames"]) {
+        NSString *filePath = [path stringByAppendingPathComponent: fileName];
+        Feed *newFeed = [[Feed alloc] initWithFileURL: filePath];
+        
+        [returningDict setObject:newFeed forKey:[NSString stringWithFormat:@"source%i", i]];
+        
+    }
+    
+    return returningDict;
 //
-//    
+//
 //    if ([aDict objectForKey:@"fileNames"]){
 //    
 //    
@@ -153,13 +168,13 @@
 {
 //    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //    NSString *documentsDirectory = [paths objectAtIndex:0];
-
-//    NSString *plistName = [_rawData objectForKey:@"plistName"];
+//
+//    //NSString *plistName = [_rawData objectForKey:@"plistName"];
 //    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
-//    NSString *plistPath = [dataPath stringByAppendingPathComponent: plistName];
+//    NSString *plistPath = [dataPath stringByAppendingPathComponent: self.path];
     
     
-    [_rawData writeToFile:self.path atomically:YES];
+    [_rawData writeToFile: self.path atomically:YES];
     
     return ;
 //    NSError  * error        = nil;
@@ -240,10 +255,12 @@
 //    NSString * plistFileName    = mutableDict[@"plistName"];
 //    bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@",_localPath,plistFileName];
     _rawData = mutableDict;
+    [self buildFeeds:_rawData];
     [_rawData writeToFile:self.path atomically:YES];
+    
 //
 //    
-//    
+//
 //    
 //    // make bookmarkvideo path if not there
 //    BOOL isDir = NO;
@@ -274,7 +291,33 @@
 
 -(void)destroy
 {
-    [self write];
+    BOOL plistDestroyed = [[NSFileManager defaultManager] removeItemAtPath:self.path error:nil];
+    
+    if (plistDestroyed) {
+        NSLog(@"The plist has been destroyed");
+    }
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
+    NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
+    
+
+    for (NSString *fileName in [_rawData objectForKey:@"fileNames"]) {
+        NSString *filePath = [path stringByAppendingPathComponent: fileName];
+        
+        BOOL vidDestroyed = [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+        
+        if (vidDestroyed) {
+<<<<<<< HEAD
+            NSLog(@"The video has been destroyed");
+=======
+            NSLog(@"The vid has been destroyed");
+>>>>>>> d085b57edbd38c747879e8de867e23f1baf824bb
+        }
+
+    }
+
     //NSDictionary * clipDict = [_clips objectForKey:aId];
 //    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //    NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -300,6 +343,13 @@
     // BOOM!
 }
 
+-(void)dealloc{
+
+}
+
+- (NSString *)globalID {
+    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
+}
 
 
 @end

@@ -301,9 +301,9 @@
         {
             Clip *clipToRemove = self.tableData[self.editingIndexPath.row];
             [self.tableData removeObject:clipToRemove];
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_CLIPS"  object:nil userInfo:@{@"event":clipToRemove.rawData[@"event"],@"id":clipToRemove.clipId}];
             [clipToRemove destroy];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_CLIPS"  object:nil userInfo:nil];
-            
             [self removeIndexPathFromDeletion];
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self.tableView reloadData];

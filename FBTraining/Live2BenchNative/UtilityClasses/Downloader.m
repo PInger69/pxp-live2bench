@@ -13,7 +13,6 @@
 #import "Downloader.h"
 
 
-
 @implementation Downloader
 {
     BOOL isDownloading;
@@ -165,7 +164,7 @@ static void *  downLoaderContext = &downLoaderContext;
             self.pause = YES;
             break;
         case DownloadItemStatusComplete:
-            //[[NSNotificationCenter defaultCenter] postNotificationName:@"finishDownloading" object:nil userInfo:@{@"dateString" : cItem.dateString}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DOWNLOAD_COMPLETE object:cItem];
             [self removeFromQueue:cItem];
             break;
         case DownloadItemStatusCancel:
