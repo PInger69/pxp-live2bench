@@ -306,7 +306,7 @@
         BOOL vidDestroyed = [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
         
         if (vidDestroyed) {
-            NSLog(@"The plist has been destroyed");
+            NSLog(@"The video has been destroyed");
         }
 
     }
