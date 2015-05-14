@@ -22,23 +22,8 @@ static AlertType    allowedTypes;
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
     
-    __block NSDictionary *alertSettings;
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS
-                                                        object:nil
-                                                      userInfo:@{ @"Class": [AlertsSettingViewController class],
-                                                                  @"Block": ^(NSDictionary *settings)
-    {
-        alertSettings = settings;
-    }
-                                                                  }];
-    
-    allowedTypes = AlertImportant;
-    
-    if ([alertSettings[ALERT_NOTIFICATION] boolValue]) allowedTypes |= AlertNotification;
-    if ([alertSettings[ALERT_ENCODER] boolValue]) allowedTypes |= AlertEncoder;
-    if ([alertSettings[ALERT_DEVICE] boolValue]) allowedTypes |= AlertDevice;
-    if ([alertSettings[ALERT_INDECISIVE] boolValue]) allowedTypes |= AlertIndecisive;
+    // all enabled by default
+    allowedTypes = AlertImportant | AlertNotification | AlertEncoder | AlertDevice | AlertIndecisive;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertsSettingChanged:) name:NOTIF_ALERTS_SETTING_CHANGED object:nil];
     
