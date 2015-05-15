@@ -588,7 +588,7 @@
         [self deleteClip: selectedClip.globalID];
     } else {
         [self deleteClip: [NSString stringWithFormat:@"%@_%@", note.userInfo[@"event"], note.userInfo[@"id"]]];
-    }  
+    }
 }
 
 -(void)deleteClip:(NSString*)aId
