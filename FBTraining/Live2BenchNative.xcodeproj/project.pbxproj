@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		436907411AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 436907401AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib */; };
-		436907451AB86E16003BD1E6 /* GTLCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		436907461AB86E16003BD1E6 /* GTLNetworking_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		436907491AB86E5B003BD1E6 /* GTLDrive_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = 436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */; };
 		43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */; };
 		947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 947F44A519883E150081E81D /* FootballTrainingBottomViewController.m */; };
 		9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9482F269199A59E7000670B0 /* FootballTrainingCollectionViewController.m */; };
@@ -47,21 +43,6 @@
 		AA222B52195B836600820BCD /* filter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA222B50195B836600820BCD /* filter@2x.png */; };
 		AA222B5B195B839100820BCD /* sort.png in Resources */ = {isa = PBXBuildFile; fileRef = AA222B55195B839100820BCD /* sort.png */; };
 		AA222B5C195B839100820BCD /* sort@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA222B56195B839100820BCD /* sort@2x.png */; };
-		AA83588E19B10967009B3ABC /* DejalActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83587D19B10967009B3ABC /* DejalActivityView.m */; };
-		AA83588F19B10967009B3ABC /* downloadCompleteHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83587F19B10967009B3ABC /* downloadCompleteHUD.png */; };
-		AA83589019B10967009B3ABC /* downloadFailedHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588019B10967009B3ABC /* downloadFailedHUD.png */; };
-		AA83589119B10967009B3ABC /* downloadHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588119B10967009B3ABC /* downloadHUD.png */; };
-		AA83589219B10967009B3ABC /* dropboxIconHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588219B10967009B3ABC /* dropboxIconHUD.png */; };
-		AA83589319B10967009B3ABC /* googleDriveIconHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588319B10967009B3ABC /* googleDriveIconHUD.png */; };
-		AA83589419B10967009B3ABC /* noWifi.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588419B10967009B3ABC /* noWifi.png */; };
-		AA83589519B10967009B3ABC /* noWifi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588519B10967009B3ABC /* noWifi@2x.png */; };
-		AA83589619B10967009B3ABC /* SVStatusHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83588719B10967009B3ABC /* SVStatusHUD.m */; };
-		AA83589719B10967009B3ABC /* uploadCompleteHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588819B10967009B3ABC /* uploadCompleteHUD.png */; };
-		AA83589819B10967009B3ABC /* uploadFailedHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588919B10967009B3ABC /* uploadFailedHUD.png */; };
-		AA83589919B10967009B3ABC /* uploadHUD.png in Resources */ = {isa = PBXBuildFile; fileRef = AA83588A19B10967009B3ABC /* uploadHUD.png */; };
-		AA8358B819B10A22009B3ABC /* LDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8358B519B10A22009B3ABC /* LDProgressView.m */; };
-		AA8358B919B10A22009B3ABC /* UIColor+RGBValues.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8358B719B10A22009B3ABC /* UIColor+RGBValues.m */; };
-		AA83595C19B10C1B009B3ABC /* HNBorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83595819B10C1B009B3ABC /* HNBorderButton.m */; };
 		AA83596D19B115D2009B3ABC /* ExportPlayersPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83596A19B115D2009B3ABC /* ExportPlayersPopoverController.m */; };
 		AA83596E19B115D2009B3ABC /* ExportPlayersSync.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83596C19B115D2009B3ABC /* ExportPlayersSync.m */; };
 		AAFCA6FE195B84B000D0F0E6 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA6FC195B84B000D0F0E6 /* share.png */; };
@@ -389,8 +370,6 @@
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */; };
 		D7C903AE17F4B7A0002A1FDD /* continue_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */; };
-		D7CCE7D61AB8A4B300D85095 /* GoogleDriveShare.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7D51AB8A4B300D85095 /* GoogleDriveShare.m */; };
-		D7CCE7DA1AB8D41A00D85095 /* ShareOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7D91AB8D41A00D85095 /* ShareOptionsViewController.m */; };
 		D7CCE7DD1AB9C04000D85095 /* SocialProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7DC1AB9C04000D85095 /* SocialProgressView.m */; };
 		D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */; };
 		D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7E71AC1C77D00D85095 /* RatingAndCommentingField.m */; };
@@ -446,11 +425,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		436907401AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
-		436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLCommon_Sources.m; sourceTree = "<group>"; };
-		436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLNetworking_Sources.m; sourceTree = "<group>"; };
-		436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDrive_Sources.m; sourceTree = "<group>"; };
-		436907481AB86E5B003BD1E6 /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
 		43BDC1EC1AA4AE1E0067CEAB /* LiveIndicatorLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveIndicatorLight.h; sourceTree = SOURCE_ROOT; };
 		43BDC1ED1AA4AE1E0067CEAB /* LiveIndicatorLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveIndicatorLight.m; sourceTree = SOURCE_ROOT; };
 		947F44A419883E150081E81D /* FootballTrainingBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballTrainingBottomViewController.h; sourceTree = "<group>"; };
@@ -493,26 +467,6 @@
 		AA222B50195B836600820BCD /* filter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "filter@2x.png"; sourceTree = "<group>"; };
 		AA222B55195B839100820BCD /* sort.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sort.png; sourceTree = "<group>"; };
 		AA222B56195B839100820BCD /* sort@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sort@2x.png"; sourceTree = "<group>"; };
-		AA83587C19B10967009B3ABC /* DejalActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DejalActivityView.h; sourceTree = "<group>"; };
-		AA83587D19B10967009B3ABC /* DejalActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DejalActivityView.m; sourceTree = "<group>"; };
-		AA83587F19B10967009B3ABC /* downloadCompleteHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downloadCompleteHUD.png; sourceTree = "<group>"; };
-		AA83588019B10967009B3ABC /* downloadFailedHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downloadFailedHUD.png; sourceTree = "<group>"; };
-		AA83588119B10967009B3ABC /* downloadHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downloadHUD.png; sourceTree = "<group>"; };
-		AA83588219B10967009B3ABC /* dropboxIconHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dropboxIconHUD.png; sourceTree = "<group>"; };
-		AA83588319B10967009B3ABC /* googleDriveIconHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = googleDriveIconHUD.png; sourceTree = "<group>"; };
-		AA83588419B10967009B3ABC /* noWifi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noWifi.png; sourceTree = "<group>"; };
-		AA83588519B10967009B3ABC /* noWifi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noWifi@2x.png"; sourceTree = "<group>"; };
-		AA83588619B10967009B3ABC /* SVStatusHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVStatusHUD.h; sourceTree = "<group>"; };
-		AA83588719B10967009B3ABC /* SVStatusHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVStatusHUD.m; sourceTree = "<group>"; };
-		AA83588819B10967009B3ABC /* uploadCompleteHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uploadCompleteHUD.png; sourceTree = "<group>"; };
-		AA83588919B10967009B3ABC /* uploadFailedHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uploadFailedHUD.png; sourceTree = "<group>"; };
-		AA83588A19B10967009B3ABC /* uploadHUD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uploadHUD.png; sourceTree = "<group>"; };
-		AA8358B419B10A22009B3ABC /* LDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDProgressView.h; sourceTree = "<group>"; };
-		AA8358B519B10A22009B3ABC /* LDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDProgressView.m; sourceTree = "<group>"; };
-		AA8358B619B10A22009B3ABC /* UIColor+RGBValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RGBValues.h"; sourceTree = "<group>"; };
-		AA8358B719B10A22009B3ABC /* UIColor+RGBValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RGBValues.m"; sourceTree = "<group>"; };
-		AA83595719B10C1B009B3ABC /* HNBorderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HNBorderButton.h; sourceTree = "<group>"; };
-		AA83595819B10C1B009B3ABC /* HNBorderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HNBorderButton.m; sourceTree = "<group>"; };
 		AA83596919B115D2009B3ABC /* ExportPlayersPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPlayersPopoverController.h; sourceTree = "<group>"; };
 		AA83596A19B115D2009B3ABC /* ExportPlayersPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExportPlayersPopoverController.m; sourceTree = "<group>"; };
 		AA83596B19B115D2009B3ABC /* ExportPlayersSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPlayersSync.h; sourceTree = "<group>"; };
@@ -1015,10 +969,6 @@
 		D7C624E7180EDBF700C2DDD7 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = continue_unselected.png; sourceTree = "<group>"; };
 		D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue_unselected@2x.png"; sourceTree = "<group>"; };
-		D7CCE7D41AB8A4B300D85095 /* GoogleDriveShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleDriveShare.h; sourceTree = "<group>"; };
-		D7CCE7D51AB8A4B300D85095 /* GoogleDriveShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleDriveShare.m; sourceTree = "<group>"; };
-		D7CCE7D81AB8D41A00D85095 /* ShareOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareOptionsViewController.h; sourceTree = "<group>"; };
-		D7CCE7D91AB8D41A00D85095 /* ShareOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareOptionsViewController.m; sourceTree = "<group>"; };
 		D7CCE7DB1AB9C04000D85095 /* SocialProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialProgressView.h; sourceTree = "<group>"; };
 		D7CCE7DC1AB9C04000D85095 /* SocialProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialProgressView.m; sourceTree = "<group>"; };
 		D7CCE7DE1ABB78AE00D85095 /* VideoZoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoZoomManager.h; sourceTree = "<group>"; };
@@ -1145,56 +1095,6 @@
 				9482F269199A59E7000670B0 /* FootballTrainingCollectionViewController.m */,
 			);
 			name = FootballTrainingCollectionViewController;
-			sourceTree = "<group>";
-		};
-		AA83587B19B10967009B3ABC /* DejalActivityView */ = {
-			isa = PBXGroup;
-			children = (
-				AA83587C19B10967009B3ABC /* DejalActivityView.h */,
-				AA83587D19B10967009B3ABC /* DejalActivityView.m */,
-			);
-			name = DejalActivityView;
-			path = "DejalActivityView-master (loading indicator)";
-			sourceTree = "<group>";
-		};
-		AA83587E19B10967009B3ABC /* SVStatusHUD */ = {
-			isa = PBXGroup;
-			children = (
-				AA83587F19B10967009B3ABC /* downloadCompleteHUD.png */,
-				AA83588019B10967009B3ABC /* downloadFailedHUD.png */,
-				AA83588119B10967009B3ABC /* downloadHUD.png */,
-				AA83588219B10967009B3ABC /* dropboxIconHUD.png */,
-				AA83588319B10967009B3ABC /* googleDriveIconHUD.png */,
-				AA83588419B10967009B3ABC /* noWifi.png */,
-				AA83588519B10967009B3ABC /* noWifi@2x.png */,
-				AA83588619B10967009B3ABC /* SVStatusHUD.h */,
-				AA83588719B10967009B3ABC /* SVStatusHUD.m */,
-				AA83588819B10967009B3ABC /* uploadCompleteHUD.png */,
-				AA83588919B10967009B3ABC /* uploadFailedHUD.png */,
-				AA83588A19B10967009B3ABC /* uploadHUD.png */,
-			);
-			path = SVStatusHUD;
-			sourceTree = "<group>";
-		};
-		AA8358B319B10A22009B3ABC /* LDProgressView */ = {
-			isa = PBXGroup;
-			children = (
-				AA8358B419B10A22009B3ABC /* LDProgressView.h */,
-				AA8358B519B10A22009B3ABC /* LDProgressView.m */,
-				AA8358B619B10A22009B3ABC /* UIColor+RGBValues.h */,
-				AA8358B719B10A22009B3ABC /* UIColor+RGBValues.m */,
-			);
-			path = LDProgressView;
-			sourceTree = "<group>";
-		};
-		AA83595D19B10C38009B3ABC /* HNBorderButton */ = {
-			isa = PBXGroup;
-			children = (
-				AA83595719B10C1B009B3ABC /* HNBorderButton.h */,
-				AA83595819B10C1B009B3ABC /* HNBorderButton.m */,
-			);
-			name = HNBorderButton;
-			path = Live2BenchNative;
 			sourceTree = "<group>";
 		};
 		AE50739C1AFC1DBF002C361D /* SettingViewControllers */ = {
@@ -1750,15 +1650,8 @@
 				D7CCE7E71AC1C77D00D85095 /* RatingAndCommentingField.m */,
 				D7CCE8061AC98B9400D85095 /* VideoTrimItem.h */,
 				D7CCE8071AC98B9400D85095 /* VideoTrimItem.m */,
-				436907401AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib */,
-				436907431AB86E16003BD1E6 /* GTLCommon_Sources.m */,
 				D7B7C4D91AD6CDF800A5DEC3 /* FeedSelectCell.h */,
 				D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */,
-				436907441AB86E16003BD1E6 /* GTLNetworking_Sources.m */,
-				436907471AB86E5B003BD1E6 /* GTLDrive_Sources.m */,
-				436907481AB86E5B003BD1E6 /* GTLDrive.h */,
-				D7CCE7D81AB8D41A00D85095 /* ShareOptionsViewController.h */,
-				D7CCE7D91AB8D41A00D85095 /* ShareOptionsViewController.m */,
 				D7CCE7DE1ABB78AE00D85095 /* VideoZoomManager.h */,
 				D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */,
 				D7B7C4D41AD32BDD00A5DEC3 /* InjuryViewController.h */,
@@ -1782,8 +1675,6 @@
 				D73CDC001AB345FA002D682D /* AlbumShare.m */,
 				D73CDC0C1AB716C7002D682D /* FacebookShare.h */,
 				D73CDC0D1AB716C7002D682D /* FacebookShare.m */,
-				D7CCE7D41AB8A4B300D85095 /* GoogleDriveShare.h */,
-				D7CCE7D51AB8A4B300D85095 /* GoogleDriveShare.m */,
 				D73CDBFC1AB339A6002D682D /* MailShare.h */,
 				D73CDBFD1AB339A6002D682D /* MailShare.m */,
 				D7CCE7DB1AB9C04000D85095 /* SocialProgressView.h */,
@@ -1893,10 +1784,6 @@
 				D7B0F39016C58DF6009D8099 /* CoreData.framework */,
 				D7B1EA2B16C5585400DD35B0 /* SystemConfiguration.framework */,
 				D7A9394916ADA65E006CBAB2 /* Live2BenchNative */,
-				AA83595D19B10C38009B3ABC /* HNBorderButton */,
-				AA8358B319B10A22009B3ABC /* LDProgressView */,
-				AA83587B19B10967009B3ABC /* DejalActivityView */,
-				AA83587E19B10967009B3ABC /* SVStatusHUD */,
 				D7A9397B16ADA65E006CBAB2 /* Live2BenchNativeTests */,
 				D7A9394216ADA65E006CBAB2 /* Frameworks */,
 				D7A9394016ADA65E006CBAB2 /* Products */,
@@ -2370,14 +2257,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				436907411AB86D1F003BD1E6 /* GTMOAuth2ViewTouch.xib in Resources */,
 				D7EE1E4B1828596300CA36CF /* gotolive@2x.png in Resources */,
 				D7581F2D196461ED0029C5DD /* InfoPlist.strings in Resources */,
 				D7EE1E4C1828596400CA36CF /* clipTab@2x.png in Resources */,
 				94B28D7E193380F40000E804 /* teleButtonSelect.png in Resources */,
 				D786C1ED17EB9BF90042DD96 /* listTabSelect@2x.png in Resources */,
 				D786C24217F39CA10042DD96 /* youtubeSelect.png in Resources */,
-				AA83589519B10967009B3ABC /* noWifi@2x.png in Resources */,
 				AA222B5C195B839100820BCD /* sort@2x.png in Resources */,
 				D78F68CB18073DC70096C793 /* BlueSettingsButtonSelect.png in Resources */,
 				D7A067EF16AF0475002A2892 /* live.png in Resources */,
@@ -2453,7 +2338,6 @@
 				94E8DB861939167100B92CD1 /* lineButton.png in Resources */,
 				94F9596A1921834D00B7D201 /* playbackRateButtonBack.png in Resources */,
 				94F9596C1921834D00B7D201 /* playbackRateButtonForward.png in Resources */,
-				AA83589719B10967009B3ABC /* uploadCompleteHUD.png in Resources */,
 				D79F9B7D17F5D5F00081C5E9 /* myplayXplay_tagging@2x.png in Resources */,
 				D79F9B8017F5ED0B0081C5E9 /* myplayXplay_phonecall.png in Resources */,
 				BDD2D2FA17ECDD11004D5D9A /* clip-back-just@2x.png in Resources */,
@@ -2494,12 +2378,9 @@
 				D797CCFA170DD8D400A6E62B /* logo.png in Resources */,
 				D79F9B7717F5C2E10081C5E9 /* vertical_myplayXplay_case.png in Resources */,
 				BDD2D2F817ECDD11004D5D9A /* clip-back-old@2x.png in Resources */,
-				AA83589819B10967009B3ABC /* uploadFailedHUD.png in Resources */,
 				D797CCFB170DD8D400A6E62B /* logo@2x.png in Resources */,
 				BD8C368417F330360094CBAD /* mailselected@2x.png in Resources */,
 				BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */,
-				AA83589019B10967009B3ABC /* downloadFailedHUD.png in Resources */,
-				AA83589119B10967009B3ABC /* downloadHUD.png in Resources */,
 				D7CCE7FC1AC1EA3B00D85095 /* SoccerBottomViewController.plist in Resources */,
 				BD3104FF183590A80094AE6D /* dropboxicoSel@2x.png in Resources */,
 				D78F68D218073DC70096C793 /* OrangeSettingsButtonSelect@2x.png in Resources */,
@@ -2510,7 +2391,6 @@
 				D7DFD4A81827FA5F00D98BE7 /* appicon@2x.png in Resources */,
 				94F959791922B86A00B7D201 /* playbackRateButtonBackSelected.png in Resources */,
 				D7807BF318185F000061305A /* extendendsec.png in Resources */,
-				AA83589319B10967009B3ABC /* googleDriveIconHUD.png in Resources */,
 				BDD2D2FF17ECF343004D5D9A /* chevbothpoints.png in Resources */,
 				94E8DB94193E1CD200B92CD1 /* arrowButtonSelect.png in Resources */,
 				BD9BC32417EB96B3001B67DE /* clip-back@2x.png in Resources */,
@@ -2534,13 +2414,11 @@
 				BD90458F17F0FE2B001423FF /* checkmarkOverlay.png in Resources */,
 				94B28D891935202A0000E804 /* undoButtonSelect@2x.png in Resources */,
 				94B28D881935202A0000E804 /* undoButtonSelect.png in Resources */,
-				AA83589919B10967009B3ABC /* uploadHUD.png in Resources */,
 				D797791E1AEEB4B0008A99E0 /* orangeSelect.png in Resources */,
 				D727089A1A141AD90086BCB8 /* Localizable.strings in Resources */,
 				BDD2D2F717ECDD11004D5D9A /* clip-back-old.png in Resources */,
 				D7D1D47E17F5C73200D5C185 /* extendendsec@2x.png in Resources */,
 				D797791A1AEEB40C008A99E0 /* num-button.png in Resources */,
-				AA83589219B10967009B3ABC /* dropboxIconHUD.png in Resources */,
 				D7B79CCC182C304900F0876D /* saveToAlbum.png in Resources */,
 				D73B42E7193F763B00EA2775 /* subtractstartsec@2x.png in Resources */,
 				94F9596D1921834D00B7D201 /* playbackRateButtonForward@2x.png in Resources */,
@@ -2551,11 +2429,9 @@
 				D760736719D21AD6000E35C2 /* seeklarge@2x.png in Resources */,
 				D7807BF418185F040061305A /* extendstartsec.png in Resources */,
 				D760736219D21A9F000E35C2 /* seek.png in Resources */,
-				AA83588F19B10967009B3ABC /* downloadCompleteHUD.png in Resources */,
 				D78F68C818073DC70096C793 /* GreenSettingsButtonSelect@2x.png in Resources */,
 				D72B833517CFDBAE0035A1C4 /* EulaString.txt in Resources */,
 				BD8C367E17F32FB80094CBAD /* mail.png in Resources */,
-				AA83589419B10967009B3ABC /* noWifi.png in Resources */,
 				BD8C367717F327AF0094CBAD /* facebook.png in Resources */,
 				D78F68C918073DC70096C793 /* GreenSettingsButtonSelect.png in Resources */,
 				D786C1F117EBA1E40042DD96 /* calendarTab@2x.png in Resources */,
@@ -2639,7 +2515,6 @@
 				D7A391721A6959DF00BFD353 /* ActionList.m in Sources */,
 				D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */,
 				D73CDBDB1AA77F33002D682D /* BookmarkTableViewController.m in Sources */,
-				AA83588E19B10967009B3ABC /* DejalActivityView.m in Sources */,
 				D7CCE7F71AC1E48500D85095 /* PopoverViewController.m in Sources */,
 				D7A7380719A3A27B0080B882 /* TagPopOverContent.m in Sources */,
 				D7A9395416ADA65E006CBAB2 /* AppDelegate.m in Sources */,
@@ -2650,7 +2525,6 @@
 				D7A2E5B919AE226A00022795 /* UserSettings.m in Sources */,
 				D7A5E5A91A9F7A1F00E3D4DB /* DownloadItem.m in Sources */,
 				BD5D6BBC17FA01A100B422EE /* NSArray+BinarySearch.m in Sources */,
-				AA83595C19B10C1B009B3ABC /* HNBorderButton.m in Sources */,
 				D7A9395D16ADA65E006CBAB2 /* Live2BenchViewController.m in Sources */,
 				D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */,
 				D79D708B19D603E2001FBE16 /* CustomTabViewController.m in Sources */,
@@ -2665,7 +2539,6 @@
 				D73CDBE11AA8B096002D682D /* DeletableTableViewCell.m in Sources */,
 				43BDC1EE1AA4AE1E0067CEAB /* LiveIndicatorLight.m in Sources */,
 				D784EF4D1AA4B6620068D260 /* RangeSlider.m in Sources */,
-				436907451AB86E16003BD1E6 /* GTLCommon_Sources.m in Sources */,
 				BDE05E9017F08AAD00CD6012 /* UIColor+Expanded.m in Sources */,
 				D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */,
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
@@ -2726,14 +2599,12 @@
 				D786C24617F39F3F0042DD96 /* IconButton.m in Sources */,
 				AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */,
 				D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */,
-				436907461AB86E16003BD1E6 /* GTLNetworking_Sources.m in Sources */,
 				94B9A516192521CD0009547B /* SnapshotView.m in Sources */,
 				D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */,
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
 				D7A2E5BD19AE39F900022795 /* ToggleButton.m in Sources */,
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
 				D700F9061B011550008152E8 /* FakeEncoder.m in Sources */,
-				AA8358B819B10A22009B3ABC /* LDProgressView.m in Sources */,
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
 				D79D709219DD8ED2001FBE16 /* ExternalScreenButton.m in Sources */,
 				D738306F19915B3B0053F0A1 /* UserColourView.m in Sources */,
@@ -2743,7 +2614,6 @@
 				D7581EF1196454B00029C5DD /* CommentingRatingField.m in Sources */,
 				94F95970192272C100B7D201 /* AVPlayerRewindableItem.m in Sources */,
 				D72779931A30F0D50034DD66 /* EncoderCommand.m in Sources */,
-				AA83589619B10967009B3ABC /* SVStatusHUD.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
@@ -2778,7 +2648,6 @@
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
 				D799748216F8C37700CAAABB /* playerCell.m in Sources */,
-				D7CCE7D61AB8A4B300D85095 /* GoogleDriveShare.m in Sources */,
 				D7EE1E4118244DB800CA36CF /* GraphView.m in Sources */,
 				D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */,
 				D766F6271ACC8C5E005FC63A /* Event.m in Sources */,
@@ -2797,9 +2666,7 @@
 				D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */,
 				D72708A51A1BA4B30086BCB8 /* Feed.m in Sources */,
 				D73CDC011AB345FA002D682D /* AlbumShare.m in Sources */,
-				AA8358B919B10A22009B3ABC /* UIColor+RGBValues.m in Sources */,
 				D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */,
-				D7CCE7DA1AB8D41A00D85095 /* ShareOptionsViewController.m in Sources */,
 				947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */,
 				D75CD0A917CBF25500DD24E8 /* HockeyBottomViewController.m in Sources */,
 				D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */,
@@ -2814,7 +2681,6 @@
 				D76B6DDB1A8AC13000601BAF /* ListPopoverControllerWithImages.m in Sources */,
 				D70FBA4C17FF7A1E00B606CF /* DownloadButton.m in Sources */,
 				D7383075199416D40053F0A1 /* FilterComponentAbstract.m in Sources */,
-				436907491AB86E5B003BD1E6 /* GTLDrive_Sources.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

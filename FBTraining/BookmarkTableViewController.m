@@ -11,7 +11,6 @@
 #import "Utility.h"
 #import "Clip.h"
 #import "SocialSharingManager.h"
-#import "ShareOptionsViewController.h"
 
 
 #define YES_BUTTON  0
