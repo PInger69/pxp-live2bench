@@ -314,7 +314,6 @@
 		D7A9395016ADA65E006CBAB2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9394F16ADA65E006CBAB2 /* main.m */; };
 		D7A9395416ADA65E006CBAB2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9395316ADA65E006CBAB2 /* AppDelegate.m */; };
 		D7A9395D16ADA65E006CBAB2 /* Live2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9395C16ADA65E006CBAB2 /* Live2BenchViewController.m */; };
-		D7A9397616ADA65E006CBAB2 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A9397516ADA65E006CBAB2 /* SenTestingKit.framework */; };
 		D7A9397716ADA65E006CBAB2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A9394316ADA65E006CBAB2 /* UIKit.framework */; };
 		D7A9397816ADA65E006CBAB2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A9394516ADA65E006CBAB2 /* Foundation.framework */; };
 		D7A9398016ADA65E006CBAB2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D7A9397E16ADA65E006CBAB2 /* InfoPlist.strings */; };
@@ -889,8 +888,7 @@
 		D7A9395316ADA65E006CBAB2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D7A9395B16ADA65E006CBAB2 /* Live2BenchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Live2BenchViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D7A9395C16ADA65E006CBAB2 /* Live2BenchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Live2BenchViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		D7A9397416ADA65E006CBAB2 /* Live2BenchNativeTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Live2BenchNativeTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D7A9397516ADA65E006CBAB2 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		D7A9397416ADA65E006CBAB2 /* Live2BenchNativeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Live2BenchNativeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7A9397D16ADA65E006CBAB2 /* Live2BenchNativeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Live2BenchNativeTests-Info.plist"; sourceTree = "<group>"; };
 		D7A9397F16ADA65E006CBAB2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D7A9398116ADA65E006CBAB2 /* Live2BenchNativeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Live2BenchNativeTests.h; sourceTree = "<group>"; };
@@ -1051,7 +1049,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7A9397616ADA65E006CBAB2 /* SenTestingKit.framework in Frameworks */,
 				D7A9397716ADA65E006CBAB2 /* UIKit.framework in Frameworks */,
 				D7A9397816ADA65E006CBAB2 /* Foundation.framework in Frameworks */,
 			);
@@ -1749,7 +1746,7 @@
 			isa = PBXGroup;
 			children = (
 				D7A9393F16ADA65E006CBAB2 /* Live2BenchNative.app */,
-				D7A9397416ADA65E006CBAB2 /* Live2BenchNativeTests.octest */,
+				D7A9397416ADA65E006CBAB2 /* Live2BenchNativeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1765,7 +1762,6 @@
 				D7A9394316ADA65E006CBAB2 /* UIKit.framework */,
 				D7A9394516ADA65E006CBAB2 /* Foundation.framework */,
 				D7A9394716ADA65E006CBAB2 /* CoreGraphics.framework */,
-				D7A9397516ADA65E006CBAB2 /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2165,8 +2161,8 @@
 			);
 			name = Live2BenchNativeTests;
 			productName = Live2BenchNativeTests;
-			productReference = D7A9397416ADA65E006CBAB2 /* Live2BenchNativeTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = D7A9397416ADA65E006CBAB2 /* Live2BenchNativeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -2711,6 +2707,7 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
 		};
@@ -2737,6 +2734,7 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
 		};
@@ -2751,13 +2749,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"/Users/sukhwinderlall/Myplayxplay/iOS7master/pxp-live2BenchNative",
-					/Users/dev/code/IOS7Beta,
 					"$(PROJECT_DIR)",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					copy/Source/build/Debug,
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					copy/Source/build/Debug,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
@@ -2792,13 +2784,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"/Users/sukhwinderlall/Myplayxplay/iOS7master/pxp-live2BenchNative",
-					/Users/dev/code/IOS7Beta,
 					"$(PROJECT_DIR)",
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					copy/Source/build/Debug,
-					"/Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only",
-					copy/Source/build/Debug,
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2830,14 +2816,17 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
 				INFOPLIST_FILE = "Live2BenchNativeTests/Live2BenchNativeTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					XCTest,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -2848,14 +2837,17 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
 				INFOPLIST_FILE = "Live2BenchNativeTests/Live2BenchNativeTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					XCTest,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

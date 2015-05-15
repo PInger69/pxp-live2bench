@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface Live2BenchNativeTests : SenTestCase
+@interface Live2BenchNativeTests : XCTestCase
 
 @end
