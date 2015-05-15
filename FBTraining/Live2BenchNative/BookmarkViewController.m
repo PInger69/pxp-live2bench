@@ -274,8 +274,7 @@ int viewWillAppearCalled;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Entering FullScreen" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Exiting FullScreen" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSaved:) name:NOTIF_CLIP_SAVED object:nil];
     
     
     progressBar = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -315,6 +314,12 @@ int viewWillAppearCalled;
     
     testFullScreen = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     //    [self.view addSubview:testFullScreen.view];
+}
+
+- (void)clipSaved:(NSNotification *)note {
+    [self.allClips addObject:note.object];
+    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+    [self.tableViewController reloadData];
 }
 
 
