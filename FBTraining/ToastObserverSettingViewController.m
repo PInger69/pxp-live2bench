@@ -39,23 +39,12 @@
         self.settingData[TOAST_TAG_SYNCHRONIZED] = @YES;
         self.settingData[TOAST_TAG_RECEIVED] = @YES;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestSettings:) name:NOTIF_REQUEST_SETTINGS object:nil];
         self.delegate = self;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TOAST_SETTING_CHANGED object:nil userInfo:self.settingData];
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REQUEST_SETTINGS object:nil];
-}
-
-- (void)requestSettings:(NSNotification *)note {
-    if ([self isKindOfClass:note.userInfo[@"Class"]]) {
-        void(^block)(NSDictionary *) = note.userInfo[@"Block"];
-        block(self.settingData);
-    }
 }
 
 - (void)toggleStateDidChangeWithIdentifier:(NSString *)identifier state:(BOOL)on {

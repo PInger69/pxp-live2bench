@@ -40,23 +40,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NOTIF_TOAST_SETTING_CHANGED object:nil];
-    
         
-        __block NSDictionary *toastSettings;
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS
-                                                            object:nil
-                                                          userInfo:@{
-                                                                     @"Class": [ToastObserverSettingViewController class],
-                                                                     @"Block": ^(NSDictionary *settings)
-        {
-            toastSettings = settings;
-        }
-                                                                     }];
-        
-        self.toastType = ARNone;
-        if ([toastSettings[TOAST_DOWNLOAD_COMPLETE] boolValue]) self.toastType |= ARFileDownloadComplete;
-        if ([toastSettings[TOAST_TAG_SYNCHRONIZED] boolValue]) self.toastType |= ARTagSynchronized;
-        if ([toastSettings[TOAST_TAG_RECEIVED] boolValue]) self.toastType |= ARTagCreated;
+        self.toastType = ARNone | ARFileDownloadComplete | ARTagSynchronized | ARTagCreated;
         
         // Refer to ToastObserver.h for an explanation of these following properties:
         self.enabled = YES;
