@@ -43,6 +43,8 @@
 #define NOTIF_EVENT_FEEDS_READY             @"EVENT_FEEDS_READY"
 #define NOTIF_DELETE_EVENT_SERVER           @"NOTIF_DELETE_EVENT_SERVER"
 
+#define NOTIF_DELETE_CLIPS                  @"NOTIF_DELETE_CLIPS"
+
 
 
 //Settings Requests

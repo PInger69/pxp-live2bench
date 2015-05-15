@@ -27,7 +27,7 @@
         
         _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
-        _clipId             = [_rawData objectForKey:@"id"];
+        _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _path               = aPath;
