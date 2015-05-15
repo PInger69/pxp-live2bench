@@ -310,14 +310,6 @@ SVSignalStatus signalStatus;
     
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateForStatus) name:@"updatedEncoderStatus" object:nil];
-    
-    
-    
-    if (!restClient) {
-        restClient =
-        [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
-        restClient.delegate = self;
-    }
 
     [appVersionLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
 
@@ -951,61 +943,6 @@ SVSignalStatus signalStatus;
     return UIModalPresentationFormSheet;
 }
 
-- (DBRestClient *)restClient {
-    if (!restClient) {
-        restClient=
-        [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
-        restClient.delegate = self;
-    }
-    return restClient;
-}
-
-
-- (void)restClient:(DBRestClient*)client loadedAccountInfo:(DBAccountInfo*)info
-{
-    [dropBoxLabel setTitle:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"DropBox", nil), [info displayName]] forState:UIControlStateNormal];
-}
-
-
--(void)updateDBLabelTimer
-{
-    if ([[DBSession sharedSession] isLinked]) {
-        restClient=nil;
-        [self restClient];
-        [updateDBLabelTimer invalidate];
-        updateDBLabelTimer =nil;
-        [dropboxLogout setTitle:NSLocalizedString(@"Unlink", nil) forState:UIControlStateNormal];
-        
-        [restClient loadAccountInfo];
-    }
-}
-
-
-
-//logout of dropbox
-- (void)logoutDropbox:(id)sender
-{
-    //call dbrestclient
-    //unlink the current account.
-    BorderlessButton *b = (BorderlessButton*)sender;
-    if([b.titleLabel.text isEqualToString:@"Unlink"])
-    {
-        
-        if ([[DBSession sharedSession] isLinked]) {
-            [[DBSession sharedSession] unlinkAll];
-        }
-        [b setTitle:NSLocalizedString(@"Link", nil) forState:UIControlStateNormal];
-        [dropBoxLabel setTitle:NSLocalizedString(@"DropBox", nil) forState:UIControlStateNormal];
-        
-    }else{
-        if (![[DBSession sharedSession] isLinked]) {
-            [[DBSession sharedSession] linkFromController:self];
-        }
-        updateDBLabelTimer=[NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(updateDBLabelTimer) userInfo:nil repeats:YES];
-        
-    }
-    
-}
 //scroll back to the general settings view
 - (void)backToGeneralView:(id)sender
 {

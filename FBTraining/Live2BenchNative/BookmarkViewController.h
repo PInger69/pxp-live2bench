@@ -15,13 +15,11 @@
 #import "Live2BenchViewController.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
-#import <FacebookSDK/FacebookSDK.h>
 #import "BookmarkFilterViewController.h"
 #import "CustomButton.h"
 #import "AMBlurView.h"
 #import "BorderButton.h"
 #import "TeleViewController.h"
-#import <DropboxSDK/DropboxSDK.h>
 
 
 @class TeleViewController, BookmarkFilterViewController, GDFileUploader, DPBFileUploader;

@@ -59,7 +59,6 @@
 		BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F817F22A270089873C /* bookmarkedit.png */; };
 		BD18B6FB17F22A270089873C /* bookmarkedit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F917F22A270089873C /* bookmarkedit@2x.png */; };
 		BD1AEF8C17F0B14E00BD59A9 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D793897217E794B800BEA70B /* OBSlider.m */; };
-		BD3104F918358E020094AE6D /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD3104F818358E020094AE6D /* DropboxSDK.framework */; };
 		BD3104FE183590A80094AE6D /* dropboxicoSel.png in Resources */ = {isa = PBXBuildFile; fileRef = BD3104FA183590A80094AE6D /* dropboxicoSel.png */; };
 		BD3104FF183590A80094AE6D /* dropboxicoSel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BD3104FB183590A80094AE6D /* dropboxicoSel@2x.png */; };
 		BD3105031835920A0094AE6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD3105021835920A0094AE6D /* Security.framework */; };
@@ -101,7 +100,6 @@
 		D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = D713AAC219C1E604004A74AF /* AirPlayDetector.m */; };
 		D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D719869619C8B83900122CAA /* VideoControlBarSlider.m */; };
 		D719869A19C8BA6E00122CAA /* VideoControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D719869919C8BA6E00122CAA /* VideoControlBar.m */; };
-		D71B46B1170E1CAC00D402B5 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D71B46B0170E1CAC00D402B5 /* FacebookSDK.framework */; };
 		D71B46B3170E1DCD00D402B5 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D71B46B2170E1DCD00D402B5 /* AdSupport.framework */; };
 		D727089A1A141AD90086BCB8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D727089C1A141AD90086BCB8 /* Localizable.strings */; };
 		D72708A01A1520900086BCB8 /* LocalEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D727089F1A1520900086BCB8 /* LocalEncoder.m */; };
@@ -487,7 +485,6 @@
 		BD18B6F917F22A270089873C /* bookmarkedit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmarkedit@2x.png"; sourceTree = "<group>"; };
 		BD18B70017F23A6F0089873C /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
 		BD18B70117F23A6F0089873C /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
-		BD3104F818358E020094AE6D /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		BD3104FA183590A80094AE6D /* dropboxicoSel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dropboxicoSel.png; sourceTree = "<group>"; };
 		BD3104FB183590A80094AE6D /* dropboxicoSel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dropboxicoSel@2x.png"; sourceTree = "<group>"; };
 		BD3105021835920A0094AE6D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -542,7 +539,6 @@
 		D719869619C8B83900122CAA /* VideoControlBarSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoControlBarSlider.m; sourceTree = SOURCE_ROOT; };
 		D719869819C8BA6E00122CAA /* VideoControlBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoControlBar.h; path = Live2BenchNative/VideoControlBar.h; sourceTree = SOURCE_ROOT; };
 		D719869919C8BA6E00122CAA /* VideoControlBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoControlBar.m; path = Live2BenchNative/VideoControlBar.m; sourceTree = SOURCE_ROOT; };
-		D71B46B0170E1CAC00D402B5 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		D71B46B2170E1DCD00D402B5 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D72708981A141ABD0086BCB8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D72708991A141ABD0086BCB8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1033,7 +1029,6 @@
 				AA0FED2919587D6A001D25EB /* Foundation.framework in Frameworks */,
 				BD3105031835920A0094AE6D /* Security.framework in Frameworks */,
 				BDD2D2EE17ECB1F5004D5D9A /* Accelerate.framework in Frameworks */,
-				BD3104F918358E020094AE6D /* DropboxSDK.framework in Frameworks */,
 				D7B5235B1760D4C100BF92EB /* CoreMedia.framework in Frameworks */,
 				D71B46B3170E1DCD00D402B5 /* AdSupport.framework in Frameworks */,
 				D797CCF7170DB9D300A6E62B /* Accounts.framework in Frameworks */,
@@ -1052,7 +1047,6 @@
 				D7A9394416ADA65E006CBAB2 /* UIKit.framework in Frameworks */,
 				D7A9394816ADA65E006CBAB2 /* CoreGraphics.framework in Frameworks */,
 				D7B4867916CC037C000AA878 /* SDWebImage.framework in Frameworks */,
-				D71B46B1170E1CAC00D402B5 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1737,10 +1731,8 @@
 				D7A2E5BE19AF76F000022795 /* CoachFilterProcessor.h */,
 				D7A2E5BF19AF76F000022795 /* CoachFilterProcessor.m */,
 				D7581EDE196342A50029C5DD /* Crashlytics.framework */,
-				BD3104F818358E020094AE6D /* DropboxSDK.framework */,
 				D7B5235A1760D4C100BF92EB /* CoreMedia.framework */,
 				D71B46B2170E1DCD00D402B5 /* AdSupport.framework */,
-				D71B46B0170E1CAC00D402B5 /* FacebookSDK.framework */,
 				D797CCF6170DB9D300A6E62B /* Accounts.framework */,
 				D797CCF4170DB9CB00A6E62B /* Social.framework */,
 				D7A49123170CAB850070A7DB /* MessageUI.framework */,

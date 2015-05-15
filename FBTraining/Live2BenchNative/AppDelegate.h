@@ -12,8 +12,6 @@
 #import <Foundation/Foundation.h>
 #import <netinet/in.h>
 #include <arpa/inet.h>
-#import <FacebookSDK/FacebookSDK.h>
-#import <DropboxSDK/DropboxSDK.h>
 #import "ScreenController.h"
 #import "ImageAssetManager.h"
 #import "LoginViewController.h"
@@ -24,7 +22,7 @@
 @class EncoderManager;
 @class UserCenter;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate,DBSessionDelegate,DBNetworkRequestDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 {
     IBOutlet UIWindow   * window;
     NSString            * relinkUserId; // TODO move out
@@ -33,7 +31,6 @@
 
 @property (strong, nonatomic) UIWindow                  * window;
 @property (strong, nonatomic) CustomTabBar              * tabBarController;
-@property (strong, nonatomic) FBSession                 * session; // TODO MOVE OUT
 @property (strong, nonatomic) ScreenController          * screenController; // this is wher you get access to otherscreens
 @property (strong, nonatomic) EncoderManager            * encoderManager;
 @property (strong, nonatomic) UserCenter                * userCenter;

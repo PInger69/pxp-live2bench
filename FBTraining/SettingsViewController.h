@@ -13,11 +13,10 @@
 #import "BorderButton.h"
 #import "CustomLabel.h"
 #import "DropdownButton.h"
-#import <DropboxSDK/DropboxSDK.h>
 #import "AppDelegate.h"
 @class EncoderManager;
 
-@interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,DBRestClientDelegate,UIGestureRecognizerDelegate>/*Removed: DBNetworkRequestDelegate no imp found*/
+@interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,UIGestureRecognizerDelegate>/*Removed: DBNetworkRequestDelegate no imp found*/
 {
     UILabel *userName;
     UILabel *wifi;
@@ -50,7 +49,6 @@
     CustomButton *backToGeneral;
     UIView *dropboxContainer;
     BorderlessButton *dropboxLogout;
-    DBRestClient *restClient;
     NSTimer *updateDBLabelTimer;
     UILabel *fbAndEmailNote;
     CustomLabel *encoderHomeText;
