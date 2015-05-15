@@ -340,8 +340,10 @@ int viewWillAppearCalled;
     //if (self.allClips.count == 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
             self.allClips = [NSMutableArray arrayWithArray: clips];
-            _tableViewController.tableData = self.allClips;
-            [_tableViewController.tableView reloadData];
+            
+            self.allClips = [self sortArrayFromHeaderBar:self.allClips headerBarState:headerBar.headerBarSortType];
+            self.tableViewController.tableData = self.allClips;
+            [self.tableViewController.tableView reloadData];
         }];
     //}
     
@@ -467,7 +469,7 @@ int viewWillAppearCalled;
 -(void)setupView{
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    headerBar = [[HeaderBar alloc]initWithFrame:CGRectMake(0,55,TOTAL_WIDTH, LABEL_HEIGHT)];
+    headerBar = [[HeaderBar alloc]initWithFrame:CGRectMake(0,55,TOTAL_WIDTH, LABEL_HEIGHT) defaultSort:DATE_FIELD | DESCEND];
     [headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
     [self.view addSubview:headerBar];
     
@@ -784,10 +786,7 @@ int viewWillAppearCalled;
     self.allClips = [self sortArrayFromHeaderBar:self.allClips headerBarState:hBar.headerBarSortType];
     self.tableViewController.tableData = self.allClips;
     [self.tableViewController.tableView reloadData];
-    //[self.tableView reloadData];
-    
-    
-    
+
 }
 
 -(NSMutableArray*)sortArrayFromHeaderBar:(NSMutableArray*)toSort headerBarState:(HBSortType) sortType
@@ -797,7 +796,7 @@ int viewWillAppearCalled;
     //Fields are from HeaderBar.h
     if(sortType & TIME_FIELD){
         sorter = [NSSortDescriptor
-                  sortDescriptorWithKey:@"displaytime"
+                  sortDescriptorWithKey:@"displayTime"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(compare:)];
         

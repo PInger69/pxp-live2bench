@@ -8,10 +8,12 @@
 
 #import "RatingAndCommentingField.h"
 
-@interface RatingAndCommentingField ()
+@interface RatingAndCommentingField () <UITextViewDelegate>
 
-@property (strong, nonatomic) UIViewController *tool;
-
+@property (strong, nonatomic) RatingInput *ratingScale;
+@property (strong, nonatomic) NSMutableDictionary *data;
+@property (strong, nonatomic) UILabel *commentingLabel;
+@property (strong, nonatomic) UITextView *commentingArea;
 
 @end
 
@@ -31,42 +33,57 @@
         [self.ratingScale.ratingLabel setFont:[UIFont boldSystemFontOfSize:18.0f]];
         [self.view addSubview:self.ratingScale];
         
-        self.commentingButton = [[UIButton alloc] initWithFrame:CGRectMake(8, 65, 100, 50)];
-        [self.commentingButton setTitle:@"Comment:" forState:UIControlStateNormal];
-        [self.commentingButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-        [self.commentingButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0f]];
-        [self.commentingButton addTarget:self action:@selector(showCommentEdit:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.commentingButton];
+        self.commentingLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 65, 100, 50)];
+        self.commentingLabel.text = NSLocalizedString(@"Comment:", nil);
+        self.commentingLabel.textColor = [UIColor blackColor];
+        self.commentingLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+        [self.view addSubview:self.commentingLabel];
         
-        self.commentingField = [[CommentingField alloc] initWithFrame:CGRectMake(5, 5, 300, 200)];
-        //[self.commentingField onPressSavePerformSelector:@selector(sendComment:) addTarget:self];
-        //self.commentingField.title = @"";
-        self.tool = [[UIViewController alloc] init];
-        [self.tool.view addSubview:self.commentingField];
-        self.commentingPop = [[UIPopoverController alloc] initWithContentViewController:self.tool];
-        [self.commentingPop setPopoverContentSize:CGSizeMake(310, 210) animated:YES];
-        self.commentingField.context = @"MyClip";
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendComment:) name:[NSString stringWithFormat:@"Save in %@", self.commentingField.context] object:nil];
-        
-    
-        self.commentingArea = [[UITextView alloc] initWithFrame:CGRectMake(124, 71, 200, 80)];
-        [self.commentingArea setFont:[UIFont systemFontOfSize:18.0f]];
-        //[self.commentingArea setBackgroundColor:[UIColor blackColor]];
-        if ([self.data[@"comment"] isEqualToString:@" "]) {
-            [self.commentingArea setText:self.data[@"comment"]];
-            [self.commentingArea setTextColor:[UIColor blackColor]];
+        self.commentingArea = [[UITextView alloc] initWithFrame:CGRectMake(124, 71, 400, 80)];
+        self.commentingArea.returnKeyType = UIReturnKeyDone;
+        self.commentingArea.font = [UIFont systemFontOfSize:18.0f];
+        if ([self.data[@"comment"] length] != 0) {
+            self.commentingArea.text = self.data[@"comment"];
+            self.commentingArea.textColor = [UIColor blackColor];
         }else{
-            [self.commentingArea setText:@"Please add comment."];
-            [self.commentingArea setTextColor:[UIColor lightGrayColor]];
+            self.commentingArea.text = NSLocalizedString(@"Please add comment.", nil);
+            self.commentingArea.textColor = [UIColor lightGrayColor];
         }
-        self.commentingArea.selectable = NO;
+        self.commentingArea.selectable = YES;
+        self.commentingArea.delegate = self;
         [self.view addSubview:self.commentingArea];
         
-//        self.tagUpdate = ^(NSMutableDictionary *tag){
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_TAG_UPDATE" object:nil userInfo:tag];
-//        };
     }
     return self;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]) {
+        [textView endEditing:YES];
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    textView.text = self.data[@"comment"];
+    textView.textColor = [UIColor blackColor];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    NSString *comment = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    if ([comment length] != 0) {
+        self.commentingArea.text = comment;
+        self.commentingArea.textColor = [UIColor blackColor];
+    } else {
+        self.commentingArea.text = NSLocalizedString(@"Please add comment.", nil);
+        self.commentingArea.textColor = [UIColor lightGrayColor];
+    }
+    
+    self.data[@"comment"] = comment;
+    self.tagUpdate(self.data);
 }
 
 -(void)sendRatingNew:(id)sender
@@ -76,35 +93,10 @@
     self.tagUpdate(self.data);
 }
 
--(void)sendComment:(id)sender
-{
-    [self.commentingField.textField resignFirstResponder];
-    NSString *comment = self.commentingField.textField.text;
-    [self.data    setObject:comment forKey:@"comment"];
-    [self.commentingArea setText:comment];
-    [self.commentingArea setTextColor:[UIColor blackColor]];
-    if ([comment isEqualToString:@""]) {
-        [self.commentingArea setText:@"Please add comment."];
-        [self.commentingArea setTextColor:[UIColor lightGrayColor]];
-    }
-    self.tagUpdate(self.data);
-}
-
-
--(void)showCommentEdit:(id)sender
-{
-    
-    [self.commentingField setText:self.data[@"comment"]];
-    
-    [self.commentingPop presentPopoverFromRect:self.commentingButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
 }
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

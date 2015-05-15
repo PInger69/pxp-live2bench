@@ -12,14 +12,8 @@
 
 @interface RatingAndCommentingField : UIViewController
 
-@property (strong, nonatomic) RatingInput *ratingScale;
-@property (strong, nonatomic) CommentingField *commentingField;
-@property (strong, nonatomic) UIPopoverController *commentingPop;
-@property (strong, nonatomic) UIButton *commentingButton;
-@property (strong, nonatomic) NSMutableDictionary *data;
-@property (strong, nonatomic) UITextView *commentingArea;
 @property (nonatomic, copy) void(^tagUpdate)(NSMutableDictionary *tag);
 
-
 - (instancetype)initWithFrame:(CGRect)frame andData:(NSMutableDictionary *)data;
+
 @end
