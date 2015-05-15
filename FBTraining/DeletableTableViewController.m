@@ -7,7 +7,6 @@
 //
 
 #import "DeletableTableViewController.h"
-#import "SocialSharingManager.h"
 
 @interface DeletableTableViewController ()
 

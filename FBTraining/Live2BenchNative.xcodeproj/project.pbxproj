@@ -144,11 +144,6 @@
 		D73CDBE41AA8BF66002D682D /* DeletableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBE31AA8BF66002D682D /* DeletableTableViewController.m */; };
 		D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */; };
 		D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBEF1AAF283C002D682D /* AccountsViewController.m */; };
-		D73CDBF31AAF3CA8002D682D /* infoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBF21AAF3CA8002D682D /* infoViewController.m */; };
-		D73CDBFA1AB33103002D682D /* SocialSharingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBF91AB33103002D682D /* SocialSharingManager.m */; };
-		D73CDBFE1AB339A7002D682D /* MailShare.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDBFD1AB339A6002D682D /* MailShare.m */; };
-		D73CDC011AB345FA002D682D /* AlbumShare.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDC001AB345FA002D682D /* AlbumShare.m */; };
-		D73CDC0E1AB716C7002D682D /* FacebookShare.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CDC0D1AB716C7002D682D /* FacebookShare.m */; };
 		D73FE3301A40882600341D57 /* L2BVideoBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */; };
 		D73FE3331A41DBF000341D57 /* L2BFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73FE3321A41DBF000341D57 /* L2BFullScreenViewController.m */; };
 		D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7424B96183FEA5A00034F05 /* UploadButton.m */; };
@@ -370,7 +365,6 @@
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */; };
 		D7C903AE17F4B7A0002A1FDD /* continue_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */; };
-		D7CCE7DD1AB9C04000D85095 /* SocialProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7DC1AB9C04000D85095 /* SocialProgressView.m */; };
 		D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */; };
 		D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7E71AC1C77D00D85095 /* RatingAndCommentingField.m */; };
 		D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7EB1AC1E48500D85095 /* ReusableBottomViewController.m */; };
@@ -631,17 +625,6 @@
 		D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
 		D73CDBEE1AAF283C002D682D /* AccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountsViewController.h; sourceTree = "<group>"; };
 		D73CDBEF1AAF283C002D682D /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
-		D73CDBF11AAF3CA8002D682D /* infoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = infoViewController.h; sourceTree = "<group>"; };
-		D73CDBF21AAF3CA8002D682D /* infoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = infoViewController.m; sourceTree = "<group>"; };
-		D73CDBF81AB33103002D682D /* SocialSharingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialSharingManager.h; sourceTree = "<group>"; };
-		D73CDBF91AB33103002D682D /* SocialSharingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialSharingManager.m; sourceTree = "<group>"; };
-		D73CDBFB1AB33149002D682D /* SocialSharingProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocialSharingProtocol.h; sourceTree = "<group>"; };
-		D73CDBFC1AB339A6002D682D /* MailShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MailShare.h; sourceTree = "<group>"; };
-		D73CDBFD1AB339A6002D682D /* MailShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MailShare.m; sourceTree = "<group>"; };
-		D73CDBFF1AB345FA002D682D /* AlbumShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumShare.h; sourceTree = "<group>"; };
-		D73CDC001AB345FA002D682D /* AlbumShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumShare.m; sourceTree = "<group>"; };
-		D73CDC0C1AB716C7002D682D /* FacebookShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookShare.h; sourceTree = "<group>"; };
-		D73CDC0D1AB716C7002D682D /* FacebookShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookShare.m; sourceTree = "<group>"; };
 		D73FE32E1A40882600341D57 /* L2BVideoBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BVideoBarViewController.h; path = Live2BenchTab/L2BVideoBarViewController.h; sourceTree = "<group>"; };
 		D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = L2BVideoBarViewController.m; path = Live2BenchTab/L2BVideoBarViewController.m; sourceTree = "<group>"; };
 		D73FE3311A41DBF000341D57 /* L2BFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BFullScreenViewController.h; path = Live2BenchTab/L2BFullScreenViewController.h; sourceTree = "<group>"; };
@@ -969,8 +952,6 @@
 		D7C624E7180EDBF700C2DDD7 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = continue_unselected.png; sourceTree = "<group>"; };
 		D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue_unselected@2x.png"; sourceTree = "<group>"; };
-		D7CCE7DB1AB9C04000D85095 /* SocialProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialProgressView.h; sourceTree = "<group>"; };
-		D7CCE7DC1AB9C04000D85095 /* SocialProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialProgressView.m; sourceTree = "<group>"; };
 		D7CCE7DE1ABB78AE00D85095 /* VideoZoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoZoomManager.h; sourceTree = "<group>"; };
 		D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoZoomManager.m; sourceTree = "<group>"; };
 		D7CCE7E61AC1C77D00D85095 /* RatingAndCommentingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatingAndCommentingField.h; sourceTree = "<group>"; };
@@ -1656,8 +1637,6 @@
 				D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */,
 				D7B7C4D41AD32BDD00A5DEC3 /* InjuryViewController.h */,
 				D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */,
-				D73CDBF11AAF3CA8002D682D /* infoViewController.h */,
-				D73CDBF21AAF3CA8002D682D /* infoViewController.m */,
 				D7CCE7EA1AC1E48500D85095 /* ReusableBottomViewController.h */,
 				D7CCE7EB1AC1E48500D85095 /* ReusableBottomViewController.m */,
 				D7CCE7FD1AC1FEE500D85095 /* BasketballBottomViewController.plist */,
@@ -1671,17 +1650,6 @@
 				D7CCE7F11AC1E48500D85095 /* PopoverViewController.m */,
 				D7CCE7F21AC1E48500D85095 /* SegmentedView.h */,
 				D7CCE7F31AC1E48500D85095 /* SegmentedView.m */,
-				D73CDBFF1AB345FA002D682D /* AlbumShare.h */,
-				D73CDC001AB345FA002D682D /* AlbumShare.m */,
-				D73CDC0C1AB716C7002D682D /* FacebookShare.h */,
-				D73CDC0D1AB716C7002D682D /* FacebookShare.m */,
-				D73CDBFC1AB339A6002D682D /* MailShare.h */,
-				D73CDBFD1AB339A6002D682D /* MailShare.m */,
-				D7CCE7DB1AB9C04000D85095 /* SocialProgressView.h */,
-				D7CCE7DC1AB9C04000D85095 /* SocialProgressView.m */,
-				D73CDBF81AB33103002D682D /* SocialSharingManager.h */,
-				D73CDBF91AB33103002D682D /* SocialSharingManager.m */,
-				D73CDBFB1AB33149002D682D /* SocialSharingProtocol.h */,
 				D784EF4B1AA4B6620068D260 /* RangeSlider.h */,
 				D784EF4C1AA4B6620068D260 /* RangeSlider.m */,
 				D784EF271AA4B0560068D260 /* CKCalendarView.m */,
@@ -2502,7 +2470,6 @@
 				D79BC1D919E836F800ECD8DB /* DebuggingTabViewController.m in Sources */,
 				D7A188C81A0D2D4F00513909 /* BitRateViewController.m in Sources */,
 				D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */,
-				D73CDBF31AAF3CA8002D682D /* infoViewController.m in Sources */,
 				D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
 				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
@@ -2542,7 +2509,6 @@
 				BDE05E9017F08AAD00CD6012 /* UIColor+Expanded.m in Sources */,
 				D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */,
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
-				D73CDC0E1AB716C7002D682D /* FacebookShare.m in Sources */,
 				D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */,
 				AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */,
 				D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */,
@@ -2552,7 +2518,6 @@
 				D7A9399216ADA933006CBAB2 /* CustomTabBar.m in Sources */,
 				D738306A19911EEC0053F0A1 /* FilterButtonBlockView.m in Sources */,
 				D719869A19C8BA6E00122CAA /* VideoControlBar.m in Sources */,
-				D73CDBFE1AB339A7002D682D /* MailShare.m in Sources */,
 				D75ED5001ACC4713003AF856 /* RJLFreezeMonitor.m in Sources */,
 				D72779AB1A37498E0034DD66 /* CalendarTableCell.m in Sources */,
 				D7DB750417E8F419009C402F /* PopoverButton.m in Sources */,
@@ -2631,7 +2596,6 @@
 				D7A7B61816D3C852000D3A84 /* TeleViewController.m in Sources */,
 				D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */,
 				BD9BC31117EB480A001B67DE /* SpinnerView.m in Sources */,
-				D73CDBFA1AB33103002D682D /* SocialSharingManager.m in Sources */,
 				D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */,
 				D7383078199417CB0053F0A1 /* DurationView.m in Sources */,
 				D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */,
@@ -2640,7 +2604,6 @@
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
-				D7CCE7DD1AB9C04000D85095 /* SocialProgressView.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
@@ -2665,7 +2628,6 @@
 				D784EF431AA4B0570068D260 /* HeaderBarForListView.m in Sources */,
 				D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */,
 				D72708A51A1BA4B30086BCB8 /* Feed.m in Sources */,
-				D73CDC011AB345FA002D682D /* AlbumShare.m in Sources */,
 				D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */,
 				947F44A619883E150081E81D /* FootballTrainingBottomViewController.m in Sources */,
 				D75CD0A917CBF25500DD24E8 /* HockeyBottomViewController.m in Sources */,

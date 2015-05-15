@@ -23,7 +23,6 @@
 #import "ScreenController.h"
 #import "CustomLabel.h"
 #import "BookmarkTableViewController.h"
-#import "SocialSharingManager.h"
 #import "TestFilterViewController.h"
 #import "Pip.h"
 #import "PipViewController.h"
