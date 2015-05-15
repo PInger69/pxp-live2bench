@@ -130,7 +130,6 @@
 		D738306A19911EEC0053F0A1 /* FilterButtonBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = D738306919911EEC0053F0A1 /* FilterButtonBlockView.m */; };
 		D738306F19915B3B0053F0A1 /* UserColourView.m in Sources */ = {isa = PBXBuildFile; fileRef = D738306E19915B3B0053F0A1 /* UserColourView.m */; };
 		D7383075199416D40053F0A1 /* FilterComponentAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = D7383074199416D40053F0A1 /* FilterComponentAbstract.m */; };
-		D7383078199417CB0053F0A1 /* DurationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7383077199417CB0053F0A1 /* DurationView.m */; };
 		D738307B199580DD0053F0A1 /* FilterProcessorFBTforPlayers.m in Sources */ = {isa = PBXBuildFile; fileRef = D738307A199580DD0053F0A1 /* FilterProcessorFBTforPlayers.m */; };
 		D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7383080199E63DB0053F0A1 /* UserColorButton.m */; };
 		D73B42E4193F763B00EA2775 /* subtractendsec.png in Resources */ = {isa = PBXBuildFile; fileRef = D73B42E0193F763B00EA2775 /* subtractendsec.png */; };
@@ -601,8 +600,6 @@
 		D738306E19915B3B0053F0A1 /* UserColourView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserColourView.m; sourceTree = "<group>"; };
 		D7383073199416D40053F0A1 /* FilterComponentAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterComponentAbstract.h; sourceTree = "<group>"; };
 		D7383074199416D40053F0A1 /* FilterComponentAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterComponentAbstract.m; sourceTree = "<group>"; };
-		D7383076199417CB0053F0A1 /* DurationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DurationView.h; sourceTree = "<group>"; };
-		D7383077199417CB0053F0A1 /* DurationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DurationView.m; sourceTree = "<group>"; };
 		D7383079199580DC0053F0A1 /* FilterProcessorFBTforPlayers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterProcessorFBTforPlayers.h; sourceTree = "<group>"; };
 		D738307A199580DD0053F0A1 /* FilterProcessorFBTforPlayers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterProcessorFBTforPlayers.m; sourceTree = "<group>"; };
 		D738307F199E63DB0053F0A1 /* UserColorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserColorButton.h; sourceTree = "<group>"; };
@@ -1309,8 +1306,6 @@
 				D7383074199416D40053F0A1 /* FilterComponentAbstract.m */,
 				D7383047198A94D60053F0A1 /* FilterScrollView.m */,
 				D738306819911EEC0053F0A1 /* FilterButtonBlockView.h */,
-				D7383076199417CB0053F0A1 /* DurationView.h */,
-				D7383077199417CB0053F0A1 /* DurationView.m */,
 				D738306919911EEC0053F0A1 /* FilterButtonBlockView.m */,
 				D7383048198A94D60053F0A1 /* FilterTab.h */,
 				D7383049198A94D60053F0A1 /* FilterTab.m */,
@@ -2589,7 +2584,6 @@
 				D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */,
 				BD9BC31117EB480A001B67DE /* SpinnerView.m in Sources */,
 				D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */,
-				D7383078199417CB0053F0A1 /* DurationView.m in Sources */,
 				D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */,
 				D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
