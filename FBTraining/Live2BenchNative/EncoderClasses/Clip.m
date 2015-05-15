@@ -51,15 +51,12 @@
 {
     self = [super init];
     if (self) {
-        
         _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _path               = [_rawData objectForKey:@"plistName"];
-        
-
     }
     return self;
 }
