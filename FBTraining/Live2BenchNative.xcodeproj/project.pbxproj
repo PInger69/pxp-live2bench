@@ -433,6 +433,7 @@
 		D7DA235616B82E5B00143102 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA235416B82E5B00143102 /* arrow@2x.png */; };
 		D7DA235F16B855A900143102 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA235E16B855A900143102 /* camera.png */; };
 		D7DA236316B85B4500143102 /* ClipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DA236116B85B4500143102 /* ClipViewController.m */; };
+		D7DA9B261B0683390062EAD9 /* ClipDataContentDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */; };
 		D7DB750417E8F419009C402F /* PopoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB750317E8F419009C402F /* PopoverButton.m */; };
 		D7DB750717E904D8009C402F /* TabBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB750617E904D8009C402F /* TabBarButton.m */; };
 		D7DB754817EA0EFC009C402F /* gotolive.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DB754617EA0EFC009C402F /* gotolive.png */; };
@@ -1100,6 +1101,8 @@
 		D7DA235E16B855A900143102 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		D7DA236016B85B4500143102 /* ClipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipViewController.h; sourceTree = "<group>"; };
 		D7DA236116B85B4500143102 /* ClipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipViewController.m; sourceTree = "<group>"; };
+		D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClipDataContentDisplay.h; path = Live2BenchNative/ClipDataContentDisplay.h; sourceTree = "<group>"; };
+		D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ClipDataContentDisplay.m; path = Live2BenchNative/ClipDataContentDisplay.m; sourceTree = "<group>"; };
 		D7DB74FF17E8D967009C402F /* BorderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorderButton.h; sourceTree = "<group>"; };
 		D7DB750017E8D967009C402F /* BorderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BorderButton.m; sourceTree = "<group>"; };
 		D7DB750217E8F419009C402F /* PopoverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverButton.h; sourceTree = "<group>"; };
@@ -1825,6 +1828,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
+				D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */,
 				D72CC2891AFA858100E26B60 /* RatingOutput.m */,
 				D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */,
 				D7B5E3561AF2B3CF00924BFA /* Media.xcassets */,
@@ -2788,6 +2793,7 @@
 				AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */,
 				D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */,
 				D7A188C21A013E2D00513909 /* PipViewController.m in Sources */,
+				D7DA9B261B0683390062EAD9 /* ClipDataContentDisplay.m in Sources */,
 				AA83596D19B115D2009B3ABC /* ExportPlayersPopoverController.m in Sources */,
 				D7A188C51A0BE57600513909 /* BitrateMonitor.m in Sources */,
 				D7A9399216ADA933006CBAB2 /* CustomTabBar.m in Sources */,
