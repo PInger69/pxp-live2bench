@@ -171,6 +171,8 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_DOWNLOAD_COMPLETE @"downloadComplete"
 //object = DownloaderItem
+#define NOTIF_CLIP_SAVED @"clipSaved"
+//object = clip
 
 // User Center
 #define NOTIF_SIDE_TAGS_READY_FOR_L2B       @"tagsReadyForLive2Bench"

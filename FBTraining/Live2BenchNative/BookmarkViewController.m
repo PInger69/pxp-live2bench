@@ -274,8 +274,7 @@ int viewWillAppearCalled;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Entering FullScreen" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFullScreen) name:@"Exiting FullScreen" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDropboxUpload) name:@"Show DB Upload" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopDropboxUpload) name:@"Stop DB Upload" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSaved:) name:NOTIF_CLIP_SAVED object:nil];
     
     
     progressBar = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -317,6 +316,12 @@ int viewWillAppearCalled;
     //    [self.view addSubview:testFullScreen.view];
 }
 
+- (void)clipSaved:(NSNotification *)note {
+    [self.allClips addObject:note.object];
+    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+    [self.tableViewController reloadData];
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -341,8 +346,7 @@ int viewWillAppearCalled;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
             self.allClips = [NSMutableArray arrayWithArray: clips];
             
-            self.allClips = [self sortArrayFromHeaderBar:self.allClips headerBarState:headerBar.headerBarSortType];
-            self.tableViewController.tableData = self.allClips;
+            self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
             [self.tableViewController.tableView reloadData];
         }];
     //}
@@ -781,12 +785,8 @@ int viewWillAppearCalled;
 #pragma mark - Richard Sort from headder
 -(void)sortFromHeaderBar:(id)sender
 {
-    HeaderBar * hBar = (HeaderBar *)sender;
-    
-    self.allClips = [self sortArrayFromHeaderBar:self.allClips headerBarState:hBar.headerBarSortType];
-    self.tableViewController.tableData = self.allClips;
+    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
     [self.tableViewController.tableView reloadData];
-
 }
 
 -(NSMutableArray*)sortArrayFromHeaderBar:(NSMutableArray*)toSort headerBarState:(HBSortType) sortType
@@ -1232,62 +1232,8 @@ int viewWillAppearCalled;
 #pragma mark - Richard Filtering
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {
-    AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
-    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
-    //self.tableData = [filteredArray mutableCopy];
-    
-    _tableViewController.tableData = [filteredArray mutableCopy];
+    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
     [self.tableViewController reloadData];
-    //[breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
-    
-    //    MyClipFilterViewController * checkFilter = (MyClipFilterViewController *)filter;
-    //
-    //    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
-    //    NSMutableArray *tempArr;
-    //
-    //
-    //    ///we have to check to see if the list has been reordered
-    //
-    //    //check to make sure filemanager exists
-    //    if(!fileManager)
-    //    {
-    //        fileManager = [NSFileManager defaultManager];
-    //    }
-    //
-    //    //create teh path to the reordered bookmarks plist
-    //    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
-    //
-    //    //now grab the bookmark tags from the global dictionary, we need to iterate through and add all of them to an array so we can get the total number of bookmarks in the end
-    //    NSMutableArray *a = [[NSMutableArray alloc] init]; //temporary array to add the thumb items to
-    //    for(NSDictionary *d in [globals.BOOKMARK_TAGS allValues])
-    //    {
-    //        [a addObjectsFromArray:[d allValues]];
-    //    }
-    //
-    //    int orderedTagCount = [[NSArray arrayWithContentsOfFile:orderedBookmarkPlist] count];
-    //    //if the user is filtering or or there is no ordered bookmarks then just display the filtered array. If however there is an ordered list and the user is not filtering, then use the
-    //    //ordered list
-    //    if(filteredArray.count < a.count || ![fileManager fileExistsAtPath:orderedBookmarkPlist] || a.count > orderedTagCount)
-    //    {
-    //        tempArr = [filteredArray mutableCopy];
-    //    }else{
-    //        //if all bookmark tags count is smaller than the odered bookmark tags, replace the ordered bookmark tags
-    //        if (a.count < orderedTagCount && [fileManager fileExistsAtPath:orderedBookmarkPlist]) {
-    //            [a writeToFile:orderedBookmarkPlist atomically:YES];
-    //            tempArr = a;
-    //        }else{
-    //            tempArr =[[NSMutableArray alloc] initWithContentsOfFile:orderedBookmarkPlist];
-    //        }
-    //
-    //
-    //    }
-    //
-    //    // Added the ability to sor the array from headerbar
-    //    self.tagsToDisplay = [self sortArrayFromHeaderBar:[tempArr mutableCopy] headerBarState:headerBar.headerBarSortType];
-    //
-    //    [self.tableView reloadData];
-    //
-    
 }
 
 
@@ -1321,6 +1267,14 @@ int viewWillAppearCalled;
     [super didReceiveMemoryWarning];
 }
 
+- (NSMutableArray *)filterAndSortClips:(NSArray *)clips {
+    NSMutableArray *clipsToSort = [NSMutableArray arrayWithArray:clips];
+    if (componentFilter) {
+        componentFilter.rawTagArray = clipsToSort;
+        clipsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
+    }
+    return [self sortArrayFromHeaderBar:clipsToSort headerBarState:headerBar.headerBarSortType];
+}
 
 @end
 
