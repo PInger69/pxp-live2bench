@@ -18,6 +18,8 @@
 @property (assign, nonatomic) int rating;
 @property (strong, nonatomic) UIView  *translucentEditingView;
 
+@property (strong, nonatomic) UIDocumentInteractionController *interactionController;
+
 //-(void)updateIndexWith:(int)newIndex;
 
 @end

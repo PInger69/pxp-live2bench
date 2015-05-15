@@ -33,6 +33,7 @@
         [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.deleteButton setFrame:CGRectMake(568, 768, 370, 0)];
         
+        /*
         self.shareButton = [[UIButton alloc] init];
         self.shareButton.backgroundColor = PRIMARY_APP_COLOR;
         [self.shareButton addTarget:self action:@selector(shareAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
@@ -41,6 +42,7 @@
         [self.shareButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [self.shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.shareButton setFrame:CGRectMake(568, 768, 370, 0)];
+         */
         
         self.setOfDeletingCells = [[NSMutableSet alloc] init];
         self.setOfSharingCells = [[NSMutableSet alloc] init];

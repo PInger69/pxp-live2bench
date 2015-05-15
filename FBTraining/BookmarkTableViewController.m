@@ -140,6 +140,10 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%i",indexPath.row + 1]];
     cell.rating = clip.rating;
     
+    NSURL *shareUrl = [NSURL fileURLWithPath:[clip.videoFiles firstObject]];
+    cell.interactionController = [UIDocumentInteractionController interactionControllerWithURL:shareUrl];
+    cell.interactionController.name = clip.name;
+    
     
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
@@ -147,7 +151,14 @@
         //[clip destroy];
     };
     
-    cell.shareBlock = ^(UITableViewCell *cell){
+    cell.shareBlock = ^(UITableViewCell *tableViewCell) {
+        
+        if ([tableViewCell isKindOfClass:[BookmarkViewCell class]]) {
+            BookmarkViewCell *cell = (BookmarkViewCell *)tableViewCell;
+            [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+        }
+        
+        /*
         self.sharingIndexPath = indexPath;
         ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
         [shareOptions setOnSelectTarget: self andSelector:@selector(shareWithOption:)];
@@ -156,6 +167,8 @@
         BookmarkViewCell *cellCasted = (BookmarkViewCell *)cell;
         [sharePop presentPopoverFromRect: cellCasted.shareButton.frame inView: cell permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
         self.sharePop = sharePop;
+         */
+        
     };
     
     //This is the condition where a cell that is selected is reused

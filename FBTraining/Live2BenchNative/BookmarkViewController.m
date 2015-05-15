@@ -43,14 +43,10 @@
 @interface BookmarkViewController ()
 
 @property (strong, nonatomic) Clip *currentClip;
-@property (strong, nonatomic) UIDocumentInteractionController *shareController;
 
 @property (strong, nonatomic) BookmarkTableViewController *tableViewController;
 @property (strong, nonatomic) NSDictionary                *feeds;
 @property (strong, nonatomic) UIButton                    * filterButton;
-
-@property (strong, nonatomic) UIButton                    *shareButton;
-@property (strong, nonatomic) UIPopoverController         *sharePop;
 
 @property (strong, nonatomic) UIView                      *informationarea;
 
@@ -213,24 +209,8 @@ int viewWillAppearCalled;
         NSString *clipVideoPath = [clipToPlay.videoFiles firstObject];
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:clipVideoPath]) {
-            Feed *feed = [[Feed alloc] initWithFileURL:clipVideoPath];
-            
             [self.videoPlayer playFeed: [[Feed alloc]initWithFileURL:clipVideoPath]];
-            
-            // Setup shareController
-            @try {
-                self.shareController = [UIDocumentInteractionController interactionControllerWithURL:feed.path];
-                self.shareController.name = clipToPlay.name;
-                self.shareButton.enabled = YES;
-            }
-            @catch (NSException *exception) {
-                PXPLog(@"Exception: %@", exception);
-            }
         }
-        
-        
-        
-        
         
     }];
     
@@ -242,34 +222,10 @@ int viewWillAppearCalled;
     }];
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_CLIPS" object:nil queue:nil usingBlock:^(NSNotification *note){
         
-        self.shareController = nil;
-        self.shareButton.enabled = NO;
-        
         [self.allClips removeObjectIdenticalTo:note.userInfo];
         componentFilter.rawTagArray = self.allClips;
         //[componentFilter refresh];
     }];
-    
-//    
-//    //facebook = [[Facebook alloc] initWithAppId:@"144069185765148"];
-//    
-//    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-//    if (!appDelegate.session.isOpen) {
-//        // create a fresh session object
-//        appDelegate.session = [[FBSession alloc] init];
-//        // if we don't have a cached token, a call to open here would cause UX for login to
-//        // occur; we don't want that to happen unless the user clicks the login button, and so
-//        // we check here to make sure we have a token before calling open
-//        if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
-//            // even though we had a cached token, we need to login to make the session usable
-//            [appDelegate.session openWithCompletionHandler:^(FBSession *session,
-//                                                             FBSessionState status,
-//                                                             NSError *error) {
-//                //// we recurse here, in order to update buttons and labels
-//                //[self updateView];
-//            }];
-//        }
-//    }
     
     self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
@@ -562,29 +518,8 @@ int viewWillAppearCalled;
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
-    self.shareButton = [[UIButton alloc] initWithFrame:CGRectMake(850, 710, 74, 58)];
-    [self.shareButton setTitle:@"Share" forState:UIControlStateNormal];
-    [self.shareButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-    [self.shareButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-    [self.shareButton addTarget:self action:@selector(popShareOptions:) forControlEvents:UIControlEventTouchUpInside];
-    self.shareButton.hidden = NO;
-    self.shareButton.enabled = NO;
-    [self.view addSubview:self.shareButton];
-    
     /////////////////////////////////////////////////////////////////
 }
-
-- (void)popShareOptions:(id)sender {
-    /*
-    //ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray:[[SocialSharingManager CommonManager] arrayOfSharingOptions]];
-    ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
-    self.sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
-    self.sharePop.popoverContentSize = CGSizeMake(280, 180);
-    [self.sharePop presentPopoverFromRect:self.shareButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
-     */
-    [self.shareController presentOptionsMenuFromRect:CGRectZero inView:self.shareButton animated:YES];
-}
-
 
 //get all the bookmark tags from the global bookmark dictionary
 - (void)fetchedData
