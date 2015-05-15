@@ -14,7 +14,6 @@
 #import "CommentingRatingField.h"
 #import "RatingInput.h"
 #import "MyClipFilterViewController.h"
-
 #import "CustomAlertView.h"
 #import "VideoBarMyClipViewController.h"
 #import "FullVideoBarMyClipViewController.h"

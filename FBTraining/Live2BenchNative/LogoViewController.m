@@ -8,8 +8,6 @@
 
 #import "LogoViewController.h"
 #import "UserSettings.h"
-#import "DPBContentNavigationController.h"
-#import "DPBContentViewController.h"
 #import "CustomAlertView.h"
 #import "ScreenController.h"
 #import "EncoderManager.h"
@@ -402,28 +400,6 @@ EncoderManager      * encoderManager;
     //    [self.view.window removeGestureRecognizer:self.tapBehindGesture];
     [settingsTab setImage:[UIImage imageNamed:@"settingsButton"]];
 }
-
-
-- (void)showGoogleDrive
-{
-    //    GDContentsViewController* contentsController = [[GDContentsViewController alloc] initWithNibName:nil bundle:nil];
-    //    GDContentsNavigationController* navController = [[GDContentsNavigationController alloc] initWithRootViewController:contentsController];
-    //    navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    //    [self presentViewController:navController animated:YES completion:nil];
-}
-
-
-- (void)showDropbox
-{
-    DPBContentViewController* viewController = [[DPBContentViewController alloc] initWithNibName:nil bundle:nil];
-    
-    DPBContentNavigationController* navController = [[DPBContentNavigationController alloc] initWithRootViewController:viewController];
-    navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:navController animated:YES completion:nil];
-    
-    
-}
-
 
 -(void)viewDidDisappear:(BOOL)animated
 {

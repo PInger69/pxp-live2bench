@@ -10,8 +10,6 @@
 #import "BookmarkViewcell.h"
 #import "Utility.h"
 #import "Clip.h"
-#import "SocialSharingManager.h"
-#import "ShareOptionsViewController.h"
 
 
 #define YES_BUTTON  0
@@ -310,18 +308,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_CLIPS  object:clipToDelete userInfo:nil];
 }
 
-
-#pragma mark - Sharing Methods
--(void)shareWithOption: (NSString *)shareOption{
-    [self.sharePop dismissPopoverAnimated:NO];
-    Clip *clipToShare = self.tableData[self.sharingIndexPath.row];
-    NSArray *arrayToShare = @[@{@"mp4": [clipToShare.videoFiles firstObject]}];
-    [[SocialSharingManager commonManager] shareItems:arrayToShare forSocialObject:shareOption inViewController:self withProgressFrame:self.shareButton.frame];
-    
-    //[self.sharePop dismissPopoverAnimated:YES];
-    BookmarkViewCell *cellToClose = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:self.sharingIndexPath];
-    [cellToClose setCellAccordingToState: cellStateNormal];
-}
 /*
  #pragma mark - Navigation
  

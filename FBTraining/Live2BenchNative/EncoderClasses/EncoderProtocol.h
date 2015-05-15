@@ -40,30 +40,12 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 -(Event*)getEventByName:(NSString*)eventName;
 
 @optional
-@property (nonatomic,assign)    NSString             * version;
+@property (nonatomic,readonly)    NSString             * version;
 @property (nonatomic,assign)    double               bitrate;
 @property (nonatomic,assign)    NSInteger       cameraCount;
 @property (nonatomic,strong)    Event                * liveEvent;
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 -(void)clearQueueAndCurrent;
-
-
-
-
-// depricated
-//@property (nonatomic,strong)    NSString                * eventType;        // the current event the encoder is looking at
-//@property (nonatomic,strong)    NSArray                 * eventTags;        // the current event the encoder is looking at
-//@property (nonatomic,strong)    NSDictionary            * eventData;   //raw dict
-//@property (nonatomic,strong)    NSArray                 * allEventData;
-//@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
-//@property (nonatomic,strong)    NSDictionary            * feeds;// feeds for current event
-
-//@property (nonatomic,strong)    NSDictionary    * playerData;
-
-
-
-
-
 
 @end
