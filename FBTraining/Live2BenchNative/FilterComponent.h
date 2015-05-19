@@ -27,6 +27,8 @@
  */
 -(NSArray*)refinedList;
 
+-(void)populate:(NSArray *)list;
+
 -(void)update;
 
 -(void)nextComponent:(id)nxt;
