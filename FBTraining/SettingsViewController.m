@@ -313,6 +313,7 @@ SVSignalStatus signalStatus;
     
     
     
+    
     if (!restClient) {
         restClient =
         [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
@@ -764,37 +765,42 @@ SVSignalStatus signalStatus;
         visitTeamPick.userPick = DEFAULT_AWAY_TEAM;
         [selectHomeTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
     }
-
 }
 
 -(void)initialiseLayout
 {
     selectHomeTeam = [DropdownButton buttonWithType:UIButtonTypeCustom];
     
+    //[selectHomeTeam setFrame:CGRectMake(0.0f, 0.0f, selectAwayContainer.bounds.size.width, selectAwayContainer.bounds.size.height)];
     [selectHomeTeam setFrame:CGRectMake(0.0f, 0.0f, selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
     selectHomeTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectHomeTeam setTitle:homeTeam forState:UIControlStateNormal];
     [selectHomeTeam setTag:0];
     [selectHomeTeam addTarget:self action:@selector(pickHome:) forControlEvents:UIControlEventTouchUpInside];
-    [selectHomeContainer addSubview:selectHomeTeam];
+    //[selectHomeContainer addSubview:selectHomeTeam];
+    [selectAwayContainer addSubview:selectHomeTeam];
     
     selectAwayTeam = [DropdownButton buttonWithType:UIButtonTypeCustom];
     
+    //[selectAwayTeam setFrame:CGRectMake(0.0f, 0.0f, selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
     [selectAwayTeam setFrame:CGRectMake(0.0f, 0.0f, selectAwayContainer.bounds.size.width, selectAwayContainer.bounds.size.height)];
     selectAwayTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectAwayTeam setTitle:awayTeam forState:UIControlStateNormal];
     [selectAwayTeam setTag:1];
     [selectAwayTeam addTarget:self action:@selector(pickAway:) forControlEvents:UIControlEventTouchUpInside];
-    [selectAwayContainer addSubview:selectAwayTeam];
+    //[selectAwayContainer addSubview:selectAwayTeam];
+    [selectLeagueContainer addSubview:selectAwayTeam];
     
     selectLeague = [DropdownButton buttonWithType:UIButtonTypeCustom];
     
+    //[selectLeague setFrame:CGRectMake(0.0f, 0.0f, selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
     [selectLeague setFrame:CGRectMake(0.0f, 0.0f, selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
     selectLeague.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectLeague setTitle:league forState:UIControlStateNormal];
     [selectLeague setTag:2];
     [selectLeague addTarget:self action:@selector(pickLeague:) forControlEvents:UIControlEventTouchUpInside];
-    [selectLeagueContainer addSubview:selectLeague];
+    //[selectLeagueContainer addSubview:selectLeague];
+    [selectHomeContainer addSubview:selectLeague];
     
     startButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
     
@@ -1156,15 +1162,22 @@ SVSignalStatus signalStatus;
     
     [selectLeague setAlpha:     (state & LEAGUE_ENABLE)?1.0f:0.6f];;
     [selectLeague setUserInteractionEnabled:(state & LEAGUE_ENABLE)!=0];//
+  
     
-    
-    if (encoderManager.currentEventData) {
+    if (encoderManager.currentEventData && state == EventButtonControlStatesLive ) {
+        
         [selectHomeTeam setTitle:encoderManager.currentEventData[@"homeTeam"] forState:UIControlStateNormal];
         [selectAwayTeam setTitle:encoderManager.currentEventData[@"visitTeam"] forState:UIControlStateNormal];
         [selectLeague setTitle:encoderManager.currentEventData[@"league"] forState:UIControlStateNormal];
     }
     
+    if (state == EventButtonControlStatesReady) {
+        [selectHomeTeam setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
+        [selectAwayTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
+        [selectLeague setTitle:DEFAULT_LEAGUE forState:UIControlStateNormal];
+    }
     
+
 }
 
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer

@@ -13,7 +13,6 @@
 #import "Feed.h"
 #import "Tag.h"
 #import "EncoderManager.h"
-#import "Live2BenchViewController.h"
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
@@ -106,7 +105,7 @@
     BOOL isVersion;
 }
 
-
+@synthesize justStarted = _justStarted;
 
 @synthesize name = _name;
 @synthesize ipAddress;
@@ -139,6 +138,7 @@
 
 @synthesize isAlive;
 
+
 -(id)initWithIP:(NSString*)ip
 {
     self = [super init];
@@ -164,6 +164,13 @@
     return self;
 }
 
+-(void)setJustStarted:(BOOL)justStarted{
+    _justStarted = justStarted;
+}
+
+-(BOOL)justStarted{
+    return _justStarted;
+}
 
 -(void)setEvent:(Event *)event
 {
@@ -633,6 +640,9 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = STOP_EVENT;
     encoderConnection.timeStamp             = aTimeStamp;
+    
+    
+    
 }
 
 -(void)pauseEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
@@ -660,7 +670,8 @@
 {
     
     [self buildEncoderRequest];
-
+    
+    _justStarted = true;
     
     NSString * homeTeam = [tData objectForKey:@"homeTeam"];
     NSString * awayTeam = [tData objectForKey:@"awayTeam"];

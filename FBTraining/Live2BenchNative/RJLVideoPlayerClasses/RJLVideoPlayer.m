@@ -74,6 +74,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(timeRequest:)          name:NOTIF_CURRENT_TIME_REQUEST object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
         
         
@@ -97,6 +98,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.isAlive = YES;
         // This listens to the app if it wants the player to do something
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
 
         commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
@@ -750,12 +752,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(void)clear
 {
     self.status = RJLPS_Offline;
-    //self.feed = nil;
     [self removePlayerTimeObserver];
     self.looping = NO;
     currentItemTime.text = @"";
     videoControlBar.enable = NO;
     [freezeMonitor stop];
+    //videoControlBar.timeSlider.hidden = YES;
+    
     
     if (self.playerItem)
     {
@@ -763,9 +766,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         [self.playerItem removeObserver:self forKeyPath:@"status"];
         
-//        [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                        name:AVPlayerItemDidPlayToEndTimeNotification
-//                                                      object:self.playerItem];
+       [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemDidPlayToEndTimeNotification
+                                                      object:self.playerItem];
         self.playerItem = nil;
     }
     
@@ -775,11 +778,18 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.avPlayer = nil;
     }
     
+    [self setPlayer:nil];
+    [self.playBackView setPlayer:nil];
     
+    self.zoomManager.enabled = NO;
+    
+
+    
+
     //[self.player replaceCurrentItemWithPlayerItem:nil];
 //  self.view.layer.sublayers = @[];
 //  self.view.layer.sublayers = nil;
-   // self.view.layer.backgroundColor = [[UIColor blackColor]CGColor];
+//    self.view.layer.backgroundColor = [[UIColor blackColor]CGColor];
 //    self.view.layer = nil;
 }
 
