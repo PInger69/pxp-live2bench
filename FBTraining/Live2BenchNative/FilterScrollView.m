@@ -110,7 +110,7 @@
         
         // This check the tag for a direct key to a String using a block
         if (filterBlock != NULL){
-            NSString * tagValueA = (filterBlock != NULL)? filterBlock(tag): tag[accessLable];
+            NSString * tagValueA = (filterBlock != NULL)? filterBlock(tag.rawData): tag[accessLable];
             if ([uniqueSet containsObject:tagValueA]) continue;
             [uniqueSet addObject:tagValueA];
             

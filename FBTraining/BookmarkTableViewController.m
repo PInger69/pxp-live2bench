@@ -10,8 +10,10 @@
 #import "BookmarkViewcell.h"
 #import "Utility.h"
 #import "Clip.h"
-#import "SocialSharingManager.h"
-#import "ShareOptionsViewController.h"
+
+
+#define YES_BUTTON  0
+#define NO_BUTTON   1
 
 @interface BookmarkTableViewController ()
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPressRecognizer;
@@ -140,14 +142,26 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%i",indexPath.row + 1]];
     cell.rating = clip.rating;
     
+    NSURL *shareUrl = [NSURL fileURLWithPath:[clip.videoFiles firstObject]];
+    cell.interactionController = [UIDocumentInteractionController interactionControllerWithURL:shareUrl];
+    cell.interactionController.name = clip.name;
+    
     
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
         [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
         //[clip destroy];
+    //    [self deleteClip:clip index:[self.tableView indexPathForCell:cell]];
     };
     
-    cell.shareBlock = ^(UITableViewCell *cell){
+    cell.shareBlock = ^(UITableViewCell *tableViewCell) {
+        
+        if ([tableViewCell isKindOfClass:[BookmarkViewCell class]]) {
+            BookmarkViewCell *cell = (BookmarkViewCell *)tableViewCell;
+            [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+        }
+        
+        /*
         self.sharingIndexPath = indexPath;
         ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
         [shareOptions setOnSelectTarget: self andSelector:@selector(shareWithOption:)];
@@ -156,6 +170,8 @@
         BookmarkViewCell *cellCasted = (BookmarkViewCell *)cell;
         [sharePop presentPopoverFromRect: cellCasted.shareButton.frame inView: cell permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
         self.sharePop = sharePop;
+         */
+        
     };
     
     //This is the condition where a cell that is selected is reused
@@ -240,8 +256,6 @@
     
 }
 
-
-
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the item to be re-orderable.
@@ -255,7 +269,7 @@
     alert.type = AlertImportant;
     [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    //[alert addButtonWithTitle:@"Yes(From server and local device)"];
+
     [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
@@ -263,76 +277,37 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
-    if ([alertView.message isEqualToString:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]] && buttonIndex == 0) {
-        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-        NSMutableArray *arrayOfClipsToRemove = [[NSMutableArray alloc]init];
+    if (buttonIndex == YES_BUTTON) {
+        NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
         
-        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-            [arrayOfClipsToRemove addObject:self.tableData[cellIndexPath.row]];
-            [indexPathsArray addObject: cellIndexPath];
-        }
-        
-        for (NSIndexPath *path in self.setOfDeletingCells) {
-            if ([path isEqual:self.selectedPath]) {
-                //NSDictionary *tag = self.tableData[self.selectedPath.row];
+        for (int i =[deleteOrderList count]-1; i>=0 ;i--) {
+            NSIndexPath *cellIndexPath = deleteOrderList[i];
+            [self deleteClipAtIndex:cellIndexPath];
+            if (cellIndexPath == self.selectedPath) { // this clears the display data on BookmarkViewController
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:nil];
                 self.selectedPath = nil;
             }
         }
-        
-        for (Clip *clip in arrayOfClipsToRemove) {
-            [self.tableData removeObject:clip];
-            [clip destroy];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
-        }
-        
+
+        [self.tableView deleteRowsAtIndexPaths:[self.setOfDeletingCells allObjects] withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
         [self.setOfDeletingCells removeAllObjects];
-        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
         [self.tableView reloadData];
-        
-//        for (NSDictionary *tag in arrayOfClipsToRemove) {
-//            //[self.tableData removeObject:tag];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
-//        }
-        
-    }else{
-        if (buttonIndex == 0)
-        {
-            Clip *clipToRemove = self.tableData[self.editingIndexPath.row];
-            [self.tableData removeObject:clipToRemove];
-
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_CLIPS"  object:nil userInfo:@{@"event":clipToRemove.rawData[@"event"],@"id":clipToRemove.clipId}];
-            [clipToRemove destroy];
-            [self removeIndexPathFromDeletion];
-            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [self.tableView reloadData];
-            
-//            [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:clipToRemove userInfo:clipToRemove];
-        }
-        else if (buttonIndex == 1)
-        {
-            // No, cancel the action to delete tags
-        }
-        
     }
-    [CustomAlertView removeAlert:alertView];
     
-    [self checkDeleteAllButton];
-    //[self.tableView reloadData];
+    [CustomAlertView removeAlert:alertView];
+    [self checkDeleteAllButton]; // hides the delete all button if shown
 }
 
-#pragma mark - Sharing Methods
--(void)shareWithOption: (NSString *)shareOption{
-    [self.sharePop dismissPopoverAnimated:NO];
-    Clip *clipToShare = self.tableData[self.sharingIndexPath.row];
-    NSArray *arrayToShare = @[@{@"mp4": [clipToShare.videoFiles firstObject]}];
-    [[SocialSharingManager commonManager] shareItems:arrayToShare forSocialObject:shareOption inViewController:self withProgressFrame:self.shareButton.frame];
-    
-    //[self.sharePop dismissPopoverAnimated:YES];
-    BookmarkViewCell *cellToClose = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:self.sharingIndexPath];
-    [cellToClose setCellAccordingToState: cellStateNormal];
+
+
+// let the local encoder destroy the clips, this class does not need to have blood on its hands
+-(void)deleteClipAtIndex:(NSIndexPath*)indexPth
+{
+    Clip * clipToDelete = self.tableData[indexPth.row];
+    [self.tableData removeObject:clipToDelete];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_CLIPS  object:clipToDelete userInfo:nil];
 }
+
 /*
  #pragma mark - Navigation
  

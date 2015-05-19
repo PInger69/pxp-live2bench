@@ -43,6 +43,8 @@
 #define NOTIF_EVENT_FEEDS_READY             @"EVENT_FEEDS_READY"
 #define NOTIF_DELETE_EVENT_SERVER           @"NOTIF_DELETE_EVENT_SERVER"
 
+#define NOTIF_DELETE_CLIPS                  @"NOTIF_DELETE_CLIPS"
+
 
 
 //Settings Requests
@@ -169,6 +171,8 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_DOWNLOAD_COMPLETE @"downloadComplete"
 //object = DownloaderItem
+#define NOTIF_CLIP_SAVED @"clipSaved"
+//object = clip
 
 // User Center
 #define NOTIF_SIDE_TAGS_READY_FOR_L2B       @"tagsReadyForLive2Bench"

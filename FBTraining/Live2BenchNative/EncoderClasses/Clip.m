@@ -27,10 +27,14 @@
         
         _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
-        _clipId             = [_rawData objectForKey:@"id"];
+        _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _path               = aPath;
+        
+        _event = _rawData[@"event"];
+        _displayTime = _rawData[@"displaytime"];
+        
         _rawData[@"plistPath"] = aPath;
         [_rawData writeToFile:self.path atomically:YES];
         
@@ -51,7 +55,6 @@
 {
     self = [super init];
     if (self) {
-        
         _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
         _name               = [_rawData objectForKey:@"name"];
         _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
@@ -59,7 +62,9 @@
         _comment            = [_rawData objectForKey:@"comment"];
         _path               = [_rawData objectForKey:@"plistName"];
         
-
+        _event = _rawData[@"event"];
+        _displayTime = _rawData[@"displaytime"];
+        
     }
     return self;
 }

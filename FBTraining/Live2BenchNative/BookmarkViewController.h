@@ -13,34 +13,24 @@
 #import "CustomTabViewController.h"
 #import "BookmarkViewCell.h"
 #import "Live2BenchViewController.h"
-#import <Social/Social.h>
-#import <Accounts/Accounts.h>
-#import <FacebookSDK/FacebookSDK.h>
+//#import <Social/Social.h>
+//#import <Accounts/Accounts.h>
 #import "BookmarkFilterViewController.h"
 #import "CustomButton.h"
 #import "AMBlurView.h"
 #import "BorderButton.h"
 #import "TeleViewController.h"
-#import <DropboxSDK/DropboxSDK.h>
-
 
 @class TeleViewController, BookmarkFilterViewController, GDFileUploader, DPBFileUploader;
 @interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate>
 {
-    //NSMutableArray               * allTags;
-    //NSMutableArray               * typesOfTags;
-//    NSString                     * userIdd;
-//    NSString                     * tagId;
-    //NSMutableArray               * tagsDidViewed;
-    //NSMutableDictionary          * selectedTag;
+
     NSIndexPath                  * wasPlayingIndexPath;
     UIView                       * videoControlBar;
     NSDictionary                 * currentPlayingTag;
     NSArray                      * paths;
     NSString                     * documentsDirectory;
     UIView                       * blurView;
-//    GDFileUploader               * _GDUploader;
-//    DPBFileUploader              * _DPBUploader;
     int                          cellSelectedNumber;
     BOOL                         isEditing;
     BOOL                         hasBeenOrdered;
@@ -53,11 +43,8 @@
 @property (nonatomic, strong)  NSMutableArray               * allClips;
 @property (nonatomic,strong)   BorderButton                 * tableActionButton;
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
-@property (nonatomic)          float                        startTime; // is dead?
 @property (nonatomic,strong)   NSMutableDictionary          * selectedTag;
 @property (nonatomic,strong)   UIPopoverController          * popoverController;
-@property (nonatomic,strong)   UILabel                      * progressLabel;
-@property (nonatomic,strong)   UIProgressView               * progressBar;
 @property (nonatomic)          int                          progressBarIndex;
 @property (nonatomic,strong)   NSMutableDictionary          * allEvents;
 @property (nonatomic,strong)   CustomButton                 * teleButton;

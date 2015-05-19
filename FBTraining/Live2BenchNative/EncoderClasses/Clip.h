@@ -26,6 +26,9 @@
 @property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
 
+@property (strong, nonatomic) NSString *event;
+@property (strong, nonatomic) NSString *displayTime;
+
 @property (readonly, nonatomic) NSString *globalID;
 
 /**

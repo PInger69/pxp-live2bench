@@ -16,7 +16,6 @@
 #import "AppDelegateActionPack.h"
 #import "SpinnerView.h"
 #import "ToastObserver.h"
-#import "SocialSharingManager.h"
 #import "CustomAlertView.h"
 
 @implementation AppDelegate
@@ -34,29 +33,6 @@
 @synthesize loginController     = _loginController;
 @synthesize eulaViewController  = _eulaViewController;
 
-
-// will be boolean NO, meaning the URL was not handled by the authenticating application
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-    // attempt to extract a token from the url
-    [[DBSession sharedSession]handleOpenURL:url];
-    return [self.session handleOpenURL:url];
-}
-
-
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    if ([[DBSession sharedSession] handleOpenURL:url]) {
-        if ([[DBSession sharedSession] isLinked]) {
-            NSLog(@"App linked successfully!");
-            // At this point you can start making API calls
-        }
-        return YES;
-    }
-    // Add whatever other url handling code your app requires here
-    return NO;
-}
 
 //this loads first when you launch the app
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -85,7 +61,7 @@
     
     _encoderManager = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 
-    (void)[[SocialSharingManager alloc]initWithSocialOptions: @[@"Mail", @"Album", @"Dropbox", @"Facebook", @"GoogleDrive"]];
+    
 
     
     self.tabBarController           = [[CustomTabBar alloc]init];
@@ -93,50 +69,8 @@
     self.window.tintColor           = PRIMARY_APP_COLOR;
     [self.window makeKeyAndVisible];
     
-    
-    
-    
-    NSFileManager                * fileManager;
+    NSFileManager *fileManager;
     fileManager = [NSFileManager defaultManager];
-    
-    // Set these variables before launching the app
-    NSString* appKey = @"huc2enjbl496cq8";
-    NSString* appSecret = @"0w4addrpazk3p9n";
-    NSString *root = kDBRootDropbox; // Should be set to either kDBRootAppFolder or kDBRootDropbox
-	// You can determine if you have App folder access or Full Dropbox along with your consumer key/secret
-	// from https://dropbox.com/developers/apps
-	
-	// Look below where the DBSession is created to understand how to use DBSession in your app
-	
-	NSString* errorMsg = nil;
-	if ([appKey rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].location != NSNotFound) {
-		errorMsg = @"Make sure you set the app key correctly in DBRouletteAppDelegate.m";
-	} else if ([appSecret rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].location != NSNotFound) {
-		errorMsg = @"Make sure you set the app secret correctly in DBRouletteAppDelegate.m";
-	} else if ([root length] == 0) {
-		errorMsg = @"Set your root to use either App Folder of full Dropbox";
-	} else {
-		NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
-		NSData *plistData = [NSData dataWithContentsOfFile:plistPath];
-		NSDictionary *loadedPlist = [NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:0 format:NULL errorDescription:NULL];
-		NSString *scheme = [[[[loadedPlist objectForKey:@"CFBundleURLTypes"] objectAtIndex:0] objectForKey:@"CFBundleURLSchemes"] objectAtIndex:1];
-		if ([scheme isEqual:@"db-2b2wsv4gcnfwi1x"]) {
-			errorMsg = @"Set your URL scheme correctly in DBRoulette-Info.plist";
-		}
-	}
-	
-	DBSession* session =[[DBSession alloc] initWithAppKey:appKey appSecret:appSecret root:root];
-	session.delegate = self; // DBSessionDelegate methods allow you to handle re-authenticating
-	[DBSession setSharedSession:session];
-	
-	[DBRequest setNetworkRequestDelegate:self];
-    
-    
-	if (errorMsg != nil) {
-		[[[UIAlertView alloc] initWithTitle:@"Error Configuring DropBox Session" message:errorMsg
-                                   delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil]
-		 show];
-	}
     
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutApp:) name:NOTIF_USER_LOGGED_OUT object:nil];
@@ -190,50 +124,11 @@
 }
 
 
-
-#pragma mark -
-#pragma mark DBSessionDelegate methods
-
-- (void)sessionDidReceiveAuthorizationFailure:(DBSession*)session userId:(NSString *)userId {
-	relinkUserId = userId;
-	[[[UIAlertView alloc]
-      initWithTitle:@"myplayXplay" message:@"Error authenticating DropBox please try to relink the account in the MyplayXplay settings page." delegate:self
-      cancelButtonTitle:@"Ok" otherButtonTitles:nil]
-	 show];
-    PXPLog(@"Error authenticating DropBox");
-}
-
-
 #pragma mark -
 #pragma mark UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)index {
-	if (index != alertView.cancelButtonIndex) {
-		[[DBSession sharedSession] linkUserId:relinkUserId fromController:self.tabBarController.selectedViewController];
-	}
-	relinkUserId = nil;
-}
-
-
-#pragma mark -
-#pragma mark DBNetworkRequestDelegate methods
-
-static int outstandingRequests;
-
-- (void)networkRequestStarted {
-	outstandingRequests++;
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"Show DB Upload" object:nil];
-    if (outstandingRequests == 1) {
-		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-	}
-}
-
-- (void)networkRequestStopped {
-	outstandingRequests--;
-	if (outstandingRequests == 0) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"Stop DB Upload" object:nil];
-        		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-	}
+    relinkUserId = nil;
 }
 
 -(void)applicationDidBecomeActive:(UIApplication *)application

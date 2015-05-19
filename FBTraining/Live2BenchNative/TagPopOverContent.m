@@ -47,7 +47,16 @@ typedef enum : NSUInteger {
             leagueName = @"";
         }
         
-        [tagDetailsView setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@ \n%@: %@ \n%@: %@ \n%@: %@\n%@: %@ \n%@: %@",NSLocalizedString(@"Event Date",nil),eventDate,NSLocalizedString(@"Event Time",nil),eventTime,NSLocalizedString(@"Home Team",nil),homeTeam,NSLocalizedString(@"Visit Team",nil),visitTeam,NSLocalizedString(@"League",nil),leagueName,NSLocalizedString(@"Tag Name",nil),[data objectForKey:@"name"],NSLocalizedString(@"Tag Time",nil) ,[data objectForKey:@"displaytime"]]];
+        [tagDetailsView setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@ \n%@: %@ \n%@: %@ \n%@: %@\n%@: %@ \n%@: %@",
+                                 NSLocalizedString(@"Event Date",nil),
+                                 eventDate,NSLocalizedString(@"Event Time",nil),
+                                 eventTime,NSLocalizedString(@"Home Team",nil),
+                                 homeTeam,NSLocalizedString(@"Visit Team",nil),
+                                 visitTeam,NSLocalizedString(@"League",nil),
+                                 leagueName,NSLocalizedString(@"Tag Name",nil),
+                                 [data objectForKey:@"name"],
+                                 NSLocalizedString(@"Tag Time",nil) ,
+                                 [data objectForKey:@"displaytime"]]];
         [tagDetailsView setFont:[UIFont boldSystemFontOfSize:18.f]];
         [tagDetailsView setUserInteractionEnabled:FALSE];
         [self addSubview:tagDetailsView];

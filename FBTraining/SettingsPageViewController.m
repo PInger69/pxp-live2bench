@@ -11,12 +11,7 @@
 #import "SettingsTableViewController.h"
 #import "SettingsViewController.h"
 #import "AccountsViewController.h"
-#import "infoViewController.h"
 #import "UserCenter.h"
-#import "GTMOAuth2ViewControllerTouch.h"
-#import "GTLDrive.h"
-#import "EncoderManager.h"
-#import "SocialSharingManager.h"
 #import "LogoViewController.h"
 #import "BitRateViewController.h"
 #import "PxpLogViewController.h"
@@ -181,7 +176,6 @@ NS_OPTIONS(NSInteger, style){
         _userName = [NSString stringWithFormat:@"User :  %@", appDel.userCenter.customerEmail];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingRequest:) name:NOTIF_REQUEST_SETTINGS object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSettings) name:UIApplicationWillTerminateNotification object:nil];
-        [self refreshSettings];
         
         self.splitViewController = [[UISplitViewController alloc] init];
         self.settingsTable = [[SettingsTableViewController alloc] initWithSettingDefinitions:self.settingDefinitions settings:self.settingsDictionary];
@@ -226,12 +220,6 @@ NS_OPTIONS(NSInteger, style){
     }
 }
 
--(void)refreshSettings {
-    
-    
-    
-}
-
 #pragma mark - Notification methods
 
 -(void)settingRequest: (NSNotification *)note{
@@ -247,18 +235,6 @@ NS_OPTIONS(NSInteger, style){
     EulaModalViewController *eulaViewController=[[EulaModalViewController alloc]init];
     [self presentViewController:eulaViewController animated:YES completion:nil];
 }
-
-
-//- (void)settingChanged: (NSDictionary *) settingChangeDictionary fromCell: (id) swipeableTableCell{
-//    NSNotification *settingNotification = [NSNotification notificationWithName:[ @"Setting - " stringByAppendingString:  settingChangeDictionary[@"Name"]] object:nil userInfo:settingChangeDictionary];
-//
-//    [[NSNotificationCenter defaultCenter] postNotification: settingNotification];
-//}
-
-- (void)didPressLink : (NSNotification *) note {
-    [[SocialSharingManager commonManager] linkSocialObject:note.userInfo[@"Name"] inViewController:self];
-}
-
 
 -(void) saveSettings{
     

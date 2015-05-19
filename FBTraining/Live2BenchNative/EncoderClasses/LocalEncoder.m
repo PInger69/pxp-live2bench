@@ -190,8 +190,8 @@
         
         
         // Observers
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:) name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDeleteRequest:) name:@"NOTIF_DELETE_CLIPS" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:)   name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDeleteRequest:) name:NOTIF_DELETE_CLIPS object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_EVENT" object:nil queue:nil usingBlock:^(NSNotification *note){
             Event *localCounterpart = [self getEventByName:((Event *)note.userInfo[@"Event"]).name];
@@ -559,9 +559,7 @@
       //  return [[VideoTrimItem alloc] init];
     } else { // there is no plist for this clip... make a new plist
        
-        // fina available plist path
         [self scanForBookmarks];
-        //int nextGap = [self gap:_bookmarkPlistNames first:0 last:[_bookmarkPlistNames count]-1];
         NSString *bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@.plist",_localPath, globalID];
         
         NSMutableDictionary *clipData = [NSMutableDictionary dictionaryWithDictionary:tagData];
@@ -570,10 +568,9 @@
         Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: clipData];
         [buildClip addSourceToClip:@{@"fileNames": @[aName]}];
         [_clips setObject:buildClip forKey:buildClip.globalID];
-//        CMTimeRange clipTimeRange = CMTimeRangeMake(CMTimeMake(tagData.startTime, 1), CMTimeMake(tagData.duration, 1));
-//        Feed * feed = [[tagData.feeds allValues] firstObject];
-//        
-//        return [Downloader trimVideoURL: [feed path].absoluteString  to: [bookmarkPlistPath stringByAppendingPathComponent:aName] withTimeRange: clipTimeRange] ;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SAVED object:buildClip];
+
     }
     
    
@@ -582,7 +579,13 @@
 
 -(void)myClipDeleteRequest:(NSNotification*)note
 {
-    [self deleteClip: [NSString stringWithFormat:@"%@_%@", note.userInfo[@"event"], note.userInfo[@"id"]]];
+    // if the object is is a clip then KILL it with Fire!
+    if ([note.object isKindOfClass:[Clip class]]) {
+        Clip * selectedClip = note.object;
+        [self deleteClip: selectedClip.globalID];
+    } else {
+        [self deleteClip: [NSString stringWithFormat:@"%@_%@", note.userInfo[@"event"], note.userInfo[@"id"]]];
+    }
 }
 
 -(void)deleteClip:(NSString*)aId

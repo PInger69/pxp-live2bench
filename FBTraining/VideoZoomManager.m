@@ -286,18 +286,12 @@
     
     //CGRect newFrame = CGRectMake(0, 0, 0, 0);
     CGRect partialView = self.zoomView.frame;
-    //float partialViewRatio = partialView.size.width / partialView.size.height;
     
     //This is to ensure that the width or height does not become infinite
     if (partialView.size.height == 0 || partialView.size.width == 0) {
         return;
-    }//else if (partialView.size.height > partialView.size.width){
-//        partialView.size.height = partialView.size.width;
-//    }
-    
-    //if (partialViewRatio < originalVideoRatio) {
-        partialView.size.height = partialView.size.width / originalVideoRatio;
-   // }
+    }
+    partialView.size.width = partialView.size.height * originalVideoRatio;
     
     // This code is added at the beginning to ensure that undoing a zoom works just as well
     // If it has been zoomed only once as well
@@ -375,18 +369,9 @@
     //This is to ensure that the width or height does not become infinite
     if (partialView.size.height == 0 || partialView.size.width == 0) {
         return;
-    }//else if (partialView.size.height > partialView.size.width){
-    //        partialView.size.height = partialView.size.width;
-    //    }
-    
-   // if (partialViewRatio < originalVideoRatio) {
-    //    partialView.size.height = partialView.size.width / originalVideoRatio;
-    //}else if (partialViewRatio > originalVideoRatio){
-        partialView.size.height = partialView.size.width / originalVideoRatio;
-    //}
-        
-    //}
-    
+    }
+    partialView.size.width = partialView.size.height * originalVideoRatio;
+
     // This code is added at the beginning to ensure that undoing a zoom works just as well
     // If it has been zoomed only once as well
     [self.secondArrayOfPreviousFrames addObject: [NSValue valueWithCGRect: self.secondLayer.frame]];

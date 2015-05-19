@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D7A9397316ADA65E006CBAB2"
-               BuildableName = "Live2BenchNativeTests.octest"
+               BuildableName = "Live2BenchNativeTests.xctest"
                BlueprintName = "Live2BenchNativeTests"
                ReferencedContainer = "container:Live2BenchNative.xcodeproj">
             </BuildableReference>
@@ -58,7 +58,8 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7A9393E16ADA65E006CBAB2"
@@ -76,7 +77,8 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7A9393E16ADA65E006CBAB2"

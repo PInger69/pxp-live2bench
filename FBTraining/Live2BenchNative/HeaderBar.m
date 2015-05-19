@@ -63,7 +63,7 @@
 {
     self.backgroundColor = [UIColor lightGrayColor];
     
-    [self addSubview:[self makeLabel:NSLocalizedString(@"Comment", nil)  xPosition:5]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Information", nil)  xPosition:5]];
     [self addSubview:[self makeLabel:NSLocalizedString(@"Date", nil)  xPosition:555]];
     [self addSubview:[self makeLabel:NSLocalizedString(@"Tag Time", nil)  xPosition:690]];
     [self addSubview:[self makeLabel:NSLocalizedString(@"Name", nil)   xPosition:795]];
