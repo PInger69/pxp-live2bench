@@ -69,7 +69,7 @@
 -(void)onFreeze
 {
     
-    if ((videoPlayer.status & RJLPS_Paused || videoPlayer.playerItem.status == AVPlayerItemStatusUnknown || videoPlayer.playerItem.status == AVPlayerItemStatusFailed)){
+    if ((videoPlayer.status & (RJLPS_Paused | RJLPS_Stop ) || videoPlayer.status == RJLPS_Offline || videoPlayer.playerItem.status == AVPlayerItemStatusUnknown || videoPlayer.playerItem.status == AVPlayerItemStatusFailed)){
      
         [freezeCounter reset];
         return;

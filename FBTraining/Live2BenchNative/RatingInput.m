@@ -83,6 +83,7 @@ static UIImage* rateUnSelected;
  *  @param sender star button
  */
 -(void)sendRating:(id)sender{
+    if (!enabled) return;
     UIButton *button = (UIButton*)sender;
     int index = button.tag;
     

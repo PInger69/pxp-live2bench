@@ -41,16 +41,11 @@
 
 @interface BookmarkViewController ()
 
-@property (strong, nonatomic) Clip *currentClip;
-
-@property (strong, nonatomic) BookmarkTableViewController *tableViewController;
-@property (strong, nonatomic) NSDictionary                *feeds;
-@property (strong, nonatomic) UIButton                    * filterButton;
-
-@property (strong, nonatomic) UIView                      *informationarea;
-
-@property (strong, nonatomic) RatingAndCommentingField    *ratingAndCommentingView;
-@property (strong, nonatomic) NSDictionary                *selectedData;
+@property (strong, nonatomic) Clip                          * currentClip;
+@property (strong, nonatomic) BookmarkTableViewController   * tableViewController;
+@property (strong, nonatomic) NSDictionary                  * feeds;
+@property (strong, nonatomic) UIButton                      * filterButton;
+@property (strong, nonatomic) NSDictionary                  * selectedData;
 
 
 @end
@@ -69,12 +64,10 @@
     float                               frameByFrameInterval;
     UIImageView                         * teleImage; //for telestration playback
     
-    
     // Richards's new UI Elements
     MyClipFilterViewController          * _filterToolBoxView;
     TestFilterViewController            * componentFilter;
     HeaderBar                           * headerBar;
-    CommentingRatingField               * commentingField;
     CustomLabel                         * numTagsLabel;
     VideoBarMyClipViewController        * newVideoControlBar;
     FullVideoBarMyClipViewController    * newFullScreenVideoControlBar;
@@ -83,7 +76,6 @@
     PipViewController                   * _pipController;
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
-    TagPopOverContent                   *tagPopoverContent;
     ClipDataContentDisplay              * clipContentDisplay;
 }
 
@@ -131,23 +123,16 @@ int viewWillAppearCalled;
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_CLIP_SELECTED" object:nil queue:nil usingBlock:^(NSNotification *note) {
         
         Clip *clipToPlay = note.object;
-        [tagPopoverContent removeFromSuperview];
-        tagPopoverContent = nil;
-        tagPopoverContent = [[TagPopOverContent alloc] initWithData: clipToPlay.rawData frame:CGRectMake(0, 0, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20))];
-        
-        [self.ratingAndCommentingView.view removeFromSuperview];
-        self.ratingAndCommentingView = nil;
-        self.ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, 100, COMMENTBOX_WIDTH, (COMMENTBOX_HEIGHT+20)) andData: [clipToPlay.rawData mutableCopy]];
-        
         __block BookmarkViewController *weakSelf = self;
-        self.ratingAndCommentingView.tagUpdate = ^(NSDictionary *tagData){
+        
+        [clipContentDisplay displayClip:clipToPlay];
+        clipContentDisplay.enable = YES;
+        clipContentDisplay.ratingAndCommentingView.tagUpdate = ^(NSDictionary *tagData){
             clipToPlay.rating = [[tagData objectForKey:@"rating"] intValue];
             clipToPlay.comment = [tagData objectForKey:@"comment"];
             [weakSelf.tableViewController reloadData];
         };
-        
-        [self.informationarea addSubview: tagPopoverContent];
-        [self.informationarea addSubview: self.ratingAndCommentingView.view];
+
         
         // single cam (take first video for now)
         NSString *clipVideoPath = [clipToPlay.videoFiles firstObject];
@@ -159,10 +144,7 @@ int viewWillAppearCalled;
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){
-        for (TagPopOverContent *info in self.informationarea.subviews) {
-            [info removeFromSuperview];
-        }
-        [self.ratingAndCommentingView.view removeFromSuperview];
+        [clipContentDisplay displayClip:nil];
     }];
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
         
@@ -295,11 +277,6 @@ int viewWillAppearCalled;
         
     }
     cellSelectedNumber = 0;
-    //if no cell has been viewed (or selected),disable the comment and rating box
-    
-    commentingField.enabled = NO;
-    commentingField.ratingScale.rating = 0;
-    [commentingField clear];
     
     fullScreenMode = FALSE;
 
@@ -333,30 +310,31 @@ int viewWillAppearCalled;
     [headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
     [self.view addSubview:headerBar];
     
-    
-    
-    commentingField = [[CommentingRatingField alloc]initWithFrame:CGRectMake(1,74, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60) title:NSLocalizedString(@"Comment",nil)];
-    commentingField.enabled = NO;
-    [commentingField onPressRatePerformSelector:@selector(sendRatingNew:) addTarget:self ];
-    [commentingField onPressSavePerformSelector:@selector(sendComment2) addTarget:self];
-    [commentingField.fieldTitle setHidden:YES];
-    
-    self.informationarea = [[UIView alloc] initWithFrame:CGRectMake(1,94, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60)];
-    self.informationarea.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.informationarea.layer.borderWidth = 1.0f;
-//    [self.view addSubview:self.informationarea];
-    
-    clipContentDisplay = [[ClipDataContentDisplay alloc]initWithFrame:CGRectMake(1,94, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60)];
 
+    clipContentDisplay = [[ClipDataContentDisplay alloc]initWithFrame:CGRectMake(1,94, COMMENTBOX_WIDTH, COMMENTBOX_HEIGHT+60)];
+    clipContentDisplay.enable = NO;
+
+    
     [self.view addSubview:clipContentDisplay];
     
     self.tableViewController = [[BookmarkTableViewController alloc] init];
     self.tableViewController.contextString = @"CLIP";
+    
+    float divider = 550;
+    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        [self.tableViewController.view setFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.width - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.height - CGRectGetMaxY(headerBar.frame) - 50.0f)];
+        [self.tableViewController.view setFrame:CGRectMake(divider + 5.0f,
+                                                           CGRectGetMaxY(headerBar.frame),
+                                                           self.view.bounds.size.width - COMMENTBOX_WIDTH - 30.0f,
+                                                           self.view.bounds.size.height - CGRectGetMaxY(headerBar.frame) - 50.0f)];
     } else {
-        [self.tableViewController.view setFrame:CGRectMake(CGRectGetMaxX(commentingField.frame) + 5.0f, CGRectGetMaxY(headerBar.frame), self.view.bounds.size.height - CGRectGetMaxX(commentingField.frame) - 30.0f, self.view.bounds.size.width - CGRectGetMaxY(headerBar.frame) - 50.0f)];
+        [self.tableViewController.view setFrame:CGRectMake(divider + 5.0f,
+                                                           CGRectGetMaxY(headerBar.frame),
+                                                           self.view.bounds.size.height - COMMENTBOX_WIDTH - 30.0f,
+                                                           self.view.bounds.size.width - CGRectGetMaxY(headerBar.frame) - 50.0f)];
     }
+    
+    
     self.tableViewController.view.autoresizingMask = UIViewAutoresizingNone;
     [self addChildViewController: self.tableViewController];
     [self.view addSubview: self.tableViewController.view];
@@ -453,22 +431,6 @@ int viewWillAppearCalled;
     [componentFilter close:YES];
 }
 
-
-
-#pragma mark Richard Methods for commenting and rating
--(void)sendRatingNew:(id)sender
-{
-    int recievedRating = [(RatingInput *)sender rating];
-    [selectedTag    setValue:   [NSString stringWithFormat:@"%i",recievedRating]   forKey:@"rating"];
-
-}
-
--(void)sendComment2
-{
-    [commentingField.textField resignFirstResponder];
-    NSString *comment = commentingField.textField.text;
-    [selectedTag setValue:comment forKey:@"comment"];
-}
 
 /**
  *  This is for detecteing swipes on the video player
