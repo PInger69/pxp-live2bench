@@ -56,6 +56,7 @@
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
+		AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */; };
 		BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F817F22A270089873C /* bookmarkedit.png */; };
 		BD18B6FB17F22A270089873C /* bookmarkedit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F917F22A270089873C /* bookmarkedit@2x.png */; };
 		BD1AEF8C17F0B14E00BD59A9 /* OBSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D793897217E794B800BEA70B /* OBSlider.m */; };
@@ -480,6 +481,8 @@
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
+		AECF63131B0BC07F00C98555 /* FBTrainingTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingTabViewController.h; sourceTree = "<group>"; };
+		AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingTabViewController.m; sourceTree = "<group>"; };
 		BD18B6F817F22A270089873C /* bookmarkedit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bookmarkedit.png; sourceTree = "<group>"; };
 		BD18B6F917F22A270089873C /* bookmarkedit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmarkedit@2x.png"; sourceTree = "<group>"; };
 		BD18B70017F23A6F0089873C /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -1097,6 +1100,15 @@
 			name = TagView;
 			sourceTree = "<group>";
 		};
+		AECF63121B0BC02900C98555 /* FBTraining */ = {
+			isa = PBXGroup;
+			children = (
+				AECF63131B0BC07F00C98555 /* FBTrainingTabViewController.h */,
+				AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */,
+			);
+			name = FBTraining;
+			sourceTree = "<group>";
+		};
 		BD9BC31D17EB6409001B67DE /* ClipCornerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1568,6 +1580,7 @@
 		D7A677DF17CB1D8D00EC20D1 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				AECF63121B0BC02900C98555 /* FBTraining */,
 				D7A2E5E519B6231800022795 /* VideoBarViewControllers */,
 				D7A2E5B619AE220500022795 /* UserSettingsViewController */,
 				D7383042198A8E940053F0A1 /* ComponentTagFilter */,
@@ -2522,6 +2535,7 @@
 				D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */,
 				D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */,
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
+				AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */,
 				D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */,
 				D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */,
 				D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */,
