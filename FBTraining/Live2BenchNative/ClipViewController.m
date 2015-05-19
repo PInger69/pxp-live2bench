@@ -94,6 +94,8 @@ static void * encoderTagContext = &encoderTagContext;
             }
         }];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        
         self.allTagsArray   = [NSMutableArray array];
         self.tagsToDisplay  = [NSMutableArray array];
     }
@@ -666,5 +668,11 @@ static void * encoderTagContext = &encoderTagContext;
         self.view = nil;
     }
 }
+
+- (void)liveEventStopped:(NSNotification *)note {
+    self.tagsToDisplay = nil;
+    [self.collectionView reloadData];
+}
+
 
 @end

@@ -51,6 +51,8 @@ typedef enum {FilterScrollSortAlpha, FilterScrollSortNumarical} SortType;
 
 -(id)initWithFrame:(CGRect)frame Name:(NSString*)name AccessLable:(NSString*)aLabel;
 
+-(void)populate:(NSArray *)list;
+
 -(void)onSelectPerformSelector:(SEL)sel addTarget:(id)target;
 -(void)deselectAll;
 -(void)update;

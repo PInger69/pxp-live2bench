@@ -88,6 +88,114 @@
 
 }
 
+
+
+/**
+ *  This takes in the full tag list and breaks it down to just the tags types you want
+ *  displayed in the view. This will clear out any buttons that are placesed if ran again
+ *  @param list all tags
+ */
+-(void)populate:(NSArray *)list
+{
+    //remove any previous buttons
+    for (CustomButton * buttonObj in buttonList) {
+        [buttonObj removeFromSuperview];
+    }
+    [buttonList removeAllObjects];
+    
+    // get all unique
+    NSMutableSet * uniqueSet = [[NSMutableSet alloc]init];
+   
+    for(id <FilterItemProtocol> tag in list){
+        
+        // This check the tag for a direct key to a String using a block
+        if (filterBlock != NULL){
+            NSString * tagValueA = (filterBlock != NULL)? filterBlock(tag.rawData): tag[accessLable];
+            if ([uniqueSet containsObject:tagValueA]) continue;
+            [uniqueSet addObject:tagValueA];
+            
+        }
+        
+        // This check the tag for a direct key to a String
+        else if ([tag.rawData[accessLable] isKindOfClass:[NSString class]]) {
+            NSString * tagValueB = tag.rawData[accessLable];
+            if ([uniqueSet containsObject:tagValueB] || [tagValueB isEqualToString:@""]) continue;
+            [uniqueSet addObject:tagValueB];
+        }
+        
+        // This sees if the value of the key is an array and adds each to the unique search
+        else if ([tag.rawData[accessLable] isKindOfClass:[NSArray class]]) {
+            NSArray * checkArray = tag.rawData[accessLable];
+            for (id item in checkArray) {
+                NSNumber * tagValueC = item;
+                if ([uniqueSet containsObject:tagValueC]) continue;
+                [uniqueSet addObject:tagValueC];
+            }
+        }
+
+        
+    }
+
+    
+    NSArray * buttonLabels;
+    
+    switch (sortType) {
+        
+        case FilterScrollSortNumarical:
+                buttonLabels = [[uniqueSet allObjects] sortedArrayUsingComparator:^(id obj1, id obj2) {
+                    return [obj1 intValue] - [obj2 intValue];
+                }];
+            break;
+            
+        case FilterScrollSortAlpha:
+        default:
+                buttonLabels = [[uniqueSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+            break;
+    }
+    
+    
+   
+    
+    int colNum = 0;
+    int rowNum = 0;
+    for (int k = 0; k<buttonLabels.count; k++  ) {
+        
+        
+        
+        NSString    *tagLabel       = [buttonLabels objectAtIndex:k];
+        CGRect      rect            =  CGRectMake(colNum * (buttonSize.width+buttonMargin.width),
+                                                  rowNum * (buttonSize.height+buttonMargin.height),
+                                                  buttonSize.width, buttonSize.height);
+        
+        if (++rowNum ==rowCount){
+            rowNum = 0;
+            colNum++;
+        }
+        
+        CustomButton  *eventButton = [self buildButton:rect btnText:tagLabel accessibilityLabel:accessLable];
+        [scrollView addSubview:eventButton];
+    }
+    
+    [scrollView setContentSize:CGSizeMake((colNum+1) * buttonSize.width, self.frame.size.height)];
+  
+    
+    // this perserves the filtering on refresh
+    
+    if ([selectedTags count] == 0) return; // if noselectTags skip this part
+    
+    for (CustomButton *activeButton in buttonList){
+        if ([selectedTags containsObject:activeButton.titleLabel.text])
+        {
+            activeButton.selected = YES;
+        }
+    }
+    [self update];
+
+}
+
+
+
+
 /**
  *  This creates the button structure (maybe the button should have its own class)
  *

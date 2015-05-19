@@ -15,6 +15,7 @@
 #import "ListViewController.h"
 #import "BookmarkViewController.h"
 #import "DebuggingTabViewController.h"
+#import "FBTrainingTabViewController.h"
 
 // Tab setting identifiers
 #define TAB_CALENDAR @"Calendar"
@@ -23,6 +24,7 @@
 #define TAB_CLIPVIEW @"ClipView"
 #define TAB_LISTVIEW @"ListView"
 #define TAB_MYCLIP @"MyClip"
+#define TAB_FOOTBALL_TRAINING @"FBTraining"
 #define TAB_DEBUG @"Debug"
 
 @interface TabsSettingViewController () <ToggleSettingViewControllerDelegate>
@@ -45,6 +47,10 @@
                                         @{
                                             @"Name": NSLocalizedString(@"Injury", nil),
                                             @"Identifier": TAB_INJURY
+                                            },
+                                        @{
+                                            @"Name": NSLocalizedString(@"FBTraining", nil),
+                                            @"Identifier": TAB_FOOTBALL_TRAINING
                                             },
                                         @{
                                             @"Name": NSLocalizedString(@"Live2Bench", nil),
@@ -77,6 +83,7 @@
         self.settingData[TAB_LISTVIEW] = @YES;
         self.settingData[TAB_MYCLIP] = @YES;
         self.settingData[TAB_DEBUG] = @NO;
+        self.settingData[TAB_FOOTBALL_TRAINING] = @NO;
         
         self.tabClassForIdentifier = @{
                                        TAB_CALENDAR: [CalendarViewController class],
@@ -86,6 +93,7 @@
                                        TAB_LISTVIEW: [ListViewController class],
                                        TAB_MYCLIP: [BookmarkViewController class],
                                        TAB_DEBUG: [DebuggingTabViewController class],
+                                       TAB_FOOTBALL_TRAINING: [FBTrainingTabViewController class],
                                        };
         self.delegate = self;
         

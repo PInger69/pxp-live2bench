@@ -394,8 +394,9 @@
 {
     [self willChangeValueForKey:@"enabled"];
     _enabled = enabled;
+
     
-    CGFloat     alpha       = (_enabled)?   1.0f:0.6f;
+    CGFloat     alpha       = (_enabled)?   1.0f:0.2f;
     BOOL        interEnable = (_enabled)?   TRUE:FALSE;
     
     for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
@@ -406,6 +407,7 @@
     }
    
     [self didChangeValueForKey:@"enabled"];
+        
 }
 
 -(BOOL)enabled
@@ -415,7 +417,7 @@
 
 
 
--(void)setHidden:(BOOL)hidden
+/*-(void)setHidden:(BOOL)hidden
 {
     [self willChangeValueForKey:@"hidden"];
     _enabled = hidden;
@@ -433,7 +435,7 @@
 {
     return _hidden;
 }
-
+*/
 
 -(void)setState:(NSString *)state
 {
