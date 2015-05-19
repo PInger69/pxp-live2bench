@@ -52,8 +52,6 @@
 @property (nonatomic,strong)    UIAlertView
 * videoPlaybackFailedAlertView;
 
-@property (nonatomic,assign)   BOOL hasWentInGotLiveEvent;
-
 //@property (nonatomic, strong)   TagMarker                                    * currentPlayingTagMarker;
 //@property (nonatomic,strong)    TagMarker                                    * tagMarker;
 

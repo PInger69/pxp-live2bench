@@ -9,6 +9,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+=======
             filePath = "FBTraining/ARCalendarTableViewController.m"
             timestampString = "453228298.751648"
             startingColumnNumber = "9223372036854775807"
@@ -41,6 +43,7 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+>>>>>>> b1955d887b83e6d4f1f682c1e4ef349d4d041f71
             filePath = "FBTraining/VideoCuttingTool.m"
             timestampString = "452790653.80334"
             startingColumnNumber = "9223372036854775807"
@@ -64,6 +67,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+<<<<<<< HEAD
+=======
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -112,6 +117,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+>>>>>>> b1955d887b83e6d4f1f682c1e4ef349d4d041f71
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -182,6 +188,9 @@
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
+<<<<<<< HEAD
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+=======
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
@@ -215,10 +224,15 @@
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+>>>>>>> b1955d887b83e6d4f1f682c1e4ef349d4d041f71
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            symbolName = "obj_exception_throw"
+            moduleName = "">
+=======
             filePath = "FBTraining/ARCalendarTableViewController.m"
             timestampString = "453228929.371335"
             startingColumnNumber = "9223372036854775807"
@@ -689,6 +703,7 @@
             endingLineNumber = "340"
             landmarkName = "-setupView"
             landmarkType = "5">
+>>>>>>> b1955d887b83e6d4f1f682c1e4ef349d4d041f71
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

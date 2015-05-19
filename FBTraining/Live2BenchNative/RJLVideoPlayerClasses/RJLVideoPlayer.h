@@ -64,7 +64,9 @@
 @property (nonatomic,assign)    BOOL                        mute;
 @property (nonatomic,assign)    BOOL                        live;
 @property (nonatomic,assign)    CMTimeRange                 range;
-@property (nonatomic,assign)    BOOL                        isAlive;
+@property (nonatomic,assign)    BOOL
+isAlive;
+
 
 // Graphic
 @property (nonatomic,strong)     LiveLight         * liveIndicatorLight;
@@ -77,6 +79,7 @@
 
 
 @property (nonatomic, strong)    VideoZoomManager       *zoomManager;
+
 
 -(instancetype)initWithFrame:(CGRect)frame;
 
