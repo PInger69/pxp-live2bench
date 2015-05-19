@@ -90,6 +90,8 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        
         
         //        self.allTags = [[NSMutableArray alloc]init];
         //        self.tagsToDisplay = [[NSMutableArray alloc]init];
@@ -4494,6 +4496,18 @@ NSMutableArray *oldEventNames;
     }
     
     return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
+}
+
+- (void)liveEventStopped:(NSNotification *)note {
+    self.tagsToDisplay = nil;
+    _tableViewController.tableData = [NSMutableArray array];
+    [_tableViewController reloadData];
+    
+    selectedTag = nil;
+    
+    [commentingField clear];
+    commentingField.enabled             = NO;
+    [newVideoControlBar setTagName: nil];
 }
 
 @end
