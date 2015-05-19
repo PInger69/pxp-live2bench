@@ -84,13 +84,11 @@ NSMutableArray *oldEventNames;
         //[self initializeOldEventNames];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initializeOldEventNames) name:@"oldEventsUpdated" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendBookmarkRequest) name:@"sendOldBookmarkRequest" object:nil];
-        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
-        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
         
         //        self.allTags = [[NSMutableArray alloc]init];
@@ -101,15 +99,15 @@ NSMutableArray *oldEventNames;
         //_tableViewController.listViewControllerView = self.view;
         //_tableViewController.tableData = self.tagsToDisplay;
         
+        /*
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+            NSLog(@"READY!");
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-            _tableViewController.tableData = self.tagsToDisplay;
-            if (!componentFilter.rawTagArray) {
-                componentFilter.rawTagArray = self.tagsToDisplay;
-            }
+            _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
             [_tableViewController.tableView reloadData];
             
         }];
+         */
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -127,33 +125,25 @@ NSMutableArray *oldEventNames;
     
 }
 
--(void)deleteTag: (NSNotification *) note{
+- (void)deleteTag: (NSNotification *)note {
     [self.tagsToDisplay removeObject: note.object];
-    //[_tableViewController.tableData removeObject: note.userInfo];
+    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
     [_tableViewController reloadData];
-    
-    componentFilter.rawTagArray = self.tagsToDisplay;
-    //[componentFilter refresh];
 }
 
--(void)listViewTagReceived:(NSNotification*)note{
+- (void)listViewTagReceived:(NSNotification*)note {
+    
     if (note.object) {
         [self.tagsToDisplay addObject: note.object];
-        //[_tableViewController.tableData addObject:note.object];
+        _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
         [_tableViewController reloadData];
-        //[_collectionView reloadData];
     }
-
+    
 }
 
--(void)sortFromHeaderBar:(id)sender
+- (void)sortFromHeaderBar:(id)sender
 {
-    HeaderBar * hBar = (HeaderBar *)sender;
-    
-    _tableViewController.tableData = [self sortArrayFromHeaderBar:_tableViewController.tableData headerBarState:hBar.headerBarSortType];
-    //_tableViewController.tableData = self.tagsToDisplay;
-    [_tableViewController.setOfDeletingCells removeAllObjects];
-    [_tableViewController checkDeleteAllButton];
+    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
     [_tableViewController reloadData];
 }
 
@@ -230,8 +220,6 @@ NSMutableArray *oldEventNames;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrubbingDestroyLoopMode) name:@"scrubbingDestroyLoopMode" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popoverDidFinishSelection) name:@"ExportPlayersPopoverControllerDidFinishSelection" object:nil];
     
-    
-    
     [self setupView];
 
      _tableViewController.tableView.delaysContentTouches = NO;
@@ -245,9 +233,11 @@ NSMutableArray *oldEventNames;
     [self.view addSubview:breadCrumbVC.view];
     
     
-    headerBar = [[HeaderBarForListView alloc]initWithFrame:CGRectMake(540,55,TOTAL_WIDTH, LABEL_HEIGHT)];
+    headerBar = [[HeaderBarForListView alloc]initWithFrame:CGRectMake(540,55,TOTAL_WIDTH, LABEL_HEIGHT) defaultSort:TIME_FIELD | DESCEND];
     [headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
     [self.view addSubview:headerBar];
+
+
     
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
@@ -321,6 +311,7 @@ NSMutableArray *oldEventNames;
     //
     //    }
     
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){
             self.feeds = feeds;
@@ -328,15 +319,12 @@ NSMutableArray *oldEventNames;
             [self.videoPlayer playFeed:theFeed];
         }
         
-        if(eventTags.count > 0 && !self.tagsToDisplay){
-            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
-            _tableViewController.tableData = self.tagsToDisplay;
-            if (!componentFilter.rawTagArray) {
-                componentFilter.rawTagArray = self.tagsToDisplay;
-                
-            }
-            [_tableViewController.tableView reloadData];
+        if (!self.tagsToDisplay) {
+            self.tagsToDisplay = [NSMutableArray arrayWithArray:[eventTags copy]];
+            _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+            [_tableViewController reloadData];
         }
+        
     }}];
     
     
@@ -375,6 +363,8 @@ NSMutableArray *oldEventNames;
     
     
     //    [newVideoControlBar.view setFrame:CGRectMake(500, 200, 100, 100)];
+    
+    
 }
 
 
@@ -519,13 +509,8 @@ NSMutableArray *oldEventNames;
 //  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  //
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {
-    AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
-    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
-    //self.tagsToDisplay = [filteredArray mutableCopy];
-    
-    _tableViewController.tableData = [filteredArray mutableCopy];
+    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
     [_tableViewController reloadData];
-    [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
 }
 //  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  //
 
@@ -569,18 +554,21 @@ NSMutableArray *oldEventNames;
     
     //[componentFilter.view removeFromSuperview];
     //componentFilter= nil;
-    //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+    
+    if (!componentFilter) {
+        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+    }
     
     self.dismissFilterButton = [[UIButton alloc] initWithFrame: self.view.bounds];
     [self.dismissFilterButton addTarget:self action:@selector(dismissFilter:) forControlEvents:UIControlEventTouchUpInside];
     self.dismissFilterButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6];
     [self.view addSubview: self.dismissFilterButton];
     
-    componentFilter.rawTagArray = self.tagsToDisplay;
+    //componentFilter.rawTagArray = self.tagsToDisplay;
     //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
     componentFilter.rangeSlider.highestValue = [(UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer durationInSeconds];
     
-    //[componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
     //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
     componentFilter.finishedSwipe = TRUE;
     
@@ -1723,15 +1711,6 @@ NSMutableArray *oldEventNames;
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
-    
-    componentFilter = [TestFilterViewController commonFilter];
-    //componentFilter = [[TestFilterViewController alloc] initWithTagArray: self.tagsToDisplay];
-    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-    [self.view addSubview:componentFilter.view];
-    [componentFilter setOrigin:CGPointMake(60, 190)];
-    [componentFilter close:NO];
-    
-    
     
     //    UIImageView *commentBoxTitleBar = [[UIImageView alloc]initWithFrame:CGRectMake(2,SMALL_MEDIA_PLAYER_HEIGHT+140,COMMENTBOX_WIDTH, LABEL_HEIGHT)];
     //    commentBoxTitleBar.backgroundColor = [UIColor clearColor];
@@ -4504,6 +4483,17 @@ NSMutableArray *oldEventNames;
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
     if ([self.view window] == nil) self.view = nil;
+}
+
+-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
+    NSMutableArray *tagsToSort = [NSMutableArray arrayWithArray:tags];
+    
+    if (componentFilter) {
+        componentFilter.rawTagArray = tagsToSort;
+        tagsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
+    }
+    
+    return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
 }
 
 @end
