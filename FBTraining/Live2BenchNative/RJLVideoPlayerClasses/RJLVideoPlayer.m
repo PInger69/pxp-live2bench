@@ -625,6 +625,17 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 
+
+-(void)playerItemDidReachEnd:(NSNotification *) notification {
+    // Will be called when AVPlayer finishes playing playerItem
+   
+    [self pause];
+    restoreAfterPauseRate = 1.0f;
+    self.videoControlBar.playButton.selected    = YES;
+}
+
+
+
 #pragma mark -
 #pragma mark Commands
 
@@ -668,7 +679,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(void)play{
     if (!_feed)return;
     [self.avPlayer play];
-    [freezeMonitor start];
+  [freezeMonitor start];
     if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
     self.status                                 = _status | RJLPS_Play;
     self.status                                 = _status & ~(RJLPS_Paused);
@@ -1224,10 +1235,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
     /* When the player item has played to its end time we'll toggle
      the movie controller Pause button to be the Play button */
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(playerItemDidReachEnd:)
-//                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-//                                               object:self.playerItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:self.playerItem];
     
     //Why????????????????????????No?????????
     seekToZeroBeforePlay = NO;

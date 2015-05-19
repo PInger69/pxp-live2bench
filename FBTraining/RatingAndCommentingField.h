@@ -13,7 +13,7 @@
 @interface RatingAndCommentingField : UIViewController
 
 @property (nonatomic, copy) void(^tagUpdate)(NSMutableDictionary *tag);
-
+@property (nonatomic,assign) BOOL   enable;
 - (instancetype)initWithFrame:(CGRect)frame andData:(NSMutableDictionary *)data;
 
 @end

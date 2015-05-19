@@ -19,6 +19,9 @@
 
 @implementation RatingAndCommentingField
 
+
+@synthesize enable =_enable;
+
 - (instancetype)initWithFrame:(CGRect)frame andData:(NSMutableDictionary *)data
 {
     self = [super init];
@@ -27,19 +30,20 @@
         self.data = data;
         self.ratingScale = [[RatingInput alloc] initWithFrame:CGRectMake(15, 48, 300, 50)];
         self.ratingScale.rating = [data[@"rating"] integerValue];
+//        self.ratingScale.enabled = NO;
         [self.ratingScale onPressRatePerformSelector:@selector(sendRatingNew:) addTarget:self];
         [self.ratingScale.ratingLabel setText:@"Rating:"];
         [self.ratingScale.ratingLabel setTextColor:[UIColor blackColor]];
         [self.ratingScale.ratingLabel setFont:[UIFont boldSystemFontOfSize:18.0f]];
-        [self.view addSubview:self.ratingScale];
+ 
         
-        self.commentingLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 65, 100, 50)];
+        self.commentingLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 62, 100, 50)];
         self.commentingLabel.text = NSLocalizedString(@"Comment:", nil);
         self.commentingLabel.textColor = [UIColor blackColor];
         self.commentingLabel.font = [UIFont boldSystemFontOfSize:18.0f];
         [self.view addSubview:self.commentingLabel];
         
-        self.commentingArea = [[UITextView alloc] initWithFrame:CGRectMake(124, 71, 400, 80)];
+        self.commentingArea = [[UITextView alloc] initWithFrame:CGRectMake(122, 68, 400, 80)];
         self.commentingArea.returnKeyType = UIReturnKeyDone;
         self.commentingArea.font = [UIFont systemFontOfSize:18.0f];
         if ([self.data[@"comment"] length] != 0) {
@@ -52,7 +56,9 @@
         self.commentingArea.selectable = YES;
         self.commentingArea.delegate = self;
         [self.view addSubview:self.commentingArea];
+        _enable = YES;
         
+               [self.view addSubview:self.ratingScale];
     }
     return self;
 }
@@ -92,6 +98,35 @@
     [self.data    setValue:[NSString stringWithFormat:@"%i",recievedRating] forKey:@"rating"];
     self.tagUpdate(self.data);
 }
+
+
+-(void)setEnable:(BOOL)enable
+{
+    if (enable == _enable) return;
+    
+    [self willChangeValueForKey:@"enable"];
+    if (_enable && !enable){
+        // to false
+
+        self.commentingLabel.alpha = 0.5;
+        self.commentingArea.selectable = NO;
+        self.ratingScale.enabled = NO;
+    } else if (!_enable && enable){
+        // to true
+
+        self.commentingLabel.alpha = 1;
+        self.commentingArea.selectable = YES;
+        self.ratingScale.enabled = YES;
+    }
+    _enable = enable;
+    [self didChangeValueForKey:@"enable"];
+}
+
+-(BOOL)enable
+{
+    return _enable;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
