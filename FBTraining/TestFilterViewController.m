@@ -237,6 +237,11 @@ static TestFilterViewController *commonFilter;
     
 }
 
+-(NSString*)description
+{
+
+    return @"TestFilterViewController";
+}
 
 
 

@@ -111,13 +111,17 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 
+
+// If the filter is actie then filter other wize just display all the tags
 -(void)clipViewTagReceived:(NSNotification*)note
 {
+    
     if (note.object && self.allTagsArray) {
-        
+
         [self.allTagsArray insertObject:note.object atIndex:0];
         [self.tagsToDisplay insertObject:note.object atIndex:0];
-        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]]];
+     //   [componentFilter refresh];
+       [_collectionView reloadData];
     }
 }
 
@@ -216,7 +220,6 @@ static void * encoderTagContext = &encoderTagContext;
     [self.view addSubview: self.filterButton];
     
     componentFilter = [TestFilterViewController commonFilter];
-    //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
     [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
     [self.view addSubview:componentFilter.view];
     [componentFilter setOrigin:CGPointMake(60, 190)];

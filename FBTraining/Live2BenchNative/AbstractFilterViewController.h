@@ -51,4 +51,5 @@
 -(void)refresh;
 -(BOOL)rawDataEmpty; //TODO fix this. it is do make sure it synced with the global kinda
 
+
 @end
