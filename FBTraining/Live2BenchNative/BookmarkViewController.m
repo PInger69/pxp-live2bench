@@ -320,7 +320,7 @@ int viewWillAppearCalled;
     self.tableViewController = [[BookmarkTableViewController alloc] init];
     self.tableViewController.contextString = @"CLIP";
     
-    float divider = 550;
+    float divider = 535;
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         [self.tableViewController.view setFrame:CGRectMake(divider + 5.0f,
