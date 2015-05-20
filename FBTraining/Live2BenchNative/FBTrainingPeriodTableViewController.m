@@ -24,6 +24,8 @@
 @property (strong, nonatomic, nullable) NSIndexPath *selectedIndexPath;
 @property (strong, nonatomic, nullable) UIPopoverController *activePopoverController;
 
+@property (assign, nonatomic) void *context;
+
 @end
 
 @implementation FBTrainingPeriodTableViewController
@@ -48,7 +50,7 @@
         
         for (NSUInteger i = 0; i < 24; i++) {
             NSString *name = [NSString stringWithFormat:@"P%02lu", (unsigned long) i + 1];
-            self.periods[name] = [NSMutableArray array];
+            self.periods[name] = [NSMutableSet set];
            
             // temporary random generation
             for (NSUInteger j = 1; j < drand48() * 10; j++) {
@@ -60,14 +62,22 @@
             }
             
         }
+        
+        _context = &_context;
+        
+        [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:_context];
     }
     return self;
+}
+
+- (void)dealloc {
+    [self.view removeObserver:self forKeyPath:@"frame" context:_context];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.frame = CGRectMake(0, 55, self.view.frame.size.width, self.view.frame.size.height - 110);
+    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -97,6 +107,18 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if (context == _context) {
+        self.tableView.frame = CGRectMake(0, 0, 160, self.view.frame.size.height);
+        self.tableView.rowHeight = self.tableView.frame.size.height / 24.0;
+        self.pullTabView.frame = CGRectMake(self.tableView.frame.size.width, self.view.frame.size.height / 2.0 - 64, 16, 128);
+    }
+    
+}
+
+#pragma mark - gesture recognizers
 
 - (void)leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
     [UIView beginAnimations:nil context:nil];
@@ -145,7 +167,7 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@ %ld", NSLocalizedString(@"Period", nil), (long) indexPath.row + 1];
     
     NSString *name = [NSString stringWithFormat:@"P%02ld", (long) indexPath.row + 1];
-    NSMutableArray *tagsForPeriod = self.periods[name];
+    NSSet *tagsForPeriod = self.periods[name];
     
     cell.accessoryType = tagsForPeriod.count > 0 ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
     
@@ -157,10 +179,10 @@
     self.selectedIndexPath = indexPath;
     
     NSString *name = [NSString stringWithFormat:@"P%02ld", (long) indexPath.row + 1];
-    NSArray *tagsForPeriod = self.periods[name];
+    NSSet *tagsForPeriod = self.periods[name];
     
     if (tagsForPeriod.count > 0) {
-        FBTrainingClipTableViewController *clipTableViewController = [[FBTrainingClipTableViewController alloc] initWithTags:tagsForPeriod];
+        FBTrainingClipTableViewController *clipTableViewController = [[FBTrainingClipTableViewController alloc] initWithTags:[tagsForPeriod allObjects]];
         
         CGFloat rowHeight = self.tableView.rowHeight;
         clipTableViewController.tableView.rowHeight = rowHeight;

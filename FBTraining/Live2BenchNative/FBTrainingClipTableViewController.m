@@ -19,7 +19,7 @@
 - (instancetype)initWithTags:(nonnull NSArray *)tags {
     self = [super init];
     if (self) {
-        self.tags = tags;
+        self.tags = [[NSMutableArray arrayWithArray:tags] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES]]];
     }
     return self;
 }
@@ -68,9 +68,9 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    //Tag *tag = self.tags[indexPath.row];
+    Tag *tag = self.tags[indexPath.row];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Clip %ld", (long) indexPath.row + 1];
+    cell.textLabel.text = [NSString stringWithFormat:@"Clip %lf", tag.startTime];
     cell.backgroundColor = [UIColor clearColor];
     
     return cell;
