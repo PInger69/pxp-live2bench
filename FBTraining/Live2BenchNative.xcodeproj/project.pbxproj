@@ -56,6 +56,7 @@
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
+		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
 		AECB9A6E1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */; };
@@ -483,6 +484,8 @@
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
+		AE848FFF1B0D083D007A19E8 /* NCRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCRecordButton.h; sourceTree = "<group>"; };
+		AE8490001B0D083D007A19E8 /* NCRecordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCRecordButton.m; sourceTree = "<group>"; };
 		AECB9A6C1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingClipTableViewController.h; sourceTree = "<group>"; };
 		AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingClipTableViewController.m; sourceTree = "<group>"; };
 		AECF63131B0BC07F00C98555 /* FBTrainingTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingTabViewController.h; sourceTree = "<group>"; };
@@ -1106,6 +1109,15 @@
 			name = TagView;
 			sourceTree = "<group>";
 		};
+		AE848FFE1B0D081F007A19E8 /* RecordButton */ = {
+			isa = PBXGroup;
+			children = (
+				AE848FFF1B0D083D007A19E8 /* NCRecordButton.h */,
+				AE8490001B0D083D007A19E8 /* NCRecordButton.m */,
+			);
+			name = RecordButton;
+			sourceTree = "<group>";
+		};
 		AECF63121B0BC02900C98555 /* FBTraining */ = {
 			isa = PBXGroup;
 			children = (
@@ -1535,6 +1547,7 @@
 		D7A677DD17CB1BF000EC20D1 /* Custom Components */ = {
 			isa = PBXGroup;
 			children = (
+				AE848FFE1B0D081F007A19E8 /* RecordButton */,
 				D749B7611A792F3A00258D63 /* RJLVideoPlayer */,
 				D760737019D4A4C9000E35C2 /* FullScreen */,
 				D7A2E5E919B6498200022795 /* Slomo.h */,
@@ -2598,6 +2611,7 @@
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
+				AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */,
 				AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */,
 				D7A7B61216D3C6C3000D3A84 /* LogoViewController.m in Sources */,
 				D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */,
