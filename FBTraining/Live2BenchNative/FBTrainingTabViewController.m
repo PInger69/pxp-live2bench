@@ -33,7 +33,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = PRIMARY_APP_COLOR;
-    self.view.bounds = CGRectMake(0, -44, self.view.bounds.size.width, self.view.bounds.size.height);
     [self.view addSubview:self.periodTableViewController.view];
 }
 

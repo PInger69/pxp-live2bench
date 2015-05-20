@@ -56,6 +56,7 @@
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
+		AECB9A6E1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */; };
 		BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F817F22A270089873C /* bookmarkedit.png */; };
@@ -482,6 +483,8 @@
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
+		AECB9A6C1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingClipTableViewController.h; sourceTree = "<group>"; };
+		AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingClipTableViewController.m; sourceTree = "<group>"; };
 		AECF63131B0BC07F00C98555 /* FBTrainingTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingTabViewController.h; sourceTree = "<group>"; };
 		AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingTabViewController.m; sourceTree = "<group>"; };
 		AECF631F1B0BD72F00C98555 /* FBTrainingPeriodTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingPeriodTableViewController.h; sourceTree = "<group>"; };
@@ -1110,6 +1113,8 @@
 				AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */,
 				AECF631F1B0BD72F00C98555 /* FBTrainingPeriodTableViewController.h */,
 				AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */,
+				AECB9A6C1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.h */,
+				AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */,
 			);
 			name = FBTraining;
 			sourceTree = "<group>";
@@ -2533,6 +2538,7 @@
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
+				AECB9A6E1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,
 				D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */,
 				AE76FFC41B01065B0089F53F /* TagView.m in Sources */,

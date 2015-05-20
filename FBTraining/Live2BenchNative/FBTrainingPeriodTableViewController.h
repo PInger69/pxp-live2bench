@@ -10,4 +10,6 @@
 
 @interface FBTrainingPeriodTableViewController : UIViewController
 
+@property (strong, nonatomic, nullable) UIImage *tabImage;
+
 @end
