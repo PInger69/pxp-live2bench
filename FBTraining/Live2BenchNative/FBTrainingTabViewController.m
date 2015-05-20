@@ -8,7 +8,11 @@
 
 #import "FBTrainingTabViewController.h"
 
+#import "FBTrainingPeriodTableViewController.h"
+
 @interface FBTrainingTabViewController ()
+
+@property (strong, nonatomic, nonnull) FBTrainingPeriodTableViewController *periodTableViewController;
 
 @end
 
@@ -17,7 +21,10 @@
 - (id)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"FBTraining",nil) imageName:@"FBTraining"];
+        [self setMainSectionTab:NSLocalizedString(@"FBTraining", nil) imageName:@"FBTraining"];
+        
+        self.periodTableViewController = [[FBTrainingPeriodTableViewController alloc] init];
+        [self addChildViewController:self.periodTableViewController];
     }
     return self;
 }
@@ -25,6 +32,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = PRIMARY_APP_COLOR;
+    [self.view addSubview:self.periodTableViewController.view];
 }
 
 - (void)didReceiveMemoryWarning {
