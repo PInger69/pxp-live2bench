@@ -12,6 +12,8 @@
 
 @interface FBTrainingClipTableViewController ()
 
+@property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *swipeGestureRecognizer;
+
 @end
 
 @implementation FBTrainingClipTableViewController
@@ -19,7 +21,10 @@
 - (instancetype)initWithTags:(nonnull NSArray *)tags {
     self = [super init];
     if (self) {
-        self.tags = [[NSMutableArray arrayWithArray:tags] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES]]];
+        self.tags = tags;
+        self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRecognized:)];
+        self.swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+        self.view.frame = CGRectZero;
     }
     return self;
 }
@@ -33,9 +38,15 @@
     
     //self.tableView.backgroundColor = [UIColor clearColor];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.allowsMultipleSelection = NO;
+    self.tableView.bounces = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    [self.view addGestureRecognizer:self.swipeGestureRecognizer];
     
     // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    self.clearsSelectionOnViewWillAppear = YES;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -46,9 +57,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    // disable rounded corners
-    self.view.superview.layer.cornerRadius = 0.0;
+- (void)swipeRecognized:(UISwipeGestureRecognizer *)recognizer {
+    [self.view removeFromSuperview];
 }
 
 #pragma mark - Table view data source
@@ -60,7 +70,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return self.tags.count;
+    NSInteger count = self.tags.count;
+    return count;
 }
 
 
@@ -70,12 +81,11 @@
     // Configure the cell...
     Tag *tag = self.tags[indexPath.row];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Clip %lf", tag.startTime];
+    cell.textLabel.text = [NSString stringWithFormat:@"Clip %f", tag.time];
     cell.backgroundColor = [UIColor clearColor];
-    
+    cell.backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
     return cell;
 }
-
 
 /*
 // Override to support conditional editing of the table view.

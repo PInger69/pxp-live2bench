@@ -21,14 +21,16 @@
 
 @property (strong, nonatomic, nonnull) NSMutableDictionary *periods;
 
-@property (strong, nonatomic, nullable) NSIndexPath *selectedIndexPath;
-@property (strong, nonatomic, nullable) UIPopoverController *activePopoverController;
+@property (strong, nonatomic, nonnull) FBTrainingClipTableViewController *clipTableViewController;
 
 @property (assign, nonatomic) void *context;
 
 @end
 
 @implementation FBTrainingPeriodTableViewController
+{
+    NSComparisonResult (^tagComparator)(Tag *a, Tag *b);
+}
 
 - (instancetype)init
 {
@@ -46,22 +48,16 @@
         self.rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
         [self.pullTabView addGestureRecognizer:self.rightSwipeGestureRecognizer];
         
+        self.tagNames = @[];
+        
         self.periods = [NSMutableDictionary dictionary];
         
-        for (NSUInteger i = 0; i < 24; i++) {
-            NSString *name = [NSString stringWithFormat:@"P%02lu", (unsigned long) i + 1];
-            self.periods[name] = [NSMutableSet set];
-           
-            // temporary random generation
-            for (NSUInteger j = 1; j < drand48() * 10; j++) {
-                Tag *tag = [[Tag alloc] init];
-                tag.name = name;
-                tag.startTime = drand48() * 60.0;
-                
-                [self.periods[tag.name] addObject:tag];
-            }
-            
-        }
+        self.clipTableViewController = [[FBTrainingClipTableViewController alloc] initWithTags:@[]];
+        [self addChildViewController:self.clipTableViewController];
+        
+        tagComparator = ^NSComparisonResult(Tag *a, Tag *b) {
+            return a.time > b.time ? NSOrderedDescending : a.time < b.time ? NSOrderedAscending : NSOrderedSame;
+        };
         
         _context = &_context;
         
@@ -82,11 +78,11 @@
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     self.tableView.frame = CGRectMake(0, 0, 160, self.view.frame.size.height);
-    self.tableView.rowHeight = self.tableView.frame.size.height / 24.0;
     self.tableView.allowsMultipleSelection = NO;
     self.tableView.bounces = NO;
-    self.tableView.pagingEnabled = NO;
-    self.tableView.layoutMargins = UIEdgeInsetsZero;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     
@@ -112,15 +108,78 @@
     
     if (context == _context) {
         self.tableView.frame = CGRectMake(0, 0, 160, self.view.frame.size.height);
-        self.tableView.rowHeight = self.tableView.frame.size.height / 24.0;
+        if (self.tagNames.count > 0) {
+            self.tableView.rowHeight = floor(self.tableView.frame.size.height / MAX(self.tagNames.count, 12));
+        }
         self.pullTabView.frame = CGRectMake(self.tableView.frame.size.width, self.view.frame.size.height / 2.0 - 64, 16, 128);
     }
     
 }
 
+- (void)setTableWidth:(CGFloat)tableWidth {
+    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, tableWidth, self.tableView.frame.size.height);
+}
+
+- (CGFloat)tableWidth {
+    return self.tableView.frame.size.width;
+}
+
+- (void)setTagNames:(nonnull NSArray *)tagNames {
+    _tagNames = tagNames;
+    
+    for (NSString *tagName in self.tagNames) {
+        self.periods[tagName] = [NSMutableArray array];
+    }
+    if (self.tagNames.count > 0) {
+        self.tableView.rowHeight = floor(self.tableView.frame.size.height / MAX(self.tagNames.count, 12));
+    }
+    [self.tableView reloadData];
+}
+
+- (void)setTags:(nonnull NSArray *)tags {
+    _tags = tags;
+    
+    // clear the tag sets
+    for (NSMutableArray *tagArray in [self.periods allValues]) {
+        [tagArray removeAllObjects];
+    }
+    
+    // add in the new tags
+    for (Tag *tag in self.tags) {
+        [self addTag:tag];
+    }
+    
+    [self.tableView reloadData];
+    [self.clipTableViewController.tableView reloadData];
+}
+
+- (void)addTag:(nonnull Tag *)tag {
+    // we need to add the tag such that the array remains sorted
+    NSMutableArray *tagArray = self.periods[tag.name];
+    if (tagArray) {
+        NSUInteger index = [tagArray indexOfObject:tag inSortedRange:(NSRange){0, tagArray.count} options:NSBinarySearchingInsertionIndex usingComparator:tagComparator];
+        [tagArray insertObject:tag atIndex:index];
+    }
+    [self.tableView reloadData];
+    [self.clipTableViewController.tableView reloadData];
+}
+
+- (void)removeTag:(nonnull Tag *)tag {
+    [self.periods[tag.name] removeObject:tag];
+    [self.tableView reloadData];
+    [self.clipTableViewController.tableView reloadData];
+}
+
 #pragma mark - gesture recognizers
 
 - (void)leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
+    
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    [self.tableView beginUpdates];
+    [self.tableView deselectRowAtIndexPath:selected animated:YES];
+    [self.tableView endUpdates];
+    [self tableView:self.tableView didDeselectRowAtIndexPath:selected];
+    
     [UIView beginAnimations:nil context:nil];
     
     [UIView setAnimationDuration:0.2];
@@ -157,65 +216,65 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return self.periods.count;
+    return self.tagNames.count;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ %ld", NSLocalizedString(@"Period", nil), (long) indexPath.row + 1];
+    NSString *name = self.tagNames[indexPath.row];
+    NSArray *tagsForPeriod = self.periods[name];
     
-    NSString *name = [NSString stringWithFormat:@"P%02ld", (long) indexPath.row + 1];
-    NSSet *tagsForPeriod = self.periods[name];
-    
+    cell.textLabel.text = name;
+    cell.backgroundColor = [UIColor clearColor];
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.accessoryType = tagsForPeriod.count > 0 ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
     
     return cell;
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSString *name = self.tagNames[indexPath.row];
+    NSArray *tagsForPeriod = self.periods[name];
+    
+    NSIndexPath *selected = [tableView indexPathForSelectedRow];
+    [tableView beginUpdates];
+    [tableView deselectRowAtIndexPath:selected animated:YES];
+    [tableView endUpdates];
+    [self tableView:tableView didDeselectRowAtIndexPath:selected];
+    
+    return tagsForPeriod.count > 0 ? indexPath : nil;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    self.selectedIndexPath = indexPath;
-    
-    NSString *name = [NSString stringWithFormat:@"P%02ld", (long) indexPath.row + 1];
-    NSSet *tagsForPeriod = self.periods[name];
+    NSString *name = self.tagNames[indexPath.row];
+    NSArray *tagsForPeriod = self.periods[name];
     
     if (tagsForPeriod.count > 0) {
-        FBTrainingClipTableViewController *clipTableViewController = [[FBTrainingClipTableViewController alloc] initWithTags:[tagsForPeriod allObjects]];
         
         CGFloat rowHeight = self.tableView.rowHeight;
-        clipTableViewController.tableView.rowHeight = rowHeight;
+        self.clipTableViewController.tableView.rowHeight = rowHeight;
         
-        NSInteger numTags = [clipTableViewController tableView:clipTableViewController.tableView numberOfRowsInSection:0];
+        NSInteger numTags = tagsForPeriod.count;
         CGFloat tableViewHeight = numTags * rowHeight;
         
-        self.activePopoverController = [[UIPopoverController alloc] initWithContentViewController:clipTableViewController];
+        CGFloat posY = rowHeight * indexPath.row;
+        posY = MAX(0, MIN(posY, self.tableView.frame.size.height - tableViewHeight));
         
-        self.activePopoverController.delegate = self;
-        self.activePopoverController.popoverContentSize = CGSizeMake(160, tableViewHeight);
-        self.activePopoverController.backgroundColor = [UIColor clearColor];
+        CGRect popoverRect = CGRectMake(self.tableView.frame.size.width, posY, self.tableView.frame.size.width, self.tableView.frame.size.height - posY + 1);
         
-        UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:indexPath];
+        self.clipTableViewController.tableView.frame = popoverRect;
+        self.clipTableViewController.tags = tagsForPeriod;
+        [self.clipTableViewController.tableView reloadData];
+        [self.view addSubview:self.clipTableViewController.view];
         
-        CGFloat posY = cell.frame.origin.y + 2.0 - rowHeight / 3.0 + tableViewHeight / 2.0;
-        posY = MIN(posY, self.tableView.bounds.size.height - tableViewHeight / 2.0 - 7.0);
-        
-        CGRect popoverRect = CGRectMake(cell.frame.origin.x + 160, posY, cell.frame.size.width, cell.frame.size.height);
-        
-        [self.activePopoverController presentPopoverFromRect:popoverRect inView:self.tableView permittedArrowDirections:0 animated:NO];
-        
-    } else {
-        [self.tableView beginUpdates];
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [self.tableView endUpdates];
-        [self tableView:self.tableView didDeselectRowAtIndexPath:indexPath];
     }
-    
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
-    self.selectedIndexPath = nil;
+    [self.clipTableViewController.view removeFromSuperview];
 }
 
 
@@ -252,22 +311,6 @@
  return YES;
  }
  */
-
-#pragma mark - UIPopoverControllerDelegate
-
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController {
-    [popoverController dismissPopoverAnimated:NO];
-    return YES;
-}
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    [self.tableView beginUpdates];
-    [self.tableView deselectRowAtIndexPath:self.selectedIndexPath animated:NO];
-    [self.tableView endUpdates];
-    [self tableView:self.tableView didDeselectRowAtIndexPath:self.selectedIndexPath];
-    
-    self.activePopoverController = nil;
-}
 
 #pragma mark - Gesture Recognizers
 
