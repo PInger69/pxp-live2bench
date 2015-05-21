@@ -1365,7 +1365,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 -(Float64)currentTimeInSeconds{
-    Float64 returnTime = [self.avPlayer currentTime].value / [self.avPlayer currentTime].timescale;
+    CMTimeScale timeScale = [self.avPlayer currentTime].timescale;
+    Float64 returnTime = timeScale != 0 ? [self.avPlayer currentTime].value / timeScale : 0;
     return returnTime;
 }
 
