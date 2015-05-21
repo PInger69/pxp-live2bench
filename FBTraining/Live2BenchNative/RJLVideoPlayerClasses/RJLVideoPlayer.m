@@ -104,6 +104,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame      = CGRectMake(500, 60, 400, 300);
         restoreAfterPauseRate = 1;
+        
+        self.zoomManager = [[VideoZoomManager alloc]init];
+        self.zoomManager.videoPlayer = self;
     }
     return self;
 }
@@ -114,8 +117,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     // every second, after 3 seconds fire if not reset
 
     self.playBackView           = [[RJLVideoPlayerPlaybackView alloc]initWithFrame:videoFrame];//CGRectMake(500, 60, 400, 300)
-    self.zoomManager = [[VideoZoomManager alloc]init];
-    self.zoomManager.videoPlayer = self;
     
     self.view                   = self.playBackView;
     self.view.backgroundColor   = [UIColor blackColor];
