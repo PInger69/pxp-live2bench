@@ -13,6 +13,7 @@
 #import "UserCenter.h"
 #import "EncoderClasses/EncoderManager.h"
 #import "RJLVideoPlayer.h"
+#import "EncoderClasses/EncoderProtocol.h"
 
 #define BOTTOM_BAR_HEIGHT 75
 
@@ -43,9 +44,22 @@
         self.recordButton = [[NCRecordButton alloc] init];
         self.timeLabel = [[UILabel alloc] init];
         
+        CGFloat playerHeight = (768 - 55 - BOTTOM_BAR_HEIGHT) / 2.0;
+        GLfloat playerWidth = playerHeight * (16.0 / 9.0);
+        
+        self.player1 = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(1024 - playerWidth, 55, playerWidth, playerHeight)];
+        self.player2 = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(1024 - playerWidth, 55 + playerHeight, playerWidth, playerHeight)];
+        
+        self.player1.zoomManager = nil;
+        self.player2.zoomManager = nil;
+        
+        [self addChildViewController:self.player1];
+        [self addChildViewController:self.player2];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagsReady:) name:NOTIF_TAGS_ARE_READY object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedsReady:) name:NOTIF_EVENT_FEEDS_READY object:nil];
     }
     return self;
 }
@@ -54,6 +68,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAGS_ARE_READY object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_EVENT_FEEDS_READY object:nil];
 }
 
 - (void)viewDidLoad {
@@ -79,19 +94,18 @@
     self.timeLabel.textAlignment = NSTextAlignmentRight;
     [self.bottomBarView addSubview:self.timeLabel];
     
-    CGFloat playerHeight = (self.view.frame.size.height - 55 - BOTTOM_BAR_HEIGHT) / 2.0;
-    GLfloat playerWidth = playerHeight * (16.0 / 9.0);
-    
-    self.player1 = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(self.view.frame.size.width - playerWidth, 55, playerWidth, playerHeight)];
-    self.player2 = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(self.view.frame.size.width - playerWidth, 55 + playerHeight, playerWidth, playerHeight)];
-    
-    [self addChildViewController:self.player1];
-    [self addChildViewController:self.player2];
-    
     [self.view addSubview:self.player1.view];
     [self.view addSubview:self.player2.view];
     
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    NSDictionary *feeds = [_appDel.encoderManager.primaryEncoder event].feeds;
+    Feed *feed = [[feeds allValues] firstObject];
     
+    NSLog(@"Player: %@", self.player1);
+    [self.player1 playFeed:feed];
+    [self.player2 playFeed:feed];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -133,6 +147,10 @@
     if (tag) {
         [self.periodTableViewController addTag:tag];
     }
+}
+
+- (void)feedsReady:(NSNotification *)note {
+    
 }
 
 #pragma mark - NCRecordButtonDelegate
