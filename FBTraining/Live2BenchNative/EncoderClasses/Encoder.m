@@ -160,6 +160,7 @@
         isAlive         = YES;
         _cameraCount    = 0;
         _status         = ENCODER_STATUS_INIT;
+        _justStarted    = true;
     }
     return self;
 }
@@ -620,7 +621,6 @@
 #pragma mark -  Master Commands
 -(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    
     NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%@",aTimeStamp],@"requesttime", nil];
     
     NSError *error;
@@ -640,7 +640,6 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = STOP_EVENT;
     encoderConnection.timeStamp             = aTimeStamp;
-    
     
     
 }
@@ -671,7 +670,7 @@
     
     [self buildEncoderRequest];
     
-    _justStarted = true;
+    _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
     
     NSString * homeTeam = [tData objectForKey:@"homeTeam"];
     NSString * awayTeam = [tData objectForKey:@"awayTeam"];
@@ -1075,7 +1074,10 @@
                         _liveEvent = anEvent;
                         [pool setObject:anEvent forKey:anEvent.name];
                         self.allEvents      = [pool copy];
-                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
+                        if (_justStarted && _status == ENCODER_STATUS_LIVE) {
+                            _justStarted = false;
+                            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
+                        }
                         
                     }else{
                         [pool setObject:anEvent forKey:anEvent.name];

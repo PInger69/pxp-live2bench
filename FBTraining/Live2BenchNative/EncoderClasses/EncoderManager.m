@@ -792,6 +792,7 @@ static void * builtContext          = &builtContext; // depricated?
             break;
         case ENCODER_STATUS_READY:
             self.hasLive = NO;
+            encoder.justStarted = true;
             break;
         default:
             break;

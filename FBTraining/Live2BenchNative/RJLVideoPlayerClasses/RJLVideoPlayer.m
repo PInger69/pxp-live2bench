@@ -74,7 +74,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(timeRequest:)          name:NOTIF_CURRENT_TIME_REQUEST object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
         
         
@@ -98,7 +97,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.isAlive = YES;
         // This listens to the app if it wants the player to do something
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
 
         commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
@@ -112,6 +110,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(void)viewDidLoad
 {
     // every second, after 3 seconds fire if not reset
+    
 
     self.playBackView           = [[RJLVideoPlayerPlaybackView alloc]initWithFrame:videoFrame];//CGRectMake(500, 60, 400, 300)
     self.zoomManager = [[VideoZoomManager alloc]init];
@@ -778,10 +777,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.avPlayer = nil;
     }
     
-    [self setPlayer:nil];
-    [self.playBackView setPlayer:nil];
+
+        [self setPlayer:nil];
+        [self.playBackView setPlayer:nil];
+        
+        self.zoomManager.enabled = NO;
     
-    self.zoomManager.enabled = NO;
+    
     
 
     
