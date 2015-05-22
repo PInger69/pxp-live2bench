@@ -1455,12 +1455,12 @@ static void * builtContext          = &builtContext; // depricated?
                 [temp addEntriesFromDictionary:curEvent.feeds];
                 [eventData addEntriesFromDictionary: curEvent.rawData];
                 _feeds = [temp mutableCopy];
-                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_FEEDS_READY object:nil];
             }
         }
     }
     _feeds = [temp mutableCopy];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_FEEDS_READY object:nil];
     
     if (_masterEncoder && [_masterEncoder.event.name isEqualToString:aCurrentEvent]) [eventData addEntriesFromDictionary: _masterEncoder.event.rawData];
     

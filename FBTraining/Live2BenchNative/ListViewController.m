@@ -90,6 +90,8 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        
         
         //        self.allTags = [[NSMutableArray alloc]init];
         //        self.tagsToDisplay = [[NSMutableArray alloc]init];
@@ -196,18 +198,6 @@ NSMutableArray *oldEventNames;
     
 }
 
-
-/*- (void)initializeOldEventNames
- {
- if (!oldEventNames){
- oldEventNames = [[NSMutableArray alloc] init];
- }
- //    NSArray *events = [[NSArray alloc] initWithContentsOfFile:[globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"EventsHid.plist"]];
- //    for (NSDictionary* event in events){
- //        [oldEventNames addObject:[event objectForKey:@"name"]];
- //    }
- }*/
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -274,43 +264,14 @@ NSMutableArray *oldEventNames;
     //    [swipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     //    [self.videoPlayer.view addGestureRecognizer:swipeGestureRecognizer];
     
+   componentFilter = [TestFilterViewController commonFilter];
     
     
 }
 
-//-(void)viewDidAppear:(BOOL)animated{
-//    [self.videoBarViewController.tagMarkerController cleanTagMarkers];
-//    [self.videoBarViewController.tagMarkerController createTagMarkers];
-//}
-
-//-(void)clipViewTagReceived:(NSNotification*)note
-//{
-//    if (note.object) {
-//        [self.tagsToDisplay addObject: note.object];
-//        [_tableViewController.tableData addObject:note.object];
-//        [_tableViewController reloadData];
-//        //[_collectionView reloadData];
-//    }
-//}
-
 -(void)viewWillAppear:(BOOL)animated{
     
-    //    [super viewWillAppear:animated];
-    //
-    //    [globals.VIDEO_PLAYER_LIVE2BENCH pause];
-    //
-    //    //will enter list view, start playing video
-    //    if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-    //
-    //        [videoPlayer play];
-    //
-    //        if (!videoPlayer.timeObserver) {
-    //            //NSLog(@"readd time observer");
-    //            [videoPlayer addPlayerItemTimeObserver];
-    //        }
-    //
-    //    }
-    
+
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){
@@ -327,6 +288,9 @@ NSMutableArray *oldEventNames;
         
     }}];
     
+    
+    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+    [_tableViewController reloadData];
     
     wasPlayingIndexPath = nil;
     
@@ -4494,6 +4458,18 @@ NSMutableArray *oldEventNames;
     }
     
     return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
+}
+
+- (void)liveEventStopped:(NSNotification *)note {
+    self.tagsToDisplay = nil;
+    _tableViewController.tableData = [NSMutableArray array];
+    [_tableViewController reloadData];
+    
+    selectedTag = nil;
+    
+    [commentingField clear];
+    commentingField.enabled             = NO;
+    [newVideoControlBar setTagName: nil];
 }
 
 @end

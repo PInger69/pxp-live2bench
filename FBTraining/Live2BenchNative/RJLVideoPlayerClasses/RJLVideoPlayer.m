@@ -102,6 +102,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame      = CGRectMake(500, 60, 400, 300);
         restoreAfterPauseRate = 1;
+        
+        self.zoomManager = [[VideoZoomManager alloc]init];
+        self.zoomManager.videoPlayer = self;
     }
     return self;
 }
@@ -113,8 +116,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
 
     self.playBackView           = [[RJLVideoPlayerPlaybackView alloc]initWithFrame:videoFrame];//CGRectMake(500, 60, 400, 300)
-    self.zoomManager = [[VideoZoomManager alloc]init];
-    self.zoomManager.videoPlayer = self;
     
     self.view                   = self.playBackView;
     self.view.backgroundColor   = [UIColor blackColor];
@@ -626,6 +627,17 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 
+
+-(void)playerItemDidReachEnd:(NSNotification *) notification {
+    // Will be called when AVPlayer finishes playing playerItem
+   
+    [self pause];
+    restoreAfterPauseRate = 1.0f;
+    self.videoControlBar.playButton.selected    = YES;
+}
+
+
+
 #pragma mark -
 #pragma mark Commands
 
@@ -669,7 +681,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(void)play{
     if (!_feed)return;
     [self.avPlayer play];
-    [freezeMonitor start];
+  [freezeMonitor start];
     if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
     self.status                                 = _status | RJLPS_Play;
     self.status                                 = _status & ~(RJLPS_Paused);
@@ -1236,10 +1248,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
     /* When the player item has played to its end time we'll toggle
      the movie controller Pause button to be the Play button */
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(playerItemDidReachEnd:)
-//                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-//                                               object:self.playerItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:self.playerItem];
     
     //Why????????????????????????No?????????
     seekToZeroBeforePlay = NO;
@@ -1355,7 +1367,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 -(Float64)currentTimeInSeconds{
-    Float64 returnTime = [self.avPlayer currentTime].value / [self.avPlayer currentTime].timescale;
+    CMTimeScale timeScale = [self.avPlayer currentTime].timescale;
+    Float64 returnTime = timeScale != 0 ? [self.avPlayer currentTime].value / timeScale : 0;
     return returnTime;
 }
 

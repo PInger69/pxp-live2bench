@@ -14,7 +14,9 @@
 
 @interface ClipDataContentDisplay : UIView
 @property (strong, nonatomic) RatingAndCommentingField    *ratingAndCommentingView;
+@property (nonatomic,assign) BOOL enable;
 
 
+-(void)displayClip:(Clip*)clip;
 
 @end
