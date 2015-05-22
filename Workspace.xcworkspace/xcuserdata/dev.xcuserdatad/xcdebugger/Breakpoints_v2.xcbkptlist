@@ -9,6 +9,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+=======
             filePath = "FBTraining/ARCalendarTableViewController.m"
             timestampString = "453228298.751648"
             startingColumnNumber = "9223372036854775807"
@@ -41,6 +43,7 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+>>>>>>> d7b134bc03687b8790de9fa188ca23c2985b4e6c
             filePath = "FBTraining/VideoCuttingTool.m"
             timestampString = "452790653.80334"
             startingColumnNumber = "9223372036854775807"
@@ -67,6 +70,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+=======
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
             timestampString = "453310809.49184"
             startingColumnNumber = "9223372036854775807"
@@ -115,28 +120,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+>>>>>>> d7b134bc03687b8790de9fa188ca23c2985b4e6c
             filePath = "FBTraining/Live2BenchNative/AppDelegate.m"
-            timestampString = "452803184.590822"
+            timestampString = "453839380.007085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "-logoutApp:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/AppDelegate.m"
-            timestampString = "452803185.652181"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
             landmarkName = "-applicationWillTerminate:"
             landmarkType = "5">
          </BreakpointContent>
@@ -147,6 +137,30 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/AppDelegate.m"
+            timestampString = "453839380.007085"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "-applicationWillTerminate:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+<<<<<<< HEAD
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+=======
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+>>>>>>> d7b134bc03687b8790de9fa188ca23c2985b4e6c
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            symbolName = "obj_exception_throw"
+            moduleName = "">
+=======
             filePath = "FBTraining/Live2BenchNative/AppDelegate.m"
             timestampString = "452803186.65384"
             startingColumnNumber = "9223372036854775807"
@@ -481,6 +495,7 @@
             endingLineNumber = "443"
             landmarkName = "-detectSwipe:"
             landmarkType = "5">
+>>>>>>> d7b134bc03687b8790de9fa188ca23c2985b4e6c
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -489,6 +504,15 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/SettingsViewController.m"
+            timestampString = "453998478.183678"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "717"
+            endingLineNumber = "717"
+            landmarkName = "-pickLeague:"
+=======
             filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
             timestampString = "453759044.149425"
             startingColumnNumber = "9223372036854775807"
@@ -496,6 +520,7 @@
             startingLineNumber = "819"
             endingLineNumber = "819"
             landmarkName = "-createAllFullScreenSubviews"
+>>>>>>> d7b134bc03687b8790de9fa188ca23c2985b4e6c
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -505,6 +530,15 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/SettingsViewController.m"
+            timestampString = "453998478.183678"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "712"
+            endingLineNumber = "712"
+            landmarkName = "-pickLeague:"
+=======
             filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
             timestampString = "453759044.149425"
             startingColumnNumber = "9223372036854775807"
@@ -832,6 +866,7 @@
             startingLineNumber = "523"
             endingLineNumber = "523"
             landmarkName = "-slideFilterBox"
+>>>>>>> d7b134bc03687b8790de9fa188ca23c2985b4e6c
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
