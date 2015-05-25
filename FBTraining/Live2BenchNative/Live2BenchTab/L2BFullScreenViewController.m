@@ -45,7 +45,7 @@
     self            = [super initWithVideoPlayer:videoPlayer];
     if (self){
         self.mode   = L2B_FULLSCREEN_MODE_DISABLE;
-        self.teleViewController = [[TeleViewController alloc] initWithController:self];
+        //self.teleViewController = [[TeleViewController alloc] initWithController:self];
     }
     return self;
 }
@@ -284,7 +284,7 @@
     
     switch (_mode) {
         case L2B_FULLSCREEN_MODE_DISABLE :
-            [self _revealThese:@[]];
+            [self _revealThese:liveElements];// should be @[]
             break;
         case L2B_FULLSCREEN_MODE_LIVE :
         case L2B_FULLSCREEN_MODE_EVENT:
@@ -328,7 +328,9 @@
 {
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SAVE_TELE object:nil];
     [self.player play];
-    [self.teleViewController saveTeles];
+    if (self.teleViewController){
+        [self.teleViewController saveTeles];
+    }
     [self setMode: L2B_FULLSCREEN_MODE_LIVE];
 }
 
@@ -337,16 +339,21 @@
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLEAR_TELE object:nil];
     [self setMode: L2B_FULLSCREEN_MODE_LIVE];
-    [self.teleViewController forceCloseTele];
+    if (self.teleViewController){
+        [self.teleViewController forceCloseTele];
+    }
     [self.player play];
 }
 
 -(void)teleButtonPressed{
     [self setMode: L2B_FULLSCREEN_MODE_TELE];
-    [self.player pause];
+
     //self.teleViewController = [[TeleViewController alloc] initWithController:self];
     //[self.teleViewController viewDidLoad];
-    [self.teleViewController startTelestration];
+    
+    if (self.teleViewController){
+        [self.teleViewController startTelestration];
+    }
     [self.view addSubview: self.saveTeleButton];
     [self.view addSubview: self.clearTeleButton];
 }

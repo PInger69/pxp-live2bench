@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "BorderButton.h"
 #import "TeleView.h"
+#import "PxpVideoPlayerProtocol.h"
+
 
 @class FullScreenViewController;
 @class TeleView;
+@protocol TeleVCProtocol;
 
 @interface TeleViewController : UIViewController
 {
@@ -42,7 +45,7 @@
 }
 
 //-(void)saveTelesCallback:(id)jsonArr;
-- (id)initWithController:(id)firstVC;
+- (id)initWithController:(UIViewController <PxpVideoPlayerProtocol>    *)aVideoPlayer;
 -(void)colorPicked:(id)sender;
 -(void) startTelestration;
 -(void) forceCloseTele;
@@ -51,13 +54,9 @@
 - (void)checkUndoState;
 
 @property (nonatomic,strong)CustomButton *teleButton;
-//@property (nonatomic,strong)Live2BenchViewController *l2bVC;
 @property (nonatomic, strong) FullScreenViewController *fullScreenViewController;
 @property (nonatomic,strong)TeleView *teleView;
 @property (nonatomic,strong)UIView *colourIndicator;
-//@property (nonatomic)CMTime pausedTime;
-//@property (nonatomic,strong)ListViewController *lvController;
-//@property (nonatomic,strong)BookmarkViewController *bmvController;
 @property (nonatomic,strong) UIButton *saveButton;
 @property (nonatomic,strong) UIButton *clearButton;
 @property (nonatomic,strong) UIButton *undoButton;
@@ -68,4 +67,22 @@
 @property (nonatomic,strong) UIImage *currentImage;
 //image view for display the screenshot image
 @property (nonatomic,strong) UIImageView *thumbImageView;
+
+@property (nonatomic, weak) id<TeleVCProtocol> delegate;
+//
 @end
+
+
+
+@protocol TeleVCProtocol <NSObject>
+@required
+
+
+@optional
+-(void)onOpenTeleView:(TeleViewController*)tvc;
+-(void)onCloseTeleView:(TeleViewController*)tvc;
+-(void)onSaveTeleView:(TeleViewController*)tvc tagData:(NSDictionary*)tagData;
+@end // end of delegate protocol
+
+
+

@@ -18,11 +18,11 @@
 #import "PopoverButton.h"
 #import "CustomTabBar.h"
 #import "PxpVideoPlayerProtocol.h"
+#import "TeleViewController.h"
 
 
 
-
-@interface Live2BenchViewController : CustomTabViewController <UIGestureRecognizerDelegate, UIAlertViewDelegate>
+@interface Live2BenchViewController : CustomTabViewController <UIGestureRecognizerDelegate, UIAlertViewDelegate, TeleVCProtocol>
 {
     NSString                                 * tagTimeWhenSwipe;                       //string of time when the tag button is swiped
     NSString                                 * _currentEventName;                      //string of current playing tag name

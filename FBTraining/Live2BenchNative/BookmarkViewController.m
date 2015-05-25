@@ -868,7 +868,6 @@ int viewWillAppearCalled;
 }
 
 
-
 -(void)removeAllFullScreenSubviews
 {
     

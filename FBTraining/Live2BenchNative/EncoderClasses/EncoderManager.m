@@ -923,7 +923,7 @@ static void * builtContext          = &builtContext; // depricated?
 
 
 /**
- *  <#Description#>
+ *  This method prepares the clip for download
  *
  *  @param note <#note description#>
  */
@@ -934,7 +934,6 @@ static void * builtContext          = &builtContext; // depricated?
     NSDictionary * theEventData = note.userInfo[@"data"];
     NSString     * eventHID     = theEventData[@"hid"];
     NSString     * source       = note.userInfo[@"source"];
-    
     NSString *encoderSource;
     if (theEventData[@"mp4_2"]) {
         encoderSource = theEventData[@"mp4_2"][source][@"hq"];
@@ -942,17 +941,44 @@ static void * builtContext          = &builtContext; // depricated?
         encoderSource = theEventData[@"mp4"];
     }
     
-    
     Event * theEvent = [self getEventByHID:eventHID];
     
-    NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
-    NSString * savedFileName   =  [encoderSource lastPathComponent];
+    
+    [self requestTagDataForEvent:theEvent.name onComplete:^(NSDictionary *all) {
+        
+        NSMutableDictionary * tagsBuilt = [[NSMutableDictionary alloc]init];
+        NSArray * keys = [all allKeys];
+        for (NSString * key in keys) {
+            
+            Tag * t = [[Tag alloc]initWithData:[all objectForKey:key]];
+            [tagsBuilt setObject:t forKey:key];
+            
+        }
+        
+        theEvent.tags = [tagsBuilt copy];
+        
+        NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+        NSString * savedFileName   =  [encoderSource lastPathComponent];
+        
+        
+        DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
+        dItemBlock(dli);
+        
+    }];
     
     
-    DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
-    dItemBlock(dli);
+    
+    
+    
+    
     
 }
+
+
+
+
+
+
 
 #pragma mark - Bonjour Methods
 // Services Methods     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

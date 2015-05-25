@@ -22,13 +22,10 @@
 @implementation TeleViewController{
     
     UIImage *teleThumbImage;
+    UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 }
 
-//@synthesize l2bVC=_l2bVC;
 @synthesize teleButton=_teleButton;
-//@synthesize pausedTime;
-//@synthesize lvController;
-//@synthesize bmvController;
 @synthesize offsetTime;
 @synthesize timeScale;
 @synthesize undoButton;
@@ -39,21 +36,12 @@ static NSString * const BOUNDRY = @"0xKhTmLbOuNdArY";
 static NSString * const FORM_FLE_INPUT = @"uploaded";
 
 
-- (id)initWithController:(id)viewController
+- (id)initWithController:(UIViewController <PxpVideoPlayerProtocol>    *)aVideoPlayer
 {
     self = [super init];
-//    if ([viewController isKindOfClass:[Live2BenchViewController class]]) {
-//        self.l2bVC=(Live2BenchViewController*)viewController;
-//    }else if([viewController isKindOfClass:[ListViewController class]]){
-//        lvController = (ListViewController*)viewController;
-//    }else if([viewController isKindOfClass:[BookmarkViewController class]]){
-//        bmvController = (BookmarkViewController*)viewController;
-//    }
-    
+
     if (self) {
-        self.fullScreenViewController = (FullScreenViewController *)viewController;
-        
-        // Custom initialization
+        videoPlayer = aVideoPlayer;
     }
 
     return self;
@@ -62,10 +50,6 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    
-//    if (!globals) {
-//        globals = [Globals instance];
-//    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forceCloseTele) name:@"Close Tele" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveTeles) name:@"Save Tele" object:nil];
@@ -85,11 +69,10 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     isStraight=FALSE;
     
     //initialise touch points
-    touchStart   = (CGPoint) { -1, -1 };
-    touchCurrent = (CGPoint) { -1, -1 };
-    
-    savedShapeStartpoint = CGPointMake(0, 0);
-    savedShapeEndpoint = CGPointMake(0, 0);
+    touchStart              = (CGPoint) { -1, -1 };
+    touchCurrent            = (CGPoint) { -1, -1 };
+    savedShapeStartpoint    = CGPointMake(0, 0);
+    savedShapeEndpoint      = CGPointMake(0, 0);
     
 //    globals.IS_TELE = TRUE;
 //    
@@ -151,13 +134,12 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 -(void)forceCloseTele
 {
     self.teleView.isBlank = YES;
-    //[self clearAll];
     [self.view removeFromSuperview];
     [self.teleView clearTelestration];
-    //self.teleView = nil;
-//    [self.l2bVC showFullScreenOverlayButtons];
-//    [self.view removeFromSuperview];
-// [self.l2bVC.videoPlayer play];
+  
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onCloseTeleView:)]) {
+        [self.delegate onCloseTeleView:self];
+    }
 }
 
 -(void)setupView
@@ -255,21 +237,6 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 //    }
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
-//    globals.IS_TELE=FALSE;
-//    if (globals.IS_IN_FIRST_VIEW) {
-//        [self.l2bVC.videoPlayer pause];
-//        [self.l2bVC.teleButton setHidden:FALSE];
-//    }else if(globals.IS_IN_LIST_VIEW){
-//        [lvController.videoPlayer pause];
-//        [lvController.teleButton setHidden:FALSE];
-//    }else if (globals.IS_IN_BOOKMARK_VIEW){
-//        [bmvController.videoPlayer pause];
-//        [bmvController.teleButton setHidden:FALSE];
-//    }
-
-}
 
 
 /*
@@ -299,7 +266,13 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     NSDictionary *dict = @{@"name":@"Telestration", @"time":[NSString stringWithFormat:@"%f", [self.fullScreenViewController.player currentTimeInSeconds] + 0.3], @"image": teleImage};
     PXPLog(@"The dict to create the tele image is %@", dict);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_TELE_TAG object:nil userInfo:dict];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_TELE_TAG object:nil userInfo:dict]; // MOVE TO ITS DELEGATE
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onSaveTeleView:tagData:)]) {
+        [self.delegate onSaveTeleView:self tagData:dict];
+    }
+    
+    
 //    if (globals.IS_IN_FIRST_VIEW) {
 //        [self.l2bVC.videoPlayer play];
 //        [self.l2bVC showFullScreenOverlayButtons];
@@ -731,33 +704,27 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 
 CGPoint midPoint(CGPoint p1, CGPoint p2)
 {
-    
     return CGPointMake((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5);
-    
 }
 
 - (void)didReceiveMemoryWarning
 {
      [super didReceiveMemoryWarning];
      [self.teleView didReceiveMemoryWarning];
-//    if (globals.IS_IN_FIRST_VIEW) {
-//        [self.l2bVC.teleButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-//    }else{
-//        [lvController.teleButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-//    }
-//    
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"There has been a low memory warning. Please try again." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-//    [alert show];
-
-    // Dispose of any resources that can be recreated.
 }
 
+
+
 -(void) startTelestration{
-    [self.fullScreenViewController.view addSubview: self.view];
-    //[self.fullScreenViewController.player.playBackView.videoLayer addSublayer: self.teleView.layer];
-    //CGRect teleViewframe = CGRectMake(0, 0, 1064, 680);
-    //[self.view setFrame: teleViewframe];
-    //NSLog(@"%@", NSStringFromCGRect(self.fullScreenViewController.player.playBackView.videoLayer.frame));
+  //  NSInteger vpIndex =     [self.fullScreenViewController.view.subviews indexOfObject: self.fullScreenViewController.player.view];
+    
+
+//    [self.fullScreenViewController.view insertSubview:self.view atIndex:vpIndex+1];
+    [videoPlayer.view addSubview:self.view];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onOpenTeleView:)]) {
+        [self.delegate onOpenTeleView:self];
+    }
+    
 }
 
 @end
