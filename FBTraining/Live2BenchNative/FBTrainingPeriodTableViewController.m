@@ -8,9 +8,6 @@
 
 #import "FBTrainingPeriodTableViewController.h"
 
-#import "Tag.h"
-#import "FBTrainingClipTableViewController.h"
-
 @interface FBTrainingPeriodTableViewController () <UITableViewDataSource, UITableViewDelegate,UIPopoverControllerDelegate>
 
 @property (strong, nonatomic, nonnull) UITableView *tableView;
@@ -114,6 +111,11 @@
         self.pullTabView.frame = CGRectMake(self.tableView.frame.size.width, self.view.frame.size.height / 2.0 - 64, 16, 128);
     }
     
+}
+
+- (void)setDelegate:(nullable id<FBTrainingTagControllerDelegate>)delegate {
+    _delegate = delegate;
+    self.clipTableViewController.delegate = delegate;
 }
 
 - (void)setTableWidth:(CGFloat)tableWidth {
@@ -254,6 +256,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSString *name = self.tagNames[indexPath.row];
+    
+    if (self.delegate) {
+        [self.delegate tagController:self didSelectTagNamed:name];
+    }
+    
     NSArray *tagsForPeriod = self.periods[name];
     
     if (tagsForPeriod.count > 0) {
