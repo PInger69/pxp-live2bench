@@ -24,7 +24,6 @@
 @synthesize mp4s        = _mp4s;
 @synthesize rawData     = _rawData;
 @synthesize deleted     = _deleted;
-@synthesize local       = _local;
 @synthesize live        = _live;
 @synthesize tags        = _tags;
 
@@ -64,9 +63,9 @@
     return self;
 }
 
-
-
-
+-(void)setTags:(NSMutableDictionary *)tags{
+    _tags = tags;
+}
 
 
 -(void)setDownloadedSources:(NSMutableArray *)downloadedSources{

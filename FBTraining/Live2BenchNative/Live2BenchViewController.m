@@ -24,6 +24,7 @@
 #import "CustomAlertView.h"
 #import "ReusableBottomViewController.h"
 #import "ListPopoverController.h"
+#import "EncoderClasses/EncoderProtocol.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -59,6 +60,7 @@
     
     UILabel                             *informationLabel;
     ListPopoverController               *_teamPick;
+    TeleViewController                  * telestration;
     //TemporaryButton
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
@@ -123,9 +125,6 @@ static void * eventContext      = &eventContext;
         [weakSelf createTagButtons];
     }];
     
-
-
-
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
@@ -374,7 +373,6 @@ static void * eventContext      = &eventContext;
     ReusableBottomViewController *bottomViewController = [[ReusableBottomViewController alloc] init];
     [self.view addSubview:bottomViewController.view];
     _theBottomViewController = bottomViewController;
-    
 
     //label to show current event title
     currentEventTitle                   = [[UILabel alloc] initWithFrame:CGRectMake(156.0f, 71.0f, MEDIA_PLAYER_WIDTH, 21.0f)];
@@ -387,22 +385,26 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:currentEventTitle];
     
     //create all the event tag buttons
-    [self createTagButtons];
+    //[self createTagButtons];
 
     __block Live2BenchViewController * weakSelf = self;
     tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
         [weakSelf createTagButtons];
+        _tagButtonController.fullScreenViewController = _fullscreenViewController;
     }];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserverForName:NOTIF_EVENT_FEEDS_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
         [self restartPlayer];
         [self createTagButtons];
+        _tagButtonController.fullScreenViewController = _fullscreenViewController;        
     }];
     
     
-    
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    telestration = [[TeleViewController alloc]initWithController:self.videoPlayer];
+    telestration.delegate = self;
+
     
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer:pinchGesture];
@@ -425,13 +427,12 @@ static void * eventContext      = &eventContext;
     //_videoBarViewController.tagMarkerController.arrayOfAllTags =
     [self.view addSubview:_videoBarViewController.view];
 
-
     _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
     [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
-    
+//    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
+    _fullscreenViewController.teleViewController =telestration;
 
     self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
     
@@ -498,6 +499,15 @@ static void * eventContext      = &eventContext;
 ////    [videoPlayer zoomIntoView: CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
 //}
 
+
+
+
+-(void)onOpenTeleView:(TeleViewController *)tvc
+{
+    [self.videoPlayer pause];
+    
+}
+
 /**
  *  This is run when the Main Encoder is removed
  *
@@ -507,6 +517,8 @@ static void * eventContext      = &eventContext;
 {
     if (_encoderManager.primaryEncoder != _encoderManager.masterEncoder) return;
     
+    
+
     if (_encoderManager.liveEventName == nil  && _encoderManager.currentEvent == nil){
         [self restartPlayer];
         CustomAlertView * alert = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"Encoder Status",nil) message:NSLocalizedString(@"Encoder connection lost",nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ok",nil) otherButtonTitles:nil, nil];

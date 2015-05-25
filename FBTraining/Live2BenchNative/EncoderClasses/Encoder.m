@@ -1,4 +1,4 @@
-//
+///
 //  Encoder.m
 //  Live2BenchNative
 //
@@ -30,7 +30,7 @@
 @property (nonatomic,strong)    NSNumber        * timeStamp;
 @property (nonatomic,strong)    NSMutableData   * cumulatedData;
 @property (nonatomic,strong)    NSString        * connectionType;
-@property (nonatomic,strong)    NSString        * extra;
+@property (nonatomic,strong)    NSDictionary    * extra;
 
 
 -(NSNumber*)timeStamp;
@@ -78,14 +78,14 @@
     return (NSString*)objc_getAssociatedObject(self,@selector(connectionType));
 }
 
--(void)setExtra:(NSString *)extra
+-(void)setExtra:(NSDictionary *)extra
 {
     objc_setAssociatedObject(self, @selector(extra), extra,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(NSString*)extra
+-(NSDictionary*)extra
 {
-    return (NSString*)objc_getAssociatedObject(self,@selector(extra));
+    return (NSDictionary*)objc_getAssociatedObject(self,@selector(extra));
 }
 
 @end
@@ -726,7 +726,7 @@
 
     NSString * connectionType   = connection.connectionType;
     NSData * finishedData       = connection.cumulatedData;
-    NSString * extra            = connection.extra;
+    NSDictionary * extra            = connection.extra;
     
     
     if ([connectionType isEqualToString: AUTHENTICATE]){
@@ -756,7 +756,7 @@
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
         //NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
         
-        [self eventTagsGetResponce:finishedData eventNameKey:extra];
+        [self eventTagsGetResponce:finishedData extraData:extra];
     }else if ([connectionType isEqualToString: DELETE_EVENT]){
         [self deleteEventResponse: finishedData];
     }
@@ -812,15 +812,15 @@
 -(void)authenticateResponse:(NSData *)data
 {
     
-    PXPLog(@"Encoder Authentication DISABLED!!!");
-    [self willChangeValueForKey:@"authenticated"];
-    _authenticated = YES;
-    PXPLog(@"Warning: JSON was malformed");
-    [self didChangeValueForKey:@"authenticated"];
-    isAuthenticate = YES;
-    return;
-    
-    
+//    PXPLog(@"Encoder Authentication DISABLED!!!");
+//    [self willChangeValueForKey:@"authenticated"];
+//    _authenticated = YES;
+//    PXPLog(@"Warning: JSON was malformed");
+//    [self didChangeValueForKey:@"authenticated"];
+//    isAuthenticate = YES;
+//    return;
+//    
+//    
     
     
     
@@ -954,9 +954,18 @@
     }
 }
 
--(void)eventTagsGetResponce:(NSData *)data eventNameKey:(NSString*)eventName
+-(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
+    
+    Event * tempEvent;
+    
+//    if ([dict objectForKey:@"event"]){
+//        tempEvent = (Event *)[dict objectForKey:@"event"];
+//    } else {
+        tempEvent = _event;
+//    }
+    
     
     if (results){
         NSDictionary    * tags = [results objectForKey:@"tags"];
@@ -971,7 +980,7 @@
                 
             }
             
-            _event.tags =tagsDictionary;
+            tempEvent.tags =tagsDictionary;
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
         } else  if (![[results objectForKey:@"success"]boolValue]) {
             PXPLog(@"Encoder Error!");
