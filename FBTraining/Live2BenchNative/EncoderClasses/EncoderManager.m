@@ -943,7 +943,6 @@ static void * builtContext          = &builtContext; // depricated?
         encoderSource = theEventData[@"mp4"];
     }
     
-    
     Event * theEvent = [self getEventByHID:eventHID];
     
     NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
