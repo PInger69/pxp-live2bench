@@ -393,18 +393,10 @@
 -(void)setEnabled:(BOOL)enabled
 {
     [self willChangeValueForKey:@"enabled"];
-    CGFloat     alpha;
-    if (enabled) {
-        alpha = 1.0f;
-    }
-    else if (!enabled)
-    {
-        alpha = 0.2f;
-    }
     _enabled = enabled;
 
     
-    //CGFloat     alpha       = (_enabled)?   1.0f:0.0f;
+    CGFloat     alpha       = (_enabled)?   1.0f:0.2f;
     BOOL        interEnable = (_enabled)?   TRUE:FALSE;
     
     for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
