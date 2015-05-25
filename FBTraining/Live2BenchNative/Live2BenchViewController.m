@@ -578,6 +578,7 @@ static void * eventContext      = &eventContext;
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
+    self.videoPlayer.mute = NO;
 
 }
 
@@ -586,6 +587,7 @@ static void * eventContext      = &eventContext;
     [CustomAlertView removeAll];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
+    self.videoPlayer.mute = YES;
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
