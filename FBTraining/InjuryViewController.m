@@ -202,7 +202,7 @@ static void * eventContext      = &eventContext;
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Injury", nil) imageName:@"live2BenchTab"];
-        self.teleViewController = [[TeleViewController alloc] initWithController:self];
+        //self.teleViewController = [[TeleViewController alloc] initWithController:self];
     }
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name:NOTIF_MASTER_HAS_LIVE object:nil];
