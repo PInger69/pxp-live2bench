@@ -15,6 +15,7 @@
 {
 
     NSArray                 * liveElements;
+    NSArray                 * eventElements;
     NSArray                 * clipElements;
     NSArray                 * teleElements;
     NSArray                 * demoElements;
@@ -77,14 +78,15 @@
     [self.view addSubview:_clearTeleButton];
     
     
-    
-    liveElements    = @[_seekForward, _seekBackward, _slomo, _teleButton];
+    eventElements   = @[_seekForward, _seekBackward, _slomo, _teleButton];
+    liveElements    = @[_seekForward, _seekBackward, _slomo, _teleButton,_liveButton];
     clipElements    = @[_seekForward, _seekBackward, _slomo, _teleButton,_liveButton,_tagEventName,_continuePlay,_startRangeModifierButton,_endRangeModifierButton];
     teleElements    = @[_saveTeleButton,_clearTeleButton];
     
     activeElements  = [@[]              arrayByAddingObjectsFromArray:liveElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:clipElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:teleElements];
+    activeElements  = [activeElements   arrayByAddingObjectsFromArray:eventElements];
     [self _revealThese: @[]];
     
     demoElements    = @[_seekForward, _seekBackward, _slomo,_liveButton];
@@ -287,8 +289,10 @@
             [self _revealThese:liveElements];// should be @[]
             break;
         case L2B_FULLSCREEN_MODE_LIVE :
-        case L2B_FULLSCREEN_MODE_EVENT:
             [self _revealThese:liveElements];
+            break;
+        case L2B_FULLSCREEN_MODE_EVENT:
+            [self _revealThese:eventElements];
             break;
         case L2B_FULLSCREEN_MODE_CLIP :
             [self _revealThese:clipElements];

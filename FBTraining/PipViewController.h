@@ -26,6 +26,7 @@ static void * isObservedContext2 = &isObservedContext2;
 @property (nonatomic,strong) NSString                       * context;
 @property (nonatomic,strong) MultiPip                       * multi;
 @property (nonatomic,strong) L2BVideoBarViewController      * videoControlBar;
+@property (assign, nonatomic) BOOL swapsOnSingleTap;
 
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer f:(FeedSwitchView *)f encoderManager:(EncoderManager*)encoderManager;

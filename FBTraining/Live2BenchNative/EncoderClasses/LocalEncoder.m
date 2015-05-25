@@ -623,6 +623,12 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
     }
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath]stringByAppendingPathExtension:@"plist"];
+    
+    NSMutableDictionary *alltags = [[NSMutableDictionary alloc]initWithCapacity:aEvent.tags.count];
+    for ( Tag *tag in aEvent.tags ){
+        [alltags setObject:tag.rawData forKey:tag.rawData[@"id"]];
+    }
+    [alltags writeToFile:plistNamePath atomically:YES];
     [aEvent.rawData writeToFile:plistNamePath atomically:YES];
     
     // make an instance of event in local

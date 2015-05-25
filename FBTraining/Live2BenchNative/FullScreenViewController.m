@@ -213,7 +213,7 @@
         // to true
         [self.view setHidden:NO];
         [self viewDidAppear:NO];
-        [self buildAddSubview: (UIViewController <PxpVideoPlayerProtocol> *) self.player];
+//        [self buildAddSubview: (UIViewController <PxpVideoPlayerProtocol> *) self.player];
         [self moveVideoToFullScreen:_animated];
 //        _player.isFullScreen = YES;
     }

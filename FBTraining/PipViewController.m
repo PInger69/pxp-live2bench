@@ -91,6 +91,7 @@ static void * vpFrameContext   = &vpFrameContext;
         syncTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(syncTimerMethod) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:syncTimer forMode:NSDefaultRunLoopMode];
         
+        self.swapsOnSingleTap = YES;
         
         // hides all added pips
         for (Pip * pip in self.pips) {
@@ -129,6 +130,7 @@ static void * vpFrameContext   = &vpFrameContext;
         syncTimer            = [NSTimer timerWithTimeInterval:inter target:self selector:@selector(syncTimerMethod) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:syncTimer forMode:NSDefaultRunLoopMode];
         
+        self.swapsOnSingleTap = YES;
         
         // hides all added pips
         for (Pip * pip in self.pips) {
@@ -335,21 +337,22 @@ static void * vpFrameContext   = &vpFrameContext;
 
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)sender {
-    if (sender.state == UIGestureRecognizerStateRecognized) {
-       
-        for (Pip * item in self.pips) {
-            item.selected = false;
+    if (self.swapsOnSingleTap) {
+        if (sender.state == UIGestureRecognizerStateRecognized) {
+            
+            for (Pip * item in self.pips) {
+                item.selected = false;
+            }
+            
+            _selectPip = (Pip *)sender.view;
+            _selectPip.selected = TRUE;
+            
+            [_selectPip.superview addSubview:_selectPip];
+            
         }
-        
-        _selectPip = (Pip *)sender.view;
-        _selectPip.selected = TRUE;
-        
-        [_selectPip.superview addSubview:_selectPip];
-
+        [self swapVideoPlayer:self.videoPlayer withPip:_selectPip];
+        [self.feedSwitchView swap];
     }
-    [self swapVideoPlayer:self.videoPlayer withPip:_selectPip];
-    [self.feedSwitchView swap];
-    
 }
 
 -(void)videoPlayerPlayTag:(NSNotification *)note

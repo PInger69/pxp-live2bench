@@ -136,7 +136,7 @@ SVSignalStatus signalStatus;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterFound:) name:NOTIF_ENCODER_MASTER_FOUND object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(askUserToPickATeam) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
-        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showInformation) name:NOTIF_LIVE_EVENT_FOUND object:nil];
         
         
         observerForLostMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -205,19 +205,20 @@ SVSignalStatus signalStatus;
     line1.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
     //    [scrollView addSubview:line1];
     
-    selectHomeContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetMaxY(line1.frame) + 70.0f, self.view.bounds.size.width, 55.0f)];
-    selectHomeContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    [scrollView addSubview:selectHomeContainer];
     
-    selectAwayContainer = [[UIView alloc] initWithFrame:CGRectMake(selectHomeContainer.frame.origin.x, CGRectGetMaxY(selectHomeContainer.frame), selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
-    selectAwayContainer.autoresizingMask = selectHomeContainer.autoresizingMask;
-    [scrollView addSubview:selectAwayContainer];
-    
-    selectLeagueContainer = [[UIView alloc] initWithFrame:CGRectMake(selectHomeContainer.frame.origin.x, CGRectGetMaxY(selectAwayContainer.frame), selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
-    selectLeagueContainer.autoresizingMask = selectHomeContainer.autoresizingMask;
+    selectLeagueContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetMaxY(line1.frame) + 70.0f, self.view.bounds.size.width, 55.0f)];
+    selectLeagueContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [scrollView addSubview:selectLeagueContainer];
     
-    firstEncButton = [[UIView alloc] initWithFrame:CGRectMake(80.0f, CGRectGetMaxY(selectLeagueContainer.frame) + 80.0f, 150.0f, 150.0f)];
+    selectHomeContainer = [[UIView alloc] initWithFrame:CGRectMake(selectLeagueContainer.frame.origin.x, CGRectGetMaxY(selectLeagueContainer.frame), selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
+    selectHomeContainer.autoresizingMask = selectLeagueContainer.autoresizingMask;
+    [scrollView addSubview:selectHomeContainer];
+    
+    selectAwayContainer = [[UIView alloc] initWithFrame:CGRectMake(selectLeagueContainer.frame.origin.x, CGRectGetMaxY(selectHomeContainer.frame), selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
+    selectAwayContainer.autoresizingMask = selectLeagueContainer.autoresizingMask;
+    [scrollView addSubview:selectAwayContainer];
+    
+    firstEncButton = [[UIView alloc] initWithFrame:CGRectMake(80.0f, CGRectGetMaxY(selectAwayContainer.frame) + 80.0f, 150.0f, 150.0f)];
     firstEncButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [scrollView addSubview:firstEncButton];
     
@@ -656,13 +657,12 @@ SVSignalStatus signalStatus;
     }
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
-        popButton.selected  = YES;
-        
+        //popButton.selected  = YES;
         [homeTeamPick populateWith:teamNames];
         __block SettingsViewController * weakSelf = self;
         [homeTeamPick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
-            popButton.selected = NO;
+            //popButton.selected = NO;
             weakSelf -> awayTeam = pick;
         }];
         
@@ -696,12 +696,12 @@ SVSignalStatus signalStatus;
     
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
-        popButton.selected = YES;
+        //popButton.selected = YES;
         [visitTeamPick populateWith:teamNames];
         __block SettingsViewController * weakSelf = self;
         [visitTeamPick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
-            popButton.selected = NO;
+            //popButton.selected = NO;
             weakSelf -> awayTeam = pick;
         }];
         
@@ -714,12 +714,12 @@ SVSignalStatus signalStatus;
     leagueNames = grabNames(encoderManager.masterEncoder.encoderLeagues);
     if (leagueNames) {
         UIButton *popButton = (UIButton*)sender;
-        popButton.selected = YES;
+        //popButton.selected = YES;
         __block SettingsViewController * weakSelf = self;
         [LeaguePick populateWith:leagueNames];
         [LeaguePick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
-            popButton.selected = NO;
+            //popButton.selected = NO;
             weakSelf -> league = pick;
             [weakSelf checkUserSelection];
         }];
@@ -744,55 +744,47 @@ SVSignalStatus signalStatus;
     NSString * homeTeamLeagueHid = ([filter1 count])?filter1[0][@"league"]:@"";
     NSString * awayTeamLeagueHid = ([filter2 count])?filter1[0][@"league"]:@"";
     
-    
-    // check the other buttons if the teams match or make them go to default
     if (![homeTeamLeagueHid isEqualToString:leagueHid]) {
         homeTeamPick.userPick = DEFAULT_HOME_TEAM;
-        [selectAwayTeam  setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
+        [selectHomeTeam  setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
     }
     
     
     if (![awayTeamLeagueHid isEqualToString:leagueHid]) {
         visitTeamPick.userPick = DEFAULT_AWAY_TEAM;
-        [selectHomeTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
-    }
+        [selectAwayTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
 
+    }
 }
 
 -(void)initialiseLayout
 {
     selectHomeTeam = [DropdownButton buttonWithType:UIButtonTypeCustom];
     
-    //[selectHomeTeam setFrame:CGRectMake(0.0f, 0.0f, selectAwayContainer.bounds.size.width, selectAwayContainer.bounds.size.height)];
     [selectHomeTeam setFrame:CGRectMake(0.0f, 0.0f, selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
     selectHomeTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectHomeTeam setTitle:homeTeam forState:UIControlStateNormal];
     [selectHomeTeam setTag:0];
     [selectHomeTeam addTarget:self action:@selector(pickHome:) forControlEvents:UIControlEventTouchUpInside];
-    //[selectHomeContainer addSubview:selectHomeTeam];
-    [selectAwayContainer addSubview:selectHomeTeam];
+    [selectHomeContainer addSubview:selectHomeTeam];
     
     selectAwayTeam = [DropdownButton buttonWithType:UIButtonTypeCustom];
     
-    //[selectAwayTeam setFrame:CGRectMake(0.0f, 0.0f, selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
     [selectAwayTeam setFrame:CGRectMake(0.0f, 0.0f, selectAwayContainer.bounds.size.width, selectAwayContainer.bounds.size.height)];
     selectAwayTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectAwayTeam setTitle:awayTeam forState:UIControlStateNormal];
     [selectAwayTeam setTag:1];
     [selectAwayTeam addTarget:self action:@selector(pickAway:) forControlEvents:UIControlEventTouchUpInside];
-    //[selectAwayContainer addSubview:selectAwayTeam];
-    [selectLeagueContainer addSubview:selectAwayTeam];
+    [selectAwayContainer addSubview:selectAwayTeam];
     
     selectLeague = [DropdownButton buttonWithType:UIButtonTypeCustom];
     
-    //[selectLeague setFrame:CGRectMake(0.0f, 0.0f, selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
     [selectLeague setFrame:CGRectMake(0.0f, 0.0f, selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
     selectLeague.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     [selectLeague setTitle:league forState:UIControlStateNormal];
     [selectLeague setTag:2];
     [selectLeague addTarget:self action:@selector(pickLeague:) forControlEvents:UIControlEventTouchUpInside];
-    //[selectLeagueContainer addSubview:selectLeague];
-    [selectHomeContainer addSubview:selectLeague];
+    [selectLeagueContainer addSubview:selectLeague];
     
     startButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
     
@@ -1065,6 +1057,14 @@ SVSignalStatus signalStatus;
 //    [askUser presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view animated:NO];
 }
 
+-(void) showInformation
+{
+    if (encoderManager.currentEventData) {
+        [selectHomeTeam setTitle:encoderManager.currentEventData[@"homeTeam"] forState:UIControlStateNormal];
+        [selectAwayTeam setTitle:encoderManager.currentEventData[@"visitTeam"] forState:UIControlStateNormal];
+        [selectLeague setTitle:encoderManager.currentEventData[@"league"] forState:UIControlStateNormal];
+    }
+}
 
 
 
@@ -1100,19 +1100,18 @@ SVSignalStatus signalStatus;
     [selectLeague setAlpha:     (state & LEAGUE_ENABLE)?1.0f:0.6f];;
     [selectLeague setUserInteractionEnabled:(state & LEAGUE_ENABLE)!=0];//
     
-    
-    if (encoderManager.currentEventData) {
+
+    /*if (encoderManager.currentEventData && state == EventButtonControlStatesLive) {
         [selectHomeTeam setTitle:encoderManager.currentEventData[@"homeTeam"] forState:UIControlStateNormal];
         [selectAwayTeam setTitle:encoderManager.currentEventData[@"visitTeam"] forState:UIControlStateNormal];
         [selectLeague setTitle:encoderManager.currentEventData[@"league"] forState:UIControlStateNormal];
-    }
+    }*/
     
     if (state == EventButtonControlStatesReady) {
         [selectHomeTeam setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
         [selectAwayTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
         [selectLeague setTitle:DEFAULT_LEAGUE forState:UIControlStateNormal];
     }
-    
 
 }
 

@@ -393,10 +393,18 @@
 -(void)setEnabled:(BOOL)enabled
 {
     [self willChangeValueForKey:@"enabled"];
+    CGFloat     alpha;
+    if (enabled) {
+        alpha = 1.0f;
+    }
+    else if (!enabled)
+    {
+        alpha = 0.2f;
+    }
     _enabled = enabled;
 
     
-    CGFloat     alpha       = (_enabled)?   1.0f:0.2f;
+    //CGFloat     alpha       = (_enabled)?   1.0f:0.0f;
     BOOL        interEnable = (_enabled)?   TRUE:FALSE;
     
     for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
@@ -417,7 +425,7 @@
 
 
 
-/*-(void)setHidden:(BOOL)hidden
+-(void)setHidden:(BOOL)hidden
 {
     [self willChangeValueForKey:@"hidden"];
     _enabled = hidden;
@@ -435,7 +443,7 @@
 {
     return _hidden;
 }
-*/
+
 
 -(void)setState:(NSString *)state
 {
@@ -485,9 +493,9 @@
 
     if (_fullScreenViewController.enable) {
         [_fullScreenViewController.view addSubview:_leftTray];
-//        [_leftTray setCenter:CGPointMake(_leftTray.center.x/2, _leftTray.center.y)];
+        //[_leftTray setCenter:CGPointMake(_leftTray.center.x/2, _leftTray.center.y)];
         [_fullScreenViewController.view addSubview:_rightTray];
-//        [_rightTray setCenter:CGPointMake(_rightTray.center.x/2, _rightTray.center.y)];
+        //[_rightTray setCenter:CGPointMake(_rightTray.center.x/2, _rightTray.center.y)];
     } else {
         [placementView addSubview:_leftTray];
         [placementView addSubview:_rightTray];

@@ -7,9 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Tag.h"
 
 @interface FBTrainingPeriodTableViewController : UIViewController
 
+@property (nonatomic) CGFloat tableWidth;
+
+@property (strong, nonatomic, nonnull) NSArray *tagNames;
+@property (strong, nonatomic, nonnull) NSArray *tags;
 @property (strong, nonatomic, nullable) UIImage *tabImage;
+
+- (void)addTag:(nonnull Tag *)tag;
+- (void)removeTag:(nonnull Tag *)tag;
 
 @end
