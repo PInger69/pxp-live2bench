@@ -8,10 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FBTrainingClipTableViewController : UITableViewController
+@interface FBTrainingClipTableViewController : UIViewController
 
+@property (strong, nonatomic, nonnull) UITableView *tableView;
+@property (readonly, nonatomic) BOOL presented;
 @property (strong, nonatomic, nonnull) NSArray *tags;
 
 - (nonnull instancetype)initWithTags:(nonnull NSArray *)tags;
+
+- (void)present:(BOOL)animated;
+- (void)dismiss:(BOOL)animated;
 
 @end

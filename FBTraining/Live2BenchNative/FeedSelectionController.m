@@ -1,72 +1,80 @@
 //
-//  FBTrainingClipTableViewController.m
+//  FeedSelectionTableViewController.m
 //  Live2BenchNative
 //
-//  Created by Nico Cvitak on 2015-05-20.
+//  Created by Nico Cvitak on 2015-05-22.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "FBTrainingClipTableViewController.h"
+#import "FeedSelectionController.h"
+#import "Feed.h"
 
-#import "Tag.h"
+@interface FeedSelectionController () <UITableViewDataSource, UITableViewDelegate>
 
-@interface FBTrainingClipTableViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
+@property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *rightSwipeGestureRecognizer;
 
-@property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *swipeGestureRecognizer;
+@property (strong, nonatomic, nonnull) UITableView *tableView;
+@property (assign, nonatomic) BOOL *isPresented;
 
 @end
 
-@implementation FBTrainingClipTableViewController
+@implementation FeedSelectionController
 {
     void *_context;
 }
 
-- (instancetype)initWithTags:(nonnull NSArray *)tags {
+- (instancetype)initWithFeeds:(nonnull NSArray *)feeds
+{
     self = [super init];
     if (self) {
+        self.view.clipsToBounds = YES;
+        
+        self.feeds = feeds;
+        
+        self.leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeGestureRecognized:)];
+        self.rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeGestureRecognized:)];
+        
+        self.leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+        self.rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        
+        [self.view addGestureRecognizer:self.leftSwipeGestureRecognizer];
+        [self.view addGestureRecognizer:self.rightSwipeGestureRecognizer];
+        
         self.tableView = [[UITableView alloc] init];
+        self.tableView.delegate = self;
+        self.tableView.dataSource = self;
+        self.tableView.backgroundColor = [UIColor clearColor];
+        self.tableView.backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+        self.tableView.bounces = NO;
         
-        self.tags = tags;
+        self.isPresented = NO;
         
-        self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRecognized:)];
-        self.swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-        self.view.frame = CGRectZero;
-        
-        _presented = YES;
+        [self.view addSubview:self.tableView];
         
         _context = &_context;
         
         [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:_context];
+        
+        [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     }
     return self;
 }
 
-- (instancetype)init {
-    return [self initWithTags:@[]];
+- (instancetype)init
+{
+    return [self initWithFeeds:@[]];
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     [self.view removeObserver:self forKeyPath:@"frame" context:_context];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.clipsToBounds = YES;
-    
-    self.tableView.backgroundColor = [UIColor clearColor];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
-    self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.allowsMultipleSelection = NO;
-    self.tableView.bounces = NO;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    
-    [self.tableView addGestureRecognizer:self.swipeGestureRecognizer];
-    
-    [self.view addSubview:self.tableView];
-    
+    self.tableView.frame = self.view.bounds;
     // Uncomment the following line to preserve selection between presentations.
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -82,10 +90,10 @@
 {
     if (context == _context) {
         
-        if (self.presented) {
-            self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        if (self.isPresented) {
+            self.tableView.frame = self.view.bounds;
         } else {
-            self.tableView.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+            self.tableView.frame = CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
         }
         
     } else {
@@ -93,15 +101,22 @@
     }
 }
 
-- (void)swipeRecognized:(UISwipeGestureRecognizer *)recognizer {
-    [self dismiss:YES];
-    //[self.view removeFromSuperview];
+- (void)setFeeds:(nonnull NSArray *)feeds {
+    _feeds = feeds;
+    self.tableView.rowHeight = self.tableView.frame.size.height / MAX(self.feeds.count, 1);
+    [self.tableView reloadData];
 }
 
-#pragma mark - Hide / Show
+- (void)leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
+    [self present:YES];
+}
+
+- (void)rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
+    [self dismiss:YES];
+}
 
 - (void)present:(BOOL)animated {
-    if (!self.presented) {
+    if (!self.isPresented) {
         
         if (animated) {
             [UIView beginAnimations:nil context:nil];
@@ -113,27 +128,28 @@
         if (animated) {
             [UIView commitAnimations];
         }
-        
-        _presented = YES;
+        self.isPresented = YES;
     }
+     
 }
 
 - (void)dismiss:(BOOL)animated {
-    if (self.presented) {
-        
+    
+    if (self.isPresented) {
         if (animated) {
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration:0.2];
         }
         
-        self.tableView.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+        self.tableView.frame = CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
         
         if (animated) {
             [UIView commitAnimations];
         }
         
-        _presented = NO;
+        self.isPresented = NO;
     }
+    
 }
 
 #pragma mark - Table view data source
@@ -145,21 +161,30 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    NSInteger count = self.tags.count;
-    return count;
+    return self.feeds.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
     
-    // Configure the cell...
-    Tag *tag = self.tags[indexPath.row];
+    Feed *feed = self.feeds[indexPath.row];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Clip %f", tag.time];
+    cell.textLabel.text = feed.sourceName;
+    cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
     cell.backgroundColor = [UIColor clearColor];
-    cell.backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+    // Configure the cell...
+    
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.delegate) {
+        [self.delegate feedSelectionController:self didSelectFeed:self.feeds[indexPath.row]];
+    }
+    [tableView beginUpdates];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView endUpdates];
 }
 
 /*

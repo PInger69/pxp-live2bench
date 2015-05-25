@@ -38,7 +38,7 @@
     if (self) {
         
         self.tableView = [[UITableView alloc] init];
-        self.pullTabView = [[UIView alloc] init];
+        self.pullTabView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
         
         self.leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeGestureRecognized:)];
         self.leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -87,9 +87,9 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     
     self.pullTabView.frame = CGRectMake(self.tableView.frame.size.width, self.view.frame.size.height / 2.0 - 64, 16, 128);
-    self.pullTabView.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.75];
     self.pullTabView.alpha = 0.0;
     
+    [self.view addSubview:self.clipTableViewController.view];
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.pullTabView];
     
@@ -174,21 +174,17 @@
 
 - (void)leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
     
-    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
-    [self.tableView beginUpdates];
-    [self.tableView deselectRowAtIndexPath:selected animated:YES];
-    [self.tableView endUpdates];
-    [self tableView:self.tableView didDeselectRowAtIndexPath:selected];
+    [self.clipTableViewController dismiss:YES];
     
     [UIView beginAnimations:nil context:nil];
     
     [UIView setAnimationDuration:0.2];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
     self.tableView.frame = CGRectMake(-self.tableView.frame.size.width, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.tableView.frame.size.height);
+    self.clipTableViewController.view.frame = CGRectMake(self.clipTableViewController.view.frame.origin.x - self.tableView.frame.size.width, self.clipTableViewController.view.frame.origin.y, self.clipTableViewController.view.frame.size.width, self.clipTableViewController.view.frame.size.height);
     
     self.pullTabView.alpha = 1.0;
     self.pullTabView.frame = CGRectMake(0, self.pullTabView.frame.origin.y, self.pullTabView.frame.size.width, self.pullTabView.frame.size.height);
-    
     
     [UIView commitAnimations];
 }
@@ -200,6 +196,8 @@
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     
     self.tableView.frame = CGRectMake(0, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.tableView.frame.size.height);
+    
+    self.clipTableViewController.view.frame = CGRectMake(self.clipTableViewController.view.frame.origin.x + self.tableView.frame.size.width, self.clipTableViewController.view.frame.origin.y, self.clipTableViewController.view.frame.size.width, self.clipTableViewController.view.frame.size.height);
     
     self.pullTabView.alpha = 0.0;
     self.pullTabView.frame = CGRectMake(self.tableView.frame.size.width, self.pullTabView.frame.origin.y, self.pullTabView.frame.size.width, self.pullTabView.frame.size.height);
@@ -236,15 +234,21 @@
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSString *name = self.tagNames[indexPath.row];
-    NSArray *tagsForPeriod = self.periods[name];
+    
+    if ([name isEqualToString:@"--"]) {
+        return nil;
+    }
     
     NSIndexPath *selected = [tableView indexPathForSelectedRow];
-    [tableView beginUpdates];
-    [tableView deselectRowAtIndexPath:selected animated:YES];
-    [tableView endUpdates];
-    [self tableView:tableView didDeselectRowAtIndexPath:selected];
     
-    return tagsForPeriod.count > 0 ? indexPath : nil;
+    if (![selected isEqual:indexPath]) {
+        [tableView beginUpdates];
+        [tableView deselectRowAtIndexPath:selected animated:YES];
+        [tableView endUpdates];
+        [self tableView:tableView didDeselectRowAtIndexPath:selected];
+    }
+    
+    return ![selected isEqual:indexPath] || !self.clipTableViewController.presented ? indexPath : nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -265,16 +269,15 @@
         
         CGRect popoverRect = CGRectMake(self.tableView.frame.size.width, posY, self.tableView.frame.size.width, self.tableView.frame.size.height - posY + 1);
         
-        self.clipTableViewController.tableView.frame = popoverRect;
+        self.clipTableViewController.view.frame = popoverRect;
         self.clipTableViewController.tags = tagsForPeriod;
         [self.clipTableViewController.tableView reloadData];
-        [self.view addSubview:self.clipTableViewController.view];
-        
+        [self.clipTableViewController present:YES];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.clipTableViewController.view removeFromSuperview];
+    [self.clipTableViewController dismiss:YES];
 }
 
 
