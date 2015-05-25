@@ -21,12 +21,20 @@
 
 #define BOTTOM_BAR_HEIGHT 70
 #define PLAYHEAD_HEIGHT 44
+#define PINCH_VELOCITY 1
 
 @interface FBTrainingTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, FBTrainingTagControllerDelegate>
 
 @property (strong, nonatomic, nonnull) FBTrainingPeriodTableViewController *periodTableViewController;
-@property (strong, nonatomic, nonnull) RJLVideoPlayer *mainPlayer;
+
+@property (strong, nonatomic, nonnull) UIViewController<PxpVideoPlayerProtocol> *currentPlayer;
+
+@property (strong, nonatomic, nonnull) UIViewController<PxpVideoPlayerProtocol> *splitPlayer;
 @property (strong, nonatomic, nonnull) PipViewController *pipViewController;
+
+@property (strong, nonatomic, nonnull) UIViewController<PxpVideoPlayerProtocol> *fullscreenPlayer;
+
+@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *pinchGestureRecognizer;
 
 @property (strong, nonatomic, nonnull) UIView *bottomBarView;
 @property (strong, nonatomic, nonnull) Pip *pipView;
@@ -45,6 +53,9 @@
 
 @property (strong, nonatomic, nullable) NSString *activeTagName;
 @property (assign, nonatomic) NSTimeInterval startTime;
+
+@property (assign, nonatomic) CGRect fullscreenInitialRect;
+@property (assign, nonatomic) BOOL isFullscreen;
 
 @end
 
@@ -68,18 +79,23 @@
         CGFloat playerHeight = (768 - 55 - BOTTOM_BAR_HEIGHT) / 2.0;
         GLfloat playerWidth = playerHeight * (16.0 / 9.0);
         
-        self.mainPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
-        self.mainPlayer.zoomManager = nil;
+        self.splitPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
+        self.fullscreenPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT)];
+        self.fullscreenPlayer.view.frame = CGRectZero;
+        self.fullscreenPlayer.view.hidden = YES;
+        
+        self.currentPlayer = self.splitPlayer;
         
         self.pipView = [[Pip alloc] initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
         self.pipView.layer.borderWidth = 0.0;
         
-        self.pipViewController = [[PipViewController alloc] initWithVideoPlayer:self.mainPlayer f:nil encoderManager:_appDel.encoderManager];
+        self.pipViewController = [[PipViewController alloc] initWithVideoPlayer:self.splitPlayer f:nil encoderManager:_appDel.encoderManager];
         self.pipViewController.swapsOnSingleTap = NO;
         
         [self addChildViewController:self.periodTableViewController];
-        [self addChildViewController:self.mainPlayer];
+        [self addChildViewController:self.splitPlayer];
         [self addChildViewController:self.pipViewController];
+        [self addChildViewController:self.fullscreenPlayer];
         
         self.feeds = @[];
         self.pipFeedSelectionController = [[FeedSelectionController alloc] initWithFeeds:self.feeds];
@@ -90,6 +106,8 @@
         
         [self addChildViewController:self.pipFeedSelectionController];
         [self addChildViewController:self.playerFeedSelectionController];
+        
+        self.pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGestureRecognized:)];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagsReady:) name:NOTIF_TAGS_ARE_READY object:nil];
@@ -113,43 +131,42 @@
     // Do any additional setup after loading the view.
     
     UIView *pipContainer = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - self.pipView.frame.size.width, 55, self.pipView.frame.size.width, self.pipView.frame.size.height)];
-    UIView *playerContainer = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - self.mainPlayer.view.frame.size.width, 55 + pipContainer.frame.size.height, self.mainPlayer.view.frame.size.width, self.mainPlayer.view.frame.size.height)];
+    UIView *playerContainer = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - self.splitPlayer.view.frame.size.width, 55 + pipContainer.frame.size.height, self.splitPlayer.view.frame.size.width, self.splitPlayer.view.frame.size.height)];
     
-    self.periodTableViewController.view.frame = CGRectMake(0, 55, self.view.bounds.size.width, self.view.bounds.size.height - 55 - BOTTOM_BAR_HEIGHT);
-    [self.view addSubview:self.periodTableViewController.view];
+    self.periodTableViewController.view.frame = CGRectMake(0, 55, 320, 768 - 55 - BOTTOM_BAR_HEIGHT - PLAYHEAD_HEIGHT);
     
-    self.bottomBarView.frame = CGRectMake(0, self.view.bounds.size.height - BOTTOM_BAR_HEIGHT, self.view.bounds.size.width, BOTTOM_BAR_HEIGHT);
+    self.bottomBarView.frame = CGRectMake(0, self.view.bounds.size.height - BOTTOM_BAR_HEIGHT - PLAYHEAD_HEIGHT, self.view.bounds.size.width, BOTTOM_BAR_HEIGHT + PLAYHEAD_HEIGHT);
     self.bottomBarView.backgroundColor = [UIColor blackColor];
     
-    self.recordButton.frame = CGRectMake(self.bottomBarView.bounds.size.width - self.bottomBarView.bounds.size.height, 0, self.bottomBarView.bounds.size.height, self.bottomBarView.bounds.size.height);
+    self.recordButton.frame = CGRectMake(self.bottomBarView.bounds.size.width - BOTTOM_BAR_HEIGHT, PLAYHEAD_HEIGHT, BOTTOM_BAR_HEIGHT, BOTTOM_BAR_HEIGHT);
     self.recordButton.displaysTime = NO;
     self.recordButton.delegate = self;
     [self.bottomBarView addSubview:self.recordButton];
     
-    self.timeLabel.frame = CGRectMake(self.bottomBarView.center.x - 150, 0, 300, self.bottomBarView.bounds.size.height);
+    self.timeLabel.frame = CGRectMake(self.bottomBarView.center.x - 150, PLAYHEAD_HEIGHT, 300, BOTTOM_BAR_HEIGHT);
     self.timeLabel.textColor = [UIColor whiteColor];
     self.timeLabel.font = [UIFont systemFontOfSize:64];
     self.timeLabel.text = @"00:00:00";
     self.timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.bottomBarView addSubview:self.timeLabel];
     
-    self.activeTagLabel.frame = CGRectMake(15, 0, 135, self.bottomBarView.bounds.size.height);
+    self.activeTagLabel.frame = CGRectMake(15, PLAYHEAD_HEIGHT, 135, BOTTOM_BAR_HEIGHT);
     self.activeTagLabel.textColor = PRIMARY_APP_COLOR;
     self.activeTagLabel.font = [UIFont systemFontOfSize:20];
     self.activeTagLabel.text = @"";
     self.activeTagLabel.textAlignment = NSTextAlignmentLeft;
     [self.bottomBarView addSubview:self.activeTagLabel];
     
-    self.liveButton = [[LiveButton alloc] initWithFrame:CGRectMake(self.bottomBarView.bounds.size.width - 370, self.bottomBarView.bounds.size.height * 0.5 - 15, 130, 35)];
+    self.liveButton = [[LiveButton alloc] initWithFrame:CGRectMake(self.bottomBarView.bounds.size.width - 370, BOTTOM_BAR_HEIGHT * 0.5 - 15 + PLAYHEAD_HEIGHT, 130, 35)];
     [self.liveButton addTarget:self action:@selector(liveButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBarView addSubview:self.liveButton];
     
-    self.slomoButton = [[Slomo alloc] initWithFrame:CGRectMake(230, 0, BOTTOM_BAR_HEIGHT, BOTTOM_BAR_HEIGHT)];
+    self.slomoButton = [[Slomo alloc] initWithFrame:CGRectMake(230, PLAYHEAD_HEIGHT, BOTTOM_BAR_HEIGHT, BOTTOM_BAR_HEIGHT)];
     [self.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBarView addSubview:self.slomoButton];
     
-    CGPoint forwardSeekPoint = [self.view convertPoint:CGPointMake(self.bottomBarView.bounds.size.width - 160 - 70, 0) fromView:self.bottomBarView];
-    CGPoint backSeekPoint = [self.view convertPoint:CGPointMake(160, 0) fromView:self.bottomBarView];
+    CGPoint forwardSeekPoint = [self.view convertPoint:CGPointMake(self.bottomBarView.bounds.size.width - 160 - 70, PLAYHEAD_HEIGHT) fromView:self.bottomBarView];
+    CGPoint backSeekPoint = [self.view convertPoint:CGPointMake(160, PLAYHEAD_HEIGHT) fromView:self.bottomBarView];
     
     
     self.forwardSeekButton = [SeekButton makeFullScreenForwardAt:forwardSeekPoint];
@@ -160,11 +177,16 @@
     [self.pipViewController addPip:self.pipView];
     
     [pipContainer addSubview:self.pipView];
-    [playerContainer addSubview:self.mainPlayer.view];
+    [playerContainer addSubview:self.splitPlayer.view];
     
+    [self.view addSubview:self.bottomBarView];
     [self.view addSubview:pipContainer];
     [self.view addSubview:playerContainer];
-    [self.view addSubview:self.bottomBarView];
+    
+    [self.view addSubview:self.fullscreenPlayer.view];
+    
+    [self.view addSubview:self.periodTableViewController.view];
+    
     [self.view addSubview:self.forwardSeekButton];
     [self.view addSubview:self.backSeekButton];
     
@@ -173,6 +195,11 @@
     
     [pipContainer addSubview:self.pipFeedSelectionController.view];
     [playerContainer addSubview:self.playerFeedSelectionController.view];
+    
+    [self.view addGestureRecognizer:self.pinchGestureRecognizer];
+    
+    self.pipView.muted = YES;
+    self.fullscreenPlayer.mute = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -182,13 +209,23 @@
     self.pipFeedSelectionController.feeds = self.feeds;
     self.playerFeedSelectionController.feeds = self.feeds;
     
-    [self.mainPlayer playFeed:self.feeds.count > 0 ? self.feeds[0] : nil];
-    [self.pipView playWithFeed:self.feeds.count > 1 ? self.feeds[1] : self.mainPlayer.feed];
+    [self setFullscreen:NO animated:NO rect:CGRectZero];
+    
+    [self.splitPlayer playFeed:self.feeds.count > 0 ? self.feeds[0] : nil];
+    [self.pipView playWithFeed:self.feeds.count > 1 ? self.feeds[1] : self.splitPlayer.feed];
     [self.pipViewController syncToPlayer];
     
-    self.mainPlayer.mute = YES;
+    self.splitPlayer.mute = NO;
     
     [self.liveButton isActive:event.live];
+    
+    // tell other players to STFU and hope they will
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{ @"command":[NSNumber numberWithInt:VideoPlayerCommandMute]}];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    // we're nice and mute when no one is listening
+    self.currentPlayer.mute = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -245,19 +282,111 @@
     self.activeTagLabel.text = activeTagName != nil ? activeTagName : @"";
 }
 
+- (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated rect:(CGRect)rect {
+    
+    if (fullscreen && !self.isFullscreen) {
+        
+        self.fullscreenPlayer.view.frame = rect;
+        self.fullscreenPlayer.view.hidden = NO;
+        self.splitPlayer.mute = YES;
+        self.fullscreenPlayer.mute = NO;
+        
+        if (animated) {
+            
+            [UIView animateWithDuration:1.0
+                             animations:^() {
+                                 self.fullscreenPlayer.view.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+                             }
+                             completion:^(BOOL finished) {
+                                 self.pipView.hidden = YES;
+                                 self.splitPlayer.view.hidden = YES;
+                             }];
+        } else {
+            self.fullscreenPlayer.view.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+            self.pipView.hidden = YES;
+            self.splitPlayer.view.hidden = YES;
+        }
+        
+        self.currentPlayer = self.fullscreenPlayer;
+        self.isFullscreen = YES;
+        
+    } else if (!fullscreen && self.isFullscreen) {
+        
+        self.pipView.hidden = NO;
+        self.splitPlayer.view.hidden = NO;
+        self.splitPlayer.mute = NO;
+        self.fullscreenPlayer.mute = YES;
+        
+        if (animated) {
+            
+            [UIView animateWithDuration:1.0
+                             animations:^() {
+                                 self.fullscreenPlayer.view.frame = rect;
+                             }
+                             completion:^(BOOL finished) {
+                                 self.fullscreenPlayer.view.hidden = YES;
+                             }];
+        } else {
+            self.fullscreenPlayer.view.frame = rect;
+            self.fullscreenPlayer.view.hidden = YES;
+        }
+        
+        self.currentPlayer = self.splitPlayer;
+        self.isFullscreen = NO;
+    }
+    
+    
+}
+
+#pragma mark - Gesture Recognizers
+
+- (void)pinchGestureRecognized:(UIPinchGestureRecognizer *)recognizer {
+    if (recognizer.velocity > PINCH_VELOCITY || recognizer.velocity < -PINCH_VELOCITY) {
+        
+        if (!self.pipView.hidden && recognizer.velocity > 0 && CGRectContainsPoint(self.pipView.bounds, [recognizer locationInView:self.pipView])) {
+            
+            [self.fullscreenPlayer playFeed:self.pipView.feed];
+            [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
+            
+            self.fullscreenInitialRect = [self.view convertRect:self.pipView.bounds fromView:self.pipView];
+            [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
+            
+        } else if (!self.splitPlayer.view.hidden && recognizer.velocity > 0 && CGRectContainsPoint(self.splitPlayer.view.bounds, [recognizer locationInView:self.splitPlayer.view])) {
+            
+            [self.fullscreenPlayer playFeed:self.splitPlayer.feed];
+            [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
+            
+            self.fullscreenInitialRect = [self.view convertRect:self.splitPlayer.view.bounds fromView:self.splitPlayer.view];
+            [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
+            
+        } else if (!self.fullscreenPlayer.view.hidden && recognizer.velocity < 0 && CGRectContainsPoint(self.fullscreenPlayer.view.bounds, [recognizer locationInView:self.fullscreenPlayer.view])) {
+            
+            [self.splitPlayer seekToInSec:self.fullscreenPlayer.currentTimeInSeconds];
+            [self setFullscreen:NO animated:YES rect:self.fullscreenInitialRect];
+        }
+    
+    }
+}
+
 #pragma mark - Actions
 
 - (void)liveButtonPressed:(LiveButton *)sender {
-    [self.mainPlayer gotolive];
+    [self.currentPlayer gotolive];
 }
 
 - (void)seekPressed:(SeekButton *)sender {
-    [self.mainPlayer seekBy:sender.speed];
+    [self.currentPlayer seekBy:sender.speed];
 }
 
 - (void)slomoPressed:(Slomo *)slomo {
     slomo.slomoOn = !slomo.slomoOn;
-    self.mainPlayer.slowmo = slomo.slomoOn;
+    self.currentPlayer.slowmo = slomo.slomoOn;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
 }
 
 #pragma mark - FBTrainingTagControllerDelegate
@@ -268,7 +397,7 @@
 
 - (void)clipController:(nonnull FBTrainingClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag {
     CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.time, 1), CMTimeMakeWithSeconds(tag.duration, 1));
-    [self.mainPlayer playFeed:self.mainPlayer.feed withRange:range];
+    [self.currentPlayer playFeed:self.currentPlayer.feed withRange:range];
 }
 
 #pragma mark - FeedSelectionControllerDelegate
@@ -277,7 +406,7 @@
     if (feedSelectionController == self.pipFeedSelectionController) {
         [self.pipView playWithFeed:feed];
     } else if (feedSelectionController == self.playerFeedSelectionController) {
-        [self.mainPlayer playFeed:feed];
+        [self.splitPlayer playFeed:feed];
     }
     
     [feedSelectionController dismiss:YES];
@@ -286,7 +415,7 @@
 #pragma mark - NCRecordButtonDelegate
 
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
-    self.startTime = CMTimeGetSeconds(self.mainPlayer.playerItem.currentTime);
+    self.startTime = CMTimeGetSeconds(self.currentPlayer.playerItem.currentTime);
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
