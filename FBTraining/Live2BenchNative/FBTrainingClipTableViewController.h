@@ -7,8 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Tag.h"
+
+@class FBTrainingClipTableViewController;
+
+@protocol FBTrainingClipControllerDelegate
+
+- (void)clipController:(nonnull FBTrainingClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag;
+
+@end
 
 @interface FBTrainingClipTableViewController : UIViewController
+
+@property (weak, nonatomic, nullable) id<FBTrainingClipControllerDelegate> delegate;
 
 @property (strong, nonatomic, nonnull) UITableView *tableView;
 @property (readonly, nonatomic) BOOL presented;

@@ -878,7 +878,7 @@
             Tag *newTag = [[Tag alloc] initWithData: results];
             newTag.feeds = self.encoderManager.feeds;
             [_event.tags setObject:newTag forKey:tagId];
-            // [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+            //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
         }
     }
 }

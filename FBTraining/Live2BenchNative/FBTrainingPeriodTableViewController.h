@@ -8,8 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import "Tag.h"
+#import "FBTrainingClipTableViewController.h"
+
+@class FBTrainingPeriodTableViewController;
+
+@protocol FBTrainingTagControllerDelegate <FBTrainingClipControllerDelegate>
+
+- (void)tagController:(nonnull FBTrainingPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName;
+
+@end
 
 @interface FBTrainingPeriodTableViewController : UIViewController
+
+@property (weak, nonatomic, nullable) id<FBTrainingTagControllerDelegate> delegate;
 
 @property (nonatomic) CGFloat tableWidth;
 

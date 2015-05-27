@@ -27,7 +27,7 @@
 @property (nonatomic,strong)    Event                   * event;            // the current event the encoder is looking at
 @property (nonatomic,strong)    Event                   * liveEvent;
 @property (nonatomic,strong)    NSDictionary            * allEvents;        // all events on the encoder
-@property (nonatomic,strong)    NSMutableArray     * localTags;
+@property (nonatomic,strong)    NSMutableDictionary     * localTags;
 @property (nonatomic, strong)   NSString                *localPath;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;

@@ -83,7 +83,9 @@
                      options:0
                      error:&error];
         
-        if(error) { /* JSON was malformed, act appropriately here */ }
+        if(error) {
+            PXPLog(@"%@ Error!",[error.userInfo objectForKey:@"NSLocalizedDescription"]);
+            /* JSON was malformed, act appropriately here */ }
         
         // the originating poster wants to deal with dictionaries;
         // assuming you do too then something like this is the first

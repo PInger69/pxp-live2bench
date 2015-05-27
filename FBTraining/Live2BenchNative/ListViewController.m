@@ -316,6 +316,9 @@ NSMutableArray *oldEventNames;
     {
         [self.view addSubview:componentFilter.view];
     }
+    
+    self.videoPlayer.mute = NO;
+    
     //[componentFilter refresh]; // refresh list when View
     
     // End Richard
@@ -2863,6 +2866,9 @@ NSMutableArray *oldEventNames;
 {
     [componentFilter close:YES];
     [self.dismissFilterButton removeFromSuperview];
+    
+    self.videoPlayer.mute = YES;
+    
     //    [teleView removeFromSuperview];
     //    teleView=nil;
     //
