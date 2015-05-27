@@ -133,6 +133,8 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 //when a tab is selected in fullcreen mode we have to close the telestration otherwise it will show up on top of the entire app
 -(void)forceCloseTele
 {
+    if (![self.view superview]) return;
+        
     self.teleView.isBlank = YES;
     [self.view removeFromSuperview];
     [self.teleView clearTelestration];
@@ -144,7 +146,10 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
 
 -(void)setupView
 {
-    self.teleView = [[TeleView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height)];
+
+    self.view.frame = videoPlayer.view.frame;
+//    self.teleView = [[TeleView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.height,self.view.frame.size.width)];
+    self.teleView = [[TeleView alloc] initWithFrame:self.view.frame];
     [self.teleView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     self.teleView.tvController = self;
     [self.view addSubview:self.teleView];

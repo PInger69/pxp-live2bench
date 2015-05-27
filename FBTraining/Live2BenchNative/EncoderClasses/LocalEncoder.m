@@ -473,6 +473,7 @@
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
 }
 
 

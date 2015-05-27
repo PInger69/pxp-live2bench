@@ -14,6 +14,10 @@
 #define L2B_FULLSCREEN_MODE_DEMO     4
 #define L2B_FULLSCREEN_MODE_EVENT    5
 
+
+
+
+
 #import "FullScreenViewController.h"
 #import "TeleViewController.h"
 #import "Slomo.h"
@@ -24,12 +28,26 @@
 
 #import "PxpVideoPlayerProtocol.h"
 
+
+typedef NS_OPTIONS (NSInteger,L2BFullScreenModes){
+    
+    L2BFullScreenModeDisable,
+    L2BFullScreenModeLive,
+    L2BFullScreenModeClip,
+    L2BFullScreenModeTele,
+    L2BFullScreenModeDemo,
+    L2BFullScreenModeEvent
+};
+
+
+
 @interface L2BFullScreenViewController : FullScreenViewController
 
 
 
 
-@property (nonatomic,assign) int                mode;
+@property (nonatomic,assign) L2BFullScreenModes                mode;
+@property (nonatomic,assign) L2BFullScreenModes                prevMode;
 
 
 

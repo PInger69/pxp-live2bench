@@ -286,6 +286,7 @@ UIScrollView *scrollView;
         [submitButton setUserInteractionEnabled:NO];
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREDENTIALS_VERIFY_RESULT object:nil];
         [noInternetLabel setHidden:YES];
+
     } else {
         [noInternetLabel setHidden:NO];
         [noInternetLabel setText:[note.userInfo objectForKey:@"msg"]];

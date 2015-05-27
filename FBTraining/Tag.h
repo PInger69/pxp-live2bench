@@ -9,12 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "FilterItemProtocol.h"
 
+typedef NS_ENUM (NSInteger,TagType){
+    TagTypeNormal   = 0,
+    TagTypeLine     = 2,
+    TagTypeDeleted  = 3,
+    TagTypeTele     = 4,
+    TagTypeStrength = 10
+};
+
 @interface Tag : NSObject<FilterItemProtocol>
 
 @property (strong, nonatomic) NSDictionary *rawData;
 @property (strong, nonatomic) NSString      *colour;
 @property (strong, nonatomic) NSString      *comment;
-//@property (strong, assign)
 @property (strong, nonatomic) NSString      *deviceID;
 @property (strong, nonatomic) NSString      *displayTime;
 @property (assign, nonatomic) int           duration;
