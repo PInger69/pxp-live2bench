@@ -8,6 +8,7 @@
 
 #import "Event.h"
 #import "Feed.h"
+#import "Tag.h"
 
 
 
@@ -50,7 +51,7 @@
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
         _downloadedSources  = [NSMutableArray array];
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
-        _tags               = [[NSMutableDictionary alloc]init];// this needs to be pop
+        _tags               = [self buildTags:_rawData];
         //_downloadedSources  = @[];
     }
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
@@ -63,8 +64,42 @@
     return self;
 }
 
--(void)setTags:(NSMutableDictionary *)tags{
+-(void)setTags:(NSMutableDictionary *)tags
+{
     _tags = tags;
+}
+
+-(NSDictionary*)rawData
+{
+    if (_tags != nil && _tags.count != 0) {
+        NSMutableDictionary *newRawData = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
+        
+        NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
+        /*NSArray * keys = [_tags allKeys];
+        for (NSString * key in keys) {
+            Tag * newTag = [[Tag alloc]initWithData:[_tags objectForKey:key]];
+            [tagsToBeAdded setObject:newTag.rawData forKey:key];
+        }*/
+        
+        NSArray *tagInArray = [_tags allValues];
+        
+        for (Tag *tag in tagInArray) {
+            [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];
+        }
+        
+        [newRawData setObject:tagsToBeAdded forKey:@"tags"];
+        return [newRawData copy];
+    }
+    /*else{
+        NSMutableDictionary *newRawData = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
+        
+        NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
+        
+        [newRawData setObject:tagsToBeAdded forKey:@"tags"];
+        return [newRawData copy];
+    }*/
+    return _rawData;
+ 
 }
 
 
@@ -72,6 +107,23 @@
     _downloadedSources = downloadedSources;
 }
 
+
+-(NSMutableDictionary *)buildTags:(NSDictionary*)aDict{
+    
+    if (aDict[@"tags"]) {
+        NSDictionary *tagToBeAdded = aDict[@"tags"];
+        NSArray *tagArray = [tagToBeAdded allValues];
+        NSMutableDictionary *tagsDic = [[NSMutableDictionary alloc]init];
+        
+        
+        for (NSDictionary *tagDic in tagArray) {
+            [tagsDic setObject:tagDic forKey:tagDic[@"id"]];
+        }
+    }
+
+    NSMutableDictionary *tagDict = [[NSMutableDictionary alloc]init];
+        return tagDict;
+}
 
 -(NSDictionary*)buildMP4s:(NSDictionary*)aDict
 {

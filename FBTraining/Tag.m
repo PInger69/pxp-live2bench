@@ -170,7 +170,8 @@
              @"name":[Utility encodeSpecialCharacters:self.name],
              @"requestime":[NSString stringWithFormat:@"%f",CACurrentMediaTime()],
              @"time": [NSString stringWithFormat:@"%f", self.time],
-             @"user": self.user
+             @"user": self.user,
+             @"id": [NSString stringWithFormat:@"%d", self.uniqueID]
              
              };
 }

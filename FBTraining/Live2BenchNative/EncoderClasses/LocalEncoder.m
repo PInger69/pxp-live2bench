@@ -71,7 +71,7 @@
         _event                          = nil;
         _clips                          = [[NSMutableDictionary alloc]init];
         _allEvents                      = [[NSMutableDictionary alloc] init];
-        _localTags                      = [[NSMutableArray alloc] init];
+        _localTags                      = [[NSMutableDictionary alloc] init];
         tagSyncConnections              = [NSMutableArray array];
         
         // build folder structue if not there
@@ -120,9 +120,28 @@
                 anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
                 
-                [self.localTags addObjectsFromArray: [anEvent.localTags allValues]];
+                [self.localTags addEntriesFromDictionary:self.event.localTags];
             }
         }
+        
+        NSMutableArray *localTempPool = [[NSMutableArray alloc]init];
+        NSArray *localplishPaths = [self grabAllFiles:_localPath ext:@"plist"];
+        for (NSString *localPths in localplishPaths) {
+                [localTempPool addObject:[[NSDictionary alloc]initWithContentsOfFile:localPths]];
+        }
+        
+       
+        NSEnumerator *localEnumerator  = [localTempPool objectEnumerator];
+        id localValue;
+        while ((localValue = [localEnumerator nextObject])) {
+            NSDictionary *localTagDic = localValue;
+            if ([localTagDic objectForKey:@"emailAddress"] == nil) {
+                NSMutableDictionary *finalLocalTags = [[NSMutableDictionary alloc]initWithDictionary:localTagDic];
+                [self.localTags addEntriesFromDictionary:finalLocalTags];
+            }
+            
+        }
+        
         
         
         
@@ -205,8 +224,8 @@
             blockName([self.clips allValues]);
         }];
         
-        
-        [self checkLocalTags];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkEncoder) name:NOTIF_EM_FOUND_MASTER object:nil];
+        //[self checkLocalTags];
     }
     return self;
 }
@@ -245,19 +264,44 @@
                                       }];
 
     Tag *newTag = [[Tag alloc] initWithData:tData];
-    newTag.uniqueID = self.event.tags.count + self.event.localTags.count;
+    //newTag.uniqueID = self.event.tags.count + self.event.localTags.count;
+    NSDictionary *tagArePresent = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
+    double tagArePresentCount = tagArePresent.count + 1;
+    newTag.uniqueID = tagArePresentCount + self.event.localTags.count;
     newTag.startTime = newTag.time - 5.0;
     newTag.displayTime = [Utility translateTimeFormat: newTag.time];
     newTag.own = YES;
     newTag.homeTeam = self.event.rawData[@"homeTeam"];
     newTag.visitTeam = self.event.rawData[@"visitTeam"];
     newTag.synced = NO;
+    NSDictionary *newTagDic = [newTag makeTagData];
+    
+    /*NSMutableDictionary *newRawData = [[NSMutableDictionary alloc]initWithDictionary:self.event.rawData];
+    [newRawData[@"tags"] setObject:newTagDic forKey:newTag.ID];
+    self.event.rawData = [newRawData copy];*/
+    
+    //[self.event.tags setObject:newTag forKey:newTag.ID];
+    
+    [self.event.rawData[@"tags"] setObject:newTagDic forKey:newTagDic[@"id"]];
+
     //newTag.requestTime = tData[@"requesttime"];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTagDic];
+    //int newKey = [newTag.ID intValue] + self.localTags.count;
+    [self.localTags setObject:newTagDic forKey:[NSString stringWithFormat:@"%d",self.localTags.count]];
+    //[self.event.localTags addEntriesFromDictionary: @{[NSString stringWithFormat:@"%i", newTag.uniqueID]: newTag}];
     
-    [self.localTags addObject: newTag];
-    [self.event.localTags addEntriesFromDictionary: @{[NSString stringWithFormat:@"%i", newTag.uniqueID]: newTag}];
+    NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
+    [self.event.rawData writeToFile:plistNamePath atomically:YES];
+    
+    NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
+    [self.localTags writeToFile:localplistNamePath atomically:YES];
+
+    
+    // make an instance of event in local
+
+
+
     
 //    NSString *jsonString                    = [Utility dictToJSON:tData];
 //    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
@@ -267,9 +311,17 @@
 //    encoderConnection.timeStamp             = aTimeStamp;
 }
 
+-(void)checkEncoder{
+    if (self.encoderManager.masterEncoder) {
+        [self checkLocalTags];
+    }
+}
+
 -(void)checkLocalTags{
-    if (self.localTags.count >= 1) {
-        Tag *tagToSend = [self.localTags firstObject];
+    if (self.localTags.count >= 1 && self.encoderManager.masterEncoder) {
+
+    NSArray *arrya = [[NSArray alloc]initWithArray:[self.localTags allValues]];
+        Tag *tagToSend = [[Tag alloc]initWithData:[arrya firstObject]];
         NSDictionary *tData = [tagToSend makeTagData];
         NSString *jsonString                    = [Utility dictToJSON:tData];
         NSString *ipAddress                     = self.encoderManager.masterEncoder.ipAddress;
@@ -334,10 +386,12 @@
 
 -(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
     if (connection.context == TAG_UPLOAD) {
-        NSDictionary    * results =[Utility JSONDatatoDict: connection.cumulatedData];
+        NSData *dataToBeUsed = [connection.cumulatedData copy];
+        NSDictionary    * results =[Utility JSONDatatoDict: dataToBeUsed];
         if([results isKindOfClass:[NSDictionary class]])
         {
-            Tag *localTag = [self.localTags firstObject];
+            NSArray *arrayFromDic = [[NSArray alloc]initWithArray:[self.localTags allValues]];
+            Tag *localTag = [[Tag alloc]initWithData:[arrayFromDic firstObject]];
             [localTag replaceDataWithDictionary: results];
             for (Event *event in [self.allEvents allValues]) {
                 if ([[event.localTags allValues] containsObject: localTag]){
@@ -345,7 +399,18 @@
                     [event.localTags removeObjectForKey:[[event.localTags allKeysForObject: localTag] firstObject]];
                 }
             }
-            [self.localTags removeObject: localTag];
+            NSArray *array = [[NSArray alloc]initWithArray:[self.localTags allKeys]];
+            NSString *keyref;
+            for (NSString *key in array ) {
+                keyref = key;
+                break;
+            }
+            [self.localTags removeObjectForKey:keyref];
+            NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
+            [self.localTags writeToFile:localplistNamePath atomically:YES];
+
+            //[self.localTags removeObject: localTag];
+            
         }
         
         [self checkLocalTags];
@@ -376,9 +441,14 @@
         }
 
     }
+    
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    [self.localTags removeObjectAtIndex:0];
+    NSArray *arrayFromDic = [[NSArray alloc]initWithArray:[self.localTags allValues]];
+    NSDictionary *dicToBeRemoved = [[NSDictionary alloc]initWithDictionary:[arrayFromDic firstObject]];
+    NSString *keyToBeRemoved = dicToBeRemoved[@"id"];
+    [self.localTags removeObjectForKey:keyToBeRemoved];
+    //[self.localTags removeObjectAtIndex:0];
     [self checkLocalTags];
 }
 
@@ -623,14 +693,10 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
     }
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath]stringByAppendingPathExtension:@"plist"];
-    
-    NSMutableDictionary *alltags = [[NSMutableDictionary alloc]initWithCapacity:aEvent.tags.count];
-    for ( Tag *tag in aEvent.tags ){
-        [alltags setObject:tag.rawData forKey:tag.rawData[@"id"]];
-    }
-    [alltags writeToFile:plistNamePath atomically:YES];
+
+    //[aEvent.tags writeToFile:plistNamePath atomically:YES];
     [aEvent.rawData writeToFile:plistNamePath atomically:YES];
-    
+
     // make an instance of event in local
     Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData isLocal:YES andlocalPath:self.localPath];
     anEvent.parentEncoder = self;

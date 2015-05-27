@@ -78,6 +78,7 @@ static void * encoderTagContext = &encoderTagContext;
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
         _encoderManager = _appDel.encoderManager;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         _imageAssetManager = appDel.imageAssetManager;
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
@@ -110,19 +111,23 @@ static void * encoderTagContext = &encoderTagContext;
     [_collectionView reloadData];
 }
 
+-(void)clear{
+    [self.tagsToDisplay removeAllObjects];
+    [_collectionView reloadData];
+}
 
 
 // If the filter is actie then filter other wize just display all the tags
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    
+    NSMutableArray *toBeRemoved = [[NSMutableArray alloc]init];
     if (note.object && self.allTagsArray) {
-
         [self.allTagsArray insertObject:note.object atIndex:0];
         [self.tagsToDisplay insertObject:note.object atIndex:0];
      //   [componentFilter refresh];
        [_collectionView reloadData];
     }
+    
 }
 
 -(Float64) highestTimeInTags: (NSArray *) arrayOfTags{
