@@ -183,81 +183,10 @@
     _event      =  event;
     [self didChangeValueForKey:@"event"];
     
-    /*
-    [self willChangeValueForKey:@"event"];
+    // this is check when Primary encoder posts a notif
+    [_encoderManager onPrimaryEncoderEventChange:self];
     
-    NSArray         * events = [rawEncoderData objectForKey:@"events"];
-    for(NSDictionary* dict in events)
-    {
-       _event =  nil;
-        if([dict isKindOfClass:[NSDictionary class]]  && [dict[@"name"] isEqualToString: event])
-        {
-            self.eventData = dict;
-            
-            // The new version have _authenticated the old versions do not
-            if (_authenticated) {
-            
-                if ([dict[@"vid_2"] isKindOfClass:[NSDictionary class]]){
-                    NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-                    
-                    for (id key in dict[@"vid_2"])
-                    {
-                        NSDictionary * vidDict      = dict[@"vid_2"];
-                        NSDictionary * qualities    = [vidDict objectForKey:key];
-                        
-                        Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
-                        createdFeed.sourceName = key;
-                        
-                        [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
-                    }
-                    
-                    _feeds = [collect copy];
-                    
-                    
-                } else if ([dict[@"live_2"] isKindOfClass:[NSDictionary class]]){
-                    NSMutableDictionary * collect = [[NSMutableDictionary alloc]init];
-                    
-                    for (id key in dict[@"live_2"])
-                    {
-                        NSDictionary * vidDict      = dict[@"live_2"];
-                        NSDictionary * qualities    = [vidDict objectForKey:key];
-                        
-                        Feed * createdFeed = [[Feed alloc]initWithURLDict:qualities];
-                        createdFeed.sourceName = key;
-                        
-                        [collect setObject:[[Feed alloc]initWithURLDict:qualities] forKey:key];
-                    }
-                    
-                    _feeds = [collect copy];
-                    
-                    
-                }
-                
-                
-                
-                
-            } else {
-                if (dict[@"live"]) { // This is for backwards compatibility
-                    // _feeds = @{ @"s1":@{@"lq":dict[@"vid"]} };
-                    // this creates a feed object from just a string with it  source named s1
-                    Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"live"] quality:0];
-                    _feeds = @{ @"s1":theFeed};
-                } else if (dict[@"vid"]) {
-                    Feed * theFeed =  [[Feed alloc]initWithURLString:dict[@"vid"] quality:0];
-                    _feeds = @{ @"s1":theFeed};
-                }
-            }
-            
-            [self willChangeValueForKey:@"eventType"];
-            _eventType = [dict objectForKey:@"sport"];
-            [self didChangeValueForKey:@"eventType"];
-           _event =  event;
-            break;
-        }
-    }
- 
-   [self didChangeValueForKey:@"event"];
-    */
+
 }
 
 -(Event*)event
@@ -790,7 +719,7 @@
     
     NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
     isWaitiing = NO;
-    
+
     PXPLog(@"%@ Error!",self.name);
     PXPLog(@"  connection type: %@ ",trim(connection.connectionType));
     PXPLog(@"  url: %@ ",[[connection originalRequest]URL]);

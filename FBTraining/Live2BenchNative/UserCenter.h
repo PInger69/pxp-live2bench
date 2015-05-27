@@ -30,12 +30,10 @@
 @property (nonatomic,strong) NSString               * accountInfoPath;
 @property (nonatomic,strong) NSString               * localPath;
 
++(instancetype)getInstance;
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
-
 -(void)enableObservers:(BOOL)isObserve;
-
-
 -(void)writeAccountInfoToPlist;
 
 // Action methods

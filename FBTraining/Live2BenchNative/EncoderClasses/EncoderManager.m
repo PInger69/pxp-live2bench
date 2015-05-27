@@ -24,6 +24,8 @@
 #import <arpa/inet.h>
 
 #import <SDWebImage/SDImageCache.h>
+#import "UserCenter.h"
+
 
 #import "FakeEncoder.h"
 
@@ -261,7 +263,7 @@
 @implementation EncoderManager
 {
     
-    NSMutableArray              * foundEncoders;
+
     NSNetServiceBrowser         * serviceBrowser;   //serviceBrowser searches for services
     NSMutableArray              * services;         //array of netservices which are detected
     NSMutableDictionary         * dictOfIPs;        //dictionary of all IPs detected
@@ -318,7 +320,7 @@
     self = [super init];
     if (self){
         
-        foundEncoders           = [[NSMutableArray alloc]init];
+
         _authenticatedEncoders  = [[NSMutableArray alloc]init];
         dictOfEncoders          = [[NSMutableDictionary alloc]init];
         _openDurationTags       = [[NSMutableDictionary alloc]init];
@@ -331,7 +333,7 @@
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
         //       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-        
+
         arrayOfTagSets          = [[NSMutableArray alloc]init];
         _feeds                  = [[NSMutableDictionary alloc]init];
         
@@ -433,6 +435,7 @@
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadEvent:) name:NOTIF_EM_DOWNLOAD_EVENT object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onLoginToCloud)            name:NOTIF_USER_LOGGED_IN object:nil];
         // making actions
         
         //SAGAR AND BEN NOTIFICATIONS
@@ -544,7 +547,8 @@ static void * builtContext          = &builtContext; // depricated?
         [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
         newEncoder.name         = name;
         [newEncoder requestVersion];
-        [newEncoder authenticateWithCustomerID:_customerID];
+        
+        [newEncoder authenticateWithCustomerID:[UserCenter getInstance].customerID];
         if (_masterEncoder == nil) [newEncoder searchForMaster];
         [dictOfEncoders setValue:newEncoder forKey:name];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForFeedChange:) name:NOTIF_ENCODER_FEEDS_UPDATED object:newEncoder];
@@ -568,7 +572,7 @@ static void * builtContext          = &builtContext; // depricated?
     [aEncoder removeObserver:self forKeyPath:@"authenticated"];
     [aEncoder removeObserver:self forKeyPath:@"status"];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_ENCODER_FEEDS_UPDATED object:aEncoder];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+
     [aEncoder destroy];
     if (_masterEncoder == aEncoder){
         
@@ -578,6 +582,7 @@ static void * builtContext          = &builtContext; // depricated?
     }
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
 }
 
 // depricated
@@ -631,8 +636,16 @@ static void * builtContext          = &builtContext; // depricated?
     [self willChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
     _primaryEncoder = primaryEncoder;
     [self didChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
+
 }
 
+// just to make sure that only the primary encoder post the notif
+-(void)onPrimaryEncoderEventChange:(id <EncoderProtocol>)encoder
+{
+    if (_primaryEncoder == encoder){
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
+    }
+}
 
 -(id <EncoderProtocol>)primaryEncoder
 {
@@ -813,7 +826,7 @@ static void * builtContext          = &builtContext; // depricated?
         if (encoder.authenticated  && ![_authenticatedEncoders containsObject:encoder]) {
             [_authenticatedEncoders addObject:encoder];
             [encoder buildEncoderRequest]; // its authenticated... now collect all data from the encoder
-            //   [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
         }
     }
     
@@ -1096,8 +1109,30 @@ static void * builtContext          = &builtContext; // depricated?
 -(void)logoutOfCloud
 {
     [_cloudEncoder logoutOfCloud];
+    
+    NSArray * allEnc = [dictOfEncoders allValues];
+    
+    for (Encoder * enc in allEnc) {
+        [self unRegisterEncoder:enc];
+    }
+    [_authenticatedEncoders removeAllObjects];
+    [dictOfEncoders removeAllObjects];
+    
+    
+    serviceBrowser          = nil ;
+    [services removeAllObjects];
 }
 
+-(void)onLoginToCloud
+{
+    
+    if (!serviceBrowser){
+        serviceBrowser          = [NSNetServiceBrowser new] ;
+        serviceBrowser.delegate = self;
+       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+    }
+
+}
 
 -(void)pushTag:(NSMutableDictionary *)tagSet
 {
@@ -1789,6 +1824,17 @@ static void * builtContext          = &builtContext; // depricated?
     [self didChangeValueForKey:@"searchForEncoders"];
 }
 
+
+
+-(void)setCustomerID:(NSString *)customerID
+{
+    // HAHA Does NOTHING!
+}
+
+-(NSString*)customerID
+{
+    return [UserCenter getInstance].customerID;
+}
 
 
 // For debugging

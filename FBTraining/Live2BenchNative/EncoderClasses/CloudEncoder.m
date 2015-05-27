@@ -349,6 +349,7 @@
     NSDictionary * jsonDict = [Utility JSONDatatoDict:data];
     if ([[jsonDict objectForKey:@"success"]boolValue]) {
         self.loggedIn = NO;
+        
     }
 
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_LOGGED_OUT object:self userInfo:jsonDict];

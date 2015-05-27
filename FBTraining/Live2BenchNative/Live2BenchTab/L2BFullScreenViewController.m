@@ -38,6 +38,7 @@
 @synthesize saveTeleButton              = _saveTeleButton;
 @synthesize clearTeleButton             = _clearTeleButton;
 @synthesize teleViewController          = _teleViewController;
+@synthesize prevMode;
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)videoPlayer
 {
@@ -45,7 +46,7 @@
     controlOffsetY  = 700.0f;
     self            = [super initWithVideoPlayer:videoPlayer];
     if (self){
-        self.mode   = L2B_FULLSCREEN_MODE_DISABLE;
+        self.mode   = L2BFullScreenModeDisable;
         //self.teleViewController = [[TeleViewController alloc] initWithController:self];
     }
     return self;
@@ -64,7 +65,7 @@
     _saveTeleButton             = [self _makeTeleSaveButton];
     _clearTeleButton            = [self _makeTeleClearButton];
     
-    
+
     [self.view addSubview:_seekForward];
     [self.view addSubview:_seekBackward];
     [self.view addSubview:_slomo];
@@ -261,7 +262,7 @@
 {
     BorderButton * btn       = [[BorderButton alloc]init];
     btn = [BorderButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(377.0f, 700.0f, 123.0f, 33.0f)];
+    [btn setFrame:CGRectMake(377.0f-10, 700.0f, 123.0f, 33.0f)];
     [btn setTitle:NSLocalizedString(@"Save",nil) forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(_saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
     return btn;
@@ -271,36 +272,36 @@
 {
     BorderButton * btn       = [[BorderButton alloc]init];
     btn = [BorderButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(500, 700.0f,123.0f, 33.0f)];
+    [btn setFrame:CGRectMake(500+10, 700.0f,123.0f, 33.0f)];
     [btn setTitle:NSLocalizedString(@"Close",nil) forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(_clearButtonClicked) forControlEvents:UIControlEventTouchUpInside];
     return btn;
 }
 
--(void)setMode:(int)mode
+-(void)setMode:(L2BFullScreenModes)mode
 {
     if (mode==_mode) return;
-    
+    prevMode = _mode;
     [self willChangeValueForKey:@"mode"];
     _mode = mode;
     
     switch (_mode) {
-        case L2B_FULLSCREEN_MODE_DISABLE :
+        case L2BFullScreenModeDisable :
             [self _revealThese:liveElements];// should be @[]
             break;
-        case L2B_FULLSCREEN_MODE_LIVE :
+        case L2BFullScreenModeLive :
             [self _revealThese:liveElements];
             break;
-        case L2B_FULLSCREEN_MODE_EVENT:
+        case L2BFullScreenModeEvent:
             [self _revealThese:eventElements];
             break;
-        case L2B_FULLSCREEN_MODE_CLIP :
+        case L2BFullScreenModeClip :
             [self _revealThese:clipElements];
             break;
-        case L2B_FULLSCREEN_MODE_TELE :
+        case L2BFullScreenModeTele :
             [self _revealThese:teleElements];
             break;
-        case L2B_FULLSCREEN_MODE_DEMO :
+        case L2BFullScreenModeDemo :
             [self _revealThese:demoElements];
             break;
         default:
@@ -309,7 +310,7 @@
     [self didChangeValueForKey:@"mode"];
 }
 
--(int)mode
+-(L2BFullScreenModes)mode
 {
     return _mode;
 }
@@ -335,22 +336,25 @@
     if (self.teleViewController){
         [self.teleViewController saveTeles];
     }
-    [self setMode: L2B_FULLSCREEN_MODE_LIVE];
+ //   [self setMode: L2B_FULLSCREEN_MODE_LIVE];
 }
 
 //clear button clicked, send notification to the teleview controller
 -(void)_clearButtonClicked
 {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLEAR_TELE object:nil];
-    [self setMode: L2B_FULLSCREEN_MODE_LIVE];
-    if (self.teleViewController){
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLEAR_TELE object:nil];
+//  [self setMode: L2B_FULLSCREEN_MODE_LIVE];
+    if (self.teleViewController && [self.teleViewController.clearButton.titleLabel.text isEqualToString:NSLocalizedString(@"Close",nil)]){
         [self.teleViewController forceCloseTele];
+            [self.player play];
+    } else {
+        [self.teleViewController.teleView clearTelestration];
     }
-    [self.player play];
+
 }
 
 -(void)teleButtonPressed{
-    [self setMode: L2B_FULLSCREEN_MODE_TELE];
+ //   [self setMode: L2B_FULLSCREEN_MODE_TELE];
 
     //self.teleViewController = [[TeleViewController alloc] initWithController:self];
     //[self.teleViewController viewDidLoad];
@@ -362,7 +366,12 @@
     [self.view addSubview: self.clearTeleButton];
 }
 
-
+-(void)setTeleViewController:(TeleViewController *)teleViewController
+{
+    _teleViewController = teleViewController;
+    _teleViewController.saveButton  = _saveTeleButton;
+    _teleViewController.clearButton = _clearTeleButton;
+}
 
 
 @end
