@@ -156,10 +156,16 @@
     // Configure the cell...
     Tag *tag = self.tags[indexPath.row];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Clip %f", tag.time];
+    cell.textLabel.text = [NSString stringWithFormat:@"Clip %@", tag.displayTime];
     cell.backgroundColor = [UIColor clearColor];
     cell.backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.delegate) {
+        [self.delegate clipController:self didSelectTagClip:self.tags[indexPath.row]];
+    }
 }
 
 /*

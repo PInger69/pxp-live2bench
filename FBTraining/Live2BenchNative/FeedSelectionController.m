@@ -170,7 +170,7 @@
     
     Feed *feed = self.feeds[indexPath.row];
     
-    cell.textLabel.text = feed.sourceName;
+    cell.textLabel.text = self.feeds.count > 1 ? feed.sourceName : @"s_00";
     cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
     cell.backgroundColor = [UIColor clearColor];
     // Configure the cell...
