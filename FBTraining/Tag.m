@@ -19,7 +19,7 @@
         self.rawData = tagData;
         self.colour = tagData[@"colour"];
         _comment = tagData[@"comment"];
-        self.deviceID = tagData[@"deviceid"];
+        self.deviceID = @"";//tagData[@"deviceid"];
         self.displayTime = tagData[@"displaytime"];
         self.duration = [tagData[@"duration"]intValue];
         self.event = tagData[@"event"];
@@ -143,7 +143,7 @@
              @"starttime": [NSString stringWithFormat:@"%f", self.startTime],
              @"success": @"1",
              @"time": [NSString stringWithFormat:@"%f", self.time],
-             @"type": [NSString stringWithFormat:@"%i", self.type],
+             @"type": [NSString stringWithFormat:@"%li", (long)self.type],
              @"url": self.thumbnails,
              @"user": self.user,
              @"visitTeam": self.visitTeam,

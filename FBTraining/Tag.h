@@ -37,7 +37,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (strong, nonatomic) NSString      *requestURL;
 @property (assign, nonatomic) double        startTime;
 @property (assign, nonatomic) double        time;
-@property (assign, nonatomic) int           type;
+@property (assign, nonatomic) TagType       type;
 @property (strong, nonatomic) NSDictionary  *thumbnails;
 @property (strong, nonatomic) NSString      *user;
 @property (assign, nonatomic) BOOL          synced;

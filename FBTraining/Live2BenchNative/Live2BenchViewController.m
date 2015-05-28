@@ -621,7 +621,11 @@ static void * eventContext      = &eventContext;
     
     if (_encoderManager.primaryEncoder != _encoderManager.masterEncoder) {
         _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
+        //[self.videoPlayer clear];
         Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
+        
+        Feed *info = [_appDel.encoderManager.masterEncoder.liveEvent.feeds allValues] [0];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
         _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
         [_teamPick addOnCompletionBlock:^(NSString *pick){
             [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];

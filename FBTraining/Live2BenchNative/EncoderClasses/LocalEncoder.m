@@ -127,7 +127,13 @@
         NSMutableArray *localTempPool = [[NSMutableArray alloc]init];
         NSArray *localplishPaths = [self grabAllFiles:_localPath ext:@"plist"];
         for (NSString *localPths in localplishPaths) {
-                [localTempPool addObject:[[NSDictionary alloc]initWithContentsOfFile:localPths]];
+            NSDictionary * temp = [[NSDictionary alloc]initWithContentsOfFile:localPths];
+            if (temp) {
+                [localTempPool addObject:temp];
+            } else {
+                PXPLog(@"Error Loading pList: ");
+                PXPLog(@"%@",localPths);
+            }
         }
         
        
