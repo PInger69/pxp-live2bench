@@ -283,7 +283,7 @@
                 Tag *newTag = [[Tag alloc]initWithData: tag];
                 if (newTag.type == 3) {
                     [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
-                }else if (newTag.type == 99){
+                }else if (((NSInteger)newTag.type)  == 99){
                     
                 }else if(newTag.modified){
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:newTag];

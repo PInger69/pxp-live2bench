@@ -143,7 +143,7 @@
              @"starttime": [NSString stringWithFormat:@"%f", self.startTime],
              @"success": @"1",
              @"time": [NSString stringWithFormat:@"%f", self.time],
-             @"type": [NSString stringWithFormat:@"%i", self.type],
+             @"type": [NSString stringWithFormat:@"%li", (long)self.type],
              @"url": self.thumbnails,
              @"user": self.user,
              @"visitTeam": self.visitTeam,
