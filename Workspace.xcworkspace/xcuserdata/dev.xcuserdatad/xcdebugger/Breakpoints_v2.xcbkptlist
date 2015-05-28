@@ -399,8 +399,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "558"
             endingLineNumber = "558"
-            landmarkName = "-removeIndexPathFromDeletion"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -687,8 +687,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "121"
             endingLineNumber = "121"
-            landmarkName = "-clear"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -703,8 +703,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "291"
             endingLineNumber = "291"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -751,8 +751,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "428"
             endingLineNumber = "428"
-            landmarkName = "-viewWillDisappear:"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -783,8 +783,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "500"
             endingLineNumber = "500"
-            landmarkName = "-slideFilterBox"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1306,8 +1306,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4437"
             endingLineNumber = "4437"
-            landmarkName = "-filterAndSortTags:"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1402,8 +1402,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "158"
             endingLineNumber = "158"
-            landmarkName = "-viewDidLoad"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1418,8 +1418,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "150"
             endingLineNumber = "150"
-            landmarkName = "-viewDidAppear:"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1434,8 +1434,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "271"
             endingLineNumber = "271"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1450,8 +1450,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "273"
             endingLineNumber = "273"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -1498,8 +1498,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "201"
             endingLineNumber = "201"
-            landmarkName = "-setupView"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1514,8 +1514,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "276"
             endingLineNumber = "276"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1530,8 +1530,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "284"
             endingLineNumber = "284"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1546,8 +1546,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "320"
             endingLineNumber = "320"
-            landmarkName = "-slideFilterBox"
-            landmarkType = "5">
+            landmarkName = "@implementation ClipViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
