@@ -49,7 +49,7 @@ static UIImage* rateSelected;
 }
 
 
-- (void) setRating:(int)rate{
+- (void) setRating:(NSInteger)rate{
     if( rate >= 0 && rate <=5)
     {
         _rating = rate;
@@ -60,7 +60,7 @@ static UIImage* rateSelected;
     }
     
     
-    for( int i=0; i < _rating; i++)
+    for( NSInteger i=0; i < _rating; i++)
     {
         [starArray[i] setHidden:false];
     }
@@ -69,7 +69,7 @@ static UIImage* rateSelected;
 
 
 
-- (int) getRating{
+- (NSInteger) getRating{
     return _rating;
 }
 

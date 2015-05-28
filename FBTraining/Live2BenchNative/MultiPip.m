@@ -64,7 +64,7 @@
 {
     feedCount = [listOfFeeds count];
     
-    int n = (feedCount > 4)?4: feedCount;
+    NSInteger n = (feedCount > 4)?4: feedCount;
     
     for (int i =0; i< n; i++) {
         Pip * pip   = [_allPips objectAtIndex:i];
@@ -78,7 +78,7 @@
 {
  
 
-    int n = (feedCount > 4)?4: feedCount;
+    NSInteger n = (feedCount > 4)?4: feedCount;
     
     for (int i =0; i< n; i++) {
         Pip * pip   = [_allPips objectAtIndex:i];
