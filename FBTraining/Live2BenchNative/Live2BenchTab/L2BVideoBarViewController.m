@@ -21,8 +21,6 @@
 @property (strong, nonatomic, nonnull) TagView *tagView;
 @property (strong, nonatomic, nonnull) NSTimer *tagViewRefreshTimer;
 
-@property (strong, nonatomic, nonnull) CADisplayLink *displayLink;
-
 @end
 
 @implementation L2BVideoBarViewController
@@ -160,8 +158,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
         
-        self.displayLink = [CADisplayLink displayLinkWithTarget:self.tagView selector:@selector(setNeedsDisplay)];
-        [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        self.tagViewRefreshTimer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(updateTagView:) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:self.tagViewRefreshTimer forMode:NSDefaultRunLoopMode];
     }
     return self;
 }
@@ -170,7 +168,11 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
-    [self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    [self.tagViewRefreshTimer invalidate];
+}
+
+- (void)updateTagView:(NSTimer *)timer {
+    [self.tagView setNeedsDisplay];
 }
 
 - (void)tagReceived:(NSNotification *)note {
