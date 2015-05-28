@@ -1130,7 +1130,7 @@
 // This will show name and status
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@" %@(%@): %d - %@   - %@",self.name,version,self.status,self.event.name,self.event.eventType  ];
+    NSString * txt = [NSString stringWithFormat:@" %@(%@): %ld - %@   - %@",self.name,version,(long)self.status,self.event.name,self.event.eventType  ];
     return txt;
 }
 

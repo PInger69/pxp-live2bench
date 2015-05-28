@@ -1040,7 +1040,7 @@ static void * builtContext          = &builtContext; // depricated?
         
         for(NSString *subIP in parseRemoteIP)
         {
-            int i = [parseRemoteIP indexOfObject:subIP];
+            NSUInteger i = [parseRemoteIP indexOfObject:subIP];
             if(![subIP isEqualToString:[parseLocalIP objectAtIndex:i]]&&i<3)//compare only the first 3 numbers in the ip address
             {
                 isSameNetwork=FALSE; // if the numbers don't equal each other then we don't want it, set the bool to false
@@ -1328,7 +1328,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     
     NSNumber    * nowTime             = GET_NOW_TIME;
-    int timeout = [encoders count] * 20;
+    NSUInteger timeout = [encoders count] * 20;
     [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
         [obj issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
     }];
@@ -1409,7 +1409,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     
     NSNumber    * nowTime             = GET_NOW_TIME;
-    int timeout = [encoders count] * 20;
+    NSUInteger timeout = [encoders count] * 20;
     [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
         [obj issueCommand:MAKE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
     }];
@@ -1872,7 +1872,7 @@ static void * builtContext          = &builtContext; // depricated?
         NSString * encoderStats = [NSString stringWithFormat:@"\t%@",enc.name];
         NSString * socialStatus;
         NSString * encoderStatus = [Utility encoderStatusToString:enc.status];
-        encoderStats = [NSString stringWithFormat:@"%@%*c - ",encoderStats, 16 - encoderStats.length, ' '];
+        encoderStats = [NSString stringWithFormat:@"%@%*c - ",encoderStats, (int) (16 - encoderStats.length), ' '];
         if ([enc isKindOfClass:[LocalEncoder class]]){
             socialStatus = @"Django";
         } else{
