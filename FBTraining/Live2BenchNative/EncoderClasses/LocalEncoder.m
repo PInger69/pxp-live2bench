@@ -255,7 +255,8 @@
 #pragma mark - Command Methods
 -(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
+    //NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
+    NSString *encodedName = [tData objectForKey:@"name"];
     
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
