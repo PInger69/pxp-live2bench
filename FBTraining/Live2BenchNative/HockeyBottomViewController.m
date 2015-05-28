@@ -452,14 +452,14 @@
         return [str1 compare:str2 options:(NSNumericSearch)];
     }];
     
-    int sortedIndex;
+    NSInteger sortedIndex;
     NSString *closestTagTime;
     if (t.count > 1) {
-        int binSearchIndex =[t binarySearch:tagTime] ; // binsearch returns -1 if time not found
-        binSearchIndex = (int)binSearchIndex <0 ? 0:binSearchIndex; // make sure the binary search index is greater then 0
+        NSInteger binSearchIndex =[t binarySearch:tagTime] ; // binsearch returns -1 if time not found
+        binSearchIndex = binSearchIndex <0 ? 0:binSearchIndex; // make sure the binary search index is greater then 0
         
-        sortedIndex=(int)binSearchIndex >t.count-1 ? t.count-1 : binSearchIndex-1;
-        sortedIndex=(int)sortedIndex <0 ? 0:sortedIndex; //make sure index isn't less then 0
+        sortedIndex= binSearchIndex >t.count-1 ? t.count-1 : binSearchIndex-1;
+        sortedIndex= sortedIndex <0 ? 0:sortedIndex; //make sure index isn't less then 0
         
         closestTagTime = [t objectAtIndex:sortedIndex];
     }else if(t.count==1){

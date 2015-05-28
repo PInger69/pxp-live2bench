@@ -20,7 +20,7 @@
     NSMutableDictionary *_gameItems;
     NSMutableArray *_selectedNumbers;
     HockeyBottomViewController *BVController;
-    int currentIndex;
+    NSInteger currentIndex;
     NSMutableArray *currentLine;
     NSMutableDictionary *playerMap;
     int numberOfPlayersAllowed;
@@ -32,7 +32,7 @@
 @property IBOutlet UICollectionView *collectionView;
 @property NSMutableDictionary *playerMap;
 
-- (id)initWithIndex:(int)i side:(NSString*)whichSide;
+- (id)initWithIndex:(NSInteger)i side:(NSString*)whichSide;
 
 
 @end
