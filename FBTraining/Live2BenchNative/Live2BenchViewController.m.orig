@@ -65,7 +65,11 @@
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
     
+<<<<<<< HEAD
+     id <EncoderProtocol>  eventOnPrimaryEncoder;
+=======
      NSObject <EncoderProtocol>  *eventOnPrimaryEncoder;
+>>>>>>> 8e00d4ff66972bb2985e21fdeba059d3b8695b65
     
     BOOL        needDelete;
     
@@ -107,7 +111,6 @@ static void * eventContext      = &eventContext;
     needDelete = true;
 
 
-
     // observers //@"currentEventType"
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEventType))  options:NSKeyValueObservingOptionNew context:&eventTypeContext];
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEvent))      options:NSKeyValueObservingOptionNew context:&eventContext];
@@ -126,9 +129,6 @@ static void * eventContext      = &eventContext;
         [weakSelf createTagButtons];
     }];
     
-
-
-
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
@@ -357,6 +357,7 @@ static void * eventContext      = &eventContext;
                 [_pipController.multi fullScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
+                [telestration forceCloseTele];
                 _fullscreenViewController.enable = NO;
                 [_pipController.multi normalScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
@@ -377,7 +378,6 @@ static void * eventContext      = &eventContext;
     ReusableBottomViewController *bottomViewController = [[ReusableBottomViewController alloc] init];
     [self.view addSubview:bottomViewController.view];
     _theBottomViewController = bottomViewController;
-    
 
     //label to show current event title
     currentEventTitle                   = [[UILabel alloc] initWithFrame:CGRectMake(156.0f, 71.0f, MEDIA_PLAYER_WIDTH, 21.0f)];
@@ -390,7 +390,7 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:currentEventTitle];
     
     //create all the event tag buttons
-    [self createTagButtons];
+    //[self createTagButtons];
 
     __block Live2BenchViewController * weakSelf = self;
     tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -404,7 +404,6 @@ static void * eventContext      = &eventContext;
         [self createTagButtons];
         _tagButtonController.fullScreenViewController = _fullscreenViewController;        
     }];
-    
     
     
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
@@ -433,7 +432,6 @@ static void * eventContext      = &eventContext;
     //_videoBarViewController.tagMarkerController.arrayOfAllTags =
     [self.view addSubview:_videoBarViewController.view];
 
-
     _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
     [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
@@ -445,11 +443,7 @@ static void * eventContext      = &eventContext;
     
     //[_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
     // so get buttons are connected to full screen
-<<<<<<< HEAD
-//    _tagButtonController.fullScreenViewController = _fullscreenViewController;
-=======
    
->>>>>>> 3e60f405df3135c302b78bd402c2a0db2ae5cbd8
 
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
     _pip.isDragAble  = YES;
@@ -516,6 +510,18 @@ static void * eventContext      = &eventContext;
 -(void)onOpenTeleView:(TeleViewController *)tvc
 {
     [self.videoPlayer pause];
+    self.videoPlayer.videoControlBar.hidden = YES;
+    [_fullscreenViewController setMode:L2BFullScreenModeTele];
+}
+
+
+-(void)onCloseTeleView:(TeleViewController *)tvc
+{
+
+    
+    [self.videoPlayer play];
+    self.videoPlayer.videoControlBar.hidden = NO;
+    [_fullscreenViewController setMode:_fullscreenViewController.prevMode];
     
 }
 
@@ -589,12 +595,8 @@ static void * eventContext      = &eventContext;
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
-<<<<<<< HEAD
-   // [self onEventChange];
-    
-=======
+    self.videoPlayer.mute = NO;
 
->>>>>>> 3e60f405df3135c302b78bd402c2a0db2ae5cbd8
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -602,6 +604,7 @@ static void * eventContext      = &eventContext;
     [CustomAlertView removeAll];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
+    self.videoPlayer.mute = YES;
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
