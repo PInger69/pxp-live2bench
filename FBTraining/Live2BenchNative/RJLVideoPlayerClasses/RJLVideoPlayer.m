@@ -1330,15 +1330,15 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     NSString *displayTime;
     if (time < 0) {
         if (dHours > 0) {
-            displayTime = [NSString stringWithFormat:@"-%i:%02i:%02i",dHours, dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"-%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
         }else{
-            displayTime = [NSString stringWithFormat:@"-%02i:%02i", dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"-%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
         }
     }else{
         if (dHours > 0) {
-            displayTime = [NSString stringWithFormat:@"%i:%02i:%02i",dHours, dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
         }else{
-            displayTime = [NSString stringWithFormat:@"%02i:%02i", dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
         }
     }
     return displayTime;
