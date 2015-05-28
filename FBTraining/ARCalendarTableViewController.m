@@ -254,7 +254,6 @@
                     source = [[Feed alloc] initWithFileURL:path];
                     //source = [[Feed alloc] initWithURLString:path quality:1];
                     
-                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
                     NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
                     NSArray *tagsArray = [tagsToBeAddedDic allValues];

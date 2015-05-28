@@ -65,7 +65,7 @@
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
     
-     Encoder <EncoderProtocol>  *eventOnPrimaryEncoder;
+     id <EncoderProtocol>  eventOnPrimaryEncoder;
     
     BOOL        needDelete;
     

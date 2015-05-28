@@ -120,7 +120,7 @@ static void * encoderTagContext = &encoderTagContext;
 // If the filter is actie then filter other wize just display all the tags
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    NSMutableArray *toBeRemoved = [[NSMutableArray alloc]init];
+//    NSMutableArray *toBeRemoved = [[NSMutableArray alloc]init];
     if (note.object && self.allTagsArray) {
         [self.allTagsArray insertObject:note.object atIndex:0];
         [self.tagsToDisplay insertObject:note.object atIndex:0];

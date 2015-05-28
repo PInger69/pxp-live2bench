@@ -20,7 +20,7 @@
 @property (nonatomic,strong) NSString       * hid;
 @property (nonatomic,strong) NSDictionary   * feeds;
 @property (nonatomic,strong) NSDictionary   * mp4s;
-@property (nonatomic,strong) NSDictionary   * rawData;
+@property (nonatomic,strong) NSMutableDictionary   * rawData;
 @property (nonatomic,strong) NSMutableDictionary   * tags;
 @property (nonatomic,assign) BOOL           deleted;
 @property (nonatomic,assign) BOOL           local;

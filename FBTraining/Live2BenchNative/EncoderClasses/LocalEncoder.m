@@ -275,19 +275,19 @@
     newTag.visitTeam = self.event.rawData[@"visitTeam"];
     newTag.synced = NO;
     NSDictionary *newTagDic = [newTag makeTagData];
+   
+    if ([self.event.rawData[@"tags"] count] ) {
+        [self.event.rawData[@"tags"] setObject:newTagDic forKey:newTag.ID];
+    }
+    else{
+        NSMutableDictionary *tagDic = [[NSMutableDictionary alloc]init];
+        [tagDic setObject:newTagDic forKey:newTag.ID];
+        [self.event.rawData setObject:tagDic forKey:@"tags"];
+    }
     
-    /*NSMutableDictionary *newRawData = [[NSMutableDictionary alloc]initWithDictionary:self.event.rawData];
-    [newRawData[@"tags"] setObject:newTagDic forKey:newTag.ID];
-    self.event.rawData = [newRawData copy];*/
-    
-    //[self.event.tags setObject:newTag forKey:newTag.ID];
-    
-    [self.event.rawData[@"tags"] setObject:newTagDic forKey:newTagDic[@"id"]];
-
-    //newTag.requestTime = tData[@"requesttime"];
-    
+ 
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTagDic];
-    //int newKey = [newTag.ID intValue] + self.localTags.count;
+
     [self.localTags setObject:newTagDic forKey:[NSString stringWithFormat:@"%d",self.localTags.count]];
     //[self.event.localTags addEntriesFromDictionary: @{[NSString stringWithFormat:@"%i", newTag.uniqueID]: newTag}];
     

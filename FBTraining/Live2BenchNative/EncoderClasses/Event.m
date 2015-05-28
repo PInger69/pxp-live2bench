@@ -36,8 +36,8 @@
 {
     self = [super init];
     if (self) {
-        
-        _rawData            = data;
+        NSMutableDictionary *dataFinal = [[NSMutableDictionary alloc]initWithDictionary:data];
+        _rawData            = dataFinal;
         _live               = (_rawData[@"live"] || _rawData[@"live_2"])? YES:NO;
         _name               = [_rawData objectForKey:@"name"];
         _hid                = [_rawData objectForKey:@"hid"];
@@ -69,10 +69,12 @@
     _tags = tags;
 }
 
+
 -(NSDictionary*)rawData
 {
     if (_tags != nil && _tags.count != 0) {
         NSMutableDictionary *newRawData = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
+        
         
         NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
         /*NSArray * keys = [_tags allKeys];
@@ -89,15 +91,7 @@
         
         [newRawData setObject:tagsToBeAdded forKey:@"tags"];
         return [newRawData copy];
-    }
-    /*else{
-        NSMutableDictionary *newRawData = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
-        
-        NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
-        
-        [newRawData setObject:tagsToBeAdded forKey:@"tags"];
-        return [newRawData copy];
-    }*/
+   }
     return _rawData;
  
 }

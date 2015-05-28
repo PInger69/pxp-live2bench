@@ -19,7 +19,7 @@
         self.rawData = tagData;
         self.colour = tagData[@"colour"];
         _comment = tagData[@"comment"];
-        self.deviceID = tagData[@"deviceid"];
+        self.deviceID = @"";//tagData[@"deviceid"];
         self.displayTime = tagData[@"displaytime"];
         self.duration = [tagData[@"duration"]intValue];
         self.event = tagData[@"event"];
