@@ -75,9 +75,9 @@ static UIImage *starImage;
     //self.contentView.layoutMargins = UIEdgeInsetsZero;
 }
 
--(void)setRating:(int)rating{
+-(void)setRating:(NSInteger)rating{
     _rating = rating;
-    [ratingLabel setText: [NSString stringWithFormat:@"%i", rating]];
+    [ratingLabel setText: [NSString stringWithFormat:@"%lu", (long)rating]];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

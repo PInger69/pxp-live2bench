@@ -199,7 +199,7 @@
     NSString *pData             = [NSString stringWithFormat:@"&v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",authoriz,emailAddress,password,@"( . Y . )",customer];
     // v0 autherzation  v1 hashedEmail  v2 password v3 ( . Y . )  v4 customerID
     NSData   *postData          = [pData dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    NSString *postDataLength    = [NSString stringWithFormat:@"%d",[postData length]];
+    NSString *postDataLength    = [NSString stringWithFormat:@"%lu",(unsigned long)[postData length]];
     
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc]init];
 
@@ -239,7 +239,7 @@
     NSString *pData             = [NSString stringWithFormat:@"&v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",deviceType,emailAddress,hashedPassword,deviceName,UUID];
     
     NSData *postData            = [pData dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    NSString *postDataLength    = [NSString stringWithFormat:@"%d",[postData length]];
+    NSString *postDataLength    = [NSString stringWithFormat:@"%lu",(unsigned long)[postData length]];
     
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc]init];
     
@@ -268,7 +268,7 @@
     NSString            *emailAddress          = [Utility stringToSha1:[accountInfo objectForKey:@"emailAddress"] ];
     NSString            *accountInfoString     = [NSString stringWithFormat:@"v0=%@&v1=%@&v2=%@&v3=%@&v4=%@",[accountInfo objectForKey:@"authorization"],emailAddress,[accountInfo objectForKey:@"password"],[accountInfo objectForKey:@"tagColour"],[accountInfo objectForKey:@"customer"]];
     NSData              *accountInfoData       = [accountInfoString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    NSString            *postDataLength        = [NSString stringWithFormat:@"%d",[accountInfoData length]];
+    NSString            *postDataLength        = [NSString stringWithFormat:@"%lu",(unsigned long)[accountInfoData length]];
     NSMutableURLRequest *request               = [[NSMutableURLRequest alloc]init];
     
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/deactivate/ajax"]]];

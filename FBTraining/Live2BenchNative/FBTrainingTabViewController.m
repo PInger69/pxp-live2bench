@@ -209,7 +209,10 @@
     self.fullscreenPlayer.mute = YES;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self updateSideTags];
+    
     Event *event = [_appDel.encoderManager.primaryEncoder event];
     
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
@@ -225,13 +228,15 @@
     self.splitPlayer.mute = NO;
     
     [self.liveButton isActive:event.live];
-    [self.splitPlayer gotolive];
+    if (event.live) {
+        [self.splitPlayer gotolive];
+    }
     
     // tell other players to STFU and hope they will
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{ @"command":[NSNumber numberWithInt:VideoPlayerCommandMute]}];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewDidDisappear:(BOOL)animated {
     // we're nice and mute when no one is listening
     self.currentPlayer.mute = YES;
 }
@@ -241,11 +246,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)sideTagsReady:(NSNotification *)note {
+- (void)updateSideTags {
     // sort them the way the user wanted them
     NSArray *sortedTagDescriptors = [_appDel.userCenter.tagNames sortedArrayUsingDescriptors:@[
-                                        [NSSortDescriptor sortDescriptorWithKey:@"position" ascending:YES],
-                                        [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES]]];
+                                                                                               [NSSortDescriptor sortDescriptorWithKey:@"position" ascending:YES],
+                                                                                               [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES]]];
     
     NSMutableArray *tagNames = [NSMutableArray array];
     for (NSDictionary *tagDescriptor in sortedTagDescriptors) {
@@ -256,17 +261,21 @@
     
     // random tags
     /*
-    for (NSUInteger i = 0; i < 64; i++) {
-        NSString *name = tagNames[(NSUInteger)(drand48() * (tagNames.count))];
-        if (![name isEqualToString:@"--"]) {
-            Tag *tag = [[Tag alloc] init];
-            tag.time = drand48();
-            tag.name = name;
-            
-            [self.periodTableViewController addTag:tag];
-        }
-    }
-    */
+     for (NSUInteger i = 0; i < 64; i++) {
+     NSString *name = tagNames[(NSUInteger)(drand48() * (tagNames.count))];
+     if (![name isEqualToString:@"--"]) {
+     Tag *tag = [[Tag alloc] init];
+     tag.time = drand48();
+     tag.name = name;
+     
+     [self.periodTableViewController addTag:tag];
+     }
+     }
+     */
+}
+
+- (void)sideTagsReady:(NSNotification *)note {
+    [self updateSideTags];
 }
 
 - (void)tagsReady:(NSNotification *)note {

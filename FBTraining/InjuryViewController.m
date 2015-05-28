@@ -375,7 +375,7 @@ static void * eventContext      = &eventContext;
         second = minute % 60;
     }
     
-    self.timeString = [NSString stringWithFormat:@"%02i:%02i", minute, second];
+    self.timeString = [NSString stringWithFormat:@"%02ld:%02ld", (long)minute, (long)second];
     [self.stopButton setTitle:[NSString stringWithFormat:@"%@", self.timeString] forState:UIControlStateNormal];
     
 }

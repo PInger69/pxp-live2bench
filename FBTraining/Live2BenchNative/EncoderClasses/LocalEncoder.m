@@ -193,8 +193,8 @@
             NSString * fn1 = [((NSString*)obj1) componentsSeparatedByString: @"."][0];
             NSString * fn2 = [((NSString*)obj2) componentsSeparatedByString: @"."][0];
             
-            int n1 = [fn1 integerValue];
-            int n2 = [fn2 integerValue];
+            NSInteger n1 = [fn1 integerValue];
+            NSInteger n2 = [fn2 integerValue];
             if (n1 > n2) {
                 return (NSComparisonResult)NSOrderedDescending;
             }
@@ -289,7 +289,7 @@
  
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTagDic];
 
-    [self.localTags setObject:newTagDic forKey:[NSString stringWithFormat:@"%d",self.localTags.count]];
+    [self.localTags setObject:newTagDic forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
     //[self.event.localTags addEntriesFromDictionary: @{[NSString stringWithFormat:@"%i", newTag.uniqueID]: newTag}];
     
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
@@ -819,7 +819,7 @@
 -(NSString*)description
 {
     NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark",_localPath];
-    NSString * txt = [NSString stringWithFormat:@" %@: %d - %@   - %@\nBookmark Path:%@",self.name,self.status,self.event.name,self.event.eventType,  bookmarkPath ];
+    NSString * txt = [NSString stringWithFormat:@" %@: %ld - %@   - %@\nBookmark Path:%@",self.name,(long)self.status,self.event.name,self.event.eventType,  bookmarkPath ];
     return txt;
 }
 

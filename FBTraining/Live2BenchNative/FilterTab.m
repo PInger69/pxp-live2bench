@@ -185,8 +185,8 @@
 -(void)linkComponents:(NSArray *)cmpList
 {
     componentList = cmpList;
-    int count = cmpList.count-1;
-    for (int i= count; i>=0;i--){
+    NSInteger count = cmpList.count-1;
+    for (NSInteger i= count; i>=0;i--){
         id <FilterComponent> cmpItem = cmpList[i];
         [cmpItem previousComponent:     (i == 0)? nil :  cmpList[i-1]];
         [cmpItem nextComponent:         (i == count)  ? nil : cmpList[i+1]];

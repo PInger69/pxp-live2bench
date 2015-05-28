@@ -841,8 +841,8 @@ int viewWillAppearCalled;
  */
 -(void)playNextOrPreTag:(id)sender
 {
-    NSInteger * buttonTagValue  = ((UIButton*)sender).tag;
-    int         nextIndex       = wasPlayingIndexPath.row + (int)buttonTagValue;
+    NSInteger buttonTagValue  = ((UIButton*)sender).tag;
+    NSInteger nextIndex = wasPlayingIndexPath.row + buttonTagValue;
     if(nextIndex > self.allClips.count -1 || nextIndex <0){
         return;
     }

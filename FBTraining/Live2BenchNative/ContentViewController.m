@@ -19,7 +19,7 @@
 @synthesize currentLine;
 @synthesize playerMap;
 
-- (id)initWithIndex:(int)i side:(NSString*)whichSide
+- (id)initWithIndex:(NSInteger)i side:(NSString*)whichSide
 {
 ////    if(!globals)
 ////    {

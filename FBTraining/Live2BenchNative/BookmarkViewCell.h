@@ -15,7 +15,7 @@
 @property (strong, nonatomic) UILabel *eventDate;
 @property (strong, nonatomic) UILabel *indexNum;
 @property (strong, nonatomic) UIImageView *ratingImage;
-@property (assign, nonatomic) int rating;
+@property (assign, nonatomic) NSInteger rating;
 @property (strong, nonatomic) UIView  *translucentEditingView;
 
 @property (strong, nonatomic) UIDocumentInteractionController *interactionController;

@@ -13,7 +13,7 @@
 @interface FullScreenViewController : UIViewController
 {
     CGRect          screenBounds;
-    int             prevDispayIndex;
+    NSInteger             prevDispayIndex;
     CGRect          prevPlayerViewRect;
     CGRect          prevPlayerViewBounds;
     CGRect          prevPlayerLayerRect;

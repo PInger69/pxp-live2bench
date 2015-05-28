@@ -103,7 +103,7 @@
     
 }
 
--(void)setRating:(int)rating{
+-(void)setRating:(NSInteger)rating{
     _rating = rating;
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_MODIFY_TAG object:self];
 }
@@ -115,7 +115,7 @@
 -(NSDictionary *)modifiedData{
     return @{ @"coachpick":(self.coachPick?@"1":@"0"),
               @"comment": (self.comment?self.comment:@""),
-              @"rating": [NSString stringWithFormat:@"%i", self.rating]
+              @"rating": [NSString stringWithFormat:@"%ld", (long)self.rating]
               };
     
 }
@@ -137,7 +137,7 @@
              @"name":self.name,
              @"newTagID" : [NSString stringWithFormat: @"%i",self.uniqueID],
              @"own": [NSString stringWithFormat: @"%i",self.own],
-             @"rating" :[NSString stringWithFormat:@"%i", self.rating],
+             @"rating" :[NSString stringWithFormat:@"%ld", (long)self.rating],
              //@"requrl": (self.requestURL? self.requestURL: @"nil"),
              @"sender":@".min",
              @"starttime": [NSString stringWithFormat:@"%f", self.startTime],

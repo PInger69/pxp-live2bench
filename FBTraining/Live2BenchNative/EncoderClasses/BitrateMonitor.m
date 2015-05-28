@@ -104,7 +104,7 @@ static void * bitrateContext         = &bitrateContext;
         [statusLabelValue sizeToFit];
         [rateLabelValue setText:[NSString stringWithFormat:@"%0.4f", val]];
         [rateLabelValue sizeToFit];
-        [camerasLabelValue setText:[NSString stringWithFormat:@"%i", encoder.cameraCount]];
+        [camerasLabelValue setText:[NSString stringWithFormat:@"%ld", (long)encoder.cameraCount]];
         [camerasLabelValue sizeToFit];
         [encoderVersionLableValue setText:[NSString stringWithFormat:@"%@",encoder.version ]];
         [encoderVersionLableValue sizeToFit];

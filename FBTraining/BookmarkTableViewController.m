@@ -134,12 +134,10 @@
     BookmarkViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookmarkViewCell" forIndexPath:indexPath];
     Clip *clip = self.tableData[indexPath.row];
     
-    
-    
     [cell.eventDate setText: [Utility dateFromEvent: clip.rawData[@"event"]]];
     [cell.tagTime setText: clip.rawData[ @"displaytime"]];
     [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
-    [cell.indexNum setText: [NSString stringWithFormat:@"%i",indexPath.row + 1]];
+    [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
     
     NSURL *shareUrl = [NSURL fileURLWithPath:[clip.videoFiles firstObject]];
@@ -280,7 +278,7 @@
     if (buttonIndex == YES_BUTTON) {
         NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
         
-        for (int i =[deleteOrderList count]-1; i>=0 ;i--) {
+        for (NSInteger i =[deleteOrderList count]-1; i>=0 ;i--) {
             NSIndexPath *cellIndexPath = deleteOrderList[i];
             [self deleteClipAtIndex:cellIndexPath];
             if (cellIndexPath == self.selectedPath) { // this clears the display data on BookmarkViewController

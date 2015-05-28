@@ -264,11 +264,11 @@
 -(void)sortClipsBySelecting
 {
 
-    int filteredTagCount = [self countOfFiltededTags];
-    [filteredTagNumber setText:[NSString stringWithFormat:@"%@: %d", NSLocalizedString(@"Filtered Tag", nil), filteredTagCount]];
+    NSInteger filteredTagCount = [self countOfFiltededTags];
+    [filteredTagNumber setText:[NSString stringWithFormat:@"%@: %ld", NSLocalizedString(@"Filtered Tag", nil), (long)filteredTagCount]];
     
-    int totalTagCount = [_rawTagArray count];
-    [totalTagNumber setText:[NSString stringWithFormat:@"%@: %d", NSLocalizedString(@"Total Tags", nil),totalTagCount]];
+    NSInteger totalTagCount = [_rawTagArray count];
+    [totalTagNumber setText:[NSString stringWithFormat:@"%@: %ld", NSLocalizedString(@"Total Tags", nil),(long)totalTagCount]];
     
 
     if (onSelectSelectors){

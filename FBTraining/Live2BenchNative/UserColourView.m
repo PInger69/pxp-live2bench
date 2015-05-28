@@ -104,7 +104,7 @@
 
     for(NSString *tagLabel in buttonLabels)
     {
-        int i = [buttonLabels indexOfObject:tagLabel];
+        NSInteger i = [buttonLabels indexOfObject:tagLabel];
         float bWidth = (USER_BUTTON_CONTAINER_WIDTH - (PADDING *buttonLabels.count)) /buttonLabels.count;
 
         CustomButton  *eventButton = [self buildButton:CGRectMake(i*(bWidth+PADDING), 0, bWidth, USER_BUTTON_HEIGHT) btnText:tagLabel accessibilityLabel:accessLable];

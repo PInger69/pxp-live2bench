@@ -78,7 +78,7 @@ static AlertType    allowedTypes;
 {
     if (!alertPool) [CustomAlertView staticInit];
    
-    for (int i=[alertPool count]; i>0;i--){
+    for (NSInteger i=[alertPool count]; i>0;i--){
         UIAlertView * check = [alertPool objectAtIndex:i];
         if ([check.message isEqualToString:message]){
             [alertPool removeObject:check];

@@ -19,7 +19,7 @@
 @property (assign,nonatomic)            double         time;
 @property (assign,nonatomic)            int            duration;
 @property (nonatomic,strong)            NSString       * clipId;
-@property (nonatomic,assign)            int            rating;
+@property (nonatomic,assign)            NSInteger            rating;
 @property (nonatomic,strong)            NSString       * comment;
 @property (nonatomic,strong)            NSMutableDictionary   * rawData;
 @property (nonatomic,strong)            NSString       * path;

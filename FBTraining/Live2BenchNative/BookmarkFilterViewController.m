@@ -295,11 +295,11 @@
     NSArray *sortedArray = [eventsArray sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     for(NSString *eventName in sortedArray)
     {
-        int i = [sortedArray indexOfObject:eventName];
+        NSInteger i = [sortedArray indexOfObject:eventName];
         //int i = [typeofTagsArr indexOfObject:eventName];
-        int colNum = ceil(i/ROWS_IN_EVENTS);
+        NSInteger colNum = ceil(i/ROWS_IN_EVENTS);
         
-        int rowNum = (i+1)%ROWS_IN_EVENTS>0 ? (i+1)%ROWS_IN_EVENTS : ROWS_IN_EVENTS;
+        NSInteger rowNum = (i+1)%ROWS_IN_EVENTS>0 ? (i+1)%ROWS_IN_EVENTS : ROWS_IN_EVENTS;
         // //
         CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
         //[eventButton setFrame:CGRectMake((colNum * 83)-60, (rowNum*28)+2, 80, 25)];
