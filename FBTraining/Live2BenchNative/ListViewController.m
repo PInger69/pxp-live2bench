@@ -4463,7 +4463,7 @@ NSMutableArray *oldEventNames;
     
     if (componentFilter) {
         componentFilter.rawTagArray = tagsToSort;
-        tagsToSort = n
+        tagsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
     }
     
     return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];

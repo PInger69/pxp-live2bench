@@ -79,6 +79,8 @@ static void * encoderTagContext = &encoderTagContext;
         _encoderManager = _appDel.encoderManager;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
+        
+        
         _imageAssetManager = appDel.imageAssetManager;
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
@@ -88,8 +90,8 @@ static void * encoderTagContext = &encoderTagContext;
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
-                self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.masterEncoder.liveEvent.tags allValues]];
+                self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.masterEncoder.liveEvent.tags allValues]];
                  [_collectionView reloadData];
             }
             if (!componentFilter.rawTagArray) {

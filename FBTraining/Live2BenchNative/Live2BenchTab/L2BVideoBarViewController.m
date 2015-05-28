@@ -138,11 +138,14 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
-        
+        /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_CHANGE object:nil queue:nil usingBlock:^(NSNotification *note){
+            [self.arrayOfAllTags addObjectsFromArray:eventTags];
+            [self.tagView setNeedsDisplay];
+        }];*/
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
                 if(eventTags){
                     
                     dispatch_async(dispatch_get_main_queue(), ^(){
@@ -179,6 +182,7 @@
         });
          
     }
+    
 }
 
 - (void)deleteTag:(NSNotification *)note {
