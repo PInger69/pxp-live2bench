@@ -87,14 +87,17 @@ static void * encoderTagContext = &encoderTagContext;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
-            self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-            self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-            [_collectionView reloadData];
+            if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
+                self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                 [_collectionView reloadData];
+            }
             if (!componentFilter.rawTagArray) {
                 componentFilter.rawTagArray = self.tagsToDisplay;
-            }
+            };
         }];
-        
+         
+            
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
         self.allTagsArray   = [NSMutableArray array];
@@ -113,6 +116,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)clear{
     [self.tagsToDisplay removeAllObjects];
+    [self.allTagsArray removeAllObjects];
     [_collectionView reloadData];
 }
 
@@ -120,8 +124,7 @@ static void * encoderTagContext = &encoderTagContext;
 // If the filter is actie then filter other wize just display all the tags
 -(void)clipViewTagReceived:(NSNotification*)note
 {
-    NSMutableArray *toBeRemoved = [[NSMutableArray alloc]init];
-    if (note.object && self.allTagsArray) {
+    if (note.object) {
         [self.allTagsArray insertObject:note.object atIndex:0];
         [self.tagsToDisplay insertObject:note.object atIndex:0];
      //   [componentFilter refresh];
