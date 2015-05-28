@@ -434,10 +434,29 @@
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
     self.recording = YES;
     self.startTime = self.currentPlayer.currentTimeInSeconds;
+    
+    self.currentPlayer.videoControlBar.enable = NO;
+    self.currentPlayer.liveIndicatorLight.tintColor = [UIColor redColor];
+    self.currentPlayer.liveIndicatorLight.hidden = NO;
+    
+    self.backSeekButton.enabled = NO;
+    self.forwardSeekButton.enabled = NO;
+    self.slomoButton.enabled = NO;
+    self.liveButton.hidden = YES;
+    [self.periodTableViewController setHidden:YES animated:YES];
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
     self.recording = NO;
+    self.currentPlayer.videoControlBar.enable = YES;
+    self.currentPlayer.liveIndicatorLight.hidden = !self.currentPlayer.live;
+    self.currentPlayer.liveIndicatorLight.tintColor = [UIColor greenColor];
+    
+    self.backSeekButton.enabled = YES;
+    self.forwardSeekButton.enabled = YES;
+    self.slomoButton.enabled = YES;
+    self.liveButton.hidden = NO;
+    [self.periodTableViewController setHidden:NO animated:YES];
     
     NSTimeInterval clipDuration = self.currentPlayer.currentTimeInSeconds - self.startTime;
     

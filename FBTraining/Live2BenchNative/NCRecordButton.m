@@ -10,7 +10,7 @@
 
 @interface NCRecordButton ()
 
-@property (strong, nonatomic, nonnull) CADisplayLink *displayLink;
+@property (strong, nonatomic, nullable) NSTimer *timer;
 
 @property (assign, nonatomic) NSTimeInterval startTime;
 
@@ -30,9 +30,15 @@
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
         
-        self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(update)];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    if (self.timer) {
+        [self.timer invalidate];
+    }
 }
 
 #pragma mark Getter / Setter overrides
@@ -87,7 +93,9 @@
     [self addTarget:self action:@selector(stopRecording) forControlEvents:UIControlEventTouchUpInside];
     
     [self setBackgroundImage:[self recordingButtonWithSize:self.frame.size] forState:UIControlStateNormal];
-    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    
+    self.timer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(update:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
     
     _isRecording = YES;
     
@@ -105,7 +113,8 @@
     [self setTitle:@"00:00:00" forState:UIControlStateNormal];
     [self setBackgroundImage:[self readyToRecordButtonWithSize:self.frame.size] forState:UIControlStateNormal];
     
-    [self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    [self.timer invalidate];
+    self.timer = nil;
     
     _isRecording = NO;
     
@@ -115,7 +124,8 @@
     }
 }
 
-- (void)update {
+- (void)update:(NSTimer *)timer {
+    NSLog(@"update");
     [self setTitle:self.recordingTimeString forState:UIControlStateNormal];
     
     if (self.delegate) {

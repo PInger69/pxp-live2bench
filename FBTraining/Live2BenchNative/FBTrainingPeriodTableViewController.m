@@ -172,30 +172,49 @@
     [self.clipTableViewController.tableView reloadData];
 }
 
-#pragma mark - gesture recognizers
+#pragma mark - Hide / Show stuff
 
-- (void)leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated {
+    _hidden = hidden;
+    if (hidden) {
+        [self dismiss:animated];
+    } else {
+        [self show:animated];
+    }
+}
+
+- (void)setHidden:(BOOL)hidden {
+    [self setHidden:hidden animated:NO];
+}
+
+- (void)dismiss:(BOOL)animated {
+    [self.clipTableViewController dismiss:animated];
     
-    [self.clipTableViewController dismiss:YES];
+    if (animated) {
+        [UIView beginAnimations:nil context:nil];
+        
+        [UIView setAnimationDuration:0.2];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+    }
     
-    [UIView beginAnimations:nil context:nil];
-    
-    [UIView setAnimationDuration:0.2];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
     self.tableView.frame = CGRectMake(-self.tableView.frame.size.width, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.tableView.frame.size.height);
     self.clipTableViewController.view.frame = CGRectMake(self.clipTableViewController.view.frame.origin.x - self.tableView.frame.size.width, self.clipTableViewController.view.frame.origin.y, self.clipTableViewController.view.frame.size.width, self.clipTableViewController.view.frame.size.height);
     
     self.pullTabView.alpha = 1.0;
     self.pullTabView.frame = CGRectMake(0, self.pullTabView.frame.origin.y, self.pullTabView.frame.size.width, self.pullTabView.frame.size.height);
     
-    [UIView commitAnimations];
+    if (animated) {
+        [UIView commitAnimations];
+    }
 }
 
-- (void)rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
-    [UIView beginAnimations:nil context:nil];
-    
-    [UIView setAnimationDuration:0.2];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+- (void)show:(BOOL)animated {
+    if (animated) {
+        [UIView beginAnimations:nil context:nil];
+        
+        [UIView setAnimationDuration:0.2];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    }
     
     self.tableView.frame = CGRectMake(0, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.tableView.frame.size.height);
     
@@ -204,7 +223,23 @@
     self.pullTabView.alpha = 0.0;
     self.pullTabView.frame = CGRectMake(self.tableView.frame.size.width, self.pullTabView.frame.origin.y, self.pullTabView.frame.size.width, self.pullTabView.frame.size.height);
     
-    [UIView commitAnimations];
+    if (animated) {
+        [UIView commitAnimations];
+    }
+}
+
+#pragma mark - gesture recognizers
+
+- (void)leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
+    if (!self.hidden) {
+        [self dismiss:YES];
+    }
+}
+
+- (void)rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
+    if (!self.hidden ) {
+        [self show:YES];
+    }
 }
 
 #pragma mark - Table view data source

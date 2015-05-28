@@ -93,23 +93,27 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
         
-        //        self.allTags = [[NSMutableArray alloc]init];
-        //        self.tagsToDisplay = [[NSMutableArray alloc]init];
+                self.allTags = [[NSMutableArray alloc]init];
+                self.tagsToDisplay = [[NSMutableArray alloc]init];
         _tableViewController = [[ListTableViewController alloc]init];
         _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
         //_tableViewController.listViewControllerView = self.view;
-        //_tableViewController.tableData = self.tagsToDisplay;
+        _tableViewController.tableData = self.tagsToDisplay;
         
-        /*
+        
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             NSLog(@"READY!");
-            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-            _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-            [_tableViewController.tableView reloadData];
+            
+            if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
+                self.tagsToDisplay =[ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+                [_tableViewController.tableView reloadData];
+
+            }
             
         }];
-         */
+        
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -322,10 +326,10 @@ NSMutableArray *oldEventNames;
     [commentingField clear];
     commentingField.ratingScale.rating = 0;
     commentingField.enabled = NO;
-    if(![self.view.subviews containsObject:componentFilter.view])
+    /*if(![self.view.subviews containsObject:componentFilter.view])
     {
         [self.view addSubview:componentFilter.view];
-    }
+    }*/
     
     self.videoPlayer.mute = NO;
     
