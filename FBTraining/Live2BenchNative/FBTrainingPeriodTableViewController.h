@@ -27,8 +27,11 @@
 @property (strong, nonatomic, nonnull) NSArray *tagNames;
 @property (strong, nonatomic, nonnull) NSArray *tags;
 @property (strong, nonatomic, nullable) UIImage *tabImage;
+@property (assign, nonatomic) BOOL hidden;
 
 - (void)addTag:(nonnull Tag *)tag;
 - (void)removeTag:(nonnull Tag *)tag;
+
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end
