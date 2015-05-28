@@ -1141,7 +1141,7 @@
 {
     // Sorted keys
     NSMutableArray * allKeys =  [NSMutableArray arrayWithArray:[[queue allKeys] sortedArrayUsingComparator:^(id obj1, id obj2) {
-        return [obj1 intValue] - [obj2 intValue];
+        return (NSComparisonResult) [obj1 longValue] - [obj2 longValue];
     }]];
     
     NSNumber * thePriorityKey = [allKeys lastObject];

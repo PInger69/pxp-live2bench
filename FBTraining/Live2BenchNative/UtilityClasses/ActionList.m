@@ -210,7 +210,7 @@ static void * actionContext = &actionContext;
 
 -(NSString*)description
 {
-    NSString* txt = [NSString stringWithFormat:@"Count of items in Action List: %i",[_alist count]];
+    NSString* txt = [NSString stringWithFormat:@"Count of items in Action List: %lu",(unsigned long)[_alist count]];
     
     
     return txt;

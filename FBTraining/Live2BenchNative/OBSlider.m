@@ -171,7 +171,7 @@
 {
     for (NSUInteger i = 0; i < [scrubbingSpeedPositions count]; i++) {
         NSNumber *scrubbingSpeedOffset = [scrubbingSpeedPositions objectAtIndex:i];
-        if (verticalOffset < [scrubbingSpeedOffset do]) {
+        if (verticalOffset < [scrubbingSpeedOffset floatValue]) {
             return i;
         }
     }
