@@ -65,7 +65,7 @@
 //    UIButton                            *zoomButton;
 //    UIButton                            *unZoomButton;
     
-     NSObject <EncoderProtocol>  *eventOnPrimaryEncoder;
+     Encoder <EncoderProtocol>  *eventOnPrimaryEncoder;
     
     BOOL        needDelete;
     
@@ -353,6 +353,7 @@ static void * eventContext      = &eventContext;
                 [_pipController.multi fullScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
+                [telestration forceCloseTele];
                 _fullscreenViewController.enable = NO;
                 [_pipController.multi normalScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
@@ -505,6 +506,18 @@ static void * eventContext      = &eventContext;
 -(void)onOpenTeleView:(TeleViewController *)tvc
 {
     [self.videoPlayer pause];
+    self.videoPlayer.videoControlBar.hidden = YES;
+    [_fullscreenViewController setMode:L2BFullScreenModeTele];
+}
+
+
+-(void)onCloseTeleView:(TeleViewController *)tvc
+{
+
+    
+    [self.videoPlayer play];
+    self.videoPlayer.videoControlBar.hidden = NO;
+    [_fullscreenViewController setMode:_fullscreenViewController.prevMode];
     
 }
 

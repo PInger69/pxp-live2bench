@@ -14,6 +14,7 @@
 #import "ListPopoverController.h"
 #import "FeedSelectCell.h"
 #import "Feed.h"
+#import "Tag.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -252,6 +253,16 @@
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                     source = [[Feed alloc] initWithFileURL:path];
                     //source = [[Feed alloc] initWithURLString:path quality:1];
+                    
+                    NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
+                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
+                    NSMutableDictionary *tags = [[NSMutableDictionary alloc]init];
+                    for (NSDictionary *tagDic in tagsArray) {
+                        [tags setObject:tagDic forKey:tagDic[@"id"]];
+                        Tag *t =  [[Tag alloc]initWithData:tagDic];
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:t userInfo:tagDic];
+                    }
 
                 } else {
                     weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;

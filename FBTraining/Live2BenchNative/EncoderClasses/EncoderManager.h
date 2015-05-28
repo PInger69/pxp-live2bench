@@ -83,7 +83,7 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 
 -(void)closeDurationTag:(NSString *)tagName;
 
-
+-(void)onPrimaryEncoderEventChange:(id <EncoderProtocol>)encoder;
 
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
@@ -95,7 +95,7 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 
 -(void)refresh;
 -(void)logoutOfCloud;
-
+-(void)onLoginToCloud;
 
 #pragma mark - Debugging Methods
 /**

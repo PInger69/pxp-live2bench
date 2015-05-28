@@ -166,6 +166,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_SELECT_TAB                    @"selectTab"   // userInfo:@{@"tabName":@"Live2Bench"}
 #define NOTIF_USER_LOGGED_OUT               @"userLoggedout" // {@"success":<bool>}
+#define NOTIF_USER_LOGGED_IN                @"userLoggedin"
 //#define NOTIF_LOGOUT_USER                   @"NOTIF_LOGOUT_USER" // this is watched by the encoder manager
 
 

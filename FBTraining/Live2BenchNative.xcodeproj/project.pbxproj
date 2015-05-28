@@ -2819,6 +2819,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/google-api-objectivec-client-read-only/Source/** /Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only/Source/** /Users/dev/Documents/live2BenchThis/google-api-objectivec-client-read-only/Source/** /Users/Benjamin/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** /Users/dev/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** \"$(SRCROOT)/../google-api-objectivec-client-read-only\"/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -2855,6 +2856,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/google-api-objectivec-client-read-only/Source/** /Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only/Source/** /Users/dev/Documents/live2BenchThis/google-api-objectivec-client-read-only/Source/** /Users/Benjamin/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** /Users/dev/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** \"$(SRCROOT)/../google-api-objectivec-client-read-only\"/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;

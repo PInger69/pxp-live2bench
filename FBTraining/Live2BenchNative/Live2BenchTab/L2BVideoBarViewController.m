@@ -138,6 +138,8 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
+        
+        
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
@@ -153,6 +155,7 @@
         }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
         
         self.displayLink = [CADisplayLink displayLinkWithTarget:self.tagView selector:@selector(setNeedsDisplay)];
         [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
@@ -332,7 +335,8 @@
 
 -(void)update
 {
-
+    [self.arrayOfAllTags removeAllObjects];
+    [self.tagView setNeedsDisplay];
 
 }
 
