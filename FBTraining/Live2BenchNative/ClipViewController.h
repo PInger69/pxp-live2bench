@@ -11,7 +11,6 @@
 #import "thumbnailCell.h"
 #import "Live2BenchViewController.h"
 #import "CustomTabBar.h"
-#import "SDWebImage/UIImageView+WebCache.h"
 #import "CustomButton.h"
 #import "ClipCornerView.h"
 //#import "UIColor+Expanded.h"

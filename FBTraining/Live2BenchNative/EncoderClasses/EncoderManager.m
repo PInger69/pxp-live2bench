@@ -22,8 +22,6 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <ifaddrs.h>
 #import <arpa/inet.h>
-
-#import <SDWebImage/SDImageCache.h>
 #import "UserCenter.h"
 
 
