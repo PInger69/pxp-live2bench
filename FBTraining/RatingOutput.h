@@ -18,7 +18,7 @@
 
 
 
-@property (assign, nonatomic)   int rating;
+@property (assign, nonatomic)   NSInteger rating;
 
 
 

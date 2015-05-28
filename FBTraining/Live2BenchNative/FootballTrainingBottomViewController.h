@@ -14,9 +14,9 @@
 @interface FootballTrainingBottomViewController : UIViewController <NSURLConnectionDataDelegate>
 
 @property (nonatomic,strong) Live2BenchViewController *live2BenchViewController;
-@property (nonatomic) int currentOffenseGroup;
-@property (nonatomic) int currentDefenseGroup;
-@property (nonatomic) int currentOtherGroup;
+@property (nonatomic) NSInteger currentOffenseGroup;
+@property (nonatomic) NSInteger currentDefenseGroup;
+@property (nonatomic) NSInteger currentOtherGroup;
 @property (nonatomic,strong) NSMutableArray *currentGroupPlayers;
 
 - (id)initWithController: (Live2BenchViewController*)l2b;

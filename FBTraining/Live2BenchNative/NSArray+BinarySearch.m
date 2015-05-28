@@ -27,7 +27,7 @@
         return [self indexOfObject:searchItem]+1;
     }
     
-    int maximIndex =[self count] - 1;
+    NSInteger maximIndex = [self count] - 1;
     if([[self objectAtIndex:maximIndex] floatValue] < [searchItem floatValue])
     {
         return self.count;

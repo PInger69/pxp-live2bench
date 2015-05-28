@@ -278,8 +278,8 @@ NSMutableData *responseData;
     offenseGroupButtons = [[NSMutableArray alloc] init];
     defenseGroupButtons = [[NSMutableArray alloc] init];
     
-    int numOfOffenseGroup = 0;
-    int numOfDefenseGroup = 0;
+    NSInteger numOfOffenseGroup = 0;
+    NSInteger numOfDefenseGroup = 0;
     
     if (offenseGroupDictionary && [offenseGroupDictionary count] > 0) {
         numOfOffenseGroup = [offenseGroupDictionary count];
@@ -292,13 +292,13 @@ NSMutableData *responseData;
     }
     
     //Creates defense and offense group buttons
-    for (int i = 0; i < MAX(numOfOffenseGroup, numOfDefenseGroup); i++) {
+    for (NSInteger i = 0; i < MAX(numOfOffenseGroup, numOfDefenseGroup); i++) {
         BorderButton *offenseButton = [BorderButton buttonWithType:UIButtonTypeCustom];
         BorderButton *defenseButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-        [offenseButton setTitle:[NSString stringWithFormat:@"%d",i+1] forState:UIControlStateNormal];
+        [offenseButton setTitle:[NSString stringWithFormat:@"%ld",(long) i+1] forState:UIControlStateNormal];
         offenseButton.tag = i+1;
         [offenseButton addTarget:self action:@selector(groupButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
-        [defenseButton setTitle:[NSString stringWithFormat:@"%d",numOfDefenseGroup-i] forState:UIControlStateNormal];
+        [defenseButton setTitle:[NSString stringWithFormat:@"%ld",(long) numOfDefenseGroup-i] forState:UIControlStateNormal];
         defenseButton.tag = numOfDefenseGroup-i;
         [defenseButton addTarget:self action:@selector(groupButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
         if (offenseGroupDictionary && i < numOfOffenseGroup) {
@@ -553,23 +553,23 @@ NSMutableData *responseData;
     }
 }
 
-- (void)selectPlayer:(int)player{
+- (void)selectPlayer:(NSInteger)player{
     for (UIButton* button in playersButtons) {
         if (button.tag == player) {
             [button setSelected:YES];
-            [currentGroupPlayers addObject:[NSString stringWithFormat:@"%d",button.tag]];
+            [currentGroupPlayers addObject:[NSString stringWithFormat:@"%ld",(long)button.tag]];
             break;
         }
     }
 //    [self dispatchPlayersModifiedNotification];
 }
 
-- (void)deselectPlayer:(int)player{
+- (void)deselectPlayer:(NSInteger)player{
     for (UIButton* button in playersButtons) {
         if (button.tag == player) {
             [button setSelected:NO];
             for (NSString *player in currentGroupPlayers){
-                if ([player isEqualToString:[NSString stringWithFormat:@"%d",button.tag]]) {
+                if ([player isEqualToString:[NSString stringWithFormat:@"%ld",(long)button.tag]]) {
                     [currentGroupPlayers removeObject:player];
                     break;
                 }
@@ -853,11 +853,11 @@ NSMutableData *responseData;
 {
     //Set selected players based on default group
     if ([self isOffenseGroup]) {
-        for (NSString *player in [offenseGroupDictionary objectForKey:[NSString stringWithFormat:@"%d",self.currentOffenseGroup]]){
+        for (NSString *player in [offenseGroupDictionary objectForKey:[NSString stringWithFormat:@"%ld",(long)self.currentOffenseGroup]]){
             [self selectPlayer:[player intValue]];
         }
     } else if ([self isDefenseGroup]) {
-        for (NSString *player in [defenseGroupDictionary objectForKey:[NSString stringWithFormat:@"%d",self.currentDefenseGroup]]){
+        for (NSString *player in [defenseGroupDictionary objectForKey:[NSString stringWithFormat:@"%ld",(long)self.currentDefenseGroup]]){
             [self selectPlayer:[player intValue]];
         }
     }
@@ -922,7 +922,7 @@ NSMutableData *responseData;
         }
         numOfRows = 4;
         buttonHeight = 32;
-        int rowCount0, rowCount1, rowCount2, rowCount3;
+        NSInteger rowCount0, rowCount1, rowCount2, rowCount3;
         rowCount0 = [playersArray count]/2;
         rowCount2 = [playersArray count] - rowCount0;
         rowCount1 = rowCount0/2;
@@ -939,7 +939,7 @@ NSMutableData *responseData;
             buttonWidth --;
         }
         numOfRows = 3;
-        int rowCount0, rowCount1, rowCount2;
+        NSInteger rowCount0, rowCount1, rowCount2;
         rowCount0 = [playersArray count]/3;
         rowCount1 = [playersArray count] - rowCount0;
         rowCount1 = rowCount1/2;
@@ -953,7 +953,7 @@ NSMutableData *responseData;
             buttonWidth --;
         }
         numOfRows = 2;
-        int rowCount0, rowCount1;
+        NSInteger rowCount0, rowCount1;
         rowCount1 = [playersArray count]/2;
         rowCount0 = [playersArray count] - rowCount1;
         NSArray *row0 = [playersArray subarrayWithRange:NSMakeRange(0, rowCount0)];

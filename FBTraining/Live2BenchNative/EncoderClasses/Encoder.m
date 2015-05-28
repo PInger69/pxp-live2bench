@@ -1070,7 +1070,7 @@
 {
     // Sorted keys
     NSMutableArray * allKeys =  [NSMutableArray arrayWithArray:[[queue allKeys] sortedArrayUsingComparator:^(id obj1, id obj2) {
-        return [obj1 intValue] - [obj2 intValue];
+        return (NSComparisonResult) ([obj1 longValue] - [obj2 longValue]);
     }]];
     
     NSNumber * thePriorityKey = [allKeys lastObject];
@@ -1130,7 +1130,7 @@
 // This will show name and status
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@" %@(%@): %d - %@   - %@",self.name,version,self.status,self.event.name,self.event.eventType  ];
+    NSString * txt = [NSString stringWithFormat:@" %@(%@): %ld - %@   - %@",self.name,version,(long)self.status,self.event.name,self.event.eventType  ];
     return txt;
 }
 

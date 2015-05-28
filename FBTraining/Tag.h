@@ -33,7 +33,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (assign, nonatomic) BOOL          isLive;
 @property (strong, nonatomic) NSString      *name;
 @property (assign, nonatomic) BOOL          own;
-@property (assign, nonatomic) int           rating;
+@property (assign, nonatomic) NSInteger           rating;
 @property (strong, nonatomic) NSString      *requestURL;
 @property (assign, nonatomic) double        startTime;
 @property (assign, nonatomic) double        time;

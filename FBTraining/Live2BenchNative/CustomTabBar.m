@@ -114,7 +114,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
         [tab removeFromSuperview];
     }
     //int tabCount = [self.viewControllers count];
-    int tabCount = [self.tabs count];
+    NSUInteger tabCount = [self.tabs count];
     tabNameReferenceDict = [[NSMutableDictionary alloc]init]; // this is so the tabs can be ref by name;
     for (int i =0; i<tabCount;i++){
         
@@ -260,7 +260,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
  *
  *  @param tabID Tab Id
  */
-- (void)selectTab:(int)tabID
+- (void)selectTab:(NSInteger)tabID
 {
     self.selectedIndex = tabID;
 }
@@ -269,7 +269,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 //tab bar button is clicked
 - (void)buttonClicked:(id)sender
 {
-    int tagNum = [sender tag];
+    NSInteger tagNum = [sender tag];
     //    if (self.selectedIndex != tagNum){
     //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SWITCH_MAIN_TAB object:self];
     //    }

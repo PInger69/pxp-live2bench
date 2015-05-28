@@ -71,9 +71,9 @@
 
 #pragma mark - custom getter and setter methods
 
--(void)setRating:(int)rating{
+-(void)setRating:(NSInteger)rating{
     _rating = rating;
-    [self modClipData: @{@"rating": [NSNumber numberWithInt: rating]}];
+    [self modClipData: @{@"rating": [NSNumber numberWithInteger: rating]}];
     [self write];
 }
 

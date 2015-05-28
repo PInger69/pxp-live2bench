@@ -22,6 +22,6 @@
  *
  *  @param tabID tabID
  */
--(void) selectTab:(int)tabID;
+-(void) selectTab:(NSInteger)tabID;
 
 @end

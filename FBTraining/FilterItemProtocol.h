@@ -15,7 +15,7 @@
 @property (assign, nonatomic) double time;
 @property (assign, nonatomic) int duration;
 @property (strong, nonatomic) NSString *name;
-@property (assign, nonatomic) int rating;
+@property (assign, nonatomic) NSInteger rating;
 @property (strong, nonatomic) NSString *user;
 
 @optional

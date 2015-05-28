@@ -52,8 +52,8 @@
 
 @synthesize speed = _speed;
 
-static int              currentForwardButtonIndex;
-static int              currentBackwardButtonIndex;
+static NSInteger              currentForwardButtonIndex;
+static NSInteger              currentBackwardButtonIndex;
 static NSArray          * listOfSpeeds;
 static NSMutableArray   * allSeekButtonsForward;
 static NSMutableArray   * allSeekButtonsBackward;
@@ -285,7 +285,7 @@ static NSMutableArray   * allSeekButtonsBackward;
  *
  *  @param index of image ot retrieve from the class dictionary
  */
--(void)setMainButtonImageIndex:(int)index
+-(void)setMainButtonImageIndex:(NSInteger)index
 {
     [ mainButton setTextNumber:[listOfSpeeds[index]  floatValue]];
     return;

@@ -258,7 +258,7 @@ BOOL touchEnded = NO;
         CGContextMoveToPoint(straightTempContext, straightPoint.x, straightPoint.y);
         CGContextAddLineToPoint(straightTempContext, newPoint.x, newPoint.y);
         CGContextStrokePath(straightTempContext);
-        CGRect displayRect = CGRectMake(MIN(straightPoint.x-5, newPoint.x-5), MIN(straightPoint.y-5, newPoint.y-5), fabsf(straightPoint.x - newPoint.x) + 10, fabsf(straightPoint.y - newPoint.y) + 10);
+        CGRect displayRect = CGRectMake(MIN(straightPoint.x-5, newPoint.x-5), MIN(straightPoint.y-5, newPoint.y-5), fabs(straightPoint.x - newPoint.x) + 10, fabs(straightPoint.y - newPoint.y) + 10);
         [self setNeedsDisplayInRect:CGRectUnion(displayRect, lastStraightRect)];
         lastStraightRect = displayRect;
         
@@ -317,7 +317,7 @@ BOOL touchEnded = NO;
                 float distance = -1;
                 float avgX = 0;
                 float avgY = 0;
-                for (int i = points.count - 1; i >= 0; i--) {
+                for (NSInteger i = points.count - 1; i >= 0; i--) {
                     avgX += [points[i] CGPointValue].x;
                     avgY += [points[i] CGPointValue].y;
                     distance = [self distanceBetweenPoint:[points[i] CGPointValue] andPoint:newPoint];

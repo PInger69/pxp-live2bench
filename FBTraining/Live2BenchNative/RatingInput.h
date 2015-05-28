@@ -14,7 +14,7 @@
     int rating;
     BOOL enabled;
 }
-@property (assign, nonatomic)   int rating;
+@property (assign, nonatomic)   NSInteger rating;
 @property (nonatomic,assign)    BOOL enabled;
 @property (nonatomic, strong)   UILabel *ratingLabel;
 

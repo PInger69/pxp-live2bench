@@ -12,7 +12,7 @@
 {
     id      _target;
     SEL     _selector;
-    int     _current;
+    NSInteger     _current;
     BOOL    isSubzero;
     
     void (^onFreeze)(BOOL);// BOOL is for subzero freeze

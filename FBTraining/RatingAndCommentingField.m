@@ -94,8 +94,8 @@
 
 -(void)sendRatingNew:(id)sender
 {
-    int recievedRating = [(RatingInput *)sender rating];
-    [self.data    setValue:[NSString stringWithFormat:@"%i",recievedRating] forKey:@"rating"];
+    NSInteger recievedRating = [(RatingInput *)sender rating];
+    [self.data    setValue:[NSString stringWithFormat:@"%li",(long)recievedRating] forKey:@"rating"];
     self.tagUpdate(self.data);
 }
 

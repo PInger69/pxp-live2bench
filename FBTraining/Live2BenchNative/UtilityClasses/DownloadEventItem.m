@@ -74,7 +74,7 @@ static void * statusContext         = &statusContext;
     if (context == &statusContext) {
         
         if (obj.status == DownloadItemStatusComplete) {
-            int myindex = [listOfDownloadItems indexOfObject:obj];
+            NSUInteger myindex = [listOfDownloadItems indexOfObject:obj];
             
             if (myindex == [listOfDownloadItems indexOfObject:[listOfDownloadItems lastObject]]){
                 [obj removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))    context:&statusContext];

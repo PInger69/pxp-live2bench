@@ -266,7 +266,7 @@
     [mark.markerView setAccessibilityLabel:@"marker"];
     //mark.marker.frame = CGRectMake(mark.xValue, 0.0f, 5.0f, 40.0f);
     [self.view insertSubview:mark.markerView belowSubview:self.tagEventName];
-    int numMarks = [[markerDict objectForKey:@"colorArr"]count];
+    NSInteger numMarks = [[markerDict objectForKey:@"colorArr"]count];
     NSArray *tempColorArr = [markerDict objectForKey:@"colorArr"];
     //create subviews according to the color array saved in the lead dictionary
     if (numMarks != 1){

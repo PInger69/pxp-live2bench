@@ -103,7 +103,7 @@
     
 }
 
--(void)setRating:(int)rating{
+-(void)setRating:(NSInteger)rating{
     _rating = rating;
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_MODIFY_TAG object:self];
 }
@@ -115,7 +115,7 @@
 -(NSDictionary *)modifiedData{
     return @{ @"coachpick":(self.coachPick?@"1":@"0"),
               @"comment": (self.comment?self.comment:@""),
-              @"rating": [NSString stringWithFormat:@"%i", self.rating]
+              @"rating": [NSString stringWithFormat:@"%ld", (long)self.rating]
               };
     
 }
@@ -127,7 +127,7 @@
     [tagDict addEntriesFromDictionary: @{@"colour": self.colour,
              @"comment": self.comment,
              @"deleted": @"1",
-             @"deviceid": (self.deviceID ? self.deviceID: @"nil"),
+             //@"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              @"displaytime":self.displayTime,
              @"duration": [NSString stringWithFormat: @"%i", self.duration],
              @"event":self.event,
@@ -137,7 +137,7 @@
              @"name":self.name,
              @"newTagID" : [NSString stringWithFormat: @"%i",self.uniqueID],
              @"own": [NSString stringWithFormat: @"%i",self.own],
-             @"rating" :[NSString stringWithFormat:@"%i", self.rating],
+             @"rating" :[NSString stringWithFormat:@"%ld", (long)self.rating],
              //@"requrl": (self.requestURL? self.requestURL: @"nil"),
              @"sender":@".min",
              @"starttime": [NSString stringWithFormat:@"%f", self.startTime],
@@ -167,7 +167,8 @@
              @"colour": self.colour,
              @"deviceid":self.deviceID,
              @"event":self.event,
-             @"name":[Utility encodeSpecialCharacters:self.name],
+             //@"name":[Utility encodeSpecialCharacters:self.name],
+             @"name":self.name,
              @"requestime":[NSString stringWithFormat:@"%f",CACurrentMediaTime()],
              @"time": [NSString stringWithFormat:@"%f", self.time],
              @"user": self.user,

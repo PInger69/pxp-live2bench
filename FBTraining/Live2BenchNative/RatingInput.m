@@ -85,7 +85,7 @@ static UIImage* rateUnSelected;
 -(void)sendRating:(id)sender{
     if (!enabled) return;
     UIButton *button = (UIButton*)sender;
-    int index = button.tag;
+    NSInteger index = button.tag;
     
     if (self.rating == 1 && index == 0){
         [button setImage:rateUnSelected forState:UIControlStateNormal];
@@ -115,14 +115,14 @@ static UIImage* rateUnSelected;
 
 
 // Getter Setter
--(int)rating
+-(NSInteger)rating
 {
     return _rating;
 }
 
 
 
--(void)setRating:(int)rate
+-(void)setRating:(NSInteger)rate
 {
     if (rate <0){
         _rating = 0;

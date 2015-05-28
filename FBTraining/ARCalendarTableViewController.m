@@ -362,17 +362,17 @@
     [cell.downloadInfoLabel setText:@"0 / 0"];
 
     if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i %@\n%i %@", (localOne.downloadedSources.count + event.downloadedSources.count), NSLocalizedString(@"Downloaded", nil), event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) (localOne.downloadedSources.count + event.downloadedSources.count), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
     }
 
     if (event.local) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", localOne.downloadedSources.count,event.mp4s.count]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)localOne.downloadedSources.count,(unsigned long)event.mp4s.count]];
 
     } else {
         if (localOne) {
-            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)(localOne.downloadedSources.count + event.downloadedSources.count),(unsigned long)event.mp4s.count]];
         } else {
-            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)event.downloadedSources.count,(unsigned long)event.mp4s.count]];
         }
     }
     

@@ -351,7 +351,6 @@
 		D7B1AF961704F41700013C95 /* slineoff.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B1AF941704F41700013C95 /* slineoff.png */; };
 		D7B1EA2C16C5585400DD35B0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B1EA2B16C5585400DD35B0 /* SystemConfiguration.framework */; };
 		D7B4865216CBF05C000AA878 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B4865116CBF05C000AA878 /* ImageIO.framework */; };
-		D7B4867916CC037C000AA878 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B4867816CC037C000AA878 /* SDWebImage.framework */; };
 		D7B5235B1760D4C100BF92EB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7B5235A1760D4C100BF92EB /* CoreMedia.framework */; };
 		D7B523631760EC9F00BF92EB /* download_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B5235F1760EC9F00BF92EB /* download_selected.png */; };
 		D7B523661760EC9F00BF92EB /* download_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B523621760EC9F00BF92EB /* download_unselected@2x.png */; };
@@ -1059,7 +1058,6 @@
 				D7A939B116ADD86F006CBAB2 /* MediaPlayer.framework in Frameworks */,
 				D7A9394416ADA65E006CBAB2 /* UIKit.framework in Frameworks */,
 				D7A9394816ADA65E006CBAB2 /* CoreGraphics.framework in Frameworks */,
-				D7B4867916CC037C000AA878 /* SDWebImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2821,7 +2819,7 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/google-api-objectivec-client-read-only/Source/** /Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only/Source/** /Users/dev/Documents/live2BenchThis/google-api-objectivec-client-read-only/Source/** /Users/Benjamin/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** /Users/dev/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** \"$(SRCROOT)/../google-api-objectivec-client-read-only\"/**";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2858,7 +2856,7 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/google-api-objectivec-client-read-only/Source/** /Users/Main/Desktop/liveBenchParent/google-api-objectivec-client-read-only/Source/** /Users/dev/Documents/live2BenchThis/google-api-objectivec-client-read-only/Source/** /Users/Benjamin/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** /Users/dev/Desktop/Avoca/pxp-live2bench/google-api-objectivec-client-read-only/Source/** \"$(SRCROOT)/../google-api-objectivec-client-read-only\"/**";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2882,7 +2880,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
 		};
@@ -2905,7 +2903,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
 		};

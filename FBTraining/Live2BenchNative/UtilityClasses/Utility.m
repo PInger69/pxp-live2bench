@@ -28,15 +28,15 @@
     NSString *displayTime;
     if (time < 0) {
         if (dHours > 0) {
-            displayTime = [NSString stringWithFormat:@"-%i:%02i:%02i",dHours, dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"-%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
         }else{
-            displayTime = [NSString stringWithFormat:@"-%02i:%02i", dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"-%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
         }
     }else{
         if (dHours > 0) {
-            displayTime = [NSString stringWithFormat:@"%i:%02i:%02i",dHours, dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
         }else{
-            displayTime = [NSString stringWithFormat:@"%02i:%02i", dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
         }
     }
     return displayTime;
@@ -160,7 +160,7 @@
     // This is the destination
     uint8_t digest[CC_SHA1_DIGEST_LENGTH] = {0};
     // This one function does an unkeyed SHA1 hash of your hash data
-    CC_SHA1(keyData.bytes, keyData.length, digest);
+    CC_SHA1(keyData.bytes, (unsigned int) keyData.length, digest);
     
     // Now convert to NSData structure to make it usable again
     NSData *out = [NSData dataWithBytes:digest
@@ -180,7 +180,7 @@
 {
     const char* str = [input UTF8String];
     unsigned char result[CC_SHA256_DIGEST_LENGTH];
-    CC_SHA256(str, strlen(str), result);
+    CC_SHA256(str, (unsigned int) strlen(str), result);
     
     NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
     for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
@@ -250,9 +250,9 @@
     NSArray *version1Array = [version1 componentsSeparatedByString:@"."];
     NSArray *version2Array = [version2 componentsSeparatedByString:@"."];
     
-    int maxCount = MAX(version1Array.count, version2Array.count);
+    NSUInteger maxCount = MAX(version1Array.count, version2Array.count);
     
-    for (int i = 0; i < maxCount; ++i) {
+    for (NSUInteger i = 0; i < maxCount; ++i) {
         int version1Number = [version1Array[i] intValue];
         int version2Number = [version1Array[i] intValue];
         
