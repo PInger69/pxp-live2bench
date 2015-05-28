@@ -147,7 +147,10 @@ static void * encoderTagContext = &encoderTagContext;
 
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:true];
+    
+    
     [_collectionView reloadData];
+
 }
 
 - (void)viewDidLoad
@@ -273,7 +276,7 @@ static void * encoderTagContext = &encoderTagContext;
             self.allTagsArray = [NSMutableArray arrayWithArray:[eventTags copy]];
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             if (!componentFilter.rawTagArray) {
-                componentFilter.rawTagArray = self.tagsToDisplay;
+                self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
             }
             [self.collectionView reloadData];
         }
@@ -289,6 +292,16 @@ static void * encoderTagContext = &encoderTagContext;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
 }
 
+//-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
+//    NSMutableArray *tagsToSort = [NSMutableArray arrayWithArray:tags];
+//    
+//    if (componentFilter) {
+//        componentFilter.rawTagArray = tagsToSort;
+//        tagsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
+//    }
+//    
+//    return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
+//}
 
 
 -(void)receiveFilteredArrayFromFilter:(id)filter

@@ -266,7 +266,7 @@ NSMutableArray *oldEventNames;
     
    componentFilter = [TestFilterViewController commonFilter];
     
-    
+    _tableViewController.tableData = self.tagsToDisplay;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -283,14 +283,24 @@ NSMutableArray *oldEventNames;
         if (!self.tagsToDisplay) {
             self.tagsToDisplay = [NSMutableArray arrayWithArray:[eventTags copy]];
             _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+
             [_tableViewController reloadData];
         }
+        
+
+//            self.allTagsArray = [NSMutableArray arrayWithArray:[eventTags copy]];
+//            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+//            if (!componentFilter.rawTagArray) {
+//                componentFilter.rawTagArray = self.tagsToDisplay;
+//            }
+        
+        
         
     }}];
     
     
-    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-    [_tableViewController reloadData];
+ //   _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+ //   [_tableViewController reloadData];
     
     wasPlayingIndexPath = nil;
     
@@ -485,42 +495,7 @@ NSMutableArray *oldEventNames;
 
 - (void)slideFilterBox
 {
-    
-    //    float boxXValue = filterToolBoxListViewController.view.frame.origin.x>=self.view.frame.size.width? 60 : self.view.frame.size.width;
-    //    if (boxXValue == 60)
-    //    {
-    //        [filterToolBoxListViewController updateDisplayedTagsCount];boo
-    //        //clear the previous filter set
-    //        [breadCrumbsView removeFromSuperview];
-    //        breadCrumbsView  = nil;
-    //
-    //        if(!self.blurView)
-    //        {
-    //            self.blurView = [[UIView alloc] initWithFrame:CGRectMake(0, 55, 1024, 768-55)];
-    ////            self.blurView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-    ////            UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped)];
-    ////            [self.blurView addGestureRecognizer:tapRec];
-    ////            [self.view addSubview:self.blurView];
-    //            componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
-    //        }
-    //
-    ////        self.blurView.hidden = NO;
-    //        //[self.view bringSubviewToFront:filterToolBoxListViewController.view];
-    //        //[self.view bringSubviewToFront:componentFilter.view];
-    //    }
-    //    else{
-    ////        self.blurView.hidden = YES;
-    //
-    //        [self createBreadCrumbsView];
-    //    }
-    
-    //    //[componentFilter open:YES]; //Richard
-    //    UIButton *dismissButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 1024, 768)];
-    //    [dismissButton addTarget:self action:@selector(dismissFilter:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.view addSubview: dismissButton];
-    
-    //[componentFilter.view removeFromSuperview];
-    //componentFilter= nil;
+
     
     if (!componentFilter) {
         componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
