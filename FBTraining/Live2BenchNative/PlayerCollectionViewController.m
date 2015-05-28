@@ -160,7 +160,7 @@
 {
     //UICollectionViewCell *cell = [self.playerCollectionView cellForItemAtIndexPath:indexPath];
     BorderButton *button = (BorderButton *)sender;
-      NSString *playerNumber = [NSString stringWithFormat:@"%d",button.tag];
+      NSString *playerNumber = [NSString stringWithFormat:@"%ld",(long)button.tag];
     if(!button.selected)
     {
         if ([button.accessibilityLabel isEqualToString:@"zone"]) {

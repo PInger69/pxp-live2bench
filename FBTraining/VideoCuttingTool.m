@@ -39,7 +39,7 @@
          switch (exportSession.status) {
              case AVAssetExportSessionStatusCompleted:
                  //[self writeVideoToPhotoLibrary:[NSURL fileURLWithPath:outputURL]];
-                 NSLog(@"Export Complete %d %@", exportSession.status, exportSession.error);
+                 NSLog(@"Export Complete %ld %@", (long)exportSession.status, exportSession.error);
                  break;
              case AVAssetExportSessionStatusFailed:
                  NSLog(@"Failed:%@",exportSession.error);
