@@ -34,7 +34,9 @@
 
 @property (strong, nonatomic, nonnull) UIViewController<PxpVideoPlayerProtocol> *fullscreenPlayer;
 
-@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *pinchGestureRecognizer;
+@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *pipToFullscreenRecognizer;
+@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *playerToFullscreenRecognizer;
+@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *exitFullscreenRecognizer;
 
 @property (strong, nonatomic, nonnull) UIView *bottomBarView;
 @property (strong, nonatomic, nonnull) Pip *pipView;
@@ -56,6 +58,7 @@
 
 @property (assign, nonatomic) CGRect fullscreenInitialRect;
 @property (assign, nonatomic) BOOL isFullscreen;
+@property (assign, nonatomic) BOOL recording;
 
 @end
 
@@ -107,7 +110,9 @@
         [self addChildViewController:self.pipFeedSelectionController];
         [self addChildViewController:self.playerFeedSelectionController];
         
-        self.pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGestureRecognized:)];
+        self.pipToFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pipToFullscreen:)];
+        self.playerToFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(playerToFullscreen:)];
+        self.exitFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(exitFullscreen:)];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagsReady:) name:NOTIF_TAGS_ARE_READY object:nil];
@@ -196,7 +201,9 @@
     [pipContainer addSubview:self.pipFeedSelectionController.view];
     [playerContainer addSubview:self.playerFeedSelectionController.view];
     
-    [self.view addGestureRecognizer:self.pinchGestureRecognizer];
+    [self.pipView addGestureRecognizer:self.pipToFullscreenRecognizer];
+    [self.splitPlayer.view addGestureRecognizer:self.playerToFullscreenRecognizer];
+    [self.fullscreenPlayer.view addGestureRecognizer:self.exitFullscreenRecognizer];
     
     self.pipView.muted = YES;
     self.fullscreenPlayer.mute = YES;
@@ -218,6 +225,7 @@
     self.splitPlayer.mute = NO;
     
     [self.liveButton isActive:event.live];
+    [self.splitPlayer gotolive];
     
     // tell other players to STFU and hope they will
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{ @"command":[NSNumber numberWithInt:VideoPlayerCommandMute]}];
@@ -340,31 +348,31 @@
 
 #pragma mark - Gesture Recognizers
 
-- (void)pinchGestureRecognized:(UIPinchGestureRecognizer *)recognizer {
-    if (recognizer.velocity > PINCH_VELOCITY || recognizer.velocity < -PINCH_VELOCITY) {
+- (void)pipToFullscreen:(UIPinchGestureRecognizer *)recognizer {
+    if (recognizer.velocity > PINCH_VELOCITY) {
+        [self.fullscreenPlayer playFeed:self.pipView.feed];
+        [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
         
-        if (!self.pipView.hidden && recognizer.velocity > 0 && CGRectContainsPoint(self.pipView.bounds, [recognizer locationInView:self.pipView])) {
-            
-            [self.fullscreenPlayer playFeed:self.pipView.feed];
-            [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
-            
-            self.fullscreenInitialRect = [self.view convertRect:self.pipView.bounds fromView:self.pipView];
-            [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
-            
-        } else if (!self.splitPlayer.view.hidden && recognizer.velocity > 0 && CGRectContainsPoint(self.splitPlayer.view.bounds, [recognizer locationInView:self.splitPlayer.view])) {
-            
-            [self.fullscreenPlayer playFeed:self.splitPlayer.feed];
-            [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
-            
-            self.fullscreenInitialRect = [self.view convertRect:self.splitPlayer.view.bounds fromView:self.splitPlayer.view];
-            [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
-            
-        } else if (!self.fullscreenPlayer.view.hidden && recognizer.velocity < 0 && CGRectContainsPoint(self.fullscreenPlayer.view.bounds, [recognizer locationInView:self.fullscreenPlayer.view])) {
-            
-            [self.splitPlayer seekToInSec:self.fullscreenPlayer.currentTimeInSeconds];
-            [self setFullscreen:NO animated:YES rect:self.fullscreenInitialRect];
-        }
-    
+        self.fullscreenInitialRect = [self.view convertRect:self.pipView.bounds fromView:self.pipView];
+        [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
+
+    }
+}
+
+- (void)playerToFullscreen:(UIPinchGestureRecognizer *)recognizer {
+    if (recognizer.velocity > PINCH_VELOCITY) {
+        [self.fullscreenPlayer playFeed:self.splitPlayer.feed];
+        [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
+        
+        self.fullscreenInitialRect = [self.view convertRect:self.splitPlayer.view.bounds fromView:self.splitPlayer.view];
+        [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
+    }
+}
+
+- (void)exitFullscreen:(UIPinchGestureRecognizer *)recognizer {
+    if (recognizer.velocity < -PINCH_VELOCITY) {
+        [self.splitPlayer seekToInSec:self.fullscreenPlayer.currentTimeInSeconds];
+        [self setFullscreen:NO animated:YES rect:self.fullscreenInitialRect];
     }
 }
 
@@ -397,7 +405,7 @@
 
 - (void)clipController:(nonnull FBTrainingClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag {
     CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.time, 1), CMTimeMakeWithSeconds(tag.duration, 1));
-    [self.currentPlayer playFeed:self.currentPlayer.feed withRange:range];
+    [self.currentPlayer playClipWithFeed:self.currentPlayer.feed andTimeRange:range];
 }
 
 #pragma mark - FeedSelectionControllerDelegate
@@ -415,21 +423,50 @@
 #pragma mark - NCRecordButtonDelegate
 
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
-    self.startTime = CMTimeGetSeconds(self.currentPlayer.playerItem.currentTime);
+    self.recording = YES;
+    self.startTime = self.currentPlayer.currentTimeInSeconds;
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
+    self.recording = NO;
+    
+    NSTimeInterval clipDuration = self.currentPlayer.currentTimeInSeconds - self.startTime;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_POSTED
                                                         object:nil
                                                       userInfo:@{ @"name": self.activeTagName,
                                                                   @"time": [NSString stringWithFormat:@"%f", self.startTime],
-                                                                  @"duration": [NSString stringWithFormat:@"%d", (int) ceil(duration) + 10]
+                                                                  @"duration": [NSString stringWithFormat:@"%d", (int) ceil(clipDuration) + 10]
                                                                   }];
 }
 
 - (void)recordingTimeDidUpdateInRecordButton:(nonnull NCRecordButton *)recordButton {
-    self.timeLabel.text = recordButton.recordingTimeString;
+    
+    if (self.recording) {
+        NSTimeInterval clipDuration = self.currentPlayer.currentTimeInSeconds - self.startTime;
+        
+        self.timeLabel.text = [self recordingTimeStringForSeconds:clipDuration];
+    } else {
+        self.timeLabel.text = @"00:00:00";
+    }
+}
+
+- (NSString *)recordingTimeStringForSeconds:(NSTimeInterval)seconds {
+    NSUInteger second = 00;
+    NSUInteger minute = 00;
+    NSUInteger hour = 00;
+    
+    second = (NSUInteger) seconds;
+    if (second >= 60 && second < 3600) {
+        minute = second / 60;
+        second = second % 60;
+    } else if (second >= 3600){
+        hour = second / 3600;
+        minute = second % 3600 / 60;
+        second = minute % 60;
+    }
+    
+    return [NSString stringWithFormat:@"%02lu:%02lu:%02lu",(unsigned long) hour, (unsigned long) minute, (unsigned long)second];
 }
 
 /*

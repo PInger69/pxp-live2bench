@@ -143,7 +143,7 @@
         
         case FilterScrollSortNumarical:
                 buttonLabels = [[uniqueSet allObjects] sortedArrayUsingComparator:^(id obj1, id obj2) {
-                    return [obj1 intValue] - [obj2 intValue];
+                    return (NSComparisonResult) [obj1 integerValue] - [obj2 integerValue];
                 }];
             break;
             
@@ -156,9 +156,9 @@
     
    
     
-    int colNum = 0;
-    int rowNum = 0;
-    for (int k = 0; k<buttonLabels.count; k++  ) {
+    NSUInteger colNum = 0;
+    NSUInteger rowNum = 0;
+    for (NSUInteger k = 0; k < buttonLabels.count; k++ ) {
         
         
         
