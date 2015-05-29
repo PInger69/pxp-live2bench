@@ -16,28 +16,28 @@
 -(instancetype) initWithData: (NSDictionary *)tagData{
     self = [super init];
     if (self) {
-        self.rawData = tagData;
-        self.colour = tagData[@"colour"];
-        _comment = tagData[@"comment"];
-        self.deviceID = @"";//tagData[@"deviceid"];
-        self.displayTime = tagData[@"displaytime"];
-        self.duration = [tagData[@"duration"]intValue];
-        self.event = tagData[@"event"];
-        self.homeTeam = tagData[@"homeTeam"];
-        self.visitTeam = tagData[@"visitTeam"];
-        self.uniqueID = [tagData[@"id"] intValue];
-        self.isLive = [tagData[@"islive"] boolValue];
-        self.name = tagData[@"name"];
-        self.own = [tagData[@"own"] boolValue];
-        _rating = [tagData[@"rating"] intValue];
-        self.requestURL = tagData[@"requrl"];
-        self.startTime = [tagData[@"starttime"] doubleValue];
-        self.time = [tagData[@"time"] doubleValue];
-        self.type = [tagData[@"type"] intValue];
-        self.user = tagData[@"user"];
-        self.modified = [tagData[@"modified"] boolValue];
-        _coachPick = [tagData[@"coachpick"] boolValue];
-        //self.requestTime = tagData [@"requettime"];
+        self.rawData         = tagData;
+        self.colour          = tagData[@"colour"];
+        self.comment         = tagData[@"comment"];
+        self.deviceID        = @"";//tagData[@"deviceid"];
+        self.displayTime     = tagData[@"displaytime"];
+        self.duration        = [tagData[@"duration"]intValue];
+        self.event           = tagData[@"event"];
+        self.homeTeam        = tagData[@"homeTeam"];
+        self.visitTeam       = tagData[@"visitTeam"];
+        self.uniqueID        = [tagData[@"id"] intValue];
+        self.isLive          = [tagData[@"islive"] boolValue];
+        self.name            = tagData[@"name"];
+        self.own             = [tagData[@"own"] boolValue];
+        self.rating          = [tagData[@"rating"] intValue];
+        self.requestURL      = tagData[@"requrl"];
+        self.startTime       = [tagData[@"starttime"] doubleValue];
+        self.time            = [tagData[@"time"] doubleValue];
+        self.type            = [tagData[@"type"] intValue];
+        self.user            = tagData[@"user"];
+        self.modified        = [tagData[@"modified"] boolValue];
+        self.coachPick       = [tagData[@"coachpick"] boolValue];
+
         if ([tagData objectForKey: @"urls_2"]) {
             NSDictionary *images = [tagData objectForKey: @"urls_2"];
             NSArray *keys = [images allKeys];
@@ -124,30 +124,31 @@
     NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];
     
     
-    [tagDict addEntriesFromDictionary: @{@"colour": self.colour,
-             @"comment": self.comment,
-             @"deleted": @"1",
+    [tagDict addEntriesFromDictionary: @{
+             @"colour"      : self.colour,
+             @"comment"     : self.comment,
+             @"deleted"     : @"1",
+             @"displaytime" : self.displayTime,
+             @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
+             @"event"       : self.event,
+             @"homeTeam"    : self.homeTeam,
+             @"id"          : [NSString stringWithFormat: @"%i", self.uniqueID],
+             @"isLive"      : [NSString stringWithFormat: @"%i", self.isLive],
+             @"name"        : self.name,
+             @"newTagID"    : [NSString stringWithFormat: @"%i",self.uniqueID],
+             @"own"         : [NSString stringWithFormat: @"%i",self.own],
+             @"rating"      : [NSString stringWithFormat:@"%ld", (long)self.rating],
+             @"sender"      : @".min",
+             @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
+             @"success"     : @"1",
+             @"time"        : [NSString stringWithFormat:@"%f", self.time],
+             @"type"        : [NSString stringWithFormat:@"%li", (long)self.type],
+             @"url"         : self.thumbnails,
+             @"user"        : self.user,
+             @"visitTeam"   : self.visitTeam,
+             @"synced"      : [NSString stringWithFormat:@"%i", self.synced]
              //@"deviceid": (self.deviceID ? self.deviceID: @"nil"),
-             @"displaytime":self.displayTime,
-             @"duration": [NSString stringWithFormat: @"%i", self.duration],
-             @"event":self.event,
-             @"homeTeam":self.homeTeam,
-             @"id": [NSString stringWithFormat: @"%i", self.uniqueID],
-             @"isLive": [NSString stringWithFormat: @"%i", self.isLive],
-             @"name":self.name,
-             @"newTagID" : [NSString stringWithFormat: @"%i",self.uniqueID],
-             @"own": [NSString stringWithFormat: @"%i",self.own],
-             @"rating" :[NSString stringWithFormat:@"%ld", (long)self.rating],
              //@"requrl": (self.requestURL? self.requestURL: @"nil"),
-             @"sender":@".min",
-             @"starttime": [NSString stringWithFormat:@"%f", self.startTime],
-             @"success": @"1",
-             @"time": [NSString stringWithFormat:@"%f", self.time],
-             @"type": [NSString stringWithFormat:@"%li", (long)self.type],
-             @"url": self.thumbnails,
-             @"user": self.user,
-             @"visitTeam": self.visitTeam,
-             @"synced": [NSString stringWithFormat:@"%i", self.synced]
              //@"feeds" : (self.feeds ? self.feeds: @"nil")
              }];
     
@@ -164,38 +165,37 @@
 
 -(NSDictionary *) makeTagData{
     return @{
-             @"colour": self.colour,
-             @"deviceid":self.deviceID,
-             @"event":self.event,
-             //@"name":[Utility encodeSpecialCharacters:self.name],
-             @"name":self.name,
-             @"requestime":[NSString stringWithFormat:@"%f",CACurrentMediaTime()],
-             @"time": [NSString stringWithFormat:@"%f", self.time],
-             @"user": self.user,
-             @"id": [NSString stringWithFormat:@"%d", self.uniqueID]
+             @"colour"      : self.colour,
+             @"deviceid"    : self.deviceID,
+             @"event"       : self.event,
+             @"name"        : self.name,
+             @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
+             @"time"        : [NSString stringWithFormat:@"%f", self.time],
+             @"user"        : self.user,
+             @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID]
              
              };
 }
 
 -(void) replaceDataWithDictionary: (NSDictionary *) tagData{
-    self.colour = tagData[@"colour"];
-    self.comment = tagData[@"comment"];
-    self.deviceID = tagData[@"deviceid"];
+    self.colour      = tagData[@"colour"];
+    self.comment     = tagData[@"comment"];
+    self.deviceID    = tagData[@"deviceid"];
     self.displayTime = tagData[@"displaytime"];
-    self.duration = [tagData[@"duration"]intValue];
-    self.event = tagData[@"event"];
-    self.homeTeam = tagData[@"homeTeam"];
-    self.visitTeam = tagData[@"visitTeam"];
-    self.uniqueID = [tagData[@"id"] intValue];
-    self.isLive = tagData[@"islive"];
-    self.name = tagData[@"name"];
-    self.own = [tagData[@"own"] boolValue];
-    self.rating = tagData[@"rating"];
-    self.requestURL = tagData[@"requrl"];
-    self.startTime = [tagData[@"starttime"] doubleValue];
-    self.time = [tagData[@"time"] doubleValue];
-    self.type = [tagData[@"type"] intValue];
-    self.user = tagData[@"user"];
+    self.duration    = [tagData[@"duration"]intValue];
+    self.event       = tagData[@"event"];
+    self.homeTeam    = tagData[@"homeTeam"];
+    self.visitTeam   = tagData[@"visitTeam"];
+    self.uniqueID    = [tagData[@"id"] intValue];
+    self.isLive      = tagData[@"islive"];
+    self.name        = tagData[@"name"];
+    self.own         = [tagData[@"own"] boolValue];
+    self.rating      = tagData[@"rating"];
+    self.requestURL  = tagData[@"requrl"];
+    self.startTime   = [tagData[@"starttime"] doubleValue];
+    self.time        = [tagData[@"time"] doubleValue];
+    self.type        = [tagData[@"type"] intValue];
+    self.user        = tagData[@"user"];
     //self.requestTime = tagData [@"requettime"];
     if ([tagData objectForKey: @"urls_2"]) {
         NSDictionary *images = [tagData objectForKey: @"urls_2"];
@@ -224,8 +224,6 @@
 }
 
 -(NSString *)description{
-    //NSDictionary *tagDictionary = [self tagDictionary];
-    //return [NSString stringWithFormat:@"%@", [self tagDictionary]];
     return [NSString stringWithFormat:@"name: %@, displayTime: %@, thumbnails: %@", self.name, self.displayTime, self.thumbnails];
 }
 

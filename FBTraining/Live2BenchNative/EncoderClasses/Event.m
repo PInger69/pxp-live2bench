@@ -52,7 +52,10 @@
         _downloadedSources  = [NSMutableArray array];
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
         _tags               = [self buildTags:_rawData];
-        //_downloadedSources  = @[];
+
+        _teams              = [[NSMutableDictionary alloc]init];
+        if ([_rawData objectForKey:@"homeTeam"]) [_teams setValue:[_rawData objectForKey:@"homeTeam"] forKey:@"homeTeam"];
+        if ([_rawData objectForKey:@"visitTeam"]) [_teams setValue:[_rawData objectForKey:@"visitTeam"] forKey:@"visitTeam"];
     }
     [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
         NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
@@ -73,17 +76,9 @@
 -(NSDictionary*)rawData
 {
     if (_tags != nil && _tags.count != 0) {
-        NSMutableDictionary *newRawData = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
-        
-        
+        NSMutableDictionary * newRawData    = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
         NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
-        /*NSArray * keys = [_tags allKeys];
-        for (NSString * key in keys) {
-            Tag * newTag = [[Tag alloc]initWithData:[_tags objectForKey:key]];
-            [tagsToBeAdded setObject:newTag.rawData forKey:key];
-        }*/
-        
-        NSArray *tagInArray = [_tags allValues];
+        NSArray             * tagInArray    = [_tags allValues];
         
         for (Tag *tag in tagInArray) {
             [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];

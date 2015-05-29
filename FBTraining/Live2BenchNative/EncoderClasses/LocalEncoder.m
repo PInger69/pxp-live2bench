@@ -261,42 +261,29 @@
 #pragma mark - Command Methods
 -(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    //NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
-    NSString *encodedName = [tData objectForKey:@"name"];
-    
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
-                                      @"name"           : encodedName,
+                                      @"name"           : [tData objectForKey:@"name"],
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
 
-    Tag *newTag = [[Tag alloc] initWithData:tData];
-    //newTag.uniqueID = self.event.tags.count + self.event.localTags.count;
-    NSDictionary *tagArePresent = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
-    double tagArePresentCount = tagArePresent.count + 1;
-    newTag.uniqueID = tagArePresentCount + self.event.localTags.count;
-    newTag.startTime = newTag.time - 5.0;
-    newTag.displayTime = [Utility translateTimeFormat: newTag.time];
-    newTag.own = YES;
-    newTag.homeTeam = self.event.rawData[@"homeTeam"];
-    newTag.visitTeam = self.event.rawData[@"visitTeam"];
-    newTag.synced = NO;
-    NSDictionary *newTagDic = [newTag makeTagData];
-   
-    if ([self.event.rawData[@"tags"] count] ) {
-        [self.event.rawData[@"tags"] setObject:newTagDic forKey:newTag.ID];
-    }
-    else{
-        NSMutableDictionary *tagDic = [[NSMutableDictionary alloc]init];
-        [tagDic setObject:newTagDic forKey:newTag.ID];
-        [self.event.rawData setObject:tagDic forKey:@"tags"];
-    }
-    
- 
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTagDic];
+    Tag *newTag                     = [[Tag alloc] initWithData:tData];
+    NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
+    double tagArePresentCount       = tagArePresent.count + 1;
+    newTag.uniqueID                 = tagArePresentCount + self.event.localTags.count;
+    newTag.startTime                = newTag.time - 5.0; // where is this 5 coming from??
+    newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
+    newTag.own                      = YES;
+    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
+    newTag.visitTeam                = self.event.teams[@"visitTeam"];
+    newTag.synced                   = NO;
 
-    [self.localTags setObject:newTagDic forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
-    //[self.event.localTags addEntriesFromDictionary: @{[NSString stringWithFormat:@"%i", newTag.uniqueID]: newTag}];
+    [self.event.tags setObject:newTag forKey:newTag.ID];// or should be unique ID
+
+ 
+
+
+    [self.localTags setObject:newTag.makeTagData forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
     
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
     [self.event.rawData writeToFile:plistNamePath atomically:YES];
@@ -304,18 +291,8 @@
     NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
     [self.localTags writeToFile:localplistNamePath atomically:YES];
 
-    
-    // make an instance of event in local
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];    
 
-
-
-    
-//    NSString *jsonString                    = [Utility dictToJSON:tData];
-//    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
-//    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
-//    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-//    encoderConnection.connectionType        = MAKE_TAG;
-//    encoderConnection.timeStamp             = aTimeStamp;
 }
 
 -(void)checkEncoder{
