@@ -18,7 +18,7 @@
     if (self) {
         self.rawData         = tagData;
         self.colour          = tagData[@"colour"];
-        self.comment         = tagData[@"comment"];
+        _comment             = tagData[@"comment"];
         self.deviceID        = @"";//tagData[@"deviceid"];
         self.displayTime     = tagData[@"displaytime"];
         self.duration        = [tagData[@"duration"]intValue];
@@ -29,14 +29,14 @@
         self.isLive          = [tagData[@"islive"] boolValue];
         self.name            = tagData[@"name"];
         self.own             = [tagData[@"own"] boolValue];
-        self.rating          = [tagData[@"rating"] intValue];
+        _rating              = [tagData[@"rating"] intValue];
         self.requestURL      = tagData[@"requrl"];
         self.startTime       = [tagData[@"starttime"] doubleValue];
         self.time            = [tagData[@"time"] doubleValue];
         self.type            = [tagData[@"type"] intValue];
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
-        self.coachPick       = [tagData[@"coachpick"] boolValue];
+        _coachPick           = [tagData[@"coachpick"] boolValue];
 
         if ([tagData objectForKey: @"urls_2"]) {
             NSDictionary *images = [tagData objectForKey: @"urls_2"];
