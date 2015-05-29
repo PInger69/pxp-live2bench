@@ -1,3 +1,4 @@
+
 //
 //  EncoderManager.m
 //  Live2BenchNative
@@ -634,7 +635,7 @@ static void * builtContext          = &builtContext; // depricated?
     [self willChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
     _primaryEncoder = primaryEncoder;
     [self didChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
-    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
 
 }
 

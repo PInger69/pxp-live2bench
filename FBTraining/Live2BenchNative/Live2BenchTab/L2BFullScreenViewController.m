@@ -83,14 +83,16 @@
     liveElements    = @[_seekForward, _seekBackward, _slomo, _teleButton,_liveButton];
     clipElements    = @[_seekForward, _seekBackward, _slomo, _teleButton,_liveButton,_tagEventName,_continuePlay,_startRangeModifierButton,_endRangeModifierButton];
     teleElements    = @[_saveTeleButton,_clearTeleButton];
+     demoElements    = @[_seekForward, _seekBackward, _slomo,_liveButton];
     
     activeElements  = [@[]              arrayByAddingObjectsFromArray:liveElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:clipElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:teleElements];
     activeElements  = [activeElements   arrayByAddingObjectsFromArray:eventElements];
+    activeElements = [activeElements arrayByAddingObjectsFromArray:demoElements];
     [self _revealThese: @[]];
     
-    demoElements    = @[_seekForward, _seekBackward, _slomo,_liveButton];
+   
     
     // Tele init
 //    _teleViewController
@@ -287,22 +289,29 @@
     
     switch (_mode) {
         case L2BFullScreenModeDisable :
-            [self _revealThese:liveElements];// should be @[]
+            //[self _revealThese:liveElements];// should be @[]
+            [self _revealThese:@[]];
+            
             break;
         case L2BFullScreenModeLive :
-            [self _revealThese:liveElements];
+            //[self _revealThese:liveElements];
+            [self _revealThese:@[_seekForward, _seekBackward, _slomo, _teleButton,_liveButton]];
             break;
         case L2BFullScreenModeEvent:
-            [self _revealThese:eventElements];
+            //[self _revealThese:eventElements];
+            [self _revealThese:@[_seekForward, _seekBackward, _slomo, _teleButton]];
             break;
         case L2BFullScreenModeClip :
-            [self _revealThese:clipElements];
+            //[self _revealThese:clipElements];
+            [self _revealThese:@[_seekForward, _seekBackward, _slomo, _teleButton,_liveButton,_tagEventName,_continuePlay,_startRangeModifierButton,_endRangeModifierButton]];
             break;
         case L2BFullScreenModeTele :
-            [self _revealThese:teleElements];
+            //[self _revealThese:teleElements];
+            [self _revealThese:@[_saveTeleButton,_clearTeleButton]];
             break;
         case L2BFullScreenModeDemo :
-            [self _revealThese:demoElements];
+            //[self _revealThese:demoElements];
+            [self _revealThese:@[_seekForward, _seekBackward, _slomo,_liveButton]];
             break;
         default:
             break;
