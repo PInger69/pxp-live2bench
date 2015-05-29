@@ -208,9 +208,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "562"
-            endingLineNumber = "562"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "5">
+            endingLineNumber = "562">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -783,8 +781,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "500"
             endingLineNumber = "500"
-            landmarkName = "-slideFilterBox"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -997,9 +995,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "568"
-            endingLineNumber = "568"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "5">
+            endingLineNumber = "568">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1289,8 +1285,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4437"
             endingLineNumber = "4437"
-            landmarkName = "-filterAndSortTags:"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
