@@ -182,7 +182,7 @@ static void * eventContext      = &eventContext;
      }];
     
     [center addObserverForName:NOTIF_EVENT_FEEDS_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [self restartPlayer];
+       [self restartPlayer];
         [self createTagButtons];
     }];
     
@@ -722,7 +722,7 @@ static void * eventContext      = &eventContext;
 //    [self.videoPlayer.view addSubview:_pip];
 //    [self.view addSubview:self.videoPlayer.view];
 //    
-    [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+   // [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
 //    [self.videoPlayer play];
 //    
 //    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];

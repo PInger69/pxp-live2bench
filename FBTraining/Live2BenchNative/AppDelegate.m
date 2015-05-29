@@ -42,14 +42,30 @@
     APP_HEIGHT  = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.width  : [[UIScreen mainScreen] bounds].size.height;
     APP_WIDTH   = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width;
     
-    self.imageAssetManager = [[ImageAssetManager alloc]init];
+    // This manages the thumbnails in the app
 
+    
+    
     ///In order for crashlytics to work, we have to initialise it with the secret app key we get during sign up
     //we can also startwithapikey with a delay if we need to (not necessary)
     [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
     
     NSArray     * kpaths    = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString    * kdocumentsDirectory = [kpaths objectAtIndex:0];
+    
+    self.imageAssetManager = [[ImageAssetManager alloc]init];
+   
+    NSString * imageAssets = [kdocumentsDirectory stringByAppendingPathComponent:@"imageAssets"];
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:imageAssets isDirectory:&isDir];
+    if ( !isDir){
+        [[NSFileManager defaultManager] createDirectoryAtPath:imageAssets withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+    
+    self.imageAssetManager.pathForFolderContainingImages = imageAssets;
+    
+    
+    
     
     _screenController       = [[ScreenController alloc]init];
     _loginController        = [[LoginViewController alloc]init];

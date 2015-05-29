@@ -261,6 +261,7 @@
 #pragma mark - Command Methods
 -(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
+    
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : [tData objectForKey:@"name"],
@@ -291,7 +292,7 @@
     NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
     [self.localTags writeToFile:localplistNamePath atomically:YES];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];
 
 }
 
