@@ -561,14 +561,20 @@ static void * vpFrameContext   = &vpFrameContext;
 
 #pragma mark -
 #pragma mark LIVE
--(void)pipsAndVideoPlayerToLive
+-(void)pipsAndVideoPlayerToLive:(Feed*)feed
 {
     
-    //_videoPlayer.feed = _feedSwitchView.primaryFeed;
+    /*//_videoPlayer.feed = _feedSwitchView.primaryFeed;
     if (![_videoPlayer.feed isEqual:_feedSwitchView.primaryFeed]) {
         [_videoPlayer clear];
     }
-    [_videoPlayer playFeed:_feedSwitchView.primaryFeed];
+    [_videoPlayer playFeed:_feedSwitchView.primaryFeed];*/
+    
+    if (![_videoPlayer.feed isEqual:feed]) {
+        [_videoPlayer clear];
+    }
+    
+    [_videoPlayer playFeed:feed];
     
     
     [_videoPlayer gotolive];

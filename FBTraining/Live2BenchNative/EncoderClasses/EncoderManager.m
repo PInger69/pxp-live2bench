@@ -635,7 +635,7 @@ static void * builtContext          = &builtContext; // depricated?
     [self willChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
     _primaryEncoder = primaryEncoder;
     [self didChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
-    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
 
 }
 
@@ -643,7 +643,7 @@ static void * builtContext          = &builtContext; // depricated?
 -(void)onPrimaryEncoderEventChange:(id <EncoderProtocol>)encoder
 {
     if (_primaryEncoder == encoder){
-        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
     }
 }
 

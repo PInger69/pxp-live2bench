@@ -779,7 +779,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
        [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
-                                                      object:self.playerItem];
+                                                                               object:self.playerItem];
         self.playerItem = nil;
     }
     
@@ -789,7 +789,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.avPlayer = nil;
     }
     
-
+    
         [self setPlayer:nil];
         [self.playBackView setPlayer:nil];
         
@@ -800,7 +800,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
     
 
-    //[self.player replaceCurrentItemWithPlayerItem:nil];
+    [self.player replaceCurrentItemWithPlayerItem:nil];
 //  self.view.layer.sublayers = @[];
 //  self.view.layer.sublayers = nil;
 //    self.view.layer.backgroundColor = [[UIColor blackColor]CGColor];

@@ -396,7 +396,7 @@
     _enabled = enabled;
 
     
-    CGFloat     alpha       = (_enabled)?   1.0f:0.1f;
+    CGFloat     alpha       = (_enabled)?   1.0f:0.2f;
     BOOL        interEnable = (_enabled)?   TRUE:FALSE;
     
     for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
