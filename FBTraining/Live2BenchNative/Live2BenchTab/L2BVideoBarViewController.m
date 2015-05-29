@@ -365,6 +365,8 @@
             [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker*/]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
+            [self _hideAll];
+            [self _revealThese:@[forwardButton,backwardButton,slomoButton]];
         case L2B_VIDEO_BAR_MODE_EVENT:
             [self _hideAll];
             [self _revealThese:@[/*_tagMarkerController.view */forwardButton,backwardButton,slomoButton]];

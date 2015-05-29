@@ -1,3 +1,4 @@
+
 //
 //  EncoderManager.m
 //  Live2BenchNative
@@ -642,7 +643,7 @@ static void * builtContext          = &builtContext; // depricated?
 -(void)onPrimaryEncoderEventChange:(id <EncoderProtocol>)encoder
 {
     if (_primaryEncoder == encoder){
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
+        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
     }
 }
 

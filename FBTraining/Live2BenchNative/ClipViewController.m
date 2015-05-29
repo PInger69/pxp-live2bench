@@ -90,9 +90,16 @@ static void * encoderTagContext = &encoderTagContext;
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
-                self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.masterEncoder.liveEvent.tags allValues]];
-                self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.masterEncoder.liveEvent.tags allValues]];
-                 [_collectionView reloadData];
+                if (appDel.encoderManager.masterEncoder.liveEvent) {
+                    self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.masterEncoder.liveEvent.tags allValues]];
+                    self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.masterEncoder.liveEvent.tags allValues]];
+                    [_collectionView reloadData];
+                }
+                else{
+                    self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                    self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                    [_collectionView reloadData];
+                }
             }
             if (!componentFilter.rawTagArray) {
                 componentFilter.rawTagArray = self.tagsToDisplay;
