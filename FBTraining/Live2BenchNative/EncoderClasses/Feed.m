@@ -51,6 +51,7 @@
         }
         _qualities = [tempDict copy];
         _urlPath = [defaultURL copy];
+        self.type =FEED_TYPE_ENCODER;           
     }
     return self;
 }
@@ -67,6 +68,7 @@
         _qualities = @{correctedQuality:[NSURL URLWithString:aPath]};
         
         _urlPath = [_qualities objectForKey:correctedQuality];
+        self.type =FEED_TYPE_ENCODER;
     }
     return self;
 }
@@ -77,6 +79,7 @@
         self.isAlive = YES;
         _qualities = @{HIGH_QUALITY: [NSURL fileURLWithPath: fileURL]};
         _urlPath = [_qualities objectForKey: HIGH_QUALITY];
+        self.type =FEED_TYPE_LOCAL;
     }
     return self;
 }

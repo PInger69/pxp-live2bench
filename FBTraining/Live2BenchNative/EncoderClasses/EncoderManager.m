@@ -202,8 +202,8 @@
     if (_timeStamp != [NSNumber numberWithDouble:[[note.userInfo objectForKey:@"timeStamp"]doubleValue]])
         
         _countOfLeftToComplete--;
-    if (_onComplete)   [_colletedResponce addObject: [note.userInfo objectForKey:@"responce"] ];
-    if (_onCompleteDict){
+    if (_onComplete && [note.userInfo objectForKey:@"responce"])   [_colletedResponce addObject: [note.userInfo objectForKey:@"responce"] ];
+    if (_onCompleteDict && [note.userInfo objectForKey:@"responce"]){
         NSDictionary * collect = [note.userInfo objectForKey:@"responce"];
         [_colletedResponceDict addEntriesFromDictionary:collect];
     }
