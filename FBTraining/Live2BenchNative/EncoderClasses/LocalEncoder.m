@@ -375,6 +375,12 @@
         NSDictionary    * results =[Utility JSONDatatoDict: dataToBeUsed];
         if([results isKindOfClass:[NSDictionary class]])
         {
+            if ( ![[results objectForKey:@"success"]integerValue] ) {
+                PXPLog(@"Encoder Error!!");
+                PXPLog(@"   %@",[results objectForKey:@"msg"]);
+                return;
+            }
+            
             NSArray *arrayFromDic = [[NSArray alloc]initWithArray:[self.localTags allValues]];
             Tag *localTag = [[Tag alloc]initWithData:[arrayFromDic firstObject]];
             [localTag replaceDataWithDictionary: results];
