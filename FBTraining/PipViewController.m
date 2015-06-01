@@ -552,6 +552,7 @@ static void * vpFrameContext   = &vpFrameContext;
                         weakPip.avPlayer.rate = r;
                         weakPip.status = weakPip.status & ~(PIP_Seeking);
                     } else {
+                        [weakPip.avPlayer cancelPendingPrerolls];
                         [weakPip.avPlayer prerollAtRate:r completionHandler:^(BOOL prerolled) {
                             weakPip.avPlayer.rate = r;
                             weakPip.status = weakPip.status & ~(PIP_Seeking);
