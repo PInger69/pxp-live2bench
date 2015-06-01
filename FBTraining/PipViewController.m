@@ -512,7 +512,7 @@ static void * vpFrameContext   = &vpFrameContext;
         CMTime pipTime = [[weakPip.avPlayerItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue].duration;
         CMTime mySeekToTime = self.videoPlayer.avPlayer.currentTime;
         
-        
+        /*
         if (CMTIME_COMPARE_INLINE(pTime, >, pipTime)) {
 
 //           CMTimeRange tempRange = [[weakPip.avPlayerItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue];
@@ -522,22 +522,48 @@ static void * vpFrameContext   = &vpFrameContext;
                 mySeekToTime =  pipTime;
 //            }
         }
+        */
         
         
-        
-        
+        /*
         [weakPip.avPlayer seekToTime:mySeekToTime completionHandler:^(BOOL finished) {
             if (finished) {
                 [weakPip.avPlayer.currentItem cancelPendingSeeks];
-                weakPip.avPlayer.rate = r;
-                weakPip.status = weakPip.status & ~(PIP_Seeking);
-                
+                [weakPip.avPlayer prerollAtRate:r completionHandler:^(BOOL prerolled) {
+                    weakPip.avPlayer.rate = r;
+                    weakPip.status = weakPip.status & ~(PIP_Seeking);
+                }];
             } else {
                 [weakPip.avPlayer.currentItem cancelPendingSeeks];
                 NSLog(@"Pip seekBy: CANCELLED error or out of range");
                 weakPip.status = weakPip.status & ~(PIP_Seeking);
             }
         }];
+         */
+        
+        if (CMTimeCompare(CMTimeAbsoluteValue(CMTimeSubtract(pTime, pipTime)), CMTimeMake(50, 1000)) > 0) {
+            [weakPip.avPlayer seekToTime:mySeekToTime completionHandler:^(BOOL finished) {
+                if (finished) {
+                    [weakPip.avPlayer.currentItem cancelPendingSeeks];
+
+                    CMTimeRange loadedRange = [weakPip.avPlayer.currentItem.loadedTimeRanges.firstObject CMTimeRangeValue];
+                    
+                    if (CMTimeRangeContainsTime(loadedRange, mySeekToTime)) {
+                        weakPip.avPlayer.rate = r;
+                        weakPip.status = weakPip.status & ~(PIP_Seeking);
+                    } else {
+                        [weakPip.avPlayer prerollAtRate:r completionHandler:^(BOOL prerolled) {
+                            weakPip.avPlayer.rate = r;
+                            weakPip.status = weakPip.status & ~(PIP_Seeking);
+                        }];
+                    }
+                } else {
+                    [weakPip.avPlayer.currentItem cancelPendingSeeks];
+                    NSLog(@"Pip seekBy: CANCELLED error or out of range");
+                    weakPip.status = weakPip.status & ~(PIP_Seeking);
+                }
+            }];
+        }
         
         
 //        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
