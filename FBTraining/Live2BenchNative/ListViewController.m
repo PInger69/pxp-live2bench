@@ -91,14 +91,14 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
-        
-                self.allTags = [[NSMutableArray alloc]init];
-                self.tagsToDisplay = [[NSMutableArray alloc]init];
+               self.allTags = [[NSMutableArray alloc]init];
+            self.tagsToDisplay = [[NSMutableArray alloc]init];
         _tableViewController = [[ListTableViewController alloc]init];
         _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
-        //_tableViewController.listViewControllerView = self.view;
+       // _tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
         
         
@@ -106,12 +106,10 @@ NSMutableArray *oldEventNames;
             NSLog(@"READY!");
             
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
-                self.tagsToDisplay =[ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-                [_tableViewController.tableView reloadData];
-
+                    self.tagsToDisplay = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+                    [_tableViewController.tableView reloadData];
             }
-            
         }];
         
         
@@ -140,7 +138,7 @@ NSMutableArray *oldEventNames;
 - (void)listViewTagReceived:(NSNotification*)note {
     
     if (note.object) {
-        [self.tagsToDisplay addObject: note.object];
+        [self.tagsToDisplay insertObject:note.object atIndex:0];
         _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
         [_tableViewController reloadData];
     }
@@ -4443,6 +4441,12 @@ NSMutableArray *oldEventNames;
     }
     
     return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
+}
+
+-(void)clear{
+    self.tagsToDisplay = [NSMutableArray array];;
+    _tableViewController.tableData = [NSMutableArray array];
+    [_tableViewController reloadData];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
