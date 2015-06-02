@@ -106,16 +106,9 @@ NSMutableArray *oldEventNames;
             NSLog(@"READY!");
             
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
-                if (appDel.encoderManager.masterEncoder.liveEvent) {
-                    self.tagsToDisplay =[ NSMutableArray arrayWithArray:[appDel.encoderManager.masterEncoder.liveEvent.tags allValues]];
-                    _tableViewController.tableData = [self filterAndSortTags: [self.tagsToDisplay copy]];
-                    [_tableViewController.tableView reloadData];
-                }
-                else{
                     self.tagsToDisplay = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
                     _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
                     [_tableViewController.tableView reloadData];
-                }
             }
         }];
         

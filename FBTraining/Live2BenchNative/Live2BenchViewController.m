@@ -620,6 +620,7 @@ static void * eventContext      = &eventContext;
     
     if (_encoderManager.primaryEncoder != _encoderManager.masterEncoder) {
         _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
+        _encoderManager.primaryEncoder.event = _encoderManager.masterEncoder.liveEvent;
         //[self.videoPlayer clear];
         Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
         
@@ -720,7 +721,11 @@ static void * eventContext      = &eventContext;
 //    [self.videoPlayer.view addSubview:_pip];
 //    [self.view addSubview:self.videoPlayer.view];
 //    
+// <<<<<<< HEAD
+      //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+// =======
    // [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+// >>>>>>> 3e6305f2d434f1b68660a37d82a98319a78890f2
 //    [self.videoPlayer play];
 //    
 //    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];

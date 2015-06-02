@@ -155,6 +155,7 @@
             }}];
         }];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG"  object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
         
@@ -362,7 +363,7 @@
     switch (_barMode) {
         case L2B_VIDEO_BAR_MODE_CLIP:
             [self _hideAll];//,slomoButton
-            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker*/]];
+          //  [self _revealThese:@[tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker,_startRangeModifierButton,_endRangeModifierButton,*/]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
             [self _hideAll];

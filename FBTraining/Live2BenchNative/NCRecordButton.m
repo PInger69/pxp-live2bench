@@ -180,6 +180,24 @@
     return recordButtonImage;
 }
 
+- (void)terminate {
+    
+    [self removeTarget:self action:@selector(stopRecording) forControlEvents:UIControlEventTouchUpInside];
+    [self addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self setTitle:@"00:00:00" forState:UIControlStateNormal];
+    [self setBackgroundImage:[self readyToRecordButtonWithSize:self.frame.size] forState:UIControlStateNormal];
+    
+    [self.timer invalidate];
+    self.timer = nil;
+    
+    _isRecording = NO;
+    
+    if (self.delegate) {
+        [self.delegate recordingTimeDidUpdateInRecordButton:self];
+    }
+}
+
 
 /*
 // Only override drawRect: if you perform custom drawing.
