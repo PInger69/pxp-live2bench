@@ -44,7 +44,12 @@
     NSURL *imageURL =[NSURL URLWithString:imageURLString];
     viewReference.image = [UIImage imageNamed:@"live.png"];
 
-    UIImage *theImage = [self checkImageCacheForImageURL:imageURLString];
+    UIImage *theImage;
+    
+    if (imageURLString != nil) {
+        theImage = [self checkImageCacheForImageURL:imageURLString];
+    }
+    //UIImage *theImage = [self checkImageCacheForImageURL:imageURLString];
     if(theImage){
         viewReference.image = theImage;
     }else{

@@ -292,6 +292,13 @@ static void * eventContext      = &eventContext;
         [_gotoLiveButton isActive:NO];
         _tagButtonController.enabled = YES;
     }
+    else if(_encoderManager.masterEncoder.event != nil){
+        [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
+        [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
+        self.videoPlayer.live = NO;
+        [_gotoLiveButton isActive:NO];
+        _tagButtonController.enabled = YES;
+    }
     else if (eventOnPrimaryEncoder.event == nil  && _encoderManager.masterEncoder.liveEvent == nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
@@ -721,11 +728,10 @@ static void * eventContext      = &eventContext;
 //    [self.videoPlayer.view addSubview:_pip];
 //    [self.view addSubview:self.videoPlayer.view];
 //    
-// <<<<<<< HEAD
+
       //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-// =======
    // [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-// >>>>>>> 3e6305f2d434f1b68660a37d82a98319a78890f2
+
 //    [self.videoPlayer play];
 //    
 //    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];

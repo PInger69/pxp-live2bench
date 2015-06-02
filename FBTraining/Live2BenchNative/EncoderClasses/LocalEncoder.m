@@ -118,6 +118,12 @@
                 anEvent.parentEncoder       = self;
                 anEvent.local               = YES;
                 anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
+                
+                for (NSDictionary *tagDic in [anEvent.rawData[@"tags"] allValues]) {
+                    Tag *newTag = [[Tag alloc] initWithData:tagDic];
+                    [anEvent.tags setObject:newTag forKey:newTag.ID];
+                }
+                
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
                 
                 [self.localTags addEntriesFromDictionary:self.event.localTags];
