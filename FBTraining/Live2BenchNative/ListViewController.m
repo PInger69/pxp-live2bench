@@ -139,6 +139,7 @@ NSMutableArray *oldEventNames;
     
     if (note.object) {
         [self.tagsToDisplay insertObject:note.object atIndex:0];
+        _tableViewController.tableData = self.tagsToDisplay;
         _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
         [_tableViewController reloadData];
     }
@@ -478,7 +479,7 @@ NSMutableArray *oldEventNames;
 //        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc] initWithObjects:tag,indexPath, nil] forKeys:[[NSArray alloc]initWithObjects:@"tag",@"indexpath", nil]];
 //        [selectedCellRows setObject:dict forKey:[NSString stringWithFormat:@"%d",indexPath.row]];
 //        [self deleteCells];
-//
+
 //    }
 //}
 
@@ -559,7 +560,7 @@ NSMutableArray *oldEventNames;
     else
     {
         _tableViewController.isEditable = FALSE;
-//        [self.edgeSwipeButtons deselectButtonAtIndex:2];
+        //[self.edgeSwipeButtons deselectButtonAtIndex:2];
         [self cancelEditingCells];
     }
     
