@@ -505,7 +505,7 @@ static void * encoderTagContext = &encoderTagContext;
             //            [self.allTagsArray removeObject: tag];
             
             NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:nil userInfo:tag];
+            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
             [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
         }
         

@@ -363,7 +363,7 @@
     switch (_barMode) {
         case L2B_VIDEO_BAR_MODE_CLIP:
             [self _hideAll];//,slomoButton
-            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker*/]];
+          //  [self _revealThese:@[tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker,_startRangeModifierButton,_endRangeModifierButton,*/]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
             [self _hideAll];

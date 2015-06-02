@@ -439,44 +439,44 @@ SVSignalStatus signalStatus;
     switch (status) {
             
         case ENCODER_STATUS_INIT :
-            NSLog(@"ENCODER_STATUS_INIT");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_INIT");
         case ENCODER_STATUS_UNKNOWN :
-            NSLog(@"ENCODER_STATUS_UNKNOWN");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_UNKNOWN");
             [self eventControlsState:EventButtonControlStatesDisabled];
         case ENCODER_STATUS_CAM_LOADING :
-            NSLog(@"ENCODER_STATUS_CAM_LOADING");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_CAM_LOADING");
             [self eventControlsState:EventButtonControlStatesDisabled];
             break;
         case ENCODER_STATUS_READY :
-            NSLog(@"ENCODER_STATUS_READY");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_READY");
             [self eventControlsState:EventButtonControlStatesReady];
             break;
         case ENCODER_STATUS_LIVE :
-            NSLog(@"ENCODER_STATUS_LIVE");
+            if (DEBUG_MODE)   NSLog(@"ENCODER_STATUS_LIVE");
             [self eventControlsState:EventButtonControlStatesLive];
             break;
         case ENCODER_STATUS_SHUTDOWN :
-            NSLog(@"ENCODER_STATUS_SHUTDOWN");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_SHUTDOWN");
             [self eventControlsState:EventButtonControlStatesDisabled];
             break;
         case ENCODER_STATUS_PAUSED :
-            NSLog(@"ENCODER_STATUS_PAUSED");
+            if (DEBUG_MODE)   NSLog(@"ENCODER_STATUS_PAUSED");
             [self eventControlsState:EventButtonControlStatesPause];
             break;
         case ENCODER_STATUS_STOP :
-            NSLog(@"ENCODER_STATUS_STOPPING");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_STOPPING");
             [self eventControlsState:EventButtonControlStatesStopping];
             break;
         case ENCODER_STATUS_START :
-            NSLog(@"ENCODER_STATUS_START");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_START");
             [self eventControlsState:EventButtonControlStatesStart];
             break;
         case ENCODER_STATUS_NOCAM :
-            NSLog(@"ENCODER_STATUS_NOCAM");
+            if (DEBUG_MODE)   NSLog(@"ENCODER_STATUS_NOCAM");
             [self eventControlsState:EventButtonControlStatesShutdown];
             break;
         case ENCODER_STATUS_LOCAL :
-            NSLog(@"ENCODER_STATUS_LOCAL");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_LOCAL");
             [self eventControlsState:EventButtonControlStatesDisabled];
             break;
             
