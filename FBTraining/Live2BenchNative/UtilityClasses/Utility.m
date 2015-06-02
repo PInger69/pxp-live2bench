@@ -92,6 +92,8 @@
         // validation step:
         if([object isKindOfClass:[NSDictionary class]])
         {
+//            NSDictionary *  test = [[NSDictionary alloc]init];
+//            NSString * teste = NSString st
             results = object;
             /* proceed with results as you like; the assignment to
              an explicit NSDictionary * is artificial step to get

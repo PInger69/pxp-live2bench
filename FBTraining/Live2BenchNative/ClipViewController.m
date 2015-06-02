@@ -242,6 +242,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
+    alert.type = AlertImportant;
     [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
     [alert setMessage:NSLocalizedString(@"Are you sure you want to delete all these clips?",nil)];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
@@ -482,8 +483,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
-    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
+     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
         NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
         
@@ -505,7 +505,7 @@ static void * encoderTagContext = &encoderTagContext;
             //            [self.allTagsArray removeObject: tag];
             
             NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:nil userInfo:tag];
+            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
             [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
         }
         
@@ -520,7 +520,10 @@ static void * encoderTagContext = &encoderTagContext;
             NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
             [self.tagsToDisplay removeObject:tag];
             
-            [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+            if (self.editingIndexPath) {
+                [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+            }
+            //[self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
             
             NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
             NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
@@ -538,11 +541,15 @@ static void * encoderTagContext = &encoderTagContext;
     [CustomAlertView removeAlert:alertView];
     
     [self checkDeleteAllButton];
-}
+
+   }
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
-    [self.setOfSelectedCells removeObject:self.editingIndexPath];
+    if (self.editingIndexPath) {
+        [self.setOfSelectedCells removeObject:self.editingIndexPath];
+    }
+   // [self.setOfSelectedCells removeObject:self.editingIndexPath];
     
     //    if ([self.selectedPath isEqual:self.editingIndexPath]) {
     //        self.selectedPath = nil;x

@@ -38,8 +38,8 @@
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
 
-        if ([tagData objectForKey: @"urls_2"]) {
-            NSDictionary *images = [tagData objectForKey: @"urls_2"];
+        if ([tagData objectForKey: @"url_2"]) {
+            NSDictionary *images = [tagData objectForKey: @"url_2"];
             NSArray *keys = [images allKeys];
             NSMutableDictionary *thumbnails = [NSMutableDictionary dictionary];
             for (NSString *key in keys) {
@@ -197,8 +197,8 @@
     self.type        = [tagData[@"type"] intValue];
     self.user        = tagData[@"user"];
     //self.requestTime = tagData [@"requettime"];
-    if ([tagData objectForKey: @"urls_2"]) {
-        NSDictionary *images = [tagData objectForKey: @"urls_2"];
+    if ([tagData objectForKey: @"url_2"]) {
+        NSDictionary *images = [tagData objectForKey: @"url_2"];
         NSArray *keys = [images allKeys];
         NSMutableDictionary *thumbnails = [NSMutableDictionary dictionary];
         for (NSString *key in keys) {

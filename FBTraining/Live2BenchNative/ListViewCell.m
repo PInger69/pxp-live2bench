@@ -40,9 +40,9 @@
     }
     return self;
 }
-//-(void)deleteButtonPressed{
-//    self.deleteBlock(self);
-
+-(void)deleteButtonPressed{
+    self.deleteBlock(self);
+}
 
 - (void) prepareForReuse
 {
@@ -67,21 +67,22 @@
 {
     [super setupView];
     
-//    [self.myContentView addSubview:[[UIImageView alloc] initWithImage: [UIImage imageNamed:@"clip-back-just.png"]]];
+    //[self.myContentView addSubview:[[UIImageView alloc] initWithImage: [UIImage imageNamed:@"clip-back-just.png"]]];
     //UIView *anExtraView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 370, 155)];
-    //    UIView *anExtraView = [UIView new];
-    //    anExtraView.backgroundColor = [UIColor whiteColor];
-    //
-    //    self.myContentView = anExtraView;
-    //
-    //self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
-    //    [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
-    //    [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    //    [self.deleteButton setBackgroundColor:[UIColor redColor]];
-    //    [self.contentView addSubview:self.deleteButton];
-    //    [self.deleteButton addTarget:self action:@selector(deleteButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        UIView *anExtraView = [UIView new];
+        anExtraView.backgroundColor = [UIColor whiteColor];
     
-    //[self.contentView addSubview:anExtraView];
+        self.myContentView = anExtraView;
+    
+    self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
+        [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
+        [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [self.deleteButton setBackgroundColor:[UIColor redColor]];
+        [self.contentView addSubview:self.deleteButton];
+        [self.deleteButton addTarget:self action:@selector(deleteButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:anExtraView];
 
     self.tagImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
     //self.tagImage.contentMode = UIViewContentModeCenter;
@@ -175,13 +176,13 @@
     _bookmarkButton.layer.borderWidth = 1.0f;
     [_bookmarkButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [_bookmarkButton addTarget:self action:@selector(showSource:) forControlEvents:UIControlEventTouchUpInside];
-    [self.myContentView addSubview:bookmarkButton];*/
+    [self.myContentView addSubview:_bookmarkButton];*/
     
     _tagActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [_tagActivityIndicator setFrame:CGRectMake((self.tagcolor.frame.size.width - _tagActivityIndicator.frame.size.width)/2, CGRectGetMaxY(self.tagcolor.frame) + 62.0f, 37.0f, 37.0f)];
     [self.myContentView addSubview:_tagActivityIndicator];
     
-    /*translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    /*ranslucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
      [translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
      [translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
      [translucentEditingView setAlpha:0.3];
@@ -194,21 +195,33 @@
      [checkmarkOverlay setAlpha:1.0];
      [self addSubview:checkmarkOverlay];*/
     
-   /* //    NSArray *theConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
-    //    [self.contentView addConstraints: theConstraints];
-    //    self.contentViewLeftConstraint = theConstraints[0];
-    //    self.contentViewRightConstraint = theConstraints[1];
-    //
-    //    self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
-    //
-    //    NSArray *theConstraintsAgain = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
-    //    [self.contentView addConstraints: theConstraintsAgain];
-    //
-    //    self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
-    //
-    //    self.swipeRecognizer =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCell:)];
-    //    self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-    //    [self.myContentView addGestureRecognizer:self.swipeRecognizer];
+       NSArray *theConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
+        [self.contentView addConstraints: theConstraints];
+        self.contentViewLeftConstraint = theConstraints[0];
+        self.contentViewRightConstraint = theConstraints[1];
+    
+        self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+        NSArray *theConstraintsAgain = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[theView]-0-|" options:0 metrics:nil views:@{@"theView":self.myContentView}];
+        [self.contentView addConstraints: theConstraintsAgain];
+    
+        self.myContentView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+        //self.swipeRecognizerLeft =[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(panThisCell:)];
+        //self.swipeRecognizerLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+        //[self.myContentView addGestureRecognizer:self.swipeRecognizerLeft];
+    
+    self.cellState = cellStateNormal;
+    self.swipeRecognizerLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(panThisCell:)];
+    self.swipeRecognizerLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    self.swipeRecognizerRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(panThisCell:)];
+    self.swipeRecognizerRight.direction = UISwipeGestureRecognizerDirectionRight;
+    for (UISwipeGestureRecognizer *previous in self.myContentView.gestureRecognizers) {
+        [self.myContentView removeGestureRecognizer:previous];
+    }
+    [self.myContentView addGestureRecognizer:self.swipeRecognizerLeft];
+    [self.myContentView addGestureRecognizer:self.swipeRecognizerRight];
+
 }
 
 -(void)setSelected:(BOOL)selected{
@@ -243,7 +256,7 @@
     float topOffset = 2;//(screenRect.size.height - newHeight) / 2;
     
     CGRect newRect = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
-    return newRect;*/
+    return newRect;
 }
 
 /*- (void)setRatingStars:(int)number {

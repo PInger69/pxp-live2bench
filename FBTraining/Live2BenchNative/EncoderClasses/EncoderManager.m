@@ -465,7 +465,7 @@
             
         }];
         
-        [[NSNotificationCenter defaultCenter] addObserverForName: NOTIF_MODIFY_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
+          [[NSNotificationCenter defaultCenter] addObserverForName: NOTIF_MODIFY_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             Tag *tagToModify = note.object;
             __block NSString *userHID;
             
