@@ -28,4 +28,6 @@
 @property (readonly, nonatomic) NSTimeInterval recordingTime;
 @property (readonly, nonatomic, nonnull) NSString *recordingTimeString;
 
+- (void)terminate;
+
 @end

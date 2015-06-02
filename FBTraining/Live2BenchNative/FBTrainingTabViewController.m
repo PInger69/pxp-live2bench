@@ -210,12 +210,15 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
     [self updateSideTags];
+    
+    self.timeLabel.text = @"00:00:00";
     
     Event *event = [_appDel.encoderManager.primaryEncoder event];
     
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
+    
+    NSLog(@"%@", self.feeds);
     self.pipFeedSelectionController.feeds = self.feeds;
     self.playerFeedSelectionController.feeds = self.feeds;
     
@@ -239,6 +242,9 @@
 - (void)viewDidDisappear:(BOOL)animated {
     // we're nice and mute when no one is listening
     self.currentPlayer.mute = YES;
+    
+    // terminate the recording
+    [self.recordButton terminate];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -360,7 +366,14 @@
 - (void)pipToFullscreen:(UIPinchGestureRecognizer *)recognizer {
     if (recognizer.velocity > PINCH_VELOCITY) {
         [self.fullscreenPlayer playFeed:self.pipView.feed];
-        [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
+        
+        [self.fullscreenPlayer.avPlayer seekToTime:self.splitPlayer.avPlayer.currentTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+            [self.fullscreenPlayer.avPlayer prerollAtRate:self.splitPlayer.avPlayer.rate completionHandler:^(BOOL complete) {
+                [self.fullscreenPlayer.avPlayer setRate:self.splitPlayer.avPlayer.rate];
+            }];
+        }];
+        
+        //[self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
         
         self.fullscreenInitialRect = [self.view convertRect:self.pipView.bounds fromView:self.pipView];
         [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
@@ -371,7 +384,14 @@
 - (void)playerToFullscreen:(UIPinchGestureRecognizer *)recognizer {
     if (recognizer.velocity > PINCH_VELOCITY) {
         [self.fullscreenPlayer playFeed:self.splitPlayer.feed];
-        [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
+        
+        [self.fullscreenPlayer.avPlayer seekToTime:self.splitPlayer.avPlayer.currentTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+            [self.fullscreenPlayer.avPlayer prerollAtRate:self.splitPlayer.avPlayer.rate completionHandler:^(BOOL complete) {
+                [self.fullscreenPlayer.avPlayer setRate:self.splitPlayer.avPlayer.rate];
+            }];
+        }];
+        
+        // [self.fullscreenPlayer seekToInSec:self.splitPlayer.currentTimeInSeconds];
         
         self.fullscreenInitialRect = [self.view convertRect:self.splitPlayer.view.bounds fromView:self.splitPlayer.view];
         [self setFullscreen:YES animated:YES rect:self.fullscreenInitialRect];
@@ -380,7 +400,14 @@
 
 - (void)exitFullscreen:(UIPinchGestureRecognizer *)recognizer {
     if (recognizer.velocity < -PINCH_VELOCITY) {
-        [self.splitPlayer seekToInSec:self.fullscreenPlayer.currentTimeInSeconds];
+        
+        [self.splitPlayer.avPlayer seekToTime:self.fullscreenPlayer.avPlayer.currentTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+            [self.splitPlayer.avPlayer prerollAtRate:self.fullscreenPlayer.avPlayer.rate completionHandler:^(BOOL complete) {
+                [self.splitPlayer.avPlayer setRate:self.fullscreenPlayer.avPlayer.rate];
+            }];
+        }];
+        
+        //[self.splitPlayer seekToInSec:self.fullscreenPlayer.currentTimeInSeconds];
         [self setFullscreen:NO animated:YES rect:self.fullscreenInitialRect];
     }
 }

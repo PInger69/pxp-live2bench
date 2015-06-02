@@ -441,8 +441,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
     if (restoreAfterScrubbingRate)
     {
-        [self.avPlayer setRate:restoreAfterScrubbingRate];
-        restoreAfterScrubbingRate = 0.f;
+        [self.avPlayer prerollAtRate:restoreAfterScrubbingRate completionHandler:^(BOOL complete) {
+            [self.avPlayer setRate:restoreAfterScrubbingRate];
+            restoreAfterScrubbingRate = 0.f;
+        }];
     } else {
         
     }
