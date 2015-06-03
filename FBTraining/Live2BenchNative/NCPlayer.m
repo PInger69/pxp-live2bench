@@ -264,11 +264,9 @@
 
 - (void)seekBy:(CMTime)time {
     CMTime newTime = CMTimeAdd(self.currentTime, time);
-    float rate = self.rate;
     
-    [self pause];
     [self seekToTime:newTime completionHandler:^(BOOL finish) {
-        [self setRate:rate];
+        
     }];
 }
 

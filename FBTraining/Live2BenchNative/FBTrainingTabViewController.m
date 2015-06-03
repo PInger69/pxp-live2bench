@@ -503,8 +503,6 @@
 #pragma mark - FBTrainingTagControllerDelegate
 
 - (void)tagController:(nonnull FBTrainingPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName {
-    // invalidate the loop range
-    self.mainPlayer.loopRange = kCMTimeRangeInvalid;
     
     self.activeTagName = tagName;
 }
