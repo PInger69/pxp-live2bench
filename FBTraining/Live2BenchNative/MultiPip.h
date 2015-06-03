@@ -24,8 +24,8 @@
 -(void)live;
 -(void)fullScreen;
 -(void)normalScreen;
-
-
+-(void)playRate:(float)rate;
+-(void)play;
 
 
 @end

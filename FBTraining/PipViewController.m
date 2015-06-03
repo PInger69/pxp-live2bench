@@ -249,17 +249,21 @@ static void * vpFrameContext   = &vpFrameContext;
     
     if (ply.status & RJLPS_Paused) {
         [self.pips makeObjectsPerformSelector:@selector(pause)];
+        [_multi pause];
     }
     if (ply.status & RJLPS_Slomo) {
         for (Pip * pip in self.pips) {
             [pip playRate:self.videoPlayer.avPlayer.rate];
         }
+        [_multi playRate:self.videoPlayer.avPlayer.rate];
     }
     if (ply.status & RJLPS_Play) {
         for (Pip * pip in self.pips) {
             [pip playRate:self.videoPlayer.avPlayer.rate];
             [pip play];
         }
+        [_multi playRate:self.videoPlayer.avPlayer.rate];
+        [_multi play];
     }
     
     // was main Player Finished Seeking
@@ -379,9 +383,6 @@ static void * vpFrameContext   = &vpFrameContext;
     Feed * f;
     if ([rick objectForKey:@"feed"]) {
    
-        //Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
-//    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
-
         if (_videoControlBar) {
             [_videoControlBar setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
             [_videoControlBar setTagName:[rick objectForKey:@"feed"]];
@@ -479,7 +480,7 @@ static void * vpFrameContext   = &vpFrameContext;
     [self.pips addObject:[self addAntiFreezeOnPip:aPip]]; // add the anti freeze
     [aPip addGestureRecognizer:tapGesture];
     [aPip addGestureRecognizer:tap2Times];
-    [aPip.freezeCounter startTimer:1 max:3];
+    [aPip.freezeCounter startTimer:5 max:5];
 }
 
 -(void)removePip:(Pip *)aPip
@@ -497,6 +498,10 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)syncToPlayer
 {
+    if ([_multi superview] != nil){
+        [_multi seekTo:self.videoPlayer.avPlayer.currentTime];
+    }
+    
     for (Pip * pp in self.pips) {
         
         __block Pip * weakPip = pp;
@@ -570,9 +575,7 @@ static void * vpFrameContext   = &vpFrameContext;
 //        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
     }
     
-    if ([_multi superview] != nil){
-        [_multi seekTo:self.videoPlayer.avPlayer.currentTime];
-    }
+
     
 }
 

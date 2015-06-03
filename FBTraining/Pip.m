@@ -115,8 +115,8 @@ static void * pipContext = &pipContext;
     if (avPlayerLayer)[avPlayerLayer removeFromSuperlayer];
     avPlayerLayer                 = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
     avPlayerLayer.frame           = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-   [self.layer addSublayer:avPlayerLayer];
-   [avPlayer setRate:1];
+    [self.layer addSublayer:avPlayerLayer];
+    [avPlayer setRate:1];
     [avPlayer play];
 }
 
@@ -136,7 +136,7 @@ static void * pipContext = &pipContext;
 
 -(void)prepareWithFeed:(Feed*)aFeed
 {
-        [self removePlayerTimeObserver];
+    [self removePlayerTimeObserver];
     _feed = aFeed;
     _feed.quality   = _quality;
     NSURL * url     = [_feed path];
@@ -211,6 +211,7 @@ static void * seekContext = &seekContext;
                     if (finished) {
                         NSLog(@"seekTo Finished");
                         weakSelf.status = weakSelf.status & ~(PIP_Seeking);
+                        [weakSelf playRate:weakSelf.avPlayer.rate];
                     } else {
                         NSLog(@"seekTo CANCELLED");
                         weakSelf.status = weakSelf.status & ~(PIP_Seeking);
@@ -221,14 +222,15 @@ static void * seekContext = &seekContext;
         };
     } else { // avplayer item is ready to play
         //        if (playerTime.value ==0)return;
-        if (difference == 1 ){
+        if (difference >3 ){
             [avPlayer seekToTime:self.avPlayerItem.duration];
         }
         [avPlayer seekToTime:time completionHandler:^(BOOL finished) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (finished) {
-                        NSLog(@"seekTo Finished");
+                    NSLog(@"seekTo Finished");
                     weakSelf.status = weakSelf.status & ~(PIP_Seeking);
+                    [weakSelf playRate:weakSelf.avPlayer.rate];
                 } else {
                     NSLog(@"seekTo CANCELLED");
                     weakSelf.status = weakSelf.status & ~(PIP_Seeking);
@@ -237,6 +239,8 @@ static void * seekContext = &seekContext;
             });
         }];
     }
+    
+    [_freezeCounter reset];
 }
 
 -(void)playRate:(float)rate

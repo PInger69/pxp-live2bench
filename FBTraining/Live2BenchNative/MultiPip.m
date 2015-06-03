@@ -71,19 +71,30 @@
         Feed * feed =   [listOfFeeds objectAtIndex:i];
         [pip playWithFeed:feed];
     }
+    
+    
+    NSInteger leftToMake = 4 - n;
+    
+    for (int ii =0; ii < leftToMake; ii++) {
+        Pip * pip   = [_allPips objectAtIndex:n++];
+        Feed * feed =   [listOfFeeds objectAtIndex:ii];
+        [pip playWithFeed:feed];
+    }
+    
 }
 
 
 -(void)seekTo:(CMTime) time
 {
- 
-
-    NSInteger n = (feedCount > 4)?4: feedCount;
-    
-    for (int i =0; i< n; i++) {
-        Pip * pip   = [_allPips objectAtIndex:i];
-        [pip seekTo:time];
+//    NSInteger n = (feedCount > 4)?4: feedCount;
+//    for (int i =0; i< n; i++) {
+//        Pip * pip   = [_allPips objectAtIndex:i];
+//        [pip seekTo:time];
+//    }
+    for (Pip * p in _allPips) {
+        [p seekTo:time];
     }
+    
 }
 
 //
@@ -103,7 +114,19 @@
     }
     
 }
+-(void)play
+{
+    for (Pip * p in _allPips) {
+        [p play];
+    }
+}
 
+-(void)playRate:(float)rate
+{
+    for (Pip * p in _allPips) {
+        [p playRate:rate];
+    }
+}
 
 -(void)fullScreen
 {

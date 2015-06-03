@@ -13,8 +13,7 @@
 #import "FeedSelectCell.h"
 #import "Tag.h"
 #import "DownloadItem.h"
-
-
+#import "RJLVideoPlayer.h"
 
 @interface ListTableViewController ()
 
@@ -193,9 +192,9 @@
                                                                                                                                             @"time": [NSString stringWithFormat:@"%f",tag.startTime],
                                                                                                                                             @"duration": [NSString stringWithFormat:@"%d",tag.duration],
                                                                                                                                             @"comment": tag.comment,
-                                                                                                                                            @"forWhole":tag
+                                                                                                                                            @"forWhole":tag,
+                                                                                                                                            @"state":[NSNumber numberWithInteger:RJLPS_Play]
                                                                                                                                             }}];
-  
         };
         return collapsableCell;
     }
