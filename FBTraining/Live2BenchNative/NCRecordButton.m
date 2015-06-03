@@ -125,7 +125,6 @@
 }
 
 - (void)update:(NSTimer *)timer {
-    NSLog(@"update");
     [self setTitle:self.recordingTimeString forState:UIControlStateNormal];
     
     if (self.delegate) {

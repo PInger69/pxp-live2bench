@@ -158,6 +158,8 @@
     
     cell.textLabel.text = [NSString stringWithFormat:@"Clip %@", tag.displayTime];
     cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
     return cell;
 }
