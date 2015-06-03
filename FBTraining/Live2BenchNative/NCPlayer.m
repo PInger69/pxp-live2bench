@@ -8,7 +8,7 @@
 
 #import "NCPlayer.h"
 
-#define DEFAULT_SYNC_THRESHOLD 0.100
+#define DEFAULT_SYNC_THRESHOLD 0.333
 #define DEFAULT_MAX_SYNCS 5
 
 @interface NCPlayerContext ()

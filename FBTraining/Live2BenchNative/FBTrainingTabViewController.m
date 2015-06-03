@@ -24,6 +24,7 @@
 #define BOTTOM_BAR_HEIGHT 70
 #define PLAYHEAD_HEIGHT 44
 #define PINCH_VELOCITY 1
+#define ANIMATION_DURATION 0.25
 
 @interface FBTrainingTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, FBTrainingTagControllerDelegate>
 
@@ -251,6 +252,12 @@
     
     [self.liveButton isActive:event.live];
     
+    if (event.live) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (self.mainPlayer.status == AVPlayerStatusReadyToPlay) [self.mainPlayer play];
+        });
+    }
+    
     // tell other players to STFU and hope they will
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{ @"command":[NSNumber numberWithInt:VideoPlayerCommandMute]}];
     
@@ -352,7 +359,7 @@
         self.fullscreenInitialRect = self.topPlayerView.frame;
         
         if (animated) {
-            [UIView animateWithDuration:1.0
+            [UIView animateWithDuration:ANIMATION_DURATION
                              animations:^() {
                                  self.topPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
                                  self.bottomPlayerView.alpha = 0.0;
@@ -378,7 +385,7 @@
         
         if (animated) {
             
-            [UIView animateWithDuration:1.0
+            [UIView animateWithDuration:ANIMATION_DURATION
                              animations:^() {
                                  self.topPlayerView.frame = self.fullscreenInitialRect;
                                  self.bottomPlayerView.alpha = 1.0;
@@ -401,7 +408,7 @@
         self.fullscreenInitialRect = self.bottomPlayerView.frame;
         
         if (animated) {
-            [UIView animateWithDuration:1.0
+            [UIView animateWithDuration:ANIMATION_DURATION
                              animations:^() {
                                  self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
                                  self.topPlayerView.alpha = 0.0;
@@ -425,7 +432,7 @@
         
         if (animated) {
             
-            [UIView animateWithDuration:1.0
+            [UIView animateWithDuration:ANIMATION_DURATION
                              animations:^() {
                                  self.bottomPlayerView.frame = self.fullscreenInitialRect;
                                  self.topPlayerView.alpha = 1.0;
@@ -467,15 +474,13 @@
     // invalidate the loop range
     self.mainPlayer.loopRange = kCMTimeRangeInvalid;
     
-    float rate = self.mainPlayer.rate;
-    
     // seek a bit before
     CMTime time = CMTimeSubtract(self.mainPlayer.duration, CMTimeMake(1, 1));
     
     if (CMTIME_IS_NUMERIC(time)) {
         [self.mainPlayer pause];
         [self.mainPlayer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
-            [self.mainPlayer prerollAndPlayAtRate:rate];
+            [self.mainPlayer prerollAndPlayAtRate:1.0];
         }];
     }
 }
@@ -579,7 +584,7 @@
                                                         object:nil
                                                       userInfo:@{ @"name": self.activeTagName,
                                                                   @"time": [NSString stringWithFormat:@"%f", self.startTime],
-                                                                  @"duration": [NSString stringWithFormat:@"%d", (int) ceil(clipDuration) + 10]
+                                                                  @"duration": [NSString stringWithFormat:@"%d", (int) ceil(clipDuration)]
                                                                   }];
 }
 
