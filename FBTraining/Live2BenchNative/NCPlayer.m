@@ -9,6 +9,7 @@
 #import "NCPlayer.h"
 
 #define DEFAULT_SYNC_THRESHOLD 0.100
+#define DEFAULT_MAX_SYNCS 5
 
 @interface NCPlayerContext ()
 
@@ -23,6 +24,8 @@
 
 @property (assign, nonatomic) BOOL seeking;
 @property (assign, nonatomic) BOOL prerolling;
+
+@property (assign, nonatomic) NSUInteger nSync;
 
 @end
 
@@ -45,6 +48,7 @@
     self.actionAtItemEnd = AVPlayerActionAtItemEndPause;
     self.readyToPlayActionQueue = [NSMutableArray array];
     self.syncThreshold = CMTimeMakeWithSeconds(DEFAULT_SYNC_THRESHOLD, NSEC_PER_SEC);
+    self.maximumSyncs = DEFAULT_MAX_SYNCS;
     
     [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:_statusContext];
 }
@@ -201,7 +205,17 @@
                 }
                 
                 if (CMTimeCompare(max, _self.syncThreshold) > 0) {
-                    [_self setRate:_self.rate atTime:time];
+                    _self.nSync++;
+                    if (_self.maximumSyncs == 0 || _self.nSync < _self.maximumSyncs) {
+                        [_self setRate:_self.rate atTime:time];
+                    } else {
+                        // sync failed we'll pause
+                        NSLog(@"NCPLAYER SYNC FAILED!");
+                        [_self pause];
+                        _self.nSync = 0;
+                    }
+                } else {
+                    _self.nSync = 0;
                 }
             }
             

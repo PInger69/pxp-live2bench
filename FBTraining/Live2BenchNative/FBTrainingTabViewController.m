@@ -76,7 +76,7 @@
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"FBTraining", nil) imageName:@"FBTraining"];
+        [self setMainSectionTab:NSLocalizedString(@"FBTraining", nil) imageName:@"live2BenchTab"];
         
         self.periodTableViewController = [[FBTrainingPeriodTableViewController alloc] init];
         self.periodTableViewController.delegate = self;
