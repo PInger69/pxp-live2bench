@@ -16,5 +16,6 @@
 @property (strong, nonatomic, nullable) NCPlayer *player;
 @property (readonly, nonatomic, nonnull) AVPlayerLayer *layer;
 @property (nonatomic) BOOL showsControlBar;
+@property (assign, nonatomic) BOOL enabled;
 
 @end

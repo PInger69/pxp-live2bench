@@ -272,7 +272,7 @@
     
     NSString *name = self.tagNames[indexPath.row];
     
-    if ([name isEqualToString:@"--"]) {
+    if ([name isEqualToString:@"-"] || [name isEqualToString:@"--"]) {
         return nil;
     }
     

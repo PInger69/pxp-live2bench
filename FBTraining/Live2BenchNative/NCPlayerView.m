@@ -198,6 +198,14 @@
     return !self.toolBarContainer.hidden;
 }
 
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    self.durationSlider.enabled = enabled;
+    self.pauseButton.enabled = enabled;
+    self.playButton.enabled = enabled;
+    self.exitButton.enabled = enabled;
+}
+
 #pragma mark - Key Value Observing
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
