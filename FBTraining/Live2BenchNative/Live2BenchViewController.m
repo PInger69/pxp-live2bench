@@ -624,8 +624,8 @@ static void * eventContext      = &eventContext;
         NSLog(@"NO LIVE EVENT");
         return;
     }
-    
-    if (_encoderManager.primaryEncoder != _encoderManager.masterEncoder) {
+
+    if ([_encoderManager.primaryEncoder event] != _encoderManager.masterEncoder.liveEvent) {
         _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
         _encoderManager.primaryEncoder.event = _encoderManager.masterEncoder.liveEvent;
         //[self.videoPlayer clear];
@@ -671,7 +671,7 @@ static void * eventContext      = &eventContext;
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-
+    _tagButtonController.fullScreenViewController = _fullscreenViewController;
 }
 
 

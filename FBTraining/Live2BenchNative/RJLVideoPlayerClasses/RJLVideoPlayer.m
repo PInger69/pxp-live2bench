@@ -1,4 +1,3 @@
-
 //
 //  RJLVideoPlayer.m
 //  Live2BenchNative
@@ -761,7 +760,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     // range will be the tag times.... might have to make a new class for this
     self.feed = aFeed;
     self.URL = [self.feed path];
-//    [self seekToInSec:CMTimeGetSeconds(aRange.start)];
+    [self seekToInSec:CMTimeGetSeconds(aRange.start)];
 }
 
 
