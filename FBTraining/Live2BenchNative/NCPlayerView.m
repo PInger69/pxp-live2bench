@@ -282,9 +282,7 @@
         // begin the final Seek
         
         [self.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL seeked) {
-            if (seeked && self.wasPlayingAtRate != 0.0) {
-                [self prerollAndPlayAtRate:self.wasPlayingAtRate];
-            }
+            [self prerollAndPlayAtRate:self.wasPlayingAtRate];
         }];
     }
     
@@ -296,19 +294,20 @@
 
 - (void)playerItemDidPlayToTimeEnd:(NSNotification *)note {
     [self.player pause];
-    
 }
 
 #pragma mark - Helper Methods
 
 - (void)prerollAndPlayAtRate:(float)rate {
-    [self.player prerollAtRate:rate completionHandler:^(BOOL prerolled) {
-        //delay just in case ;)
-        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
-        dispatch_after(delay, dispatch_get_main_queue(), ^{
-            [self.player setRate:rate];
-        });
-    }];
+    if (rate != 0.0) {
+        [self.player prerollAtRate:rate completionHandler:^(BOOL prerolled) {
+            //delay just in case ;)
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
+            dispatch_after(delay, dispatch_get_main_queue(), ^{
+                [self.player setRate:rate];
+            });
+        }];
+    }
 }
 
 - (NSString *)stringForSeconds:(NSTimeInterval)seconds {

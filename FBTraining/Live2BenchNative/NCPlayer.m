@@ -8,7 +8,7 @@
 
 #import "NCPlayer.h"
 
-#define DEFAULT_SYNC_THRESHOLD 0.250
+#define DEFAULT_SYNC_THRESHOLD 0.100
 
 @interface NCPlayerContext ()
 
@@ -20,6 +20,9 @@
 
 @property (readonly, nonatomic, nonnull) NSArray *contextPlayers;
 @property (strong, nonatomic, nonnull) NSMutableArray *readyToPlayActionQueue;
+
+@property (assign, nonatomic) BOOL seeking;
+@property (assign, nonatomic) BOOL prerolling;
 
 @end
 
@@ -189,15 +192,17 @@
         
         _syncPeriodicObserver = [self addPeriodicTimeObserverForInterval:syncInterval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
             
-            // first calculate the maximum time difference
-            CMTime max = kCMTimeZero;
-            for (NCPlayer *player in _self.contextPlayers) {
-                CMTime diff = CMTimeAbsoluteValue(CMTimeSubtract(_self.currentTime, player.currentTime));
-                max = CMTimeMaximum(max, diff);
-            }
-            
-            if (CMTimeCompare(max, _self.syncThreshold) > 0) {
-                [_self setRate:_self.rate atTime:time];
+            if (!_self.seeking && !_prerolling) {
+                // first calculate the maximum time difference
+                CMTime max = kCMTimeZero;
+                for (NCPlayer *player in _self.contextPlayers) {
+                    CMTime diff = CMTimeAbsoluteValue(CMTimeSubtract(_self.currentTime, player.currentTime));
+                    max = CMTimeMaximum(max, diff);
+                }
+                
+                if (CMTimeCompare(max, _self.syncThreshold) > 0) {
+                    [_self setRate:_self.rate atTime:time];
+                }
             }
             
         }];
@@ -288,7 +293,11 @@
         
         for (NCPlayer *player in self.contextPlayers) [player prerollAtRate:rate multi:NO completionHandler:handler];
     } else {
-        [super prerollAtRate:rate completionHandler:completionHandler];
+        self.prerolling = YES;
+        [super prerollAtRate:rate completionHandler:^(BOOL success) {
+            completionHandler(success);
+            self.prerolling = NO;
+        }];
     }
 }
 
@@ -304,7 +313,10 @@
     if (multi) {
         for (NCPlayer *player in self.contextPlayers) [player seekToDate:date multi:NO];
     } else {
-        [super seekToDate:date];
+        self.seeking = YES;
+        [super seekToDate:date completionHandler:^(BOOL success) {
+            self.seeking = NO;
+        }];
     }
 }
 
@@ -325,7 +337,11 @@
         
         for (NCPlayer *player in self.contextPlayers) [player seekToDate:date multi:NO completionHandler:handler];
     } else {
-        [super seekToDate:date completionHandler:completionHandler];
+        self.seeking = YES;
+        [super seekToDate:date completionHandler:^(BOOL success) {
+            completionHandler(success);
+            self.seeking = NO;
+        }];
     }
 }
 
@@ -333,7 +349,10 @@
     if (multi) {
         for (NCPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO];
     } else {
-        [super seekToTime:time];
+        self.seeking = YES;
+        [super seekToTime:time completionHandler:^(BOOL success) {
+            self.seeking = NO;
+        }];
     }
 }
 
@@ -354,7 +373,11 @@
         
         for (NCPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO completionHandler:handler];
     } else {
-        [super seekToTime:time completionHandler:completionHandler];
+        self.seeking = YES;
+        [super seekToTime:time completionHandler:^(BOOL success) {
+            completionHandler(success);
+            self.seeking = NO;
+        }];
     }
 }
 
@@ -362,7 +385,10 @@
     if (multi) {
         for (NCPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
     } else {
-        [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
+        self.seeking = YES;
+        [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL success) {
+            self.seeking = NO;
+        }];
     }
 }
 
@@ -383,7 +409,11 @@
         
         for (NCPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handler];
     } else {
-        [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+        self.seeking = YES;
+        [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL success) {
+            completionHandler(success);
+            self.seeking = NO;
+        }];
     }
 }
 
