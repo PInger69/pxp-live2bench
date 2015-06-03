@@ -272,20 +272,21 @@
     
     NSString *name = self.tagNames[indexPath.row];
     
-    if ([name isEqualToString:@"-"] || [name isEqualToString:@"--"]) {
+    if ([name hasPrefix:@"-"]) {
         return nil;
+    } else {
+        
+        NSIndexPath *selected = [tableView indexPathForSelectedRow];
+        
+        if (![selected isEqual:indexPath]) {
+            [tableView beginUpdates];
+            [tableView deselectRowAtIndexPath:selected animated:YES];
+            [tableView endUpdates];
+            [self tableView:tableView didDeselectRowAtIndexPath:selected];
+        }
+        
+        return ![selected isEqual:indexPath] || !self.clipTableViewController.presented ? indexPath : nil;
     }
-    
-    NSIndexPath *selected = [tableView indexPathForSelectedRow];
-    
-    if (![selected isEqual:indexPath]) {
-        [tableView beginUpdates];
-        [tableView deselectRowAtIndexPath:selected animated:YES];
-        [tableView endUpdates];
-        [self tableView:tableView didDeselectRowAtIndexPath:selected];
-    }
-    
-    return ![selected isEqual:indexPath] || !self.clipTableViewController.presented ? indexPath : nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
