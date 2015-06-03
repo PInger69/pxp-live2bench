@@ -339,7 +339,7 @@ static void * eventContext      = &eventContext;
         [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];
        
-       [_pipController pipsAndVideoPlayerToLive];
+       [_pipController pipsAndVideoPlayerToLive:info];
        [_videoBarViewController.tagMarkerController cleanTagMarkers];
        [_videoBarViewController.tagMarkerController createTagMarkers];
    }
@@ -624,8 +624,8 @@ static void * eventContext      = &eventContext;
         NSLog(@"NO LIVE EVENT");
         return;
     }
-    
-    if (_encoderManager.primaryEncoder != _encoderManager.masterEncoder) {
+
+    if ([_encoderManager.primaryEncoder event] != _encoderManager.masterEncoder.liveEvent) {
         _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
         _encoderManager.primaryEncoder.event = _encoderManager.masterEncoder.liveEvent;
         //[self.videoPlayer clear];
@@ -643,7 +643,7 @@ static void * eventContext      = &eventContext;
         [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];
         }
-    [_pipController pipsAndVideoPlayerToLive];
+    [_pipController pipsAndVideoPlayerToLive:info];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
 

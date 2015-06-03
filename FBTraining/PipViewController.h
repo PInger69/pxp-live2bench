@@ -36,6 +36,6 @@ static void * isObservedContext2 = &isObservedContext2;
 -(void)removePip:(Pip *)aPip;
 -(void)swapVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)aVideoPlayer withPip:(Pip*)aPip;
 -(void)syncToPlayer;
--(void)pipsAndVideoPlayerToLive;
+-(void)pipsAndVideoPlayerToLive:(Feed *)feed;
 
 @end
