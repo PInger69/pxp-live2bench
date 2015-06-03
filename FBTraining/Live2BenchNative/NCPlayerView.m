@@ -168,7 +168,8 @@
     self.timeRemainingLabel.frame = CGRectMake(self.bounds.size.width - (SLIDER_INSET - 5), 0, (SLIDER_INSET - 5), 44);
     
     self.toolBarContainer.frame = CGRectMake(0, self.bounds.size.height - 44, self.bounds.size.width, 44);
-    self.blurView.frame = self.toolBarContainer.bounds;
+    self.blurContainer.frame = self.toolBarContainer.bounds;
+    self.blurView.frame = self.blurContainer.bounds;
     self.toolBar.frame = self.toolBarContainer.bounds;
     self.durationSlider.frame = CGRectMake(SLIDER_INSET, 0, self.blurView.bounds.size.width - 2 * SLIDER_INSET, self.blurView.bounds.size.height);
 }

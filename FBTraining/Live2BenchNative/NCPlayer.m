@@ -153,7 +153,13 @@
             
             [self pause];
             [self seekToTime:loopRange.start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL seekComplete) {
-                [self setRate:rate];
+                
+                if (rate != 0.0) {
+                    [self prerollAtRate:rate completionHandler:^(BOOL prerollComplete) {
+                        [self setRate:rate];
+                    }];
+                }
+                
             }];
             
             _loopBoundaryObserver = [self addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:end]] queue:dispatch_get_main_queue() usingBlock:^{

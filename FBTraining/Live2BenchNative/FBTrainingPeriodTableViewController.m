@@ -262,6 +262,7 @@
     
     cell.textLabel.text = name;
     cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.accessoryType = tagsForPeriod.count > 0 ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
     
