@@ -106,10 +106,14 @@ NSMutableArray *oldEventNames;
             NSLog(@"READY!");
             
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
+                self.allTags = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
                     self.tagsToDisplay = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+                    //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
                     [_tableViewController.tableView reloadData];
             }
+            if (!componentFilter.rawTagArray) {
+                componentFilter.rawTagArray = self.tagsToDisplay;
+            };
         }];
         
         
@@ -131,24 +135,30 @@ NSMutableArray *oldEventNames;
 
 - (void)deleteTag: (NSNotification *)note {
     [self.tagsToDisplay removeObject: note.object];
-    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-    [_tableViewController reloadData];
+    [self.allTags removeObject:note.object];
+    //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+      componentFilter.rawTagArray = self.tagsToDisplay;
+    [_tableViewController.tableView reloadData];
 }
 
 - (void)listViewTagReceived:(NSNotification*)note {
     
     if (note.object) {
+        [self.allTags insertObject:note.object atIndex:0];
         [self.tagsToDisplay insertObject:note.object atIndex:0];
         _tableViewController.tableData = self.tagsToDisplay;
-        _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-        [_tableViewController reloadData];
+        //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+        [_tableViewController.tableView reloadData];
     }
     
 }
 
 - (void)sortFromHeaderBar:(id)sender
 {
-    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+    //[self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
+    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
+    //[self filterAndSortTags:self.tagsToDisplay];
+    //_tableViewController.tableData = [self receiveFilteredArrayFromFilter:nil];
     [_tableViewController reloadData];
 }
 
@@ -267,14 +277,13 @@ NSMutableArray *oldEventNames;
     //    [swipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     //    [self.videoPlayer.view addGestureRecognizer:swipeGestureRecognizer];
     
-   componentFilter = [TestFilterViewController commonFilter];
+   //componentFilter = [TestFilterViewController commonFilter];
     
     _tableViewController.tableData = self.tagsToDisplay;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     
-
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){
@@ -283,13 +292,21 @@ NSMutableArray *oldEventNames;
             [self.videoPlayer playFeed:theFeed];
         }
         
-        if (!self.tagsToDisplay) {
+        /*if (!self.tagsToDisplay) {
             self.tagsToDisplay = [NSMutableArray arrayWithArray:[eventTags copy]];
             _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
 
             [_tableViewController reloadData];
-        }
+        }*/
         
+        if(eventTags.count > 0 && !self.tagsToDisplay){
+            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+            if (!componentFilter.rawTagArray) {
+                self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
+            }
+            [_tableViewController.tableView reloadData];
+        }
+
 
 //            self.allTagsArray = [NSMutableArray arrayWithArray:[eventTags copy]];
 //            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
@@ -489,10 +506,30 @@ NSMutableArray *oldEventNames;
 //  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  //
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {
-    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-    [_tableViewController reloadData];
+    AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
+    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
+    self.tagsToDisplay = [filteredArray mutableCopy];
+    //[self.collectionView reloadData];
+    _tableViewController.tableData = self.tagsToDisplay;
+    [_tableViewController.tableView reloadData];
+    [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
+
+    
+    //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+ 
 }
 //  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  //
+
+-(Float64) highestTimeInTags: (NSArray *) arrayOfTags{
+    Float64 highestTime = 0;
+    for (Tag *tag in arrayOfTags) {
+        if (tag.time > highestTime) {
+            highestTime = tag.time;
+        }
+    }
+    return highestTime;
+}
+
 
 #pragma mark - Edge Swipe Buttons Delegate Methods
 
@@ -500,30 +537,43 @@ NSMutableArray *oldEventNames;
 {
 
     
-    if (!componentFilter) {
-//        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+    /*if (!componentFilter) {
+        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
         componentFilter = [TestFilterViewController commonFilter];
-    }
+    }*/
     
     self.dismissFilterButton = [[UIButton alloc] initWithFrame: self.view.bounds];
     [self.dismissFilterButton addTarget:self action:@selector(dismissFilter:) forControlEvents:UIControlEventTouchUpInside];
     self.dismissFilterButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6];
     [self.view addSubview: self.dismissFilterButton];
     
-    //componentFilter.rawTagArray = self.tagsToDisplay;
-    //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
-    componentFilter.rangeSlider.highestValue = [(UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer durationInSeconds];
     
-    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
-    componentFilter.finishedSwipe = TRUE;
-    
+    componentFilter.rawTagArray                 = self.allTags;
+    componentFilter.rangeSlider.highestValue    = [self highestTimeInTags:self.allTags];
+    componentFilter.finishedSwipe               = TRUE;
     [self.view addSubview:componentFilter.view];
-    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
     [componentFilter setOrigin:CGPointMake(60, 190)];
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
     [componentFilter open:YES];
+
+    
+    
+    //componentFilter.rawTagArray = self.tagsToDisplay;
+    //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+    //componentFilter.rangeSlider.highestValue = [(UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer durationInSeconds];
+    
+    //[componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
+    componentFilter.finishedSwipe = TRUE;
+    
+    [self.view addSubview:componentFilter.view];
+    
+    //componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
+    //[componentFilter setOrigin:CGPointMake(60, 190)];
+    //[componentFilter close:NO];
+    //[componentFilter viewDidAppear:TRUE];
+    //[componentFilter open:YES];
 }
 
 -(void)dismissFilter: (UIButton *)dismissButton{
@@ -1548,16 +1598,17 @@ NSMutableArray *oldEventNames;
     
     CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
     
-//    NSString *pick = [userInfo objectForKey:@"feed"];
+   /* NSString *pick = [userInfo objectForKey:@"feed"];
     
-    //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
-    //                                                                                                          @"feed":pick,
-    //                                                                                                          @"time":[userInfo objectForKey:@"time"],
-    //                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
-    //                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                              @"feed":pick,
+                                                                                                              @"time":[userInfo objectForKey:@"time"],
+                                                                                                              @"duration":[userInfo objectForKey:@"duration"],
+                                                                                                              //@"state":[NSNumber numberWithInteger:PS_Play]}];*/
     
     [self.videoPlayer playFeed:[userInfo objectForKey:@"feed"] withRange:timeRange];
     self.videoPlayer.looping = NO;
+    self.videoPlayer.looping = YES;
     selectedTag = userInfo[@"forWhole"];
     
     [commentingField clear];
@@ -1658,6 +1709,13 @@ NSMutableArray *oldEventNames;
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
+    
+    componentFilter = [TestFilterViewController commonFilter];
+    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    [self.view addSubview:componentFilter.view];
+    [componentFilter setOrigin:CGPointMake(60, 190)];
+    [componentFilter close:NO];
+
     //    UIImageView *commentBoxTitleBar = [[UIImageView alloc]initWithFrame:CGRectMake(2,SMALL_MEDIA_PLAYER_HEIGHT+140,COMMENTBOX_WIDTH, LABEL_HEIGHT)];
     //    commentBoxTitleBar.backgroundColor = [UIColor clearColor];
     //    [self.view addSubview:commentBoxTitleBar];
@@ -3461,25 +3519,30 @@ NSMutableArray *oldEventNames;
     if ([self.view window] == nil) self.view = nil;
 }
 
--(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
+/*-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
     NSMutableArray *tagsToSort = [NSMutableArray arrayWithArray:tags];
     
     if (componentFilter) {
-      //  componentFilter.rawTagArray = tagsToSort;
+        componentFilter.rawTagArray = tagsToSort;
         tagsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
     }
+    //else{
+       // componentFilter = [TestFilterViewController commonFilter];
+    //}
     
     return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
-}
+}*/
 
 -(void)clear{
-    self.tagsToDisplay = [NSMutableArray array];;
-    _tableViewController.tableData = [NSMutableArray array];
-    [_tableViewController reloadData];
+    [self.allTags removeAllObjects];
+    [self.tagsToDisplay removeAllObjects];
+    //_tableViewController.tableData = [NSMutableArray array];
+    [_tableViewController.tableView reloadData];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
     self.tagsToDisplay = nil;
+    self.allTags = [NSMutableArray alloc];
     _tableViewController.tableData = [NSMutableArray array];
     [_tableViewController reloadData];
     

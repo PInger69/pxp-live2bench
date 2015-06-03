@@ -339,7 +339,7 @@ static void * eventContext      = &eventContext;
         [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];
        
-       [_pipController pipsAndVideoPlayerToLive:info];
+       [_pipController pipsAndVideoPlayerToLive];
        [_videoBarViewController.tagMarkerController cleanTagMarkers];
        [_videoBarViewController.tagMarkerController createTagMarkers];
    }
@@ -643,7 +643,7 @@ static void * eventContext      = &eventContext;
         [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];
         }
-    [_pipController pipsAndVideoPlayerToLive:info];
+    [_pipController pipsAndVideoPlayerToLive];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
 
@@ -671,7 +671,7 @@ static void * eventContext      = &eventContext;
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-
+    _tagButtonController.fullScreenViewController = _fullscreenViewController;
 }
 
 
