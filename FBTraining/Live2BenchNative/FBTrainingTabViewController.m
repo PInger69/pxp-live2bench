@@ -474,6 +474,10 @@
 
 - (void)liveButtonPressed:(LiveButton *)sender {
     
+    // disable slomo
+    self.slomoButton.slomoOn = NO;
+    self.mainPlayer.slomo = NO;
+    
     // invalidate the loop range
     self.mainPlayer.loopRange = kCMTimeRangeInvalid;
     
