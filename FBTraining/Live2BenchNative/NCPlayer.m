@@ -264,11 +264,9 @@
 
 - (void)seekBy:(CMTime)time {
     CMTime newTime = CMTimeAdd(self.currentTime, time);
-    float rate = self.rate;
     
-    [self pause];
     [self seekToTime:newTime completionHandler:^(BOOL finish) {
-        [self setRate:rate];
+        
     }];
 }
 
@@ -473,22 +471,27 @@
 }
 
 - (void)seekToTime:(CMTime)time {
+    if (CMTIMERANGE_IS_VALID(self.loopRange) && !CMTimeRangeContainsTime(self.loopRange, time)) time = self.loopRange.start;
     [self seekToTime:time multi:YES];
 }
 
 - (void)seekToTime:(CMTime)time completionHandler:(void (^)(BOOL))completionHandler {
+    if (CMTIMERANGE_IS_VALID(self.loopRange) && !CMTimeRangeContainsTime(self.loopRange, time)) time = self.loopRange.start;
     [self seekToTime:time multi:YES completionHandler:completionHandler];
 }
 
 - (void)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter {
+    if (CMTIMERANGE_IS_VALID(self.loopRange) && !CMTimeRangeContainsTime(self.loopRange, time)) time = self.loopRange.start;
     [self seekToTime:time multi:YES toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
 }
 
 - (void)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void (^)(BOOL))completionHandler {
+    if (CMTIMERANGE_IS_VALID(self.loopRange) && !CMTimeRangeContainsTime(self.loopRange, time)) time = self.loopRange.start;
     [self seekToTime:time multi:YES toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
 }
 
 - (void)setRate:(float)rate atTime:(CMTime)time {
+    if (CMTIMERANGE_IS_VALID(self.loopRange) && !CMTimeRangeContainsTime(self.loopRange, time)) time = self.loopRange.start;
     
     [self pause];
     [self seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL seekComplete) {
