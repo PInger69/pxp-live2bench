@@ -356,6 +356,7 @@
                              animations:^() {
                                  self.topPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
                                  self.bottomPlayerView.alpha = 0.0;
+                                 self.view.backgroundColor = [UIColor blackColor];
                              }
                              completion:^(BOOL finished) {
                                  self.topPlayerView.showsControlBar = YES;
@@ -366,6 +367,7 @@
             self.topPlayerView.showsControlBar = YES;
             self.bottomPlayerView.alpha = 0.0;
             self.bottomPlayerView.hidden = YES;
+            self.view.backgroundColor = [UIColor blackColor];
         }
     } else if (!fullscreen && self.fullscreenView == self.topPlayerView) {
         
@@ -380,6 +382,7 @@
                              animations:^() {
                                  self.topPlayerView.frame = self.fullscreenInitialRect;
                                  self.bottomPlayerView.alpha = 1.0;
+                                 self.view.backgroundColor = [UIColor whiteColor];
                              }
                              completion:^(BOOL finished) {
                                  
@@ -387,6 +390,7 @@
         } else {
             self.bottomPlayerView.alpha = 1.0;
             self.topPlayerView.frame = self.fullscreenInitialRect;
+            self.view.backgroundColor = [UIColor whiteColor];
         }
     }
 }
@@ -401,6 +405,7 @@
                              animations:^() {
                                  self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
                                  self.topPlayerView.alpha = 0.0;
+                                 self.view.backgroundColor = [UIColor blackColor];
                              }
                              completion:^(BOOL finished) {
                                  self.topPlayerView.hidden = YES;
@@ -410,6 +415,7 @@
             self.bottomPlayerView.showsControlBar = YES;
             self.topPlayerView.alpha = 0.0;
             self.topPlayerView.hidden = YES;
+            self.view.backgroundColor = [UIColor blackColor];
         }
     } else if (!fullscreen && self.fullscreenView == self.bottomPlayerView) {
         
@@ -423,6 +429,7 @@
                              animations:^() {
                                  self.bottomPlayerView.frame = self.fullscreenInitialRect;
                                  self.topPlayerView.alpha = 1.0;
+                                 self.view.backgroundColor = [UIColor whiteColor];
                              }
                              completion:^(BOOL finished) {
                                  
@@ -430,6 +437,7 @@
         } else {
             self.bottomPlayerView.frame = self.fullscreenInitialRect;
             self.topPlayerView.alpha = 1.0;
+            self.view.backgroundColor = [UIColor whiteColor];
         }
     }
 }
