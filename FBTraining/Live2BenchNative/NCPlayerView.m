@@ -113,19 +113,17 @@
         self.periodicObserverBlock = ^(CMTime time) {
             CMTimeRange range = CMTIMERANGE_IS_VALID(_self.player.loopRange) ? _self.player.loopRange : CMTimeRangeMake(kCMTimeZero, _self.player.duration);
             
-            NSTimeInterval currentTime = CMTimeGetSeconds(_self.player.currentTime);
-            NSTimeInterval duration = CMTimeGetSeconds(_self.player.duration);
-            
-            
-            
             if (!_self.seeking) {
                 CGFloat percent = CMTimeGetSeconds(CMTimeSubtract(_self.player.currentTime, range.start)) / CMTimeGetSeconds(range.duration);
                 
                 [_self.durationSlider setValue:isfinite(percent) ? percent : 0.0 animated:YES];
             }
             
-            _self.timeElapsedLabel.text = [_self stringForSeconds:currentTime];
-            _self.timeRemainingLabel.text = [NSString stringWithFormat:@"-%@", [_self stringForSeconds:duration - currentTime]];
+            NSTimeInterval elapsed = MAX(0, CMTimeGetSeconds(CMTimeSubtract(_self.player.currentTime, range.start)));
+            NSTimeInterval remaining = MAX(0, CMTimeGetSeconds(CMTimeSubtract(range.duration, CMTimeSubtract(_self.player.currentTime, range.start))));
+            
+            _self.timeElapsedLabel.text = [_self stringForSeconds:elapsed];
+            _self.timeRemainingLabel.text = [NSString stringWithFormat:@"-%@", [_self stringForSeconds:remaining]];
         };
         
         self.durationSlider.frame = CGRectMake(SLIDER_INSET, 0, self.blurView.bounds.size.width - 2 * SLIDER_INSET, self.blurView.bounds.size.height);

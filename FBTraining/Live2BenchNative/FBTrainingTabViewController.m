@@ -77,7 +77,7 @@
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"FBTraining", nil) imageName:@"live2BenchTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Dual View", nil) imageName:@"live2BenchTab"];
         
         self.periodTableViewController = [[FBTrainingPeriodTableViewController alloc] init];
         self.periodTableViewController.delegate = self;
@@ -264,6 +264,7 @@
     self.mainPlayer.muted = NO;
     
     [self.periodTableViewController setHidden:NO animated:YES];
+    self.timeLabel.textColor = [UIColor lightGrayColor];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -285,6 +286,8 @@
     self.liveButton.hidden = NO;
     self.topPlayerView.enabled = YES;
     self.bottomPlayerView.enabled = YES;
+    
+    [self.periodTableViewController setHidden:YES animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -474,8 +477,7 @@
     // invalidate the loop range
     self.mainPlayer.loopRange = kCMTimeRangeInvalid;
     
-    // seek a bit before
-    CMTime time = CMTimeSubtract(self.mainPlayer.duration, CMTimeMake(1, 1));
+    CMTime time = self.mainPlayer.duration;
     
     if (CMTIME_IS_NUMERIC(time)) {
         [self.mainPlayer pause];
@@ -563,6 +565,8 @@
     self.topPlayerView.enabled = NO;
     self.bottomPlayerView.enabled = NO;
     [self.periodTableViewController setHidden:YES animated:YES];
+    
+    self.timeLabel.textColor = [UIColor whiteColor];
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
@@ -584,6 +588,8 @@
                                                                   @"time": [NSString stringWithFormat:@"%f", self.startTime],
                                                                   @"duration": [NSString stringWithFormat:@"%d", (int) ceil(clipDuration)]
                                                                   }];
+    
+    self.timeLabel.textColor = [UIColor lightGrayColor];
 }
 
 - (void)recordingTimeDidUpdateInRecordButton:(nonnull NCRecordButton *)recordButton {
