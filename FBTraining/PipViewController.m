@@ -240,8 +240,8 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)observerMethodForVideoPlayerForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    int oldStatus = [[change objectForKey:@"old"]intValue];
-    int newStatus = [[change objectForKey:@"new"]intValue];
+    PlayerStatus oldStatus = [[change objectForKey:@"old"]intValue];
+    PlayerStatus newStatus = [[change objectForKey:@"new"]intValue];
     if (oldStatus == newStatus) return;
     
   
@@ -257,7 +257,7 @@ static void * vpFrameContext   = &vpFrameContext;
         }
         [_multi playRate:self.videoPlayer.avPlayer.rate];
     }
-    if (ply.status & RJLPS_Play) {
+    if ((ply.status & RJLPS_Play) && !(ply.status & (RJLPS_Scrubbing|RJLPS_Seeking)) ) {
         for (Pip * pip in self.pips) {
             [pip playRate:self.videoPlayer.avPlayer.rate];
             [pip play];
@@ -267,11 +267,18 @@ static void * vpFrameContext   = &vpFrameContext;
     }
     
     // was main Player Finished Seeking
-    if ( (oldStatus & RJLPS_Seeking) && !((newStatus & RJLPS_Seeking)!=0)) {
+//    if ( (oldStatus & RJLPS_Scrubbing) && !(newStatus & RJLPS_Scrubbing)) {
+//        [self syncToPlayer];
+//        
+//    }
+
+    if ( (oldStatus & RJLPS_Seeking) && !(newStatus & RJLPS_Seeking)) {
+        [self syncToPlayer];
+        
+    } else  if ( (oldStatus & RJLPS_Scrubbing) && !(newStatus & RJLPS_Scrubbing)) {
         [self syncToPlayer];
         
     }
-
 
 }
 

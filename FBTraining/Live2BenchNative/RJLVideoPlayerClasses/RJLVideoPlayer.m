@@ -445,12 +445,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         [self.avPlayer prerollAtRate:restoreAfterScrubbingRate completionHandler:^(BOOL complete) {
             [self.avPlayer setRate:restoreAfterScrubbingRate];
             restoreAfterScrubbingRate = 0.f;
+              self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
         }];
     } else {
-        
+          self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
     }
     
-    self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
+  
 
     if (!timeObserver)
     {
@@ -684,13 +685,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)play{
     if (!_feed)return;
-    [self.avPlayer play];
-  [freezeMonitor start];
-    if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
-    self.status                                 = _status | RJLPS_Play;
-    self.status                                 = _status & ~(RJLPS_Paused);
-    [self.videoControlBar setHidden:NO];
-    //self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil;
     __block RJLVideoPlayer  * weakSelf          = self;
     if (self.playerItem.status == AVPlayerItemStatusUnknown){ // This delays the seek if its not ready
@@ -702,6 +696,16 @@ static void *FeedAliveContext                               = &FeedAliveContext;
             [weakSelf play];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
         };
+    } else {
+        [self.avPlayer play];
+        [freezeMonitor start];
+        if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
+        self.status                                 = _status | RJLPS_Play;
+        self.status                                 = _status & ~(RJLPS_Paused);
+        [self.videoControlBar setHidden:NO];
+        //self.videoControlBar.playButton.selected    = FALSE;
+
+    
     }
 }
 
