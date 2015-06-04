@@ -838,7 +838,7 @@
     
     if([results isKindOfClass:[NSDictionary class]])
     {
-        if (![[results objectForKey:@"success"]boolValue]) {
+        if ([results objectForKey:@"success"] && ![[results objectForKey:@"success"]boolValue]) {
             PXPLog(@"Encoder Error!");
             PXPLog(@"  reason: %@",results[@"msg"]);
         }

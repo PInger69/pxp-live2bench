@@ -103,16 +103,17 @@
         [_endRangeModifierButton setAccessibilityValue:@"extend"];
         [background addSubview:_endRangeModifierButton];
         
-        _startRangeModifierButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+     //   _startRangeModifierButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         _startRangeModifierButton = [[CustomButton alloc]initWithFrame:CGRectMake(160,5 + _videoPlayer.view.frame.size.height + 100, LITTLE_ICON_DIMENSIONS-5, LITTLE_ICON_DIMENSIONS-10)];
         [_startRangeModifierButton setContentMode:UIViewContentModeScaleAspectFill];
         [_startRangeModifierButton setImage:[UIImage imageNamed:@"extendstartsec.png"] forState:UIControlStateNormal];
         [_startRangeModifierButton setAccessibilityValue:@"extend"];
-//        [background addSubview:_startRangeModifierButton];
+       [background addSubview:_startRangeModifierButton];
 
         
         
-        activeElements = @[_startRangeModifierButton,
+        activeElements = @[
+                           _startRangeModifierButton,
                            _endRangeModifierButton,
                            forwardButton,
                            backwardButton,
@@ -207,7 +208,9 @@
        // watching for only change in slomo
 //        if (newStatus & RJLPS_Slomo && !(oldStatus & RJLPS_Slomo)) {
 //           NSLog(@"slomow");
-            slomoButton.slomoOn = ply.slowmo;
+        BOOL isSlow = ply.slowmo;
+        
+            slomoButton.slomoOn = isSlow;
 //        } else if (oldStatus & RJLPS_Slomo && !(newStatus & RJLPS_Slomo)) {
 //             slomoButton.slomoOn = ply.slowmo;
 //        }
@@ -218,8 +221,10 @@
 
 -(void)toggleSlowmo:(id)sender
 {
-
-        _videoPlayer.slowmo = !_videoPlayer.slowmo;
+    BOOL value = _videoPlayer.slowmo;
+    _videoPlayer.slowmo = !value;
+    
+     //   _videoPlayer.slowmo = !_videoPlayer.slowmo;
     ((Slomo*)sender).slomoOn = _videoPlayer.slowmo;
 }
 
@@ -264,9 +269,6 @@
 -(void)setTagName:(NSString*)name
 {
     tagLabel.text = name;
-    for (UIView * item in activeElements){
-        [item setHidden:NO];
-    }
 }
 
 
@@ -363,7 +365,7 @@
     switch (_barMode) {
         case L2B_VIDEO_BAR_MODE_CLIP:
             [self _hideAll];//,slomoButton
-          //  [self _revealThese:@[tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker,_startRangeModifierButton,_endRangeModifierButton,*/]];
+            [self _revealThese:@[tagLabel,forwardButton,backwardButton,slomoButton/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker,_startRangeModifierButton,_endRangeModifierButton,*/]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
             [self _hideAll];

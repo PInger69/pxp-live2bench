@@ -13,7 +13,7 @@
 
 
 #define LIVE_BUFFER     5
-#define SLOWMO_SPEED    0.5f
+#define SLOWMO_SPEED    0.5
 
 @implementation RJLVideoPlayer
 {
@@ -84,6 +84,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         liveBuffer = [[ValueBuffer alloc]initWithValue:5 coolDownValue:10000000 coolDownTick:30];
         restoreAfterPauseRate = 1;
+
     }
     return self;
 }
@@ -101,9 +102,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame      = CGRectMake(500, 60, 400, 300);
         restoreAfterPauseRate = 1;
-        
+
         self.zoomManager = [[VideoZoomManager alloc]init];
         self.zoomManager.videoPlayer = self;
+
     }
     return self;
 }
@@ -182,7 +184,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self.isInClipMode = YES;
     self.clipControlBar.hidden = NO;
     self.clipControlBar.enable = YES;
-    self.clipControlBar.timeSlider.minimumValue = (aRange.start.value / aRange.start.timescale);
+    self.clipControlBar.timeSlider.minimumValue = 0;//(aRange.start.value / aRange.start.timescale);
     self.clipControlBar.timeSlider.maximumValue = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);
     
     self.videoControlBar.hidden = YES;
@@ -443,12 +445,13 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         [self.avPlayer prerollAtRate:restoreAfterScrubbingRate completionHandler:^(BOOL complete) {
             [self.avPlayer setRate:restoreAfterScrubbingRate];
             restoreAfterScrubbingRate = 0.f;
+              self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
         }];
     } else {
-        
+          self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
     }
     
-    self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
+  
 
     if (!timeObserver)
     {
@@ -670,6 +673,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     [self seekToInSec:[self durationInSeconds]];
     [self.avPlayer setRate:1];
     restoreAfterPauseRate = 1;
+    self.slowmo = NO;
     if (self.playerItem.status == AVPlayerItemStatusUnknown){
         __block RJLVideoPlayer *weakSelf = self;
         onReadyBlock = ^void(){
@@ -681,13 +685,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)play{
     if (!_feed)return;
-    [self.avPlayer play];
-  [freezeMonitor start];
-    if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
-    self.status                                 = _status | RJLPS_Play;
-    self.status                                 = _status & ~(RJLPS_Paused);
-    [self.videoControlBar setHidden:NO];
-    //self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil;
     __block RJLVideoPlayer  * weakSelf          = self;
     if (self.playerItem.status == AVPlayerItemStatusUnknown){ // This delays the seek if its not ready
@@ -699,6 +696,16 @@ static void *FeedAliveContext                               = &FeedAliveContext;
             [weakSelf play];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
         };
+    } else {
+        [self.avPlayer play];
+        [freezeMonitor start];
+        if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
+        self.status                                 = _status | RJLPS_Play;
+        self.status                                 = _status & ~(RJLPS_Paused);
+        [self.videoControlBar setHidden:NO];
+        //self.videoControlBar.playButton.selected    = FALSE;
+
+    
     }
 }
 
@@ -1047,24 +1054,26 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(BOOL)slowmo
 {
     if (!self.avPlayer) return NO;
-    return ([self.avPlayer rate] >= 1.0)? NO : YES;
+    return (self.avPlayer.rate <=.5 && self.avPlayer.rate >0)? YES : NO;
 }
 
 -(void)setSlowmo:(BOOL)slowmo
 {
     [self willChangeValueForKey:@"slowmo"];
+    float newRate;
     if (slowmo) {
-        [self.avPlayer setRate:SLOWMO_SPEED];
+
+        newRate = SLOWMO_SPEED;
         self.status = _status & ~(RJLPS_Live);
         self.status = _status | RJLPS_Slomo;
         
     } else {
-        [self.avPlayer setRate:1];
+        newRate = 1;
        self.status = _status & ~(RJLPS_Slomo);
         
     }
     [self didChangeValueForKey:@"slowmo"];
-
+    [self.avPlayer setRate:newRate];
 }
 
 -(BOOL)mute
@@ -1279,6 +1288,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                       forKeyPath:@"rate"
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:ViewControllerRateObservationContext];
+        self.avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndPause;
     }
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */

@@ -927,7 +927,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
     
-    [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:15 tagData:sumRequestData timeStamp:GET_NOW_TIME];
+    [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME];
     
     [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
     
