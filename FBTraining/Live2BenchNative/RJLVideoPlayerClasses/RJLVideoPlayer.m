@@ -720,7 +720,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)playFeed:(Feed*)aFeed
 {
-
     self.feed = aFeed;
     self.URL = [self.feed path];
     [self play];
@@ -775,6 +774,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self.looping = NO;
     currentItemTime.text = @"";
     videoControlBar.enable = NO;
+    [self.clipControlBar setHidden:YES];
     [freezeMonitor stop];
     //videoControlBar.timeSlider.hidden = YES;
     
