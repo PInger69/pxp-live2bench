@@ -300,7 +300,7 @@
             collapsableCell.downloadButton.downloadItem = nil;
             
             collapsableCell.downloadButtonBlock = ^(){
-                [Utility downloadEvent:weakCell.event sourceName:weakCell.feedName.text returnBlock:
+                [Utility downloadEvent:weakCell.event sourceName:weakCell.dicKey returnBlock:
                  ^(DownloadItem *item){
                      DownloadItem *downloadItem = item;
                      downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
