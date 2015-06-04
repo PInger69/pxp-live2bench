@@ -15,7 +15,7 @@
 #define CELL_HEIGHT                  155//172
 #define LABEL_HEIGHT                 40
 #define LABEL_WIDTH                 100
-#define TABLE_WIDTH                 370//430
+#define TABLE_WIDTH                 460
 #define TABLE_HEIGHT                620//575
 
 #define NOTIF_CELL_SELECTED        @"cell selected"
