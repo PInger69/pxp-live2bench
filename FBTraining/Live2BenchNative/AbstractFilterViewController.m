@@ -56,6 +56,8 @@
         _rawTagData = tagData;
         selectTargets = [NSMutableArray array];
         onSelectSelectors = [NSMutableArray array];
+         //tabManager = [[FilterTabViewController alloc]initWithFrame:CGRectMake(0, 0, FILTER_AREA_WIDTH, FILTER_AREA_HEIGHT+50)];
+         //[self.view addSubview:tabManager.view];
     }
     return self;
 }
@@ -70,6 +72,8 @@
         _rawTagArray = tagArray;
         selectTargets = [NSMutableArray array];
         onSelectSelectors = [NSMutableArray array];
+         //tabManager = [[FilterTabViewController alloc]initWithFrame:CGRectMake(0, 0, FILTER_AREA_WIDTH, FILTER_AREA_HEIGHT+50)];
+         //[self.view addSubview:tabManager.view];
     }
     return self;
 }
@@ -164,11 +168,16 @@
     [self.view addSubview:backplate];
     
     // this is the main placement of the tabs
-    tabManager = [[FilterTabViewController alloc]initWithFrame:CGRectMake(0, 0, FILTER_AREA_WIDTH, FILTER_AREA_HEIGHT+50)];
+    
+    if (!tabManager) {
+        tabManager = [[FilterTabViewController alloc]initWithFrame:CGRectMake(0, 0, FILTER_AREA_WIDTH, FILTER_AREA_HEIGHT+50)];
+        [self.view addSubview:tabManager.view];
+    }
+    //tabManager = [[FilterTabViewController alloc]initWithFrame:CGRectMake(0, 0, FILTER_AREA_WIDTH, FILTER_AREA_HEIGHT+50)];
 
    
     
-    [self.view addSubview:tabManager.view];
+    //[self.view addSubview:tabManager.view];
     
     // this will show the total number of tabs
     /*numTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(backplate.bounds.size.width - 110.0f, 300.0f, 100.0f, 21.0f)];
