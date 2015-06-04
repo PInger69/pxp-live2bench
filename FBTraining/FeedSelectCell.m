@@ -19,10 +19,12 @@
     if (self) {
         _feedName = [[UILabel alloc] init];
         _feedView = [[UIImageView alloc] init];
+        _dicKey = [[NSString alloc]init];
         
         
         unsigned long n;
         sscanf(name.UTF8String, "s_%lu", &n);
+        _dicKey = name;
         _feedName.text = [NSString stringWithFormat:@"Cam %lu", n];
         
         ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];

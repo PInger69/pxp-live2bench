@@ -184,7 +184,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self.isInClipMode = YES;
     self.clipControlBar.hidden = NO;
     self.clipControlBar.enable = YES;
-    self.clipControlBar.timeSlider.minimumValue = 0;//(aRange.start.value / aRange.start.timescale);
+    self.clipControlBar.timeSlider.minimumValue = (aRange.start.value / aRange.start.timescale);
     self.clipControlBar.timeSlider.maximumValue = (aRange.start.value / aRange.start.timescale) + (aRange.duration.value/ aRange.duration.timescale);
     
     self.videoControlBar.hidden = YES;
@@ -210,8 +210,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
     self.videoControlBar.timeSlider.maximumValue = checkDuration;
     if (_looping){
-        videoControlBar.timeSlider.minimumValue = CMTimeGetSeconds(range.start);
-        self.videoControlBar.timeSlider.maximumValue = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
+        //videoControlBar.timeSlider.minimumValue = CMTimeGetSeconds(range.start);
+        //self.videoControlBar.timeSlider.maximumValue = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
     }
     
     if (CMTIME_IS_INVALID(playerDuration))
@@ -227,8 +227,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //        float maxValue = [self.videoControlBar.timeSlider maximumValue];
         double time = CMTimeGetSeconds([self.playerItem currentTime]);
     
-        self.videoControlBar.timeSlider.maximumValue = duration;
-        videoControlBar.timeSlider.minimumValue = 0.0;
+       // self.videoControlBar.timeSlider.maximumValue = duration;
+       // videoControlBar.timeSlider.minimumValue = 0.0;
         [self.videoControlBar.timeSlider setValue:time];
         
         double clipControlBarValue = time;

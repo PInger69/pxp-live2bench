@@ -162,7 +162,17 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
-    tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
+    long num;
+    if (firstDownloadCellPath) {
+        num = [firstDownloadCellPath row] - 1;
+        if (num <= 0) {
+            num = 0;
+        }
+    }
+    else{
+        num = 0;
+    }
+    tag = self.tableData[num];
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
