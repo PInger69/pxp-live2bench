@@ -440,7 +440,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)scrubbingEnd{
     
-    if (restoreAfterScrubbingRate)
+    if (restoreAfterScrubbingRate != 0)
     {
         [self.avPlayer prerollAtRate:restoreAfterScrubbingRate completionHandler:^(BOOL complete) {
             [self.avPlayer setRate:restoreAfterScrubbingRate];
@@ -511,9 +511,43 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                  
              case AVPlayerItemStatusFailed:
              {
-                 videoControlBar.enable = NO;
+              
                  AVPlayerItem *playerItem = (AVPlayerItem *)object;
-                 [self assetFailedToPrepareForPlayback:playerItem.error];
+                 
+                 // if the error happens when seeking
+                 if ((_status & RJLPS_Play)!=0){
+
+                     __block RJLVideoPlayer  * weakSelf          = self;
+                     __block CMTime rStart                       = playerItem.currentTime;
+            
+                     onFeedReadyBlock = ^void(){
+                         
+                             [weakSelf.avPlayer seekToTime:rStart completionHandler:^(BOOL finished) {
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     
+                                     if (finished) {
+                                         
+                                     } else {
+                                         NSLog(@"seekToInSec: CANCELLED");
+                                     }
+                                     weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                                 });
+                             }];
+                             
+                         };
+                     
+                     NSURL * tmpURL = [mURL copy];
+                     [self clear];
+                     mURL = nil;
+                     [self setURL:tmpURL];
+                     
+                 } else {
+                     // if its a completely unknow error
+                    videoControlBar.enable = NO;
+                     [self assetFailedToPrepareForPlayback:playerItem.error];
+                 }
+                 
+                
              }
                  break;
          }
@@ -1330,6 +1364,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
     [alertView show];
+    
+    PXPLog(@"VIDEO PLAYER ERROR");
 }
 
 //translate seconds to hh:mm:ss format

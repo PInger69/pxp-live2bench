@@ -885,6 +885,10 @@ static void * builtContext          = &builtContext; // depricated?
 //    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
     Tag *tag = note.userInfo[@"tag"];
 //    NSString *feedName = note.userInfo[@"feedName"];
+    
+    unsigned long srcID;
+    sscanf([note.userInfo[@"src"] UTF8String], "s_%lu", &srcID);
+    
 //
 //    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4", tag.event, tag.ID];
 //    dItemBlock([_localEncoder saveClip:videoName withData: tag ]);
@@ -898,34 +902,43 @@ static void * builtContext          = &builtContext; // depricated?
         NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
          if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
         // if in the data success is 0 then there is an error!
-        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4",results[@"event"],results[@"id"]];
         
-        NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
-        DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
-        dItemBlock(dli);
+        // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
+        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
+        
         
         // http://10.93.63.226/events/live/video/01hq_vid_10.mp4
         
         // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
-        /*
-        NSString *tagID = tag.ID;
-        NSString *ip = ((Encoder *)_primaryEncoder).ipAddress;
-        NSString *src = note.userInfo[@"src"];
         
-        unsigned long n;
-        sscanf(src.UTF8String, "s_%lu", &n);
-        NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
+         NSString *tagID = tag.ID;
+         NSString *ip = ((Encoder *)_primaryEncoder).ipAddress;
+         NSString *src = note.userInfo[@"src"];
+         
+         unsigned long n;
+         sscanf(src.UTF8String, "s_%lu", &n);
+         NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
+         
+         NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+         
+         // END SERVER IS DUMB
         
-        NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+        NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
+        DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo];
+        dItemBlock(dli);
         
-        // END SERVER IS DUMB
-         */
+        
+        
+        
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
             // is the object what we ware downloading
             if (note.object == dli) {
                 NSLog(@"Download Complete");
-                [_localEncoder saveClip:videoName withData: results]; // this is the data used to make the plist
+                
+                // we must now forge the results
+                
+                [_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
             }
         }];
     };
