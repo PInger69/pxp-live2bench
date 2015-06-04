@@ -127,9 +127,15 @@
     NSString *aName = [[aDict objectForKey:@"fileNames"] firstObject];
     [list addObject: aName];
     mutableDict[@"fileNames"]   = list;
-
+    
     _rawData = mutableDict;
-    [_rawData writeToFile:self.path atomically:YES];
+    
+    @try {
+        [_rawData writeToFile:self.path atomically:YES];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"EXCEPTION: %@", exception);
+    }
     
 }
 

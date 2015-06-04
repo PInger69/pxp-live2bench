@@ -68,10 +68,10 @@
 
 - (void)positionWithFrame:(CGRect)frame {
     
-    [_feedView setFrame:CGRectMake(0, 0, (16.0 / 9.0) * frame.size.height, frame.size.height)];
+    [_feedView setFrame:CGRectMake(44, 0, (16.0 / 9.0) * frame.size.height, frame.size.height)];
     [_feedName setFrame:CGRectMake(_feedView.frame.origin.x + _feedView.frame.size.width + 10, 0, 100, frame.size.height)];
-    [_downloadButton setFrame:CGRectMake(_feedName.frame.origin.x + _feedName.frame.size.width, (frame.size.height - 34) / 2.0, 34, 34)];
-    [_playButton setFrame:CGRectMake(_downloadButton.frame.origin.x + _downloadButton.frame.size.width + 30, (frame.size.height - 30) / 2.0, 30, 30)];
+    [_downloadButton setFrame:CGRectMake(276, (frame.size.height - 34) / 2.0, 34, 34)];
+    [_playButton setFrame:CGRectMake(CGRectGetMaxX(_downloadButton.frame) + 60, (frame.size.height - 30) / 2.0, 30, 30)];
 }
 
 

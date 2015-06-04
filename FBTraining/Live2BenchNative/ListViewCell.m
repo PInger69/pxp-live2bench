@@ -74,7 +74,7 @@
     
         self.myContentView = anExtraView;
     
-    self.deleteButton.frame = CGRectMake(290, 0, 80, 155);
+    self.deleteButton.frame = CGRectMake(380, 0, 80, 155);
         [self.deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
         [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
@@ -104,7 +104,7 @@
     self.tagcolor.layer.shadowOpacity = 0.8;
     [self.tagImage addSubview:self.tagcolor];
     
-    tagname = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.origin.x + tagImage.frame.size.width + 10, tagImage.frame.origin.y +13, 150.0f, 18.0f)];
+    tagname = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.origin.x + tagImage.frame.size.width + 44, tagImage.frame.origin.y +13, 150.0f, 18.0f)];
     //[self.tagtime setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];
     [tagname setText:NSLocalizedString(@"Name", nil)];
     [tagname setBackgroundColor:[UIColor clearColor]];
@@ -162,7 +162,7 @@
     coachpickButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [coachpickButton setBackgroundImage:[UIImage imageNamed:@"coach.png"] forState:UIControlStateNormal];
     [coachpickButton setBackgroundImage:[UIImage imageNamed:@"coachPicked.png"] forState:UIControlStateSelected];
-    [coachpickButton setFrame:CGRectMake(CGRectGetMaxX(tagImage.frame) + 15.0f, CGRectGetMaxY(tagPlayersView.frame) + 5, 32.0f, 32.0f)];
+    [coachpickButton setFrame:CGRectMake(CGRectGetMaxX(tagImage.frame) + 44, CGRectGetMaxY(tagPlayersView.frame) + 5, 32.0f, 32.0f)];
     //[coachpickButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
     [self.myContentView addSubview:coachpickButton];
     
