@@ -98,7 +98,7 @@ NSMutableArray *oldEventNames;
         _tableViewController = [[ListTableViewController alloc]init];
         _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
-       // _tableViewController.listViewControllerView = self.view;
+        //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
         
         
@@ -108,8 +108,9 @@ NSMutableArray *oldEventNames;
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
                 self.allTags = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
                     self.tagsToDisplay = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
+                    _tableViewController.tableData = self.tagsToDisplay;
                     //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-                    [_tableViewController.tableView reloadData];
+                    [_tableViewController reloadData];
             }
             if (!componentFilter.rawTagArray) {
                 componentFilter.rawTagArray = self.tagsToDisplay;
@@ -126,7 +127,6 @@ NSMutableArray *oldEventNames;
             commentingField.ratingScale.rating  = selectedTag.rating;
             [newVideoControlBar setTagName: selectedTag.name];
         }];
-
         
     }
     return self;
@@ -136,9 +136,10 @@ NSMutableArray *oldEventNames;
 - (void)deleteTag: (NSNotification *)note {
     [self.tagsToDisplay removeObject: note.object];
     [self.allTags removeObject:note.object];
+    //_tableViewController.tableData = self.tagsToDisplay;
     //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
       componentFilter.rawTagArray = self.tagsToDisplay;
-    [_tableViewController.tableView reloadData];
+    [_tableViewController reloadData];
 }
 
 - (void)listViewTagReceived:(NSNotification*)note {
@@ -148,7 +149,7 @@ NSMutableArray *oldEventNames;
         [self.tagsToDisplay insertObject:note.object atIndex:0];
         _tableViewController.tableData = self.tagsToDisplay;
         //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-        [_tableViewController.tableView reloadData];
+        [_tableViewController reloadData];
     }
     
 }
@@ -301,10 +302,11 @@ NSMutableArray *oldEventNames;
         
         if(eventTags.count > 0 && !self.tagsToDisplay){
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+            self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
             if (!componentFilter.rawTagArray) {
                 self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
             }
-            [_tableViewController.tableView reloadData];
+            [_tableViewController reloadData];
         }
 
 
@@ -511,7 +513,7 @@ NSMutableArray *oldEventNames;
     self.tagsToDisplay = [filteredArray mutableCopy];
     //[self.collectionView reloadData];
     _tableViewController.tableData = self.tagsToDisplay;
-    [_tableViewController.tableView reloadData];
+    [_tableViewController reloadData];
     [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
 
     
@@ -3537,13 +3539,13 @@ NSMutableArray *oldEventNames;
     [self.allTags removeAllObjects];
     [self.tagsToDisplay removeAllObjects];
     //_tableViewController.tableData = [NSMutableArray array];
-    [_tableViewController.tableView reloadData];
+    [_tableViewController reloadData];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
     self.tagsToDisplay = nil;
-    self.allTags = [NSMutableArray alloc];
-    _tableViewController.tableData = [NSMutableArray array];
+    //self.allTags = nil;
+    //_tableViewController.tableData = [NSMutableArray array];
     [_tableViewController reloadData];
     
     selectedTag = nil;
