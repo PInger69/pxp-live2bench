@@ -30,7 +30,7 @@
         videoPlayer     = aPlayer;
         freezeCounter   = [[RJLFreezeCounter alloc]initWithTarget:self selector:@selector(onFreeze) object:nil];
         _enabled = YES;
-        [freezeCounter startTimer:3 max:3];
+        [freezeCounter startTimer:4 max:3];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(monitorPlayer:) name:PLAYER_TICK object:videoPlayer];
         
@@ -62,7 +62,7 @@
 {
     if (_enabled) return;
     _enabled = YES;
-    [freezeCounter startTimer:1 max:3];
+    [freezeCounter startTimer:4 max:3];
 }
 
 
