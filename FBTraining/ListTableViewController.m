@@ -162,7 +162,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
-    long num;
+    /*long num;
     if (firstDownloadCellPath) {
         num = [firstDownloadCellPath row] - 1;
         if (num <= 0) {
@@ -172,7 +172,12 @@
     else{
         num = 0;
     }
-    tag = self.tableData[num];
+    
+    if (self.tableData[num]) {
+        tag = self.tableData[num];
+    }*/
+    tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
+
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
@@ -201,6 +206,13 @@
             
             
         };
+        
+        /*if (firstDownloadCellPath.row < indexPath.row) {
+            tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+        }else{
+            tag = self.tableData[indexPath.row];
+        }*/
+
         
         collapsableCell.sendUserInfo = ^(){
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
