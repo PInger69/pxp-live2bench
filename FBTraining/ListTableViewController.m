@@ -34,9 +34,9 @@
     if(self){
         self.isEditable = YES;
         //self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(1024 - (TABLE_WIDTH+1) - 85 , LABEL_HEIGHT + 60, TABLE_WIDTH, TABLE_HEIGHT) style:UITableViewStyleGrouped];
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(568 , LABEL_HEIGHT + 55, TABLE_WIDTH, TABLE_HEIGHT + 30) style:UITableViewStylePlain];
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(1024 - TABLE_WIDTH, LABEL_HEIGHT + 55, TABLE_WIDTH, TABLE_HEIGHT) style:UITableViewStylePlain];
         self.tableView.backgroundColor = [UIColor whiteColor];
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
         //self.tableView.layer.borderWidth = 1.0f;
         //self.tableView.layer.borderColor = [[UIColor grayColor] CGColor];
@@ -144,7 +144,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
-        return CELL_HEIGHT/2;
+        return 44.0;
     }
     return CELL_HEIGHT;
 }
@@ -160,18 +160,32 @@
 //}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
-    tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
+    long num;
+    if (firstDownloadCellPath) {
+        num = [firstDownloadCellPath row] - 1;
+        if (num <= 0) {
+            num = 0;
+        }
+    }
+    else{
+        num = 0;
+    }
+    tag = self.tableData[num];
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
         NSDictionary *urls = tag.thumbnails;
-        NSArray *keys = [urls allKeys];
+        
+        NSArray *keys = [[NSMutableArray arrayWithArray:[urls allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        
         NSString *key = keys[indexPath.row - firstIndexPath.row];
+        
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
-        //collapsableCell.backgroundColor = [UIColor redColor];
+        
+        
+        
         __block FeedSelectCell *weakCell = collapsableCell;
         collapsableCell.downloadButtonBlock = ^(){
             //__block DownloadItem *videoItem;
@@ -181,7 +195,9 @@
                 weakCell.downloadButton.downloadItem = downloadItem;
             };
             
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName, @"tag": tag, @"src":@"s_01hq"}];
+            NSString *src = [NSString stringWithFormat:@"%@hq", key];
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName, @"tag": tag, @"src":src}];
             
             
         };

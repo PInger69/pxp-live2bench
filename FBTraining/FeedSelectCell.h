@@ -15,6 +15,7 @@
 
 @property (strong, nonatomic) UIImageView *feedView;
 @property (strong, nonatomic) UILabel *feedName;
+@property (strong, nonatomic) NSString *dicKey;
 
 @property (strong, nonatomic) DownloadButton *downloadButton;
 @property (strong, nonatomic) CustomButton *playButton;

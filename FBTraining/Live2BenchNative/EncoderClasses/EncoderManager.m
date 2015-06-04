@@ -904,6 +904,22 @@ static void * builtContext          = &builtContext; // depricated?
         DownloadItem * dli = [Downloader downloadURL:urlForImageOnServer to:pth type:DownloadItem_TypeVideo];
         dItemBlock(dli);
         
+        // http://10.93.63.226/events/live/video/01hq_vid_10.mp4
+        
+        // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
+        /*
+        NSString *tagID = tag.ID;
+        NSString *ip = ((Encoder *)_primaryEncoder).ipAddress;
+        NSString *src = note.userInfo[@"src"];
+        
+        unsigned long n;
+        sscanf(src.UTF8String, "s_%lu", &n);
+        NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
+        
+        NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+        
+        // END SERVER IS DUMB
+         */
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
             // is the object what we ware downloading
