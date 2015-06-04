@@ -19,9 +19,14 @@
     if (self) {
         _feedName = [[UILabel alloc] init];
         _feedView = [[UIImageView alloc] init];
-        _feedName.text = name;
-//        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-        //[imageAssetManager imageForURL:url atImageView:self.feedView];
+        
+        
+        unsigned long n;
+        sscanf(name.UTF8String, "s_%lu", &n);
+        _feedName.text = [NSString stringWithFormat:@"Cam %lu", n];
+        
+        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+        [imageAssetManager imageForURL:url atImageView:self.feedView];
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -41,6 +46,7 @@
         [self.contentView addSubview:self.playButton];
         
         [self setSelectionStyle:UITableViewCellEditingStyleNone];
+        
     }
     return self;
 }
@@ -59,10 +65,11 @@
 }
 
 - (void)positionWithFrame:(CGRect)frame {
-    [_feedView setFrame:CGRectMake(0.1*frame.size.width, 0, 1.5*frame.size.height, frame.size.height)];
-    [_feedName setFrame:CGRectMake(0.1*frame.size.width + 1.5*frame.size.height + 10, frame.size.height - 0.6*frame.size.height , 100, 0.6*frame.size.height)];
-    [_downloadButton setFrame:CGRectMake(0.6*frame.size.width, 0.05*frame.size.height, 0.9*frame.size.height, 0.9*frame.size.height)];
-    [_playButton setFrame:CGRectMake(0.8*frame.size.width, 5, 30, 30)];
+    
+    [_feedView setFrame:CGRectMake(0, 0, (16.0 / 9.0) * frame.size.height, frame.size.height)];
+    [_feedName setFrame:CGRectMake(_feedView.frame.origin.x + _feedView.frame.size.width + 10, 0, 100, frame.size.height)];
+    [_downloadButton setFrame:CGRectMake(_feedName.frame.origin.x + _feedName.frame.size.width, (frame.size.height - 34) / 2.0, 34, 34)];
+    [_playButton setFrame:CGRectMake(_downloadButton.frame.origin.x + _downloadButton.frame.size.width + 30, (frame.size.height - 30) / 2.0, 30, 30)];
 }
 
 
