@@ -140,9 +140,16 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
     
-    NSURL *shareUrl = [NSURL fileURLWithPath:[clip.videoFiles firstObject]];
+    NSString *path = clip.videoFiles.firstObject;
+    
+    unsigned long srcID;
+    if (sscanf(path.UTF8String, "%*[^+]+%lu.mp4", &srcID) != 1) {
+        srcID = 0;
+    }
+    
+    NSURL *shareUrl = [NSURL fileURLWithPath:path];
     cell.interactionController = [UIDocumentInteractionController interactionControllerWithURL:shareUrl];
-    cell.interactionController.name = clip.name;
+    cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam %02lu", clip.name, clip.displayTime, srcID];
     
     
     cell.deleteBlock = ^(UITableViewCell *cell){

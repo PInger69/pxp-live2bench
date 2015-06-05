@@ -56,6 +56,7 @@
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
+		AE8058AD1B21DAD600536478 /* MyClipShareTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8058AC1B21DAD600536478 /* MyClipShareTableViewController.m */; };
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
 		AECB9A6E1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */; };
@@ -487,6 +488,8 @@
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
+		AE8058AB1B21DAD600536478 /* MyClipShareTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClipShareTableViewController.h; sourceTree = "<group>"; };
+		AE8058AC1B21DAD600536478 /* MyClipShareTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClipShareTableViewController.m; sourceTree = "<group>"; };
 		AE848FFF1B0D083D007A19E8 /* NCRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCRecordButton.h; sourceTree = "<group>"; };
 		AE8490001B0D083D007A19E8 /* NCRecordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCRecordButton.m; sourceTree = "<group>"; };
 		AECB9A6C1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingClipTableViewController.h; sourceTree = "<group>"; };
@@ -1556,6 +1559,8 @@
 				AA0FED2B19589951001D25EB /* ClipSharePopoverViewController.m */,
 				D7A7380519A3A27B0080B882 /* TagPopOverContent.h */,
 				D7A7380619A3A27B0080B882 /* TagPopOverContent.m */,
+				AE8058AB1B21DAD600536478 /* MyClipShareTableViewController.h */,
+				AE8058AC1B21DAD600536478 /* MyClipShareTableViewController.m */,
 			);
 			name = MyClipViewController;
 			sourceTree = "<group>";
@@ -2649,6 +2654,7 @@
 				D70FBA3C17FE0DFA00B606CF /* EulaModalViewController.m in Sources */,
 				D72708A01A1520900086BCB8 /* LocalEncoder.m in Sources */,
 				D7581F3E196461ED0029C5DD /* HeaderBar.m in Sources */,
+				AE8058AD1B21DAD600536478 /* MyClipShareTableViewController.m in Sources */,
 				D769AB8919BDFEA900DF68BC /* VideoBarListViewController.m in Sources */,
 				D738305A198AC9A30053F0A1 /* MyClipFilterViewController.m in Sources */,
 				D786C20117ECA00E0042DD96 /* CustomLabel.m in Sources */,
