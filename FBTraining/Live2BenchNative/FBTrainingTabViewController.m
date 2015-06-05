@@ -70,6 +70,9 @@
 
 @property (assign, nonatomic) BOOL recording;
 
+@property (assign, nonatomic) CMTime resumeTime;
+@property (assign, nonatomic) float resumeRate;
+
 @end
 
 @implementation FBTrainingTabViewController
@@ -137,6 +140,9 @@
         self.bottomPlayerView.player = self.playerA;
         
         // END NC PLAYER
+        
+        _resumeTime = kCMTimeInvalid;
+        _resumeRate = 1.0;
     }
     return self;
 }
@@ -254,7 +260,17 @@
     
     if (event.live) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (self.mainPlayer.status == AVPlayerStatusReadyToPlay) [self.mainPlayer play];
+            if (self.mainPlayer.status == AVPlayerStatusReadyToPlay) {
+                if (CMTIME_IS_INVALID(self.resumeTime)) {
+                    [self.mainPlayer play];
+                } else {
+                    [self.mainPlayer setRate:self.resumeRate atTime:self.resumeTime];
+                }
+            }
+        });
+    } else {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (self.mainPlayer.status == AVPlayerStatusReadyToPlay) [self.mainPlayer setRate:self.resumeRate atTime:CMTIME_IS_INVALID(self.resumeTime) ? kCMTimeZero : self.resumeTime];
         });
     }
     
@@ -268,6 +284,9 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    
+    self.resumeRate = self.mainPlayer.rate;
+    self.resumeTime = self.mainPlayer.currentTime;
     
     // pause the player
     [self.playerA pause];
