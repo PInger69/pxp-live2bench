@@ -187,6 +187,12 @@ static void * pipContext = &pipContext;
 static void * seekContext = &seekContext;
 -(void)seekTo:(CMTime)time
 {
+    
+    
+    if (CMTIME_IS_INVALID(time)) {
+        return;
+    }
+    
     CMTime playerTime   = self.avPlayerItem.duration;
     int difference      = CMTimeCompare(time, playerTime);
     AVPlayer * avplyer  = avPlayer;
@@ -225,6 +231,7 @@ static void * seekContext = &seekContext;
         if (difference >3 ){
             [avPlayer seekToTime:self.avPlayerItem.duration];
         }
+        
         [avPlayer seekToTime:time completionHandler:^(BOOL finished) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (finished) {

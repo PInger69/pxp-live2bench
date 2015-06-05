@@ -65,21 +65,48 @@
     feedCount = [listOfFeeds count];
     
     NSInteger n = (feedCount > 4)?4: feedCount;
+   
     
-    for (int i =0; i< n; i++) {
-        Pip * pip   = [_allPips objectAtIndex:i];
-        Feed * feed =   [listOfFeeds objectAtIndex:i];
-        [pip playWithFeed:feed];
+    if (n == 1) {
+       [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+       [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+       [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+       [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+    
+    } else if (n ==2) {
+        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+    
+    } else if (n ==3) {
+        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:3]];
+        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        
+    } else if (n ==4) {
+        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:3]];
+        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:4]];
+        
     }
     
-    
-    NSInteger leftToMake = 4 - n;
-    
-    for (int ii =0; ii < leftToMake; ii++) {
-        Pip * pip   = [_allPips objectAtIndex:n++];
-        Feed * feed =   [listOfFeeds objectAtIndex:ii];
-        [pip playWithFeed:feed];
-    }
+//    for (int i =0; i< n; i++) {
+//        Pip * pip   = [_allPips objectAtIndex:i];
+//        Feed * feed =   [listOfFeeds objectAtIndex:i];
+//        [pip playWithFeed:feed];
+//    }
+//    
+//    
+//    NSInteger leftToMake = 4 - n;
+//    
+//    for (NSInteger ii =leftToMake; ii > 0; ii--) {
+//        Pip * pip   = [_allPips objectAtIndex:n++];
+//        Feed * feed =   [listOfFeeds objectAtIndex:ii];
+//        [pip playWithFeed:feed];
+//    }
     
 }
 

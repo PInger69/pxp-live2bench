@@ -82,7 +82,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         commander = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame = frame;
         
-        liveBuffer = [[ValueBuffer alloc]initWithValue:5 coolDownValue:10000000 coolDownTick:30];
+        liveBuffer = [[ValueBuffer alloc]initWithValue:6 coolDownValue:10000000 coolDownTick:50];
         restoreAfterPauseRate = 1;
 
     }
