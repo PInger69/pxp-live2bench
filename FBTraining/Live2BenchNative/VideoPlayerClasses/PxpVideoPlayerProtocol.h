@@ -36,7 +36,7 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 };
 
 #define PLAYER_WILL_RESET   @"playerWillReset"
-#define PLAYER_WILL_DID     @"playerWillDid"
+#define PLAYER_DID_RESET    @"playerDidReset"
 
 
 @protocol PxpVideoPlayerProtocol <NSObject>
