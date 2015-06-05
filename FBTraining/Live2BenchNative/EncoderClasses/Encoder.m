@@ -879,10 +879,13 @@
             newTag.feeds = self.encoderManager.feeds;
             [_event.tags setObject:newTag forKey:tagId];
             if (self.encoderManager.primaryEncoder == self.encoderManager.masterEncoder) {
-                if ([self.encoderManager.primaryEncoder event] == self.encoderManager.masterEncoder.liveEvent) {
+                if ([[[self.encoderManager.primaryEncoder event] name] isEqualToString:self.encoderManager.masterEncoder.liveEvent.name ]) {
                     return;
                 }
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+                if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+                }
+                
             }
         }
     }

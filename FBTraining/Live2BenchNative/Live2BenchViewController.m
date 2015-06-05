@@ -628,7 +628,6 @@ static void * eventContext      = &eventContext;
     if ([_encoderManager.primaryEncoder event] != _encoderManager.masterEncoder.liveEvent) {
         _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
         _encoderManager.primaryEncoder.event = _encoderManager.masterEncoder.liveEvent;
-        //[self.videoPlayer clear];
         Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
         
         //info = [_appDel.encoderManager.masterEncoder.liveEvent.feeds allValues] [0];

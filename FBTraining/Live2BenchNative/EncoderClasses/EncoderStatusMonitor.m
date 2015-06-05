@@ -296,7 +296,9 @@
                 }else if(newTag.modified){
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:newTag];
                 }else{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object: newTag userInfo:tag];
+                    if ([checkedEncoder.event.name isEqualToString:newTag.event]) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object: newTag userInfo:tag];
+                    }
                 }
                 
             }
