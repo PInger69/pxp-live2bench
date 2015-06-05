@@ -80,11 +80,13 @@ static void * vpFrameContext   = &vpFrameContext;
         
         // video player
         [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
-//        [self.videoPlayer       addObserver:self forKeyPath:@"slowmo" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
-        
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
 
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillReset:) name:PLAYER_WILL_RESET  object:self.videoPlayer];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillDid:)   name:PLAYER_DID_RESET    object:self.videoPlayer];
+        
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerCancelClip:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
         NSTimeInterval  inter   =  2;
@@ -123,6 +125,12 @@ static void * vpFrameContext   = &vpFrameContext;
         
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillReset:) name:PLAYER_WILL_RESET  object:self.videoPlayer];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillDid:)   name:PLAYER_DID_RESET   object:self.videoPlayer];
+        
+        
+        
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerCancelClip:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
@@ -251,20 +259,23 @@ static void * vpFrameContext   = &vpFrameContext;
         [self.pips makeObjectsPerformSelector:@selector(pause)];
         [_multi pause];
     }
-    if (ply.status & RJLPS_Slomo) {
-        for (Pip * pip in self.pips) {
-            [pip playRate:self.videoPlayer.avPlayer.rate];
-        }
-        [_multi playRate:self.videoPlayer.avPlayer.rate];
-    }
+
     if ((ply.status & RJLPS_Play) && !(ply.status & (RJLPS_Scrubbing|RJLPS_Seeking)) ) {
         for (Pip * pip in self.pips) {
-            [pip playRate:self.videoPlayer.avPlayer.rate];
+            [pip playRate:1];
             [pip play];
         }
-        [_multi playRate:self.videoPlayer.avPlayer.rate];
+        [_multi playRate:1];
         [_multi play];
     }
+    
+    if (ply.status & RJLPS_Slomo) {
+        for (Pip * pip in self.pips) {
+            [pip playRate:.5];
+        }
+        [_multi playRate:.5];
+    }
+    
     
     // was main Player Finished Seeking
 //    if ( (oldStatus & RJLPS_Scrubbing) && !(newStatus & RJLPS_Scrubbing)) {
@@ -644,6 +655,21 @@ static void * vpFrameContext   = &vpFrameContext;
 {
     [_multi pause];
     [_multi removeFromSuperview];
+}
+
+
+
+-(void)playerWillReset:(NSNotification*)note
+{
+
+}
+
+-(void)playerWillDid:(NSNotification*)note
+{
+    if ([_multi superview]) {
+        [self hideMulti];
+        [self showMulti];
+    }
 }
 
 

@@ -9,7 +9,8 @@
 #import "NCPlayer.h"
 
 #define DEFAULT_SYNC_THRESHOLD 0.333
-#define DEFAULT_MAX_SYNCS 5
+#define DEFAULT_MAX_SYNCS 3
+#define DEFAULT_SYNC_WAIT_TIME 5
 
 @interface NCPlayerContext ()
 
@@ -49,6 +50,7 @@
     self.readyToPlayActionQueue = [NSMutableArray array];
     self.syncThreshold = CMTimeMakeWithSeconds(DEFAULT_SYNC_THRESHOLD, NSEC_PER_SEC);
     self.maximumSyncs = DEFAULT_MAX_SYNCS;
+    self.syncWaitTime = CMTimeMakeWithSeconds(DEFAULT_SYNC_WAIT_TIME, NSEC_PER_SEC);
     
     [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:_statusContext];
 }
@@ -191,12 +193,12 @@
         player->_syncInterval = syncInterval;
     }
     
-    if (CMTIME_IS_NUMERIC(syncInterval) && CMTIME_IS_NUMERIC(self.syncThreshold)) {
+    if (CMTIME_IS_NUMERIC(syncInterval)) {
         __block NCPlayer *_self = self;
         
         _syncPeriodicObserver = [self addPeriodicTimeObserverForInterval:syncInterval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
             
-            if (!_self.seeking && !_prerolling) {
+            if (!_self.seeking && !_prerolling && CMTIME_IS_NUMERIC(_self.syncThreshold)) {
                 // first calculate the maximum time difference
                 CMTime max = kCMTimeZero;
                 for (NCPlayer *player in _self.contextPlayers) {
@@ -209,9 +211,17 @@
                     if (_self.maximumSyncs == 0 || _self.nSync < _self.maximumSyncs) {
                         [_self setRate:_self.rate atTime:time];
                     } else {
-                        // sync failed we'll pause
+                        // sync failed
                         NSLog(@"NCPLAYER SYNC FAILED!");
-                        [_self pause];
+                        
+                        CMTime syncInterval = _self.syncInterval;
+                        
+                        _self.syncInterval = kCMTimePositiveInfinity;
+                        
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(CMTimeGetSeconds(_self.syncWaitTime) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            _self.syncInterval = syncInterval;
+                        });
+                        
                         _self.nSync = 0;
                     }
                 } else {

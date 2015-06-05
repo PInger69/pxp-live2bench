@@ -20,6 +20,7 @@
 @property (assign, nonatomic) CMTime syncThreshold;
 @property (assign, nonatomic) BOOL slomo;
 @property (assign, nonatomic) NSUInteger maximumSyncs;
+@property (assign, nonatomic) CMTime syncWaitTime;
 
 - (void)setURL:(nonnull NSURL *)URL;
 - (void)addReadyToPlayObserver:(nonnull void(^)(BOOL))readyBlock;

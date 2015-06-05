@@ -516,12 +516,12 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                  
                  // if the error happens when seeking
                  if ((_status & RJLPS_Play)!=0){
-
+                     [[NSNotificationCenter defaultCenter]postNotificationName:PLAYER_WILL_RESET object:self];
                      __block RJLVideoPlayer  * weakSelf          = self;
                      __block CMTime rStart                       = playerItem.currentTime;
             
                      onFeedReadyBlock = ^void(){
-                         
+                         if (!weakSelf)return;
                              [weakSelf.avPlayer seekToTime:rStart completionHandler:^(BOOL finished) {
                                  dispatch_async(dispatch_get_main_queue(), ^{
                                      
@@ -531,9 +531,12 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                                          NSLog(@"seekToInSec: CANCELLED");
                                      }
                                      weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                                 
                                  });
                              }];
-                             
+                            PXPLog(@"RJLPLayer: %@ RESET!",weakSelf.playerContext);
+                      
+                            [[NSNotificationCenter defaultCenter]postNotificationName:PLAYER_DID_RESET object:weakSelf];
                          };
                      
                      NSURL * tmpURL = [mURL copy];

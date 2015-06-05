@@ -91,6 +91,7 @@
     
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutApp:) name:NOTIF_USER_LOGGED_OUT object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(memoryWarning:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
     
     // action creation
     requestInfoAction = [[RequestUserInfoAction alloc]initWithAppDelegate:self];
@@ -336,5 +337,11 @@
 
     
 }
+
+-(void)memoryWarning:(NSNotification*)note
+{
+
+}
+
 
 @end
