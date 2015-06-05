@@ -414,7 +414,8 @@
                                  self.view.backgroundColor = [UIColor whiteColor];
                              }
                              completion:^(BOOL finished) {
-                                 
+                                 self.topPlayerView.showsControlBar = NO;
+                                 self.bottomPlayerView.hidden = NO;
                              }];
         } else {
             self.bottomPlayerView.alpha = 1.0;
@@ -461,7 +462,7 @@
                                  self.view.backgroundColor = [UIColor whiteColor];
                              }
                              completion:^(BOOL finished) {
-                                 
+                                 self.topPlayerView.hidden = NO;
                              }];
         } else {
             self.bottomPlayerView.frame = self.fullscreenInitialRect;
