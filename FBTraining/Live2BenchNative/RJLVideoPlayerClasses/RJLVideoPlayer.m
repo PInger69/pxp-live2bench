@@ -809,6 +809,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     currentItemTime.text = @"";
     videoControlBar.enable = NO;
     [self.clipControlBar setHidden:YES];
+    //self.isInClipMode           = NO;
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIP_CANCELED object:self];
+    
+    //[self cancelClip];
     [freezeMonitor stop];
     //videoControlBar.timeSlider.hidden = YES;
     
