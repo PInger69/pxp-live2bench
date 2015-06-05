@@ -882,7 +882,10 @@
                 if ([self.encoderManager.primaryEncoder event] == self.encoderManager.masterEncoder.liveEvent) {
                     return;
                 }
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+                if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
+                }
+                
             }
         }
     }

@@ -255,6 +255,7 @@
 //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil userInfo:nil];
 //    } else {
     if (currentFailCount--<=0)  {
+        if (checkedEncoder.status == ENCODER_STATUS_UNKNOWN) return;
         checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:checkedEncoder userInfo:nil];
     }
@@ -289,7 +290,9 @@
                 }else if(newTag.modified){
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:newTag];
                 }else{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object: newTag userInfo:tag];
+                    if ([checkedEncoder.event.name isEqualToString:newTag.event]) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object: newTag userInfo:tag];
+                    }
                 }
                 
             }
