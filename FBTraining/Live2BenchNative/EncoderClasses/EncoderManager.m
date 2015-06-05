@@ -785,6 +785,7 @@ static void * builtContext          = &builtContext; // depricated?
     
     switch (encoder.status) {
         case ENCODER_STATUS_UNKNOWN: // Disconnected
+            PXPLog(@"ENCODER_STATUS_UNKNOWN");
             [self unRegisterEncoder:encoder];
             break;
         case ENCODER_STATUS_LIVE:  // This is so when you start a live event on the device it builds a encoder
@@ -1129,6 +1130,7 @@ static void * builtContext          = &builtContext; // depricated?
     NSArray * allEnc = [dictOfEncoders allValues];
     
     for (Encoder * enc in allEnc) {
+        PXPLog(@"Logged out of Encoder");
         [self unRegisterEncoder:enc];
     }
     [_authenticatedEncoders removeAllObjects];

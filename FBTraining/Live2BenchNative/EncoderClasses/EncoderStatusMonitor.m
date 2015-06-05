@@ -255,6 +255,7 @@
 //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil userInfo:nil];
 //    } else {
     if (currentFailCount--<=0)  {
+        if (checkedEncoder.status == ENCODER_STATUS_UNKNOWN) return;
         checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:checkedEncoder userInfo:nil];
     }
