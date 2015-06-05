@@ -167,6 +167,8 @@
     return @{
              @"colour"      : self.colour,
              @"deviceid"    : self.deviceID,
+             @"displaytime" : self.displayTime,
+             @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
              @"event"       : self.event,
              @"name"        : self.name,
              @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],

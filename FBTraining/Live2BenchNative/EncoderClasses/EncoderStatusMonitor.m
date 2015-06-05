@@ -282,6 +282,7 @@
         if ( [json objectForKey: @"tags"]) {
             for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
                 Tag *newTag = [[Tag alloc]initWithData: tag];
+                newTag.feeds = checkedEncoder.event.feeds;
                 if (newTag.type == 3) {
                     [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
                 }else if (((NSInteger)newTag.type)  == 99){
