@@ -2240,7 +2240,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0630;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = DEV;
 				TargetAttributes = {
 					D7A9393E16ADA65E006CBAB2 = {
@@ -2768,6 +2768,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2843,6 +2844,7 @@
 					"-all_load",
 					"-Objc",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.avocatec.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
@@ -2880,6 +2882,7 @@
 					"-all_load",
 					"-Objc",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.avocatec.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
@@ -2906,6 +2909,7 @@
 					"-framework",
 					XCTest,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.avocatec.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -2929,6 +2933,7 @@
 					"-framework",
 					XCTest,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.avocatec.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				VALID_ARCHS = "armv7 armv7s arm64";

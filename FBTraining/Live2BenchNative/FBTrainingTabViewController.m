@@ -35,7 +35,7 @@
 @property (strong, nonatomic, nonnull) NCPlayer *playerA;
 @property (strong, nonatomic, nonnull) NCPlayer *playerB;
 
-@property (weak, nonatomic, nonnull) NCPlayer *mainPlayer;
+@property (weak, nonatomic, nullable) NCPlayer *mainPlayer;
 
 @property (strong, nonatomic, nonnull) NCPlayerView *topPlayerView;
 @property (strong, nonatomic, nonnull) NCPlayerView *bottomPlayerView;
@@ -119,8 +119,8 @@
         
         self.playerContext = [[NCPlayerContext alloc] init];
         
-        self.playerA = [[NCPlayer alloc] initWithPlayerItem:nil];
-        self.playerB = [[NCPlayer alloc] initWithPlayerItem:nil];
+        self.playerA = [[NCPlayer alloc] init];
+        self.playerB = [[NCPlayer alloc] init];
         
         self.playerA.context = self.playerContext;
         self.playerB.context = self.playerContext;
@@ -314,7 +314,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setMainPlayer:(nonnull NCPlayer *)mainPlayer {
+- (void)setMainPlayer:(nullable NCPlayer *)mainPlayer {
     _mainPlayer.muted = YES;
     _mainPlayer = mainPlayer;
     _mainPlayer.muted = NO;
