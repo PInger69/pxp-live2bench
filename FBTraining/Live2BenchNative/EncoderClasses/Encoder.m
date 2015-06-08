@@ -937,6 +937,7 @@
 
 }
 
+
 -(void)onBitrate:(NSDate *)startTime
 {
     self.bitrate = (double)[[NSDate date] timeIntervalSinceDate:startTime];
@@ -984,11 +985,14 @@
      self.statusAsString   = ([data objectForKey:@"status"])?[data objectForKey:@"status"]:@"";
 }
 
--(void)onEncoderMasterFallen
+-(void)onEncoderMasterFallen:(NSError *)error
 {
     if (self.status == ENCODER_STATUS_UNKNOWN) return;
     self.status = ENCODER_STATUS_UNKNOWN;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self userInfo:nil];
+    NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
+    PXPLog(@"EncoderStatus Error!!! ENCODER_STATUS_UNKNOWN : %@",failType);
+
 }
 
 -(void)onMotionAlarm:(NSDictionary *)data

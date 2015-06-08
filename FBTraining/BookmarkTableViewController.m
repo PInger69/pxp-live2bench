@@ -16,7 +16,6 @@
 #define NO_BUTTON   1
 
 @interface BookmarkTableViewController ()
-@property (strong, nonatomic) UILongPressGestureRecognizer *longPressRecognizer;
 @property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 
@@ -29,26 +28,11 @@
     self = [super init];
     if (self){
         [self.tableView registerClass:[BookmarkViewCell class] forCellReuseIdentifier:@"BookmarkViewCell"];
-        self.longPressRecognizer = [[UILongPressGestureRecognizer alloc] init];
-        [self.tableView addGestureRecognizer: self.longPressRecognizer];
-        self.longPressRecognizer.minimumPressDuration = 0.7;
-        [self.longPressRecognizer addTarget:self action:@selector(longPressDetected:)];
         
         //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         
     }
     return self;
-}
-
--(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
-    if(longPress.state == UIGestureRecognizerStateBegan){
-        if (!self.editing) {
-            [self setEditing:YES animated:YES];
-        }else if(self.editing){
-            [self setEditing:NO animated:NO];
-        }
-    }
-    
 }
 
 - (void)viewDidLoad {
@@ -232,9 +216,6 @@
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
-    if(self.editing){
-        return YES;
-    }
     return NO;
 }
 
@@ -264,7 +245,7 @@
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    return NO;
 }
 
 #pragma mark - Deletion Methods

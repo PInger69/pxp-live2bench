@@ -422,6 +422,7 @@ static void * vpFrameContext   = &vpFrameContext;
         [pip setHidden:YES];
         [pip seekTo:cmtime];
     }
+    [self hideMulti];
     // set feeds highlight
     
     [_feedSwitchView deselectByIndex:-1];

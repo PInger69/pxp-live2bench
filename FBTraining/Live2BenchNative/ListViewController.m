@@ -3555,7 +3555,7 @@ NSMutableArray *oldEventNames;
     [newVideoControlBar setTagName: nil];
 }
 
-/*
+
 - (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
     NSMutableArray *tags = [NSMutableArray array];
     for (Tag *tag in tagsToDisplay) {
@@ -3565,6 +3565,5 @@ NSMutableArray *oldEventNames;
     }
     _tagsToDisplay = tags;
 }
- */
 
 @end

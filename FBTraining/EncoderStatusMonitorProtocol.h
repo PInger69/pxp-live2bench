@@ -14,7 +14,7 @@
 @protocol EncoderStatusMonitorProtocol <NSObject>
 
 //- (void) onUserInfo;
-- (void) onEncoderMasterFallen;
+-(void)onEncoderMasterFallen:(NSError *)error;
 - (void) onTagsChange:(NSData *) data;
 - (void) onMotionAlarm:(NSDictionary *)data;
 - (void) encoderStatusChange:(EncoderStatus) status;

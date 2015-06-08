@@ -62,25 +62,67 @@
 
 -(void)makePips:(NSArray*)listOfFeeds
 {
+    // Added code
+    
+    [_allPips makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_allPips makeObjectsPerformSelector:@selector(clear)];    
+    _allPips = [[NSMutableArray alloc]init];
+    
+    float pWidth    = rect.size.width  * 0.5;
+    float pHeight   = rect.size.height * 0.5;
+    
+    Pip * pip1 = [[Pip alloc]initWithFrame:CGRectMake(0,            0, pWidth, pHeight)];
+    Pip * pip2 = [[Pip alloc]initWithFrame:CGRectMake(pWidth,       0, pWidth, pHeight)];
+    Pip * pip3 = [[Pip alloc]initWithFrame:CGRectMake(0,      pHeight, pWidth, pHeight)];
+    Pip * pip4 = [[Pip alloc]initWithFrame:CGRectMake(pWidth, pHeight, pWidth, pHeight)];
+    
+    [_allPips addObject:pip1];
+    [_allPips addObject:pip2];
+    [_allPips addObject:pip3];
+    [_allPips addObject:pip4];
+    
+    [self addSubview:pip1];
+    [self addSubview:pip2];
+    [self addSubview:pip3];
+    [self addSubview:pip4];
+
+
+    
+    // end of added code
+    
     feedCount = [listOfFeeds count];
     
     NSInteger n = (feedCount > 4)?4: feedCount;
+   
+
     
-    for (int i =0; i< n; i++) {
-        Pip * pip   = [_allPips objectAtIndex:i];
-        Feed * feed =   [listOfFeeds objectAtIndex:i];
-        [pip playWithFeed:feed];
+    if (n == 1) {
+       [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+       [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+       [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+       [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+    
+    } else if (n ==2) {
+        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+    
+    } else if (n ==3) {
+        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:3]];
+        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        
+    } else if (n ==4) {
+        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
+        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
+        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:3]];
+        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:4]];
+        
     }
     
-    
-    NSInteger leftToMake = 4 - n;
-    
-    for (int ii =0; ii < leftToMake; ii++) {
-        Pip * pip   = [_allPips objectAtIndex:n++];
-        Feed * feed =   [listOfFeeds objectAtIndex:ii];
-        [pip playWithFeed:feed];
-    }
-    
+
 }
 
 

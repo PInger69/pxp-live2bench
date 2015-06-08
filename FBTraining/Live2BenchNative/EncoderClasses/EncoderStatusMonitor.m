@@ -190,7 +190,7 @@
         statusPath          = [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress];
         feedPath            = [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",ipAddress];
         
-        timeout             = 6 ;
+        timeout             = 10 ;
         statusInvocation    = [self _buildInvokSel:selector_ path:statusPath  type:STATUS       timeout:&timeout];
         feedInvocation      = [self _buildInvokSel:selector_ path:feedPath    type:FEED_CHECK   timeout:&timeout];
 
@@ -304,12 +304,15 @@
 //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil userInfo:nil];
 //    } else {
     if (currentFailCount--<=0)  {
-        [checkedEncoder onEncoderMasterFallen];
+        [checkedEncoder onEncoderMasterFallen:error];
         //if (checkedEncoder.status == ENCODER_STATUS_UNKNOWN) return;
         //checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
         //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:checkedEncoder userInfo:nil];
-        
-       
+
+    } else {
+        NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
+//        [NSString stringWithFormat:@"%i",currentFailCount ];
+        PXPLog(@"EncoderStatus Error Countdown %i: %@", currentFailCount,failType);
     }
 //    }
 

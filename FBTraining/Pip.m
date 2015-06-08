@@ -18,7 +18,8 @@
     UITextView                     * debugLabel;
     NSDictionary                * _qualityFeeds;
     float                       _rate;
-    BOOL                        isSeeking;
+    BOOL                        isReadyObserved;
+    BOOL                        isPlayerReadyObserved;
     void                        (^seekReady)();
     id                           loopingObserver;
     id                           timeObserver;
@@ -91,6 +92,8 @@ static void * pipContext = &pipContext;
         self.layer.borderColor  = [DESELECT_COLOR CGColor];
         self.isDragAble         = NO;
         avPlayer.muted          = NO;
+        isReadyObserved         = NO;
+        isPlayerReadyObserved   = NO;
         _rate                   = 1.0;
         _quality                = 0;
         debugLabel              = [[UITextView alloc]initWithFrame:CGRectMake(5, 5, frame.size.width-10, frame.size.height *.5)];
@@ -141,7 +144,14 @@ static void * pipContext = &pipContext;
     _feed.quality   = _quality;
     NSURL * url     = [_feed path];
     avPlayer        = nil;
+    if (avPlayerItem) {
+        [avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+    }
     avPlayerItem    = [[AVPlayerItem alloc] initWithURL:url];
+    [avPlayerItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&seekContext];
+
+
+    
     avPlayer        = [AVPlayer playerWithPlayerItem:avPlayerItem];
     avPlayer.muted  = _muted;
     if (avPlayerLayer)[avPlayerLayer removeFromSuperlayer];
@@ -187,17 +197,24 @@ static void * pipContext = &pipContext;
 static void * seekContext = &seekContext;
 -(void)seekTo:(CMTime)time
 {
+    
+    
+    if (CMTIME_IS_INVALID(time)) {
+        return;
+    }
+    
     CMTime playerTime   = self.avPlayerItem.duration;
     int difference      = CMTimeCompare(time, playerTime);
     AVPlayer * avplyer  = avPlayer;
     avplyer.muted       = _muted;
-    AVPlayerItem * avplyeritm  = avPlayerItem;
+    __block AVPlayerItem * avplyeritm  = avPlayerItem;
     __block Pip      * weakSelf      = self;
     weakSelf.status = weakSelf.status | PIP_Seeking;
     
     if (self.avPlayerItem.status != AVPlayerItemStatusReadyToPlay){
         
-        [self.avPlayerItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&seekContext];
+  //  [self.avPlayerItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:&seekContext];
+        isReadyObserved = YES;
         // MAKES BLOCK
         seekReady = ^void(){
             
@@ -225,6 +242,7 @@ static void * seekContext = &seekContext;
         if (difference >3 ){
             [avPlayer seekToTime:self.avPlayerItem.duration];
         }
+        
         [avPlayer seekToTime:time completionHandler:^(BOOL finished) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (finished) {
@@ -317,11 +335,12 @@ static void * seekContext = &seekContext;
     
     if (context == &seekContext){
         AVPlayerItem * plyItm = (AVPlayerItem *)object;
-        if (plyItm.status == AVPlayerItemStatusReadyToPlay && avPlayer.status ==AVPlayerStatusReadyToPlay) {
-            [plyItm removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+        if (plyItm.status == AVPlayerItemStatusReadyToPlay && avPlayer.status ==AVPlayerStatusReadyToPlay && isReadyObserved) {
+        //    [plyItm removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
            if(seekReady) seekReady();
             [self removePlayerTimeObserver];
             [self addPeriodicTimeObserver];
+            isReadyObserved = NO;
             
         }
     
@@ -572,6 +591,7 @@ static void * seekContext = &seekContext;
     if (avPlayerLayer)[avPlayerLayer removeFromSuperlayer];
     _feed               = nil;
     debugLabel.text     = @"";
+    seekReady           = nil;
 }
 
 
@@ -584,8 +604,9 @@ static void * seekContext = &seekContext;
 -(void)dealloc
 {
     self.isAlive = NO;
-//    [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
-//    [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
+
+    [self.avPlayerItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&seekContext];
+
 }
 
 
