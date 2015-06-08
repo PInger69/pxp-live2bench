@@ -111,7 +111,7 @@ static SpinnerView *instance;
             [theApp addSubview:instance];
             [indicator startAnimating];
             CATransition *animation = [CATransition animation];
-            [animation setType:nil];
+            animation.type = kCATransitionFade;
 //            NSLog(@"Global Spinner OPEN");
             
             if ([note.userInfo objectForKey:@"message"]){
@@ -194,7 +194,7 @@ static SpinnerView *instance;
     // Create a new animation
     CATransition *animation = [CATransition animation];
 	// Set the type to a nice wee fade
-	[animation setType:nil];
+    animation.type = kCATransitionFade;
 
 	return spinnerView;
 }
