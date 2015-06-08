@@ -808,17 +808,23 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 {
     self.status = RJLPS_Offline;
     [self removePlayerTimeObserver];
-    self.looping = NO;
+    //self.looping = NO;
     currentItemTime.text = @"";
     videoControlBar.enable = NO;
-    [self.clipControlBar setHidden:YES];
+    //[self.clipControlBar setHidden:YES];
     //self.isInClipMode           = NO;
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIP_CANCELED object:self];
     
+    if (self.clipControlBar.hidden == NO) {
+        [self cancelClip];
+    }
     //[self cancelClip];
     [freezeMonitor stop];
     //videoControlBar.timeSlider.hidden = YES;
     
+    //[self cancelClip];
+    
+   
     
     if (self.playerItem)
     {

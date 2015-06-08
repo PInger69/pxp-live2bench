@@ -46,7 +46,7 @@
 #define RESUME_EVENT    @"resumeEvent:timeStamp:"
 #define START_EVENT     @"startEvent:timeStamp:"
 
-@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol>
+@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol,EncoderStatusMonitorProtocol>
 {
     
     
@@ -122,6 +122,19 @@
 
 -(Event*)getEventByName:(NSString*)eventName;
 
+
+//Don't know why I need all these, but have to add them to get rid of errors
+-(void)getAllEventsResponse:(NSData *)data;
+-(void)stopResponce:(NSData *)data;
+-(void)startResponce:(NSData *)data;
+-(void)pauseResponce:(NSData *)data;
+-(void)resumeResponce:(NSData *)data;
+-(void)camerasGetResponce:(NSData *)data;
+-(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict;
+-(void)deleteEventResponse: (NSData *) data;
+-(void)removeFromQueue:(EncoderCommand *)obj;
+-(void)addToQueue:(EncoderCommand *)obj;
+-(EncoderCommand *)getNextInQueue;
 
 /**
  *  removes all observers and checker and release memory if possible

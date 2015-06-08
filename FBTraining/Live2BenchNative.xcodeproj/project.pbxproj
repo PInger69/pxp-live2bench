@@ -641,6 +641,7 @@
 		D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
 		D73CDBEE1AAF283C002D682D /* AccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountsViewController.h; sourceTree = "<group>"; };
 		D73CDBEF1AAF283C002D682D /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
+		D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderStatusMonitorProtocol.h; sourceTree = "<group>"; };
 		D73FE32E1A40882600341D57 /* L2BVideoBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BVideoBarViewController.h; path = Live2BenchTab/L2BVideoBarViewController.h; sourceTree = "<group>"; };
 		D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = L2BVideoBarViewController.m; path = Live2BenchTab/L2BVideoBarViewController.m; sourceTree = "<group>"; };
 		D73FE3311A41DBF000341D57 /* L2BFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BFullScreenViewController.h; path = Live2BenchTab/L2BFullScreenViewController.h; sourceTree = "<group>"; };
@@ -1659,6 +1660,7 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */,
 				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
 				D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */,
 				D72CC2891AFA858100E26B60 /* RatingOutput.m */,

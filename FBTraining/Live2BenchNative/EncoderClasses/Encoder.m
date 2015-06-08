@@ -16,6 +16,7 @@
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
+#define SYNC_ME             @"SYNC_ME"
 
 
 
@@ -675,11 +676,14 @@
     }  else if ([connectionType isEqualToString: RESUME_EVENT]) {
         [self resumeResponce:    finishedData];
     } else if ([connectionType isEqualToString: MAKE_TAG]) {
-        [self makeTagResponce:    finishedData];
+        //[self makeTagResponce:    finishedData];
+        [self tagsJustChanged:finishedData extraData:MAKE_TAG];
     } else if ([connectionType isEqualToString: MAKE_TELE_TAG]) {
-        [self makeTagResponce:    finishedData];
+        //[self makeTagResponce:    finishedData];
+        [self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
-        [self modTagResponce:    finishedData];
+        //[self modTagResponce:    finishedData];
+        [self tagsJustChanged:finishedData extraData:MODIFY_TAG];
     } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
@@ -692,7 +696,8 @@
     
     if (isAuthenticate && 1 && _isBuild && isTeamsGet && !_isReady){
         _isReady         = YES;
-        if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
+        //if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
+        if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithDelegate:self];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
         
     }
@@ -849,7 +854,12 @@
     isTeamsGet = YES;
 }
 
--(void)modTagResponce:(NSData *)data
+-(void)checkTag:(NSData *)data
+{
+    
+}
+
+/*-(void)modTagResponce:(NSData *)data
 {
     
     NSDictionary    * results =[Utility JSONDatatoDict:data];
@@ -864,9 +874,137 @@
     
     }
     
+}*/
+
+//when tags are created or modified on the same ipad that is displaying the change
+-(void)tagsJustChanged:(NSData *)data extraData:(NSString *)type
+{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    if([results isKindOfClass:[NSDictionary class]])    {
+        if ([type isEqualToString:MODIFY_TAG]) {
+            [self onModifyTags:results];
+        }
+        else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])
+        {
+            [self onNewTags:results];
+        }
+    }
 }
 
--(void)makeTagResponce:(NSData *)data
+-(void)onModifyTags:(NSDictionary *)data
+{
+    if ([data objectForKey:@"id"]) {
+        //NSString * tagId = [[results objectForKey:@"id"]stringValue];
+        //[_event.tags setObject:results forKey:tagId];
+        
+        PXPLog(@"Tag Modification succeded: %@", @"");
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:data];
+    }
+}
+
+-(void)onNewTags:(NSDictionary*)data
+{
+    if ([data objectForKey:@"id"]) {
+        NSString * tagId = [[data objectForKey:@"id"]stringValue];
+        Tag *newTag = [[Tag alloc] initWithData: data];
+        newTag.feeds = self.encoderManager.feeds;
+        [_event.tags setObject:newTag forKey:tagId];
+        if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:data];
+        }
+    }
+}
+
+-(void)onTagsChange:(NSData *)data
+{
+    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    if ([json isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
+    if ( [json objectForKey: @"tags"]) {
+        for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
+            Tag *newTag = [[Tag alloc]initWithData: tag];
+            if (newTag.type == 3) {
+                [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
+            }else if (((NSInteger)newTag.type)  == 99){
+                
+            }else if(newTag.modified){
+                [self onModifyTags:tag];
+            }else{
+                [self onNewTags:tag];
+            }
+            
+        }
+    }
+
+}
+
+-(void)onBitrate:(NSDate *)startTime
+{
+    self.bitrate = (double)[[NSDate date] timeIntervalSinceDate:startTime];
+}
+
+-(BOOL)checkEncoderVersion
+{
+    BOOL olderVersion = ([self.version isEqualToString:@"0.94.5"])?YES:NO;
+    return olderVersion;
+}
+
+// this is for the older encoder versions
+-(void)assignMaster:(NSDictionary *)data extraData:(BOOL)olderVersion
+{
+    if ([self.version compare:OLD_VERSION options:NSNumericSearch]){
+        BOOL checkIfNobel = [[data objectForKey:@"master"]boolValue];
+        
+        if (olderVersion){
+            checkIfNobel = YES;
+        }
+        
+        self.isMaster = checkIfNobel;
+    }
+
+}
+
+
+-(void)encoderStatusChange:(EncoderStatus)status
+{
+    if (self.status != status) {
+        // encoder status changed
+        // old encoder status is not live or live event name was set or new encoder status is ready
+        
+        self.status           = status; /// maybe make this mod directly
+        if (self.status == ENCODER_STATUS_LIVE) {
+            self.isBuild = false; // This is so the encoder manager rebuilds it once
+        }
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];
+    }
+
+}
+
+-(void)encoderStatusStringChange:(NSDictionary *)data
+{
+     self.statusAsString   = ([data objectForKey:@"status"])?[data objectForKey:@"status"]:@"";
+}
+
+-(void)onEncoderMasterFallen
+{
+    if (self.status == ENCODER_STATUS_UNKNOWN) return;
+    self.status = ENCODER_STATUS_UNKNOWN;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self userInfo:nil];
+}
+
+-(void)onMotionAlarm:(NSDictionary *)data
+{
+    if ([data objectForKey:@"alarms"]) {
+        NSArray * alarmedFeeds = [data objectForKey:@"alarms"];
+        NSArray * feedsChecked = (self.event.feeds)?[self.event.feeds allKeys]:@[];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MOTION_ALARM object:self userInfo:@{
+                                                                                                                @"feeds"    : feedsChecked,
+                                                                                                                @"alarms"   : alarmedFeeds
+                                                                                                            }];
+    }
+}
+
+
+/*-(void)makeTagResponce:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     PXPLog(@"Tag Response has been received");
@@ -878,23 +1016,16 @@
             Tag *newTag = [[Tag alloc] initWithData: results];
             newTag.feeds = self.encoderManager.feeds;
             [_event.tags setObject:newTag forKey:tagId];
-            if (self.encoderManager.primaryEncoder == self.encoderManager.masterEncoder) {
-                if ([[[self.encoderManager.primaryEncoder event] name] isEqualToString:self.encoderManager.masterEncoder.liveEvent.name ]) {
-                    return;
-                }
                 if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:results];
                 }
-                
-            }
         }
     }
-}
+}*/
 
 -(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
-    
     Event * tempEvent;
     
 //    if ([dict objectForKey:@"event"]){
@@ -913,6 +1044,9 @@
                     Tag *newTag = [[Tag alloc] initWithData: tags[idKey]];
                     newTag.feeds = self.encoderManager.feeds;
                     [tagsDictionary addEntriesFromDictionary:@{idKey:newTag}];
+                    if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:tags[idKey]];
+                    }
                 }
                 
             }
