@@ -36,6 +36,10 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
 
+
+-(id <EncoderProtocol>)makePrimary;
+-(id <EncoderProtocol>)removeFromPrimary;
+
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
 -(Event*)getEventByName:(NSString*)eventName;
 

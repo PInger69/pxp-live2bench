@@ -19,7 +19,6 @@
 
 #define NOTIF_ENCODER_CONNECTION_PROGRESS   @"encoderConnectionProgress"
 #define NOTIF_ENCODER_CONNECTION_FINISH     @"encoderConnectionComplete"
-#define NOTIF_ENCODER_FEEDS_UPDATED         @"encoderFeedsUpdated"
 #define NOTIF_ENCODER_MASTER_FOUND          @"encoderMasterFound"
 #define NOTIF_ENCODER_MASTER_HAS_FALLEN     @"encoderMasterLost"
 #define NOTIF_ENCODER_MASTER_ENSLAVED       @"encoderMasterEnslaved"

@@ -149,6 +149,13 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
  *  Notifications
  */
 
+
+#define NOTIF_PRIMARY_ENCODER_CHANGE        @"NOTIF_PRIMARY_ENCODER_CHANGE"
+#define NOTIF_DELETE_TAG                    @"NOTIF_DELETE_TAG"
+
+
+
+
 #define NOTIF_UPDATE_MEMORY                 @"update memory"
 #define NOTIF_RECEIVE_MEMORY_WARNING        @"receive memory warning"
 #define NOTIF_SUBTAG_SELECTED       		@"subtag selected"
