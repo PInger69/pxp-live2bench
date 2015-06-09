@@ -329,6 +329,7 @@
 		D7A9399216ADA933006CBAB2 /* CustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9399116ADA933006CBAB2 /* CustomTabBar.m */; };
 		D7A939B116ADD86F006CBAB2 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A939B016ADD86F006CBAB2 /* MediaPlayer.framework */; };
 		D7A939B316ADD875006CBAB2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A939B216ADD875006CBAB2 /* AVFoundation.framework */; };
+		D7A9F10D1B25EE72005C8B3E /* EncoderCommander.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9F10C1B25EE72005C8B3E /* EncoderCommander.m */; };
 		D7AA943917F4893E000EDAD5 /* ContactLabelString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */; };
 		D7AB2D1D16B6F44D0093465F /* line-button-grey.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D1B16B6F44D0093465F /* line-button-grey.png */; };
 		D7AB2D2416B6F4AD0093465F /* ToolBarValues.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */; };
@@ -922,6 +923,8 @@
 		D7A9399116ADA933006CBAB2 /* CustomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBar.m; sourceTree = "<group>"; };
 		D7A939B016ADD86F006CBAB2 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		D7A939B216ADD875006CBAB2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D7A9F10B1B25EE72005C8B3E /* EncoderCommander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderCommander.h; path = Live2BenchNative/EncoderClasses/EncoderCommander.h; sourceTree = "<group>"; };
+		D7A9F10C1B25EE72005C8B3E /* EncoderCommander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderCommander.m; path = Live2BenchNative/EncoderClasses/EncoderCommander.m; sourceTree = "<group>"; };
 		D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactLabelString.txt; sourceTree = "<group>"; };
 		D7AB2D1B16B6F44D0093465F /* line-button-grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line-button-grey.png"; sourceTree = "<group>"; };
 		D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ToolBarValues.plist; sourceTree = "<group>"; };
@@ -2631,6 +2634,7 @@
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
 				D700F9061B011550008152E8 /* FakeEncoder.m in Sources */,
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
+				D7A9F10D1B25EE72005C8B3E /* EncoderCommander.m in Sources */,
 				D79D709219DD8ED2001FBE16 /* ExternalScreenButton.m in Sources */,
 				D738306F19915B3B0053F0A1 /* UserColourView.m in Sources */,
 				D79BC1DC19E8720100ECD8DB /* Pip.m in Sources */,

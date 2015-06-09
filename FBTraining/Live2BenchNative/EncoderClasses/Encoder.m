@@ -184,10 +184,7 @@
     _event      =  event;
     [self didChangeValueForKey:@"event"];
     
-    // this is check when Primary encoder posts a notif
-    [_encoderManager onPrimaryEncoderEventChange:self];
-    
-
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
 }
 
 -(Event*)event

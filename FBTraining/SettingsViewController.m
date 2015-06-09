@@ -484,8 +484,7 @@ SVSignalStatus signalStatus;
             break;
     }
     
-    //    NSInteger cc = encoderManager.totalCameraCount;
-    //    NSString * scourceCount = (cc)?[NSString stringWithFormat:@" (s%i)",cc]:@"";
+
     [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }
 

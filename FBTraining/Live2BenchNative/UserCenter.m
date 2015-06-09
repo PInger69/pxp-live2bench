@@ -193,7 +193,7 @@ static UserCenter * instance;
         }];
         instance = self;
     }
-    
+
     return self;
 }
 
