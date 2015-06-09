@@ -108,6 +108,6 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 -(id<ActionListItem>)checkForWiFiAction;
 -(id<ActionListItem>)checkForACloudAction;
 -(id<ActionListItem>)checkForMasterAction;
--(id<ActionListItem>)logoutAction;
+//-(id<ActionListItem>)logoutAction;
 
 @end

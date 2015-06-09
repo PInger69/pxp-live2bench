@@ -8,8 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "ActionList.h"
+#import "EncoderCommand.h"
+
 
 @interface UserCenter : NSObject
+{
+    NSURLRequest            * urlRequest;
+    NSURLConnection         * encoderConnection;
+
+    EncoderCommand         * currentCommand;
+
+}
 
 @property (nonatomic,strong) NSMutableArray         * tagNames;
 @property (nonatomic,strong) NSString               * userPick;// team pic
@@ -33,11 +42,14 @@
 +(instancetype)getInstance;
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
--(void)enableObservers:(BOOL)isObserve;
+//-(void)enableObservers:(BOOL)isObserve;
 -(void)writeAccountInfoToPlist;
+-(void)logoutOfCloud;
+-(void)updateTagInfoFromCloud;
 
 // Action methods
 
+-(id<ActionListItem>)logoutAction;
 -(id<ActionListItem>)checkLoginPlistAction;
 
 

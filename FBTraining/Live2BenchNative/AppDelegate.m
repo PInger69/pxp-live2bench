@@ -74,7 +74,7 @@
     
     _actionList             = [[ActionList alloc]init];
     _userCenter             = [[UserCenter alloc]initWithLocalDocPath:kdocumentsDirectory];
-    [_userCenter enableObservers:YES];
+    //[_userCenter enableObservers:YES];
     
     _encoderManager = [[EncoderManager alloc]initWithLocalDocPath: kdocumentsDirectory];
 
@@ -313,7 +313,7 @@
         if(succsess){ // get the ID from the userCenter and sets it to the Manager so it can look for encoders
             weakEM.customerID = weakSelf.userCenter.customerID;
             weakEM.searchForEncoders = weakEM.hasWiFi;
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+            //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
             // add to action list success list bransh
             
         } else {

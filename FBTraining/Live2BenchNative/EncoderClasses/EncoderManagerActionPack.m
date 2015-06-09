@@ -146,15 +146,24 @@
 
 @implementation LogoutAction
 {
-    EncoderManager * encoderManager;
+    //EncoderManager * encoderManager;
+    UserCenter * userCenter;
     
 }
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
 
+-(id)initWithUserCenter:(UserCenter *)aUserCenter
+{
+    self = [super init];
+    if (self) {
+        userCenter = aUserCenter;
+    }
+    
+    return self;
+}
 
-
--(id)initWithEncoderManager:(EncoderManager*)aEncoderManager
+/*-(id)initWithEncoderManager:(EncoderManager*)aEncoderManager
 {
     self = [super init];
     if (self) {
@@ -163,12 +172,13 @@
     
     return self;
     
-}
+}*/
 
 -(void)start
 {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(found:) name:NOTIF_USER_LOGGED_OUT object:nil];
-    [encoderManager logoutOfCloud];
+    //[encoderManager logoutOfCloud];
+    [userCenter logoutOfCloud];
 }
 
 
@@ -199,6 +209,9 @@
 
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
+
+
+
 
 -(void)start
 {

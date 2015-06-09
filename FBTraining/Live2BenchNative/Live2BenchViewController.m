@@ -396,9 +396,10 @@ static void * eventContext      = &eventContext;
     //create all the event tag buttons
     //[self createTagButtons];
 
-    /*__block Live2BenchViewController * weakSelf = self;
-    tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
-        //[weakSelf createTagButtons];
+    //__block Live2BenchViewController * weakSelf = self;
+    //tagsReadyObserver =
+    /*[[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [weakSelf createTagButtons];
     }];*/
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -654,6 +655,7 @@ static void * eventContext      = &eventContext;
  */
 - (void)createTagButtons
 {
+    [_tagButtonController clear];
     [_tagButtonController.view removeFromSuperview];
     // side tags
     _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];

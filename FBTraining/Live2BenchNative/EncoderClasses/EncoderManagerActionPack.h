@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ActionList.h"
 #import "EncoderManager.h"
+#import "UserCenter.h"
 
 
 @interface CheckWiFiAction : NSObject <ActionListItem>
@@ -55,7 +56,8 @@
 
 @interface LogoutAction : NSObject <ActionListItem>
 
--(id)initWithEncoderManager:(EncoderManager*)aEncoderManager;
+//-(id)initWithEncoderManager:(EncoderManager*)aEncoderManager;
+-(id)initWithUserCenter:(UserCenter*)aUserCenter;
 
 /**
  *  This property is observeded by the action list once Changed to YES it will move to the next action

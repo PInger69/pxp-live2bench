@@ -282,7 +282,7 @@
     CheckWiFiAction             * checkWiFiAction;
     CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
-    LogoutAction                * logoutAction;
+    //LogoutAction                * logoutAction;
     
 }
 
@@ -351,9 +351,9 @@
         __block EncoderManager * weakSelf = self;
         
         
-        _logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
+        /*_logoutObserver         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LOGOUT_USER     object:nil queue:nil usingBlock:^(NSNotification *note) {
             [weakSelf.logoutAction start];
-        }];
+        }];*/
         
         _liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             // if the current playing event is the live event and its stopped then we have to make it no Event at all
@@ -501,7 +501,7 @@
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
         checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
         checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
-        logoutAction                = [[LogoutAction alloc]initWithEncoderManager:self];
+        //logoutAction                = [[LogoutAction alloc]initWithEncoderManager:self];
         
         
         // This will look for the external encoder if no other normal encoders are found
@@ -1846,7 +1846,8 @@ static void * builtContext          = &builtContext; // depricated?
     if (searchForEncoders == _searchForEncoders)return;
     if (searchForEncoders) {
         [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-        [_cloudEncoder updateTagInfoFromCloud];// search for cloud
+        [[UserCenter getInstance] updateTagInfoFromCloud];
+        //[_cloudEncoder updateTagInfoFromCloud];// search for cloud
     } else{
         [serviceBrowser stop];
     }
@@ -2008,12 +2009,12 @@ static void * builtContext          = &builtContext; // depricated?
  *
  *  @return the action
  */
--(id<ActionListItem>)logoutAction
+/*-(id<ActionListItem>)logoutAction
 {
     logoutAction.isFinished = NO;
     logoutAction.isSuccess  = NO;
     return logoutAction;
-}
+}*/
 
 @end
 
