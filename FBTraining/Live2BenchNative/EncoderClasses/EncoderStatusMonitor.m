@@ -11,6 +11,7 @@
 #import "Event.h"
 #import <objc/runtime.h>
 #import "Tag.h"
+#import "EncoderStatusMonitorProtocol.h"
 
 #define SHUTDOWN_RESPONCE   @"shutdown responce"
 #define STATUS              @"status"
@@ -83,8 +84,8 @@
 
 @implementation EncoderStatusMonitor
 {
-    Encoder                 * checkedEncoder;
-    
+    //Encoder                 * checkedEncoder;
+    id <EncoderStatusMonitorProtocol>     checkedEncoder;
     // For Status
     NSString                * ipAddress;
     NSTimer                 * statusTimer;
@@ -108,11 +109,12 @@
     
     NSInvocation            * statusInvocation;
     NSInvocation            * feedInvocation;
+    NSInvocation            * syncMeInvocation;
     
     //For SyncMe
-    NSTimer                 * syncMeTimer;
+//    NSTimer                 * syncMeTimer;
     NSString                * syncMePath;
-    NSURLConnection         * syncMeConnection;
+//    NSURLConnection         * syncMeConnection;
     
     NSString                * statusPath;
     NSString                * feedPath;
@@ -123,14 +125,52 @@
     BOOL                    flag; // simple flag to alternate status calls
     
     BOOL                    isLegacy;
+    
+    SEL selector_;
 }
 
 
 
 @synthesize isLookingForMaster = _isLookingForMaster;
 
+-(id)initWithDelegate:(id<EncoderStatusMonitorProtocol>)delegate
+{
+    self = [super init];
+    if (self){
+        checkedEncoder      = delegate;
+        ipAddress           = delegate.ipAddress;
+        statusInterval      = 1.0;
+        flag                = NO;
+        maxFailCount        = 10; // 3 tries   0 index
+        currentFailCount    = maxFailCount;
+        statusPack          = [[NSMutableArray alloc]init];
+        statusSync          = YES;
+        statusTimer         = [NSTimer scheduledTimerWithTimeInterval:statusInterval target:self selector:@selector(statusLoop) userInfo:nil repeats:YES];
+        
+        
+        // Build Invocation
+        //SEL selector_       = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
+        selector_ = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
+        statusPath          = [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress];
+        feedPath            = [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",ipAddress];
+        
+        timeout             = 6 ;
+        statusInvocation    = [self _buildInvokSel:selector_ path:statusPath  type:STATUS       timeout:&timeout];
+        feedInvocation      = [self _buildInvokSel:selector_ path:feedPath    type:FEED_CHECK   timeout:&timeout];
+        
+        [self buildSyncMeComponents];
+        [statusPack addObject:statusInvocation];
+        //isLegacy            = ([checkedEncoder.version isEqualToString:@"0.94.5"])?YES:NO;
+        isLegacy            = [checkedEncoder checkEncoderVersion];
+        
+        
+    }
+    return self;
 
--(id)initWithEncoder:(Encoder*)encoder
+}
+
+
+/*-(id)initWithEncoder:(Encoder*)encoder
 {
     self = [super init];
     if (self){
@@ -157,12 +197,12 @@
         [self buildSyncMeComponents];
 //        [statusPack addObject:feedInvocation];
         [statusPack addObject:statusInvocation];
-        isLegacy            = ([checkedEncoder.version isEqualToString:@"0.94.5"])?YES:NO;
+        //isLegacy            = ([checkedEncoder.version isEqualToString:@"0.94.5"])?YES:NO;
         
         
     }
     return self;
-}
+}*/
 
 -(void)buildSyncMeComponents{
     __block NSString *hidString;
@@ -189,7 +229,8 @@
     jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     syncMePath = [NSString stringWithFormat:@"http://%@/min/ajax/syncme/%@", ipAddress, jsonString];
-    syncMeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(syncMe) userInfo:nil repeats:YES];
+    [self syncMe];
+//    syncMeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(syncMe) userInfo:nil repeats:YES];
     
 //    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
 //    
@@ -199,12 +240,19 @@
 
 -(void) syncMe{
     if (statusCode & ENCODER_STATUS_LIVE) {
+        syncMeInvocation      = [self _buildInvokSel:selector_ path:syncMePath type:SYNC_ME       timeout:&timeout];
+        [statusPack addObject: syncMeInvocation];
+    }
+    
+    /*if (statusCode & ENCODER_STATUS_LIVE) {
         
+     
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
-        
+
         syncMeConnection = [NSURLConnection connectionWithRequest:request delegate:self];
         syncMeConnection.connectionType = SYNC_ME;
-    }
+    }*/
+
 }
 
 -(NSInvocation * )_buildInvokSel:(SEL)aSelec path:(NSString*)aPath type:(NSString*)aType timeout:(double *)aTimeOut
@@ -230,7 +278,8 @@
     if ([connection.connectionType isEqualToString: SHUTDOWN_RESPONCE])     currentCount = maxCount;
     
     if ([connection.connectionType isEqualToString: STATUS]){
-        checkedEncoder.bitrate = (double)[[NSDate date] timeIntervalSinceDate:startRequestTime];
+        [checkedEncoder onBitrate:startRequestTime];
+        //checkedEncoder.bitrate = (double)[[NSDate date] timeIntervalSinceDate:startRequestTime];
     }
 }
 
@@ -255,11 +304,11 @@
 //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil userInfo:nil];
 //    } else {
     if (currentFailCount--<=0)  {
-        if (checkedEncoder.status == ENCODER_STATUS_UNKNOWN) return;
-        checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
-        NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
-        PXPLog(@"EncoderStatus Error!!! ENCODER_STATUS_UNKNOWN : %@",failType);
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:checkedEncoder userInfo:nil];
+        [checkedEncoder onEncoderMasterFallen:error];
+        //if (checkedEncoder.status == ENCODER_STATUS_UNKNOWN) return;
+        //checkedEncoder.status = ENCODER_STATUS_UNKNOWN;
+        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:checkedEncoder userInfo:nil];
+
     } else {
         NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
 //        [NSString stringWithFormat:@"%i",currentFailCount ];
@@ -283,7 +332,8 @@
     } else  if ([connection.connectionType isEqualToString: FEED_CHECK]) {
         [self checkFeeds:connection.cumulatedData];
     }else if( [connection.connectionType isEqualToString: SYNC_ME]){
-        id json = [NSJSONSerialization JSONObjectWithData: connection.cumulatedData options:0 error:nil];
+        [checkedEncoder onTagsChange:connection.cumulatedData];
+        /*id json = [NSJSONSerialization JSONObjectWithData: connection.cumulatedData options:0 error:nil];
         if ([json isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
         if ( [json objectForKey: @"tags"]) {
             for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
@@ -296,14 +346,12 @@
                 }else if(newTag.modified){
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:newTag];
                 }else{
-                    if ([checkedEncoder.event.name isEqualToString:newTag.event]) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object: newTag userInfo:tag];
-                    }
+                    [checkedEncoder onNewTags:connection.cumulatedData];
                 }
                 
             }
             
-        }
+        }*/
     }
     // get cam check..... add it
 }
@@ -378,7 +426,9 @@
             
             //TODO
             // this is for the older encoder versions
-            if ([checkedEncoder.version compare:OLD_VERSION options:NSNumericSearch]){
+            [checkedEncoder assignMaster:results extraData:isLegacy];
+            
+            /*if ([checkedEncoder.version compare:OLD_VERSION options:NSNumericSearch]){
 //            if ([Utility sumOfVersion:checkedEncoder.version] >= [Utility sumOfVersion:OLD_VERSION]){
 //                 NSLog(@"Encoder: Version check in Authenticate Disabled");
                 BOOL checkIfNobel =[[results objectForKey:@"master"]boolValue];
@@ -388,28 +438,36 @@
                 }
                 
                 checkedEncoder.isMaster = checkIfNobel;
-            }
+            }*/
             
-            if (checkedEncoder.status != statusCode /*&& (!(checkedEncoder.status & ENCODER_STATUS_LIVE) || checkedEncoder.liveEventName || (statusCode & ENCODER_STATUS_READY))*/) {
+            [checkedEncoder encoderStatusChange:statusCode];
+            [checkedEncoder encoderStatusStringChange:results];
+            //if (checkedEncoder.status != statusCode /*&& (!(checkedEncoder.status & ENCODER_STATUS_LIVE) || checkedEncoder.liveEventName || (statusCode & ENCODER_STATUS_READY))*/) {
                 // encoder status changed
                 // old encoder status is not live or live event name was set or new encoder status is ready
-                checkedEncoder.statusAsString   = ([results objectForKey:@"status"])?[results objectForKey:@"status"]:@"";
-                checkedEncoder.status           = statusCode; /// maybe make this mod directly
-                if (checkedEncoder.status == ENCODER_STATUS_LIVE) {
-                    checkedEncoder.isBuild = false; // This is so the encoder manager rebuilds it once
-                }
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:checkedEncoder];
+            //    checkedEncoder.statusAsString   = ([results objectForKey:@"status"])?[results objectForKey:@"status"]:@"";
+            //      checkedEncoder.status           = statusCode; /// maybe make this mod directly
+            //    if (checkedEncoder.status == ENCODER_STATUS_LIVE) {
+            //        checkedEncoder.isBuild = false; // This is so the encoder manager rebuilds it once
+            //    }
                 
-            }
+            //    [checkedEncoder onEncoderStart];
+                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:checkedEncoder];
+                
+            // }
         
-            if ([results objectForKey:@"alarms"]) {
+            [checkedEncoder onMotionAlarm:results];
+            /*if ([results objectForKey:@"alarms"]) {
+                NSArray * alarmedFeeds = [results objectForKey:@"alarms"];
+             
+                
                 NSArray * feedsChecked = (checkedEncoder.event.feeds)?[checkedEncoder.event.feeds allKeys]:@[];
                 NSArray * alarmedFeeds = [results objectForKey:@"alarms"];
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MOTION_ALARM object:checkedEncoder userInfo:@{
                                                                                                                               @"feeds"    : feedsChecked,
                                                                                                                               @"alarms"   : alarmedFeeds
                                                                                                                               }];
-            }
+            }*/
 
         }
     }
@@ -441,7 +499,7 @@
 // This section is to check feed changes
 -(void)checkFeeds:(NSData *)data
 {
-    NSString        * currentEvent = checkedEncoder.event.name;
+   /* NSString        * currentEvent = checkedEncoder.event.name;
     NSDictionary    * tempFeeds    = @{};
     if (currentEvent == nil ||[currentEvent isEqualToString:@""]){
         return;
@@ -500,7 +558,7 @@
            // }
                 
         }
-    }
+    }*/
     
 }
 
@@ -565,3 +623,4 @@
 
 
 @end
+

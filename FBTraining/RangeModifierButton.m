@@ -12,8 +12,7 @@
 #define LITTLE_ICON_DIMENSIONS       30
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [CustomButton buttonWithType:UIButtonTypeCustom];
-    self = (RangeModifierButton*)[[CustomButton alloc]initWithFrame:frame];
+    self = [super initWithFrame:frame];
     if (self) {
 
         [self setContentMode:UIViewContentModeScaleAspectFill];
