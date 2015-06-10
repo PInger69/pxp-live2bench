@@ -338,7 +338,7 @@
 
 -(Encoder*)removeEncoder:(Encoder*)aEncoder
 {
-   
+    return nil;
     
 }
 

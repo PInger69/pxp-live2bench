@@ -371,7 +371,7 @@
         
         
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
-            _masterEncoder = (Encoder *)note.object;
+            _masterEncoder = note.object;
             
             if (_masterEncoder.liveEvent) {
                 weakSelf.liveEventName = _masterEncoder.liveEvent.name;
