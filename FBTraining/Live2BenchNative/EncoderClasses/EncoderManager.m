@@ -1731,6 +1731,7 @@ static void * statusContext         = &statusContext;
     if (searchForEncoders == _searchForEncoders)return;
     if (searchForEncoders) {
         [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+        [[UserCenter getInstance] updateTagInfoFromCloud];
 //        [_cloudEncoder updateTagInfoFromCloud];// THIS NEEDS TO BE CHANGED TO USER CENTER METHOD
     } else{
         [serviceBrowser stop];
