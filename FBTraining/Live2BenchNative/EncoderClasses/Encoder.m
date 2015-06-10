@@ -937,6 +937,8 @@
     }
 }
 
+
+// This method is getting run from the Encoder Status monitor
 -(void)onTagsChange:(NSData *)data
 {
     id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -1302,12 +1304,13 @@
     return txt;
 }
 
-
+// Depricated? do we need getters and setters
 -(NSString*)name
 {
     return _name;
 }
 
+// Depricated? do we need getters and setters
 -(void)setName:(NSString *)name
 {
     [self willChangeValueForKey:@"name"];

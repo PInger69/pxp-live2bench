@@ -12,13 +12,14 @@
 #import <objc/runtime.h>
 #import "Tag.h"
 #import "EncoderStatusMonitorProtocol.h"
+#import "UserCenter.h"
 
 #define SHUTDOWN_RESPONCE   @"shutdown responce"
 #define STATUS              @"status"
 #define FEED_CHECK          @"feed check"
 #define MASTER_SEARCH       @"master search"
 #define SYNC_ME             @"SYNC_ME"
-
+#define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 /**
  *  This class is to just see what status the currentStatus the he incoder is in
  *  and will also check shutdown
@@ -205,22 +206,31 @@
 }*/
 
 -(void)buildSyncMeComponents{
-    __block NSString *hidString;
-    __block NSString *eventString = @"live";
-    __block NSString *authorizationString;
-    double currentSystemTime = 0;
+//    __block NSString *hidString;
+//    __block NSString *eventString = @"live";
+//    __block NSString *authorizationString;
+//    double currentSystemTime = 0;
+//    
+//    void (^userCenterDataBlock)(NSDictionary *dataDictionary) = ^(NSDictionary *dataDictionary){
+//        hidString = dataDictionary[@"hid"];
+//        //eventString = dataDictionary[@"event"];
+//        authorizationString = dataDictionary[@"authorization"];
+//        
+//    };
+//    
+//    NSDictionary *blockDictionary = @{@"block": userCenterDataBlock};
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"setUserInfo" object:nil userInfo: blockDictionary];
+//    
+//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys: hidString,@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",eventString,@"event", authorizationString ,@"device", nil];
+
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:@{
+                                                                                @"user"         : [UserCenter getInstance].userHID,
+                                                                                @"requesttime"  : GET_NOW_TIME_STRING, //[NSString stringWithFormat:@"%f",0]
+                                                                                @"event"        : @"live",
+                                                                                @"device"       : [UserCenter getInstance].customerAuthorization
+                                                                                 }];
     
-    void (^userCenterDataBlock)(NSDictionary *dataDictionary) = ^(NSDictionary *dataDictionary){
-        hidString = dataDictionary[@"hid"];
-        //eventString = dataDictionary[@"event"];
-        authorizationString = dataDictionary[@"authorization"];
-        
-    };
     
-    NSDictionary *blockDictionary = @{@"block": userCenterDataBlock};
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"setUserInfo" object:nil userInfo: blockDictionary];
-    
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys: hidString,@"user",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",eventString,@"event", authorizationString ,@"device", nil];
     
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
@@ -230,12 +240,7 @@
 
     syncMePath = [NSString stringWithFormat:@"http://%@/min/ajax/syncme/%@", ipAddress, jsonString];
     [self syncMe];
-//    syncMeTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(syncMe) userInfo:nil repeats:YES];
-    
-//    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
-//    
-//    syncMeConnection = [NSURLConnection connectionWithRequest:request delegate:self];
-//    syncMeConnection.connectionType = SYNC_ME;
+
 }
 
 -(void) syncMe{
