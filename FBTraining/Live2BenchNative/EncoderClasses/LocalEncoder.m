@@ -243,6 +243,29 @@
 }
 
 
+-(id <EncoderProtocol>)makePrimary
+{
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadEvent:)  name:NOTIF_EM_DOWNLOAD_EVENT    object:nil];
+    return self;
+}
+
+-(id <EncoderProtocol>)removeFromPrimary
+{
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_EVENT       object:nil];
+    return self;
+}
 
 
 #pragma mark - EncoderProtocol

@@ -73,7 +73,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     //Richard
     AppDelegate            * _appDel;
     EncoderManager         * encoderManager;
-    Encoder                * masterEncoder;
+    NSObject <EncoderProtocol> *   masterEncoder;
     UserCenter             * userCenter;
     TablePopoverController * homeTeamPick;
     TablePopoverController * visitTeamPick;
@@ -122,7 +122,7 @@ SVSignalStatus signalStatus;
 //        __block SettingsViewController * weakSelf = self;
         __block UILabel * weakStateLable    =  encStateLabel;
         __block UILabel * weakHomeLable     =  encoderHomeText;
-        __block Encoder * weakMasterEncoder =  masterEncoder;
+        __block NSObject <EncoderProtocol> * weakMasterEncoder =  masterEncoder;
         
         [encStateLabel setHidden:YES];
         // observers
@@ -432,7 +432,7 @@ SVSignalStatus signalStatus;
 }
 
 
--(void)masterEncoderStatusObserver:(Encoder*)master
+-(void)masterEncoderStatusObserver:(id<EncoderProtocol>)master
 {
     EncoderStatus status    = master.status;
     NSString * stringStatus = master.statusAsString;
