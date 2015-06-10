@@ -125,14 +125,16 @@ static void * eventContext      = &eventContext;
         [weakSelf createTagButtons];
     }];
     
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver) name:NOTIF_EVENT_CHANGE object:nil];
+    
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
 
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
     
@@ -197,6 +199,15 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:informationLabel];
     
     return self;
+}
+
+-(void)setEventObserver
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_EVENT_CHANGE];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
+    if ([_appDel.encoderManager.primaryEncoder event].live) {
+        [self gotLiveEvent];
+    }
 }
 
 
