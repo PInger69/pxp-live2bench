@@ -143,7 +143,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
     }
     
-    for (Tag *tag in self.allTagsArray  ){
+    for (Tag *tag in self.allTagsArray ){
         
         if (![_currentEvent.tags containsObject:tag]) {
             [self.allTagsArray removeObject:tag];

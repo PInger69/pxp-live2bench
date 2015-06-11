@@ -444,9 +444,9 @@
                 
                 checkedEncoder.isMaster = checkIfNobel;
             }*/
-            
+            [checkedEncoder encoderStatusStringChange:results];            
             [checkedEncoder encoderStatusChange:statusCode];
-            [checkedEncoder encoderStatusStringChange:results];
+
             //if (checkedEncoder.status != statusCode /*&& (!(checkedEncoder.status & ENCODER_STATUS_LIVE) || checkedEncoder.liveEventName || (statusCode & ENCODER_STATUS_READY))*/) {
                 // encoder status changed
                 // old encoder status is not live or live event name was set or new encoder status is ready

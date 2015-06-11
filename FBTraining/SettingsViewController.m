@@ -497,7 +497,7 @@ SVSignalStatus signalStatus;
     [encoderHomeText setAlpha:1];
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
     [masterEncoder addObserver:self forKeyPath:@"isAlive" options:NSKeyValueObservingOptionNew context:nil];
-    
+    [self masterEncoderStatusObserver:masterEncoder];// run it once just to display status
     // block
 //    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
 //        NSMutableArray  * collection    = [[NSMutableArray alloc]init];
