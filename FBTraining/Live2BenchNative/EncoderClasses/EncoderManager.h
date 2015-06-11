@@ -53,9 +53,12 @@
 @property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
 
 
+@property (nonatomic,weak)              Event                   * liveEvent;
+
+
 // important encoders
-@property (nonatomic,strong)            EncoderCommander        * masterEncoder; // Main box encoder
-//@property (nonatomic,strong)            Encoder                 * masterEncoder; // Main box encoder
+@property (nonatomic,strong)            EncoderCommander        * encoderCommander; // Main box encoder
+@property (nonatomic,strong)            Encoder                 * masterEncoder; // Main box encoder
 @property (nonatomic,strong)            LocalEncoder            * localEncoder;  // the device acts like an in app encoder / with clips
 @property (nonatomic,strong)            CloudEncoder            * cloudEncoder;  // 
 @property (nonatomic,strong)            id <EncoderProtocol>    primaryEncoder;

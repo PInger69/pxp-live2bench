@@ -367,7 +367,7 @@
 //        }];
 //        
         
-        _masterEncoder = [[EncoderCommander alloc]init];
+      //  _masterEncoder = [[EncoderCommander alloc]init];
         
         
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -561,7 +561,7 @@ static void * statusContext         = &statusContext;
         PXPLog(@"    %@ - %@",newEncoder.name,ip);
         PXPLog(@"**************************");
         
-       if (![newEncoder.name isEqualToString:@"External Encoder"])  [_masterEncoder addEncoder:newEncoder];
+//       if (![newEncoder.name isEqualToString:@"External Encoder"])  [_masterEncoder addEncoder:newEncoder];
     }
 }
 
@@ -1589,10 +1589,10 @@ static void * statusContext         = &statusContext;
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet
 {
     NSString * myEvent = ([event isEqualToString:_liveEventName])?@"live":event; // Converts event name to live if needed
-    NSString * hid     = [_dictOfAccountInfo objectForKey:@"hid"];
+
     
     NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                        @"user"        : hid,
+                                                                                        @"user"        : [UserCenter getInstance].userHID,
                                                                                         @"requesttime" : GET_NOW_TIME,
                                                                                         @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
                                                                                         @"event"       : myEvent
