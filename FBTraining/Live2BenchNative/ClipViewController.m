@@ -117,14 +117,14 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)setEventObserver
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_EVENT_CHANGE];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EventChanged) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
 }
 
 -(void)EventChanged
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_TAG_RECEIVED];
-    [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_DELETE_TAG];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG object:nil];
      _currentEvent = [_appDel.encoderManager.primaryEncoder event];
     [self clear];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived) name:NOTIF_TAG_RECEIVED object:_currentEvent];
@@ -140,7 +140,8 @@ static void * encoderTagContext = &encoderTagContext;
         }
     }
     
-    for (Tag *tag in self.allTagsArray  ) {
+    for (Tag *tag in self.allTagsArray {
+        
         if (![_currentEvent.tags containsObject:tag]) {
             [self.allTagsArray removeObject:tag];
             [self.tagsToDisplay removeObject:tag];
