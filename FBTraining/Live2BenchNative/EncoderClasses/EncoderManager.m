@@ -350,16 +350,39 @@
         _liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             // if the current playing event is the live event and its stopped then we have to make it no Event at all
             if ([weakSelf.currentEvent isEqualToString:weakSelf.liveEventName]){
-                weakSelf.currentEvent = nil;
-                weakSelf.liveEventName = nil;
+                weakSelf.currentEvent   = nil; // Depricated
+                weakSelf.liveEventName  = nil; // Depricated
+                weakSelf.liveEvent      = nil;
             }
         }];
         
         _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
             
-            weakSelf.liveEventName = ((Encoder*) note.object).liveEvent.name;
-            weakSelf.currentEvent = weakSelf.liveEventName; // should live be live no matter what??
+            weakSelf.liveEventName  = ((Encoder*) note.object).liveEvent.name; // Depricated
+            weakSelf.currentEvent   = weakSelf.liveEventName; // should live be live no matter what?? // Depricated
+            weakSelf.liveEvent = ((Encoder*) note.object).liveEvent;
+            
+            if (weakSelf.masterEncoder == ((Encoder*) note.object).liveEvent.parentEncoder) {
+                
+               
+                
+                if (weakSelf.primaryEncoder && ![weakSelf.primaryEncoder event]) {
+                
+                     // add code here to let the app know if its the only event and to push the app to live2Bench
+                    [weakSelf declareCurrentEvent:weakSelf.liveEvent];
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
+                }
+            
+            
+            }
+            
+            
         }];
+        
+        
+        
+        
+        
         
 //        _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
 //            _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
@@ -373,13 +396,13 @@
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = note.object;
             
-            if (_masterEncoder.liveEvent) {
-                weakSelf.liveEventName = _masterEncoder.liveEvent.name;
-                //                [weakSelf refresh];
-
-                weakSelf.primaryEncoder = _masterEncoder;
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
-            }
+//            if (_masterEncoder.liveEvent) {
+//                weakSelf.liveEventName = _masterEncoder.liveEvent.name;
+//                //                [weakSelf refresh];
+//
+//                weakSelf.primaryEncoder = _masterEncoder;
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
+//            }
 //            [weakSelf refresh];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
             

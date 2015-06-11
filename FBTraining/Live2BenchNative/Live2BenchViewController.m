@@ -137,7 +137,7 @@ static void * eventContext      = &eventContext;
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
 
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
     
     NSDictionary *theEntireDataDictionary = @{
                                               @"Half":@{@"initializationArray":@[@{@"Name": @"1", @"Value": @"s_00"},
