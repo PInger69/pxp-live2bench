@@ -34,7 +34,7 @@
 
 
 // HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
-@interface EncoderDataSync : NSObject
+/*@interface EncoderDataSync : NSObject
 @property (nonatomic,assign)  BOOL            complete;
 -(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete;
 
@@ -73,7 +73,7 @@
 }
 
 
-/**
+*
  *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
  *  passing the data thru the block as an Array of each of the responeses
  *
@@ -82,7 +82,7 @@
  *  @param aOnComplete block to run on completion
  *
  *  @return instance
- */
+ 
 -(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
 {
     self = [super init];
@@ -107,7 +107,7 @@
 }
 
 
-/**
+*
  *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
  *  passing the data thru the block as an Array of each of the responeses
  *
@@ -116,7 +116,7 @@
  *  @param aOnComplete block to run on completion
  *
  *
- */
+
 -(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
 {
     
@@ -192,11 +192,11 @@
 
 
 
-/**
+*
  *  This collects the data responce that is sent with the notif
  *
  *  @param note Notification with responce data
- */
+
 -(void)recievedNotifcation:(NSNotification *)note
 {
     if (_timeStamp != [NSNumber numberWithDouble:[[note.userInfo objectForKey:@"timeStamp"]doubleValue]])
@@ -210,13 +210,13 @@
     if (!_countOfLeftToComplete || _earlyBirdMode) [self onCompletion];
 }
 
-/**
+*
  *  This method is run when all the encders have responced
  *  This object will be flaged as complete
  *  it will remove the observers
  * it will also run the block. The argeument passed into the block is an Array of all the responces from the encoders
  *
- */
+ *
 -(void)onCompletion
 {
     self.complete = YES;
@@ -250,6 +250,8 @@
 
 @end
 
+*/
+
 
 #pragma mark - End of Helper Classes
 // END OF HELPER CLASSES// // // // // // // // // // // // // // // // // // // // // // // // //
@@ -269,7 +271,7 @@
     NSMutableDictionary         * dictOfEncoders;
     NSMutableArray              * arrayOfTagSets;
     NSMutableDictionary         * _dictOfAccountInfo; // this will take in the from the global ACCOUNT_INFO, to cut down access to the global
-    EncoderDataSync             * encoderSync;// depricated
+    //EncoderDataSync             * encoderSync;// depricated
 
     id                          _userDataObserver;// depricated
     id                          _masterLostObserver;
@@ -340,7 +342,7 @@
         
         _currentEventType       = SPORT_HOCKEY;
         _searchForEncoders      = NO;
-        encoderSync             = [[EncoderDataSync alloc]init];
+        //encoderSync             = [[EncoderDataSync alloc]init];
         _hasLive                = NO; // default before checking
         
         // setup observers
@@ -1211,7 +1213,7 @@ static void * statusContext         = &statusContext;
         NSNumber    * nowTime             = GET_NOW_TIME;
         [_primaryEncoder issueCommand:TEAMS_GET priority:1 timeoutInSec:10 tagData:nil timeStamp:nowTime];
         //        encoderSync =  [[EncoderDataSync alloc]initWith:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
-        [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
+        //[encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
     } else {
         // Alert the user that there is not master encoder
     }
@@ -1639,7 +1641,7 @@ static void * statusContext         = &statusContext;
     }];
     
     
-    [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:^(NSArray *pooledResponces) {
+   /* [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:^(NSArray *pooledResponces) {
         //        this is where you collect all the raw data and convert it all in to one dict
         NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
         for (NSData * rData in pooledResponces) {
@@ -1649,7 +1651,7 @@ static void * statusContext         = &statusContext;
         
         onCompleteGet([dic copy]);
         
-    }];
+    }];*/
     
     
     
@@ -1676,7 +1678,14 @@ static void * statusContext         = &statusContext;
         NSLog(@"%@", encoder.event);
         if (encoder.event.tags != nil ){
             NSLog(@"%@", encoder.event);
-            [tags  addEntriesFromDictionary:encoder.event.tags];
+            
+            NSMutableArray *keys = [[NSMutableArray alloc]init];
+            for(Tag *tags in encoder.event.tags){
+                [keys addObject:tags.ID];
+            }
+            
+            NSDictionary *newTagDic = [[NSDictionary alloc]initWithObjects:encoder.event.tags forKeys:keys];
+            [tags  addEntriesFromDictionary:newTagDic];
         }
     }
     return tags;

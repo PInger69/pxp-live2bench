@@ -67,20 +67,44 @@
     return self;
 }
 
--(void)setTags:(NSMutableDictionary *)tags
+-(void)setTags:(NSMutableArray *)tags
 {
     _tags = tags;
 }
 
+-(void)addTag:(Tag *)newtag
+{
+    [_tags addObject:newtag];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+}
+
+-(void)deleteTag:(Tag *)newtag
+{
+    [_tags removeObject:newtag];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:self];
+}
+
+-(void)modifyTag:(Tag *)newtag
+{
+    int index = 0;
+    for (Tag *tag in _tags) {
+        if ([tag.ID isEqualToString:newtag.ID]) {
+            break;
+        }
+        index = index + 1;
+    }
+    
+    [_tags replaceObjectAtIndex:index withObject:newtag];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:self];
+}
 
 -(NSDictionary*)rawData
 {
     if (_tags != nil && _tags.count != 0) {
         NSMutableDictionary * newRawData    = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
         NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
-        NSArray             * tagInArray    = [_tags allValues];
         
-        for (Tag *tag in tagInArray) {
+        for (Tag *tag in _tags) {
             [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];
         }
         
@@ -97,21 +121,24 @@
 }
 
 
--(NSMutableDictionary *)buildTags:(NSDictionary*)aDict{
+-(NSMutableArray *)buildTags:(NSDictionary*)aDict{
+    
+    NSMutableArray *tagResult = [[NSMutableArray alloc]init];
     
     if (aDict[@"tags"]) {
         NSDictionary *tagToBeAdded = aDict[@"tags"];
         NSArray *tagArray = [tagToBeAdded allValues];
-        NSMutableDictionary *tagsDic = [[NSMutableDictionary alloc]init];
+       
         
         
         for (NSDictionary *tagDic in tagArray) {
-            [tagsDic setObject:tagDic forKey:tagDic[@"id"]];
+            Tag *tag = [[Tag alloc]initWithData:tagDic];
+            if (tag.type !=  TagTypeDeleted ) {
+            [tagResult addObject:tag];
+            }
         }
     }
-
-    NSMutableDictionary *tagDict = [[NSMutableDictionary alloc]init];
-        return tagDict;
+    return tagResult;
 }
 
 -(NSDictionary*)buildMP4s:(NSDictionary*)aDict
