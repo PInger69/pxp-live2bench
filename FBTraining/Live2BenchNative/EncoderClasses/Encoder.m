@@ -1061,7 +1061,7 @@
 //    } else {
         tempEvent = _event;
 //    }
-    
+
     
     if (results){
         NSDictionary    * tags = [results objectForKey:@"tags"];

@@ -51,6 +51,7 @@
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
     id                                  tagsReadyObserver;
+    Event                               * _currentEvent;
     
     // some old stuff
     UILabel                             * durationTagLabel;
@@ -128,9 +129,9 @@ static void * eventContext      = &eventContext;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver) name:NOTIF_EVENT_CHANGE object:nil];
     
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
@@ -205,11 +206,16 @@ static void * eventContext      = &eventContext;
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_EVENT_CHANGE];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
-    if ([_appDel.encoderManager.primaryEncoder event].live) {
+}
+
+-(void)EventChanged
+{
+    _currentEvent = [_appDel.encoderManager.primaryEncoder event];
+    [self onEventChange];
+    if (_currentEvent.live) {
         [self gotLiveEvent];
     }
 }
-
 
 #pragma mark - Swipe Gesture Recognizer methods
 
@@ -250,16 +256,16 @@ static void * eventContext      = &eventContext;
 
 }
 
--(void)removething{
+/*-(void)removething{
     
     if (needDelete) {
         needDelete = false;
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
     }
     
-}
+}*/
 
--(void)oberverForEncoderStatus:(NSNotification *)note
+/*-(void)oberverForEncoderStatus:(NSNotification *)note
 {
     Encoder * encoder = (Encoder * )note.object;
     switch (encoder.status) {
@@ -274,10 +280,40 @@ static void * eventContext      = &eventContext;
         default:
             break;
     }
+}*/
+
+-(void)onEventChange
+{
+    if (_currentEvent.live){
+        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
+        self.videoPlayer.live = YES;
+        [_gotoLiveButton isActive:YES];
+        _tagButtonController.enabled = YES;
+    }
+    else if (_currentEvent != nil){
+        [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
+        [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
+        self.videoPlayer.live = NO;
+        [_gotoLiveButton isActive:NO];
+        _tagButtonController.enabled = YES;
+    }
+    else if (_currentEvent == nil){
+        [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
+        [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
+        self.videoPlayer.live = NO;
+        [_gotoLiveButton isActive:NO];
+        _tagButtonController.enabled = NO;
+        [self.videoPlayer clear];
+        [informationLabel setText:@""];
+    }
+    [multiButton setHidden:!([_encoderManager.feeds count]>1)];
 }
 
+
+
 // when the event changes mod these
--(void)onEventChange
+/*-(void)onEventChange
 {
     eventOnPrimaryEncoder = _encoderManager.primaryEncoder;
     
@@ -322,9 +358,33 @@ static void * eventContext      = &eventContext;
     
     
     [multiButton setHidden:!([_encoderManager.feeds count]>1)];
-}
+}*/
 
 -(void)gotLiveEvent
+{
+        Feed *info = [_currentEvent.feeds allValues] [0];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+    
+        _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[_currentEvent.rawData[@"homeTeam"], _currentEvent.rawData[@"visitTeam"]]];
+    
+        [_teamPick addOnCompletionBlock:^(NSString *pick){
+            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
+            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
+                                                             userInfo:@{@"tabName":@"Live2Bench"}];
+            
+            NSString *info = @"Live";
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+        }];
+        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                   animated:YES];
+        
+        [_pipController pipsAndVideoPlayerToLive:info];
+        [_videoBarViewController.tagMarkerController cleanTagMarkers];
+        [_videoBarViewController.tagMarkerController createTagMarkers];
+    
+}
+
+/*-(void)gotLiveEvent
 {
     if (_encoderManager.primaryEncoder == nil) {
         _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
@@ -355,7 +415,7 @@ static void * eventContext      = &eventContext;
        [_videoBarViewController.tagMarkerController createTagMarkers];
    }
     
-}
+}*/
 
 #pragma mark -
 #pragma mark Gesture
@@ -544,7 +604,7 @@ static void * eventContext      = &eventContext;
  *
  *  @param note
  */
--(void)masterLost:(NSNotification*)note
+/*-(void)masterLost:(NSNotification*)note
 {
     if (_encoderManager.primaryEncoder != _encoderManager.masterEncoder) return;
     
@@ -557,7 +617,7 @@ static void * eventContext      = &eventContext;
         
         [multiButton setHidden:!([_encoderManager.feeds count]>1)];
     }
-}
+}*/
 
 
 -(void)viewWillAppear:(BOOL)animated
@@ -607,8 +667,8 @@ static void * eventContext      = &eventContext;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
     self.videoPlayer.mute = NO;
 
 }
@@ -629,7 +689,17 @@ static void * eventContext      = &eventContext;
 /**
  *  This sets the video player and all its pip to live
  */
+
 - (void)goToLive
+{
+    if (!_currentEvent.live) {
+        NSLog(@"NO LIVE EVENT");
+        return;
+    }
+    //[_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.li
+}
+
+/*- (void)goToLive
 {
     Feed *info = [_appDel.encoderManager.masterEncoder.liveEvent.feeds allValues] [0];
     if (_appDel.encoderManager.liveEventName == nil) {
@@ -659,7 +729,7 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
 
-}
+}*/
 
 /**
  *  This creates the side tag buttons from the userCenter
