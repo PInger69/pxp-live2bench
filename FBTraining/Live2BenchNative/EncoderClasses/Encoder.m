@@ -1355,11 +1355,16 @@
 -(void)onModifyTags:(NSDictionary *)data
 {
     if ([data objectForKey:@"id"]) {
+        Tag *newTag = [[Tag alloc] initWithData: data];
+        newTag.feeds = self.encoderManager.feeds;
+        [_event modifyTag:newTag];
+        
+        //old code
         //NSString * tagId = [[results objectForKey:@"id"]stringValue];
         //[_event.tags setObject:results forKey:tagId];
         
-        PXPLog(@"Tag Modification succeded: %@", @"");
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:data];
+        //PXPLog(@"Tag Modification succeded: %@", @"");
+        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:data];
     }
 }
 
@@ -1368,10 +1373,13 @@
     if ([data objectForKey:@"id"]) {
         Tag *newTag = [[Tag alloc] initWithData: data];
         newTag.feeds = self.encoderManager.feeds;
-        [_event.tags addObject:newTag];
+        [_event addTag:newTag];
+        
+        //old code
+        /*[_event.tags addObject:newTag];
         if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:data];
-        }
+        }*/
     }
 }
 

@@ -205,10 +205,10 @@ static void * eventContext      = &eventContext;
 -(void)setEventObserver
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EventChanged) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
 }
 
--(void)EventChanged
+-(void)eventChanged
 {
     _currentEvent = [_appDel.encoderManager.primaryEncoder event];
     [self onEventChange];

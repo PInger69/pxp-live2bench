@@ -80,7 +80,7 @@ static void * encoderTagContext = &encoderTagContext;
         _encoderManager = _appDel.encoderManager;
         
         
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         
         
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
@@ -115,42 +115,50 @@ static void * encoderTagContext = &encoderTagContext;
     
 }
 
--(void)setEventObserver
+-(void)addEventObserver:(NSNotification *)note
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EventChanged) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
 }
 
--(void)EventChanged
+-(void)eventChanged:(NSNotification *)note
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG object:nil];
      _currentEvent = [_appDel.encoderManager.primaryEncoder event];
     [self clear];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived) name:NOTIF_TAG_RECEIVED object:_currentEvent];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteTag:) name:NOTIF_DELETE_TAG object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
 }
 
--(void)onTagChanged{
+-(void)onTagChanged:(NSNotification *)note{
     
     for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTagsArray containsObject:tag]) {
             [self.allTagsArray insertObject:tag atIndex:0];
             [self.tagsToDisplay insertObject:tag atIndex:0];
         }
+        if(tag.modified){
+            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
+            [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            tag.modified = false;
+        }
     }
     
-    for (Tag *tag in self.allTagsArray {
+    for (Tag *tag in self.allTagsArray  ){
         
         if (![_currentEvent.tags containsObject:tag]) {
             [self.allTagsArray removeObject:tag];
             [self.tagsToDisplay removeObject:tag];
         }
     }
+    
+    componentFilter.rawTagArray = self.allTagsArray;
+    [_collectionView reloadData];
 
 }
 
--(void)deleteTag: (NSNotification *)note{
+
+
+/*-(void)deleteTag: (NSNotification *)note{
     
     for (Tag *tag in self.allTagsArray  ) {
         if (![_currentEvent.tags containsObject:tag]) {
@@ -160,7 +168,7 @@ static void * encoderTagContext = &encoderTagContext;
     }
     componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];
-}
+}*/
 
 /*-(void) deleteTag: (NSNotification *)note{
     [self.allTagsArray removeObject: note.object];
@@ -177,7 +185,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 
 // If the filter is actie then filter other wize just display all the tags
--(void)clipViewTagReceived
+/*-(void)clipViewTagReceived
 {
     for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTagsArray containsObject:tag]) {
@@ -187,7 +195,7 @@ static void * encoderTagContext = &encoderTagContext;
     }
     componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];
-}
+}*/
 /*-(void)clipViewTagReceived:(NSNotification*)note
 {
     if (note.object) {
