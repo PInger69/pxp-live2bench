@@ -833,7 +833,8 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
+                                      @"colour"         : [Utility hexStringFromColor: [tData objectForKey:@"colour"]]
                                     }];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
