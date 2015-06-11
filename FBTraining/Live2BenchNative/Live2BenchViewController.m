@@ -70,6 +70,7 @@
     
     BOOL        needDelete;
     
+    id <EncoderProtocol>                _observedEncoder;
     
 }
 
@@ -126,7 +127,7 @@ static void * eventContext      = &eventContext;
         [weakSelf createTagButtons];
     }];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
     
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -202,15 +203,17 @@ static void * eventContext      = &eventContext;
     return self;
 }
 
--(void)setEventObserver
+-(void)setEventObserver:(NSNotification*)note
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EventChanged) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
+    
+    if (_observedEncoder)    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    _observedEncoder = (id <EncoderProtocol>) note.object;
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
 }
 
--(void)EventChanged
+-(void)eventChanged:(NSNotification*)note
 {
-    _currentEvent = [_appDel.encoderManager.primaryEncoder event];
+    _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
     [self onEventChange];
     if (_currentEvent.live) {
         [self gotLiveEvent];

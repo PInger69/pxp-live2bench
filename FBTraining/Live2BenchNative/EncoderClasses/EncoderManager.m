@@ -365,14 +365,13 @@
             weakSelf.liveEvent = ((Encoder*) note.object).liveEvent;
             
             if (weakSelf.masterEncoder == ((Encoder*) note.object).liveEvent.parentEncoder) {
-                
-               
-                
-                if (weakSelf.primaryEncoder && ![weakSelf.primaryEncoder event]) {
-                
-                     // add code here to let the app know if its the only event and to push the app to live2Bench
+                 // add code here to let the app know if its the only event and to push the app to live2Bench
+                if (!weakSelf.primaryEncoder || (weakSelf.primaryEncoder && ![weakSelf.primaryEncoder event])) {
+                    
                     [weakSelf declareCurrentEvent:weakSelf.liveEvent];
                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
+                    //this moves over to the Live to bench tab
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 }
             
             
@@ -1632,10 +1631,7 @@ static void * statusContext         = &statusContext;
         
     }
     
-    
-    
-    
-    NSNumber    * nowTime             = GET_NOW_TIME;
+
     [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol>obj, NSUInteger idx, BOOL *stop){
         [obj issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];
     }];
