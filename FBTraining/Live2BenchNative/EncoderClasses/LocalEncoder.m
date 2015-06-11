@@ -41,6 +41,8 @@
 @implementation NSURLDataConnection
 @end
 
+
+static LocalEncoder * instance;
 @implementation LocalEncoder
 {
     NSString        * _localDocsPListPath;
@@ -57,6 +59,12 @@
 @synthesize status          = _status;
 @synthesize allEvents       = _allEvents;
 @synthesize clips           = _clips;
+
++(instancetype)getInstance
+{
+    return instance;
+}
+
 
 -(id)initWithDocsPath:(NSString*)aDocsPath
 {
@@ -121,7 +129,7 @@
                 
                 for (NSDictionary *tagDic in [anEvent.rawData[@"tags"] allValues]) {
                     Tag *newTag = [[Tag alloc] initWithData:tagDic];
-                    [anEvent.tags setObject:newTag forKey:newTag.ID];
+                    [anEvent.tags addObject:newTag];
                 }
                 
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
@@ -308,11 +316,9 @@
     newTag.visitTeam                = self.event.teams[@"visitTeam"];
     newTag.synced                   = NO;
 
-    [self.event.tags setObject:newTag forKey:newTag.ID];// or should be unique ID
+    [self.event.tags addObject:newTag];
 
  
-
-
     [self.localTags setObject:newTag.makeTagData forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
     
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
@@ -415,7 +421,8 @@
             [localTag replaceDataWithDictionary: results];
             for (Event *event in [self.allEvents allValues]) {
                 if ([[event.localTags allValues] containsObject: localTag]){
-                    [event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
+                    [event.tags addObject:localTag];
+                    //[event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
                     [event.localTags removeObjectForKey:[[event.localTags allKeysForObject: localTag] firstObject]];
                 }
             }
@@ -451,8 +458,9 @@
                 
                 for (NSDictionary *tag in tags) {
                     Tag *newTag = [[Tag alloc]initWithData:tag];
-                    if (![[theEvent.tags allValues] containsObject: newTag]) {
-                        [theEvent.tags addEntriesFromDictionary:@{[NSString stringWithFormat:@"%d", newTag.uniqueID]: newTag}];
+                    if (![theEvent.tags containsObject: newTag]) {
+                        [theEvent.tags addObject:newTag];
+                        //[theEvent.tags addEntriesFromDictionary:@{[NSString stringWithFormat:@"%d", newTag.uniqueID]: newTag}];
                     }
                 }
                 

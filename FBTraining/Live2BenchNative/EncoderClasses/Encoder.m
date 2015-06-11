@@ -13,10 +13,238 @@
 #import "Feed.h"
 #import "Tag.h"
 #import "EncoderManager.h"
+#import "UserCenter.h"
+
+#define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
+#define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
 #define SYNC_ME             @"SYNC_ME"
+
+
+
+// HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
+@interface EncoderDataSync : NSObject
+@property (nonatomic,assign)  BOOL            complete;
+-(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete;
+
+@end
+
+@implementation EncoderDataSync
+{
+    NSMutableArray  * _colletedResponce;
+    NSMutableDictionary  * _colletedResponceDict;
+    NSString        * _name;
+    NSArray         * _encodersBeingWatched;
+    NSInteger       _countOfLeftToComplete;
+    void            (^_onComplete)(NSArray*pooled);
+    void            (^_onCompleteDict)(NSDictionary*pooled);
+    void            * _context;
+    NSNumber        * _timeStamp;
+    BOOL            _earlyBirdMode;
+    
+}
+
+@synthesize complete = _complete;
+
+
+-(id)init
+{
+    self = [super init];
+    if (self){
+        _earlyBirdMode          = NO;
+        _complete               = YES;
+        _colletedResponce       = [[NSMutableArray alloc]init];
+        _name                   = @"None";
+        _countOfLeftToComplete  = 0;
+        _encodersBeingWatched   = @[];
+    }
+    return self;
+}
+
+
+/**
+ *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
+ *  passing the data thru the block as an Array of each of the responeses
+ *
+ *  @param aToObserve  list of encoders
+ *  @param aName       Name of notification to be observed
+ *  @param aOnComplete block to run on completion
+ *
+ *  @return instance
+ */
+-(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
+{
+    self = [super init];
+    if (self){
+        _complete               = NO;
+        _colletedResponce       = [[NSMutableArray alloc]init];
+        _colletedResponceDict   = [[NSMutableDictionary alloc]init];
+        _name                   = aName;
+        _encodersBeingWatched   = aToObserve;
+        _countOfLeftToComplete  = _encodersBeingWatched.count;
+        _onComplete             = aOnComplete;
+        _timeStamp              = aTime;
+        
+        for (id <EncoderProtocol> edS in _encodersBeingWatched) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
+        }
+        
+        
+        
+    }
+    return self;
+}
+
+
+/**
+ *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
+ *  passing the data thru the block as an Array of each of the responeses
+ *
+ *  @param aToObserve  list of encoders
+ *  @param aName       Name of notification to be observed
+ *  @param aOnComplete block to run on completion
+ *
+ *
+ */
+-(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
+{
+    
+    if (!_complete){
+        [self cancel];
+    }
+    _earlyBirdMode          = NO;
+    _complete               = NO;
+    _name                   = aName;
+    _encodersBeingWatched   = aToObserve;
+    _countOfLeftToComplete  = _encodersBeingWatched.count;
+    _onComplete             = aOnComplete;
+    _timeStamp              = aTime;
+    
+    _colletedResponce       = [[NSMutableArray alloc]init];
+    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
+    
+    
+    for (id <EncoderProtocol> edS in _encodersBeingWatched) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
+    }
+}
+
+
+-(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinishDict: (void (^)(NSDictionary * pooledResponces))aOnComplete
+{
+    
+    if (!_complete){
+        [self cancel];
+    }
+    _earlyBirdMode          = NO;
+    _complete               = NO;
+    _name                   = aName;
+    _encodersBeingWatched   = aToObserve;
+    _countOfLeftToComplete  = _encodersBeingWatched.count;
+    _onCompleteDict             = aOnComplete;
+    _timeStamp              = aTime;
+    
+    _colletedResponce       = [[NSMutableArray alloc]init];
+    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
+    
+    
+    for (id <EncoderProtocol> edS in _encodersBeingWatched) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
+    }
+}
+
+
+// This method requests from all passed encoders and the first one to respond is not canceled
+-(void)earlyBird:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
+{
+    if (!_complete){
+        [self cancel];
+    }
+    _earlyBirdMode          = YES;
+    _complete               = NO;
+    _name                   = aName;
+    _encodersBeingWatched   = aToObserve;
+    _countOfLeftToComplete  = _encodersBeingWatched.count;
+    _onComplete             = aOnComplete;
+    _timeStamp              = aTime;
+    
+    _colletedResponce       = [[NSMutableArray alloc]init];
+    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
+    
+    
+    for ( id <EncoderProtocol> edS in _encodersBeingWatched) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
+    }
+    
+    
+}
+
+
+
+/**
+ *  This collects the data responce that is sent with the notif
+ *
+ *  @param note Notification with responce data
+ */
+-(void)recievedNotifcation:(NSNotification *)note
+{
+    if (_timeStamp != [NSNumber numberWithDouble:[[note.userInfo objectForKey:@"timeStamp"]doubleValue]])
+        
+        _countOfLeftToComplete--;
+    if (_onComplete && [note.userInfo objectForKey:@"responce"])   [_colletedResponce addObject: [note.userInfo objectForKey:@"responce"] ];
+    if (_onCompleteDict && [note.userInfo objectForKey:@"responce"]){
+        NSDictionary * collect = [note.userInfo objectForKey:@"responce"];
+        [_colletedResponceDict addEntriesFromDictionary:collect];
+    }
+    if (!_countOfLeftToComplete || _earlyBirdMode) [self onCompletion];
+}
+
+/**
+ *  This method is run when all the encders have responced
+ *  This object will be flaged as complete
+ *  it will remove the observers
+ * it will also run the block. The argeument passed into the block is an Array of all the responces from the encoders
+ *
+ */
+-(void)onCompletion
+{
+    self.complete = YES;
+    [_encodersBeingWatched enumerateObjectsUsingBlock:^( id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:_name object:obj];
+    }];
+    if (_onComplete)        _onComplete([_colletedResponce copy]);
+    if (_onCompleteDict)    _onCompleteDict([_colletedResponceDict copy]);
+    [self cancel];
+}
+
+
+// cancel current command
+-(void)cancel
+{
+    //   NSLog(@"Cancel Sync: %@",_name);
+    _onComplete = nil;
+    [_colletedResponce removeAllObjects];
+    _name                   = @"";
+    
+    [_encodersBeingWatched enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:_name object:obj];
+        
+        // this needs to reamove the command from the queue or cancel all
+    }];
+    _countOfLeftToComplete  = 0;
+    
+    
+}
+
+
+@end
+
+// END OF HELPER CLASS
+
+
+
 
 
 
@@ -104,6 +332,7 @@
     BOOL isTeamsGet;
     BOOL isAuthenticate;
     BOOL isVersion;
+    EncoderDataSync             * encoderSync;
 }
 
 @synthesize justStarted = _justStarted;
@@ -162,6 +391,7 @@
         _cameraCount    = 0;
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
+        encoderSync             = [[EncoderDataSync alloc]init];
     }
     return self;
 }
@@ -171,10 +401,9 @@
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ondeleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadEvent:)  name:NOTIF_EM_DOWNLOAD_EVENT    object:nil];
     return self;
 }
 
@@ -186,7 +415,6 @@
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_EVENT       object:nil];
     return self;
 }
 
@@ -282,6 +510,217 @@
     
     return (Event*)filtered[0];
 }
+
+
+
+// Commands
+#pragma mark - Observer
+//[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
+
+-(void)onTagPost:(NSNotification *)note
+{
+    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+    BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
+    
+    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+    NSString *eventNm = (self.event.live)?@"live":self.event.name;
+    
+    // This is the starndard info that is collected from the encoder
+    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                        @{
+                                           @"event"         : eventNm,
+                                           @"colour"        : [UserCenter getInstance].customerColor,
+                                           @"user"          : [UserCenter getInstance].userHID,
+                                           @"time"          : tagTime,
+                                           @"name"          : tagName,
+                                          @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                           }];
+    if (isDuration){ // Add extra data for duration Tags
+        NSDictionary *durationData =        @{
+                                                @"starttime"     : tagTime
+                                            };
+        [tagData addEntriesFromDictionary:durationData];
+    }
+    
+    [tagData addEntriesFromDictionary:data];
+    
+    [self issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+}
+
+-(void)onTelePost:(NSNotification *)note
+{
+    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+    
+    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+    NSString *eventNm = (self.event.live)?@"live":self.event.name;
+    
+    // This is the starndard info that is collected from the encoder
+    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{
+                                       @"event"         : eventNm,
+                                       @"colour"        : [UserCenter getInstance].customerColor,
+                                       @"user"          : [UserCenter getInstance].userHID,
+                                       @"time"          : tagTime,
+                                       @"name"          : tagName,
+                                       @"duration"      : @"1",
+                                       @"type"          : @"4",
+                                       }];
+    
+    [tagData addEntriesFromDictionary:data];
+    
+    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+    
+}
+
+-(void)onModTag:(NSNotification *)note
+{
+     Tag *tagToModify = note.object;
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
+                                 tagToModify.event,@"event",
+                                 [NSString stringWithFormat:@"%f", CACurrentMediaTime()],
+                                 @"requesttime", [UserCenter getInstance].userHID,
+                                 @"user", tagToModify.ID,
+                                 @"id", nil];
+    
+                [dict addEntriesFromDictionary: [tagToModify modifiedData]];
+    
+                if (tagToModify.isLive) {
+                    [dict setObject:@"live" forKey:@"event"];
+                }
+    
+
+               [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+-(void)DeleteTag:(NSNotification *)note
+{
+    Tag *tagToDelete = note.object;
+    tagToDelete.type = 3;
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
+                                 @"1",@"delete",
+                                 tagToDelete.event,@"event",
+                                 [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
+                                 @"requesttime", [UserCenter getInstance].userHID,
+                                 @"user",tagToDelete.ID,
+                                 @"id", nil];
+    
+    
+    
+    [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+
+-(void)ondeleteEvent:(NSNotification *)note
+{
+    Event *eventToDelete = note.object;
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
+                                      @"name": eventToDelete.name,
+                                      @"hid": eventToDelete.hid
+                                       }];
+    
+    [self issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+-(void)onDownloadClip:(NSNotification *)note
+{
+    //__block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+    Tag *tag = note.userInfo[@"tag"];
+    //NSString *feedName = note.userInfo[@"feedName"];
+    
+    unsigned long srcID;
+    sscanf([note.userInfo[@"src"] UTF8String], "s_%lu", &srcID);
+    
+
+    //NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4", tag.event, tag.ID];
+    //dItemBlock([[LocalEncoder getInstance] saveClip:videoName withData:tag]);
+    //dItemBlock([[LocalEncoder getInstance] saveClip:videoName withData: [tag makeTagData]]);
+    //dItemBlock([_localEncoder saveClip:videoName withData: tag ]);
+    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+
+    // This gets run when the server responds
+    void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
+    
+    NSData          * data                  = pooledResponces[0];
+    NSDictionary    * results               = [Utility JSONDatatoDict: data];
+    NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+    if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
+    // if in the data success is 0 then there is an error!
+
+    // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
+    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
+    
+
+    // http://10.93.63.226/events/live/video/01hq_vid_10.mp4
+    
+    // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
+    
+    NSString *tagID = tag.ID;
+    NSString *ip = self.ipAddress;
+    NSString *src = note.userInfo[@"src"];
+    
+    unsigned long n;
+    sscanf(src.UTF8String, "s_%lu", &n);
+    NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
+    
+    NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+
+    // END SERVER IS DUMB
+    
+    NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
+    //NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
+    DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo];
+    dItemBlock(dli);
+    
+    
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
+    // is the object what we ware downloading
+        if (note.object == dli) {
+         NSLog(@"Download Complete");
+    
+         // we must now forge the results
+    
+          [[LocalEncoder getInstance] saveClip:videoName withData:results];
+          //[_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
+          }
+     }];
+    };
+    
+    
+    
+    NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
+                                                @{
+                                                 @"id": tag.ID,
+                                                 @"event": (tag.isLive)?@"live":tag.event,
+                                                 @"requesttime":GET_NOW_TIME_STRING,
+                                                 @"bookmark":@"1",
+                                                 @"user":[UserCenter getInstance].userHID
+                                                }];
+    
+    [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
+    
+    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME];
+    
+    [encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
+    //[encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
+    
+    PXPLog(@"Downloading Clip!");
+    
+
+}
+
+
 
 // Commands
 #pragma mark - Commands
@@ -895,7 +1334,7 @@
         }
     
     }
-    
+ 
 }*/
 
 //when tags are created or modified on the same ipad that is displaying the change
@@ -927,10 +1366,9 @@
 -(void)onNewTags:(NSDictionary*)data
 {
     if ([data objectForKey:@"id"]) {
-        NSString * tagId = [[data objectForKey:@"id"]stringValue];
         Tag *newTag = [[Tag alloc] initWithData: data];
         newTag.feeds = self.encoderManager.feeds;
-        [_event.tags setObject:newTag forKey:tagId];
+        [_event.tags addObject:newTag];
         if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:data];
         }
@@ -1079,7 +1517,7 @@
                 
             }
             
-            tempEvent.tags =tagsDictionary;
+            tempEvent.tags = [[NSMutableArray alloc]initWithArray:[tagsDictionary allValues]];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
         } else  if (![[results objectForKey:@"success"]boolValue]) {
             PXPLog(@"Encoder Error!");

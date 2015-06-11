@@ -126,7 +126,7 @@ static void * eventContext      = &eventContext;
         [weakSelf createTagButtons];
     }];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver) name:NOTIF_EVENT_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
     
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -205,7 +205,7 @@ static void * eventContext      = &eventContext;
 -(void)setEventObserver
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self forKeyPath:NOTIF_EVENT_CHANGE];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(EventChanged) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
 }
 
 -(void)EventChanged

@@ -1653,7 +1653,14 @@ static void * statusContext         = &statusContext;
         NSLog(@"%@", encoder.event);
         if (encoder.event.tags != nil ){
             NSLog(@"%@", encoder.event);
-            [tags  addEntriesFromDictionary:encoder.event.tags];
+            
+            NSMutableArray *keys = [[NSMutableArray alloc]init];
+            for(Tag *tags in encoder.event.tags){
+                [keys addObject:tags.ID];
+            }
+            
+            NSDictionary *newTagDic = [[NSDictionary alloc]initWithObjects:encoder.event.tags forKeys:keys];
+            [tags  addEntriesFromDictionary:newTagDic];
         }
     }
     return tags;
