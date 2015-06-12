@@ -75,7 +75,7 @@
 -(void)addTag:(Tag *)newtag
 {
     [_tags addObject:newtag];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self userInfo:@{@"tag":newtag}];
 }
 
 -(void)modifyTag:(Tag *)newtag

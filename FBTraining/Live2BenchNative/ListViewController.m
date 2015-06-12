@@ -65,6 +65,9 @@
     HeaderBarForListView            * headerBar;
     CommentingRatingField           * commentingField;
     VideoBarListViewController      * newVideoControlBar;
+    
+    Event                           * _currentEvent;
+    id <EncoderProtocol>                _observedEncoder;
 }
 @synthesize breadCrumbsView;
 @synthesize selectedCellRows;
@@ -86,12 +89,12 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendBookmarkRequest) name:@"sendOldBookmarkRequest" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
                self.allTags = [[NSMutableArray alloc]init];
             self.tagsToDisplay = [[NSMutableArray alloc]init];
@@ -102,7 +105,7 @@ NSMutableArray *oldEventNames;
         _tableViewController.tableData = self.tagsToDisplay;
         
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+        /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             NSLog(@"READY!");
             
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
@@ -115,7 +118,9 @@ NSMutableArray *oldEventNames;
             if (!componentFilter.rawTagArray) {
                 componentFilter.rawTagArray = self.tagsToDisplay;
             };
-        }];
+        }];*/
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -132,6 +137,27 @@ NSMutableArray *oldEventNames;
     return self;
     
 }
+
+-(void)addEventObserver:(NSNotification *)note
+{
+    if (_observedEncoder)    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    _observedEncoder = (id <EncoderProtocol>) note.object;
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+}
+
+-(void)eventChanged:(NSNotification *)note
+{
+    if (_currentEvent){
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+    [self clear];
+    _currentEvent = [((id <EncoderProtocol>) note.object) event];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+}
+
+
 
 - (void)deleteTag: (NSNotification *)note {
     [self.tagsToDisplay removeObject: note.object];

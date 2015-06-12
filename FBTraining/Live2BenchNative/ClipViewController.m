@@ -49,6 +49,7 @@
     id                              clipViewTagObserver;
     ImageAssetManager               * _imageAssetManager;
     Event                           * _currentEvent;
+    id <EncoderProtocol>                _observedEncoder;
     
 }
 
@@ -92,9 +93,9 @@ static void * encoderTagContext = &encoderTagContext;
         self.contextString = @"TAG";
         
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         
-        /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+        /*[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
                     self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
                     self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
@@ -117,16 +118,21 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)addEventObserver:(NSNotification *)note
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_appDel.encoderManager.primaryEncoder];
+    if (_observedEncoder)    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    _observedEncoder = (id <EncoderProtocol>) note.object;
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
 }
 
 -(void)eventChanged:(NSNotification *)note
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
-     _currentEvent = [_appDel.encoderManager.primaryEncoder event];
+    if (_currentEvent){
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
     [self clear];
+    _currentEvent = [((id <EncoderProtocol>) note.object) event];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -578,9 +584,9 @@ static void * encoderTagContext = &encoderTagContext;
             //            [self.tagsToDisplay removeObject:tag];
             //            [self.allTagsArray removeObject: tag];
             
-            NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
             NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
         }
@@ -601,9 +607,11 @@ static void * encoderTagContext = &encoderTagContext;
             }
             //[self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
             
-            NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
             NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
             
             [self removeIndexPathFromDeletion];
             

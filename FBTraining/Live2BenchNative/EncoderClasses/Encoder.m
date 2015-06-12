@@ -401,7 +401,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ondeleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
     return self;
@@ -412,7 +412,7 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
     return self;
@@ -535,7 +535,7 @@
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
                                         @{
                                            @"event"         : eventNm,
-                                           @"colour"        : [UserCenter getInstance].customerColor,
+                                           @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
                                            @"user"          : [UserCenter getInstance].userHID,
                                            @"time"          : tagTime,
                                            @"name"          : tagName,
@@ -600,7 +600,7 @@
                [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 }
 
--(void)DeleteTag:(NSNotification *)note
+-(void)onDeleteTag:(NSNotification *)note
 {
     Tag *tagToDelete = note.object;
     tagToDelete.type = 3;
@@ -613,7 +613,7 @@
                                  @"user",tagToDelete.ID,
                                  @"id", nil];
     
-    
+    [dict addEntriesFromDictionary:[tagToDelete makeTagData]];
     
     [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 }
@@ -833,8 +833,8 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
-                                      @"colour"         : [Utility hexStringFromColor: [tData objectForKey:@"colour"]]
+                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      //,@"colour"         : [Utility hexStringFromColor: [tData objectForKey:@"colour"]]
                                     }];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
@@ -898,8 +898,8 @@
     if (!encodedName) encodedName = @"";
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
-                                      //@"name"           : encodedName,
-                                      //@"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      @"name"           : encodedName,
+                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
@@ -1151,7 +1151,8 @@
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
         //NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
         
-        [self eventTagsGetResponce:finishedData extraData:extra];
+        [self tagsJustChanged:finishedData extraData:EVENT_GET_TAGS];
+        //[self eventTagsGetResponce:finishedData extraData:extra];
     }else if ([connectionType isEqualToString: DELETE_EVENT]){
         [self deleteEventResponse: finishedData];
     }
@@ -1350,8 +1351,19 @@
         {
             [self onNewTags:results];
         }
+        else if ([type isEqualToString:EVENT_GET_TAGS]){
+            if (results){
+                NSDictionary    * tags = [results objectForKey:@"tags"];
+                if (tags) {
+                    for (NSDictionary *newTagDic in [tags allValues]) {
+                        [self onNewTags:newTagDic];
+                    }
+                }
+            }
+        }
     }
 }
+                        
 
 -(void)onModifyTags:(NSDictionary *)data
 {
@@ -1394,7 +1406,8 @@
         for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
             Tag *newTag = [[Tag alloc]initWithData: tag];
             if (newTag.type == 3) {
-                [[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
+                [self onModifyTags:tag];
+                //[[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
             }else if (((NSInteger)newTag.type)  == 99){
                 
             }else if(newTag.modified){
@@ -1498,7 +1511,7 @@
     }
 }*/
 
--(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict
+/*-(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     Event * tempEvent;
@@ -1527,7 +1540,7 @@
             }
             
             tempEvent.tags = [[NSMutableArray alloc]initWithArray:[tagsDictionary allValues]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
         } else  if (![[results objectForKey:@"success"]boolValue]) {
             PXPLog(@"Encoder Error!");
             PXPLog(@"  ajax: %@",@"gametags");
@@ -1535,7 +1548,7 @@
         }
     }
     
-}
+}*/
 
 -(void)deleteEventResponse: (NSData *) data{
     NSDictionary    * results =[Utility JSONDatatoDict:data];

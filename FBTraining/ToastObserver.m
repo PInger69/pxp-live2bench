@@ -140,7 +140,7 @@
     NSNotification *currentNotification = (self.queueOfNotifications[0]);
     
     if (currentNotification.object) {
-        Tag *tag = (Tag *) currentNotification.object;
+        Tag *tag = (Tag *) currentNotification.userInfo[@"tag"];
         //Creating of the ToastView
         UIView *presentingView = [[UIView alloc] init];
         presentingView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
