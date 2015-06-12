@@ -582,12 +582,26 @@
 {
      Tag *tagToModify = note.object;
     
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
+     //NSString *tagName = tagToModify.name;// just to make sure they are added
+    
+    /*NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
                                  tagToModify.event,@"event",
                                  [NSString stringWithFormat:@"%f", CACurrentMediaTime()],
                                  @"requesttime", [UserCenter getInstance].userHID,
-                                 @"user", tagToModify.ID,
-                                 @"id", nil];
+                                 @"user", tagToModify.ID
+                                 ];
+                                 //@"name", tagName,
+                                 //@"id", nil];*/
+    
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
+                                  @{
+                                    @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event, // LIVE_EVENT == @"live"
+                                    @"id"            : tagToModify.ID,
+                                    @"requesttime"   : GET_NOW_TIME_STRING,
+                                    @"name"          : tagToModify.name,
+                                    @"user"          : tagToModify.user
+                                    }];
+
     
                 [dict addEntriesFromDictionary: [tagToModify modifiedData]];
     
@@ -1412,25 +1426,24 @@
 // This method is getting run from the Encoder Status monitor
 -(void)onTagsChange:(NSData *)data
 {
-    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    if ([json isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
-    if ( [json objectForKey: @"tags"]) {
-        for (NSDictionary *tag in [[json objectForKey: @"tags"] allValues]) {
-            Tag *newTag = [[Tag alloc]initWithData: tag];
-            if (newTag.type == 3) {
-                [self onModifyTags:tag];
-                //[[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
-            }else if (((NSInteger)newTag.type)  == 99){
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    if ([results isKindOfClass:[NSArray class]])return; // this gets hit when event is shutdown and a sync was in progress
+    if([results isKindOfClass:[NSDictionary class]]){
+        if ( [results objectForKey: @"tags"]) {
+            NSArray * allTags = [[results objectForKey: @"tags"] allValues];
+            for (NSDictionary *tag in allTags) {
+                if ([tag[@"type"]intValue] == TagTypeDeleted) {
+                    [self onModifyTags:tag];
+                    //[[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
+                }else if([tag[@"modified"]boolValue]){
+                    [self onModifyTags:tag];
+                }else{
+                    [self onNewTags:tag];
+                }
                 
-            }else if(newTag.modified){
-                [self onModifyTags:tag];
-            }else{
-                [self onNewTags:tag];
             }
-            
         }
     }
-
 }
 
 
