@@ -127,7 +127,7 @@ static void * eventContext      = &eventContext;
         [weakSelf createTagButtons];
     }];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
     
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -203,12 +203,12 @@ static void * eventContext      = &eventContext;
     return self;
 }
 
--(void)setEventObserver:(NSNotification*)note
+-(void)addEventObserver:(NSNotification*)note
 {
-    
     if (_observedEncoder)    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
     _observedEncoder = (id <EncoderProtocol>) note.object;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+
 }
 
 -(void)eventChanged:(NSNotification*)note
@@ -287,7 +287,7 @@ static void * eventContext      = &eventContext;
 
 -(void)onEventChange
 {
-    if (_currentEvent.live){
+    if (_appDel.encoderManager.liveEvent != nil){
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         self.videoPlayer.live = YES;
@@ -695,11 +695,16 @@ static void * eventContext      = &eventContext;
 
 - (void)goToLive
 {
-    if (!_currentEvent.live) {
-        NSLog(@"NO LIVE EVENT");
+    if (_currentEvent.live) {
+        Feed *info = [_currentEvent.feeds allValues] [0];
+        [_pipController pipsAndVideoPlayerToLive:info];
+        [_videoBarViewController.tagMarkerController cleanTagMarkers];
+        [_videoBarViewController.tagMarkerController createTagMarkers];
         return;
     }
-    //[_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.li
+    
+    [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
+    
 }
 
 /*- (void)goToLive

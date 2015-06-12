@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "EncoderProtocol.h"
+#import "Tag.h"
 
 
 @interface Event : NSObject
@@ -44,4 +45,6 @@
 
 
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
+-(void)addTag:(Tag *)newtag;
+-(void)modifyTag:(Tag *)newtag;
 @end
