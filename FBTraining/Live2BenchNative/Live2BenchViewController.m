@@ -256,7 +256,7 @@ static void * eventContext      = &eventContext;
     if (context == &eventTypeContext){ // This checks to see if the encoder manager has changed Events Types like Sport or Medical
         [self onEventTypeChange: [change objectForKey:@"new"]];
     } else if (context == &eventContext){
-        [self onEventChange];
+        //[self onEventChange];
     }
 }
 

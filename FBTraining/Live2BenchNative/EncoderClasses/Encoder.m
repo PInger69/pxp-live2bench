@@ -1,4 +1,3 @@
-///
 //  Encoder.m
 //  Live2BenchNative
 //

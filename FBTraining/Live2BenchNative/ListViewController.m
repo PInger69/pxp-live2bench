@@ -153,8 +153,8 @@ NSMutableArray *oldEventNames;
     }
     [self clear];
     _currentEvent = [((id <EncoderProtocol>) note.object) event];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -171,12 +171,16 @@ NSMutableArray *oldEventNames;
         }
     }
     
+    Tag *toBeRemoved;
     for (Tag *tag in self.allTags ){
         
         if (![_currentEvent.tags containsObject:tag]) {
-            [self.allTags removeObject:tag];
-            [self.tagsToDisplay removeObject:tag];
+            toBeRemoved = tag;
         }
+    }
+    if (toBeRemoved) {
+        [self.allTags removeObject:toBeRemoved];
+        [self.tagsToDisplay removeObject:toBeRemoved];
     }
     
     componentFilter.rawTagArray = self.tagsToDisplay;
