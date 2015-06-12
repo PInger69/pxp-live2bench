@@ -582,12 +582,26 @@
 {
      Tag *tagToModify = note.object;
     
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
+     //NSString *tagName = tagToModify.name;// just to make sure they are added
+    
+    /*NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
                                  tagToModify.event,@"event",
                                  [NSString stringWithFormat:@"%f", CACurrentMediaTime()],
                                  @"requesttime", [UserCenter getInstance].userHID,
-                                 @"user", tagToModify.ID,
-                                 @"id", nil];
+                                 @"user", tagToModify.ID
+                                 ];
+                                 //@"name", tagName,
+                                 //@"id", nil];*/
+    
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
+                                  @{
+                                    @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event, // LIVE_EVENT == @"live"
+                                    @"id"            : tagToModify.ID,
+                                    @"requesttime"   : GET_NOW_TIME_STRING,
+                                    @"name"          : tagToModify.name,
+                                    @"user"          : tagToModify.user
+                                    }];
+
     
                 [dict addEntriesFromDictionary: [tagToModify modifiedData]];
     
