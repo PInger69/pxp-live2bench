@@ -529,7 +529,7 @@
     
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
-    NSString *eventNm = (self.event.live)?@"live":self.event.name;
+    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -559,7 +559,7 @@
     
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
-    NSString *eventNm = (self.event.live)?@"live":self.event.name;
+    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -593,7 +593,7 @@
                 [dict addEntriesFromDictionary: [tagToModify modifiedData]];
     
                 if (tagToModify.isLive) {
-                    [dict setObject:@"live" forKey:@"event"];
+                    [dict setObject:LIVE_EVENT forKey:@"event"];
                 }
     
 
@@ -605,15 +605,25 @@
     Tag *tagToDelete = note.object;
     tagToDelete.type = 3;
     
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
-                                 @"1",@"delete",
-                                 tagToDelete.event,@"event",
-                                 [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
-                                 @"requesttime", [UserCenter getInstance].userHID,
-                                 @"user",tagToDelete.ID,
-                                 @"id", nil];
+//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
+//                                 @"1",@"delete",
+//                                 tagToDelete.event,@"event",
+//                                 [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
+//                                 @"requesttime", [UserCenter getInstance].userHID,
+//                                 @"user",tagToDelete.ID,
+//                                 @"id", nil];
     
-    [dict addEntriesFromDictionary:[tagToDelete makeTagData]];
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{
+                                       @"delete"        : @"1",
+                                       @"event"         : (tagToDelete.isLive)?LIVE_EVENT:tagToDelete.event, // LIVE_EVENT == @"live"
+                                       @"id"            : tagToDelete.ID,
+                                       @"requesttime"   : GET_NOW_TIME_STRING,
+                                       @"user"          : tagToDelete.user
+                                       }];
+    
+    
+   // [dict addEntriesFromDictionary:[tagToDelete makeTagData]];
     
     [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 }
@@ -702,7 +712,7 @@
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                                 @{
                                                  @"id": tag.ID,
-                                                 @"event": (tag.isLive)?@"live":tag.event,
+                                                 @"event": (tag.isLive)?LIVE_EVENT:tag.event,
                                                  @"requesttime":GET_NOW_TIME_STRING,
                                                  @"bookmark":@"1",
                                                  @"user":[UserCenter getInstance].userHID
@@ -833,7 +843,7 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      @"requesttime"    : GET_NOW_TIME_STRING
                                       //,@"colour"         : [Utility hexStringFromColor: [tData objectForKey:@"colour"]]
                                     }];
     
@@ -1458,7 +1468,13 @@
         self.status           = status; /// maybe make this mod directly
         if (self.status == ENCODER_STATUS_LIVE) {
             self.isBuild = false; // This is so the encoder manager rebuilds it once
+        } else if (self.status == ENCODER_STATUS_STOP ||self.status == ENCODER_STATUS_READY) {
+            if (self.liveEvent == self.event) {
+                [self stopResponce:nil];
+                self.liveEvent = nil;
+            }
         }
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];
     }
 

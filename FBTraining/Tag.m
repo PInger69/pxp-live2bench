@@ -19,7 +19,7 @@
         self.rawData         = tagData;
         self.colour          = tagData[@"colour"];
         _comment             = tagData[@"comment"];
-        self.deviceID        = @"";//tagData[@"deviceid"];
+        self.deviceID        = tagData[@"deviceid"];
         self.displayTime     = tagData[@"displaytime"];
         self.duration        = [tagData[@"duration"]intValue];
         self.event           = tagData[@"event"];
@@ -51,7 +51,7 @@
         }
         
         tagModifyObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAG_MODIFIED object:nil queue:nil usingBlock:^(NSNotification *note) {
-            Tag *modifiedTag = note.object;
+            Tag *modifiedTag = note.userInfo[@"tag"];
             if (modifiedTag.uniqueID == self.uniqueID) {
                 if (modifiedTag.comment) {
                     _comment = modifiedTag.comment;

@@ -561,7 +561,7 @@ static void * eventContext      = &eventContext;
     
     [self.view addSubview:_gotoLiveButton];
         [_gotoLiveButton isActive:NO];
-     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
+   //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
     
     
     ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;

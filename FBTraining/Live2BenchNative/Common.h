@@ -16,8 +16,8 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-
-
+// const
+#define LIVE_EVENT                          @"live"
 
 //BEN AND SAGAR STUFF BEGINNING
 #define NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW  @"setPlayerFeedInListView"
