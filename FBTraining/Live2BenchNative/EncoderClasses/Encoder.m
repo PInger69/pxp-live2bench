@@ -1368,17 +1368,34 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
-            [self onModifyTags:results];
+            if (results){
+                NSDictionary    * tags = [results objectForKey:@"tags"];
+                if (tags) {
+                    NSArray *tagArray = [tags allValues];
+                    for (NSDictionary *newTagDic in tagArray) {
+                        [self onModifyTags:newTagDic];
+                    }
+                }
+            }
         }
         else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])
         {
-            [self onNewTags:results];
+            if (results){
+                NSDictionary    * tags = [results objectForKey:@"tags"];
+                if (tags) {
+                    NSArray *tagArray = [tags allValues];
+                    for (NSDictionary *newTagDic in tagArray) {
+                        [self onNewTags:newTagDic];
+                    }
+                }
+            }
         }
         else if ([type isEqualToString:EVENT_GET_TAGS]){
             if (results){
                 NSDictionary    * tags = [results objectForKey:@"tags"];
                 if (tags) {
-                    for (NSDictionary *newTagDic in [tags allValues]) {
+                    NSArray *tagArray = [tags allValues];
+                    for (NSDictionary *newTagDic in tagArray) {
                         [self onNewTags:newTagDic];
                     }
                 }
