@@ -1437,7 +1437,13 @@
         self.status           = status; /// maybe make this mod directly
         if (self.status == ENCODER_STATUS_LIVE) {
             self.isBuild = false; // This is so the encoder manager rebuilds it once
+        } else if (self.status == ENCODER_STATUS_STOP ||self.status == ENCODER_STATUS_READY) {
+            if (self.liveEvent == self.event) {
+                [self stopResponce:nil];
+                self.liveEvent = nil;
+            }
         }
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];
     }
 
