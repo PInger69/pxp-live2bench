@@ -10,12 +10,15 @@
 #import "VideoBarContainerView.h"
 
 #import "TagView.h"
+#import "Event.h"
 
 #define BAR_HEIGHT      40
 #define LABEL_WIDTH     150
 #define LITTLE_ICON_DIMENSIONS 40
 
-@interface L2BVideoBarViewController () <TagViewDataSource>
+@interface L2BVideoBarViewController () <TagViewDataSource>{
+    Event *_currentEvent;
+}
 
 @property (strong, nonatomic, nonnull) NSMutableArray *arrayOfAllTags;
 @property (strong, nonatomic, nonnull) TagView *tagView;
@@ -135,14 +138,14 @@
         [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
         
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
+        //[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
         /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_CHANGE object:nil queue:nil usingBlock:^(NSNotification *note){
             [self.arrayOfAllTags addObjectsFromArray:eventTags];
             [self.tagView setNeedsDisplay];
         }];*/
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+       /* [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
                 if(eventTags){
@@ -154,11 +157,11 @@
                     
                 }
             }}];
-        }];
+        }];*/
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG"  object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG"  object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
         
         self.tagViewRefreshTimer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(updateTagView:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:self.tagViewRefreshTimer forMode:NSDefaultRunLoopMode];
@@ -166,10 +169,41 @@
     return self;
 }
 
+-(void)onEventChanged:(Event*)event
+{
+    [self update];
+    if (_currentEvent) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+    _currentEvent = event;
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+}
+
+-(void)onTagChanged:(NSNotification *)note{
+    
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.arrayOfAllTags containsObject:tag]) {
+            [self.arrayOfAllTags insertObject:tag atIndex:0];
+        }
+    }
+    
+    for (Tag *tag in self.arrayOfAllTags){
+        
+        if (![_currentEvent.tags containsObject:tag]) {
+            [self.arrayOfAllTags removeObject:tag];
+        }
+    }
+    
+    [self.tagView setNeedsDisplay];
+}
+
+
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
     [self.tagViewRefreshTimer invalidate];
 }
 
@@ -177,7 +211,7 @@
     [self.tagView setNeedsDisplay];
 }
 
-- (void)tagReceived:(NSNotification *)note {
+/*- (void)tagReceived:(NSNotification *)note {
     if ([note.object isKindOfClass:[Tag class]]) {
         
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -187,11 +221,11 @@
          
     }
     
-}
+}*/
 
-- (void)deleteTag:(NSNotification *)note {
+/*- (void)deleteTag:(NSNotification *)note {
     [self.arrayOfAllTags removeObject:note.object];
-}
+}*/
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {

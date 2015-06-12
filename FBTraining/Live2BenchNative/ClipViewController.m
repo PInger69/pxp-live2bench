@@ -107,7 +107,7 @@ static void * encoderTagContext = &encoderTagContext;
         }];*/
          
             
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
         self.allTagsArray   = [NSMutableArray array];
         self.tagsToDisplay  = [NSMutableArray array];
@@ -786,10 +786,12 @@ static void * encoderTagContext = &encoderTagContext;
     }
 }
 
-/*- (void)liveEventStopped:(NSNotification *)note {
-    self.tagsToDisplay = nil;
-    [self.collectionView reloadData];
-}*/
+- (void)liveEventStopped:(NSNotification *)note {
+    if (_currentEvent.live) {
+         _currentEvent = nil;
+        [self clear];
+    }
+}
 
 - (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
     NSMutableArray *tags = [NSMutableArray array];
