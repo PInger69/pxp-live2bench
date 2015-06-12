@@ -312,7 +312,7 @@ static void * vpFrameContext   = &vpFrameContext;
         for (Pip * pip in self.pips) {
             [pip clear];
         }
-        [self.videoPlayer clear];
+        //[self.videoPlayer clear];
     }
 }
 

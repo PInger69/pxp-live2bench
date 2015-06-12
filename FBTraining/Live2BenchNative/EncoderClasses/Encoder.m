@@ -1395,7 +1395,10 @@
     if ([data objectForKey:@"id"]) {
         Tag *newTag = [[Tag alloc] initWithData: data];
         newTag.feeds = self.encoderManager.feeds;
-        [_event addTag:newTag];
+        if (![_event.tags containsObject:newTag]) {
+            [_event addTag:newTag];
+        }
+        
         
         //old code
         /*[_event.tags addObject:newTag];
