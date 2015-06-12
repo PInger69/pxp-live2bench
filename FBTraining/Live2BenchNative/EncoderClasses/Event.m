@@ -80,7 +80,7 @@
 
 -(void)modifyTag:(Tag *)newtag
 {
-    if (newtag.modified) {
+    if (newtag.type ==  TagTypeDeleted) {
         [_tags removeObject:newtag];
     }else{
         NSUInteger index = [_tags indexOfObject:newtag];

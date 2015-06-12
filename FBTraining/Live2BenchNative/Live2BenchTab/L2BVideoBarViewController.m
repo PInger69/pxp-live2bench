@@ -189,12 +189,17 @@
         }
     }
     
+    Tag *toBeRemoved;
     for (Tag *tag in self.arrayOfAllTags){
         
         if (![_currentEvent.tags containsObject:tag]) {
-            [self.arrayOfAllTags removeObject:tag];
+            toBeRemoved = tag;
         }
     }
+    if (toBeRemoved) {
+        [self.arrayOfAllTags removeObject:toBeRemoved];
+    }
+    
     
     [self.tagView setNeedsDisplay];
 }

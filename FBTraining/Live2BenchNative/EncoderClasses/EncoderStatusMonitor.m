@@ -148,6 +148,24 @@
         statusSync          = YES;
         statusTimer         = [NSTimer scheduledTimerWithTimeInterval:statusInterval target:self selector:@selector(statusLoop) userInfo:nil repeats:YES];
         
+        //Building SyncMe Invocation
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:@{
+                                                                                     @"user"         : [UserCenter getInstance].userHID,
+                                                                                     @"requesttime"  : GET_NOW_TIME_STRING, //[NSString stringWithFormat:@"%f",0]
+                                                                                     @"event"        : @"live",
+                                                                                     @"device"       : [UserCenter getInstance].customerAuthorization
+                                                                                     }];
+        
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+        NSString *jsonString;
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        syncMePath = [NSString stringWithFormat:@"http://%@/min/ajax/syncme/%@", ipAddress, jsonString];
+        
+        
+
         
         // Build Invocation
         //SEL selector_       = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
@@ -158,9 +176,12 @@
         timeout             = 6 ;
         statusInvocation    = [self _buildInvokSel:selector_ path:statusPath  type:STATUS       timeout:&timeout];
         feedInvocation      = [self _buildInvokSel:selector_ path:feedPath    type:FEED_CHECK   timeout:&timeout];
+        syncMeInvocation      = [self _buildInvokSel:selector_ path:syncMePath type:SYNC_ME       timeout:&timeout];
         
-        [self buildSyncMeComponents];
+        //[self syncMe];
+        //[self buildSyncMeComponents];
         [statusPack addObject:statusInvocation];
+        [statusPack addObject: syncMeInvocation];
         //isLegacy            = ([checkedEncoder.version isEqualToString:@"0.94.5"])?YES:NO;
         isLegacy            = [checkedEncoder checkEncoderVersion];
         
@@ -205,7 +226,7 @@
     return self;
 }*/
 
--(void)buildSyncMeComponents{
+/*-(void)buildSyncMeComponents{
 //    __block NSString *hidString;
 //    __block NSString *eventString = @"live";
 //    __block NSString *authorizationString;
@@ -244,21 +265,21 @@
 }
 
 -(void) syncMe{
-    if (statusCode & ENCODER_STATUS_LIVE) {
+    if ((statusCode & ENCODER_STATUS_LIVE) !=0) {
         syncMeInvocation      = [self _buildInvokSel:selector_ path:syncMePath type:SYNC_ME       timeout:&timeout];
         [statusPack addObject: syncMeInvocation];
     }
     
-    /*if (statusCode & ENCODER_STATUS_LIVE) {
+    if (statusCode & ENCODER_STATUS_LIVE) {
         
      
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:syncMePath] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:2.0];
 
         syncMeConnection = [NSURLConnection connectionWithRequest:request delegate:self];
         syncMeConnection.connectionType = SYNC_ME;
-    }*/
+    }
 
-}
+}*/
 
 -(NSInvocation * )_buildInvokSel:(SEL)aSelec path:(NSString*)aPath type:(NSString*)aType timeout:(double *)aTimeOut
 {

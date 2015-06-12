@@ -128,6 +128,7 @@ static void * eventContext      = &eventContext;
     }];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChanged:) name: object:<#(id)#>]
     
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -256,7 +257,7 @@ static void * eventContext      = &eventContext;
     if (context == &eventTypeContext){ // This checks to see if the encoder manager has changed Events Types like Sport or Medical
         [self onEventTypeChange: [change objectForKey:@"new"]];
     } else if (context == &eventContext){
-        [self onEventChange];
+        //[self onEventChange];
     }
 }
 
@@ -299,11 +300,10 @@ static void * eventContext      = &eventContext;
     if (_appDel.encoderManager.liveEvent != nil){
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
-        self.videoPlayer.live = YES;
+        //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
         _tagButtonController.enabled = YES;
-    }
-    else if (_currentEvent != nil){
+    }else if (_currentEvent != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;

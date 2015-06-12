@@ -149,13 +149,18 @@ static void * encoderTagContext = &encoderTagContext;
         }
     }
     
+    Tag *toBeRemoved;
     for (Tag *tag in self.allTagsArray ){
         
         if (![_currentEvent.tags containsObject:tag]) {
-            [self.allTagsArray removeObject:tag];
-            [self.tagsToDisplay removeObject:tag];
+            toBeRemoved = tag;
         }
     }
+    if (toBeRemoved) {
+        [self.allTagsArray removeObject:toBeRemoved];
+        [self.tagsToDisplay removeObject:toBeRemoved];
+    }
+
     
     componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];
