@@ -128,12 +128,12 @@ static void * eventContext      = &eventContext;
     }];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChanged:) name: object:<#(id)#>]
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
     
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
@@ -389,7 +389,8 @@ static void * eventContext      = &eventContext;
         }];
         [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];
-        
+    
+        self.videoPlayer.live = YES;
         [_pipController pipsAndVideoPlayerToLive:info];
         [_videoBarViewController.tagMarkerController cleanTagMarkers];
         [_videoBarViewController.tagMarkerController createTagMarkers];
@@ -704,6 +705,7 @@ static void * eventContext      = &eventContext;
 
 - (void)goToLive
 {
+    self.videoPlayer.live = YES;
     if (_currentEvent.live) {
         Feed *info = [_currentEvent.feeds allValues] [0];
         [_pipController pipsAndVideoPlayerToLive:info];
