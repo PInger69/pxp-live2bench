@@ -93,7 +93,7 @@ NSMutableArray *oldEventNames;
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
                self.allTags = [[NSMutableArray alloc]init];
@@ -157,18 +157,44 @@ NSMutableArray *oldEventNames;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
 }
 
+-(void)onTagChanged:(NSNotification *)note{
+    
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.allTags containsObject:tag]) {
+            [self.allTags insertObject:tag atIndex:0];
+            [self.tagsToDisplay insertObject:tag atIndex:0];
+        }
+        if(tag.modified){
+            [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
+            [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            tag.modified = false;
+        }
+    }
+    
+    for (Tag *tag in self.allTags ){
+        
+        if (![_currentEvent.tags containsObject:tag]) {
+            [self.allTags removeObject:tag];
+            [self.tagsToDisplay removeObject:tag];
+        }
+    }
+    
+    componentFilter.rawTagArray = self.tagsToDisplay;
+    [_tableViewController reloadData];
+    
+}
 
 
-- (void)deleteTag: (NSNotification *)note {
+/*- (void)deleteTag: (NSNotification *)note {
     [self.tagsToDisplay removeObject: note.object];
     [self.allTags removeObject:note.object];
     //_tableViewController.tableData = self.tagsToDisplay;
     //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
       componentFilter.rawTagArray = self.tagsToDisplay;
     [_tableViewController reloadData];
-}
+}*/
 
-- (void)listViewTagReceived:(NSNotification*)note {
+/*- (void)listViewTagReceived:(NSNotification*)note {
     
     if (note.object) {
         [self.allTags insertObject:note.object atIndex:0];
@@ -178,7 +204,7 @@ NSMutableArray *oldEventNames;
         [_tableViewController reloadData];
     }
     
-}
+}*/
 
 - (void)sortFromHeaderBar:(id)sender
 {
@@ -3569,16 +3595,20 @@ NSMutableArray *oldEventNames;
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
-    self.tagsToDisplay = nil;
+    //self.tagsToDisplay = nil;
     //self.allTags = nil;
     //_tableViewController.tableData = [NSMutableArray array];
-    [_tableViewController reloadData];
+    //[_tableViewController reloadData];
     
-    selectedTag = nil;
-    
-    [commentingField clear];
-    commentingField.enabled             = NO;
-    [newVideoControlBar setTagName: nil];
+    if(_currentEvent.live){
+        _currentEvent = nil;
+        [self clear];
+        selectedTag = nil;
+        
+        [commentingField clear];
+        commentingField.enabled             = NO;
+        [newVideoControlBar setTagName: nil];
+    }
 }
 
 

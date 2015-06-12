@@ -132,7 +132,7 @@ static void * eventContext      = &eventContext;
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
-    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
@@ -214,9 +214,18 @@ static void * eventContext      = &eventContext;
 -(void)eventChanged:(NSNotification*)note
 {
     _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+    [_videoBarViewController onEventChanged:_currentEvent];
     [self onEventChange];
     if (_currentEvent.live) {
         [self gotLiveEvent];
+    }
+}
+
+-(void)liveEventStopped:(NSNotification *)note
+{
+    if (_currentEvent.live) {
+        _currentEvent = nil;
+        [self onEventChange];
     }
 }
 

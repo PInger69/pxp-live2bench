@@ -246,28 +246,44 @@
                 [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
              
                 //[[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
-                weakSelf.encoderManager.currentEvent = eventName;
+                //weakSelf.encoderManager.currentEvent = eventName;
+                [weakSelf.encoderManager declareCurrentEvent:event];
+                
                 
                 Feed *source;
-                if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {                    
-                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
+                if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
+                    [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.localEncoder];
+                    //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
                     source = [[Feed alloc] initWithFileURL:path];
                     //source = [[Feed alloc] initWithURLString:path quality:1];
                     
                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
-                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+                    /*NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
                     NSArray *tagsArray = [tagsToBeAddedDic allValues];
-                    NSMutableDictionary *tags = [[NSMutableDictionary alloc]init];
+                    //NSMutableDictionary *tags = [[NSMutableDictionary alloc]init];
                     for (NSDictionary *tagDic in tagsArray) {
-                        [tags setObject:tagDic forKey:tagDic[@"id"]];
+                        //[tags setObject:tagDic forKey:tagDic[@"id"]];
                         Tag *t =  [[Tag alloc]initWithData:tagDic];
-                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:t userInfo:tagDic];
+                        [encoder.event addTag:t];
+                        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:t userInfo:tagDic];
+                    }*/
+                    
+                    for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
+                        Tag *t =  [[Tag alloc]initWithData:tagDic];
+                        [encoder.event addTag:t];
                     }
 
                 } else {
-                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
+                    [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.masterEncoder];
+                    //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
                     source = [[Feed alloc] initWithURLString:data quality:0];
 //                    source = weakSelf.encoderManager.primaryEncoder getEventByName:<#(NSString *)#>
+                    
+                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
+                     for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
+                        Tag *t =  [[Tag alloc]initWithData:tagDic];
+                        [encoder.event addTag:t];
+                     }
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
