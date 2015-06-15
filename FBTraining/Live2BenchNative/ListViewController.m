@@ -167,7 +167,7 @@ NSMutableArray *oldEventNames;
         if(tag.modified){
             [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
             [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            tag.modified = false;
+            //tag.modified = false;
         }
     }
     

@@ -1162,19 +1162,19 @@
         [self resumeResponce:    finishedData];
     } else if ([connectionType isEqualToString: MAKE_TAG]) {
         //[self makeTagResponce:    finishedData];
-        [self tagsJustChanged:finishedData extraData:MAKE_TAG];
+        //[self tagsJustChanged:finishedData extraData:MAKE_TAG];
     } else if ([connectionType isEqualToString: MAKE_TELE_TAG]) {
         //[self makeTagResponce:    finishedData];
-        [self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
+        //[self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
-        [self tagsJustChanged:finishedData extraData:MODIFY_TAG];
+        //[self tagsJustChanged:finishedData extraData:MODIFY_TAG];
     } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
         //NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
         
-        [self tagsJustChanged:finishedData extraData:EVENT_GET_TAGS];
+        [self getEventTags:finishedData extraData:EVENT_GET_TAGS ];
         //[self eventTagsGetResponce:finishedData extraData:extra];
     }else if ([connectionType isEqualToString: DELETE_EVENT]){
         [self deleteEventResponse: finishedData];
@@ -1363,17 +1363,17 @@
 }*/
 
 //when tags are created or modified on the same ipad that is displaying the change
--(void)tagsJustChanged:(NSData *)data extraData:(NSString *)type
+-(void)getEventTags:(NSData *)data extraData:(NSString *)type
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
-        if ([type isEqualToString:MODIFY_TAG]) {
+        /*if ([type isEqualToString:MODIFY_TAG]) {
             if (results){
                 NSDictionary    * tags = [results objectForKey:@"tags"];
                 if (tags) {
                     NSArray *tagArray = [tags allValues];
                     for (NSDictionary *newTagDic in tagArray) {
-                        [self onModifyTags:newTagDic];
+                        //[self onModifyTags:newTagDic];
                     }
                 }
             }
@@ -1381,16 +1381,10 @@
         else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])
         {
             if (results){
-                NSDictionary    * tags = [results objectForKey:@"tags"];
-                if (tags) {
-                    NSArray *tagArray = [tags allValues];
-                    for (NSDictionary *newTagDic in tagArray) {
-                        [self onNewTags:newTagDic];
-                    }
-                }
+                //[self onNewTags:results];
             }
         }
-        else if ([type isEqualToString:EVENT_GET_TAGS]){
+        else*/ if ([type isEqualToString:EVENT_GET_TAGS]){
             if (results){
                 NSDictionary    * tags = [results objectForKey:@"tags"];
                 if (tags) {

@@ -145,7 +145,7 @@ static void * encoderTagContext = &encoderTagContext;
         if(tag.modified){
             [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
             [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            tag.modified = false;
+            //tag.modified = false;
         }
     }
     
