@@ -1426,13 +1426,6 @@
             //[_event addTag:newTag];
         }
         
-        if (notifTost) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
-                                                                                                          @"msg":newTag.name,
-                                                                                                          @"colour":newTag.colour,
-                                                                                                          @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
-                                                                                                          }];
-        }
         //old code
         /*[_event.tags addObject:newTag];
         if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {

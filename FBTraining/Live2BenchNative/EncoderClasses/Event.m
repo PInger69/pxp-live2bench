@@ -79,7 +79,11 @@
     //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self userInfo:@{@"tag":newtag}];
     
     if(notifTost){
-        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
+                                                                                                      @"msg":newtag.name,
+                                                                                                      @"colour":newtag.colour,
+                                                                                                      @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
+                                                                                                      }];
     }
 }
 
