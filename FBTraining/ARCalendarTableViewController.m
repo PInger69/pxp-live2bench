@@ -54,7 +54,7 @@
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filterArray:) name:@"datePicked" object:nil];
     //To reload the number of downloaded sources
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_DOWNLOADED object:nil queue:nil usingBlock:^(NSNotification *note){
         [self.tableView reloadData];
     }];
 }
@@ -449,7 +449,7 @@
         for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
             [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
             [indexPathsArray addObject: cellIndexPath];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_EVENT" object:nil userInfo:@{@"Event" : self.tableData[cellIndexPath.row]}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : self.tableData[cellIndexPath.row]}];
             [((Event *)self.tableData[cellIndexPath.row]).downloadedSources removeAllObjects];
             if (buttonIndex == 0) {
                 //Post a notification to delete it from server.
@@ -485,7 +485,7 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
             }
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_EVENT" object:nil userInfo:@{@"Event" : eventToRemove}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : eventToRemove}];
             [eventToRemove.downloadedSources removeAllObjects];
             [self removeIndexPathFromDeletion];
             

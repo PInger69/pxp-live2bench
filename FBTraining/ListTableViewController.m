@@ -481,9 +481,11 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
         
         for (NSDictionary *tag in arrayOfTagsToRemove) {
             
-            NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
             NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
         }
 
     }else{
@@ -496,9 +498,11 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
             [self.setOfDeletingCells removeObject: self.editingIndexPath];
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             
-            NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
             NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
             
             [self removeIndexPathFromDeletion];
         }

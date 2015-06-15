@@ -217,13 +217,14 @@
         for (NSIndexPath *path in self.setOfDeletingCells) {
             if ([path isEqual:self.selectedPath]) {
                 //NSDictionary *tag = self.tableData[self.selectedPath.row];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
                 self.selectedPath = nil;
             }
         }
         
         for (NSDictionary *tag in arrayOfTagsToRemove) {
             [self.tableData removeObject:tag];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
             //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
         }
         
@@ -233,7 +234,8 @@
         
         for (NSDictionary *tag in arrayOfTagsToRemove) {
             //[self.tableData removeObject:tag];
-            [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
+            //[[NSNotificationCenter defaultCenter] post]
+            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
         }
         
     }else{
@@ -248,7 +250,7 @@
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self.tableView reloadData];
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:tagToRemove userInfo:tagToRemove];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:tagToRemove userInfo:tagToRemove];
         }
         else if (buttonIndex == 1)
         {
@@ -267,7 +269,7 @@
     [self.setOfDeletingCells removeObject:self.editingIndexPath];
     if ([self.selectedPath isEqual:self.editingIndexPath]) {
         //NSDictionary *tag = self.tableData[self.selectedPath.row];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:self];
         self.selectedPath = nil;
     }
     if (self.selectedPath && self.selectedPath.row > self.editingIndexPath.row) {

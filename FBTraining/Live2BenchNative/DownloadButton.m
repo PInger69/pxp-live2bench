@@ -192,7 +192,7 @@
             break;
         case DownloadItemStatusComplete:
             self.downloadComplete = YES;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_EVENT_DOWNLOADED" object:self userInfo:@{@"Finish":self.downloadItem}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_DOWNLOADED object:self userInfo:@{@"Finish":self.downloadItem}];
             [self setNeedsDisplay];
 
         default:

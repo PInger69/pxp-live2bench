@@ -232,7 +232,7 @@ static LocalEncoder * instance;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:)   name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDeleteRequest:) name:NOTIF_DELETE_CLIPS object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_EVENT" object:nil queue:nil usingBlock:^(NSNotification *note){
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_EVENT object:nil queue:nil usingBlock:^(NSNotification *note){
             Event *localCounterpart = [self getEventByName:((Event *)note.userInfo[@"Event"]).name];
             if (localCounterpart) {
                 [self deleteEvent:localCounterpart];

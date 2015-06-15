@@ -120,7 +120,7 @@ int viewWillAppearCalled;
     [super viewDidLoad];
    
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_CLIP_SELECTED" object:nil queue:nil usingBlock:^(NSNotification *note) {
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_CLIP_SELECTED object:nil queue:nil usingBlock:^(NSNotification *note) {
         
         Clip *clipToPlay = note.object;
         __block BookmarkViewController *weakSelf = self;
@@ -143,7 +143,7 @@ int viewWillAppearCalled;
         
     }];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"removeInformation" object:nil queue:nil usingBlock:^(NSNotification *note){
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REMOVE_INFORMATION object:nil queue:nil usingBlock:^(NSNotification *note){
         [clipContentDisplay displayClip:nil];
     }];
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){

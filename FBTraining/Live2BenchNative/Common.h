@@ -44,6 +44,8 @@
 #define NOTIF_DELETE_EVENT_SERVER           @"NOTIF_DELETE_EVENT_SERVER"
 
 #define NOTIF_DELETE_CLIPS                  @"NOTIF_DELETE_CLIPS"
+#define NOTIF_EVENT_DOWNLOADED              @"NOTIF_EVENT_DOWNLOADED"
+#define NOTIF_DELETE_EVENT                  @"NOTIF_DELETE_EVENT"
 
 #define NOTIF_TOAST                         @"NOTIF_TOAST"
 
@@ -53,6 +55,8 @@
 
 #define LIST_OF_TOGGLES                     @"LIST_OF_TOGGLES"
 #define LIST_OF_OPTIONS                     @"LIST_OF_OPTIONS"
+#define NOTIF_CLIP_SELECTED                 @"NOTIF_CLIP_SELECTED"
+#define NOTIF_REMOVE_INFORMATION            @"removeInformation"
 
 
 //TypeDef for ToastObserver
