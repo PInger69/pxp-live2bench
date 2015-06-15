@@ -1423,16 +1423,23 @@
 -(void)onNewTags:(NSDictionary*)data extraData:(BOOL)notifTost
 {
     if ([data objectForKey:@"id"]) {
-        if ([data[@"event"] isEqualToString:_event.name])
-        {
-            
+//        if ([data[@"event"] isEqualToString:_event.name])
+//        {
+//            
+//        }
+//        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
+//        newTag.feeds = self.encoderManager.feeds;
+//        if (![_event.tags containsObject:newTag]) {
+//            [_event addTag:newTag extraData:notifTost];
+//            //[_event addTag:newTag];
+//        }
+//        
+        if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
+            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
+            Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
+            [checkEvent addTag:newTag extraData:notifTost];
         }
-        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
-        newTag.feeds = self.encoderManager.feeds;
-        if (![_event.tags containsObject:newTag]) {
-            [_event addTag:newTag extraData:notifTost];
-            //[_event addTag:newTag];
-        }
+        
         
         //old code
         /*[_event.tags addObject:newTag];
