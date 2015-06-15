@@ -16,6 +16,9 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
+
+#define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
+
 // const
 #define LIVE_EVENT                          @"live"
 

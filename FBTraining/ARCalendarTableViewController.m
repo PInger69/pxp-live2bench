@@ -15,6 +15,7 @@
 #import "FeedSelectCell.h"
 #import "Feed.h"
 #import "Tag.h"
+#import "UserCenter.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -243,11 +244,9 @@
             }
             
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
-                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
-             
-                //[[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
-                //weakSelf.encoderManager.currentEvent = eventName;
-                [weakSelf.encoderManager declareCurrentEvent:event];
+                
+                [UserCenter getInstance].userPick = pick;
+
                 
                 
                 Feed *source;
@@ -278,12 +277,39 @@
 
 
                 } else {
-                    [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.masterEncoder];
-                    //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
+                    
+                    
+                    NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                                        @"user"        : [UserCenter getInstance].userHID,
+                                                                                                        @"requesttime" : GET_NOW_TIME,
+                                                                                                        @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                                                                                        @"event"       : event.name
+                                                                                                        }];
+                                                                                                        
+    
+                    __block Event * weakEvent = event;
                     source = [[Feed alloc] initWithURLString:data quality:0];
+                    event.onComplete = ^(){
+                        
+                        
+                        
+                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                        
+                        NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", weakEvent.rawData[@"date"], weakEvent.rawData[@"visitTeam"], weakEvent.rawData[@"homeTeam"]];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+                        
+                        [weakSelf.encoderManager declareCurrentEvent:weakEvent];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
+                    };
+                    [event.parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];   
+                
+//                    [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.masterEncoder];
+                    //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
+                    
 //                    source = weakSelf.encoderManager.primaryEncoder getEventByName:<#(NSString *)#>
                     
-                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
+//                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
 
                     
 //                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
@@ -294,12 +320,12 @@
 //                     }
 
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
-                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-                
-                NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", event.rawData[@"date"], event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+//                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
+//                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+//                
+//                NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", event.rawData[@"date"], event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                        animated:YES];
