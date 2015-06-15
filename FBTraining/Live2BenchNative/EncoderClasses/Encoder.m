@@ -1390,7 +1390,8 @@
                 if (tags) {
                     NSArray *tagArray = [tags allValues];
                     for (NSDictionary *newTagDic in tagArray) {
-                        [self onNewTags:newTagDic];
+                        [self onNewTags:newTagDic extraData:false];
+                        //[self onNewTags:newTagDic];
                     }
                 }
             }
@@ -1415,13 +1416,14 @@
     }
 }
 
--(void)onNewTags:(NSDictionary*)data
+-(void)onNewTags:(NSDictionary*)data extraData:(BOOL)notifTost
 {
     if ([data objectForKey:@"id"]) {
         Tag *newTag = [[Tag alloc] initWithData: data];
         newTag.feeds = self.encoderManager.feeds;
         if (![_event.tags containsObject:newTag]) {
-            [_event addTag:newTag];
+            [_event addTag:newTag extraData:notifTost];
+            //[_event addTag:newTag];
         }
         
         
@@ -1449,7 +1451,8 @@
                 }else if([tag[@"modified"]boolValue]){
                     [self onModifyTags:tag];
                 }else{
-                    [self onNewTags:tag];
+                    [self onNewTags:tag extraData:true];
+                    //[self onNewTags:tag];
                 }
                 
             }

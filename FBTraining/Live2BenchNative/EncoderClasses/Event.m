@@ -72,10 +72,15 @@
     _tags = tags;
 }
 
--(void)addTag:(Tag *)newtag
+-(void)addTag:(Tag *)newtag extraData:(BOOL)notifTost
 {
     [_tags addObject:newtag];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self userInfo:@{@"tag":newtag}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self userInfo:@{@"tag":newtag}];
+    
+    if(notifTost){
+        
+    }
 }
 
 -(void)modifyTag:(Tag *)newtag

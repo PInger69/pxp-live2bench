@@ -36,7 +36,7 @@
     if(self){
         // By adding the ToastObserver as an observer in the Notification Center, any Notifications that are posted with the name ToastObserver
         // will be recognized by the Toast Observer
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TAG_RECEIVED object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NOTIF_TOAST_SETTING_CHANGED object:nil];
