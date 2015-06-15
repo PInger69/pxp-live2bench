@@ -45,7 +45,7 @@
 
 #define NOTIF_DELETE_CLIPS                  @"NOTIF_DELETE_CLIPS"
 
-
+#define NOTIF_TOAST                         @"NOTIF_TOAST"
 
 //Settings Requests
 #define NOTIF_SETTINGS_ARE_READY            @"NOTIF_SETTINGS_ARE_READY"

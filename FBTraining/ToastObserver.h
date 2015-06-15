@@ -40,5 +40,8 @@
 // @{ @"Name": <(str)name>, @"Colour": < UIColor >} 
 -(void) notificationNoticed: (NSNotification *)recievedNotification;
 
++(void)allowedTypes:(NSInteger)type;
+
+
 
 @end
