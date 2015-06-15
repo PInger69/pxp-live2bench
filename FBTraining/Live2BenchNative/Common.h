@@ -47,6 +47,7 @@
 #define NOTIF_EVENT_DOWNLOADED              @"NOTIF_EVENT_DOWNLOADED"
 #define NOTIF_DELETE_EVENT                  @"NOTIF_DELETE_EVENT"
 
+#define NOTIF_TOAST                         @"NOTIF_TOAST"
 
 //Settings Requests
 #define NOTIF_SETTINGS_ARE_READY            @"NOTIF_SETTINGS_ARE_READY"
