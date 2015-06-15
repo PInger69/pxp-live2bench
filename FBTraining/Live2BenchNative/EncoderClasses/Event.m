@@ -88,6 +88,7 @@
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:self];
+    newtag.modified = false;
 }
 
 -(NSDictionary*)rawData
