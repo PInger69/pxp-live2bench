@@ -270,7 +270,7 @@
                     
                     for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
                         Tag *t =  [[Tag alloc]initWithData:tagDic];
-                        [encoder.event addTag:t];
+                        [encoder.event addTag:t extraData:false];
                     }
 
                 } else {
@@ -282,7 +282,7 @@
                      NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
                      for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
                         Tag *t =  [[Tag alloc]initWithData:tagDic];
-                        [encoder.event addTag:t];
+                        [encoder.event addTag:t extraData:false];
                      }
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
