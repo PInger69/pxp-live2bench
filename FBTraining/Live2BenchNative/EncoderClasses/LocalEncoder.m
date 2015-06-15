@@ -128,7 +128,7 @@ static LocalEncoder * instance;
                 anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                 
                 for (NSDictionary *tagDic in [anEvent.rawData[@"tags"] allValues]) {
-                    Tag *newTag = [[Tag alloc] initWithData:tagDic];
+                    Tag *newTag = [[Tag alloc] initWithData:tagDic event:anEvent];
                     [anEvent.tags addObject:newTag];
                 }
                 
@@ -305,7 +305,7 @@ static LocalEncoder * instance;
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
 
-    Tag *newTag                     = [[Tag alloc] initWithData:tData];
+    Tag *newTag                     = [[Tag alloc] initWithData:tData event:self.event];
     NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
     double tagArePresentCount       = tagArePresent.count + 1;
     newTag.uniqueID                 = tagArePresentCount + self.event.localTags.count;
@@ -343,7 +343,7 @@ static LocalEncoder * instance;
     if (self.localTags.count >= 1 && self.encoderManager.masterEncoder) {
 
     NSArray *arrya = [[NSArray alloc]initWithArray:[self.localTags allValues]];
-        Tag *tagToSend = [[Tag alloc]initWithData:[arrya firstObject]];
+        Tag *tagToSend = [[Tag alloc]initWithData:[arrya firstObject] event:self.event];
         NSDictionary *tData = [tagToSend makeTagData];
         NSString *jsonString                    = [Utility dictToJSON:tData];
         NSString *ipAddress                     = self.encoderManager.masterEncoder.ipAddress;
@@ -419,7 +419,7 @@ static LocalEncoder * instance;
             }
             
             NSArray *arrayFromDic = [[NSArray alloc]initWithArray:[self.localTags allValues]];
-            Tag *localTag = [[Tag alloc]initWithData:[arrayFromDic firstObject]];
+            Tag *localTag = [[Tag alloc]initWithData:[arrayFromDic firstObject] event:self.event];
             [localTag replaceDataWithDictionary: results];
             for (Event *event in [self.allEvents allValues]) {
                 if ([[event.localTags allValues] containsObject: localTag]){
@@ -453,15 +453,15 @@ static LocalEncoder * instance;
             NSDictionary    * tags = [results objectForKey:@"tags"];
             if (tags) {
                 Event *theEvent;
-                Tag *firstTag = [[Tag alloc] initWithData:[[tags allValues]firstObject]];
+                Tag *firstTag = [[Tag alloc] initWithData:[[tags allValues]firstObject] event:self.event];
                 for (Event *event in [self.allEvents allValues]) {
-                    if ([event.rawData[@"hid"] isEqualToString: firstTag.event]) {
+                    if ([event.rawData[@"hid"] isEqualToString: firstTag.event.hid]) {
                         theEvent = event;
                     }
                 }
                 
                 for (NSDictionary *tag in tags) {
-                    Tag *newTag = [[Tag alloc]initWithData:tag];
+                    Tag *newTag = [[Tag alloc]initWithData:tag event:self.event];
                     if (![theEvent.tags containsObject: newTag]) {
                         [theEvent addTag:newTag extraData:true];
                         //[theEvent addTag:newTag];

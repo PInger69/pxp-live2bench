@@ -134,7 +134,7 @@
         
         
         for (NSDictionary *tagDic in tagArray) {
-            Tag *tag = [[Tag alloc]initWithData:tagDic];
+            Tag *tag = [[Tag alloc]initWithData:tagDic event:self];
             if (tag.type !=  TagTypeDeleted ) {
             [tagResult addObject:tag];
             }

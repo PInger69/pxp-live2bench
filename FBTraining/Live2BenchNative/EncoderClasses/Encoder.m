@@ -1403,7 +1403,11 @@
 -(void)onModifyTags:(NSDictionary *)data
 {
     if ([data objectForKey:@"id"]) {
-        Tag *newTag = [[Tag alloc] initWithData: data];
+        if ([data[@"event"] isEqualToString:_event.name])
+        {
+        
+        }
+        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
         newTag.feeds = self.encoderManager.feeds;
         [_event modifyTag:newTag];
         
@@ -1419,7 +1423,11 @@
 -(void)onNewTags:(NSDictionary*)data extraData:(BOOL)notifTost
 {
     if ([data objectForKey:@"id"]) {
-        Tag *newTag = [[Tag alloc] initWithData: data];
+        if ([data[@"event"] isEqualToString:_event.name])
+        {
+            
+        }
+        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
         newTag.feeds = self.encoderManager.feeds;
         if (![_event.tags containsObject:newTag]) {
             [_event addTag:newTag extraData:notifTost];
