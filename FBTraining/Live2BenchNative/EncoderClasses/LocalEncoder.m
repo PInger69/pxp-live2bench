@@ -316,7 +316,8 @@ static LocalEncoder * instance;
     newTag.visitTeam                = self.event.teams[@"visitTeam"];
     newTag.synced                   = NO;
 
-    [self.event addTag:newTag];
+    [self.event addTag:newTag extraData:true];
+    //[self.event addTag:newTag];
     //[self.event.tags addObject:newTag];
 
  
@@ -422,7 +423,8 @@ static LocalEncoder * instance;
             [localTag replaceDataWithDictionary: results];
             for (Event *event in [self.allEvents allValues]) {
                 if ([[event.localTags allValues] containsObject: localTag]){
-                    [event addTag:localTag];
+                    [event addTag:localTag extraData:true];
+                    //[event addTag:localTag];
                     //[event.tags addObject:localTag];
                     //[event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
                     [event.localTags removeObjectForKey:[[event.localTags allKeysForObject: localTag] firstObject]];
@@ -461,7 +463,8 @@ static LocalEncoder * instance;
                 for (NSDictionary *tag in tags) {
                     Tag *newTag = [[Tag alloc]initWithData:tag];
                     if (![theEvent.tags containsObject: newTag]) {
-                        [theEvent addTag:newTag];
+                        [theEvent addTag:newTag extraData:true];
+                        //[theEvent addTag:newTag];
                         //[theEvent.tags addObject:newTag];
                         //[theEvent.tags addEntriesFromDictionary:@{[NSString stringWithFormat:@"%d", newTag.uniqueID]: newTag}];
                     }
