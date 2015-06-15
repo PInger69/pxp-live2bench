@@ -1162,9 +1162,11 @@
         [self resumeResponce:    finishedData];
     } else if ([connectionType isEqualToString: MAKE_TAG]) {
         //[self makeTagResponce:    finishedData];
+        [self getEventTags:finishedData extraData:MAKE_TAG];
         //[self tagsJustChanged:finishedData extraData:MAKE_TAG];
     } else if ([connectionType isEqualToString: MAKE_TELE_TAG]) {
         //[self makeTagResponce:    finishedData];
+        [self getEventTags:finishedData extraData:MAKE_TAG];
         //[self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
@@ -1367,13 +1369,13 @@
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
-        /*if ([type isEqualToString:MODIFY_TAG]) {
+        if ([type isEqualToString:MODIFY_TAG]) {
             if (results){
                 NSDictionary    * tags = [results objectForKey:@"tags"];
                 if (tags) {
                     NSArray *tagArray = [tags allValues];
                     for (NSDictionary *newTagDic in tagArray) {
-                        //[self onModifyTags:newTagDic];
+                        [self onModifyTags:newTagDic];
                     }
                 }
             }
@@ -1381,17 +1383,16 @@
         else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])
         {
             if (results){
-                //[self onNewTags:results];
+                [self onNewTags:results extraData:true];
             }
         }
-        else*/ if ([type isEqualToString:EVENT_GET_TAGS]){
+        else if ([type isEqualToString:EVENT_GET_TAGS]){
             if (results){
                 NSDictionary    * tags = [results objectForKey:@"tags"];
                 if (tags) {
                     NSArray *tagArray = [tags allValues];
                     for (NSDictionary *newTagDic in tagArray) {
                         [self onNewTags:newTagDic extraData:false];
-                        //[self onNewTags:newTagDic];
                     }
                 }
             }
@@ -1405,11 +1406,11 @@
     if ([data objectForKey:@"id"]) {
         if ([data[@"event"] isEqualToString:_event.name])
         {
-        
+            Tag *newTag = [[Tag alloc] initWithData: data event:_event];
+            newTag.feeds = self.encoderManager.feeds;
+            [_event modifyTag:newTag];
         }
-        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
-        newTag.feeds = self.encoderManager.feeds;
-        [_event modifyTag:newTag];
+       
         
         //old code
         //NSString * tagId = [[results objectForKey:@"id"]stringValue];
@@ -1425,13 +1426,12 @@
     if ([data objectForKey:@"id"]) {
         if ([data[@"event"] isEqualToString:_event.name])
         {
-            
-        }
-        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
-        newTag.feeds = self.encoderManager.feeds;
-        if (![_event.tags containsObject:newTag]) {
-            [_event addTag:newTag extraData:notifTost];
-            //[_event addTag:newTag];
+            Tag *newTag = [[Tag alloc] initWithData: data event:_event];
+            newTag.feeds = self.encoderManager.feeds;
+            if (![_event.tags containsObject:newTag]) {
+                [_event addTag:newTag extraData:notifTost];
+            }
+
         }
         
         //old code
@@ -1454,12 +1454,10 @@
             for (NSDictionary *tag in allTags) {
                 if ([tag[@"type"]intValue] == TagTypeDeleted) {
                     [self onModifyTags:tag];
-                    //[[NSNotificationCenter defaultCenter] postNotificationName: @"NOTIF_DELETE_SYNCED_TAG" object:newTag];
                 }else if([tag[@"modified"]boolValue]){
                     [self onModifyTags:tag];
                 }else{
                     [self onNewTags:tag extraData:true];
-                    //[self onNewTags:tag];
                 }
                 
             }
