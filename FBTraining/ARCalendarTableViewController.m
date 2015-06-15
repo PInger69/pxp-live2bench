@@ -268,7 +268,9 @@
                         //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:t userInfo:tagDic];
                     }*/
                     
-                    for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
+                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
+                    for (NSDictionary *tagDic in tagsArray) {
                         Tag *t =  [[Tag alloc]initWithData:tagDic];
                         [encoder.event addTag:t extraData:false];
                     }
@@ -280,7 +282,10 @@
 //                    source = weakSelf.encoderManager.primaryEncoder getEventByName:<#(NSString *)#>
                     
                      NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
-                     for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
+                    
+                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
+                     for (NSDictionary *tagDic in tagsArray) {
                         Tag *t =  [[Tag alloc]initWithData:tagDic];
                         [encoder.event addTag:t extraData:false];
                      }

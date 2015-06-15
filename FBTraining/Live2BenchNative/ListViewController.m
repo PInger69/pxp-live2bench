@@ -164,7 +164,7 @@ NSMutableArray *oldEventNames;
             [self.allTags insertObject:tag atIndex:0];
             [self.tagsToDisplay insertObject:tag atIndex:0];
         }
-        if(tag.modified){
+        if(tag.modified && [self.allTags containsObject:tag]){
             [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
             [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
         }
