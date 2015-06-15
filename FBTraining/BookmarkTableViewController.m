@@ -85,7 +85,7 @@
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_CLIP_SELECTED" object:clip];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:clip];
 //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
 //                                                                                                                                 @"feed": clip,
 //                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
@@ -268,7 +268,7 @@
             NSIndexPath *cellIndexPath = deleteOrderList[i];
             [self deleteClipAtIndex:cellIndexPath];
             if (cellIndexPath == self.selectedPath) { // this clears the display data on BookmarkViewController
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
                 self.selectedPath = nil;
             }
         }

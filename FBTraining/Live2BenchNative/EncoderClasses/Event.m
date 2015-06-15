@@ -57,7 +57,7 @@
         if ([_rawData objectForKey:@"homeTeam"]) [_teams setValue:[_rawData objectForKey:@"homeTeam"] forKey:@"homeTeam"];
         if ([_rawData objectForKey:@"visitTeam"]) [_teams setValue:[_rawData objectForKey:@"visitTeam"] forKey:@"visitTeam"];
     }
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_DOWNLOADED object:nil queue:nil usingBlock:^(NSNotification *note){
         NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
         if (key.count > 0) {
             [self.downloadingItemsDictionary removeObjectForKey:key[0]];

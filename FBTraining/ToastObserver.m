@@ -107,7 +107,7 @@
         // Otherwise the other 2 methods ( dequeueTheArray and animateView)
         //will keep track of the queue
         if([self.queueOfNotifications count] == 1) {
-            [self animateView];
+            //[self animateView];
         }
     }
 }
