@@ -268,10 +268,19 @@
                         //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:t userInfo:tagDic];
                     }*/
                     
+<<<<<<< HEAD
+                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
+                    for (NSDictionary *tagDic in tagsArray) {
+                        Tag *t =  [[Tag alloc]initWithData:tagDic];
+                        [encoder.event addTag:t extraData:false];
+                    }
+=======
 //                    for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
 //                        Tag *t =  [[Tag alloc]initWithData:tagDic];
 //                        [encoder.event addTag:t extraData:false];
 //                    }
+>>>>>>> dd5cf4355b9eda55dc529de5d513f6750c8ac02c
 
                 } else {
                     [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.masterEncoder];
@@ -280,10 +289,20 @@
 //                    source = weakSelf.encoderManager.primaryEncoder getEventByName:<#(NSString *)#>
                     
                      NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
+<<<<<<< HEAD
+                    
+                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
+                     for (NSDictionary *tagDic in tagsArray) {
+                        Tag *t =  [[Tag alloc]initWithData:tagDic];
+                        [encoder.event addTag:t extraData:false];
+                     }
+=======
 //                     for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
 //                        Tag *t =  [[Tag alloc]initWithData:tagDic];
 //                        [encoder.event addTag:t extraData:false];
 //                     }
+>>>>>>> dd5cf4355b9eda55dc529de5d513f6750c8ac02c
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];

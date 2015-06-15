@@ -216,7 +216,8 @@
         
         collapsableCell.sendUserInfo = ^(){
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                            @"feed":tag.feeds[key],
+                                                                                                                                            //@"feed":tag.feeds[key],
+                                                                                                                                            @"feed":tag.name,
                                                                                                                                             @"time": [NSString stringWithFormat:@"%f",tag.startTime],
                                                                                                                                             @"duration": [NSString stringWithFormat:@"%d",tag.duration],
                                                                                                                                             @"comment": tag.comment,
