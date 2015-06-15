@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FilterItemProtocol.h"
+#import "Event.h"
 
 typedef NS_ENUM (NSInteger,TagType){
     TagTypeNormal   = 0,
@@ -25,7 +26,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (strong, nonatomic) NSString      *deviceID;
 @property (strong, nonatomic) NSString      *displayTime;
 @property (assign, nonatomic) int           duration;
-@property (strong, nonatomic) NSString      *event;
+@property (strong, nonatomic) Event         * event;
 @property (strong, nonatomic) NSString      *homeTeam;
 @property (strong, nonatomic) NSString      *visitTeam;
 @property (assign, nonatomic) int           uniqueID;
@@ -46,7 +47,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (strong, nonatomic) NSDictionary  *feeds;
 //@property (strong, nonatomic) NSString *requestTime;
 
--(instancetype) initWithData: (NSDictionary *)tagData;
+-(instancetype) initWithData: (NSDictionary *)tagData event:(Event*)aEvent;
 -(NSDictionary *) tagDictionary;
 -(NSDictionary *) modifiedData;
 -(NSDictionary *) makeTagData;

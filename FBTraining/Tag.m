@@ -13,7 +13,7 @@
     id tagModifyObserver;
 }
 
--(instancetype) initWithData: (NSDictionary *)tagData{
+-(instancetype) initWithData: (NSDictionary *)tagData event:(Event*)aEvent{
     self = [super init];
     if (self) {
         self.rawData         = tagData;
@@ -22,7 +22,7 @@
         self.deviceID        = tagData[@"deviceid"];
         self.displayTime     = tagData[@"displaytime"];
         self.duration        = [tagData[@"duration"]intValue];
-        self.event           = tagData[@"event"];
+        self.event           = aEvent;//tagData[@"event"];
         self.homeTeam        = tagData[@"homeTeam"];
         self.visitTeam       = tagData[@"visitTeam"];
         self.uniqueID        = [tagData[@"id"] intValue];
@@ -79,7 +79,7 @@
     return _displayTime;
 }
 
--(NSString *)event{
+-(Event *)event{
     return _event;
 }
 
@@ -130,7 +130,7 @@
              @"deleted"     : @"1",
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
-             @"event"       : self.event,
+             @"event"       : self.event.name,
              @"homeTeam"    : self.homeTeam,
              @"id"          : [NSString stringWithFormat: @"%i", self.uniqueID],
              @"isLive"      : [NSString stringWithFormat: @"%i", self.isLive],
@@ -169,7 +169,7 @@
              @"deviceid"    : self.deviceID,
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
-             @"event"       : self.event,
+             @"event"       : self.event.name,
              @"name"        : self.name,
              @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
              @"time"        : [NSString stringWithFormat:@"%f", self.time],
@@ -226,7 +226,7 @@
 }
 
 -(NSString *)description{
-    return [NSString stringWithFormat:@"name: %@, displayTime: %@, thumbnails: %@", self.name, self.displayTime, self.thumbnails];
+    return [NSString stringWithFormat:@"name: %@, displayTime: %@, thumbnails: %@  feeds: %@", self.name, self.displayTime, self.thumbnails, self.feeds];
 }
 
 -(void)dealloc{

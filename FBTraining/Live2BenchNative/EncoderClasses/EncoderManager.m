@@ -952,7 +952,7 @@ static void * statusContext         = &statusContext;
         NSArray * keys = [all allKeys];
         for (NSString * key in keys) {
             
-            Tag * t = [[Tag alloc]initWithData:[all objectForKey:key]];
+            Tag * t = [[Tag alloc]initWithData:[all objectForKey:key] event:theEvent];
             [tagsBuilt setObject:t forKey:key];
             
         }

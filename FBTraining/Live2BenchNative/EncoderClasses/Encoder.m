@@ -1403,7 +1403,11 @@
 -(void)onModifyTags:(NSDictionary *)data
 {
     if ([data objectForKey:@"id"]) {
-        Tag *newTag = [[Tag alloc] initWithData: data];
+        if ([data[@"event"] isEqualToString:_event.name])
+        {
+        
+        }
+        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
         newTag.feeds = self.encoderManager.feeds;
         [_event modifyTag:newTag];
         
@@ -1419,20 +1423,17 @@
 -(void)onNewTags:(NSDictionary*)data extraData:(BOOL)notifTost
 {
     if ([data objectForKey:@"id"]) {
-        Tag *newTag = [[Tag alloc] initWithData: data];
+        if ([data[@"event"] isEqualToString:_event.name])
+        {
+            
+        }
+        Tag *newTag = [[Tag alloc] initWithData: data event:_event];
         newTag.feeds = self.encoderManager.feeds;
         if (![_event.tags containsObject:newTag]) {
             [_event addTag:newTag extraData:notifTost];
             //[_event addTag:newTag];
         }
         
-        if (notifTost) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
-                                                                                                          @"msg":newTag.name,
-                                                                                                          @"colour":newTag.colour,
-                                                                                                          @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
-                                                                                                          }];
-        }
         //old code
         /*[_event.tags addObject:newTag];
         if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
