@@ -30,7 +30,7 @@
 
 @synthesize downloadedSources       = _downloadedSources;
 @synthesize parentEncoder           = _parentEncoder;
-@synthesize isBuildComplete         = _isBuildComplete;
+@synthesize isBuilt                 = _isBuilt;
 
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
@@ -275,19 +275,19 @@
 }
 
 
--(void)setIsBuildComplete:(BOOL)isBuildComplete
+-(void)setIsBuilt:(BOOL)isBuilt
 {
-    if (_isBuildComplete == isBuildComplete) return;
-    _isBuildComplete = isBuildComplete;
-    if (isBuildComplete && self.onComplete){
+    if (_isBuilt == isBuilt) return;
+    _isBuilt = isBuilt;
+    if (_isBuilt && self.onComplete){
         self.onComplete();
     }
     
 }
 
--(BOOL)isBuildComplete
+-(BOOL)isBuilt
 {
-    return _isBuildComplete;
+    return _isBuilt;
 }
 
 

@@ -42,7 +42,7 @@
 
 @property (nonatomic,strong) id <EncoderProtocol> parentEncoder;
 
-@property (nonatomic,assign) BOOL               isBuildComplete;
+@property (nonatomic,assign) BOOL               isBuilt;
 @property (nonatomic, copy) void(^onComplete)();
 
 -(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;

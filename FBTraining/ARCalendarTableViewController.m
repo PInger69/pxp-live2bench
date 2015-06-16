@@ -251,41 +251,13 @@
                 
                 
                 Feed *source;
+                __block Event * weakEvent = event;
                 if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
-                    [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.localEncoder];
-                    //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
+                    
                     source = [[Feed alloc] initWithFileURL:path];
-                    //source = [[Feed alloc] initWithURLString:path quality:1];
-                    
-                    NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
-                    /*NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
-                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
-                    //NSMutableDictionary *tags = [[NSMutableDictionary alloc]init];
-                    for (NSDictionary *tagDic in tagsArray) {
-                        //[tags setObject:tagDic forKey:tagDic[@"id"]];
-                        Tag *t =  [[Tag alloc]initWithData:tagDic];
-                        [encoder.event addTag:t];
-                        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:t userInfo:tagDic];
-                    }*/
-                    
-                    /*NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
-                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
-                    for (NSDictionary *tagDic in tagsArray) {
-                        Tag *t =  [[Tag alloc]initWithData:tagDic];
-                        [encoder.event addTag:t extraData:false];
-                    }*/
-//                    for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
-//                        Tag *t =  [[Tag alloc]initWithData:tagDic];
-//                        [encoder.event addTag:t extraData:false];
-//                    }
-
-//                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
-//                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
-//                    for (NSDictionary *tagDic in tagsArray) {
-//                        Tag *t =  [[Tag alloc]initWithData:tagDic];
-//                        [encoder.event addTag:t extraData:false];
-//                    }
-
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                    [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                    [weakSelf.encoderManager declareCurrentEvent:localCounterpart];
 
                 } else {
                     
@@ -298,19 +270,15 @@
                                                                                                         }];
                                                                                                         
     
-                    __block Event * weakEvent = event;
+                    
                     source = [[Feed alloc] initWithURLString:data quality:0];
                     
-                    if (event.isBuildComplete){
+                    if (event.isBuilt){
                         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                         [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-                        
-                        NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", weakEvent.rawData[@"date"], weakEvent.rawData[@"visitTeam"], weakEvent.rawData[@"homeTeam"]];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
-                        
                         [weakSelf.encoderManager declareCurrentEvent:weakEvent];
                         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
-               
+
 
                     } else {
                         // The Event was not built and it will have to wait for the server to build all the tag data
@@ -322,10 +290,6 @@
                             
                             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                             [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-                            
-                            NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", weakEvent.rawData[@"date"], weakEvent.rawData[@"visitTeam"], weakEvent.rawData[@"homeTeam"]];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
-                            
                             [weakSelf.encoderManager declareCurrentEvent:weakEvent];
                             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
@@ -335,12 +299,7 @@
 
 
                 }
-//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-//                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
-//                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-//                
-//                NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", event.rawData[@"date"], event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
-//                [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                        animated:YES];
