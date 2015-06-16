@@ -945,28 +945,37 @@ static void * statusContext         = &statusContext;
     
     Event * theEvent = [self getEventByHID:eventHID];
     
+    if (theEvent.isBuilt){
     
-    [self requestTagDataForEvent:theEvent.name onComplete:^(NSDictionary *all) {
-        
-        NSMutableDictionary * tagsBuilt = [[NSMutableDictionary alloc]init];
-        NSArray * keys = [all allKeys];
-        for (NSString * key in keys) {
-            
-            Tag * t = [[Tag alloc]initWithData:[all objectForKey:key] event:theEvent];
-            [tagsBuilt setObject:t forKey:key];
-            
-        }
-        
-        theEvent.tags = [tagsBuilt copy];
-        
         NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
         NSString * savedFileName   =  [encoderSource lastPathComponent];
-        
-        
         DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
         dItemBlock(dli);
         
-    }];
+    } else {
+        theEvent.onComplete = nil;// clear out the on complete build block
+        [self requestTagDataForEvent:theEvent.name onComplete:^(NSDictionary *all) {
+            
+            NSMutableDictionary * tagsBuilt = [[NSMutableDictionary alloc]init];
+            NSArray * keys = [all allKeys];
+            for (NSString * key in keys) {
+                
+                Tag * t = [[Tag alloc]initWithData:[all objectForKey:key] event:theEvent];
+                [tagsBuilt setObject:t forKey:key];
+                
+            }
+            theEvent.tags = [tagsBuilt copy];
+            NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+            NSString * savedFileName   =  [encoderSource lastPathComponent];
+
+            DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
+            dItemBlock(dli);
+            
+        }];
+    }
+    
+    
+
     
     
     

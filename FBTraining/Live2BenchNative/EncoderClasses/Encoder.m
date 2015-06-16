@@ -1402,7 +1402,7 @@
                     [polishedTags addObject:newTag];
                 }
                 checkEvent.tags = polishedTags;
-                checkEvent.isBuildComplete = YES;
+                checkEvent.isBuilt = YES;
             }
     
         }

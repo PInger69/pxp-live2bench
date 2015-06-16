@@ -55,7 +55,9 @@ static SpinnerView *instance;
 // This is the new global spinner that is controlled by notifivations
 -(id)initStatic
 {
-    self = [super init];
+    UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+
+    self = [super initWithEffect:effect];
     if (self) {
         // Initialization code
         
@@ -65,7 +67,7 @@ static SpinnerView *instance;
         
         UIImageView *background = [[UIImageView alloc] initWithImage:[self addBackground]];
         background.alpha = 0.7;
-        [self addSubview:background];
+     //   [self addSubview:background];
         
         
         indicator =
@@ -78,7 +80,7 @@ static SpinnerView *instance;
         UIViewAutoresizingFlexibleLeftMargin;
         // Place it in the middle of the view
         indicator.center = self.center;
-        [self addSubview:indicator];
+        [self.contentView addSubview:indicator];
         
         // progress bar
         
@@ -87,7 +89,7 @@ static SpinnerView *instance;
         progressBar.progressTintColor       = PRIMARY_APP_COLOR;
         progressBar.bounds                  = CGRectMake(progressBar.bounds.origin.x, progressBar.bounds.origin.y, 400, 30);
         [progressBar setProgressViewStyle:UIProgressViewStyleBar];
-        [self addSubview:progressBar];
+        [self.contentView addSubview:progressBar];
         
         
         
@@ -98,7 +100,7 @@ static SpinnerView *instance;
         progressMessage.backgroundColor     = [UIColor clearColor];
         progressMessage.textAlignment       = NSTextAlignmentCenter;
         progressMessage.bounds              = CGRectMake(progressMessage.bounds.origin.x, progressMessage.bounds.origin.y, 400, 30);
-        [self addSubview:progressMessage];
+        [self.contentView addSubview:progressMessage];
         
         
 
