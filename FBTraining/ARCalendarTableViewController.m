@@ -279,6 +279,14 @@
 //                        [encoder.event addTag:t extraData:false];
 //                    }
 
+//                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+//                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
+//                    for (NSDictionary *tagDic in tagsArray) {
+//                        Tag *t =  [[Tag alloc]initWithData:tagDic];
+//                        [encoder.event addTag:t extraData:false];
+//                    }
+
+
                 } else {
                     [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.masterEncoder];
                     //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
@@ -297,6 +305,15 @@
 //                        Tag *t =  [[Tag alloc]initWithData:tagDic];
 //                        [encoder.event addTag:t extraData:false];
 //                     }
+
+                    
+//                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
+//                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
+//                     for (NSDictionary *tagDic in tagsArray) {
+//                        Tag *t =  [[Tag alloc]initWithData:tagDic];
+//                        [encoder.event addTag:t extraData:false];
+//                     }
+
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];

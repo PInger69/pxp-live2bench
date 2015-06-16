@@ -1404,41 +1404,26 @@
 -(void)onModifyTags:(NSDictionary *)data
 {
     if ([data objectForKey:@"id"]) {
-        if ([data[@"event"] isEqualToString:_event.name])
-        {
-            Tag *newTag = [[Tag alloc] initWithData: data event:_event];
-            newTag.feeds = self.encoderManager.feeds;
-            [_event modifyTag:newTag];
+        
+        if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
+            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
+            Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
+            [checkEvent modifyTag:newTag];
         }
-       
-        
-        //old code
-        //NSString * tagId = [[results objectForKey:@"id"]stringValue];
-        //[_event.tags setObject:results forKey:tagId];
-        
-        //PXPLog(@"Tag Modification succeded: %@", @"");
-        //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:data];
     }
 }
 
 -(void)onNewTags:(NSDictionary*)data extraData:(BOOL)notifTost
 {
     if ([data objectForKey:@"id"]) {
-        if ([data[@"event"] isEqualToString:_event.name])
-        {
-            Tag *newTag = [[Tag alloc] initWithData: data event:_event];
-            newTag.feeds = self.encoderManager.feeds;
-            if (![_event.tags containsObject:newTag]) {
-                [_event addTag:newTag extraData:notifTost];
-            }
-
-        }
         
-        //old code
-        /*[_event.tags addObject:newTag];
-        if ([[[self.encoderManager.primaryEncoder event]name] isEqualToString:newTag.event] ) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:data];
-        }*/
+        if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
+            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
+            Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
+            if (![checkEvent.tags containsObject:newTag]) {
+                [checkEvent addTag:newTag extraData:notifTost];
+            }
+        }
     }
 }
 
