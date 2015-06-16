@@ -47,6 +47,7 @@
 -(void)logoutOfCloud;
 -(void)updateTagInfoFromCloud;
 
+-(void)verifyGet:(NSMutableDictionary *)tData  timeStamp:(NSNumber *)aTimeStamp;
 // Action methods
 
 -(id<ActionListItem>)logoutAction;

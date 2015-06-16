@@ -195,10 +195,6 @@ static void * eventContext      = &eventContext;
     
     informationLabel = [[UILabel alloc] initWithFrame:CGRectMake(156, 50, MEDIA_PLAYER_WIDTH, 50)];
     [informationLabel setTextAlignment:NSTextAlignmentRight];
-    /*[[NSNotificationCenter defaultCenter] addObserverForName:@"UpdateInfoLabel" object:nil queue:nil usingBlock:^(NSNotification *note){
-        NSString *content = [NSString stringWithFormat:@"%@ - Tagging team: %@", note.userInfo[@"info"], _appDel.userCenter.userPick];
-        [informationLabel setText:content];
-    }];*/
     [self.view addSubview:informationLabel];
     
     return self;
@@ -215,7 +211,12 @@ static void * eventContext      = &eventContext;
 -(void)displayLable{
     NSString *content;
     if (_currentEvent.live) {
-        content = [NSString stringWithFormat:@"Live - Tagging team: %@", [UserCenter getInstance].userPick];
+        if ([UserCenter getInstance].userPick && ([[UserCenter getInstance].userPick isEqualToString:_currentEvent.rawData[@"homeTeam"]]|| [[UserCenter getInstance].userPick isEqualToString: _currentEvent.rawData[@"visitTeam"]])) {
+            content = [NSString stringWithFormat:@"Live - Tagging team: %@", [UserCenter getInstance].userPick];
+        }
+        else{
+            content = @"Live - Tagging team:";
+        }
     }
     else{
          content = [NSString stringWithFormat:@"%@ - Tagging team: %@", _currentEvent.date, _appDel.userCenter.userPick];
@@ -223,16 +224,19 @@ static void * eventContext      = &eventContext;
     [informationLabel setText:content];
 }
 
+-(void)clear{
+    [informationLabel setText:@""];
+}
+
 -(void)eventChanged:(NSNotification*)note
 {
     _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+    [self displayLable];
     if (_currentEvent.live) {
         [self gotLiveEvent];
     }
     [_videoBarViewController onEventChanged:_currentEvent];
     [self onEventChange];
-    [self displayLable];
-    
 }
 
 -(void)liveEventStopped:(NSNotification *)note
@@ -393,12 +397,10 @@ static void * eventContext      = &eventContext;
         _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[_currentEvent.rawData[@"homeTeam"], _currentEvent.rawData[@"visitTeam"]]];
     
         [_teamPick addOnCompletionBlock:^(NSString *pick){
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
+            [UserCenter getInstance].userPick = pick;
+            [self displayLable];
             [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
                                                              userInfo:@{@"tabName":@"Live2Bench"}];
-            
-            NSString *info = @"Live";
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
         }];
         [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];

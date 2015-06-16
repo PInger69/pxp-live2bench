@@ -310,30 +310,7 @@
                         
                         [weakSelf.encoderManager declareCurrentEvent:weakEvent];
                         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
-<<<<<<< HEAD
-                    };
-                    [event.parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];   
-                
-//                    [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.masterEncoder];
-                    //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
-                    
-//                    source = weakSelf.encoderManager.primaryEncoder getEventByName:<#(NSString *)#>
-                    
-                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
-                    
-                    /*NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
-                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
-                     for (NSDictionary *tagDic in tagsArray) {
-                        Tag *t =  [[Tag alloc]initWithData:tagDic];
-                        [encoder.event addTag:t extraData:false];
-                     }*/
-//                     for (NSDictionary *tagDic in [encoder.event.rawData[@"tags"] allValues]) {
-//                        Tag *t =  [[Tag alloc]initWithData:tagDic];
-//                        [encoder.event addTag:t extraData:false];
-//                     }
-//                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
-=======
->>>>>>> 16b362f65d055220f7f77b3be6b9cdf2b75f6496
+               
 
                     } else {
                         // The Event was not built and it will have to wait for the server to build all the tag data
