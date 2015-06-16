@@ -16,6 +16,7 @@
 #import "Feed.h"
 #import "Tag.h"
 #import "UserCenter.h"
+#import "SpinnerView.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -289,35 +290,38 @@
     
                     __block Event * weakEvent = event;
                     source = [[Feed alloc] initWithURLString:data quality:0];
-                    event.onComplete = ^(){
-                        
-                        
-                        
+                    
+                    if (event.isBuildComplete){
                         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-                        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
                         
                         NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", weakEvent.rawData[@"date"], weakEvent.rawData[@"visitTeam"], weakEvent.rawData[@"homeTeam"]];
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
                         
                         [weakSelf.encoderManager declareCurrentEvent:weakEvent];
                         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
-                    };
-                    [event.parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];   
-                
-//                    [weakSelf.encoderManager setPrimaryEncoder:weakSelf.encoderManager.masterEncoder];
-                    //weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
-                    
-//                    source = weakSelf.encoderManager.primaryEncoder getEventByName:<#(NSString *)#>
-                    
-//                     NSObject <EncoderProtocol> *encoder = weakSelf.encoderManager.primaryEncoder;
 
-                    
-//                    NSMutableDictionary *tagsToBeAddedDic = encoder.event.rawData[@"tags"];
-//                    NSArray *tagsArray = [tagsToBeAddedDic allValues];
-//                     for (NSDictionary *tagDic in tagsArray) {
-//                        Tag *t =  [[Tag alloc]initWithData:tagDic];
-//                        [encoder.event addTag:t extraData:false];
-//                     }
+                    } else {
+                        // The Event was not built and it will have to wait for the server to build all the tag data
+                        
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
+                                                                           object:nil
+                                                                         userInfo:[SpinnerView message:@"Retreving tag data..." progress:0 animated:NO ]];
+                        event.onComplete = ^(){
+                            
+                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                            
+                            NSString *info = [NSString stringWithFormat:@"%@ %@ at %@", weakEvent.rawData[@"date"], weakEvent.rawData[@"visitTeam"], weakEvent.rawData[@"homeTeam"]];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
+                            
+                            [weakSelf.encoderManager declareCurrentEvent:weakEvent];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
+                            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
+                        };
+                        [event.parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];
+                    }
+
 
                 }
 //                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
