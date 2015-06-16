@@ -16,7 +16,7 @@
 
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
-#define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
+
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
 #define SYNC_ME             @"SYNC_ME"
@@ -636,7 +636,7 @@
                                        }];
     
     
-   // [dict addEntriesFromDictionary:[tagToDelete makeTagData]];
+    [dict addEntriesFromDictionary:[tagToDelete makeTagData]];
     
     [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 }
@@ -1170,6 +1170,7 @@
         //[self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
+         [self getEventTags:finishedData extraData:MAKE_TAG];
         //[self tagsJustChanged:finishedData extraData:MODIFY_TAG];
     } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
@@ -1375,6 +1376,7 @@
                 if (tags) {
                     NSArray *tagArray = [tags allValues];
                     for (NSDictionary *newTagDic in tagArray) {
+                
                         [self onModifyTags:newTagDic];
                     }
                 }
@@ -1385,18 +1387,27 @@
             if (results){
                 [self onNewTags:results extraData:true];
             }
-        }
-        else if ([type isEqualToString:EVENT_GET_TAGS]){
-            if (results){
-                NSDictionary    * tags = [results objectForKey:@"tags"];
-                if (tags) {
-                    NSArray *tagArray = [tags allValues];
-                    for (NSDictionary *newTagDic in tagArray) {
-                        [self onNewTags:newTagDic extraData:false];
-                    }
+        } else if ([type isEqualToString:EVENT_GET_TAGS]){
+        
+            NSDictionary    * rawtags = [results objectForKey:@"tags"];
+            NSMutableArray  * polishedTags = [[NSMutableArray alloc]init];
+            if (rawtags) {
+                NSArray *tagArray = [rawtags allValues];
+                Event * checkEvent;
+                for (NSDictionary *newTagDic in tagArray) {
+//                    [self onNewTags:newTagDic extraData:false];
+                   
+                    checkEvent = [self.allEvents objectForKey:newTagDic[@"event"]];
+                    Tag *newTag = [[Tag alloc] initWithData: newTagDic event:checkEvent];
+                    [polishedTags addObject:newTag];
                 }
+                checkEvent.tags = polishedTags;
+                checkEvent.isBuildComplete = YES;
             }
+    
         }
+        
+        
     }
 }
                         

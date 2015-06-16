@@ -195,10 +195,10 @@ static void * eventContext      = &eventContext;
     
     informationLabel = [[UILabel alloc] initWithFrame:CGRectMake(156, 50, MEDIA_PLAYER_WIDTH, 50)];
     [informationLabel setTextAlignment:NSTextAlignmentRight];
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"UpdateInfoLabel" object:nil queue:nil usingBlock:^(NSNotification *note){
+    /*[[NSNotificationCenter defaultCenter] addObserverForName:@"UpdateInfoLabel" object:nil queue:nil usingBlock:^(NSNotification *note){
         NSString *content = [NSString stringWithFormat:@"%@ - Tagging team: %@", note.userInfo[@"info"], _appDel.userCenter.userPick];
         [informationLabel setText:content];
-    }];
+    }];*/
     [self.view addSubview:informationLabel];
     
     return self;
@@ -212,14 +212,27 @@ static void * eventContext      = &eventContext;
 
 }
 
+-(void)displayLable{
+    NSString *content;
+    if (_currentEvent.live) {
+        content = [NSString stringWithFormat:@"Live - Tagging team: %@", [UserCenter getInstance].userPick];
+    }
+    else{
+         content = [NSString stringWithFormat:@"%@ - Tagging team: %@", _currentEvent.date, _appDel.userCenter.userPick];
+    }
+    [informationLabel setText:content];
+}
+
 -(void)eventChanged:(NSNotification*)note
 {
     _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
-    [_videoBarViewController onEventChanged:_currentEvent];
-    [self onEventChange];
     if (_currentEvent.live) {
         [self gotLiveEvent];
     }
+    [_videoBarViewController onEventChanged:_currentEvent];
+    [self onEventChange];
+    [self displayLable];
+    
 }
 
 -(void)liveEventStopped:(NSNotification *)note
@@ -715,6 +728,7 @@ static void * eventContext      = &eventContext;
     }
     
     [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
     
 }
 

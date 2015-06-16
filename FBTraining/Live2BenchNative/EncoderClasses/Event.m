@@ -30,7 +30,7 @@
 
 @synthesize downloadedSources       = _downloadedSources;
 @synthesize parentEncoder           = _parentEncoder;
-
+@synthesize isBuildComplete         = _isBuildComplete;
 
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
@@ -70,6 +70,7 @@
 -(void)setTags:(NSMutableArray *)tags
 {
     _tags = tags;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
 }
 
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifTost
@@ -140,7 +141,7 @@
             }
         }
     }
-    return tagResult;
+    return (tagResult)?tagResult:nil;
 }
 
 -(NSDictionary*)buildMP4s:(NSDictionary*)aDict
@@ -272,6 +273,23 @@
     }
     return [tempDict copy];
 }
+
+
+-(void)setIsBuildComplete:(BOOL)isBuildComplete
+{
+    if (_isBuildComplete == isBuildComplete) return;
+    _isBuildComplete = isBuildComplete;
+    if (isBuildComplete && self.onComplete){
+        self.onComplete();
+    }
+    
+}
+
+-(BOOL)isBuildComplete
+{
+    return _isBuildComplete;
+}
+
 
 -(NSString*)description
 {
