@@ -143,6 +143,7 @@ static UserCenter * instance;
 @synthesize userHID             = _userHID;
 @synthesize localPath               = _localPath;
 
+
 +(instancetype)getInstance
 {
     return instance;
@@ -173,8 +174,7 @@ static UserCenter * instance;
         
         
         // notifications will mostly be coming from the cloud Encoder
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(update:)                   name:NOTIF_USER_CENTER_UPDATE object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(checkCredentials:)         name:NOTIF_CREDENTIALS_TO_VERIFY object:nil]; // listen to the app for check
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(checkCredentials:)         name:NOTIF_CREDENTIALS_TO_VERIFY object:nil]; // listen to the app for check
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(cloudCredentialsResponce:) name:NOTIF_CLOUD_VERIFY_RESULTS object:nil]; // listen to the Cloud for check
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(dataRequest:)              name:NOTIF_USER_CENTER_DATA_REQUEST object:nil]; // listen to the Cloud for check
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutUser:)               name:NOTIF_USER_LOGGED_OUT object:nil]; // listen to the Cloud for check
@@ -255,11 +255,11 @@ static UserCenter * instance;
  *
  *  @param note NSNotification
  */
--(void)checkCredentials:(NSNotification*)note
+/*-(void)checkCredentials:(NSNotification*)note
 {
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]initWithDictionary:note.userInfo];
     [self verifyGet:dic timeStamp:GET_NOW_TIME];
-}
+}*/
 
 -(void)verifyGet:(NSMutableDictionary *)tData  timeStamp:(NSNumber *)aTimeStamp
 {
@@ -470,15 +470,6 @@ static UserCenter * instance;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_LOGGED_IN object:nil];
 }
 
-
-
-// This updates this class based of the keys in the userdict
--(void)update:(NSNotification*)note
-{
-    NSDictionary * data = note.userInfo;
-
-    if ([data objectForKey:@"userPick"]) self.userPick = [data objectForKey:@"userPick"];
-}
 
 
 -(void)tagnameUpdate:(NSDictionary *)dic

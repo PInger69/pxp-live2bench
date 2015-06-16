@@ -595,7 +595,7 @@
     
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
                                   @{
-                                    @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event, // LIVE_EVENT == @"live"
+                                    @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
                                     @"id"            : tagToModify.ID,
                                     @"requesttime"   : GET_NOW_TIME_STRING,
                                     @"name"          : tagToModify.name,
@@ -629,14 +629,14 @@
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
                                      @{
                                        @"delete"        : @"1",
-                                       @"event"         : (tagToDelete.isLive)?LIVE_EVENT:tagToDelete.event, // LIVE_EVENT == @"live"
+                                       @"event"         : (tagToDelete.isLive)?LIVE_EVENT:tagToDelete.event.name, // LIVE_EVENT == @"live"
                                        @"id"            : tagToDelete.ID,
                                        @"requesttime"   : GET_NOW_TIME_STRING,
                                        @"user"          : tagToDelete.user
                                        }];
     
     
-    [dict addEntriesFromDictionary:[tagToDelete makeTagData]];
+    //[dict addEntriesFromDictionary:[tagToDelete makeTagData]];
     
     [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 }
@@ -1170,7 +1170,7 @@
         //[self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
-         [self getEventTags:finishedData extraData:MAKE_TAG];
+         [self getEventTags:finishedData extraData:MODIFY_TAG];
         //[self tagsJustChanged:finishedData extraData:MODIFY_TAG];
     } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
@@ -1372,14 +1372,14 @@
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
             if (results){
-                NSDictionary    * tags = [results objectForKey:@"tags"];
-                if (tags) {
-                    NSArray *tagArray = [tags allValues];
-                    for (NSDictionary *newTagDic in tagArray) {
+                //NSDictionary    * tags = [results objectForKey:@"tags"];
+                //if (tags) {
+                    //NSArray *tagArray = [tags allValues];
+                    //for (NSDictionary *newTagDic in tagArray) {
                 
-                        [self onModifyTags:newTagDic];
-                    }
-                }
+                        [self onModifyTags:results];
+                    //}
+                //}
             }
         }
         else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])

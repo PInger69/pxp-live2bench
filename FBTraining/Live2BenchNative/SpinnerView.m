@@ -67,7 +67,7 @@ static SpinnerView *instance;
         
         UIImageView *background = [[UIImageView alloc] initWithImage:[self addBackground]];
         background.alpha = 0.7;
-     //   [self addSubview:background];
+        [self.contentView addSubview:background];
         
         
         indicator =
