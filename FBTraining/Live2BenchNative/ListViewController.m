@@ -38,7 +38,7 @@
 
 @interface ListViewController ()
 
-@property (strong, nonatomic) L2BVideoBarViewController *videoBarViewController;
+//@property (strong, nonatomic) L2BVideoBarViewController *videoBarViewController;
 @property (strong, nonatomic) UIPinchGestureRecognizer *pinchGesture;
 @property (strong, nonatomic) FullScreenViewController *fullScreenViewController;
 @property (strong, nonatomic) UIButton *filterButton;
@@ -125,6 +125,7 @@ NSMutableArray *oldEventNames;
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
+            [newVideoControlBar setMode:LISTVIEW_MODE_CLIP];
         
             [commentingField clear];
             commentingField.enabled             = YES;
@@ -307,15 +308,27 @@ NSMutableArray *oldEventNames;
     //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
     
     
-    self.videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    newVideoControlBar = [[VideoBarListViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    [newVideoControlBar.startRangeModifierButton addTarget:self action:@selector(startRangeBeenModified: ) forControlEvents:UIControlEventTouchUpInside];
+    [newVideoControlBar.endRangeModifierButton addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:newVideoControlBar.view];
+    if (_currentEvent) {
+        [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
+    }
+    else{
+        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
+    }
+    
+    //self.videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
     //[_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     //[_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [self.videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
-    [self.videoBarViewController viewDidAppear: YES];
+    //[self.videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+    //[self.videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
+    //[self.videoBarViewController viewDidAppear: YES];
     //[self.videoBarViewController createTagMarkers];
     
     [self.view addSubview:self.videoPlayer.view];
-    [self.view addSubview:self.videoBarViewController.view];
+    //[self.view addSubview:self.videoBarViewController.view];
     
     self.fullScreenViewController = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     self.fullScreenViewController.context = @"ListView Tab";
@@ -1673,7 +1686,8 @@ NSMutableArray *oldEventNames;
     commentingField.text                = selectedTag.comment;
     commentingField.ratingScale.rating  = selectedTag.rating;
     
-    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+    //
+    [newVideoControlBar setTagName:selectedTag.name];
 }
 
 
@@ -2560,46 +2574,96 @@ NSMutableArray *oldEventNames;
 
 //extend the tag duration by adding five secs at the beginning of the tag
 -(void)startRangeBeenModified:(CustomButton*)button{
-    //    if (!currentPlayingTag || [[currentPlayingTag objectForKey:@"type"]intValue] == 4){
-    //
-    //        return;
-    //    }
-    //
-    //
-    //    float newStartTime = 0;
-    //
-    //    float endTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + [[currentPlayingTag objectForKey:@"duration"]floatValue];
-    //    if ([button.accessibilityValue isEqualToString:@"extend"]) {
-    //
-    //        //extend the duration 5 seconds by decreasing the start time 5 seconds
-    //        newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] -5;
-    //        //if the new start time is smaller than 0, set it to 0
-    //        if (newStartTime <0) {
-    //            newStartTime = 0;
-    //        }
-    //
-    //    }else{
-    //        //subtract the duration 5 seconds by increasing the start time 5 seconds
-    //        newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + 5;
-    //
-    //        //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
-    //        if (newStartTime > endTime) {
-    //            newStartTime = endTime -1;
-    //        }
-    //
-    //    }
-    //
-    //    //set the new duration to tag end time minus new start time
-    //    int newDuration = endTime - newStartTime;
-    //
+    Tag *tagToBeModified = selectedTag;
+    
+    
+    if (!tagToBeModified|| tagToBeModified.type == TagTypeTele ){
+        
+        return;
+    }
+    
+    
+    float newStartTime = 0;
+    
+    float endTime = tagToBeModified.startTime + tagToBeModified.duration;
+    if ([button.accessibilityValue isEqualToString:@"extend"]) {
+        
+        //extend the duration 5 seconds by decreasing the start time 5 seconds
+        newStartTime = tagToBeModified.startTime - 5;
+        //if the new start time is smaller than 0, set it to 0
+        if (newStartTime <0) {
+            newStartTime = 0;
+        }
+        
+    }else{
+        //subtract the duration 5 seconds by increasing the start time 5 seconds
+        newStartTime = tagToBeModified.startTime + 5;
+        
+        //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
+        if (newStartTime > endTime) {
+            newStartTime = endTime -1;
+        }
+        
+    }
+    
+    //set the new duration to tag end time minus new start time
+    int newDuration = endTime - newStartTime;
+    
+    
     //    globals.HOME_START_TIME = newStartTime;
     //    globals.HOME_END_TIME = endTime;
     //
-    //    NSString *startTimeString = [NSString stringWithFormat:@"%f",newStartTime];
-    //    NSString *duration = [NSString stringWithFormat:@"%d",newDuration];
-    //    [currentPlayingTag setValue:startTimeString forKey:@"starttime"];
-    //    [currentPlayingTag setValue:duration forKey:@"duration"];
+    
+    tagToBeModified.startTime = newStartTime;
+    tagToBeModified.duration = newDuration;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    
+    //[_tableViewController reloadData];
+    
+    
+    
+        /*if (!currentPlayingTag || [[currentPlayingTag objectForKey:@"type"]intValue] == 4){
+    
+            return;
+        }
+    
+    
+        float newStartTime = 0;
+    
+        float endTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + [[currentPlayingTag objectForKey:@"duration"]floatValue];
+        if ([button.accessibilityValue isEqualToString:@"extend"]) {
+    
+            //extend the duration 5 seconds by decreasing the start time 5 seconds
+            newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] -5;
+            //if the new start time is smaller than 0, set it to 0
+            if (newStartTime <0) {
+                newStartTime = 0;
+            }
+    
+        }else{
+            //subtract the duration 5 seconds by increasing the start time 5 seconds
+            newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + 5;
+    
+            //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
+            if (newStartTime > endTime) {
+                newStartTime = endTime -1;
+            }
+    
+        }
+    
+        //set the new duration to tag end time minus new start time
+        int newDuration = endTime - newStartTime;
+    
+    
+    //    globals.HOME_START_TIME = newStartTime;
+    //    globals.HOME_END_TIME = endTime;
     //
+        NSString *startTimeString = [NSString stringWithFormat:@"%f",newStartTime];
+        NSString *duration = [NSString stringWithFormat:@"%d",newDuration];
+        [currentPlayingTag setValue:startTimeString forKey:@"starttime"];
+        [currentPlayingTag setValue:duration forKey:@"duration"];*/
+    
     //    [globals.CURRENT_EVENT_THUMBNAILS setObject:currentPlayingTag forKey:[NSString stringWithFormat:@"%@",[currentPlayingTag objectForKey:@"id"]]];
     //
     //    if ([[currentPlayingTag objectForKey:@"bookmark"]integerValue] ==1) {
@@ -3607,10 +3671,11 @@ NSMutableArray *oldEventNames;
         _currentEvent = nil;
         [self clear];
         selectedTag = nil;
+        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
         
         [commentingField clear];
         commentingField.enabled             = NO;
-        [newVideoControlBar setTagName: nil];
+        //[newVideoControlBar setTagName: nil];
     }
 }
 

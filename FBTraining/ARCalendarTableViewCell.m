@@ -54,12 +54,12 @@
 //    [self.downloadButton setFrame:CGRectMake(400, 15, 30,35)];
 //    [self.downloadButton setTag:98];
 //    [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
+
     [self.myContentView addSubview: self.downloadInfoLabel];
     [self.myContentView addSubview: self.dateLabel];
     [self.myContentView addSubview: self.timeLabel];
     [self.myContentView addSubview: self.titleLabel];
-    //[self.myContentView addSubview: self.downloadButton];
+//    [self.myContentView addSubview: self.downloadButton];
     //[self.myContentView addSubview: self.playButton];
 }
 //-(void)prepareForReuse{

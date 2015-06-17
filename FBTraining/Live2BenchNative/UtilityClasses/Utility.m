@@ -373,7 +373,7 @@
 +(NSString*)removeSubString:(NSString*)substring in:(NSString*)main
 {
     NSMutableString * temp =     [[NSMutableString alloc]initWithString:main];
-    [temp deleteCharactersInRange:[main rangeOfString:substring]];
+    //[temp deleteCharactersInRange:[main rangeOfString:substring]];
     return temp;
 }
 

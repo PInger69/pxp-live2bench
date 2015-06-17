@@ -11,6 +11,7 @@
 #import "SeekButton.h"
 #import "VideoBarContainerView.h"
 #import "BorderButton.h"
+#import "PxpVideoPlayerProtocol.h"
 
 
 
