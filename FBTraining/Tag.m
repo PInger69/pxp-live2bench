@@ -11,7 +11,10 @@
 
 @implementation Tag{
     id tagModifyObserver;
+    NSTimer        * durationTagWarningTimer;
 }
+
+@synthesize type = _type;
 
 -(instancetype) initWithData: (NSDictionary *)tagData event:(Event*)aEvent{
     self = [super init];
@@ -70,10 +73,48 @@
     return self;
 }
 
+
+
+-(void)postDurationTagWarning:(NSTimer *)timer
+{
+    // post notif
+    [durationTagWarningTimer invalidate];
+    durationTagWarningTimer = nil;
+}
+
 #pragma mark - custom setters and getters
 -(NSString *)name{
     return _name;
 }
+
+
+-(void)setType:(TagType)type
+{
+    if (_type == type) return;
+    
+    [self willChangeValueForKey:NSStringFromSelector(@selector(type))];
+
+    _type = type;
+    
+    [self didChangeValueForKey:NSStringFromSelector(@selector(type))];
+    if (_type == TagTypeOpenDuration && !durationTagWarningTimer) {
+        
+        durationTagWarningTimer            = [NSTimer timerWithTimeInterval:(60 * 5.5) target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:durationTagWarningTimer forMode:NSDefaultRunLoopMode];
+        [durationTagWarningTimer fire];
+    } else if (_type == TagTypeCloseDuration && durationTagWarningTimer){
+        // stop timer
+        [durationTagWarningTimer invalidate];
+    }
+}
+
+
+
+
+
+
+
+
 
 -(NSString *)displayTime{
     return _displayTime;
@@ -166,7 +207,7 @@
 -(NSDictionary *) makeTagData{
     return @{
              @"colour"      : self.colour,
-             @"deviceid"    : self.deviceID,
+           //  @"deviceid"    : self.deviceID,
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
              @"event"       : self.event.name,

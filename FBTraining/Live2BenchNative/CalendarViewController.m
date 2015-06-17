@@ -142,10 +142,9 @@
     }
     [temp removeObjectsInArray:liveEvents];
     
-    tableViewController.arrayOfAllData = [temp mutableCopy];
-    calendarViewController.arrayOfAllData = tableViewController.arrayOfAllData;
-    
-    tableViewController.encoderManager = _appDel.encoderManager;
+    tableViewController.arrayOfAllData      = [temp mutableCopy];
+    calendarViewController.arrayOfAllData   = tableViewController.arrayOfAllData;
+    tableViewController.encoderManager      = _appDel.encoderManager;
 }
 
 - (void)goToLatestEvent:(id)sender
@@ -176,16 +175,6 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
-    //    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CALENDAR_DATA object:nil userInfo:@{@"block": ^(NSMutableArray *eventArray){
-    //
-    //        NSMutableArray *notliveEvents = [NSMutableArray array];
-    //        for (NSDictionary *event in eventArray) {
-    //            if (!event[@"live"]) {
-    //                [notliveEvents addObject:event];
-    //            }
-    //        }
-    //    }}];
 }
 
 - (void)didReceiveMemoryWarning
