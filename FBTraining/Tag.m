@@ -9,6 +9,8 @@
 #import "Tag.h"
 #import "Feed.h"
 
+//#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
+
 @implementation Tag{
     id tagModifyObserver;
     NSTimer        * durationTagWarningTimer;
@@ -36,12 +38,19 @@
         self.requestURL      = tagData[@"requrl"];
         self.startTime       = [tagData[@"starttime"] doubleValue];
         self.time            = [tagData[@"time"] doubleValue];
-        self.type            = [tagData[@"type"] intValue];
+        _type                = [tagData[@"type"] intValue];
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
         
 
+        if (_type == TagTypeOpenDuration) {
+            durationTagWarningTimer            = [NSTimer timerWithTimeInterval:(60 * 5.5) target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:YES];
+            [[NSRunLoop mainRunLoop] addTimer:durationTagWarningTimer forMode:NSDefaultRunLoopMode];
+            [durationTagWarningTimer fire];
+        }
+        
+        
         if ([tagData objectForKey: @"url_2"]) {
             NSDictionary *images = [tagData objectForKey: @"url_2"];
             NSArray *keys = [images allKeys];
@@ -81,6 +90,7 @@
     // post notif
     [durationTagWarningTimer invalidate];
     durationTagWarningTimer = nil;
+    PXPLog(@"warning Tag is too long");
 }
 
 #pragma mark - custom setters and getters
@@ -91,21 +101,41 @@
 
 -(void)setType:(TagType)type
 {
-    if (_type == type) return;
+    if (_type == type || type == TagTypeOpenDuration) return; // you can't set a tag to be a duration, it must be init as one
     
     [self willChangeValueForKey:NSStringFromSelector(@selector(type))];
 
     _type = type;
     
     [self didChangeValueForKey:NSStringFromSelector(@selector(type))];
-    if (_type == TagTypeOpenDuration && !durationTagWarningTimer) {
-        
-        durationTagWarningTimer            = [NSTimer timerWithTimeInterval:(60 * 5.5) target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:durationTagWarningTimer forMode:NSDefaultRunLoopMode];
-        [durationTagWarningTimer fire];
-    } else if (_type == TagTypeCloseDuration && durationTagWarningTimer){
-        // stop timer
-        [durationTagWarningTimer invalidate];
+   if (_type == TagTypeCloseDuration && durationTagWarningTimer){
+       
+       id <EncoderProtocol> closingEncoder = self.event.parentEncoder;
+       
+//       MAKE_TAG
+//       MODIFY_TAG
+       
+       
+//       (lldb) po mutableDict
+//       {
+//           colour = 3af20f;
+//           deviceid = "922FB422-01C7-4ADC-92E7-A299263F82B2";
+//           event = live;
+//           id = 7;
+//           name = "COACH%20CALL";
+//           requesttime = "999704.872756";
+//           time = "123.832534";
+//           type = 100;
+//           user = ae1e7198bc3074ff1b2e9ff520c30bc1898d038e;
+//       }
+
+       
+       
+       [closingEncoder issueCommand:MAKE_TAG priority:5 timeoutInSec:5 tagData:[NSMutableDictionary dictionaryWithDictionary:[self makeTagData]] timeStamp:GET_NOW_TIME];
+       
+       
+       [durationTagWarningTimer invalidate];
+       durationTagWarningTimer = nil;
     }
 }
 
@@ -210,8 +240,8 @@
 -(NSDictionary *) makeTagData{
     return @{
              @"colour"      : self.colour,
-             //@"deviceid"    : self.deviceID,
-            @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
+             @"deviceid"    : self.deviceID,
+             @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
              @"event"       : self.event.name,
@@ -219,7 +249,8 @@
              @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
              @"time"        : [NSString stringWithFormat:@"%f", self.time],
              @"user"        : self.user,
-             @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID]
+             @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
+             @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type]
              
              };
 }
