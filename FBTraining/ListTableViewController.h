@@ -1,3 +1,4 @@
+
 //
 //  ListTableViewController.h
 //  Live2BenchNative
@@ -27,6 +28,5 @@
 @property (assign, nonatomic) BOOL isEditable;
 @property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
 
-@property (assign, nonatomic) Tag* currentTag;
 
 @end

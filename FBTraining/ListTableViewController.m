@@ -28,7 +28,7 @@
 
 @implementation ListTableViewController
 
-@synthesize currentTag;
+
 
 -(instancetype)init{
     self = [super init];
@@ -178,7 +178,6 @@
         tag = self.tableData[num];
     }*/
     tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
-    //currentTag = tag;
 
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
@@ -233,10 +232,8 @@
     
     if (firstDownloadCellPath.row < indexPath.row) {
         tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
-        //currentTag = tag;
     }else{
         tag = self.tableData[indexPath.row];
-        //currentTag = tag;
     }
     ListViewCell *cell = (ListViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
     [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
@@ -340,13 +337,10 @@
     
     if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
         tag = self.tableData[firstDownloadCellPath.row -1];
-        currentTag = tag;
     }else if (firstDownloadCellPath.row < indexPath.row) {
         tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
-        currentTag = tag;
     }else{
         tag = self.tableData[indexPath.row];
-        currentTag = tag;
     }
     
     
