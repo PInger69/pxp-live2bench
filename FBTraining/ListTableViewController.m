@@ -24,10 +24,11 @@
 //@property (strong, assign) UIButton *deleteButton;
 
 
-
 @end
 
 @implementation ListTableViewController
+
+@synthesize currentTag;
 
 -(instancetype)init{
     self = [super init];
@@ -58,8 +59,8 @@
         
     
                 self.setOfDeletingCells = [[NSMutableSet alloc] init];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addDeletionCell:) name:@"AddDeletionCell" object:nil];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDeletionCell:) name:@"RemoveDeletionCell" object:nil];
+                //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addDeletionCell:) name:@"AddDeletionCell" object:nil];
+                //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDeletionCell:) name:@"RemoveDeletionCell" object:nil];
         
         self.originalFrame = CGRectMake(568, 768, 370, 0);
         [self.deleteButton setFrame: self.originalFrame];
@@ -177,6 +178,7 @@
         tag = self.tableData[num];
     }*/
     tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
+    //currentTag = tag;
 
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
@@ -217,7 +219,8 @@
         collapsableCell.sendUserInfo = ^(){
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
                                                                                                                                             //@"feed":tag.feeds[key],
-                                                                                                                                            @"feed":tag.name,
+                                                                                                                                            //@"feed":tag.name,
+                                                                                                                                            @"feed":tag.event.feeds[@"s1"],
                                                                                                                                             @"time": [NSString stringWithFormat:@"%f",tag.startTime],
                                                                                                                                             @"duration": [NSString stringWithFormat:@"%d",tag.duration],
                                                                                                                                             @"comment": tag.comment,
@@ -230,8 +233,10 @@
     
     if (firstDownloadCellPath.row < indexPath.row) {
         tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+        //currentTag = tag;
     }else{
         tag = self.tableData[indexPath.row];
+        //currentTag = tag;
     }
     ListViewCell *cell = (ListViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
     [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
@@ -335,11 +340,15 @@
     
     if ([self.arrayOfCollapsableIndexPaths containsObject:indexPath]) {
         tag = self.tableData[firstDownloadCellPath.row -1];
+        currentTag = tag;
     }else if (firstDownloadCellPath.row < indexPath.row) {
         tag = self.tableData[indexPath.row -self.arrayOfCollapsableIndexPaths.count];
+        currentTag = tag;
     }else{
         tag = self.tableData[indexPath.row];
+        currentTag = tag;
     }
+    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
     if (self.setOfDeletingCells.count ) {

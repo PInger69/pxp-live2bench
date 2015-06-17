@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DeletableTableViewController.h"
+#import "Tag.h"
 
 #define BUTTON_HEIGHT   125
 #define POP_WIDTH       200
@@ -26,6 +27,6 @@
 @property (assign, nonatomic) BOOL isEditable;
 @property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
 
-
+@property (assign, nonatomic) Tag* currentTag;
 
 @end

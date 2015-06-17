@@ -37,6 +37,7 @@
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
+        
 
         if ([tagData objectForKey: @"url_2"]) {
             NSDictionary *images = [tagData objectForKey: @"url_2"];
@@ -115,6 +116,8 @@
 -(NSDictionary *)modifiedData{
     return @{ @"coachpick":(self.coachPick?@"1":@"0"),
               @"comment": (self.comment?self.comment:@""),
+              @"duration":[NSString stringWithFormat:@"%i",self.duration],
+              @"starttime":[NSString stringWithFormat:@"%f",self.startTime],
               @"rating": [NSString stringWithFormat:@"%ld", (long)self.rating]
               };
     
@@ -166,7 +169,8 @@
 -(NSDictionary *) makeTagData{
     return @{
              @"colour"      : self.colour,
-             @"deviceid"    : self.deviceID,
+             //@"deviceid"    : self.deviceID,
+            @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
              @"event"       : self.event.name,
