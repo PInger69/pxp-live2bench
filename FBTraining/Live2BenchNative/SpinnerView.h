@@ -15,8 +15,8 @@
 
 
 
-@interface SpinnerView : UIVisualEffectView
-+(SpinnerView *)loadSpinnerIntoView:(UIVisualEffectView  *)superView;
+@interface SpinnerView : UIView
++(SpinnerView *)loadSpinnerIntoView:(UIView  *)superView;
 -(void)removeSpinner;
 
 // NEW

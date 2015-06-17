@@ -11,12 +11,44 @@
 #import "Event.h"
 
 typedef NS_ENUM (NSInteger,TagType){
-    TagTypeNormal   = 0,
-    TagTypeLine     = 2,
-    TagTypeDeleted  = 3,
-    TagTypeTele     = 4,
-    TagTypeStrength = 10
+    TagTypeNormal           = 0,
+    TagTypeLine             = 2,
+    TagTypeDeleted          = 3,
+    TagTypeTele             = 4,
+    TagTypeStrength         = 10,
+    TagTypeOpenDuration     = 99,
+    TagTypeCloseDuration    = 100
+    
 };
+//#default			= 0
+//
+//#deleted			= 3 - this one shouldn't happen on tagSet
+//#telestration 		= 4
+//
+//#start o-line     	= 1 - hockey
+//#stop o-line     	= 2 - hockey
+//#start d-line		= 5 - hockey
+//#stop  d-line		= 6 - hockey
+//#period start		= 7 - hockey
+//#period	stop		= 8 - hockey
+//#opp. o-line start 	= 9 - hockey
+//#opp. o-line stop 	= 10- hockey
+//#opp. d-line start 	= 11- hockey
+//#opp. d-line stop 	= 12- hockey
+//#strength start 	= 13- hockey
+//#strength stop 		= 14- hockey
+//
+//#half start 		= 15- soccer
+//#half stop 			= 16- soccer
+//#zone start 		= 17- soccer
+//#zone stop 			= 18- soccer
+//
+//#down start 		= 19- football
+//#down stop 			= 20- football
+//#quarter start 		= 21- football
+//#quarter stop 		= 22- football
+
+//type 0: normal tag, type 4: tele tag, type 100: duration tag,type 2: offense line shift, type 6: defense line shift, type 16: soccer zone shift
 
 @interface Tag : NSObject<FilterItemProtocol>
 

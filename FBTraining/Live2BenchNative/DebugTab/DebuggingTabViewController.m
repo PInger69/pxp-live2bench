@@ -125,6 +125,18 @@ static void *  debugContext = &debugContext;
 //        Feed * fff =[[Feed alloc]initWithURLString:@"http://192.168.1.154/events/2015-04-21_09-38-18_3dc550ff6dfb7df9cc4668cdcbf8bb779758c36b_local/video/main.mp4" quality:0];
 //    [testPlayer playFeed:fff];
 
+
+
+    UIImageView * img = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"playbackRateButtonBackSelected.png"]];
+    img.frame = CGRectMake(120, 100, 200, 200);
+    [self.view addSubview:img];
+    UIVisualEffectView          * blurEffect;
+    UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    blurEffect = [[UIVisualEffectView alloc]initWithEffect:effect];
+    blurEffect.frame = CGRectMake(100, 100, 200, 200);
+    
+    [self.view addSubview:blurEffect];
+    blurEffect.layer.borderWidth = 1;
 }
 
 

@@ -540,12 +540,12 @@
                                            @"name"          : tagName,
                                           @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                            }];
-    if (isDuration){ // Add extra data for duration Tags
+    //if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
                                                 @"starttime"     : tagTime
                                             };
         [tagData addEntriesFromDictionary:durationData];
-    }
+  //  }
     
     [tagData addEntriesFromDictionary:data];
     
