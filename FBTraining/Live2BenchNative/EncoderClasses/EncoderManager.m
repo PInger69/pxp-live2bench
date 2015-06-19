@@ -551,12 +551,15 @@ static void * statusContext         = &statusContext;
 
 -(void)declareCurrentEvent:(Event*)event
 {
-    self.primaryEncoder = event.parentEncoder;
-    
-    
-    [self.primaryEncoder setEvent:event];
-
-
+    if (event == nil) {
+        self.liveEvent = nil;
+        [self.primaryEncoder setEvent:event];
+        self.primaryEncoder = event.parentEncoder;
+    }
+    else{
+        self.primaryEncoder = event.parentEncoder;
+        [self.primaryEncoder setEvent:event];
+    }
 }
 
 

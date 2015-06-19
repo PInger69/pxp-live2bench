@@ -127,10 +127,14 @@ static LocalEncoder * instance;
                 anEvent.local               = YES;
                 anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                 
-                for (NSDictionary *tagDic in [anEvent.rawData[@"tags"] allValues]) {
+                NSArray *tags    = [anEvent.rawData[@"tags"] allValues];
+                NSMutableArray *newTags = [[NSMutableArray alloc]init];
+                for (NSDictionary *tagDic in tags) {
                     Tag *newTag = [[Tag alloc] initWithData:tagDic event:anEvent];
-                    [anEvent.tags addObject:newTag];
+                    [newTags addObject:newTag];
                 }
+                
+                [anEvent setTags:newTags];
                 
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
                 
@@ -316,7 +320,7 @@ static LocalEncoder * instance;
     newTag.visitTeam                = self.event.teams[@"visitTeam"];
     newTag.synced                   = NO;
 
-    [self.event addTag:newTag extraData:true];
+    [self.event addTag:newTag];
     //[self.event addTag:newTag];
     //[self.event.tags addObject:newTag];
 
@@ -423,7 +427,7 @@ static LocalEncoder * instance;
             [localTag replaceDataWithDictionary: results];
             for (Event *event in [self.allEvents allValues]) {
                 if ([[event.localTags allValues] containsObject: localTag]){
-                    [event addTag:localTag extraData:true];
+                    [event addTag:localTag];
                     //[event addTag:localTag];
                     //[event.tags addObject:localTag];
                     //[event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
@@ -463,7 +467,7 @@ static LocalEncoder * instance;
                 for (NSDictionary *tag in tags) {
                     Tag *newTag = [[Tag alloc]initWithData:tag event:self.event];
                     if (![theEvent.tags containsObject: newTag]) {
-                        [theEvent addTag:newTag extraData:true];
+                        [theEvent addTag:newTag];
                         //[theEvent addTag:newTag];
                         //[theEvent.tags addObject:newTag];
                         //[theEvent.tags addEntriesFromDictionary:@{[NSString stringWithFormat:@"%d", newTag.uniqueID]: newTag}];

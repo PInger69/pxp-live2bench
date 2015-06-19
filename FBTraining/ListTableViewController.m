@@ -15,6 +15,8 @@
 #import "DownloadItem.h"
 #import "RJLVideoPlayer.h"
 
+#import "ListViewFullScreenViewController.h"
+
 @interface ListTableViewController ()
 
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
@@ -328,7 +330,6 @@
     
     return cell;
 }
-
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {

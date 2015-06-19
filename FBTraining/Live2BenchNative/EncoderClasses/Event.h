@@ -49,6 +49,6 @@
 @property (nonatomic, copy) void(^onComplete)();
 
 -(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
--(void)addTag:(Tag *)newtag extraData:(BOOL)notifTost;
+-(void)addTag:(Tag *)newtag;
 -(void)modifyTag:(Tag *)newtag;
 @end

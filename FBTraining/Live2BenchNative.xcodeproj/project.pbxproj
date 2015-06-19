@@ -369,6 +369,7 @@
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */; };
 		D7C903AE17F4B7A0002A1FDD /* continue_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */; };
+		D7C931041B320CB000E725B9 /* ListViewFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C931031B320CB000E725B9 /* ListViewFullScreenViewController.m */; };
 		D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */; };
 		D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7E71AC1C77D00D85095 /* RatingAndCommentingField.m */; };
 		D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7EB1AC1E48500D85095 /* ReusableBottomViewController.m */; };
@@ -970,6 +971,8 @@
 		D7C624E7180EDBF700C2DDD7 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = continue_unselected.png; sourceTree = "<group>"; };
 		D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue_unselected@2x.png"; sourceTree = "<group>"; };
+		D7C931021B320CB000E725B9 /* ListViewFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewFullScreenViewController.h; sourceTree = "<group>"; };
+		D7C931031B320CB000E725B9 /* ListViewFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewFullScreenViewController.m; sourceTree = "<group>"; };
 		D7CCE7DE1ABB78AE00D85095 /* VideoZoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoZoomManager.h; sourceTree = "<group>"; };
 		D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoZoomManager.m; sourceTree = "<group>"; };
 		D7CCE7E61AC1C77D00D85095 /* RatingAndCommentingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatingAndCommentingField.h; sourceTree = "<group>"; };
@@ -1662,6 +1665,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7C931021B320CB000E725B9 /* ListViewFullScreenViewController.h */,
+				D7C931031B320CB000E725B9 /* ListViewFullScreenViewController.m */,
 				D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */,
 				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
 				D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */,
@@ -2525,6 +2530,7 @@
 				D7A188C81A0D2D4F00513909 /* BitRateViewController.m in Sources */,
 				D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */,
 				D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */,
+				D7C931041B320CB000E725B9 /* ListViewFullScreenViewController.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
 				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
 				D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */,

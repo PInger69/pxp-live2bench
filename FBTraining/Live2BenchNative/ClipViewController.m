@@ -139,8 +139,10 @@ static void * encoderTagContext = &encoderTagContext;
     
     for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTagsArray containsObject:tag]) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay insertObject:tag atIndex:0];
+            }
             [self.allTagsArray insertObject:tag atIndex:0];
-            [self.tagsToDisplay insertObject:tag atIndex:0];
         }
         if(tag.modified && [self.allTagsArray containsObject:tag]){
             [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];

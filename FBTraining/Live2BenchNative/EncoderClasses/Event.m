@@ -75,31 +75,19 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
 }
 
--(void)addTag:(Tag *)newtag extraData:(BOOL)notifTost
+-(void)addTag:(Tag *)newtag
 {
-    /*if (![_openDurationTags containsObject:newtag] && newtag ==) {
+    if (![_openDurationTags containsObject:newtag] && newtag.type == TagTypeOpenDuration) {
         [_openDurationTags addObject:newtag];
      }else{
          [_tags addObject:newtag];
          [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
-         if(notifTost){
-             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
+         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
                                                                                                            @"msg":newtag.name,
                                                                                                            @"colour":newtag.colour,
                                                                                                            @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
                                                                                                            }];
-    }*/
-    
-
-    [_tags addObject:newtag];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
-    
-    if(notifTost){
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
-                                                                                                      @"msg":newtag.name,
-                                                                                                      @"colour":newtag.colour,
-                                                                                                      @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
-                                                                                                      }];
+         
     }
 }
 
@@ -108,7 +96,7 @@
     
     if (newtag.type ==  TagTypeDeleted) {
         [_tags removeObject:newtag];
-    }/*else if(![_tags containsObject:newtag] && newtag.type == ){
+    }else if(![_tags containsObject:newtag] && newtag.type == TagTypeCloseDuration){
         Tag * openDurationTagDelete;
         for (Tag *tag in _openDurationTags ) {
             if (tag.ID == newtag.ID) {
@@ -120,7 +108,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{@"msg":newtag.name,@"colour":newtag.colour,@"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]}];
         return;
-    }*/else{
+    }else{
         NSUInteger index = [_tags indexOfObject:newtag];
         [_tags replaceObjectAtIndex:index withObject:newtag];
     }

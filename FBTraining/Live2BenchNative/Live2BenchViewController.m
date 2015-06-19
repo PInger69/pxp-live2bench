@@ -128,12 +128,12 @@ static void * eventContext      = &eventContext;
     }];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
     
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
@@ -202,10 +202,11 @@ static void * eventContext      = &eventContext;
 
 -(void)addEventObserver:(NSNotification*)note
 {
-    if (_observedEncoder)    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    //if (_observedEncoder){
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    //}
     _observedEncoder = (id <EncoderProtocol>) note.object;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
-
 }
 
 -(void)displayLable{
@@ -230,6 +231,9 @@ static void * eventContext      = &eventContext;
 
 -(void)eventChanged:(NSNotification*)note
 {
+    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        _currentEvent = nil;
+    }
     _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
     [self displayLable];
     if (_currentEvent.live) {
@@ -242,9 +246,10 @@ static void * eventContext      = &eventContext;
 -(void)liveEventStopped:(NSNotification *)note
 {
     if (_currentEvent.live) {
-        _currentEvent = nil;
+        //_currentEvent = nil;
+        [_appDel.encoderManager declareCurrentEvent:nil];
     }
-    [self onEventChange];
+    //[self onEventChange];
 }
 
 #pragma mark - Swipe Gesture Recognizer methods

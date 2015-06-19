@@ -184,7 +184,7 @@
 -(void)onTagChanged:(NSNotification *)note{
     
     for (Tag *tag in _currentEvent.tags ) {
-        if (![self.arrayOfAllTags containsObject:tag]) {
+        if (![self.arrayOfAllTags containsObject:tag] && (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration)) {
             [self.arrayOfAllTags insertObject:tag atIndex:0];
         }
     }

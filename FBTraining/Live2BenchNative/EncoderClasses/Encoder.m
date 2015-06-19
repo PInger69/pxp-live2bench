@@ -540,12 +540,12 @@
                                            @"name"          : tagName,
                                           @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                            }];
-    //if (isDuration){ // Add extra data for duration Tags
+    /*if ([data objectForKey:@"type"]){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
                                                 @"starttime"     : tagTime
                                             };
         [tagData addEntriesFromDictionary:durationData];
-  //  }
+    }*/
     
     [tagData addEntriesFromDictionary:data];
     
@@ -1036,6 +1036,8 @@
 #pragma mark -  Master Commands
 -(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
+    [self.encoderManager declareCurrentEvent:nil];
+    
     NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%@",aTimeStamp],@"requesttime", nil];
     
     NSError *error;
@@ -1372,20 +1374,13 @@
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
             if (results){
-                //NSDictionary    * tags = [results objectForKey:@"tags"];
-                //if (tags) {
-                    //NSArray *tagArray = [tags allValues];
-                    //for (NSDictionary *newTagDic in tagArray) {
-                
-                        [self onModifyTags:results];
-                    //}
-                //}
+                [self onModifyTags:results];
             }
         }
         else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])
         {
             if (results){
-                [self onNewTags:results extraData:true];
+                [self onNewTags:results];
             }
         } else if ([type isEqualToString:EVENT_GET_TAGS]){
         
@@ -1424,7 +1419,7 @@
     }
 }
 
--(void)onNewTags:(NSDictionary*)data extraData:(BOOL)notifTost
+-(void)onNewTags:(NSDictionary*)data
 {
     if ([data objectForKey:@"id"]) {
         
@@ -1432,7 +1427,7 @@
             Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
             Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
             if (![checkEvent.tags containsObject:newTag]) {
-                [checkEvent addTag:newTag extraData:notifTost];
+                [checkEvent addTag:newTag];
             }
         }
     }
@@ -1453,7 +1448,7 @@
                 }else if([tag[@"modified"]boolValue]){
                     [self onModifyTags:tag];
                 }else{
-                    [self onNewTags:tag extraData:true];
+                    [self onNewTags:tag];
                 }
                 
             }
