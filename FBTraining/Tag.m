@@ -45,9 +45,10 @@
         
 
         if (_type == TagTypeOpenDuration) {
-            durationTagWarningTimer            = [NSTimer timerWithTimeInterval:(60 * 5.5) target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:YES];
-            [[NSRunLoop mainRunLoop] addTimer:durationTagWarningTimer forMode:NSDefaultRunLoopMode];
-            [durationTagWarningTimer fire];
+            NSTimeInterval waitInterval = (330);
+            durationTagWarningTimer            = [NSTimer scheduledTimerWithTimeInterval:waitInterval target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:NO];
+         //   [[NSRunLoop mainRunLoop] addTimer:durationTagWarningTimer forMode:NSDefaultRunLoopMode];
+           // [durationTagWarningTimer fire];
         }
         
         
@@ -91,6 +92,7 @@
     [durationTagWarningTimer invalidate];
     durationTagWarningTimer = nil;
     PXPLog(@"warning Tag is too long");
+    NSLog(@"warning Tag is too long");
 }
 
 #pragma mark - custom setters and getters
@@ -240,7 +242,7 @@
 -(NSDictionary *) makeTagData{
     return @{
              @"colour"      : self.colour,
-             @"deviceid"    : self.deviceID,
+             @"deviceid"    : (self.deviceID)?self.deviceID:@"",
              @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],

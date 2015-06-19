@@ -5,21 +5,7 @@
 //  Created by dev on 2015-04-17.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
-
-#import <Foundation/Foundation.h>
-#import "FilterItemProtocol.h"
-#import "Event.h"
-
-typedef NS_ENUM (NSInteger,TagType){
-    TagTypeNormal           = 0,
-    TagTypeLine             = 2,
-    TagTypeDeleted          = 3,
-    TagTypeTele             = 4,
-    TagTypeStrength         = 10,
-    TagTypeOpenDuration     = 99,
-    TagTypeCloseDuration    = 100
-    
-};
+// NOTES
 //#default			= 0
 //
 //#deleted			= 3 - this one shouldn't happen on tagSet
@@ -49,6 +35,43 @@ typedef NS_ENUM (NSInteger,TagType){
 //#quarter stop 		= 22- football
 
 //type 0: normal tag, type 4: tele tag, type 100: duration tag,type 2: offense line shift, type 6: defense line shift, type 16: soccer zone shift
+
+
+#import <Foundation/Foundation.h>
+#import "FilterItemProtocol.h"
+#import "Event.h"
+
+typedef NS_ENUM (NSInteger,TagType){
+    TagTypeNormal                  = 0,
+    TagTypeLine                    = 2,
+    TagTypeDeleted                 = 3,
+    TagTypeTele                    = 4,
+    TagTypeStrength                = 10,
+    TagTypeOpenDuration            = 99,
+    TagTypeCloseDuration           = 100,
+    
+    TagTypeHockeyStartOLine        = 1,
+    TagTypeHockeyStopOLine         = 2,
+    TagTypeHockeyStartDLine        = 5,
+    TagTypeHockeyStopDLine         = 6,
+    TagTypeHockeyPeriodStart       = 7,
+    TagTypeHockeyPeriodStop        = 8,
+    TagTypeHockeyOppOLineStart     = 9,
+    TagTypeHockeyOppOLineStop      = 10,
+    TagTypeHockeyOppDLineStart     = 11,
+    TagTypeHockeyOppDLineStop      = 12,
+    TagTypeHockeyStrengthStart     = 13,
+    TagTypeHockeyStrengthStop      = 14,
+    TagTypeSoccerHalfStart         = 15,
+    TagTypeSoccerHalfStop          = 16,
+    TagTypeSoccerZoneStart         = 17,
+    TagTypeSoccerZoneStop          = 18,
+    TagTypeFootballDownStart       = 19,
+    TagTypeFootballDownStop        = 20,
+    TagTypeFootballQuarterStart    = 21,
+    TagTypeFootballQuarterStop     = 22
+    
+};
 
 @interface Tag : NSObject<FilterItemProtocol>
 
