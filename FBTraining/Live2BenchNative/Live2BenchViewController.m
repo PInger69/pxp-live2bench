@@ -133,7 +133,7 @@ static void * eventContext      = &eventContext;
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
-    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
@@ -246,10 +246,10 @@ static void * eventContext      = &eventContext;
 -(void)liveEventStopped:(NSNotification *)note
 {
     if (_currentEvent.live) {
-        //_currentEvent = nil;
         [_appDel.encoderManager declareCurrentEvent:nil];
+    }else{
+        [self onEventChange];
     }
-    //[self onEventChange];
 }
 
 #pragma mark - Swipe Gesture Recognizer methods

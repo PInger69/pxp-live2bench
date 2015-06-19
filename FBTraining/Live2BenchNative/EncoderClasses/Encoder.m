@@ -335,6 +335,7 @@
 }
 
 @synthesize justStarted = _justStarted;
+@synthesize pressingStart = _pressingStart;
 
 @synthesize name = _name;
 @synthesize ipAddress;
@@ -533,32 +534,23 @@
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-                                        @{
-                                           @"event"         : eventNm,
-                                           @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
-                                           @"user"          : [UserCenter getInstance].userHID,
-                                           @"time"          : tagTime,
-                                           @"name"          : tagName,
-                                          @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
-                                           ,@"dtagid": @"123456789"
-                                           }];
-<<<<<<< HEAD
-    /*if ([data objectForKey:@"type"]){ // Add extra data for duration Tags
-=======
+                                     @{
+                                       @"event"         : eventNm,
+                                       @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                       @"user"          : [UserCenter getInstance].userHID,
+                                       @"time"          : tagTime,
+                                       @"name"          : tagName,
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       ,@"dtagid": @"123456789"
+                                       }];
     if (isDuration){ // Add extra data for duration Tags
->>>>>>> 03420c085d08f5e904f7b982d034c56adc4494b0
         NSDictionary *durationData =        @{
-                                                @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
-                                            };
+                                              @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
+                                              };
         [tagData addEntriesFromDictionary:durationData];
-<<<<<<< HEAD
-    }*/
-    
-=======
         
     }
-
->>>>>>> 03420c085d08f5e904f7b982d034c56adc4494b0
+    
     [tagData addEntriesFromDictionary:data];
     
     [self issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
@@ -1048,7 +1040,6 @@
 #pragma mark -  Master Commands
 -(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    [self.encoderManager declareCurrentEvent:nil];
     
     NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%@",aTimeStamp],@"requesttime", nil];
     
@@ -1100,6 +1091,8 @@
     [self buildEncoderRequest];
     
     _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
+    
+    _pressingStart = true;
     
     NSString * homeTeam = [tData objectForKey:@"homeTeam"];
     NSString * awayTeam = [tData objectForKey:@"awayTeam"];
@@ -1459,7 +1452,10 @@
                     [self onModifyTags:tag];
                 }else if([tag[@"modified"]boolValue]){
                     [self onModifyTags:tag];
-                }else{
+                }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
+                    [self onModifyTags:tag];
+                }
+                else{
                     [self onNewTags:tag];
                 }
                 
@@ -1695,7 +1691,7 @@
                         _liveEvent = anEvent;
                         [pool setObject:anEvent forKey:anEvent.name];
                         self.allEvents      = [pool copy];
-                        if (_justStarted && _status == ENCODER_STATUS_LIVE) {
+                        if (/*_justStarted &&*/ _status == ENCODER_STATUS_LIVE) {
                             _justStarted = false;
                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
                         }

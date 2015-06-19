@@ -242,11 +242,8 @@
 -(NSDictionary *) makeTagData{
     return @{
              @"colour"      : self.colour,
-<<<<<<< HEAD
              //@"deviceid"    : self.deviceID,
-=======
              @"deviceid"    : (self.deviceID)?self.deviceID:@"",
->>>>>>> 03420c085d08f5e904f7b982d034c56adc4494b0
              @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
