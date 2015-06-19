@@ -52,8 +52,8 @@
     UIProgressView * proBar;
     UILabel * lbl;
     
-    UIButton * playButton;
-    UIButton * pauseButton;
+    UIButton * openButton;
+    UIButton * closeButton;
     UIButton * stepButton;
     __block DebuggingTabViewController * weakSelf;
 
@@ -111,22 +111,6 @@ static void *  debugContext = &debugContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-}
-
-
-
-
-
--(void)viewWillAppear:(BOOL)animated
-{
-//        testPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
-//    [self .view addSubview:testPlayer.view];
-//        Feed * fff =[[Feed alloc]initWithURLString:@"http://192.168.1.154/events/2015-04-21_09-38-18_3dc550ff6dfb7df9cc4668cdcbf8bb779758c36b_local/video/main.mp4" quality:0];
-//    [testPlayer playFeed:fff];
-
-
-
     UIImageView * img = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"playbackRateButtonBackSelected.png"]];
     img.frame = CGRectMake(120, 100, 200, 200);
     [self.view addSubview:img];
@@ -137,6 +121,56 @@ static void *  debugContext = &debugContext;
     
     [self.view addSubview:blurEffect];
     blurEffect.layer.borderWidth = 1;
+    
+    
+    openButton  = [[UIButton alloc]initWithFrame:CGRectMake(300, 300, 100, 50)];
+    [openButton setTitle:@"open" forState:UIControlStateNormal];
+    [openButton addTarget:self action:@selector(onOpen:) forControlEvents:UIControlEventTouchUpInside];
+    closeButton = [[UIButton alloc]initWithFrame:CGRectMake(430, 300, 100, 50)];
+    [closeButton setTitle:@"close" forState:UIControlStateNormal];
+    [closeButton addTarget:self action:@selector(onClose:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:closeButton];
+    [self.view addSubview:openButton];
+    
+}
+
+-(void)onOpen:(id)sender
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                      @"name":@"PP",
+                                                                                                      @"time":[NSString stringWithFormat:@"%d",100],
+                                                                                                      @"duration":[NSNumber numberWithBool:YES]
+                                                                                                      }];
+}
+
+-(void)onClose:(id)sender
+{
+    
+    Tag * tag;
+    
+
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:nil];
+    
+    
+}
+
+
+-(void)addTarge:(id) sel:(SEL)sel
+{
+
+
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+//        testPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
+//    [self .view addSubview:testPlayer.view];
+//        Feed * fff =[[Feed alloc]initWithURLString:@"http://192.168.1.154/events/2015-04-21_09-38-18_3dc550ff6dfb7df9cc4668cdcbf8bb779758c36b_local/video/main.mp4" quality:0];
+//    [testPlayer playFeed:fff];
+
+
+
+   
 }
 
 

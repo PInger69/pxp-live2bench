@@ -410,7 +410,7 @@
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
@@ -525,6 +525,7 @@
 {
     NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
     BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
+    [data removeObjectForKey:@"duration"];
     
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
@@ -539,14 +540,25 @@
                                            @"time"          : tagTime,
                                            @"name"          : tagName,
                                           @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                           ,@"dtagid": @"123456789"
                                            }];
+<<<<<<< HEAD
     /*if ([data objectForKey:@"type"]){ // Add extra data for duration Tags
+=======
+    if (isDuration){ // Add extra data for duration Tags
+>>>>>>> 03420c085d08f5e904f7b982d034c56adc4494b0
         NSDictionary *durationData =        @{
-                                                @"starttime"     : tagTime
+                                                @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
                                             };
         [tagData addEntriesFromDictionary:durationData];
+<<<<<<< HEAD
     }*/
     
+=======
+        
+    }
+
+>>>>>>> 03420c085d08f5e904f7b982d034c56adc4494b0
     [tagData addEntriesFromDictionary:data];
     
     [self issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];

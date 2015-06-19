@@ -814,6 +814,7 @@ static void * eventContext      = &eventContext;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
                                                                                                       @"name":button.titleLabel.text,
                                                                                                       @"time":[NSString stringWithFormat:@"%f",currentTime]
+                                                                                                      //,@"duration":[NSNumber numberWithBool:YES]
                                                                                                       }];
 }
 
