@@ -335,6 +335,7 @@
 }
 
 @synthesize justStarted = _justStarted;
+@synthesize pressingStart = _pressingStart;
 
 @synthesize name = _name;
 @synthesize ipAddress;
@@ -533,23 +534,23 @@
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-                                        @{
-                                           @"event"         : eventNm,
-                                           @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
-                                           @"user"          : [UserCenter getInstance].userHID,
-                                           @"time"          : tagTime,
-                                           @"name"          : tagName,
-                                          @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
-                                           ,@"dtagid": @"123456789"
-                                           }];
+                                     @{
+                                       @"event"         : eventNm,
+                                       @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                       @"user"          : [UserCenter getInstance].userHID,
+                                       @"time"          : tagTime,
+                                       @"name"          : tagName,
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       ,@"dtagid": @"123456789"
+                                       }];
     if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
-                                                @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
-                                            };
+                                              @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
+                                              };
         [tagData addEntriesFromDictionary:durationData];
         
     }
-
+    
     [tagData addEntriesFromDictionary:data];
     
     [self issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
@@ -1039,6 +1040,7 @@
 #pragma mark -  Master Commands
 -(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
+    
     NSMutableDictionary *summarydict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%@",aTimeStamp],@"requesttime", nil];
     
     NSError *error;
@@ -1089,6 +1091,8 @@
     [self buildEncoderRequest];
     
     _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
+    
+    _pressingStart = true;
     
     NSString * homeTeam = [tData objectForKey:@"homeTeam"];
     NSString * awayTeam = [tData objectForKey:@"awayTeam"];
@@ -1375,20 +1379,13 @@
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
             if (results){
-                //NSDictionary    * tags = [results objectForKey:@"tags"];
-                //if (tags) {
-                    //NSArray *tagArray = [tags allValues];
-                    //for (NSDictionary *newTagDic in tagArray) {
-                
-                        [self onModifyTags:results];
-                    //}
-                //}
+                [self onModifyTags:results];
             }
         }
         else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])
         {
             if (results){
-                [self onNewTags:results extraData:true];
+                [self onNewTags:results];
             }
         } else if ([type isEqualToString:EVENT_GET_TAGS]){
         
@@ -1427,7 +1424,7 @@
     }
 }
 
--(void)onNewTags:(NSDictionary*)data extraData:(BOOL)notifTost
+-(void)onNewTags:(NSDictionary*)data
 {
     if ([data objectForKey:@"id"]) {
         
@@ -1435,7 +1432,7 @@
             Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
             Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
             if (![checkEvent.tags containsObject:newTag]) {
-                [checkEvent addTag:newTag extraData:notifTost];
+                [checkEvent addTag:newTag];
             }
         }
     }
@@ -1455,8 +1452,11 @@
                     [self onModifyTags:tag];
                 }else if([tag[@"modified"]boolValue]){
                     [self onModifyTags:tag];
-                }else{
-                    [self onNewTags:tag extraData:true];
+                }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
+                    [self onModifyTags:tag];
+                }
+                else{
+                    [self onNewTags:tag];
                 }
                 
             }
@@ -1691,7 +1691,7 @@
                         _liveEvent = anEvent;
                         [pool setObject:anEvent forKey:anEvent.name];
                         self.allEvents      = [pool copy];
-                        if (_justStarted && _status == ENCODER_STATUS_LIVE) {
+                        if (/*_justStarted &&*/ _status == ENCODER_STATUS_LIVE) {
                             _justStarted = false;
                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
                         }

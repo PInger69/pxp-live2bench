@@ -34,8 +34,6 @@
 
 @property (nonatomic,strong) NSMutableArray        * downloadedSources; // this is a list of strings of videos that are on the device
 
-//This is for the open duration tags
-@property (nonatomic,strong) NSMutableArray      *openDurationTags;
 
 
 // These need to be cleaned
@@ -49,6 +47,6 @@
 @property (nonatomic, copy) void(^onComplete)();
 
 -(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
--(void)addTag:(Tag *)newtag extraData:(BOOL)notifTost;
+-(void)addTag:(Tag *)newtag;
 -(void)modifyTag:(Tag *)newtag;
 @end

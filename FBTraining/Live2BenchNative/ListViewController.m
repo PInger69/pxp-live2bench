@@ -24,6 +24,7 @@
 
 #import "FullScreenViewController.h"
 #import "Tag.h"
+#import "ListViewFullScreenViewController.h"
 
 
 
@@ -40,7 +41,8 @@
 
 //@property (strong, nonatomic) L2BVideoBarViewController *videoBarViewController;
 @property (strong, nonatomic) UIPinchGestureRecognizer *pinchGesture;
-@property (strong, nonatomic) FullScreenViewController *fullScreenViewController;
+//@property (strong, nonatomic) FullScreenViewController *fullScreenViewController;
+@property (strong, nonatomic) ListViewFullScreenViewController *listViewFullScreenViewController;
 @property (strong, nonatomic) UIButton *filterButton;
 @property (strong, nonatomic) UIButton *dismissFilterButton;
 
@@ -93,7 +95,7 @@ NSMutableArray *oldEventNames;
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
                self.allTags = [[NSMutableArray alloc]init];
@@ -132,12 +134,14 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
             [newVideoControlBar setMode:LISTVIEW_MODE_CLIP];
+            [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_CLIP];
         
             [commentingField clear];
             commentingField.enabled             = YES;
             commentingField.text                = selectedTag.comment;
             commentingField.ratingScale.rating  = selectedTag.rating;
             [newVideoControlBar setTagName: selectedTag.name];
+            [self.listViewFullScreenViewController setTagName:selectedTag.name];
         }];
         
     }
@@ -147,19 +151,22 @@ NSMutableArray *oldEventNames;
 
 -(void)addEventObserver:(NSNotification *)note
 {
-    if (_observedEncoder)    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
     _observedEncoder = (id <EncoderProtocol>) note.object;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
 }
 
 -(void)eventChanged:(NSNotification *)note
 {
-    if (_currentEvent){
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        _currentEvent = nil;
     }
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
     [self clear];
     _currentEvent = [((id <EncoderProtocol>) note.object) event];
+    [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
+    [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_REGULAR];
     [self.videoPlayer playFeed:_currentEvent.feeds[@"s1"]];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
@@ -169,8 +176,10 @@ NSMutableArray *oldEventNames;
     
     for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTags containsObject:tag]) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay insertObject:tag atIndex:0];
+            }
             [self.allTags insertObject:tag atIndex:0];
-            [self.tagsToDisplay insertObject:tag atIndex:0];
         }
         if(tag.modified && [self.allTags containsObject:tag]){
             [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
@@ -264,10 +273,12 @@ NSMutableArray *oldEventNames;
             
             
             if (self.pinchGesture.scale >1) {
-                self.fullScreenViewController.enable = YES;
+                //self.fullScreenViewController.enable = YES;
+                self.listViewFullScreenViewController.enable = YES;
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (self.pinchGesture.scale < 1){
-                self.fullScreenViewController.enable = NO;
+                //self.fullScreenViewController.enable = NO;
+                self.listViewFullScreenViewController.enable = NO;
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
@@ -337,10 +348,23 @@ NSMutableArray *oldEventNames;
     [self.view addSubview:self.videoPlayer.view];
     //[self.view addSubview:self.videoBarViewController.view];
     
-    self.fullScreenViewController = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    /*self.fullScreenViewController = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     self.fullScreenViewController.context = @"ListView Tab";
     //[self.fullScreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
-    [self.view addSubview: self.fullScreenViewController.view];
+    [self.view addSubview: self.fullScreenViewController.view];*/
+    
+    self.listViewFullScreenViewController = [[ListViewFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    self.listViewFullScreenViewController.context = @"ListView Tab";
+    [self.listViewFullScreenViewController.startRangeModifierButton addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [self.listViewFullScreenViewController.endRangeModifierButton addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [self.listViewFullScreenViewController.next addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
+    [self.listViewFullScreenViewController.prev addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview: self.listViewFullScreenViewController.view];
+    if (_currentEvent) {
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_REGULAR];
+    }else{
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
+    }
     
     self.pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer: self.pinchGesture];
@@ -356,6 +380,63 @@ NSMutableArray *oldEventNames;
    //componentFilter = [TestFilterViewController commonFilter];
     
     _tableViewController.tableData = self.tagsToDisplay;
+}
+
+-(void)getNextTag
+{
+    NSUInteger index = [_tableViewController.tableData indexOfObject:selectedTag];
+    
+    if (index == _tableViewController.tableData.count - 1) {
+        return;
+    }
+    
+    NSUInteger newIndex = index + 1;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                   @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                   @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
+                                                                                                                                   @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
+                                                                                                                                   @"comment": selectedTag.comment,
+                                                                                                                                   @"forWhole":selectedTag,
+                                                                                                                                   @"state":[NSNumber numberWithInteger:RJLPS_Play]
+                                                                                                                                   }}];
+    
+    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
+    
+    [commentingField clear];
+    commentingField.text                = selectedTag.comment;
+    commentingField.ratingScale.rating  = selectedTag.rating;
+    [newVideoControlBar setTagName: selectedTag.name];
+    [self.listViewFullScreenViewController setTagName:selectedTag.name];
+}
+
+-(void)getPrevTag
+{
+    NSUInteger index = [_tableViewController.tableData indexOfObject:selectedTag];
+    
+    if (index == 0) {
+        return;
+    }
+    
+    NSUInteger newIndex = index - 1;
+    
+    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                    @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                    @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
+                                                                                                                                    @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
+                                                                                                                                    @"comment": selectedTag.comment,
+                                                                                                                                    @"forWhole":selectedTag,
+                                                                                                                                    @"state":[NSNumber numberWithInteger:RJLPS_Play]
+                                                                                                                                    }}];
+
+    
+    [commentingField clear];
+    commentingField.text                = selectedTag.comment;
+    commentingField.ratingScale.rating  = selectedTag.rating;
+    [newVideoControlBar setTagName: selectedTag.name];
+    [self.listViewFullScreenViewController setTagName:selectedTag.name];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -3683,6 +3764,7 @@ NSMutableArray *oldEventNames;
         [self clear];
         selectedTag = nil;
         [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
         
         [commentingField clear];
         commentingField.enabled             = NO;

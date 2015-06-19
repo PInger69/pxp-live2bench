@@ -225,7 +225,7 @@
             [self _revealThese:@[]];
             break;
         case ListViewModeRegular :
-            [self _revealThese:@[forwardButton,backwardButton,tagLabel,slomoButton]];
+            [self _revealThese:@[forwardButton,backwardButton,slomoButton]];
             break;
         case ListViewModeClip:
             [self _revealThese: @[forwardButton,backwardButton,tagLabel,slomoButton,_startRangeModifierButton,_endRangeModifierButton]];
