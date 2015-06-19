@@ -34,6 +34,9 @@
 
 @property (nonatomic,strong) NSMutableArray        * downloadedSources; // this is a list of strings of videos that are on the device
 
+//This is for the open duration tags
+@property (nonatomic,strong) NSMutableArray      *openDurationTags;
+
 
 // These need to be cleaned
 @property (nonatomic,strong) NSDictionary        * teams;

@@ -31,6 +31,7 @@
 @synthesize downloadedSources       = _downloadedSources;
 @synthesize parentEncoder           = _parentEncoder;
 @synthesize isBuilt                 = _isBuilt;
+@synthesize openDurationTags        = _openDurationTags;
 
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
@@ -52,6 +53,7 @@
         _downloadedSources  = [NSMutableArray array];
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
         _tags               = [self buildTags:_rawData];
+        _openDurationTags   = [NSMutableArray array];
 
         _teams              = [[NSMutableDictionary alloc]init];
         if ([_rawData objectForKey:@"homeTeam"]) [_teams setValue:[_rawData objectForKey:@"homeTeam"] forKey:@"homeTeam"];
@@ -75,9 +77,22 @@
 
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifTost
 {
+    /*if (![_openDurationTags containsObject:newtag] && newtag ==) {
+        [_openDurationTags addObject:newtag];
+     }else{
+         [_tags addObject:newtag];
+         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+         if(notifTost){
+             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
+                                                                                                           @"msg":newtag.name,
+                                                                                                           @"colour":newtag.colour,
+                                                                                                           @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
+                                                                                                           }];
+    }*/
+    
+
     [_tags addObject:newtag];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self userInfo:@{@"tag":newtag}];
     
     if(notifTost){
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
@@ -90,9 +105,22 @@
 
 -(void)modifyTag:(Tag *)newtag
 {
+    
     if (newtag.type ==  TagTypeDeleted) {
         [_tags removeObject:newtag];
-    }else{
+    }/*else if(![_tags containsObject:newtag] && newtag.type == ){
+        Tag * openDurationTagDelete;
+        for (Tag *tag in _openDurationTags ) {
+            if (tag.ID == newtag.ID) {
+                openDurationTagDelete = tag;
+            }
+        }
+        [_tags addObject:newtag];
+        [_openDurationTags removeObject:openDurationTagDelete];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{@"msg":newtag.name,@"colour":newtag.colour,@"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]}];
+        return;
+    }*/else{
         NSUInteger index = [_tags indexOfObject:newtag];
         [_tags replaceObjectAtIndex:index withObject:newtag];
     }

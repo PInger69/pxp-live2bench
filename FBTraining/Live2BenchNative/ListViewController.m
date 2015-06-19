@@ -122,6 +122,12 @@ NSMutableArray *oldEventNames;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         
+        self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
+        //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
+        self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
+        //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+
+         [self.view addSubview:self.videoPlayer.view];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -154,6 +160,7 @@ NSMutableArray *oldEventNames;
     }
     [self clear];
     _currentEvent = [((id <EncoderProtocol>) note.object) event];
+    [self.videoPlayer playFeed:_currentEvent.feeds[@"s1"]];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
 }
@@ -2714,38 +2721,42 @@ NSMutableArray *oldEventNames;
 
 //extend the tag duration by adding five secs at the end of the tag
 -(void)endRangeBeenModified:(CustomButton*)button{
-    //    if (!currentPlayingTag || [[currentPlayingTag objectForKey:@"type"]intValue] == 4){
-    //
-    //        return;
-    //    }
-    //
-    //    //int newDuration = [[currentPlayingTag objectForKey:@"duration"]integerValue] + 5;
-    //    int newDuration = 0;
-    //    float startTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue];
-    //    float endTime = startTime + [[currentPlayingTag objectForKey:@"duration"]floatValue];
-    //    if ([button.accessibilityValue isEqualToString:@"extend"]) {
-    //        //increase end time by 5 seconds
-    //        endTime = endTime + 5;
-    //        //if new end time is greater the duration of video, set it to the video's duration
-    //        if (endTime > self.videoPlayer.durationInSeconds) {
-    //            endTime = self.videoPlayer.duration;
-    //        }
-    //
-    //    }else{
-    //        //subtract end time by 5 seconds
-    //        endTime = endTime - 5;
-    //        //if the new end time is smaller than the start time,it will cause a problem for tag looping. So set it to start time plus one.
-    //        if (endTime < startTime) {
-    //            endTime = startTime + 1;
-    //        }
-    //
-    //    }
-    //    //get the new duration
-    //    newDuration = endTime - startTime;
-    //
-    //    NSString *duration = [NSString stringWithFormat:@"%d",newDuration];
-    //    [currentPlayingTag setValue:duration forKey:@"duration"];
-    //
+    Tag *tagToBeModified = selectedTag;
+        if (!selectedTag || selectedTag.type == TagTypeDeleted)
+        {
+            return;
+        }
+
+
+    int newDuration = tagToBeModified.duration + 5;
+
+    float startTime = tagToBeModified.startTime;
+    
+    float endTime = startTime + tagToBeModified.duration;
+ 
+    if ([button.accessibilityValue isEqualToString:@"extend"]) {
+           //increase end time by 5 seconds
+            endTime = endTime + 5;
+            //if new end time is greater the duration of video, set it to the video's duration
+            if (endTime > [self.videoPlayer durationInSeconds]) {
+                endTime = [self.videoPlayer durationInSeconds];
+            }
+    
+        }else{
+            //subtract end time by 5 seconds
+            endTime = endTime - 5;
+            //if the new end time is smaller than the start time,it will cause a problem for tag looping. So set it to start time plus one.
+            if (endTime < startTime) {
+                endTime = startTime + 1;
+            }
+    
+        }
+        //get the new duration
+        newDuration = endTime - startTime;
+    
+    tagToBeModified.duration = newDuration;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    
     //    //handle offline mode, save comment information in local storage
     //    [globals.CURRENT_EVENT_THUMBNAILS setObject:currentPlayingTag forKey:[NSString stringWithFormat:@"%@",[currentPlayingTag objectForKey:@"id"]]];
     //
