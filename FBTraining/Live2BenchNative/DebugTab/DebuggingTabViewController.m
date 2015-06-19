@@ -138,7 +138,7 @@ static void *  debugContext = &debugContext;
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
                                                                                                       @"name":@"PP",
-                                                                                                      @"time":[NSString stringWithFormat:@"%d",100],
+                                                                                                      @"time":[NSString stringWithFormat:@"%d",10],
                                                                                                       @"duration":[NSNumber numberWithBool:YES]
                                                                                                       }];
 }
@@ -147,8 +147,10 @@ static void *  debugContext = &debugContext;
 {
     
     Tag * tag;
+    NSLog(@"");
+    tag.type = TagTypeCloseDuration;
+    tag.time = 60;
     
-
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:nil];
     
     

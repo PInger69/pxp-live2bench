@@ -103,6 +103,13 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (strong, nonatomic) NSDictionary  *feeds;
 //@property (strong, nonatomic) NSString *requestTime;
 
+
+
++(void)clearDurationTags;
++(NSInteger)makeDurationID;
+
+
+
 -(instancetype) initWithData: (NSDictionary *)tagData event:(Event*)aEvent;
 -(NSDictionary *) tagDictionary;
 -(NSDictionary *) modifiedData;

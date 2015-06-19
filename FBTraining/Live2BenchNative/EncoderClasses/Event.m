@@ -106,6 +106,15 @@
 -(void)modifyTag:(Tag *)newtag
 {
     
+    // This needs to close a tag
+    if (newtag.type ==  TagTypeCloseDuration) {
+        // get tag by durationID
+        
+        
+//        take mod  time and minus org time and that will be the duration
+//        the mod the tag by that
+    }
+    
     if (newtag.type ==  TagTypeDeleted) {
         [_tags removeObject:newtag];
     }/*else if(![_tags containsObject:newtag] && newtag.type == ){
