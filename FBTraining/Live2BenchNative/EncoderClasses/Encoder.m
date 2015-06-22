@@ -1396,8 +1396,16 @@
                 [self onNewTags:results];
             }
         } else if ([type isEqualToString:EVENT_GET_TAGS]){
-        
-            NSDictionary    * rawtags = [results objectForKey:@"tags"];
+            NSDictionary    * rawTags = [results objectForKey:@"tags"];
+            if (rawTags) {
+                NSArray *rawTagsArray = [rawTags allValues];
+                NSDictionary *firstTag = [rawTagsArray firstObject];
+                Event * checkEvent = [self.allEvents objectForKey:firstTag[@"event"]];
+                [checkEvent addAllTags:rawTags];
+            }
+            
+            
+            /*NSDictionary    * rawtags = [results objectForKey:@"tags"];
             NSMutableArray  * polishedTags = [[NSMutableArray alloc]init];
             if (rawtags) {
                 NSArray *tagArray = [rawtags allValues];
@@ -1411,7 +1419,7 @@
                 }
                 checkEvent.tags = polishedTags;
                 checkEvent.isBuilt = YES;
-            }
+            }*/
     
         }
         
@@ -1425,6 +1433,12 @@
     if ([data objectForKey:@"id"]) {
         
         if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
+            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
+            [checkEvent modifyTag:data];
+        }
+            
+        
+        /*if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
             Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]]; // get event by name
             NSArray * eventTags = [checkEvent.tags copy];
             
@@ -1452,7 +1466,7 @@
             
 
             [checkEvent modifyTag:tagToBeModded];
-        }
+        }*/
     }
 }
 
