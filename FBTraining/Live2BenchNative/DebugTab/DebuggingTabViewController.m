@@ -152,11 +152,12 @@ static void *  debugContext = &debugContext;
     
     Tag * tag;
     NSLog(@"");
-    tag.type = TagTypeCloseDuration;
+   // tag.type = TagTypeCloseDuration;
 //    tag.time = 60;
     
     NSMutableDictionary * dick = [[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]];
     [dick setObject:@60 forKey:@"time"];
+    [dick setObject:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:dick];
     
     

@@ -1437,11 +1437,11 @@
             NSArray *filteredArray = [eventTags filteredArrayUsingPredicate:pred];
             Tag *tagToBeModded = [filteredArray firstObject];
             
-            if ( ((TagType)[data[@"type"]integerValue]) == TagTypeCloseDuration) {
+            if ( ((TagType)[data[@"type"]integerValue]) == TagTypeOpenDuration) {
                 NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:data];
                 double openTime                 = tagToBeModded.time;
                 double closeTime                = [dictToChange[@"time"]doubleValue];
-                dictToChange[@"duration"]       = [NSNumber numberWithDouble:(openTime - closeTime)];
+                dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime - openTime )];
                 dictToChange[@"time"]           = [NSNumber numberWithDouble:openTime];
                 
                 [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
