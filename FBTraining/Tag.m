@@ -303,7 +303,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     self.deviceID    = tagData[@"deviceid"];
     self.displayTime = tagData[@"displaytime"];
     self.duration    = [tagData[@"duration"]intValue];
-    self.event       = tagData[@"event"];
+//    self.event       = tagData[@"event"];
     self.homeTeam    = tagData[@"homeTeam"];
     self.visitTeam   = tagData[@"visitTeam"];
     self.uniqueID    = [tagData[@"id"] intValue];
