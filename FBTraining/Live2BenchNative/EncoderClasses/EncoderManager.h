@@ -80,7 +80,6 @@
 
 -(void)declareCurrentEvent:(Event*)event;
 
-
 -(void)makeFakeEncoder;
 #pragma mark - Commands Methods
 

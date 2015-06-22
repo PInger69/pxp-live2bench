@@ -1503,9 +1503,14 @@
             self.isBuild = false; // This is so the encoder manager rebuilds it once
         } else if (self.status == ENCODER_STATUS_STOP ||self.status == ENCODER_STATUS_READY) {
             if (self.liveEvent == self.event) {
-                [self stopResponce:nil];
-                self.liveEvent = nil;
-            }
+                //[self stopResponce:nil];
+                //self.liveEvent = nil;
+                [self.encoderManager declareCurrentEvent:nil];
+            };
+            self.liveEvent = nil;
+            self.encoderManager.liveEvent = nil;
+            self.encoderManager.liveEventName = nil;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
         }
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];
@@ -1625,7 +1630,7 @@
 
 -(void)stopResponce:(NSData *)data
 {
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
+    
     PXPLog(@"!!!Event Stopped on %@",self.name);
 }
 
