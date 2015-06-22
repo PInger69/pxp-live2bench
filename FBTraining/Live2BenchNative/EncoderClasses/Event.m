@@ -79,7 +79,7 @@
     
     if (newtag.type != TagTypeOpenDuration ) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:self   userInfo:@{
                                                                                                       @"msg":newtag.name,
                                                                                                       @"colour":newtag.colour,
                                                                                                       @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]

@@ -246,7 +246,6 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live) {
         [self gotLiveEvent];
     }
-
     [self onEventChange];
 }
 

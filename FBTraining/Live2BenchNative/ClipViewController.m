@@ -124,11 +124,10 @@ static void * encoderTagContext = &encoderTagContext;
     
     if (note.object == nil) {
         _observedEncoder = nil;
-        return;
+    }else{
+        _observedEncoder = (id <EncoderProtocol>) note.object;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
     }
-    
-    _observedEncoder = (id <EncoderProtocol>) note.object;
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
 }
 
 -(void)eventChanged:(NSNotification *)note
@@ -141,12 +140,11 @@ static void * encoderTagContext = &encoderTagContext;
 
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
-        return;
+    }else{
+        _currentEvent = [((id <EncoderProtocol>) note.object) event];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
     }
-    
-    _currentEvent = [((id <EncoderProtocol>) note.object) event];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -808,10 +806,10 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
-    if (_currentEvent.live) {
-         _currentEvent = nil;
+    //if (_currentEvent.live) {
+         //_currentEvent = nil;
         [self clear];
-    }
+    //}
 }
 
 - (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {

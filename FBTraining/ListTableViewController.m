@@ -218,6 +218,7 @@
 
         
         collapsableCell.sendUserInfo = ^(){
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
                                                                                                                                             //@"feed":tag.feeds[key],
                                                                                                                                             //@"feed":tag.name,
