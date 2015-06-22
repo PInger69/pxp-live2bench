@@ -11,12 +11,35 @@
 
 //#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 
+
+
+static NSMutableDictionary * openDurationTagsWithID;
+
 @implementation Tag{
     id tagModifyObserver;
     NSTimer        * durationTagWarningTimer;
 }
 
 @synthesize type = _type;
+
+
++ (void)initialize {
+    if (self == [Tag self]) {
+        openDurationTagsWithID = [[NSMutableDictionary alloc]init];
+    }
+}
+
++(void)clearDurationTags
+{
+    [openDurationTagsWithID removeAllObjects];
+}
+
++(NSInteger)makeDurationID
+{
+    return 0;
+}
+
+
 
 -(instancetype) initWithData: (NSDictionary *)tagData event:(Event*)aEvent{
     self = [super init];
@@ -187,14 +210,30 @@
 }
 
 -(NSDictionary *)modifiedData{
-    return @{ @"coachpick":(self.coachPick?@"1":@"0"),
-              @"comment": (self.comment?self.comment:@""),
-              @"duration":[NSString stringWithFormat:@"%i",self.duration],
-              @"starttime":[NSString stringWithFormat:@"%f",self.startTime],
-              @"rating": [NSString stringWithFormat:@"%ld", (long)self.rating]
-              };
+    
+    NSDictionary * output = @{ @"coachpick":(self.coachPick?@"1":@"0"),
+                               @"comment": (self.comment?self.comment:@""),
+                               @"duration":[NSString stringWithFormat:@"%i",self.duration],
+                               @"starttime":[NSString stringWithFormat:@"%f",self.startTime],
+                               @"rating": [NSString stringWithFormat:@"%ld", (long)self.rating],
+                               @"type":  [NSNumber numberWithInteger:self.type],
+                               @"time":  [NSNumber numberWithInteger:self.time]
+                               };
+    
+    
+    
+    return output;
     
 }
+
+
+-(void)modifyTagWithDict:(NSDictionary*)dict
+{
+
+
+
+}
+
 
 -(NSDictionary *)tagDictionary{
     NSMutableDictionary *tagDict = [NSMutableDictionary dictionary];
@@ -305,7 +344,7 @@
 }
 
 -(NSString *)description{
-    return [NSString stringWithFormat:@"name: %@, displayTime: %@, thumbnails: %@  feeds: %@", self.name, self.displayTime, self.thumbnails, self.feeds];
+    return [NSString stringWithFormat:@"name: %@, type: %@,displayTime: %@, thumbnails: %@  feeds: %@", self.name,[NSString stringWithFormat:@"%ld",(long)self.type],self.displayTime, self.thumbnails, self.feeds];
 }
 
 -(void)dealloc{
