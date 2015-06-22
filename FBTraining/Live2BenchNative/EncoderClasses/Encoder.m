@@ -584,37 +584,45 @@
 
 -(void)onModTag:(NSNotification *)note
 {
-     Tag *tagToModify = note.object;
     
-     //NSString *tagName = tagToModify.name;// just to make sure they are added
+    NSMutableDictionary * dict;
     
-    /*NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
-                                 tagToModify.event,@"event",
-                                 [NSString stringWithFormat:@"%f", CACurrentMediaTime()],
-                                 @"requesttime", [UserCenter getInstance].userHID,
-                                 @"user", tagToModify.ID
-                                 ];
-                                 //@"name", tagName,
-                                 //@"id", nil];*/
+    if (!note.object && note.userInfo) {
+        
+        dict = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+        
+         ///@"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
+        
+        
+//        if (tagToModify.isLive) {
+//            [dict setObject:LIVE_EVENT forKey:@"event"];
+//        }
     
-    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
-                                  @{
-                                    @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
-                                    @"id"            : tagToModify.ID,
-                                    @"requesttime"   : GET_NOW_TIME_STRING,
-                                    @"name"          : tagToModify.name,
-                                    @"user"          : tagToModify.user
-                                    }];
+    } else {
+        Tag *tagToModify = note.object;
+        dict = [NSMutableDictionary dictionaryWithDictionary:
+                @{
+                  @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
+                  @"id"            : tagToModify.ID,
+                  @"requesttime"   : GET_NOW_TIME_STRING,
+                  @"name"          : tagToModify.name,
+                  @"user"          : tagToModify.user
+                  }];
+        
+        
+        [dict addEntriesFromDictionary: [tagToModify modifiedData]];
+        
+        if (tagToModify.isLive) {
+            [dict setObject:LIVE_EVENT forKey:@"event"];
+        }
+    }
+    
+    
+    
 
     
-                [dict addEntriesFromDictionary: [tagToModify modifiedData]];
-    
-                if (tagToModify.isLive) {
-                    [dict setObject:LIVE_EVENT forKey:@"event"];
-                }
-    
 
-               [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+    [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 }
 
 -(void)onDeleteTag:(NSNotification *)note
@@ -1417,9 +1425,29 @@
     if ([data objectForKey:@"id"]) {
         
         if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
-            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
-            Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
-            [checkEvent modifyTag:newTag];
+            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]]; // get event by name
+            NSArray * eventTags = [checkEvent.tags copy];
+            
+            NSInteger tagId = [[data objectForKey:@"id"]integerValue];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uniqueID == %d", tagId];
+            NSArray *filteredArray = [eventTags filteredArrayUsingPredicate:predicate];
+            Tag *tagToBeModded = [filteredArray firstObject];
+            
+            if ( ((TagType)[data[@"type"]integerValue]) == TagTypeCloseDuration) {
+                NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:data];
+                double openTime                 = tagToBeModded.time;
+                double closeTime                = [dictToChange[@"time"]doubleValue];
+                dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime - openTime)];
+                dictToChange[@"time"]           = [NSNumber numberWithDouble:openTime];
+                
+                [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
+            } else {
+                [tagToBeModded replaceDataWithDictionary:data];
+            
+            }
+            
+
+            [checkEvent modifyTag:tagToBeModded];
         }
     }
 }

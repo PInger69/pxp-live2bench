@@ -129,6 +129,12 @@
 
 -(void)onModTag:(NSNotification*)note
 {
+    if (!note.object){
+    
+    } else {
+    
+    }
+    
     Tag *tagToModify            = note.object;
     NSMutableDictionary *dict   = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                             @"event":tagToModify.event,

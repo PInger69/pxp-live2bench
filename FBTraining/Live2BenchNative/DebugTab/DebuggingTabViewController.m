@@ -151,7 +151,9 @@ static void *  debugContext = &debugContext;
     tag.type = TagTypeCloseDuration;
     tag.time = 60;
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:nil];
+    NSMutableDictionary * dick = [[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:dick];
     
     
 }
