@@ -299,7 +299,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 -(void) replaceDataWithDictionary: (NSDictionary *) tagData{
     self.colour      = tagData[@"colour"];
-    self.comment     = tagData[@"comment"];
+    _comment     = tagData[@"comment"];
     self.deviceID    = tagData[@"deviceid"];
     self.displayTime = tagData[@"displaytime"];
     self.duration    = [tagData[@"duration"]intValue];
@@ -310,7 +310,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     self.isLive      = tagData[@"islive"];
     self.name        = tagData[@"name"];
     self.own         = [tagData[@"own"] boolValue];
-    self.rating      = tagData[@"rating"];
+    _rating      = tagData[@"rating"];
     self.requestURL  = tagData[@"requrl"];
     self.startTime   = [tagData[@"starttime"] doubleValue];
     self.time        = [tagData[@"time"] doubleValue];
