@@ -214,7 +214,15 @@
     return [tempDict copy];
 }
 
-
+-(NSArray*)getTagsByID:(NSString*)tagId
+{
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {        
+        Tag * obj = evaluatedObject;
+        return [obj.name isEqualToString:tagId];
+    }];
+    
+    return [self.tags filteredArrayUsingPredicate:pred];
+}
 
 /**
  *  This makes the feeds from the data and returns the a dict based of the feeds labeled by scource name as key
