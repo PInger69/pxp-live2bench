@@ -49,4 +49,5 @@
 -(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
 -(void)addTag:(Tag *)newtag;
 -(void)modifyTag:(Tag *)newtag;
+-(NSArray*)getTagsByID:(NSString*)tagId;
 @end

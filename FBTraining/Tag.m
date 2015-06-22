@@ -298,24 +298,24 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 -(void) replaceDataWithDictionary: (NSDictionary *) tagData{
-    self.colour      = tagData[@"colour"];
-    _comment     = tagData[@"comment"];
-    self.deviceID    = tagData[@"deviceid"];
-    self.displayTime = tagData[@"displaytime"];
-    self.duration    = [tagData[@"duration"]intValue];
+    _colour      = tagData[@"colour"];
+    _comment        = tagData[@"comment"];
+    _deviceID    = tagData[@"deviceid"];
+    _displayTime = tagData[@"displaytime"];
+    _duration    = [tagData[@"duration"]intValue];
 //    self.event       = tagData[@"event"];
-    self.homeTeam    = tagData[@"homeTeam"];
-    self.visitTeam   = tagData[@"visitTeam"];
-    self.uniqueID    = [tagData[@"id"] intValue];
-    self.isLive      = tagData[@"islive"];
-    self.name        = tagData[@"name"];
-    self.own         = [tagData[@"own"] boolValue];
+    _homeTeam    = tagData[@"homeTeam"];
+    _visitTeam   = tagData[@"visitTeam"];
+    _uniqueID    = [tagData[@"id"] intValue];
+    _isLive      = tagData[@"islive"];
+    _name        = tagData[@"name"];
+    _own         = [tagData[@"own"] boolValue];
     _rating      = tagData[@"rating"];
-    self.requestURL  = tagData[@"requrl"];
-    self.startTime   = [tagData[@"starttime"] doubleValue];
-    self.time        = [tagData[@"time"] doubleValue];
-    self.type        = [tagData[@"type"] intValue];
-    self.user        = tagData[@"user"];
+    _requestURL  = tagData[@"requrl"];
+    _startTime   = [tagData[@"starttime"] doubleValue];
+    _time        = [tagData[@"time"] doubleValue];
+    _type        = [tagData[@"type"] intValue];
+    _user        = tagData[@"user"];
     //self.requestTime = tagData [@"requettime"];
     if ([tagData objectForKey: @"url_2"]) {
         NSDictionary *images = [tagData objectForKey: @"url_2"];

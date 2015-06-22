@@ -1428,16 +1428,20 @@
             Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]]; // get event by name
             NSArray * eventTags = [checkEvent.tags copy];
             
-            NSInteger tagId = [[data objectForKey:@"id"]integerValue];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uniqueID == %d", tagId];
-            NSArray *filteredArray = [eventTags filteredArrayUsingPredicate:predicate];
+            NSString * tagId = [[data objectForKey:@"id"]stringValue];// [NSString stringWithFormat:@"%ld",[[data objectForKey:@"id"]integerValue] ];
+            NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                Tag * obj = evaluatedObject;
+                return [obj.ID isEqualToString:tagId];
+            }];
+            
+            NSArray *filteredArray = [eventTags filteredArrayUsingPredicate:pred];
             Tag *tagToBeModded = [filteredArray firstObject];
             
             if ( ((TagType)[data[@"type"]integerValue]) == TagTypeCloseDuration) {
                 NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:data];
                 double openTime                 = tagToBeModded.time;
                 double closeTime                = [dictToChange[@"time"]doubleValue];
-                dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime - openTime)];
+                dictToChange[@"duration"]       = [NSNumber numberWithDouble:(openTime - closeTime)];
                 dictToChange[@"time"]           = [NSNumber numberWithDouble:openTime];
                 
                 [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];

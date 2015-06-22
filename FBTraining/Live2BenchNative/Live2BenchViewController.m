@@ -236,11 +236,12 @@ static void * eventContext      = &eventContext;
 {
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
-    }else {
-        _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
-        [_videoBarViewController onEventChanged:_currentEvent];
-    }
 
+    } else {
+        _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+
+    }
+        [_videoBarViewController onEventChanged:_currentEvent];
     [self displayLable];
     if (_currentEvent.live) {
         [self gotLiveEvent];
