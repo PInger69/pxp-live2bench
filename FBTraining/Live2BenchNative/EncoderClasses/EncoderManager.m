@@ -349,14 +349,14 @@
         __block EncoderManager * weakSelf = self;
         
         
-        _liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
+       /* _liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             // if the current playing event is the live event and its stopped then we have to make it no Event at all
             if ([weakSelf.currentEvent isEqualToString:weakSelf.liveEventName]){
                 weakSelf.currentEvent   = nil; // Depricated
                 weakSelf.liveEventName  = nil; // Depricated
                 weakSelf.liveEvent      = nil;
             }
-        }];
+        }];*/
         
         _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
             
@@ -553,9 +553,13 @@ static void * statusContext         = &statusContext;
 -(void)declareCurrentEvent:(Event*)event
 {
     if (event == nil) {
-        self.liveEvent = nil;
-        [self.primaryEncoder setEvent:event];
-        self.primaryEncoder = event.parentEncoder;
+        
+        if ([[self.primaryEncoder event].name isEqualToString:self.liveEventName]) {
+            self.liveEvent = nil;
+        }
+
+        [self.primaryEncoder setEvent:nil];
+        self.primaryEncoder = nil;
     }
     else{
         self.primaryEncoder = event.parentEncoder;

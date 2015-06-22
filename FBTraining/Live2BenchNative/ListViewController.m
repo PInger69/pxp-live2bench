@@ -152,18 +152,30 @@ NSMutableArray *oldEventNames;
 -(void)addEventObserver:(NSNotification *)note
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    
+    if (note.object == nil) {
+        _observedEncoder = nil;
+        return;
+    }
+    
     _observedEncoder = (id <EncoderProtocol>) note.object;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
 }
 
 -(void)eventChanged:(NSNotification *)note
 {
-    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
-        _currentEvent = nil;
-    }
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
     [self clear];
+    
+    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        _currentEvent = nil;
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
+        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
+        [self.videoPlayer playFeed:nil];
+        return;
+    }
+
     _currentEvent = [((id <EncoderProtocol>) note.object) event];
     [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
     [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_REGULAR];
