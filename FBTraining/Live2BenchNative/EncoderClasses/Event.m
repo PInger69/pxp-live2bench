@@ -67,9 +67,14 @@
     return self;
 }
 
--(void)setTags:(NSMutableArray *)tags
+-(void)addAllTags:(NSDictionary *)allTagData
 {
-    _tags = tags;
+     NSArray *tagArray = [allTagData allValues];
+     for (NSDictionary *newTagDic in tagArray) {
+         Tag *newTag = [[Tag alloc] initWithData: newTagDic event:self];
+         [_tags addObject:newTag];
+     }
+     self.isBuilt = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
 }
 
@@ -87,27 +92,34 @@
     }
 }
 
--(void)modifyTag:(Tag *)newtag
+-(void)modifyTag:(NSDictionary *)modifiedData
 {
-    
-    // This needs to close a tag
-    if (newtag.type ==  TagTypeCloseDuration) {
-        // get tag by durationID
+    NSString * tagId = [[modifiedData objectForKey:@"id"]stringValue];// [NSString stringWithFormat:@"%ld",[[data objectForKey:@"id"]integerValue] ];
+        NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            Tag * obj = evaluatedObject;
+            return [obj.ID isEqualToString:tagId];
+        }];
         
+        NSArray *filteredArray = [_tags filteredArrayUsingPredicate:pred];
+        Tag *tagToBeModded = [filteredArray firstObject];
         
-//        take mod  time and minus org time and that will be the duration
-//        the mod the tag by that
-    }
-    
-    if (newtag.type ==  TagTypeDeleted) {
-        [_tags removeObject:newtag];
-    }else{
-        NSUInteger index = [_tags indexOfObject:newtag];
-        [_tags replaceObjectAtIndex:index withObject:newtag];
-    }
+        if ( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeCloseDuration && tagToBeModded.type == TagTypeOpenDuration) {
+            NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:modifiedData];
+            double openTime                 = tagToBeModded.time;
+            double closeTime                = [dictToChange[@"time"]doubleValue];
+            dictToChange[@"duration"]       = [NSNumber numberWithDouble:(openTime - closeTime)];
+            dictToChange[@"time"]           = [NSNumber numberWithDouble:openTime];
+            
+            [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
+        }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){
+            [_tags removeObject:tagToBeModded];
+            
+        }else {
+            [tagToBeModded replaceDataWithDictionary:modifiedData];
+        }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:self];
-    newtag.modified = false;
+    tagToBeModded.modified = false;
 }
 
 -(NSDictionary*)rawData

@@ -158,8 +158,9 @@ static void * encoderTagContext = &encoderTagContext;
         }
         if(tag.modified && [self.allTagsArray containsObject:tag]){
             [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
-            [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            //tag.modified = false;
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            }
         }
     }
     

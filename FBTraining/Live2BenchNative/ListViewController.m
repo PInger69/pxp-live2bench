@@ -198,7 +198,9 @@ NSMutableArray *oldEventNames;
         }
         if(tag.modified && [self.allTags containsObject:tag]){
             [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
-            [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            }
         }
     }
     
