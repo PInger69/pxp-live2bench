@@ -818,15 +818,33 @@ static void * eventContext      = &eventContext;
  */
 -(void)tagButtonSelected:(id)sender
 {
-    CustomButton *button = (CustomButton*)sender;
+    SideTagButton *button = (SideTagButton*)sender;
     
     float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+    /*[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
                                                                                                       @"name":button.titleLabel.text,
                                                                                                       @"time":[NSString stringWithFormat:@"%f",currentTime]
                                                                                                       //,@"duration":[NSNumber numberWithBool:YES]
-                                                                                                      }];
+                                                                                                      }];*/
+
+    
+    if (!button.isON) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                          @"name":button.titleLabel.text,
+                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime]
+                                                                                                          //@"dtagid":
+                                                                                                          }];
+        [button onIsON];
+    }else if(button.isON){
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:self userInfo:@{
+                                                                                                          @"name":button.titleLabel.text,
+                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime]
+                                                                                                          //
+                                                                                                          }];
+        [button onIsON];
+    }
+    
 }
 
 

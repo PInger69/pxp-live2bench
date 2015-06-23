@@ -212,11 +212,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/SideTagButton.m"
-            timestampString = "456784134.75308"
+            timestampString = "456786761.639602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
             landmarkName = "-setMode:"
             landmarkType = "5">
          </BreakpointContent>
@@ -228,11 +228,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/SideTagButton.m"
-            timestampString = "456784134.75308"
+            timestampString = "456786761.639602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "-setMode:"
             landmarkType = "5">
          </BreakpointContent>
@@ -292,11 +292,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/SideTagButton.m"
-            timestampString = "456784134.75308"
+            timestampString = "456786761.639602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
             landmarkName = "-setMode:"
             landmarkType = "5">
          </BreakpointContent>
@@ -308,11 +308,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/SideTagButton.m"
-            timestampString = "456784134.75308"
+            timestampString = "456786761.639602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "-setMode:"
             landmarkType = "5">
          </BreakpointContent>
@@ -340,12 +340,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/SideTagButton.m"
-            timestampString = "456784811.942401"
+            timestampString = "456786761.639602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "-getEnabled:"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "-onEnabled:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -356,12 +356,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/SideTagButton.m"
-            timestampString = "456784815.994334"
+            timestampString = "456786761.639602"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "-getEnabled:"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "-onEnabled:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
