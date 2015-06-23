@@ -104,6 +104,9 @@
         Tag *tagToBeModded = [filteredArray firstObject];
         
         if ( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeCloseDuration && tagToBeModded.type == TagTypeOpenDuration) {
+           
+            tagToBeModded = [Tag getOpenTagByDurationId:modifiedData[@"dtagid"]];
+            
             NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:modifiedData];
             double openTime                 = tagToBeModded.time;
             double closeTime                = [dictToChange[@"closetime"]doubleValue];

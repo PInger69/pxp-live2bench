@@ -547,7 +547,7 @@
         NSDictionary *durationData =        @{
                                               
                                               @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
-                                            // ,@"dtagid": @"123456789"
+                                            // ,@"dtagid": @"123456789" // this should be set before
                                               };
         [tagData addEntriesFromDictionary:durationData];
         
