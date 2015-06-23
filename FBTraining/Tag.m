@@ -36,7 +36,27 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 +(NSInteger)makeDurationID
 {
-    return 0;
+    NSString * uid = [[NSUUID UUID]UUIDString];
+    [openDurationTagsWithID setObject:[[NSMutableDictionary alloc]init] forKey:uid];
+    
+    return uid;
+}
+
++(void)addOpenDurationTag:(Tag*)tag dtid:(NSString*)uid
+{
+    if (![openDurationTagsWithID objectForKey:uid]){
+        [openDurationTagsWithID setObject:[[NSMutableDictionary alloc]init] forKey:uid];
+    }
+    
+    
+    NSMutableDictionary * dict =[openDurationTagsWithID objectForKey:uid];
+    [dict setObject:tag forKey:@"open"];
+
+}
+
++(Tag*)getOpenTagByDurationId:(NSString*)uid
+{
+    return (Tag*)[openDurationTagsWithID objectForKey:uid][@"open"];
 }
 
 
@@ -70,8 +90,9 @@ static NSMutableDictionary * openDurationTagsWithID;
         if (_type == TagTypeOpenDuration) {
             NSTimeInterval waitInterval = (330);
             durationTagWarningTimer            = [NSTimer scheduledTimerWithTimeInterval:waitInterval target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:NO];
-         //   [[NSRunLoop mainRunLoop] addTimer:durationTagWarningTimer forMode:NSDefaultRunLoopMode];
-           // [durationTagWarningTimer fire];
+
+            [Tag addOpenDurationTag:self dtid:tagData[@"dtagid"]];
+            
         }
         
         
@@ -158,7 +179,7 @@ static NSMutableDictionary * openDurationTagsWithID;
        
        [closingEncoder issueCommand:MAKE_TAG priority:5 timeoutInSec:5 tagData:[NSMutableDictionary dictionaryWithDictionary:[self makeTagData]] timeStamp:GET_NOW_TIME];
        
-       if (durationTagWarningTimer && _type == TagTypeCloseDuration) {
+    if (durationTagWarningTimer && (_type == TagTypeCloseDuration || _type == TagTypeDeleted )) {
            [durationTagWarningTimer invalidate];
            durationTagWarningTimer = nil;
        }
@@ -331,7 +352,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
     }
     
-    if (durationTagWarningTimer && _type == TagTypeCloseDuration) {
+    if (durationTagWarningTimer && (_type == TagTypeCloseDuration || _type == TagTypeDeleted )) {
         [durationTagWarningTimer invalidate];
         durationTagWarningTimer = nil;
     }

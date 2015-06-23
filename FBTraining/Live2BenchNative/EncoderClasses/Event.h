@@ -46,6 +46,8 @@
 @property (nonatomic,assign) BOOL               isBuilt;
 @property (nonatomic, copy) void(^onComplete)();
 
+
+
 -(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
 -(void)addTag:(Tag *)newtag;
 -(void)addAllTags:(NSDictionary *)allTagData;
