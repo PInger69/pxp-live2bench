@@ -7,6 +7,7 @@
 //
 
 #import "SideTagButton.h"
+#import "Tag.h"
 
 @implementation SideTagButton
 {
@@ -32,7 +33,7 @@
         [self setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         [self onEnabled:false];
-        isON = false;
+        _isON = false;
 
     }
     return self;
@@ -95,10 +96,10 @@
         if (_isON) {
             _isON = false;
             [self setHighlighted:false];
-        }
-        if (!_isON) {
+        }else if (!_isON) {
             _isON = true;
             [self setHighlighted:true];
+            [self setDurationID:[Tag makeDurationID]];
         }
     }
 

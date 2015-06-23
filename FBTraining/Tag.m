@@ -34,7 +34,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     [openDurationTagsWithID removeAllObjects];
 }
 
-+(NSInteger)makeDurationID
++( NSString *)makeDurationID
 {
     NSString * uid = [[NSUUID UUID]UUIDString];
     [openDurationTagsWithID setObject:[[NSMutableDictionary alloc]init] forKey:uid];

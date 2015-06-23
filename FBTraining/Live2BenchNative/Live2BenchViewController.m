@@ -330,7 +330,7 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
-        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_REGULAR];
+        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_TOGGLE];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
@@ -830,19 +830,23 @@ static void * eventContext      = &eventContext;
 
     
     if (!button.isON) {
+        [button onIsON];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
                                                                                                           @"name":button.titleLabel.text,
-                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime]
-                                                                                                          //@"dtagid":
+                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
+                                                                                                          @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+                                                                                                          @"dtagid": button.durationID
                                                                                                           }];
-        [button onIsON];
+        
     }else if(button.isON){
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:self userInfo:@{
-                                                                                                          @"name":button.titleLabel.text,
-                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime]
-                                                                                                          //
-                                                                                                          }];
         [button onIsON];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:@{
+                                                                                                          @"name":button.titleLabel.text,
+                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
+                                                                                                          @"type":[NSNumber numberWithInteger:TagTypeCloseDuration],
+                                                                                                          @"dtagid": button.durationID
+                                                                                                          }];
+        
     }
     
 }
