@@ -541,11 +541,13 @@
                                        @"time"          : tagTime,
                                        @"name"          : tagName,
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
-                                       ,@"dtagid": @"123456789"
+
                                        }];
     if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
+                                              
                                               @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
+                                            // ,@"dtagid": @"123456789"
                                               };
         [tagData addEntriesFromDictionary:durationData];
         
@@ -594,9 +596,9 @@
          ///@"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
         
         
-//        if (tagToModify.isLive) {
-//            [dict setObject:LIVE_EVENT forKey:@"event"];
-//        }
+        if ([self.event.name isEqualToString:dict[@"event"]]) {
+            dict[@"event"] = LIVE_EVENT;
+        }
     
     } else {
         Tag *tagToModify = note.object;
@@ -936,6 +938,16 @@
                                       @"name"           : encodedName,
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
+    
+    // this is temp
+    if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
+        double openTime                 = [tData[@"starttime"]doubleValue];
+        double closeTime                = [tData[@"closetime"]doubleValue];
+        tData[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
+        
+        [tData removeObjectForKey:@"closetime"];
+    }
+    
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];

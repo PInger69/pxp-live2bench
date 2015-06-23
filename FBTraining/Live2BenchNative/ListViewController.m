@@ -193,13 +193,17 @@ NSMutableArray *oldEventNames;
         if (![self.allTags containsObject:tag]) {
             if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             }
             [self.allTags insertObject:tag atIndex:0];
         }
         if(tag.modified && [self.allTags containsObject:tag]){
             [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
                 [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            }
+            if (tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay insertObject:tag atIndex:0];
             }
         }
     }

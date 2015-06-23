@@ -106,9 +106,9 @@
         if ( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeCloseDuration && tagToBeModded.type == TagTypeOpenDuration) {
             NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:modifiedData];
             double openTime                 = tagToBeModded.time;
-            double closeTime                = [dictToChange[@"time"]doubleValue];
-            dictToChange[@"duration"]       = [NSNumber numberWithDouble:(openTime - closeTime)];
-            dictToChange[@"time"]           = [NSNumber numberWithDouble:openTime];
+            double closeTime                = [dictToChange[@"closetime"]doubleValue];
+            dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
+
             
             [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
         }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){
