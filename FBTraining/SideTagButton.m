@@ -7,15 +7,16 @@
 //
 
 #import "SideTagButton.h"
+#import "Tag.h"
 
 @implementation SideTagButton
 {
-    BOOL                         isON;
     UIColor                      *accentColor;
     SideTagButtonModes           mode;
 }
 
 @synthesize durationID = _durationID;
+@synthesize isON       = _isON;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -31,13 +32,14 @@
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
-        [self getEnabled:false];
+        [self onEnabled:false];
+        _isON = false;
 
     }
     return self;
 }
 
--(void)getEnabled:(BOOL)enabled
+-(void)onEnabled:(BOOL)enabled
 {
     //[super setEnabled:enabled];
     if (enabled) {
@@ -57,6 +59,10 @@
     [self setNeedsDisplay];
 }
 
+-(void)setDurationID:(NSString *)durationID{
+    _durationID = durationID;
+}
+
 -(void)tintColorDidChange
 {
     [super tintColorDidChange];
@@ -72,31 +78,33 @@
  
     switch (mode) {
         case SideTagButtonModeDisable :
-            [self getEnabled:false];
+            [self onEnabled:false];
             break;
         case SideTagButtonModeRegular :
-            [self getEnabled:true];
+            [self onEnabled:true];
             break;
         case SideTagButtonModeToggle :
-            [self getEnabled:true];
+            [self onEnabled:true];
             break;
         default:
             break;
     }
 }
 
--(void)setIsON:(BOOL)isOnValue{
+-(void)onIsON{
     if (mode == SideTagButtonModeToggle) {
-        if (isON && !isOnValue) {
-            isON = false;
+        if (_isON) {
+            _isON = false;
             [self setHighlighted:false];
-        }
-        if (!isON && isOnValue) {
-            isON = true;
+        }else if (!_isON) {
+            _isON = true;
             [self setHighlighted:true];
+            [self setDurationID:[Tag makeDurationID]];
         }
     }
+
 }
+
 
 
 
