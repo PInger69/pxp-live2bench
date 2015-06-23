@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SideTagButton.h"
 #import "BorderButton.h"
 #import "FullScreenViewController.h"
 #import "PlayerCollectionViewController.h"
@@ -47,6 +48,6 @@
 -(void)open;
 
 
-
+-(void)setButtonState:(SideTagButtonModes)mode;
 
 @end
