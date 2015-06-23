@@ -152,12 +152,19 @@ static void *  debugContext = &debugContext;
     
     Tag * tag;
     NSLog(@"");
-    tag.type = TagTypeCloseDuration;
+   // tag.type = TagTypeCloseDuration;
 //    tag.time = 60;
     
     NSMutableDictionary * dick = [[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]];
-    [dick setObject:@60 forKey:@"time"];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:dick];
+    [dick setObject:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];    
+    [dick setObject:[NSString stringWithFormat:@"%f",60.000000] forKey:@"closetime"];
+    
+    
+//    add close time to the post
+//    time gets rest when it gets to the encoder.
+//    but make sure that the event is still getting the open tag, just not displaying them in the views
+//    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:dick];
     
     
 }

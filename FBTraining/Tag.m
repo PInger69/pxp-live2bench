@@ -158,9 +158,11 @@ static NSMutableDictionary * openDurationTagsWithID;
        
        [closingEncoder issueCommand:MAKE_TAG priority:5 timeoutInSec:5 tagData:[NSMutableDictionary dictionaryWithDictionary:[self makeTagData]] timeStamp:GET_NOW_TIME];
        
-       
-       [durationTagWarningTimer invalidate];
-       durationTagWarningTimer = nil;
+       if (durationTagWarningTimer && _type == TagTypeCloseDuration) {
+           [durationTagWarningTimer invalidate];
+           durationTagWarningTimer = nil;
+       }
+
     }
 }
 
@@ -328,7 +330,12 @@ static NSMutableDictionary * openDurationTagsWithID;
     }else{
         self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
     }
-
+    
+    if (durationTagWarningTimer && _type == TagTypeCloseDuration) {
+        [durationTagWarningTimer invalidate];
+        durationTagWarningTimer = nil;
+    }
+    
 }
 
 -(NSString *)ID{
