@@ -330,20 +330,23 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
-        _tagButtonController.enabled = YES;
+        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_REGULAR];
+        //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
-        _tagButtonController.enabled = YES;
+        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_REGULAR];
+        //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
-        _tagButtonController.enabled = NO;
+        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_DISABLE];
+        //_tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
     }
@@ -788,10 +791,12 @@ static void * eventContext      = &eventContext;
     _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
     [self addChildViewController:_tagButtonController];
     [_tagButtonController didMoveToParentViewController:self];
-    _tagButtonController.enabled = NO;
+    
+    //_tagButtonController.enabled = NO;
     
     NSArray * tNames = [_userCenter.tagNames copy]; //self.tagNames;
     [_tagButtonController inputTagData:tNames];
+    //[_tagButtonController setButtonState:SIDETAGBUTTON_MODE_DISABLE];
     
     //Add Actions
     [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
