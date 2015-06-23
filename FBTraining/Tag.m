@@ -310,7 +310,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     _isLive      = tagData[@"islive"];
     _name        = tagData[@"name"];
     _own         = [tagData[@"own"] boolValue];
-    _rating      = tagData[@"rating"];
+    _rating      = [tagData[@"rating"] intValue];
     _requestURL  = tagData[@"requrl"];
     _startTime   = [tagData[@"starttime"] doubleValue];
     _time        = [tagData[@"time"] doubleValue];
