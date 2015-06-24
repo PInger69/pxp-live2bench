@@ -8,7 +8,7 @@
 
 #import "Live2BenchTagUIViewController.h"
 #import "SideTagButton.h"
-
+#import "UserCenter.h"
 //#import "Globals.h"
 
 
@@ -562,6 +562,33 @@
         [placementView addSubview:_rightTray];
     }
 }
+
+-(void)allToggleOnOpenTags:(NSMutableArray *)eventTags
+{
+    
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    
+
+    for (SideTagButton * btn1 in tempList) {
+        btn1.isOpen = NO;
+    }
+
+    for (Tag * tag in eventTags) {
+        for (SideTagButton * btn2 in tempList) {
+            // if the tag is open and has a duration Id and is from this divice
+            if (tag.name == btn2.titleLabel.text && tag.type == TagTypeOpenDuration && tag.deviceID == [[[UIDevice currentDevice] identifierForVendor]UUIDString]){
+                btn2.isOpen = NO;
+                btn2.durationID = tag.durationID;
+            }
+            
+            
+        }
+    }
+    
+
+
+}
+
 
 
 @end

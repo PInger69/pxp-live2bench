@@ -46,7 +46,7 @@
 -(void)maximize;
 -(void)close;
 -(void)open;
-
+-(void)allToggleOnOpenTags:(NSMutableArray *)eventTags;
 
 -(void)setButtonState:(SideTagButtonModes)mode;
 

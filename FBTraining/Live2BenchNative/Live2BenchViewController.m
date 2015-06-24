@@ -239,7 +239,9 @@ static void * eventContext      = &eventContext;
 
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
-
+        [_tagButtonController allToggleOnOpenTags:_currentEvent.tags];
+        
+        
     }
         [_videoBarViewController onEventChanged:_currentEvent];
     [self displayLable];
@@ -822,32 +824,37 @@ static void * eventContext      = &eventContext;
     
     float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
     
-    /*[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
-                                                                                                      @"name":button.titleLabel.text,
-                                                                                                      @"time":[NSString stringWithFormat:@"%f",currentTime]
-                                                                                                      //,@"duration":[NSNumber numberWithBool:YES]
-                                                                                                      }];*/
 
-    
-    if (!button.isON) {
-        [button onIsON];
+    if (button.mode == SideTagButtonModeRegular) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+         @"name":button.titleLabel.text,
+         @"time":[NSString stringWithFormat:@"%f",currentTime]
+         }];
+    } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
+        button.isOpen = YES;
+        // Open Duration Tag
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
                                                                                                           @"name":button.titleLabel.text,
                                                                                                           @"time":[NSString stringWithFormat:@"%f",currentTime],
                                                                                                           @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
                                                                                                           @"dtagid": button.durationID
                                                                                                           }];
+    } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
+        // Close Duration Tag
         
-    }else if(button.isON){
-        [button onIsON];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:@{
-                                                                                                          @"name":button.titleLabel.text,
-                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
-                                                                                                          @"type":[NSNumber numberWithInteger:TagTypeCloseDuration],
-                                                                                                          @"dtagid": button.durationID
-                                                                                                          }];
+        // Collect and mod tag data for close tag
+        Tag * tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
+        NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed tagDictionary]];
         
+        [tagData setValue:[NSString stringWithFormat:@"%f",currentTime] forKey:@"closetime"];
+        [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
+        [tagData setValue:button.durationID forKey:@"dtagid"];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:tagData];
+        
+        button.isOpen = NO;
     }
+    
+
     
 }
 

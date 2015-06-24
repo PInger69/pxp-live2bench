@@ -24,11 +24,10 @@ typedef NS_OPTIONS (NSInteger,SideTagButtonModes){
 
 @interface SideTagButton : UIButton
 
-@property (nonatomic,strong) NSString              *durationID;
-@property (nonatomic) BOOL                         isON;
+@property (nonatomic,strong) NSString               *durationID;
+@property (nonatomic,assign) BOOL                   isOpen;
+@property (nonatomic,assign) SideTagButtonModes     mode;
 
--(void)setMode:(SideTagButtonModes)newMode;
--(void)onIsON;
 
 
 @end
