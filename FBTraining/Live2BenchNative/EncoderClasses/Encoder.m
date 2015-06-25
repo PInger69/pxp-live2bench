@@ -474,6 +474,40 @@
     }
 }
 
+
+-(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp onComplete:(void (^)())onComplete
+{
+    EncoderCommand *cmd    = [[EncoderCommand alloc]init];
+    cmd.selector    = NSSelectorFromString(methodName);
+    cmd.target      = self;
+    cmd.priority    = priority;
+    cmd.timeOut     = time;
+    cmd.tagData     = tData;
+    cmd.timeStamp   = aTimeStamp;
+    cmd.onComplete  = onComplete;
+    [self addToQueue:cmd];
+    int count =0;
+    for (NSArray * arrayinQueue in [queue allValues]) {
+        count += arrayinQueue.count;
+    }
+    
+    if (count == 1) {
+        isWaitiing  = NO;
+        [self runNextCommand]; // run command as soon as issued if there is non in the queue
+    }
+    else if (currentCommand.priority < cmd.priority)
+    {
+        [encoderConnection cancel];
+        isWaitiing = NO;
+        [self runNextCommand];
+    }
+
+
+
+}
+
+
+
 /**
  *  this will run the next command in the queue
  */

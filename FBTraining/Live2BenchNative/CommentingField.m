@@ -102,6 +102,7 @@
     [clearButton setFrame:CGRectMake(5, textViewFrame.size.height+5, DEFALT_BUTTON_WIDTH, DEFALT_BUTTON_HEIGHT)];
     [clearButton setTitle:NSLocalizedString(@"Clear", nil)  forState:UIControlStateNormal];
     [clearButton addTarget:self action:@selector(onClear:) forControlEvents:UIControlEventTouchUpInside];
+
     [self addSubview:clearButton];
     
     

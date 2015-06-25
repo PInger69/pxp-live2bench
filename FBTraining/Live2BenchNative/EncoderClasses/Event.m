@@ -12,6 +12,7 @@
 
 
 
+
 @implementation Event {
     NSString *localPath;
 }
@@ -75,6 +76,13 @@
          [_tags addObject:newTag];
      }
      self.isBuilt = YES;
+    
+
+    
+    if([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
+        [self.delegate onEventBuildFinished:self];
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
 }
 
