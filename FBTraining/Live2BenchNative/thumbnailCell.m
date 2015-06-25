@@ -80,9 +80,10 @@
     self.backgroundView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
 //    [self.backgroundView setFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
     [self.backgroundView setAutoresizingMask: UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin];
-    [self.backgroundView setImage:[UIImage imageNamed:@"clip-back-just.png"]];
+//    [self.backgroundView setImage:[UIImage imageNamed:@"clip-back-just.png"]];
     [self addSubview:self.backgroundView];
-    
+    self.backgroundView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    self.backgroundView.layer.borderWidth = 3;
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"live.png"]];
     //self.imageView.contentMode = UIViewContentModeCenter;
     [self.imageView setFrame:CGRectMake(2, 2, self.backgroundView.bounds.size.width - 5, 131.0f)];
@@ -178,7 +179,7 @@
     
     
     checkmarkOverlay = [[UIImageView alloc] initWithFrame:self.bounds];
-    [checkmarkOverlay setImage:[UIImage imageNamed:@"checkmarkOverlay"]];
+    [checkmarkOverlay setImage:[[UIImage imageNamed:@"checkmarkOverlay"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     [checkmarkOverlay setTag:999];
     [checkmarkOverlay setUserInteractionEnabled:TRUE];
     [checkmarkOverlay setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];

@@ -15,8 +15,6 @@
 static UIImage *circleArrowNorm;
 static UIImage *circleArrowLarge;
 static NSDictionary    *fonrSizeDict;
-static UIColor * normalColor;
-static UIColor * selectedColor;
 
 
 
@@ -36,8 +34,8 @@ static UIColor * selectedColor;
 
     circleArrowNorm         = [[UIImage imageNamed: @"seek.png"]    imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     circleArrowLarge        = [[UIImage imageNamed: @"seeklarge.png"]    imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    normalColor             = [UIColor colorWithRed:247/255.f green:148/255.f blue:29/255.f alpha:1]; ;
-    selectedColor           = [UIColor colorWithRed:247/255.f*.5 green:148/255.f*.5 blue:29/255.f*.5 alpha:1];
+
+
     fonrSizeDict            = @{
                          NORMAL:@[
                                  [NSNumber numberWithFloat:14.00f],
@@ -124,7 +122,7 @@ static UIColor * selectedColor;
     [self setImage:circleArrowLarge forState:UIControlStateNormal];
     numberLabel                 = [[UILabel alloc]initWithFrame:CGRectMake(0,0, self.frame.size.width,self.frame.size.height)];
     numberLabel.text            = @"X";
-    numberLabel.textColor       = self.tintColor;//normalColor
+    numberLabel.textColor       = self.tintColor;
     numberLabel.textAlignment   = NSTextAlignmentCenter;
     numberLabel.font            = [UIFont fontWithName:numberLabel.font.fontName size:[fontSizes[1]floatValue]];
     [self addSubview:numberLabel];
@@ -141,9 +139,9 @@ static UIColor * selectedColor;
 {
     [super setHighlighted:highlighted];
     if (highlighted){
-         numberLabel.textColor = selectedColor;
+         numberLabel.textColor = [Utility darkerColorOf:self.tintColor];
     } else {
-         numberLabel.textColor = normalColor;
+         numberLabel.textColor = self.tintColor;
     }
 }
 

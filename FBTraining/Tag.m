@@ -87,7 +87,8 @@ static NSMutableDictionary * openDurationTagsWithID;
         _coachPick           = [tagData[@"coachpick"] boolValue];
         
 
-        if (_type == TagTypeOpenDuration) {
+        // only add the timer if its your tag not someone elses
+        if (_type == TagTypeOpenDuration && [self.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
             NSTimeInterval waitInterval = (330);
             durationTagWarningTimer            = [NSTimer scheduledTimerWithTimeInterval:waitInterval target:self selector:@selector(postDurationTagWarning:) userInfo:nil repeats:NO];
 

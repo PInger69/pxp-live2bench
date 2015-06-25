@@ -28,6 +28,10 @@
 
 +(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block;
 +(NSString*)removeSubString:(NSString*)substring in:(NSString*)main;
+
++(UIColor*)ligherColorOf:(UIColor*)color;
++(UIColor*)darkerColorOf:(UIColor*)color;
+
 @end
 
 

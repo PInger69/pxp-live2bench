@@ -485,6 +485,8 @@ SVSignalStatus signalStatus;
     }
     
 
+    if ([stringStatus isEqualToString:@"stopped"]) stringStatus= @"ready"; // This is just to make the display more user friendly
+    
     [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }
 

@@ -45,7 +45,7 @@
 
 - (UIImage*)selectedImage
 {
-    return [UIImage imageNamed:[NSString stringWithFormat:@"%@Select",self.imageName]];
+    return [[UIImage imageNamed:[NSString stringWithFormat:@"%@Select",self.imageName]]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 @end

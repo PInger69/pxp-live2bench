@@ -19,29 +19,53 @@ UIColor *accentColor;
 //    self = [BorderButton buttonWithType:UIButtonTypeCustom];
     if (self){
         [self setFrame:frame];
-        [self setBackgroundImage:[UIImage imageNamed:@"gotolive"]       forState:UIControlStateNormal];
-        [self setBackgroundImage:[UIImage imageNamed:@"gotoliveSelect"] forState:UIControlStateHighlighted];
+        [self setBackgroundImage:[[UIImage imageNamed:@"gotolive"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]       forState:UIControlStateNormal];
+        [self setBackgroundImage:[UIImage imageNamed:@"gotolive"] forState:UIControlStateHighlighted];
         [self setTitle:NSLocalizedString(@"Live", nil)  forState:UIControlStateNormal];
         _enabled = YES;
         
         accentColor = PRIMARY_APP_COLOR;
         [self setBackgroundColor:[UIColor clearColor]];
-        [self setBorderColour:accentColor];
+        [self setBorderColour:self.tintColor];
         [self setBorderWidth:1.0f];
         [self setContentEdgeInsets:UIEdgeInsetsMake(3, 5, 3, 5)];
-        [self setTitleColor:accentColor forState:UIControlStateNormal];
+        [self setTitleColor:self.tintColor forState:UIControlStateNormal];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        [self setBackgroundImage:[UIImage imageNamed:@"orangeSelect"] forState:UIControlStateHighlighted];
+//        [self setBackgroundImage:[UIImage imageNamed:@"orangeSelect"] forState:UIControlStateHighlighted];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-        [self setBackgroundImage:[UIImage imageNamed:@"orangeSelect"] forState:UIControlStateSelected];
-        [self setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+//        [self setBackgroundImage:[UIImage imageNamed:@"orangeSelect"] forState:UIControlStateSelected];
+//        [self setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
         [self setFont:[UIFont defaultFontOfSize:17.0f]];
         
     }
     return self;
 }
 
+-(void)setHighlighted:(BOOL)highlighted{
+    super.highlighted = highlighted;
+    [self setNeedsDisplay];
+    
+    if (highlighted) {
+        if (!self.selected) self.backgroundColor = self.tintColor;
+    } else {
+        if (!self.selected) self.backgroundColor = [UIColor clearColor];
+    }
+    
+}
 
+
+-(void)setSelected:(BOOL)selected
+{
+    super.selected = selected;
+    [self setNeedsDisplay];
+    
+    if (selected) {
+        self.backgroundColor = self.tintColor;
+    } else {
+        self.backgroundColor = [UIColor clearColor];
+    }
+    
+}
 
 -(void)isActive:(BOOL)enabled
 {
@@ -85,8 +109,13 @@ UIColor *accentColor;
 {
     [super setEnabled:enabled];
     if (enabled) {
-        [self setBorderColour:accentColor];
+        self.tintColor = self.window.tintColor;
+        [self setTitleColor:self.tintColor forState:UIControlStateNormal];
+        [self setBorderColour:self.tintColor];
+
     } else {
+        self.tintColor = [UIColor grayColor];
+        [self setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
         [self setBorderColour:[UIColor grayColor]];
     }
 }
@@ -94,10 +123,10 @@ UIColor *accentColor;
 -(void)tintColorDidChange
 {
     [super tintColorDidChange];
-    [self setBorderColour:self.tintColor];
-    
-    [self setTitleColor:self.tintColor forState:UIControlStateNormal];
-    
+    if (self.enabled){
+        [self setBorderColour:self.tintColor];
+        [self setTitleColor:self.tintColor forState:UIControlStateNormal];
+    }
 }
 
 @end

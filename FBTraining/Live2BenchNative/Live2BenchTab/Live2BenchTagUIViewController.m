@@ -577,7 +577,7 @@
         for (SideTagButton * btn2 in tempList) {
             // if the tag is open and has a duration Id and is from this divice
             if (tag.name == btn2.titleLabel.text && tag.type == TagTypeOpenDuration && tag.deviceID == [[[UIDevice currentDevice] identifierForVendor]UUIDString]){
-                btn2.isOpen = NO;
+                btn2.isOpen = YES;
                 btn2.durationID = tag.durationID;
             }
             

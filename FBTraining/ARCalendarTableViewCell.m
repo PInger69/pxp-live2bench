@@ -79,7 +79,15 @@
 }
 
 - (void)isSelected:(BOOL)selected{
-    UIColor * color = [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
+    
+    UIColor * color;
+    
+    // this is just to get the colors to reflect the tint change
+    
+    color = [Utility ligherColorOf:self.tintColor];
+
+    
+ //   color =     [self.tintColor colorWithAlphaComponent:.5]; //[UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
 
     UIColor * textColor = [UIColor colorWithWhite:0.224 alpha:1.0f];
     if (selected) {
