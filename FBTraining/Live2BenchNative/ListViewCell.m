@@ -160,8 +160,8 @@
     
     
     coachpickButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [coachpickButton setBackgroundImage:[UIImage imageNamed:@"coach.png"] forState:UIControlStateNormal];
-    [coachpickButton setBackgroundImage:[UIImage imageNamed:@"coachPicked.png"] forState:UIControlStateSelected];
+    [coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coach.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coachPicked.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
     [coachpickButton setFrame:CGRectMake(CGRectGetMaxX(tagImage.frame) + 44, CGRectGetMaxY(tagPlayersView.frame) + 5, 32.0f, 32.0f)];
     //[coachpickButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
     [self.myContentView addSubview:coachpickButton];

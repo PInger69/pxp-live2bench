@@ -160,7 +160,7 @@ NS_OPTIONS(NSInteger, style){
         
         [self loadSettingsFromPlist];
         
-        PXPLog(@"Settings Loaded: \n%@", self.settingsDictionary);
+        PXPLog(@"Settings Loaded: \n%@\n", self.settingsDictionary);
         
         // Tell toggle observers to update their values since we loaded from the plist
         for (NSDictionary *identifier in self.settingsDictionary) {

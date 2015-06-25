@@ -199,7 +199,7 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:informationLabel];
     
     
-    durationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(100, 60, 100, 30)];
+    durationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(80, 60, 100, 30)];
     [durationSwitch setOnTintColor:PRIMARY_APP_COLOR];
     [durationSwitch setTintColor:PRIMARY_APP_COLOR];
     [durationSwitch setThumbTintColor:[UIColor grayColor]];
@@ -207,7 +207,7 @@ static void * eventContext      = &eventContext;
     [durationSwitch addTarget:self action:@selector(switchPressed:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:durationSwitch];
     UILabel *durationLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 60, 125, 30)];
-    [durationLabel setText:@"Dur/Event"];
+    [durationLabel setText:@"Duration"];
     [self.view addSubview:durationLabel];
     
     return self;

@@ -297,6 +297,7 @@
     } onItemFinish:^(BOOL succsess) {
         PXPLog(@"Cloud Connection Checking...");
         PXPLog(succsess?@"   SUCCSESS":@"   FAIL");
+        if (!succsess)PXPLog(@"   NO INTERNET FOUND!");
         weakSelf.loginController.hasInternet = succsess;
     }];
     

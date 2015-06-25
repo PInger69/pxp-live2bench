@@ -180,7 +180,7 @@ EncoderManager      * encoderManager;
     //self.tabContentLink.backgroundColor = [UIColor grayColor];
     self.tabContentLink.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.tabContentLink addTarget:self action:@selector(goToTabLink:) forControlEvents:UIControlEventTouchUpInside];
-    [self.tabContentLink setImage:[UIImage imageNamed:@"youtube"] forState:UIControlStateNormal];
+    [self.tabContentLink setImage:[[UIImage imageNamed:@"youtube"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [self.tabContentLink setImage:[UIImage imageNamed:@"youtubeSelect"] forState:UIControlStateHighlighted];
     //self.tabContentLink.titleLabel.backgroundColor = [UIColor blueColor];
     [self.tabContentLink setTitle:NSLocalizedString(@"Learn more",nil) forState:UIControlStateNormal];

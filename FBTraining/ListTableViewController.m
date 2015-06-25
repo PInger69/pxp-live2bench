@@ -200,7 +200,12 @@
             
             void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
                 //videoItem = downloadItem;
-                weakCell.downloadButton.downloadItem = downloadItem;
+                 weakCell.downloadButton.downloadItem = downloadItem;
+                 __block FeedSelectCell *weakerCell = weakCell;
+                [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                    weakerCell.downloadButton.progress = progress;
+                    [weakerCell.downloadButton setNeedsDisplay];
+                }];
             };
             
             NSString *src = [NSString stringWithFormat:@"%@hq", key];
