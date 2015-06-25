@@ -250,6 +250,7 @@ static LocalEncoder * instance;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkEncoder) name:NOTIF_EM_FOUND_MASTER object:nil];
         //[self checkLocalTags];
+        instance = self;
     }
     return self;
 }

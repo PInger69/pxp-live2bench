@@ -741,8 +741,17 @@
     unsigned long n;
     sscanf(src.UTF8String, "s_%lu", &n);
     NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
+        
+        NSString *remotePath;
+    if ([self checkEncoderVersion]) {
+        remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/vid_%@.mp4", ip, tagID];
+    }else{
+        remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+    }
+        
+    //NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
     
-    NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+
 
     // END SERVER IS DUMB
     
@@ -761,8 +770,9 @@
          NSLog(@"Download Complete");
     
          // we must now forge the results
-    
-          [[LocalEncoder getInstance] saveClip:videoName withData:results];
+            
+            [[LocalEncoder getInstance] saveClip:videoName withData:results];
+          //[[LocalEncoder getInstance] saveClip:videoName withData:results];
           //[_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
           }
      }];
