@@ -72,6 +72,8 @@
     
     id <EncoderProtocol>                _observedEncoder;
     
+    UISwitch                            *durationSwitch;
+    
 }
 
 // Context
@@ -132,7 +134,7 @@ static void * eventContext      = &eventContext;
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
@@ -196,6 +198,18 @@ static void * eventContext      = &eventContext;
     [informationLabel setTextAlignment:NSTextAlignmentRight];
     [self.view addSubview:informationLabel];
     
+    
+    durationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(100, 60, 100, 30)];
+    [durationSwitch setOnTintColor:PRIMARY_APP_COLOR];
+    [durationSwitch setTintColor:PRIMARY_APP_COLOR];
+    [durationSwitch setThumbTintColor:[UIColor grayColor]];
+    [durationSwitch setOn:NO];
+    [durationSwitch addTarget:self action:@selector(switchPressed:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:durationSwitch];
+    UILabel *durationLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 60, 125, 30)];
+    [durationLabel setText:@"Dur/Event"];
+    [self.view addSubview:durationLabel];
+    
     return self;
 }
 
@@ -240,10 +254,10 @@ static void * eventContext      = &eventContext;
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
         [_tagButtonController allToggleOnOpenTags:_currentEvent.tags];
-        
-        
     }
-        [_videoBarViewController onEventChanged:_currentEvent];
+    
+    [_videoBarViewController onEventChanged:_currentEvent];
+    [_tagButtonController onEventChange:_currentEvent];
     [self displayLable];
     if (_currentEvent.live) {
         [self gotLiveEvent];
@@ -332,14 +346,14 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
-        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_TOGGLE];
+        [_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
-        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_REGULAR];
+        [_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
@@ -347,7 +361,7 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
-        [_tagButtonController setButtonState:SIDETAGBUTTON_MODE_DISABLE];
+        [_tagButtonController setButtonState:SideTagButtonModeDisable];
         //_tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
@@ -831,6 +845,7 @@ static void * eventContext      = &eventContext;
          @"time":[NSString stringWithFormat:@"%f",currentTime]
          }];
     } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
+        [_tagButtonController disEnableButton];
         button.isOpen = YES;
         // Open Duration Tag
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
@@ -931,6 +946,13 @@ static void * eventContext      = &eventContext;
 
 }
 
+-(void) switchPressed: (id) sender{
+    if (durationSwitch.on == true) {
+        [_tagButtonController setButtonState:SideTagButtonModeToggle];
+    }else if(durationSwitch.on == false){
+        [_tagButtonController setButtonState:SideTagButtonModeRegular];
+    }
+}
 
 - (void)didReceiveMemoryWarning
 {

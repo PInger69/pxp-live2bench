@@ -349,7 +349,7 @@
         __block EncoderManager * weakSelf = self;
         
         
-       /* _liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
+        /*_liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
             // if the current playing event is the live event and its stopped then we have to make it no Event at all
             if ([weakSelf.currentEvent isEqualToString:weakSelf.liveEventName]){
                 weakSelf.currentEvent   = nil; // Depricated

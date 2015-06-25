@@ -81,9 +81,10 @@
 -(void)addTag:(Tag *)newtag
 {
     [_tags addObject:newtag];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
     
     if (newtag.type != TagTypeOpenDuration ) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:self   userInfo:@{
                                                                                                       @"msg":newtag.name,
                                                                                                       @"colour":newtag.colour,

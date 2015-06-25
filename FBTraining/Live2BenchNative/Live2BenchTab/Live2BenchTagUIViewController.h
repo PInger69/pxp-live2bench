@@ -23,6 +23,8 @@
     NSMutableArray          * tagButtonsRight;
     NSInteger               * tagCount;
     NSMutableDictionary     * buttons;
+    
+    Event                   *_currentEvent;
 }
 
 @property (assign,nonatomic) BOOL                               enabled;
@@ -49,5 +51,7 @@
 -(void)allToggleOnOpenTags:(NSMutableArray *)eventTags;
 
 -(void)setButtonState:(SideTagButtonModes)mode;
+-(void)onEventChange:(Event*)event;
+-(void)disEnableButton;
 
 @end

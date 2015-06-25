@@ -25,7 +25,7 @@
     if (self) {
 
         [self setBackgroundColor:[UIColor clearColor]];
-        [[self layer] setBorderColor:self.tintColor.CGColor];
+        //[[self layer] setBorderColor:self.tintColor.CGColor];
         [[self layer] setBorderWidth:1.0f];
         [self setContentEdgeInsets:UIEdgeInsetsMake(3, 5, 3, 5)];
         [self setTitleColor:self.tintColor forState:UIControlStateNormal];
@@ -33,7 +33,8 @@
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         
-        self.mode = SideTagButtonModeRegular;
+        self.mode = SideTagButtonModeDisable;
+        [self setEnabled:false];
 
     }
     return self;
@@ -50,13 +51,13 @@
 {
     [super setEnabled:enabled];
     if (enabled) {
-        [[self layer] setBorderColor:self.tintColor.CGColor];
+        //[[self layer] setBorderColor:self.tintColor.CGColor];
         [self setAlpha:1.0];
         self.mode   = prevMode;
         
-    } else {
+    }else if(!enabled){
         [[self layer] setBorderColor:[UIColor grayColor].CGColor];
-        [self setAlpha:0.4];
+        [self setAlpha:0.2];
         self.mode = SideTagButtonModeDisable;
     }
 }
@@ -99,7 +100,9 @@
 -(void)tintColorDidChange
 {
     [super tintColorDidChange];
-    [[self layer] setBorderColor:self.tintColor.CGColor];
+    if (_mode != SideTagButtonModeDisable) {
+        [[self layer] setBorderColor:self.tintColor.CGColor];
+    }
     
     [self setTitleColor:self.tintColor forState:UIControlStateNormal];
 }
@@ -114,13 +117,16 @@
     
         switch (mode) {
             case SideTagButtonModeDisable :
-                [super setEnabled:false];
+                [self setEnabled:false];
+                //[super setEnabled:false];
                 break;
             case SideTagButtonModeRegular :
                 _durationID = nil;
             case SideTagButtonModeToggle :
-                [super setEnabled:true];
                 prevMode = self.mode;
+                [self setEnabled:true];
+                //[super setEnabled:true];
+                
                 break;
             default:
                 break;

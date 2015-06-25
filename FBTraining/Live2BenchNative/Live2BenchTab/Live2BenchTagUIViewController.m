@@ -589,6 +589,38 @@
 
 }
 
+-(void)onEventChange:(Event*)event
+{
+    if (_currentEvent) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    }
+    
+    if (event){
+        _currentEvent = event;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enableButton:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    }
+}
+
+-(void)disEnableButton
+{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = false;
+        }
+    }
+    
+}
+
+-(void)enableButton:(NSNotification*)note
+{
+     NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = true;
+        }
+    }
+}
 
 
 @end
