@@ -102,7 +102,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (assign, nonatomic) BOOL          coachPick;
 @property (strong, nonatomic) NSDictionary  *feeds;
 //@property (strong, nonatomic) NSString *requestTime;
-
+@property (strong, nonatomic) NSString      *durationID;
 
 
 +(void)clearDurationTags;

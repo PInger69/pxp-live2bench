@@ -11,53 +11,87 @@
 
 @implementation SideTagButton
 {
-    UIColor                      *accentColor;
-    SideTagButtonModes           mode;
+    SideTagButtonModes           prevMode;
 }
 
 @synthesize durationID = _durationID;
-@synthesize isON       = _isON;
+@synthesize isOpen      =_isOpen;
+@synthesize mode        = _mode;
+
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        accentColor = PRIMARY_APP_COLOR;
+
         [self setBackgroundColor:[UIColor clearColor]];
-        [[self layer] setBorderColor:accentColor.CGColor];
+        //[[self layer] setBorderColor:self.tintColor.CGColor];
         [[self layer] setBorderWidth:1.0f];
         [self setContentEdgeInsets:UIEdgeInsetsMake(3, 5, 3, 5)];
-        [self setTitleColor:accentColor forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [self setTitleColor:self.tintColor forState:UIControlStateNormal];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-        [self setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
-        [self onEnabled:false];
-        _isON = false;
+        
+        self.mode = SideTagButtonModeDisable;
+        [self setEnabled:false];
 
     }
     return self;
 }
 
--(void)onEnabled:(BOOL)enabled
+-(void)sendAction:(nonnull SEL)action to:(nullable id)target forEvent:(nullable UIEvent *)event
 {
-    //[super setEnabled:enabled];
-    if (enabled) {
-        [[self layer] setBorderColor:accentColor.CGColor];
-        [self setAlpha:1.0];
-        self.enabled = true;
 
-    } else {
+    if (self.mode == SideTagButtonModeToggle)[self setSelected:!self.selected];
+    [super sendAction:action to:target forEvent:event];
+}
+
+-(void)setEnabled:(BOOL)enabled
+{
+    [super setEnabled:enabled];
+    if (enabled) {
+        //[[self layer] setBorderColor:self.tintColor.CGColor];
+        [self setAlpha:1.0];
+        self.mode   = prevMode;
+        
+    }else if(!enabled){
         [[self layer] setBorderColor:[UIColor grayColor].CGColor];
-        [self setAlpha:0.4];
-        self.enabled = false;
+        [self setAlpha:0.2];
+        self.mode = SideTagButtonModeDisable;
     }
 }
+
+
+
 
 -(void)setHighlighted:(BOOL)highlighted{
     super.highlighted = highlighted;
     [self setNeedsDisplay];
+    
+    if (highlighted) {
+        if (!self.selected) self.backgroundColor = self.tintColor;
+    } else {
+        if (!self.selected) self.backgroundColor = [UIColor clearColor];
+    }
+    
 }
+
+
+-(void)setSelected:(BOOL)selected
+{
+    super.selected = selected;
+    [self setNeedsDisplay];
+    
+    if (selected) {
+        self.backgroundColor = self.tintColor;
+    } else {
+        self.backgroundColor = [UIColor clearColor];
+    }
+
+}
+
+
 
 -(void)setDurationID:(NSString *)durationID{
     _durationID = durationID;
@@ -66,44 +100,58 @@
 -(void)tintColorDidChange
 {
     [super tintColorDidChange];
-    [[self layer] setBorderColor:self.tintColor.CGColor];
+    if (_mode != SideTagButtonModeDisable) {
+        [[self layer] setBorderColor:self.tintColor.CGColor];
+    }
     
     [self setTitleColor:self.tintColor forState:UIControlStateNormal];
 }
 
--(void)setMode:(SideTagButtonModes)newMode
+
+
+-(void)setMode:(SideTagButtonModes)mode
 {
-    if (mode == newMode) return;
-    mode = newMode;
- 
-    switch (mode) {
-        case SideTagButtonModeDisable :
-            [self onEnabled:false];
-            break;
-        case SideTagButtonModeRegular :
-            [self onEnabled:true];
-            break;
-        case SideTagButtonModeToggle :
-            [self onEnabled:true];
-            break;
-        default:
-            break;
-    }
-}
 
--(void)onIsON{
-    if (mode == SideTagButtonModeToggle) {
-        if (_isON) {
-            _isON = false;
-            [self setHighlighted:false];
-        }else if (!_isON) {
-            _isON = true;
-            [self setHighlighted:true];
-            [self setDurationID:[Tag makeDurationID]];
+    if (_mode == mode) return;
+        _mode = mode;
+    
+        switch (mode) {
+            case SideTagButtonModeDisable :
+                [self setEnabled:false];
+                //[super setEnabled:false];
+                break;
+            case SideTagButtonModeRegular :
+                _durationID = nil;
+            case SideTagButtonModeToggle :
+                prevMode = self.mode;
+                [self setEnabled:true];
+                //[super setEnabled:true];
+                
+                break;
+            default:
+                break;
         }
-    }
 
 }
+
+
+
+
+-(void)setIsOpen:(BOOL)isOpen
+{
+    if (isOpen == _isOpen )return;
+    
+    if (isOpen && !_isOpen && self.mode == SideTagButtonModeToggle){
+        [self setHighlighted:true];
+        self.durationID = [Tag makeDurationID];
+    } else if (!isOpen && _isOpen && self.mode == SideTagButtonModeToggle) {
+        [self setHighlighted:false];
+        self.durationID = nil; // clear id as soon as its finished closing
+    }
+    isOpen = _isOpen;
+}
+
+
 
 
 

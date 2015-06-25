@@ -8,7 +8,7 @@
 
 #import "Live2BenchTagUIViewController.h"
 #import "SideTagButton.h"
-
+#import "UserCenter.h"
 //#import "Globals.h"
 
 
@@ -560,6 +560,65 @@
     } else {
         [placementView addSubview:_leftTray];
         [placementView addSubview:_rightTray];
+    }
+}
+
+-(void)allToggleOnOpenTags:(NSMutableArray *)eventTags
+{
+    
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    
+
+    for (SideTagButton * btn1 in tempList) {
+        btn1.isOpen = NO;
+    }
+
+    for (Tag * tag in eventTags) {
+        for (SideTagButton * btn2 in tempList) {
+            // if the tag is open and has a duration Id and is from this divice
+            if (tag.name == btn2.titleLabel.text && tag.type == TagTypeOpenDuration && tag.deviceID == [[[UIDevice currentDevice] identifierForVendor]UUIDString]){
+                btn2.isOpen = YES;
+                btn2.durationID = tag.durationID;
+            }
+            
+            
+        }
+    }
+    
+
+
+}
+
+-(void)onEventChange:(Event*)event
+{
+    if (_currentEvent) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    }
+    
+    if (event){
+        _currentEvent = event;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enableButton:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    }
+}
+
+-(void)disEnableButton
+{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = false;
+        }
+    }
+    
+}
+
+-(void)enableButton:(NSNotification*)note
+{
+     NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = true;
+        }
     }
 }
 

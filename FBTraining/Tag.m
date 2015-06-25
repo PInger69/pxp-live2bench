@@ -21,7 +21,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 @synthesize type = _type;
-
+@synthesize durationID;
 
 + (void)initialize {
     if (self == [Tag self]) {
@@ -135,8 +135,8 @@ static NSMutableDictionary * openDurationTagsWithID;
     // post notif
     [durationTagWarningTimer invalidate];
     durationTagWarningTimer = nil;
-    PXPLog(@"warning Tag is too long");
-    NSLog(@"warning Tag is too long");
+    PXPLog(@"Warning Tag is too long - %@", self.name);
+    NSLog(@"Warning Tag is too long - %@", self.name);
 }
 
 #pragma mark - custom setters and getters
@@ -298,6 +298,10 @@ static NSMutableDictionary * openDurationTagsWithID;
         [tagDict addEntriesFromDictionary:@{@"deviceid": self.deviceID}];
     }
     
+    if (self.durationID) {
+        [tagDict addEntriesFromDictionary:@{@"durationID": self.durationID}];
+    }
+    
     return tagDict;
 }
 
@@ -351,6 +355,11 @@ static NSMutableDictionary * openDurationTagsWithID;
     }else{
         self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
     }
+    
+    if ([tagData objectForKey:@"durationID"]) {
+        self.durationID = [tagData objectForKey:@"durationID"];
+    }
+    
     
     if (durationTagWarningTimer && (_type == TagTypeCloseDuration || _type == TagTypeDeleted )) {
         [durationTagWarningTimer invalidate];
