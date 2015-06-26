@@ -51,14 +51,11 @@
 {
     [super setEnabled:enabled];
     if (enabled) {
-        //[[self layer] setBorderColor:self.tintColor.CGColor];
         [self setAlpha:1.0];
-        self.mode   = prevMode;
         
     }else if(!enabled){
         [[self layer] setBorderColor:[UIColor grayColor].CGColor];
         [self setAlpha:0.2];
-        self.mode = SideTagButtonModeDisable;
     }
 }
 
@@ -118,15 +115,15 @@
         switch (mode) {
             case SideTagButtonModeDisable :
                 [self setEnabled:false];
-                //[super setEnabled:false];
                 break;
             case SideTagButtonModeRegular :
+                prevMode = SideTagButtonModeRegular;
                 _durationID = nil;
-            case SideTagButtonModeToggle :
-                prevMode = self.mode;
                 [self setEnabled:true];
-                //[super setEnabled:true];
-                
+                break;
+            case SideTagButtonModeToggle :
+                prevMode = SideTagButtonModeToggle;
+                [self setEnabled:true];
                 break;
             default:
                 break;
@@ -148,7 +145,7 @@
         [self setHighlighted:false];
         self.durationID = nil; // clear id as soon as its finished closing
     }
-    isOpen = _isOpen;
+    _isOpen = isOpen;
 }
 
 

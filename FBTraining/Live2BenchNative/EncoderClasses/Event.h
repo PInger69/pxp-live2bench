@@ -38,6 +38,7 @@
 @property (nonatomic,assign) BOOL           deleted;
 @property (nonatomic,assign) BOOL           local;
 @property (nonatomic,assign) BOOL           live;
+@property (nonatomic,assign) BOOL           primary;
 
 @property (nonatomic, strong) NSMutableDictionary  * downloadingItemsDictionary;
 

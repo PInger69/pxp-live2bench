@@ -204,7 +204,7 @@ static void * eventContext      = &eventContext;
     [durationSwitch setTintColor:PRIMARY_APP_COLOR];
     [durationSwitch setThumbTintColor:[UIColor grayColor]];
     [durationSwitch setOn:NO];
-    [durationSwitch addTarget:self action:@selector(switchPressed:) forControlEvents:UIControlEventValueChanged];
+    [durationSwitch addTarget:self action:@selector(switchPressed) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:durationSwitch];
     UILabel *durationLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 60, 125, 30)];
     [durationLabel setText:@"Duration"];
@@ -348,14 +348,16 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
-        [_tagButtonController setButtonState:SideTagButtonModeRegular];
+        [self switchPressed];
+        //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
-        [_tagButtonController setButtonState:SideTagButtonModeRegular];
+        //[_tagButtonController setButtonState:SideTagButtonModeRegular];
+        [self switchPressed];
         //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
@@ -848,6 +850,7 @@ static void * eventContext      = &eventContext;
          }];
     } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
         [_tagButtonController disEnableButton];
+        [_tagButtonController unHighlightButton:button];
         button.isOpen = YES;
         // Open Duration Tag
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
@@ -948,13 +951,15 @@ static void * eventContext      = &eventContext;
 
 }
 
--(void) switchPressed: (id) sender{
+-(void) switchPressed
+{
     if (durationSwitch.on == true) {
         [_tagButtonController setButtonState:SideTagButtonModeToggle];
     }else if(durationSwitch.on == false){
         [_tagButtonController setButtonState:SideTagButtonModeRegular];
     }
 }
+
 
 - (void)didReceiveMemoryWarning
 {

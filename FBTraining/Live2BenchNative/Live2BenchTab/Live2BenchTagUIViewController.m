@@ -622,5 +622,15 @@
     }
 }
 
+-(void)unHighlightButton:(SideTagButton *)button
+{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if ([btn1.titleLabel.text isEqualToString:button.titleLabel.text]) {
+            btn1.highlighted = false;
+        }
+    }
+}
+
 
 @end
