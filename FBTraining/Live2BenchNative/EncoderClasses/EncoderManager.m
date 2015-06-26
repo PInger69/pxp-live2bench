@@ -630,9 +630,9 @@ static void * statusContext         = &statusContext;
 -(void)masterHasLive:(NSNotification *)note
 {
     self.currentEvent   = self.liveEventName;
-    [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
-        [_eventTags setObject:all forKey:_liveEventName];
-    }];
+//    [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
+//        [_eventTags setObject:all forKey:_liveEventName];
+//    }];
 }
 
 
@@ -1654,7 +1654,9 @@ static void * statusContext         = &statusContext;
     
 
     [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol>obj, NSUInteger idx, BOOL *stop){
-        [obj issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];
+        [obj issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME onComplete:^{
+            onCompleteGet(nil);
+        }];
     }];
     
     
@@ -1718,34 +1720,6 @@ static void * statusContext         = &statusContext;
 {
     return NO;//[Globals instance].HAS_MIN;
 }
-
-/**
- *  This menthod Will recollect all the data from the encoders for the current Event
- */
-//-(void)refresh
-//{
-//    // this collects all the tags from the encoders
-//    [self willChangeValueForKey:@"currentEventTags"];
-//    
-//    
-//    if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) { // if its any other type of encoder then just take the tags from it only
-//        _currentEventTags = [[_primaryEncoder.event.tags allValues] copy];
-//        
-//    } else {// if its normal encoder get from all connected and authenticated
-//        NSMutableArray * tempList  = [[NSMutableArray alloc]init];
-//        for (Encoder * encoder in _authenticatedEncoders) {
-//            if (encoder.event.eventType != nil && ![encoder isKindOfClass:[LocalEncoder class]]){
-//                [tempList addObjectsFromArray:[encoder.event.tags allValues]];
-//            }
-//            
-//        }
-//        _currentEventTags = [tempList copy];
-//    }
-//    
-//    [self didChangeValueForKey:@"currentEventTags"];
-//}
-//
-//
 
 
 -(BOOL)hasLive

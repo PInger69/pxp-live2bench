@@ -229,7 +229,8 @@
         [self.translucentEditingView removeFromSuperview];
         self.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
         [self.translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-        [self.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
+        [self.translucentEditingView setBackgroundColor: self.tintColor];
+//        [self.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
         [self.translucentEditingView setAlpha:0.3];
         [self.translucentEditingView setUserInteractionEnabled:FALSE];
         [self addSubview: self.translucentEditingView];

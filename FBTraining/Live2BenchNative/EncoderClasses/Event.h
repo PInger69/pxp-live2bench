@@ -11,6 +11,18 @@
 
 @class Tag;
 
+
+@protocol EventDelegate <NSObject>
+
+@optional
+-(void)onEventBuildFinished:(Event*)event;
+
+
+@end
+
+
+
+
 @interface Event : NSObject
 
 
@@ -35,6 +47,7 @@
 
 @property (nonatomic,strong) NSMutableArray        * downloadedSources; // this is a list of strings of videos that are on the device
 
+@property (nonatomic,weak)  id <EventDelegate>  delegate;
 
 
 // These need to be cleaned

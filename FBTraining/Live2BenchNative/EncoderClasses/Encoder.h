@@ -15,6 +15,8 @@
 
 @class EncoderManager;
 
+
+
 #define OLD_VERSION  @"1.0.13"
 
 #define NOTIF_ENCODER_CONNECTION_PROGRESS   @"encoderConnectionProgress"
@@ -80,6 +82,7 @@
 @property (nonatomic,assign)    BOOL            isMaster;
 @property (nonatomic,assign)    NSInteger       cameraCount;
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
+
 
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;

@@ -47,6 +47,10 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 };
 
 
+
+
+
+
 @protocol EncoderProtocol <NSObject>
 
 @property (nonatomic,strong)    NSString                * name;
@@ -56,14 +60,18 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
 
-
 -(id <EncoderProtocol>)makePrimary;
 -(id <EncoderProtocol>)removeFromPrimary;
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
+
+
+@property (nonatomic, copy) void(^onComplete)();
 -(Event*)getEventByName:(NSString*)eventName;
 
 @optional
+-(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp onComplete:(void (^)())onComplete;
+
 @property (nonatomic,readonly)    NSString             * version;
 @property (nonatomic,assign)    double               bitrate;
 @property (nonatomic,assign)    NSInteger       cameraCount;
