@@ -62,6 +62,8 @@ static NSUInteger allowedToastType        = 0;
     allowedToastType = type;
 }
 
+
+
 -(void)addEventObserver:(NSNotification *)note
 {
     if (_observedEncoder != nil) {

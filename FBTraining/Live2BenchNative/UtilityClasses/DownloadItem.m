@@ -146,6 +146,11 @@
     if (progressBlock) progressBlock(self.progress, kbps);
     elapsedTime = CACurrentMediaTime() - startTime;
     kbps = ((double)_receivedBytes /  (double)elapsedTime) * 0.001;
+    
+    if([self.delegate respondsToSelector:@selector(onDownloadProgress:)]) {
+        [self.delegate onDownloadProgress:self];
+    }
+    
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -158,6 +163,9 @@
     
     self.status     = DownloadItemStatusComplete;
     self.progress   = 1;
+    if([self.delegate respondsToSelector:@selector(onDownloadComplete:)]) {
+        [self.delegate onDownloadComplete:self];
+    }
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -177,6 +185,11 @@
     {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
+    
+    if([self.delegate respondsToSelector:@selector(onDownloadFail:)]) {
+        [self.delegate onDownloadFail:self];
+    }
+    
 }
 
 #pragma mark -
