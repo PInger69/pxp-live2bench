@@ -21,7 +21,8 @@
 +(NSString*)encoderStatusToString:(int)status;
 +(NSComparisonResult)compareVersion: (NSString *)version1 withVersion: (NSString *)version2;
 +(NSString *)dateFromEvent: (NSString *) eventName;
-
++(NSString *)platformString;
++(BOOL)isDeviceBlurSupported:(NSString *)platform;
 +(BOOL)hasInternet;
 +(NSString*)myWifiName;
 

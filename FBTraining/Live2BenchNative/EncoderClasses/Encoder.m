@@ -13,6 +13,7 @@
 #import "Feed.h"
 #import "Tag.h"
 #import "EncoderManager.h"
+#import "CameraDetails.h"
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
@@ -31,6 +32,9 @@
 @property (nonatomic,strong)    NSMutableData   * cumulatedData;
 @property (nonatomic,strong)    NSString        * connectionType;
 @property (nonatomic,strong)    NSDictionary    * extra;
+@property (nonatomic,weak)      CameraDetails   * cameraDetails;
+@property (nonatomic,weak)      NSMutableArray  * camerasAvailableList;
+
 
 
 -(NSNumber*)timeStamp;
@@ -44,6 +48,8 @@
 @dynamic cumulatedData;
 @dynamic connectionType;
 @dynamic extra;
+@dynamic cameraDetails;
+@dynamic camerasAvailableList;
 
 
 -(void)setTimeStamp:(NSNumber*)time
@@ -934,8 +940,15 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     NSArray * list = [results[@"camlist"]allValues];
     _cameraCount = 0;
+    
+    NSMutableArray *camerasAvailableList = [[NSMutableArray alloc]init];
+    
+    
     for (NSDictionary *dic in list) {
-        if ([dic[@"cameraPresent"]boolValue])_cameraCount++;
+       // if ([dic[@"cameraPresent"]boolValue])_cameraCount++;
+        
+       [camerasAvailableList addObject:[[CameraDetails alloc]initWithDictionary:dic encoderOwner:self]];
+        
     }
  //   _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
     
