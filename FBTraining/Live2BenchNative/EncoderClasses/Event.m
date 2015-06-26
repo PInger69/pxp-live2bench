@@ -31,6 +31,7 @@
 @synthesize downloadedSources       = _downloadedSources;
 @synthesize parentEncoder           = _parentEncoder;
 @synthesize isBuilt                 = _isBuilt;
+@synthesize primary                 = _primary;
 
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
@@ -39,6 +40,7 @@
         NSMutableDictionary *dataFinal = [[NSMutableDictionary alloc]initWithDictionary:data];
         _rawData            = dataFinal;
         _live               = (_rawData[@"live"] || _rawData[@"live_2"])? YES:NO;
+        _primary            = false;
         _name               = [_rawData objectForKey:@"name"];
         _hid                = [_rawData objectForKey:@"hid"];
         _eventType          = [_rawData objectForKey:@"sport"];
@@ -67,6 +69,10 @@
     return self;
 }
 
+-(void)setPrimary:(BOOL)primary{
+    _primary = primary;
+}
+
 -(void)addAllTags:(NSDictionary *)allTagData
 {
      NSArray *tagArray = [allTagData allValues];
@@ -83,9 +89,9 @@
     [_tags addObject:newtag];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
     
-    if (newtag.type != TagTypeOpenDuration ) {
+    if (newtag.type != TagTypeOpenDuration && _primary ) {
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:self   userInfo:@{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
                                                                                                       @"msg":newtag.name,
                                                                                                       @"colour":newtag.colour,
                                                                                                       @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]

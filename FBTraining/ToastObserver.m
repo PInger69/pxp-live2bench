@@ -38,12 +38,11 @@ static NSUInteger allowedToastType        = 0;
     if(self){
         // By adding the ToastObserver as an observer in the Notification Center, any Notifications that are posted with the name ToastObserver
         // will be recognized by the Toast Observer
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TOAST object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TOAST object:nil];
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TAG_RECEIVED object:nil];
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NOTIF_TOAST_SETTING_CHANGED object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         
         
         self.toastType = ARNone | ARFileDownloadComplete | ARTagSynchronized | ARTagCreated;
@@ -61,36 +60,6 @@ static NSUInteger allowedToastType        = 0;
 {
     allowedToastType = type;
 }
-
--(void)addEventObserver:(NSNotification *)note
-{
-    if (_observedEncoder != nil) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
-    }
-    
-    
-    if (note.object == nil) {
-        _observedEncoder = nil;
-    }else{
-        _observedEncoder = (id <EncoderProtocol>) note.object;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
-    }
-}
-
--(void)eventChanged:(NSNotification *)note
-{
-    if (_currentEvent != nil) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TOAST object:_currentEvent];
-    }
-    
-    if (note.object == nil) {
-        _currentEvent = nil;
-    }else{
-        _currentEvent = [((id <EncoderProtocol>) note.object) event];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TOAST object:_currentEvent];
-    }
-}
-
 
 
 //-(void)synchronizedTags:(NSNotification *)note {

@@ -552,6 +552,7 @@ static void * statusContext         = &statusContext;
 
 -(void)declareCurrentEvent:(Event*)event
 {
+    [self.primaryEncoder event].primary = false;
     if (event == nil) {
         
         if ([[self.primaryEncoder event].name isEqualToString:self.liveEventName]) {
@@ -562,8 +563,11 @@ static void * statusContext         = &statusContext;
         self.primaryEncoder = nil;
     }
     else{
+        
         self.primaryEncoder = event.parentEncoder;
+        event.primary = true;
         [self.primaryEncoder setEvent:event];
+        
     }
 }
 

@@ -195,6 +195,7 @@
         
         
         __block FeedSelectCell *weakCell = collapsableCell;
+        collapsableCell.downloadButton.downloadItem = nil;
         collapsableCell.downloadButtonBlock = ^(){
             //__block DownloadItem *videoItem;
             
