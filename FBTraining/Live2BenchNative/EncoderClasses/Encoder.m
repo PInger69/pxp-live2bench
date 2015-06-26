@@ -980,17 +980,17 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
     // this is temp
-    if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
+    /*if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
         double openTime                 = [tData[@"starttime"]doubleValue];
         double closeTime                = [tData[@"closetime"]doubleValue];
         tData[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
         
         [tData removeObjectForKey:@"closetime"];
-    }
+    }*/
     
     
     NSString *jsonString                    = [Utility dictToJSON:tData];

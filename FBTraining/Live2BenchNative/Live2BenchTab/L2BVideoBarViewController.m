@@ -16,9 +16,7 @@
 #define LABEL_WIDTH     150
 #define LITTLE_ICON_DIMENSIONS 40
 
-@interface L2BVideoBarViewController () <TagViewDataSource>{
-    Event *_currentEvent;
-}
+@interface L2BVideoBarViewController () <TagViewDataSource>
 
 @property (strong, nonatomic, nonnull) NSMutableArray *arrayOfAllTags;
 @property (strong, nonatomic, nonnull) TagView *tagView;
@@ -169,24 +167,11 @@
     return self;
 }
 
--(void)onEventChanged:(Event*)event
-{
-    [self update];
-    if (_currentEvent) {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
-    }
-    
-    if (event) {
-        _currentEvent = event;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
-    }
-}
 
--(void)onTagChanged:(NSNotification *)note{
+
+-(void)onTagChanged:(Event *)currentEvent{
     
-    for (Tag *tag in _currentEvent.tags ) {
+    for (Tag *tag in currentEvent.tags ) {
         if (![self.arrayOfAllTags containsObject:tag] && (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration)) {
             [self.arrayOfAllTags insertObject:tag atIndex:0];
         }
@@ -195,7 +180,7 @@
     Tag *toBeRemoved;
     for (Tag *tag in self.arrayOfAllTags){
         
-        if (![_currentEvent.tags containsObject:tag]) {
+        if (![currentEvent.tags containsObject:tag]) {
             toBeRemoved = tag;
         }
     }

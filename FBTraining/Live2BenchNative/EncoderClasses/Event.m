@@ -126,7 +126,7 @@
             double openTime                 = tagToBeModded.time;
             double closeTime                = [dictToChange[@"closetime"]doubleValue];
             dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
-
+            dictToChange[@"type"]           = [NSNumber numberWithInteger:TagTypeCloseDuration];
             
             [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
         }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){
