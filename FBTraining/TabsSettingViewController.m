@@ -49,7 +49,7 @@
                                             @"Identifier": TAB_INJURY
                                             },
                                         @{
-                                            @"Name": NSLocalizedString(@"FBTraining", nil),
+                                            @"Name": NSLocalizedString(@"Dual View", nil),
                                             @"Identifier": TAB_FOOTBALL_TRAINING
                                             },
                                         @{
@@ -77,13 +77,13 @@
                                         ]];
     if (self) {
         self.settingData[TAB_CALENDAR] = @YES;
-        self.settingData[TAB_INJURY] = @YES;
+        self.settingData[TAB_INJURY] = @NO;
         self.settingData[TAB_LIVE2BENCH] = @YES;
         self.settingData[TAB_CLIPVIEW] = @YES;
         self.settingData[TAB_LISTVIEW] = @YES;
         self.settingData[TAB_MYCLIP] = @YES;
         self.settingData[TAB_DEBUG] = @NO;
-        self.settingData[TAB_FOOTBALL_TRAINING] = @NO;
+        self.settingData[TAB_FOOTBALL_TRAINING] = @YES;
         
         self.tabClassForIdentifier = @{
                                        TAB_CALENDAR: [CalendarViewController class],

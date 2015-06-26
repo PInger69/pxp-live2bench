@@ -7,6 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
+#define AUTHENTICATE    @"authenticate:timeStamp:"
+#define BUILD           @"buildEncoder:timeStamp:"
+#define VERSION         @"requestVersion:timeStamp:"
+#define SHUTDOWN        @"shutdown:timeStamp:"
+#define MODIFY_TAG      @"modifyTag:timeStamp:"
+#define MAKE_TAG        @"makeTag:timeStamp:"
+#define MAKE_TELE_TAG   @"makeTeleTag:timeStamp:"
+#define SUMMARY_GET     @"summaryGet:timeStamp:"
+#define SUMMARY_PUT     @"summaryPut:timeStamp:"
+#define TEAMS_GET       @"teamsGet:timeStamp:"
+#define EVENT_GET_TAGS  @"eventTagsGet:timeStamp:"
+#define CAMERAS_GET     @"camerasGet:timeStamp:"
+#define ALL_EVENTS_GET_ @"allEventsGet:timeStamp:"
+#define DELETE_EVENT    @"deleteEvent:timeStamp:"
+
+#define STOP_EVENT      @"stopEvent:timeStamp:"
+#define PAUSE_EVENT     @"pauseEvent:timeStamp:"
+#define RESUME_EVENT    @"resumeEvent:timeStamp:"
+#define START_EVENT     @"startEvent:timeStamp:"
+
 @class Event;
 @class EncoderManager;
 
@@ -27,6 +47,10 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 };
 
 
+
+
+
+
 @protocol EncoderProtocol <NSObject>
 
 @property (nonatomic,strong)    NSString                * name;
@@ -36,10 +60,18 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
 
+-(id <EncoderProtocol>)makePrimary;
+-(id <EncoderProtocol>)removeFromPrimary;
+
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
+
+
+@property (nonatomic, copy) void(^onComplete)();
 -(Event*)getEventByName:(NSString*)eventName;
 
 @optional
+-(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp onComplete:(void (^)())onComplete;
+
 @property (nonatomic,readonly)    NSString             * version;
 @property (nonatomic,assign)    double               bitrate;
 @property (nonatomic,assign)    NSInteger       cameraCount;

@@ -28,7 +28,7 @@ static NSMutableSet * shareFilterSubtag;
 static NSMutableSet * shareFilterOffence;
 static NSMutableSet * shareFilterDefence;
 static NSMutableSet * shareFilterUser;
-static TestFilterViewController *commonFilter;
+static TestFilterViewController * commonFilter;
 
 - (id)initWithTagArray: (NSMutableArray *)tagArray
 {

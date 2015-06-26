@@ -21,6 +21,7 @@
 #import "TagFlagViewController.h"
 #import "CustomButton.h"
 #import "PxpVideoPlayerProtocol.h"
+#import "Event.h"
 
 
 @interface L2BVideoBarViewController : UIViewController
@@ -50,5 +51,7 @@
 -(void)createTagMarkers;
 
 -(void)update;
+
+-(void)onEventChanged:(Event *)event;
 
 @end

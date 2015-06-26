@@ -41,6 +41,8 @@
 @implementation NSURLDataConnection
 @end
 
+
+static LocalEncoder * instance;
 @implementation LocalEncoder
 {
     NSString        * _localDocsPListPath;
@@ -57,6 +59,12 @@
 @synthesize status          = _status;
 @synthesize allEvents       = _allEvents;
 @synthesize clips           = _clips;
+
++(instancetype)getInstance
+{
+    return instance;
+}
+
 
 -(id)initWithDocsPath:(NSString*)aDocsPath
 {
@@ -118,6 +126,16 @@
                 anEvent.parentEncoder       = self;
                 anEvent.local               = YES;
                 anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
+                
+                NSArray *tags    = [anEvent.rawData[@"tags"] allValues];
+                NSMutableArray *newTags = [[NSMutableArray alloc]init];
+                for (NSDictionary *tagDic in tags) {
+                    Tag *newTag = [[Tag alloc] initWithData:tagDic event:anEvent];
+                    [newTags addObject:newTag];
+                }
+                
+                [anEvent setTags:newTags];
+                
                 [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
                 
                 [self.localTags addEntriesFromDictionary:self.event.localTags];
@@ -218,7 +236,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDataRequest:)   name:NOTIF_REQUEST_MYCLIP_DATA object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(myClipDeleteRequest:) name:NOTIF_DELETE_CLIPS object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_EVENT" object:nil queue:nil usingBlock:^(NSNotification *note){
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_EVENT object:nil queue:nil usingBlock:^(NSNotification *note){
             Event *localCounterpart = [self getEventByName:((Event *)note.userInfo[@"Event"]).name];
             if (localCounterpart) {
                 [self deleteEvent:localCounterpart];
@@ -232,11 +250,35 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkEncoder) name:NOTIF_EM_FOUND_MASTER object:nil];
         //[self checkLocalTags];
+        instance = self;
     }
     return self;
 }
 
 
+-(id <EncoderProtocol>)makePrimary
+{
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadEvent:)  name:NOTIF_EM_DOWNLOAD_EVENT    object:nil];
+    return self;
+}
+
+-(id <EncoderProtocol>)removeFromPrimary
+{
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_EVENT       object:nil];
+    return self;
+}
 
 
 #pragma mark - EncoderProtocol
@@ -268,7 +310,7 @@
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
 
-    Tag *newTag                     = [[Tag alloc] initWithData:tData];
+    Tag *newTag                     = [[Tag alloc] initWithData:tData event:self.event];
     NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
     double tagArePresentCount       = tagArePresent.count + 1;
     newTag.uniqueID                 = tagArePresentCount + self.event.localTags.count;
@@ -279,11 +321,11 @@
     newTag.visitTeam                = self.event.teams[@"visitTeam"];
     newTag.synced                   = NO;
 
-    [self.event.tags setObject:newTag forKey:newTag.ID];// or should be unique ID
+    [self.event addTag:newTag];
+    //[self.event addTag:newTag];
+    //[self.event.tags addObject:newTag];
 
  
-
-
     [self.localTags setObject:newTag.makeTagData forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
     
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
@@ -292,7 +334,7 @@
     NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
     [self.localTags writeToFile:localplistNamePath atomically:YES];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];
 
 }
 
@@ -306,7 +348,7 @@
     if (self.localTags.count >= 1 && self.encoderManager.masterEncoder) {
 
     NSArray *arrya = [[NSArray alloc]initWithArray:[self.localTags allValues]];
-        Tag *tagToSend = [[Tag alloc]initWithData:[arrya firstObject]];
+        Tag *tagToSend = [[Tag alloc]initWithData:[arrya firstObject] event:self.event];
         NSDictionary *tData = [tagToSend makeTagData];
         NSString *jsonString                    = [Utility dictToJSON:tData];
         NSString *ipAddress                     = self.encoderManager.masterEncoder.ipAddress;
@@ -382,11 +424,14 @@
             }
             
             NSArray *arrayFromDic = [[NSArray alloc]initWithArray:[self.localTags allValues]];
-            Tag *localTag = [[Tag alloc]initWithData:[arrayFromDic firstObject]];
+            Tag *localTag = [[Tag alloc]initWithData:[arrayFromDic firstObject] event:self.event];
             [localTag replaceDataWithDictionary: results];
             for (Event *event in [self.allEvents allValues]) {
                 if ([[event.localTags allValues] containsObject: localTag]){
-                    [event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
+                    [event addTag:localTag];
+                    //[event addTag:localTag];
+                    //[event.tags addObject:localTag];
+                    //[event.tags addEntriesFromDictionary: @{[NSString stringWithFormat: @"%i", localTag.uniqueID]:localTag }];
                     [event.localTags removeObjectForKey:[[event.localTags allKeysForObject: localTag] firstObject]];
                 }
             }
@@ -413,17 +458,20 @@
             NSDictionary    * tags = [results objectForKey:@"tags"];
             if (tags) {
                 Event *theEvent;
-                Tag *firstTag = [[Tag alloc] initWithData:[[tags allValues]firstObject]];
+                Tag *firstTag = [[Tag alloc] initWithData:[[tags allValues]firstObject] event:self.event];
                 for (Event *event in [self.allEvents allValues]) {
-                    if ([event.rawData[@"hid"] isEqualToString: firstTag.event]) {
+                    if ([event.rawData[@"hid"] isEqualToString: firstTag.event.hid]) {
                         theEvent = event;
                     }
                 }
                 
                 for (NSDictionary *tag in tags) {
-                    Tag *newTag = [[Tag alloc]initWithData:tag];
-                    if (![[theEvent.tags allValues] containsObject: newTag]) {
-                        [theEvent.tags addEntriesFromDictionary:@{[NSString stringWithFormat:@"%d", newTag.uniqueID]: newTag}];
+                    Tag *newTag = [[Tag alloc]initWithData:tag event:self.event];
+                    if (![theEvent.tags containsObject: newTag]) {
+                        [theEvent addTag:newTag];
+                        //[theEvent addTag:newTag];
+                        //[theEvent.tags addObject:newTag];
+                        //[theEvent.tags addEntriesFromDictionary:@{[NSString stringWithFormat:@"%d", newTag.uniqueID]: newTag}];
                     }
                 }
                 

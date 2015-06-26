@@ -24,6 +24,7 @@
 
 #import "FullScreenViewController.h"
 #import "Tag.h"
+#import "ListViewFullScreenViewController.h"
 
 
 
@@ -38,9 +39,10 @@
 
 @interface ListViewController ()
 
-@property (strong, nonatomic) L2BVideoBarViewController *videoBarViewController;
+//@property (strong, nonatomic) L2BVideoBarViewController *videoBarViewController;
 @property (strong, nonatomic) UIPinchGestureRecognizer *pinchGesture;
-@property (strong, nonatomic) FullScreenViewController *fullScreenViewController;
+//@property (strong, nonatomic) FullScreenViewController *fullScreenViewController;
+@property (strong, nonatomic) ListViewFullScreenViewController *listViewFullScreenViewController;
 @property (strong, nonatomic) UIButton *filterButton;
 @property (strong, nonatomic) UIButton *dismissFilterButton;
 
@@ -65,6 +67,9 @@
     HeaderBarForListView            * headerBar;
     CommentingRatingField           * commentingField;
     VideoBarListViewController      * newVideoControlBar;
+    
+    Event                           * _currentEvent;
+    id <EncoderProtocol>                _observedEncoder;
 }
 @synthesize breadCrumbsView;
 @synthesize selectedCellRows;
@@ -86,68 +91,168 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sendBookmarkRequest) name:@"sendOldBookmarkRequest" object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(listViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
                self.allTags = [[NSMutableArray alloc]init];
             self.tagsToDisplay = [[NSMutableArray alloc]init];
         _tableViewController = [[ListTableViewController alloc]init];
         _tableViewController.contextString = @"TAG";
         [self addChildViewController:_tableViewController];
-       // _tableViewController.listViewControllerView = self.view;
+        //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
         
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+        /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             NSLog(@"READY!");
             
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
+                self.allTags = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
                     self.tagsToDisplay = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-                    [_tableViewController.tableView reloadData];
+                    _tableViewController.tableData = self.tagsToDisplay;
+                    //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+                    [_tableViewController reloadData];
             }
-        }];
+            if (!componentFilter.rawTagArray) {
+                componentFilter.rawTagArray = self.tagsToDisplay;
+            };
+        }];*/
         
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+        
+        self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
+        //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
+        self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
+        //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+
+         [self.view addSubview:self.videoPlayer.view];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
+            [newVideoControlBar setMode:LISTVIEW_MODE_CLIP];
+            [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_CLIP];
         
             [commentingField clear];
             commentingField.enabled             = YES;
             commentingField.text                = selectedTag.comment;
             commentingField.ratingScale.rating  = selectedTag.rating;
             [newVideoControlBar setTagName: selectedTag.name];
+            [self.listViewFullScreenViewController setTagName:selectedTag.name];
         }];
-
         
     }
     return self;
     
 }
 
-- (void)deleteTag: (NSNotification *)note {
-    [self.tagsToDisplay removeObject: note.object];
-    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-    [_tableViewController reloadData];
+-(void)addEventObserver:(NSNotification *)note
+{
+    if (_observedEncoder != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+
+    
+    if (note.object == nil) {
+        _observedEncoder = nil;
+    }else{
+        _observedEncoder = (id <EncoderProtocol>) note.object;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
 }
 
-- (void)listViewTagReceived:(NSNotification*)note {
+-(void)eventChanged:(NSNotification *)note
+{
+    if (_currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+    [self clear];
+    
+    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        _currentEvent = nil;
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
+        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
+        [self.videoPlayer playFeed:nil];
+    }else{
+        _currentEvent = [((id <EncoderProtocol>) note.object) event];
+        [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_REGULAR];
+        [self.videoPlayer playFeed:_currentEvent.feeds[@"s1"]];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+}
+
+-(void)onTagChanged:(NSNotification *)note{
+    
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.allTags containsObject:tag]) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay insertObject:tag atIndex:0];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
+            }
+            [self.allTags insertObject:tag atIndex:0];
+        }
+        if(tag.modified && [self.allTags containsObject:tag]){
+            [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
+                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            }
+            if (tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay insertObject:tag atIndex:0];
+            }
+        }
+    }
+    
+    Tag *toBeRemoved;
+    for (Tag *tag in self.allTags ){
+        
+        if (![_currentEvent.tags containsObject:tag]) {
+            toBeRemoved = tag;
+        }
+    }
+    if (toBeRemoved) {
+        [self.allTags removeObject:toBeRemoved];
+        [self.tagsToDisplay removeObject:toBeRemoved];
+    }
+    
+    componentFilter.rawTagArray = self.tagsToDisplay;
+    [_tableViewController reloadData];
+    
+}
+
+
+/*- (void)deleteTag: (NSNotification *)note {
+    [self.tagsToDisplay removeObject: note.object];
+    [self.allTags removeObject:note.object];
+    //_tableViewController.tableData = self.tagsToDisplay;
+    //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+      componentFilter.rawTagArray = self.tagsToDisplay;
+    [_tableViewController reloadData];
+}*/
+
+/*- (void)listViewTagReceived:(NSNotification*)note {
     
     if (note.object) {
+        [self.allTags insertObject:note.object atIndex:0];
         [self.tagsToDisplay insertObject:note.object atIndex:0];
-        _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+        _tableViewController.tableData = self.tagsToDisplay;
+        //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
         [_tableViewController reloadData];
     }
     
-}
+}*/
 
 - (void)sortFromHeaderBar:(id)sender
 {
-    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+    //[self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
+    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
+    //[self filterAndSortTags:self.tagsToDisplay];
+    //_tableViewController.tableData = [self receiveFilteredArrayFromFilter:nil];
     [_tableViewController reloadData];
 }
 
@@ -189,10 +294,12 @@ NSMutableArray *oldEventNames;
             
             
             if (self.pinchGesture.scale >1) {
-                self.fullScreenViewController.enable = YES;
+                //self.fullScreenViewController.enable = YES;
+                self.listViewFullScreenViewController.enable = YES;
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (self.pinchGesture.scale < 1){
-                self.fullScreenViewController.enable = NO;
+                //self.fullScreenViewController.enable = NO;
+                self.listViewFullScreenViewController.enable = NO;
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
@@ -240,20 +347,45 @@ NSMutableArray *oldEventNames;
     //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
     
     
-    self.videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    newVideoControlBar = [[VideoBarListViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    [newVideoControlBar.startRangeModifierButton addTarget:self action:@selector(startRangeBeenModified: ) forControlEvents:UIControlEventTouchUpInside];
+    [newVideoControlBar.endRangeModifierButton addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:newVideoControlBar.view];
+    if (_currentEvent) {
+        [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
+    }
+    else{
+        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
+    }
+    
+    //self.videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
     //[_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     //[_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [self.videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
-    [self.videoBarViewController viewDidAppear: YES];
+    //[self.videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
+    //[self.videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
+    //[self.videoBarViewController viewDidAppear: YES];
     //[self.videoBarViewController createTagMarkers];
     
     [self.view addSubview:self.videoPlayer.view];
-    [self.view addSubview:self.videoBarViewController.view];
+    //[self.view addSubview:self.videoBarViewController.view];
     
-    self.fullScreenViewController = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    /*self.fullScreenViewController = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     self.fullScreenViewController.context = @"ListView Tab";
     //[self.fullScreenViewController setMode: L2B_FULLSCREEN_MODE_DEMO];
-    [self.view addSubview: self.fullScreenViewController.view];
+    [self.view addSubview: self.fullScreenViewController.view];*/
+    
+    self.listViewFullScreenViewController = [[ListViewFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    self.listViewFullScreenViewController.context = @"ListView Tab";
+    [self.listViewFullScreenViewController.startRangeModifierButton addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [self.listViewFullScreenViewController.endRangeModifierButton addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
+    [self.listViewFullScreenViewController.next addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
+    [self.listViewFullScreenViewController.prev addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview: self.listViewFullScreenViewController.view];
+    if (_currentEvent) {
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_REGULAR];
+    }else{
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
+    }
     
     self.pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer: self.pinchGesture];
@@ -266,14 +398,70 @@ NSMutableArray *oldEventNames;
     //    [swipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     //    [self.videoPlayer.view addGestureRecognizer:swipeGestureRecognizer];
     
-   componentFilter = [TestFilterViewController commonFilter];
+   //componentFilter = [TestFilterViewController commonFilter];
     
     _tableViewController.tableData = self.tagsToDisplay;
 }
 
+-(void)getNextTag
+{
+    NSUInteger index = [_tableViewController.tableData indexOfObject:selectedTag];
+    
+    if (index == _tableViewController.tableData.count - 1) {
+        return;
+    }
+    
+    NSUInteger newIndex = index + 1;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                   @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                   @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
+                                                                                                                                   @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
+                                                                                                                                   @"comment": selectedTag.comment,
+                                                                                                                                   @"forWhole":selectedTag,
+                                                                                                                                   @"state":[NSNumber numberWithInteger:RJLPS_Play]
+                                                                                                                                   }}];
+    
+    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
+    
+    [commentingField clear];
+    commentingField.text                = selectedTag.comment;
+    commentingField.ratingScale.rating  = selectedTag.rating;
+    [newVideoControlBar setTagName: selectedTag.name];
+    [self.listViewFullScreenViewController setTagName:selectedTag.name];
+}
+
+-(void)getPrevTag
+{
+    NSUInteger index = [_tableViewController.tableData indexOfObject:selectedTag];
+    
+    if (index == 0) {
+        return;
+    }
+    
+    NSUInteger newIndex = index - 1;
+    
+    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                                                    @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                    @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
+                                                                                                                                    @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
+                                                                                                                                    @"comment": selectedTag.comment,
+                                                                                                                                    @"forWhole":selectedTag,
+                                                                                                                                    @"state":[NSNumber numberWithInteger:RJLPS_Play]
+                                                                                                                                    }}];
+
+    
+    [commentingField clear];
+    commentingField.text                = selectedTag.comment;
+    commentingField.ratingScale.rating  = selectedTag.rating;
+    [newVideoControlBar setTagName: selectedTag.name];
+    [self.listViewFullScreenViewController setTagName:selectedTag.name];
+}
+
 -(void)viewWillAppear:(BOOL)animated{
     
-
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){
@@ -282,13 +470,22 @@ NSMutableArray *oldEventNames;
             [self.videoPlayer playFeed:theFeed];
         }
         
-        if (!self.tagsToDisplay) {
+        /*if (!self.tagsToDisplay) {
             self.tagsToDisplay = [NSMutableArray arrayWithArray:[eventTags copy]];
             _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
 
             [_tableViewController reloadData];
-        }
+        }*/
         
+        if(eventTags.count > 0 && !self.tagsToDisplay){
+            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+            self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
+            if (!componentFilter.rawTagArray) {
+                self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
+            }
+            [_tableViewController reloadData];
+        }
+
 
 //            self.allTagsArray = [NSMutableArray arrayWithArray:[eventTags copy]];
 //            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
@@ -478,7 +675,7 @@ NSMutableArray *oldEventNames;
 //        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc] initWithObjects:tag,indexPath, nil] forKeys:[[NSArray alloc]initWithObjects:@"tag",@"indexpath", nil]];
 //        [selectedCellRows setObject:dict forKey:[NSString stringWithFormat:@"%d",indexPath.row]];
 //        [self deleteCells];
-//
+
 //    }
 //}
 
@@ -488,10 +685,30 @@ NSMutableArray *oldEventNames;
 //  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  //
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {
-    _tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+    AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
+    NSMutableArray *filteredArray = (NSMutableArray *)[checkFilter processedList]; //checkFilter.displayArray;
+    self.tagsToDisplay = [filteredArray mutableCopy];
+    //[self.collectionView reloadData];
+    _tableViewController.tableData = self.tagsToDisplay;
     [_tableViewController reloadData];
+    [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
+
+    
+    //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
+ 
 }
 //  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  ////  //
+
+-(Float64) highestTimeInTags: (NSArray *) arrayOfTags{
+    Float64 highestTime = 0;
+    for (Tag *tag in arrayOfTags) {
+        if (tag.time > highestTime) {
+            highestTime = tag.time;
+        }
+    }
+    return highestTime;
+}
+
 
 #pragma mark - Edge Swipe Buttons Delegate Methods
 
@@ -499,29 +716,43 @@ NSMutableArray *oldEventNames;
 {
 
     
-    if (!componentFilter) {
+    /*if (!componentFilter) {
         componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
-    }
+        componentFilter = [TestFilterViewController commonFilter];
+    }*/
     
     self.dismissFilterButton = [[UIButton alloc] initWithFrame: self.view.bounds];
     [self.dismissFilterButton addTarget:self action:@selector(dismissFilter:) forControlEvents:UIControlEventTouchUpInside];
     self.dismissFilterButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6];
     [self.view addSubview: self.dismissFilterButton];
     
-    //componentFilter.rawTagArray = self.tagsToDisplay;
-    //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
-    componentFilter.rangeSlider.highestValue = [(UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer durationInSeconds];
     
-    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
-    componentFilter.finishedSwipe = TRUE;
-    
+    componentFilter.rawTagArray                 = self.allTags;
+    componentFilter.rangeSlider.highestValue    = [self highestTimeInTags:self.allTags];
+    componentFilter.finishedSwipe               = TRUE;
     [self.view addSubview:componentFilter.view];
-    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
     [componentFilter setOrigin:CGPointMake(60, 190)];
     [componentFilter close:NO];
     [componentFilter viewDidAppear:TRUE];
     [componentFilter open:YES];
+
+    
+    
+    //componentFilter.rawTagArray = self.tagsToDisplay;
+    //componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
+    //componentFilter.rangeSlider.highestValue = [(UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer durationInSeconds];
+    
+    //[componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
+    componentFilter.finishedSwipe = TRUE;
+    
+    [self.view addSubview:componentFilter.view];
+    
+    //componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
+    //[componentFilter setOrigin:CGPointMake(60, 190)];
+    //[componentFilter close:NO];
+    //[componentFilter viewDidAppear:TRUE];
+    //[componentFilter open:YES];
 }
 
 -(void)dismissFilter: (UIButton *)dismissButton{
@@ -559,7 +790,7 @@ NSMutableArray *oldEventNames;
     else
     {
         _tableViewController.isEditable = FALSE;
-//        [self.edgeSwipeButtons deselectButtonAtIndex:2];
+        //[self.edgeSwipeButtons deselectButtonAtIndex:2];
         [self cancelEditingCells];
     }
     
@@ -1546,16 +1777,17 @@ NSMutableArray *oldEventNames;
     
     CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
     
-//    NSString *pick = [userInfo objectForKey:@"feed"];
+   /* NSString *pick = [userInfo objectForKey:@"feed"];
     
-    //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
-    //                                                                                                          @"feed":pick,
-    //                                                                                                          @"time":[userInfo objectForKey:@"time"],
-    //                                                                                                          @"duration":[userInfo objectForKey:@"duration"],
-    //                                                                                                          @"state":[NSNumber numberWithInteger:PS_Play]}];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LISTVIEW_CONTEXT,
+                                                                                                              @"feed":pick,
+                                                                                                              @"time":[userInfo objectForKey:@"time"],
+                                                                                                              @"duration":[userInfo objectForKey:@"duration"],
+                                                                                                              //@"state":[NSNumber numberWithInteger:PS_Play]}];*/
     
     [self.videoPlayer playFeed:[userInfo objectForKey:@"feed"] withRange:timeRange];
-    self.videoPlayer.looping = NO;
+    //self.videoPlayer.looping = NO;
+    self.videoPlayer.looping = YES;
     selectedTag = userInfo[@"forWhole"];
     
     [commentingField clear];
@@ -1563,7 +1795,8 @@ NSMutableArray *oldEventNames;
     commentingField.text                = selectedTag.comment;
     commentingField.ratingScale.rating  = selectedTag.rating;
     
-    [newVideoControlBar setTagName:[currentPlayingTag objectForKey:@"name"]];
+    //
+    [newVideoControlBar setTagName:selectedTag.name];
 }
 
 
@@ -1656,6 +1889,13 @@ NSMutableArray *oldEventNames;
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
+    
+    componentFilter = [TestFilterViewController commonFilter];
+    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+    [self.view addSubview:componentFilter.view];
+    [componentFilter setOrigin:CGPointMake(60, 190)];
+    [componentFilter close:NO];
+
     //    UIImageView *commentBoxTitleBar = [[UIImageView alloc]initWithFrame:CGRectMake(2,SMALL_MEDIA_PLAYER_HEIGHT+140,COMMENTBOX_WIDTH, LABEL_HEIGHT)];
     //    commentBoxTitleBar.backgroundColor = [UIColor clearColor];
     //    [self.view addSubview:commentBoxTitleBar];
@@ -2126,194 +2366,6 @@ NSMutableArray *oldEventNames;
     //    ////////NSLog(@"file length: %i",[_responseData length]);
 }
 
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
-    // Return nil to indicate not necessary to store a cached response for this connection
-    return nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    //    // The request is complete and data has been received
-    //    // You can parse the stuff in your instance variable now
-    //    if (!_responseData) {
-    //        return;
-    //    }
-    //
-    //    id json;
-    //    if(self.isTagModRequest)
-    //    {
-    //        json = [NSJSONSerialization JSONObjectWithData:_responseData options:0 error:nil];
-    //        if ([[json objectForKey:@"success"]integerValue] == 0) {
-    //            //TODO:if the current event was downloaded from other encoder, could not generate bookmark from current servr and no error msg received from current encoder
-    //            if ([json objectForKey:@"msg"]) {
-    //                CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:[NSString stringWithFormat:@"Download clips failed. %@",[json objectForKey:@"msg"]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    //                [alert show];
-    ////                [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
-    //            }
-    //
-    //            //tagmod failed, remove the old request
-    //            if (globals.BOOKMARK_QUEUE.count > 0) {
-    //                NSDictionary *tagInfoDict = [globals.BOOKMARK_QUEUE objectAtIndex:0];
-    //                //[globals.BOOKMARK_QUEUE_FAILED addObject:tagInfoDict];
-    //                NSDictionary *currentBookmark = [tagInfoDict objectForKey:@"tag"];
-    //                [[downloadingTagsDict objectForKey:[currentBookmark objectForKey:@"event"]] removeObject:[currentBookmark objectForKey:@"id"]];
-    //                [globals.BOOKMARK_QUEUE removeObjectAtIndex:0];
-    //            }
-    //
-    //            globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS--;
-    //
-    //            //if the queue is not empty, send the next request
-    //            if (globals.BOOKMARK_QUEUE.count > 0) {
-    //                [self sendTheNextRequest];
-    //            }else if ([aCopyOfUnfinishedTags count] > 0){
-    //                [self sendOneRequest];
-    //            }
-    //
-    //
-    //        }else{
-    //            [self tagModCallback:json];
-    //        }
-    //    } else {
-    //        NSDictionary *currentBookmark = newTagInfoDict;
-    //        NSError* error;
-    //
-    //        if(![[NSFileManager defaultManager] fileExistsAtPath:globals.BOOKMARK_VIDEO_PATH])
-    //        {
-    //            [fileManager createDirectoryAtPath:globals.BOOKMARK_VIDEO_PATH withIntermediateDirectories:YES attributes:nil error:&error];
-    //        }
-    //        //add video to directory
-    //       // NSURL *url = [[NSURL alloc]initWithString:[[currentBookmark objectForKey:@"vidurl"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    //        NSString *videoNameStr = [[currentBookmark objectForKey:@"event"] stringByAppendingFormat:@"_%@",[[currentBookmark objectForKey:@"vidurl"] lastPathComponent]];
-    //        NSString *videoName;
-    //        videoName = [NSString stringWithFormat:@"test%@",videoNameStr];
-    //
-    //        NSString *videoFilePath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoName]];
-    //        NSFileHandle *output = [NSFileHandle fileHandleForWritingAtPath:videoFilePath];
-    //        if(output == nil) {
-    //            [[NSFileManager defaultManager] createFileAtPath:videoFilePath contents:nil attributes:nil];
-    //            output = [NSFileHandle fileHandleForWritingAtPath:videoFilePath];
-    //        } else {
-    //            [output seekToEndOfFile];
-    //        }
-    //        //[output truncateFileAtOffset:[output seekToEndOfFile]]; //setting aFileHandle to write at the end of the file
-    //
-    //        [output writeData:_responseData]; //actually write the data
-    //
-    //        NSString *finalVideoPath = [globals.BOOKMARK_VIDEO_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",videoNameStr]];
-    //        //globals.TAGS_DOWNLOADED_FROM_SERVER is an array of dictionaries.Each dictionary object has keys:@"tag",@"testPath",@"videoPath".
-    //        //@"tag": tag dictioanrary current downloaded
-    //        //@"testPath" is the temporary path for saving the downloaded full rez or low quality video
-    //        //@"videoPath" is the final path saving the bookmark video
-    //        if (!globals.TAGS_DOWNLOADED_FROM_SERVER) {
-    //            globals.TAGS_DOWNLOADED_FROM_SERVER = [NSMutableArray arrayWithObject:[NSDictionary dictionaryWithObjectsAndKeys:currentBookmark,@"tag",videoFilePath,@"testPath",finalVideoPath,@"videoPath", nil]];
-    //        }else{
-    //            [globals.TAGS_DOWNLOADED_FROM_SERVER addObject:[NSDictionary dictionaryWithObjectsAndKeys:currentBookmark,@"tag",videoFilePath,@"testPath",finalVideoPath,@"videoPath", nil]];
-    //        }
-    //        //NSLog(@"added to globals.TAGS_DOWNLOADED_FROM_SERVER");
-    //        if (globals.BOOKMARK_QUEUE.count > 0) {
-    //            [globals.BOOKMARK_QUEUE removeObjectAtIndex:0];
-    //        }
-    //
-    //         if (globals.BOOKMARK_QUEUE.count > 0) {
-    //             [self sendTheNextRequest];
-    //         }else if ([aCopyOfUnfinishedTags count] > 0){
-    //             [self sendOneRequest];
-    //         }
-    //
-    ////        if (!globals.NEED_RECREATE_BOOKMARK_VIDEO) {
-    ////            [self updateTableView];
-    ////        }else{
-    //        if (globals.TAGS_DOWNLOADED_FROM_SERVER.count == 1) {
-    //            //NSLog(@"count == 1; recreate video clip.");
-    //            [self makeLocalBookmark];
-    //        }
-    //
-    ////        }
-    //
-    //        //make sure all bookmark tags have processed before the process bar in bookmark view "done!"
-    //        _responseData = nil;
-    //
-    //  }
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    //    _responseData = nil;
-    //
-    //    if ([globals.BOOKMARK_QUEUE count] > 0){
-    //
-    //        NSDictionary *tagInfoDict = [globals.BOOKMARK_QUEUE objectAtIndex:0];
-    //        if (!failedBookmarkTagsArr || ![failedBookmarkTagsArr containsObject:tagInfoDict]) {
-    //            //If the request failed the first time, resend request
-    //            if (!failedBookmarkTagsArr) {
-    //                failedBookmarkTagsArr = [NSMutableArray arrayWithObject:tagInfoDict];
-    //            }else{
-    //                [failedBookmarkTagsArr addObject:tagInfoDict];
-    //            }
-    //
-    //            [self sendTheNextRequest];
-    //        }else{
-    //            //If the request failed twice, added it to globals.BOOKMARK_QUEUE_FAILED and remove it from globals.BOOKMARK_QUEUE, then send the next request
-    //
-    //            [globals.BOOKMARK_QUEUE_FAILED addObject:tagInfoDict];
-    //            NSDictionary *currentBookmark = [tagInfoDict objectForKey:@"tag"];
-    //            [[downloadingTagsDict objectForKey:[currentBookmark objectForKey:@"event"]] removeObject:[currentBookmark objectForKey:@"id"]];
-    //            [globals.BOOKMARK_QUEUE removeObjectAtIndex:0];
-    //
-    //            globals.NUMBER_OF_BOOKMARK_TAG_TO_PROCESS--;
-    //            //if the queue is not empty, send the next request
-    //            if (globals.BOOKMARK_QUEUE.count > 0) {
-    //                [self sendTheNextRequest];
-    //            }else if ([aCopyOfUnfinishedTags count] > 0){
-    //                [self sendOneRequest];
-    //            }
-    //        }
-    //    }
-}
-
-//update list view table view and update globals varibals
-//-(void)updateTableView
-//{
-//    if(globals.TAGS_DOWNLOADED_FROM_SERVER.count < 1) {
-//        return;
-//    }
-//
-//    NSDictionary *currentBookmark = [[globals.TAGS_DOWNLOADED_FROM_SERVER objectAtIndex:0]objectForKey:@"tag"];//newTagInfoDict;
-//    if(![receivedTagArr containsObject:[currentBookmark objectForKey:@"id"]]){
-//        globals.NUMBER_OF_BOOKMARK_TAG_RECEIVED++;
-//        globals.RECEIVED_ONE_BOOKMARK_VIDEO = TRUE;
-//        [receivedTagArr addObject:[currentBookmark objectForKey:@"id"]];
-//    }
-//    [[downloadingTagsDict objectForKey:[currentBookmark objectForKey:@"event"]] removeObject:[currentBookmark objectForKey:@"id"]];
-//
-//    if (![[globals.BOOKMARK_TAGS allKeys] containsObject:[currentBookmark objectForKey:@"event"]]) {
-//        [globals.BOOKMARK_TAGS setObject:[[NSMutableDictionary alloc]initWithObjects:[[NSArray alloc]initWithObjects:currentBookmark, nil] forKeys:[[NSArray alloc]initWithObjects:[NSString stringWithFormat:@"%@",[currentBookmark objectForKey:@"id"]], nil]] forKey:[currentBookmark objectForKey:@"event"]];
-//    } else {
-//        [[globals.BOOKMARK_TAGS objectForKey:[currentBookmark objectForKey:@"event"]] setObject:currentBookmark forKey:[NSString stringWithFormat:@"%@",[currentBookmark objectForKey:@"id"]]];
-//    }
-//    [globals.BOOKMARK_TAGS writeToFile:globals.BOOKMARK_TAGS_PATH atomically:YES];
-//
-//    //NSLog(@"updateTableView, reload data");
-//    //[myTableView reloadData];
-//
-//    NSString *orderedBookmarkPlist=[globals.BOOKMARK_PATH stringByAppendingPathComponent:@"orderedBookmarks.plist"];
-//
-//    if([fileManager fileExistsAtPath:orderedBookmarkPlist isDirectory:false])
-//    {
-//        NSMutableArray *t = [[NSMutableArray alloc] initWithContentsOfFile:orderedBookmarkPlist]; // temp array for the ordered list of bookmarks
-//        [t insertObject:currentBookmark atIndex:0];//add the new bookmark to the top of the list
-//        [t writeToFile:orderedBookmarkPlist atomically:TRUE];
-//    }
-//
-//    if (globals.TAGS_DOWNLOADED_FROM_SERVER.count > 0) {
-//        [globals.TAGS_DOWNLOADED_FROM_SERVER removeObjectAtIndex:0];
-//    }
-//
-//     if (globals.TAGS_DOWNLOADED_FROM_SERVER.count > 0) {
-//         //shouldRecreateNextTag = TRUE;
-//         //NSLog(@"more tag videos being downloaded");
-//         [self makeLocalBookmark];
-//     }
-//}
 
 
 //initialise the video control bar which is right under the video player
@@ -2631,46 +2683,96 @@ NSMutableArray *oldEventNames;
 
 //extend the tag duration by adding five secs at the beginning of the tag
 -(void)startRangeBeenModified:(CustomButton*)button{
-    //    if (!currentPlayingTag || [[currentPlayingTag objectForKey:@"type"]intValue] == 4){
-    //
-    //        return;
-    //    }
-    //
-    //
-    //    float newStartTime = 0;
-    //
-    //    float endTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + [[currentPlayingTag objectForKey:@"duration"]floatValue];
-    //    if ([button.accessibilityValue isEqualToString:@"extend"]) {
-    //
-    //        //extend the duration 5 seconds by decreasing the start time 5 seconds
-    //        newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] -5;
-    //        //if the new start time is smaller than 0, set it to 0
-    //        if (newStartTime <0) {
-    //            newStartTime = 0;
-    //        }
-    //
-    //    }else{
-    //        //subtract the duration 5 seconds by increasing the start time 5 seconds
-    //        newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + 5;
-    //
-    //        //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
-    //        if (newStartTime > endTime) {
-    //            newStartTime = endTime -1;
-    //        }
-    //
-    //    }
-    //
-    //    //set the new duration to tag end time minus new start time
-    //    int newDuration = endTime - newStartTime;
-    //
+    Tag *tagToBeModified = selectedTag;
+    
+    
+    if (!tagToBeModified|| tagToBeModified.type == TagTypeTele ){
+        
+        return;
+    }
+    
+    
+    float newStartTime = 0;
+    
+    float endTime = tagToBeModified.startTime + tagToBeModified.duration;
+    if ([button.accessibilityValue isEqualToString:@"extend"]) {
+        
+        //extend the duration 5 seconds by decreasing the start time 5 seconds
+        newStartTime = tagToBeModified.startTime - 5;
+        //if the new start time is smaller than 0, set it to 0
+        if (newStartTime <0) {
+            newStartTime = 0;
+        }
+        
+    }else{
+        //subtract the duration 5 seconds by increasing the start time 5 seconds
+        newStartTime = tagToBeModified.startTime + 5;
+        
+        //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
+        if (newStartTime > endTime) {
+            newStartTime = endTime -1;
+        }
+        
+    }
+    
+    //set the new duration to tag end time minus new start time
+    int newDuration = endTime - newStartTime;
+    
+    
     //    globals.HOME_START_TIME = newStartTime;
     //    globals.HOME_END_TIME = endTime;
     //
-    //    NSString *startTimeString = [NSString stringWithFormat:@"%f",newStartTime];
-    //    NSString *duration = [NSString stringWithFormat:@"%d",newDuration];
-    //    [currentPlayingTag setValue:startTimeString forKey:@"starttime"];
-    //    [currentPlayingTag setValue:duration forKey:@"duration"];
+    
+    tagToBeModified.startTime = newStartTime;
+    tagToBeModified.duration = newDuration;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    
+    //[_tableViewController reloadData];
+    
+    
+    
+        /*if (!currentPlayingTag || [[currentPlayingTag objectForKey:@"type"]intValue] == 4){
+    
+            return;
+        }
+    
+    
+        float newStartTime = 0;
+    
+        float endTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + [[currentPlayingTag objectForKey:@"duration"]floatValue];
+        if ([button.accessibilityValue isEqualToString:@"extend"]) {
+    
+            //extend the duration 5 seconds by decreasing the start time 5 seconds
+            newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] -5;
+            //if the new start time is smaller than 0, set it to 0
+            if (newStartTime <0) {
+                newStartTime = 0;
+            }
+    
+        }else{
+            //subtract the duration 5 seconds by increasing the start time 5 seconds
+            newStartTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue] + 5;
+    
+            //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
+            if (newStartTime > endTime) {
+                newStartTime = endTime -1;
+            }
+    
+        }
+    
+        //set the new duration to tag end time minus new start time
+        int newDuration = endTime - newStartTime;
+    
+    
+    //    globals.HOME_START_TIME = newStartTime;
+    //    globals.HOME_END_TIME = endTime;
     //
+        NSString *startTimeString = [NSString stringWithFormat:@"%f",newStartTime];
+        NSString *duration = [NSString stringWithFormat:@"%d",newDuration];
+        [currentPlayingTag setValue:startTimeString forKey:@"starttime"];
+        [currentPlayingTag setValue:duration forKey:@"duration"];*/
+    
     //    [globals.CURRENT_EVENT_THUMBNAILS setObject:currentPlayingTag forKey:[NSString stringWithFormat:@"%@",[currentPlayingTag objectForKey:@"id"]]];
     //
     //    if ([[currentPlayingTag objectForKey:@"bookmark"]integerValue] ==1) {
@@ -2721,38 +2823,42 @@ NSMutableArray *oldEventNames;
 
 //extend the tag duration by adding five secs at the end of the tag
 -(void)endRangeBeenModified:(CustomButton*)button{
-    //    if (!currentPlayingTag || [[currentPlayingTag objectForKey:@"type"]intValue] == 4){
-    //
-    //        return;
-    //    }
-    //
-    //    //int newDuration = [[currentPlayingTag objectForKey:@"duration"]integerValue] + 5;
-    //    int newDuration = 0;
-    //    float startTime = [[currentPlayingTag objectForKey:@"starttime"]floatValue];
-    //    float endTime = startTime + [[currentPlayingTag objectForKey:@"duration"]floatValue];
-    //    if ([button.accessibilityValue isEqualToString:@"extend"]) {
-    //        //increase end time by 5 seconds
-    //        endTime = endTime + 5;
-    //        //if new end time is greater the duration of video, set it to the video's duration
-    //        if (endTime > self.videoPlayer.durationInSeconds) {
-    //            endTime = self.videoPlayer.duration;
-    //        }
-    //
-    //    }else{
-    //        //subtract end time by 5 seconds
-    //        endTime = endTime - 5;
-    //        //if the new end time is smaller than the start time,it will cause a problem for tag looping. So set it to start time plus one.
-    //        if (endTime < startTime) {
-    //            endTime = startTime + 1;
-    //        }
-    //
-    //    }
-    //    //get the new duration
-    //    newDuration = endTime - startTime;
-    //
-    //    NSString *duration = [NSString stringWithFormat:@"%d",newDuration];
-    //    [currentPlayingTag setValue:duration forKey:@"duration"];
-    //
+    Tag *tagToBeModified = selectedTag;
+        if (!selectedTag || selectedTag.type == TagTypeDeleted)
+        {
+            return;
+        }
+
+
+    int newDuration = tagToBeModified.duration + 5;
+
+    float startTime = tagToBeModified.startTime;
+    
+    float endTime = startTime + tagToBeModified.duration;
+ 
+    if ([button.accessibilityValue isEqualToString:@"extend"]) {
+           //increase end time by 5 seconds
+            endTime = endTime + 5;
+            //if new end time is greater the duration of video, set it to the video's duration
+            if (endTime > [self.videoPlayer durationInSeconds]) {
+                endTime = [self.videoPlayer durationInSeconds];
+            }
+    
+        }else{
+            //subtract end time by 5 seconds
+            endTime = endTime - 5;
+            //if the new end time is smaller than the start time,it will cause a problem for tag looping. So set it to start time plus one.
+            if (endTime < startTime) {
+                endTime = startTime + 1;
+            }
+    
+        }
+        //get the new duration
+        newDuration = endTime - startTime;
+    
+    tagToBeModified.duration = newDuration;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    
     //    //handle offline mode, save comment information in local storage
     //    [globals.CURRENT_EVENT_THUMBNAILS setObject:currentPlayingTag forKey:[NSString stringWithFormat:@"%@",[currentPlayingTag objectForKey:@"id"]]];
     //
@@ -2846,397 +2952,13 @@ NSMutableArray *oldEventNames;
     
     self.videoPlayer.mute = YES;
     
-    //    [teleView removeFromSuperview];
-    //    teleView=nil;
-    //
-    //    [self.blurView removeFromSuperview];
-    //    self.blurView=nil;
-    //    [self.edgeSwipeButtons deselectButtonAtIndex:1];
-    //
-    //    //will leaving live2bench view,pause video
-    //    if (globals.CURRENT_PLAYBACK_EVENT && ![globals.CURRENT_PLAYBACK_EVENT isEqualToString:@""]) {
-    //        [videoPlayer pause];
-    //        //remove timeobserver
-    //        if (videoPlayer.timeObserver) {
-    //            //NSLog(@"remove time observer");
-    //            [videoPlayer removePlayerItemTimeObserver];
-    //        }
-    //
-    //    }
-    //
-    //    //remove loop tag observer
-    //    //remove the observer for looping tag
-    //    if (loopTagObserver) {
-    //        [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
-    //        loopTagObserver = nil;
-    //    }
-    //
-    //    //if navigating to other view while video player is still in fullscreen mode, call the exit fullscreen method
-    //    if (videoPlayer.isFullScreen) {
-    //        [videoPlayer exitFullScreen];
-    //    }
-    //    ////NSLog(@"globals.CURRENT_EVENT_THUMBNAILS count in listview  will disappear %d",globals.CURRENT_EVENT_THUMBNAILS.count);
-    //    globals.IS_LOOP_MODE = FALSE;
-    //    globals.SHOW_TOASTS = TRUE;
-    //    //we will remove the filtertoolbox to deallocate mem -- makes sure app does not freeze up
-    //    [typesOfTags removeAllObjects];
-    //    //[self invalidateTimer];
-    //    [selectedCellRows removeAllObjects];
-    //
-    //    [self.tagsToDisplay removeAllObjects];
-    //    //we will remove the filtertoolbox to deallocate mem -- makes sure app does not freeze up
-    //    [filterToolBoxListViewController.view removeFromSuperview];
-    //    filterToolBoxListViewController=nil;
-    //
-    //    currentPlayingTag = nil;
-    //    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
-    //        [uController writeTagsToPlist];
-    //    }
-    //    noVideoURLAlert = nil;
-    //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeAllObjects];
-    //    [CustomAlertView removeAll];
-    //    //Edge Swipe Buttons
-    //    [self.edgeSwipeButtons deselectAllButtons];
-    //    [componentFilter close:NO];
-}
+  }
 
 
-//-(void)receiveFilteredArray:(NSArray*)filteredArray
-//{
-//
-//    NSMutableArray *tempArr = [[self sortArrayByTime: [NSMutableArray arrayWithArray:filteredArray]]mutableCopy];
-//    self.tagsToDisplay = [tempArr mutableCopy];
-//    for(NSDictionary *tag in tempArr){
-//        if ([[tag objectForKey:@"type"]integerValue ] ==7 ||[[tag objectForKey:@"type"]integerValue ] ==8 ) {
-//            [self.tagsToDisplay removeObject:tag];
-//        }
-//    }
-//    [self.myTableView reloadData];
-//    globals.THUMBNAIL_COUNT_REF_ARRAY = self.tagsToDisplay;
-//    @try {
-//        downloadedTagIds = [globals.DOWNLOADED_THUMBNAILS_SET mutableCopy];
-//    }
-//    @catch (NSException *exception) {
-//        NSLog(@"downloadedTagIds: %@",exception.reason);
-//    }
-//}
 
-//new tags received from the server while the user is in list view
--(void)getNewTags:(NSNotification*)notification{
-    //
-    //    NSDictionary *newTag;
-    //    if(globals.TAGGED_ATTS_DICT_SHIFT.count >0){
-    //        if([filterToolBoxListViewController sortClipsBySelectingforShiftFiltering:notification.object].count > 0){
-    //            //socket only send one tag a time
-    //            newTag = [[[filterToolBoxListViewController sortClipsBySelectingforShiftFiltering:notification.object] objectAtIndex:0] copy];
-    //
-    //            if ([[newTag objectForKey:@"modified"]intValue] != 1) {
-    //                [self.tagsToDisplay addObject:newTag];
-    //            }else{
-    //                //NSLog(@"getNewTags  reload data!");
-    //                [self.myTableView reloadData];
-    //                return;
-    //            }
-    //        }else{
-    //            return;
-    //        }
-    //
-    //    }else{
-    //        if ([filterToolBoxListViewController sortClipsWithAttributes:notification.object].count > 0) {
-    //            //socket only send one tag a time
-    //            newTag = [[[filterToolBoxListViewController sortClipsWithAttributes:notification.object] objectAtIndex:0]copy];
-    //
-    //            //if this tag is tagmod tag, donot update the list view.
-    //            if ([[newTag objectForKey:@"modified"]intValue] != 1) {
-    //                [self.tagsToDisplay addObject:newTag];
-    //            }else{
-    //                //NSLog(@"getNewTags  reload data!");
-    //                [self.myTableView reloadData];
-    //                return;
-    //            }
-    //
-    //        }else{
-    //            return;
-    //        }
-    //    }
-    //
-    //    if (globals.CURRENT_EVENT_THUMBNAILS.count > 0) {
-    //        self.edgeSwipeButtons.hidden = NO;
-    //    }
-    //    else
-    //    {
-    //        self.edgeSwipeButtons.hidden = YES;
-    //    }
-    //
-    //
-    //    [self updateTagTypes:notification.object];
-    //    globals.THUMBNAIL_COUNT_REF_ARRAY = self.tagsToDisplay;
-    //    //NSLog(@"getNewTags  reload data!");
-    //    [self.myTableView reloadData];
-}
-
-
-//update update globals.TYPES_OF_TAGS which is used to update filter view's event buttons, user buttons and player buttons
--(void)updateTagTypes:(NSArray*)tagsArr{
-    
-    //    NSMutableArray *tempAllTags = [tagsArr mutableCopy];
-    //    allTags = [tempAllTags mutableCopy];
-    //    //"type" value: #default = 0; #stop line/zone = 2;#telestration = 4;#player end shift = 6;#period/half end = 8/18; #strength end  = 10
-    //    for(NSDictionary *tag in tempAllTags){
-    //
-    //        if([[tag objectForKey:@"type"] intValue]==8 || [[tag objectForKey:@"type"] intValue]==18 || ([[tag objectForKey:@"type"] intValue]&1)||[[tag objectForKey:@"type"]integerValue] == 20|| [[tag objectForKey:@"type"]integerValue] == 22 ){
-    //            [allTags removeObject:tag];
-    //        }
-    //    }
-    //
-    //
-    //    NSMutableArray *openEndStrings = [[NSMutableArray alloc] init]; //will use this array for open and end types of different sports -- soccer will be 17,18 hockey will be 7,8
-    //    if([globals.WHICH_SPORT isEqualToString:@"hockey"])
-    //    {
-    //        [openEndStrings addObject:@"7"];
-    //        [openEndStrings addObject:@"8"];
-    //    }else if([globals.WHICH_SPORT isEqualToString:@"soccer"] || [globals.WHICH_SPORT isEqualToString:@"rugby"])
-    //    {
-    //        [openEndStrings addObject:@"17"];
-    //        [openEndStrings addObject:@"18"];
-    //    }else{
-    //        //for testing
-    //        [openEndStrings addObject:@"100"];
-    //        [openEndStrings addObject:@"101"];
-    //    }
-    //
-    //    NSMutableArray *tempArray = [[NSMutableArray alloc]init];
-    //    for(NSDictionary *tag in allTags){
-    //
-    //        globals.IS_TAG_TYPES_UPDATED = TRUE;
-    //
-    //        if(![globals.ARRAY_OF_COLOURS containsObject:[tag objectForKey:@"colour"]]&&[tag objectForKey:@"colour"]!=nil)
-    //        {
-    //            [globals.ARRAY_OF_COLOURS  addObject:[tag objectForKey:@"colour"]];
-    //        }
-    //        //type == 2, line tag;type == 0 normal tag;type ==100, duration tag; if the tag was deleted, type value will be 3 and "deleted" value will be 1
-    //        if(([[tag objectForKey:@"type"] intValue]==0 || [[tag objectForKey:@"type"] intValue]==100) && [[tag objectForKey:@"type"]integerValue]!=3&& [tag  objectForKey:@"name"]!=nil)
-    //        {
-    //            [tempArray addObject:tag];
-    //
-    //            if(![[globals.TYPES_OF_TAGS objectAtIndex:0] containsObject:[tag  objectForKey:@"name"]] && [tag  objectForKey:@"name"]!=nil && [[tag objectForKey:@"name"] rangeOfString:@"Pl. "].location == NSNotFound)
-    //            {
-    //                [[globals.TYPES_OF_TAGS objectAtIndex:0] addObject:[tag  objectForKey:@"name"]];
-    //            }
-    //
-    //            if ([[tag  objectForKey:@"player"]count]>0 && ![[[tag  objectForKey:@"player"] objectAtIndex:0] isEqualToString: @""] ) {
-    //                NSMutableSet* set1 = [NSMutableSet setWithArray:[globals.TYPES_OF_TAGS objectAtIndex:3]];
-    //                NSMutableSet* set2 = [NSMutableSet setWithArray:[tag  objectForKey:@"player"]];
-    //                [set1 intersectSet:set2]; //this will give you only the obejcts that are in both sets
-    //                NSArray* intersectArray = [set1 allObjects];
-    //                if (intersectArray.count < [[tag objectForKey:@"player"]count]) {
-    //                    NSMutableArray *tempPlayerArr = [[tag objectForKey:@"player"]mutableCopy];
-    //                    //new players which are not included in the array typesoftags
-    //                    [tempPlayerArr removeObjectsInArray:intersectArray];
-    //                    [[globals.TYPES_OF_TAGS objectAtIndex:3] addObjectsFromArray:tempPlayerArr];
-    //                }
-    //            }
-    //
-    //
-    //        }else if([[tag objectForKey:@"type"] intValue]==10 && [[tag objectForKey:@"type"]integerValue]!=3 && [tag  objectForKey:@"name"]!=nil){
-    //            [tempArray addObject:tag];
-    //            //strength tags
-    //            if(![[globals.TYPES_OF_TAGS objectAtIndex:2] containsObject:[tag  objectForKey:@"name"]])
-    //            {
-    //                [[globals.TYPES_OF_TAGS objectAtIndex:2] addObject:[tag  objectForKey:@"name"]];
-    //            }
-    //
-    //        }else if(!([[tag objectForKey:@"type"] intValue]&1) && [[tag objectForKey:@"type"]integerValue]!=3 && [tag  objectForKey:@"name"]!=nil && ![openEndStrings containsObject:[NSString stringWithFormat:@"%@",[tag objectForKey:@"type"]]]){
-    //            [tempArray addObject:tag];
-    //            //normal tag
-    //            if(![[globals.TYPES_OF_TAGS objectAtIndex:1] containsObject:[tag  objectForKey:@"name"]])
-    //            {
-    //                [[globals.TYPES_OF_TAGS objectAtIndex:1] addObject:[tag  objectForKey:@"name"]];
-    //            }
-    //        }
-    //    }
-    //
-    
-}
-
-//create the scroll view to display the current filtering information
--(void)createBreadCrumbsView{
-    return;
-    //    [breadCrumbsView removeFromSuperview];
-    //    breadCrumbsView  = nil;
-    //
-    //    breadCrumbsView = [[UIScrollView alloc]initWithFrame:CGRectMake(0.f,70.f, self.view.bounds.size.width, 40.f)];
-    //
-    //    [self.view addSubview:breadCrumbsView];
-    //
-    //
-    //    NSDictionary *currentCrumbDict;
-    //    NSMutableArray *currentBreadCrumbs=[[NSMutableArray alloc] init];
-    //
-    //    if(globals.TAGGED_ATTS_DICT_SHIFT.count>0)
-    //    {
-    //        currentCrumbDict = [[NSDictionary alloc] initWithDictionary:globals.TAGGED_ATTS_DICT_SHIFT];
-    //    }
-    //    if(globals.TAGGED_ATTS_DICT.count>0){
-    //        currentCrumbDict = [[NSDictionary alloc] initWithDictionary:globals.TAGGED_ATTS_DICT];
-    //    }
-    //    if(currentCrumbDict.count>0)
-    //    {
-    //        for(NSString *keyValue in [currentCrumbDict allKeys])
-    //        {
-    //            //currentBreadCrumbs = (NSMutableArray*)[currentBreadCrumbs arrayByAddingObjectsFromArray:arr];
-    //
-    //            NSString *crumbKeyValue = [NSString stringWithFormat:@"%@|%@",keyValue,[[currentCrumbDict objectForKey:keyValue] componentsJoinedByString:@","]];
-    //            [currentBreadCrumbs addObject:crumbKeyValue];
-    //        }
-    //    }
-    //    if (currentBreadCrumbs.count>0) {
-    //        int i = 0;
-    //        for(NSString *obj in currentBreadCrumbs)
-    //        {
-    //            UIImageView *crumbBG = [[UIImageView alloc] initWithFrame:CGRectMake(2+(i*113), 0, 120, 35)];
-    //            NSString *imgName = i ==0 ? @"chevrect" : @"chevbothpoints";
-    //            [crumbBG setImage:[UIImage imageNamed:imgName]];
-    //
-    //            int xFactor = i == 0 ? 5 : 13;
-    //
-    //            UIScrollView *crumb = [[UIScrollView alloc]initWithFrame:CGRectMake(xFactor, 0, 100 - xFactor, 35)];
-    //            [crumb setBackgroundColor:[UIColor clearColor]];
-    //            [crumb setScrollEnabled:TRUE];
-    //            [crumbBG addSubview:crumb];
-    //
-    //            NSString *typeOfFilter = [[obj componentsSeparatedByString:@"|"] objectAtIndex:0];
-    //
-    //            if (![typeOfFilter isEqualToString:@"colours"]) {
-    //
-    //                UILabel *crumbName = [[UILabel alloc] initWithFrame:CGRectMake(0, crumb.bounds.origin.y, crumb.bounds.size.width - xFactor, crumb.bounds.size.height)];
-    //                NSString *crumbText = obj;
-    //                if([typeOfFilter isEqualToString:@"periods"])
-    //                {
-    //                    if ([globals.WHICH_SPORT isEqualToString:@"football"]){
-    //                        crumbText = @"Quarter: ";
-    //                    }else{
-    //                        crumbText = @"Period: ";
-    //                    }
-    //
-    //                    NSArray *periodNumberArr = [[[obj componentsSeparatedByString:@"|"] objectAtIndex:1] componentsSeparatedByString:@","];
-    //                    for(id periodNumber in periodNumberArr){
-    //                        int i = [periodNumberArr indexOfObject:periodNumber];
-    //                        NSString *periodStr;
-    //                        if (i==0) {
-    //                            periodStr = [NSString stringWithFormat:@"%@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-    //                        }else{
-    //                            periodStr = [NSString stringWithFormat:@", %@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-    //                        }
-    //                        crumbText = [crumbText stringByAppendingString:periodStr];
-    //                    }
-    //                }else if([typeOfFilter isEqualToString:@"half"])
-    //                {
-    //                    crumbText = @"Half: ";
-    //                    NSArray *periodNumberArr = [[[obj componentsSeparatedByString:@"|"] objectAtIndex:1] componentsSeparatedByString:@","];
-    //                    for(id periodNumber in periodNumberArr){
-    //                        int i = [periodNumberArr indexOfObject:periodNumber];
-    //                        NSString *periodStr;
-    //                        if (i==0) {
-    //                            periodStr = [NSString stringWithFormat:@"%@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-    //                        }else{
-    //                            periodStr = [NSString stringWithFormat:@", %@",[globals.ARRAY_OF_PERIODS objectAtIndex:[periodNumber integerValue]]];
-    //                        }
-    //                        crumbText = [crumbText stringByAppendingString:periodStr];
-    //                    }
-    //                }else if([typeOfFilter isEqualToString:@"players"])
-    //                {
-    //                    crumbText =[NSString stringWithFormat:@"Player(s): %@",[[obj componentsSeparatedByString:@"|"] objectAtIndex:1]]; ;
-    //
-    //                }else if([typeOfFilter isEqualToString:@"coachpick"])
-    //                {
-    //                    crumbText = @"Coach Pick";
-    //
-    //                }else if([typeOfFilter isEqualToString:@"homestr"])
-    //                {
-    //                    crumbText =[NSString stringWithFormat:@"Home strength: %@",[[obj componentsSeparatedByString:@"|"] objectAtIndex:1]]; ;
-    //
-    //                }else if([typeOfFilter isEqualToString:@"awaystr"])
-    //                {
-    //                    crumbText =[NSString stringWithFormat:@"Away strength: %@",[[obj componentsSeparatedByString:@"|"] objectAtIndex:1]]; ;
-    //
-    //                }else{
-    //                    crumbText = [[obj componentsSeparatedByString:@"|"] objectAtIndex:1];
-    //                }
-    //
-    //                [crumbName setText:crumbText];
-    //                [crumbName setBackgroundColor:[UIColor clearColor]];
-    //                [crumbName setTextColor:[UIColor darkGrayColor]];
-    //                [crumbName setTextAlignment:NSTextAlignmentCenter];
-    //                [crumbName setFont:[UIFont defaultFontOfSize:13]];
-    //                [crumb addSubview:crumbName];
-    //                //if the filtered property's text is greater than the size of the crumbName label, use uiscroll view to display all the information
-    //                CGSize labelSize = [crumbText sizeWithAttributes:[NSDictionary dictionaryWithObject:[UIFont defaultFontOfSize:13] forKey:NSFontAttributeName]];
-    //                if (labelSize.width > crumbName.frame.size.width) {
-    //                    [crumbName setFrame:CGRectMake(0, crumbName.frame.origin.y, labelSize.width+20, crumbName.frame.size.height)];
-    //                    [crumb setContentSize:CGSizeMake(labelSize.width+20, 35)];
-    //                    [crumb setUserInteractionEnabled:TRUE];
-    //                    [crumbBG setUserInteractionEnabled:TRUE];
-    //                }else{
-    //                    [crumb setContentSize:CGSizeMake(100, 35)];
-    //                }
-    //
-    //            }else{
-    //                NSArray *colorArr = [[[obj componentsSeparatedByString:@"|"] objectAtIndex:1] componentsSeparatedByString:@","];
-    //                int labelWidth = 80/colorArr.count;
-    //                for(NSString *colorStr in colorArr){
-    //                    int i = [colorArr indexOfObject:colorStr];
-    //                    UILabel *colorLabel = [[UILabel alloc]initWithFrame:CGRectMake(5+i*labelWidth, crumb.bounds.origin.y+5, labelWidth, crumb.bounds.size.height - 10)];
-    //                    [colorLabel setBackgroundColor:[UIColor colorWithHexString:colorStr]];
-    //                    [crumb addSubview:colorLabel];
-    //                }
-    //            }
-    //            [breadCrumbsView addSubview:crumbBG];
-    //            [breadCrumbsView setContentSize:CGSizeMake(25+((i+1)*118), 35)];
-    //            [breadCrumbsView scrollRectToVisible:CGRectMake(breadCrumbsView.contentSize.width-70, 0, 10, 10) animated:TRUE];
-    //            [breadCrumbsView setScrollEnabled:TRUE];
-    //            i++;
-    //        }
-    //
-    //    }else{
-    //        UIImageView *crumb = [[UIImageView alloc] initWithFrame:CGRectMake(2, 0, 100, 35)];
-    //        NSString *imgName = @"chevrect";
-    //        [crumb setImage:[UIImage imageNamed:imgName]];
-    //        int xFactor = 5 ;
-    //        UILabel *crumbName = [[UILabel alloc] initWithFrame:CGRectMake(crumb.bounds.origin.x+xFactor, crumb.bounds.origin.y, crumb.bounds.size.width-xFactor, crumb.bounds.size.height)];
-    //        [crumbName setText:@"No filter set"];
-    //        [crumbName setBackgroundColor:[UIColor clearColor]];
-    //        [crumbName setTextColor:[UIColor darkGrayColor]];
-    //        [crumbName setFont:[UIFont systemFontOfSize:13]];
-    //        [crumb addSubview:crumbName];
-    //        [breadCrumbsView addSubview:crumb];
-    //        [breadCrumbsView setContentSize:CGSizeMake(10, 35)];
-    //        [breadCrumbsView scrollRectToVisible:CGRectMake(breadCrumbsView.contentSize.width-70, 0, 10, 10) animated:TRUE];
-    //        [breadCrumbsView setScrollEnabled:TRUE];
-    //
-    //    }
-    //
-}
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    //    if (!fullScreenMode || !self.videoPlayer.isFullScreen) {
-    //        //[videoControlBar removeFromSuperview];
-    //        if(filterToolBoxListViewController.view.frame.origin.y==438)
-    //        {
-    //            [self slideFilterBox];
-    //            self.filterToolBoxListViewController.taggedAttsDict = nil;
-    //        }
-    //        for(NSObject *cell in self.myTableView.subviews){
-    //            if ([cell isKindOfClass:[ListViewCell class]]){
-    //                [(ListViewCell*)cell removeFromSuperview];
-    //            }
-    //        }
-    //
-    //        [allTags removeAllObjects];
-    //        globals.IS_IN_LIST_VIEW = FALSE;
-    //    }
-    
 }
 
 
@@ -3352,44 +3074,6 @@ NSMutableArray *oldEventNames;
 ////        [currentSeekForwardButton addTarget:self action:globals.CURRENT_SEEK_FORWARD_ACTION forControlEvents:UIControlEventTouchUpInside];
 //
 ////        [videoPlayer.teleBigView setFrame:CGRectMake(0, 25, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height)];
-//    }
-//}
-
-//-(void)willEnterFullScreen{
-//
-//    [self.videoPlayer setIsFullScreen:YES];
-//
-//    //switch from normal screen to full screen,set the right slow mode button icon in full screen according to the play back rate in normal screen
-//    if(globals.PLAYBACK_SPEED == 1.0f)
-//    {
-//        [slowMoButtonFullScreen setImage:[UIImage imageNamed:@"normalsp.png"] forState:UIControlStateNormal];
-//    }else{
-//        fullScreenMode = IS_FULLSCREEN;
-//        [self.videoPlayer setIsFullScreen:YES];
-//
-//        //switch from normal screen to full screen,set the right slow mode button icon in full screen according to the play back rate in normal screen
-//        if(globals.PLAYBACK_SPEED == 1.0f)
-//        {
-//            [slowMoButtonFullScreen setImage:[UIImage imageNamed:@"normalsp.png"] forState:UIControlStateNormal];
-//        }else{
-//            [slowMoButtonFullScreen setImage:[UIImage imageNamed:@"slowmo.png"] forState:UIControlStateNormal];
-//        }
-//    }
-//    [self createAllFullScreenSubviews];
-//
-//}
-
-
-//-(void)willExitFullscreen{
-//
-//    [self removeAllFullScreenSubviews];
-//    //switch from full screen to normal screen,set the right slow mode button icon in normal screen according to the play back rate in full screen
-//    if(globals.PLAYBACK_SPEED == 1.0f)
-//    {
-//        [slowMoButton setImage:[UIImage imageNamed:@"normalsp.png"] forState:UIControlStateNormal];
-//    }else{
-//        [slowMoButton setImage:[UIImage imageNamed:@"slowmo.png"] forState:UIControlStateNormal];
-//
 //    }
 //}
 
@@ -3922,69 +3606,7 @@ NSMutableArray *oldEventNames;
     // [videoPlayer pause];
 }
 
--(void)playbackRateButtonUp:(id)sender{
-    
-    /* Uncomment for cool sliding speed control
-     isModifyingPlaybackRate = NO;
-     isFrameByFrame = NO;
-     if ([sender tag] == 0) {
-     [UIView animateWithDuration:0.3f animations:^{
-     [playbackRateBackGuide setAlpha:0.0f];
-     [playbackRateBackButton setFrame:CGRectMake(165, 535, 70.0f, 70.0f)];
-     [playbackRateBackLabel setFrame:CGRectMake(CGRectGetMaxX(playbackRateBackButton.frame), playbackRateBackButton.frame.origin.y, playbackRateBackLabel.bounds.size.width, playbackRateBackLabel.bounds.size.height)];
-     [playbackRateBackLabel setAlpha:0.0f];
-     }];
-     } else if ([sender tag] == 1){
-     [UIView animateWithDuration:0.3f animations:^{
-     [playbackRateForwardGuide setAlpha:0.0f];
-     [playbackRateForwardButton setFrame:CGRectMake(playbackRateBackButton.superview.bounds.size.width - playbackRateBackButton.frame.origin.x - playbackRateBackButton.bounds.size.width, playbackRateBackButton.frame.origin.y, playbackRateBackButton.bounds.size.width, playbackRateBackButton.bounds.size.height)];
-     [playbackRateForwardLabel setFrame:CGRectMake(playbackRateForwardButton.frame.origin.x - playbackRateForwardLabel.bounds.size.width, playbackRateForwardButton.frame.origin.y, playbackRateForwardLabel.bounds.size.width, playbackRateForwardLabel.bounds.size.height)];
-     [playbackRateForwardLabel setAlpha:0.0f];
-     
-     }];
-     }
-     [videoPlayer pause];
-     */
-    //    if ([sender isSelected]) {
-    //        [sender setSelected:NO];
-    //        globals.PLAYBACK_SPEED = 0.0f;
-    //        [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
-    //    } else {
-    //        if ([sender tag] == 0) {
-    //            globals.PLAYBACK_SPEED = -2.0f;
-    //        } else {
-    //            globals.PLAYBACK_SPEED = 2.0f;
-    //        }
-    //        [sender setSelected:YES];
-    //        [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
-    //    }
-}
 
--(void)playbackRateButtonDrag:(id)sender forEvent:(UIEvent*)event{
-    //    UIButton* button = sender;
-    //    UITouch *touch = [[event touchesForView:button] anyObject];
-    //    CGPoint touchPoint = [touch locationInView:button.superview];
-    //    CGPoint buttonPosition = [self coordForPosition:touchPoint onGuide:[button tag]];
-    //    [button setCenter:buttonPosition];
-    //    if ([button tag] == 0) {
-    //        [playbackRateBackLabel setFrame:CGRectMake(CGRectGetMaxX(button.frame), button.frame.origin.y, playbackRateBackLabel.bounds.size.width, playbackRateBackLabel.bounds.size.height)];
-    //        if (isFrameByFrame) {
-    //            [playbackRateBackLabel setText:[NSString stringWithFormat:@"-%.0ffps",1/frameByFrameInterval]];
-    //        } else {
-    //            [playbackRateBackLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
-    //        }
-    //    } else if ([button tag] == 1){
-    //        [playbackRateForwardLabel setFrame:CGRectMake(button.frame.origin.x - playbackRateForwardLabel.bounds.size.width, button.frame.origin.y, playbackRateForwardLabel.bounds.size.width, playbackRateForwardLabel.bounds.size.height)];
-    //        if (isFrameByFrame) {
-    //            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.0ffps",1/frameByFrameInterval]];
-    //        } else {
-    //            [playbackRateForwardLabel setText:[NSString stringWithFormat:@"%.2fx",globals.PLAYBACK_SPEED]];
-    //        }
-    //    }
-    //    if (videoPlayer.avPlayer.rate != globals.PLAYBACK_SPEED) {
-    //        videoPlayer.avPlayer.rate = globals.PLAYBACK_SPEED;
-    //    }
-}
 
 -(CGPoint)coordForPosition:(CGPoint)point onGuide:(int)tag{
     float yPos = 0.0f;
@@ -4098,94 +3720,6 @@ NSMutableArray *oldEventNames;
 }
 
 
-/*
- *--------------------
- *After updating to iOS7.1, avplayer might gives us negative video start time(this value randomly changes while the video plays) and video's current time is also based on this start time.
- *For example: Start time is -2 sec and current time is 50 sec which could be mapped to start time is 0 sec, the current time value is 52 sec or start time is -3 sec current time is 49 sec;
- *When user pauses the video, get the current tele time and the current video's start time.
- *After finishing telestartion, send the tag information dictionary to the server and the tag time in the dictionary will be: (tele time) - (start time), which is "52" in our example;
- *The time sent to the server is always based on start time is 0;
- *When reviewing the telestration, the avplayer will seek to is right tele time base on the video's new start time which is (tag time) + (new start time).
- *--------------------
- */
-//create telestration screen
--(void)initTele:(id)sender
-{
-    //when show the telestration screen, hide all the buttons in full screen and only diaplay save button and clear button for telestration
-    //[self hideFullScreenOverlayButtonsinLoopMode];
-    //pause the video
-    // [videoPlayer pause];
-    //get the current time for telestartion time but round it into integer; Otherwise playback telestration will be off a lot
-    //CMTime currentCMTime = videoPlayer.avPlayer.currentTime;
-    //    globals.TELE_TIME = (float)[self roundValue:CMTimeGetSeconds(currentCMTime)];
-    
-    //resize the video player
-    //videoPlayer.playerFrame = CGRectMake(0, 0, 748, 1024);
-    
-    //if the mp4 file is played right now
-    //    if ([globals.CURRENT_PLAYBACK_EVENT rangeOfString:@".mp4"].location != NSNotFound) {
-    //
-    //        UIView *rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    //
-    //        saveTeleButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-    //        [saveTeleButton setFrame:CGRectMake(377.0f, 700.0f, 123.0f, 33.0f)];
-    //        [saveTeleButton setTitle:@"Save" forState:UIControlStateNormal];
-    //        [saveTeleButton addTarget:self action:@selector(saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    //        [rootView addSubview:saveTeleButton];
-    //
-    //        clearTeleButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-    //        [clearTeleButton setFrame:CGRectMake(CGRectGetMaxX(saveTeleButton.frame) + 15.0f, saveTeleButton.frame.origin.y, saveTeleButton.frame.size.width, saveTeleButton.frame.size.height)];
-    //        [clearTeleButton setTitle:@"Close" forState:UIControlStateNormal];
-    //        [clearTeleButton addTarget:self action:@selector(clearButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    //        [rootView addSubview:clearTeleButton];
-    //
-    //
-    //        //add televiewcontroller
-    //        self.teleViewController= [[TeleViewController alloc] initWithController:self];
-    //        [self.teleViewController.view setFrame:CGRectMake(0, 45, self.view.frame.size.width,self.view.frame.size.width * 9/16 + 10)];
-    //        [self.teleViewController.view setBackgroundColor:[UIColor magentaColor]];
-    //        self.teleViewController.clearButton = clearTeleButton;
-    //        [teleButton setHidden:TRUE];
-    //        [rootView addSubview:self.teleViewController.view];
-    //
-    //        [rootView bringSubviewToFront:saveTeleButton];
-    //        [rootView bringSubviewToFront:clearTeleButton];
-    //
-    //
-    //        NSURL *videoURL = globals.VIDEO_PLAYER_LIVE2BENCH.videoURL;
-    //        AVAsset *asset = [AVAsset assetWithURL:videoURL];
-    //        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
-    //        [imageGenerator setMaximumSize:CGSizeMake(self.view.frame.size.width,self.view.frame.size.width * 9/16 + 10)];
-    //        CMTime time = currentCMTime;//CMTimeMake([[dict objectForKey:@"time"]floatValue],1);//CMTimeMake(30, 1);
-    //        ////////NSLog(@"%f", [[dict objectForKey:@"time"]floatValue]);
-    //        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
-    //        UIImage *currentImage = [UIImage imageWithCGImage:imageRef];
-    //        CGImageRelease(imageRef);
-    //
-    //        self.teleViewController.currentImage = currentImage;//[self imageWithImage:currentImage convertToSize:CGSizeMake(self.view.frame.size.width,self.view.frame.size.width * 9/16)];//currentImage;
-    //        self.teleViewController.thumbImageView = [[UIImageView alloc] initWithImage:currentImage];//[UIImage imageNamed:@"test.jpg"]];
-    //        [self.teleViewController.thumbImageView setFrame:self.teleViewController.view.frame];//CGRectMake(0, -10, 1024,768)];
-    //        [self.teleViewController.thumbImageView setBackgroundColor:[UIColor blackColor]];
-    //        [self.teleViewController.view insertSubview:self.teleViewController.thumbImageView atIndex:0];
-    //
-    //    }else{
-    //
-    //        //if the mp4 video file not exist
-    //
-    //        //add televiewcontroller
-    //        self.teleViewController= [[TeleViewController alloc] initWithController:self];
-    //
-    //        globals.TELE_TIME = [videoPlayer currentTimeInSeconds];
-    //        self.teleViewController.offsetTime = videoPlayer.startTime;
-    //        [self.teleViewController.view setFrame:CGRectMake(0, 10, 1024, 768)];
-    //        [self.teleButton setHidden:TRUE];
-    //        [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self.teleViewController.view];
-    //
-    //
-    //    }
-    
-}
-
 
 //save button clicked, send notification to the teleview controller
 -(void)saveButtonClicked{
@@ -4199,18 +3733,6 @@ NSMutableArray *oldEventNames;
     [[NSNotificationCenter defaultCenter]postNotificationName:@"Clear Tele" object:nil];
 }
 
-
-////round the float value to int
-//-(int)roundValue:(float)numberToRound{
-//    numberToRound = numberToRound;
-//    if (self.videoPlayer.duration - numberToRound < 2) {
-//        return (int)numberToRound;
-//    }
-//
-//    return  (int)(numberToRound + 0.5);
-//
-//}
-
 //set the right text for tag name label in fullscreen
 -(void)setTagEventNameLabelText:(NSString*)name{
     [tagEventNameFullScreen setText:name];
@@ -4219,209 +3741,8 @@ NSMutableArray *oldEventNames;
 
 //after finish commenting, touch any other part of the view except commentTextView, will resign the keyboard
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    
-    //    UITouch *touch = [[event allTouches] anyObject];
-    //    if ([commentTextView isFirstResponder] && [touch view] != commentTextView) {
-    //        [commentTextView resignFirstResponder];
-    //    }
     [super touchesBegan:touches withEvent:event];
 }
-
-//download tags which were not finished before
--(void)sendBookmarkRequest{
-    
-    //    //NSLog(@"download unfinished tags");
-    //    //command this because ceci's one event makes the whole downloading not working
-    //    if ([[NSFileManager defaultManager] fileExistsAtPath:globals.BOOKMARK_QUEUE_PATH])
-    //    {
-    //        globals.BOOKMARK_TAGS_UNFINISHED = [[NSMutableArray alloc] initWithContentsOfFile:globals.BOOKMARK_QUEUE_PATH];
-    //
-    //        [[NSFileManager defaultManager]removeItemAtPath:globals.BOOKMARK_QUEUE_PATH error:nil];
-    //    }else{
-    //        return;
-    //    }
-    //    if ([globals.BOOKMARK_TAGS_UNFINISHED count] > 0 && (!globals.BOOKMARK_QUEUE || globals.BOOKMARK_QUEUE.count == 0)){
-    //       //NSLog(@"BOOKMARK_TAGS_UNFINISHED count = %d",globals.BOOKMARK_TAGS_UNFINISHED.count);
-    ////        if (!convertNextBookmarkVideoTimer) {
-    ////            convertNextBookmarkVideoTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(checkRequestStatus:) userInfo:nil repeats:YES];
-    ////            [[NSRunLoop mainRunLoop] addTimer:convertNextBookmarkVideoTimer forMode:NSDefaultRunLoopMode];
-    ////            //[convertNextBookmarkVideoTimer fire];
-    ////        }
-    //
-    //        aCopyOfUnfinishedTags = [globals.BOOKMARK_TAGS_UNFINISHED mutableCopy];
-    //        [self sendOneRequest];
-    //    }
-    
-}
-
-//this method is for bookmarking tags which were not finished from other events
-//In this method, we will check if the tag is belongs to this event or not. If it is, download the video clip, else do nothing.
--(void)sendOneRequest{
-    if (_aCopyOfUnfinishedTags.count < 1) {
-        return;
-    }
-    NSDictionary *tag = [_aCopyOfUnfinishedTags objectAtIndex:0];
-    //this version changed the type of tag info in globals.BOOKMARK_QUEUE_PATH file(Now: array of dictionaries, old: array of arrays);
-    //After the user updated the app,the app may crash at the first time when the user launch the app.
-    //So here, check if the tag info is an array, just return.
-    if ([tag isKindOfClass:[NSArray class]]) {
-        return;
-    }
-//    BOOL isEventInCurrentServer = FALSE;
-//    NSString *eventNameStr;
-    //check if the tag from live event or not. If it is, the event value is the request url will be @"live", else it will be [tag objectForKey:@"event"].
-    //    if ([globals.EVENT_NAME isEqualToString:@"live"]) {
-    //        if (globals.CURRENT_EVENT_THUMBNAILS.count > 0) {
-    //            NSString *event = [[globals.CURRENT_EVENT_THUMBNAILS objectForKey:[[globals.CURRENT_EVENT_THUMBNAILS allKeys] objectAtIndex:0]] objectForKey:@"event"];
-    //            if ([event isEqual:[tag objectForKey:@"event"]]) {
-    //                eventNameStr = @"live";
-    //                isEventInCurrentServer = TRUE;
-    //            }else{
-    //                eventNameStr = [tag objectForKey:@"event"];
-    //            }
-    //        }else{
-    //            eventNameStr = [tag objectForKey:@"event"];
-    //        }
-    //    }else{
-    //        eventNameStr = [tag objectForKey:@"event"];
-    //    }
-    
-    //if tag is not from live event, check the event it belongs to is from current encoder or not. If it is not, we could not download anything
-    //    if (!isEventInCurrentServer) {
-    //        for(NSDictionary *event in globals.EVENTS_ON_SERVER){
-    //            if ([[event objectForKey:@"name"] isEqualToString: [tag objectForKey:@"event"]] && ![[event objectForKey:@"deleted"] boolValue]){
-    //                isEventInCurrentServer = TRUE;
-    //            }
-    //        }
-    //    }
-    //    [aCopyOfUnfinishedTags removeObject:tag];
-    //
-    //    //if the event the tag belongs to is from current encoder, send the bookmark request
-    //    if (isEventInCurrentServer) {
-    //        [globals.BOOKMARK_TAGS_UNFINISHED removeObject:tag];
-    //        double currentSystemTime = CACurrentMediaTime();
-    //        //Find path to accountInformation plist
-    //        //array of file paths
-    //        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    //        NSString *documentsDirectory = [paths objectAtIndex:0];
-    //        NSString *accountInformationPath = [documentsDirectory stringByAppendingPathComponent:@"accountInformation.plist"];
-    //        NSMutableDictionary *accountInfo = [[NSMutableDictionary alloc] initWithContentsOfFile: accountInformationPath];
-    //        userId = [accountInfo objectForKey:@"hid"];
-    //        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",1],@"bookmark",eventNameStr,@"event",[NSString stringWithFormat:@"%f",currentSystemTime],@"requesttime",userId,@"user",[tag objectForKey:@"id"],@"id", nil];
-    //        NSError *error;
-    //        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    //        NSString *jsonString;
-    //        if (! jsonData) {
-    //
-    //        } else {
-    //            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    //            jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    //        }
-    //
-    //        NSString *url = [NSString stringWithFormat:@"%@/min/ajax/tagmod/%@",globals.URL,jsonString];
-    //
-    //        //callback method and parent view controller reference for the appqueue
-    //        NSArray *objects = [[NSArray alloc]initWithObjects:[NSValue valueWithPointer:@selector(tagModCallback:)],self,@"60", nil];
-    //        NSArray *keys = [[NSArray alloc]initWithObjects:@"callback",@"controller",@"timeout", nil];
-    //        NSDictionary *instObj = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    //
-    //        NSMutableDictionary *dictionaryOfObj = [[NSMutableDictionary alloc]init];
-    //        [dictionaryOfObj setObject:instObj forKey:url];
-    //        //[tag setObject:[NSString stringWithFormat:@"%.0f",[[tag objectForKey:@"duration"]floatValue]+10] forKey:@"duration"];
-    //        [dictionaryOfObj setObject:tag forKey:@"tag"];
-    //
-    //        if (!globals.BOOKMARK_QUEUE){
-    //            globals.BOOKMARK_QUEUE = [NSMutableArray arrayWithObject:dictionaryOfObj];
-    //        } else {
-    //            [globals.BOOKMARK_QUEUE addObject:dictionaryOfObj];
-    //        }
-    //        [self sendTheNextRequest];
-    //    }else{
-    //
-    //        //this the tag is from event in different encoder, then send the next tag
-    //        [self sendOneRequest];
-    //    }
-    
-    
-}
-
-
--(BOOL)redownloadImageFromtheServer:(NSDictionary*)dict{
-    //    //if thumbnail folder not exist, create a new one
-    //    if(![fileManager fileExistsAtPath:globals.THUMBNAILS_PATH])
-    //    {
-    //        NSError *cError;
-    //        [fileManager createDirectoryAtPath:globals.THUMBNAILS_PATH withIntermediateDirectories:TRUE attributes:nil error:&cError];
-    //    }
-    //
-    //    NSURL *jurl = [[NSURL alloc]initWithString:[[dict objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    //    NSString *imageName = [[dict objectForKey:@"url"] lastPathComponent];
-    //    //thumbnail data
-    //    NSData *imgData= [NSData dataWithContentsOfURL:jurl options:0 error:nil];
-    //
-    //    //image file path for current image
-    //    NSString *filePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageName]];
-    //
-    //    NSData *imgTData;
-    //    NSString *teleImageFilePath;
-    //    //save telesteration thumb
-    //    if([[dict objectForKey:@"type"]intValue]==4)
-    //    {
-    //        //tele image datat
-    //        imgTData= [NSData dataWithContentsOfURL:[NSURL URLWithString:[[dict objectForKey:@"teleurl"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] options:0 error:nil];
-    //        NSString *teleImageName = [[dict objectForKey:@"teleurl"] lastPathComponent];
-    //        //image file path for telestration
-    //        teleImageFilePath = [globals.THUMBNAILS_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",teleImageName]];
-    //
-    //    }
-    //
-    //    if (([[dict objectForKey:@"type"]intValue]!=4 && imgData != nil )||([[dict objectForKey:@"type"]intValue]==4 && imgData != nil && imgTData != nil) ) {
-    //
-    //        [imgData writeToFile:filePath atomically:YES];
-    //
-    //        if ([[dict objectForKey:@"type"]intValue]==4) {
-    //            [imgTData writeToFile:teleImageFilePath atomically:YES ];
-    //        }
-    //
-    //        if (!globals.DOWNLOADED_THUMBNAILS_SET){
-    //            globals.DOWNLOADED_THUMBNAILS_SET = [NSMutableArray arrayWithObject:[dict objectForKey:@"id"]];
-    //        } else {
-    //            [globals.DOWNLOADED_THUMBNAILS_SET addObject:[dict objectForKey:@"id"]];
-    //        }
-    //
-    //        return TRUE;
-    //    }else{
-    return FALSE;
-    //    }
-    
-}
-
-
-////when scrubbing the slider, need to remove telestration
-//-(void)scrubbingDestroyLoopMode{
-//
-//    //remove looptagobserver
-//    if (loopTagObserver) {
-//        [videoPlayer.avPlayer removeTimeObserver:loopTagObserver];
-//        loopTagObserver = nil;
-//    }
-//    [tagEventName setHidden:TRUE];
-////    globals.IS_LOOP_MODE = FALSE;
-//
-//    if(self.videoPlayer.teleBigView)
-//    {
-//        [self.videoPlayer.teleBigView removeFromSuperview];
-//        self.videoPlayer.teleBigView=nil;
-//    }
-//
-//}
-
-
-//-(void)removeCurrentTimeObserver{
-//    if (loopTagObserver) {
-//        loopTagObserver = nil;
-//    }
-//}
 
 
 
@@ -4432,33 +3753,55 @@ NSMutableArray *oldEventNames;
     if ([self.view window] == nil) self.view = nil;
 }
 
--(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
+/*-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
     NSMutableArray *tagsToSort = [NSMutableArray arrayWithArray:tags];
     
     if (componentFilter) {
         componentFilter.rawTagArray = tagsToSort;
         tagsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
     }
+    //else{
+       // componentFilter = [TestFilterViewController commonFilter];
+    //}
     
     return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
-}
+}*/
 
 -(void)clear{
-    self.tagsToDisplay = [NSMutableArray array];;
-    _tableViewController.tableData = [NSMutableArray array];
+    [self.allTags removeAllObjects];
+    [self.tagsToDisplay removeAllObjects];
+    //_tableViewController.tableData = [NSMutableArray array];
     [_tableViewController reloadData];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
-    self.tagsToDisplay = nil;
-    _tableViewController.tableData = [NSMutableArray array];
-    [_tableViewController reloadData];
+    //self.tagsToDisplay = nil;
+    //self.allTags = nil;
+    //_tableViewController.tableData = [NSMutableArray array];
+    //[_tableViewController reloadData];
     
-    selectedTag = nil;
-    
-    [commentingField clear];
-    commentingField.enabled             = NO;
-    [newVideoControlBar setTagName: nil];
+    if(_currentEvent.live){
+        _currentEvent = nil;
+        [self clear];
+        selectedTag = nil;
+        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
+        [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
+        
+        [commentingField clear];
+        commentingField.enabled             = NO;
+        //[newVideoControlBar setTagName: nil];
+    }
+}
+
+
+- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
+    NSMutableArray *tags = [NSMutableArray array];
+    for (Tag *tag in tagsToDisplay) {
+        if (tag.type == TagTypeNormal) {
+            [tags addObject:tag];
+        }
+    }
+    _tagsToDisplay = tags;
 }
 
 @end

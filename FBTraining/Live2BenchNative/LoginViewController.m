@@ -270,7 +270,9 @@ UIScrollView *scrollView;
     [passwordTextField resignFirstResponder];
     [emailAddressTextField resignFirstResponder];
     [loadingView setHidden:false];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREDENTIALS_TO_VERIFY object:nil userInfo:@{@"user":userInput,@"password":passwordInput}];
+    NSMutableDictionary *loginData = [[NSMutableDictionary alloc] initWithDictionary: @{@"user":userInput,@"password":passwordInput}];
+    [[UserCenter getInstance] verifyGet: loginData timeStamp:GET_NOW_TIME];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREDENTIALS_TO_VERIFY object:nil userInfo:@{@"user":userInput,@"password":passwordInput}];
     
 }
 

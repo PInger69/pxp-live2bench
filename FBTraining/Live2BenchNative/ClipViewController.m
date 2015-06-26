@@ -48,6 +48,8 @@
     EncoderManager                  * _encoderManager;
     id                              clipViewTagObserver;
     ImageAssetManager               * _imageAssetManager;
+    Event                           * _currentEvent;
+    id <EncoderProtocol>                _observedEncoder;
     
 }
 
@@ -77,18 +79,23 @@ static void * encoderTagContext = &encoderTagContext;
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
         _encoderManager = _appDel.encoderManager;
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
+        
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+        
+        
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
         
         _imageAssetManager = appDel.imageAssetManager;
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+        /*[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
                     self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
                     self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
@@ -97,10 +104,10 @@ static void * encoderTagContext = &encoderTagContext;
             if (!componentFilter.rawTagArray) {
                 componentFilter.rawTagArray = self.tagsToDisplay;
             };
-        }];
+        }];*/
          
             
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
         self.allTagsArray   = [NSMutableArray array];
         self.tagsToDisplay  = [NSMutableArray array];
@@ -109,12 +116,95 @@ static void * encoderTagContext = &encoderTagContext;
     
 }
 
--(void) deleteTag: (NSNotification *)note{
+-(void)addEventObserver:(NSNotification *)note
+{
+    if (_observedEncoder != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+    
+    if (note.object == nil) {
+        _observedEncoder = nil;
+    }else{
+        _observedEncoder = (id <EncoderProtocol>) note.object;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+}
+
+-(void)eventChanged:(NSNotification *)note
+{
+    if (_currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        [self clear];
+    }
+
+    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        _currentEvent = nil;
+    }else{
+        _currentEvent = [((id <EncoderProtocol>) note.object) event];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+}
+
+-(void)onTagChanged:(NSNotification *)note{
+    
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.allTagsArray containsObject:tag]) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay insertObject:tag atIndex:0];
+            }
+            [self.allTagsArray insertObject:tag atIndex:0];
+        }
+        if(tag.modified && [self.allTagsArray containsObject:tag]){
+            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
+                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
+            }
+            if (tag.type == TagTypeCloseDuration) {
+                [self.tagsToDisplay insertObject:tag atIndex:0];
+            }
+        }
+    }
+    
+    Tag *toBeRemoved;
+    for (Tag *tag in self.allTagsArray ){
+        
+        if (![_currentEvent.tags containsObject:tag]) {
+            toBeRemoved = tag;
+        }
+    }
+    if (toBeRemoved) {
+        [self.allTagsArray removeObject:toBeRemoved];
+        [self.tagsToDisplay removeObject:toBeRemoved];
+    }
+
+    
+    componentFilter.rawTagArray = self.allTagsArray;
+    [_collectionView reloadData];
+
+}
+
+
+
+/*-(void)deleteTag: (NSNotification *)note{
+    
+    for (Tag *tag in self.allTagsArray  ) {
+        if (![_currentEvent.tags containsObject:tag]) {
+            [self.allTagsArray removeObject:tag];
+            [self.tagsToDisplay removeObject:tag];
+        }
+    }
+    componentFilter.rawTagArray = self.allTagsArray;
+    [_collectionView reloadData];
+}*/
+
+/*-(void) deleteTag: (NSNotification *)note{
     [self.allTagsArray removeObject: note.object];
     [self.tagsToDisplay removeObject: note.object];
     componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];
-}
+}*/
 
 -(void)clear{
     [self.tagsToDisplay removeAllObjects];
@@ -124,7 +214,18 @@ static void * encoderTagContext = &encoderTagContext;
 
 
 // If the filter is actie then filter other wize just display all the tags
--(void)clipViewTagReceived:(NSNotification*)note
+/*-(void)clipViewTagReceived
+{
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.allTagsArray containsObject:tag]) {
+            [self.allTagsArray insertObject:tag atIndex:0];
+            [self.tagsToDisplay insertObject:tag atIndex:0];
+        }
+    }
+    componentFilter.rawTagArray = self.allTagsArray;
+    [_collectionView reloadData];
+}*/
+/*-(void)clipViewTagReceived:(NSNotification*)note
 {
     if (note.object) {
         [self.allTagsArray insertObject:note.object atIndex:0];
@@ -133,7 +234,9 @@ static void * encoderTagContext = &encoderTagContext;
        [_collectionView reloadData];
     }
     
-}
+}*/
+
+
 
 -(Float64) highestTimeInTags: (NSArray *) arrayOfTags{
     Float64 highestTime = 0;
@@ -242,6 +345,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
+    alert.type = AlertImportant;
     [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
     [alert setMessage:NSLocalizedString(@"Are you sure you want to delete all these clips?",nil)];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
@@ -482,8 +586,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
-    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
+     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
         NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
         
@@ -504,9 +607,11 @@ static void * encoderTagContext = &encoderTagContext;
             //            [self.tagsToDisplay removeObject:tag];
             //            [self.allTagsArray removeObject: tag];
             
-            NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:nil userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
+            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
         }
         
         for (thumbnailCell *cell in self.collectionView.visibleCells) {
@@ -520,11 +625,16 @@ static void * encoderTagContext = &encoderTagContext;
             NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
             [self.tagsToDisplay removeObject:tag];
             
-            [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+            if (self.editingIndexPath) {
+                [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+            }
+            //[self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
             
-            NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
             NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
             
             [self removeIndexPathFromDeletion];
             
@@ -538,11 +648,15 @@ static void * encoderTagContext = &encoderTagContext;
     [CustomAlertView removeAlert:alertView];
     
     [self checkDeleteAllButton];
-}
+
+   }
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
-    [self.setOfSelectedCells removeObject:self.editingIndexPath];
+    if (self.editingIndexPath) {
+        [self.setOfSelectedCells removeObject:self.editingIndexPath];
+    }
+   // [self.setOfSelectedCells removeObject:self.editingIndexPath];
     
     //    if ([self.selectedPath isEqual:self.editingIndexPath]) {
     //        self.selectedPath = nil;x
@@ -696,8 +810,20 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
-    self.tagsToDisplay = nil;
-    [self.collectionView reloadData];
+    //if (_currentEvent.live) {
+         //_currentEvent = nil;
+        [self clear];
+    //}
+}
+
+- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
+    NSMutableArray *tags = [NSMutableArray array];
+    for (Tag *tag in tagsToDisplay) {
+        if (tag.type == TagTypeNormal) {
+            [tags addObject:tag];
+        }
+    }
+    _tagsToDisplay = tags;
 }
 
 

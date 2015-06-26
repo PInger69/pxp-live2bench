@@ -10,12 +10,15 @@
 #import "VideoBarContainerView.h"
 
 #import "TagView.h"
+#import "Event.h"
 
 #define BAR_HEIGHT      40
 #define LABEL_WIDTH     150
 #define LITTLE_ICON_DIMENSIONS 40
 
-@interface L2BVideoBarViewController () <TagViewDataSource>
+@interface L2BVideoBarViewController () <TagViewDataSource>{
+    Event *_currentEvent;
+}
 
 @property (strong, nonatomic, nonnull) NSMutableArray *arrayOfAllTags;
 @property (strong, nonatomic, nonnull) TagView *tagView;
@@ -103,16 +106,17 @@
         [_endRangeModifierButton setAccessibilityValue:@"extend"];
         [background addSubview:_endRangeModifierButton];
         
-        _startRangeModifierButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+     //   _startRangeModifierButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         _startRangeModifierButton = [[CustomButton alloc]initWithFrame:CGRectMake(160,5 + _videoPlayer.view.frame.size.height + 100, LITTLE_ICON_DIMENSIONS-5, LITTLE_ICON_DIMENSIONS-10)];
         [_startRangeModifierButton setContentMode:UIViewContentModeScaleAspectFill];
         [_startRangeModifierButton setImage:[UIImage imageNamed:@"extendstartsec.png"] forState:UIControlStateNormal];
         [_startRangeModifierButton setAccessibilityValue:@"extend"];
-//        [background addSubview:_startRangeModifierButton];
+       [background addSubview:_startRangeModifierButton];
 
         
         
-        activeElements = @[_startRangeModifierButton,
+        activeElements = @[
+                           _startRangeModifierButton,
                            _endRangeModifierButton,
                            forwardButton,
                            backwardButton,
@@ -134,14 +138,14 @@
         [_videoPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
         
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
+        //[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name: NOTIF_TAG_RECEIVED object:nil];
         
         /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_CHANGE object:nil queue:nil usingBlock:^(NSNotification *note){
             [self.arrayOfAllTags addObjectsFromArray:eventTags];
             [self.tagView setNeedsDisplay];
         }];*/
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+       //[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
                 if(eventTags){
@@ -153,11 +157,11 @@
                     
                 }
             }}];
-        }];
+        //}];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG"  object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG"  object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
         
         self.tagViewRefreshTimer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(updateTagView:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:self.tagViewRefreshTimer forMode:NSDefaultRunLoopMode];
@@ -165,10 +169,49 @@
     return self;
 }
 
+-(void)onEventChanged:(Event*)event
+{
+    [self update];
+    if (_currentEvent) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+    
+    if (event) {
+        _currentEvent = event;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+}
+
+-(void)onTagChanged:(NSNotification *)note{
+    
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.arrayOfAllTags containsObject:tag] && (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration)) {
+            [self.arrayOfAllTags insertObject:tag atIndex:0];
+        }
+    }
+    
+    Tag *toBeRemoved;
+    for (Tag *tag in self.arrayOfAllTags){
+        
+        if (![_currentEvent.tags containsObject:tag]) {
+            toBeRemoved = tag;
+        }
+    }
+    if (toBeRemoved) {
+        [self.arrayOfAllTags removeObject:toBeRemoved];
+    }
+    
+    
+    [self.tagView setNeedsDisplay];
+}
+
+
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
     [self.tagViewRefreshTimer invalidate];
 }
 
@@ -176,7 +219,7 @@
     [self.tagView setNeedsDisplay];
 }
 
-- (void)tagReceived:(NSNotification *)note {
+/*- (void)tagReceived:(NSNotification *)note {
     if ([note.object isKindOfClass:[Tag class]]) {
         
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -186,11 +229,11 @@
          
     }
     
-}
+}*/
 
-- (void)deleteTag:(NSNotification *)note {
+/*- (void)deleteTag:(NSNotification *)note {
     [self.arrayOfAllTags removeObject:note.object];
-}
+}*/
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -207,7 +250,9 @@
        // watching for only change in slomo
 //        if (newStatus & RJLPS_Slomo && !(oldStatus & RJLPS_Slomo)) {
 //           NSLog(@"slomow");
-            slomoButton.slomoOn = ply.slowmo;
+        BOOL isSlow = ply.slowmo;
+        
+            slomoButton.slomoOn = isSlow;
 //        } else if (oldStatus & RJLPS_Slomo && !(newStatus & RJLPS_Slomo)) {
 //             slomoButton.slomoOn = ply.slowmo;
 //        }
@@ -218,8 +263,10 @@
 
 -(void)toggleSlowmo:(id)sender
 {
-
-        _videoPlayer.slowmo = !_videoPlayer.slowmo;
+    BOOL value = _videoPlayer.slowmo;
+    _videoPlayer.slowmo = !value;
+    
+     //   _videoPlayer.slowmo = !_videoPlayer.slowmo;
     ((Slomo*)sender).slomoOn = _videoPlayer.slowmo;
 }
 
@@ -264,9 +311,6 @@
 -(void)setTagName:(NSString*)name
 {
     tagLabel.text = name;
-    for (UIView * item in activeElements){
-        [item setHidden:NO];
-    }
 }
 
 
@@ -363,7 +407,7 @@
     switch (_barMode) {
         case L2B_VIDEO_BAR_MODE_CLIP:
             [self _hideAll];//,slomoButton
-            [self _revealThese:@[_startRangeModifierButton,_endRangeModifierButton,tagLabel,/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker*/]];
+            [self _revealThese:@[tagLabel,forwardButton,backwardButton,slomoButton/*_tagMarkerController.view,_tagMarkerController.currentPositionMarker,_startRangeModifierButton,_endRangeModifierButton,*/]];
             break;
         case L2B_VIDEO_BAR_MODE_LIVE:
             [self _hideAll];

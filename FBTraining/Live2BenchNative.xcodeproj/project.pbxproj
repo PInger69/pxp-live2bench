@@ -60,6 +60,9 @@
 		AECB9A6E1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */; };
+		AED2EBCD1B1DED25008AD159 /* NCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBC81B1DED25008AD159 /* NCPlayer.m */; };
+		AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBCA1B1DED25008AD159 /* NCPlayerContext.m */; };
+		AED2EBCF1B1DED25008AD159 /* NCPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBCC1B1DED25008AD159 /* NCPlayerView.m */; };
 		AEE595361B0FA75700DCABE6 /* FeedSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE595351B0FA75700DCABE6 /* FeedSelectionController.m */; };
 		BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F817F22A270089873C /* bookmarkedit.png */; };
 		BD18B6FB17F22A270089873C /* bookmarkedit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F917F22A270089873C /* bookmarkedit@2x.png */; };
@@ -183,6 +186,7 @@
 		D760736619D21AD6000E35C2 /* seeklarge.png in Resources */ = {isa = PBXBuildFile; fileRef = D760736419D21AD6000E35C2 /* seeklarge.png */; };
 		D760736719D21AD6000E35C2 /* seeklarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D760736519D21AD6000E35C2 /* seeklarge@2x.png */; };
 		D760737319D4A513000E35C2 /* FullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D760737219D4A513000E35C2 /* FullScreenViewController.m */; };
+		D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7652C501B39C40A006B46E3 /* SideTagButton.m */; };
 		D766F6271ACC8C5E005FC63A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = D766F6261ACC8C5E005FC63A /* Event.m */; };
 		D769AB8919BDFEA900DF68BC /* VideoBarListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8819BDFEA900DF68BC /* VideoBarListViewController.m */; };
 		D769AB8D19BE5E8400DF68BC /* RangeModifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8C19BE5E8400DF68BC /* RangeModifierButton.m */; };
@@ -328,6 +332,7 @@
 		D7A9399216ADA933006CBAB2 /* CustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9399116ADA933006CBAB2 /* CustomTabBar.m */; };
 		D7A939B116ADD86F006CBAB2 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A939B016ADD86F006CBAB2 /* MediaPlayer.framework */; };
 		D7A939B316ADD875006CBAB2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A939B216ADD875006CBAB2 /* AVFoundation.framework */; };
+		D7A9F10D1B25EE72005C8B3E /* EncoderCommander.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9F10C1B25EE72005C8B3E /* EncoderCommander.m */; };
 		D7AA943917F4893E000EDAD5 /* ContactLabelString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */; };
 		D7AB2D1D16B6F44D0093465F /* line-button-grey.png in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D1B16B6F44D0093465F /* line-button-grey.png */; };
 		D7AB2D2416B6F4AD0093465F /* ToolBarValues.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */; };
@@ -367,6 +372,7 @@
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */; };
 		D7C903AE17F4B7A0002A1FDD /* continue_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */; };
+		D7C931041B320CB000E725B9 /* ListViewFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C931031B320CB000E725B9 /* ListViewFullScreenViewController.m */; };
 		D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */; };
 		D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7E71AC1C77D00D85095 /* RatingAndCommentingField.m */; };
 		D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CCE7EB1AC1E48500D85095 /* ReusableBottomViewController.m */; };
@@ -496,6 +502,12 @@
 		AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingTabViewController.m; sourceTree = "<group>"; };
 		AECF631F1B0BD72F00C98555 /* FBTrainingPeriodTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingPeriodTableViewController.h; sourceTree = "<group>"; };
 		AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingPeriodTableViewController.m; sourceTree = "<group>"; };
+		AED2EBC71B1DED25008AD159 /* NCPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCPlayer.h; sourceTree = "<group>"; };
+		AED2EBC81B1DED25008AD159 /* NCPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCPlayer.m; sourceTree = "<group>"; };
+		AED2EBC91B1DED25008AD159 /* NCPlayerContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCPlayerContext.h; sourceTree = "<group>"; };
+		AED2EBCA1B1DED25008AD159 /* NCPlayerContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCPlayerContext.m; sourceTree = "<group>"; };
+		AED2EBCB1B1DED25008AD159 /* NCPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCPlayerView.h; sourceTree = "<group>"; };
+		AED2EBCC1B1DED25008AD159 /* NCPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCPlayerView.m; sourceTree = "<group>"; };
 		AEE595341B0FA75700DCABE6 /* FeedSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectionController.h; sourceTree = "<group>"; };
 		AEE595351B0FA75700DCABE6 /* FeedSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectionController.m; sourceTree = "<group>"; };
 		BD18B6F817F22A270089873C /* bookmarkedit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bookmarkedit.png; sourceTree = "<group>"; };
@@ -638,6 +650,7 @@
 		D73CDBEC1AAE17FC002D682D /* SettingsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsPageViewController.m; sourceTree = "<group>"; };
 		D73CDBEE1AAF283C002D682D /* AccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountsViewController.h; sourceTree = "<group>"; };
 		D73CDBEF1AAF283C002D682D /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
+		D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderStatusMonitorProtocol.h; sourceTree = "<group>"; };
 		D73FE32E1A40882600341D57 /* L2BVideoBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BVideoBarViewController.h; path = Live2BenchTab/L2BVideoBarViewController.h; sourceTree = "<group>"; };
 		D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = L2BVideoBarViewController.m; path = Live2BenchTab/L2BVideoBarViewController.m; sourceTree = "<group>"; };
 		D73FE3311A41DBF000341D57 /* L2BFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L2BFullScreenViewController.h; path = Live2BenchTab/L2BFullScreenViewController.h; sourceTree = "<group>"; };
@@ -706,6 +719,8 @@
 		D760737219D4A513000E35C2 /* FullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullScreenViewController.m; sourceTree = "<group>"; };
 		D763A0461731677E0089D132 /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		D763A0471731677F0089D132 /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
+		D7652C4F1B39C40A006B46E3 /* SideTagButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideTagButton.h; sourceTree = "<group>"; };
+		D7652C501B39C40A006B46E3 /* SideTagButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideTagButton.m; sourceTree = "<group>"; };
 		D766F6251ACC8C5E005FC63A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = EncoderClasses/Event.h; sourceTree = "<group>"; };
 		D766F6261ACC8C5E005FC63A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Event.m; path = EncoderClasses/Event.m; sourceTree = "<group>"; };
 		D767A7D616BC84810050783A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
@@ -919,6 +934,7 @@
 		D7A9399116ADA933006CBAB2 /* CustomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBar.m; sourceTree = "<group>"; };
 		D7A939B016ADD86F006CBAB2 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		D7A939B216ADD875006CBAB2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D7A9F10C1B25EE72005C8B3E /* EncoderCommander.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderCommander.m; path = Live2BenchNative/EncoderClasses/EncoderCommander.m; sourceTree = "<group>"; };
 		D7AA943817F4893E000EDAD5 /* ContactLabelString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactLabelString.txt; sourceTree = "<group>"; };
 		D7AB2D1B16B6F44D0093465F /* line-button-grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line-button-grey.png"; sourceTree = "<group>"; };
 		D7AB2D2316B6F4AD0093465F /* ToolBarValues.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ToolBarValues.plist; sourceTree = "<group>"; };
@@ -965,6 +981,8 @@
 		D7C624E7180EDBF700C2DDD7 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = continue_unselected.png; sourceTree = "<group>"; };
 		D7C903AC17F4B7A0002A1FDD /* continue_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue_unselected@2x.png"; sourceTree = "<group>"; };
+		D7C931021B320CB000E725B9 /* ListViewFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewFullScreenViewController.h; sourceTree = "<group>"; };
+		D7C931031B320CB000E725B9 /* ListViewFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewFullScreenViewController.m; sourceTree = "<group>"; };
 		D7CCE7DE1ABB78AE00D85095 /* VideoZoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoZoomManager.h; sourceTree = "<group>"; };
 		D7CCE7DF1ABB78AE00D85095 /* VideoZoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoZoomManager.m; sourceTree = "<group>"; };
 		D7CCE7E61AC1C77D00D85095 /* RatingAndCommentingField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatingAndCommentingField.h; sourceTree = "<group>"; };
@@ -1142,6 +1160,19 @@
 				AEE595351B0FA75700DCABE6 /* FeedSelectionController.m */,
 			);
 			name = FBTraining;
+			sourceTree = "<group>";
+		};
+		AED2EBC31B1DE1F7008AD159 /* NCPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				AED2EBC71B1DED25008AD159 /* NCPlayer.h */,
+				AED2EBC81B1DED25008AD159 /* NCPlayer.m */,
+				AED2EBC91B1DED25008AD159 /* NCPlayerContext.h */,
+				AED2EBCA1B1DED25008AD159 /* NCPlayerContext.m */,
+				AED2EBCB1B1DED25008AD159 /* NCPlayerView.h */,
+				AED2EBCC1B1DED25008AD159 /* NCPlayerView.m */,
+			);
+			name = NCPlayer;
 			sourceTree = "<group>";
 		};
 		BD9BC31D17EB6409001B67DE /* ClipCornerView */ = {
@@ -1560,6 +1591,7 @@
 		D7A677DD17CB1BF000EC20D1 /* Custom Components */ = {
 			isa = PBXGroup;
 			children = (
+				AED2EBC31B1DE1F7008AD159 /* NCPlayer */,
 				AE848FFE1B0D081F007A19E8 /* RecordButton */,
 				D749B7611A792F3A00258D63 /* RJLVideoPlayer */,
 				D760737019D4A4C9000E35C2 /* FullScreen */,
@@ -1647,6 +1679,11 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7652C4F1B39C40A006B46E3 /* SideTagButton.h */,
+				D7652C501B39C40A006B46E3 /* SideTagButton.m */,
+				D7C931021B320CB000E725B9 /* ListViewFullScreenViewController.h */,
+				D7C931031B320CB000E725B9 /* ListViewFullScreenViewController.m */,
+				D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */,
 				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
 				D7F2BFB11B39970B00EA8BF0 /* CreditsView.xib */,
 				D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */,
@@ -2524,6 +2561,7 @@
 				D7A188C81A0D2D4F00513909 /* BitRateViewController.m in Sources */,
 				D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */,
 				D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */,
+				D7C931041B320CB000E725B9 /* ListViewFullScreenViewController.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
 				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
 				D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */,
@@ -2542,6 +2580,7 @@
 				D7CCE7F81AC1E48500D85095 /* SegmentedView.m in Sources */,
 				D781900F1A70697D00B964B4 /* UserCenterActionPack.m in Sources */,
 				D790CEA31A6F059800700D9D /* SettingsViewController.m in Sources */,
+				AED2EBCF1B1DED25008AD159 /* NCPlayerView.m in Sources */,
 				D7F04ED71AE1A5CC0028FBE4 /* Tag.m in Sources */,
 				D7A2E5B919AE226A00022795 /* UserSettings.m in Sources */,
 				D7A5E5A91A9F7A1F00E3D4DB /* DownloadItem.m in Sources */,
@@ -2589,6 +2628,7 @@
 				D7E4AC7616B3225B00129222 /* TagMarker.m in Sources */,
 				D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */,
 				D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */,
+				AED2EBCD1B1DED25008AD159 /* NCPlayer.m in Sources */,
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
 				AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */,
 				D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */,
@@ -2602,9 +2642,14 @@
 				D738304E198A94D60053F0A1 /* FilterTab.m in Sources */,
 				D7DA236316B85B4500143102 /* ClipViewController.m in Sources */,
 				D7A7380419A2920D0080B882 /* SortArrow.m in Sources */,
+				AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */,
 				D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */,
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
+<<<<<<< HEAD
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
+=======
+				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
+>>>>>>> ca052b3cc2f21bbbbabc472f7bc91ec856170cb3
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,
 				AA83596E19B115D2009B3ABC /* ExportPlayersSync.m in Sources */,
 				D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */,
@@ -2630,6 +2675,7 @@
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
 				D700F9061B011550008152E8 /* FakeEncoder.m in Sources */,
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
+				D7A9F10D1B25EE72005C8B3E /* EncoderCommander.m in Sources */,
 				D79D709219DD8ED2001FBE16 /* ExternalScreenButton.m in Sources */,
 				D738306F19915B3B0053F0A1 /* UserColourView.m in Sources */,
 				D706AC961B2735610091C02C /* CameraDetails.m in Sources */,
@@ -2825,6 +2871,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -2862,6 +2909,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",

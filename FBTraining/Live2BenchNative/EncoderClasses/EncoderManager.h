@@ -12,16 +12,12 @@
 #import "CloudEncoder.h"
 #import "LocalEncoder.h"
 #import "Event.h"
+#import "EncoderCommander.h"
 
 
 @class Encoder;
 
 
-
-typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
-    EncoderManagerModeOnline   = 1<<1,
-    EncoderManagerModeOffline  = 1<<2
-};
 
 
 #define NOTIF_ENCODER_COUNT_CHANGE          @"encoderCountChange"
@@ -38,7 +34,6 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 
 @interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
 
-@property (nonatomic,assign)            EncoderManagerMode      mode;
 
 @property (nonatomic,assign)            BOOL                    hasInternet;
 @property (nonatomic,assign)            BOOL                    hasWiFi; // Toggled by checkForWiFiAction
@@ -58,56 +53,43 @@ typedef NS_OPTIONS(NSInteger, EncoderManagerMode) {
 @property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
 
 
+@property (nonatomic,weak)              Event                   * liveEvent;
+
+
 // important encoders
+@property (nonatomic,strong)            EncoderCommander        * encoderCommander; // Main box encoder
 @property (nonatomic,strong)            Encoder                 * masterEncoder; // Main box encoder
 @property (nonatomic,strong)            LocalEncoder            * localEncoder;  // the device acts like an in app encoder / with clips
 @property (nonatomic,strong)            CloudEncoder            * cloudEncoder;  // 
 @property (nonatomic,strong)            id <EncoderProtocol>    primaryEncoder;
 
 
-@property (nonatomic,assign,readonly)   NSInteger               totalCameraCount;
-
-@property (nonatomic,strong)            NSString                * customerID;
-
-
 #pragma mark - Encoder Manager Methods
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
 
--(void)reqestSummaryId:(NSString*)aId type:(NSString*)aType onComplete:(void(^)(NSArray*pooled))onCompleteGet;
+// depricated
 
--(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet;
-
--(void)createTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration;
-
--(void)modifyTag:(NSMutableDictionary *)data;
-
--(void)closeDurationTag:(NSString *)tagName;
-
--(void)onPrimaryEncoderEventChange:(id <EncoderProtocol>)encoder;
-
+//-(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet;
+//-(void)createTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration;
+//-(void)modifyTag:(NSMutableDictionary *)data;
+//-(void)closeDurationTag:(NSString *)tagName;
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
 -(Event*)getEventByHID:(NSString*)eventHID;
 -(Event*)getEventByName:(NSString*)eventName;
 
+-(void)declareCurrentEvent:(Event*)event;
+
 -(void)makeFakeEncoder;
 #pragma mark - Commands Methods
 
--(void)refresh;
--(void)logoutOfCloud;
--(void)onLoginToCloud;
-
-#pragma mark - Debugging Methods
-/**
- *  Removes all external Encoders and disables searching for others
- *  This is to be used for Debugging
- */
--(void)removeAllExternalEncoders;
-
+//-(void)refresh;
+-(void)logoutOfCloud; // Depricated
+-(void)onLoginToCloud; // Depricated
 
 -(id<ActionListItem>)checkForWiFiAction;
 -(id<ActionListItem>)checkForACloudAction;
 -(id<ActionListItem>)checkForMasterAction;
--(id<ActionListItem>)logoutAction;
+//-(id<ActionListItem>)logoutAction;
 
 @end

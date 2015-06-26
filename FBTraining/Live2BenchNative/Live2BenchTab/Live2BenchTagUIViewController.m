@@ -7,7 +7,8 @@
 //
 
 #import "Live2BenchTagUIViewController.h"
-
+#import "SideTagButton.h"
+#import "UserCenter.h"
 //#import "Globals.h"
 
 
@@ -295,7 +296,7 @@
 }
 
 
--(BorderButton *)_buildButton:(NSDictionary*)dict
+/*-(BorderButton *)_buildButton:(NSDictionary*)dict
 {
     BorderButton * btn = [BorderButton buttonWithType:UIButtonTypeCustom];
     [btn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
@@ -348,14 +349,72 @@
     }
     
     return btn;
+}*/
+
+-(SideTagButton *)_buildButton:(NSDictionary*)dict
+{
+    SideTagButton * btn = [SideTagButton buttonWithType:UIButtonTypeCustom];
+    [btn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
+    [btn setTag:tagCount++];
+    
+    [buttons setObject:btn forKey:[dict objectForKey:@"name"]];
+    
+    if( [[dict objectForKey:@"side"] isEqualToString:@"left"]  || [[dict objectForKey:@"position"] isEqualToString:@"left"]){
+        
+        [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        [btn setAccessibilityValue:@"left"];
+        
+        [btn setFrame:CGRectMake(0,
+                                 ( [tagButtonsLeft count] * (_buttonSize.height + _gap) ) + 0,
+                                 _buttonSize.width,
+                                 _buttonSize.height) ];
+        
+        [tagButtonsLeft addObject:btn];
+        [_leftTray addSubview:btn];
+        // TODO DEPREICATED START
+        //        if (![[Globals instance].LEFT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
+        //            [[Globals instance].LEFT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
+        //        }
+        // TODO DEPREICATED END
+        
+    } else { /// Right Tags
+        
+        [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [btn setAccessibilityValue:@"right"];
+        //        self.view.bounds.size.width - _buttonSize.width
+        [btn setFrame:CGRectMake(0,
+                                 ( [tagButtonsRight count] * (_buttonSize.height + _gap) ) + 0,
+                                 _buttonSize.width,
+                                 _buttonSize.height) ];
+        
+        [tagButtonsRight addObject:btn];
+        [_rightTray addSubview:btn];
+        // TODO DEPREICATED START
+        //        if (![[Globals instance].RIGHT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
+        //            [[Globals instance].RIGHT_TAG_BUTTONS_NAME addObject:[dict objectForKey:@"name"]];
+        //        }
+        // TODO DEPREICATED END
+        
+    }
+    
+    //This check is to make the filler buttons blank
+    
+    if ([[dict objectForKey:@"name"] isEqualToString:@"--"] || [[dict objectForKey:@"name"] isEqualToString:@"-"]) {
+        btn.hidden = YES;
+    }
+    
+    return btn;
 }
 
-
--(BorderButton*)getButtonByName:(NSString*)btnName
+/*-(BorderButton*)getButtonByName:(NSString*)btnName
 {
 
     return [buttons objectForKey:btnName];
 
+}*/
+-(SideTagButton*) getButtonByName:(NSString*)btnName
+{
+    return [buttons objectForKey:btnName];
 }
 
 #pragma mark - Observers
@@ -390,7 +449,7 @@
 #pragma mark - Getters and Setters
 /////////////////////////////////////////////////// getter and setters
 
--(void)setEnabled:(BOOL)enabled
+/*-(void)setEnabled:(BOOL)enabled
 {
     [self willChangeValueForKey:@"enabled"];
     _enabled = enabled;
@@ -408,7 +467,8 @@
    
     [self didChangeValueForKey:@"enabled"];
         
-}
+}*/
+
 
 -(BOOL)enabled
 {
@@ -417,7 +477,7 @@
 
 
 
--(void)setHidden:(BOOL)hidden
+/*-(void)setHidden:(BOOL)hidden
 {
     [self willChangeValueForKey:@"hidden"];
     _enabled = hidden;
@@ -434,9 +494,18 @@
 -(BOOL)hidden
 {
     return _hidden;
+}*/
+
+-(void)setButtonState:(SideTagButtonModes)mode{
+    for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
+        for (SideTagButton * btn in list) {
+            [btn setMode:mode];
+        }
+    }
+
 }
 
-
+                       
 -(void)setState:(NSString *)state
 {
 
@@ -491,6 +560,75 @@
     } else {
         [placementView addSubview:_leftTray];
         [placementView addSubview:_rightTray];
+    }
+}
+
+-(void)allToggleOnOpenTags:(NSMutableArray *)eventTags
+{
+    
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    
+
+    for (SideTagButton * btn1 in tempList) {
+        btn1.isOpen = NO;
+    }
+
+    for (Tag * tag in eventTags) {
+        for (SideTagButton * btn2 in tempList) {
+            // if the tag is open and has a duration Id and is from this divice
+            if (tag.name == btn2.titleLabel.text && tag.type == TagTypeOpenDuration && tag.deviceID == [[[UIDevice currentDevice] identifierForVendor]UUIDString]){
+                btn2.isOpen = YES;
+                btn2.durationID = tag.durationID;
+            }
+            
+            
+        }
+    }
+    
+
+
+}
+
+-(void)onEventChange:(Event*)event
+{
+    if (_currentEvent) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    }
+    
+    if (event){
+        _currentEvent = event;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enableButton:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    }
+}
+
+-(void)disEnableButton
+{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = false;
+        }
+    }
+    
+}
+
+-(void)enableButton:(NSNotification*)note
+{
+     NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = true;
+        }
+    }
+}
+
+-(void)unHighlightButton:(SideTagButton *)button
+{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if ([btn1.titleLabel.text isEqualToString:button.titleLabel.text]) {
+            btn1.highlighted = false;
+        }
     }
 }
 

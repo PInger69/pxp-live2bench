@@ -80,11 +80,13 @@ static void * vpFrameContext   = &vpFrameContext;
         
         // video player
         [self.videoPlayer       addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
-//        [self.videoPlayer       addObserver:self forKeyPath:@"slowmo" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpStatusContext];
-        
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
 
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillReset:) name:PLAYER_WILL_RESET  object:self.videoPlayer];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillDid:)   name:PLAYER_DID_RESET    object:self.videoPlayer];
+        
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerCancelClip:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
         NSTimeInterval  inter   =  2;
@@ -123,6 +125,12 @@ static void * vpFrameContext   = &vpFrameContext;
         
         [self.videoPlayer.view  addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&vpFrameContext];
         [self.videoPlayer       addObserver:self forKeyPath:NSStringFromSelector(@selector(isAlive)) options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&isObservedContext2];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillReset:) name:PLAYER_WILL_RESET  object:self.videoPlayer];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerWillDid:)   name:PLAYER_DID_RESET   object:self.videoPlayer];
+        
+        
+        
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerCancelClip:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
@@ -240,8 +248,8 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)observerMethodForVideoPlayerForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    int oldStatus = [[change objectForKey:@"old"]intValue];
-    int newStatus = [[change objectForKey:@"new"]intValue];
+    PlayerStatus oldStatus = [[change objectForKey:@"old"]intValue];
+    PlayerStatus newStatus = [[change objectForKey:@"new"]intValue];
     if (oldStatus == newStatus) return;
     
   
@@ -249,25 +257,39 @@ static void * vpFrameContext   = &vpFrameContext;
     
     if (ply.status & RJLPS_Paused) {
         [self.pips makeObjectsPerformSelector:@selector(pause)];
+        [_multi pause];
     }
-    if (ply.status & RJLPS_Slomo) {
+
+    if ((ply.status & RJLPS_Play) && !(ply.status & (RJLPS_Scrubbing|RJLPS_Seeking)) ) {
         for (Pip * pip in self.pips) {
-            [pip playRate:self.videoPlayer.avPlayer.rate];
-        }
-    }
-    if (ply.status & RJLPS_Play) {
-        for (Pip * pip in self.pips) {
-            [pip playRate:self.videoPlayer.avPlayer.rate];
+            [pip playRate:1];
             [pip play];
         }
+        [_multi playRate:1];
+        [_multi play];
     }
     
+    if (ply.status & RJLPS_Slomo) {
+        for (Pip * pip in self.pips) {
+            [pip playRate:.5];
+        }
+        [_multi playRate:.5];
+    }
+    
+    
     // was main Player Finished Seeking
-    if ( (oldStatus & RJLPS_Seeking) && !((newStatus & RJLPS_Seeking)!=0)) {
+//    if ( (oldStatus & RJLPS_Scrubbing) && !(newStatus & RJLPS_Scrubbing)) {
+//        [self syncToPlayer];
+//        
+//    }
+
+    if ( (oldStatus & RJLPS_Seeking) && !(newStatus & RJLPS_Seeking)) {
+        [self syncToPlayer];
+        
+    } else  if ( (oldStatus & RJLPS_Scrubbing) && !(newStatus & RJLPS_Scrubbing)) {
         [self syncToPlayer];
         
     }
-
 
 }
 
@@ -290,7 +312,7 @@ static void * vpFrameContext   = &vpFrameContext;
         for (Pip * pip in self.pips) {
             [pip clear];
         }
-        [self.videoPlayer clear];
+        //[self.videoPlayer clear];
     }
 }
 
@@ -379,9 +401,6 @@ static void * vpFrameContext   = &vpFrameContext;
     Feed * f;
     if ([rick objectForKey:@"feed"]) {
    
-        //Feed * f = [_feedSwitchView feedFromKey:[rick objectForKey:@"feed"]];
-//    playerStatus oldStatus = [[rick objectForKey:@"state"]integerValue];
-
         if (_videoControlBar) {
             [_videoControlBar setBarMode:L2B_VIDEO_BAR_MODE_CLIP];
             [_videoControlBar setTagName:[rick objectForKey:@"feed"]];
@@ -403,6 +422,7 @@ static void * vpFrameContext   = &vpFrameContext;
         [pip setHidden:YES];
         [pip seekTo:cmtime];
     }
+    [self hideMulti];
     // set feeds highlight
     
     [_feedSwitchView deselectByIndex:-1];
@@ -479,7 +499,7 @@ static void * vpFrameContext   = &vpFrameContext;
     [self.pips addObject:[self addAntiFreezeOnPip:aPip]]; // add the anti freeze
     [aPip addGestureRecognizer:tapGesture];
     [aPip addGestureRecognizer:tap2Times];
-    [aPip.freezeCounter startTimer:1 max:3];
+    [aPip.freezeCounter startTimer:5 max:5];
 }
 
 -(void)removePip:(Pip *)aPip
@@ -497,6 +517,10 @@ static void * vpFrameContext   = &vpFrameContext;
 
 -(void)syncToPlayer
 {
+    if ([_multi superview] != nil){
+        [_multi seekTo:self.videoPlayer.avPlayer.currentTime];
+    }
+    
     for (Pip * pp in self.pips) {
         
         __block Pip * weakPip = pp;
@@ -512,7 +536,7 @@ static void * vpFrameContext   = &vpFrameContext;
         CMTime pipTime = [[weakPip.avPlayerItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue].duration;
         CMTime mySeekToTime = self.videoPlayer.avPlayer.currentTime;
         
-        
+        /*
         if (CMTIME_COMPARE_INLINE(pTime, >, pipTime)) {
 
 //           CMTimeRange tempRange = [[weakPip.avPlayerItem.seekableTimeRanges objectAtIndex:0] CMTimeRangeValue];
@@ -522,30 +546,55 @@ static void * vpFrameContext   = &vpFrameContext;
                 mySeekToTime =  pipTime;
 //            }
         }
+        */
         
         
-        
-        
+        /*
         [weakPip.avPlayer seekToTime:mySeekToTime completionHandler:^(BOOL finished) {
             if (finished) {
                 [weakPip.avPlayer.currentItem cancelPendingSeeks];
-                weakPip.avPlayer.rate = r;
-                weakPip.status = weakPip.status & ~(PIP_Seeking);
-                
+                [weakPip.avPlayer prerollAtRate:r completionHandler:^(BOOL prerolled) {
+                    weakPip.avPlayer.rate = r;
+                    weakPip.status = weakPip.status & ~(PIP_Seeking);
+                }];
             } else {
                 [weakPip.avPlayer.currentItem cancelPendingSeeks];
                 NSLog(@"Pip seekBy: CANCELLED error or out of range");
                 weakPip.status = weakPip.status & ~(PIP_Seeking);
             }
         }];
+         */
+        
+        if (CMTimeCompare(CMTimeAbsoluteValue(CMTimeSubtract(pTime, pipTime)), CMTimeMake(50, 1000)) > 0) {
+            [weakPip.avPlayer seekToTime:mySeekToTime completionHandler:^(BOOL finished) {
+                if (finished) {
+                    [weakPip.avPlayer.currentItem cancelPendingSeeks];
+
+                    CMTimeRange loadedRange = [weakPip.avPlayer.currentItem.loadedTimeRanges.firstObject CMTimeRangeValue];
+                    
+                    if (CMTimeRangeContainsTime(loadedRange, mySeekToTime)) {
+                        weakPip.avPlayer.rate = r;
+                        weakPip.status = weakPip.status & ~(PIP_Seeking);
+                    } else {
+                        [weakPip.avPlayer cancelPendingPrerolls];
+                        [weakPip.avPlayer prerollAtRate:r completionHandler:^(BOOL prerolled) {
+                            weakPip.avPlayer.rate = r;
+                            weakPip.status = weakPip.status & ~(PIP_Seeking);
+                        }];
+                    }
+                } else {
+                    [weakPip.avPlayer.currentItem cancelPendingSeeks];
+                    NSLog(@"Pip seekBy: CANCELLED error or out of range");
+                    weakPip.status = weakPip.status & ~(PIP_Seeking);
+                }
+            }];
+        }
         
         
 //        [pp seekTo: self.videoPlayer.avPlayer.currentTime] ;
     }
     
-    if ([_multi superview] != nil){
-        [_multi seekTo:self.videoPlayer.avPlayer.currentTime];
-    }
+
     
 }
 
@@ -561,11 +610,11 @@ static void * vpFrameContext   = &vpFrameContext;
 
 #pragma mark -
 #pragma mark LIVE
--(void)pipsAndVideoPlayerToLive:(Feed*)feed
+-(void)pipsAndVideoPlayerToLive:(Feed *)feed
 {
     
-    /*//_videoPlayer.feed = _feedSwitchView.primaryFeed;
-    if (![_videoPlayer.feed isEqual:_feedSwitchView.primaryFeed]) {
+    //_videoPlayer.feed = _feedSwitchView.primaryFeed;
+    /*if (![_videoPlayer.feed isEqual:_feedSwitchView.primaryFeed]) {
         [_videoPlayer clear];
     }
     [_videoPlayer playFeed:_feedSwitchView.primaryFeed];*/
@@ -607,6 +656,21 @@ static void * vpFrameContext   = &vpFrameContext;
 {
     [_multi pause];
     [_multi removeFromSuperview];
+}
+
+
+
+-(void)playerWillReset:(NSNotification*)note
+{
+
+}
+
+-(void)playerWillDid:(NSNotification*)note
+{
+    if ([_multi superview]) {
+        [self hideMulti];
+        [self showMulti];
+    }
 }
 
 

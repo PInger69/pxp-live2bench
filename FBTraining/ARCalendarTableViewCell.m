@@ -54,12 +54,12 @@
 //    [self.downloadButton setFrame:CGRectMake(400, 15, 30,35)];
 //    [self.downloadButton setTag:98];
 //    [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
+
     [self.myContentView addSubview: self.downloadInfoLabel];
     [self.myContentView addSubview: self.dateLabel];
     [self.myContentView addSubview: self.timeLabel];
     [self.myContentView addSubview: self.titleLabel];
-    //[self.myContentView addSubview: self.downloadButton];
+//    [self.myContentView addSubview: self.downloadButton];
     //[self.myContentView addSubview: self.playButton];
 }
 //-(void)prepareForReuse{
@@ -79,7 +79,15 @@
 }
 
 - (void)isSelected:(BOOL)selected{
-    UIColor * color = [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
+    
+    UIColor * color;
+    
+    // this is just to get the colors to reflect the tint change
+    
+    color = [Utility ligherColorOf:self.tintColor];
+
+    
+ //   color =     [self.tintColor colorWithAlphaComponent:.5]; //[UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f];
 
     UIColor * textColor = [UIColor colorWithWhite:0.224 alpha:1.0f];
     if (selected) {

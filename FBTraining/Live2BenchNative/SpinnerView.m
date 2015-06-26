@@ -16,6 +16,8 @@
     UIActivityIndicatorView     * indicator;
     UILabel                     * progressMessage;
     UIProgressView              * progressBar;
+    UIVisualEffectView          * blurEffect;
+    
 }
 static SpinnerView *instance;
 
@@ -55,6 +57,8 @@ static SpinnerView *instance;
 // This is the new global spinner that is controlled by notifivations
 -(id)initStatic
 {
+
+
     self = [super init];
     if (self) {
         // Initialization code
@@ -65,7 +69,7 @@ static SpinnerView *instance;
         
         UIImageView *background = [[UIImageView alloc] initWithImage:[self addBackground]];
         background.alpha = 0.7;
-        [self addSubview:background];
+      [self addSubview:background];
         
         
         indicator =
@@ -87,7 +91,7 @@ static SpinnerView *instance;
         progressBar.progressTintColor       = PRIMARY_APP_COLOR;
         progressBar.bounds                  = CGRectMake(progressBar.bounds.origin.x, progressBar.bounds.origin.y, 400, 30);
         [progressBar setProgressViewStyle:UIProgressViewStyleBar];
-        [self addSubview:progressBar];
+       [self addSubview:progressBar];
         
         
         
@@ -102,16 +106,27 @@ static SpinnerView *instance;
         
         
 
-       // __block SpinnerView * weakSelf;
-        
+//       __block SpinnerView * weakSelf;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onOpenSpinner:) name:NOTIF_OPEN_SPINNER object:nil];
         
         openObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_OPEN_SPINNER object:nil queue:nil usingBlock:^(NSNotification *note) {
             UIView * theApp = [UIApplication sharedApplication].keyWindow.rootViewController.view;
             
             [theApp addSubview:instance];
+//            if (!blurEffect) {
+//                 UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+//                blurEffect = [[UIVisualEffectView alloc]initWithEffect:effect];
+//                blurEffect.frame = CGRectMake(100, 100, 100, 100);
+//                
+//                [instance addSubview:blurEffect];
+//                blurEffect.layer.borderWidth = 1;
+//            }
+            
+            
+            
             [indicator startAnimating];
             CATransition *animation = [CATransition animation];
-            [animation setType:nil];
+            animation.type = kCATransitionFade;
 //            NSLog(@"Global Spinner OPEN");
             
             if ([note.userInfo objectForKey:@"message"]){
@@ -145,6 +160,14 @@ static SpinnerView *instance;
             }
         }];
         
+//        if (!blurEffect) {
+//            UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+//            blurEffect = [[UIVisualEffectView alloc]initWithEffect:effect];
+//            blurEffect.frame = CGRectMake(300, 200, 200, 200);
+//            
+//            [self addSubview:blurEffect];
+//            blurEffect.layer.borderWidth = 1;
+//        }
 
     }
     return self;
@@ -161,6 +184,45 @@ static SpinnerView *instance;
     }
     return self;
 }
+
+-(void)onOpenSpinner:(NSNotification*)note
+{
+
+    UIView * theApp = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    
+    [theApp addSubview:instance];
+//    if (blurEffect) {
+//        
+//        blurEffect = nil;
+//        UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+//        blurEffect = [[UIVisualEffectView alloc]initWithEffect:effect];
+//        blurEffect.frame = CGRectMake(300, 100, 400, 400);
+//        
+//        [instance addSubview:blurEffect];
+//        blurEffect.layer.borderWidth = 1;
+//    }
+//    
+    
+    
+    [indicator startAnimating];
+    CATransition *animation = [CATransition animation];
+    animation.type = kCATransitionFade;
+    //            NSLog(@"Global Spinner OPEN");
+    
+    if ([note.userInfo objectForKey:@"message"]){
+        progressMessage.text = [note.userInfo objectForKey:@"message"];
+        
+    }
+    if ([note.userInfo objectForKey:@"progress"]){
+        [progressBar setProgress:[[note.userInfo objectForKey:@"progress"]floatValue]
+                        animated:[[note.userInfo objectForKey:@"animated"]boolValue]];
+    }
+    theApp.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
+
+
+}
+
+
 
 
 
@@ -194,7 +256,7 @@ static SpinnerView *instance;
     // Create a new animation
     CATransition *animation = [CATransition animation];
 	// Set the type to a nice wee fade
-	[animation setType:nil];
+    animation.type = kCATransitionFade;
 
 	return spinnerView;
 }

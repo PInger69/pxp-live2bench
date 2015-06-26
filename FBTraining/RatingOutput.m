@@ -43,6 +43,7 @@ static UIImage* rateSelected;
 
                 
             }
+        
         }
     
     return self;

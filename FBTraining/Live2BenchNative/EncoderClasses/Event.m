@@ -12,6 +12,7 @@
 
 
 
+
 @implementation Event {
     NSString *localPath;
 }
@@ -30,7 +31,8 @@
 
 @synthesize downloadedSources       = _downloadedSources;
 @synthesize parentEncoder           = _parentEncoder;
-
+@synthesize isBuilt                 = _isBuilt;
+@synthesize primary                 = _primary;
 
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
@@ -39,6 +41,7 @@
         NSMutableDictionary *dataFinal = [[NSMutableDictionary alloc]initWithDictionary:data];
         _rawData            = dataFinal;
         _live               = (_rawData[@"live"] || _rawData[@"live_2"])? YES:NO;
+        _primary            = false;
         _name               = [_rawData objectForKey:@"name"];
         _hid                = [_rawData objectForKey:@"hid"];
         _eventType          = [_rawData objectForKey:@"sport"];
@@ -57,7 +60,7 @@
         if ([_rawData objectForKey:@"homeTeam"]) [_teams setValue:[_rawData objectForKey:@"homeTeam"] forKey:@"homeTeam"];
         if ([_rawData objectForKey:@"visitTeam"]) [_teams setValue:[_rawData objectForKey:@"visitTeam"] forKey:@"visitTeam"];
     }
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_DOWNLOADED object:nil queue:nil usingBlock:^(NSNotification *note){
         NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
         if (key.count > 0) {
             [self.downloadingItemsDictionary removeObjectForKey:key[0]];
@@ -67,20 +70,83 @@
     return self;
 }
 
--(void)setTags:(NSMutableDictionary *)tags
-{
-    _tags = tags;
+-(void)setPrimary:(BOOL)primary{
+    _primary = primary;
 }
 
+-(void)addAllTags:(NSDictionary *)allTagData
+{
+     NSArray *tagArray = [allTagData allValues];
+     for (NSDictionary *newTagDic in tagArray) {
+         Tag *newTag = [[Tag alloc] initWithData: newTagDic event:self];
+         [_tags addObject:newTag];
+     }
+     self.isBuilt = YES;
+    
+
+    
+    if([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
+        [self.delegate onEventBuildFinished:self];
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+}
+
+-(void)addTag:(Tag *)newtag
+{
+    [_tags addObject:newtag];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+    
+    if (newtag.type != TagTypeOpenDuration && _primary ) {
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
+                                                                                                      @"msg":newtag.name,
+                                                                                                      @"colour":newtag.colour,
+                                                                                                      @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
+                                                                                                      }];
+    }
+}
+
+-(void)modifyTag:(NSDictionary *)modifiedData
+{
+    NSString * tagId = [[modifiedData objectForKey:@"id"]stringValue];// [NSString stringWithFormat:@"%ld",[[data objectForKey:@"id"]integerValue] ];
+        NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            Tag * obj = evaluatedObject;
+            return [obj.ID isEqualToString:tagId];
+        }];
+        
+        NSArray *filteredArray = [_tags filteredArrayUsingPredicate:pred];
+        Tag *tagToBeModded = [filteredArray firstObject];
+        
+        if ( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeCloseDuration && tagToBeModded.type == TagTypeOpenDuration) {
+           
+            tagToBeModded = [Tag getOpenTagByDurationId:modifiedData[@"dtagid"]];
+            
+            NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:modifiedData];
+            double openTime                 = tagToBeModded.time;
+            double closeTime                = [dictToChange[@"closetime"]doubleValue];
+            dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
+
+            
+            [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
+        }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){
+            [_tags removeObject:tagToBeModded];
+            
+        }else {
+            [tagToBeModded replaceDataWithDictionary:modifiedData];
+        }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:self];
+    tagToBeModded.modified = false;
+}
 
 -(NSDictionary*)rawData
 {
     if (_tags != nil && _tags.count != 0) {
         NSMutableDictionary * newRawData    = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
         NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
-        NSArray             * tagInArray    = [_tags allValues];
         
-        for (Tag *tag in tagInArray) {
+        for (Tag *tag in _tags) {
             [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];
         }
         
@@ -97,21 +163,24 @@
 }
 
 
--(NSMutableDictionary *)buildTags:(NSDictionary*)aDict{
+-(NSMutableArray *)buildTags:(NSDictionary*)aDict{
+    
+    NSMutableArray *tagResult = [[NSMutableArray alloc]init];
     
     if (aDict[@"tags"]) {
         NSDictionary *tagToBeAdded = aDict[@"tags"];
         NSArray *tagArray = [tagToBeAdded allValues];
-        NSMutableDictionary *tagsDic = [[NSMutableDictionary alloc]init];
+       
         
         
         for (NSDictionary *tagDic in tagArray) {
-            [tagsDic setObject:tagDic forKey:tagDic[@"id"]];
+            Tag *tag = [[Tag alloc]initWithData:tagDic event:self];
+            if (tag.type !=  TagTypeDeleted ) {
+            [tagResult addObject:tag];
+            }
         }
     }
-
-    NSMutableDictionary *tagDict = [[NSMutableDictionary alloc]init];
-        return tagDict;
+    return (tagResult)?tagResult:nil;
 }
 
 -(NSDictionary*)buildMP4s:(NSDictionary*)aDict
@@ -175,7 +244,15 @@
     return [tempDict copy];
 }
 
-
+-(NSArray*)getTagsByID:(NSString*)tagId
+{
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {        
+        Tag * obj = evaluatedObject;
+        return [obj.name isEqualToString:tagId];
+    }];
+    
+    return [self.tags filteredArrayUsingPredicate:pred];
+}
 
 /**
  *  This makes the feeds from the data and returns the a dict based of the feeds labeled by scource name as key
@@ -243,6 +320,23 @@
     }
     return [tempDict copy];
 }
+
+
+-(void)setIsBuilt:(BOOL)isBuilt
+{
+    if (_isBuilt == isBuilt) return;
+    _isBuilt = isBuilt;
+    if (_isBuilt && self.onComplete){
+        self.onComplete();
+    }
+    
+}
+
+-(BOOL)isBuilt
+{
+    return _isBuilt;
+}
+
 
 -(NSString*)description
 {

@@ -73,7 +73,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     //Richard
     AppDelegate            * _appDel;
     EncoderManager         * encoderManager;
-    Encoder                * masterEncoder;
+    NSObject <EncoderProtocol> *   masterEncoder;
     UserCenter             * userCenter;
     TablePopoverController * homeTeamPick;
     TablePopoverController * visitTeamPick;
@@ -122,7 +122,7 @@ SVSignalStatus signalStatus;
 //        __block SettingsViewController * weakSelf = self;
         __block UILabel * weakStateLable    =  encStateLabel;
         __block UILabel * weakHomeLable     =  encoderHomeText;
-        __block Encoder * weakMasterEncoder =  masterEncoder;
+        __block NSObject <EncoderProtocol> * weakMasterEncoder =  masterEncoder;
         
         [encStateLabel setHidden:YES];
         // observers
@@ -432,51 +432,51 @@ SVSignalStatus signalStatus;
 }
 
 
--(void)masterEncoderStatusObserver:(Encoder*)master
+-(void)masterEncoderStatusObserver:(id<EncoderProtocol>)master
 {
     EncoderStatus status    = master.status;
     NSString * stringStatus = master.statusAsString;
     switch (status) {
             
         case ENCODER_STATUS_INIT :
-            NSLog(@"ENCODER_STATUS_INIT");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_INIT");
         case ENCODER_STATUS_UNKNOWN :
-            NSLog(@"ENCODER_STATUS_UNKNOWN");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_UNKNOWN");
             [self eventControlsState:EventButtonControlStatesDisabled];
         case ENCODER_STATUS_CAM_LOADING :
-            NSLog(@"ENCODER_STATUS_CAM_LOADING");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_CAM_LOADING");
             [self eventControlsState:EventButtonControlStatesDisabled];
             break;
         case ENCODER_STATUS_READY :
-            NSLog(@"ENCODER_STATUS_READY");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_READY");
             [self eventControlsState:EventButtonControlStatesReady];
             break;
         case ENCODER_STATUS_LIVE :
-            NSLog(@"ENCODER_STATUS_LIVE");
+            if (DEBUG_MODE)   NSLog(@"ENCODER_STATUS_LIVE");
             [self eventControlsState:EventButtonControlStatesLive];
             break;
         case ENCODER_STATUS_SHUTDOWN :
-            NSLog(@"ENCODER_STATUS_SHUTDOWN");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_SHUTDOWN");
             [self eventControlsState:EventButtonControlStatesDisabled];
             break;
         case ENCODER_STATUS_PAUSED :
-            NSLog(@"ENCODER_STATUS_PAUSED");
+            if (DEBUG_MODE)   NSLog(@"ENCODER_STATUS_PAUSED");
             [self eventControlsState:EventButtonControlStatesPause];
             break;
         case ENCODER_STATUS_STOP :
-            NSLog(@"ENCODER_STATUS_STOPPING");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_STOPPING");
             [self eventControlsState:EventButtonControlStatesStopping];
             break;
         case ENCODER_STATUS_START :
-            NSLog(@"ENCODER_STATUS_START");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_START");
             [self eventControlsState:EventButtonControlStatesStart];
             break;
         case ENCODER_STATUS_NOCAM :
-            NSLog(@"ENCODER_STATUS_NOCAM");
+            if (DEBUG_MODE)   NSLog(@"ENCODER_STATUS_NOCAM");
             [self eventControlsState:EventButtonControlStatesShutdown];
             break;
         case ENCODER_STATUS_LOCAL :
-            NSLog(@"ENCODER_STATUS_LOCAL");
+            if (DEBUG_MODE)  NSLog(@"ENCODER_STATUS_LOCAL");
             [self eventControlsState:EventButtonControlStatesDisabled];
             break;
             
@@ -484,8 +484,9 @@ SVSignalStatus signalStatus;
             break;
     }
     
-    //    NSInteger cc = encoderManager.totalCameraCount;
-    //    NSString * scourceCount = (cc)?[NSString stringWithFormat:@" (s%i)",cc]:@"";
+
+    if ([stringStatus isEqualToString:@"stopped"]) stringStatus= @"ready"; // This is just to make the display more user friendly
+    
     [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }
 
@@ -498,7 +499,7 @@ SVSignalStatus signalStatus;
     [encoderHomeText setAlpha:1];
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
     [masterEncoder addObserver:self forKeyPath:@"isAlive" options:NSKeyValueObservingOptionNew context:nil];
-    
+    [self masterEncoderStatusObserver:masterEncoder];// run it once just to display status
     // block
 //    NSArray * (^grabNames)(NSDictionary * input) = ^NSArray * (NSDictionary * input) {
 //        NSMutableArray  * collection    = [[NSMutableArray alloc]init];

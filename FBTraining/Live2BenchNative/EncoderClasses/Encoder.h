@@ -15,11 +15,12 @@
 
 @class EncoderManager;
 
+
+
 #define OLD_VERSION  @"1.0.13"
 
 #define NOTIF_ENCODER_CONNECTION_PROGRESS   @"encoderConnectionProgress"
 #define NOTIF_ENCODER_CONNECTION_FINISH     @"encoderConnectionComplete"
-#define NOTIF_ENCODER_FEEDS_UPDATED         @"encoderFeedsUpdated"
 #define NOTIF_ENCODER_MASTER_FOUND          @"encoderMasterFound"
 #define NOTIF_ENCODER_MASTER_HAS_FALLEN     @"encoderMasterLost"
 #define NOTIF_ENCODER_MASTER_ENSLAVED       @"encoderMasterEnslaved"
@@ -46,7 +47,7 @@
 #define RESUME_EVENT    @"resumeEvent:timeStamp:"
 #define START_EVENT     @"startEvent:timeStamp:"
 
-@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol>
+@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol,EncoderStatusMonitorProtocol>
 {
     
     
@@ -82,6 +83,7 @@
 @property (nonatomic,assign)    NSInteger       cameraCount;
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 
+
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 
@@ -89,6 +91,7 @@
 @property (nonatomic,assign)    BOOL            isReady;
 @property (nonatomic,assign)    BOOL            isAlive;
 @property (nonatomic,assign)    BOOL            justStarted;
+@property (nonatomic,assign)    BOOL            pressingStart;
 
 /**
  *  This will create and instance of an endcoder at inputted ip
@@ -122,6 +125,19 @@
 
 -(Event*)getEventByName:(NSString*)eventName;
 
+
+//Don't know why I need all these, but have to add them to get rid of errors
+-(void)getAllEventsResponse:(NSData *)data;
+-(void)stopResponce:(NSData *)data;
+-(void)startResponce:(NSData *)data;
+-(void)pauseResponce:(NSData *)data;
+-(void)resumeResponce:(NSData *)data;
+-(void)camerasGetResponce:(NSData *)data;
+-(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict;
+-(void)deleteEventResponse: (NSData *) data;
+-(void)removeFromQueue:(EncoderCommand *)obj;
+-(void)addToQueue:(EncoderCommand *)obj;
+-(EncoderCommand *)getNextInQueue;
 
 /**
  *  removes all observers and checker and release memory if possible

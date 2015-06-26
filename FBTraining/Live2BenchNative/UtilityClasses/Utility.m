@@ -92,6 +92,8 @@
         // validation step:
         if([object isKindOfClass:[NSDictionary class]])
         {
+//            NSDictionary *  test = [[NSDictionary alloc]init];
+//            NSString * teste = NSString st
             results = object;
             /* proceed with results as you like; the assignment to
              an explicit NSDictionary * is artificial step to get
@@ -150,6 +152,19 @@
     return newString;
 }
 
++(NSString *)hexStringFromColor:(UIColor *)color
+{
+    const CGFloat *components = CGColorGetComponents(color.CGColor);
+    
+    CGFloat r = components[0];
+    CGFloat g = components[1];
+    CGFloat b = components[2];
+    
+    return [NSString stringWithFormat:@"%02lX%02lX%02lX",
+            lroundf(r * 255),
+            lroundf(g * 255),
+            lroundf(b * 255)];
+}
 
 +(NSString *)stringToSha1:(NSString *)hashkey{
     
@@ -408,8 +423,30 @@
 +(NSString*)removeSubString:(NSString*)substring in:(NSString*)main
 {
     NSMutableString * temp =     [[NSMutableString alloc]initWithString:main];
-    [temp deleteCharactersInRange:[main rangeOfString:substring]];
+    //[temp deleteCharactersInRange:[main rangeOfString:substring]];
     return temp;
+}
+
++(UIColor*)darkerColorOf:(UIColor*)color
+{
+    CGFloat r, g, b, a;
+    if ([color getRed:&r green:&g blue:&b alpha:&a])
+        return [UIColor colorWithRed:MAX(r - 0.2, 0.0)
+                               green:MAX(g - 0.2, 0.0)
+                                blue:MAX(b - 0.2, 0.0)
+                               alpha:a];
+    return nil;
+}
+
++(UIColor*)ligherColorOf:(UIColor*)color
+{
+    CGFloat r, g, b, a;
+    if ([color getRed:&r green:&g blue:&b alpha:&a])
+        return [UIColor colorWithRed:MAX(r + 0.5, 0.0)
+                               green:MAX(g + 0.5, 0.0)
+                                blue:MAX(b + 0.5, 0.0)
+                               alpha:a];
+    return nil;
 }
 
 

@@ -16,7 +16,7 @@
 #import "TeleViewController.h"
 #import "CustomButton.h"
 #import "TeleViewController.h"
-#import "PxpVideoPlayerProtocol.h"
+
 
 @interface InjuryViewController : CustomTabViewController
 

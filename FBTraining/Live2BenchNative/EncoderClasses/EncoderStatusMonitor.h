@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ENcoderStatusMonitorProtocol.h"
 #import "EncoderProtocol.h"
 @class Encoder;
 //typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
@@ -39,8 +40,11 @@
 
 @property (nonatomic,assign)    BOOL    isLookingForMaster;
 
--(id)initWithEncoder:(Encoder*)encoder;
+//-(id)initWithEncoder:(Encoder*)encoder;
+-(id)initWithDelegate:( id <EncoderStatusMonitorProtocol> )delegate;
 -(void)startShutdownChecker:(void(^)(void))onShutdown;
+-(void)statusResponse:(NSData *)data;
+-(void)checkFeeds:(NSData *)data;
 -(void)destroy;
 
 @end

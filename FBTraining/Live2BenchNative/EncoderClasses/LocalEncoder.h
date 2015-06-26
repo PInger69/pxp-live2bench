@@ -40,6 +40,8 @@
 #pragma mark - Bookmark Clip Methods
 @property (nonatomic,strong)    NSMutableDictionary * clips;    // This is all feeds kept on the device  key:<id> value:<Clip>
 
++(instancetype)getInstance;
+
 -(NSInteger)getBookmarkSpace;
 -(NSString*)bookmarkPath;  // make readonly Props
 -(NSString*)bookmarkedVideosPath; // make readonly Props

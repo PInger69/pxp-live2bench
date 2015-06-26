@@ -9,6 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "EncoderProtocol.h"
 
+@class Tag;
+
+
+@protocol EventDelegate <NSObject>
+
+@optional
+-(void)onEventBuildFinished:(Event*)event;
+
+
+@end
+
+
+
 
 @interface Event : NSObject
 
@@ -21,10 +34,11 @@
 @property (nonatomic,strong) NSDictionary   * feeds;
 @property (nonatomic,strong) NSDictionary   * mp4s;
 @property (nonatomic,strong) NSMutableDictionary   * rawData;
-@property (nonatomic,strong) NSMutableDictionary   * tags;
+@property (nonatomic,strong) NSMutableArray   * tags;
 @property (nonatomic,assign) BOOL           deleted;
 @property (nonatomic,assign) BOOL           local;
 @property (nonatomic,assign) BOOL           live;
+@property (nonatomic,assign) BOOL           primary;
 
 @property (nonatomic, strong) NSMutableDictionary  * downloadingItemsDictionary;
 
@@ -32,6 +46,8 @@
 @property (nonatomic,strong) NSMutableDictionary    * localTags;
 
 @property (nonatomic,strong) NSMutableArray        * downloadedSources; // this is a list of strings of videos that are on the device
+
+@property (nonatomic,weak)  id <EventDelegate>  delegate;
 
 
 // These need to be cleaned
@@ -41,7 +57,14 @@
 
 @property (nonatomic,strong) id <EncoderProtocol> parentEncoder;
 
+@property (nonatomic,assign) BOOL               isBuilt;
+@property (nonatomic, copy) void(^onComplete)();
 
 
-- (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
+
+-(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
+-(void)addTag:(Tag *)newtag;
+-(void)addAllTags:(NSDictionary *)allTagData;
+-(void)modifyTag:(NSDictionary *)modifiedData;
+-(NSArray*)getTagsByID:(NSString*)tagId;
 @end

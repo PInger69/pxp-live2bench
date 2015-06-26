@@ -52,8 +52,8 @@
     UIProgressView * proBar;
     UILabel * lbl;
     
-    UIButton * playButton;
-    UIButton * pauseButton;
+    UIButton * openButton;
+    UIButton * closeButton;
     UIButton * stepButton;
     __block DebuggingTabViewController * weakSelf;
 
@@ -111,12 +111,70 @@ static void *  debugContext = &debugContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIImageView * img = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"playbackRateButtonBackSelected.png"]];
+    img.frame = CGRectMake(120, 100, 200, 200);
+    [self.view addSubview:img];
+    UIVisualEffectView          * blurEffect;
+    UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    blurEffect = [[UIVisualEffectView alloc]initWithEffect:effect];
+    blurEffect.frame = CGRectMake(100, 100, 200, 200);
+    
+    [self.view addSubview:blurEffect];
+    blurEffect.layer.borderWidth = 1;
+    
+    
+    openButton  = [[UIButton alloc]initWithFrame:CGRectMake(300, 300, 100, 50)];
+    [openButton setTitle:@"open" forState:UIControlStateNormal];
+    [openButton addTarget:self action:@selector(onOpen:) forControlEvents:UIControlEventTouchUpInside];
+    closeButton = [[UIButton alloc]initWithFrame:CGRectMake(430, 300, 100, 50)];
+    [closeButton setTitle:@"close" forState:UIControlStateNormal];
+    [closeButton addTarget:self action:@selector(onClose:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:closeButton];
+    [self.view addSubview:openButton];
+    
+}
+
+-(void)onOpen:(id)sender
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                      @"name":@"PP",
+                                                                                                      @"time":[NSString stringWithFormat:@"%d",10],
+                                                                                                      @"duration":[NSNumber numberWithBool:YES]
+                                                                                                      }];
+}
+
+-(void)onClose:(id)sender
+{
+    
+    
+    NSString * fakeId = @"00";
+    
+    
+    Tag * tag;
+    NSLog(@"");
+   // tag.type = TagTypeCloseDuration;
+//    tag.time = 60;
+    
+    NSMutableDictionary * dick = [[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]];
+    [dick setObject:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];    
+    [dick setObject:[NSString stringWithFormat:@"%f",60.000000] forKey:@"closetime"];
+    
+    
+//    add close time to the post
+//    time gets rest when it gets to the encoder.
+//    but make sure that the event is still getting the open tag, just not displaying them in the views
+//    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:dick];
+    
     
 }
 
 
+-(void)addTarge:(id) sel:(SEL)sel
+{
 
 
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -125,6 +183,9 @@ static void *  debugContext = &debugContext;
 //        Feed * fff =[[Feed alloc]initWithURLString:@"http://192.168.1.154/events/2015-04-21_09-38-18_3dc550ff6dfb7df9cc4668cdcbf8bb779758c36b_local/video/main.mp4" quality:0];
 //    [testPlayer playFeed:fff];
 
+
+
+   
 }
 
 

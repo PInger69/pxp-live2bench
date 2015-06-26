@@ -17,7 +17,10 @@
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 
+#define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
 
+// const
+#define LIVE_EVENT                          @"live"
 
 //BEN AND SAGAR STUFF BEGINNING
 #define NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW  @"setPlayerFeedInListView"
@@ -44,8 +47,10 @@
 #define NOTIF_DELETE_EVENT_SERVER           @"NOTIF_DELETE_EVENT_SERVER"
 
 #define NOTIF_DELETE_CLIPS                  @"NOTIF_DELETE_CLIPS"
+#define NOTIF_EVENT_DOWNLOADED              @"NOTIF_EVENT_DOWNLOADED"
+#define NOTIF_DELETE_EVENT                  @"NOTIF_DELETE_EVENT"
 
-
+#define NOTIF_TOAST                         @"NOTIF_TOAST"
 
 //Settings Requests
 #define NOTIF_SETTINGS_ARE_READY            @"NOTIF_SETTINGS_ARE_READY"
@@ -53,6 +58,8 @@
 
 #define LIST_OF_TOGGLES                     @"LIST_OF_TOGGLES"
 #define LIST_OF_OPTIONS                     @"LIST_OF_OPTIONS"
+#define NOTIF_CLIP_SELECTED                 @"NOTIF_CLIP_SELECTED"
+#define NOTIF_REMOVE_INFORMATION            @"removeInformation"
 
 
 //TypeDef for ToastObserver
@@ -133,7 +140,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          0
+#define DEBUG_MODE                          1
 
 //#if DEBUG_MODE == 0
 //#define DebugLog(...)
@@ -148,6 +155,13 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 /**
  *  Notifications
  */
+
+
+#define NOTIF_PRIMARY_ENCODER_CHANGE        @"NOTIF_PRIMARY_ENCODER_CHANGE"
+#define NOTIF_DELETE_TAG                    @"NOTIF_DELETE_TAG"
+
+
+
 
 #define NOTIF_UPDATE_MEMORY                 @"update memory"
 #define NOTIF_RECEIVE_MEMORY_WARNING        @"receive memory warning"

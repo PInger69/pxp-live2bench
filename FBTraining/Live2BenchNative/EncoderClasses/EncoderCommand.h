@@ -15,9 +15,8 @@
 @property (nonatomic,assign)    int                 priority;
 @property (nonatomic,assign)    float               timeOut;
 @property (nonatomic,strong)    NSMutableDictionary * tagData;
-//@property (nonatomic)           void                * context;
 @property (nonatomic)           NSNumber            * timeStamp;
-
+@property (nonatomic, copy)     void(^onComplete)();
 
 
 @end

@@ -8,7 +8,7 @@
 
 #import "CloudEncoder.h"
 #import "EncoderCommand.h"
-#import <objc/runtime.h>
+//#import <objc/runtime.h>
 #import "Utility.h"
 #import "EncoderManager.h"
 
@@ -17,7 +17,7 @@
 
 // catagory  // catagory  // catagory  // catagory  // catagory  // catagory  // catagory  // catagory  // catagory
 
-@interface NSURLConnection (Context)
+/*@interface NSURLConnection (Context)
 
 @property (nonatomic,strong)    NSNumber        * timeStamp;
 @property (nonatomic,strong)    NSMutableData   * cumulatedData;
@@ -70,11 +70,11 @@
 @end
 
 
-/**
+*
  *  This will manage connection and avaiability with its encoder
  *  Note: Look in to "sendAsynchronousRequest:queue:completionHandler:"
  *  This might be the correct way to Request
- */
+ 
 
 
 @interface Command : NSObject
@@ -91,7 +91,7 @@
 
 @implementation Command
 
-@end
+@end*/
 
 
 
@@ -132,8 +132,8 @@
 
 -(void)startObserving
 {
-    self.name = @"Cloud Encoder";
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(verifyUser:) name:NOTIF_CLOUD_VERIFY object:nil];// UserCenter is what is dispatching
+    //self.name = @"Cloud Encoder";
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(verifyUser:) name:NOTIF_CLOUD_VERIFY object:nil];// UserCenter is what is dispatching
 
 }
 
@@ -184,7 +184,7 @@
 #pragma mark -
 #pragma mark Commands
 
--(void)tagNamesGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+/*-(void)tagNamesGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     NSString * user             = [tData objectForKey:@"emailAddress"];
     NSString * password         = [tData objectForKey:@"password"];
@@ -316,7 +316,7 @@
     
     [super connectionDidFinishLoading:connection];
     
-}
+}*/
 
 
 #pragma mark -

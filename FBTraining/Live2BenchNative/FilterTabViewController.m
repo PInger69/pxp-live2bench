@@ -19,11 +19,13 @@
     FilterTab   * currentTab;
 }
 
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super init];
     if (self) {
         self.view.frame = frame;
+        //allTabs = [[NSArray alloc]init];
         // Initialization code
 //        self.layer.borderWidth = 1;
 //        self.layer.borderColor = [UIColor randomColor].CGColor;
@@ -36,6 +38,8 @@
 -(void)addTabList:(NSArray*)tabList
 {
     
+    //allTabs = [tabList copy];
+    //tabList;
     allTabs = tabList;
     NSUInteger  count = tabList.count;
     

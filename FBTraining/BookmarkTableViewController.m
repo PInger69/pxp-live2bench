@@ -16,7 +16,6 @@
 #define NO_BUTTON   1
 
 @interface BookmarkTableViewController ()
-@property (strong, nonatomic) UILongPressGestureRecognizer *longPressRecognizer;
 @property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 
@@ -29,26 +28,11 @@
     self = [super init];
     if (self){
         [self.tableView registerClass:[BookmarkViewCell class] forCellReuseIdentifier:@"BookmarkViewCell"];
-        self.longPressRecognizer = [[UILongPressGestureRecognizer alloc] init];
-        [self.tableView addGestureRecognizer: self.longPressRecognizer];
-        self.longPressRecognizer.minimumPressDuration = 0.7;
-        [self.longPressRecognizer addTarget:self action:@selector(longPressDetected:)];
         
         //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         
     }
     return self;
-}
-
--(void) longPressDetected: (UILongPressGestureRecognizer *) longPress{
-    if(longPress.state == UIGestureRecognizerStateBegan){
-        if (!self.editing) {
-            [self setEditing:YES animated:YES];
-        }else if(self.editing){
-            [self setEditing:NO animated:NO];
-        }
-    }
-    
 }
 
 - (void)viewDidLoad {
@@ -101,7 +85,7 @@
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_CLIP_SELECTED" object:clip];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:clip];
 //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
 //                                                                                                                                 @"feed": clip,
 //                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
@@ -140,9 +124,16 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
     
-    NSURL *shareUrl = [NSURL fileURLWithPath:[clip.videoFiles firstObject]];
+    NSString *path = clip.videoFiles.firstObject;
+    
+    unsigned long srcID;
+    if (sscanf(path.UTF8String, "%*[^+]+%lu.mp4", &srcID) != 1) {
+        srcID = 0;
+    }
+    
+    NSURL *shareUrl = [NSURL fileURLWithPath:path];
     cell.interactionController = [UIDocumentInteractionController interactionControllerWithURL:shareUrl];
-    cell.interactionController.name = clip.name;
+    cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam %02lu", clip.name, clip.displayTime, srcID];
     
     
     cell.deleteBlock = ^(UITableViewCell *cell){
@@ -225,9 +216,6 @@
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
-    if(self.editing){
-        return YES;
-    }
     return NO;
 }
 
@@ -257,17 +245,15 @@
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    return NO;
 }
 
 #pragma mark - Deletion Methods
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];
     [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-    alert.type = AlertImportant;
     [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-
     [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
     [alert show];
@@ -282,7 +268,7 @@
             NSIndexPath *cellIndexPath = deleteOrderList[i];
             [self deleteClipAtIndex:cellIndexPath];
             if (cellIndexPath == self.selectedPath) { // this clears the display data on BookmarkViewController
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeInformation" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
                 self.selectedPath = nil;
             }
         }

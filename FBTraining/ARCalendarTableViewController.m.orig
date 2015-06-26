@@ -14,6 +14,9 @@
 #import "ListPopoverController.h"
 #import "FeedSelectCell.h"
 #import "Feed.h"
+#import "Tag.h"
+#import "UserCenter.h"
+#import "SpinnerView.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -53,7 +56,7 @@
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(filterArray:) name:@"datePicked" object:nil];
     //To reload the number of downloaded sources
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_EVENT_DOWNLOADED" object:nil queue:nil usingBlock:^(NSNotification *note){
+    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_DOWNLOADED object:nil queue:nil usingBlock:^(NSNotification *note){
         [self.tableView reloadData];
     }];
 }
@@ -232,34 +235,75 @@
             
             _teamPick.contentViewController.modalInPopover = NO;
             
-            NSString *path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
+            NSString *path;
+            if (event.rawData[@"mp4_2"]) {
+                path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
+                //path = @"/Documents/events/2015-04-16_16-17-13_368156f1cc13acdf43d265c420b4d2956ed0f645_local/main_00hq.mp4";
+            } else {
+                path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main.mp4"];
+//                path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
+            }
             
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
-                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:weakSelf userInfo:@{@"userPick":pick}];
-<<<<<<< HEAD
                 
-=======
-             
->>>>>>> ce007ea8d83d23bf3d6ab6b50c946d2a58357fa1
-                //[[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Injury"}];
+                [UserCenter getInstance].userPick = pick;
 
-                [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_EVENT_CHANGE object:weakSelf userInfo:@{@"eventName":eventName}];
+                
                 
                 Feed *source;
+                __block Event * weakEvent = event;
                 if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
-                    source = [[Feed alloc] initWithURLString:path quality:0];
-                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.localEncoder;
+                    
+                    source = [[Feed alloc] initWithFileURL:path];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                    [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                    [weakSelf.encoderManager declareCurrentEvent:localCounterpart];
+
                 } else {
+                    
+                    
+                    NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                                        @"user"        : [UserCenter getInstance].userHID,
+                                                                                                        @"requesttime" : GET_NOW_TIME,
+                                                                                                        @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                                                                                        @"event"       : event.name
+                                                                                                        }];
+                                                                                                        
+    
+                    
                     source = [[Feed alloc] initWithURLString:data quality:0];
-                    weakSelf.encoderManager.primaryEncoder = weakSelf.encoderManager.masterEncoder;
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_INJURY_CONTEXT}];
-                [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                    
+                    if (event.isBuilt){
+                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                        [weakSelf.encoderManager declareCurrentEvent:weakEvent];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
 <<<<<<< HEAD
-                
+
 =======
->>>>>>> ce007ea8d83d23bf3d6ab6b50c946d2a58357fa1
+               
+>>>>>>> 4fa944c1c7b6f400c8058ffee3a1a2a9e8dfeba6
+
+                    } else {
+                        // The Event was not built and it will have to wait for the server to build all the tag data
+                        
+                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
+                                                                           object:nil
+                                                                         userInfo:[SpinnerView message:@"Retreving tag data..." progress:0 animated:NO ]];
+                        event.onComplete = ^(){
+                            
+                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                            [weakSelf.encoderManager declareCurrentEvent:weakEvent];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
+                            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
+                        };
+                        [event.parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];
+                    }
+
+
+                }
+
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                        animated:YES];
@@ -285,7 +329,7 @@
             collapsableCell.downloadButton.downloadItem = nil;
             
             collapsableCell.downloadButtonBlock = ^(){
-                [Utility downloadEvent:weakCell.event sourceName:weakCell.feedName.text returnBlock:
+                [Utility downloadEvent:weakCell.event sourceName:weakCell.dicKey returnBlock:
                  ^(DownloadItem *item){
                      DownloadItem *downloadItem = item;
                      downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
@@ -345,12 +389,21 @@
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
+
     if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", (localOne.downloadedSources.count + event.downloadedSources.count),event.mp4s.count]];
-    } else {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%i Downloaded\n%i Sources", event.downloadedSources.count,event.mp4s.count]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) (localOne.downloadedSources.count + event.downloadedSources.count), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
     }
-    
+
+    if (event.local) {
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)localOne.downloadedSources.count,(unsigned long)event.mp4s.count]];
+
+    } else {
+        if (localOne) {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)(localOne.downloadedSources.count + event.downloadedSources.count),(unsigned long)event.mp4s.count]];
+        } else {
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)event.downloadedSources.count,(unsigned long)event.mp4s.count]];
+        }
+    }
     
     [cell setSelectionStyle: UITableViewCellSelectionStyleNone];
     
@@ -365,7 +418,7 @@
 }
 
 // Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     if (indexPath.row >= self.tableData.count || !self.tableData) {
         return NO;
@@ -385,15 +438,15 @@
         Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         alert.type = AlertImportant;
-        [alert setTitle:@"myplayXplay"];
-        [alert setMessage:@"Are you sure you want to delete this Event?"];
+        [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+        [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this Event?",nil)];
         if ((localCounterpart && localCounterpart.downloadedSources.count > 0) || event.downloadedSources.count > 0) {
-            [alert addButtonWithTitle:@"Yes(From server and local device)"];
-            [alert addButtonWithTitle:@"Yes(Only local)"];
-            [alert addButtonWithTitle:@"No"];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server and local device)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(Only local)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         } else {
-            [alert addButtonWithTitle:@"Yes(From server)"];
-            [alert addButtonWithTitle:@"No"];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         }
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert display];
@@ -409,7 +462,7 @@
         for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
             [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
             [indexPathsArray addObject: cellIndexPath];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_EVENT" object:nil userInfo:@{@"Event" : self.tableData[cellIndexPath.row]}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : self.tableData[cellIndexPath.row]}];
             [((Event *)self.tableData[cellIndexPath.row]).downloadedSources removeAllObjects];
             if (buttonIndex == 0) {
                 //Post a notification to delete it from server.
@@ -419,6 +472,10 @@
             [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
             [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
             [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+            
+            for (Event *eventToDelete in arrayOfTagsToRemove) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToDelete];
+            }
         }
         
         [self.setOfDeletingCells removeAllObjects];
@@ -434,13 +491,14 @@
             Event *eventToRemove = self.tableData[self.editingIndexPath.row];
             
             if (buttonIndex == 0) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];
                 [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
             }
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NOTIF_DELETE_EVENT" object:nil userInfo:@{@"Event" : eventToRemove}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : eventToRemove}];
             [eventToRemove.downloadedSources removeAllObjects];
             [self removeIndexPathFromDeletion];
             
@@ -450,6 +508,7 @@
         } else {
             if (buttonIndex == 0) {
                 Event *eventToRemove = self.tableData[self.editingIndexPath.row];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self removeIndexPathFromDeletion];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];

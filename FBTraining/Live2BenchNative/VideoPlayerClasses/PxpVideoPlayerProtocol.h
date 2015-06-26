@@ -35,6 +35,8 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
     RJLPS_Looping      = 1<<10
 };
 
+#define PLAYER_WILL_RESET   @"playerWillReset"
+#define PLAYER_DID_RESET    @"playerDidReset"
 
 
 @protocol PxpVideoPlayerProtocol <NSObject>

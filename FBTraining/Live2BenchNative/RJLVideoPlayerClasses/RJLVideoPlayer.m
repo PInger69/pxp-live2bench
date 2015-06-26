@@ -1,4 +1,3 @@
-
 //
 //  RJLVideoPlayer.m
 //  Live2BenchNative
@@ -14,7 +13,7 @@
 
 
 #define LIVE_BUFFER     5
-#define SLOWMO_SPEED    0.5f
+#define SLOWMO_SPEED    0.5
 
 @implementation RJLVideoPlayer
 {
@@ -83,8 +82,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         commander = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame = frame;
         
-        liveBuffer = [[ValueBuffer alloc]initWithValue:5 coolDownValue:10000000 coolDownTick:30];
+        liveBuffer = [[ValueBuffer alloc]initWithValue:6 coolDownValue:10000000 coolDownTick:50];
         restoreAfterPauseRate = 1;
+
     }
     return self;
 }
@@ -102,9 +102,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         commander       = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame      = CGRectMake(500, 60, 400, 300);
         restoreAfterPauseRate = 1;
-        
+
         self.zoomManager = [[VideoZoomManager alloc]init];
         self.zoomManager.videoPlayer = self;
+
     }
     return self;
 }
@@ -209,8 +210,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
     self.videoControlBar.timeSlider.maximumValue = checkDuration;
     if (_looping){
-        videoControlBar.timeSlider.minimumValue = CMTimeGetSeconds(range.start);
-        self.videoControlBar.timeSlider.maximumValue = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
+        //videoControlBar.timeSlider.minimumValue = CMTimeGetSeconds(range.start);
+        //self.videoControlBar.timeSlider.maximumValue = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
     }
     
     if (CMTIME_IS_INVALID(playerDuration))
@@ -226,8 +227,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //        float maxValue = [self.videoControlBar.timeSlider maximumValue];
         double time = CMTimeGetSeconds([self.playerItem currentTime]);
     
-        self.videoControlBar.timeSlider.maximumValue = duration;
-        videoControlBar.timeSlider.minimumValue = 0.0;
+       // self.videoControlBar.timeSlider.maximumValue = duration;
+       // videoControlBar.timeSlider.minimumValue = 0.0;
         [self.videoControlBar.timeSlider setValue:time];
         
         double clipControlBarValue = time;
@@ -439,15 +440,18 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)scrubbingEnd{
     
-    if (restoreAfterScrubbingRate)
+    if (restoreAfterScrubbingRate != 0)
     {
-        [self.avPlayer setRate:restoreAfterScrubbingRate];
-        restoreAfterScrubbingRate = 0.f;
+        [self.avPlayer prerollAtRate:restoreAfterScrubbingRate completionHandler:^(BOOL complete) {
+            [self.avPlayer setRate:restoreAfterScrubbingRate];
+            restoreAfterScrubbingRate = 0.f;
+              self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
+        }];
     } else {
-        
+          self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
     }
     
-    self.status = _status & ~(RJLPS_Scrubbing); // not scrubbing anymore
+  
 
     if (!timeObserver)
     {
@@ -507,9 +511,46 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                  
              case AVPlayerItemStatusFailed:
              {
-                 videoControlBar.enable = NO;
+              
                  AVPlayerItem *playerItem = (AVPlayerItem *)object;
-                 [self assetFailedToPrepareForPlayback:playerItem.error];
+                 
+                 // if the error happens when seeking
+                 if ((_status & RJLPS_Play)!=0){
+                     [[NSNotificationCenter defaultCenter]postNotificationName:PLAYER_WILL_RESET object:self];
+                     __block RJLVideoPlayer  * weakSelf          = self;
+                     __block CMTime rStart                       = playerItem.currentTime;
+            
+                     onFeedReadyBlock = ^void(){
+                         if (!weakSelf)return;
+                             [weakSelf.avPlayer seekToTime:rStart completionHandler:^(BOOL finished) {
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     
+                                     if (finished) {
+                                         
+                                     } else {
+                                         NSLog(@"seekToInSec: CANCELLED");
+                                     }
+                                     weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
+                                 
+                                 });
+                             }];
+                            PXPLog(@"RJLPLayer: %@ RESET!",weakSelf.playerContext);
+                      
+                            [[NSNotificationCenter defaultCenter]postNotificationName:PLAYER_DID_RESET object:weakSelf];
+                         };
+                     
+                     NSURL * tmpURL = [mURL copy];
+                     [self clear];
+                     mURL = nil;
+                     [self setURL:tmpURL];
+                     
+                 } else {
+                     // if its a completely unknow error
+                    videoControlBar.enable = NO;
+                     [self assetFailedToPrepareForPlayback:playerItem.error];
+                 }
+                 
+                
              }
                  break;
          }
@@ -669,6 +710,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     [self seekToInSec:[self durationInSeconds]];
     [self.avPlayer setRate:1];
     restoreAfterPauseRate = 1;
+    self.slowmo = NO;
     if (self.playerItem.status == AVPlayerItemStatusUnknown){
         __block RJLVideoPlayer *weakSelf = self;
         onReadyBlock = ^void(){
@@ -680,13 +722,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)play{
     if (!_feed)return;
-    [self.avPlayer play];
-  [freezeMonitor start];
-    if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
-    self.status                                 = _status | RJLPS_Play;
-    self.status                                 = _status & ~(RJLPS_Paused);
-    [self.videoControlBar setHidden:NO];
-    //self.videoControlBar.playButton.selected    = FALSE;
     onReadyBlock                                = nil;
     __block RJLVideoPlayer  * weakSelf          = self;
     if (self.playerItem.status == AVPlayerItemStatusUnknown){ // This delays the seek if its not ready
@@ -698,6 +733,16 @@ static void *FeedAliveContext                               = &FeedAliveContext;
             [weakSelf play];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
         };
+    } else {
+        [self.avPlayer play];
+        [freezeMonitor start];
+        if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
+        self.status                                 = _status | RJLPS_Play;
+        self.status                                 = _status & ~(RJLPS_Paused);
+        [self.videoControlBar setHidden:NO];
+        //self.videoControlBar.playButton.selected    = FALSE;
+
+    
     }
 }
 
@@ -712,7 +757,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)playFeed:(Feed*)aFeed
 {
-
     self.feed = aFeed;
     self.URL = [self.feed path];
     [self play];
@@ -756,7 +800,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     // range will be the tag times.... might have to make a new class for this
     self.feed = aFeed;
     self.URL = [self.feed path];
-//    [self seekToInSec:CMTimeGetSeconds(aRange.start)];
+    [self seekToInSec:CMTimeGetSeconds(aRange.start)];
 }
 
 
@@ -764,12 +808,23 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 {
     self.status = RJLPS_Offline;
     [self removePlayerTimeObserver];
-    self.looping = NO;
+    //self.looping = NO;
     currentItemTime.text = @"";
     videoControlBar.enable = NO;
+    //[self.clipControlBar setHidden:YES];
+    //self.isInClipMode           = NO;
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLIP_CANCELED object:self];
+    
+    if (self.clipControlBar.hidden == NO) {
+        [self cancelClip];
+    }
+    //[self cancelClip];
     [freezeMonitor stop];
     //videoControlBar.timeSlider.hidden = YES;
     
+    //[self cancelClip];
+    
+   
     
     if (self.playerItem)
     {
@@ -1046,24 +1101,26 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 -(BOOL)slowmo
 {
     if (!self.avPlayer) return NO;
-    return ([self.avPlayer rate] >= 1.0)? NO : YES;
+    return (self.avPlayer.rate <=.5 && self.avPlayer.rate >0)? YES : NO;
 }
 
 -(void)setSlowmo:(BOOL)slowmo
 {
     [self willChangeValueForKey:@"slowmo"];
+    float newRate;
     if (slowmo) {
-        [self.avPlayer setRate:SLOWMO_SPEED];
+
+        newRate = SLOWMO_SPEED;
         self.status = _status & ~(RJLPS_Live);
         self.status = _status | RJLPS_Slomo;
         
     } else {
-        [self.avPlayer setRate:1];
+        newRate = 1;
        self.status = _status & ~(RJLPS_Slomo);
         
     }
     [self didChangeValueForKey:@"slowmo"];
-
+    [self.avPlayer setRate:newRate];
 }
 
 -(BOOL)mute
@@ -1278,6 +1335,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                       forKeyPath:@"rate"
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:ViewControllerRateObservationContext];
+        self.avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndPause;
     }
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
@@ -1319,6 +1377,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
     [alertView show];
+    
+    PXPLog(@"VIDEO PLAYER ERROR");
 }
 
 //translate seconds to hh:mm:ss format

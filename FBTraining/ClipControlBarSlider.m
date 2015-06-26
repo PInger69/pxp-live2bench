@@ -14,13 +14,11 @@
 #define CONTROL_BAR_HEIGHT  44
 
 @implementation ClipControlBarSlider
-
 {
     id player;
     SEL playSEL;
     SEL pauseSEL;
     SEL cancelSEL;
-    
 }
 
 @synthesize timeSlider;
@@ -35,7 +33,7 @@
     self = [super initWithFrame:videoConrolBarFrame];
     if (self) {
         _enable                             = YES;
-        CGRect slideFrame                   = CGRectMake(SLIDER_HEIGHT, 0.0, frame.size.width-220, SLIDER_HEIGHT);
+        CGRect slideFrame                   = CGRectMake(SLIDER_HEIGHT, 0.0, frame.size.width-240, SLIDER_HEIGHT);
         self.barStyle                       = UIBarStyleBlackTranslucent;
         
         self.timeSlider                     = [self buildSlider:slideFrame];
