@@ -914,7 +914,6 @@ static void * eventContext      = &eventContext;
 //    
 
       //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-   // [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
 
 //    [self.videoPlayer play];
 //    

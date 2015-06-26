@@ -72,6 +72,8 @@
     
     id <EncoderProtocol>                _observedEncoder;
     
+    UISwitch                            *durationSwitch;
+    
 }
 
 // Context
@@ -132,7 +134,7 @@ static void * eventContext      = &eventContext;
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_EVENT_CHANGE object:nil];
     
@@ -196,6 +198,18 @@ static void * eventContext      = &eventContext;
     [informationLabel setTextAlignment:NSTextAlignmentRight];
     [self.view addSubview:informationLabel];
     
+    
+    durationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(80, 60, 100, 30)];
+    [durationSwitch setOnTintColor:PRIMARY_APP_COLOR];
+    [durationSwitch setTintColor:PRIMARY_APP_COLOR];
+    [durationSwitch setThumbTintColor:[UIColor grayColor]];
+    [durationSwitch setOn:NO];
+    [durationSwitch addTarget:self action:@selector(switchPressed) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:durationSwitch];
+    UILabel *durationLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 60, 125, 30)];
+    [durationLabel setText:@"Duration"];
+    [self.view addSubview:durationLabel];
+    
     return self;
 }
 
@@ -236,28 +250,18 @@ static void * eventContext      = &eventContext;
 {
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
-<<<<<<< HEAD
 
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
-
+        [_tagButtonController allToggleOnOpenTags:_currentEvent.tags];
     }
-        [_videoBarViewController onEventChanged:_currentEvent];
-=======
-    }else {
-        _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
-        [_videoBarViewController onEventChanged:_currentEvent];
-    }
-
->>>>>>> b351de6d0c1bb15a2b67d3a4eebc734317309fa4
+    
+    [_videoBarViewController onEventChanged:_currentEvent];
+    [_tagButtonController onEventChange:_currentEvent];
     [self displayLable];
     if (_currentEvent.live) {
         [self gotLiveEvent];
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> b351de6d0c1bb15a2b67d3a4eebc734317309fa4
     [self onEventChange];
 }
 
@@ -342,20 +346,25 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
-        _tagButtonController.enabled = YES;
+        [self switchPressed];
+        //[_tagButtonController setButtonState:SideTagButtonModeRegular];
+        //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
-        _tagButtonController.enabled = YES;
+        //[_tagButtonController setButtonState:SideTagButtonModeRegular];
+        [self switchPressed];
+        //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
-        _tagButtonController.enabled = NO;
+        [_tagButtonController setButtonState:SideTagButtonModeDisable];
+        //_tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
     }
@@ -800,10 +809,12 @@ static void * eventContext      = &eventContext;
     _tagButtonController = [[Live2BenchTagUIViewController alloc]initWithView:self.view];
     [self addChildViewController:_tagButtonController];
     [_tagButtonController didMoveToParentViewController:self];
-    _tagButtonController.enabled = NO;
+    
+    //_tagButtonController.enabled = NO;
     
     NSArray * tNames = [_userCenter.tagNames copy]; //self.tagNames;
     [_tagButtonController inputTagData:tNames];
+    //[_tagButtonController setButtonState:SIDETAGBUTTON_MODE_DISABLE];
     
     //Add Actions
     [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
@@ -825,15 +836,44 @@ static void * eventContext      = &eventContext;
  */
 -(void)tagButtonSelected:(id)sender
 {
-    CustomButton *button = (CustomButton*)sender;
+    SideTagButton *button = (SideTagButton*)sender;
     
     float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
-                                                                                                      @"name":button.titleLabel.text,
-                                                                                                      @"time":[NSString stringWithFormat:@"%f",currentTime]
-                                                                                                      //,@"duration":[NSNumber numberWithBool:YES]
-                                                                                                      }];
+
+    if (button.mode == SideTagButtonModeRegular) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+         @"name":button.titleLabel.text,
+         @"time":[NSString stringWithFormat:@"%f",currentTime]
+         }];
+    } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
+        [_tagButtonController disEnableButton];
+        [_tagButtonController unHighlightButton:button];
+        button.isOpen = YES;
+        // Open Duration Tag
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                          @"name":button.titleLabel.text,
+                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
+                                                                                                          @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+                                                                                                          @"dtagid": button.durationID
+                                                                                                          }];
+    } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
+        // Close Duration Tag
+        
+        // Collect and mod tag data for close tag
+        Tag * tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
+        NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed tagDictionary]];
+        
+        [tagData setValue:[NSString stringWithFormat:@"%f",currentTime] forKey:@"closetime"];
+        [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
+        [tagData setValue:button.durationID forKey:@"dtagid"];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:tagData];
+        
+        button.isOpen = NO;
+    }
+    
+
+    
 }
 
 
@@ -872,7 +912,10 @@ static void * eventContext      = &eventContext;
 //    
 
       //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+<<<<<<< HEAD
+=======
    // [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+>>>>>>> ca052b3cc2f21bbbbabc472f7bc91ec856170cb3
 
 //    [self.videoPlayer play];
 //    
@@ -907,6 +950,15 @@ static void * eventContext      = &eventContext;
 ////   // so get buttons are connected to full screen
 //    _tagButtonController.fullScreenViewController = _fullscreenViewController;
 
+}
+
+-(void) switchPressed
+{
+    if (durationSwitch.on == true) {
+        [_tagButtonController setButtonState:SideTagButtonModeToggle];
+    }else if(durationSwitch.on == false){
+        [_tagButtonController setButtonState:SideTagButtonModeRegular];
+    }
 }
 
 

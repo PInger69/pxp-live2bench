@@ -15,6 +15,7 @@
 #import "LogoViewController.h"
 #import "BitRateViewController.h"
 #import "PxpLogViewController.h"
+#import "CreditsViewController.h"
 
 #import "InfoSettingViewController.h"
 #import "ToastObserverSettingViewController.h"
@@ -130,6 +131,10 @@ NS_OPTIONS(NSInteger, style){
                                     @{
                                         @"Name": NSLocalizedString(@"Log", nil),
                                         @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
+                                        },
+                                    @{
+                                        @"Name": NSLocalizedString(@"Credits", nil),
+                                        @"ViewController": [[CreditsViewController alloc] initWithAppDelegate:appDel]
                                         }
                                     ];
         
