@@ -73,6 +73,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
+<<<<<<< HEAD
+=======
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -80,6 +82,7 @@
 	</dict>
 	<key>UIRequiresFullScreen</key>
 	<true/>
+>>>>>>> ca052b3cc2f21bbbbabc472f7bc91ec856170cb3
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

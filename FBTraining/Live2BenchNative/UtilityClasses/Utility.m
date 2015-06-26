@@ -294,7 +294,7 @@
 
 
 
-- (NSString *) platformString{
++ (NSString *) platformString{
     
     size_t size;
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
@@ -303,23 +303,73 @@
     NSString *platform = [NSString stringWithUTF8String:machine];
     free(machine);
     
-    if ([platform isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
-    if ([platform isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
-    if ([platform isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
-    if ([platform isEqualToString:@"iPhone3,1"])    return @"iPhone 4";
-    if ([platform isEqualToString:@"iPhone3,3"])    return @"Verizon iPhone 4";
-    if ([platform isEqualToString:@"iPhone4,1"])    return @"iPhone 4S";
-    if ([platform isEqualToString:@"iPod1,1"])      return @"iPod Touch 1G";
-    if ([platform isEqualToString:@"iPod2,1"])      return @"iPod Touch 2G";
-    if ([platform isEqualToString:@"iPod3,1"])      return @"iPod Touch 3G";
-    if ([platform isEqualToString:@"iPod4,1"])      return @"iPod Touch 4G";
-    if ([platform isEqualToString:@"iPad1,1"])      return @"iPad";
-    if ([platform isEqualToString:@"iPad2,1"])      return @"iPad 2 (WiFi)";
-    if ([platform isEqualToString:@"iPad2,2"])      return @"iPad 2 (GSM)";
-    if ([platform isEqualToString:@"iPad2,3"])      return @"iPad 2 (CDMA)";
-    if ([platform isEqualToString:@"i386"])         return @"Simulator";
-    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
+//    if ([platform isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
+//    if ([platform isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
+//    if ([platform isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
+//    if ([platform isEqualToString:@"iPhone3,1"])    return @"iPhone 4";
+//    if ([platform isEqualToString:@"iPhone3,3"])    return @"Verizon iPhone 4";
+//    if ([platform isEqualToString:@"iPhone4,1"])    return @"iPhone 4S";
+//    if ([platform isEqualToString:@"iPod1,1"])      return @"iPod Touch 1G";
+//    if ([platform isEqualToString:@"iPod2,1"])      return @"iPod Touch 2G";
+//    if ([platform isEqualToString:@"iPod3,1"])      return @"iPod Touch 3G";
+//    if ([platform isEqualToString:@"iPod4,1"])      return @"iPod Touch 4G";
+//    if ([platform isEqualToString:@"iPad1,1"])      return @"iPad";
+//    if ([platform isEqualToString:@"iPad2,1"])      return @"iPad 2 (WiFi)";
+//    if ([platform isEqualToString:@"iPad2,2"])      return @"iPad 2 (GSM)";
+//    if ([platform isEqualToString:@"iPad2,3"])      return @"iPad 2 (CDMA)";
+//    if ([platform isEqualToString:@"iPad3,1"])      return @"foobar";
+//    if ([platform isEqualToString:@"i386"])         return @"Simulator";
+//    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
+    
+    
     return platform;
+}
+
+
+
+
+
+
++(BOOL)isDeviceBlurSupported:(NSString *)platform{
+  // [Utility isDeviceBlurSupported:[Utility platformString]];
+    
+    BOOL result = FALSE;
+    NSArray *deviceBlurNotSupportedArray = [[NSArray alloc] initWithObjects:
+                                            @"iPad1,1",
+                                            @"iPhone1,1",
+                                            @"iPhone1,2",
+                                            @"iPhone2,1",
+                                            @"iPhone3,1",
+                                            @"iPhone3,2",
+                                            @"iPhone3,3",
+                                            @"iPod1,1",
+                                            @"iPod2,1",
+                                            @"iPod2,2",
+                                            @"iPod3,1",
+                                            @"iPod4,1",
+                                            @"iPad2,1",
+                                            @"iPad2,2",
+                                            @"iPad2,3",
+                                            @"iPad2,4",
+                                            @"iPad3,1",
+                                            @"iPad3,2",
+                                            @"iPad3,3", nil];
+    
+    for(NSString *devicePlatformFromArray in deviceBlurNotSupportedArray){
+        if([platform isEqualToString:devicePlatformFromArray]){
+            result = FALSE;
+            NSLog(@"Blur not supported for Device ID \"%@\"", platform);
+            break;
+            
+        }else{
+            result = TRUE;
+    
+        }
+        
+    }
+    
+    return result;
+    
 }
 
 +(NSString*)myWifiName

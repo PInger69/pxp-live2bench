@@ -12,6 +12,7 @@
 #import "Feed.h"
 #import "Tag.h"
 #import "EncoderManager.h"
+#import "CameraDetails.h"
 #import "UserCenter.h"
 
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
@@ -259,6 +260,9 @@
 @property (nonatomic,strong)    NSMutableData   * cumulatedData;
 @property (nonatomic,strong)    NSString        * connectionType;
 @property (nonatomic,strong)    NSDictionary    * extra;
+@property (nonatomic,weak)      CameraDetails   * cameraDetails;
+@property (nonatomic,weak)      NSMutableArray  * camerasAvailableList;
+
 
 
 -(NSNumber*)timeStamp;
@@ -272,6 +276,8 @@
 @dynamic cumulatedData;
 @dynamic connectionType;
 @dynamic extra;
+@dynamic cameraDetails;
+@dynamic camerasAvailableList;
 
 
 -(void)setTimeStamp:(NSNumber*)time
@@ -1720,8 +1726,15 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     NSArray * list = [results[@"camlist"]allValues];
     _cameraCount = 0;
+    
+    NSMutableArray *camerasAvailableList = [[NSMutableArray alloc]init];
+    
+    
     for (NSDictionary *dic in list) {
-        if ([dic[@"cameraPresent"]boolValue])_cameraCount++;
+       // if ([dic[@"cameraPresent"]boolValue])_cameraCount++;
+        
+       [camerasAvailableList addObject:[[CameraDetails alloc]initWithDictionary:dic encoderOwner:self]];
+        
     }
  //   _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
     
