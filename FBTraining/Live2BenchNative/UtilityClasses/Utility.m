@@ -84,7 +84,7 @@
                      error:&error];
         
         if(error) {
-            PXPLog(@"%@ Error!",[error.userInfo objectForKey:@"NSLocalizedDescription"]);
+            PXPLog(@"%@ Error! U001",[error.userInfo objectForKey:@"NSLocalizedDescription"]);
             /* JSON was malformed, act appropriately here */ }
         
         // the originating poster wants to deal with dictionaries;

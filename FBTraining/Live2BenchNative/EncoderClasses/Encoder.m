@@ -374,6 +374,9 @@
 
 @synthesize isAlive;
 
+// ActionListItems
+@synthesize delegate,isFinished,isSuccess;
+
 
 -(id)initWithIP:(NSString*)ip
 {
@@ -444,6 +447,7 @@
     [self didChangeValueForKey:@"event"];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];
 }
 
 -(Event*)event
@@ -1272,7 +1276,12 @@
             if (weakSelf.isMaster) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:weakSelf userInfo:nil];
          }];
     }
-    isWaitiing = NO;
+    isWaitiing  = NO;
+    isSuccess   = YES;
+    isFinished  = YES;
+    if (self.delegate) {
+        [self.delegate onSuccess:self];
+    }
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
 }
@@ -1290,6 +1299,11 @@
     PXPLog(@"  reason: %@ ",failType);
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:nil];//
+    isSuccess   = NO;
+    isFinished  = YES;
+    if (self.delegate) {
+        [self.delegate onFail:self];
+    }
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
 }
@@ -1946,6 +1960,16 @@
     _name = name;
     [self didChangeValueForKey:@"name"];
 }
+
+
+// ActionListItem Methods
+
+-(void)start
+{
+    isFinished = NO;
+}
+
+
 
 
 -(void)dealloc
