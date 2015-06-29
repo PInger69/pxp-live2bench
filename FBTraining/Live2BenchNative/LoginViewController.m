@@ -84,17 +84,19 @@ UIScrollView *scrollView;
     pxpLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     [scrollView addSubview:pxpLabel];
     
-    self.emailAddressTextField = [[LoginTextField alloc] initWithFrame:CGRectMake(70.0f, 350.0f, self.view.bounds.size.width - 140.0f, 50.0f)];
+    self.emailAddressTextField = [[LoginTextField alloc] initWithFrame:CGRectMake(70.0f, 335.0f, self.view.bounds.size.width - 140.0f, 50.0f)];
     self.emailAddressTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     self.emailAddressTextField.placeholder = NSLocalizedString(@"Email",nil);
     [self.emailAddressTextField setBackground:[[UIImage imageNamed:@"groupedTop"] resizableImageWithCapInsets:UIEdgeInsetsMake(6.0f, 6.0f, 6.0f, 6.0f)]];
+    [self.emailAddressTextField setBorderStyle:UITextBorderStyleRoundedRect];
     self.emailAddressTextField.keyboardType = UIKeyboardTypeEmailAddress;
     [scrollView addSubview:self.emailAddressTextField];
     
-    self.passwordTextField = [[LoginTextField alloc] initWithFrame:CGRectMake(70.0f, CGRectGetMaxY(self.emailAddressTextField.frame) - 1.0f, self.view.bounds.size.width - 140.0f, 50.0f)];
+    self.passwordTextField = [[LoginTextField alloc] initWithFrame:CGRectMake(70.0f, CGRectGetMaxY(self.emailAddressTextField.frame) + 15.0f, self.view.bounds.size.width - 140.0f, 50.0f)];
     self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     self.passwordTextField.placeholder = NSLocalizedString(@"Password",nil);
     [self.passwordTextField setBackground:[[UIImage imageNamed:@"groupedBottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(6.0f, 6.0f, 6.0f, 6.0f)]];
+    [self.passwordTextField setBorderStyle:UITextBorderStyleRoundedRect];
     self.passwordTextField.secureTextEntry = TRUE;
     [scrollView addSubview:self.passwordTextField];
     
