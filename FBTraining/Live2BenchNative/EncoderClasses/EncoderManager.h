@@ -13,7 +13,7 @@
 #import "LocalEncoder.h"
 #import "Event.h"
 #import "EncoderCommander.h"
-
+#import "ActionListItemDelegate.h"
 
 @class Encoder;
 
@@ -32,7 +32,7 @@
 #define SUMMARY_TYPE_EVENT  @"game"
 
 
-@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
+@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate,ActionListItemDelegate>
 
 
 @property (nonatomic,assign)            BOOL                    hasInternet;

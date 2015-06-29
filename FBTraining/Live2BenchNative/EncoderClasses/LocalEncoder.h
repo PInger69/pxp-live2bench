@@ -8,6 +8,8 @@
 
 #import "Encoder.h" // what ever is taken from this needs to be moved to the protocol
 #import "EncoderProtocol.h"
+#import "ActionListItem.h"
+
 @class Event;
 @class Clip;
 @class Tag;
@@ -18,7 +20,7 @@
  */
 
 
-@interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate>
+@interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate,ActionListItem>
 
 @property (nonatomic, weak)     EncoderManager          *encoderManager;
 @property (nonatomic,strong)    NSString                * name;
@@ -29,6 +31,10 @@
 @property (nonatomic,strong)    NSDictionary            * allEvents;        // all events on the encoder
 @property (nonatomic,strong)    NSMutableDictionary     * localTags;
 @property (nonatomic, strong)   NSString                *localPath;
+
+
+
+
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 
@@ -53,5 +59,12 @@
 -(void)deleteEvent:(Event*)aEvent;
 -(Event*)getEventByName:(NSString*)eventName;
 
+
+// ActionListItem Methods
+@property (nonatomic,assign) BOOL isFinished;
+@property (nonatomic,assign) BOOL isSuccess;
+@property (nonatomic,weak)  id <ActionListItemDelegate>  delegate;
+
+-(void)start;
 
 @end

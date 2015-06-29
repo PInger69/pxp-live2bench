@@ -52,6 +52,6 @@
 
 -(void)update;
 
--(void)onEventChanged:(Event *)event;
+-(void)onTagChanged:(Event *)currentEvent;
 
 @end

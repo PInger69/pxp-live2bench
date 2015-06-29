@@ -174,6 +174,7 @@
 
 }
 
+@synthesize currentEvent                = _currentEvent;
 @synthesize enabled                     = _enabled;
 @synthesize hidden                      = _hidden;
 @synthesize buttonSize                  = _buttonSize;
@@ -563,8 +564,14 @@
     }
 }
 
--(void)allToggleOnOpenTags:(NSMutableArray *)eventTags
+-(void)allToggleOnOpenTags:(Event *)event
 {
+    if ([event.name isEqualToString:_currentEvent.name]) {
+        return;
+    }
+    
+    _currentEvent = event;
+    NSMutableArray *eventTags = event.tags;
     
     NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
     
@@ -595,7 +602,9 @@
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
     }
     
-    if (event){
+    if (!event){
+        _currentEvent = nil;
+    }else{
         _currentEvent = event;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(enableButton:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
     }

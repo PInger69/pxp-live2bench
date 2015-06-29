@@ -62,6 +62,10 @@ static LocalEncoder * instance;
 @synthesize allEvents       = _allEvents;
 @synthesize clips           = _clips;
 
+// ActionListItems
+@synthesize delegate,isFinished,isSuccess;
+
+
 +(instancetype)getInstance
 {
     return instance;
@@ -640,6 +644,13 @@ static LocalEncoder * instance;
 
     }
     
+
+    isSuccess   = YES;
+    isFinished  = YES;
+    if (self.delegate) {
+        [self.delegate onSuccess:self];
+    }
+    
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     NSArray *arrayFromDic = [[NSArray alloc]initWithArray:[self.localTags allValues]];
@@ -648,6 +659,11 @@ static LocalEncoder * instance;
     [self.localTags removeObjectForKey:keyToBeRemoved];
     //[self.localTags removeObjectAtIndex:0];
     [self checkLocalTags];
+    isSuccess   = NO;
+    isFinished  = YES;
+    if (self.delegate) {
+        [self.delegate onFail:self];
+    }
 }
 
 
@@ -671,7 +687,7 @@ static LocalEncoder * instance;
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
 }
 
 
@@ -1006,6 +1022,15 @@ static LocalEncoder * instance;
     }
     return [collection copy];
 }
+
+// ActionListItem Methods
+
+-(void)start
+{
+    isFinished = NO;
+}
+
+
 
 
 //debugging

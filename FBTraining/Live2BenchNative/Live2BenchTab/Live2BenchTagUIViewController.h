@@ -23,10 +23,9 @@
     NSMutableArray          * tagButtonsRight;
     NSInteger               * tagCount;
     NSMutableDictionary     * buttons;
-    
-    Event                   *_currentEvent;
 }
 
+@property (assign,nonatomic) Event                              *currentEvent;
 @property (assign,nonatomic) BOOL                               enabled;
 @property (assign,nonatomic) BOOL                               hidden;
 @property (assign,nonatomic) CGSize                             buttonSize;
@@ -48,7 +47,7 @@
 -(void)maximize;
 -(void)close;
 -(void)open;
--(void)allToggleOnOpenTags:(NSMutableArray *)eventTags;
+-(void)allToggleOnOpenTags:(Event *)event;
 
 -(void)setButtonState:(SideTagButtonModes)mode;
 -(void)onEventChange:(Event*)event;

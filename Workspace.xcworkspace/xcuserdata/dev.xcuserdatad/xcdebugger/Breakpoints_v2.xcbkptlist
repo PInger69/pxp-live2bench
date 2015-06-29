@@ -340,41 +340,41 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.635094"
+                  timestampString = "457306967.440612"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "946"
-                  endingLineNumber = "946"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
                   offsetFromSymbolStart = "48">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_copy_317"
+                  symbolName = "__Block_byref_object_copy_321"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.635212"
+                  timestampString = "457306967.440736"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "946"
-                  endingLineNumber = "946"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
                   offsetFromSymbolStart = "10">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_dispose_318"
+                  symbolName = "__Block_byref_object_dispose_322"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.635314"
+                  timestampString = "457306967.440836"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "946"
-                  endingLineNumber = "946"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
                   offsetFromSymbolStart = "10">
                </Location>
             </Locations>
@@ -394,6 +394,53 @@
             endingLineNumber = "950"
             landmarkName = "-notificationDownloadEvent:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EncoderManager notificationDownloadEvent:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "457306967.441772"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__Block_byref_object_copy_321"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "457306967.44189"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
+                  offsetFromSymbolStart = "10">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__Block_byref_object_dispose_322"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "457306967.441984"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
+                  offsetFromSymbolStart = "10">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -410,6 +457,53 @@
             endingLineNumber = "957"
             landmarkName = "-notificationDownloadEvent:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EncoderManager notificationDownloadEvent:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "457306967.442657"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__Block_byref_object_copy_321"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "457306967.442776"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
+                  offsetFromSymbolStart = "10">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__Block_byref_object_dispose_322"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+                  timestampString = "457306967.442876"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
+                  offsetFromSymbolStart = "10">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1028,41 +1122,41 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.647091"
+                  timestampString = "457306967.453341"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "946"
-                  endingLineNumber = "946"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
                   offsetFromSymbolStart = "48">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_copy_317"
+                  symbolName = "__Block_byref_object_copy_321"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.647211"
+                  timestampString = "457306967.453466"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "946"
-                  endingLineNumber = "946"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
                   offsetFromSymbolStart = "10">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_dispose_318"
+                  symbolName = "__Block_byref_object_dispose_322"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.647346"
+                  timestampString = "457306967.453563"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "946"
-                  endingLineNumber = "946"
+                  startingLineNumber = "959"
+                  endingLineNumber = "959"
                   offsetFromSymbolStart = "10">
                </Location>
             </Locations>
@@ -1130,38 +1224,6 @@
             endingLineNumber = "1653"
             landmarkName = "-requestTagDataForEvent:onComplete:"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[EncoderManager requestTagDataForEvent:onComplete:]"
-                  moduleName = "Live2BenchNative"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.649934"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1656"
-                  endingLineNumber = "1656"
-                  offsetFromSymbolStart = "1072">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__52-[EncoderManager requestTagDataForEvent:onComplete:]_block_invoke"
-                  moduleName = "Live2BenchNative"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.650056"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1656"
-                  endingLineNumber = "1656"
-                  offsetFromSymbolStart = "52">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1178,38 +1240,6 @@
             endingLineNumber = "1654"
             landmarkName = "-requestTagDataForEvent:onComplete:"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[EncoderManager requestTagDataForEvent:onComplete:]"
-                  moduleName = "Live2BenchNative"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.650797"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1656"
-                  endingLineNumber = "1656"
-                  offsetFromSymbolStart = "1072">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__52-[EncoderManager requestTagDataForEvent:onComplete:]_block_invoke"
-                  moduleName = "Live2BenchNative"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-                  timestampString = "457303799.650914"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1656"
-                  endingLineNumber = "1656"
-                  offsetFromSymbolStart = "52">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1399,7 +1429,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/ListTableViewController.m"
-                  timestampString = "457303799.655816"
+                  timestampString = "457306967.461088"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "202"
@@ -1414,7 +1444,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp_live2bench/master/FBTraining/ListTableViewController.m"
-                  timestampString = "457303799.655939"
+                  timestampString = "457306967.461219"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "202"
