@@ -250,21 +250,35 @@ static void * eventContext      = &eventContext;
 
 -(void)eventChanged:(NSNotification*)note
 {
+    if (_currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+
+    
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
 
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
-        [_tagButtonController allToggleOnOpenTags:_currentEvent.tags];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        [self displayLable];
+        if (_currentEvent.live) {
+            [self gotLiveEvent];
+        }
     }
     
-    [_videoBarViewController onEventChanged:_currentEvent];
-    [_tagButtonController onEventChange:_currentEvent];
-    [self displayLable];
-    if (_currentEvent.live) {
-        [self gotLiveEvent];
-    }
     [self onEventChange];
+}
+
+-(void)onTagChanged:(NSNotification *)note
+{
+    if (![_tagButtonController.currentEvent.name isEqualToString:_currentEvent.name] && _currentEvent && [note.userInfo[@"allEventTag"] isEqualToString:@"true"] ) {
+        //[_tagButtonController allToggleOnOpenTags:_currentEvent];
+    }
+    
+    [_videoBarViewController onTagChanged:_currentEvent];
 }
 
 -(void)liveEventStopped:(NSNotification *)note
@@ -850,7 +864,8 @@ static void * eventContext      = &eventContext;
          }];
     } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
         [_tagButtonController disEnableButton];
-        [_tagButtonController unHighlightButton:button];
+        [_tagButtonController onEventChange:_currentEvent];
+        //[_tagButtonController unHighlightButton:button];
         button.isOpen = YES;
         // Open Duration Tag
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
@@ -860,11 +875,12 @@ static void * eventContext      = &eventContext;
                                                                                                           @"dtagid": button.durationID
                                                                                                           }];
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
+        [_tagButtonController onEventChange:nil];
         // Close Duration Tag
         
         // Collect and mod tag data for close tag
         Tag * tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
-        NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed tagDictionary]];
+        NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed makeTagData]];
         
         [tagData setValue:[NSString stringWithFormat:@"%f",currentTime] forKey:@"closetime"];
         [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
@@ -952,9 +968,9 @@ static void * eventContext      = &eventContext;
 
 -(void) switchPressed
 {
-    if (durationSwitch.on == true) {
+    if (durationSwitch.on == true &&_currentEvent) {
         [_tagButtonController setButtonState:SideTagButtonModeToggle];
-    }else if(durationSwitch.on == false){
+    }else if(durationSwitch.on == false &&_currentEvent){
         [_tagButtonController setButtonState:SideTagButtonModeRegular];
     }
 }

@@ -985,17 +985,17 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
     // this is temp
-    if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
+    /*if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
         double openTime                 = [tData[@"starttime"]doubleValue];
         double closeTime                = [tData[@"closetime"]doubleValue];
         tData[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
         
         [tData removeObjectForKey:@"closetime"];
-    }
+    }*/
     
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
@@ -1244,7 +1244,7 @@
         //[self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
-         [self getEventTags:finishedData extraData:@{@"type":MAKE_TAG}];
+         [self getEventTags:finishedData extraData:@{@"type":MODIFY_TAG}];
         //[self tagsJustChanged:finishedData extraData:MODIFY_TAG];
     } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
@@ -1553,9 +1553,9 @@
         if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
             Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
             Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
-            if (![checkEvent.tags containsObject:newTag]) {
+            //if (![checkEvent.tags containsObject:newTag]) {
                 [checkEvent addTag:newTag];
-            }
+            //}
         }
     }
 }
@@ -1570,16 +1570,21 @@
         if ( [results objectForKey: @"tags"]) {
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
-                if ([tag[@"type"]intValue] == TagTypeDeleted) {
-                    [self onModifyTags:tag];
-                }else if([tag[@"modified"]boolValue]){
-                    [self onModifyTags:tag];
-                }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
-                    [self onModifyTags:tag];
+                
+                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                    if ([tag[@"type"]intValue] == TagTypeDeleted) {
+                        [self onModifyTags:tag];
+                    }else if([tag[@"modified"]boolValue]){
+                        [self onModifyTags:tag];
+                    }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
+                        [self onModifyTags:tag];
+                    }
+                    else{
+                        [self onNewTags:tag];
+                    }
+
                 }
-                else{
-                    [self onNewTags:tag];
-                }
+                
                 
             }
         }
