@@ -6,14 +6,15 @@
 //  Copyright © 2015 DEV. All rights reserved.
 //
 
-#import "CustomTabViewController.h"
+#import "SettingViewController.h"
 
 
-@interface CreditsViewController : CustomTabViewController{
-}
+@interface CreditsViewController : SettingViewController
+
 @property (weak, nonatomic) IBOutlet UIVisualEffectView *blurView;
 @property (weak, nonatomic) IBOutlet UIView *creditsView;
 
+- (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel;
 
 
 @end

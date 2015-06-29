@@ -10,11 +10,11 @@
 #import "CreditsViewController.h"
 
 
-
 @interface CreditsViewController ()
 {
-    
+    BOOL hasDecided;
 }
+
 
 @end
 
@@ -23,24 +23,26 @@
 @synthesize blurView;
 @synthesize creditsView;
 
--(id)initWithAppDelegate:(AppDelegate *)mainappDelegate
-{
-    self = [super initWithAppDelegate:mainappDelegate];
+
+- (instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel {
+    self = [super initWithAppDelegate:appDel name:NSLocalizedString(@"Credits", nil) identifier:@"Credits"];
     if (self) {
-
-        [self setMainSectionTab:@"Credits" imageName:@""];
-
+        
+        hasDecided = FALSE;
+        
+        
     }
-    
     return self;
-    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self creditsViewWithBlurIfAvailable];
+    if(!hasDecided){
+        [self creditsViewWithBlurIfAvailable];
+        hasDecided = TRUE;
+    }
     
 }
 
@@ -48,6 +50,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
 
+    // test
     
 }
 
@@ -72,6 +75,8 @@
     } else {
         // Blur-Supported = NO
         [self.blurView setHidden:TRUE];
+        [self.blurView removeFromSuperview];
+        self.blurView = nil;
     }
     
     

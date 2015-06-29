@@ -85,6 +85,7 @@ NS_OPTIONS(NSInteger, style){
         AlertsSettingViewController *alertsSettingViewController = [[AlertsSettingViewController alloc] initWithAppDelegate:appDel];
         InfoSettingViewController *informationSettingViewController = [[InfoSettingViewController alloc] initWithAppDelegate:appDel];
         TabsSettingViewController *tabsSettingViewController = [[TabsSettingViewController alloc] initWithAppDelegate:appDel];
+        CreditsViewController *creditsViewController = [[CreditsViewController alloc] initWithAppDelegate:appDel];
         
         // Setting Definitions to be loaded
         //  Name: the display name of the setting
@@ -133,9 +134,10 @@ NS_OPTIONS(NSInteger, style){
                                         @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
                                         },
                                     @{
-                                        @"Name": NSLocalizedString(@"Credits", nil),
-                                        @"ViewController": [[CreditsViewController alloc] initWithAppDelegate:appDel]
-                                        }
+                                        @"Name": creditsViewController.name,
+                                        @"ViewController": creditsViewController,
+                                        @"Identifier": creditsViewController.identifier
+                                        },
                                     ];
         
         self.settingsDictionary = [NSMutableDictionary dictionary];
