@@ -2645,11 +2645,8 @@
 				AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */,
 				D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */,
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
-<<<<<<< HEAD
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
-=======
 				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
->>>>>>> ca052b3cc2f21bbbbabc472f7bc91ec856170cb3
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,
 				AA83596E19B115D2009B3ABC /* ExportPlayersSync.m in Sources */,
 				D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */,

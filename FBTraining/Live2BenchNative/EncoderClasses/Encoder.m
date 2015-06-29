@@ -405,22 +405,22 @@
 -(id <EncoderProtocol>)makePrimary
 {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ondeleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ondeleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
     return self;
 }
 
 -(id <EncoderProtocol>)removeFromPrimary
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
     return self;
 }
 
@@ -555,12 +555,7 @@
 
 // Commands
 #pragma mark - Observer
-//[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(DeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
+
 
 -(void)onTagPost:(NSNotification *)note
 {
@@ -1088,7 +1083,7 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
     encoderConnection.timeStamp             = aTimeStamp;
-    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key th   at will be used when making the dict
+    encoderConnection.extra                 = @{@"event":[tData objectForKey:@"event"]};// This is the key th   at will be used when making the dict
 }
 
 
@@ -1102,7 +1097,7 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
     encoderConnection.timeStamp             = aTimeStamp;
-    encoderConnection.extra                 = [tData objectForKey:@"event"];// This is the key that will be used when making the dict
+    encoderConnection.extra                 = @{@"event":[tData objectForKey:@"event"]};// This is the key that will be used when making the dict
 }
 
 
@@ -1157,8 +1152,6 @@
 
 -(void)startEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    
-    [self buildEncoderRequest];
     
     _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
     
@@ -1239,22 +1232,22 @@
         [self resumeResponce:    finishedData];
     } else if ([connectionType isEqualToString: MAKE_TAG]) {
         //[self makeTagResponce:    finishedData];
-        [self getEventTags:finishedData extraData:MAKE_TAG];
+        [self getEventTags:finishedData extraData:@{@"type":MAKE_TAG}];
         //[self tagsJustChanged:finishedData extraData:MAKE_TAG];
     } else if ([connectionType isEqualToString: MAKE_TELE_TAG]) {
         //[self makeTagResponce:    finishedData];
-        [self getEventTags:finishedData extraData:MAKE_TAG];
+        [self getEventTags:finishedData extraData:@{@"type":MAKE_TAG,@"event": extra[@"event"]}];
         //[self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
-         [self getEventTags:finishedData extraData:MODIFY_TAG];
+         [self getEventTags:finishedData extraData:@{@"type":MODIFY_TAG}];
         //[self tagsJustChanged:finishedData extraData:MODIFY_TAG];
     } else if ([connectionType isEqualToString: CAMERAS_GET]) {
         [self camerasGetResponce:    finishedData];
     } else if ([connectionType isEqualToString: EVENT_GET_TAGS]) {
         //NSLog(@"%@",[[NSString alloc] initWithData:finishedData encoding:NSUTF8StringEncoding]);
         
-        [self getEventTags:finishedData extraData:EVENT_GET_TAGS ];
+        [self getEventTags:finishedData extraData:@{@"type":EVENT_GET_TAGS,@"event": extra[@"event"]} ];
         //[self eventTagsGetResponce:finishedData extraData:extra];
     }else if ([connectionType isEqualToString: DELETE_EVENT]){
         [self deleteEventResponse: finishedData];
@@ -1443,8 +1436,11 @@
 }*/
 
 //when tags are created or modified on the same ipad that is displaying the change
--(void)getEventTags:(NSData *)data extraData:(NSString *)type
+-(void)getEventTags:(NSData *)data extraData:(NSDictionary *)extra
 {
+    NSString * type = extra[@"type"];
+    Event * checkEvent = ([type isEqualToString:EVENT_GET_TAGS])?[self.allEvents objectForKey:extra[@"event"]]:nil ;
+    
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
@@ -1462,10 +1458,12 @@
             if (rawTags) {
                 NSArray *rawTagsArray = [rawTags allValues];
                 NSDictionary *firstTag = [rawTagsArray firstObject];
-                Event * checkEvent = [self.allEvents objectForKey:firstTag[@"event"]];
+                checkEvent = [self.allEvents objectForKey:firstTag[@"event"]];
                 [checkEvent addAllTags:rawTags];
+                
+                NSLog(@"oncomp: %@", (checkEvent.onComplete)?@"yes":@"no");
             }
-            
+            checkEvent.isBuilt = YES;
             
             /*NSDictionary    * rawtags = [results objectForKey:@"tags"];
             NSMutableArray  * polishedTags = [[NSMutableArray alloc]init];
@@ -1487,6 +1485,8 @@
         
         
     }
+    
+
 }
                         
 
@@ -1539,9 +1539,9 @@
         if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
             Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
             Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
-            if (![checkEvent.tags containsObject:newTag]) {
+            //if (![checkEvent.tags containsObject:newTag]) {
                 [checkEvent addTag:newTag];
-            }
+            //}
         }
     }
 }
@@ -1556,16 +1556,21 @@
         if ( [results objectForKey: @"tags"]) {
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
-                if ([tag[@"type"]intValue] == TagTypeDeleted) {
-                    [self onModifyTags:tag];
-                }else if([tag[@"modified"]boolValue]){
-                    [self onModifyTags:tag];
-                }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
-                    [self onModifyTags:tag];
+                
+                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                    if ([tag[@"type"]intValue] == TagTypeDeleted) {
+                        [self onModifyTags:tag];
+                    }else if([tag[@"modified"]boolValue]){
+                        [self onModifyTags:tag];
+                    }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
+                        [self onModifyTags:tag];
+                    }
+                    else{
+                        [self onNewTags:tag];
+                    }
+
                 }
-                else{
-                    [self onNewTags:tag];
-                }
+                
                 
             }
         }

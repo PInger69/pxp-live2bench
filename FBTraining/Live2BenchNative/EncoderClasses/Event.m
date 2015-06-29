@@ -95,7 +95,7 @@
 -(void)addTag:(Tag *)newtag
 {
     [_tags addObject:newtag];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self  userInfo:@{@"allEventTag":@"true"}];
     
     if (newtag.type != TagTypeOpenDuration && _primary ) {
         
@@ -120,15 +120,33 @@
         
         if ( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeCloseDuration && tagToBeModded.type == TagTypeOpenDuration) {
            
-            tagToBeModded = [Tag getOpenTagByDurationId:modifiedData[@"dtagid"]];
+            if ([Tag getOpenTagByDurationId:modifiedData[@"dtagid"]]) {
+                tagToBeModded = [Tag getOpenTagByDurationId:modifiedData[@"dtagid"]];
+            }
+            
             
             NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:modifiedData];
             double openTime                 = tagToBeModded.time;
             double closeTime                = [dictToChange[@"closetime"]doubleValue];
+            
+            if (!closeTime) {
+                return;
+            }
+            
             dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
             dictToChange[@"type"]           = [NSNumber numberWithInteger:TagTypeCloseDuration];
             
+            
             [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
+            tagToBeModded.modified = true;
+                
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
+                                                                                                              @"msg":tagToBeModded.name,
+                                                                                                              @"colour":tagToBeModded.colour,
+                                                                                                              @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
+                                                                                                              }];
+            
+     
         }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){
             [_tags removeObject:tagToBeModded];
             
@@ -340,7 +358,7 @@
 
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@"Event Name: %@ \nLocal: %@\n", _name,(_local)?@"YES":@"NO"];
+    NSString * txt = [NSString stringWithFormat:@"Event Name: %@ \n Local: %@\n IsBuilt: %@ Live: %@", _name,(_local)?@"YES":@"NO",(_isBuilt)?@"YES":@"NO",(self.live)?@"YES":@"NO"];
     
     return txt;
 }

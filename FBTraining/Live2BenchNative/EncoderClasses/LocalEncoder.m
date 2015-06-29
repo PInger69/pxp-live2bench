@@ -23,7 +23,7 @@
 #import "Event.h"
 #import "Clip.h"
 #import "Tag.h"
-
+#import "UserCenter.h"
 
 
 
@@ -32,6 +32,8 @@
 
 #define TAG_SYNC        1
 #define TAG_UPLOAD      2
+
+#define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
 // PRIVATE CLASS
 @interface NSURLDataConnection : NSURLConnection
@@ -99,8 +101,6 @@ static LocalEncoder * instance;
         if ( !isDir2){
             [[NSFileManager defaultManager] createDirectoryAtPath:[self bookmarkedVideosPath] withIntermediateDirectories:YES attributes:nil error:NULL];
         }
-        
-        
         
         // Build Bookmark Clip sections
         [self scanForBookmarks];
@@ -258,25 +258,22 @@ static LocalEncoder * instance;
 
 -(id <EncoderProtocol>)makePrimary
 {
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadEvent:)  name:NOTIF_EM_DOWNLOAD_EVENT    object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
+
     return self;
 }
 
 -(id <EncoderProtocol>)removeFromPrimary
 {
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_EVENT       object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
     return self;
 }
 
@@ -300,6 +297,169 @@ static LocalEncoder * instance;
     
 }
 
+
+#pragma mark - Observer
+
+
+-(void)onTagPost:(NSNotification *)note
+{
+    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+    BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
+    [data removeObjectForKey:@"duration"];
+    
+    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+//    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    
+    // This is the starndard info that is collected from the encoder
+    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{
+                                       @"event"         : self.event.name,
+                                       @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                       @"user"          : [UserCenter getInstance].userHID,
+                                       @"time"          : tagTime,
+                                       @"name"          : tagName,
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       
+                                       }];
+    if (isDuration){ // Add extra data for duration Tags
+        NSDictionary *durationData =        @{
+                                              
+                                              @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
+                                              // ,@"dtagid": @"123456789" // this should be set before
+                                              };
+        [tagData addEntriesFromDictionary:durationData];
+        
+    }
+    
+    [tagData addEntriesFromDictionary:data];
+    
+    [self issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+}
+
+-(void)onTelePost:(NSNotification *)note
+{
+//    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+//    
+//    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+//    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+//    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+//    
+//    // This is the starndard info that is collected from the encoder
+//    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+//                                     @{
+//                                       @"event"         : eventNm,
+//                                       @"colour"        : [UserCenter getInstance].customerColor,
+//                                       @"user"          : [UserCenter getInstance].userHID,
+//                                       @"time"          : tagTime,
+//                                       @"name"          : tagName,
+//                                       @"duration"      : @"1",
+//                                       @"type"          : @"4",
+//                                       }];
+//    
+//    [tagData addEntriesFromDictionary:data];
+//    
+//    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+    
+}
+
+-(void)onModTag:(NSNotification *)note
+{
+    
+    NSMutableDictionary * dict;
+    
+    if (!note.object && note.userInfo) {
+        
+        dict = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
+        
+        ///@"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
+        
+        
+        if ([self.event.name isEqualToString:dict[@"event"]]) {
+            dict[@"event"] = LIVE_EVENT;
+        }
+        
+    } else {
+        Tag *tagToModify = note.object;
+        dict = [NSMutableDictionary dictionaryWithDictionary:
+                @{
+                  @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
+                  @"id"            : tagToModify.ID,
+                  @"requesttime"   : GET_NOW_TIME_STRING,
+                  @"name"          : tagToModify.name,
+                  @"user"          : tagToModify.user
+                  }];
+        
+        
+        [dict addEntriesFromDictionary: [tagToModify modifiedData]];
+        
+        if (tagToModify.isLive) {
+            [dict setObject:LIVE_EVENT forKey:@"event"];
+        }
+    }
+    
+    
+    
+    
+    
+    
+    [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+-(void)onDeleteTag:(NSNotification *)note
+{
+//    Tag *tagToDelete = note.object;
+//    tagToDelete.type = 3;
+//    
+//    //    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
+//    //                                 @"1",@"delete",
+//    //                                 tagToDelete.event,@"event",
+//    //                                 [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
+//    //                                 @"requesttime", [UserCenter getInstance].userHID,
+//    //                                 @"user",tagToDelete.ID,
+//    //                                 @"id", nil];
+//    
+//    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
+//                                  @{
+//                                    @"delete"        : @"1",
+//                                    @"event"         : (tagToDelete.isLive)?LIVE_EVENT:tagToDelete.event.name, // LIVE_EVENT == @"live"
+//                                    @"id"            : tagToDelete.ID,
+//                                    @"requesttime"   : GET_NOW_TIME_STRING,
+//                                    @"user"          : tagToDelete.user
+//                                    }];
+//    
+//    
+//    //[dict addEntriesFromDictionary:[tagToDelete makeTagData]];
+//    
+//    [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+
+-(void)ondeleteEvent:(NSNotification *)note
+{
+//    Event *eventToDelete = note.object;
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
+//                                                                                @"name": eventToDelete.name,
+//                                                                                @"hid": eventToDelete.hid
+//                                                                                }];
+//    
+//    [self issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+-(void)onDownloadClip:(NSNotification *)note
+{
+// this should cut an MP4
+}
+
+
+
+
+
+
+
+
+
+
 #pragma mark - Command Methods
 -(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
@@ -322,8 +482,7 @@ static LocalEncoder * instance;
     newTag.synced                   = NO;
 
     [self.event addTag:newTag];
-    //[self.event addTag:newTag];
-    //[self.event.tags addObject:newTag];
+
 
  
     [self.localTags setObject:newTag.makeTagData forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
@@ -334,7 +493,7 @@ static LocalEncoder * instance;
     NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
     [self.localTags writeToFile:localplistNamePath atomically:YES];
 
-    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];
 
 }
 

@@ -9,10 +9,7 @@
 #import "ToastObserver.h"
 #import "UIKit/UIKit.h"
 #import "Utility.h"
-#import "Tag.h"
-
-
-
+#import "ToastObserverSettingViewController.h"
 
 @interface ToastObserver ()
 
@@ -28,8 +25,12 @@
 @end
 
 
+static NSUInteger allowedToastType        = 0;
 
-@implementation ToastObserver
+@implementation ToastObserver{
+    Event                           * _currentEvent;
+    id <EncoderProtocol>                _observedEncoder;
+}
 
 
 -(instancetype)init{
@@ -37,26 +38,15 @@
     if(self){
         // By adding the ToastObserver as an observer in the Notification Center, any Notifications that are posted with the name ToastObserver
         // will be recognized by the Toast Observer
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TAG_RECEIVED object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toastTypeChanged:) name:@"Setting - Toast Observer" object:nil];
-        self.toastType = ARNone;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TOAST object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TAG_RECEIVED object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(synchronizedTags:) name:@"NOTIF_TAGS_SYNCHRONIZED" object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDownloadComplete:) name:@"NOTIF_FILE_DOWNLOAD_COMPLETE" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NOTIF_TOAST_SETTING_CHANGED object:nil];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS object:self userInfo:@{@"name": @"Toast Observer" ,@"block" : ^(NSArray *settingOptions, NSArray *onOrOff){
-            for (int i = 0; i <= 2; i++) {
-                if ([((NSNumber *)onOrOff[i]) integerValue] == 1) {
-                    if ([settingOptions[i] isEqualToString:@"Tag Synchronized"]) {
-                        self.toastType = self.toastType | ARTagSynchronized;
-                    } else if ([settingOptions[i] isEqualToString:@"Download Complete"]){
-                        self.toastType = self.toastType | ARFileDownloadComplete;
-                    } else {
-                        self.toastType = self.toastType | ARTagCreated;
-                    }
-                }
-            }
-        }}];
         
+        self.toastType = ARNone | ARFileDownloadComplete | ARTagSynchronized | ARTagCreated;
+        allowedToastType = NSUIntegerMax;
         // Refer to ToastObserver.h for an explanation of these following properties:
         self.enabled = YES;
         self.easeTime = 0.5;
@@ -65,40 +55,50 @@
     }
     return self;
 }
+
++(void)allowedTypes:(NSInteger)type
+{
+    allowedToastType = type;
+}
+
 <<<<<<< HEAD
 
--(void)synchronizedTags:(NSNotification *)note {
-    if (self.toastType & ARTagSynchronized) {
-        [self.queueOfNotifications addObject:note];
-        // If there is only 1 Notification in the queue, animateView is called
-        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
-        //will keep track of the queue
-        if([self.queueOfNotifications count] == 1){
-            [self animateView];
-        }
+
+-(void)addEventObserver:(NSNotification *)note
+{
+    if (_observedEncoder != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+    
+    
+    if (note.object == nil) {
+        _observedEncoder = nil;
+    }else{
+        _observedEncoder = (id <EncoderProtocol>) note.object;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
     }
 }
 
--(void)fileDownloadComplete:(NSNotification *)note {
-    if (self.toastType & ARFileDownloadComplete) {
-        // Each NSNotification is first added to the queue
-        [self.queueOfNotifications addObject:note];
-        // If there is only 1 Notification in the queue, animateView is called
-        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
-        //will keep track of the queue
-        if([self.queueOfNotifications count] == 1){
-            [self animateView];
-        }
+-(void)eventChanged:(NSNotification *)note
+{
+    if (_currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TOAST object:_currentEvent];
+    }
+    
+    if (note.object == nil) {
+        _currentEvent = nil;
+    }else{
+        _currentEvent = [((id <EncoderProtocol>) note.object) event];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationNoticed:) name:NOTIF_TOAST object:_currentEvent];
     }
 }
+
+
 =======
-//
+>>>>>>> ca052b3cc2f21bbbbabc472f7bc91ec856170cb3
+
 //-(void)synchronizedTags:(NSNotification *)note {
-//    if (self.toastType && ARSynchronizedTags) {
-//        return;
-//    }
-//    if(self.enabled && note.userInfo){
-//        // Each NSNotification is first added to the queue
+//    if (self.toastType & ARTagSynchronized) {
 //        [self.queueOfNotifications addObject:note];
 //        // If there is only 1 Notification in the queue, animateView is called
 //        // Otherwise the other 2 methods ( dequeueTheArray and animateView)
@@ -110,10 +110,10 @@
 //}
 //
 //-(void)fileDownloadComplete:(NSNotification *)note {
-//    if (self.toastType && ARFileDownloadComplete) {
-//        return;
-//    }
-//    if(self.enabled && note.userInfo){
+//    
+//    NSUInteger mask = (NSUInteger )note.userInfo[@"type"];
+//    
+//    if (allowedToastType & mask) {
 //        // Each NSNotification is first added to the queue
 //        [self.queueOfNotifications addObject:note];
 //        // If there is only 1 Notification in the queue, animateView is called
@@ -124,30 +124,21 @@
 //        }
 //    }
 //}
->>>>>>> f5670461f001ccbf5cbf83ec761a857141379f77
 
-
--(void)toastTypeChanged: (NSNotification *) note{
-
-    if ([note.userInfo[@"Name"] isEqualToString:@"Download Complete"]) {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            self.toastType = self.toastType & (~ARFileDownloadComplete);
-        } else {
-            self.toastType = self.toastType | ARFileDownloadComplete;
-        }
-    } else if ([note.userInfo[@"Name"] isEqualToString:@"Tag Synchronized"]) {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            self.toastType = self.toastType & (~ARTagSynchronized);
-        } else {
-            self.toastType = self.toastType | ARTagSynchronized;
-        }
-    } else {
-        if (![note.userInfo[@"Value"] boolValue]) {
-            self.toastType = self.toastType & (~ARTagCreated);
-        } else {
-            self.toastType = self.toastType | ARTagCreated;
-        }
-    }
+- (void)settingsChanged: (NSNotification *)note {
+    NSDictionary *toastSettings = note.userInfo;
+    
+    self.toastType = ARNone;
+    if ([toastSettings[TOAST_DOWNLOAD_COMPLETE] boolValue]) self.toastType |= ARFileDownloadComplete;
+    if ([toastSettings[TOAST_TAG_SYNCHRONIZED] boolValue]) self.toastType |= ARTagSynchronized;
+    if ([toastSettings[TOAST_TAG_RECEIVED] boolValue]) self.toastType |= ARTagCreated;
+    
+    allowedToastType = 0;
+    if ([toastSettings[TOAST_DOWNLOAD_COMPLETE] boolValue]) allowedToastType |= ARFileDownloadComplete;
+    if ([toastSettings[TOAST_TAG_SYNCHRONIZED] boolValue])  allowedToastType |= ARTagSynchronized;
+    if ([toastSettings[TOAST_TAG_RECEIVED] boolValue])      allowedToastType |= ARTagCreated;
+    
+    
     
 }
 
@@ -161,17 +152,18 @@
 }
 
 -(void) notificationNoticed: (NSNotification *)receivedNotification{
-    
+
+    NSUInteger mask = (NSUInteger )receivedNotification.userInfo[@"type"];
     // This is the check to make sure Toast observer should be on, if
     // ToastObserver is disabled then this code will not execute, and hence
     // the other methods can no longer be called
-    if (self.toastType & ARTagCreated) {
+      if (allowedToastType & mask) {
         // Each NSNotification is first added to the queue
         [self.queueOfNotifications addObject:receivedNotification];
         // If there is only 1 Notification in the queue, animateView is called
         // Otherwise the other 2 methods ( dequeueTheArray and animateView)
         //will keep track of the queue
-        if([self.queueOfNotifications count] == 1){
+        if([self.queueOfNotifications count] == 1) {
             [self animateView];
         }
     }
@@ -205,10 +197,13 @@
     NSNotification *currentNotification = (self.queueOfNotifications[0]);
     
     if (currentNotification.object) {
-        Tag *tag = (Tag *) currentNotification.object;
+        
+        NSString    * message   = currentNotification.userInfo[@"msg"];
+        UIColor     * chipColor = [Utility colorWithHexString: currentNotification.userInfo[@"colour"] ];
+        
         //Creating of the ToastView
         UIView *presentingView = [[UIView alloc] init];
-        presentingView.layer.borderColor = [UIColor orangeColor].CGColor;
+        presentingView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
         presentingView.backgroundColor = [UIColor whiteColor];
         presentingView.layer.borderWidth = 1.0f;
         
@@ -219,13 +214,13 @@
         [presentingView addSubview:label];
         
         // These lines are to set the text for the label and the text color
-        label.text = [tag.name stringByRemovingPercentEncoding];
+        label.text = [message stringByRemovingPercentEncoding];
         label.textColor = [UIColor blackColor];
         
         // These lines are to create a subview which is on the left of the infoView
         // and set its color to be the same as the color of the trigger button
         UIView *smallView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        smallView.backgroundColor = [Utility colorWithHexString: tag.colour ];
+        smallView.backgroundColor = chipColor;
         [presentingView addSubview:smallView];
         
         CGRect originalFrame = CGRectMake(20, self.parentView.bounds.size.height, 200, 50);
@@ -264,7 +259,7 @@
     if (currentNotification.userInfo) {
         //Creating of the ToastView
         UIView *presentingView = [[UIView alloc] init];
-        presentingView.layer.borderColor = [UIColor orangeColor].CGColor;
+        presentingView.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
         presentingView.backgroundColor = [UIColor whiteColor];
         presentingView.layer.borderWidth = 1.0f;
         
@@ -275,7 +270,7 @@
         [presentingView addSubview:label];
         
         // These lines are to set the text for the label and the text color
-        label.text = [[currentNotification.userInfo objectForKey:@"name"] stringByRemovingPercentEncoding];
+        label.text = [[currentNotification.userInfo objectForKey:@"msg"] stringByRemovingPercentEncoding];
         label.textColor = [UIColor blackColor];
         
         // These lines are to create a subview which is on the left of the infoView

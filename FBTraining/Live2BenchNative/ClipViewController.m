@@ -116,6 +116,7 @@ static void * encoderTagContext = &encoderTagContext;
     
 }
 
+// encoderOberver
 -(void)addEventObserver:(NSNotification *)note
 {
     if (_observedEncoder != nil) {

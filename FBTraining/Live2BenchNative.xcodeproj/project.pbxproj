@@ -560,6 +560,7 @@
 		D700F9051B011550008152E8 /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FakeEncoder.m; path = Live2BenchNative/EncoderClasses/FakeEncoder.m; sourceTree = "<group>"; };
 		D706AC941B2730980091C02C /* CameraDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraDetails.h; sourceTree = "<group>"; };
 		D706AC951B2735610091C02C /* CameraDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraDetails.m; sourceTree = "<group>"; };
+		D70F5CEA1B3DFEEE004353FD /* Live2BenchNative copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Live2BenchNative copy-Info.plist"; path = "/Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative copy-Info.plist"; sourceTree = "<absolute>"; };
 		D70FBA3D17FE0E3600B606CF /* PlayerCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerCollectionViewController.h; sourceTree = "<group>"; };
 		D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCollectionViewController.m; sourceTree = "<group>"; };
 		D70FBA4A17FF7A1E00B606CF /* DownloadButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadButton.h; sourceTree = "<group>"; };
@@ -1832,6 +1833,7 @@
 				D7A9397B16ADA65E006CBAB2 /* Live2BenchNativeTests */,
 				D7A9394216ADA65E006CBAB2 /* Frameworks */,
 				D7A9394016ADA65E006CBAB2 /* Products */,
+				D70F5CEA1B3DFEEE004353FD /* Live2BenchNative copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2645,11 +2647,8 @@
 				AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */,
 				D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */,
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
-<<<<<<< HEAD
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
-=======
 				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
->>>>>>> ca052b3cc2f21bbbbabc472f7bc91ec856170cb3
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,
 				AA83596E19B115D2009B3ABC /* ExportPlayersSync.m in Sources */,
 				D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */,

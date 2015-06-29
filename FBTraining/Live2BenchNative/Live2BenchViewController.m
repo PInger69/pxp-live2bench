@@ -213,6 +213,8 @@ static void * eventContext      = &eventContext;
     return self;
 }
 
+#pragma mark- Encoder Observers
+
 -(void)addEventObserver:(NSNotification*)note
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
@@ -272,8 +274,8 @@ static void * eventContext      = &eventContext;
 
 -(void)onTagChanged:(NSNotification *)note
 {
-    if (![_tagButtonController.currentEvent.name isEqualToString:_currentEvent.name] && _currentEvent) {
-        [_tagButtonController allToggleOnOpenTags:_currentEvent];
+    if (![_tagButtonController.currentEvent.name isEqualToString:_currentEvent.name] && _currentEvent && [note.userInfo[@"allEventTag"] isEqualToString:@"true"] ) {
+        //[_tagButtonController allToggleOnOpenTags:_currentEvent];
     }
     
     [_videoBarViewController onTagChanged:_currentEvent];
@@ -863,7 +865,7 @@ static void * eventContext      = &eventContext;
     } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
         [_tagButtonController disEnableButton];
         [_tagButtonController onEventChange:_currentEvent];
-        [_tagButtonController unHighlightButton:button];
+        //[_tagButtonController unHighlightButton:button];
         button.isOpen = YES;
         // Open Duration Tag
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{

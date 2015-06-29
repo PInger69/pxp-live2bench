@@ -21,9 +21,24 @@ typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
 };
 
 typedef NS_OPTIONS(NSInteger, DownloadType) {
-    DownloadItem_TypePlist   = 1<<1,
-    DownloadItem_TypeVideo     = 1<<2
+    DownloadItem_TypePlist      = 1<<1,
+    DownloadItem_TypeVideo      = 1<<2
 };
+
+@class DownloadItem;
+
+@protocol DownloadItemDelegate <NSObject>
+
+@optional
+-(void)onDownloadComplete:(DownloadItem*)downloadItem;
+-(void)onDownloadProgress:(DownloadItem*)downloadItem;
+-(void)onDownloadFail:(DownloadItem*)downloadItem;
+
+
+@end
+
+
+
 
 
 @interface DownloadItem : NSObject <NSURLConnectionDataDelegate,NSURLConnectionDelegate>
@@ -54,6 +69,7 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 @property (nonatomic,assign) NSInteger          freeSpaceBuffer;
 @property (nonatomic,assign) NSInteger          kbps;
 @property (nonatomic,assign) BOOL               isAlive;
+@property (nonatomic,weak)  id <DownloadItemDelegate>  delegate;
 
 -(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath;
 
@@ -64,3 +80,4 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 -(void)addOnProgressBlock:(void(^)(float progress,NSInteger kbps)) pBlock;
 -(NSString*)stringStatus;
 @end
+
