@@ -213,6 +213,8 @@ static void * eventContext      = &eventContext;
     return self;
 }
 
+#pragma mark- Encoder Observers
+
 -(void)addEventObserver:(NSNotification*)note
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];

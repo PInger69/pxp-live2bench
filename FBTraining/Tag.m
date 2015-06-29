@@ -307,14 +307,16 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 -(NSDictionary *) makeTagData{
+    
+    
     return @{
              @"colour"      : self.colour,
              //@"deviceid"    : self.deviceID,
              @"deviceid"    : (self.deviceID)?self.deviceID:@"",
              @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
              @"displaytime" : self.displayTime,
-             @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
-             @"event"       : self.event.name,
+             @"duration"    : (self.duration)?[NSString stringWithFormat: @"%i", self.duration]:@"",
+             @"event"       : (self.event.name)?self.event.name:@"",
              @"name"        : self.name,
              @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
              @"time"        : [NSString stringWithFormat:@"%f", self.time],

@@ -340,7 +340,7 @@
 
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@"Event Name: %@ \nLocal: %@\n", _name,(_local)?@"YES":@"NO"];
+    NSString * txt = [NSString stringWithFormat:@"Event Name: %@ \n Local: %@\n IsBuilt: %@ Live: %@", _name,(_local)?@"YES":@"NO",(_isBuilt)?@"YES":@"NO",(self.live)?@"YES":@"NO"];
     
     return txt;
 }
