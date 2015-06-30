@@ -635,7 +635,11 @@
          ///@"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
         
         
-        if ([self.event.name isEqualToString:dict[@"event"]]) {
+        /*if ([self.event.name isEqualToString:dict[@"event"]]) {
+            dict[@"event"] = LIVE_EVENT;
+        }*/
+        
+        if ([self.event.name isEqualToString:dict[@"event"]] && self.event.live) {
             dict[@"event"] = LIVE_EVENT;
         }
     

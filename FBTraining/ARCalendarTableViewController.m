@@ -238,10 +238,10 @@
             
             NSString *path;
             if (event.rawData[@"mp4_2"]) {
-                path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
+                path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
                 //path = @"/Documents/events/2015-04-16_16-17-13_368156f1cc13acdf43d265c420b4d2956ed0f645_local/main_00hq.mp4";
             } else {
-                path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main.mp4"];
+                path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main.mp4"];
 //                path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
             }
             
