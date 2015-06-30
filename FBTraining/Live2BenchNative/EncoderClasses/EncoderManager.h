@@ -13,7 +13,8 @@
 #import "LocalEncoder.h"
 #import "Event.h"
 #import "EncoderCommander.h"
-
+#import "ActionListItemDelegate.h"
+#import "LocalMediaManager.h"
 
 @class Encoder;
 
@@ -32,7 +33,7 @@
 #define SUMMARY_TYPE_EVENT  @"game"
 
 
-@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
+@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate,ActionListItemDelegate>
 
 
 @property (nonatomic,assign)            BOOL                    hasInternet;
@@ -60,6 +61,7 @@
 @property (nonatomic,strong)            EncoderCommander        * encoderCommander; // Main box encoder
 @property (nonatomic,strong)            Encoder                 * masterEncoder; // Main box encoder
 @property (nonatomic,strong)            LocalEncoder            * localEncoder;  // the device acts like an in app encoder / with clips
+@property (nonatomic,strong)            LocalMediaManager       * localMediaManager;
 @property (nonatomic,strong)            CloudEncoder            * cloudEncoder;  // 
 @property (nonatomic,strong)            id <EncoderProtocol>    primaryEncoder;
 

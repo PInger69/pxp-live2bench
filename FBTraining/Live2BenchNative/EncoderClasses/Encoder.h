@@ -12,6 +12,8 @@
 #import "EncoderCommands.h" // Depricated
 #import "EncoderCommand.h" // Depricated
 #import "Event.h"
+#import "ActionListItem.h"
+
 
 @class EncoderManager;
 
@@ -47,7 +49,7 @@
 #define RESUME_EVENT    @"resumeEvent:timeStamp:"
 #define START_EVENT     @"startEvent:timeStamp:"
 
-@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol,EncoderStatusMonitorProtocol>
+@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol,EncoderStatusMonitorProtocol,ActionListItem>
 {
     
     
@@ -143,6 +145,15 @@
  *  removes all observers and checker and release memory if possible
  */
 -(void)destroy;
+
+
+// ActionListItem Methods
+@property (nonatomic,assign) BOOL isFinished;
+@property (nonatomic,assign) BOOL isSuccess;
+@property (nonatomic,weak)  id <ActionListItemDelegate>  delegate;
+
+-(void)start;
+
 
 
 @end

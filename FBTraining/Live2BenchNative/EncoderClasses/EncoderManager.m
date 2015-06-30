@@ -24,11 +24,12 @@
 #import <ifaddrs.h>
 #import <arpa/inet.h>
 #import "UserCenter.h"
+#import "ActionListItem.h"
 
 
 #import "FakeEncoder.h"
 
-#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
+//#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
@@ -286,6 +287,8 @@
     CheckMasterEncoderAction    * checkMasterEncoderAction;
     //LogoutAction                * logoutAction;
     
+    id <ActionListItem>         buildEventAction;
+    Event                       * eventBeingBuilt;
 }
 
 @synthesize hasWiFi                 = _hasWiFi;
@@ -306,6 +309,7 @@
 @synthesize masterEncoder           = _masterEncoder;
 @synthesize cloudEncoder            = _cloudEncoder;
 @synthesize localEncoder            = _localEncoder;
+@synthesize localMediaManager       = _localMediaManager;
 @synthesize primaryEncoder          = _primaryEncoder;
 
 #pragma mark - Encoder Manager Methods
@@ -339,6 +343,7 @@
         
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
         _localEncoder.encoderManager = self;
+        _localMediaManager      = [[LocalMediaManager alloc]initWithDocsPath:aLocalDocsPath];
         
         _currentEventType       = SPORT_HOCKEY;
         _searchForEncoders      = NO;
@@ -552,23 +557,33 @@ static void * statusContext         = &statusContext;
 
 -(void)declareCurrentEvent:(Event*)event
 {
-    [self.primaryEncoder event].primary = false;
-    if (event == nil) {
-        
-        if ([[self.primaryEncoder event].name isEqualToString:self.liveEventName]) {
-            self.liveEvent = nil;
+  
+        [self.primaryEncoder event].primary = false;
+        if (event == nil) {
+            
+            if ([[self.primaryEncoder event].name isEqualToString:self.liveEventName]) {
+                self.liveEvent = nil;
+            }
+
+            [self.primaryEncoder setEvent:nil];
+            self.primaryEncoder = nil;
+        }
+        else{
+            if (event.isBuilt){
+                self.primaryEncoder = event.parentEncoder;
+                event.primary = true;
+                [self.primaryEncoder setEvent:event];
+            } else {
+                eventBeingBuilt = event;
+                buildEventAction = (id <ActionListItem>) eventBeingBuilt.parentEncoder;
+                buildEventAction.delegate = self;
+                [self requestTagDataForEvent:eventBeingBuilt.name onComplete:nil];
+
+
+            }
         }
 
-        [self.primaryEncoder setEvent:nil];
-        self.primaryEncoder = nil;
-    }
-    else{
         
-        self.primaryEncoder = event.parentEncoder;
-        event.primary = true;
-        [self.primaryEncoder setEvent:event];
-        
-    }
 }
 
 
@@ -959,7 +974,8 @@ static void * statusContext         = &statusContext;
     
     if (theEvent.isBuilt){
     
-        NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+        //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+        NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
         NSString * savedFileName   =  [encoderSource lastPathComponent];
         DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
         dItemBlock(dli);
@@ -977,7 +993,8 @@ static void * statusContext         = &statusContext;
                 
             }
             theEvent.tags = [tagsBuilt copy];
-            NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+            //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+            NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
             NSString * savedFileName   =  [encoderSource lastPathComponent];
 
             DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
@@ -1843,6 +1860,19 @@ static void * statusContext         = &statusContext;
     
 }
 
+#pragma mark -
+#pragma Action Delegate Methods
+
+
+-(void)onSuccess:(id<ActionListItem>)actionListItem
+{
+    if (actionListItem == buildEventAction && eventBeingBuilt.isBuilt) {
+        buildEventAction            = nil;
+        eventBeingBuilt.delegate    = nil;
+        [self declareCurrentEvent:eventBeingBuilt];
+    
+    }
+}
 
 
 #pragma mark -

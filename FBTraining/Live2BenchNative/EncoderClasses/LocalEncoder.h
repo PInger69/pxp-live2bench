@@ -8,6 +8,8 @@
 
 #import "Encoder.h" // what ever is taken from this needs to be moved to the protocol
 #import "EncoderProtocol.h"
+#import "ActionListItem.h"
+
 @class Event;
 @class Clip;
 @class Tag;
@@ -18,7 +20,7 @@
  */
 
 
-@interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate>
+@interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate,ActionListItem>
 
 @property (nonatomic, weak)     EncoderManager          *encoderManager;
 @property (nonatomic,strong)    NSString                * name;
@@ -26,9 +28,13 @@
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;            // the current event the encoder is looking at
 @property (nonatomic,strong)    Event                   * liveEvent;
-@property (nonatomic,strong)    NSDictionary            * allEvents;        // all events on the encoder
+//@property (nonatomic,strong)    NSDictionary            * allEvents;        // all events on the encoder
 @property (nonatomic,strong)    NSMutableDictionary     * localTags;
 @property (nonatomic, strong)   NSString                *localPath;
+
+
+
+
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 
@@ -38,20 +44,27 @@
 
 
 #pragma mark - Bookmark Clip Methods
-@property (nonatomic,strong)    NSMutableDictionary * clips;    // This is all feeds kept on the device  key:<id> value:<Clip>
+//@property (nonatomic,strong)    NSMutableDictionary * clips;    // This is all feeds kept on the device  key:<id> value:<Clip>
 
 +(instancetype)getInstance;
 
 -(NSInteger)getBookmarkSpace;
--(NSString*)bookmarkPath;  // make readonly Props
--(NSString*)bookmarkedVideosPath; // make readonly Props
--(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData;//video file
--(void)deleteClip:(NSString*)aName;
+//-(NSString*)bookmarkPath;  // make readonly Props
+//-(NSString*)bookmarkedVideosPath; // make readonly Props
+//-(void)saveClip:(NSString*)aName withData:(NSDictionary*)tagData;//video file
+//-(void)deleteClip:(NSString*)aName;
 
 
--(NSString*)saveEvent:(Event*)aEvent;
--(void)deleteEvent:(Event*)aEvent;
--(Event*)getEventByName:(NSString*)eventName;
+//-(NSString*)saveEvent:(Event*)aEvent;
+//-(void)deleteEvent:(Event*)aEvent;
+//-(Event*)getEventByName:(NSString*)eventName;
 
+
+// ActionListItem Methods
+@property (nonatomic,assign) BOOL isFinished;
+@property (nonatomic,assign) BOOL isSuccess;
+@property (nonatomic,weak)  id <ActionListItemDelegate>  delegate;
+
+-(void)start;
 
 @end

@@ -374,6 +374,9 @@
 
 @synthesize isAlive;
 
+// ActionListItems
+@synthesize delegate,isFinished,isSuccess;
+
 
 -(id)initWithIP:(NSString*)ip
 {
@@ -444,6 +447,7 @@
     [self didChangeValueForKey:@"event"];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];
 }
 
 -(Event*)event
@@ -756,8 +760,8 @@
 
     // END SERVER IS DUMB
     
-    NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
-    //NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
+    //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
+    NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
     DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo];
     dItemBlock(dli);
     
@@ -772,8 +776,8 @@
     
          // we must now forge the results
             
-            [[LocalEncoder getInstance] saveClip:videoName withData:results];
-          //[[LocalEncoder getInstance] saveClip:videoName withData:results];
+            //[[LocalEncoder getInstance] saveClip:videoName withData:results];
+          [[LocalMediaManager getInstance] saveClip:videoName withData:results];
           //[_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
           }
      }];
@@ -1272,7 +1276,12 @@
             if (weakSelf.isMaster) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:weakSelf userInfo:nil];
          }];
     }
-    isWaitiing = NO;
+    isWaitiing  = NO;
+    isSuccess   = YES;
+    isFinished  = YES;
+    if (self.delegate) {
+        [self.delegate onSuccess:self];
+    }
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
 }
@@ -1290,6 +1299,11 @@
     PXPLog(@"  reason: %@ ",failType);
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:nil];//
+    isSuccess   = NO;
+    isFinished  = YES;
+    if (self.delegate) {
+        [self.delegate onFail:self];
+    }
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
 }
@@ -1951,6 +1965,16 @@
     _name = name;
     [self didChangeValueForKey:@"name"];
 }
+
+
+// ActionListItem Methods
+
+-(void)start
+{
+    isFinished = NO;
+}
+
+
 
 
 -(void)dealloc
