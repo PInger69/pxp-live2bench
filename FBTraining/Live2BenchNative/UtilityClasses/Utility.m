@@ -382,10 +382,16 @@
         NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
         NSString* ssid = [dict objectForKey:@"SSID"];
         //    NSLog(@"network name: %@",ssid);
+        if(!ssid){
+            ssid = @"Unavailable";
+        }
+        
         return ssid;
     }
     
-    return @"No Wifi";
+    
+    
+     return @"No Wifi";
 }
 
 +(NSString *) dateFromEvent: (NSString *) eventName{

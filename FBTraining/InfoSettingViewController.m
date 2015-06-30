@@ -55,6 +55,7 @@
         SwipeableTableViewCell *appVersion = cells[0];
         appVersion.myTextLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"App Version", nil)];
         [appVersion.functionalButton setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] forState:UIControlStateNormal];
+        
         self.appVersionCell = appVersion;
         
         SwipeableTableViewCell *sysVersion = cells[1];
@@ -78,6 +79,7 @@
         eula.myTextLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"EULA", nil)];
         [eula.functionalButton setTitle:NSLocalizedString(@"View", nil) forState:UIControlStateNormal];
         [eula.functionalButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        
         eula.functionalButton.enabled = YES;
         self.eulaCell = eula;
         
