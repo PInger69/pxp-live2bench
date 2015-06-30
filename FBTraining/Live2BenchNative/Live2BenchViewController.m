@@ -882,7 +882,19 @@ static void * eventContext      = &eventContext;
         // Close Duration Tag
         
         // Collect and mod tag data for close tag
-        Tag * tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
+        
+        Tag * tagToBeClosed;
+        if ([Tag getOpenTagByDurationId:button.durationID]) {
+            tagToBeClosed = [Tag getOpenTagByDurationId:button.durationID];
+        }else{
+            for (Tag *tag in _currentEvent.tags) {
+                if ([tag.name isEqualToString:button.titleLabel.text] && tag.type == TagTypeOpenDuration) {
+                    tagToBeClosed = tag;
+                }
+            }
+        }
+        
+        //tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
         NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed makeTagData]];
         
         [tagData setValue:[NSString stringWithFormat:@"%f",currentTime] forKey:@"closetime"];
