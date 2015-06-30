@@ -145,6 +145,7 @@
     } else if (!isOpen && _isOpen && self.mode == SideTagButtonModeToggle) {
         [self setHighlighted:false];
         self.durationID = nil; // clear id as soon as its finished closing
+        [self setSelected:false];
     }
     _isOpen = isOpen;
 }

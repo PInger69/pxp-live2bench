@@ -7,7 +7,7 @@
 //
 
 #import "Live2BenchTagUIViewController.h"
-#import "SideTagButton.h"
+
 #import "UserCenter.h"
 //#import "Globals.h"
 
@@ -26,6 +26,7 @@
     BOOL            maximized;
     NSMutableArray  * buttonList;
 }
+
 
 
 - (id)initWithSide:(NSString*)side buttonList:(NSMutableArray*)aButtonList;
@@ -182,7 +183,7 @@
 @synthesize topOffset                   = _topOffset;
 @synthesize state                       = _state;
 @synthesize fullScreenViewController    = _fullScreenViewController;
-
+@synthesize buttonState;
 
 -(id)initWithView:(UIView*)view
 {
@@ -498,12 +499,18 @@
 }*/
 
 -(void)setButtonState:(SideTagButtonModes)mode{
+//    if (self.buttonState == SideTagButtonModeToggle && mode == SideTagButtonModeRegular)
+//    {
+//        [self closeAllOpenTagButtons];
+//    }
+//    
+    
     for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
         for (SideTagButton * btn in list) {
             [btn setMode:mode];
         }
     }
-
+//    self.buttonState = mode;
 }
 
                        
@@ -645,6 +652,18 @@
         }
     }
 }*/
+
+-(void)closeAllOpenTagButtons
+{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.isOpen) {
+            [btn1 sendActionsForControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+
+}
+
 
 
 @end
