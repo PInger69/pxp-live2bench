@@ -309,6 +309,7 @@
 @synthesize masterEncoder           = _masterEncoder;
 @synthesize cloudEncoder            = _cloudEncoder;
 @synthesize localEncoder            = _localEncoder;
+@synthesize localMediaManager       = _localMediaManager;
 @synthesize primaryEncoder          = _primaryEncoder;
 
 #pragma mark - Encoder Manager Methods
@@ -342,6 +343,7 @@
         
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
         _localEncoder.encoderManager = self;
+        _localMediaManager      = [[LocalMediaManager alloc]initWithDocsPath:aLocalDocsPath];
         
         _currentEventType       = SPORT_HOCKEY;
         _searchForEncoders      = NO;
@@ -975,7 +977,8 @@ static void * statusContext         = &statusContext;
     
     if (theEvent.isBuilt){
     
-        NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+        //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+        NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
         NSString * savedFileName   =  [encoderSource lastPathComponent];
         DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
         dItemBlock(dli);
@@ -993,7 +996,8 @@ static void * statusContext         = &statusContext;
                 
             }
             theEvent.tags = [tagsBuilt copy];
-            NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+            //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
+            NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
             NSString * savedFileName   =  [encoderSource lastPathComponent];
 
             DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];

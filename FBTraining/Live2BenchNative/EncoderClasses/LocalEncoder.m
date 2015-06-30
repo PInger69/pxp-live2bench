@@ -24,7 +24,7 @@
 #import "Clip.h"
 #import "Tag.h"
 #import "UserCenter.h"
-
+#import "LocalMediaManager.h"
 
 
 #define LOCAL_PLIST     @"EventsHid.plist"
@@ -46,20 +46,18 @@
 static LocalEncoder * instance;
 @implementation LocalEncoder
 {
-    NSString        * _localDocsPListPath;
-    //NSString        * _localPath;
-    NSMutableArray  * _bookmarkPlistNames;
-    NSComparisonResult(^plistSort)(id obj1, id obj2);
+    //NSString        * _localDocsPListPath;
+    //NSMutableArray  * _bookmarkPlistNames;
+    //NSComparisonResult(^plistSort)(id obj1, id obj2);
     NSMutableArray  * tagSyncConnections;
-    //NSURLDataConnection *tagSyncConnection;
     NSURLDataConnection *encoderConnection;
 }
 
 @synthesize name            = _name;
 @synthesize event           = _event;
 @synthesize status          = _status;
-@synthesize allEvents       = _allEvents;
-@synthesize clips           = _clips;
+//@synthesize allEvents       = _allEvents;
+//@synthesize clips           = _clips;
 
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
@@ -78,16 +76,16 @@ static LocalEncoder * instance;
         
         // Build Local Encoder
         _name                           = @"Local Encoder";
-        _localPath                      = aDocsPath;
-        _localDocsPListPath             = [aDocsPath stringByAppendingPathComponent:LOCAL_PLIST];// if its not there make it
+         _localPath                      = aDocsPath;
+        //_localDocsPListPath             = [aDocsPath stringByAppendingPathComponent:LOCAL_PLIST];// if its not there make it
         _status                         = ENCODER_STATUS_LOCAL;
         _event                          = nil;
-        _clips                          = [[NSMutableDictionary alloc]init];
-        _allEvents                      = [[NSMutableDictionary alloc] init];
+        //_clips                          = [[NSMutableDictionary alloc]init];
+        //_allEvents                      = [[NSMutableDictionary alloc] init];
         _localTags                      = [[NSMutableDictionary alloc] init];
         tagSyncConnections              = [NSMutableArray array];
         
-        // build folder structue if not there
+       /* // build folder structue if not there
         
         BOOL isDir = NO;
         
@@ -139,11 +137,13 @@ static LocalEncoder * instance;
                 
                 [anEvent setTags:newTags];
                 
-                [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
+                [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed*/
                 
                 [self.localTags addEntriesFromDictionary:self.event.localTags];
-            }
+            /*}
         }
+        
+    
         
         NSMutableArray *localTempPool = [[NSMutableArray alloc]init];
         NSArray *localplishPaths = [self grabAllFiles:_localPath ext:@"plist"];
@@ -167,16 +167,16 @@ static LocalEncoder * instance;
                 [self.localTags addEntriesFromDictionary:finalLocalTags];
             }
             
-        }
+        }*/
         
         
         
         
         
         
-        /**
+        /*
          Book mark Section!!!
-         */
+         
         
         // this gets all the plists for the book marks
         NSMutableArray  * tempPoolClips      = [[NSMutableArray alloc]init];
@@ -244,15 +244,15 @@ static LocalEncoder * instance;
             if (localCounterpart) {
                 [self deleteEvent:localCounterpart];
             }
-        }];
+        }];*/
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REQUEST_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
+        /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REQUEST_CLIPS object:nil queue:nil usingBlock:^(NSNotification *note){
             void(^blockName)(NSArray *clips) = note.object;
             blockName([self.clips allValues]);
         }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkEncoder) name:NOTIF_EM_FOUND_MASTER object:nil];
-        //[self checkLocalTags];
+        //[self checkLocalTags];*/
         instance = self;
     }
     return self;
@@ -705,7 +705,7 @@ static LocalEncoder * instance;
 
 
 
--(NSString*)bookmarkPath
+/*-(NSString*)bookmarkPath
 {
     return [NSString stringWithFormat:@"%@/bookmark",_localPath];
 }
@@ -716,10 +716,10 @@ static LocalEncoder * instance;
 }
 
 
-/**
+ *
  *  This get all the plists in the bookmark folder on the device
  *  the plists are labeled as such 1.plist, 2.plist, 3.plist...
- */
+ 
 -(void)scanForBookmarks
 {
     [_bookmarkPlistNames removeAllObjects];
@@ -755,7 +755,7 @@ static LocalEncoder * instance;
     
 }
 
-/**
+*
  *  Grabs all files from a directory with and extention 
  *  will create a directory if its not there
  *
@@ -763,7 +763,7 @@ static LocalEncoder * instance;
  *  @param ext   <#ext description#>
  *
  *  @return <#return value description#>
- */
+ 
 -(NSArray*)grabAllFiles:(NSString*)aPath ext:(NSString*)ext
 {
     
@@ -788,7 +788,7 @@ static LocalEncoder * instance;
     }];
     
     return [files copy];
-}
+}*/
 
 
 /**
@@ -805,7 +805,7 @@ static LocalEncoder * instance;
 
 
 
-#pragma mark - Bookmark Clip Methods
+/*#pragma mark - Bookmark Clip Methods
 
 -(Event*)getEventByName:(NSString*)eventName
 {
@@ -823,12 +823,12 @@ static LocalEncoder * instance;
 }
 
 
-/**
+*
  *  This saves the clip. This method only saves one source at a time
  *
  *  @param aName   !!! This name has to change
  *  @param tagData the data for the raw clip
- */
+ 
 -(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData
 {
     
@@ -888,13 +888,13 @@ static LocalEncoder * instance;
 
 
 
-/**
+*
  *  This saves sent Events by taking the raw data and then making a dir to store the videos and then writes the plist
  *
  *  @param aEvent Event to Save as plist
  *
  *  @return returns path of folder to save the videos
- */
+ 
 -(NSString*)saveEvent:(Event*)aEvent
 {
     // This gets the path and makes a DIR if its not there
@@ -922,7 +922,7 @@ static LocalEncoder * instance;
     [allEventsMutable setObject:anEvent forKey:anEvent.hid];
     _allEvents = [allEventsMutable copy];
     return aPath;
-}
+}*/
 
 
 
@@ -934,7 +934,7 @@ static LocalEncoder * instance;
 -(void)deleteEvent:(Event*)aEvent
 {
     
-    if (aEvent == nil || !aEvent.local) {
+    /*if (aEvent == nil || !aEvent.local) {
         NSLog(@"CAN NOT DELETE NON LOCAL EVENTS");
         return;
     }
@@ -950,8 +950,10 @@ static LocalEncoder * instance;
     
     _allEvents = [temp copy];
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_MEMORY object:nil];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_MEMORY object:nil];*/
     
+    
+    [[LocalMediaManager getInstance] deleteEvent:aEvent];
     // This is run when the current playing event is deleted
     if (_event == aEvent){
         _event = nil;
@@ -959,7 +961,7 @@ static LocalEncoder * instance;
     }
 }
 
--(int)gap:(NSArray*)list first:(int)first last:(int)last
+/*-(int)gap:(NSArray*)list first:(int)first last:(int)last
 {
     // if there is nothing in the list
     if ([list count] <1){
@@ -981,13 +983,13 @@ static LocalEncoder * instance;
 }
 
 
-/**
+*
  *  Validate clip names
  *
  *  @param check file name
  *
  *  @return is valid
- */
+ 
 -(BOOL)myClipPlistNameCheck:(NSString*)check
 {
     // Regx
@@ -1020,7 +1022,7 @@ static LocalEncoder * instance;
         [collection addObject:[dlFileNames lastPathComponent]];
     }
     return [collection copy];
-}
+}*/
 
 // ActionListItem Methods
 

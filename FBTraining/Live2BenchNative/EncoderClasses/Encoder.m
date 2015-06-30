@@ -760,8 +760,8 @@
 
     // END SERVER IS DUMB
     
-    NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
-    //NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
+    //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
+    NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
     DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo];
     dItemBlock(dli);
     
@@ -776,8 +776,8 @@
     
          // we must now forge the results
             
-            [[LocalEncoder getInstance] saveClip:videoName withData:results];
-          //[[LocalEncoder getInstance] saveClip:videoName withData:results];
+            //[[LocalEncoder getInstance] saveClip:videoName withData:results];
+          [[LocalMediaManager getInstance] saveClip:videoName withData:results];
           //[_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
           }
      }];

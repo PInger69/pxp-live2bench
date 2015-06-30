@@ -261,6 +261,7 @@ static void * eventContext      = &eventContext;
 
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+        [_tagButtonController allToggleOnOpenTags:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         [self displayLable];
@@ -380,6 +381,7 @@ static void * eventContext      = &eventContext;
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
+        //[self switchPressed];
         //_tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];

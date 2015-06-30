@@ -251,6 +251,7 @@
 		D786C24617F39F3F0042DD96 /* IconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D786C24517F39F3F0042DD96 /* IconButton.m */; };
 		D786C24817F3A6E30042DD96 /* TaggingString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D786C24717F3A6E30042DD96 /* TaggingString.txt */; };
 		D786C24A17F483F10042DD96 /* ContactString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D786C24917F483F10042DD96 /* ContactString.txt */; };
+		D788262D1B42D9D400969D43 /* LocalMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D788262C1B42D9D400969D43 /* LocalMediaManager.m */; };
 		D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F68B4180736820096C793 /* UIImage+animatedGIF.m */; };
 		D78F68C618073DC70096C793 /* GreenSettingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D78F68B618073DC70096C793 /* GreenSettingsButton@2x.png */; };
 		D78F68C718073DC70096C793 /* GreenSettingsButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D78F68B718073DC70096C793 /* GreenSettingsButton.png */; };
@@ -811,6 +812,8 @@
 		D786C24517F39F3F0042DD96 /* IconButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconButton.m; sourceTree = "<group>"; };
 		D786C24717F3A6E30042DD96 /* TaggingString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TaggingString.txt; sourceTree = "<group>"; };
 		D786C24917F483F10042DD96 /* ContactString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContactString.txt; sourceTree = "<group>"; };
+		D788262B1B42D9D400969D43 /* LocalMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalMediaManager.h; sourceTree = "<group>"; };
+		D788262C1B42D9D400969D43 /* LocalMediaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalMediaManager.m; sourceTree = "<group>"; };
 		D78F68B3180736810096C793 /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		D78F68B4180736820096C793 /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 		D78F68B618073DC70096C793 /* GreenSettingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenSettingsButton@2x.png"; sourceTree = "<group>"; };
@@ -1683,6 +1686,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D788262B1B42D9D400969D43 /* LocalMediaManager.h */,
+				D788262C1B42D9D400969D43 /* LocalMediaManager.m */,
 				D7652C4F1B39C40A006B46E3 /* SideTagButton.h */,
 				D7652C501B39C40A006B46E3 /* SideTagButton.m */,
 				D7C931021B320CB000E725B9 /* ListViewFullScreenViewController.h */,
@@ -2576,6 +2581,7 @@
 				D7C5F38119BF894A008190CE /* ScreenController.m in Sources */,
 				AECF63211B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m in Sources */,
 				D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */,
+				D788262D1B42D9D400969D43 /* LocalMediaManager.m in Sources */,
 				AA0FED2C19589951001D25EB /* ClipSharePopoverViewController.m in Sources */,
 				D72779901A30C8120034DD66 /* CloudEncoder.m in Sources */,
 				D7581F2C196461ED0029C5DD /* drawXYZ.m in Sources */,

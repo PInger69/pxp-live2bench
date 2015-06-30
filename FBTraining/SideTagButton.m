@@ -34,7 +34,7 @@
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         
         self.mode = SideTagButtonModeDisable;
-        [self setEnabled:false];
+        [self setEnabled:true];
 
     }
     return self;

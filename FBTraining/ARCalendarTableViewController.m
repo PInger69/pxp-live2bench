@@ -219,7 +219,8 @@
         collapsableCell.downloadButton.enabled = YES;
         NSString *name = event.name;
         
-        Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:name];
+        //Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:name];
+        Event *localCounterpart = [[LocalMediaManager getInstance] getEventByName:name];
         
         [collapsableCell positionWithFrame:CGRectMake(0, 0, 518, 40)];
         __block ARCalendarTableViewController *weakSelf = self;
@@ -382,7 +383,8 @@
     }else{
         event = self.tableData[indexPath.row];
     }
-    Event *localOne = [self.encoderManager.localEncoder getEventByName:event.name];
+    //Event *localOne = [self.encoderManager.localEncoder getEventByName:event.name];
+    Event *localOne = [[LocalMediaManager getInstance] getEventByName:event.name];
     
     [cell isSelected:NO];
     if ([self.arrayOfSelectedEvent containsObject:event.name]) {
@@ -445,7 +447,8 @@
         Event *event = self.tableData[indexPath.row];
 //        NSString *dateString = event.date;
         
-        Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
+        //Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:event.name];
+        Event *localCounterpart = [[LocalMediaManager getInstance] getEventByName:event.name];
         CustomAlertView *alert = [[CustomAlertView alloc] init];
         alert.type = AlertImportant;
         [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];

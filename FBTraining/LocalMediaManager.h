@@ -1,0 +1,28 @@
+//
+//  LocalMediaManager.h
+//  Live2BenchNative
+//
+//  Created by dev on 2015-06-30.
+//  Copyright © 2015 DEV. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "Event.h"
+
+@interface LocalMediaManager : NSObject
+
+@property (nonatomic,strong)    NSString                * name;
+@property (nonatomic, strong)   NSString                *localPath;
+@property (nonatomic,strong)    NSDictionary            * allEvents;
+@property (nonatomic,strong)    NSMutableDictionary * clips;    // This is all feeds kept on the device  key:<id> value:<Clip>
+
++(instancetype)getInstance;
+-(id)initWithDocsPath:(NSString*)aDocsPath;
+-(void)deleteEvent:(Event*)aEvent;
+-(NSString*)saveEvent:(Event*)aEvent;
+-(NSString*)bookmarkedVideosPath;
+-(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData;
+-(Event*)getEventByName:(NSString*)eventName;
+
+
+@end

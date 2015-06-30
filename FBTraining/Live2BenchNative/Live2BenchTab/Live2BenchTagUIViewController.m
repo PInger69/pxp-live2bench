@@ -603,6 +603,7 @@
 
 }
 
+// add the observer to the current event so when we receive the open duration tag all the buttons would be enable again
 -(void)onEventChange:(Event*)event
 {
     if (_currentEvent) {
@@ -617,6 +618,7 @@
     }
 }
 
+// diable user interaction for all the side button until we receive the open duration tag from the server
 -(void)disEnableButton
 {
     NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
@@ -628,6 +630,7 @@
     
 }
 
+// enable all the buttons again
 -(void)enableButton:(NSNotification*)note
 {
      NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
@@ -638,7 +641,9 @@
     }
 }
 
--(void)unHighlightButton:(SideTagButton *)button
+
+
+/*-(void)unHighlightButton:(SideTagButton *)button
 {
     NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
     for (SideTagButton * btn1 in tempList){
@@ -646,7 +651,7 @@
             btn1.highlighted = false;
         }
     }
-}
+}*/
 
 -(void)closeAllOpenTagButtons
 {
