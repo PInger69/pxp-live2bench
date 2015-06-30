@@ -1873,6 +1873,12 @@ static void * statusContext         = &statusContext;
     }
 }
 
+-(void)onFail:(id<ActionListItem>)actionListItem
+{
+    // too bad so sad
+}
+
+ 
 
 #pragma mark -
 #pragma Action Methods
