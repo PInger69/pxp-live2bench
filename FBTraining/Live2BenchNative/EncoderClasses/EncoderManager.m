@@ -718,7 +718,7 @@ static void * statusContext         = &statusContext;
     
     // If there is no exteral events check the local
     if (!event){
-        collection = [NSMutableArray arrayWithArray:[self.localEncoder.allEvents allValues]];
+        collection = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].allEvents allValues]];
         
         for (Event * evt in collection) {
             if ([evt.hid isEqualToString:eventHID]) {
@@ -740,7 +740,8 @@ static void * statusContext         = &statusContext;
         }
     }
     
-    return [self.localEncoder getEventByName:eventName];
+    //return [self.localEncoder getEventByName:eventName];
+    return [[LocalMediaManager getInstance] getEventByName:eventName];
 }
 
 -(void)makeFakeEncoder
