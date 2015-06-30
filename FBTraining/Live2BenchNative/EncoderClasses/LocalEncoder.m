@@ -27,9 +27,8 @@
 #import "LocalMediaManager.h"
 
 
-#define LOCAL_PLIST  @"EventsHid.plist"
-#define VIDEO_EXT    @"mp4"
-
+#define LOCAL_PLIST     @"EventsHid.plist"
+#define VIDEO_EXT       @"mp4"
 #define TAG_SYNC        1
 #define TAG_UPLOAD      2
 

@@ -372,11 +372,13 @@
             if (weakSelf.masterEncoder == ((Encoder*) note.object).liveEvent.parentEncoder) {
                  // add code here to let the app know if its the only event and to push the app to live2Bench
                 if (!weakSelf.primaryEncoder || (weakSelf.primaryEncoder && ![weakSelf.primaryEncoder event]) || weakSelf.masterEncoder.pressingStart) {
-                    
+                    if (!weakSelf.primaryEncoder) {
+                        weakSelf.primaryEncoder = weakSelf.masterEncoder;
+                    }
                     weakSelf.masterEncoder.pressingStart = false;
                     [weakSelf declareCurrentEvent:weakSelf.liveEvent];
                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
-                    //this moves over to the Live to bench tab
+
                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 }
             
@@ -573,6 +575,7 @@ static void * statusContext         = &statusContext;
                 self.primaryEncoder = event.parentEncoder;
                 event.primary = true;
                 [self.primaryEncoder setEvent:event];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:event];
             } else {
                 eventBeingBuilt = event;
                 buildEventAction = (id <ActionListItem>) eventBeingBuilt.parentEncoder;
