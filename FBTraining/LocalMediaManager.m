@@ -84,6 +84,7 @@ static LocalMediaManager * instance;
                 Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
                 anEvent.parentEncoder       = [LocalEncoder getInstance];
                     anEvent.local               = YES;
+                    anEvent.isBuilt             = YES;
                     anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                     
                     NSArray *tags    = [anEvent.rawData[@"tags"] allValues];

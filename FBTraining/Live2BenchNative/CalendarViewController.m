@@ -14,6 +14,7 @@
 #import "ARCalendarTableViewController.h"
 #import "UserCenter.h"
 #import "Utility.h"
+#import "LocalMediaManager.h"
 
 @interface CalendarViewController ()
 
@@ -48,7 +49,8 @@
             if (_appDel.encoderManager.masterEncoder) {
                 [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];
             } else {
-                [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+                [temp addObjectsFromArray:[[[[LocalMediaManager getInstance]allEvents] allValues] mutableCopy]];
+//                [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
             }
             NSMutableArray *liveEvents = [NSMutableArray array];
             for (Event *event in temp) {
@@ -132,7 +134,8 @@
     if (_appDel.encoderManager.masterEncoder) {
         [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];
     } else {
-        [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+          [temp addObjectsFromArray:[[[[LocalMediaManager getInstance]allEvents] allValues] mutableCopy]];
+//        [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
     }
     NSMutableArray *liveEvents = [NSMutableArray array];
     for (Event *event in temp) {

@@ -32,7 +32,7 @@
 @property (assign,nonatomic) CGFloat                            gap;
 @property (assign,nonatomic) CGFloat                            topOffset;
 @property (strong,nonatomic) NSString                           * state;
-@property (assign,nonatomic) SideTagButtonModes                 buttonState;
+@property (assign,nonatomic) SideTagButtonModes                 buttonStateMode;
 @property (strong,nonatomic) FullScreenViewController           * fullScreenViewController;
 @property (strong,nonatomic) PlayerCollectionViewController     * playerCollectionViewController;         //it will show up when swiping tag button;Its view contains all the player buttons
 
