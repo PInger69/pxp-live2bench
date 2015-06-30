@@ -183,7 +183,7 @@
 @synthesize topOffset                   = _topOffset;
 @synthesize state                       = _state;
 @synthesize fullScreenViewController    = _fullScreenViewController;
-@synthesize buttonState;
+@synthesize buttonStateMode;
 
 -(id)initWithView:(UIView*)view
 {
@@ -202,6 +202,7 @@
         _state              = STATE_SMALLSCREEN;
         _leftTray           = [[Tray alloc]initWithSide:@"left" buttonList:tagButtonsLeft];
         _rightTray          = [[Tray alloc]initWithSide:@"right" buttonList:tagButtonsRight];
+        self.buttonStateMode    = SideTagButtonModeDisable;
     }
 
     return self;
@@ -499,18 +500,18 @@
 }*/
 
 -(void)setButtonState:(SideTagButtonModes)mode{
-//    if (self.buttonState == SideTagButtonModeToggle && mode == SideTagButtonModeRegular)
-//    {
-//        [self closeAllOpenTagButtons];
-//    }
-//    
+    if (self.buttonStateMode == SideTagButtonModeToggle && mode == SideTagButtonModeRegular)
+    {
+        [self closeAllOpenTagButtons];
+    }
+    
     
     for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
         for (SideTagButton * btn in list) {
             [btn setMode:mode];
         }
     }
-//    self.buttonState = mode;
+    self.buttonStateMode = mode;
 }
 
                        
