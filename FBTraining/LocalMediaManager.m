@@ -62,7 +62,8 @@ static LocalMediaManager * instance;
         
         if ( !isDir2){
             [[NSFileManager defaultManager] createDirectoryAtPath:[self bookmarkedVideosPath] withIntermediateDirectories:YES attributes:nil error:NULL];
-
+        }
+        
         // Build Bookmark Clip sections
         [self scanForBookmarks];
         
@@ -83,6 +84,7 @@ static LocalMediaManager * instance;
                 Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
                 anEvent.parentEncoder       = [LocalEncoder getInstance];
                     anEvent.local               = YES;
+                    anEvent.isBuilt             = YES;
                     anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                     
                     NSArray *tags    = [anEvent.rawData[@"tags"] allValues];
@@ -198,8 +200,7 @@ static LocalMediaManager * instance;
         
         instance = self;
         }
-    }
-    return self;
+        return self;
 }
     
 -(NSString*)bookmarkPath
