@@ -252,8 +252,8 @@
         } else if (aDict[@"vid"] || aDict[@"mp4"]) {
             theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"]] :  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0]  ;
         } else {
-            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
-            PXPLog(@"   HID: %@",aDict[@"hid"]);
+//            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
+//            PXPLog(@"   HID: %@",aDict[@"hid"]);
             return @{};
         }
         [tempDict setObject:theFeed forKey:@"s1"];
@@ -330,8 +330,8 @@
         } else if (aDict[@"vid"]) {
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0];
         } else {
-            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
-            PXPLog(@"   HID: %@",aDict[@"hid"]);
+//            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
+//            PXPLog(@"   HID: %@",aDict[@"hid"]);
             return @{};
         }
         [tempDict setObject:theFeed forKey:@"s1"];

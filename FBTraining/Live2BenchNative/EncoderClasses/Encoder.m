@@ -1453,6 +1453,7 @@
 -(void)getEventTags:(NSData *)data extraData:(NSDictionary *)extra
 {
     NSString * type = extra[@"type"];
+    
     Event * checkEvent = ([type isEqualToString:EVENT_GET_TAGS])?[self.allEvents objectForKey:extra[@"event"]]:nil ;
     
     NSDictionary    * results =[Utility JSONDatatoDict:data];
@@ -1829,6 +1830,7 @@
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
                         [pool setObject:anEvent forKey:anEvent.name];
+                        [pool setObject:anEvent forKey:LIVE_EVENT];
                         self.allEvents      = [pool copy];
                         if (/*_justStarted &&*/ _status == ENCODER_STATUS_LIVE) {
                             _justStarted = false;
