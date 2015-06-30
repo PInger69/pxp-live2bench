@@ -261,6 +261,7 @@ static void * eventContext      = &eventContext;
 
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+        [self turnSwitchOn];
         [_tagButtonController allToggleOnOpenTags:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
@@ -977,6 +978,16 @@ static void * eventContext      = &eventContext;
     }
 }
 
+-(void) turnSwitchOn
+{
+    for (Tag *tag in _currentEvent.tags) {
+        if (tag.type == TagTypeOpenDuration) {
+            [durationSwitch setOn:YES];
+            [self switchPressed];
+            return;
+        }
+    }
+}
 
 - (void)didReceiveMemoryWarning
 {
