@@ -7,6 +7,7 @@
 //
 
 #import "FeedSwitchView.h"
+
 #define FEEDS @"feeds"
 #define PRIMARY_COLOR   PRIMARY_APP_COLOR
 #define SECONDARY_COLOR [UIColor darkGrayColor]
@@ -26,6 +27,7 @@
     NSMutableDictionary * _buttonToFeedDict;
     CGSize              _buttonSize;
     BOOL                _secondarySelected;
+    Event               * currentEvent;
 }
 
 @synthesize primaryPosition     = _primaryPosition;
@@ -33,22 +35,29 @@
 @synthesize buttonArray         = _buttonArray;
 @synthesize buttonDict          = _buttonDict;
 
+
 -(id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _buttonArray         = [[NSMutableArray alloc]init];
-        _primaryPosition     = 0;
-        _secondaryPosition   = -1;
-        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:encoderManager];
-        _buttonSize          = CGSizeMake(frame.size.width, frame.size.height);
-        _secondarySelected   = NO;
+        _buttonArray        = [[NSMutableArray alloc]init];
+        _primaryPosition    = 0;
+        _secondaryPosition  = -1;
+        _buttonToFeedDict   = [[NSMutableDictionary alloc]init];
+        _buttonDict         = [[NSMutableDictionary alloc]init];
+        _buttonSize         = CGSizeMake(frame.size.width, frame.size.height);
+        _secondarySelected  = NO;
+
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMovmentCheck:)       name:NOTIF_MOTION_ALARM object:nil];
+        
+//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange:)       name:NOTIF_EVENT_CHANGE object:nil];
+        
         
     }
     return self;
-
-
 }
+
+
 
 -(id)initWithFrame:(CGRect)frame encoderManager:(EncoderManager*)encoderManager
 {
@@ -84,12 +93,18 @@
         _buttonDict         = [[NSMutableDictionary alloc]init];
         _buttonSize         = CGSizeMake(frame.size.width, frame.size.height);
         _secondarySelected  = NO;
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:nil];
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEncoderCountChange:) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMovmentCheck:)       name:NOTIF_MOTION_ALARM object:nil];
     }
     return self;
 }
+
+
+-(void)watchCurrentEvent:(Event*)aEvent
+{
+    [self clear];
+    currentEvent = aEvent;
+    [self buildButtonsWithData:aEvent.feeds];
+}
+
 
 -(void)onMovmentCheck:(NSNotification*)note
 {
@@ -113,19 +128,12 @@
 }
 
 
--(void)onEncoderCountChange:(NSNotification*)note
-{
-
-
-}
-
-
--(void)onEventChange:(NSNotification*)note
-{
-    [self clear];
-    [self buildButtonsWithData:_encoderManager.feeds];
-    
-}
+//-(void)onEventChange:(NSNotification*)note
+//{
+//    [self clear];
+//    [self buildButtonsWithData:currentEvent.feeds];
+//    
+//}
 
 
 /**

@@ -33,6 +33,8 @@
 +(UIColor*)ligherColorOf:(UIColor*)color;
 +(UIColor*)darkerColorOf:(UIColor*)color;
 
++(NSString *)getIPAddress;
++(BOOL)hasWiFi;
 @end
 
 

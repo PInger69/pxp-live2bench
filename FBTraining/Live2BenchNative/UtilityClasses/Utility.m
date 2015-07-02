@@ -15,6 +15,10 @@
 #import <SystemConfiguration/CaptiveNetwork.h>
 #import "sys/socket.h"
 #import "netinet/in.h"
+#import <ifaddrs.h>
+#import <arpa/inet.h>
+
+
 
 @implementation Utility
 
@@ -454,6 +458,97 @@
                                alpha:a];
     return nil;
 }
+
+
+
++(NSString *)getIPAddress {
+    NSString *address = @"error";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    // retrieve the current interfaces - returns 0 on success
+    success = getifaddrs(&interfaces);
+    if (success == 0) {
+        // Loop through linked list of interfaces
+        temp_addr = interfaces;
+        while(temp_addr != NULL) {
+            if(temp_addr->ifa_addr->sa_family == AF_INET) {
+                // Check if interface is en0 which is the wired connection on a simulator, en1 - wifi on the simulator, or lo0 - wifi on an iPad
+                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"] ||
+                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en1"] ||
+                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"lo0"]) {
+                    // Get NSString from C String
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                }
+            }
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    // Free memory
+    freeifaddrs(interfaces);
+    return address;
+    
+}
+
+
++(BOOL)hasWiFi
+{
+    struct sockaddr_in zeroAddress;
+    bzero(&zeroAddress, sizeof(zeroAddress));
+    zeroAddress.sin_len = sizeof(zeroAddress);
+    zeroAddress.sin_family = AF_INET;
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)&zeroAddress);
+    if(reachability != NULL) {
+        //NetworkStatus retVal = NotReachable;
+        SCNetworkReachabilityFlags flags;
+        if (SCNetworkReachabilityGetFlags(reachability, &flags)) {
+            if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
+            {
+                // if target host is not reachable
+                CFRelease(reachability);
+                return NO;
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
+            {
+                // if target host is reachable and no connection is required
+                //  then we'll assume (for now) that your on Wi-Fi
+                CFRelease(reachability);
+                return YES;
+            }
+            
+            
+            if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
+                 (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
+            {
+                // ... and the connection is on-demand (or on-traffic) if the
+                //     calling application is using the CFSocketStream or higher APIs
+                
+                if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
+                {
+                    // ... and no [user] intervention is needed
+                    CFRelease(reachability);
+                    return YES;
+                }
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0)
+            {
+                // ... but WWAN connections are OK if the calling application
+                //     is using the CFNetwork (CFSocketStream?) APIs.
+                CFRelease(reachability);
+                return YES;
+            }
+        }
+    }
+    
+    CFRelease(reachability);
+    return NO;
+    
+    //    return [uController hasConnectivity];
+}
+
 
 
 @end

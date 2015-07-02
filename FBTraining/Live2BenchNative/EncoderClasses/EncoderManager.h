@@ -15,6 +15,8 @@
 #import "EncoderCommander.h"
 #import "ActionListItemDelegate.h"
 #import "LocalMediaManager.h"
+#import "BonjourModule.h"
+
 
 @class Encoder;
 
@@ -33,7 +35,9 @@
 #define SUMMARY_TYPE_EVENT  @"game"
 
 
-@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate,ActionListItemDelegate>
+@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate,ActionListItemDelegate,BonjourModuleDelegate>
+
+@property (nonatomic,strong)            BonjourModule           * bonjourModule;
 
 
 @property (nonatomic,assign)            BOOL                    hasInternet;
@@ -52,6 +56,7 @@
 @property (nonatomic,strong,readonly)   NSDictionary            * currentEventData; // like sport or medical
 @property (nonatomic,strong)            NSMutableDictionary     * openDurationTags;
 @property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
+
 
 
 @property (nonatomic,weak)              Event                   * liveEvent;

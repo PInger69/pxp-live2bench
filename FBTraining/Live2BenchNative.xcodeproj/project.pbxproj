@@ -103,6 +103,7 @@
 		D700801B19DF2456000144CF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D700801A19DF2456000144CF /* Utility.m */; };
 		D700F9061B011550008152E8 /* FakeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D700F9051B011550008152E8 /* FakeEncoder.m */; };
 		D706AC961B2735610091C02C /* CameraDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = D706AC951B2735610091C02C /* CameraDetails.m */; };
+		D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D70E21651B434E2600F6C1D5 /* BonjourModule.m */; };
 		D70FBA3C17FE0DFA00B606CF /* EulaModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD9BC31317EB4855001B67DE /* EulaModalViewController.m */; };
 		D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */; };
 		D70FBA4C17FF7A1E00B606CF /* DownloadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D70FBA4B17FF7A1E00B606CF /* DownloadButton.m */; };
@@ -562,6 +563,8 @@
 		D700F9051B011550008152E8 /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FakeEncoder.m; path = Live2BenchNative/EncoderClasses/FakeEncoder.m; sourceTree = "<group>"; };
 		D706AC941B2730980091C02C /* CameraDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraDetails.h; sourceTree = "<group>"; };
 		D706AC951B2735610091C02C /* CameraDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraDetails.m; sourceTree = "<group>"; };
+		D70E21641B434E2600F6C1D5 /* BonjourModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourModule.h; path = Live2BenchNative/EncoderClasses/BonjourModule.h; sourceTree = "<group>"; };
+		D70E21651B434E2600F6C1D5 /* BonjourModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourModule.m; path = Live2BenchNative/EncoderClasses/BonjourModule.m; sourceTree = "<group>"; };
 		D70F5CEA1B3DFEEE004353FD /* Live2BenchNative copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Live2BenchNative copy-Info.plist"; path = "/Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative copy-Info.plist"; sourceTree = "<absolute>"; };
 		D70FBA3D17FE0E3600B606CF /* PlayerCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerCollectionViewController.h; sourceTree = "<group>"; };
 		D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCollectionViewController.m; sourceTree = "<group>"; };
@@ -1686,6 +1689,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D70E21641B434E2600F6C1D5 /* BonjourModule.h */,
+				D70E21651B434E2600F6C1D5 /* BonjourModule.m */,
 				D788262B1B42D9D400969D43 /* LocalMediaManager.h */,
 				D788262C1B42D9D400969D43 /* LocalMediaManager.m */,
 				D7652C4F1B39C40A006B46E3 /* SideTagButton.h */,
@@ -2724,6 +2729,7 @@
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
+				D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */,
 				D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
