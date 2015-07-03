@@ -34,7 +34,7 @@
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         
         self.mode = SideTagButtonModeDisable;
-        [self setEnabled:true];
+        [self setEnabled:false];
 
     }
     return self;
@@ -51,6 +51,7 @@
 {
     [super setEnabled:enabled];
     if (enabled) {
+        [[self layer] setBorderColor:self.tintColor.CGColor];
         [self setAlpha:1.0];
         
     }else if(!enabled){
@@ -144,6 +145,7 @@
     } else if (!isOpen && _isOpen && self.mode == SideTagButtonModeToggle) {
         [self setHighlighted:false];
         self.durationID = nil; // clear id as soon as its finished closing
+        [self setSelected:false];
     }
     _isOpen = isOpen;
 }

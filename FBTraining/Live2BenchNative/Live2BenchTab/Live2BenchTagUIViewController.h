@@ -12,7 +12,7 @@
 #import "FullScreenViewController.h"
 #import "PlayerCollectionViewController.h"
 #import "OverlayViewController.h"
-
+#import "SideTagButton.h"
 #define STATE_FULLSCREEN @"fullscreen"
 #define STATE_SMALLSCREEN @"smallscreen"
 
@@ -32,6 +32,7 @@
 @property (assign,nonatomic) CGFloat                            gap;
 @property (assign,nonatomic) CGFloat                            topOffset;
 @property (strong,nonatomic) NSString                           * state;
+@property (assign,nonatomic) SideTagButtonModes                 buttonStateMode;
 @property (strong,nonatomic) FullScreenViewController           * fullScreenViewController;
 @property (strong,nonatomic) PlayerCollectionViewController     * playerCollectionViewController;         //it will show up when swiping tag button;Its view contains all the player buttons
 
@@ -53,5 +54,6 @@
 -(void)onEventChange:(Event*)event;
 -(void)disEnableButton;
 -(void)unHighlightButton:(SideTagButton *)button;
+-(void)closeAllOpenTagButtons;
 
 @end

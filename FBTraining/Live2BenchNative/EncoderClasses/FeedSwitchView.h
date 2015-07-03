@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "EncoderManager.h"
 #import "Pip.h"
+#import "Event.h"
 
 @interface FeedSwitchView : UIView
 
@@ -18,6 +19,7 @@
 @property (nonatomic,assign) NSUInteger             primaryPosition;
 @property (nonatomic,assign) NSUInteger             secondaryPosition;
 
+-(id)initWithFrame:(CGRect)frame;
 
 -(id)initWithFrame:(CGRect)frame encoderManager:(EncoderManager*)encoderManager;
 
@@ -37,5 +39,8 @@
 -(BOOL)secondarySelected;
 -(void)clear;
 -(void)setPrimaryPositionByName:(NSString*)btnName;
+
+
+-(void)watchCurrentEvent:(Event*)aEvent;
 
 @end

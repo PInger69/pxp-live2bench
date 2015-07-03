@@ -7,7 +7,7 @@
 //
 
 #import "Live2BenchTagUIViewController.h"
-#import "SideTagButton.h"
+
 #import "UserCenter.h"
 //#import "Globals.h"
 
@@ -26,6 +26,7 @@
     BOOL            maximized;
     NSMutableArray  * buttonList;
 }
+
 
 
 - (id)initWithSide:(NSString*)side buttonList:(NSMutableArray*)aButtonList;
@@ -182,7 +183,7 @@
 @synthesize topOffset                   = _topOffset;
 @synthesize state                       = _state;
 @synthesize fullScreenViewController    = _fullScreenViewController;
-
+@synthesize buttonStateMode;
 
 -(id)initWithView:(UIView*)view
 {
@@ -201,6 +202,7 @@
         _state              = STATE_SMALLSCREEN;
         _leftTray           = [[Tray alloc]initWithSide:@"left" buttonList:tagButtonsLeft];
         _rightTray          = [[Tray alloc]initWithSide:@"right" buttonList:tagButtonsRight];
+        self.buttonStateMode    = SideTagButtonModeDisable;
     }
 
     return self;
@@ -498,12 +500,18 @@
 }*/
 
 -(void)setButtonState:(SideTagButtonModes)mode{
+    if (self.buttonStateMode == SideTagButtonModeToggle && mode == SideTagButtonModeRegular)
+    {
+        [self closeAllOpenTagButtons];
+    }
+    
+    
     for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
         for (SideTagButton * btn in list) {
             [btn setMode:mode];
         }
     }
-
+    self.buttonStateMode = mode;
 }
 
                        
@@ -583,7 +591,7 @@
     for (Tag * tag in eventTags) {
         for (SideTagButton * btn2 in tempList) {
             // if the tag is open and has a duration Id and is from this divice
-            if (tag.name == btn2.titleLabel.text && tag.type == TagTypeOpenDuration && tag.deviceID == [[[UIDevice currentDevice] identifierForVendor]UUIDString]){
+            if ([tag.name isEqualToString:btn2.titleLabel.text] && tag.type == TagTypeOpenDuration && [tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]){
                 btn2.isOpen = YES;
                 btn2.durationID = tag.durationID;
             }
@@ -645,6 +653,18 @@
         }
     }
 }*/
+
+-(void)closeAllOpenTagButtons
+{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton * btn1 in tempList){
+        if (btn1.isOpen) {
+            [btn1 sendActionsForControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+
+}
+
 
 
 @end

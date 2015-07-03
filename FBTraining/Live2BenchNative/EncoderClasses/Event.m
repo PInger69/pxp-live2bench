@@ -145,6 +145,7 @@
                                                                                                               @"colour":tagToBeModded.colour,
                                                                                                               @"type":[NSNumber numberWithUnsignedInteger:ARTagCreated]
                                                                                                               }];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:[tagToBeModded makeTagData]];
             
      
         }else if( ((TagType)[modifiedData[@"type"]integerValue]) == TagTypeDeleted){

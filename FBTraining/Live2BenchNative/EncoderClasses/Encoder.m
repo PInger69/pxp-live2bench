@@ -635,7 +635,11 @@
          ///@"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
         
         
-        if ([self.event.name isEqualToString:dict[@"event"]]) {
+        /*if ([self.event.name isEqualToString:dict[@"event"]]) {
+            dict[@"event"] = LIVE_EVENT;
+        }*/
+        
+        if ([self.event.name isEqualToString:dict[@"event"]] && self.event.live) {
             dict[@"event"] = LIVE_EVENT;
         }
     
@@ -805,6 +809,89 @@
     
 
 }
+
+
+
+/**
+ *  This creates tags on the server or local
+ *
+ *
+ *  @param data          this is the custom data that will be added to the tag
+ *  @param isDuration    if YES then it will be stored in a open Duration tag dict
+ */
+//-(void)createTeleTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration
+//{
+//    
+//    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+//    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+//    NSString *eventNm = ([_currentEvent isEqualToString:_liveEventName])?@"live":_currentEvent;
+//    
+//    // This is the starndard info that is collected from the encoder
+//    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+//                                     @{
+//                                       @"event"         : eventNm,
+//                                       @"colour"        : [_dictOfAccountInfo objectForKey:@"tagColour"],
+//                                       @"user"          : [_dictOfAccountInfo objectForKey:@"hid"],
+//                                       @"time"          : tagTime,
+//                                       @"name"          : tagName,
+//                                       //                                               @"comment"       : @"",
+//                                       //                                               @"rating"        : @"0",
+//                                       //                                               @"coachpick"     : @"0",
+//                                       //                                               @"bookmark"      : @"0",
+//                                       //                                               @"deleted"       : @"0",
+//                                       //                                               @"edited"        : @"0",
+//                                       @"duration"      : @"1",
+//                                       @"type"          : @"4",
+//                                       //@"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+//                                       }];
+//    if (isDuration){ // Add extra data for duration Tags
+//        NSDictionary *durationData =        @{
+//                                              @"starttime"     : tagTime
+//                                              };
+//        [tagData addEntriesFromDictionary:durationData];
+//    }
+//    
+//    [tagData addEntriesFromDictionary:data];//
+//    
+//    
+//    
+//    //    // Check if tag is open for this already, if so close it
+//    //    if ([_openDurationTags objectForKey:tagName] != nil)
+//    //    {
+//    //
+//    //        [self closeDurationTag:tagName];
+//    //
+//    //
+//    //    } else {
+//    //
+//    //        [_openDurationTags setObject:tagData forKey:tagName];
+//    //        // issues new tag command
+//    //    }
+//    
+//    
+//    // issue command to all encoder with events
+//    
+//    
+//    NSArray     * encoders;
+//    
+//    if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) {
+//        encoders    = @[_primaryEncoder];
+//    } else {
+//        encoders    = [_authenticatedEncoders copy];
+//        
+//    }
+//    
+//    
+//    
+//    NSNumber    * nowTime             = GET_NOW_TIME;
+//    NSUInteger timeout = [encoders count] * 20;
+//    [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
+//        [obj issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
+//    }];
+//    
+//    
+//    
+//}
 
 
 
@@ -1074,6 +1161,9 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = CAMERAS_GET;
     encoderConnection.timeStamp             = aTimeStamp;
+    PXPLog(@" ");
+    PXPLog(@"CAMERAS_GET: %@",checkURL);
+    PXPLog(@" ");
 }
 
 
@@ -1759,6 +1849,9 @@
  //   _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
     
     PXPLog(@"%@ has %@ cameras",self.name ,[NSString stringWithFormat:@"%ld",(long)_cameraCount ]);
+    PXPLog(@"JSON OUTPUT:");
+    PXPLog(@"%@",results);
+    PXPLog(@" ");
 }
 
 #pragma mark - Master Responce

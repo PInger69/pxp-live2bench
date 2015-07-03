@@ -17,12 +17,6 @@
 #import "DownloadItem.h"
 #import "Event.h"
 #import "Tag.h"
-#import "sys/socket.h"
-#import "netinet/in.h"
-#import "SystemConfiguration/SystemConfiguration.h"
-#import <CommonCrypto/CommonDigest.h>
-#import <ifaddrs.h>
-#import <arpa/inet.h>
 #import "UserCenter.h"
 #import "ActionListItem.h"
 
@@ -33,248 +27,12 @@
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
-
-// HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
-/*@interface EncoderDataSync : NSObject
-@property (nonatomic,assign)  BOOL            complete;
--(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete;
-
-@end
-
-@implementation EncoderDataSync
-{
-    NSMutableArray  * _colletedResponce;
-    NSMutableDictionary  * _colletedResponceDict;
-    NSString        * _name;
-    NSArray         * _encodersBeingWatched;
-    NSInteger       _countOfLeftToComplete;
-    void            (^_onComplete)(NSArray*pooled);
-    void            (^_onCompleteDict)(NSDictionary*pooled);
-    void            * _context;
-    NSNumber        * _timeStamp;
-    BOOL            _earlyBirdMode;
-    
-}
-
-@synthesize complete = _complete;
-
-
--(id)init
-{
-    self = [super init];
-    if (self){
-        _earlyBirdMode          = NO;
-        _complete               = YES;
-        _colletedResponce       = [[NSMutableArray alloc]init];
-        _name                   = @"None";
-        _countOfLeftToComplete  = 0;
-        _encodersBeingWatched   = @[];
-    }
-    return self;
-}
-
-
-*
- *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
- *  passing the data thru the block as an Array of each of the responeses
- *
- *  @param aToObserve  list of encoders
- *  @param aName       Name of notification to be observed
- *  @param aOnComplete block to run on completion
- *
- *  @return instance
- 
--(id)initWith:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
-{
-    self = [super init];
-    if (self){
-        _complete               = NO;
-        _colletedResponce       = [[NSMutableArray alloc]init];
-        _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-        _name                   = aName;
-        _encodersBeingWatched   = aToObserve;
-        _countOfLeftToComplete  = _encodersBeingWatched.count;
-        _onComplete             = aOnComplete;
-        _timeStamp              = aTime;
-        
-        for (id <EncoderProtocol> edS in _encodersBeingWatched) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-        }
-        
-        
-        
-    }
-    return self;
-}
-
-
-*
- *  This class is basically watches x number of encoders during a request and runs a block after all encoders have finished
- *  passing the data thru the block as an Array of each of the responeses
- *
- *  @param aToObserve  list of encoders
- *  @param aName       Name of notification to be observed
- *  @param aOnComplete block to run on completion
- *
- *
-
--(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
-{
-    
-    if (!_complete){
-        [self cancel];
-    }
-    _earlyBirdMode          = NO;
-    _complete               = NO;
-    _name                   = aName;
-    _encodersBeingWatched   = aToObserve;
-    _countOfLeftToComplete  = _encodersBeingWatched.count;
-    _onComplete             = aOnComplete;
-    _timeStamp              = aTime;
-    
-    _colletedResponce       = [[NSMutableArray alloc]init];
-    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-    
-    
-    for (id <EncoderProtocol> edS in _encodersBeingWatched) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-    }
-}
-
-
--(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinishDict: (void (^)(NSDictionary * pooledResponces))aOnComplete
-{
-    
-    if (!_complete){
-        [self cancel];
-    }
-    _earlyBirdMode          = NO;
-    _complete               = NO;
-    _name                   = aName;
-    _encodersBeingWatched   = aToObserve;
-    _countOfLeftToComplete  = _encodersBeingWatched.count;
-    _onCompleteDict             = aOnComplete;
-    _timeStamp              = aTime;
-    
-    _colletedResponce       = [[NSMutableArray alloc]init];
-    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-    
-    
-    for (id <EncoderProtocol> edS in _encodersBeingWatched) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-    }
-}
-
-
-// This method requests from all passed encoders and the first one to respond is not canceled
--(void)earlyBird:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
-{
-    if (!_complete){
-        [self cancel];
-    }
-    _earlyBirdMode          = YES;
-    _complete               = NO;
-    _name                   = aName;
-    _encodersBeingWatched   = aToObserve;
-    _countOfLeftToComplete  = _encodersBeingWatched.count;
-    _onComplete             = aOnComplete;
-    _timeStamp              = aTime;
-    
-    _colletedResponce       = [[NSMutableArray alloc]init];
-    _colletedResponceDict   = [[NSMutableDictionary alloc]init];
-    
-    
-    for ( id <EncoderProtocol> edS in _encodersBeingWatched) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievedNotifcation:) name:_name object:edS];
-    }
-    
-    
-}
-
-
-
-*
- *  This collects the data responce that is sent with the notif
- *
- *  @param note Notification with responce data
-
--(void)recievedNotifcation:(NSNotification *)note
-{
-    if (_timeStamp != [NSNumber numberWithDouble:[[note.userInfo objectForKey:@"timeStamp"]doubleValue]])
-        
-        _countOfLeftToComplete--;
-    if (_onComplete && [note.userInfo objectForKey:@"responce"])   [_colletedResponce addObject: [note.userInfo objectForKey:@"responce"] ];
-    if (_onCompleteDict && [note.userInfo objectForKey:@"responce"]){
-        NSDictionary * collect = [note.userInfo objectForKey:@"responce"];
-        [_colletedResponceDict addEntriesFromDictionary:collect];
-    }
-    if (!_countOfLeftToComplete || _earlyBirdMode) [self onCompletion];
-}
-
-*
- *  This method is run when all the encders have responced
- *  This object will be flaged as complete
- *  it will remove the observers
- * it will also run the block. The argeument passed into the block is an Array of all the responces from the encoders
- *
- *
--(void)onCompletion
-{
-    self.complete = YES;
-    [_encodersBeingWatched enumerateObjectsUsingBlock:^( id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:_name object:obj];
-    }];
-    if (_onComplete)        _onComplete([_colletedResponce copy]);
-    if (_onCompleteDict)    _onCompleteDict([_colletedResponceDict copy]);
-    [self cancel];
-}
-
-
-// cancel current command
--(void)cancel
-{
-    //   NSLog(@"Cancel Sync: %@",_name);
-    _onComplete = nil;
-    [_colletedResponce removeAllObjects];
-    _name                   = @"";
-    
-    [_encodersBeingWatched enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:_name object:obj];
-        
-        // this needs to reamove the command from the queue or cancel all
-    }];
-    _countOfLeftToComplete  = 0;
-    
-    
-}
-
-
-@end
-
-*/
-
-
-#pragma mark - End of Helper Classes
-// END OF HELPER CLASSES// // // // // // // // // // // // // // // // // // // // // // // // //
-// END OF HELPER CLASSES// // // // // // // // // // // // // // // // // // // // // // // // //
-// END OF HELPER CLASSES// // // // // // // // // // // // // // // // // // // // // // // // //
-// END OF HELPER CLASSES// // // // // // // // // // // // // // // // // // // // // // // // //
-// END OF HELPER CLASSES// // // // // // // // // // // // // // // // // // // // // // // // //
-
-
 @implementation EncoderManager
 {
     
-
-    NSNetServiceBrowser         * serviceBrowser;   //serviceBrowser searches for services
-    NSMutableArray              * services;         //array of netservices which are detected
-    NSMutableDictionary         * dictOfIPs;        //dictionary of all IPs detected
     NSMutableDictionary         * dictOfEncoders;
     NSMutableArray              * arrayOfTagSets;
-    NSMutableDictionary         * _dictOfAccountInfo; // this will take in the from the global ACCOUNT_INFO, to cut down access to the global
-    //EncoderDataSync             * encoderSync;// depricated
 
-    id                          _userDataObserver;// depricated
     id                          _masterLostObserver;
     id                          _masterFoundObserver;
     id                          _encoderReadyObserver;
@@ -285,11 +43,12 @@
     CheckWiFiAction             * checkWiFiAction;
     CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
-    //LogoutAction                * logoutAction;
     
     id <ActionListItem>         buildEventAction;
     Event                       * eventBeingBuilt;
 }
+
+@synthesize bonjourModule;
 
 @synthesize hasWiFi                 = _hasWiFi;
 @synthesize hasMAX                  = _hasMAX;
@@ -320,25 +79,20 @@
     self = [super init];
     if (self){
         
-
         _authenticatedEncoders  = [[NSMutableArray alloc]init];
         dictOfEncoders          = [[NSMutableDictionary alloc]init];
         _liveEventName          = @"None";
         
         // Browse for services
-        // Starts Bonjour search for pxp servers
-        services                = [[NSMutableArray alloc]init];
-        serviceBrowser          = [NSNetServiceBrowser new] ;
-        serviceBrowser.delegate = self;
-        //       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-
+        
+        bonjourModule           = [[BonjourModule alloc]initWithDelegate:self];
         
         _openDurationTags       = [[NSMutableDictionary alloc]init];
         _eventTags              = [[NSMutableDictionary alloc]init];
         arrayOfTagSets          = [[NSMutableArray alloc]init];
         _feeds                  = [[NSMutableDictionary alloc]init];
         
-        _cloudEncoder           = [[CloudEncoder alloc]initWithIP:[self getIPAddress]];  // started in searchForEncoders
+        _cloudEncoder           = [[CloudEncoder alloc]initWithIP:[Utility getIPAddress]];  // started in searchForEncoders
         [_cloudEncoder startObserving];
         
         _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
@@ -389,19 +143,6 @@
         }];
         
         
-        
-        
-        
-        
-//        _userDataObserver       = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_USER_INFO_RETRIEVED     object:nil queue:nil usingBlock:^(NSNotification *note) {
-//            _dictOfAccountInfo       = (NSMutableDictionary*)note.object;
-//            [[NSNotificationCenter defaultCenter]removeObserver:_userDataObserver];
-//        }];
-//        
-        
-      //  _masterEncoder = [[EncoderCommander alloc]init];
-        
-        
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             _masterEncoder = note.object;
             
@@ -437,82 +178,18 @@
             }];
         }];
         
-//        _encoderReadyObserver     = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_THIS_ENCODER_IS_READY    object:nil queue:nil usingBlock:^(NSNotification *note) {
-//            
-//            
-//            //            Encoder * anEncoder = (Encoder *) note.object; // was _masterEncoder. before
-//            
-//            
-//            
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
-//        }];
-        
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_observerForTagPosting:)   name:NOTIF_TAG_POSTED       object:nil];
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(observerForTelestrationTag:)   name:NOTIF_CREATE_TELE_TAG  object:nil];
+
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
-        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)           name:NOTIF_MASTER_COMMAND   object:nil]; // watch whole app for start or stop events
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
-        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:)            name:NOTIF_MASTER_HAS_LIVE  object:nil];
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDataRequest:)  name:NOTIF_ENCODER_MNG_DATA_REQUEST object:nil];
-
-        
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadClip:)  name:NOTIF_EM_DOWNLOAD_CLIP object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadEvent:) name:NOTIF_EM_DOWNLOAD_EVENT object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onLoginToCloud)            name:NOTIF_USER_LOGGED_IN object:nil];
         // making actions
         
         //SAGAR AND BEN NOTIFICATIONS
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listViewFeed:) name:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDataRequest:) name:NOTIF_REQUEST_CALENDAR_DATA object:nil];
-        
-        
-//        [[NSNotificationCenter defaultCenter] addObserverForName:@"NOTIF_DELETE_TAG" object:nil queue:nil usingBlock:^(NSNotification *note) {
-//            Tag *tagToDelete = note.object;
-//            tagToDelete.type = 3;
-//            __block NSString *userHID;
-//            
-//            void(^userBlock)(NSDictionary *data) = ^(NSDictionary *data){
-////                PXPLog(@"%@", data);
-//                userHID = [data objectForKey:@"hid"];
-//            };
-//            
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"block": userBlock, @"type": UC_REQUEST_USER_INFO}];
-//            
-//            NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"1",@"delete",tagToDelete.event,@"event",[NSString stringWithFormat:@"%f",CACurrentMediaTime()],@"requesttime",userHID,@"user",tagToDelete.ID,@"id", nil];
-//            
-//            if (tagToDelete.isLive) {
-//                [dict setObject:@"live" forKey:@"event"];
-//            }
-//
-//            [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: dict]];
-//            
-//        }];
-        
-//          [[NSNotificationCenter defaultCenter] addObserverForName: NOTIF_MODIFY_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
-//            Tag *tagToModify = note.object;
-//            __block NSString *userHID;
-//            
-//            void(^userBlock)(NSDictionary *data) = ^(NSDictionary *data){
-//
-//                userHID = [data objectForKey:@"hid"];
-//            };
-//            
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"block": userBlock, @"type": UC_REQUEST_USER_INFO}];
-//            
-//            NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys: tagToModify.event,@"event",[NSString stringWithFormat:@"%f", CACurrentMediaTime()], @"requesttime", userHID, @"user", tagToModify.ID, @"id", nil];
-//
-//            [dict addEntriesFromDictionary: [tagToModify modifiedData]];
-//            
-//            if (tagToModify.isLive) {
-//                [dict setObject:@"live" forKey:@"event"];
-//            }
-//            
-//            [self modifyTag: [NSMutableDictionary dictionaryWithDictionary: dict]];
-//            
-//        }];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_EVENT_SERVER object:nil queue:nil usingBlock:^(NSNotification *note) {
             Event *eventToDelete = note.object;
@@ -528,7 +205,6 @@
         checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
         checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
         //logoutAction                = [[LogoutAction alloc]initWithEncoderManager:self];
-        
         
         // This will look for the external encoder if no other normal encoders are found
         [self performSelector:@selector(makeCoachExternal) withObject:nil afterDelay:40];
@@ -555,7 +231,6 @@ static void * statusContext         = &statusContext;
 }
 
 //SAGAR AND BEN CODE FINISHES
-
 
 -(void)declareCurrentEvent:(Event*)event
 {
@@ -678,27 +353,6 @@ static void * statusContext         = &statusContext;
 
 -(Event*)getEventByHID:(NSString*)eventHID
 {
-//    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-//        
-//        NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
-//        
-//        return [thisHID isEqualToString:eventHID];
-//    }];
-//    
-//    
-//    //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
-//    
-//    
-//    NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
-//    
-//    if ([filtered count]==0)return nil;
-//    
-//    // this is an issues
-//    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:NO andlocalPath:nil];
-//    
-    
-    
-    /////
     Event * event;
     
     // collects all events
@@ -718,7 +372,7 @@ static void * statusContext         = &statusContext;
     
     // If there is no exteral events check the local
     if (!event){
-        collection = [NSMutableArray arrayWithArray:[self.localEncoder.allEvents allValues]];
+        collection = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].allEvents allValues]];
         
         for (Event * evt in collection) {
             if ([evt.hid isEqualToString:eventHID]) {
@@ -740,7 +394,8 @@ static void * statusContext         = &statusContext;
         }
     }
     
-    return [self.localEncoder getEventByName:eventName];
+    //return [self.localEncoder getEventByName:eventName];
+    return [[LocalMediaManager getInstance] getEventByName:eventName];
 }
 
 -(void)makeFakeEncoder
@@ -821,23 +476,6 @@ static void * statusContext         = &statusContext;
     
 }
 
-
-//-(void)_observerForTagPosting:(NSNotification*)note
-//{
-//    PXPLog(@"Recieved a tage from the bottom view controller or some where");
-//    NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
-//    BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
-//    [self createTag:tagData isDuration:isDuration];
-//}
-
-//-(void)observerForTelestrationTag: (NSNotification *)note{
-//    PXPLog(@"Recieved a telestration tag");
-//    NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
-//    //BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
-//    [self createTeleTag:tagData isDuration:NO];
-//
-//}
-
 -(void)changeCurrentEvent:(NSNotification*)note
 {
     NSString * eventName = note.userInfo[@"name"];
@@ -845,119 +483,10 @@ static void * statusContext         = &statusContext;
     
 }
 
-
-//
-//-(void)notificationDataRequest:(NSNotification*)note
-//{
-//    NSString * requestType = note.userInfo[@"type"];
-//    
-//    if ([requestType isEqualToString:EM_REQUEST_TAG_DATA_FOR_EVENT]){
-//        NSString * eventName = note.userInfo[@"eventName"];
-//        [self requestTagDataForEvent:eventName onComplete:[note.userInfo objectForKey:@"block"]];
-//        
-//    } else if ([requestType isEqualToString:EM_REQUEST_ALL_EVENT_DATA]) {
-//        
-//    }
-//    
-//    
-//}
-
-/**
- *  The Encoder manager will tell the server to create the clip then it will get the url where it can be downloaded
- *  it will then ask the Local encoder to for a place to place the file then it will start the download and pass the downloader item thru the block
- *
- *
- *  @param note clip request
- */
-//-(void)notificationDownloadClip:(NSNotification*)note
-//{
-////    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
-//    Tag *tag = note.userInfo[@"tag"];
-////    NSString *feedName = note.userInfo[@"feedName"];
-//    
-//    unsigned long srcID;
-//    sscanf([note.userInfo[@"src"] UTF8String], "s_%lu", &srcID);
-//    
-////
-////    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4", tag.event, tag.ID];
-////    dItemBlock([_localEncoder saveClip:videoName withData: tag ]);
-//    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
-//    
-//    // This gets run when the server responds
-//    void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
-//        
-//        NSData          * data                  = pooledResponces[0];
-//        NSDictionary    * results               = [Utility JSONDatatoDict: data];
-//        NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
-//         if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
-//        // if in the data success is 0 then there is an error!
-//        
-//        // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
-//        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
-//        
-//        
-//        // http://10.93.63.226/events/live/video/01hq_vid_10.mp4
-//        
-//        // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
-//        
-//         NSString *tagID = tag.ID;
-//         NSString *ip = ((Encoder *)_primaryEncoder).ipAddress;
-//         NSString *src = note.userInfo[@"src"];
-//         
-//         unsigned long n;
-//         sscanf(src.UTF8String, "s_%lu", &n);
-//         NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
-//         
-//         NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
-//         
-//         // END SERVER IS DUMB
-//        
-//        NSString * pth = [NSString stringWithFormat:@"%@/%@",[_localEncoder bookmarkedVideosPath],videoName];
-//        DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo];
-//        dItemBlock(dli);
-//        
-//        
-//        
-//        
-//        
-//        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
-//            // is the object what we ware downloading
-//            if (note.object == dli) {
-//                NSLog(@"Download Complete");
-//                
-//                // we must now forge the results
-//                
-//                [_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
-//            }
-//        }];
-//    };
-//    
-//    
-//    
-//    NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
-//                                            @{
-//                                              @"id": tag.ID,
-//                                              @"event": (tag.isLive)?@"live":tag.event,
-//                                              @"requesttime":GET_NOW_TIME_STRING,
-//                                              @"bookmark":@"1",
-//                                              @"user":[_dictOfAccountInfo objectForKey:@"hid"]
-//                                              }];
-//    
-//    [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
-//    
-//    [_primaryEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME];
-//    
-//    [encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
-//    
-//    PXPLog(@"Downloading Clip!");
-//   
-//}
-//
-
 /**
  *  This method prepares the clip for download
  *
- *  @param note <#note description#>
+ *  @param note
  */
 -(void)notificationDownloadEvent:(NSNotification*)note
 {
@@ -1006,110 +535,7 @@ static void * statusContext         = &statusContext;
         }];
     }
     
-    
-
-    
-    
-    
-    
-    
-    
-    
 }
-
-
-
-
-
-
-
-#pragma mark - Bonjour Methods
-// Services Methods     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-//---services found---
--(void)netServiceBrowser:(NSNetServiceBrowser *)aBrowser didFindService:(NSNetService *)aService moreComing:(BOOL)more {
-    [services addObject:aService];
-    [self resolveIPAddress:aService];
-}
-
-//---services removed from the network---
--(void)netServiceBrowser:(NSNetServiceBrowser *)aBrowser didRemoveService:(NSNetService *)aService moreComing:(BOOL)more {
-    [services removeObject:aService];
-}
-
-//---resolve the IP address of a service---
--(void) resolveIPAddress:(NSNetService *)service {
-    NSNetService *remoteService = service;
-    remoteService.delegate = self;
-    [remoteService resolveWithTimeout:0];
-}
-
-//---managed to resolve---
--(void)netServiceDidResolveAddress:(NSNetService *)service {
-    
-    if (!_searchForEncoders)return; // disable the ability to search
-    
-    NSString *name          = nil;
-    NSData *address         = nil;
-    struct sockaddr_in *socketAddress = nil;
-    NSString *ipString      = nil;
-    int port;
-    BOOL isSameNetwork      = TRUE;
-    NSString *deviceIP      = [self getIPAddress];
-    
-    NSArray *parseLocalIP   = [[NSArray alloc]initWithArray:[deviceIP componentsSeparatedByString:@"."]]; //split the local ip of the device into an array of each number -- used to compare to remote ip(test if on the same network
-    
-    for(int i=0;i < [[service addresses] count]; i++ )
-    {
-        name                    = [service name];//retrieve unique name of bonjservice
-        address                 = [[service addresses] objectAtIndex: i];
-        socketAddress           = (struct sockaddr_in *) [address bytes];
-        ipString                = [NSString stringWithFormat: @"%s", inet_ntoa(socketAddress->sin_addr)];
-        NSArray *parseRemoteIP  = [[NSArray alloc]initWithArray:[ipString componentsSeparatedByString:@"."]]; //parse remote ip into an array to compare with local ip
-        
-        for(NSString *subIP in parseRemoteIP)
-        {
-            NSUInteger i = [parseRemoteIP indexOfObject:subIP];
-            if(![subIP isEqualToString:[parseLocalIP objectAtIndex:i]]&&i<3)//compare only the first 3 numbers in the ip address
-            {
-                isSameNetwork=FALSE; // if the numbers don't equal each other then we don't want it, set the bool to false
-            }
-        }
-        
-        port = socketAddress->sin_port; // grab port
-        
-        if(isSameNetwork)
-        {
-            NSArray *arrayOfStrings = [name componentsSeparatedByString:@" - "];
-            [dictOfIPs setValue:[NSString stringWithFormat:@"http://%@:%d",ipString,htons(port)] forKey:[arrayOfStrings objectAtIndex:0]];
-            //globals.URL=[NSString stringWithFormat:@"http://%@:%d",ipString,htons(port)];//set the global url parameter to our ipstring:port -- we need to use htons to flip the bytes returned by the port
-            //globals.CURRENT_PLAYBACK_EVENT=[NSString stringWithFormat:@"%@/events/live/video/list.m3u8",globals.URL];
-            
-            NSString *hostName = [service hostName];
-            if ([[service hostName] hasSuffix:@".local."]){
-                hostName = [[service hostName] stringByReplacingOccurrencesOfString:@".local." withString:@""];
-            }
-            [dictOfIPs setValue:[NSString stringWithFormat:@"http://%@:%d",ipString,htons(port)] forKey:hostName];
-            
-            [self registerEncoder:hostName ip:ipString];
-        }
-    }
-    
-    
-    
-    
-    
-}
-
-//---did not managed to resolve---
--(void)netService:(NSNetService *)service didNotResolve:(NSDictionary *)errorDict {
-    
-}
-
-
-
-
-// END of Services Methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #pragma mark - Master Command Methods
 -(void)masterCommands:(NSNotification *)note
@@ -1147,20 +573,12 @@ static void * statusContext         = &statusContext;
     }
     [_authenticatedEncoders removeAllObjects];
     [dictOfEncoders removeAllObjects];
-
-    serviceBrowser          = nil ;
-    [services removeAllObjects];
+    [bonjourModule clear];
 }
 
 -(void)onLoginToCloud
 {
-    
-    if (!serviceBrowser){
-        serviceBrowser          = [NSNetServiceBrowser new] ;
-        serviceBrowser.delegate = self;
-       [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-    }
-
+    [bonjourModule reset];
 }
 
 -(void)pushTag:(NSMutableDictionary *)tagSet
@@ -1168,290 +586,23 @@ static void * statusContext         = &statusContext;
     [arrayOfTagSets addObject:tagSet];
 }
 
-// Getters
--(BOOL)hasInternet
-{
-    SCNetworkReachabilityFlags flags;
-    BOOL receivedFlags;
-    
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
-    
-    receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
-    
-    CFRelease(reachability);
-    
-    return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
-    
-}
-
-
--(BOOL)hasWiFi
-{
-    struct sockaddr_in zeroAddress;
-    bzero(&zeroAddress, sizeof(zeroAddress));
-    zeroAddress.sin_len = sizeof(zeroAddress);
-    zeroAddress.sin_family = AF_INET;
-    
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)&zeroAddress);
-    if(reachability != NULL) {
-        //NetworkStatus retVal = NotReachable;
-        SCNetworkReachabilityFlags flags;
-        if (SCNetworkReachabilityGetFlags(reachability, &flags)) {
-            if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
-            {
-                // if target host is not reachable
-                CFRelease(reachability);
-                return NO;
-            }
-            
-            if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
-            {
-                // if target host is reachable and no connection is required
-                //  then we'll assume (for now) that your on Wi-Fi
-                CFRelease(reachability);
-                return YES;
-            }
-            
-            
-            if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
-                 (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
-            {
-                // ... and the connection is on-demand (or on-traffic) if the
-                //     calling application is using the CFSocketStream or higher APIs
-                
-                if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
-                {
-                    // ... and no [user] intervention is needed
-                    CFRelease(reachability);
-                    return YES;
-                }
-            }
-            
-            if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0)
-            {
-                // ... but WWAN connections are OK if the calling application
-                //     is using the CFNetwork (CFSocketStream?) APIs.
-                CFRelease(reachability);
-                return YES;
-            }
-        }
-    }
-    
-    CFRelease(reachability);
-    return NO;
-    
-    //    return [uController hasConnectivity];
-}
-
 
 
 // depricated
--(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet
-{
-    
-    if (_primaryEncoder) {
-        NSNumber    * nowTime             = GET_NOW_TIME;
-        [_primaryEncoder issueCommand:TEAMS_GET priority:1 timeoutInSec:10 tagData:nil timeStamp:nowTime];
-        //        encoderSync =  [[EncoderDataSync alloc]initWith:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
-        //[encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
-    } else {
-        // Alert the user that there is not master encoder
-    }
-}
-
-/**
- *  This creates tags on the server or local
- *
- *
- *  @param data          this is the custom data that will be added to the tag
- *  @param isDuration    if YES then it will be stored in a open Duration tag dict
- */
--(void)createTeleTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration
-{
-    
-    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
-    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
-    NSString *eventNm = ([_currentEvent isEqualToString:_liveEventName])?@"live":_currentEvent;
-    
-    // This is the starndard info that is collected from the encoder
-    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-                                     @{
-                                       @"event"         : eventNm,
-                                       @"colour"        : [_dictOfAccountInfo objectForKey:@"tagColour"],
-                                       @"user"          : [_dictOfAccountInfo objectForKey:@"hid"],
-                                       @"time"          : tagTime,
-                                       @"name"          : tagName,
-                                       //                                               @"comment"       : @"",
-                                       //                                               @"rating"        : @"0",
-                                       //                                               @"coachpick"     : @"0",
-                                       //                                               @"bookmark"      : @"0",
-                                       //                                               @"deleted"       : @"0",
-                                       //                                               @"edited"        : @"0",
-                                       @"duration"      : @"1",
-                                       @"type"          : @"4",
-                                       //@"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
-                                       }];
-    if (isDuration){ // Add extra data for duration Tags
-        NSDictionary *durationData =        @{
-                                              @"starttime"     : tagTime
-                                              };
-        [tagData addEntriesFromDictionary:durationData];
-    }
-    
-    [tagData addEntriesFromDictionary:data];//
-    
-    
-    
-    //    // Check if tag is open for this already, if so close it
-    //    if ([_openDurationTags objectForKey:tagName] != nil)
-    //    {
-    //
-    //        [self closeDurationTag:tagName];
-    //
-    //
-    //    } else {
-    //
-    //        [_openDurationTags setObject:tagData forKey:tagName];
-    //        // issues new tag command
-    //    }
-    
-    
-    // issue command to all encoder with events
-    
-    
-    NSArray     * encoders;
-    
-    if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) {
-        encoders    = @[_primaryEncoder];
-    } else {
-        encoders    = [_authenticatedEncoders copy];
-        
-    }
-    
-    
-    
-    NSNumber    * nowTime             = GET_NOW_TIME;
-    NSUInteger timeout = [encoders count] * 20;
-    [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
-        [obj issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
-    }];
-    
-    
-    
-}
-
-
-
-/**
- *  This creates tags on the server or local
- *
- *
- *  @param data          this is the custom data that will be added to the tag
- *  @param isDuration    if YES then it will be stored in a open Duration tag dict
- */
-//-(void)createTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration
+//-(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet
 //{
 //    
-//    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
-//    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
-//    NSString *eventNm = ([_currentEvent isEqualToString:_liveEventName])?@"live":_currentEvent;
-//    
-//    // This is the starndard info that is collected from the encoder
-//    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-//                                     @{
-//                                       @"event"         : eventNm,
-//                                       @"colour"        : [_dictOfAccountInfo objectForKey:@"tagColour"],
-//                                       @"user"          : [_dictOfAccountInfo objectForKey:@"hid"],
-//                                       @"time"          : tagTime,
-//                                       @"name"          : tagName,
-//                                       //                                               @"comment"       : @"",
-//                                       //                                               @"rating"        : @"0",
-//                                       //                                               @"coachpick"     : @"0",
-//                                       //                                               @"bookmark"      : @"0",
-//                                       //                                               @"deleted"       : @"0",
-//                                       //                                               @"edited"        : @"0",
-//                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
-//                                       }];
-//    if (isDuration){ // Add extra data for duration Tags
-//        NSDictionary *durationData =        @{
-//                                              @"starttime"     : tagTime
-//                                              };
-//        [tagData addEntriesFromDictionary:durationData];
-//    }
-//    
-//    [tagData addEntriesFromDictionary:data];//
-//    
-//    
-//    
-//    //    // Check if tag is open for this already, if so close it
-//    //    if ([_openDurationTags objectForKey:tagName] != nil)
-//    //    {
-//    //
-//    //        [self closeDurationTag:tagName];
-//    //
-//    //
-//    //    } else {
-//    //
-//    //        [_openDurationTags setObject:tagData forKey:tagName];
-//    //        // issues new tag command
-//    //    }
-//    
-//    
-//    // issue command to all encoder with events
-//    
-//    
-//    NSArray     * encoders;
-//    
-//    if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) {
-//        encoders    = @[_primaryEncoder];
+//    if (_primaryEncoder) {
+//        NSNumber    * nowTime             = GET_NOW_TIME;
+//        [_primaryEncoder issueCommand:TEAMS_GET priority:1 timeoutInSec:10 tagData:nil timeStamp:nowTime];
+//        //        encoderSync =  [[EncoderDataSync alloc]initWith:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
+//        //[encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
 //    } else {
-//        encoders    = [_authenticatedEncoders copy];
-//        
-//    }
-//    
-//    
-//    
-//    NSNumber    * nowTime             = GET_NOW_TIME;
-//    NSUInteger timeout = [encoders count] * 20;
-//    [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
-//        [obj issueCommand:MAKE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
-//    }];
-//    
-//    
-//    
-//}
-
-//-(void)modifyTag:(NSMutableDictionary *)data
-//{
-//    for (id <EncoderProtocol> aEncoder  in _authenticatedEncoders) {
-//        
-//        [aEncoder issueCommand:MODIFY_TAG
-//                      priority:10
-//                  timeoutInSec:5
-//                       tagData:data
-//                     timeStamp:GET_NOW_TIME];
+//        // Alert the user that there is not master encoder
 //    }
 //}
 
-//-(void)closeDurationTag:(NSString *)tagName
-//{
-//    
-//    NSMutableDictionary * tag = [_openDurationTags objectForKey:tagName];
-//    [_openDurationTags removeObjectForKey:tagName];
-//    
-//    
-//    // issues mod tag command
-//    
-//    for (id <EncoderProtocol> aEncoder  in _authenticatedEncoders) {
-//        
-//        [aEncoder issueCommand:MODIFY_TAG
-//                      priority:10
-//                  timeoutInSec:5
-//                       tagData:tag
-//                     timeStamp:GET_NOW_TIME];
-//    }
-//    
-//}
+
 
 -(void)deleteEvent:(NSMutableDictionary *)data{
 
@@ -1467,106 +618,6 @@ static void * statusContext         = &statusContext;
 }
 
 
-// depricated
-//// Getters and setters
-//-(NSString*)currentEvent
-//{
-////    return _currentEvent;
-//    return _primaryEncoder.event.name;
-//    
-//}
-
-
-
-// depricated
-// whe you set an event it will update the feeds to the correct feeds
-//-(void)setCurrentEvent:(NSString *)aCurrentEvent
-//{
-//    // if the event is nil then clear out all the data for the encoder
-//    if (!aCurrentEvent) {
-//        [_feeds removeAllObjects];
-//        _currentEventData = @{};
-//        
-//        [self willChangeValueForKey:@"currentEvent"];
-//        _currentEvent = aCurrentEvent;
-//        [self didChangeValueForKey:@"currentEvent"];
-//        
-//        [self willChangeValueForKey:@"currentEventType"];
-//        _currentEventType = nil;
-//        [self didChangeValueForKey:@"currentEventType"];
-//        
-//        [self willChangeValueForKey:@"currentEventTags"];
-//        _currentEventTags = nil;
-//        [self didChangeValueForKey:@"currentEventTags"];
-//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
-//        
-//        return;
-//    } //
-//    
-//    // CHANGE TO BE CONTROLLED FROM PRIMARY ENCODER
-//    NSMutableSet * typeCollector =  [[NSMutableSet alloc]init];
-//    
-//    NSMutableDictionary * eventData = [[NSMutableDictionary alloc]init];;
-//    
-//    NSMutableDictionary * temp  = [[NSMutableDictionary alloc]init];
-//    NSArray * encodersToCheck = [@[self.localEncoder] arrayByAddingObjectsFromArray:_authenticatedEncoders];
-//    
-//    for (int i=0; i<[encodersToCheck count]; i++) {
-//        id <EncoderProtocol> encoder = encodersToCheck[i];
-//        
-//        if (/*[encoder.allEvents objectForKey:aCurrentEvent]*/[encoder getEventByName:aCurrentEvent]){
-//            //            Event * curEvent = [encoder.allEvents objectForKey:aCurrentEvent];
-//            Event *curEvent = [encoder getEventByName:aCurrentEvent];
-//            encoder.event = curEvent;
-//            if (encoder.event.eventType != nil){
-//                [typeCollector addObject:curEvent.eventType];
-//                [temp addEntriesFromDictionary:curEvent.feeds];
-//                [eventData addEntriesFromDictionary: curEvent.rawData];
-//                _feeds = [temp mutableCopy];
-//            }
-//        }
-//    }
-//    _feeds = [temp mutableCopy];
-//    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_FEEDS_READY object:nil];
-//    
-//    if (_masterEncoder && [_masterEncoder.event.name isEqualToString:aCurrentEvent]) [eventData addEntriesFromDictionary: _masterEncoder.event.rawData];
-//    
-//    
-//    _currentEventData = [eventData copy];
-//    
-//    [self willChangeValueForKey:@"currentEvent"];
-//    _currentEvent = aCurrentEvent;
-//    NSLog(@"%@", _currentEvent);
-//    
-//    
-//    
-//    [typeCollector removeObject:@"none"]; // just incase
-//    [typeCollector removeObject:@""]; // just incase
-//    
-//    if ([_feeds count] >0 && [typeCollector count]>0){
-//        [self willChangeValueForKey:@"currentEventType"];
-//        // filter out none
-//        _currentEventType = (NSString *)[typeCollector anyObject];
-//        [self didChangeValueForKey:@"currentEventType"];
-//    }
-//    
-//    
-//    
-//    
-//    [self refresh];
-//    
-//    [self requestTagDataForEvent:aCurrentEvent onComplete:^(NSDictionary *all) {
-//        
-//        [_eventTags setObject:all forKey:aCurrentEvent];
-//        
-//    }];
-//    [self didChangeValueForKey:@"currentEvent"];
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:self];
-//}
-//
-//
-
 
 
 /**
@@ -1578,15 +629,13 @@ static void * statusContext         = &statusContext;
 {
     NSMutableArray * temp  = [[NSMutableArray alloc]init];
     for (id <EncoderProtocol> encoder in _authenticatedEncoders) {
-        
         [temp addObjectsFromArray:[encoder.allEvents allValues]];
     }
     
     return temp;
 }
 
-
-
+// This will be depricated soon with the construction of a new MasterSlaveEncoder
 // this gets all Events, Masters Event take priority and all events are unique.
 -(NSMutableArray*)allEventData
 {
@@ -1650,7 +699,7 @@ static void * statusContext         = &statusContext;
     return [[uniqueDict allValues]copy];
 }
 
-
+// This will be depricated soon with the construction of a new MasterSlaveEncoder
 -(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet
 {
     NSString * myEvent = ([event isEqualToString:_liveEventName])?@"live":event; // Converts event name to live if needed
@@ -1678,24 +727,7 @@ static void * statusContext         = &statusContext;
             onCompleteGet(nil);
         }];
     }];
-    
-    
-   /* [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:^(NSArray *pooledResponces) {
-        //        this is where you collect all the raw data and convert it all in to one dict
-        NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
-        for (NSData * rData in pooledResponces) {
-            NSDictionary * tags =[[Utility JSONDatatoDict:rData] objectForKey:@"tags"];
-            if (tags)[dic addEntriesFromDictionary:tags];
-        }
-        
-        onCompleteGet([dic copy]);
-        
-    }];*/
-    
-    
-    
-    //    [encoderSync syncAll:encoders name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinishDict:onCompleteGet];
-    
+
 }
 
 
@@ -1773,11 +805,10 @@ static void * statusContext         = &statusContext;
 {
     if (searchForEncoders == _searchForEncoders)return;
     if (searchForEncoders) {
-        [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+        bonjourModule.searching = YES;
         [[UserCenter getInstance] updateTagInfoFromCloud];
-//        [_cloudEncoder updateTagInfoFromCloud];// THIS NEEDS TO BE CHANGED TO USER CENTER METHOD
     } else{
-        [serviceBrowser stop];
+        bonjourModule.searching = NO;
     }
     [self willChangeValueForKey:@"searchForEncoders"];
     _searchForEncoders = searchForEncoders;
@@ -1823,45 +854,11 @@ static void * statusContext         = &statusContext;
             }
         };
         
-        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"type":UC_REQUEST_USER_INFO, @"block":onRecieveData}];
     }
-    
-    
-    
+
 }
 
-
-#pragma mark -
-#pragma Utility Methods
-- (NSString *)getIPAddress {
-    NSString *address = @"error";
-    struct ifaddrs *interfaces = NULL;
-    struct ifaddrs *temp_addr = NULL;
-    int success = 0;
-    // retrieve the current interfaces - returns 0 on success
-    success = getifaddrs(&interfaces);
-    if (success == 0) {
-        // Loop through linked list of interfaces
-        temp_addr = interfaces;
-        while(temp_addr != NULL) {
-            if(temp_addr->ifa_addr->sa_family == AF_INET) {
-                // Check if interface is en0 which is the wired connection on a simulator, en1 - wifi on the simulator, or lo0 - wifi on an iPad
-                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"] ||
-                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en1"] ||
-                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"lo0"]) {
-                    // Get NSString from C String
-                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
-                }
-            }
-            temp_addr = temp_addr->ifa_next;
-        }
-    }
-    // Free memory
-    freeifaddrs(interfaces);
-    return address;
-    
-}
 
 #pragma mark -
 #pragma Action Delegate Methods
@@ -1877,6 +874,12 @@ static void * statusContext         = &statusContext;
     }
 }
 
+-(void)onFail:(id<ActionListItem>)actionListItem
+{
+    // too bad so sad
+}
+
+ 
 
 #pragma mark -
 #pragma Action Methods
@@ -1907,18 +910,6 @@ static void * statusContext         = &statusContext;
     checkMasterEncoderAction.isSuccess  = NO;
     return checkMasterEncoderAction;
 }
-
-/**
- *  logout of the cloud encoder
- *
- *  @return the action
- */
-/*-(id<ActionListItem>)logoutAction
-{
-    logoutAction.isFinished = NO;
-    logoutAction.isSuccess  = NO;
-    return logoutAction;
-}*/
 
 @end
 

@@ -261,6 +261,8 @@ static void * eventContext      = &eventContext;
 
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+        [self turnSwitchOn];
+        [_feedSwitch watchCurrentEvent:_currentEvent];
         [_tagButtonController allToggleOnOpenTags:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
@@ -386,7 +388,7 @@ static void * eventContext      = &eventContext;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
     }
-    [multiButton setHidden:!([_encoderManager.feeds count]>1)];
+    [multiButton setHidden:!([_currentEvent.feeds count]>1)];
 }
 
 
@@ -604,7 +606,7 @@ static void * eventContext      = &eventContext;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
     
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38)];
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
@@ -881,7 +883,19 @@ static void * eventContext      = &eventContext;
         // Close Duration Tag
         
         // Collect and mod tag data for close tag
-        Tag * tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
+        
+        Tag * tagToBeClosed;
+        if ([Tag getOpenTagByDurationId:button.durationID]) {
+            tagToBeClosed = [Tag getOpenTagByDurationId:button.durationID];
+        }else{
+            for (Tag *tag in _currentEvent.tags) {
+                if ([tag.name isEqualToString:button.titleLabel.text] && tag.type == TagTypeOpenDuration) {
+                    tagToBeClosed = tag;
+                }
+            }
+        }
+        
+        //tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
         NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed makeTagData]];
         
         [tagData setValue:[NSString stringWithFormat:@"%f",currentTime] forKey:@"closetime"];
@@ -977,6 +991,16 @@ static void * eventContext      = &eventContext;
     }
 }
 
+-(void) turnSwitchOn
+{
+    for (Tag *tag in _currentEvent.tags) {
+        if (tag.type == TagTypeOpenDuration) {
+            [durationSwitch setOn:YES];
+            [self switchPressed];
+            return;
+        }
+    }
+}
 
 - (void)didReceiveMemoryWarning
 {
