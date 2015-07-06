@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EncoderProtocol.h"
 #import "EncoderStatusMonitor.h"
-#import "EncoderCommands.h" // Depricated
-#import "EncoderCommand.h" // Depricated
+#import "EncoderTask.h" // Depricated
 #import "Event.h"
 #import "ActionListItem.h"
 
@@ -26,7 +25,7 @@
 #define NOTIF_ENCODER_MASTER_FOUND          @"encoderMasterFound"
 #define NOTIF_ENCODER_MASTER_HAS_FALLEN     @"encoderMasterLost"
 #define NOTIF_ENCODER_MASTER_ENSLAVED       @"encoderMasterEnslaved"
-#define NOTIF_THIS_ENCODER_IS_READY         @"encoderIsReady"
+//#define NOTIF_THIS_ENCODER_IS_READY         @"encoderIsReady"
 
 
 #define AUTHENTICATE    @"authenticate:timeStamp:"
@@ -49,7 +48,7 @@
 #define RESUME_EVENT    @"resumeEvent:timeStamp:"
 #define START_EVENT     @"startEvent:timeStamp:"
 
-@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderCommands,EncoderProtocol,EncoderStatusMonitorProtocol,ActionListItem>
+@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderProtocol,EncoderStatusMonitorProtocol,ActionListItem>
 {
     
     
@@ -61,7 +60,7 @@
     BOOL                    isWaitiing;
 
 
-    EncoderCommand         * currentCommand;
+    EncoderTask         * currentCommand;
     EncoderStatusMonitor    * statusMonitor;
     NSDictionary            * rawEncoderData; // Data from getpastevents
 }
@@ -137,9 +136,9 @@
 -(void)camerasGetResponce:(NSData *)data;
 -(void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary*)dict;
 -(void)deleteEventResponse: (NSData *) data;
--(void)removeFromQueue:(EncoderCommand *)obj;
--(void)addToQueue:(EncoderCommand *)obj;
--(EncoderCommand *)getNextInQueue;
+-(void)removeFromQueue:(EncoderTask *)obj;
+-(void)addToQueue:(EncoderTask *)obj;
+-(EncoderTask *)getNextInQueue;
 
 /**
  *  removes all observers and checker and release memory if possible

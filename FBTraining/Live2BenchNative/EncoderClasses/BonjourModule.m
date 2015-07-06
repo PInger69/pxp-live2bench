@@ -31,7 +31,7 @@
         services                = [[NSMutableArray alloc]init];
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
-        _searching              = YES;
+        _searching              = NO;
         delegate                = aDelegate;
        [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
     }
@@ -126,8 +126,10 @@
     if (searching == _searching)return;
     if (searching) {
         [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+        PXPLog(@"BonjourModule: ON");
     } else{
         [serviceBrowser stop];
+        PXPLog(@"BonjourModule: OFF");
     }
     [self willChangeValueForKey:@"searchForEncoders"];
     _searching = searching;

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ActionList.h"
-#import "EncoderCommand.h"
+#import "EncoderTask.h"
 
 
 @interface UserCenter : NSObject
@@ -16,7 +16,7 @@
     NSURLRequest            * urlRequest;
     NSURLConnection         * encoderConnection;
 
-    EncoderCommand         * currentCommand;
+    EncoderTask         * currentCommand;
 
 }
 

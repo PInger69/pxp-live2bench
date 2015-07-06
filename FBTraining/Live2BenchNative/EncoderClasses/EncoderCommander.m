@@ -16,8 +16,8 @@
 }
 @synthesize masterEncoder,allEncoders;
 @synthesize event = _event;
+@synthesize allEvents = _allEvents;
 
-#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
@@ -26,10 +26,10 @@
     self = [super init];
     if (self) {
         allEncoders = [[NSMutableArray alloc]init];
-        
+            self.name = @"EncoderCommander";
         _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
             masterEncoder = (Encoder *)note.object;
-            
+
             if (masterEncoder.liveEvent) {
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
             }
@@ -338,13 +338,18 @@
 
 -(void)addEncoder:(Encoder*)aEncoder
 {
-    
+    [allEncoders addObject:aEncoder];
   
 }
 
 -(Encoder*)removeEncoder:(Encoder*)aEncoder
 {
-    return nil;
+    if ([allEncoders containsObject:aEncoder]) {
+        [allEncoders removeObject:aEncoder];
+        return aEncoder;
+    } else {
+        return nil;
+    }
     
 }
 
@@ -363,7 +368,7 @@
 
 -(Event*)event
 {
-    return _event;
+    return (Event*)_event;
 }
 
 
@@ -473,10 +478,35 @@
 
 -(void)clearQueueAndCurrent
 {
-
-
-
+    for (Encoder * encoder in allEncoders) {
+        [encoder clearQueueAndCurrent];
+    }
 }
+
+
+-(NSDictionary*)allEvents
+{
+    NSMutableDictionary *tempDict = [[NSMutableDictionary alloc]init];
+
+    for (Encoder * encoder in allEncoders) {
+        [tempDict addEntriesFromDictionary:encoder.allEvents];
+    }
+    
+    [tempDict addEntriesFromDictionary:masterEncoder.allEvents]; // master Encoder overwrites all other events
+
+    return [tempDict copy];
+}
+
+-(EncoderStatus)status
+{
+    return masterEncoder.status;
+}
+
+-(NSString *)statusAsString
+{
+    return masterEncoder.statusAsString;
+}
+
 
 @end
 
@@ -486,6 +516,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-/// Make Combo Event class - this cla
+/// Make Combo Event class - this class acts as one event but is a combo of all events from all the encoders
 
 
+@interface EventCombo : Event
+
+@end
+
+@implementation EventCombo
+
+
+
+@end

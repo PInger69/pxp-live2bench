@@ -62,7 +62,6 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 {
     // Tab Props
     NSMutableDictionary * tabNameReferenceDict;
-    //NSArray             * tabBarItems;
     NSMutableArray      * tabButtonItems;
     
     // App Start Props

@@ -9,7 +9,6 @@
 
 #import "EncoderManager.h"
 #import "Encoder.h"
-#import "EncoderCommands.h"
 #import "EncoderStatusMonitor.h"
 #import "Utility.h"
 #import "EncoderManagerActionPack.h" // All actions are in here!!
@@ -20,7 +19,7 @@
 #import "UserCenter.h"
 #import "ActionListItem.h"
 
-
+#import "ListPopoverController.h"
 #import "FakeEncoder.h"
 
 //#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
@@ -29,42 +28,23 @@
 
 @implementation EncoderManager
 {
-    
     NSMutableDictionary         * dictOfEncoders;
-    NSMutableArray              * arrayOfTagSets;
-
-    id                          _masterLostObserver;
-    id                          _masterFoundObserver;
-    id                          _encoderReadyObserver;
-    id                          _logoutObserver;
-    id                          _liveEventStopped;
-    id                          _liveEventFound;
+  
+    Event                       * eventBeingBuilt;
+    ListPopoverController       * askPickMaster;
     
+    id <ActionListItem>         buildEventAction;
     CheckWiFiAction             * checkWiFiAction;
     CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
-    
-    id <ActionListItem>         buildEventAction;
-    Event                       * eventBeingBuilt;
 }
 
 @synthesize bonjourModule;
-
-@synthesize hasWiFi                 = _hasWiFi;
 @synthesize hasMAX                  = _hasMAX;
-
 @synthesize hasLive                 = _hasLive;
 @synthesize searchForEncoders       = _searchForEncoders;
-@synthesize feeds                   = _feeds;           // depricated
-@synthesize currentEvent            = _currentEvent;    // depricated
-@synthesize currentEventType        = _currentEventType;// depricated
-@synthesize currentEventData        = _currentEventData;// depricated
-@synthesize currentEventTags        = _currentEventTags;// depricated
 @synthesize allEvents               = _allEvents;
 @synthesize authenticatedEncoders   = _authenticatedEncoders;
-@synthesize openDurationTags        = _openDurationTags;// depricated
-@synthesize liveEventName           = _liveEventName;
-@synthesize eventTags               = _eventTags;// depricated
 @synthesize masterEncoder           = _masterEncoder;
 @synthesize cloudEncoder            = _cloudEncoder;
 @synthesize localEncoder            = _localEncoder;
@@ -79,132 +59,29 @@
     self = [super init];
     if (self){
         
-        _authenticatedEncoders  = [[NSMutableArray alloc]init];
-        dictOfEncoders          = [[NSMutableDictionary alloc]init];
-        _liveEventName          = @"None";
+        _authenticatedEncoders          = [[NSMutableArray alloc]init];
+        dictOfEncoders                  = [[NSMutableDictionary alloc]init];
+        bonjourModule                   = [[BonjourModule alloc]initWithDelegate:self];
+        _cloudEncoder                   = [[CloudEncoder alloc]initWithIP:[Utility getIPAddress]];  // started in searchForEncoders
+        _localEncoder                   = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
+        _localEncoder.encoderManager    = self;
+        _localMediaManager              = [[LocalMediaManager alloc]initWithDocsPath:aLocalDocsPath];
+        _searchForEncoders              = NO;
+        _hasLive                        = NO; // default before checking
         
-        // Browse for services
-        
-        bonjourModule           = [[BonjourModule alloc]initWithDelegate:self];
-        
-        _openDurationTags       = [[NSMutableDictionary alloc]init];
-        _eventTags              = [[NSMutableDictionary alloc]init];
-        arrayOfTagSets          = [[NSMutableArray alloc]init];
-        _feeds                  = [[NSMutableDictionary alloc]init];
-        
-        _cloudEncoder           = [[CloudEncoder alloc]initWithIP:[Utility getIPAddress]];  // started in searchForEncoders
-        [_cloudEncoder startObserving];
-        
-        _localEncoder           = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
-        _localEncoder.encoderManager = self;
-        _localMediaManager      = [[LocalMediaManager alloc]initWithDocsPath:aLocalDocsPath];
-        
-        _currentEventType       = SPORT_HOCKEY;
-        _searchForEncoders      = NO;
-        //encoderSync             = [[EncoderDataSync alloc]init];
-        _hasLive                = NO; // default before checking
-        
-        // setup observers
-        __block EncoderManager * weakSelf = self;
-        
-        
-        /*_liveEventStopped         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_STOPPED     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            // if the current playing event is the live event and its stopped then we have to make it no Event at all
-            if ([weakSelf.currentEvent isEqualToString:weakSelf.liveEventName]){
-                weakSelf.currentEvent   = nil; // Depricated
-                weakSelf.liveEventName  = nil; // Depricated
-                weakSelf.liveEvent      = nil;
-            }
-        }];*/
-        
-        _liveEventFound         = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_LIVE_EVENT_FOUND     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            
-            weakSelf.liveEventName  = ((Encoder*) note.object).liveEvent.name; // Depricated
-            weakSelf.currentEvent   = weakSelf.liveEventName; // should live be live no matter what?? // Depricated
-            weakSelf.liveEvent = ((Encoder*) note.object).liveEvent;
-            
-            if (weakSelf.masterEncoder == ((Encoder*) note.object).liveEvent.parentEncoder) {
-                 // add code here to let the app know if its the only event and to push the app to live2Bench
-                if (!weakSelf.primaryEncoder || (weakSelf.primaryEncoder && ![weakSelf.primaryEncoder event]) || weakSelf.masterEncoder.pressingStart) {
-                    if (!weakSelf.primaryEncoder) {
-                        weakSelf.primaryEncoder = weakSelf.masterEncoder;
-                    }
-                    weakSelf.masterEncoder.pressingStart = false;
-                    [weakSelf declareCurrentEvent:weakSelf.liveEvent];
-                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onLiveEventFound:)             name:NOTIF_LIVE_EVENT_FOUND             object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterFound:)                name:NOTIF_ENCODER_MASTER_FOUND         object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterLost:)                 name:NOTIF_ENCODER_MASTER_HAS_FALLEN    object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteEvent:)                name:NOTIF_DELETE_EVENT_SERVER          object:nil];
 
-                    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-                }
-            
-            
-            }
-            
-            
-        }];
-        
-        
-        _masterFoundObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND    object:nil queue:nil usingBlock:^(NSNotification *note) {
-            _masterEncoder = note.object;
-            
-//            if (_masterEncoder.liveEvent) {
-//                weakSelf.liveEventName = _masterEncoder.liveEvent.name;
-//                //                [weakSelf refresh];
-//
-//                weakSelf.primaryEncoder = _masterEncoder;
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_HAS_LIVE object:nil];
-//            }
-//            [weakSelf refresh];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
-            
-        }];
-        
-        _masterLostObserver  = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN     object:nil queue:nil usingBlock:^(NSNotification *note) {
-            
-            [weakSelf.authenticatedEncoders removeObject:weakSelf.masterEncoder];
-            
-            if (weakSelf.masterEncoder !=nil) [weakSelf unRegisterEncoder:(Encoder*)weakSelf.masterEncoder];
-            
-            if ( [weakSelf.liveEventName isEqualToString:weakSelf.currentEvent]){
-                weakSelf.currentEvent = nil;
-            }
-            
-            weakSelf.liveEventName = nil;
-            
-            [weakSelf.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
-                    Encoder * anEncoder = (Encoder *) obj;
-                    [anEncoder searchForMaster];
-                }
-            }];
-        }];
-        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)               name:NOTIF_MASTER_COMMAND               object:nil]; // watch whole app for start or stop events
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)      name:NOTIF_ENCODER_STAT                 object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadEvent:)    name:NOTIF_EM_DOWNLOAD_EVENT            object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onLoginToCloud)                name:NOTIF_USER_LOGGED_IN               object:nil];
 
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeCurrentEvent:)       name:NOTIF_EM_CHANGE_EVENT object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)           name:NOTIF_MASTER_COMMAND   object:nil]; // watch whole app for start or stop events
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterHasLive:)            name:NOTIF_MASTER_HAS_LIVE  object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationDownloadEvent:) name:NOTIF_EM_DOWNLOAD_EVENT object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onLoginToCloud)            name:NOTIF_USER_LOGGED_IN object:nil];
-        // making actions
-        
-        //SAGAR AND BEN NOTIFICATIONS
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listViewFeed:) name:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDataRequest:) name:NOTIF_REQUEST_CALENDAR_DATA object:nil];
-        
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DELETE_EVENT_SERVER object:nil queue:nil usingBlock:^(NSNotification *note) {
-            Event *eventToDelete = note.object;
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
-                                   @"name": eventToDelete.name,
-                                   @"hid": eventToDelete.hid
-                                   }];
-            [self deleteEvent: dict];
-        }];
-
-        
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
         checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
         checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
-        //logoutAction                = [[LogoutAction alloc]initWithEncoderManager:self];
         
         // This will look for the external encoder if no other normal encoders are found
         [self performSelector:@selector(makeCoachExternal) withObject:nil afterDelay:40];
@@ -212,26 +89,71 @@
     return self;
 }
 
-static void * authenticatContext    = &authenticatContext;
-static void * statusContext         = &statusContext;
 
-
-//SAGAR AND BEN CODE BEGINS
-
--(void)eventDataRequest: (NSNotification *)note{
+-(void)logoutOfCloud
+{
+    [_cloudEncoder logoutOfCloud];
+    NSArray * allEnc = [dictOfEncoders allValues];
     
-    void(^theBlock)(NSArray *eventData) = [note.userInfo objectForKey:@"block"];
-    theBlock(self.allEventData);
+    for (Encoder * enc in allEnc) {
+        PXPLog(@"Logged out of Encoder");
+        [self unRegisterEncoder:enc];
+    }
+    [_authenticatedEncoders removeAllObjects];
+    [dictOfEncoders removeAllObjects];
+    [bonjourModule clear];
 }
 
--(void)listViewFeed: (NSNotification *)note{
-    
-    void(^theBlock)(NSDictionary *someFeeds, NSArray *allTags) = [note.userInfo objectForKey:@"block"];
-    theBlock(self.feeds, [self.eventTags allValues]);
+-(void)onLoginToCloud
+{
+    [bonjourModule reset];
 }
 
-//SAGAR AND BEN CODE FINISHES
 
+
+
+
+// This will be depricated soon with the construction of a new MasterSlaveEncoder
+-(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet
+{
+    // check if this line is really being used
+    NSString * myEvent = ([event isEqualToString:self.liveEvent.name])?@"live":event; // Converts event name to live if needed
+    
+    
+    NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                        @"user"        : [UserCenter getInstance].userHID,
+                                                                                        @"requesttime" : GET_NOW_TIME,
+                                                                                        @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                                                                        @"event"       : myEvent
+                                                                                        }];
+    
+    NSArray     * encoders;
+    
+    if (![_primaryEncoder isKindOfClass:[Encoder class]] && _primaryEncoder) {
+        encoders    = @[_primaryEncoder];
+    } else {
+        encoders    = [_authenticatedEncoders copy];
+        
+    }
+    
+    
+    [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol>obj, NSUInteger idx, BOOL *stop){
+        [obj issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME onComplete:^{
+            onCompleteGet(nil);
+        }];
+    }];
+    
+}
+
+
+
+
+
+
+#pragma mark -
+#pragma mark Encoder Administartion
+
+// This method switches encoders if need then changes the event. It will also build event if it has not been built
 -(void)declareCurrentEvent:(Event*)event
 {
   
@@ -244,8 +166,7 @@ static void * statusContext         = &statusContext;
 
             [self.primaryEncoder setEvent:nil];
             self.primaryEncoder = nil;
-        }
-        else{
+        } else {
             if (event.isBuilt){
                 self.primaryEncoder = event.parentEncoder;
                 event.primary = true;
@@ -275,24 +196,65 @@ static void * statusContext         = &statusContext;
 -(void)registerEncoder:(NSString*)name ip:(NSString*)ip
 {
     if ([dictOfEncoders objectForKey:name] == nil) {
-        Encoder * newEncoder    = [[Encoder alloc]initWithIP:ip];
-        newEncoder.encoderManager = self;
-        [newEncoder addObserver:self forKeyPath:@"authenticated"    options:0 context:authenticatContext];
-        [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
-        newEncoder.name         = name;
+        Encoder * newEncoder        = [[Encoder alloc]initWithIP:ip];
+        newEncoder.encoderManager   = self;
+        newEncoder.name             = name;
         [newEncoder requestVersion];
-        
         [newEncoder authenticateWithCustomerID:[UserCenter getInstance].customerID];
-//        if (_masterEncoder == nil) [newEncoder searchForMaster];
         [dictOfEncoders setValue:newEncoder forKey:name];
         
         PXPLog(@"*** Registered Encoder ***");
         PXPLog(@"    %@ - %@",newEncoder.name,ip);
         PXPLog(@"**************************");
         
-//       if (![newEncoder.name isEqualToString:@"External Encoder"])  [_masterEncoder addEncoder:newEncoder];
+        
     }
 }
+
+// once the encoder is registered completed you can do what you want with it
+-(void)onRegisterEncoderCompleted:(Encoder*)registerEncoder
+{
+
+    if (registerEncoder.authenticated  && ![_authenticatedEncoders containsObject:registerEncoder]) {
+        [_authenticatedEncoders addObject:registerEncoder];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+    } else if (!registerEncoder.authenticated) {
+        [registerEncoder destroy];
+    }
+
+    
+    // is it added to the Encoder Commander check encocer level
+    
+    // this is a temp
+    if ([dictOfEncoders count] > 0) {
+        
+        NSMutableArray * listed                     = [NSMutableArray arrayWithArray:[dictOfEncoders allKeys]];
+        
+        if (askPickMaster) {
+            [askPickMaster dismissPopoverAnimated:NO];
+            [askPickMaster clear];
+            askPickMaster = nil;
+        }
+        
+        askPickMaster                               = [[ListPopoverController alloc] initWithMessage:@"Please pick an encoder:" buttonListNames:[listed copy]];
+        __block EncoderManager * weakEncoderManager = self;
+        
+        [askPickMaster addOnCompletionBlock:^(NSString *pick){
+            
+            for (Encoder* enc in [weakEncoderManager->dictOfEncoders allValues])
+            {
+                enc.isMaster = NO;
+            }
+            ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]).isMaster =YES;
+        }];
+        [askPickMaster presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                       animated:YES];
+        
+    }
+
+}
+
+
 
 /**
  *  This removes an encoder and posts to the app to let it know when a feed changes or when master is lost
@@ -303,31 +265,13 @@ static void * statusContext         = &statusContext;
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {
     PXPLog(@"!!! ENCODER REMOVED !!! %@",aEncoder.name);
-    
-    [aEncoder removeObserver:self forKeyPath:@"authenticated"];
-    [aEncoder removeObserver:self forKeyPath:@"status"];
 
     [aEncoder destroy];
-//    if (((Encoder*)_masterEncoder) == aEncoder){
-//        
-//        _masterEncoder = nil;
-//        PXPLog(@"Master Encoder Linched!");
-//
-//    }
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
 
 }
-
--(void)masterHasLive:(NSNotification *)note
-{
-    self.currentEvent   = self.liveEventName;
-//    [self requestTagDataForEvent:_liveEventName onComplete:^(NSDictionary *all) {
-//        [_eventTags setObject:all forKey:_liveEventName];
-//    }];
-}
-
 
 
 -(void)setPrimaryEncoder:(id<EncoderProtocol>)primaryEncoder
@@ -350,73 +294,6 @@ static void * statusContext         = &statusContext;
 }
 
 
-
--(Event*)getEventByHID:(NSString*)eventHID
-{
-    Event * event;
-    
-    // collects all events
-    NSMutableArray * collection = [[NSMutableArray alloc]init];
-    
-    for (Encoder * enc in self.authenticatedEncoders) {
-        [collection addObjectsFromArray:[enc.allEvents allValues]];
-    }
-    
-    
-    for (Event * evt in collection) {
-        if ([evt.hid isEqualToString:eventHID]) {
-            event = evt;
-            break;
-        };
-    }
-    
-    // If there is no exteral events check the local
-    if (!event){
-        collection = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].allEvents allValues]];
-        
-        for (Event * evt in collection) {
-            if ([evt.hid isEqualToString:eventHID]) {
-                event = evt;
-                break;
-            };
-        }
-    }
-
-    return event;
-}
-
--(Event*)getEventByName:(NSString*)eventName
-{
-    for (Encoder * enc in self.authenticatedEncoders) {
-        
-        if ([enc getEventByName:eventName]){
-            return [enc getEventByName:eventName];
-        }
-    }
-    
-    //return [self.localEncoder getEventByName:eventName];
-    return [[LocalMediaManager getInstance] getEventByName:eventName];
-}
-
--(void)makeFakeEncoder
-{
-
-        FakeEncoder * newEncoder    = [[FakeEncoder alloc]init];
-        newEncoder.encoderManager = self;
-        [newEncoder addObserver:self forKeyPath:@"authenticated"    options:0 context:authenticatContext];
-        [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
-        newEncoder.name         = [NSString stringWithFormat:@"Fake %d",[FakeEncoder fakeCount] ];
-//        [newEncoder requestVersion];
-//        [newEncoder authenticateWithCustomerID:_customerID];
-//        if (_masterEncoder == nil) [newEncoder searchForMaster];
-        [dictOfEncoders setValue:newEncoder forKey:newEncoder.name];
-    
-        
-        PXPLog(@"*** Registered FAKE Encoder ***");
-        PXPLog(@"    %@ ",newEncoder.name);
-        PXPLog(@"**************************");
-
-}
 
 
 #pragma mark -
@@ -461,27 +338,6 @@ static void * statusContext         = &statusContext;
     
 }
 
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    Encoder * encoder = object;
-    if (context == authenticatContext){
-        
-        if (encoder.authenticated  && ![_authenticatedEncoders containsObject:encoder]) {
-            [_authenticatedEncoders addObject:encoder];
-            [encoder buildEncoderRequest]; // its authenticated... now collect all data from the encoder
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
-        }
-    }
-    
-}
-
--(void)changeCurrentEvent:(NSNotification*)note
-{
-    NSString * eventName = note.userInfo[@"name"];
-    self.currentEvent = eventName;
-    
-}
 
 /**
  *  This method prepares the clip for download
@@ -537,7 +393,66 @@ static void * statusContext         = &statusContext;
     
 }
 
-#pragma mark - Master Command Methods
+
+-(void)onDeleteEvent:(NSNotification*)note
+{
+    Event *eventToDelete = note.object;
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                @"name": eventToDelete.name,
+                                                                                @"hid": eventToDelete.hid
+                                                                                }];
+    
+    [eventToDelete.parentEncoder issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+}
+
+-(void)onLiveEventFound:(NSNotification*)note
+{
+    Encoder * encoderHasLive = (Encoder*) note.object;
+    self.liveEvent = encoderHasLive.liveEvent;
+    
+    if (self.masterEncoder == encoderHasLive.liveEvent.parentEncoder) {
+        // add code here to let the app know if its the only event and to push the app to live2Bench
+        if (!self.primaryEncoder || (self.primaryEncoder && ![self.primaryEncoder event]) || self.masterEncoder.pressingStart) {
+            if (!self.primaryEncoder) {
+                self.primaryEncoder = self.masterEncoder;
+            }
+            self.masterEncoder.pressingStart = false;
+            [self declareCurrentEvent:self.liveEvent];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
+        }
+    }
+}
+
+
+-(void)onMasterFound:(NSNotification*)note
+{
+    _masterEncoder = note.object;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
+}
+
+-(void)onMasterLost:(NSNotification*)note
+{
+    [self.authenticatedEncoders removeObject:self.masterEncoder];
+    
+    if (self.masterEncoder !=nil) [self unRegisterEncoder:self.masterEncoder];
+    
+    if ( [self.liveEvent.name isEqualToString:self.currentEvent]){
+        self.currentEvent = nil;
+    }
+    
+    self.liveEvent = nil;
+    
+    [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
+            Encoder * anEncoder = (Encoder *) obj;
+            [anEncoder searchForMaster];
+        }
+    }];
+
+}
+
+
+#pragma mark Master Command Methods
 -(void)masterCommands:(NSNotification *)note
 {
     NSDictionary * data = note.userInfo;
@@ -559,66 +474,53 @@ static void * statusContext         = &statusContext;
     
 }
 
-#pragma mark - Command Methods
 
--(void)logoutOfCloud
+#pragma mark -
+#pragma mark Utility Methods
+-(Event*)getEventByHID:(NSString*)eventHID
 {
-    [_cloudEncoder logoutOfCloud];
+    Event * event;
     
-    NSArray * allEnc = [dictOfEncoders allValues];
+    // collects all events
+    NSMutableArray * collection = [[NSMutableArray alloc]init];
     
-    for (Encoder * enc in allEnc) {
-        PXPLog(@"Logged out of Encoder");
-        [self unRegisterEncoder:enc];
-    }
-    [_authenticatedEncoders removeAllObjects];
-    [dictOfEncoders removeAllObjects];
-    [bonjourModule clear];
-}
-
--(void)onLoginToCloud
-{
-    [bonjourModule reset];
-}
-
--(void)pushTag:(NSMutableDictionary *)tagSet
-{
-    [arrayOfTagSets addObject:tagSet];
-}
-
-
-
-// depricated
-//-(void)reqestTeamData:(void(^)(NSArray*pooled))onCompleteGet
-//{
-//    
-//    if (_primaryEncoder) {
-//        NSNumber    * nowTime             = GET_NOW_TIME;
-//        [_primaryEncoder issueCommand:TEAMS_GET priority:1 timeoutInSec:10 tagData:nil timeStamp:nowTime];
-//        //        encoderSync =  [[EncoderDataSync alloc]initWith:@[_masterEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
-//        //[encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:nowTime onFinish:onCompleteGet];
-//    } else {
-//        // Alert the user that there is not master encoder
-//    }
-//}
-
-
-
--(void)deleteEvent:(NSMutableDictionary *)data{
-
-    for (id <EncoderProtocol> aEncoder  in _authenticatedEncoders) {
-        [aEncoder issueCommand:DELETE_EVENT
-                      priority:10
-                  timeoutInSec:5
-                       tagData:data
-                     timeStamp:GET_NOW_TIME];
+    for (Encoder * enc in self.authenticatedEncoders) {
+        [collection addObjectsFromArray:[enc.allEvents allValues]];
     }
     
-
+    
+    for (Event * evt in collection) {
+        if ([evt.hid isEqualToString:eventHID]) {
+            event = evt;
+            break;
+        };
+    }
+    
+    // If there is no exteral events check the local
+    if (!event){
+        collection = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].allEvents allValues]];
+        
+        for (Event * evt in collection) {
+            if ([evt.hid isEqualToString:eventHID]) {
+                event = evt;
+                break;
+            };
+        }
+    }
+    
+    return event;
 }
 
-
-
+-(Event*)getEventByName:(NSString*)eventName
+{
+    for (Encoder * enc in self.authenticatedEncoders) {
+        
+        if ([enc getEventByName:eventName]){
+            return [enc getEventByName:eventName];
+        }
+    }
+    return [[LocalMediaManager getInstance] getEventByName:eventName];
+}
 
 /**
  *  This gets all Event Classes from all encoders in a group
@@ -635,172 +537,50 @@ static void * statusContext         = &statusContext;
     return temp;
 }
 
-// This will be depricated soon with the construction of a new MasterSlaveEncoder
-// this gets all Events, Masters Event take priority and all events are unique.
--(NSMutableArray*)allEventData
-{
-    
-    // Collects all data from encoders into a temp array
-    NSMutableArray * temp1  = [[NSMutableArray alloc]init];
-    NSMutableArray * eventPool  = [[NSMutableArray alloc]init];
-    
-    
-    //Why doesn't the protocol have allEvents?
-    for (Encoder <EncoderProtocol> *encoder in _authenticatedEncoders) {
-        [eventPool addObjectsFromArray:[encoder.allEvents allValues]];
-    }
-    
-    for (Event * anEvent in eventPool) {
-        //        [temp1 addObjectsFromArray:anEvent.rawData];
-        [temp1 addObjectsFromArray:[anEvent.rawData allValues]];
-    }
-    
-    
-    // This filters the data so its all unique
-    NSMutableSet    * uniqueHIDS  = [[NSMutableSet alloc]init];
-    NSPredicate     * makeUniquie = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        
-        if (![evaluatedObject isKindOfClass:[NSDictionary class]]) return NO; // quick filter.. if not a dict... remove
-        
-        NSDictionary * thisDict = evaluatedObject;
-        NSString * thisHID = [thisDict objectForKey:@"hid"];
-        if ( thisHID == nil) {
-            return NO;
-        } else if ([uniqueHIDS containsObject:thisHID]){
-            return NO;
-        } else {
-            [uniqueHIDS addObject:thisHID];
-            return YES;
-        }
-    }];
-    temp1  = [NSMutableArray arrayWithArray:[temp1 filteredArrayUsingPredicate:makeUniquie]];
-    
-    
-    // convert data to a dict to make it easier to add/overwrite data from the master encoder
-    NSMutableDictionary * uniqueDict = [[NSMutableDictionary alloc]init];
-    NSEnumerator * converToDict = [temp1 objectEnumerator];
-    id value;
-    while ((value = [converToDict nextObject])) {
-        NSDictionary * dict = value;
-        [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
-    }
-    
-    // this adds the data from the master encoder and overwrites slave data
-    if (_masterEncoder != nil){
-        NSEnumerator * masterEnum = [_masterEncoder.allEvents objectEnumerator];
-        id value2;
-        while ((value2 = [masterEnum nextObject])) {
-            Event *event = value2;
-            NSDictionary * dict = event.rawData;
-            [uniqueDict setObject:dict forKey:[dict objectForKey:@"name"]];
-        }
-        
-    }
-    return [[uniqueDict allValues]copy];
-}
-
-// This will be depricated soon with the construction of a new MasterSlaveEncoder
--(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet
-{
-    NSString * myEvent = ([event isEqualToString:_liveEventName])?@"live":event; // Converts event name to live if needed
-
-    
-    NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                        @"user"        : [UserCenter getInstance].userHID,
-                                                                                        @"requesttime" : GET_NOW_TIME,
-                                                                                        @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
-                                                                                        @"event"       : myEvent
-                                                                                        }];
-    
-    NSArray     * encoders;
-    
-    if (![_primaryEncoder isKindOfClass:[Encoder class]] && _primaryEncoder) {
-        encoders    = @[_primaryEncoder];
-    } else {
-        encoders    = [_authenticatedEncoders copy];
-        
-    }
-    
-
-    [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol>obj, NSUInteger idx, BOOL *stop){
-        [obj issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME onComplete:^{
-            onCompleteGet(nil);
-        }];
-    }];
-
-}
-
-
-// This will be depricated soon with the construction of a new MasterSlaveEncoder
--(NSMutableDictionary*)eventTags
-{
-    
-    NSMutableDictionary * tags = [[NSMutableDictionary alloc]init];
-    NSArray             * encoders;
-    
-    if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) {
-        encoders    = @[_primaryEncoder];
-    } else {
-        encoders    = [_authenticatedEncoders copy];
-        
-    }
-    
-    for (id <EncoderProtocol> encoder in /*_authenticatedEncoders*/encoders) {
-        NSLog(@"%@", encoder.event);
-        if (encoder.event.tags != nil ){
-            NSLog(@"%@", encoder.event);
-            
-            NSMutableArray *keys = [[NSMutableArray alloc]init];
-            for(Tag *tags in encoder.event.tags){
-                [keys addObject:tags.ID];
-            }
-            
-            NSDictionary *newTagDic = [[NSDictionary alloc]initWithObjects:encoder.event.tags forKeys:keys];
-            [tags  addEntriesFromDictionary:newTagDic];
-        }
-    }
-    return tags;
-}
-
-
-/**
- *  TODO fix this global crap. this was added so global can be cut out slowly
- *  DEPRICATED!
- *  @return connected to Encoder
- */
--(BOOL)hasMIN
-{
-    return NO;//[Globals instance].HAS_MIN;
-}
-
-
--(BOOL)hasLive
-{
-    return _hasLive;
-}
-
--(void)setHasLive:(BOOL)hasLive
-{
-    if (hasLive == _hasLive) return;
-    
-    [self willChangeValueForKey:@"hasLive"];
-    _hasLive = hasLive;
-    if ([_currentEvent isEqualToString:_liveEventName] && !_hasLive){
-        self.currentEvent = @"None";
-    }
-    [self didChangeValueForKey:@"hasLive"];
-    
-}
-
 
 
 
 #pragma mark -
-#pragma This what starts the encoder manager to start searching
+#pragma mark Debug Methods
+
+
+/**
+ *   This makes the external encoder after 40 seconds and if MAX is found and no encoders are found
+ */
+-(void)makeCoachExternal
+{
+    if ([_authenticatedEncoders count] == 1 && self.hasMAX && [[UserCenter getInstance].customerEmail isEqualToString:@"coach"]){
+        [self registerEncoder:@"External Encoder" ip:@"avocatec.org:8888"];
+    }
+}
+
+// does not work
+-(void)makeFakeEncoder
+{
+    
+    FakeEncoder * newEncoder    = [[FakeEncoder alloc]init];
+    newEncoder.encoderManager = self;
+    newEncoder.name         = [NSString stringWithFormat:@"Fake %d",[FakeEncoder fakeCount] ];
+    //        [newEncoder requestVersion];
+    //        [newEncoder authenticateWithCustomerID:_customerID];
+    //        if (_masterEncoder == nil) [newEncoder searchForMaster];
+    [dictOfEncoders setValue:newEncoder forKey:newEncoder.name];
+    
+    
+    PXPLog(@"*** Registered FAKE Encoder ***");
+    PXPLog(@"    %@ ",newEncoder.name);
+    PXPLog(@"**************************");
+    
+}
+
+
+// Depricated?
 -(BOOL)searchForEncoders
 {
     return _searchForEncoders;
 }
+
+// Depricated?
 -(void)setSearchForEncoders:(BOOL)searchForEncoders
 {
     if (searchForEncoders == _searchForEncoders)return;
@@ -814,7 +594,6 @@ static void * statusContext         = &statusContext;
     _searchForEncoders = searchForEncoders;
     [self didChangeValueForKey:@"searchForEncoders"];
 }
-
 
 
 -(NSString*)description
@@ -841,27 +620,8 @@ static void * statusContext         = &statusContext;
 }
 
 
-/**
- *   This makes the external encoder
- */
--(void)makeCoachExternal
-{
-    if ([_authenticatedEncoders count] == 1 && self.hasMAX){
-        __block EncoderManager * weakSelf = self;
-        void (^onRecieveData)(NSDictionary*) = ^void(NSDictionary* theData){
-            if ([theData[@"emailAddress"] isEqualToString:@"coach"]){
-                [weakSelf registerEncoder:@"External Encoder" ip:@"avocatec.org:8888"];
-            }
-        };
-        
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_USER_CENTER_DATA_REQUEST object:nil userInfo:@{@"type":UC_REQUEST_USER_INFO, @"block":onRecieveData}];
-    }
-
-}
-
-
 #pragma mark -
-#pragma Action Delegate Methods
+#pragma mark Action Delegate Methods
 
 
 -(void)onSuccess:(id<ActionListItem>)actionListItem
@@ -882,7 +642,7 @@ static void * statusContext         = &statusContext;
  
 
 #pragma mark -
-#pragma Action Methods
+#pragma mark Action Methods
 // Action Methods
 
 -(id<ActionListItem>)checkForWiFiAction

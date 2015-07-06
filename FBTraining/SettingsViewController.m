@@ -1005,7 +1005,7 @@ SVSignalStatus signalStatus;
     [userName setText:userCenter.customerEmail];
     
     
-    if (!encoderManager.hasWiFi) {
+    if (![Utility hasWiFi]) {
         encoderHomeText.text = @"Encoder is not available.";
         [encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
         [encStateLabel setText:@""];

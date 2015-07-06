@@ -85,7 +85,7 @@
     
 
     
-    if([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
+    if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
         [self.delegate onEventBuildFinished:self];
     }
     
