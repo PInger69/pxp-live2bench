@@ -227,7 +227,9 @@
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
                                                                                                                                             //@"feed":tag.feeds[key],
                                                                                                                                             //@"feed":tag.name,
-                                                                                                                                            @"feed":tag.event.feeds[@"s1"],
+                                                                                     
+                                                                                     @"name": key,
+                                                                                                                                            @"feed":tag.event.feeds.allValues.firstObject,
                                                                                                                                             @"time": [NSString stringWithFormat:@"%f",tag.startTime],
                                                                                                                                             @"duration": [NSString stringWithFormat:@"%d",tag.duration],
                                                                                                                                             @"comment": tag.comment,

@@ -243,27 +243,34 @@ static CMClockRef _pxpPlayerMasterClock;
             [player didChangeValueForKey:@"range"];
         }
         
-        // get start and end times
-        CMTime start = range.start, end = CMTimeAdd(start, range.duration);
-        
-        // create a boundary observer at the range end points
-        __block PxpPlayer *player = self;
-        self.rangeObserver = [self addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:start], [NSValue valueWithCMTime:end]] queue:NULL usingBlock:^() {
+        if (CMTIMERANGE_IS_VALID(range)) {
+            // get start and end times
+            CMTime start = range.start, end = CMTimeAdd(start, range.duration);
             
-            // seek to the appropriate time based on playback direction
-            if (player.rate < 0.0) {
-                //[player setRate:player.rate atTime:end];
-            } else {
-                //[player setRate:player.rate atTime:start];
+            // create a boundary observer at the range end points
+            __block PxpPlayer *player = self;
+            self.rangeObserver = [self addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:end]] queue:NULL usingBlock:^() {
+                
+                float rate = player.rate;
+                [player pause];
+                [player seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+                    [player prerollAtRate:rate completionHandler:^(BOOL complete) {
+                        [player setRate:rate];
+                    }];
+                }];
+                
+            }];
+            
+            if (!CMTimeRangeContainsTime(range, self.currentTime)) {
+                float rate = player.rate;
+                [player pause];
+                [player seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+                    [player prerollAtRate:rate completionHandler:^(BOOL complete) {
+                        [player setRate:rate];
+                    }];
+                }];
             }
             
-        }];
-        
-        // seek to the appropriate time based on playback direction
-        if (player.rate < 0.0) {
-            //[player setRate:player.rate atTime:end];
-        } else {
-            //[player setRate:player.rate atTime:start];
         }
         
     }

@@ -84,6 +84,18 @@
     self.companionView.hidden = NO;
 }
 
+- (void)setPlayer:(PxpPlayer *)player {
+    if (self.context != player.context) {
+        self.context = player.context;
+    }
+    
+    self.companionView.player = player;
+}
+
+- (nullable PxpPlayer *)player {
+    return self.companionView.player;
+}
+
 #pragma mark - PxpPlayerGridViewDelegate
 
 - (void)playerView:(nonnull PxpPlayerView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView {
