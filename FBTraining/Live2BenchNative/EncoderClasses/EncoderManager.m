@@ -245,13 +245,15 @@
                     enc.isMaster = NO;
                 }
                 Encoder* electedMaster = ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]);
+               weakEncoderManager.masterEncoder = electedMaster;
                 electedMaster.isMaster =YES;
-                weakEncoderManager.masterEncoder = electedMaster;
+                
                 PXPLog(@"%@ is set to master!",weakEncoderManager.masterEncoder.name);
                 
                 if (electedMaster.liveEvent){
                     [weakEncoderManager declareCurrentEvent:electedMaster.liveEvent];
                     weakEncoderManager.liveEvent = electedMaster.liveEvent;
+                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:electedMaster];
                 }
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:weakEncoderManager];

@@ -79,7 +79,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 -(void)clearQueueAndCurrent;
-
+-(void) writeToPlist;
 
 
 
