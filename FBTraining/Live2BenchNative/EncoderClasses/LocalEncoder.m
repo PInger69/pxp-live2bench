@@ -734,6 +734,7 @@ static LocalEncoder * instance;
         if (encoderEvent.isBuilt && localEvent.isBuilt) {
             for (Tag *tag in encoderEvent.tags) {
                 if (![localEvent.tags containsObject:tag]) {
+                    Tag *localTag = [[Tag alloc]initWithData:[tag makeTagData] event:localEvent];
                     [localEvent.tags addObject:tag];
                 }
             }
@@ -928,8 +929,8 @@ static LocalEncoder * instance;
     NSString *keyToBeRemoved = dicToBeRemoved[@"id"];
     [self.localTags removeObjectForKey:keyToBeRemoved];*/
     //[self.localTags removeObjectAtIndex:0];
-    [self.localTags removeObjectAtIndex:0];
-    [self checkLocalTags];
+    //[self.localTags removeObjectAtIndex:0];
+    //[self checkLocalTags];
     isSuccess   = NO;
     isFinished  = YES;
     if (self.delegate) {

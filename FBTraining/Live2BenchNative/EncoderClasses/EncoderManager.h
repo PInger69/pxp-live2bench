@@ -80,7 +80,7 @@
 //-(void)createTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration;
 //-(void)modifyTag:(NSMutableDictionary *)data;
 //-(void)closeDurationTag:(NSString *)tagName;
-//-(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
+-(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
 -(Event*)getEventByHID:(NSString*)eventHID;
 -(Event*)getEventByName:(NSString*)eventName;

@@ -426,13 +426,13 @@
 
 -(void)onMasterFound:(NSNotification*)note
 {
-    _masterEncoder = note.object;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
+    /*_masterEncoder = note.object;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];*/
 }
 
 -(void)onMasterLost:(NSNotification*)note
 {
-    [self.authenticatedEncoders removeObject:self.masterEncoder];
+    /*[self.authenticatedEncoders removeObject:self.masterEncoder];
     
     if (self.masterEncoder !=nil) [self unRegisterEncoder:self.masterEncoder];
     
@@ -447,7 +447,7 @@
             Encoder * anEncoder = (Encoder *) obj;
             [anEncoder searchForMaster];
         }
-    }];
+    }];*/
 
 }
 

@@ -547,14 +547,17 @@
 {
     NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         
-        NSMutableDictionary *objDic = evaluatedObject;
-        Event *obj = [objDic objectForKey:@"local"];
-        
-        //Event* obj = evaluatedObject;
+        Event* obj = evaluatedObject;
         return [obj.name isEqualToString:eventName];
     }];
     
-    NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents] allValues] filteredArrayUsingPredicate:pred ]];
+    NSMutableArray *dataToBeFiltered = [[NSMutableArray alloc]init];
+    for (NSMutableDictionary *eventDic in [_allEvents allValues]) {
+        [dataToBeFiltered addObject:[eventDic objectForKey:@"non-local"]];
+    }
+    
+    //NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents] allValues] filteredArrayUsingPredicate:pred ]];
+    NSArray * filtered = [NSArray arrayWithArray:[dataToBeFiltered filteredArrayUsingPredicate:pred]];
     
     if ([filtered count]==0)return nil;
     
@@ -1602,7 +1605,18 @@
         if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
             NSMutableDictionary *checkEventDic = [_allEvents objectForKey:[data objectForKey:@"event"]];
             Event * checkEvent = [checkEventDic objectForKey:@"non-local"];
+            Event * localEvent = [checkEventDic objectForKey:@"local"];
+            
             [checkEvent modifyTag:data];
+            
+            if (localEvent) {
+                if ([data[@"type"] integerValue] == TagTypeCloseDuration) {
+                    Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
+                    [localEvent addTag:localTag extraData:false];
+                }else{
+                    [localEvent modifyTag:data];
+                }
+            }
         }
             
         
@@ -1644,13 +1658,19 @@
         
         if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
             NSMutableDictionary *checkEventDic = [_allEvents objectForKey:[data objectForKey:@"event"]];
-            Event * checkEvent = [checkEventDic objectForKey:@"non-local"];
-            Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
+            Event * encoderEvent = [checkEventDic objectForKey:@"non-local"];
+            Event * localEvent = [checkEventDic objectForKey:@"local"];
+            Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
             
-            if (self.event == checkEvent) {
-                [checkEvent addTag:newTag extraData:true];
+            if (self.event == encoderEvent) {
+                [encoderEvent addTag:newTag extraData:true];
             }else{
-                [checkEvent addTag:newTag extraData:false];
+                [encoderEvent addTag:newTag extraData:false];
+            }
+            
+            if (localEvent && newTag.type != TagTypeOpenDuration) {
+                Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
+                [localEvent addTag:localTag extraData:false];
             }
         }
     }
