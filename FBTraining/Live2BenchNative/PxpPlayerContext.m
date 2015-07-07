@@ -12,6 +12,8 @@
 
 @interface PxpPlayerContext ()
 
+@property (strong, nonatomic, nonnull) NSArray *players;
+
 /// The set of players bound to the context.
 @property (strong, nonatomic, nonnull) NSMutableSet *boundPlayers;
 
@@ -44,6 +46,7 @@
 - (nonnull instancetype)initWithPlayers:(nullable NSArray *)players {
     self = [super init];
     if (self) {
+        _players = @[];
         _boundPlayers = [NSMutableSet set];
         
         if (players) {
@@ -127,13 +130,18 @@
 }
 
 - (void)sortPlayers {
-    [self willChangeValueForKey:@"players"];
-    
     // sort the players by name
-    _players = [[NSMutableArray arrayWithArray:self.boundPlayers.allObjects]
+    self.players = [[NSMutableArray arrayWithArray:self.boundPlayers.allObjects]
                 sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
     
-    [self didChangeValueForKey:@"players"];
+}
+
+- (void)muteAllButPlayer:(nullable PxpPlayer *)player {
+    for (PxpPlayer *p in self.players) {
+        if (p != player) {
+            p.muted = YES;
+        }
+    }
 }
 
 @end

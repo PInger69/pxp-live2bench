@@ -26,7 +26,8 @@
 #import "Tag.h"
 #import "ListViewFullScreenViewController.h"
 
-
+#import "PxpEventContext.h"
+#import "PxpPlayerMultiViewController.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -38,6 +39,9 @@
 #define COMMENTBOX_WIDTH            530//520
 
 @interface ListViewController ()
+
+@property (strong, nonatomic, nullable) PxpPlayerContext *context;
+@property (strong, nonatomic, nonnull) PxpPlayerMultiViewController *playerViewController;
 
 //@property (strong, nonatomic) L2BVideoBarViewController *videoBarViewController;
 @property (strong, nonatomic) UIPinchGestureRecognizer *pinchGesture;
@@ -85,6 +89,9 @@ NSMutableArray *oldEventNames;
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
         //        globals = [Globals instance];
         
+        _context = nil;
+        _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        
         oldEventNames = [[NSMutableArray alloc] init];
         //[self initializeOldEventNames];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initializeOldEventNames) name:@"oldEventsUpdated" object:nil];
@@ -105,6 +112,8 @@ NSMutableArray *oldEventNames;
         [self addChildViewController:_tableViewController];
         //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
+        
+        //[self addChildViewController:self.playerViewController];
         
         
         /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -130,6 +139,10 @@ NSMutableArray *oldEventNames;
         //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
 
          [self.view addSubview:self.videoPlayer.view];
+        
+        self.playerViewController.view.frame = CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT);
+        self.playerViewController.multiView.context = self.context;
+        //[self.view addSubview:self.playerViewController.view];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -185,6 +198,12 @@ NSMutableArray *oldEventNames;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
     }
+    
+    // update the context
+    /*
+    self.context = [PxpEventContext contextWithEvent:_currentEvent];
+    self.playerViewController.multiView.context = self.context;
+    */
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -1718,8 +1737,8 @@ NSMutableArray *oldEventNames;
     
     NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
     
-    float time              = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"time"] floatValue];
-    float dur               = [[[notification.userInfo objectForKey:@"forFeed"] objectForKey:@"duration"] floatValue];
+    float time              = [[userInfo objectForKey:@"time"] floatValue];
+    float dur               = [[userInfo objectForKey:@"duration"] floatValue];
     CMTime cmtime           = CMTimeMake(time, 1);
     CMTime cmDur            = CMTimeMake(dur, 1);
     
@@ -1733,10 +1752,11 @@ NSMutableArray *oldEventNames;
                                                                                                               @"duration":[userInfo objectForKey:@"duration"],
                                                                                                               //@"state":[NSNumber numberWithInteger:PS_Play]}];*/
     
-    [self.videoPlayer playFeed:[userInfo objectForKey:@"feed"] withRange:timeRange];
-    //self.videoPlayer.looping = NO;
-    self.videoPlayer.looping = YES;
+
+    [self.videoPlayer playClipWithFeed:[userInfo objectForKey:@"feed"] andTimeRange:timeRange];
+    
     selectedTag = userInfo[@"forWhole"];
+    
     
     [commentingField clear];
     commentingField.enabled             = YES;
@@ -1744,6 +1764,20 @@ NSMutableArray *oldEventNames;
     commentingField.ratingScale.rating  = selectedTag.rating;
     
     [newVideoControlBar setTagName:selectedTag.name];
+    
+    /*
+    // find the first player with the source name we are looking for
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
+    PxpPlayer *player = [self.context.players filteredArrayUsingPredicate:predicate].firstObject;
+    
+    // put the player in focus.
+    if (player) {
+        self.playerViewController.multiView.player = player;
+    }
+    
+    // update the loop range.
+    self.context.mainPlayer.range = timeRange;
+     */
 }
 
 

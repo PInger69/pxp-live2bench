@@ -733,11 +733,15 @@ static void * encoderTagContext = &encoderTagContext;
         //if ( [tagSelect count] >1 ){
             [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {
                 
+                // Get the feed
+                NSDictionary *feeds = selectedCell.data.event.feeds;
+                Feed *feed = feeds[pick] ? feeds[pick] : feeds.allValues.firstObject;
+                
                 PXPLog(@"You Picked a feed: %@",pick);
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                                      @"feed":pick,
+                                                                                                                      @"feed":feed,
                                                                                                                       @"time": [NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
                                                                                                                       @"duration": [NSString stringWithFormat:@"%d", selectedCell.data.duration ],
                                                                                                                       @"state":[NSNumber numberWithInteger:RJLPS_Play]}];

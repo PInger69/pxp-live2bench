@@ -84,6 +84,22 @@
     self.companionView.hidden = NO;
 }
 
+- (void)setPlayer:(PxpPlayer *)player {
+    if (self.context != player.context) {
+        self.context = player.context;
+    }
+    
+    self.companionView.player = player;
+    self.companionView.hidden = NO;
+    
+    self.gridView.hidden = YES;
+    [self.context.mainPlayer sync];
+}
+
+- (nullable PxpPlayer *)player {
+    return self.companionView.player;
+}
+
 #pragma mark - PxpPlayerGridViewDelegate
 
 - (void)playerView:(nonnull PxpPlayerView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView {
@@ -114,7 +130,9 @@
             self.gridView.hidden = YES;
             [self.context.mainPlayer sync];
         }
+        
     }
+    
 }
 
 #pragma mark - Private Methods

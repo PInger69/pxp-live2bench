@@ -1860,7 +1860,7 @@
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     NSArray * list = [results[@"camlist"]allValues];
-    _cameraCount = 0;
+    _cameraCount = list.count;
     
     NSMutableArray *camerasAvailableList = [[NSMutableArray alloc]init];
     

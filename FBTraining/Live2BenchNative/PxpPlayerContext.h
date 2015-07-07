@@ -65,4 +65,7 @@
 /// Sorts all of the players in the context by name.
 - (void)sortPlayers;
 
+/// Mutes all players in the context expect for the specified player.
+- (void)muteAllButPlayer:(nullable PxpPlayer *)player;
+
 @end

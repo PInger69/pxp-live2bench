@@ -194,6 +194,7 @@
 - (void)setPlayer:(nullable PxpPlayer *)player {
     [self willChangeValueForKey:@"player"];
     self.avPlayerView.layer.player = player;
+    [self.avPlayerView.layer setNeedsDisplay];
     [self didChangeValueForKey:@"player"];
 }
 

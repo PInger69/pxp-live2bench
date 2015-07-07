@@ -64,6 +64,12 @@
     self.pipView.frame = CGRectMake(self.pipView.frame.origin.x, self.pipView.frame.origin.y, self.bounds.size.width / 3.0, self.bounds.size.height / 3.0);
 }
 
+- (void)setPlayer:(nullable PxpPlayer *)player {
+    [super setPlayer:player];
+    
+    [player.context muteAllButPlayer:player];
+}
+
 #pragma mark - Gesture Recognizers
 
 - (void)pipGestureRecognized:(UITapGestureRecognizer *)recognizer {

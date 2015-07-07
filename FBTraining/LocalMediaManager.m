@@ -71,7 +71,10 @@ static LocalMediaManager * instance;
         NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
         NSArray         * plistPaths    = [self grabAllFiles:[_localPath stringByAppendingPathComponent:@"events"] ext:@"plist"];
         for (NSString *pths in plistPaths) {
-            [tempPool addObject:[[NSDictionary alloc]initWithContentsOfFile:pths]];
+            NSDictionary *dict = [[NSDictionary alloc]initWithContentsOfFile:pths];
+            if (dict) {
+                [tempPool addObject:dict];
+            }
         }
 
         // and then checks if the videos are downloaded for each source and added to the Event
