@@ -307,10 +307,11 @@ static LocalEncoder * instance;
 -(void) writeToPlist{
     
 // local event write to plist
-    NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
+    //NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
     
     for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
         Event *localEvent = eventDic[@"local"];
+        NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:localEvent.datapath]stringByAppendingPathExtension:@"plist"];
         [localEvent.rawData writeToFile:plistNamePath atomically:YES];
     }
 
@@ -746,6 +747,11 @@ static LocalEncoder * instance;
                 if (![localEvent.tags containsObject:tag]) {
                     Tag *localTag = [[Tag alloc]initWithData:[tag makeTagData] event:localEvent];
                     [localEvent.tags addObject:localTag];
+                }
+            }
+            for (Tag *tag in localEvent.tags) {
+                if (![encoderEvent.tags containsObject:tag]) {
+                    [localEvent.tags removeObject:tag];
                 }
             }
         }

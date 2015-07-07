@@ -369,6 +369,8 @@ static LocalMediaManager * instance;
     return (Event*)filtered[0];
 }
 
+-(Tag*)getTagBy
+
 /*
  *  This saves the clip. This method only saves one source at a time
  *

@@ -1616,6 +1616,7 @@
                 }else{
                     [localEvent modifyTag:data];
                 }
+                [localEvent.parentEncoder writeToPlist];
             }
         }
             
@@ -1671,6 +1672,7 @@
             if (localEvent && newTag.type != TagTypeOpenDuration) {
                 Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
                 [localEvent addTag:localTag extraData:false];
+                [localEvent.parentEncoder writeToPlist];
             }
         }
     }
