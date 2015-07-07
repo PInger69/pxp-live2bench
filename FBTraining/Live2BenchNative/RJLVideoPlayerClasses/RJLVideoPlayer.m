@@ -737,8 +737,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     } else {
         [self.avPlayer play];
         [freezeMonitor start];
-        // Nice - causing issues when pause rate is zero
-        //if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
+        if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
         self.status                                 = _status | RJLPS_Play;
         self.status                                 = _status & ~(RJLPS_Paused);
         [self.videoControlBar setHidden:NO];
