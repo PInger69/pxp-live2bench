@@ -91,35 +91,9 @@
     // end of added code
     
     feedCount = [listOfFeeds count];
-    
-    NSInteger n = (feedCount > 4)?4: feedCount;
    
-
-    
-    if (n == 1) {
-       [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-       [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-       [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-       [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-    
-    } else if (n ==2) {
-        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
-        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
-        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-    
-    } else if (n ==3) {
-        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
-        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:3]];
-        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-        
-    } else if (n ==4) {
-        [((Pip *)[_allPips objectAtIndex:0]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:0]];
-        [((Pip *)[_allPips objectAtIndex:1]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:1]];
-        [((Pip *)[_allPips objectAtIndex:2]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:3]];
-        [((Pip *)[_allPips objectAtIndex:3]) playWithFeed:(Feed *)[listOfFeeds objectAtIndex:4]];
-        
+    for (NSUInteger i = 0; i < _allPips.count; i++) {
+        [_allPips[i] playWithFeed:listOfFeeds[i % listOfFeeds.count]];
     }
     
 
