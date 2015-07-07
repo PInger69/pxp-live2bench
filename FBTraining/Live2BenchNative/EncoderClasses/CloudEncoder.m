@@ -7,7 +7,7 @@
 //
 
 #import "CloudEncoder.h"
-#import "EncoderCommand.h"
+#import "EncoderTask.h"
 //#import <objc/runtime.h>
 #import "Utility.h"
 #import "EncoderManager.h"

@@ -4,6 +4,7 @@
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
+<<<<<<< HEAD
          BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "Yes"
@@ -254,11 +255,14 @@
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
+=======
+>>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
             timestampString = "457978826.304868"
             startingColumnNumber = "9223372036854775807"
@@ -330,6 +334,15 @@
             startingLineNumber = "99"
             endingLineNumber = "99"
             landmarkName = "-initWithDocsPath:"
+=======
+            filePath = "FBTraining/Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
+            timestampString = "457394644.18607"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1180"
+            endingLineNumber = "1180"
+            landmarkName = "-setURL:"
+>>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -339,6 +352,7 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
             timestampString = "457978826.304868"
             startingColumnNumber = "9223372036854775807"
@@ -346,6 +360,15 @@
             startingLineNumber = "1880"
             endingLineNumber = "1880"
             landmarkName = "-getAllEventsResponse:"
+=======
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+            timestampString = "457641145.774753"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "495"
+            endingLineNumber = "495"
+            landmarkName = "-getEventByHID:"
+>>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -354,6 +377,7 @@
          <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
+<<<<<<< HEAD
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
             timestampString = "457978826.304868"
@@ -379,6 +403,25 @@
             endingLineNumber = "1888"
             landmarkName = "-getAllEventsResponse:"
             landmarkType = "5">
+=======
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+            timestampString = "457625216.266561"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
+            landmarkName = "@implementation EncoderManager"
+            landmarkType = "3">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent
+                     consoleCommand = "p EncoderManager * $em = self">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+>>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -386,6 +429,7 @@
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
+<<<<<<< HEAD
             continueAfterRunningActions = "No"
             filePath = "FBTraining/LocalMediaManager.m"
             timestampString = "457908640.768506"
@@ -394,7 +438,26 @@
             startingLineNumber = "437"
             endingLineNumber = "437"
             landmarkName = "-saveEvent:"
+=======
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+            timestampString = "457643340.759103"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
+            landmarkName = "-declareCurrentEvent:"
+>>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
             landmarkType = "5">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.Log">
+                  <ActionContent
+                     message = "master found"
+                     conveyanceType = "1">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -403,6 +466,7 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
             filePath = "FBTraining/Live2BenchNative/UserCenter.m"
             timestampString = "457899380.374293"
             startingColumnNumber = "9223372036854775807"
@@ -906,6 +970,15 @@
             startingLineNumber = "1309"
             endingLineNumber = "1309"
             landmarkName = "-connection:didFailWithError:"
+=======
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+            timestampString = "457641630.219332"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "440"
+            endingLineNumber = "440"
+            landmarkName = "-onMasterLost:"
+>>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -915,6 +988,7 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
             filePath = "FBTraining/Live2BenchNative/EncoderClasses/LocalEncoder.m"
             timestampString = "457979318.727681"
             startingColumnNumber = "9223372036854775807"
@@ -1115,6 +1189,14 @@
             endingLineNumber = "642"
             landmarkName = "-onEventBuildFinished:"
             landmarkType = "5">
+=======
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+            timestampString = "457886372.512009"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "719"
+            endingLineNumber = "719">
+>>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

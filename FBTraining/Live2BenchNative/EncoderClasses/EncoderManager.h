@@ -15,6 +15,8 @@
 #import "EncoderCommander.h"
 #import "ActionListItemDelegate.h"
 #import "LocalMediaManager.h"
+#import "BonjourModule.h"
+
 
 @class Encoder;
 
@@ -22,7 +24,7 @@
 
 
 #define NOTIF_ENCODER_COUNT_CHANGE          @"encoderCountChange"
-#define NOTIF_THIS_ENCODER_IS_READY         @"encoderIsReady" // this is called on the encoder in question
+//#define NOTIF_THIS_ENCODER_IS_READY         @"encoderIsReady" // this is called on the encoder in question
 #define NOTIF_ENCODER_AUTHENTICATED         @"encoderAuthenticated"
 #define NOTIF_ENCODER_FEED_HAVE_CHANGED     @"encoderFeedHaveChanged"
 #define NOTIF_TAG_POSTED                    @"postedTag"        // to post tages up to the server also sends the data in userInfo
@@ -33,11 +35,13 @@
 #define SUMMARY_TYPE_EVENT  @"game"
 
 
-@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate,ActionListItemDelegate>
+@interface EncoderManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate,ActionListItemDelegate,BonjourModuleDelegate>
+
+@property (nonatomic,strong)            BonjourModule           * bonjourModule;
 
 
-@property (nonatomic,assign)            BOOL                    hasInternet;
-@property (nonatomic,assign)            BOOL                    hasWiFi; // Toggled by checkForWiFiAction
+//@property (nonatomic,assign)            BOOL                    hasInternet;
+//@property (nonatomic,assign)            BOOL                    hasWiFi; // Toggled by checkForWiFiAction
 @property (nonatomic,assign)            BOOL                    hasMAX;
 @property (nonatomic,assign)            BOOL                    searchForEncoders;
 @property (nonatomic,assign)            BOOL                    hasLive; // all the Encoders status checkers will effect this if non have live or if one has
@@ -52,6 +56,7 @@
 @property (nonatomic,strong,readonly)   NSDictionary            * currentEventData; // like sport or medical
 @property (nonatomic,strong)            NSMutableDictionary     * openDurationTags;
 @property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
+
 
 
 @property (nonatomic,weak)              Event                   * liveEvent;
@@ -75,14 +80,18 @@
 //-(void)createTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration;
 //-(void)modifyTag:(NSMutableDictionary *)data;
 //-(void)closeDurationTag:(NSString *)tagName;
--(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
+//-(void)requestTagDataForEvent:(NSString*)event onComplete:(void(^)(NSDictionary*all))onCompleteGet;
 
 -(Event*)getEventByHID:(NSString*)eventHID;
 -(Event*)getEventByName:(NSString*)eventName;
 
+-(void)registerEncoder:(NSString*)name ip:(NSString*)ip;
+-(void)onRegisterEncoderCompleted:(Encoder*)registerEncoder; 
+
 -(void)declareCurrentEvent:(Event*)event;
 
--(void)makeFakeEncoder;
+-(void)makeFakeEncoder; // debug
+
 #pragma mark - Commands Methods
 
 //-(void)refresh;

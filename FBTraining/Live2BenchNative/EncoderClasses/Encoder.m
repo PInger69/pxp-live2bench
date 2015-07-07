@@ -462,7 +462,7 @@
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    EncoderCommand *cmd    = [[EncoderCommand alloc]init];
+    EncoderTask *cmd    = [[EncoderTask alloc]init];
     cmd.selector    = NSSelectorFromString(methodName);
     cmd.target      = self;
     cmd.priority    = priority;
@@ -490,7 +490,7 @@
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp onComplete:(void (^)())onComplete
 {
-    EncoderCommand *cmd    = [[EncoderCommand alloc]init];
+    EncoderTask *cmd    = [[EncoderTask alloc]init];
     cmd.selector    = NSSelectorFromString(methodName);
     cmd.target      = self;
     cmd.priority    = priority;
@@ -528,7 +528,7 @@
     //if the queue is not empty, send another request
     if(queue.count>0 && !isWaitiing)
     {
-        EncoderCommand * nextInQueue = [self getNextInQueue];
+        EncoderTask * nextInQueue = [self getNextInQueue];
         currentCommand = nextInQueue;
         id controller   = nextInQueue.target;
         SEL sel         = nextInQueue.selector;
@@ -620,7 +620,7 @@
                                        @"time"          : tagTime,
                                        @"name"          : tagName,
                                        @"duration"      : @"1",
-                                       @"type"          : @"4",
+                                       @"type"          : [NSNumber numberWithInteger:TagTypeTele]
                                        }];
     
     [tagData addEntriesFromDictionary:data];
@@ -679,15 +679,8 @@
 -(void)onDeleteTag:(NSNotification *)note
 {
     Tag *tagToDelete = note.object;
-    tagToDelete.type = 3;
-    
-//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
-//                                 @"1",@"delete",
-//                                 tagToDelete.event,@"event",
-//                                 [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
-//                                 @"requesttime", [UserCenter getInstance].userHID,
-//                                 @"user",tagToDelete.ID,
-//                                 @"id", nil];
+    tagToDelete.type = TagTypeDeleted;
+
     
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
                                      @{
@@ -818,6 +811,89 @@
 
 
 
+/**
+ *  This creates tags on the server or local
+ *
+ *
+ *  @param data          this is the custom data that will be added to the tag
+ *  @param isDuration    if YES then it will be stored in a open Duration tag dict
+ */
+//-(void)createTeleTag:(NSMutableDictionary *)data isDuration:(BOOL)isDuration
+//{
+//    
+//    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+//    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+//    NSString *eventNm = ([_currentEvent isEqualToString:_liveEventName])?@"live":_currentEvent;
+//    
+//    // This is the starndard info that is collected from the encoder
+//    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+//                                     @{
+//                                       @"event"         : eventNm,
+//                                       @"colour"        : [_dictOfAccountInfo objectForKey:@"tagColour"],
+//                                       @"user"          : [_dictOfAccountInfo objectForKey:@"hid"],
+//                                       @"time"          : tagTime,
+//                                       @"name"          : tagName,
+//                                       //                                               @"comment"       : @"",
+//                                       //                                               @"rating"        : @"0",
+//                                       //                                               @"coachpick"     : @"0",
+//                                       //                                               @"bookmark"      : @"0",
+//                                       //                                               @"deleted"       : @"0",
+//                                       //                                               @"edited"        : @"0",
+//                                       @"duration"      : @"1",
+//                                       @"type"          : @"4",
+//                                       //@"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+//                                       }];
+//    if (isDuration){ // Add extra data for duration Tags
+//        NSDictionary *durationData =        @{
+//                                              @"starttime"     : tagTime
+//                                              };
+//        [tagData addEntriesFromDictionary:durationData];
+//    }
+//    
+//    [tagData addEntriesFromDictionary:data];//
+//    
+//    
+//    
+//    //    // Check if tag is open for this already, if so close it
+//    //    if ([_openDurationTags objectForKey:tagName] != nil)
+//    //    {
+//    //
+//    //        [self closeDurationTag:tagName];
+//    //
+//    //
+//    //    } else {
+//    //
+//    //        [_openDurationTags setObject:tagData forKey:tagName];
+//    //        // issues new tag command
+//    //    }
+//    
+//    
+//    // issue command to all encoder with events
+//    
+//    
+//    NSArray     * encoders;
+//    
+//    if (![_primaryEncoder isKindOfClass:[Encoder class]]&& _primaryEncoder) {
+//        encoders    = @[_primaryEncoder];
+//    } else {
+//        encoders    = [_authenticatedEncoders copy];
+//        
+//    }
+//    
+//    
+//    
+//    NSNumber    * nowTime             = GET_NOW_TIME;
+//    NSUInteger timeout = [encoders count] * 20;
+//    [encoders enumerateObjectsUsingBlock:^(id <EncoderProtocol> obj, NSUInteger idx, BOOL *stop){
+//        [obj issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:timeout tagData:tagData timeStamp:nowTime];
+//    }];
+//    
+//    
+//    
+//}
+
+
+
 // Commands
 #pragma mark - Commands
 -(void)authenticateWithCustomerID:(NSString*)custID
@@ -870,6 +946,7 @@
 
 //    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
         [self willChangeValueForKey:@"authenticated"];
+        if (!_authenticated) [self buildEncoderRequest];
         _authenticated  = YES;
         isAuthenticate = YES;
         [self didChangeValueForKey:@"authenticated"];
@@ -1083,6 +1160,9 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = CAMERAS_GET;
     encoderConnection.timeStamp             = aTimeStamp;
+    PXPLog(@" ");
+    PXPLog(@"CAMERAS_GET: %@",checkURL);
+    PXPLog(@" ");
 }
 
 
@@ -1268,10 +1348,9 @@
     
     if (isAuthenticate && 1 && _isBuild && isTeamsGet && !_isReady){
         _isReady         = YES;
-        //if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
         if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithDelegate:self];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
-        
+//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
+        [self.encoderManager onRegisterEncoderCompleted:self];
     }
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:@{@"responce":finishedData}];
@@ -1399,7 +1478,7 @@
     // Check the data or website and see if it is successful if so
     //    authenticated = YES else NO
     // Should there be a notif for when its complete
-
+    if (!isAuthenticate) [self buildEncoderRequest];
     isAuthenticate = YES;
 }
 
@@ -1775,6 +1854,9 @@
  //   _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
     
     PXPLog(@"%@ has %@ cameras",self.name ,[NSString stringWithFormat:@"%ld",(long)_cameraCount ]);
+    PXPLog(@"JSON OUTPUT:");
+    PXPLog(@"%@",results);
+    PXPLog(@" ");
 }
 
 #pragma mark - Master Responce
@@ -1898,7 +1980,7 @@
 
 #pragma mark - Queue methods
 // Queue methods
--(void)addToQueue:(EncoderCommand *)obj
+-(void)addToQueue:(EncoderTask *)obj
 {
     NSNumber * priKey =[[NSNumber alloc] initWithInt:obj.priority];
     if ([queue objectForKey: priKey] == nil ) {
@@ -1913,14 +1995,14 @@
  *
  *  @param obj the command to be removed
  */
--(void)removeFromQueue:(EncoderCommand *)obj
+-(void)removeFromQueue:(EncoderTask *)obj
 {
     NSNumber * priKey =[[NSNumber alloc] initWithInt:obj.priority];
     [[queue objectForKey:priKey]removeObject:obj];
     
 }
 
--(EncoderCommand *)getNextInQueue
+-(EncoderTask *)getNextInQueue
 {
     // Sorted keys
     NSMutableArray * allKeys =  [NSMutableArray arrayWithArray:[[queue allKeys] sortedArrayUsingComparator:^(id obj1, id obj2) {
@@ -1934,7 +2016,7 @@
         thePriorityKey = [allKeys lastObject];
     }
     
-    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) objectAtIndex:0];
+    EncoderTask * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) objectAtIndex:0];
     
     return nextObj;
 }

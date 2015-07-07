@@ -85,6 +85,9 @@
     
     [self runEventDelegate];
     
+    if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
+        [self.delegate onEventBuildFinished:self];
+    }
     
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];

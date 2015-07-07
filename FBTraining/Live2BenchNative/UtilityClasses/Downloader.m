@@ -21,6 +21,7 @@
 
 @synthesize queue               = _queue;
 @synthesize pause               = _pause;
+@synthesize keyedDownloadItems  = _keyedDownloadItems;
 
 static Downloader * _instance;
 static void *  downLoaderContext = &downLoaderContext;
@@ -70,6 +71,13 @@ static void *  downLoaderContext = &downLoaderContext;
     return item;
 }
 
++(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path type:(DownloadType)aType key:(NSString*)aKey
+{
+    DownloadItem * item = [[DownloadItem alloc]initWithURL:url destination:path type:aType];
+    [[Downloader defaultDownloader] addToQueue:item key:aKey];
+    return item;
+}
+
 +(VideoTrimItem *)trimVideoURL: (NSString*)url to:(NSString*)path withTimeRange: (CMTimeRange) range{
     VideoTrimItem *item = [[VideoTrimItem alloc] initWithVideoURLString:url destination:path andTimeRange:range];
     [[Downloader defaultDownloader] addToQueue:item];
@@ -86,6 +94,7 @@ static void *  downLoaderContext = &downLoaderContext;
 {
     self = [super init];
     if (self) {
+        _keyedDownloadItems     = [[NSMutableDictionary alloc]init];
         _queue                  = [[NSMutableArray alloc]init];
         _pause                  = NO;
         isDownloading           = NO;
@@ -113,11 +122,24 @@ static void *  downLoaderContext = &downLoaderContext;
     
 }
 
+-(void)addToQueue:(DownloadItem *)item key:(NSString *)key
+{
+    [item addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&downLoaderContext];
+    [_queue addObject:item];
+    if (!isDownloading){
+        isDownloading = YES;
+        [self process];
+    }
+    item.key = key;
+    [_keyedDownloadItems setObject:item forKey:key];
+}
+
 
 -(void)removeFromQueue:(DownloadItem *)item
 {
     [item removeObserver:self forKeyPath:@"status" context:&downLoaderContext];
     [_queue removeObject:item];
+    if (item.key)[_keyedDownloadItems removeObjectForKey:item.key];
     isDownloading = NO;
 }
 
