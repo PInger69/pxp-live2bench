@@ -90,6 +90,10 @@
     }
     
     self.companionView.player = player;
+    self.companionView.hidden = NO;
+    
+    self.gridView.hidden = YES;
+    [self.context.mainPlayer sync];
 }
 
 - (nullable PxpPlayer *)player {
@@ -126,7 +130,9 @@
             self.gridView.hidden = YES;
             [self.context.mainPlayer sync];
         }
+        
     }
+    
 }
 
 #pragma mark - Private Methods

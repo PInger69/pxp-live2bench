@@ -151,7 +151,7 @@ static void * eventContext      = &eventContext;
     
     self.videoPlayer.playerContext      = STRING_INJURY_CONTEXT;
     
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 64, 38) encoderManager:_encoderManager];
     
    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
     
