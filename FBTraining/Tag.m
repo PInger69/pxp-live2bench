@@ -308,24 +308,30 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 -(NSDictionary *) makeTagData{
     
+    NSMutableDictionary *tagData = [[NSMutableDictionary alloc]initWithDictionary:@{
+                                                                                  @"colour"      : self.colour,
+                                                                                  @"deviceid"    : (self.deviceID)?self.deviceID:@"",
+                                                                                  @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
+                                                                                  @"displaytime" : self.displayTime,
+                                                                                  @"duration"    : (self.duration)?[NSString stringWithFormat: @"%i", self.duration]:@"",
+                                                                                  @"event"       : (self.event.name)?self.event.name:@"",
+                                                                                  @"name"        : self.name,
+                                                                                  @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
+                                                                                  @"time"        : [NSString stringWithFormat:@"%f", self.time],
+                                                                                  @"user"        : self.user,
+                                                                                  @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
+                                                                                  @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
+                                                                                  @"comment"     : (self.comment)?self.comment:@"",
+                                                                                   @"rating"     : (self.rating)?[NSString stringWithFormat:@"%ld", (long)self.rating]:@""
+                                                                                  
+                                                                                  }];
+    if (self.durationID) {
+        [tagData setObject:self.durationID forKey:@"dtagid"];
+    }
     
-    return @{
-             @"colour"      : self.colour,
-             //@"deviceid"    : self.deviceID,
-             @"deviceid"    : (self.deviceID)?self.deviceID:@"",
-             @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
-             @"displaytime" : self.displayTime,
-             @"duration"    : (self.duration)?[NSString stringWithFormat: @"%i", self.duration]:@"",
-             @"event"       : (self.event.name)?self.event.name:@"",
-             @"name"        : self.name,
-             @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
-             @"time"        : [NSString stringWithFormat:@"%f", self.time],
-             @"user"        : self.user,
-             @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
-             @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type]
-             
-             };
-}
+    return tagData;
+    
+  }
 
 -(void) replaceDataWithDictionary: (NSDictionary *) tagData{
     _colour      = tagData[@"colour"];
@@ -355,7 +361,7 @@ static NSMutableDictionary * openDurationTagsWithID;
             [thumbnails addEntriesFromDictionary:@{key: images[key]}];
         }
         self.thumbnails = thumbnails;
-    }else{
+    }else if ([tagData objectForKey:@"url"]){
         self.thumbnails = @{@"onlySource": [tagData objectForKey:@"url"]};
     }
     

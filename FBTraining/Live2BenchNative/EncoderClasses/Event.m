@@ -83,21 +83,28 @@
      }
      self.isBuilt = YES;
     
-
+    [self runEventDelegate];
     
-    if([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
-        [self.delegate onEventBuildFinished:self];
-    }
+    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
 }
 
--(void)addTag:(Tag *)newtag
+-(void)runEventDelegate{
+    if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
+        [self.delegate onEventBuildFinished:self];
+    }
+}
+
+-(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost
 {
+    if (newtag.type == TagTypeDeleted) {
+        return;
+    }
     [_tags addObject:newtag];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self  userInfo:@{@"allEventTag":@"true"}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
     
-    if (newtag.type != TagTypeOpenDuration && _primary ) {
+    if (newtag.type != TagTypeOpenDuration && _primary && notifPost ) {
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
                                                                                                       @"msg":newtag.name,
@@ -109,7 +116,13 @@
 
 -(void)modifyTag:(NSDictionary *)modifiedData
 {
-    NSString * tagId = [[modifiedData objectForKey:@"id"]stringValue];// [NSString stringWithFormat:@"%ld",[[data objectForKey:@"id"]integerValue] ];
+    NSString * tagId;
+    if ([[modifiedData objectForKey:@"id"] isKindOfClass:[NSString class]]) {
+        tagId = [modifiedData objectForKey:@"id"];
+    }else{
+        tagId = [[modifiedData objectForKey:@"id"]stringValue];
+    }
+    //NSString * tagId = [[modifiedData objectForKey:@"id"]stringValue];// [NSString stringWithFormat:@"%ld",[[data objectForKey:@"id"]integerValue] ];
         NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             Tag * obj = evaluatedObject;
             return [obj.ID isEqualToString:tagId];
@@ -172,6 +185,10 @@
         [newRawData setObject:tagsToBeAdded forKey:@"tags"];
         return [newRawData copy];
    }
+    
+    if ([_rawData objectForKey:@"tags"]) {
+        [_rawData removeObjectForKey:@"tags"];
+    }
     return _rawData;
  
 }
