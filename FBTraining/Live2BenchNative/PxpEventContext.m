@@ -11,6 +11,12 @@
 #import "Event.h"
 #import "Feed.h"
 
+@interface PxpEventContext ()
+
+@property (strong, nonatomic, nullable) Event *event;
+
+@end
+
 @implementation PxpEventContext
 
 + (nonnull instancetype)contextWithEvent:(nullable Event *)event {
@@ -71,9 +77,28 @@
     
     [self sortPlayers];
     
-    // default sync parameters
-    self.mainPlayer.syncThreshold = CMTimeMake(1, 3);
-    self.mainPlayer.syncInterval = CMTimeMake(5, 1);
+    if (event) {
+        // default sync parameters
+        self.mainPlayer.syncThreshold = CMTimeMake(1, 3);
+        self.mainPlayer.syncInterval = CMTimeMake(5, 1);
+        
+        [self.mainPlayer addLoadAction:[PxpLoadAction loadActionWithTarget:self action:@selector(loadComplete:)]];
+    }
+    
+}
+
+- (void)loadComplete:(PxpLoadAction *)loadAction {
+    if (loadAction.success) {
+        if (self.event.live) {
+            self.mainPlayer.live = YES;
+        } else {
+            [self.mainPlayer seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+                [self.mainPlayer prerollAtRate:self.mainPlayer.playRate completionHandler:^(BOOL finished) {
+                    [self.mainPlayer setRate:self.mainPlayer.playRate];
+                }];
+            }];
+        }
+    }
 }
 
 @end

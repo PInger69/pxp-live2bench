@@ -71,7 +71,10 @@ static LocalMediaManager * instance;
         NSMutableArray  * tempPool      = [[NSMutableArray alloc]init];
         NSArray         * plistPaths    = [self grabAllFiles:[_localPath stringByAppendingPathComponent:@"events"] ext:@"plist"];
         for (NSString *pths in plistPaths) {
-            [tempPool addObject:[[NSDictionary alloc]initWithContentsOfFile:pths]];
+            NSDictionary *dict = [[NSDictionary alloc]initWithContentsOfFile:pths];
+            if (dict) {
+                [tempPool addObject:dict];
+            }
         }
 
         // and then checks if the videos are downloaded for each source and added to the Event
@@ -87,16 +90,19 @@ static LocalMediaManager * instance;
                     anEvent.isBuilt             = YES;
                     anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                     
-                    NSArray *tags    = [anEvent.rawData[@"tags"] allValues];
+                    /*NSArray *tags    = [anEvent.rawData[@"tags"] allValues];
                     NSMutableArray *newTags = [[NSMutableArray alloc]init];
                     for (NSDictionary *tagDic in tags) {
                         Tag *newTag = [[Tag alloc] initWithData:tagDic event:anEvent];
                         [newTags addObject:newTag];
                     }
                     
-                    [anEvent setTags:newTags];
-                    
-                    [_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
+                    [anEvent setTags:newTags];*/
+                
+                    NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
+                    [_allEvents setValue: eventFinal forKey:anEvent.name];// this is the new kind of build that events have their own feed
+                
+                    //[_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
                 }
             }
             
@@ -119,11 +125,15 @@ static LocalMediaManager * instance;
         while ((localValue = [localEnumerator nextObject])) {
             NSDictionary *localTagDic = localValue;
             if ([localTagDic objectForKey:@"emailAddress"] == nil) {
-                NSMutableDictionary *finalLocalTags = [[NSMutableDictionary alloc]initWithDictionary:localTagDic];
-                [[LocalEncoder getInstance].localTags addEntriesFromDictionary:finalLocalTags];
+                    [self assignLocalTags:localTagDic];
+                }
+                //NSMutableDictionary *finalLocalTags = [[NSMutableDictionary alloc]initWithDictionary:localTagDic];
+                //[self assignLocalTags:localTagDic];
+                //[[LocalEncoder getInstance].localTags addObjectsFromArray:[finalLocalTags allValues]];
+                //[[LocalEncoder getInstance].localTags addEntriesFromDictionary:finalLocalTags];
             }
                 
-        }
+        
 
             
         
@@ -202,7 +212,49 @@ static LocalMediaManager * instance;
         }
         return self;
 }
+
+-(void)assignLocalTags:(NSDictionary *)mainDict{
+    NSArray *tagToBeAddedArray = [mainDict allValues];
     
+    for (NSMutableDictionary *tagToBeAdded in tagToBeAddedArray) {
+        
+        if (![tagToBeAdded isEqual:@"true"]) {
+            Event *event = [self getEventByName:tagToBeAdded[@"event"]];
+            
+            for (Tag *tag in event.tags) {
+                if ([tag.ID isEqual:tagToBeAdded[@"id"]]) {
+                    
+                    if ([mainDict objectForKey:@"modifiedTags"] != nil) {
+                        [[LocalEncoder getInstance].modifiedTags addObject:tag];
+                    }else{
+                        [[LocalEncoder getInstance].localTags addObject:tag];
+                    }
+                }
+            }
+            
+            if ([[tagToBeAdded objectForKey:@"type"] integerValue] == TagTypeDeleted) {
+                Event *event = [self getEventByName:tagToBeAdded[@"event"]];
+                Tag *deletedTag = [[Tag alloc]initWithData:tagToBeAdded event:event];
+                [[LocalEncoder getInstance].modifiedTags addObject:deletedTag];
+            }
+
+        }
+        
+    }
+}
+
+-(void)assignEncoderVersionEvent:(NSDictionary *)allEvent{
+    for (NSString *eventName in [_allEvents allKeys]) {
+        NSMutableDictionary *encoderEventDic = [allEvent objectForKey:eventName];
+        Event *encoderVersionEvent = [encoderEventDic objectForKey:@"non-local"];
+        if (encoderVersionEvent) {
+            NSMutableDictionary *eventFinal = [_allEvents objectForKey:eventName];
+            [eventFinal setObject:encoderVersionEvent forKey:@"non-local"];
+        }
+    }
+}
+
+
 -(NSString*)bookmarkPath
 {
     return [NSString stringWithFormat:@"%@/bookmark",_localPath];
@@ -296,11 +348,21 @@ static LocalMediaManager * instance;
 {
     NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         
+        //NSMutableDictionary *objDic = evaluatedObject;
+        //Event *obj = [objDic objectForKey:@"local"];
+        
         Event* obj = evaluatedObject;
         return [obj.name isEqualToString:eventName];
     }];
     
-    NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents]allValues] filteredArrayUsingPredicate:pred ]];
+    NSMutableArray *dataToBeFiltered = [[NSMutableArray alloc]init];
+    for (NSMutableDictionary *eventDic in [_allEvents allValues]) {
+        [dataToBeFiltered addObject:[eventDic objectForKey:@"local"]];
+    }
+    
+    
+    //NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents]allValues] filteredArrayUsingPredicate:pred ]];
+    NSArray * filtered = [NSArray arrayWithArray:[dataToBeFiltered filteredArrayUsingPredicate:pred ]];
     
     if ([filtered count]==0)return nil;
     
@@ -387,16 +449,22 @@ static LocalMediaManager * instance;
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath]stringByAppendingPathExtension:@"plist"];
     
     //[aEvent.tags writeToFile:plistNamePath atomically:YES];
-    [aEvent.rawData writeToFile:plistNamePath atomically:YES];
+    //[aEvent.rawData writeToFile:plistNamePath atomically:YES];
     
     // make an instance of event in local
     Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData isLocal:YES andlocalPath:self.localPath];
     anEvent.parentEncoder = [LocalEncoder getInstance];
+    anEvent.local = true;
+    
+    [anEvent.rawData writeToFile:plistNamePath atomically:YES];
+    
+    NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent,@"non-local":aEvent}];
+    [_allEvents setObject:eventFinal forKey:aEvent.name];
     
     
-    NSMutableDictionary            * allEventsMutable =  [_allEvents mutableCopy];
-    [allEventsMutable setObject:anEvent forKey:anEvent.hid];
-    _allEvents = [allEventsMutable copy];
+    //NSMutableDictionary            * allEventsMutable =  [_allEvents mutableCopy];
+    //[allEventsMutable setObject:anEvent forKey:anEvent.hid];
+    //_allEvents = [allEventsMutable copy];
     return aPath;
 }
 
@@ -421,10 +489,12 @@ static LocalMediaManager * instance;
     [[NSFileManager defaultManager] removeItemAtPath:aPath error:NULL]; // deletes the folder
     [[NSFileManager defaultManager] removeItemAtPath: [aPath stringByAppendingPathExtension:@"plist"] error:NULL]; // delets the plist
     
-    NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:_allEvents];
-    [temp removeObjectForKey:aEvent.hid];
+    [_allEvents removeObjectForKey:aEvent.name];
     
-    _allEvents = [temp copy];
+    //NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:_allEvents];
+    //[temp removeObjectForKey:aEvent.hid];
+    
+    //_allEvents = [temp copy];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_UPDATE_MEMORY object:nil];
 }

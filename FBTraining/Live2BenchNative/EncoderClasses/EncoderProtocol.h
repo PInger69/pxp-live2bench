@@ -80,4 +80,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 -(void)clearQueueAndCurrent;
 
+
+
+
 @end

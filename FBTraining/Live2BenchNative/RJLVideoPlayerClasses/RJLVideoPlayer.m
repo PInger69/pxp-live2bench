@@ -78,7 +78,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         [self addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&RJLVideoPlayerStatusChange];
 
-        freezeMonitor = [[RJLFreezeMonitor alloc]initWithPlayer:self];
+        // Nico - Temporary disabled (was causing problems with Pip Seek)
+        //freezeMonitor = [[RJLFreezeMonitor alloc]initWithPlayer:self];
         commander = [[RJLVideoPlayerResponder alloc]initWithPlayer:self];
         videoFrame = frame;
         
@@ -764,43 +765,27 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange
 {
-
-    onFeedReadyBlock    = nil;
-    range               = aRange;
-    
+    // Nico - clean :)
     if ([[self.feed path] isEqual:[aFeed path]]){
+        // set the range, set looping, seek, and play
+        
+        range               = aRange;
+        self.looping = YES;
+        
         [self seekToInSec:CMTimeGetSeconds(aRange.start)];
-        return;
+        [self play];
+    } else {
+        // switch to the new feed, and re run the method when its ready
+        
+        self.feed = aFeed;
+        self.URL = [self.feed path];
+        
+        __block RJLVideoPlayer *player = self;
+        
+        onReadyBlock = ^void() {
+            [player playFeed:aFeed withRange:aRange];
+        };
     }
-    
-    self.status                             = _status | RJLPS_Seeking;
-    
-    __block RJLVideoPlayer  * weakSelf          = self;
-    __block CMTime rStart                       = aRange.start;
-    onFeedReadyBlock = ^void(){
-        
-        [weakSelf.avPlayer seekToTime:rStart completionHandler:^(BOOL finished) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if (finished) {
-                    
-                } else {
-                    NSLog(@"seekToInSec: CANCELLED");
-                }
-                weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
-            });
-        }];
-        
-    };
-
-    
-    
-    
-    
-    // range will be the tag times.... might have to make a new class for this
-    self.feed = aFeed;
-    self.URL = [self.feed path];
-    [self seekToInSec:CMTimeGetSeconds(aRange.start)];
 }
 
 
@@ -889,7 +874,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                 dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (finished) {
-//                    weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
 
                 } else {
                     NSLog(@"seekToInSec: CANCELLED");
@@ -1435,6 +1419,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(float)seekClamp:(float)seekTime
 {
+    return seekTime; // Nico - problem with function, returning zero after entering clip mode, so leave it be for now
+    
     AVPlayerItem    * currentItem       = self.avPlayer.currentItem;
     NSArray         * seekableRanges    = currentItem.seekableTimeRanges;
     

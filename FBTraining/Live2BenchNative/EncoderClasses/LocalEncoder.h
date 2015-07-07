@@ -20,16 +20,17 @@
  */
 
 
-@interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate,ActionListItem>
+@interface LocalEncoder : NSObject <EncoderProtocol, NSURLConnectionDataDelegate,ActionListItem,EventDelegate>
 
 @property (nonatomic, weak)     EncoderManager          *encoderManager;
-@property (nonatomic,strong)    NSString                * name;
+//@property (nonatomic,strong)    NSString                * name;
 @property (nonatomic,assign)    EncoderStatus           status;
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;            // the current event the encoder is looking at
 @property (nonatomic,strong)    Event                   * liveEvent;
 //@property (nonatomic,strong)    NSDictionary            * allEvents;        // all events on the encoder
-@property (nonatomic,strong)    NSMutableDictionary     * localTags;
+@property (nonatomic,strong)    NSMutableArray     * localTags;
+@property (nonatomic,strong)    NSMutableArray     * modifiedTags;
 @property (nonatomic, strong)   NSString                *localPath;
 
 

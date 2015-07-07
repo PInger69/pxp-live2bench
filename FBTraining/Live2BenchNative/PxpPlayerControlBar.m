@@ -68,6 +68,8 @@
         PxpCancelButton *cancelButton = [[PxpCancelButton alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
         cancelButton.tintColor = [UIColor redColor];
         
+        [cancelButton addTarget:self action:@selector(cancelRange:) forControlEvents:UIControlEventTouchUpInside];
+        
         _rangeCancelButton = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
         
         _defaultItem = [[UIBarButtonItem alloc] init];
@@ -166,6 +168,12 @@
     }
 }
 
+- (void)tintColorDidChange {
+    [super tintColorDidChange];
+    
+    self.backgroundColor = CMTIMERANGE_IS_VALID(self.player.range) ? [self.tintColor colorWithAlphaComponent:0.5] : [UIColor clearColor];
+}
+
 #pragma mark - Slider Actions
 
 - (void)seekDidBegin:(nonnull UISlider *)slider {
@@ -224,6 +232,8 @@
 
 - (void)update:(CMTime)time {
     
+    self.backgroundColor = CMTIMERANGE_IS_VALID(self.player.range) ? [self.tintColor colorWithAlphaComponent:0.5] : [UIColor clearColor];
+    
     if (self.player.live) {
         self.toolbar.rightBarButtonItem = self.liveLight;
     } else if (CMTIMERANGE_IS_VALID(self.player.range)) {
@@ -260,6 +270,10 @@
     NSUInteger h = interval / 3600;
     
     return [NSString stringWithFormat:@"%02lu:%02lu:%02lu",(unsigned long) h, (unsigned long) m, (unsigned long)s];
+}
+
+- (void)cancelRange:(PxpCancelButton *)cancelButton {
+    self.player.range = kCMTimeRangeInvalid;
 }
 
 #pragma mark - PxpPlayPauseButtonDelegate

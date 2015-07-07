@@ -18,4 +18,6 @@
 /// The context that the multi view should load its data from.
 @property (strong, nonatomic, nonnull) PxpPlayerContext *context;
 
+@property (strong, nonatomic, nullable) PxpPlayer *player;
+
 @end

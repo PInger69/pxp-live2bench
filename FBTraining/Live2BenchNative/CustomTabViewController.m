@@ -57,6 +57,9 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onAppTerminate:)
+                                                 name:UIApplicationDidEnterBackgroundNotification object:nil];
     // Do any additional setup after loading the view.
 }
 
@@ -105,6 +108,11 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+}
+
+-(void)onAppTerminate:(NSNotification *)note
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 

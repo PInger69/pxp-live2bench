@@ -74,7 +74,7 @@
 @property (nonatomic,strong)    NSString        * URL;
 @property (nonatomic,strong)    Event           * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    Event           * liveEvent;
-@property (nonatomic,strong)    NSDictionary    * allEvents;    // all events on the encoder
+@property (nonatomic,strong)    NSMutableDictionary    * allEvents;    // all events on the encoder
 @property (nonatomic,weak)      EncoderManager  * encoderManager;
 @property (nonatomic,assign)    EncoderStatus   status;
 @property (nonatomic,strong)    NSString        * statusAsString;
@@ -152,6 +152,9 @@
 @property (nonatomic,weak)  id <ActionListItemDelegate>  delegate;
 
 -(void)start;
+
+//Methods for Local Encoder to update its tags
+//-(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp;
 
 
 

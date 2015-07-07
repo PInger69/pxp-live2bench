@@ -105,6 +105,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @property (strong, nonatomic) NSString      *durationID;
 
 
+
 +(void)clearDurationTags;
 +( NSString *)makeDurationID;
 +(void)addOpenDurationTag:(Tag*)tag dtid:(NSString*)uid;

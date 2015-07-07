@@ -60,7 +60,7 @@
     [self addGestureRecognizer:advanceGestureRecognizer];
     [self addGestureRecognizer:listGestureRecognizer];
     
-    [self addObserver:self forKeyPath:@"context" options:0 context:_contextObserverContext];
+    //[self addObserver:self forKeyPath:@"context.players" options:0 context:_contextObserverContext];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -81,12 +81,12 @@
 }
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"context" context:_contextObserverContext];
+    // [self removeObserver:self forKeyPath:@"context.players" context:_contextObserverContext];
 }
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _contextObserverContext) {
-        self.playerContextIndex = self.context ? [self.context.players indexOfObject:self.player] : NSNotFound;
+        //self.playerContextIndex = self.context ? [self.context.players indexOfObject:self.player] : NSNotFound;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -98,21 +98,18 @@
     [super setPlayer:player];
     
     if (player.context != self.context) {
-        [self willChangeValueForKey:@"context"];
+        //[self willChangeValueForKey:@"context"];
         _context = player.context ? player.context : [PxpPlayerContext contextWithPlayer:player];
-        [self didChangeValueForKey:@"context"];
+        //[self didChangeValueForKey:@"context"];
     }
     
     self.playerContextIndex = self.player.context ? [self.player.context.players indexOfObject:self.player] : NSNotFound;
 }
 
 - (void)setContext:(nonnull PxpPlayerContext *)context {
-    [self willChangeValueForKey:@"context"];
     _context = context;
     
     self.player = context.players.firstObject;
-    
-    [self didChangeValueForKey:@"context"];
 }
 
 #pragma mark - Gesture Recognizers
