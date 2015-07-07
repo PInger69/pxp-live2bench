@@ -398,7 +398,15 @@ static void * vpFrameContext   = &vpFrameContext;
     
     CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
     
-    Feed * f;
+    // Get feed
+    Feed *feed = [rick objectForKey:@"feed"];
+    
+    // enter clip mode
+    if (feed) {
+        [vid playClipWithFeed:feed andTimeRange:timeRange];
+    }
+    
+    /*
     if ([rick objectForKey:@"feed"]) {
    
         if (_videoControlBar) {
@@ -417,7 +425,7 @@ static void * vpFrameContext   = &vpFrameContext;
     [vid playClipWithFeed:f andTimeRange:timeRange];
     vid.looping         = YES;
 
-    
+    */
     for (Pip * pip in self.pips) {
         [pip setHidden:YES];
         [pip seekTo:cmtime];
@@ -570,7 +578,8 @@ static void * vpFrameContext   = &vpFrameContext;
                 if (finished) {
                     [weakPip.avPlayer.currentItem cancelPendingSeeks];
 
-                    CMTimeRange loadedRange = [weakPip.avPlayer.currentItem.loadedTimeRanges.firstObject CMTimeRangeValue];
+                    // use seekable range NOT loaded range
+                    CMTimeRange loadedRange = [weakPip.avPlayer.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
                     
                     if (CMTimeRangeContainsTime(loadedRange, mySeekToTime)) {
                         weakPip.avPlayer.rate = r;

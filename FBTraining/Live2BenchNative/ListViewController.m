@@ -1804,9 +1804,9 @@ NSMutableArray *oldEventNames;
                                                                                                               @"duration":[userInfo objectForKey:@"duration"],
                                                                                                               //@"state":[NSNumber numberWithInteger:PS_Play]}];*/
     
-    [self.videoPlayer playFeed:[userInfo objectForKey:@"feed"] withRange:timeRange];
-    //self.videoPlayer.looping = NO;
-    self.videoPlayer.looping = YES;
+
+    [self.videoPlayer playClipWithFeed:[userInfo objectForKey:@"feed"] andTimeRange:timeRange];
+    
     selectedTag = userInfo[@"forWhole"];
     
     
