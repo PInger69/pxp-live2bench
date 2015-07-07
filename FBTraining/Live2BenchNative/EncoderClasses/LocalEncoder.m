@@ -690,7 +690,7 @@ static LocalEncoder * instance;
         Event *encoderEvent = [eventDic objectForKey:@"non-local"];
         if (!encoderEvent.isBuilt && encoderEvent) {
             [encoderEvent setDelegate:self];
-            [self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
+//            [self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
         }
     }
 }
@@ -929,7 +929,7 @@ static LocalEncoder * instance;
     [self.localTags removeObjectForKey:keyToBeRemoved];*/
     //[self.localTags removeObjectAtIndex:0];
     [self.localTags removeObjectAtIndex:0];
-    [self checkLocalTags];
+//    [self checkLocalTags];
     isSuccess   = NO;
     isFinished  = YES;
     if (self.delegate) {

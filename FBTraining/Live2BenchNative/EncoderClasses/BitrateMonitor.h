@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Encoder.h"
+#import "EncoderManager.h"
 #import "EncoderProtocol.h"
 
 @interface BitrateMonitor : UIView

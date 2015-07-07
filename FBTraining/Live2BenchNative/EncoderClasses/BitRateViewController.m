@@ -108,15 +108,26 @@
 -(void)rearrange
 {
     
-    float   yOffset = 20;
+    float   yOffset = 120;
     int     count   = 0;
     NSArray * list = [builtMonitors allValues];
     
     for (BitrateMonitor * monitor in list){
         
-        [monitor setFrame:CGRectMake(75, yOffset* count + 150, 703 - 150, monitorSize.height)];
+        [monitor setFrame:CGRectMake(75, yOffset + (count * (monitorSize.height+60)), 703 - 150, monitorSize.height)];
         count++;
     }
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self refresh:nil];
+    [super viewDidAppear:animated];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
 }
 
 
