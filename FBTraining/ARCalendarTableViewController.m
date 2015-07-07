@@ -253,7 +253,22 @@
                 
                 Feed *source;
                 __block Event * weakEvent = event;
-                if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
+                
+                if (event.local && ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]])) {
+                    source = [[Feed alloc] initWithFileURL:path];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                    [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                    [weakSelf.encoderManager declareCurrentEvent:localCounterpart];
+                }else{
+                    source = [[Feed alloc] initWithURLString:data quality:0];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                    [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
+                    [weakSelf.encoderManager declareCurrentEvent:weakEvent];
+                }
+                
+                
+
+                /*if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
                     
                     source = [[Feed alloc] initWithFileURL:path];
                     //[localCounterpart setOnComplete:^{
@@ -313,7 +328,7 @@
 //                    }
 
 
-                }
+                }*/
 
             }];
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view

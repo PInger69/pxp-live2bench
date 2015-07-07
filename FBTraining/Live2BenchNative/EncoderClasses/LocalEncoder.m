@@ -613,7 +613,11 @@ static LocalEncoder * instance;
         
         
         [[LocalMediaManager getInstance] assignEncoderVersionEvent:self.encoderManager.masterEncoder.allEvents];
-        [self builtEncoderEvent];
+        if (!self.localTags && !self.modifiedTags) {
+            [self syncTagsFromEncoder];
+        }else{
+            [self builtEncoderEvent];
+        }
         
         //[self checkLocalTags];
         //[self syncEvents];
@@ -690,7 +694,7 @@ static LocalEncoder * instance;
         Event *encoderEvent = [eventDic objectForKey:@"non-local"];
         if (!encoderEvent.isBuilt && encoderEvent) {
             [encoderEvent setDelegate:self];
-//            [self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
+            [self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
         }
     }
 }
@@ -734,6 +738,7 @@ static LocalEncoder * instance;
         if (encoderEvent.isBuilt && localEvent.isBuilt) {
             for (Tag *tag in encoderEvent.tags) {
                 if (![localEvent.tags containsObject:tag]) {
+                    Tag *localTag = [[Tag alloc]initWithData:[tag makeTagData] event:localEvent];
                     [localEvent.tags addObject:tag];
                 }
             }

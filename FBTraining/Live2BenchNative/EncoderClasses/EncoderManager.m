@@ -445,28 +445,28 @@
 
 -(void)onMasterFound:(NSNotification*)note
 {
-//    _masterEncoder = note.object;
-//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
+    /*_masterEncoder = note.object;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];*/
 }
 
 -(void)onMasterLost:(NSNotification*)note
 {
-//    [self.authenticatedEncoders removeObject:self.masterEncoder];
-//    
-//    if (self.masterEncoder !=nil) [self unRegisterEncoder:self.masterEncoder];
-//    
-//    if ( [self.liveEvent.name isEqualToString:self.currentEvent]){
-//        self.currentEvent = nil;
-//    }
-//    
-//    self.liveEvent = nil;
-//    
-//    [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//        if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
-//            Encoder * anEncoder = (Encoder *) obj;
-//            [anEncoder searchForMaster];
-//        }
-//    }];
+    /*[self.authenticatedEncoders removeObject:self.masterEncoder];
+    
+    if (self.masterEncoder !=nil) [self unRegisterEncoder:self.masterEncoder];
+    
+    if ( [self.liveEvent.name isEqualToString:self.currentEvent]){
+        self.currentEvent = nil;
+    }
+    
+    self.liveEvent = nil;
+    
+    [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
+            Encoder * anEncoder = (Encoder *) obj;
+            [anEncoder searchForMaster];
+        }
+    }];*/
 
 }
 

@@ -218,40 +218,52 @@
     if (registerEncoder.authenticated  && ![_authenticatedEncoders containsObject:registerEncoder]) {
         [_authenticatedEncoders addObject:registerEncoder];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+        
+        
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// THIS IS TEMP FOR IVANS MEETING ///////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        // this is a temp
+        if ([dictOfEncoders count] > 0 && ![registerEncoder.name isEqualToString:@"trashed"]) {
+            
+            NSMutableArray * listed                     = [NSMutableArray arrayWithArray:[dictOfEncoders allKeys]];
+            
+            if (askPickMaster) {
+                [askPickMaster dismissPopoverAnimated:NO];
+                [askPickMaster clear];
+                askPickMaster = nil;
+            }
+            
+            askPickMaster                               = [[ListPopoverController alloc] initWithMessage:@"Please pick an encoder:" buttonListNames:[listed copy]];
+            __block EncoderManager * weakEncoderManager = self;
+            
+            [askPickMaster addOnCompletionBlock:^(NSString *pick){
+                
+                for (Encoder* enc in [weakEncoderManager->dictOfEncoders allValues])
+                {
+                    enc.isMaster = NO;
+                }
+                ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]).isMaster =YES;
+                weakEncoderManager.masterEncoder = ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]);
+                PXPLog(@"%@ is set to master!",weakEncoderManager.masterEncoder.name);
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:weakEncoderManager];
+            }];
+            [askPickMaster presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                           animated:YES];
+            
+        }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
     } else if (!registerEncoder.authenticated) {
         [registerEncoder destroy];
     }
 
-    
-    // is it added to the Encoder Commander check encocer level
-    
-    // this is a temp
-    if ([dictOfEncoders count] > 0) {
-        
-        NSMutableArray * listed                     = [NSMutableArray arrayWithArray:[dictOfEncoders allKeys]];
-        
-        if (askPickMaster) {
-            [askPickMaster dismissPopoverAnimated:NO];
-            [askPickMaster clear];
-            askPickMaster = nil;
-        }
-        
-        askPickMaster                               = [[ListPopoverController alloc] initWithMessage:@"Please pick an encoder:" buttonListNames:[listed copy]];
-        __block EncoderManager * weakEncoderManager = self;
-        
-        [askPickMaster addOnCompletionBlock:^(NSString *pick){
-            
-            for (Encoder* enc in [weakEncoderManager->dictOfEncoders allValues])
-            {
-                enc.isMaster = NO;
-            }
-            ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]).isMaster =YES;
-        }];
-        [askPickMaster presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
-                                       animated:YES];
-        
-    }
 
+   
 }
 
 
@@ -295,101 +307,6 @@
 
 
 
-<<<<<<< HEAD
--(Event*)getEventByHID:(NSString*)eventHID
-{
-//    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-//        
-//        NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
-//        
-//        return [thisHID isEqualToString:eventHID];
-//    }];
-//    
-//    
-//    //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
-//    
-//    
-//    NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
-//    
-//    if ([filtered count]==0)return nil;
-//    
-//    // this is an issues
-//    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:NO andlocalPath:nil];
-//    
-    
-    
-    /////
-    Event * event;
-    
-    // collects all events
-    NSMutableArray * collection = [[NSMutableArray alloc]init];
-    
-    for (Encoder * enc in self.authenticatedEncoders) {
-        for (NSMutableDictionary *eventDic in [enc.allEvents allValues]) {
-            [collection addObject:eventDic[@"non-local"]];
-        }
-        //[collection addObjectsFromArray:[enc.allEvents allValues]];
-    }
-    
-    
-    for (Event * evt in collection) {
-        if ([evt.hid isEqualToString:eventHID]) {
-            event = evt;
-            break;
-        };
-    }
-    
-    // If there is no exteral events check the local
-    if (!event){
-        collection = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].allEvents allValues]];
-        
-        for (NSMutableDictionary * evtDic in collection) {
-            Event *evt = evtDic[@"local"];
-            if ([evt.hid isEqualToString:eventHID]) {
-                event = evt;
-                break;
-            };
-        }
-    }
-
-    return event;
-}
-
--(Event*)getEventByName:(NSString*)eventName
-{
-    for (Encoder * enc in self.authenticatedEncoders) {
-        
-        if ([enc getEventByName:eventName]){
-            return [enc getEventByName:eventName];
-        }
-    }
-    
-    //return [self.localEncoder getEventByName:eventName];
-    return [[LocalMediaManager getInstance] getEventByName:eventName];
-}
-
--(void)makeFakeEncoder
-{
-
-        FakeEncoder * newEncoder    = [[FakeEncoder alloc]init];
-        newEncoder.encoderManager = self;
-        [newEncoder addObserver:self forKeyPath:@"authenticated"    options:0 context:authenticatContext];
-        [newEncoder addObserver:self forKeyPath:@"status"           options:0 context:statusContext];
-        newEncoder.name         = [NSString stringWithFormat:@"Fake %d",[FakeEncoder fakeCount] ];
-//        [newEncoder requestVersion];
-//        [newEncoder authenticateWithCustomerID:_customerID];
-//        if (_masterEncoder == nil) [newEncoder searchForMaster];
-        [dictOfEncoders setValue:newEncoder forKey:newEncoder.name];
-    
-        
-        PXPLog(@"*** Registered FAKE Encoder ***");
-        PXPLog(@"    %@ ",newEncoder.name);
-        PXPLog(@"**************************");
-
-}
-
-=======
->>>>>>> 624e6d5f925cc949d82d403b553167945a9473e9
 
 #pragma mark -
 #pragma mark Observers
@@ -521,13 +438,19 @@
 
 -(void)onMasterFound:(NSNotification*)note
 {
-    _masterEncoder = note.object;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
+<<<<<<< HEAD
+    /*_masterEncoder = note.object;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];*/
+=======
+//    _masterEncoder = note.object;
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
+>>>>>>> 45800f5efaa631d5341041a0bd6db16262e44f88
 }
 
 -(void)onMasterLost:(NSNotification*)note
 {
-    [self.authenticatedEncoders removeObject:self.masterEncoder];
+<<<<<<< HEAD
+    /*[self.authenticatedEncoders removeObject:self.masterEncoder];
     
     if (self.masterEncoder !=nil) [self unRegisterEncoder:self.masterEncoder];
     
@@ -542,7 +465,25 @@
             Encoder * anEncoder = (Encoder *) obj;
             [anEncoder searchForMaster];
         }
-    }];
+    }];*/
+=======
+//    [self.authenticatedEncoders removeObject:self.masterEncoder];
+//    
+//    if (self.masterEncoder !=nil) [self unRegisterEncoder:self.masterEncoder];
+//    
+//    if ( [self.liveEvent.name isEqualToString:self.currentEvent]){
+//        self.currentEvent = nil;
+//    }
+//    
+//    self.liveEvent = nil;
+//    
+//    [self.authenticatedEncoders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//        if ([obj isKindOfClass:[Encoder class]]){ // this is so it does not get the local encoder to search
+//            Encoder * anEncoder = (Encoder *) obj;
+//            [anEncoder searchForMaster];
+//        }
+//    }];
+>>>>>>> 45800f5efaa631d5341041a0bd6db16262e44f88
 
 }
 
