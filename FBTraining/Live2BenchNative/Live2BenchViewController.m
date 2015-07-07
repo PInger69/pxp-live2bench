@@ -255,6 +255,9 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
     }
 
+    if (!_currentEvent.live) {
+        [_tagButtonController closeAllOpenTagButtons];
+    }
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
@@ -272,15 +275,12 @@ static void * eventContext      = &eventContext;
         }
     }
     
+    [_videoBarViewController update];
     [self onEventChange];
 }
 
 -(void)onTagChanged:(NSNotification *)note
 {
-    if (![_tagButtonController.currentEvent.name isEqualToString:_currentEvent.name] && _currentEvent && [note.userInfo[@"allEventTag"] isEqualToString:@"true"] ) {
-        //[_tagButtonController allToggleOnOpenTags:_currentEvent];
-    }
-    
     [_videoBarViewController onTagChanged:_currentEvent];
 }
 
@@ -1000,6 +1000,13 @@ static void * eventContext      = &eventContext;
             return;
         }
     }
+    
+
+    
+}
+
+-(void) onAppTerminate:(NSNotification *)note{
+    [_tagButtonController closeAllOpenTagButtons];
 }
 
 - (void)didReceiveMemoryWarning

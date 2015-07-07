@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface EncoderCommand : NSObject
+@interface EncoderTask : NSObject
 
 @property (nonatomic)           SEL                 selector;
 @property (nonatomic)           id                  target;

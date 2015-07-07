@@ -66,12 +66,12 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp;
 
 
-@property (nonatomic, copy) void(^onComplete)();
+
 -(Event*)getEventByName:(NSString*)eventName;
 
 @optional
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp onComplete:(void (^)())onComplete;
-
+@property (nonatomic, copy) void(^onComplete)();
 @property (nonatomic,readonly)    NSString             * version;
 @property (nonatomic,assign)    double               bitrate;
 @property (nonatomic,assign)    NSInteger       cameraCount;
@@ -79,5 +79,8 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
 -(void)clearQueueAndCurrent;
+
+
+
 
 @end

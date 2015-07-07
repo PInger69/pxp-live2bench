@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 
-#import "EncoderCommand.h"
+#import "EncoderTask.h"
 
-@implementation EncoderCommand
+@implementation EncoderTask
 
 @end

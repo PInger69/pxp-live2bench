@@ -136,7 +136,7 @@
 		D727798A1A2FBEBE0034DD66 /* LiveButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779891A2FBEBE0034DD66 /* LiveButton.m */; };
 		D727798D1A30C5870034DD66 /* UserCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D727798C1A30C5870034DD66 /* UserCenter.m */; };
 		D72779901A30C8120034DD66 /* CloudEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D727798F1A30C8120034DD66 /* CloudEncoder.m */; };
-		D72779931A30F0D50034DD66 /* EncoderCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779921A30F0D50034DD66 /* EncoderCommand.m */; };
+		D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779921A30F0D50034DD66 /* EncoderTask.m */; };
 		D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */; };
 		D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779A71A3609620034DD66 /* ListPopoverController.m */; };
 		D72779AB1A37498E0034DD66 /* CalendarTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779AA1A37498E0034DD66 /* CalendarTableCell.m */; };
@@ -640,7 +640,6 @@
 		D727089D1A141ADC0086BCB8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D727089E1A1520900086BCB8 /* LocalEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalEncoder.h; path = EncoderClasses/LocalEncoder.h; sourceTree = "<group>"; };
 		D727089F1A1520900086BCB8 /* LocalEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocalEncoder.m; path = EncoderClasses/LocalEncoder.m; sourceTree = "<group>"; };
-		D72708A11A153BA70086BCB8 /* EncoderCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderCommands.h; path = EncoderClasses/EncoderCommands.h; sourceTree = "<group>"; };
 		D72708A31A1BA4B30086BCB8 /* Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feed.h; path = EncoderClasses/Feed.h; sourceTree = "<group>"; };
 		D72708A41A1BA4B30086BCB8 /* Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Feed.m; path = EncoderClasses/Feed.m; sourceTree = "<group>"; };
 		D72779881A2FBEBE0034DD66 /* LiveButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveButton.h; path = Live2BenchNative/Live2BenchTab/LiveButton.h; sourceTree = "<group>"; };
@@ -649,8 +648,8 @@
 		D727798C1A30C5870034DD66 /* UserCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserCenter.m; path = Live2BenchNative/UserCenter.m; sourceTree = "<group>"; };
 		D727798E1A30C8120034DD66 /* CloudEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CloudEncoder.h; path = EncoderClasses/CloudEncoder.h; sourceTree = "<group>"; };
 		D727798F1A30C8120034DD66 /* CloudEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CloudEncoder.m; path = EncoderClasses/CloudEncoder.m; sourceTree = "<group>"; };
-		D72779911A30F0D50034DD66 /* EncoderCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderCommand.h; path = EncoderClasses/EncoderCommand.h; sourceTree = "<group>"; };
-		D72779921A30F0D50034DD66 /* EncoderCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderCommand.m; path = EncoderClasses/EncoderCommand.m; sourceTree = "<group>"; };
+		D72779911A30F0D50034DD66 /* EncoderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderTask.h; path = EncoderClasses/EncoderTask.h; sourceTree = "<group>"; };
+		D72779921A30F0D50034DD66 /* EncoderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderTask.m; path = EncoderClasses/EncoderTask.m; sourceTree = "<group>"; };
 		D72779A31A32605B0034DD66 /* BottomViewControllerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BottomViewControllerBase.h; path = Live2BenchNative/Live2BenchTab/BottomViewClasses/BottomViewControllerBase.h; sourceTree = "<group>"; };
 		D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BottomViewControllerBase.m; path = Live2BenchNative/Live2BenchTab/BottomViewClasses/BottomViewControllerBase.m; sourceTree = "<group>"; };
 		D72779A61A3609620034DD66 /* ListPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ListPopoverController.h; path = Live2BenchNative/GeneralUIClasses/ListPopoverController.h; sourceTree = "<group>"; };
@@ -2409,11 +2408,10 @@
 		D7EE84D419F19EBC00DEC82B /* EncoderClasses */ = {
 			isa = PBXGroup;
 			children = (
-				D72779911A30F0D50034DD66 /* EncoderCommand.h */,
-				D72779921A30F0D50034DD66 /* EncoderCommand.m */,
+				D72779911A30F0D50034DD66 /* EncoderTask.h */,
+				D72779921A30F0D50034DD66 /* EncoderTask.m */,
 				D727798E1A30C8120034DD66 /* CloudEncoder.h */,
 				D727798F1A30C8120034DD66 /* CloudEncoder.m */,
-				D72708A11A153BA70086BCB8 /* EncoderCommands.h */,
 				D727089E1A1520900086BCB8 /* LocalEncoder.h */,
 				D727089F1A1520900086BCB8 /* LocalEncoder.m */,
 				D75042AF19FA966F00D9851D /* EncoderStatusMonitor.h */,
@@ -2914,7 +2912,7 @@
 				D760737319D4A513000E35C2 /* FullScreenViewController.m in Sources */,
 				D7581EF1196454B00029C5DD /* CommentingRatingField.m in Sources */,
 				94F95970192272C100B7D201 /* AVPlayerRewindableItem.m in Sources */,
-				D72779931A30F0D50034DD66 /* EncoderCommand.m in Sources */,
+				D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,

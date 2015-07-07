@@ -22,5 +22,6 @@
 -(id)initWithAppDelegate:(AppDelegate *) appDel;
 //-(id)initWithAppDelegate:(id<UIApplicationDelegate >) mainappDelegate;
 -(void)setMainSectionTab:(NSString*)name imageName:(NSString*)imgName;
+-(void)onAppTerminate:(NSNotification *)note;
 
 @end

@@ -63,8 +63,9 @@
 
 
 -(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
--(void)addTag:(Tag *)newtag;
+-(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost;
 -(void)addAllTags:(NSDictionary *)allTagData;
 -(void)modifyTag:(NSDictionary *)modifiedData;
 -(NSArray*)getTagsByID:(NSString*)tagId;
+-(void)runEventDelegate;
 @end

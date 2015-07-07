@@ -373,6 +373,7 @@
 @synthesize isReady         = _isReady;
 
 @synthesize isAlive;
+@synthesize allEvents       = _allEvents;
 
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
@@ -386,6 +387,7 @@
         _authenticated  = NO;
         timeOut         = 15.0f;
         queue           = [[NSMutableDictionary alloc]init];
+        _allEvents      = [[NSMutableDictionary alloc]init];
 //        _eventTagsDict  = [[NSMutableDictionary alloc]init];
         isWaitiing      = NO;
         version         = @"?";
@@ -422,6 +424,7 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
+    self.event = nil;
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
     return self;
@@ -459,7 +462,7 @@
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    EncoderCommand *cmd    = [[EncoderCommand alloc]init];
+    EncoderTask *cmd    = [[EncoderTask alloc]init];
     cmd.selector    = NSSelectorFromString(methodName);
     cmd.target      = self;
     cmd.priority    = priority;
@@ -487,7 +490,7 @@
 
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData timeStamp:(NSNumber *)aTimeStamp onComplete:(void (^)())onComplete
 {
-    EncoderCommand *cmd    = [[EncoderCommand alloc]init];
+    EncoderTask *cmd    = [[EncoderTask alloc]init];
     cmd.selector    = NSSelectorFromString(methodName);
     cmd.target      = self;
     cmd.priority    = priority;
@@ -525,7 +528,7 @@
     //if the queue is not empty, send another request
     if(queue.count>0 && !isWaitiing)
     {
-        EncoderCommand * nextInQueue = [self getNextInQueue];
+        EncoderTask * nextInQueue = [self getNextInQueue];
         currentCommand = nextInQueue;
         id controller   = nextInQueue.target;
         SEL sel         = nextInQueue.selector;
@@ -544,11 +547,14 @@
 {
     NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         
-        Event* obj = evaluatedObject;
+        NSMutableDictionary *objDic = evaluatedObject;
+        Event *obj = [objDic objectForKey:@"local"];
+        
+        //Event* obj = evaluatedObject;
         return [obj.name isEqualToString:eventName];
     }];
     
-    NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents]allValues] filteredArrayUsingPredicate:pred ]];
+    NSArray * filtered = [NSArray arrayWithArray:[[[self allEvents] allValues] filteredArrayUsingPredicate:pred ]];
     
     if ([filtered count]==0)return nil;
     
@@ -614,7 +620,7 @@
                                        @"time"          : tagTime,
                                        @"name"          : tagName,
                                        @"duration"      : @"1",
-                                       @"type"          : @"4",
+                                       @"type"          : [NSNumber numberWithInteger:TagTypeTele]
                                        }];
     
     [tagData addEntriesFromDictionary:data];
@@ -673,15 +679,8 @@
 -(void)onDeleteTag:(NSNotification *)note
 {
     Tag *tagToDelete = note.object;
-    tagToDelete.type = 3;
-    
-//    NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
-//                                 @"1",@"delete",
-//                                 tagToDelete.event,@"event",
-//                                 [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
-//                                 @"requesttime", [UserCenter getInstance].userHID,
-//                                 @"user",tagToDelete.ID,
-//                                 @"id", nil];
+    tagToDelete.type = TagTypeDeleted;
+
     
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
                                      @{
@@ -947,6 +946,7 @@
 
 //    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
         [self willChangeValueForKey:@"authenticated"];
+        if (!_authenticated) [self buildEncoderRequest];
         _authenticated  = YES;
         isAuthenticate = YES;
         [self didChangeValueForKey:@"authenticated"];
@@ -997,7 +997,6 @@
     encoderConnection.timeStamp             = aTimeStamp;
 
 }
-
 
 -(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
@@ -1349,10 +1348,9 @@
     
     if (isAuthenticate && 1 && _isBuild && isTeamsGet && !_isReady){
         _isReady         = YES;
-        //if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithEncoder:self]; // Start watching the status when its ready
         if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithDelegate:self];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
-        
+//        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
+        [self.encoderManager onRegisterEncoderCompleted:self];
     }
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:@{@"responce":finishedData}];
@@ -1480,7 +1478,7 @@
     // Check the data or website and see if it is successful if so
     //    authenticated = YES else NO
     // Should there be a notif for when its complete
-
+    if (!isAuthenticate) [self buildEncoderRequest];
     isAuthenticate = YES;
 }
 
@@ -1544,7 +1542,8 @@
 {
     NSString * type = extra[@"type"];
     
-    Event * checkEvent = ([type isEqualToString:EVENT_GET_TAGS])?[self.allEvents objectForKey:extra[@"event"]]:nil ;
+    NSMutableDictionary *checkEventDic = ([type isEqualToString:EVENT_GET_TAGS])?[_allEvents objectForKey:extra[@"event"]]:nil ;
+    Event * checkEvent = checkEventDic[@"non-local"];
     
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
@@ -1561,14 +1560,15 @@
         } else if ([type isEqualToString:EVENT_GET_TAGS]){
             NSDictionary    * rawTags = [results objectForKey:@"tags"];
             if (rawTags) {
-                NSArray *rawTagsArray = [rawTags allValues];
-                NSDictionary *firstTag = [rawTagsArray firstObject];
-                checkEvent = [self.allEvents objectForKey:firstTag[@"event"]];
+                //NSArray *rawTagsArray = [rawTags allValues];
+                //NSDictionary *firstTag = [rawTagsArray firstObject];
+                //checkEvent = [self.allEvents objectForKey:firstTag[@"event"]];
                 [checkEvent addAllTags:rawTags];
                 
                 NSLog(@"oncomp: %@", (checkEvent.onComplete)?@"yes":@"no");
             }
             checkEvent.isBuilt = YES;
+            [checkEvent runEventDelegate];
             
             /*NSDictionary    * rawtags = [results objectForKey:@"tags"];
             NSMutableArray  * polishedTags = [[NSMutableArray alloc]init];
@@ -1599,8 +1599,9 @@
 {
     if ([data objectForKey:@"id"]) {
         
-        if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
-            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
+        if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
+            NSMutableDictionary *checkEventDic = [_allEvents objectForKey:[data objectForKey:@"event"]];
+            Event * checkEvent = [checkEventDic objectForKey:@"non-local"];
             [checkEvent modifyTag:data];
         }
             
@@ -1641,12 +1642,16 @@
 {
     if ([data objectForKey:@"id"]) {
         
-        if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
-            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]];
+        if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
+            NSMutableDictionary *checkEventDic = [_allEvents objectForKey:[data objectForKey:@"event"]];
+            Event * checkEvent = [checkEventDic objectForKey:@"non-local"];
             Tag *newTag = [[Tag alloc] initWithData: data event:checkEvent];
-            //if (![checkEvent.tags containsObject:newTag]) {
-                [checkEvent addTag:newTag];
-            //}
+            
+            if (self.event == checkEvent) {
+                [checkEvent addTag:newTag extraData:true];
+            }else{
+                [checkEvent addTag:newTag extraData:false];
+            }
         }
     }
 }
@@ -1922,9 +1927,15 @@
                     
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
+                        
                         [pool setObject:anEvent forKey:anEvent.name];
                         [pool setObject:anEvent forKey:LIVE_EVENT];
-                        self.allEvents      = [pool copy];
+                        
+                        NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
+                        [_allEvents setObject:eventFinal forKey:anEvent.name];
+                        [_allEvents setObject:eventFinal forKey:LIVE_EVENT];
+                        
+                        //self.allEvents      = [pool copy];
                         if (/*_justStarted &&*/ _status == ENCODER_STATUS_LIVE) {
                             _justStarted = false;
                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
@@ -1946,7 +1957,19 @@
                 
             }
             
-            self.allEvents      = [pool copy];
+            for(Event *encoderEvent in [pool allValues]) {
+                Event *localEvent = [[LocalMediaManager getInstance] getEventByName:encoderEvent.name];
+                if (localEvent) {
+                    NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":localEvent,@"non-local":encoderEvent}];
+                    [_allEvents setObject:eventFinal forKey:encoderEvent.name];
+                }else{
+                    NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":encoderEvent}];
+                    [_allEvents setObject:eventFinal forKey:encoderEvent.name];
+                }
+            }
+            
+            
+            //self.allEvents      = [pool copy];
             
         }
     }
@@ -1957,7 +1980,7 @@
 
 #pragma mark - Queue methods
 // Queue methods
--(void)addToQueue:(EncoderCommand *)obj
+-(void)addToQueue:(EncoderTask *)obj
 {
     NSNumber * priKey =[[NSNumber alloc] initWithInt:obj.priority];
     if ([queue objectForKey: priKey] == nil ) {
@@ -1972,14 +1995,14 @@
  *
  *  @param obj the command to be removed
  */
--(void)removeFromQueue:(EncoderCommand *)obj
+-(void)removeFromQueue:(EncoderTask *)obj
 {
     NSNumber * priKey =[[NSNumber alloc] initWithInt:obj.priority];
     [[queue objectForKey:priKey]removeObject:obj];
     
 }
 
--(EncoderCommand *)getNextInQueue
+-(EncoderTask *)getNextInQueue
 {
     // Sorted keys
     NSMutableArray * allKeys =  [NSMutableArray arrayWithArray:[[queue allKeys] sortedArrayUsingComparator:^(id obj1, id obj2) {
@@ -1993,7 +2016,7 @@
         thePriorityKey = [allKeys lastObject];
     }
     
-    EncoderCommand * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) objectAtIndex:0];
+    EncoderTask * nextObj = [((NSMutableArray *)[queue objectForKey:thePriorityKey]) objectAtIndex:0];
     
     return nextObj;
 }

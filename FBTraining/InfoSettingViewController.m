@@ -106,7 +106,7 @@
 }
 
 - (void)logout {
-    BOOL hasInternet = self.encoderManager.hasInternet;
+    BOOL hasInternet = [Utility hasInternet];
     if (!hasInternet) {
         CustomAlertView *errorView;
         errorView = [[CustomAlertView alloc]

@@ -565,6 +565,9 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
  // Pass the selected object to the new view controller.
  }
  */
-
+-(void)reloadData
+{
+    [super reloadData];
+}
 @end
 

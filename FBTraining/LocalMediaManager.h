@@ -13,7 +13,7 @@
 
 @property (nonatomic,strong)    NSString                * name;
 @property (nonatomic, strong)   NSString                *localPath;
-@property (nonatomic,strong)    NSDictionary            * allEvents;
+@property (nonatomic,strong)    NSMutableDictionary            * allEvents;
 @property (nonatomic,strong)    NSMutableDictionary * clips;    // This is all feeds kept on the device  key:<id> value:<Clip>
 
 +(instancetype)getInstance;
@@ -23,6 +23,7 @@
 -(NSString*)bookmarkedVideosPath;
 -(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData;
 -(Event*)getEventByName:(NSString*)eventName;
+-(void)assignEncoderVersionEvent:(NSDictionary *)allEvent;
 
 
 @end

@@ -16,7 +16,7 @@
 #import "ActionList.h"
 #import "UserCenterActionPack.h" // This has all the user Actions
 #import "CloudEncoder.h"// to get defins
-#import "EncoderCommand.h"
+#import "EncoderTask.h"
 #import <objc/runtime.h>
 #import "EncoderManagerActionPack.h"
 

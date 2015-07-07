@@ -313,7 +313,7 @@
         
         if(succsess){ // get the ID from the userCenter and sets it to the Manager so it can look for encoders
 //            weakEM.customerID = weakSelf.userCenter.customerID;
-            weakEM.searchForEncoders = weakEM.hasWiFi;
+            weakEM.searchForEncoders = [Utility hasWiFi];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
             // add to action list success list bransh
             
@@ -324,7 +324,7 @@
                     weakSelf.userCenter.isEULA = YES;
                     [weakSelf.userCenter writeAccountInfoToPlist];
 //                    weakEM.customerID = weakSelf.userCenter.customerID;
-                    weakEM.searchForEncoders = weakEM.hasWiFi;
+                    weakEM.searchForEncoders = [Utility hasWiFi];
                     // present Eula and accept
                     // if info is okay and Eula is accepted
                     // save to plist

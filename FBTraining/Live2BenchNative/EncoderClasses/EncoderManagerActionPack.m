@@ -79,7 +79,7 @@
 }
 
 -(void)start {
-    self.isSuccess = encoderMangager.hasWiFi;
+    self.isSuccess = [Utility hasWiFi];
     self.isFinished = YES;
 }
 

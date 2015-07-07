@@ -130,7 +130,7 @@
     [self.view addSubview:memoryBar];
     
     
-    NSMutableArray *temp = [[NSMutableArray alloc] init];
+    /*NSMutableArray *temp = [[NSMutableArray alloc] init];
     if (_appDel.encoderManager.masterEncoder) {
         [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];
     } else {
@@ -143,7 +143,18 @@
             [liveEvents addObject:event];
         }
     }
-    [temp removeObjectsInArray:liveEvents];
+    [temp removeObjectsInArray:liveEvents];*/
+    
+    NSMutableArray  *temp = [[NSMutableArray alloc] init];
+    if (_appDel.encoderManager.masterEncoder) {
+        for (NSMutableDictionary *eventDic in [_appDel.encoderManager.masterEncoder.allEvents allValues]) {
+            [temp addObject:eventDic[@"non-local"]];
+        }
+    }else{
+        for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
+            [temp addObject:eventDic[@"local"]];
+        }
+    }
     
     tableViewController.arrayOfAllData      = [temp mutableCopy];
     calendarViewController.arrayOfAllData   = tableViewController.arrayOfAllData;
