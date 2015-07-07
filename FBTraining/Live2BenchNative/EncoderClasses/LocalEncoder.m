@@ -613,7 +613,11 @@ static LocalEncoder * instance;
         
         
         [[LocalMediaManager getInstance] assignEncoderVersionEvent:self.encoderManager.masterEncoder.allEvents];
-        [self builtEncoderEvent];
+        if (!self.localTags && !self.modifiedTags) {
+            [self syncTagsFromEncoder];
+        }else{
+            [self builtEncoderEvent];
+        }
         
         //[self checkLocalTags];
         //[self syncEvents];
