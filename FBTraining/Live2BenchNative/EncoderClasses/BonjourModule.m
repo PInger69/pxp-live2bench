@@ -17,6 +17,7 @@
 {
     NSNetServiceBrowser         * serviceBrowser;   //serviceBrowser searches for services
     NSMutableArray              * services;         //array of netservices which are detected
+    NSTimer                     * searchingTimer;
 }
 
 
@@ -53,7 +54,7 @@
 -(void) resolveIPAddress:(NSNetService *)service {
     NSNetService *remoteService = service;
     remoteService.delegate = self;
-    [remoteService resolveWithTimeout:0];
+    [remoteService resolveWithTimeout:20];
 }
 
 //---managed to resolve---
@@ -115,6 +116,12 @@
     
 }
 
+-(void)netService:(nonnull NSNetService *)sender didNotPublish:(nonnull NSDictionary<NSString *,NSNumber *> *)errorDict
+{
+
+}
+
+
 
 -(BOOL)searching
 {
@@ -125,9 +132,21 @@
 {
     if (searching == _searching)return;
     if (searching) {
-        [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
+        if (searchingTimer) {
+            [searchingTimer invalidate];
+            searchingTimer = nil;
+        }
+        
+        if (![dictOfIPs count]) {
+            searchingTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(searchPing) userInfo:nil repeats:YES];
+        }
+        [searchingTimer fire];
         PXPLog(@"BonjourModule: ON");
     } else{
+        if (searchingTimer) {
+            [searchingTimer invalidate];
+            searchingTimer = nil;
+        }
         [serviceBrowser stop];
         PXPLog(@"BonjourModule: OFF");
     }
@@ -135,6 +154,19 @@
     _searching = searching;
     [self didChangeValueForKey:@"searchForEncoders"];
 }
+                              
+                              
+-(void)searchPing
+{
+    if ([dictOfIPs count]) {
+        [searchingTimer invalidate];
+        searchingTimer = nil;
+    } else {
+        [self clear];
+        [self reset];
+    }
+}
+                              
 
 -(void)reset
 {
@@ -147,6 +179,7 @@
 
 -(void)clear
 {
+    [serviceBrowser stop];
     serviceBrowser              = nil ;
     [services removeAllObjects];
 }

@@ -479,13 +479,37 @@
 #pragma mark Utility Methods
 -(Event*)getEventByHID:(NSString*)eventHID
 {
+    //    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    //
+    //        NSString * thisHID = [evaluatedObject objectForKey:@"hid"];
+    //
+    //        return [thisHID isEqualToString:eventHID];
+    //    }];
+    //
+    //
+    //    //   NSPredicate *pred2 =  [pred predicateWithSubstitutionVariables:@{@"asdlfkj":@"poop"}];
+    //
+    //
+    //    NSArray * filtered = [NSArray arrayWithArray:[[self allEventData] filteredArrayUsingPredicate:pred ]];
+    //
+    //    if ([filtered count]==0)return nil;
+    //
+    //    // this is an issues
+    //    Event * event = [[Event alloc]initWithDict:filtered[0] isLocal:NO andlocalPath:nil];
+    //
+    
+    
+    /////
     Event * event;
     
     // collects all events
     NSMutableArray * collection = [[NSMutableArray alloc]init];
     
     for (Encoder * enc in self.authenticatedEncoders) {
-        [collection addObjectsFromArray:[enc.allEvents allValues]];
+        for (NSMutableDictionary *eventDic in [enc.allEvents allValues]) {
+            [collection addObject:eventDic[@"non-local"]];
+        }
+        //[collection addObjectsFromArray:[enc.allEvents allValues]];
     }
     
     
@@ -500,7 +524,8 @@
     if (!event){
         collection = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].allEvents allValues]];
         
-        for (Event * evt in collection) {
+        for (NSMutableDictionary * evtDic in collection) {
+            Event *evt = evtDic[@"local"];
             if ([evt.hid isEqualToString:eventHID]) {
                 event = evt;
                 break;
@@ -510,6 +535,7 @@
     
     return event;
 }
+
 
 -(Event*)getEventByName:(NSString*)eventName
 {

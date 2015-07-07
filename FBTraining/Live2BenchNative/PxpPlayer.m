@@ -445,7 +445,7 @@ static CMClockRef _pxpPlayerMasterClock;
     [self setRate:rate multi:YES time:itemTime atHostTime:hostClockTime];
 }
 
-- (void)prerollAtRate:(float)rate completionHandler:(nullable void (^)(BOOL))completionHandler {
+- (void)prerollAtRate:(float)rate completionHandler:( void (^)(BOOL))completionHandler {
     if (!completionHandler) completionHandler = ^(BOOL complete) {};
     if (rate != 0.0) {
         [self prerollAtRate:rate multi:YES completionHandler:completionHandler];
