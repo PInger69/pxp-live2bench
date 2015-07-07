@@ -218,40 +218,52 @@
     if (registerEncoder.authenticated  && ![_authenticatedEncoders containsObject:registerEncoder]) {
         [_authenticatedEncoders addObject:registerEncoder];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+        
+        
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// THIS IS TEMP FOR IVANS MEETING ///////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        // this is a temp
+        if ([dictOfEncoders count] > 0 && ![registerEncoder.name isEqualToString:@"trashed"]) {
+            
+            NSMutableArray * listed                     = [NSMutableArray arrayWithArray:[dictOfEncoders allKeys]];
+            
+            if (askPickMaster) {
+                [askPickMaster dismissPopoverAnimated:NO];
+                [askPickMaster clear];
+                askPickMaster = nil;
+            }
+            
+            askPickMaster                               = [[ListPopoverController alloc] initWithMessage:@"Please pick an encoder:" buttonListNames:[listed copy]];
+            __block EncoderManager * weakEncoderManager = self;
+            
+            [askPickMaster addOnCompletionBlock:^(NSString *pick){
+                
+                for (Encoder* enc in [weakEncoderManager->dictOfEncoders allValues])
+                {
+                    enc.isMaster = NO;
+                }
+                ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]).isMaster =YES;
+                weakEncoderManager.masterEncoder = ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]);
+                PXPLog(@"%@ is set to master!",weakEncoderManager.masterEncoder.name);
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:weakEncoderManager];
+            }];
+            [askPickMaster presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                           animated:YES];
+            
+        }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
     } else if (!registerEncoder.authenticated) {
         [registerEncoder destroy];
     }
 
-    
-    // is it added to the Encoder Commander check encocer level
-    
-    // this is a temp
-    if ([dictOfEncoders count] > 0) {
-        
-        NSMutableArray * listed                     = [NSMutableArray arrayWithArray:[dictOfEncoders allKeys]];
-        
-        if (askPickMaster) {
-            [askPickMaster dismissPopoverAnimated:NO];
-            [askPickMaster clear];
-            askPickMaster = nil;
-        }
-        
-        askPickMaster                               = [[ListPopoverController alloc] initWithMessage:@"Please pick an encoder:" buttonListNames:[listed copy]];
-        __block EncoderManager * weakEncoderManager = self;
-        
-        [askPickMaster addOnCompletionBlock:^(NSString *pick){
-            
-            for (Encoder* enc in [weakEncoderManager->dictOfEncoders allValues])
-            {
-                enc.isMaster = NO;
-            }
-            ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]).isMaster =YES;
-        }];
-        [askPickMaster presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
-                                       animated:YES];
-        
-    }
 
+   
 }
 
 

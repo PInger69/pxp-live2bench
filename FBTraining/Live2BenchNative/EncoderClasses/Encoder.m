@@ -2056,7 +2056,7 @@
     [statusMonitor destroy];
     [self clearQueueAndCurrent];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_ENCODER_MASTER_FOUND object:nil];
-    
+    self.name = @"trashed"; // temp fix
 }
 
 

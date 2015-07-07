@@ -116,10 +116,10 @@
     
 }
 
--(void)netService:(nonnull NSNetService *)sender didNotPublish:(nonnull NSDictionary<NSString *,NSNumber *> *)errorDict
-{
-
-}
+//-(void)netService:(nonnull NSNetService *)sender didNotPublish:(nonnull NSDictionary<NSString *,NSNumber *> *)errorDict
+//{
+//
+//}
 
 
 
