@@ -244,9 +244,16 @@
                 {
                     enc.isMaster = NO;
                 }
-                ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]).isMaster =YES;
-                weakEncoderManager.masterEncoder = ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]);
+                Encoder* electedMaster = ((Encoder*)[weakEncoderManager->dictOfEncoders objectForKey:pick]);
+                electedMaster.isMaster =YES;
+                weakEncoderManager.masterEncoder = electedMaster;
                 PXPLog(@"%@ is set to master!",weakEncoderManager.masterEncoder.name);
+                
+                if (electedMaster.liveEvent){
+                    [weakEncoderManager declareCurrentEvent:electedMaster.liveEvent];
+                    weakEncoderManager.liveEvent = electedMaster.liveEvent;
+                }
+                
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:weakEncoderManager];
             }];
             [askPickMaster presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view

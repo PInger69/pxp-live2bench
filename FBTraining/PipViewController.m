@@ -654,7 +654,8 @@ static void * vpFrameContext   = &vpFrameContext;
 -(void)showMulti
 {
     _multi.frame = CGRectMake(0, 0, _videoPlayer.view.frame.size.width, _videoPlayer.view.frame.size.height);
-    [_multi makePips:[_encoderManager.feeds allValues]];
+    
+    [_multi makePips:_encoderManager.primaryEncoder.event.feeds.allValues];
     [_multi seekTo:_videoPlayer.avPlayer.currentItem.currentTime];
 
     [_videoPlayer.view insertSubview:_multi atIndex:2];

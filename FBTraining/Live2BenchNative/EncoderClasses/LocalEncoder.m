@@ -945,8 +945,8 @@ static LocalEncoder * instance;
     NSString *keyToBeRemoved = dicToBeRemoved[@"id"];
     [self.localTags removeObjectForKey:keyToBeRemoved];*/
     //[self.localTags removeObjectAtIndex:0];
-    //[self.localTags removeObjectAtIndex:0];
-    //[self checkLocalTags];
+    [self.localTags removeObjectAtIndex:0];
+//    [self checkLocalTags];
     isSuccess   = NO;
     isFinished  = YES;
     if (self.delegate) {

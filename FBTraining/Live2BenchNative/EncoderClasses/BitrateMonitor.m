@@ -95,10 +95,10 @@ static void * bitrateContext         = &bitrateContext;
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == bitrateContext){
-        
+
         double val = ( (Encoder*) object).bitrate;
         [self setBackgroundColorBasedOnRate:val];
-        [nameLabelValue setText: [NSString stringWithFormat:@"%@",encoder.name]];
+        [nameLabelValue setText: [NSString stringWithFormat:@"%@ %@",encoder.name,(encoder.encoderManager.masterEncoder==encoder)?@"(Master)":@""]];
         [nameLabelValue sizeToFit];
         [statusLabelValue setText:[NSString stringWithFormat:@"%@", encoder.statusAsString]];
         [statusLabelValue sizeToFit];
