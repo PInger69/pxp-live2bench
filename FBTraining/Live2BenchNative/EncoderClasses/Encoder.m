@@ -768,7 +768,7 @@
     
     //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
     NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
-    DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo];
+    DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tagID,src ]];
     dItemBlock(dli);
     
     
