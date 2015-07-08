@@ -150,6 +150,11 @@
         for (NSMutableDictionary *eventDic in [_appDel.encoderManager.masterEncoder.allEvents allValues]) {
             [temp addObject:eventDic[@"non-local"]];
         }
+        for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
+            if (![eventDic objectForKey:@"non-local"]) {
+                [temp addObject:eventDic[@"local"]];
+            }
+        }
     }else{
         for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
             [temp addObject:eventDic[@"local"]];

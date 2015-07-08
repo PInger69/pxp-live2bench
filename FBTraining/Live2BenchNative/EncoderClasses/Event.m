@@ -101,9 +101,10 @@
 
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost
 {
-    if (newtag.type == TagTypeDeleted) {
+    if (newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) {
         return;
     }
+    
     [_tags addObject:newtag];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
     
