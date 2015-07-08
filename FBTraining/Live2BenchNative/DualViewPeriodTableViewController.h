@@ -25,7 +25,7 @@
 @property (nonatomic) CGFloat tableWidth;
 
 @property (strong, nonatomic, nonnull) NSArray *tagNames;
-@property (strong, nonatomic, nonnull) NSArray *tags;
+@property (strong, nonatomic, nonnull) NSMutableArray *tags;
 @property (strong, nonatomic, nullable) UIImage *tabImage;
 @property (assign, nonatomic) BOOL hidden;
 

@@ -56,6 +56,7 @@
             return a.time > b.time ? NSOrderedDescending : a.time < b.time ? NSOrderedAscending : NSOrderedSame;
         };
         
+        _tags  = [[NSMutableArray alloc]init];
         _context = &_context;
         
         [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:_context];
@@ -138,8 +139,8 @@
     [self.tableView reloadData];
 }
 
-- (void)setTags:(nonnull NSArray *)tags {
-    _tags = tags;
+/*- (void)setTags:(nonnull NSArray *)tags {
+    _tags =  tags;
     
     // clear the tag sets
     for (NSMutableArray *tagArray in [self.periods allValues]) {
@@ -153,9 +154,10 @@
     
     [self.tableView reloadData];
     [self.clipTableViewController.tableView reloadData];
-}
+}*/
 
 - (void)addTag:(nonnull Tag *)tag {
+    [_tags addObject:tag];
     // we need to add the tag such that the array remains sorted
     NSMutableArray *tagArray = self.periods[tag.name];
     if (tagArray) {
@@ -167,6 +169,7 @@
 }
 
 - (void)removeTag:(nonnull Tag *)tag {
+    [_tags removeObject:tag];
     [self.periods[tag.name] removeObject:tag];
     [self.tableView reloadData];
     [self.clipTableViewController.tableView reloadData];

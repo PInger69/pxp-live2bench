@@ -2068,11 +2068,11 @@ NSMutableArray *oldEventNames;
     //
     
     tagToBeModified.startTime = newStartTime;
-    tagToBeModified.duration = newDuration;
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
-    
-
+    if (newDuration > tagToBeModified.duration) {
+        tagToBeModified.duration = newDuration;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    }
 }
 
 //extend the tag duration by adding five secs at the end of the tag
@@ -2109,10 +2109,10 @@ NSMutableArray *oldEventNames;
         }
         //get the new duration
         newDuration = endTime - startTime;
-    
-    tagToBeModified.duration = newDuration;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
-    
+    if (newDuration > tagToBeModified.duration) {
+        tagToBeModified.duration = newDuration;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    }
 
 }
 
