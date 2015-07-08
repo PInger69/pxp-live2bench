@@ -157,12 +157,29 @@
 - (void)addTag:(nonnull Tag *)tag {
     
     if (tag.type != TagTypeDeleted && tag.type != TagTypeOpenDuration) {
-        [_tags addObject:tag];
+        
+        BOOL found = NO;
+        for (NSUInteger i = 0; !found && i < _tags.count; i++) {
+            if ([_tags[i] uniqueID] == tag.uniqueID) {
+                _tags[i] = tag;
+                found = YES;
+            }
+        }
+        if (!found) {
+            [_tags addObject:tag];
+        }
+        
         // we need to add the tag such that the array remains sorted
         NSMutableArray *tagArray = self.periods[tag.name];
         if (tagArray) {
             NSUInteger index = [tagArray indexOfObject:tag inSortedRange:(NSRange){0, tagArray.count} options:NSBinarySearchingInsertionIndex usingComparator:tagComparator];
-            [tagArray insertObject:tag atIndex:index];
+            
+            // modify the tag if the
+            if (index < tagArray.count && [tagArray[index] uniqueID] == tag.uniqueID) {
+                tagArray[index] = tag;
+            } else {
+                [tagArray insertObject:tag atIndex:index];
+            }
         }
         [self.tableView reloadData];
         [self.clipTableViewController.tableView reloadData];
