@@ -240,7 +240,7 @@ NSMutableArray *oldEventNames;
     }
     
     componentFilter.rawTagArray = self.tagsToDisplay;
-    //[_tableViewController reloadData];
+    [_tableViewController reloadData];
     
 }
 

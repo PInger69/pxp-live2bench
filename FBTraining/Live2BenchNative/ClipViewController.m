@@ -763,12 +763,17 @@ static void * encoderTagContext = &encoderTagContext;
         
         
     } else {
+        
+        // Get the feed
+        NSDictionary *feeds = selectedCell.data.event.feeds;
+        Feed *feed = feeds.allValues.firstObject;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
                                                            object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
         //NSString * key =        listOfScource[0];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                              @"feed":selectedCell.data.name,
+                                                                                                              //@"feed":selectedCell.data.name,
+                                                                                                              @"feed":feed,
                                                                                                               @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
                                                                                                               @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration ],
                                                                                                               @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
