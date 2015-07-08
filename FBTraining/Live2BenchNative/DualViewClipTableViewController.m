@@ -1,22 +1,22 @@
 //
-//  FBTrainingClipTableViewController.m
+//  DualViewClipTableViewController.m
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-20.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "FBTrainingClipTableViewController.h"
+#import "DualViewClipTableViewController.h"
 
 #import "Tag.h"
 
-@interface FBTrainingClipTableViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface DualViewClipTableViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *swipeGestureRecognizer;
 
 @end
 
-@implementation FBTrainingClipTableViewController
+@implementation DualViewClipTableViewController
 {
     void *_context;
 }

@@ -1,5 +1,5 @@
 //
-//  FBTrainingTabViewController.h
+//  DualViewTabViewController.h
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-19.
@@ -8,6 +8,6 @@
 
 #import "CustomTabViewController.h"
 
-@interface FBTrainingTabViewController : CustomTabViewController
+@interface DualViewTabViewController : CustomTabViewController
 
 @end
