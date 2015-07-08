@@ -1,14 +1,14 @@
 //
-//  FBTrainingTabViewController.m
+//  DualViewTabViewController.m
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-19.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "FBTrainingTabViewController.h"
+#import "DualViewTabViewController.h"
 
-#import "FBTrainingPeriodTableViewController.h"
+#import "DualViewPeriodTableViewController.h"
 #import "NCRecordButton.h"
 #import "UserCenter.h"
 #import "EncoderClasses/EncoderProtocol.h"
@@ -26,7 +26,7 @@
 #define PINCH_VELOCITY 1
 #define ANIMATION_DURATION 0.25
 
-@interface FBTrainingTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, FBTrainingTagControllerDelegate>
+@interface DualViewTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, DualViewTagControllerDelegate>
 
 // BEGIN NC PLAYER
 
@@ -43,7 +43,7 @@
 
 // END NC PLAYER
 
-@property (strong, nonatomic, nonnull) FBTrainingPeriodTableViewController *periodTableViewController;
+@property (strong, nonatomic, nonnull) DualViewPeriodTableViewController *periodTableViewController;
 
 @property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *topPlayerFullscreenRecognizer;
 @property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *bottomPlayerFullscreenRecognizer;
@@ -75,14 +75,14 @@
 
 @end
 
-@implementation FBTrainingTabViewController
+@implementation DualViewTabViewController
 
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Dual View", nil) imageName:@"live2BenchTab"];
         
-        self.periodTableViewController = [[FBTrainingPeriodTableViewController alloc] init];
+        self.periodTableViewController = [[DualViewPeriodTableViewController alloc] init];
         self.periodTableViewController.delegate = self;
         
         self.bottomBarView = [[UIView alloc] init];
@@ -236,7 +236,7 @@
     Event *event = [_appDel.encoderManager.primaryEncoder event];
     
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
-    self.periodTableViewController.tags = [[_appDel.encoderManager.eventTags allValues] copy];
+    self.periodTableViewController.tags = [_appDel.encoderManager.primaryEncoder.event.tags copy];
     
     NSLog(@"%@", self.feeds);
     self.topViewFeedSelectionController.feeds = self.feeds;
@@ -526,14 +526,14 @@
     return YES;
 }
 
-#pragma mark - FBTrainingTagControllerDelegate
+#pragma mark - DualViewTagControllerDelegate
 
-- (void)tagController:(nonnull FBTrainingPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName {
+- (void)tagController:(nonnull DualViewPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName {
     
     self.activeTagName = tagName;
 }
 
-- (void)clipController:(nonnull FBTrainingClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag {
+- (void)clipController:(nonnull DualViewClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag {
     CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.time, 1), CMTimeMakeWithSeconds(tag.duration, 1));
     
     self.mainPlayer.loopRange = range;

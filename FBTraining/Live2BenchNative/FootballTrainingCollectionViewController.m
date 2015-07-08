@@ -424,7 +424,7 @@ UIView *horizontalDivider;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    NSLog(@"FBTraining: %@",error);
+    NSLog(@"DualView: %@",error);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
@@ -432,7 +432,7 @@ UIView *horizontalDivider;
         NSError *error;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([json objectForKey:@"success"] && [[json objectForKey:@"success"] intValue] == 0) {
-            NSLog(@"FBTraining Unsuccessful: %@",[json objectForKey:@"msg"]);
+            NSLog(@"DualView Unsuccessful: %@",[json objectForKey:@"msg"]);
         }
         if (error){
             NSLog(@"PlayersError: %@",error);

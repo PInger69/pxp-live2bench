@@ -1,5 +1,5 @@
 //
-//  FBTrainingPeriodTableViewController.h
+//  DualViewPeriodTableViewController.h
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-19.
@@ -8,19 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import "Tag.h"
-#import "FBTrainingClipTableViewController.h"
+#import "DualViewClipTableViewController.h"
 
-@class FBTrainingPeriodTableViewController;
+@class DualViewPeriodTableViewController;
 
-@protocol FBTrainingTagControllerDelegate <FBTrainingClipControllerDelegate>
+@protocol DualViewTagControllerDelegate <DualViewClipControllerDelegate>
 
-- (void)tagController:(nonnull FBTrainingPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName;
+- (void)tagController:(nonnull DualViewPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName;
 
 @end
 
-@interface FBTrainingPeriodTableViewController : UIViewController
+@interface DualViewPeriodTableViewController : UIViewController
 
-@property (weak, nonatomic, nullable) id<FBTrainingTagControllerDelegate> delegate;
+@property (weak, nonatomic, nullable) id<DualViewTagControllerDelegate> delegate;
 
 @property (nonatomic) CGFloat tableWidth;
 

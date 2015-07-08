@@ -44,7 +44,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 +(void)addOpenDurationTag:(Tag*)tag dtid:(NSString*)uid
 {
-    if (![openDurationTagsWithID objectForKey:uid]){
+    if (uid && ![openDurationTagsWithID objectForKey:uid]){
         [openDurationTagsWithID setObject:[[NSMutableDictionary alloc]init] forKey:uid];
     }
     

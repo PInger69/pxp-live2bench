@@ -1,14 +1,14 @@
 //
-//  FBTrainingPeriodTableViewController.m
+//  DualViewPeriodTableViewController.m
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-19.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "FBTrainingPeriodTableViewController.h"
+#import "DualViewPeriodTableViewController.h"
 
-@interface FBTrainingPeriodTableViewController () <UITableViewDataSource, UITableViewDelegate,UIPopoverControllerDelegate>
+@interface DualViewPeriodTableViewController () <UITableViewDataSource, UITableViewDelegate,UIPopoverControllerDelegate>
 
 @property (strong, nonatomic, nonnull) UITableView *tableView;
 @property (strong, nonatomic, nonnull) UIView *pullTabView;
@@ -18,13 +18,13 @@
 
 @property (strong, nonatomic, nonnull) NSMutableDictionary *periods;
 
-@property (strong, nonatomic, nonnull) FBTrainingClipTableViewController *clipTableViewController;
+@property (strong, nonatomic, nonnull) DualViewClipTableViewController *clipTableViewController;
 
 @property (assign, nonatomic) void *context;
 
 @end
 
-@implementation FBTrainingPeriodTableViewController
+@implementation DualViewPeriodTableViewController
 {
     NSComparisonResult (^tagComparator)(Tag *a, Tag *b);
 }
@@ -49,7 +49,7 @@
         
         self.periods = [NSMutableDictionary dictionary];
         
-        self.clipTableViewController = [[FBTrainingClipTableViewController alloc] initWithTags:@[]];
+        self.clipTableViewController = [[DualViewClipTableViewController alloc] initWithTags:@[]];
         [self addChildViewController:self.clipTableViewController];
         
         tagComparator = ^NSComparisonResult(Tag *a, Tag *b) {
@@ -113,7 +113,7 @@
     
 }
 
-- (void)setDelegate:(nullable id<FBTrainingTagControllerDelegate>)delegate {
+- (void)setDelegate:(nullable id<DualViewTagControllerDelegate>)delegate {
     _delegate = delegate;
     self.clipTableViewController.delegate = delegate;
 }
