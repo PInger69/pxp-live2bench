@@ -255,6 +255,9 @@
                 __block Event * weakEvent = event;
                 
                 if (event.local && ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]])) {
+                    if (!localCounterpart.isBuilt) {
+                        [self.encoderManager requestTagDataForEvent:localCounterpart.name onComplete:nil];
+                    }
                     source = [[Feed alloc] initWithFileURL:path];
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                     [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
