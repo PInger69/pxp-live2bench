@@ -69,6 +69,7 @@
 @property (weak, nonatomic, nullable) NCPlayerView *fullscreenView;
 
 @property (assign, nonatomic) BOOL recording;
+@property (copy, nonatomic, nullable) NSString *durationTagID;
 
 @property (assign, nonatomic) CMTime resumeTime;
 @property (assign, nonatomic) float resumeRate;
@@ -591,6 +592,16 @@
     [self.periodTableViewController setHidden:YES animated:YES];
     
     self.timeLabel.textColor = [UIColor whiteColor];
+    
+    self.durationTagID = [Tag makeDurationID];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                      @"name":self.activeTagName,
+                                                                                                      @"time":[NSString stringWithFormat:@"%f", self.startTime],
+                                                                                                      @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+                                                                                                      @"dtagid": self.durationTagID
+                                                                                                      }];
+    
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
@@ -604,14 +615,36 @@
     self.bottomPlayerView.enabled = YES;
     [self.periodTableViewController setHidden:NO animated:YES];
     
-    NSTimeInterval clipDuration = CMTimeGetSeconds(self.mainPlayer.currentTime) - self.startTime;
+    NSTimeInterval endTime = CMTimeGetSeconds(self.mainPlayer.currentTime);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_POSTED
-                                                        object:nil
-                                                      userInfo:@{ @"name": self.activeTagName,
-                                                                  @"time": [NSString stringWithFormat:@"%f", self.startTime],
-                                                                  @"duration": [NSString stringWithFormat:@"%d", (int) ceil(clipDuration)]
-                                                                  }];
+    Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
+    
+    NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tag makeTagData]];
+    
+    [tagData setValue:[NSString stringWithFormat:@"%f", endTime] forKey:@"closetime"];
+    [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
+    [tagData setValue:self.durationTagID forKey:@"dtagid"];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:tagData];
+    self.durationTagID = nil;
+    
+    self.timeLabel.textColor = [UIColor lightGrayColor];
+}
+
+- (void)recordingDidTerminateInRecordButton:(nonnull NCRecordButton *)recordButton {
+    self.recording = NO;
+    
+    self.backSeekButton.enabled = YES;
+    self.forwardSeekButton.enabled = YES;
+    self.slomoButton.enabled = YES;
+    self.liveButton.hidden = NO;
+    self.topPlayerView.enabled = YES;
+    self.bottomPlayerView.enabled = YES;
+    [self.periodTableViewController setHidden:NO animated:YES];
+    
+    Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag];
+    self.durationTagID = nil;
     
     self.timeLabel.textColor = [UIColor lightGrayColor];
 }

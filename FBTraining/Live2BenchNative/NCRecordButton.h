@@ -15,6 +15,7 @@
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton;
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration;
 - (void)recordingTimeDidUpdateInRecordButton:(nonnull NCRecordButton *)recordButton;
+- (void)recordingDidTerminateInRecordButton:(nonnull NCRecordButton *)recordButton;
 
 @end
 
