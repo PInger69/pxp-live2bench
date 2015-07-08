@@ -236,7 +236,7 @@
     Event *event = [_appDel.encoderManager.primaryEncoder event];
     
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
-    self.periodTableViewController.tags = [[_appDel.encoderManager.eventTags allValues] copy];
+    self.periodTableViewController.tags = [_appDel.encoderManager.primaryEncoder.event.tags copy];
     
     NSLog(@"%@", self.feeds);
     self.topViewFeedSelectionController.feeds = self.feeds;
