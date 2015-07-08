@@ -26,7 +26,10 @@
 #define PINCH_VELOCITY 1
 #define ANIMATION_DURATION 0.25
 
-@interface DualViewTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, DualViewTagControllerDelegate>
+@interface DualViewTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, DualViewTagControllerDelegate>{
+    Event                           * _currentEvent;
+    id <EncoderProtocol>                _observedEncoder;
+}
 
 // BEGIN NC PLAYER
 
@@ -112,8 +115,9 @@
         self.bottomPlayerFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(bottomFullscreen:)];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagsReady:) name:NOTIF_TAGS_ARE_READY object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedsReady:) name:NOTIF_EVENT_FEEDS_READY object:nil];
         
         // BEGIN NC PLAYER
@@ -148,11 +152,75 @@
     return self;
 }
 
+// encoderOberver
+-(void)addEventObserver:(NSNotification *)note
+{
+    if (_observedEncoder != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+    
+    if (note.object == nil) {
+        _observedEncoder = nil;
+    }else{
+        _observedEncoder = (id <EncoderProtocol>) note.object;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+}
+
+-(void)eventChanged:(NSNotification *)note
+{
+    if (_currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        //[self.periodTableViewController ];
+    }
+    
+    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        _currentEvent = nil;
+    }else{
+        _currentEvent = [((id <EncoderProtocol>) note.object) event];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+}
+
+-(void)onTagChanged:(NSNotification *)note{
+    
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.periodTableViewController.tags containsObject:tag]) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.periodTableViewController addTag:tag];
+            }
+        }
+        if(tag.modified && [self.periodTableViewController.tags containsObject:tag]){
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
+                [self.periodTableViewController removeTag:tag];
+                [self.periodTableViewController addTag:tag];
+            }
+            if (tag.type == TagTypeCloseDuration) {
+                [self.periodTableViewController addTag:tag];
+            }
+        }
+    }
+    
+    Tag *toBeRemoved;
+    for (Tag *tag in self.periodTableViewController.tags ){
+        
+        if (![_currentEvent.tags containsObject:tag]) {
+            toBeRemoved = tag;
+        }
+    }
+    if (toBeRemoved) {
+        [self.periodTableViewController removeTag:toBeRemoved];
+    }
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAGS_ARE_READY object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAGS_ARE_READY object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_EVENT_FEEDS_READY object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
 }
 
 - (void)viewDidLoad {
@@ -625,7 +693,7 @@
     [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
     [tagData setValue:self.durationTagID forKey:@"dtagid"];
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag userInfo:tagData];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:tagData];
     self.durationTagID = nil;
     
     self.timeLabel.textColor = [UIColor lightGrayColor];
@@ -643,7 +711,7 @@
     [self.periodTableViewController setHidden:NO animated:YES];
     
     Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
     self.durationTagID = nil;
     
     self.timeLabel.textColor = [UIColor lightGrayColor];
