@@ -139,8 +139,9 @@
     [self.tableView reloadData];
 }
 
-/*- (void)setTags:(nonnull NSArray *)tags {
-    _tags =  tags;
+- (void)setTags:(nonnull NSMutableArray *)tags {
+    
+    [_tags removeAllObjects];
     
     // clear the tag sets
     for (NSMutableArray *tagArray in [self.periods allValues]) {
@@ -148,24 +149,42 @@
     }
     
     // add in the new tags
-    for (Tag *tag in self.tags) {
+    for (Tag *tag in tags) {
         [self addTag:tag];
     }
-    
-    [self.tableView reloadData];
-    [self.clipTableViewController.tableView reloadData];
-}*/
+}
 
 - (void)addTag:(nonnull Tag *)tag {
-    [_tags addObject:tag];
-    // we need to add the tag such that the array remains sorted
-    NSMutableArray *tagArray = self.periods[tag.name];
-    if (tagArray) {
-        NSUInteger index = [tagArray indexOfObject:tag inSortedRange:(NSRange){0, tagArray.count} options:NSBinarySearchingInsertionIndex usingComparator:tagComparator];
-        [tagArray insertObject:tag atIndex:index];
+    
+    if (tag.type != TagTypeDeleted && tag.type != TagTypeOpenDuration) {
+        
+        BOOL found = NO;
+        for (NSUInteger i = 0; !found && i < _tags.count; i++) {
+            if ([_tags[i] uniqueID] == tag.uniqueID) {
+                _tags[i] = tag;
+                found = YES;
+            }
+        }
+        if (!found) {
+            [_tags addObject:tag];
+        }
+        
+        // we need to add the tag such that the array remains sorted
+        NSMutableArray *tagArray = self.periods[tag.name];
+        if (tagArray) {
+            NSUInteger index = [tagArray indexOfObject:tag inSortedRange:(NSRange){0, tagArray.count} options:NSBinarySearchingInsertionIndex usingComparator:tagComparator];
+            
+            // modify the tag if the
+            if (index < tagArray.count && [tagArray[index] uniqueID] == tag.uniqueID) {
+                tagArray[index] = tag;
+            } else {
+                [tagArray insertObject:tag atIndex:index];
+            }
+        }
+        [self.tableView reloadData];
+        [self.clipTableViewController.tableView reloadData];
     }
-    [self.tableView reloadData];
-    [self.clipTableViewController.tableView reloadData];
+    
 }
 
 - (void)removeTag:(nonnull Tag *)tag {

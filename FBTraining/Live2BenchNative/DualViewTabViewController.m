@@ -305,7 +305,7 @@
     Event *event = [_appDel.encoderManager.primaryEncoder event];
     
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
-    self.periodTableViewController.tags = [_appDel.encoderManager.primaryEncoder.event.tags copy];
+    self.periodTableViewController.tags = [NSMutableArray arrayWithArray:_appDel.encoderManager.primaryEncoder.event.tags];
     
     NSLog(@"%@", self.feeds);
     self.topViewFeedSelectionController.feeds = self.feeds;
@@ -711,7 +711,10 @@
     [self.periodTableViewController setHidden:NO animated:YES];
     
     Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+    if (tag) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+    }
+    
     self.durationTagID = nil;
     
     self.timeLabel.textColor = [UIColor lightGrayColor];
