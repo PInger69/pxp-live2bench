@@ -31,11 +31,14 @@
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _path               = aPath;
-        
+        _videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
         _event = _rawData[@"event"];
         _displayTime = _rawData[@"displaytime"];
         
         _rawData[@"plistPath"] = aPath;
+        
+        
+        
         [_rawData writeToFile:self.path atomically:YES];
         
         // just save
@@ -61,10 +64,38 @@
         _rating             = [[_rawData objectForKey:@"rating"] intValue];
         _comment            = [_rawData objectForKey:@"comment"];
         _path               = [_rawData objectForKey:@"plistName"];
-        
+        _videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
         _event = _rawData[@"event"];
         _displayTime = _rawData[@"displaytime"];
         
+        
+        NSMutableArray * listOfVideos = [NSMutableArray arrayWithArray:[self videoFiles]];
+        BOOL modFlag;
+         // this checks to see if the clip is are on the device if not then remove from Dict
+        for (NSString * videoPathsToCheck  in listOfVideos) {
+            if ( ![[NSFileManager defaultManager] fileExistsAtPath:videoPathsToCheck] ){
+                [listOfVideos removeObject:videoPathsToCheck];
+                modFlag = YES;
+            }
+        }
+        
+        NSArray * vidkeys = [_videosBySrcKey allKeys];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
+        NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
+        
+        for (NSString * k  in vidkeys) {
+
+            NSString * check = [path stringByAppendingPathComponent:_videosBySrcKey[k]];
+            if ( ![[NSFileManager defaultManager] fileExistsAtPath:check] ){
+                [_videosBySrcKey removeObjectForKey:k];
+                modFlag = YES;
+            }
+        }
+        
+        
+        if (modFlag) [_rawData writeToFile:self.path atomically:YES];
     }
     return self;
 }
@@ -123,10 +154,38 @@
         [mutableDict setObject:[[NSMutableArray alloc]init] forKey:@"fileNames"];
     }
     
+    
+    if (![mutableDict objectForKey:@"fileNamesByKey"]){
+        _videosBySrcKey = [[NSMutableDictionary alloc]init];
+        [mutableDict setObject:_videosBySrcKey forKey:@"fileNamesByKey"];
+    } else {
+        _videosBySrcKey = [NSMutableDictionary dictionaryWithDictionary:[mutableDict objectForKey:@"fileNamesByKey"]];
+    
+    }
+    
+    
+        NSString * theFileName          = [[aDict objectForKey:@"fileNames"] firstObject];
+        
+        NSRange startRange = [theFileName rangeOfString:@"+"];
+        NSRange endRange = [theFileName rangeOfString:@".mp4"];
+        
+        NSRange searchRange = NSMakeRange(startRange.location+1, (endRange.location-1) - startRange.location);
+        
+//        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=\+).+?(?=\.mp4)" options:0 error:nil];
+//        NSRange needleRange = [regex rangeOfFirstMatchInString:theFileName options:NSMatchingAnchored range:NSMakeRange(0, theFileName.length)];
+        NSString *scrKeyFromFileName = [theFileName substringWithRange:searchRange];
+
+     //   NSString * scrKeyFromFileName   = [theFileName substringWithRange:needleRange];
+        
+        [_videosBySrcKey setObject:theFileName forKey:scrKeyFromFileName];
+
+    
+    
     NSMutableArray * list       = [NSMutableArray arrayWithArray: mutableDict[@"fileNames"]];
     NSString *aName = [[aDict objectForKey:@"fileNames"] firstObject];
     [list addObject: aName];
-    mutableDict[@"fileNames"]   = list;
+    NSSet * uniqueFileNames = [[NSSet alloc]initWithArray:list];
+    mutableDict[@"fileNames"]   = [uniqueFileNames allObjects];
     
     _rawData = mutableDict;
     
@@ -137,6 +196,15 @@
         NSLog(@"EXCEPTION: %@", exception);
     }
     
+}
+
+// This method mods the clip GlobalID so that its no longer connected to live event
+-(void)breakClipId
+{
+    
+    [_rawData setObject:  [NSNumber numberWithInteger:CFAbsoluteTimeGetCurrent()]   forKey:@"id"]  ;
+    _clipId = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
+    [self write];
 }
 
 
@@ -167,7 +235,8 @@
 }
 
 - (NSString *)globalID {
-    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
+//    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
+    return [NSString stringWithFormat:@"%@_%@", _event, _clipId];
 }
 
 

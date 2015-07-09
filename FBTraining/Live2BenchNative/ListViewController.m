@@ -29,6 +29,8 @@
 #import "PxpEventContext.h"
 #import "PxpPlayerMultiViewController.h"
 
+#import "LocalMediaManager.h"
+
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
 #define NOTCOACHPICK                  0
@@ -2030,6 +2032,12 @@ NSMutableArray *oldEventNames;
     Tag *tagToBeModified = selectedTag;
     
     
+    if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
+        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil];
+        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        [_tableViewController reloadData];
+    }
+    
     if (!tagToBeModified|| tagToBeModified.type == TagTypeTele ){
         
         return;
@@ -2078,10 +2086,17 @@ NSMutableArray *oldEventNames;
 //extend the tag duration by adding five secs at the end of the tag
 -(void)endRangeBeenModified:(CustomButton*)button{
     Tag *tagToBeModified = selectedTag;
-        if (!selectedTag || selectedTag.type == TagTypeDeleted)
-        {
-            return;
-        }
+
+    if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
+        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil];
+        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        [_tableViewController reloadData];
+    }
+    
+    if (!selectedTag || selectedTag.type == TagTypeDeleted)
+    {
+        return;
+    }
 
 
     int newDuration = tagToBeModified.duration + 5;

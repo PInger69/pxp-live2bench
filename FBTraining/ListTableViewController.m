@@ -16,6 +16,8 @@
 #import "RJLVideoPlayer.h"
 
 #import "ListViewFullScreenViewController.h"
+#import "LocalMediaManager.h"
+#import "Downloader.h"
 
 @interface ListTableViewController ()
 
@@ -165,20 +167,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
-    /*long num;
-    if (firstDownloadCellPath) {
-        num = [firstDownloadCellPath row] - 1;
-        if (num <= 0) {
-            num = 0;
-        }
-    }
-    else{
-        num = 0;
-    }
-    
-    if (self.tableData[num]) {
-        tag = self.tableData[num];
-    }*/
+
     tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
 
     
@@ -193,9 +182,27 @@
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
         
         
-        
+
         __block FeedSelectCell *weakCell = collapsableCell;
         collapsableCell.downloadButton.downloadItem = nil;
+        
+
+        NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
+        // This is checking if tag is downloaded to the device already
+        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
+            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
+            __block FeedSelectCell *weakerCell = weakCell;
+            [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+                weakerCell.downloadButton.progress = progress;
+                [weakerCell.downloadButton setNeedsDisplay];
+            }];
+        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:key]){
+            collapsableCell.downloadButton.downloadComplete = YES;
+            collapsableCell.downloadButton.progress = 1;
+        }
+
+        
+        
         collapsableCell.downloadButtonBlock = ^(){
             //__block DownloadItem *videoItem;
             
@@ -211,7 +218,10 @@
             
             NSString *src = [NSString stringWithFormat:@"%@hq", key];
             
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{@"block": blockName, @"tag": tag, @"src":src}];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
+                                                                                                                   @"block": blockName,
+                                                                                                                   @"tag": tag,
+                                                                                                                   @"src":src}];
             
             
         };

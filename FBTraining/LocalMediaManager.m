@@ -153,12 +153,13 @@ static LocalMediaManager * instance;
                 Clip * clip =[[Clip alloc]initWithDict: theDict];
                 clip.path = pthss;
                 [_clips setObject:clip forKey:clip.globalID];
+
             }
                 
         }
             
             
-            
+         // IS THIS DOING ANYTHING ANYMORE??
         // This builds all the events from the _allEventData
         NSEnumerator    * enumerator2    = [tempPoolClips objectEnumerator];
         id              value2;
@@ -369,10 +370,64 @@ static LocalMediaManager * instance;
     return (Event*)filtered[0];
 }
 
--(Tag*)getTagBy
+
+/*
+ *  This will return the clip if found on the device.
+ *  The acts as tool to check if a specific exist on the device
+ *  It will check for clip with the Tag ID then check that clip for the source
+ *
+ *  @param tagID   the ID of the tag your looking for
+ *  @param scrKey  what a source are you looking for if you send nil it will just send you the clip
+ *  
+ *  @output if the clip is found and the source is not it will return nil
+ */
+-(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey
 {
+  
+    NSString * eventName = tag.event.name;
+    NSString * tagID = tag.ID;
+    NSString * searchClipID = [NSString stringWithFormat:@"%@_%@", eventName, tagID];
+    Clip    * foundClip;
+    NSArray * justClips = [_clips allValues];
+    // Cheking all clips
+    for (Clip * someClip in justClips) {
+        if ([someClip.globalID isEqualToString:searchClipID]){
+            foundClip = someClip;
+            break;
+        }
+    }
+    
+    if (foundClip && !scrKey){
+        return foundClip;
+    }
+    
+    if(!foundClip){
+        return nil; // no clip found!!
+    }
+    
+    // Now search the clip if it has the source
+    if ([foundClip.videosBySrcKey objectForKey:[NSString stringWithFormat:@"%@hq", scrKey]]) {
+        return foundClip;
+    }
+    
     return nil;
 }
+
+
+
+// This method mods the clip GlobalID so that its no longer connected to live event
+// as well as mod the data kept here
+-(void)breakTagLink:(Clip*)aClip
+{
+   
+//    [_clips objectForKey:aClip.name];
+    [_clips removeObjectForKey:aClip.globalID];
+    [aClip breakClipId];
+    
+    [_clips setObject:aClip forKey:[NSString stringWithFormat:@"%@",aClip.globalID ]];
+
+}
+
 
 /*
  *  This saves the clip. This method only saves one source at a time

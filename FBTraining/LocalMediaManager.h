@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "Event.h"
+#import "Clip.h"
+#import "Tag.h"
 
 @interface LocalMediaManager : NSObject
 
@@ -24,6 +26,6 @@
 -(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData;
 -(Event*)getEventByName:(NSString*)eventName;
 -(void)assignEncoderVersionEvent:(NSDictionary *)allEvent;
-
-
+-(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey;
+-(void)breakTagLink:(Clip*)aClip;
 @end
