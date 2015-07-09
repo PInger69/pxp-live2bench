@@ -181,6 +181,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 -(void)playClipWithFeed: (Feed*)aFeed andTimeRange:(CMTimeRange)aRange{
+    self.looping = NO;
     [self playFeed:aFeed withRange:aRange];
     self.isInClipMode = YES;
     self.clipControlBar.hidden = NO;

@@ -57,9 +57,9 @@
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
-		AECB9A6E1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */; };
-		AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */; };
-		AECF63211B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */; };
+		AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */; };
+		AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */; };
+		AECF63211B0BD72F00C98555 /* DualViewPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */; };
 		AED2EBCD1B1DED25008AD159 /* NCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBC81B1DED25008AD159 /* NCPlayer.m */; };
 		AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBCA1B1DED25008AD159 /* NCPlayerContext.m */; };
 		AED2EBCF1B1DED25008AD159 /* NCPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBCC1B1DED25008AD159 /* NCPlayerView.m */; };
@@ -518,12 +518,12 @@
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
 		AE848FFF1B0D083D007A19E8 /* NCRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCRecordButton.h; sourceTree = "<group>"; };
 		AE8490001B0D083D007A19E8 /* NCRecordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCRecordButton.m; sourceTree = "<group>"; };
-		AECB9A6C1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingClipTableViewController.h; sourceTree = "<group>"; };
-		AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingClipTableViewController.m; sourceTree = "<group>"; };
-		AECF63131B0BC07F00C98555 /* FBTrainingTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingTabViewController.h; sourceTree = "<group>"; };
-		AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingTabViewController.m; sourceTree = "<group>"; };
-		AECF631F1B0BD72F00C98555 /* FBTrainingPeriodTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTrainingPeriodTableViewController.h; sourceTree = "<group>"; };
-		AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTrainingPeriodTableViewController.m; sourceTree = "<group>"; };
+		AECB9A6C1B0CC0B3005DDB32 /* DualViewClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewClipTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewClipTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		AECF63131B0BC07F00C98555 /* DualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewTabViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewTabViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		AECF631F1B0BD72F00C98555 /* DualViewPeriodTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewPeriodTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewPeriodTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AED2EBC71B1DED25008AD159 /* NCPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCPlayer.h; sourceTree = "<group>"; };
 		AED2EBC81B1DED25008AD159 /* NCPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCPlayer.m; sourceTree = "<group>"; };
 		AED2EBC91B1DED25008AD159 /* NCPlayerContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCPlayerContext.h; sourceTree = "<group>"; };
@@ -1213,19 +1213,19 @@
 			name = RecordButton;
 			sourceTree = "<group>";
 		};
-		AECF63121B0BC02900C98555 /* FBTraining */ = {
+		AECF63121B0BC02900C98555 /* DualView */ = {
 			isa = PBXGroup;
 			children = (
-				AECF63131B0BC07F00C98555 /* FBTrainingTabViewController.h */,
-				AECF63141B0BC07F00C98555 /* FBTrainingTabViewController.m */,
-				AECF631F1B0BD72F00C98555 /* FBTrainingPeriodTableViewController.h */,
-				AECF63201B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m */,
-				AECB9A6C1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.h */,
-				AECB9A6D1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m */,
+				AECF63131B0BC07F00C98555 /* DualViewTabViewController.h */,
+				AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */,
+				AECF631F1B0BD72F00C98555 /* DualViewPeriodTableViewController.h */,
+				AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */,
+				AECB9A6C1B0CC0B3005DDB32 /* DualViewClipTableViewController.h */,
+				AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */,
 				AEE595341B0FA75700DCABE6 /* FeedSelectionController.h */,
 				AEE595351B0FA75700DCABE6 /* FeedSelectionController.m */,
 			);
-			name = FBTraining;
+			name = DualView;
 			sourceTree = "<group>";
 		};
 		AED2EBC31B1DE1F7008AD159 /* NCPlayer */ = {
@@ -1856,7 +1856,7 @@
 			isa = PBXGroup;
 			children = (
 				D7F2BFAD1B38A76400EA8BF0 /* CreditsViewController */,
-				AECF63121B0BC02900C98555 /* FBTraining */,
+				AECF63121B0BC02900C98555 /* DualView */,
 				D7A2E5E519B6231800022795 /* VideoBarViewControllers */,
 				D7A2E5B619AE220500022795 /* UserSettingsViewController */,
 				D7383042198A8E940053F0A1 /* ComponentTagFilter */,
@@ -2782,7 +2782,7 @@
 				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
 				D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */,
 				D7C5F38119BF894A008190CE /* ScreenController.m in Sources */,
-				AECF63211B0BD72F00C98555 /* FBTrainingPeriodTableViewController.m in Sources */,
+				AECF63211B0BD72F00C98555 /* DualViewPeriodTableViewController.m in Sources */,
 				D7424B97183FEA5A00034F05 /* UploadButton.m in Sources */,
 				AEDD7CA41B4AB92C003C82F3 /* PxpPlayerSwapView.m in Sources */,
 				D788262D1B42D9D400969D43 /* LocalMediaManager.m in Sources */,
@@ -2846,7 +2846,7 @@
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
-				AECB9A6E1B0CC0B3005DDB32 /* FBTrainingClipTableViewController.m in Sources */,
+				AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,
 				D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */,
 				AE76FFC41B01065B0089F53F /* TagView.m in Sources */,
@@ -2856,7 +2856,7 @@
 				D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */,
 				AED2EBCD1B1DED25008AD159 /* NCPlayer.m in Sources */,
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
-				AECF63151B0BC07F00C98555 /* FBTrainingTabViewController.m in Sources */,
+				AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */,
 				D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */,
 				D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */,
 				D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */,

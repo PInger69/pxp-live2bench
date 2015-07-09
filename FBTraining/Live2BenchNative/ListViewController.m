@@ -223,7 +223,7 @@ NSMutableArray *oldEventNames;
             if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
                 [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
             }
-            if (tag.type == TagTypeCloseDuration) {
+            if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
         }
@@ -242,7 +242,7 @@ NSMutableArray *oldEventNames;
     }
     
     componentFilter.rawTagArray = self.tagsToDisplay;
-    //[_tableViewController reloadData];
+    [_tableViewController reloadData];
     
 }
 
@@ -433,9 +433,12 @@ NSMutableArray *oldEventNames;
     }
     
     NSUInteger newIndex = index + 1;
+
     
+    
+    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                   @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                   @"feed":[[selectedTag.event.feeds allValues] firstObject],
                                                                                                                                    @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
                                                                                                                                    @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
                                                                                                                                    @"comment": selectedTag.comment,
@@ -443,7 +446,6 @@ NSMutableArray *oldEventNames;
                                                                                                                                    @"state":[NSNumber numberWithInteger:RJLPS_Play]
                                                                                                                                    }}];
     
-    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     
     [commentingField clear];
     commentingField.text                = selectedTag.comment;
@@ -465,7 +467,7 @@ NSMutableArray *oldEventNames;
     selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                    @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                    @"feed":[[selectedTag.event.feeds allValues] firstObject],
                                                                                                                                     @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
                                                                                                                                     @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
                                                                                                                                     @"comment": selectedTag.comment,
@@ -2076,11 +2078,11 @@ NSMutableArray *oldEventNames;
     //
     
     tagToBeModified.startTime = newStartTime;
-    tagToBeModified.duration = newDuration;
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
-    
-
+    if (newDuration > tagToBeModified.duration) {
+        tagToBeModified.duration = newDuration;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    }
 }
 
 //extend the tag duration by adding five secs at the end of the tag
@@ -2124,10 +2126,10 @@ NSMutableArray *oldEventNames;
         }
         //get the new duration
         newDuration = endTime - startTime;
-    
-    tagToBeModified.duration = newDuration;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
-    
+    if (newDuration > tagToBeModified.duration) {
+        tagToBeModified.duration = newDuration;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
+    }
 
 }
 

@@ -193,6 +193,7 @@
     _isRecording = NO;
     
     if (self.delegate) {
+        [self.delegate recordingDidTerminateInRecordButton:self];
         [self.delegate recordingTimeDidUpdateInRecordButton:self];
     }
 }

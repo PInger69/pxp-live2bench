@@ -15,7 +15,7 @@
 #import "ListViewController.h"
 #import "BookmarkViewController.h"
 #import "DebuggingTabViewController.h"
-#import "FBTrainingTabViewController.h"
+#import "DualViewTabViewController.h"
 
 // Tab setting identifiers
 #define TAB_CALENDAR @"Calendar"
@@ -24,7 +24,7 @@
 #define TAB_CLIPVIEW @"ClipView"
 #define TAB_LISTVIEW @"ListView"
 #define TAB_MYCLIP @"MyClip"
-#define TAB_FOOTBALL_TRAINING @"FBTraining"
+#define TAB_FOOTBALL_TRAINING @"DualView"
 #define TAB_DEBUG @"Debug"
 
 @interface TabsSettingViewController () <ToggleSettingViewControllerDelegate>
@@ -93,7 +93,7 @@
                                        TAB_LISTVIEW: [ListViewController class],
                                        TAB_MYCLIP: [BookmarkViewController class],
                                        TAB_DEBUG: [DebuggingTabViewController class],
-                                       TAB_FOOTBALL_TRAINING: [FBTrainingTabViewController class],
+                                       TAB_FOOTBALL_TRAINING: [DualViewTabViewController class],
                                        };
         self.delegate = self;
         

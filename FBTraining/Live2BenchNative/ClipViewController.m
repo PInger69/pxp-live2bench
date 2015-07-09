@@ -162,7 +162,7 @@ static void * encoderTagContext = &encoderTagContext;
             if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
                 [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
             }
-            if (tag.type == TagTypeCloseDuration) {
+            if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
         }
@@ -763,12 +763,15 @@ static void * encoderTagContext = &encoderTagContext;
         
         
     } else {
+        
+        Feed *feed = [[selectedCell.data.event.feeds allValues] firstObject];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
                                                            object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
         //NSString * key =        listOfScource[0];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                              @"feed":selectedCell.data.name,
+                                                                                                              //@"feed":selectedCell.data.name,
+                                                                                                              @"feed":feed,
                                                                                                               @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
                                                                                                               @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration ],
                                                                                                               @"state":[NSNumber numberWithInteger:RJLPS_Play]}];

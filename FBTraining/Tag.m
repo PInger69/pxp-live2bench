@@ -44,7 +44,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 +(void)addOpenDurationTag:(Tag*)tag dtid:(NSString*)uid
 {
-    if (![openDurationTagsWithID objectForKey:uid]){
+    if (uid && ![openDurationTagsWithID objectForKey:uid]){
         [openDurationTagsWithID setObject:[[NSMutableDictionary alloc]init] forKey:uid];
     }
     
@@ -327,6 +327,19 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   }];
     if (self.durationID) {
         [tagData setObject:self.durationID forKey:@"dtagid"];
+    }
+    
+    if (self.thumbnails.count > 1) {
+        NSMutableDictionary *urls = [[NSMutableDictionary alloc]init];
+        NSArray *keys = [self.thumbnails allKeys];
+        for (NSString *key in keys) {
+            [urls setObject:[self.thumbnails objectForKey:key] forKey:key];
+        }
+        [tagData setObject:urls forKey:@"url_2"];
+        
+    }else if (self.thumbnails.count == 1){
+        NSString *url = [[self.thumbnails allValues] firstObject];
+        [tagData setObject:url forKey:@"url"];
     }
     
     return tagData;

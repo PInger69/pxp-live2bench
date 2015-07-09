@@ -1,5 +1,5 @@
 //
-//  FBTrainingClipTableViewController.h
+//  DualViewClipTableViewController.h
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-20.
@@ -9,17 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "Tag.h"
 
-@class FBTrainingClipTableViewController;
+@class DualViewClipTableViewController;
 
-@protocol FBTrainingClipControllerDelegate
+@protocol DualViewClipControllerDelegate
 
-- (void)clipController:(nonnull FBTrainingClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag;
+- (void)clipController:(nonnull DualViewClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag;
 
 @end
 
-@interface FBTrainingClipTableViewController : UIViewController
+@interface DualViewClipTableViewController : UIViewController
 
-@property (weak, nonatomic, nullable) id<FBTrainingClipControllerDelegate> delegate;
+@property (weak, nonatomic, nullable) id<DualViewClipControllerDelegate> delegate;
 
 @property (strong, nonatomic, nonnull) UITableView *tableView;
 @property (readonly, nonatomic) BOOL presented;

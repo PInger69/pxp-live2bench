@@ -1,14 +1,14 @@
 //
-//  FBTrainingPeriodTableViewController.m
+//  DualViewPeriodTableViewController.m
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-19.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "FBTrainingPeriodTableViewController.h"
+#import "DualViewPeriodTableViewController.h"
 
-@interface FBTrainingPeriodTableViewController () <UITableViewDataSource, UITableViewDelegate,UIPopoverControllerDelegate>
+@interface DualViewPeriodTableViewController () <UITableViewDataSource, UITableViewDelegate,UIPopoverControllerDelegate>
 
 @property (strong, nonatomic, nonnull) UITableView *tableView;
 @property (strong, nonatomic, nonnull) UIView *pullTabView;
@@ -18,13 +18,13 @@
 
 @property (strong, nonatomic, nonnull) NSMutableDictionary *periods;
 
-@property (strong, nonatomic, nonnull) FBTrainingClipTableViewController *clipTableViewController;
+@property (strong, nonatomic, nonnull) DualViewClipTableViewController *clipTableViewController;
 
 @property (assign, nonatomic) void *context;
 
 @end
 
-@implementation FBTrainingPeriodTableViewController
+@implementation DualViewPeriodTableViewController
 {
     NSComparisonResult (^tagComparator)(Tag *a, Tag *b);
 }
@@ -49,13 +49,14 @@
         
         self.periods = [NSMutableDictionary dictionary];
         
-        self.clipTableViewController = [[FBTrainingClipTableViewController alloc] initWithTags:@[]];
+        self.clipTableViewController = [[DualViewClipTableViewController alloc] initWithTags:@[]];
         [self addChildViewController:self.clipTableViewController];
         
         tagComparator = ^NSComparisonResult(Tag *a, Tag *b) {
             return a.time > b.time ? NSOrderedDescending : a.time < b.time ? NSOrderedAscending : NSOrderedSame;
         };
         
+        _tags  = [[NSMutableArray alloc]init];
         _context = &_context;
         
         [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:_context];
@@ -113,7 +114,7 @@
     
 }
 
-- (void)setDelegate:(nullable id<FBTrainingTagControllerDelegate>)delegate {
+- (void)setDelegate:(nullable id<DualViewTagControllerDelegate>)delegate {
     _delegate = delegate;
     self.clipTableViewController.delegate = delegate;
 }
@@ -138,8 +139,9 @@
     [self.tableView reloadData];
 }
 
-- (void)setTags:(nonnull NSArray *)tags {
-    _tags = tags;
+- (void)setTags:(nonnull NSMutableArray *)tags {
+    
+    [_tags removeAllObjects];
     
     // clear the tag sets
     for (NSMutableArray *tagArray in [self.periods allValues]) {
@@ -147,26 +149,46 @@
     }
     
     // add in the new tags
-    for (Tag *tag in self.tags) {
+    for (Tag *tag in tags) {
         [self addTag:tag];
     }
-    
-    [self.tableView reloadData];
-    [self.clipTableViewController.tableView reloadData];
 }
 
 - (void)addTag:(nonnull Tag *)tag {
-    // we need to add the tag such that the array remains sorted
-    NSMutableArray *tagArray = self.periods[tag.name];
-    if (tagArray) {
-        NSUInteger index = [tagArray indexOfObject:tag inSortedRange:(NSRange){0, tagArray.count} options:NSBinarySearchingInsertionIndex usingComparator:tagComparator];
-        [tagArray insertObject:tag atIndex:index];
+    
+    if (tag.type != TagTypeDeleted && tag.type != TagTypeOpenDuration) {
+        
+        BOOL found = NO;
+        for (NSUInteger i = 0; !found && i < _tags.count; i++) {
+            if ([_tags[i] uniqueID] == tag.uniqueID) {
+                _tags[i] = tag;
+                found = YES;
+            }
+        }
+        if (!found) {
+            [_tags addObject:tag];
+        }
+        
+        // we need to add the tag such that the array remains sorted
+        NSMutableArray *tagArray = self.periods[tag.name];
+        if (tagArray) {
+            NSUInteger index = [tagArray indexOfObject:tag inSortedRange:(NSRange){0, tagArray.count} options:NSBinarySearchingInsertionIndex usingComparator:tagComparator];
+            
+            // modify the tag if the
+            if (index < tagArray.count && [tagArray[index] uniqueID] == tag.uniqueID) {
+                tagArray[index] = tag;
+            } else {
+                [tagArray insertObject:tag atIndex:index];
+            }
+        }
+        [self.tableView reloadData];
+        [self.clipTableViewController.tableView reloadData];
     }
-    [self.tableView reloadData];
-    [self.clipTableViewController.tableView reloadData];
+    
 }
 
 - (void)removeTag:(nonnull Tag *)tag {
+    [_tags removeObject:tag];
     [self.periods[tag.name] removeObject:tag];
     [self.tableView reloadData];
     [self.clipTableViewController.tableView reloadData];

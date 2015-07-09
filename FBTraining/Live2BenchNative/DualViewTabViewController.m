@@ -1,14 +1,14 @@
 //
-//  FBTrainingTabViewController.m
+//  DualViewTabViewController.m
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-05-19.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "FBTrainingTabViewController.h"
+#import "DualViewTabViewController.h"
 
-#import "FBTrainingPeriodTableViewController.h"
+#import "DualViewPeriodTableViewController.h"
 #import "NCRecordButton.h"
 #import "UserCenter.h"
 #import "EncoderClasses/EncoderProtocol.h"
@@ -26,7 +26,10 @@
 #define PINCH_VELOCITY 1
 #define ANIMATION_DURATION 0.25
 
-@interface FBTrainingTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, FBTrainingTagControllerDelegate>
+@interface DualViewTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, DualViewTagControllerDelegate>{
+    Event                           * _currentEvent;
+    id <EncoderProtocol>                _observedEncoder;
+}
 
 // BEGIN NC PLAYER
 
@@ -43,7 +46,7 @@
 
 // END NC PLAYER
 
-@property (strong, nonatomic, nonnull) FBTrainingPeriodTableViewController *periodTableViewController;
+@property (strong, nonatomic, nonnull) DualViewPeriodTableViewController *periodTableViewController;
 
 @property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *topPlayerFullscreenRecognizer;
 @property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *bottomPlayerFullscreenRecognizer;
@@ -69,20 +72,21 @@
 @property (weak, nonatomic, nullable) NCPlayerView *fullscreenView;
 
 @property (assign, nonatomic) BOOL recording;
+@property (copy, nonatomic, nullable) NSString *durationTagID;
 
 @property (assign, nonatomic) CMTime resumeTime;
 @property (assign, nonatomic) float resumeRate;
 
 @end
 
-@implementation FBTrainingTabViewController
+@implementation DualViewTabViewController
 
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Dual View", nil) imageName:@"live2BenchTab"];
         
-        self.periodTableViewController = [[FBTrainingPeriodTableViewController alloc] init];
+        self.periodTableViewController = [[DualViewPeriodTableViewController alloc] init];
         self.periodTableViewController.delegate = self;
         
         self.bottomBarView = [[UIView alloc] init];
@@ -111,8 +115,9 @@
         self.bottomPlayerFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(bottomFullscreen:)];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagsReady:) name:NOTIF_TAGS_ARE_READY object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedsReady:) name:NOTIF_EVENT_FEEDS_READY object:nil];
         
         // BEGIN NC PLAYER
@@ -147,11 +152,75 @@
     return self;
 }
 
+// encoderOberver
+-(void)addEventObserver:(NSNotification *)note
+{
+    if (_observedEncoder != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+    
+    if (note.object == nil) {
+        _observedEncoder = nil;
+    }else{
+        _observedEncoder = (id <EncoderProtocol>) note.object;
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    }
+}
+
+-(void)eventChanged:(NSNotification *)note
+{
+    if (_currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        //[self.periodTableViewController ];
+    }
+    
+    if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
+        _currentEvent = nil;
+    }else{
+        _currentEvent = [((id <EncoderProtocol>) note.object) event];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+}
+
+-(void)onTagChanged:(NSNotification *)note{
+    
+    for (Tag *tag in _currentEvent.tags ) {
+        if (![self.periodTableViewController.tags containsObject:tag]) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+                [self.periodTableViewController addTag:tag];
+            }
+        }
+        if(tag.modified && [self.periodTableViewController.tags containsObject:tag]){
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
+                [self.periodTableViewController removeTag:tag];
+                [self.periodTableViewController addTag:tag];
+            }
+            if (tag.type == TagTypeCloseDuration) {
+                [self.periodTableViewController addTag:tag];
+            }
+        }
+    }
+    
+    Tag *toBeRemoved;
+    for (Tag *tag in self.periodTableViewController.tags ){
+        
+        if (![_currentEvent.tags containsObject:tag]) {
+            toBeRemoved = tag;
+        }
+    }
+    if (toBeRemoved) {
+        [self.periodTableViewController removeTag:toBeRemoved];
+    }
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAGS_ARE_READY object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAGS_ARE_READY object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_EVENT_FEEDS_READY object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
 }
 
 - (void)viewDidLoad {
@@ -236,7 +305,7 @@
     Event *event = [_appDel.encoderManager.primaryEncoder event];
     
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
-    self.periodTableViewController.tags = [[_appDel.encoderManager.eventTags allValues] copy];
+    self.periodTableViewController.tags = [NSMutableArray arrayWithArray:_appDel.encoderManager.primaryEncoder.event.tags];
     
     NSLog(@"%@", self.feeds);
     self.topViewFeedSelectionController.feeds = self.feeds;
@@ -526,14 +595,14 @@
     return YES;
 }
 
-#pragma mark - FBTrainingTagControllerDelegate
+#pragma mark - DualViewTagControllerDelegate
 
-- (void)tagController:(nonnull FBTrainingPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName {
+- (void)tagController:(nonnull DualViewPeriodTableViewController *)tagController didSelectTagNamed:(nonnull NSString *)tagName {
     
     self.activeTagName = tagName;
 }
 
-- (void)clipController:(nonnull FBTrainingClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag {
+- (void)clipController:(nonnull DualViewClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag {
     CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.time, 1), CMTimeMakeWithSeconds(tag.duration, 1));
     
     self.mainPlayer.loopRange = range;
@@ -591,6 +660,16 @@
     [self.periodTableViewController setHidden:YES animated:YES];
     
     self.timeLabel.textColor = [UIColor whiteColor];
+    
+    self.durationTagID = [Tag makeDurationID];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                      @"name":self.activeTagName,
+                                                                                                      @"time":[NSString stringWithFormat:@"%f", self.startTime],
+                                                                                                      @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+                                                                                                      @"dtagid": self.durationTagID
+                                                                                                      }];
+    
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
@@ -604,14 +683,39 @@
     self.bottomPlayerView.enabled = YES;
     [self.periodTableViewController setHidden:NO animated:YES];
     
-    NSTimeInterval clipDuration = CMTimeGetSeconds(self.mainPlayer.currentTime) - self.startTime;
+    NSTimeInterval endTime = CMTimeGetSeconds(self.mainPlayer.currentTime);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_POSTED
-                                                        object:nil
-                                                      userInfo:@{ @"name": self.activeTagName,
-                                                                  @"time": [NSString stringWithFormat:@"%f", self.startTime],
-                                                                  @"duration": [NSString stringWithFormat:@"%d", (int) ceil(clipDuration)]
-                                                                  }];
+    Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
+    
+    NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tag makeTagData]];
+    
+    [tagData setValue:[NSString stringWithFormat:@"%f", endTime] forKey:@"closetime"];
+    [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
+    [tagData setValue:self.durationTagID forKey:@"dtagid"];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:tagData];
+    self.durationTagID = nil;
+    
+    self.timeLabel.textColor = [UIColor lightGrayColor];
+}
+
+- (void)recordingDidTerminateInRecordButton:(nonnull NCRecordButton *)recordButton {
+    self.recording = NO;
+    
+    self.backSeekButton.enabled = YES;
+    self.forwardSeekButton.enabled = YES;
+    self.slomoButton.enabled = YES;
+    self.liveButton.hidden = NO;
+    self.topPlayerView.enabled = YES;
+    self.bottomPlayerView.enabled = YES;
+    [self.periodTableViewController setHidden:NO animated:YES];
+    
+    Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
+    if (tag) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+    }
+    
+    self.durationTagID = nil;
     
     self.timeLabel.textColor = [UIColor lightGrayColor];
 }

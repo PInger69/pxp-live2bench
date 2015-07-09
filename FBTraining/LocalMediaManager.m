@@ -81,9 +81,24 @@ static LocalMediaManager * instance;
         NSEnumerator    * enumerator    = [tempPool objectEnumerator];
         id              value;
         while ((value = [enumerator nextObject])) {
-            NSDictionary * dict = value;
+            NSMutableDictionary * dict = value;
             NSString * itemHid = [dict objectForKey:@"hid"];
             if (itemHid) {
+                NSArray *mp4s = [dict[@"mp4_2"] allValues];
+                if (mp4s.count > 1) {
+                    NSMutableDictionary *feeds = [[NSMutableDictionary alloc]init];
+                    for (int i = 0; i < mp4s.count; i++) {
+                        NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
+                        NSString *path = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:dict[@"name"]] stringByAppendingPathComponent:name];
+                        [feeds setObject:path forKey:[NSString stringWithFormat:@"s_0%i",i]];
+                    }
+                    [dict setObject:feeds forKeyedSubscript:@"mp4_2"];
+                } else {
+                    NSString *path = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:dict[@"name"]] stringByAppendingPathComponent:@"main.mp4"];
+                    [dict setObject:path forKey:@"mp4"];
+                }
+                
+                
                 Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
                 anEvent.parentEncoder       = [LocalEncoder getInstance];
                     anEvent.local               = YES;
@@ -153,7 +168,6 @@ static LocalMediaManager * instance;
                 Clip * clip =[[Clip alloc]initWithDict: theDict];
                 clip.path = pthss;
                 [_clips setObject:clip forKey:clip.globalID];
-
             }
                 
         }
@@ -370,48 +384,7 @@ static LocalMediaManager * instance;
     return (Event*)filtered[0];
 }
 
-
-/*
- *  This will return the clip if found on the device.
- *  The acts as tool to check if a specific exist on the device
- *  It will check for clip with the Tag ID then check that clip for the source
- *
- *  @param tagID   the ID of the tag your looking for
- *  @param scrKey  what a source are you looking for if you send nil it will just send you the clip
- *  
- *  @output if the clip is found and the source is not it will return nil
- */
--(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey
-{
-  
-    NSString * eventName = tag.event.name;
-    NSString * tagID = tag.ID;
-    NSString * searchClipID = [NSString stringWithFormat:@"%@_%@", eventName, tagID];
-    Clip    * foundClip;
-    NSArray * justClips = [_clips allValues];
-    // Cheking all clips
-    for (Clip * someClip in justClips) {
-        if ([someClip.globalID isEqualToString:searchClipID]){
-            foundClip = someClip;
-            break;
-        }
-    }
-    
-    if (foundClip && !scrKey){
-        return foundClip;
-    }
-    
-    if(!foundClip){
-        return nil; // no clip found!!
-    }
-    
-    // Now search the clip if it has the source
-    if ([foundClip.videosBySrcKey objectForKey:[NSString stringWithFormat:@"%@hq", scrKey]]) {
-        return foundClip;
-    }
-    
-    return nil;
-}
+//-(Tag*)getTagBy
 
 
 
@@ -495,10 +468,12 @@ static LocalMediaManager * instance;
  *
  *  @return returns path of folder to save the videos
  */
--(NSString*)saveEvent:(Event*)aEvent
+-(NSString*)saveEvent:(NSMutableDictionary*)eventDic
 {
+    Event *encoderEvent = eventDic[@"non-local"];
+    
     // This gets the path and makes a DIR if its not there
-    NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath];
+    NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.datapath];
     BOOL isDir = NO;
     [[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:&isDir];
     
@@ -506,25 +481,54 @@ static LocalMediaManager * instance;
     if ( !isDir){
         [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
     }
-    NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:aEvent.datapath]stringByAppendingPathExtension:@"plist"];
+    NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.datapath]stringByAppendingPathExtension:@"plist"];
     
     //[aEvent.tags writeToFile:plistNamePath atomically:YES];
     //[aEvent.rawData writeToFile:plistNamePath atomically:YES];
     
     // make an instance of event in local
-    Event * anEvent = [[Event alloc]initWithDict:aEvent.rawData isLocal:YES andlocalPath:self.localPath];
-    anEvent.parentEncoder = [LocalEncoder getInstance];
-    anEvent.local = true;
+    //Event * localEvent = [[Event alloc]initWithDict:encoderEvent.rawData isLocal:YES andlocalPath:self.localPath];
+    //localEvent.parentEncoder = [LocalEncoder getInstance];
+    //localEvent.local = true;
+    //localEvent.tags = encoderEvent.tags;
+    //localEvent.isBuilt = true;
     
-    [anEvent.rawData writeToFile:plistNamePath atomically:YES];
+    NSMutableDictionary * localEventRawData = [[NSMutableDictionary alloc]initWithDictionary:[encoderEvent.rawData copy]];
+    if (encoderEvent.mp4s.count > 1) {
+        NSMutableDictionary *feeds = [[NSMutableDictionary alloc]init];
+        for (int i = 0; i < encoderEvent.mp4s.count; i++) {
+            NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
+            NSString *path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.name] stringByAppendingPathComponent:name];
+            [feeds setObject:path forKey:[NSString stringWithFormat:@"s_0%i",i]];
+        }
+        [localEventRawData setObject:feeds forKeyedSubscript:@"mp4_2"];
+    } else {
+        NSString *path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.name] stringByAppendingPathComponent:@"main.mp4"];
+        [localEventRawData setObject:path forKey:@"mp4"];
+    }
     
-    NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent,@"non-local":aEvent}];
-    [_allEvents setObject:eventFinal forKey:aEvent.name];
+
+    Event * localEvent = [[Event alloc]initWithDict:localEventRawData isLocal:YES andlocalPath:self.localPath];
+    localEvent.parentEncoder = [LocalEncoder getInstance];
+    localEvent.local = true;
+    //localEvent.tags = encoderEvent.tags;
+    //localEvent.isBuilt = true;
+
+
     
+    
+    [localEvent.rawData writeToFile:plistNamePath atomically:YES];
+    
+    [eventDic setObject:localEvent forKey:@"local"];
+    [eventDic setObject:encoderEvent forKey:@"non-local"];
+    NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":localEvent,@"non-local":encoderEvent}];
+    [_allEvents setObject:eventFinal forKey:encoderEvent.name];
+    //[[LocalEncoder getInstance] checkEncoder];
     
     //NSMutableDictionary            * allEventsMutable =  [_allEvents mutableCopy];
     //[allEventsMutable setObject:anEvent forKey:anEvent.hid];
     //_allEvents = [allEventsMutable copy];
+     
     return aPath;
 }
 
