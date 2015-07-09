@@ -19,7 +19,7 @@
 +(instancetype)getInstance;
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 -(void)deleteEvent:(Event*)aEvent;
--(NSString*)saveEvent:(Event*)aEvent;
+-(NSString*)saveEvent:(NSMutableDictionary*)eventDic;
 -(NSString*)bookmarkedVideosPath;
 -(void)saveClip:(NSString*)aName withData:(NSDictionary *)tagData;
 -(Event*)getEventByName:(NSString*)eventName;

@@ -67,5 +67,6 @@
 @property (nonatomic,weak)  id <ActionListItemDelegate>  delegate;
 
 -(void)start;
+-(void)checkEncoder;
 
 @end

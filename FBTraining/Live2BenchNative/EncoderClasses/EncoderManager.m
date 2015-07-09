@@ -380,11 +380,13 @@
     }
     
     Event * theEvent = [self getEventByHID:eventHID];
+    NSMutableDictionary *eventDic = [self.masterEncoder.allEvents objectForKey:theEvent.name];
     
     if (theEvent.isBuilt){
     
         //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
-        NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
+        NSString *videoFolderPath = [_localMediaManager saveEvent:eventDic];
+        //NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
         NSString * savedFileName   =  [encoderSource lastPathComponent];
         DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
         dItemBlock(dli);
@@ -403,7 +405,7 @@
             }
             theEvent.tags = [tagsBuilt copy];
             //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
-            NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
+            NSString * videoFolderPath =  [_localMediaManager saveEvent:eventDic]; // this is the data used to make the plist
             NSString * savedFileName   =  [encoderSource lastPathComponent];
 
             DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];

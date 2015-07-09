@@ -184,12 +184,38 @@
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
-        NSDictionary *urls = tag.thumbnails;
+        NSDictionary *urls; //= tag.thumbnails;
+        
+        /*FeedSelectCell *collapsableCell;
+        NSString *key;
+        if (urls) {
+            NSArray *keys = [[NSMutableArray arrayWithArray:[urls allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+            key = keys[indexPath.row - firstIndexPath.row];
+            collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];
+        }else{
+            key = @"s_00";
+            collapsableCell = [[FeedSelectCell alloc] initWithImageData:nil andName:key];
+        }*/
+    
+        /*if (tag.thumbnails.count == 0) {
+            NSMutableDictionary *urlsDic = [[NSMutableDictionary alloc]init];
+            NSArray * keys = [tag.event.feeds allKeys];
+            for(NSString *key in keys) {
+                //NSString *url = [[tag.event.feeds objectForKey:key] objectForKey:@"High Quaility"];
+                //[urls setObject:url forKey:key];
+                [urlsDic setObject:@"" forKey:key];
+            }
+            urls = [urlsDic copy];
+        }else{
+            urls = tag.thumbnails;
+        }
         
         NSArray *keys = [[NSMutableArray arrayWithArray:[urls allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
         
-        NSString *key = keys[indexPath.row - firstIndexPath.row];
+        NSString *key = keys[indexPath.row - firstIndexPath.row];*/
         
+        NSArray *keys = [[NSMutableArray arrayWithArray:[tag.event.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        NSString *key = keys[indexPath.row - firstIndexPath.row];
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
         
         
@@ -223,15 +249,16 @@
         }*/
 
         // Get the feed
-        NSDictionary *feeds = tag.event.feeds;
-        Feed *feed = feeds[key] ? feeds[key] :feeds.allValues.firstObject;
+        //NSDictionary *feeds = tag.event.feeds;
+        //Feed *feed = feeds[key] ? feeds[key] :feeds.allValues.firstObject;
         
         collapsableCell.sendUserInfo = ^(){
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
+            Feed *feed = [tag.event.feeds objectForKey:key];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{//@"context":STRING_LISTVIEW_CONTEXT,
                                                                                                                                             //@"feed":tag.feeds[key],
                                                                                                                                             //@"feed":tag.name,
                                                                                      
-                                                                                     @"name": key,
+                                                                                                                                            @"name": key,
                                                                                                                                             @"feed":feed,
                                                                                                                                             @"time": [NSString stringWithFormat:@"%f",tag.startTime],
                                                                                                                                             @"duration": [NSString stringWithFormat:@"%d",tag.duration],
@@ -391,14 +418,14 @@
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
         if (self.previouslySelectedIndexPath.row < indexPath.row && self.previouslySelectedIndexPath) {
-            for (int i = 0; i < tag.thumbnails.count ; ++i) {
+            for (int i = 0; i < tag.event.feeds.count ; ++i) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];
             }
             
             self.previouslySelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
         }else{
-            for (int i = 0; i < tag.thumbnails.count ; ++i) {
+            for (int i = 0; i < tag.event.feeds.count ; ++i) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];
             }

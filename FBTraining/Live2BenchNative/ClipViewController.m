@@ -162,7 +162,7 @@ static void * encoderTagContext = &encoderTagContext;
             if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
                 [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
             }
-            if (tag.type == TagTypeCloseDuration) {
+            if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
         }
@@ -764,9 +764,7 @@ static void * encoderTagContext = &encoderTagContext;
         
     } else {
         
-        // Get the feed
-        NSDictionary *feeds = selectedCell.data.event.feeds;
-        Feed *feed = feeds.allValues.firstObject;
+        Feed *feed = [[selectedCell.data.event.feeds allValues] firstObject];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB
                                                            object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         

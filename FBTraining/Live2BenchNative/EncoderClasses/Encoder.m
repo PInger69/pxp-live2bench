@@ -110,7 +110,6 @@
  */
 -(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
 {
-    
     if (!_complete){
         [self cancel];
     }
@@ -1077,6 +1076,14 @@
                                       @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
+    //f ([tData objectForKey:@"url"]) {
+        [tData removeObjectForKey:@"url"];
+    //}
+    
+    //if ([tData objectForKey:@"ulr_2"]) {
+        [tData removeObjectForKey:@"url_2"];
+    //}
+    
     // this is temp
     /*if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
         double openTime                 = [tData[@"starttime"]doubleValue];
@@ -1611,8 +1618,20 @@
             
             if (localEvent) {
                 if ([data[@"type"] integerValue] == TagTypeCloseDuration) {
-                    Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
-                    [localEvent addTag:localTag extraData:false];
+                    
+                    bool alreadyExist = false;
+                    for (Tag *tag in localEvent.tags) {
+                        if ([tag.ID isEqualToString:[data[@"id"] stringValue]]) {
+                            [tag replaceDataWithDictionary:data];
+                            alreadyExist = true;
+                        }
+                    }
+                    if (!alreadyExist) {
+                        Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
+                        [localEvent addTag:localTag extraData:false];
+                    }else{
+                        [localEvent modifyTag:data];
+                    }
                 }else{
                     [localEvent modifyTag:data];
                 }
