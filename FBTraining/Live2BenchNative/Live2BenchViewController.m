@@ -561,8 +561,10 @@ static void * eventContext      = &eventContext;
     
     
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    /*! Disabled For Demo
     telestration = [[TeleViewController alloc]initWithController:self.videoPlayer];
     telestration.delegate = self;
+     */
 
     
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
