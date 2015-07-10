@@ -48,9 +48,6 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -64,6 +61,21 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+-(void)onPressDownload:(FeedSelectCell*)aCell
+{
+    Event * eventgettingBuilt = aCell.event;
+    eventgettingBuilt.delegate = self; // onEventBuildFinished will get run
+    
+}
+
+// reloads the tableView so that the downloader reflects
+-(void)onEventBuildFinished:(Event*)event
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:event userInfo:@{}];
+    [self reloadData];
 }
 
 //This method is getting called when you press "All Events Button" of datePicker.
@@ -359,19 +371,22 @@
         } else {
             collapsableCell.downloadButton.downloadItem = nil;
             
+            __block ARCalendarTableViewController * weakSelf = self;
             collapsableCell.downloadButtonBlock = ^(){
-                [Utility downloadEvent:weakCell.event sourceName:weakCell.dicKey returnBlock:
-                 ^(DownloadItem *item){
-                     DownloadItem *downloadItem = item;
-                     downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
-                     weakCell.downloadButton.downloadItem = downloadItem;
-                     __block FeedSelectCell *weakerCell = weakCell;
-                     [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-                         weakerCell.downloadButton.progress = progress;
-                         [weakerCell.downloadButton setNeedsDisplay];
-                     }];
-                     [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
-                 }];
+                
+                [weakSelf onPressDownload:weakCell];
+//                [Utility downloadEvent:weakCell.event sourceName:weakCell.dicKey returnBlock:
+//                 ^(DownloadItem *item){
+//                     DownloadItem *downloadItem = item;
+//                     downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
+//                     weakCell.downloadButton.downloadItem = downloadItem;
+//                     __block FeedSelectCell *weakerCell = weakCell;
+//                     [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
+//                         weakerCell.downloadButton.progress = progress;
+//                         [weakerCell.downloadButton setNeedsDisplay];
+//                     }];
+//                     [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
+//                 }];
             };
         }
         return collapsableCell;

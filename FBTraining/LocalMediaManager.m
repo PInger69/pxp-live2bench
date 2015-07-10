@@ -384,7 +384,47 @@ static LocalMediaManager * instance;
     return (Event*)filtered[0];
 }
 
-//-(Tag*)getTagBy
+/*
+ *  This will return the clip if found on the device.
+ *  The acts as tool to check if a specific exist on the device
+ *  It will check for clip with the Tag ID then check that clip for the source
+ *
+ *  @param tagID   the ID of the tag your looking for
+ *  @param scrKey  what a source are you looking for if you send nil it will just send you the clip
+ *
+ *  @output if the clip is found and the source is not it will return nil
+ */
+-(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey
+{
+    
+    NSString * eventName = tag.event.name;
+    NSString * tagID = tag.ID;
+    NSString * searchClipID = [NSString stringWithFormat:@"%@_%@", eventName, tagID];
+    Clip    * foundClip;
+    NSArray * justClips = [_clips allValues];
+    // Cheking all clips
+    for (Clip * someClip in justClips) {
+        if ([someClip.globalID isEqualToString:searchClipID]){
+            foundClip = someClip;
+            break;
+        }
+    }
+    
+    if (foundClip && !scrKey){
+        return foundClip;
+    }
+    
+    if(!foundClip){
+        return nil; // no clip found!!
+    }
+    
+    // Now search the clip if it has the source
+    if ([foundClip.videosBySrcKey objectForKey:[NSString stringWithFormat:@"%@hq", scrKey]]) {
+        return foundClip;
+    }
+    
+    return nil;
+}
 
 
 

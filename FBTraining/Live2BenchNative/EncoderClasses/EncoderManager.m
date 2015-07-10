@@ -160,10 +160,11 @@
         [self.primaryEncoder event].primary = false;
         if (event == nil) {
             
+            
             if ([[self.primaryEncoder event].name isEqualToString:self.liveEventName]) {
                 self.liveEvent = nil;
             }
-
+           if (self.primaryEncoder) [self.primaryEncoder removeFromPrimary];
             [self.primaryEncoder setEvent:nil];
             self.primaryEncoder = nil;
         } else {
@@ -302,7 +303,10 @@
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {
     PXPLog(@"!!! ENCODER REMOVED !!! %@",aEncoder.name);
-
+    if (aEncoder == self.primaryEncoder){
+        [aEncoder removeFromPrimary];
+        [self declareCurrentEvent:nil];
+    }
     [aEncoder destroy];
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];
@@ -383,53 +387,18 @@
  */
 -(void)notificationDownloadEvent:(NSNotification*)note
 {
-    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
-    
-    NSDictionary * theEventData = note.userInfo[@"data"];
-    NSString     * eventHID     = theEventData[@"hid"];
-    NSString     * source       = note.userInfo[@"source"];
-    NSString *encoderSource;
-    if (theEventData[@"mp4_2"]) {
-        encoderSource = theEventData[@"mp4_2"][source][@"hq"];
-    } else {
-        encoderSource = theEventData[@"mp4"];
-    }
-    
-    Event * theEvent = [self getEventByHID:eventHID];
-    NSMutableDictionary *eventDic = [self.masterEncoder.allEvents objectForKey:theEvent.name];
+    Event               * theEvent         = (Event *)note.object;
+    NSString            * source           = note.userInfo[@"source"];
+    NSString            * encoderSource    = (source)?[theEvent.mp4s objectForKey:source]:[[theEvent.mp4s allValues]firstObject];
+    NSMutableDictionary * eventDic         = [self.masterEncoder.allEvents objectForKey:theEvent.name];
     
     if (theEvent.isBuilt){
-    
-        //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
-        NSString *videoFolderPath = [_localMediaManager saveEvent:eventDic];
-        //NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
-        NSString * savedFileName   =  [encoderSource lastPathComponent];
-        DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
-        dItemBlock(dli);
-        
+        NSString * videoFolderPath = [_localMediaManager saveEvent:eventDic]; // This makes a plist for the event and a location to save the video
+        NSString * savedFileName   = [encoderSource lastPathComponent];
+        (void)[Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:theEvent.name];
     } else {
-        theEvent.onComplete = nil;// clear out the on complete build block
-        [self requestTagDataForEvent:theEvent.name onComplete:^(NSDictionary *all) {
-            
-            NSMutableDictionary * tagsBuilt = [[NSMutableDictionary alloc]init];
-            NSArray * keys = [all allKeys];
-            for (NSString * key in keys) {
-                
-                Tag * t = [[Tag alloc]initWithData:[all objectForKey:key] event:theEvent];
-                [tagsBuilt setObject:t forKey:key];
-                
-            }
-            theEvent.tags = [tagsBuilt copy];
-            //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
-            NSString * videoFolderPath =  [_localMediaManager saveEvent:eventDic]; // this is the data used to make the plist
-            NSString * savedFileName   =  [encoderSource lastPathComponent];
-
-            DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
-            dItemBlock(dli);
-            
-        }];
+        PXPLog(@"Event Download Failed... Event was not built... please build");
     }
-    
 }
 
 
