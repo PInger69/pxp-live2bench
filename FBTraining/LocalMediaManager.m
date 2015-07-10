@@ -384,7 +384,37 @@ static LocalMediaManager * instance;
     return (Event*)filtered[0];
 }
 
-//-(Tag*)getTagBy
+-(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey
+{
+    
+    NSString * eventName = tag.event.name;
+    NSString * tagID = tag.ID;
+    NSString * searchClipID = [NSString stringWithFormat:@"%@_%@", eventName, tagID];
+    Clip    * foundClip;
+    NSArray * justClips = [_clips allValues];
+    // Cheking all clips
+    for (Clip * someClip in justClips) {
+        if ([someClip.globalID isEqualToString:searchClipID]){
+            foundClip = someClip;
+            break;
+        }
+    }
+    
+    if (foundClip && !scrKey){
+        return foundClip;
+    }
+    
+    if(!foundClip){
+        return nil; // no clip found!!
+    }
+    
+    // Now search the clip if it has the source
+    if ([foundClip.videosBySrcKey objectForKey:[NSString stringWithFormat:@"%@hq", scrKey]]) {
+        return foundClip;
+    }
+    
+    return nil;
+}
 
 /*
  *  This saves the clip. This method only saves one source at a time
@@ -483,12 +513,14 @@ static LocalMediaManager * instance;
         for (int i = 0; i < encoderEvent.mp4s.count; i++) {
             NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
             NSString *path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.name] stringByAppendingPathComponent:name];
-            [feeds setObject:path forKey:[NSString stringWithFormat:@"s_0%i",i]];
+            NSDictionary *mp4Dic = @{@"hq":path};
+            [feeds setObject:mp4Dic forKey:[NSString stringWithFormat:@"s_0%i",i]];
         }
         [localEventRawData setObject:feeds forKeyedSubscript:@"mp4_2"];
     } else {
         NSString *path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.name] stringByAppendingPathComponent:@"main.mp4"];
-        [localEventRawData setObject:path forKey:@"mp4"];
+        NSDictionary *mp4Dic = @{@"hq":path};
+        [localEventRawData setObject:mp4Dic forKey:@"mp4"];
     }
     
 

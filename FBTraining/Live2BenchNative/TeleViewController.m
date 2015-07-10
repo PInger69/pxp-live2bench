@@ -271,7 +271,7 @@ static NSString * const FORM_FLE_INPUT = @"uploaded";
     NSDictionary *dict = @{@"name":@"Telestration", @"time":[NSString stringWithFormat:@"%f", [self.fullScreenViewController.player currentTimeInSeconds] + 0.3], @"image": teleImage};
     PXPLog(@"The dict to create the tele image is %@", dict);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_TELE_TAG object:nil userInfo:dict]; // MOVE TO ITS DELEGATE
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CREATE_TELE_TAG object:nil userInfo:dict]; // MOVE TO ITS DELEGATE
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(onSaveTeleView:tagData:)]) {
         [self.delegate onSaveTeleView:self tagData:dict];

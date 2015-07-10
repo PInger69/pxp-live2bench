@@ -66,6 +66,19 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)onPressDownload:(FeedSelectCell*)aCell
+{
+    Event * eventgettingBuilt = aCell.event;
+    eventgettingBuilt.delegate = self; // onEventBuildFinished will get run
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:aCell.event userInfo:@{}];
+}
+
+// reloads the tableView so that the downloader reflects
+-(void)onEventBuildFinished:(Event*)event
+{
+    [self reloadData];
+}
+
 //This method is getting called when you press "All Events Button" of datePicker.
 -(void)showAllData{
     //To remove those collapsible cells and selected effect(orange background).
@@ -198,28 +211,25 @@
         return cell;
     }
     
-//    NSString *data;
     NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         Event *event = self.tableData[firstIndexPath.row - 1];
-        NSDictionary *urls = event.mp4s;
+        
+        NSDictionary *urls = event.feeds;
         NSString *key;
         NSString *data;
+        Feed *feed;
         
         key = [urls allKeys][indexPath.row - firstIndexPath.row];
-        if (event.rawData[@"mp4_2"]) {
-            data = urls[key][@"hq"];
-        } else {
-            data = urls[key];
-        }
-        
+        feed = urls[key];
+        data = [[feed.allPaths firstObject] absoluteString];
+    
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
         
-        collapsableCell.event = event.rawData;
+        collapsableCell.event = event;
         collapsableCell.downloadButton.enabled = YES;
         NSString *name = event.name;
         
-        //Event *localCounterpart = [self.encoderManager.localEncoder getEventByName:name];
         Event *localCounterpart = [[LocalMediaManager getInstance] getEventByName:name];
         
         [collapsableCell positionWithFrame:CGRectMake(0, 0, 518, 40)];
@@ -227,25 +237,13 @@
         collapsableCell.sendUserInfo = ^(NSString *key){
             _teamPick = nil;
             
-            NSString *homeName = event.rawData[@"homeTeam"];
-            NSString *visitName = event.rawData[@"visitTeam"];
-            NSString *eventName = event.rawData[@"name"];
+            NSString *homeName = event.teams[@"homeTeam"];
+            NSString *visitName = event.teams[@"visitTeam"];
             
             _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
                                                       buttonListNames:@[homeName, visitName]];
             
             _teamPick.contentViewController.modalInPopover = NO;
-            
-            /*NSString *path;
-            if (event.rawData[@"mp4_2"]) {
-                path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
-                //path = @"/Documents/events/2015-04-16_16-17-13_368156f1cc13acdf43d265c420b4d2956ed0f645_local/main_00hq.mp4";
-            } else {
-                path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:event.name] stringByAppendingPathComponent:@"main.mp4"];
-//                path = [[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:@"main.mp4"];
-            }*/
-            
-            
             
             
             
@@ -259,89 +257,21 @@
                 __block Event * weakEvent = event;
                 
                 if (event.local && ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]])) {
-                    Feed *source = [[Feed alloc] initWithFileURL:[event.mp4s objectForKey:key]];
+                    Feed *source = [localCounterpart.feeds objectForKey:key];
                     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                     [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
                     [weakSelf.encoderManager declareCurrentEvent:localCounterpart];
                 }else{
-                    //source = [[Feed alloc] initWithURLString:data quality:0];
-                    Feed *source = [[Feed alloc] initWithURLString:[event.mp4s objectForKey:key] quality:0];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":feed, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
                     [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
                     [weakSelf.encoderManager declareCurrentEvent:weakEvent];
                 }
                 
-                
-
-                /*if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
-                    
-                    source = [[Feed alloc] initWithFileURL:path];
-                    //[localCounterpart setOnComplete:^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-                        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-                        
-                    //}];
-                    [weakSelf.encoderManager declareCurrentEvent:localCounterpart];
-
-                } else {
-                    
-                    
-                    NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                                        @"user"        : [UserCenter getInstance].userHID,
-                                                                                                        @"requesttime" : GET_NOW_TIME,
-                                                                                                        @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
-                                                                                                        @"event"       : event.name
-                                                                                                        }];
-                                                                                                        
-    
-                    
-                    source = [[Feed alloc] initWithURLString:data quality:0];
-                    
-                    
-                    //[weakEvent setOnComplete:^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-                        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-
-                    //}];
-                    
-                    [weakSelf.encoderManager declareCurrentEvent:weakEvent];
-                    
-                    
-                    
-//                    if (event.isBuilt){
-//                        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-//                        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-//                        [weakSelf.encoderManager declareCurrentEvent:weakEvent];
-
-
-
-//                    } else {
-//                        // The Event was not built and it will have to wait for the server to build all the tag data
-//                        
-//                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
-//                                                                           object:nil
-//                                                                         userInfo:[SpinnerView message:@"Retreving tag data..." progress:0 animated:NO ]];
-//                        event.onComplete = ^(){
-//                            
-//                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":source, @"command":[NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-//                            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_SELECT_TAB          object:weakSelf userInfo:@{@"tabName":@"Live2Bench"}];
-//                            [weakSelf.encoderManager declareCurrentEvent:weakEvent];
-//                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:weakEvent];
-//                            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
-//                        };
-//                        [event.parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:GET_NOW_TIME];
-//                    }
-
-
-                }*/
-
             }];
+            
             [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                        animated:YES];
         };
-        
-        //        NSString *path = [[[self.encoderManager.localEncoder.localPath stringByAppendingPathComponent:@"events"]stringByAppendingPathComponent:event.datapath] stringByAppendingString:@".plist"];
-        //        NSDictionary *plistForEvent = [[NSDictionary alloc] initWithContentsOfFile:path];
         
         
         __block FeedSelectCell *weakCell = collapsableCell;
