@@ -389,7 +389,7 @@
 {
     Event               * theEvent         = (Event *)note.object;
     NSString            * source           = note.userInfo[@"source"];
-    NSString            * encoderSource    = (source)?[theEvent.mp4s objectForKey:source]:[[theEvent.mp4s allValues]firstObject];
+    NSString            * encoderSource    = (source)?[theEvent.mp4s objectForKey:source][@"hq"]:[[theEvent.mp4s allValues]firstObject][@"hq"];
     NSMutableDictionary * eventDic         = [self.masterEncoder.allEvents objectForKey:theEvent.name];
     
     if (theEvent.isBuilt){

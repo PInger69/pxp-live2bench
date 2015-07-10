@@ -426,6 +426,25 @@ static LocalMediaManager * instance;
     return nil;
 }
 
+-(Feed*)getFeedByEvent:(Event*)event scrKey:(NSString *)scrKey
+{
+    NSDictionary *feeds = event.feeds;
+    NSArray *keys = [feeds allKeys];
+    Feed *foundFeed;
+    
+    for (NSString *key in keys) {
+        if ([key isEqualToString:scrKey]) {
+            foundFeed = [feeds objectForKey:key];
+        }
+    }
+    
+    if (foundFeed) {
+        return foundFeed;
+    }else{
+        return nil;
+    }
+}
+
 
 
 // This method mods the clip GlobalID so that its no longer connected to live event

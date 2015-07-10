@@ -112,22 +112,18 @@
     NSInvocation            * feedInvocation;
     NSInvocation            * syncMeInvocation;
     
-    //For SyncMe
-//    NSTimer                 * syncMeTimer;
     NSString                * syncMePath;
-//    NSURLConnection         * syncMeConnection;
-    
     NSString                * statusPath;
     NSString                * feedPath;
-    double              timeout;
+    double                  timeout;
     NSMutableArray          * statusPack;
 
-    
     BOOL                    flag; // simple flag to alternate status calls
-    
     BOOL                    isLegacy;
-    
     SEL selector_;
+
+    
+    NSString                * connectType;
 }
 
 
@@ -164,9 +160,6 @@
         
         syncMePath = [NSString stringWithFormat:@"http://%@/min/ajax/syncme/%@", ipAddress, jsonString];
         
-        
-
-        
         // Build Invocation
         //SEL selector_       = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
         selector_ = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
@@ -178,14 +171,9 @@
         feedInvocation      = [self _buildInvokSel:selector_ path:feedPath    type:FEED_CHECK   timeout:&timeout];
         syncMeInvocation      = [self _buildInvokSel:selector_ path:syncMePath type:SYNC_ME       timeout:&timeout];
         
-        //[self syncMe];
-        //[self buildSyncMeComponents];
         [statusPack addObject:statusInvocation];
         [statusPack addObject: syncMeInvocation];
-        //isLegacy            = ([checkedEncoder.version isEqualToString:@"0.94.5"])?YES:NO;
         isLegacy            = [checkedEncoder checkEncoderVersion];
-        
-        
     }
     return self;
 
@@ -215,7 +203,6 @@
     
     if ([connection.connectionType isEqualToString: STATUS]){
         [checkedEncoder onBitrate:startRequestTime];
-        //checkedEncoder.bitrate = (double)[[NSDate date] timeIntervalSinceDate:startRequestTime];
     }
 }
 
@@ -250,8 +237,8 @@
     if ([connection.connectionType isEqualToString: STATUS])   {
         [self statusResponse:connection.cumulatedData];
     } else  if ([connection.connectionType isEqualToString: FEED_CHECK]) {
-        [self checkFeeds:connection.cumulatedData];
-    }else if( [connection.connectionType isEqualToString: SYNC_ME]){
+        // no need to check feeds now
+    } else if( [connection.connectionType isEqualToString: SYNC_ME]){
         [checkedEncoder onTagsChange:connection.cumulatedData];
     }
 }
