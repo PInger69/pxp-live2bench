@@ -15,8 +15,10 @@
 {
     EncoderManager * encoderMangager;
 }
+
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
+@synthesize delegate = _delegate;
 
 -(id)initWithEncoderManager:(EncoderManager*)aEncoderManager
 {
@@ -63,11 +65,12 @@
 
 @implementation CheckWiFiAction
 {
-    
     EncoderManager * encoderMangager;
 }
+
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
+@synthesize delegate = _delegate;
 
 -(id)initWithEncoderManager:(EncoderManager*)aEncoderManager
 {
@@ -93,12 +96,11 @@
 @implementation CheckMasterEncoderAction
 {
     EncoderManager * encoderManager;
-    
 }
+
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
-
-
+@synthesize delegate = _delegate;
 
 -(id)initWithEncoderManager:(EncoderManager*)aEncoderManager
 {
@@ -148,10 +150,11 @@
 {
     //EncoderManager * encoderManager;
     UserCenter * userCenter;
-    
 }
+
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
+@synthesize delegate = _delegate;
 
 -(id)initWithUserCenter:(UserCenter *)aUserCenter
 {
@@ -209,9 +212,7 @@
 
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
-
-
-
+@synthesize delegate = _delegate;
 
 -(void)start
 {

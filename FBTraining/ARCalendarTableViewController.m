@@ -222,8 +222,9 @@
         key = [urls allKeys][indexPath.row - firstIndexPath.row];
         feed = urls[key];
         data = [[feed.allPaths firstObject] absoluteString];
-    
-        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
+        
+        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:nil andName:key];
+        collapsableCell.feedView.hidden = YES;
         
         collapsableCell.event = event;
         collapsableCell.downloadButton.enabled = YES;

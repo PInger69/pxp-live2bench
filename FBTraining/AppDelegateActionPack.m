@@ -12,8 +12,10 @@
 {
     AppDelegate *appDelegate;
 }
+
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
+@synthesize delegate = _delegate;
 
 - (instancetype)initWithAppDelegate:(AppDelegate*)appDel
 {
@@ -61,8 +63,11 @@
 {
     AppDelegate *appDelegate;
 }
+
 @synthesize isFinished  = _isFinished;
 @synthesize isSuccess   = _isSuccess;
+@synthesize delegate = _delegate;
+
 - (instancetype)initWithAppDelegate:(AppDelegate*)appDel
 {
     self = [super init];

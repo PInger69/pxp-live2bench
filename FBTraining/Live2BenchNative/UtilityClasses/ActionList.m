@@ -234,8 +234,9 @@ static void * actionContext = &actionContext;
     int t;
 }
 
-@synthesize isFinished;
-@synthesize isSuccess;
+@synthesize isFinished = _isFinished;
+@synthesize isSuccess = _isSuccess;
+@synthesize delegate = _delegate;
 
 -(id)initWithTime:(int)time
 {

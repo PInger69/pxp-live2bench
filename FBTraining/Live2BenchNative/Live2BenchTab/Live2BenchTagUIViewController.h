@@ -53,7 +53,7 @@
 -(void)setButtonState:(SideTagButtonModes)mode;
 -(void)onEventChange:(Event*)event;
 -(void)disEnableButton;
--(void)unHighlightButton:(SideTagButton *)button;
+//-(void)unHighlightButton:(SideTagButton *)button;
 -(void)closeAllOpenTagButtons;
 
 @end
