@@ -29,7 +29,7 @@
 @synthesize live        = _live;
 @synthesize tags        = _tags;
 
-@synthesize downloadedSources       = _downloadedSources;
+@synthesize downloadedSources       = _downloadedSources; // depricated
 @synthesize parentEncoder           = _parentEncoder;
 @synthesize isBuilt                 = _isBuilt;
 @synthesize primary                 = _primary;
@@ -52,7 +52,7 @@
         //        _feeds              = [self buildFeeds:_rawData];
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
-        _downloadedSources  = [NSMutableArray array];
+        _downloadedSources  = [NSMutableArray array]; // depricated
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
         _tags               = [self buildTags:_rawData];
 
