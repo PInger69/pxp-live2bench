@@ -1793,7 +1793,7 @@
     if (self.status == ENCODER_STATUS_UNKNOWN) return;
     self.status = ENCODER_STATUS_UNKNOWN;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:self userInfo:nil];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];    
     NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
     PXPLog(@"EncoderStatus Error!!! ENCODER_STATUS_UNKNOWN : %@",failType);
 

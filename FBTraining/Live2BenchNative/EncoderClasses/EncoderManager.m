@@ -160,10 +160,11 @@
         [self.primaryEncoder event].primary = false;
         if (event == nil) {
             
+            
             if ([[self.primaryEncoder event].name isEqualToString:self.liveEventName]) {
                 self.liveEvent = nil;
             }
-
+           if (self.primaryEncoder) [self.primaryEncoder removeFromPrimary];
             [self.primaryEncoder setEvent:nil];
             self.primaryEncoder = nil;
         } else {
@@ -302,7 +303,10 @@
 -(void)unRegisterEncoder:(Encoder *) aEncoder
 {
     PXPLog(@"!!! ENCODER REMOVED !!! %@",aEncoder.name);
-
+    if (aEncoder == self.primaryEncoder){
+        [aEncoder removeFromPrimary];
+        [self declareCurrentEvent:nil];
+    }
     [aEncoder destroy];
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];

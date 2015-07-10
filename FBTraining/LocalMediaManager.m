@@ -384,6 +384,16 @@ static LocalMediaManager * instance;
     return (Event*)filtered[0];
 }
 
+/*
+ *  This will return the clip if found on the device.
+ *  The acts as tool to check if a specific exist on the device
+ *  It will check for clip with the Tag ID then check that clip for the source
+ *
+ *  @param tagID   the ID of the tag your looking for
+ *  @param scrKey  what a source are you looking for if you send nil it will just send you the clip
+ *
+ *  @output if the clip is found and the source is not it will return nil
+ */
 -(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey
 {
     
