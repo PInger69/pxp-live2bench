@@ -595,7 +595,8 @@
 {
     NSDictionary * output;
     if ([data isKindOfClass:[NSString class]]){
-        output = @{@"s1":@{@"lq":data}};
+        //output = @{@"s1":@{@"lq":data}};
+        output = @{@"onlySource":@{@"lq":data}};
     } else {
         output = (NSDictionary *)data;
     }

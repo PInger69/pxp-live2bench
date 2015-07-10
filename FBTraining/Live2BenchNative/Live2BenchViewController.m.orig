@@ -213,6 +213,8 @@ static void * eventContext      = &eventContext;
     return self;
 }
 
+#pragma mark- Encoder Observers
+
 -(void)addEventObserver:(NSNotification*)note
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
@@ -248,21 +250,38 @@ static void * eventContext      = &eventContext;
 
 -(void)eventChanged:(NSNotification*)note
 {
+    if (_currentEvent != nil) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    }
+
+    if (!_currentEvent.live) {
+        [_tagButtonController closeAllOpenTagButtons];
+    }
+    
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
 
     } else {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
-        [_tagButtonController allToggleOnOpenTags:_currentEvent.tags];
+        [self turnSwitchOn];
+        [_feedSwitch watchCurrentEvent:_currentEvent];
+        [_tagButtonController allToggleOnOpenTags:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        [self displayLable];
+        if (_currentEvent.live) {
+            [self gotLiveEvent];
+        }
     }
     
-    [_videoBarViewController onEventChanged:_currentEvent];
-    [_tagButtonController onEventChange:_currentEvent];
-    [self displayLable];
-    if (_currentEvent.live) {
-        [self gotLiveEvent];
-    }
+    [_videoBarViewController update];
     [self onEventChange];
+}
+
+-(void)onTagChanged:(NSNotification *)note
+{
+    [_videoBarViewController onTagChanged:_currentEvent];
 }
 
 -(void)liveEventStopped:(NSNotification *)note
@@ -364,11 +383,12 @@ static void * eventContext      = &eventContext;
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
+        //[self switchPressed];
         //_tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
     }
-    [multiButton setHidden:!([_encoderManager.feeds count]>1)];
+    [multiButton setHidden:!([_currentEvent.feeds count]>1)];
 }
 
 
@@ -541,8 +561,10 @@ static void * eventContext      = &eventContext;
     
     
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    /*! Disabled For Demo
     telestration = [[TeleViewController alloc]initWithController:self.videoPlayer];
     telestration.delegate = self;
+     */
 
     
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
@@ -586,7 +608,7 @@ static void * eventContext      = &eventContext;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
     
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 100, 38) encoderManager:_encoderManager];
+    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 64, 38)];
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
@@ -754,8 +776,12 @@ static void * eventContext      = &eventContext;
 {
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
+<<<<<<< HEAD
         Feed *info = [_currentEvent.feeds allValues] [0];
-        [_pipController pipsAndVideoPlayerToLive:info];
+         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
+=======
+        [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
+>>>>>>> 2e1c0b8d876440f365d99ccedb7aed01ddcbd2b4
         [_videoBarViewController.tagMarkerController cleanTagMarkers];
         [_videoBarViewController.tagMarkerController createTagMarkers];
         return;
@@ -848,7 +874,8 @@ static void * eventContext      = &eventContext;
          }];
     } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
         [_tagButtonController disEnableButton];
-        [_tagButtonController unHighlightButton:button];
+        [_tagButtonController onEventChange:_currentEvent];
+        //[_tagButtonController unHighlightButton:button];
         button.isOpen = YES;
         // Open Duration Tag
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
@@ -858,11 +885,24 @@ static void * eventContext      = &eventContext;
                                                                                                           @"dtagid": button.durationID
                                                                                                           }];
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
+        [_tagButtonController onEventChange:nil];
         // Close Duration Tag
         
         // Collect and mod tag data for close tag
-        Tag * tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
-        NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed tagDictionary]];
+        
+        Tag * tagToBeClosed;
+        if ([Tag getOpenTagByDurationId:button.durationID]) {
+            tagToBeClosed = [Tag getOpenTagByDurationId:button.durationID];
+        }else{
+            for (Tag *tag in _currentEvent.tags) {
+                if ([tag.name isEqualToString:button.titleLabel.text] && tag.type == TagTypeOpenDuration) {
+                    tagToBeClosed = tag;
+                }
+            }
+        }
+        
+        //tagToBeClosed             = [Tag getOpenTagByDurationId:button.durationID];
+        NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed makeTagData]];
         
         [tagData setValue:[NSString stringWithFormat:@"%f",currentTime] forKey:@"closetime"];
         [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
@@ -912,10 +952,6 @@ static void * eventContext      = &eventContext;
 //    
 
       //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-<<<<<<< HEAD
-=======
-   // [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
->>>>>>> ca052b3cc2f21bbbbabc472f7bc91ec856170cb3
 
 //    [self.videoPlayer play];
 //    
@@ -954,13 +990,30 @@ static void * eventContext      = &eventContext;
 
 -(void) switchPressed
 {
-    if (durationSwitch.on == true) {
+    if (durationSwitch.on == true &&_currentEvent) {
         [_tagButtonController setButtonState:SideTagButtonModeToggle];
-    }else if(durationSwitch.on == false){
+    }else if(durationSwitch.on == false &&_currentEvent){
         [_tagButtonController setButtonState:SideTagButtonModeRegular];
     }
 }
 
+-(void) turnSwitchOn
+{
+    for (Tag *tag in _currentEvent.tags) {
+        if (tag.type == TagTypeOpenDuration) {
+            [durationSwitch setOn:YES];
+            [self switchPressed];
+            return;
+        }
+    }
+    
+
+    
+}
+
+-(void) onAppTerminate:(NSNotification *)note{
+    [_tagButtonController closeAllOpenTagButtons];
+}
 
 - (void)didReceiveMemoryWarning
 {
