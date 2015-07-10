@@ -232,11 +232,13 @@
         [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
         [self.tableView reloadData];
         
+        /*
         for (NSDictionary *tag in arrayOfTagsToRemove) {
             //[self.tableData removeObject:tag];
             //[[NSNotificationCenter defaultCenter] post]
             //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
         }
+         */
         
     }else{
         if (buttonIndex == 0)

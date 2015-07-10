@@ -56,11 +56,10 @@ static LocalEncoder * instance;
     NSURLDataConnection *encoderConnection;
 }
 
-//@synthesize name            = _name;
+@synthesize name            = _name;
 @synthesize event           = _event;
 @synthesize status          = _status;
-//@synthesize allEvents       = _allEvents;
-//@synthesize clips           = _clips;
+@synthesize allEvents       = _allEvents;
 
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;

@@ -443,24 +443,25 @@ static void * eventContext      = &eventContext;
 
 -(void)gotLiveEvent
 {
-        Feed *info = [_currentEvent.feeds allValues] [0];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+    Feed *info = [_currentEvent.feeds allValues] [0];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
     
-        _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[_currentEvent.rawData[@"homeTeam"], _currentEvent.rawData[@"visitTeam"]]];
+    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[_currentEvent.rawData[@"homeTeam"], _currentEvent.rawData[@"visitTeam"]]];
     
-        [_teamPick addOnCompletionBlock:^(NSString *pick){
-            [UserCenter getInstance].userPick = pick;
-            [self displayLable];
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
-                                                             userInfo:@{@"tabName":@"Live2Bench"}];
-        }];
-        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
-                                   animated:YES];
+    __block Live2BenchViewController *weakSelf = self;
+    [_teamPick addOnCompletionBlock:^(NSString *pick){
+        [UserCenter getInstance].userPick = pick;
+        [weakSelf displayLable];
+        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
+                                                         userInfo:@{@"tabName":@"Live2Bench"}];
+    }];
+    [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                               animated:YES];
     
-        self.videoPlayer.live = YES;
-        [_pipController pipsAndVideoPlayerToLive:info];
-        [_videoBarViewController.tagMarkerController cleanTagMarkers];
-        [_videoBarViewController.tagMarkerController createTagMarkers];
+    self.videoPlayer.live = YES;
+    [_pipController pipsAndVideoPlayerToLive:info];
+    [_videoBarViewController.tagMarkerController cleanTagMarkers];
+    [_videoBarViewController.tagMarkerController createTagMarkers];
     
 }
 
