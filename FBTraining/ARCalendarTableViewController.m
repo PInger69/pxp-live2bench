@@ -18,6 +18,7 @@
 #import "UserCenter.h"
 #import "SpinnerView.h"
 #import "Downloader.h"
+#import "LocalMediaManager.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -286,7 +287,8 @@
                 [weakCell.downloadButton setNeedsDisplay];
             }];
             [collapsableCell.downloadButton setNeedsDisplay];
-        } else if ([localCounterpart.downloadedSources containsObject:[data lastPathComponent]] || [event.downloadedSources containsObject:[data lastPathComponent]]) {
+        }
+        else if ([[LocalMediaManager getInstance]getFeedByEvent:collapsableCell.event scrKey:collapsableCell.dicKey]) {
             weakCell.downloadButton.downloadComplete = YES;
             weakCell.downloadButton.progress = 1;
             [weakCell setNeedsDisplay];
