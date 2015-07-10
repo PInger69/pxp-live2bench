@@ -170,12 +170,10 @@
     
     Feed *feed = self.feeds[indexPath.row];
     
-    NSString *sourceName = self.feeds.count > 1 ? feed.sourceName : @"s_00";
-    
     unsigned long n;
-    sscanf(sourceName.UTF8String, "s_%lu", &n);
+    NSString *soruceName = sscanf(feed.sourceName.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : feed.sourceName;
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Cam %lu", n];
+    cell.textLabel.text = soruceName;
     cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
     cell.backgroundColor = [UIColor clearColor];
     // Configure the cell...
