@@ -550,23 +550,23 @@
         arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
-        if ([event.mp4s allValues].count > 1) {
+        if ([event.feeds allValues].count > 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
-                for (int i = 0; i < ((NSArray *)[event.mp4s allValues]).count ; ++i) {
+                for (int i = 0; i < ((NSArray *)[event.feeds allValues]).count ; ++i) {
                     NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
                     [insertionIndexPaths addObject:insertionIndexPath];
                 }
                 
                 self.lastSelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
             }else{
-                for (int i = 0; i < ((NSArray *)[event.mp4s allValues]).count ; ++i) {
+                for (int i = 0; i < ((NSArray *)[event.feeds allValues]).count ; ++i) {
                     NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
                     [insertionIndexPaths addObject:insertionIndexPath];
                 }
                 
                 self.lastSelectedIndexPath = indexPath;
             }
-        } else if (event.mp4s.count == 1) {
+        } else if (event.feeds.count == 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];

@@ -428,7 +428,11 @@ static LocalMediaManager * instance;
 
 -(Feed*)getFeedByEvent:(Event*)event scrKey:(NSString *)scrKey
 {
-    NSDictionary *feeds = event.feeds;
+    Event *localEvent = [self getEventByName:event.name];
+    if (!localEvent) {
+        return  nil;
+    }
+    NSDictionary *feeds = localEvent.feeds;
     NSArray *keys = [feeds allKeys];
     Feed *foundFeed;
     
