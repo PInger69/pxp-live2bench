@@ -17,6 +17,7 @@
 #import "Tag.h"
 #import "UserCenter.h"
 #import "SpinnerView.h"
+#import "Downloader.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -66,17 +67,18 @@
 
 -(void)onPressDownload:(FeedSelectCell*)aCell
 {
-    Event * eventgettingBuilt = aCell.event;
-    eventgettingBuilt.delegate = self; // onEventBuildFinished will get run
+    __block Event * eventgettingBuilt = aCell.event;
+    NSString * sourceKey = aCell.dicKey;
+    __block ARCalendarTableViewController * weakSelf = self;
+    [aCell.event setOnComplete:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:eventgettingBuilt userInfo:@{@"source":sourceKey}];
+        [weakSelf reloadData];
+    }];
+    
     [eventgettingBuilt build];
 }
 
-// reloads the tableView so that the downloader reflects
--(void)onEventBuildFinished:(Event*)event
-{
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:event userInfo:@{}];
-    [self reloadData];
-}
+
 
 //This method is getting called when you press "All Events Button" of datePicker.
 -(void)showAllData{
@@ -275,8 +277,10 @@
         
         
         __block FeedSelectCell *weakCell = collapsableCell;
-        if([event.downloadingItemsDictionary objectForKey:data]) {
-            collapsableCell.downloadButton.downloadItem = [event.downloadingItemsDictionary objectForKey:data];
+
+        if([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@_%@",collapsableCell.event.name,collapsableCell.dicKey ]]) {
+        // This is checking if the downloader is downloading this event.. if so link the item to the download button
+            collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@_%@",collapsableCell.event.name,collapsableCell.dicKey ]];
             [collapsableCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
                 weakCell.downloadButton.progress = progress;
                 [weakCell.downloadButton setNeedsDisplay];
@@ -288,23 +292,9 @@
             [weakCell setNeedsDisplay];
         } else {
             collapsableCell.downloadButton.downloadItem = nil;
-            
             __block ARCalendarTableViewController * weakSelf = self;
             collapsableCell.downloadButtonBlock = ^(){
-                
-                [weakSelf onPressDownload:weakCell];
-//                [Utility downloadEvent:weakCell.event sourceName:weakCell.dicKey returnBlock:
-//                 ^(DownloadItem *item){
-//                     DownloadItem *downloadItem = item;
-//                     downloadItem.name = [NSString stringWithFormat:@"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]];
-//                     weakCell.downloadButton.downloadItem = downloadItem;
-//                     __block FeedSelectCell *weakerCell = weakCell;
-//                     [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
-//                         weakerCell.downloadButton.progress = progress;
-//                         [weakerCell.downloadButton setNeedsDisplay];
-//                     }];
-//                     [event.downloadingItemsDictionary setObject:downloadItem forKey:data];
-//                 }];
+                [weakSelf onPressDownload:weakCell]; // LOL okay why not
             };
         }
         return collapsableCell;

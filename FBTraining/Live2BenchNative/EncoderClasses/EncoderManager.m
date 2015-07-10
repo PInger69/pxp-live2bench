@@ -395,7 +395,8 @@
     if (theEvent.isBuilt){
         NSString * videoFolderPath = [_localMediaManager saveEvent:eventDic]; // This makes a plist for the event and a location to save the video
         NSString * savedFileName   = [encoderSource lastPathComponent];
-        (void)[Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:theEvent.name];
+        NSString * downloaderKey   = [NSString stringWithFormat:@"%@_%@",theEvent.name,source ];
+        (void)[Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:downloaderKey];
     } else {
         PXPLog(@"Event Download Failed... Event was not built... please build");
     }

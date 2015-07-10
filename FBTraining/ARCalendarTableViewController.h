@@ -11,7 +11,8 @@
 #import "EncoderManager.h"
 #import "Event.h"
 
-@interface ARCalendarTableViewController : DeletableTableViewController<EventDelegate>
+
+@interface ARCalendarTableViewController : DeletableTableViewController
 
 @property (strong, nonatomic) NSMutableArray *arrayOfAllData;
 @property (strong, nonatomic) NSString       *localPath;

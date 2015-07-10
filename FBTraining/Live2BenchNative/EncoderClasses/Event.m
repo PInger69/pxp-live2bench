@@ -272,7 +272,11 @@
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"live"] quality:0];
             _live = YES;
         } else if (aDict[@"vid"] || aDict[@"mp4"]) {
-            theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"][@"hq"]] :  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0]  ;
+            if (isLocal) {
+                theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"][@"hq"]] :  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0]  ;
+            }else{
+                theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"][@"hq"]] :  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0]  ;
+            }
         } else {
 //            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
 //            PXPLog(@"   HID: %@",aDict[@"hid"]);
