@@ -225,7 +225,8 @@
             data = urls[key];
         }
         
-        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:data andName:key];
+        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:nil andName:key];
+        collapsableCell.feedView.hidden = YES;
         
         collapsableCell.event = event.rawData;
         collapsableCell.downloadButton.enabled = YES;
@@ -241,7 +242,6 @@
             
             NSString *homeName = event.rawData[@"homeTeam"];
             NSString *visitName = event.rawData[@"visitTeam"];
-            NSString *eventName = event.rawData[@"name"];
             
             _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
                                                       buttonListNames:@[homeName, visitName]];
