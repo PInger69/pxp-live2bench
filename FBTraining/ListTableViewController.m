@@ -173,7 +173,7 @@
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
-        NSDictionary *urls; //= tag.thumbnails;
+        NSDictionary *urls = tag.thumbnails;
         
         /*FeedSelectCell *collapsableCell;
         NSString *key;
