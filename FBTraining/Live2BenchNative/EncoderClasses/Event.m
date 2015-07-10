@@ -279,7 +279,9 @@
             return @{};
         }
         //[tempDict setObject:theFeed forKey:@"s1"];
-        [tempDict setObject:theFeed forKey:@"onlySource"];
+        if (theFeed != nil) {
+            [tempDict setObject:theFeed forKey:@"onlySource"];
+        }
     }
     
     return [tempDict copy];
