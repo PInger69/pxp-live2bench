@@ -774,8 +774,7 @@ static void * eventContext      = &eventContext;
 {
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
-        Feed *info = [_currentEvent.feeds allValues] [0];
-        [_pipController pipsAndVideoPlayerToLive:info];
+        [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
         [_videoBarViewController.tagMarkerController cleanTagMarkers];
         [_videoBarViewController.tagMarkerController createTagMarkers];
         return;
