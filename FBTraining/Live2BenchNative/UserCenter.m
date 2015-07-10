@@ -432,10 +432,10 @@ static UserCenter * instance;
     
     if ([[rawResponce objectForKey:@"success"]boolValue]) {
         [self updateCustomerInfoWith:rawResponce];
+        [self updateTagInfoFromCloud];
     }
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREDENTIALS_VERIFY_RESULT object:self userInfo:jsonDict];
-    [self updateTagInfoFromCloud];
 }
 
 
