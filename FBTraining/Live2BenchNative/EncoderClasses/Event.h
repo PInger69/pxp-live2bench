@@ -67,5 +67,6 @@
 -(void)addAllTags:(NSDictionary *)allTagData;
 -(void)modifyTag:(NSDictionary *)modifiedData;
 -(NSArray*)getTagsByID:(NSString*)tagId;
--(void)runEventDelegate;
+
+-(void)build;
 @end

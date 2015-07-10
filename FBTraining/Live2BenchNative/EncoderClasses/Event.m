@@ -9,7 +9,7 @@
 #import "Event.h"
 #import "Feed.h"
 #import "Tag.h"
-
+#import "UserCenter.h"
 
 
 
@@ -82,22 +82,10 @@
          [_tags addObject:newTag];
      }
      self.isBuilt = YES;
-    
-    [self runEventDelegate];
-    
-    if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
-        [self.delegate onEventBuildFinished:self];
-    }
-    
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
 }
 
--(void)runEventDelegate{
-    if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
-        [self.delegate onEventBuildFinished:self];
-    }
-}
+
 
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost
 {
@@ -362,12 +350,38 @@
 }
 
 
+// this builds
+-(void)build
+{
+    if (_isBuilt) { // If the event is already built then you want these methods to run anyway
+        if (self.onComplete)self.onComplete();
+        if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
+            [self.delegate onEventBuildFinished:self];
+        }
+        return;
+    }
+
+    NSMutableDictionary * requestData = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                        @"user"        : [UserCenter getInstance].userHID,
+                                                                                        @"requesttime" : GET_NOW_TIME,
+                                                                                        @"device"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                                                                        @"event"       : (self.live)?LIVE_EVENT:self.name
+                                                                                        }];
+    
+    [_parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:[NSNumber numberWithDouble:CACurrentMediaTime()]];
+
+        
+}
+
 -(void)setIsBuilt:(BOOL)isBuilt
 {
     if (_isBuilt == isBuilt) return;
     _isBuilt = isBuilt;
     if (_isBuilt && self.onComplete){
         self.onComplete();
+    }
+    if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
+        [self.delegate onEventBuildFinished:self];
     }
     
 }
