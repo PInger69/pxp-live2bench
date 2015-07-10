@@ -237,26 +237,33 @@
     
     // this is a check for the new encoder vs the old
     if ([aDict[toypKey] isKindOfClass:[NSDictionary class]]) {
-        
-        for (id key in aDict[toypKey])
+        NSDictionary *vidDict = aDict[toypKey];
+        NSArray *keys = [vidDict allKeys];
+        //for (id key in aDict[toypKey])
+        for (int i = 0; i < vidDict.count; i++)
         {
-            NSDictionary * vidDict      = aDict[toypKey];
-            NSDictionary * qualities    = [vidDict objectForKey:key];
-            NSString *filePath = [[[localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.name] stringByAppendingPathComponent:@"main_00hq.mp4"];
+            //NSDictionary * vidDict      = aDict[toypKey];
+            NSDictionary * qualities    = [vidDict objectForKey:keys[i]];
+            NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
+            NSString *filePath = [[[localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.name] stringByAppendingPathComponent:name];
             
             Feed * createdFeed = (isLocal)? [[Feed alloc]initWithFileURL:filePath] : [[Feed alloc] initWithURLDict:qualities];
             
-            createdFeed.sourceName = key;
-            if (self.live){
-                createdFeed.type = FEED_TYPE_LIVE;
-            } else if (self.local) {
-                createdFeed.type = FEED_TYPE_LOCAL;
-            } else {
-                createdFeed.type = FEED_TYPE_ENCODER;
+            if (createdFeed != nil) {
+                createdFeed.sourceName = keys[i];
+                if (self.live){
+                    createdFeed.type = FEED_TYPE_LIVE;
+                } else if (self.local) {
+                    createdFeed.type = FEED_TYPE_LOCAL;
+                } else {
+                    createdFeed.type = FEED_TYPE_ENCODER;
+                }
+                
+                
+                [tempDict setObject:createdFeed forKey:keys[i]];
+
             }
             
-            
-            [tempDict setObject:createdFeed forKey:key];
         }
         
     } else { // old encoder
@@ -265,14 +272,16 @@
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"live"] quality:0];
             _live = YES;
         } else if (aDict[@"vid"] || aDict[@"mp4"]) {
-            theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"]] :  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0]  ;
+            theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"][@"hq"]] :  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0]  ;
         } else {
 //            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
 //            PXPLog(@"   HID: %@",aDict[@"hid"]);
             return @{};
         }
         //[tempDict setObject:theFeed forKey:@"s1"];
-        [tempDict setObject:theFeed forKey:@"onlySource"];
+        if (theFeed != nil) {
+            [tempDict setObject:theFeed forKey:@"onlySource"];
+        }
     }
     
     return [tempDict copy];

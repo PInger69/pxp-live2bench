@@ -17,6 +17,9 @@
 {
     UserCenter* userCenter;
 }
+
+@synthesize delegate = _delegate;
+
 -(id)initWithCenter:(UserCenter*)aUserCenter
 {
     self = [super init];

@@ -145,11 +145,6 @@ static void *  debugContext = &debugContext;
 
 -(void)onClose:(id)sender
 {
-    
-    
-    NSString * fakeId = @"00";
-    
-    
     Tag * tag;
     NSLog(@"");
    // tag.type = TagTypeCloseDuration;
@@ -167,13 +162,6 @@ static void *  debugContext = &debugContext;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:dick];
     
     
-}
-
-
--(void)addTarge:(id) sel:(SEL)sel
-{
-
-
 }
 
 -(void)viewWillAppear:(BOOL)animated

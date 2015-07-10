@@ -31,6 +31,7 @@ typedef NS_OPTIONS (NSInteger,FeedModes){
 @property (nonatomic, strong)            NSDictionary   * info;         // any extra data that needs to be associated with the feed e.g. tag plist
 @property (nonatomic, strong)            NSArray        *allPaths;
 @property (nonatomic, strong)           NSString       * type;
+@property (nonatomic,assign)             FeedModes      mode;
 
 -(id)initWithURLDict:(NSDictionary *)aDict;
 -(id)initWithURLString:(NSString *)aPath quality:(int)qlty;
