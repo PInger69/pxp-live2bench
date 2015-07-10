@@ -71,7 +71,7 @@
         
         NSMutableArray * listOfVideos = [NSMutableArray arrayWithArray:[self videoFiles]];
         BOOL modFlag;
-        // this checks to see if the clip is are on the device if not then remove from Dict
+         // this checks to see if the clip is are on the device if not then remove from Dict
         for (NSString * videoPathsToCheck  in listOfVideos) {
             if ( ![[NSFileManager defaultManager] fileExistsAtPath:videoPathsToCheck] ){
                 [listOfVideos removeObject:videoPathsToCheck];
@@ -86,7 +86,7 @@
         NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
         
         for (NSString * k  in vidkeys) {
-            
+
             NSString * check = [path stringByAppendingPathComponent:_videosBySrcKey[k]];
             if ( ![[NSFileManager defaultManager] fileExistsAtPath:check] ){
                 [_videosBySrcKey removeObjectForKey:k];
@@ -160,25 +160,25 @@
         [mutableDict setObject:_videosBySrcKey forKey:@"fileNamesByKey"];
     } else {
         _videosBySrcKey = [NSMutableDictionary dictionaryWithDictionary:[mutableDict objectForKey:@"fileNamesByKey"]];
-        
+    
     }
     
     
-    NSString * theFileName          = [[aDict objectForKey:@"fileNames"] firstObject];
-    
-    NSRange startRange = [theFileName rangeOfString:@"+"];
-    NSRange endRange = [theFileName rangeOfString:@".mp4"];
-    
-    NSRange searchRange = NSMakeRange(startRange.location+1, (endRange.location-1) - startRange.location);
-    
-    //        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=\+).+?(?=\.mp4)" options:0 error:nil];
-    //        NSRange needleRange = [regex rangeOfFirstMatchInString:theFileName options:NSMatchingAnchored range:NSMakeRange(0, theFileName.length)];
-    NSString *scrKeyFromFileName = [theFileName substringWithRange:searchRange];
-    
-    //   NSString * scrKeyFromFileName   = [theFileName substringWithRange:needleRange];
-    
-    [_videosBySrcKey setObject:theFileName forKey:scrKeyFromFileName];
-    
+        NSString * theFileName          = [[aDict objectForKey:@"fileNames"] firstObject];
+        
+        NSRange startRange = [theFileName rangeOfString:@"+"];
+        NSRange endRange = [theFileName rangeOfString:@".mp4"];
+        
+        NSRange searchRange = NSMakeRange(startRange.location+1, (endRange.location-1) - startRange.location);
+        
+//        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=\+).+?(?=\.mp4)" options:0 error:nil];
+//        NSRange needleRange = [regex rangeOfFirstMatchInString:theFileName options:NSMatchingAnchored range:NSMakeRange(0, theFileName.length)];
+        NSString *scrKeyFromFileName = [theFileName substringWithRange:searchRange];
+
+     //   NSString * scrKeyFromFileName   = [theFileName substringWithRange:needleRange];
+        
+        [_videosBySrcKey setObject:theFileName forKey:scrKeyFromFileName];
+
     
     
     NSMutableArray * list       = [NSMutableArray arrayWithArray: mutableDict[@"fileNames"]];
@@ -235,7 +235,7 @@
 }
 
 - (NSString *)globalID {
-    //    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
+//    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
     return [NSString stringWithFormat:@"%@_%@", _event, _clipId];
 }
 

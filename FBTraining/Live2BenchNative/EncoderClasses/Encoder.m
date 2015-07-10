@@ -717,10 +717,10 @@
     Tag *tag = note.userInfo[@"tag"];
     //NSString *feedName = note.userInfo[@"feedName"];
     
-    unsigned long srcID;
-    sscanf([note.userInfo[@"src"] UTF8String], "s_%lu", &srcID);
+//    unsigned long srcID;
+//    sscanf([note.userInfo[@"src"] UTF8String], "s_%lu", &srcID);
     
-
+    NSString * srcID = note.userInfo[@"src"];
     //NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4", tag.event, tag.ID];
     //dItemBlock([[LocalEncoder getInstance] saveClip:videoName withData:tag]);
     //dItemBlock([[LocalEncoder getInstance] saveClip:videoName withData: [tag makeTagData]]);
@@ -737,7 +737,8 @@
     // if in the data success is 0 then there is an error!
 
     // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
-    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
+//    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
+    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",results[@"event"],results[@"id"], srcID];
     
 
     // http://10.93.63.226/events/live/video/01hq_vid_10.mp4

@@ -13,6 +13,14 @@
 #define FEED_TYPE_ENCODER   @"encoder"
 
 
+typedef NS_OPTIONS (NSInteger,FeedModes){
+    
+    FeedModesReady,
+    FeedModesNotFound,
+    FeedModesCorrupt,
+    FeedModesInProcess
+};
+
 @interface Feed : NSObject
 
 @property (nonatomic, assign)            int            quality;

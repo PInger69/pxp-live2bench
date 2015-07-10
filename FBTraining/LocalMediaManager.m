@@ -173,7 +173,7 @@ static LocalMediaManager * instance;
         }
             
             
-            
+         // IS THIS DOING ANYTHING ANYMORE??
         // This builds all the events from the _allEventData
         NSEnumerator    * enumerator2    = [tempPoolClips objectEnumerator];
         id              value2;
@@ -416,6 +416,22 @@ static LocalMediaManager * instance;
     return nil;
 }
 
+
+
+// This method mods the clip GlobalID so that its no longer connected to live event
+// as well as mod the data kept here
+-(void)breakTagLink:(Clip*)aClip
+{
+   
+//    [_clips objectForKey:aClip.name];
+    [_clips removeObjectForKey:aClip.globalID];
+    [aClip breakClipId];
+    
+    [_clips setObject:aClip forKey:[NSString stringWithFormat:@"%@",aClip.globalID ]];
+
+}
+
+
 /*
  *  This saves the clip. This method only saves one source at a time
  *
@@ -641,8 +657,6 @@ static LocalMediaManager * instance;
     }
     return [collection copy];
 }
-
-
 
 
 @end
