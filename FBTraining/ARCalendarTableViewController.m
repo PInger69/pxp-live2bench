@@ -68,7 +68,7 @@
 {
     Event * eventgettingBuilt = aCell.event;
     eventgettingBuilt.delegate = self; // onEventBuildFinished will get run
-    
+    [eventgettingBuilt build];
 }
 
 // reloads the tableView so that the downloader reflects

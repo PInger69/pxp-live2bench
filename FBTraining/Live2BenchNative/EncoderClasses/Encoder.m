@@ -1579,24 +1579,8 @@
                 NSLog(@"oncomp: %@", (checkEvent.onComplete)?@"yes":@"no");
             }
             checkEvent.isBuilt = YES;
-            [checkEvent runEventDelegate];
-            
-            /*NSDictionary    * rawtags = [results objectForKey:@"tags"];
-            NSMutableArray  * polishedTags = [[NSMutableArray alloc]init];
-            if (rawtags) {
-                NSArray *tagArray = [rawtags allValues];
-                Event * checkEvent;
-                for (NSDictionary *newTagDic in tagArray) {
-//                    [self onNewTags:newTagDic extraData:false];
-                   
-                    checkEvent = [self.allEvents objectForKey:newTagDic[@"event"]];
-                    Tag *newTag = [[Tag alloc] initWithData: newTagDic event:checkEvent];
-                    [polishedTags addObject:newTag];
-                }
-                checkEvent.tags = polishedTags;
-                checkEvent.isBuilt = YES;
-            }*/
-    
+
+
         }
         
         
