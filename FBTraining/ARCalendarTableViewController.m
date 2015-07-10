@@ -214,16 +214,15 @@
     NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         Event *event = self.tableData[firstIndexPath.row - 1];
-        NSDictionary *urls = event.mp4s;
+        
+        NSDictionary *urls = event.feeds;
         NSString *key;
         NSString *data;
+        Feed *feed;
         
         key = [urls allKeys][indexPath.row - firstIndexPath.row];
-        if (event.rawData[@"mp4_2"]) {
-            data = urls[key][@"hq"];
-        } else {
-            data = urls[key];
-        }
+        feed = urls[key];
+        data = [[feed.allPaths firstObject] absoluteString];
         
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData:nil andName:key];
         collapsableCell.feedView.hidden = YES;
