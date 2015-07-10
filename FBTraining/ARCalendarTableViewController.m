@@ -237,8 +237,8 @@
         collapsableCell.sendUserInfo = ^(NSString *key){
             _teamPick = nil;
             
-            NSString *homeName = event.rawData[@"homeTeam"];
-            NSString *visitName = event.rawData[@"visitTeam"];
+            NSString *homeName = event.teams[@"homeTeam"];
+            NSString *visitName = event.teams[@"visitTeam"];
             
             _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
                                                       buttonListNames:@[homeName, visitName]];
