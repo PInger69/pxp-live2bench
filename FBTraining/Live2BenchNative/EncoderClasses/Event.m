@@ -89,6 +89,10 @@
 
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost
 {
+    //BOOL type = (newtag.type == TagTypeDeleted);
+    //BOOL contain = [_tags containsObject:newtag];
+    //int  index = [_tags indexOfObject:newtag];
+    //BOOL mem = (newtag == [_tags objectAtIndex:index]);
     if (newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) {
         return;
     }
@@ -218,7 +222,8 @@
     if ([aDict objectForKey:@"mp4_2"]) {
         tempDict = [aDict objectForKey:@"mp4_2"];
     } else if ([aDict objectForKey:@"mp4"]) {
-        [tempDict setObject:[aDict objectForKey:@"mp4"] forKey:@"s_00"];
+        NSDictionary *dic = @{@"hq":[aDict objectForKey:@"mp4"]};
+        [tempDict setObject:dic forKey:@"s_00"];
     }
     return [tempDict copy];
 }
@@ -266,7 +271,8 @@
 //            PXPLog(@"   HID: %@",aDict[@"hid"]);
             return @{};
         }
-        [tempDict setObject:theFeed forKey:@"s1"];
+        //[tempDict setObject:theFeed forKey:@"s1"];
+        [tempDict setObject:theFeed forKey:@"onlySource"];
     }
     
     return [tempDict copy];
@@ -344,7 +350,8 @@
 //            PXPLog(@"   HID: %@",aDict[@"hid"]);
             return @{};
         }
-        [tempDict setObject:theFeed forKey:@"s1"];
+       // [tempDict setObject:theFeed forKey:@"s1"];
+        [tempDict setObject:theFeed forKey:@"onlySource"];
     }
     return [tempDict copy];
 }

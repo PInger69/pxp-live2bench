@@ -266,7 +266,7 @@ static LocalEncoder * instance;
 -(id <EncoderProtocol>)makePrimary
 {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
@@ -277,7 +277,7 @@ static LocalEncoder * instance;
 -(id <EncoderProtocol>)removeFromPrimary
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
+    //[[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
@@ -714,7 +714,7 @@ static LocalEncoder * instance;
         for (Tag *tag in self.localTags) {
             NSMutableDictionary *eventFinal = [[LocalMediaManager getInstance].allEvents objectForKey:tag.event.name];
             Event *encoderEvent = [eventFinal objectForKey:@"non-local"];
-            if (encoderEvent) {
+            if (encoderEvent.isBuilt) {
                 [encoderEvent.parentEncoder issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:[[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]] timeStamp:GET_NOW_TIME];
             }
         }
@@ -725,7 +725,7 @@ static LocalEncoder * instance;
             
             NSMutableDictionary *eventFinal = [[LocalMediaManager getInstance].allEvents objectForKey:tag.event.name];
             Event *encoderEvent = [eventFinal objectForKey:@"non-local"];
-            if (encoderEvent) {
+            if (encoderEvent.isBuilt) {
                 [encoderEvent.parentEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:20 tagData:[[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]] timeStamp:GET_NOW_TIME];
             }
         }

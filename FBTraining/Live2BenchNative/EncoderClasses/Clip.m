@@ -221,7 +221,7 @@
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
     NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
     
-
+    
     for (NSString *fileName in [_rawData objectForKey:@"fileNames"]) {
         NSString *filePath = [path stringByAppendingPathComponent: fileName];
         
@@ -230,7 +230,7 @@
         if (vidDestroyed) {
             NSLog(@"The video has been destroyed");
         }
-
+        
     }
 }
 
@@ -241,3 +241,4 @@
 
 
 @end
+

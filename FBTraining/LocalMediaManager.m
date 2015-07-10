@@ -539,12 +539,14 @@ static LocalMediaManager * instance;
         for (int i = 0; i < encoderEvent.mp4s.count; i++) {
             NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
             NSString *path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.name] stringByAppendingPathComponent:name];
-            [feeds setObject:path forKey:[NSString stringWithFormat:@"s_0%i",i]];
+            NSDictionary *mp4Dic = @{@"hq":path};
+            [feeds setObject:mp4Dic forKey:[NSString stringWithFormat:@"s_0%i",i]];
         }
         [localEventRawData setObject:feeds forKeyedSubscript:@"mp4_2"];
     } else {
         NSString *path = [[[[LocalMediaManager getInstance].localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.name] stringByAppendingPathComponent:@"main.mp4"];
-        [localEventRawData setObject:path forKey:@"mp4"];
+        NSDictionary *mp4Dic = @{@"hq":path};
+        [localEventRawData setObject:mp4Dic forKey:@"mp4"];
     }
     
 
