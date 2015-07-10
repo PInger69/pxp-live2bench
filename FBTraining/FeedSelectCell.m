@@ -63,7 +63,7 @@
 }
 
 - (void)playButtonPressed:(id)sender {
-    self.sendUserInfo();
+    self.sendUserInfo(_dicKey);
 }
 
 - (void)positionWithFrame:(CGRect)frame {

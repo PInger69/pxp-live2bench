@@ -225,7 +225,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         // this is a temp
-        if ([dictOfEncoders count] > 0 && ![registerEncoder.name isEqualToString:@"trashed"]) {
+        if ([dictOfEncoders count] > 1 && ![registerEncoder.name isEqualToString:@"trashed"]) {
             
             NSMutableArray * listed                     = [NSMutableArray arrayWithArray:[dictOfEncoders allKeys]];
             
@@ -260,6 +260,22 @@
             }];
             [askPickMaster presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                            animated:YES];
+            
+        } else if ([dictOfEncoders count] == 1 && ![registerEncoder.name isEqualToString:@"trashed"] && self.masterEncoder == nil) {
+            
+            self.masterEncoder = (Encoder*)[[dictOfEncoders allValues] firstObject];;
+            self.masterEncoder.isMaster =YES;
+            
+            PXPLog(@"%@ is set to master!",self.masterEncoder.name);
+            
+            if (self.masterEncoder.liveEvent){
+                [self declareCurrentEvent:self.masterEncoder.liveEvent];
+                self.masterEncoder.liveEvent = self.masterEncoder.liveEvent;
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self.masterEncoder];
+            }
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];
+
             
         }
 
@@ -380,11 +396,13 @@
     }
     
     Event * theEvent = [self getEventByHID:eventHID];
+    NSMutableDictionary *eventDic = [self.masterEncoder.allEvents objectForKey:theEvent.name];
     
     if (theEvent.isBuilt){
     
         //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
-        NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
+        NSString *videoFolderPath = [_localMediaManager saveEvent:eventDic];
+        //NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
         NSString * savedFileName   =  [encoderSource lastPathComponent];
         DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
         dItemBlock(dli);
@@ -403,7 +421,7 @@
             }
             theEvent.tags = [tagsBuilt copy];
             //NSString * videoFolderPath =  [_localEncoder saveEvent:theEvent]; // this is the data used to make the plist
-            NSString * videoFolderPath =  [_localMediaManager saveEvent:theEvent]; // this is the data used to make the plist
+            NSString * videoFolderPath =  [_localMediaManager saveEvent:eventDic]; // this is the data used to make the plist
             NSString * savedFileName   =  [encoderSource lastPathComponent];
 
             DownloadItem * dli = [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo];
@@ -596,7 +614,7 @@
  */
 -(void)makeCoachExternal
 {
-    if ([_authenticatedEncoders count] == 1 && self.hasMAX && [[UserCenter getInstance].customerEmail isEqualToString:@"coach"]){
+    if ([_authenticatedEncoders count] == 1 && self.hasMAX && [[UserCenter getInstance].customerEmail isEqualToString:@"coach"] && self.masterEncoder == nil){
         [self registerEncoder:@"External Encoder" ip:@"avocatec.org:8888"];
     }
 }

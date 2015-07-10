@@ -25,11 +25,13 @@
 @property (nonatomic,strong)            NSString       * path;
 @property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
+@property (nonatomic, strong)         NSMutableDictionary        * videosBySrcKey;
 
 @property (strong, nonatomic) NSString *event;
 @property (strong, nonatomic) NSString *displayTime;
 
 @property (readonly, nonatomic) NSString *globalID;
+
 
 /**
  *  This is used to make a new Clip from a non existing Plist
@@ -63,6 +65,11 @@
  *  @param aDict
  */
 -(void)addSourceToClip:(NSDictionary*)aDict;
+
+/**
+ *  This method mods the clip GlobalID so that its no longer connected to live event
+ */
+-(void)breakClipId;
 
 /**
  *  Deletes all mp4s and selfPlist

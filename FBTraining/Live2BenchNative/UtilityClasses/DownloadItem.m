@@ -155,7 +155,15 @@
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    if (!_data && _expectedBytes < 300) {
+        NSError * e =  [[NSError alloc]initWithDomain:@"Unknown" code:404 userInfo:@{@"NSLocalizedDescription":@"File not found"}];
+        [self connection:connection didFailWithError:e];
+        return;
+    }
+    
     if (stream)[stream close];
+    
+    
     
     if (downloadType == DownloadItem_TypePlist) {
         [self parseAndSavePlistTo:path data:_data];
@@ -174,10 +182,11 @@
     
     
     NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
+    PXPLog(@"######################################################");
     PXPLog(@"Clip/Event Download FAILED!");
     PXPLog(@"  url: %@ ",url);
     PXPLog(@"  reason: %@ ",failType);
-    
+    PXPLog(@"######################################################");
     
     if (stream) [stream close];
     // delete file if partly downloaded

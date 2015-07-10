@@ -110,7 +110,6 @@
  */
 -(void)syncAll:(NSArray*)aToObserve name:(NSString*)aName timeStamp:(NSNumber *)aTime onFinish: (void (^)(NSArray * pooledResponces))aOnComplete
 {
-    
     if (!_complete){
         [self cancel];
     }
@@ -718,10 +717,10 @@
     Tag *tag = note.userInfo[@"tag"];
     //NSString *feedName = note.userInfo[@"feedName"];
     
-    unsigned long srcID;
-    sscanf([note.userInfo[@"src"] UTF8String], "s_%lu", &srcID);
+//    unsigned long srcID;
+//    sscanf([note.userInfo[@"src"] UTF8String], "s_%lu", &srcID);
     
-
+    NSString * srcID = note.userInfo[@"src"];
     //NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@.mp4", tag.event, tag.ID];
     //dItemBlock([[LocalEncoder getInstance] saveClip:videoName withData:tag]);
     //dItemBlock([[LocalEncoder getInstance] saveClip:videoName withData: [tag makeTagData]]);
@@ -738,7 +737,8 @@
     // if in the data success is 0 then there is an error!
 
     // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
-    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
+//    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
+    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",results[@"event"],results[@"id"], srcID];
     
 
     // http://10.93.63.226/events/live/video/01hq_vid_10.mp4
@@ -1076,6 +1076,14 @@
                                       @"name"           : encodedName,
                                       @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
+    
+    //f ([tData objectForKey:@"url"]) {
+        [tData removeObjectForKey:@"url"];
+    //}
+    
+    //if ([tData objectForKey:@"ulr_2"]) {
+        [tData removeObjectForKey:@"url_2"];
+    //}
     
     // this is temp
     /*if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
@@ -1611,8 +1619,20 @@
             
             if (localEvent) {
                 if ([data[@"type"] integerValue] == TagTypeCloseDuration) {
-                    Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
-                    [localEvent addTag:localTag extraData:false];
+                    
+                    bool alreadyExist = false;
+                    for (Tag *tag in localEvent.tags) {
+                        if ([tag.ID isEqualToString:[data[@"id"] stringValue]]) {
+                            [tag replaceDataWithDictionary:data];
+                            alreadyExist = true;
+                        }
+                    }
+                    if (!alreadyExist) {
+                        Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
+                        [localEvent addTag:localTag extraData:false];
+                    }else{
+                        [localEvent modifyTag:data];
+                    }
                 }else{
                     [localEvent modifyTag:data];
                 }

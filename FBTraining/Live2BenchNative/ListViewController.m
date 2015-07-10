@@ -29,6 +29,8 @@
 #import "PxpEventContext.h"
 #import "PxpPlayerMultiViewController.h"
 
+#import "LocalMediaManager.h"
+
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
 #define NOTCOACHPICK                  0
@@ -221,7 +223,7 @@ NSMutableArray *oldEventNames;
             if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
                 [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
             }
-            if (tag.type == TagTypeCloseDuration) {
+            if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
         }
@@ -431,9 +433,12 @@ NSMutableArray *oldEventNames;
     }
     
     NSUInteger newIndex = index + 1;
+
     
+    
+    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                   @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                   @"feed":[[selectedTag.event.feeds allValues] firstObject],
                                                                                                                                    @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
                                                                                                                                    @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
                                                                                                                                    @"comment": selectedTag.comment,
@@ -441,7 +446,6 @@ NSMutableArray *oldEventNames;
                                                                                                                                    @"state":[NSNumber numberWithInteger:RJLPS_Play]
                                                                                                                                    }}];
     
-    selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     
     [commentingField clear];
     commentingField.text                = selectedTag.comment;
@@ -463,7 +467,7 @@ NSMutableArray *oldEventNames;
     selectedTag = [_tableViewController.tableData objectAtIndex:newIndex];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil userInfo:@{@"forFeed":@{@"context":STRING_LISTVIEW_CONTEXT,
-                                                                                                                                    @"feed":selectedTag.event.feeds[@"s1"],
+                                                                                                                                    @"feed":[[selectedTag.event.feeds allValues] firstObject],
                                                                                                                                     @"time": [NSString stringWithFormat:@"%f",selectedTag.startTime],
                                                                                                                                     @"duration": [NSString stringWithFormat:@"%d",selectedTag.duration],
                                                                                                                                     @"comment": selectedTag.comment,
@@ -2030,6 +2034,12 @@ NSMutableArray *oldEventNames;
     Tag *tagToBeModified = selectedTag;
     
     
+    if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
+        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil];
+        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        [_tableViewController reloadData];
+    }
+    
     if (!tagToBeModified|| tagToBeModified.type == TagTypeTele ){
         
         return;
@@ -2078,10 +2088,17 @@ NSMutableArray *oldEventNames;
 //extend the tag duration by adding five secs at the end of the tag
 -(void)endRangeBeenModified:(CustomButton*)button{
     Tag *tagToBeModified = selectedTag;
-        if (!selectedTag || selectedTag.type == TagTypeDeleted)
-        {
-            return;
-        }
+
+    if ([[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil]){
+        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:tagToBeModified scrKey:nil];
+        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        [_tableViewController reloadData];
+    }
+    
+    if (!selectedTag || selectedTag.type == TagTypeDeleted)
+    {
+        return;
+    }
 
 
     int newDuration = tagToBeModified.duration + 5;

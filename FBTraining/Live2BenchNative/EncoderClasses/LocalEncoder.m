@@ -749,7 +749,8 @@ static LocalEncoder * instance;
                     [localEvent.tags addObject:localTag];
                 }
             }
-            for (Tag *tag in localEvent.tags) {
+            NSArray *localEventArray = [localEvent.tags copy];
+            for (Tag *tag in localEventArray) {
                 if (![encoderEvent.tags containsObject:tag]) {
                     [localEvent.tags removeObject:tag];
                 }
