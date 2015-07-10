@@ -112,21 +112,14 @@
     NSInvocation            * feedInvocation;
     NSInvocation            * syncMeInvocation;
     
-    //For SyncMe
-//    NSTimer                 * syncMeTimer;
     NSString                * syncMePath;
-//    NSURLConnection         * syncMeConnection;
-    
     NSString                * statusPath;
     NSString                * feedPath;
-    double              timeout;
+    double                  timeout;
     NSMutableArray          * statusPack;
 
-    
     BOOL                    flag; // simple flag to alternate status calls
-    
     BOOL                    isLegacy;
-    
     SEL selector_;
 }
 
@@ -250,8 +243,8 @@
     if ([connection.connectionType isEqualToString: STATUS])   {
         [self statusResponse:connection.cumulatedData];
     } else  if ([connection.connectionType isEqualToString: FEED_CHECK]) {
-        [self checkFeeds:connection.cumulatedData];
-    }else if( [connection.connectionType isEqualToString: SYNC_ME]){
+        // no need to check feeds now
+    } else if( [connection.connectionType isEqualToString: SYNC_ME]){
         [checkedEncoder onTagsChange:connection.cumulatedData];
     }
 }
