@@ -171,7 +171,9 @@
     Feed *feed = self.feeds[indexPath.row];
     
     unsigned long n;
-    NSString *soruceName = sscanf(feed.sourceName.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : feed.sourceName;
+    
+    NSString *feedSourceName = feed.sourceName ? feed.sourceName : @"s_00";
+    NSString *soruceName = sscanf(feedSourceName.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : feedSourceName;
     
     cell.textLabel.text = soruceName;
     cell.textLabel.highlightedTextColor = PRIMARY_APP_COLOR;
