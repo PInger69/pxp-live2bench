@@ -66,17 +66,18 @@
 
 -(void)onPressDownload:(FeedSelectCell*)aCell
 {
-    Event * eventgettingBuilt = aCell.event;
-    eventgettingBuilt.delegate = self; // onEventBuildFinished will get run
+    __block Event * eventgettingBuilt = aCell.event;
+    NSString * sourceKey = aCell.dicKey;
+    __block ARCalendarTableViewController * weakSelf = self;
+    [eventgettingBuilt setOnComplete:^{
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:eventgettingBuilt userInfo:@{@"source":sourceKey}];
+        [weakSelf reloadData];
+    }];
+    
     [eventgettingBuilt build];
 }
 
-// reloads the tableView so that the downloader reflects
--(void)onEventBuildFinished:(Event*)event
-{
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:event userInfo:@{}];
-    [self reloadData];
-}
+
 
 //This method is getting called when you press "All Events Button" of datePicker.
 -(void)showAllData{
