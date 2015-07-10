@@ -626,7 +626,37 @@ static LocalMediaManager * instance;
     return [collection copy];
 }
 
-
+-(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey
+{
+    
+    NSString * eventName = tag.event.name;
+    NSString * tagID = tag.ID;
+    NSString * searchClipID = [NSString stringWithFormat:@"%@_%@", eventName, tagID];
+    Clip    * foundClip;
+    NSArray * justClips = [_clips allValues];
+    // Cheking all clips
+    for (Clip * someClip in justClips) {
+        if ([someClip.globalID isEqualToString:searchClipID]){
+            foundClip = someClip;
+            break;
+        }
+    }
+    
+    if (foundClip && !scrKey){
+        return foundClip;
+    }
+    
+    if(!foundClip){
+        return nil; // no clip found!!
+    }
+    
+    // Now search the clip if it has the source
+    if ([foundClip.videosBySrcKey objectForKey:[NSString stringWithFormat:@"%@hq", scrKey]]) {
+        return foundClip;
+    }
+    
+    return nil;
+}
 
 
 @end
