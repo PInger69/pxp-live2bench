@@ -23,6 +23,7 @@
 @synthesize type;
 @synthesize isAlive;
 @synthesize info;
+@synthesize mode        = _mode;
 
 /**
  *  this is to be used right from the JSON data
@@ -60,6 +61,7 @@
 {
     self = [super init];
     if (self) {
+        
         self.isAlive = YES;
         NSString * correctedQuality;
         if (qlty>=1) correctedQuality = HIGH_QUALITY;
@@ -76,12 +78,26 @@
 -(instancetype) initWithFileURL: (NSString *) fileURL{
     self = [super init];
     if (self) {
+        [self assignModes:fileURL];
         self.isAlive = YES;
         _qualities = @{HIGH_QUALITY: [NSURL fileURLWithPath: fileURL]};
         _urlPath = [_qualities objectForKey: HIGH_QUALITY];
         self.type =FEED_TYPE_LOCAL;
     }
-    return self;
+    if (_mode == FeedModesReady) {
+        return  self;
+    }else{
+        return nil;
+    }
+
+}
+
+-(void)assignModes:(NSString *)aPath{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:aPath]) {
+        _mode = FeedModesReady;
+    }else{
+        _mode = FeedModesNotFound;
+    }
 }
 
 -(NSArray *)allPaths{
