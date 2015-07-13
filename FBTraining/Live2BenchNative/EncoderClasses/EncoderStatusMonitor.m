@@ -25,63 +25,6 @@
  *  and will also check shutdown
  */
 
-@interface NSURLConnection (Context)
-
-@property (nonatomic,strong)    NSNumber        * timeStamp;
-@property (nonatomic,strong)    NSMutableData   * cumulatedData;
-@property (nonatomic,strong)    NSString        * connectionType;
-
--(NSNumber*)timeStamp;
--(void)setTimeStamp:(NSNumber*)time;
-
-@end
-
-@implementation NSURLConnection (Context)
-
-@dynamic timeStamp;
-@dynamic cumulatedData;
-@dynamic connectionType;
-
--(void)setTimeStamp:(NSNumber*)time
-{
-    objc_setAssociatedObject(self, @selector(timeStamp), time,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
--(NSNumber*)timeStamp
-{
-    return (NSNumber*)objc_getAssociatedObject(self,@selector(timeStamp));
-}
-
-
--(void)setCumulatedData:(NSMutableData*)data
-{
-    objc_setAssociatedObject(self, @selector(cumulatedData), data,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
--(NSMutableData*)cumulatedData
-{
-    return (NSMutableData*)objc_getAssociatedObject(self,@selector(cumulatedData));
-}
-
-
--(void)setConnectionType:(NSString*)type
-{
-    objc_setAssociatedObject(self, @selector(connectionType), type,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
--(NSString*)connectionType
-{
-    return (NSString*)objc_getAssociatedObject(self,@selector(connectionType));
-}
-
-
-@end
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @implementation EncoderStatusMonitor
 {
@@ -124,6 +67,7 @@
 
     
     NSString                * connectType;
+    NSMutableData           * cumulatedData;
 }
 
 
@@ -141,7 +85,7 @@
         maxFailCount        = 10; // 3 tries   0 index
         currentFailCount    = maxFailCount;
         statusPack          = [[NSMutableArray alloc]init];
-        statusSync          = YES;
+        statusSync          = YES; // to make sure that Sync never runs more then once
         statusTimer         = [NSTimer scheduledTimerWithTimeInterval:statusInterval target:self selector:@selector(statusLoop) userInfo:nil repeats:YES];
         
         //Building SyncMe Invocation
@@ -152,26 +96,19 @@
                                                                                      @"device"       : [UserCenter getInstance].customerAuthorization
                                                                                      }];
         
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-        NSString *jsonString;
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        
+
+        NSString *jsonString = [Utility dictToJSON:dict];
         syncMePath = [NSString stringWithFormat:@"http://%@/min/ajax/syncme/%@", ipAddress, jsonString];
         
-        // Build Invocation
-        //SEL selector_       = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
+
         selector_ = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
         statusPath          = [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress];
-        feedPath            = [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",ipAddress];
         
         timeout             = 6 ;
         statusInvocation    = [self _buildInvokSel:selector_ path:statusPath  type:STATUS       timeout:&timeout];
-        feedInvocation      = [self _buildInvokSel:selector_ path:feedPath    type:FEED_CHECK   timeout:&timeout];
         syncMeInvocation      = [self _buildInvokSel:selector_ path:syncMePath type:SYNC_ME       timeout:&timeout];
         
-        [statusPack addObject:statusInvocation];
+        [statusPack addObject: statusInvocation];
         [statusPack addObject: syncMeInvocation];
         isLegacy            = [checkedEncoder checkEncoderVersion];
     }
@@ -199,22 +136,23 @@
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
  
-    if ([connection.connectionType isEqualToString: SHUTDOWN_RESPONCE])     currentCount = maxCount;
+    if ([connectType isEqualToString: SHUTDOWN_RESPONCE])     currentCount = maxCount;
     
-    if ([connection.connectionType isEqualToString: STATUS]){
+    if ([connectType isEqualToString: STATUS]){
         [checkedEncoder onBitrate:startRequestTime];
     }
+    cumulatedData = [[NSMutableData alloc]init];
+
 }
 
 // This collects the data
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    if (connection.cumulatedData == nil){
-        connection.cumulatedData = [NSMutableData dataWithData:data];
-    } else {
-        [connection.cumulatedData appendData:data];
+    if(!cumulatedData)
+    {
+        cumulatedData = [NSMutableData data];
     }
-
+    [cumulatedData appendData:data];
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -227,20 +165,19 @@
         NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
         PXPLog(@"EncoderStatus Error Countdown %i: %@", currentFailCount,failType);
     }
-    
+    cumulatedData = nil;
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     statusSync = YES;
     currentFailCount = maxFailCount;
-    if ([connection.connectionType isEqualToString: STATUS])   {
-        [self statusResponse:connection.cumulatedData];
-    } else  if ([connection.connectionType isEqualToString: FEED_CHECK]) {
-        // no need to check feeds now
-    } else if( [connection.connectionType isEqualToString: SYNC_ME]){
-        [checkedEncoder onTagsChange:connection.cumulatedData];
+    if ([connectType isEqualToString: STATUS])   {
+        [self statusResponse:cumulatedData];
+    } else if( [connectType isEqualToString: SYNC_ME]){
+        [checkedEncoder onTagsChange:cumulatedData];
     }
+    cumulatedData = nil;
 }
 
 -(void)statusLoop
@@ -257,12 +194,11 @@
 
     urlRequest                          = [NSURLRequest requestWithURL: [ NSURL URLWithString: aPath ] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:aTimeOut];
     encoderConnection                   = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    encoderConnection.connectionType    = aType;
+    connectType                         = aType;
     startRequestTime                    = [NSDate date];
     statusSync                          = NO;
     flag                                = !flag;
 }
-
 
 -(void)statusResponse:(NSData *)data
 {
@@ -304,8 +240,6 @@
     [checkedEncoder onMotionAlarm:results];
 }
 
-
-
 #pragma mark -
 #pragma mark Shutting down methods
 
@@ -323,9 +257,8 @@
     NSURL * checkURL            = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress]  ];
     urlRequestShutdown          = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:1];
     encoderConnectionShutdown   = [NSURLConnection connectionWithRequest:urlRequestShutdown delegate:self];
-    encoderConnectionShutdown.connectionType = SHUTDOWN_RESPONCE;
+    connectType                 = SHUTDOWN_RESPONCE;
 }
-
 
 /**
  *  Invalidates timer and runs block
@@ -338,10 +271,9 @@
 
 -(void)destroy
 {
-    if (statusTimer) [statusTimer invalidate];
-    if (shutdownTimer) [shutdownTimer invalidate];
+    if (statusTimer)    [statusTimer invalidate];
+    if (shutdownTimer)  [shutdownTimer invalidate];
 }
-
 
 @end
 

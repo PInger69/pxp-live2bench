@@ -29,7 +29,7 @@
 @synthesize live        = _live;
 @synthesize tags        = _tags;
 
-@synthesize downloadedSources       = _downloadedSources;
+@synthesize downloadedSources       = _downloadedSources; // depricated
 @synthesize parentEncoder           = _parentEncoder;
 @synthesize isBuilt                 = _isBuilt;
 @synthesize primary                 = _primary;
@@ -54,7 +54,7 @@
         //        _feeds              = [self buildFeeds:_rawData];
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
-        _downloadedSources  = [NSMutableArray array];
+        _downloadedSources  = [NSMutableArray array]; // depricated
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
         _tags               = [self buildTags:_rawData];
 
@@ -274,7 +274,8 @@
             theFeed =  [[Feed alloc]initWithURLString:aDict[@"live"] quality:0];
             _live = YES;
         } else if (aDict[@"vid"] || aDict[@"mp4"]) {
-            theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"]] :  [[Feed alloc]initWithURLString:aDict[@"vid"]  quality:0]  ;
+//            theFeed = [[Feed alloc]initWithFileURL:aDict[@"mp4"]];
+            theFeed = (isLocal)? [[Feed alloc]initWithFileURL:aDict[@"mp4"]] :  [[Feed alloc]initWithURLString:aDict[@"mp4"]  quality:0]  ;
         } else {
 //            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
 //            PXPLog(@"   HID: %@",aDict[@"hid"]);

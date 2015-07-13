@@ -11,7 +11,7 @@
 #import "Clip.h"
 #import "LocalEncoder.h"
 #import "Tag.h"
-#import "Feed.h"
+
 
 #define LOCAL_PLIST  @"EventsHid.plist"
 #define VIDEO_EXT    @"mp4"

@@ -10,6 +10,7 @@
 #import "Event.h"
 #import "Clip.h"
 #import "Tag.h"
+#import "Feed.h"
 
 @interface LocalMediaManager : NSObject
 
@@ -28,4 +29,5 @@
 -(void)assignEncoderVersionEvent:(NSDictionary *)allEvent;
 -(Clip*)getClipByTag:(Tag*)tag scrKey:(NSString*)scrKey;
 -(void)breakTagLink:(Clip*)aClip;
+-(Feed*)getFeedByEvent:(Event*)event scrKey:(NSString *)scrKey;
 @end
