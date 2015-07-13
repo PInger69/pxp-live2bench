@@ -564,7 +564,7 @@
                 
                 self.lastSelectedIndexPath = indexPath;
             }
-        } else if (event.feedst.count == 1) {
+        } else if (event.feeds.count == 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];

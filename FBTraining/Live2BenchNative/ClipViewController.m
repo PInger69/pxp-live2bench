@@ -707,8 +707,8 @@ static void * encoderTagContext = &encoderTagContext;
     thumbnailCell *selectedCell =(thumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     [sourceSelectPopover clear];
     
-    if (selectedCell.data.thumbnails.count >=2) { // if is new
-        NSArray * listOfScource = [[selectedCell.data.thumbnails allKeys]sortedArrayUsingSelector:@selector(compare:)];
+    if (selectedCell.data.event.feeds.count >=2) { // if is new
+        NSArray * listOfScource = [[selectedCell.data.event.feeds allKeys]sortedArrayUsingSelector:@selector(compare:)];
         
         [sourceSelectPopover setListOfButtonNames:listOfScource];
         
