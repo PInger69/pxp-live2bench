@@ -724,6 +724,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 -(void)play{
     if (!_feed)return;
+    [_playerItem cancelPendingSeeks];
     onReadyBlock                                = nil;
     __block RJLVideoPlayer  * weakSelf          = self;
     if (self.playerItem.status == AVPlayerItemStatusUnknown){ // This delays the seek if its not ready
@@ -964,7 +965,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         });
     }];
 
-    
+
     
 }
 
