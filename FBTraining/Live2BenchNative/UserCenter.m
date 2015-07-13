@@ -480,12 +480,18 @@ static UserCenter * instance;
     NSMutableDictionary         * onlyTags = [[tgnames objectForKey:@"tagbuttons"]mutableCopy];
     [tgnames setObject:onlyTags forKey:@"tagbuttons"];
     
-    for (NSString * theKey in [onlyTags allKeys]) {
-        NSMutableDictionary * checkedTag =  [[onlyTags objectForKey:theKey]mutableCopy];
-        [onlyTags setObject:checkedTag forKey:theKey];
-        [checkedTag removeObjectForKey:@"subtags"];
+    if ([onlyTags isKindOfClass:[NSDictionary class]]){
+    
+        for (NSString * theKey in [onlyTags allKeys]) {
+            NSMutableDictionary * checkedTag =  [[onlyTags objectForKey:theKey]mutableCopy];
+            [onlyTags setObject:checkedTag forKey:theKey];
+            [checkedTag removeObjectForKey:@"subtags"];
+        }
+    } else {
+        // there was no take
     }
         
+    
     NSString                * plistPath   = [_localPath stringByAppendingPathComponent:PLIST_ACCOUNT_INFO];
     NSMutableDictionary     * userInfo    = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
         

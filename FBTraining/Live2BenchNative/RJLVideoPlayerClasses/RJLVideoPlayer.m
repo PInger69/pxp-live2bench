@@ -847,6 +847,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //  self.view.layer.sublayers = nil;
 //    self.view.layer.backgroundColor = [[UIColor blackColor]CGColor];
 //    self.view.layer = nil;
+    mURL = nil;
 }
 
 
@@ -883,6 +884,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                 weakSelf.status = weakSelf.status & ~(RJLPS_Seeking);
                 });
             }];
+            
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    [self cancelPendingSeeks];
+//            });
+            
             
         };
         return;

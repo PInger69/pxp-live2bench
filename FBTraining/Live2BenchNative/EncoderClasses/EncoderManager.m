@@ -317,7 +317,7 @@
 
 -(void)setPrimaryEncoder:(id<EncoderProtocol>)primaryEncoder
 {
-    if (_primaryEncoder == primaryEncoder) return;
+//    if (_primaryEncoder == primaryEncoder) return;
 
     [self willChangeValueForKey:NSStringFromSelector(@selector(primaryEncoder))];
     
