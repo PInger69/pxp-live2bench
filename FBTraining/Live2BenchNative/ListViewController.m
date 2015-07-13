@@ -196,7 +196,7 @@ NSMutableArray *oldEventNames;
         _currentEvent = [((id <EncoderProtocol>) note.object) event];
         [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
         [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_REGULAR];
-        [self.videoPlayer playFeed:[[_currentEvent.feeds allValues]firstObject] ];
+        //[self.videoPlayer playFeed:[[_currentEvent.feeds allValues]firstObject] ];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
     }

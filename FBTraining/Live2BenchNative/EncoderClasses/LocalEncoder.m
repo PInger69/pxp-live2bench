@@ -644,7 +644,7 @@ static LocalEncoder * instance;
         NSMutableDictionary *eventFinal = [[LocalMediaManager getInstance].allEvents objectForKey:event.name];
         Event *encoderEvent = [eventFinal objectForKey:@"non-local"];
 
-        if (!encoderEvent.isBuilt) {
+        if (!encoderEvent.isBuilt && encoderEvent) {
             allBuilt = false;
         }
     }
@@ -700,7 +700,8 @@ static LocalEncoder * instance;
         Event *encoderEvent = [eventDic objectForKey:@"non-local"];
         if (!encoderEvent.isBuilt && encoderEvent) {
             [encoderEvent setDelegate:self];
-            [self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
+            [encoderEvent build];
+            //[self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
         }
     }
 }
