@@ -74,6 +74,7 @@
     [aCell.event setOnComplete:^{
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:eventgettingBuilt userInfo:@{@"source":sourceKey}];
         [weakSelf reloadData];
+
     }];
     
     [eventgettingBuilt build];

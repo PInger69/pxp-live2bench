@@ -1748,7 +1748,7 @@
         // old encoder status is not live or live event name was set or new encoder status is ready
         
         self.status           = status; /// maybe make this mod directly
-        if (self.status == ENCODER_STATUS_LIVE) {
+        if (self.status == ENCODER_STATUS_LIVE && self.liveEvent == nil) {
             self.isBuild = false; // This is so the encoder manager rebuilds it once
         } else if (self.status == ENCODER_STATUS_STOP ||self.status == ENCODER_STATUS_READY) {
             if (self.liveEvent == self.event) {
