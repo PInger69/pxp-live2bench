@@ -1205,6 +1205,15 @@
 }
 
 
+-(void)liveEventGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
+{
+    
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",self.ipAddress]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
+    encoderConnection.connectionType        = LIVE_EVENT_GET;
+    encoderConnection.timeStamp             = aTimeStamp;
+}
 
 #pragma mark -  Master Commands
 -(void)stopEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
@@ -1353,9 +1362,14 @@
         
         [self getEventTags:finishedData extraData:@{@"type":EVENT_GET_TAGS,@"event": extra[@"event"]} ];
         //[self eventTagsGetResponce:finishedData extraData:extra];
-    }else if ([connectionType isEqualToString: DELETE_EVENT]){
+    } else if ([connectionType isEqualToString: DELETE_EVENT]){
         [self deleteEventResponse: finishedData];
+    } else if ([connectionType isEqualToString: LIVE_EVENT_GET]){
+        [self searchForLiveEventResponse: finishedData];
     }
+
+    
+    
     
     if (isAuthenticate && 1 && _isBuild && isTeamsGet && !_isReady){
         _isReady         = YES;
@@ -1749,7 +1763,8 @@
         
         self.status           = status; /// maybe make this mod directly
         if (self.status == ENCODER_STATUS_LIVE && self.liveEvent == nil) {
-            self.isBuild = false; // This is so the encoder manager rebuilds it once
+//            self.isBuild = false; // This is so the encoder manager rebuilds it once
+            [self issueCommand:LIVE_EVENT_GET priority:1 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
         } else if (self.status == ENCODER_STATUS_STOP ||self.status == ENCODER_STATUS_READY) {
             if (self.liveEvent == self.event) {
                 //[self stopResponce:nil];
@@ -1886,6 +1901,9 @@
     PXPLog(@" ");
 }
 
+
+
+
 #pragma mark - Master Responce
 
 -(void)stopResponce:(NSData *)data
@@ -2003,6 +2021,34 @@
     _isBuild = YES;
 }
 
+
+
+-(void)searchForLiveEventResponse:(NSData *)data
+{
+    NSDictionary * rData = [Utility JSONDatatoDict:data];
+    
+    if (![rData isKindOfClass:[NSDictionary class]]){
+        PXPLog(@"error parsing json data");
+    }
+   
+    NSArray     * eventsToSearch        = [rData objectForKey:@"events"];
+    
+    NSEnumerator *enumerator = [eventsToSearch objectEnumerator];
+    id value;
+    while ((value = [enumerator nextObject])) {
+        
+        if ([(NSDictionary *)value objectForKey:@"live"] || [(NSDictionary *)value objectForKey:@"live_2"] ) {
+            Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
+            anEvent.parentEncoder = self;
+            _liveEvent = anEvent;
+            NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
+            [_allEvents setObject:eventFinal forKey:anEvent.name];
+            [_allEvents setObject:eventFinal forKey:LIVE_EVENT];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
+            break;
+        }
+    }
+}
 
 
 #pragma mark - Queue methods
