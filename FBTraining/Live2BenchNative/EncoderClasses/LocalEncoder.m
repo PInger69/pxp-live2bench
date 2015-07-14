@@ -644,7 +644,7 @@ static LocalEncoder * instance;
         NSMutableDictionary *eventFinal = [[LocalMediaManager getInstance].allEvents objectForKey:event.name];
         Event *encoderEvent = [eventFinal objectForKey:@"non-local"];
 
-        if (!encoderEvent.isBuilt) {
+        if (!encoderEvent.isBuilt && encoderEvent) {
             allBuilt = false;
         }
     }
@@ -700,7 +700,8 @@ static LocalEncoder * instance;
         Event *encoderEvent = [eventDic objectForKey:@"non-local"];
         if (!encoderEvent.isBuilt && encoderEvent) {
             [encoderEvent setDelegate:self];
-            [self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
+            [encoderEvent build];
+            //[self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
         }
     }
 }
@@ -774,7 +775,7 @@ static LocalEncoder * instance;
 
 
 #pragma mark - Event Download
--(void)syncEvents{
+/*-(void)syncEvents{
     NSArray *allEvents = [[LocalMediaManager getInstance].allEvents allValues];
     for (int i = 0; i < [LocalMediaManager getInstance].allEvents.count; ++i) {
         Event *eventToSync = allEvents[i];
@@ -796,7 +797,7 @@ static LocalEncoder * instance;
         encoderConnection                       = [[NSURLDataConnection alloc] initWithRequest:urlRequest delegate:self];
         //encoderConnection.context        = TAG_SYNC;
     }
-}
+}*/
 
 #pragma mark - Responces
 
@@ -825,7 +826,7 @@ static LocalEncoder * instance;
     }
 }
 
--(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
+/*-(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
     if (connection.context == NEW_TAG_UPLOAD) {
         NSData *dataToBeUsed = [connection.cumulatedData copy];
         NSDictionary    * results =[Utility JSONDatatoDict: dataToBeUsed];
@@ -854,7 +855,7 @@ static LocalEncoder * instance;
         }
     }
     
-}
+}*/
 
 /*-(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
     if (connection.context == TAG_UPLOAD) {

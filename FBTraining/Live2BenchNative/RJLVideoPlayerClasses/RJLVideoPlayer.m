@@ -735,6 +735,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 //            [weakSelf addPeriodicTimeObserver];
             [weakSelf play];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"ReadyToCreateTagMarkers" object:nil];
+
         };
     } else {
         [self.avPlayer play];

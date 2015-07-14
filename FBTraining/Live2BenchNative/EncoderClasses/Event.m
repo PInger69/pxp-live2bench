@@ -34,6 +34,8 @@
 @synthesize isBuilt                 = _isBuilt;
 @synthesize primary                 = _primary;
 
+@synthesize delegate = _delegate;
+
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
     self = [super init];
@@ -378,8 +380,8 @@
 {
     if (_isBuilt) { // If the event is already built then you want these methods to run anyway
         if (self.onComplete)self.onComplete();
-        if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
-            [self.delegate onEventBuildFinished:self];
+        if([_delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
+            [_delegate onEventBuildFinished:self];
         }
         return;
     }
@@ -393,7 +395,6 @@
     
     [_parentEncoder issueCommand:EVENT_GET_TAGS priority:1 timeoutInSec:15 tagData:requestData timeStamp:[NSNumber numberWithDouble:CACurrentMediaTime()]];
 
-        
 }
 
 -(void)setIsBuilt:(BOOL)isBuilt
@@ -403,8 +404,8 @@
     if (_isBuilt && self.onComplete){
         self.onComplete();
     }
-    if([self.delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
-        [self.delegate onEventBuildFinished:self];
+    if([_delegate respondsToSelector:@selector(onEventBuildFinished:)]) {
+        [_delegate onEventBuildFinished:self];
     }
     
 }

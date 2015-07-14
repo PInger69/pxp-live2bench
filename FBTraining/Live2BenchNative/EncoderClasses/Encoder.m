@@ -440,9 +440,9 @@
 
 -(void)setEvent:(Event *)event
 {
-    if (event ==_event){
+    /*if (event ==_event){
         return;
-    }
+    }*/
     
     [self willChangeValueForKey:@"event"];
     _event      =  event;
