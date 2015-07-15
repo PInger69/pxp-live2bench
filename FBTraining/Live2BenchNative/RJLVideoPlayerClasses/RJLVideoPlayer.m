@@ -1596,4 +1596,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
 }
 
+- (NSTimeInterval)currentTime {
+    return CMTimeGetSeconds(self.avPlayer.currentTime);
+}
+
 @end

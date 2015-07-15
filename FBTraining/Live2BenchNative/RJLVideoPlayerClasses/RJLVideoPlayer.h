@@ -19,6 +19,8 @@
 #import "VideoZoomManager.h"
 #import "ClipControlBarSlider.h"
 
+#import "PxpTimeProvider.h"
+
 
 #define PLAYER_TICK @"tick"
 
@@ -48,7 +50,7 @@
  *--------------------
  */
 
-@interface RJLVideoPlayer : UIViewController <PxpVideoPlayerProtocol>
+@interface RJLVideoPlayer : UIViewController <PxpVideoPlayerProtocol, PxpTimeProvider>
 {
     BOOL seekToZeroBeforePlay;
 }
