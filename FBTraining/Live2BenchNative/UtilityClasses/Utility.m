@@ -84,7 +84,7 @@
         NSError *error = nil;
         id object = [NSJSONSerialization
                      JSONObjectWithData:data
-                     options:0
+                     options:NSJSONReadingAllowFragments
                      error:&error];
         
         if(error) {
