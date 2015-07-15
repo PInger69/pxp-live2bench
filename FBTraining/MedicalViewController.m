@@ -31,7 +31,7 @@
     UIButton                            *startButton;
     UIButton                            *stopButton;
     NSString                            *timeString;
-    CFTimeInterval                      startTime;
+    float                               startTime;
     NSTimer                             *recordingTimer;
     NSArray                             *activeElements;
     id <EncoderProtocol>                _observedEncoder;
@@ -201,23 +201,22 @@
 }
 
 - (void)updateRecodingTime {
-    CFTimeInterval recodingTime = CACurrentMediaTime() - startTime;
+    float time = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
     NSInteger second = 00;
     NSInteger minute = 00;
     NSInteger hour = 00;
-    second = (int)recodingTime;
+    second = time;
     if (second >= 60 && second < 3600) {
         minute = second / 60;
         second = second % 60;
     } else if (second >= 3600){
         hour = second / 3600;
         minute = second % 3600 / 60;
-        second = minute % 60;
+        second = second - (minute*60+hour*60*60);
     }
     
-    timeString = [NSString stringWithFormat:@"%02ld:%02ld", (long)minute, (long)second];
+    timeString = [NSString stringWithFormat:@"%01ld:%02ld:%02ld", (long)hour ,(long)minute, (long)second];
     [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
-    
 }
 
 -(UIImage *)recordingButtonWithSize: (CGSize) buttonSize{
@@ -262,14 +261,14 @@
     [btn setFrame:CGRectMake(1024 - 75, 690,70.0f, 70.0f)];
     [btn addTarget:self action:@selector(startButtonClicked) forControlEvents:UIControlEventTouchUpInside];
     [btn setBackgroundImage:[self readyToRecordButtonWithSize:CGSizeMake(65, 65)] forState:UIControlStateNormal];
-    timeString = @"00:00:00";
+    //timeString = @"00:00:00";
     startButton.hidden = true;
     stopButton.hidden = false;
     return btn;
 }
 
 - (UIButton *)makeStopButton {
-    timeString = @"00:00";
+    //timeString = @"00:00";
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setFrame:CGRectMake(1024 - 75, 690,70.0f, 70.0f)];
     [btn setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
@@ -306,7 +305,8 @@
     [self.videoPlayer.videoControlBar setEnable:NO];
     self.videoPlayer.liveIndicatorLight.tintColor = [UIColor redColor];
     [self.videoPlayer.liveIndicatorLight setHidden:NO];
-    startTime = CACurrentMediaTime();
+    [self updateRecodingTime];
+    startTime = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
     recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateRecodingTime) userInfo:nil repeats:YES];
     startButton.hidden = true;
     stopButton.hidden = false;
@@ -319,12 +319,18 @@
     self.videoPlayer.liveIndicatorLight.tintColor = [UIColor greenColor];
     [self.videoPlayer.liveIndicatorLight setHidden: self.videoPlayer.live?NO:YES];
     [self.videoPlayer.videoControlBar setEnable:YES];
-    timeString = @"00:00:00";
+    float duration = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime) - startTime;
     [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
     startButton.hidden = false;
     stopButton.hidden = true;
     
-    // tag.telestration = self.telestrationViewController.telestration;
+    if (self.telestrationViewController.telestration) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
+                                                                                                          @"time": [NSString stringWithFormat:@"%f",startTime],
+                                                                                                          @"duration": [NSString stringWithFormat:@"%i",(int)roundf(duration)],
+                                                                                                          @"telestration" : self.telestrationViewController.telestration.data
+                                                                                                          }];
+    }
     
     self.telestrationViewController.telestration = nil;
 }

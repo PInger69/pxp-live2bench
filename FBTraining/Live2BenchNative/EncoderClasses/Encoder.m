@@ -412,7 +412,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ondeleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
     return self;
 }
@@ -425,7 +425,7 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
     self.event = nil;
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
     return self;
 }
 
@@ -610,7 +610,8 @@
     NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
     
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
-    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+    NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
+    NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
     
     // This is the starndard info that is collected from the encoder
@@ -620,12 +621,12 @@
                                        @"colour"        : [UserCenter getInstance].customerColor,
                                        @"user"          : [UserCenter getInstance].userHID,
                                        @"time"          : tagTime,
-                                       @"name"          : tagName,
-                                       @"duration"      : @"1",
-                                       @"type"          : [NSNumber numberWithInteger:TagTypeTele]
+                                       @"name"          : @"Tele",
+                                       @"duration"      : tagDuration,
+                                       @"type"          : [NSNumber numberWithInteger:TagTypeTele],
+                                       @"data"          : teleData
                                        }];
     
-    [tagData addEntriesFromDictionary:data];
     
     [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
     
@@ -1022,9 +1023,6 @@
 
 -(void)makeTeleTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
-    NSData *imageData = UIImagePNGRepresentation([tData objectForKey:@"image"]) ;
-    [tData removeObjectForKey:@"image"];
-    
     NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
     
     //over write name and add request time
@@ -1034,34 +1032,9 @@
                                       }];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
-    jsonString = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress]  ];
-    NSMutableURLRequest *someUrlRequest     = [NSMutableURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
-    [someUrlRequest setHTTPMethod:@"POST"];
-
-    NSString *boundary = @"----WebKitFormBoundarycC4YiaUFwM44F6rT";
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [someUrlRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
-    NSMutableData *body = [NSMutableData data];
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=tag\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    // [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
-    // Now we need to append the different data 'segments'. We first start by adding the boundary.
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=file; filename=picture.png\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    // We now need to tell the receiver what content type we have
-    // In my case it's a png image. If you have a jpg, set it to 'image/jpg'
-    [body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    // Now we append the actual image data
-    [body appendData:[NSData dataWithData:imageData]];
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    // and again the delimiting boundary
-    //NSString *tempstr =[[NSString alloc]initWithData:body encoding:NSStringEncodingConversionAllowLossy];
-    [someUrlRequest setHTTPBody:body];
-
-    urlRequest                              = someUrlRequest;
-    encoderConnection                       = [NSURLConnection connectionWithRequest:someUrlRequest delegate:self];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset/%@",self.ipAddress,jsonString]  ];
+    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = MAKE_TELE_TAG;
     encoderConnection.timeStamp             = aTimeStamp;
 }
@@ -1577,7 +1550,7 @@
                 [self onModifyTags:results];
             }
         }
-        else if ([type isEqualToString:MAKE_TAG] || [type isEqualToString:MAKE_TELE_TAG])
+        else if ([type isEqualToString:MAKE_TAG])
         {
             if (results){
                 [self onNewTags:results];
@@ -1595,6 +1568,11 @@
             checkEvent.isBuilt = YES;
 
 
+        }else if([type isEqualToString:MAKE_TELE_TAG]){
+            if (results) {
+                [self onTeleTags:results];
+            }
+            
         }
         
         
@@ -1681,6 +1659,33 @@
             Event * localEvent = [checkEventDic objectForKey:@"local"];
             Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
             
+            if (self.event == encoderEvent) {
+                [encoderEvent addTag:newTag extraData:true];
+            }else{
+                [encoderEvent addTag:newTag extraData:false];
+            }
+            
+            if (localEvent && newTag.type != TagTypeOpenDuration) {
+                Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
+                [localEvent addTag:localTag extraData:false];
+                [localEvent.parentEncoder writeToPlist];
+            }
+        }
+    }
+}
+
+-(void)onTeleTags:(NSDictionary*)data
+{
+    if ([data objectForKey:@"id"]) {
+        if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
+            NSMutableDictionary *checkEventDic = [_allEvents objectForKey:[data objectForKey:@"event"]];
+            Event * encoderEvent = [checkEventDic objectForKey:@"non-local"];
+            Event * localEvent = [checkEventDic objectForKey:@"local"];
+            Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
+            if ([data objectForKey:@"telestration"]) {
+                newTag.telestration = [PxpTelestration telestrationFromData:[data objectForKey:@"telestration"]];
+            }
+        
             if (self.event == encoderEvent) {
                 [encoderEvent addTag:newTag extraData:true];
             }else{
