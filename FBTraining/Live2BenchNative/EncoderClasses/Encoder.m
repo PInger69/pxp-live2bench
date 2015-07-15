@@ -628,7 +628,7 @@
                                        }];
     
     
-    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+    [self issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
     
 }
 
@@ -1032,10 +1032,10 @@
                                       }];
 
     NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset/%@",self.ipAddress,jsonString]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress] ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    encoderConnection.connectionType        = MAKE_TELE_TAG;
+    encoderConnection.connectionType        = MAKE_TAG;
     encoderConnection.timeStamp             = aTimeStamp;
 }
 
@@ -1322,7 +1322,7 @@
         //[self tagsJustChanged:finishedData extraData:MAKE_TAG];
     } else if ([connectionType isEqualToString: MAKE_TELE_TAG]) {
         //[self makeTagResponce:    finishedData];
-        [self getEventTags:finishedData extraData:@{@"type":MAKE_TAG,@"event": extra[@"event"]}];
+        [self getEventTags:finishedData extraData:@{@"type":MAKE_TELE_TAG}];
         //[self tagsJustChanged:finishedData extraData:MAKE_TELE_TAG];
     } else if ([connectionType isEqualToString: MODIFY_TAG]) {
         //[self modTagResponce:    finishedData];
@@ -1552,7 +1552,9 @@
         }
         else if ([type isEqualToString:MAKE_TAG])
         {
-            if (results){
+            if (results && [results objectForKey:@"telestration"]){
+                [self onTeleTags:results];
+            }else if (results){
                 [self onNewTags:results];
             }
         } else if ([type isEqualToString:EVENT_GET_TAGS]){
