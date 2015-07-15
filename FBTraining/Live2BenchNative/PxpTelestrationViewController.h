@@ -17,4 +17,6 @@
 
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
 
+@property (assign, nonatomic) BOOL showsControls;
+
 @end

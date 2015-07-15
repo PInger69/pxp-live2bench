@@ -83,8 +83,9 @@
     self.captureArea.frame = self.renderView.bounds;
     self.renderView.backgroundColor = [UIColor clearColor];
     
-    self.telestration = nil;
+    self.showsControls = YES;
     self.showsTelestrationControls = NO;
+    self.telestration = nil;
     
     [self.undoButton addTarget:self action:@selector(undoAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.lineButton addTarget:self action:@selector(lineAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -137,12 +138,37 @@
     [self.captureArea bindTelestration:telestration];
     
     if (telestration) {
-        self.telestrationButton.hidden = NO;
+        self.telestrationButton.hidden = !self.showsControls;
         self.showsTelestrationControls = self.showsTelestrationControls;
     } else {
         self.telestrationButton.hidden = YES;
         self.showsTelestrationControls = NO;
     }
+}
+
+- (void)setShowsControls:(BOOL)showsControls {
+    _showsControls = showsControls;
+    
+    if (showsControls) {
+        self.telestrationButton.hidden = !self.telestration;
+        self.lineButton.hidden = NO;
+        self.arrowButton.hidden = NO;
+        self.colorPicker.hidden = NO;
+        self.undoButton.hidden = NO;
+        self.clearButton.hidden = NO;
+        
+        self.showsTelestrationControls = self.showsTelestrationControls;
+    } else {
+        self.telestrationButton.hidden = YES;
+        self.lineButton.hidden = YES;
+        self.arrowButton.hidden = YES;
+        self.colorPicker.hidden = YES;
+        self.undoButton.hidden = YES;
+        self.clearButton.hidden = YES;
+        
+        self.showsTelestrationControls = NO;
+    }
+    
 }
 
 #pragma mark - Buttons
