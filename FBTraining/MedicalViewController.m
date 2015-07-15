@@ -310,6 +310,8 @@
     recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateRecodingTime) userInfo:nil repeats:YES];
     startButton.hidden = true;
     stopButton.hidden = false;
+    
+    self.telestrationViewController.telestration = [[PxpTelestration alloc] init];
 }
 
 - (void)stopButtonClicked {
@@ -321,6 +323,10 @@
     [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
     startButton.hidden = false;
     stopButton.hidden = true;
+    
+    // tag.telestration = self.telestrationViewController.telestration;
+    
+    self.telestrationViewController.telestration = nil;
 }
 
 
