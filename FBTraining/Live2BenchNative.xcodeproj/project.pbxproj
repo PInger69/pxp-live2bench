@@ -223,6 +223,7 @@
 		D779390C1822F8F90037CF82 /* signalStrength.png in Resources */ = {isa = PBXBuildFile; fileRef = D779390B1822F8F90037CF82 /* signalStrength.png */; };
 		D77939101823E82A0037CF82 /* signalStrength.gif in Resources */ = {isa = PBXBuildFile; fileRef = D779390E1823E82A0037CF82 /* signalStrength.gif */; };
 		D77939111823E82A0037CF82 /* signalStrength@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = D779390F1823E82A0037CF82 /* signalStrength@2x.gif */; };
+		D77BE0241B5556A4007C5E9B /* MedicalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D77BE0231B5556A4007C5E9B /* MedicalViewController.m */; };
 		D7807BF1181830100061305A /* live@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7807BF0181830100061305A /* live@2x.png */; };
 		D7807BF318185F000061305A /* extendendsec.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47917F5C73200D5C185 /* extendendsec.png */; };
 		D7807BF418185F040061305A /* extendstartsec.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47717F5C73200D5C185 /* extendstartsec.png */; };
@@ -808,6 +809,8 @@
 		D779390B1822F8F90037CF82 /* signalStrength.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = signalStrength.png; sourceTree = "<group>"; };
 		D779390E1823E82A0037CF82 /* signalStrength.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = signalStrength.gif; sourceTree = "<group>"; };
 		D779390F1823E82A0037CF82 /* signalStrength@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "signalStrength@2x.gif"; sourceTree = "<group>"; };
+		D77BE0221B5556A4007C5E9B /* MedicalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalViewController.h; sourceTree = "<group>"; };
+		D77BE0231B5556A4007C5E9B /* MedicalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalViewController.m; sourceTree = "<group>"; };
 		D7807BF0181830100061305A /* live@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "live@2x.png"; sourceTree = "<group>"; };
 		D781900A1A70649800B964B4 /* EncoderManagerActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderManagerActionPack.h; path = EncoderClasses/EncoderManagerActionPack.h; sourceTree = "<group>"; };
 		D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderManagerActionPack.m; path = EncoderClasses/EncoderManagerActionPack.m; sourceTree = "<group>"; };
@@ -1886,6 +1889,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D77BE0221B5556A4007C5E9B /* MedicalViewController.h */,
+				D77BE0231B5556A4007C5E9B /* MedicalViewController.m */,
 				D70E21641B434E2600F6C1D5 /* BonjourModule.h */,
 				D70E21651B434E2600F6C1D5 /* BonjourModule.m */,
 				D788262B1B42D9D400969D43 /* LocalMediaManager.h */,
@@ -2823,6 +2828,7 @@
 				AEDD7C971B4AB830003C82F3 /* PxpPlayerControlToolbar.m in Sources */,
 				D784EF4D1AA4B6620068D260 /* RangeSlider.m in Sources */,
 				BDE05E9017F08AAD00CD6012 /* UIColor+Expanded.m in Sources */,
+				D77BE0241B5556A4007C5E9B /* MedicalViewController.m in Sources */,
 				D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */,
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
 				D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */,

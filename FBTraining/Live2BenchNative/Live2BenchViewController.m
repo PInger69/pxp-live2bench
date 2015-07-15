@@ -250,6 +250,11 @@ static void * eventContext      = &eventContext;
 
 -(void)eventChanged:(NSNotification*)note
 {
+    if ([[note.object event].name isEqualToString:_currentEvent.name]) {
+        [self onEventChange];
+        return;
+    }
+    
     if (_currentEvent != nil) {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
@@ -262,7 +267,9 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
 
-    } else {
+    }
+    
+    if ([((id <EncoderProtocol>) note.object) event]) {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
         [self turnSwitchOn];
         [_feedSwitch watchCurrentEvent:_currentEvent];
@@ -273,6 +280,7 @@ static void * eventContext      = &eventContext;
         if (_currentEvent.live) {
             [self gotLiveEvent];
         }
+
     }
     
     [_videoBarViewController update];

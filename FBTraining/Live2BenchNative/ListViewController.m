@@ -181,6 +181,10 @@ NSMutableArray *oldEventNames;
 
 -(void)eventChanged:(NSNotification *)note
 {
+    if ([[note.object event].name isEqualToString:_currentEvent.name]) {
+        return;
+    }
+    
     if (_currentEvent != nil) {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];

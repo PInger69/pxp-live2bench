@@ -161,7 +161,7 @@
         if (event == nil) {
             
             
-            if ([[self.primaryEncoder event].name isEqualToString:self.liveEventName]) {
+            if ([[self.primaryEncoder event].name isEqualToString:self.liveEvent.name]) {
                 self.liveEvent = nil;
             }
            if (self.primaryEncoder) [self.primaryEncoder removeFromPrimary];

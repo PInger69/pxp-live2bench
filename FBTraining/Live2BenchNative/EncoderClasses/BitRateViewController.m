@@ -57,9 +57,14 @@
  */
 -(void)refresh:(NSNotification*)note
 {
+    //[self removeEncoder];
+    //[self addEncoder];
+}
+
+-(void)removeEncoder{
     // Remove the monitors for encoders that have been disconnected
     NSSet           * currentlyWatched  = [[NSSet alloc]initWithArray:[builtMonitors allKeys]];
-    NSMutableSet    * shouldWatch       = [[NSMutableSet alloc]init];
+    /*NSMutableSet    * shouldWatch       = [[NSMutableSet alloc]init];
     
     for (Encoder * aEncoder in encoderManager.authenticatedEncoders) {
         [shouldWatch addObject:aEncoder.name];
@@ -68,18 +73,17 @@
     NSMutableSet           * nameOfMonitorsToBeRemoved = [[NSMutableSet alloc]init];
     
     [nameOfMonitorsToBeRemoved setSet:currentlyWatched];
-    [nameOfMonitorsToBeRemoved minusSet:shouldWatch];
-
-    for (NSString * mNames in nameOfMonitorsToBeRemoved) {
+    [nameOfMonitorsToBeRemoved minusSet:shouldWatch];*/
+    
+    for (NSString * mNames in currentlyWatched) {
         BitrateMonitor* monitor1 = [builtMonitors objectForKey:mNames];
         [monitor1 removeFromSuperview];
         [builtMonitors removeObjectForKey:mNames];
     }
+    [self rearrange];
+}
 
-    
-    
-    
-    
+-(void)addEncoder{
     // this adds new encoders
     for (Encoder * coder in encoderManager.authenticatedEncoders) {
         NSString * eName = coder.name;
@@ -119,16 +123,16 @@
     }
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [self refresh:nil];
+-(void)viewWillAppear:(BOOL)animated{
+    [self addEncoder];
     [super viewDidAppear:animated];
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
+-(void)viewWillDisappear:(BOOL)animated{
+    [self removeEncoder];
     [super viewDidDisappear:animated];
 }
+
 
 
 - (void)viewDidLoad
