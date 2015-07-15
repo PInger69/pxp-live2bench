@@ -14,9 +14,9 @@
 @property (readonly, assign, nonatomic) CGSize size;
 @property (readonly, strong, nonatomic, nonnull) NSArray *actionStack;
 @property (readonly, strong, nonatomic, nonnull) NSArray *sortedActions;
-@property (readonly, strong, nonatomic, nonnull) NSData *data;
+@property (readonly, strong, nonatomic, nonnull) NSString *data;
 
-+ (nonnull instancetype)telestrationFromData:(nonnull NSData *)data;
++ (nonnull instancetype)telestrationFromData:(nonnull NSString *)data;
 
 - (nonnull instancetype)initWithSize:(CGSize)size;
 - (nonnull instancetype)initWithSize:(CGSize)size actions:(nonnull NSArray *)actions;

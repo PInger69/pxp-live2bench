@@ -15,8 +15,8 @@
 
 @synthesize actionStack = _actionStack;
 
-+ (nonnull instancetype)telestrationFromData:(nonnull NSData *)data {
-    PxpTelestration *telestration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
++ (nonnull instancetype)telestrationFromData:(nonnull NSString *)data {
+    PxpTelestration *telestration = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSData alloc] initWithBase64EncodedString:data options:0]];
     
     return [telestration isKindOfClass:self] ? telestration : [[self alloc] init];
 }
@@ -54,10 +54,10 @@
     [aCoder encodeObject:self.actionStack forKey:@"a"];
 }
 
-- (nonnull NSData *)data {
+- (nonnull NSString *)data {
     // TODO - compress the data :)
     
-    return [NSKeyedArchiver archivedDataWithRootObject:self];
+    return [[NSKeyedArchiver archivedDataWithRootObject:self] base64EncodedStringWithOptions:0];
 }
 
 - (void)pushAction:(nonnull PxpTelestrationAction *)action {
