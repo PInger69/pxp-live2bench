@@ -595,7 +595,9 @@ static LocalEncoder * instance;
                                       }];
     
     Tag *newTag                     = [[Tag alloc] initWithData:tData event:self.event];
-    newTag.uniqueID                 = newTag.event.tags.count + 2;
+    NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
+    double tagArePresentCount       = tagArePresent.count + 1;
+    newTag.uniqueID                 = tagArePresentCount;
     newTag.startTime                = newTag.time;
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
     
