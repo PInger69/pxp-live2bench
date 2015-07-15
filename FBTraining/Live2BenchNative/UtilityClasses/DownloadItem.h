@@ -71,6 +71,7 @@ typedef NS_OPTIONS(NSInteger, DownloadType) {
 @property (nonatomic,assign) NSInteger          kbps;
 @property (nonatomic,assign) BOOL               isAlive;
 @property (nonatomic,weak)  id <DownloadItemDelegate>  delegate;
+@property (nonatomic, copy) void(^onComplete)();
 
 -(instancetype)initWithURL:(NSString*)aURL destination:(NSString*)aPath;
 

@@ -244,6 +244,14 @@
             NSString *homeName = event.teams[@"homeTeam"];
             NSString *visitName = event.teams[@"visitTeam"];
             
+            
+            if (_teamPick){
+                [_teamPick dismissPopoverAnimated:NO];
+                [_teamPick clear];
+                _teamPick = nil;
+            }
+            
+            
             _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
                                                       buttonListNames:@[homeName, visitName]];
             
@@ -348,8 +356,12 @@
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
 
+    
+//    if ()
+    
+    
     if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) (localOne.downloadedSources.count + event.downloadedSources.count), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) ([localOne.feeds count]), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
     }
 
     if (event.local) {
@@ -357,8 +369,9 @@
 
     } else {
         if (localOne) {
-            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)(localOne.downloadedSources.count + event.downloadedSources.count),(unsigned long)event.mp4s.count]];
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)([localOne.feeds count]),(unsigned long)event.mp4s.count]];
         } else {
+            
             [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)event.downloadedSources.count,(unsigned long)event.mp4s.count]];
         }
     }
@@ -399,7 +412,7 @@
         alert.type = AlertImportant;
         [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
         [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this Event?",nil)];
-        if ((localCounterpart && localCounterpart.downloadedSources.count > 0) || event.downloadedSources.count > 0) {
+        if ((localCounterpart && [localCounterpart.feeds count] > 0)) {
             [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server and local device)",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"Yes(Only local)",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
@@ -432,8 +445,10 @@
             [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
             [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
             
+            
             for (Event *eventToDelete in arrayOfTagsToRemove) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToDelete];
+                [eventToDelete destroy];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToDelete];
             }
         }
         
@@ -456,9 +471,12 @@
                 [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
             }
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : eventToRemove}];
+
+
+            [[LocalMediaManager getInstance]deleteEvent:[[LocalMediaManager getInstance]getEventByName:eventToRemove.name]];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : eventToRemove}];
             [eventToRemove.downloadedSources removeAllObjects];
+            [eventToRemove destroy];// deletes event from the server
             [self removeIndexPathFromDeletion];
             
             if (buttonIndex == 1) {

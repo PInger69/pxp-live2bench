@@ -69,4 +69,6 @@
 -(NSArray*)getTagsByID:(NSString*)tagId;
 
 -(void)build;
+-(void)buildFeeds;
+-(void)destroy;
 @end
