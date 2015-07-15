@@ -20,6 +20,8 @@
 #import "RJLVideoPlayerPlaybackView.h"
 #import "LiveLight.h"
 
+#import "PxpTimeProvider.h"
+
 typedef NS_OPTIONS (NSInteger,PlayerStatus){
     RJLPS_Offline      = 0,
     RJLPS_Live         = 1<<0,
@@ -39,7 +41,7 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 #define PLAYER_DID_RESET    @"playerDidReset"
 
 
-@protocol PxpVideoPlayerProtocol <NSObject>
+@protocol PxpVideoPlayerProtocol <NSObject, PxpTimeProvider>
 
 
 @property (nonatomic,strong)    NSString                    * playerContext;          //let you tell the difference between other active video players

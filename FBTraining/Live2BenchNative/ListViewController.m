@@ -31,6 +31,8 @@
 
 #import "LocalMediaManager.h"
 
+#import "PxpTelestrationViewController.h"
+
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
 #define NOTCOACHPICK                  0
@@ -53,6 +55,8 @@
 @property (strong, nonatomic) UIButton *dismissFilterButton;
 
 //@property (strong, nonatomic) NSDictionary *eventTags;
+
+@property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
 @end
 
@@ -93,6 +97,9 @@ NSMutableArray *oldEventNames;
         
         _context = nil;
         _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        
+        _telestrationViewController = [[PxpTelestrationViewController alloc] init];
+        [self addChildViewController:_telestrationViewController];
         
         oldEventNames = [[NSMutableArray alloc] init];
         //[self initializeOldEventNames];
@@ -426,6 +433,14 @@ NSMutableArray *oldEventNames;
    //componentFilter = [TestFilterViewController commonFilter];
     
     _tableViewController.tableData = self.tagsToDisplay;
+    
+    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0);
+    
+    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
+    
+    self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    self.telestrationViewController.timeProvider = self.videoPlayer;
 }
 
 -(void)getNextTag
@@ -1765,6 +1780,7 @@ NSMutableArray *oldEventNames;
     
     selectedTag = userInfo[@"forWhole"];
     
+    self.telestrationViewController.telestration = selectedTag.telestration;
     
     [commentingField clear];
     commentingField.enabled             = YES;
