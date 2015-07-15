@@ -76,8 +76,6 @@ static __nonnull NSComparator _pxpTelestrationActionSortMethod;
             _type = 0;
             _points = [NSMutableArray array];
         }
-        
-        free(data);
     }
     return self;
 }
@@ -104,6 +102,8 @@ static __nonnull NSComparator _pxpTelestrationActionSortMethod;
     }
     
     [aCoder encodeBytes:data length:size];
+    
+    free(data);
 }
 
 - (nonnull NSString *)description {
