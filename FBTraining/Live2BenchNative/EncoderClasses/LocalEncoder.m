@@ -265,7 +265,7 @@ static LocalEncoder * instance;
 -(id <EncoderProtocol>)makePrimary
 {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagPost:)        name:NOTIF_TAG_POSTED           object:nil];
-    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onModTag:)         name:NOTIF_MODIFY_TAG           object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteTag:)      name:NOTIF_DELETE_TAG           object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
@@ -276,7 +276,7 @@ static LocalEncoder * instance;
 -(id <EncoderProtocol>)removeFromPrimary
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_POSTED              object:nil];
-    //[[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_MODIFY_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_TAG              object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EM_DOWNLOAD_CLIP        object:nil];
@@ -298,6 +298,8 @@ static LocalEncoder * instance;
         [self modTag:tData];
     } else if ([methodName isEqualToString: EVENT_GET_TAGS]) {
      //   [self eventTagsGetResponce: tData eventNameKey:extra];
+    }else if ([methodName isEqualToString:MAKE_TELE_TAG]){
+        [self teleTag:tData];
     }
     
     
@@ -420,28 +422,29 @@ static LocalEncoder * instance;
 
 -(void)onTelePost:(NSNotification *)note
 {
-//    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
-//    
-//    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
-//    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
-//    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
-//    
-//    // This is the starndard info that is collected from the encoder
-//    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-//                                     @{
-//                                       @"event"         : eventNm,
-//                                       @"colour"        : [UserCenter getInstance].customerColor,
-//                                       @"user"          : [UserCenter getInstance].userHID,
-//                                       @"time"          : tagTime,
-//                                       @"name"          : tagName,
-//                                       @"duration"      : @"1",
-//                                       @"type"          : @"4",
-//                                       }];
-//    
-//    [tagData addEntriesFromDictionary:data];
-//    
-//    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
     
+    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+    NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
+    NSData *teleData = [data objectForKey:@"telestration"];
+    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    
+    // This is the starndard info that is collected from the encoder
+    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{
+                                       @"event"         : eventNm,
+                                       @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                       @"user"          : [UserCenter getInstance].userHID,
+                                       @"time"          : tagTime,
+                                       @"name"          : @"Tele",
+                                       @"duration"      : tagDuration,
+                                       @"type"          : [NSNumber numberWithInteger:TagTypeTele],
+                                       @"telestration"  : teleData,
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       }];
+    
+    
+    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
 }
 
 -(void)onModTag:(NSNotification *)note
@@ -582,6 +585,30 @@ static LocalEncoder * instance;
     [self.localTags writeToFile:localplistNamePath atomically:YES];*/
 
 //    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:newTag userInfo:newTag.makeTagData];
+
+}
+
+-(void)teleTag:(NSMutableDictionary *)tData{
+    
+    [tData addEntriesFromDictionary:@{
+                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      }];
+    
+    Tag *newTag                     = [[Tag alloc] initWithData:tData event:self.event];
+    newTag.uniqueID                 = newTag.event.tags.count + 2;
+    newTag.startTime                = newTag.time;
+    newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
+    
+    newTag.own                      = YES;
+    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
+    newTag.visitTeam                = self.event.teams[@"visitTeam"];
+    newTag.synced                   = NO;
+    
+    [self.event addTag:newTag extraData:true];
+    
+    [self.localTags addObject:newTag];
+    
+    [self writeToPlist];
 
 }
 
