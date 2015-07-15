@@ -624,7 +624,7 @@
                                        @"name"          : @"Tele",
                                        @"duration"      : tagDuration,
                                        @"type"          : [NSNumber numberWithInteger:TagTypeTele],
-                                       @"data"          : teleData
+                                       @"telestration"  : teleData
                                        }];
     
     
