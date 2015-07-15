@@ -41,6 +41,7 @@
 #define EVENT_GET_TAGS  @"eventTagsGet:timeStamp:"
 #define CAMERAS_GET     @"camerasGet:timeStamp:"
 #define ALL_EVENTS_GET_ @"allEventsGet:timeStamp:"
+#define LIVE_EVENT_GET  @"liveEventGet:timeStamp:"
 #define DELETE_EVENT    @"deleteEvent:timeStamp:"
 
 #define STOP_EVENT      @"stopEvent:timeStamp:"
