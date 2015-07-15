@@ -83,14 +83,8 @@
     self.captureArea.frame = self.renderView.bounds;
     self.renderView.backgroundColor = [UIColor clearColor];
     
-    self.undoButton.frame = CGRectMake(20.0f, self.view.bounds.size.height + 100.0f, 45.0f, 65.0f);
-    self.lineButton.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height + 180.0f, 45.0f, 45.0f);
-    self.arrowButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height + 180.0f, 45.0f, 45.0f);
-    
-    self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height + 130.0f, 110.0f, 110.0f);
-    self.clearButton.frame = CGRectMake(20.0f, self.view.bounds.size.height + 180.0f, 45.0f, 65.0f);
-    
-    self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 120.0f, self.view.bounds.size.height - 120.0f, 90.0f, 90.0f);
+    self.telestration = nil;
+    self.showsTelestrationControls = NO;
     
     [self.undoButton addTarget:self action:@selector(undoAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.lineButton addTarget:self action:@selector(lineAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -120,8 +114,6 @@
     self.colorPicker.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     self.clearButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     
-    self.telestrationButton.hidden = YES;
-    
     self.renderView.timeProvider = self;
     self.captureArea.timeProvider = self;
     self.captureArea.delegate = self;
@@ -146,6 +138,7 @@
     
     if (telestration) {
         self.telestrationButton.hidden = NO;
+        self.showsTelestrationControls = self.showsTelestrationControls;
     } else {
         self.telestrationButton.hidden = YES;
         self.showsTelestrationControls = NO;
@@ -218,6 +211,8 @@
         
         self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 120.0f, 30.0f, 90.0f, 90.0f);
         
+        self.telestrationButton.selected = YES;
+        
         if (animated) {
             [UIView commitAnimations];
         }
@@ -235,6 +230,8 @@
         self.clearButton.frame = CGRectMake(20.0f, self.view.bounds.size.height + 180.0f, 45.0f, 65.0f);
         
         self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 120.0f, self.view.bounds.size.height - 120.0f, 90.0f, 90.0f);
+        
+        self.telestrationButton.selected = NO;
         
         if (animated) {
             [UIView commitAnimations];

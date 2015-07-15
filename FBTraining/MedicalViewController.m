@@ -15,12 +15,14 @@
 #import "BorderButton.h"
 #import "Event.h"
 
-
+#import "PxpTelestrationViewController.h"
 
 #define PADDING                 5
 #define LITTLE_ICON_DIMENSIONS 40
 
-@interface MedicalViewController ()
+@interface MedicalViewController () <PxpTimeProvider>
+
+@property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
 @end
 
@@ -41,57 +43,67 @@
 
 -(id)initWithAppDelegate:(AppDelegate *)mainappDelegate
 {
-     self = [super initWithAppDelegate:mainappDelegate];
+    self = [super initWithAppDelegate:mainappDelegate];
     
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Medical", nil) imageName:@"live2BenchTab"];
+        
+        _telestrationViewController = [[PxpTelestrationViewController alloc] init];
+        _encoderManager         = mainappDelegate.encoderManager;
+        
+        CGRect screenBounds;
+        
+        CGFloat playerWidth = 1024.0, playerHeight = playerWidth / (16.0 / 9.0);
+        CGFloat playerY = (768.0 - playerHeight + 55.0) / 2.0;
+        
+        self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
+        
+        screenBounds = CGRectMake(0, 0, 1024, 768);
+        NSDictionary *fullScreenFramesParts = @{
+                                                @"light" : [NSValue valueWithCGRect:CGRectMake(screenBounds.size.width-32,
+                                                                                               60,
+                                                                                               self.videoPlayer.liveIndicatorLight.frame.size.width,
+                                                                                               self.videoPlayer.liveIndicatorLight.frame.size.height)],
+                                                
+                                                @"bar"   : [NSValue valueWithCGRect:CGRectMake(0,
+                                                                                               640,
+                                                                                               screenBounds.size.width,
+                                                                                               self.videoPlayer.videoControlBar.frame.size.height)],
+                                                @"slide" : [NSValue valueWithCGRect:CGRectMake(0,
+                                                                                               0,
+                                                                                               screenBounds.size.width-200,
+                                                                                               self.videoPlayer.videoControlBar.timeSlider.frame.size.height)]
+                                                };
+        
+        
+        self.videoPlayer.liveIndicatorLight.frame                = [((NSValue *)[fullScreenFramesParts objectForKey:@"light"]) CGRectValue];
+        self.videoPlayer.videoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
+        self.videoPlayer.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
+        [self.view addSubview:self.videoPlayer.view];
+        
+        gotoLiveButton = [self makeLive];
+        [self.view addSubview:gotoLiveButton];
+        
+        startButton = [self makeStartButton];
+        [self.view addSubview:startButton];
+        
+        stopButton = [self makeStopButton];
+        [self.view addSubview:stopButton];
+        
+        activeElements = @[gotoLiveButton,startButton,stopButton];
+        [self revealThese:@[]];
+        
+        //self.telestrationViewController.telestration = [[PxpTelestration alloc] init];
+        [self addChildViewController:_telestrationViewController];
+        
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+        
+        
     }
         
-    _encoderManager         = mainappDelegate.encoderManager;
-        
-    CGRect screenBounds;
-    screenBounds = CGRectMake(0, 0, 1024, 768);
-    self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:screenBounds];
-    self.videoPlayer.view.frame                              = screenBounds;
-    self.videoPlayer.view.bounds                             = screenBounds;
-    self.videoPlayer.playBackView.frame                       = screenBounds;
-    self.videoPlayer.playBackView.bounds                      = screenBounds;
-    NSDictionary *fullScreenFramesParts = @{
-                                            @"light" : [NSValue valueWithCGRect:CGRectMake(screenBounds.size.width-32,
-                                                                                            60,
-                                                                                            self.videoPlayer.liveIndicatorLight.frame.size.width,
-                                                                                            self.videoPlayer.liveIndicatorLight.frame.size.height)],
-                                                
-                                            @"bar"   : [NSValue valueWithCGRect:CGRectMake(0,
-                                                                                            640,
-                                                                                            screenBounds.size.width,
-                                                                                            self.videoPlayer.videoControlBar.frame.size.height)],
-                                            @"slide" : [NSValue valueWithCGRect:CGRectMake(0,
-                                                                                            0,
-                                                                                            screenBounds.size.width-200,
-                                                                                            self.videoPlayer.videoControlBar.timeSlider.frame.size.height)]
-                                            };
-        
-        
-    self.videoPlayer.liveIndicatorLight.frame                = [((NSValue *)[fullScreenFramesParts objectForKey:@"light"]) CGRectValue];
-    self.videoPlayer.videoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
-    self.videoPlayer.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
-    [self.view addSubview:self.videoPlayer.view];
-        
-    gotoLiveButton = [self makeLive];
-    [self.view addSubview:gotoLiveButton];
-        
-    startButton = [self makeStartButton];
-    [self.view addSubview:startButton];
-        
-    stopButton = [self makeStopButton];
-    [self.view addSubview:stopButton];
-
-    activeElements = @[gotoLiveButton,startButton,stopButton];
-    [self revealThese:@[]];
-        
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+    
     
     return self;
 }
@@ -324,13 +336,24 @@
 
 
 - (void)viewDidLoad {
-    
     // Do any additional setup after loading the view.
+    [super viewDidLoad];
+    
+    NSLog(@"%@", [NSValue valueWithCGRect:self.view.frame]);
+    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0f);
+    self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
+    self.telestrationViewController.timeProvider = self;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (NSTimeInterval)currentTime {
+    return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);;
 }
 
 /*
