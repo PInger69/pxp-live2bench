@@ -42,7 +42,7 @@
 #define COMMENTBOX_HEIGHT           210
 #define COMMENTBOX_WIDTH            530//520
 
-@interface ListViewController () <PxpTimeProvider>
+@interface ListViewController ()
 
 @property (strong, nonatomic, nullable) PxpPlayerContext *context;
 @property (strong, nonatomic, nonnull) PxpPlayerMultiViewController *playerViewController;
@@ -439,6 +439,8 @@ NSMutableArray *oldEventNames;
     [self.videoPlayer.view addSubview:self.telestrationViewController.view];
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    self.telestrationViewController.timeProvider = self.videoPlayer;
 }
 
 -(void)getNextTag
@@ -2428,10 +2430,6 @@ NSMutableArray *oldEventNames;
         }
     }
     _tagsToDisplay = tags;
-}
-
-- (NSTimeInterval)currentTime {
-    return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
 }
 
 @end
