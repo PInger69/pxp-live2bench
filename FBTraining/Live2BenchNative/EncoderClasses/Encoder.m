@@ -618,7 +618,7 @@
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
                                      @{
                                        @"event"         : eventNm,
-                                       @"colour"        : [UserCenter getInstance].customerColor,
+                                       @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
                                        @"user"          : [UserCenter getInstance].userHID,
                                        @"time"          : tagTime,
                                        @"name"          : @"Tele",
@@ -1030,7 +1030,7 @@
                                       @"name"           : encodedName,
                                       @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
-    
+
     NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset/%@",self.ipAddress,jsonString]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
