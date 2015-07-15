@@ -399,7 +399,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         durationTagWarningTimer = nil;
     }
     
-    NSData *telestrationData = tagData[@"telestration"];
+    NSString *telestrationData = tagData[@"telestration"];
     _telestration = telestrationData ? [PxpTelestration telestrationFromData:telestrationData] : nil;
 }
 
