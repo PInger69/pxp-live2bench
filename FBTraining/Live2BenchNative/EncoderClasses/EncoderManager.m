@@ -254,7 +254,7 @@
                 if (electedMaster.liveEvent){
                     [weakEncoderManager declareCurrentEvent:electedMaster.liveEvent];
                     weakEncoderManager.liveEvent = electedMaster.liveEvent;
-                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:electedMaster];
+                     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:electedMaster];
                 }
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:weakEncoderManager];
@@ -272,7 +272,7 @@
             if (self.masterEncoder.liveEvent){
                 [self declareCurrentEvent:self.masterEncoder.liveEvent];
                 self.masterEncoder.liveEvent = self.masterEncoder.liveEvent;
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self.masterEncoder];
+                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self.masterEncoder];
             }
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_FOUND_MASTER object:self];

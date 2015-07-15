@@ -1982,10 +1982,9 @@
                         [_allEvents setObject:eventFinal forKey:LIVE_EVENT];
                         
                         //self.allEvents      = [pool copy];
-                        if (/*_justStarted &&*/ _status == ENCODER_STATUS_LIVE) {
-                            _justStarted = false;
+                        //if (_status == ENCODER_STATUS_LIVE) {
                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
-                        }
+                        //}
                         
                     }else{
                         [pool setObject:anEvent forKey:anEvent.name];

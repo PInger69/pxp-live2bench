@@ -217,7 +217,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1691"
             endingLineNumber = "1691"
-            landmarkName = "-onTagsChange:"
+            landmarkName = "-onNewTags:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -233,7 +233,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1694"
             endingLineNumber = "1694"
-            landmarkName = "-onTagsChange:"
+            landmarkName = "-onNewTags:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -265,7 +265,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1692"
             endingLineNumber = "1692"
-            landmarkName = "-onTagsChange:"
+            landmarkName = "-onNewTags:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1082,7 +1082,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1662"
             endingLineNumber = "1662"
-            landmarkName = "-onNewTags:"
+            landmarkName = "-onModifyTags:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1178,8 +1178,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1559"
             endingLineNumber = "1559"
-            landmarkName = "-getEventTags:extraData:"
-            landmarkType = "5">
+            landmarkName = "@implementation Encoder"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1258,7 +1258,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1668"
             endingLineNumber = "1668"
-            landmarkName = "-onNewTags:"
+            landmarkName = "-onModifyTags:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1444,13 +1444,45 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
-            timestampString = "458661477.877416"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "458662842.290889"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
-            landmarkName = "-declareCurrentEvent:"
+            startingLineNumber = "2047"
+            endingLineNumber = "2047"
+            landmarkName = "-searchForLiveEventResponse:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "458664177.210381"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1368"
+            endingLineNumber = "1368"
+            landmarkName = "-connectionDidFinishLoading:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "458664675.808159"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1986"
+            endingLineNumber = "1986"
+            landmarkName = "-getAllEventsResponse:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
