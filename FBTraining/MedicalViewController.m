@@ -392,16 +392,18 @@
 
 - (void)telestration:(nonnull PxpTelestration *)telestration didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
-    [telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.videoPlayer.currentTime]];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
-                                                                                                           @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
-                                                                                                           @"duration": [NSString stringWithFormat:@"%i",(int)roundf(telestration.duration)],
-                                                                                                           @"starttime": [NSString stringWithFormat:@"%f",telestration.startTime],
-                                                                                                           @"displaytime" : [NSString stringWithFormat:@"%f",telestration.startTime],
-                                                                                                           @"telestration" : telestration.data,
-                                                                                                           @"image" : telestration.thumbnail
-                                                                                                           }];
-    
+    if (telestration.actionStack.count) {
+        [telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.videoPlayer.currentTime]];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
+                                                                                                               @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
+                                                                                                               @"duration": [NSString stringWithFormat:@"%i",(int)roundf(telestration.duration)],
+                                                                                                               @"starttime": [NSString stringWithFormat:@"%f",telestration.startTime],
+                                                                                                               @"displaytime" : [NSString stringWithFormat:@"%f",telestration.startTime],
+                                                                                                               @"telestration" : telestration.data,
+                                                                                                               @"image" : telestration.thumbnail
+                                                                                                               }];
+        
+    }
     
     self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
 }
