@@ -33,6 +33,7 @@
 
 @property (strong, nonatomic, nonnull) UIButton *telestrationButton;
 
+@property (assign, nonatomic) BOOL telestrating;
 @property (assign, nonatomic) BOOL activeTelestration;
 
 @end
@@ -53,6 +54,9 @@
         _clearButton = [[PxpAddButton alloc] init];
         
         _telestrationButton = [[PxpTelestrationButton alloc] init];
+        
+        _showsControls = YES;
+        _showsClearButton = YES;
     }
     return self;
 }
@@ -71,6 +75,9 @@
         _clearButton = [[PxpAddButton alloc] init];
         
         _telestrationButton = [[PxpTelestrationButton alloc] init];
+        
+        _showsControls = YES;
+        _showsClearButton = YES;
     }
     return self;
 }
@@ -85,8 +92,10 @@
     self.captureArea.frame = self.renderView.bounds;
     self.renderView.backgroundColor = [UIColor clearColor];
     
-    self.showsControls = YES;
-    self.showsTelestrationControls = NO;
+    // make sure we run the setters :)
+    self.showsClearButton = self.showsClearButton;
+    self.showsControls = self.showsControls;
+    self.telestrating = NO;
     self.telestration = nil;
     
     [self.undoButton addTarget:self action:@selector(undoAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -129,8 +138,8 @@
 
 #pragma mark - Getters / Setters
 
-- (void)setShowsTelestrationControls:(BOOL)showsTelestrationControls {
-    [self setShowsTelestrationControls:showsTelestrationControls animated:NO];
+- (void)setTelestrating:(BOOL)telestrating {
+    [self setTelestrating:telestrating animated:NO];
 }
 
 - (void)setTelestration:(nullable PxpTelestration *)telestration {
@@ -141,10 +150,10 @@
     
     if (telestration) {
         self.telestrationButton.hidden = !self.showsControls;
-        self.showsTelestrationControls = self.showsTelestrationControls;
+        self.telestrating = self.telestrating;
     } else {
         self.telestrationButton.hidden = YES;
-        self.showsTelestrationControls = NO;
+        self.telestrating = NO;
     }
 }
 
@@ -157,9 +166,9 @@
         self.arrowButton.hidden = NO;
         self.colorPicker.hidden = NO;
         self.undoButton.hidden = NO;
-        self.clearButton.hidden = NO;
+        self.clearButton.hidden = !self.showsClearButton;
         
-        self.showsTelestrationControls = self.showsTelestrationControls;
+        self.telestrating = self.telestrating;
     } else {
         self.telestrationButton.hidden = YES;
         self.lineButton.hidden = YES;
@@ -168,9 +177,15 @@
         self.undoButton.hidden = YES;
         self.clearButton.hidden = YES;
         
-        self.showsTelestrationControls = NO;
+        self.telestrating = NO;
     }
     
+}
+
+- (void)setShowsClearButton:(BOOL)showsClearButton {
+    _showsClearButton = showsClearButton;
+    
+    self.clearButton.hidden = !showsClearButton;
 }
 
 #pragma mark - Buttons
@@ -194,7 +209,7 @@
 - (void)telestrationAction:(UIButton *)button {
     self.telestrationButton.selected = !self.telestrationButton.selected;
     self.captureArea.captureEnabled = self.telestrationButton.selected;
-    [self setShowsTelestrationControls:self.telestrationButton.selected animated:YES];
+    [self setTelestrating:self.telestrationButton.selected animated:YES];
 }
 
 #pragma mark - PxpCaptureAreaDelegate
@@ -220,12 +235,12 @@
 
 #pragma mark - Private Methods
 
-- (void)setShowsTelestrationControls:(BOOL)showsTelestrationControls animated:(BOOL)animated {
+- (void)setTelestrating:(BOOL)telestrating animated:(BOOL)animated {
     
-    [self willChangeValueForKey:@"showsTelestrationControls"];
-    _showsTelestrationControls = showsTelestrationControls;
+    [self willChangeValueForKey:@"telestrating"];
+    _telestrating = telestrating;
     
-    if (showsTelestrationControls) {
+    if (telestrating) {
         
         if (!self.activeTelestration) {
             self.activeTelestration = YES;
@@ -280,7 +295,7 @@
         
     }
     
-    [self didChangeValueForKey:@"showsTelestrationControls"];
+    [self didChangeValueForKey:@"telestrating"];
 }
 
 /*

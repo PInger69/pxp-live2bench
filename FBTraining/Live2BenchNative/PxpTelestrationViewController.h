@@ -23,10 +23,10 @@
 @property (weak, nonatomic, nullable) id<PxpTelestrationViewControllerDelegate> delegate;
 @property (weak, nonatomic, nullable) id<PxpTimeProvider> timeProvider;
 
-@property (assign, nonatomic) BOOL showsTelestrationControls;
-
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
 
 @property (assign, nonatomic) BOOL showsControls;
+
+@property (assign, nonatomic) BOOL showsClearButton;
 
 @end

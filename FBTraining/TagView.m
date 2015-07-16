@@ -82,7 +82,7 @@
                     NSMutableSet *colorSet = drawInfo[x];
                     
                     // add color to set
-                    [colorSet addObject:tag.colour];
+                    [colorSet addObject:tag.colour ? tag.colour : @"000000"];
                 }
             }
             

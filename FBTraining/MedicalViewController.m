@@ -363,6 +363,7 @@
     [self.videoPlayer.view addSubview:self.telestrationViewController.view];
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.delegate = self;
+    self.telestrationViewController.showsClearButton = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

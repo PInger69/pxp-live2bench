@@ -332,16 +332,16 @@ static NSMutableDictionary * openDurationTagsWithID;
 -(NSDictionary *) makeTagData{
     
     NSMutableDictionary *tagData = [[NSMutableDictionary alloc]initWithDictionary:@{
-                                                                                  @"colour"      : self.colour,
+                                                                                    @"colour"      : self.colour ? self.colour : @"000000",
                                                                                   @"deviceid"    : (self.deviceID)?self.deviceID:@"",
                                                                                   @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
-                                                                                  @"displaytime" : self.displayTime,
+                                                                                    @"displaytime" : self.displayTime ? self.displayTime : @"",
                                                                                   @"duration"    : (self.duration)?[NSString stringWithFormat: @"%i", self.duration]:@"",
                                                                                   @"event"       : (self.event.name)?self.event.name:@"",
-                                                                                  @"name"        : self.name,
+                                                                                  @"name"        : self.name ? self.name : @"",
                                                                                   @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
                                                                                   @"time"        : [NSString stringWithFormat:@"%f", self.time],
-                                                                                  @"user"        : self.user,
+                                                                                  @"user"        : self.user ? self.user : @"",
                                                                                   @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
                                                                                   @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
                                                                                   @"comment"     : (self.comment)?self.comment:@"",
