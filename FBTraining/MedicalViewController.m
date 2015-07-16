@@ -311,7 +311,7 @@
     startButton.hidden = true;
     stopButton.hidden = false;
     
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] init];
+    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
 }
 
 - (void)stopButtonClicked {

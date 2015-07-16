@@ -58,16 +58,18 @@ static __nonnull NSComparator _pxpTelestrationActionSortMethod;
         
         if (len >= sizeof(struct PxpTelestrationActionData)) {
             CGFloat r = data->color.r / 255.0, g = data->color.g / 255.0, b = data->color.b / 255.0, a = data->color.a / 255.0;
-            NSUInteger n_points = len - sizeof(struct PxpTelestrationActionData);
+            NSUInteger n_points = 0;//data->n_points;
             
             _strokeColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
             _strokeWidth = (CGFloat) data->width;
             _type = (PxpTelestrationActionType) data->type;
             
+            
             _points = [NSMutableArray arrayWithCapacity:n_points];
             
             for (NSUInteger i = 0; i < n_points; i++) {
-                [_points addObject:[[PxpTelestrationPoint alloc] initWithPointData:data->points[i]]];
+                struct PxpTelestrationPointData point_data = data->points[i];
+                [_points addObject:[[PxpTelestrationPoint alloc] initWithPointData:point_data]];
             }
             
         } else {
@@ -96,6 +98,8 @@ static __nonnull NSComparator _pxpTelestrationActionSortMethod;
     data->width = (Float32) self.strokeWidth;
     
     data->type = (UInt32) self.type;
+    
+    data->n_points = (UInt32) self.points.count;
     
     for (NSUInteger i = 0; i < self.points.count; i++) {
         data->points[i] = [self.points[i] pointData];

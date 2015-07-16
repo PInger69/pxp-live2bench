@@ -441,6 +441,7 @@ NSMutableArray *oldEventNames;
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     self.telestrationViewController.timeProvider = self.videoPlayer;
+    self.telestrationViewController.showsControls = NO;
 }
 
 -(void)getNextTag

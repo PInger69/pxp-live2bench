@@ -85,8 +85,13 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
+       [self builtTelestration:tagData];
         
-
+        NSString *teleData = tagData[@"telestration"];
+        if (teleData) {
+            _telestration = [PxpTelestration telestrationFromData:teleData];
+        }
+        
         // only add the timer if its your tag not someone elses
         if (_type == TagTypeOpenDuration && [self.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
             NSTimeInterval waitInterval = (330);
@@ -129,6 +134,12 @@ static NSMutableDictionary * openDurationTagsWithID;
     return self;
 }
 
+-(void)builtTelestration:(NSDictionary*)data
+{
+    if ([data objectForKey:@"telestration"]) {
+        self.telestration = [PxpTelestration telestrationFromData:[data objectForKey:@"telestration"]];
+    }
+}
 
 
 -(void)postDurationTagWarning:(NSTimer *)timer

@@ -16,7 +16,9 @@
 @synthesize actionStack = _actionStack;
 
 + (nonnull instancetype)telestrationFromData:(nonnull NSString *)data {
-    PxpTelestration *telestration = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSData alloc] initWithBase64EncodedString:data options:0]];
+    NSString *base64 = [[data stringByReplacingOccurrencesOfString:@"(" withString:@"+"] stringByReplacingOccurrencesOfString:@")" withString:@"/"];
+    
+    PxpTelestration *telestration = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSData alloc] initWithBase64EncodedString:base64 options:0]];
     
     return [telestration isKindOfClass:self] ? telestration : [[self alloc] init];
 }
@@ -57,7 +59,9 @@
 - (nonnull NSString *)data {
     // TODO - compress the data :)
     
-    return [[NSKeyedArchiver archivedDataWithRootObject:self] base64EncodedStringWithOptions:0];
+    NSString *base64 = [[NSKeyedArchiver archivedDataWithRootObject:self] base64EncodedStringWithOptions:0];
+    
+    return [[base64 stringByReplacingOccurrencesOfString:@"+" withString:@"("] stringByReplacingOccurrencesOfString:@"/" withString:@")"];
 }
 
 - (void)pushAction:(nonnull PxpTelestrationAction *)action {

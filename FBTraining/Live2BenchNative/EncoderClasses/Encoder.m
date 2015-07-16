@@ -624,7 +624,8 @@
                                        @"name"          : @"Tele",
                                        @"duration"      : tagDuration,
                                        @"type"          : [NSNumber numberWithInteger:TagTypeTele],
-                                       @"telestration"  : teleData
+                                       @"telestration"  : teleData,
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
     
     
@@ -1543,6 +1544,8 @@
     NSMutableDictionary *checkEventDic = ([type isEqualToString:EVENT_GET_TAGS])?[_allEvents objectForKey:extra[@"event"]]:nil ;
     Event * checkEvent = checkEventDic[@"non-local"];
     
+    NSString *s = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
+    ;
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
