@@ -604,7 +604,6 @@ static LocalEncoder * instance;
     newTag.uniqueID                 = tagArePresentCount;
     newTag.startTime                = newTag.time;
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
-
     
     newTag.own                      = YES;
     newTag.homeTeam                 = self.event.teams[@"homeTeam"];
