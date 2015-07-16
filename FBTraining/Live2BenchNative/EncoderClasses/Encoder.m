@@ -1920,7 +1920,7 @@
         NSLog( @"The results");
         PXPLog(@"The event has been deleted %@" , results);
     }
-    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_EVENT_COMPLETE object:self];
 }
 -(void)camerasGetResponce:(NSData *)data
 {

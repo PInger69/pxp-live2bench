@@ -160,6 +160,8 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define NOTIF_PRIMARY_ENCODER_CHANGE        @"NOTIF_PRIMARY_ENCODER_CHANGE"
 #define NOTIF_DELETE_TAG                    @"NOTIF_DELETE_TAG"
 
+#define NOTIF_DELETE_EVENT_COMPLETE         @"NOTIF_DELETE_EVENT_COMPLETE"
+
 
 
 

@@ -58,7 +58,7 @@ static __nonnull NSComparator _pxpTelestrationActionSortMethod;
         
         if (len >= sizeof(struct PxpTelestrationActionData)) {
             CGFloat r = data->color.r / 255.0, g = data->color.g / 255.0, b = data->color.b / 255.0, a = data->color.a / 255.0;
-            NSUInteger n_points = data->n_points;
+            NSUInteger n_points = 0;//data->n_points;
             
             _strokeColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
             _strokeWidth = (CGFloat) data->width;
