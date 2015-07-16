@@ -406,6 +406,7 @@
 		D7B79CD5182C398400F0876D /* saveToAlbumSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CD3182C398400F0876D /* saveToAlbumSelected@2x.png */; };
 		D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */; };
 		D7B7C4DB1AD6CDF800A5DEC3 /* FeedSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */; };
+		D7BA253C1B58081200DECA65 /* painting.png in Resources */ = {isa = PBXBuildFile; fileRef = D7BA253B1B58081200DECA65 /* painting.png */; };
 		D7C5F38119BF894A008190CE /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5F38019BF894A008190CE /* ScreenController.m */; };
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */; };
@@ -1090,6 +1091,7 @@
 		D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryViewController.m; sourceTree = "<group>"; };
 		D7B7C4D91AD6CDF800A5DEC3 /* FeedSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectCell.h; sourceTree = "<group>"; };
 		D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectCell.m; sourceTree = "<group>"; };
+		D7BA253B1B58081200DECA65 /* painting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = painting.png; sourceTree = "<group>"; };
 		D7C5F37F19BF894A008190CE /* ScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenController.h; sourceTree = "<group>"; };
 		D7C5F38019BF894A008190CE /* ScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenController.m; sourceTree = "<group>"; };
 		D7C624E6180EDBF700C2DDD7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -1972,6 +1974,7 @@
 			isa = PBXGroup;
 			children = (
 				D77BE0221B5556A4007C5E9B /* MedicalViewController.h */,
+				D7BA253B1B58081200DECA65 /* painting.png */,
 				D77BE0231B5556A4007C5E9B /* MedicalViewController.m */,
 				D70E21641B434E2600F6C1D5 /* BonjourModule.h */,
 				D70E21651B434E2600F6C1D5 /* BonjourModule.m */,
@@ -2674,6 +2677,7 @@
 				D7AFD98716D520D6000CA781 /* slowmo.png in Resources */,
 				D79F9B7517F5BC1F0081C5E9 /* vertical_myplayXplay_case@2x.png in Resources */,
 				D786C1EE17EB9BF90042DD96 /* clipTabSelect@2x.png in Resources */,
+				D7BA253C1B58081200DECA65 /* painting.png in Resources */,
 				D7AFD98816D520D6000CA781 /* slowmo@2x.png in Resources */,
 				D773A36B16D87DE5007A0BA9 /* coach.png in Resources */,
 				D7C903AE17F4B7A0002A1FDD /* continue_unselected@2x.png in Resources */,
