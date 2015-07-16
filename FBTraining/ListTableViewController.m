@@ -272,7 +272,7 @@
                                                                                                                                             @"feed":feed,
                                                                                                                                             @"time": [NSString stringWithFormat:@"%f",tag.startTime],
                                                                                                                                             @"duration": [NSString stringWithFormat:@"%d",tag.duration],
-                                                                                                                                            @"comment": tag.comment,
+                                                                                                                                            @"comment": tag.comment ? tag.comment : @"",
                                                                                                                                             @"forWhole":tag,
                                                                                                                                             @"state":[NSNumber numberWithInteger:RJLPS_Play]
                                                                                                                                             }}];

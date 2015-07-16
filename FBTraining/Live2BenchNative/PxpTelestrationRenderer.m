@@ -51,6 +51,9 @@
 }
 
 - (void)renderInContext:(nullable CGContextRef)context size:(CGSize)size atTime:(NSTimeInterval)time {
+    
+    CGVector scale = self.telestration.size.width && self.telestration.size.height ? CGVectorMake(size.width / self.telestration.size.width, size.height / self.telestration.size.height) : CGVectorMake(1.0, 1.0);
+    
     CGContextSaveGState(context);
     
     CGContextSetBlendMode(context, kCGBlendModeCopy);
@@ -97,6 +100,8 @@
         self.cachedPoint = nil;
     }
     
+    CGContextSaveGState(ctx);
+    CGContextScaleCTM(ctx, scale.dx, scale.dy);
     for (NSUInteger i = 0; i < actions.count; i++) {
         PxpTelestrationAction *action = actions[i];
         
@@ -112,6 +117,8 @@
             }
         }
     }
+    CGContextRestoreGState(ctx);
+    
     
     CGContextRestoreGState(ctx);
     
@@ -122,7 +129,8 @@
     CGContextDrawLayerInRect(bctx, CGRectMake(0.0, 0.0, pixelSize.width, pixelSize.height), self.layer);
     CGContextDrawLayerInRect(context, CGRectMake(0.0, 0.0, size.width, size.height), self.layer);
     
-    
+    CGContextSaveGState(context);
+    CGContextScaleCTM(context, scale.dx, scale.dy);
     for (NSUInteger i = 0; i < actions.count; i++) {
         PxpTelestrationAction *action = actions[i];
         
@@ -188,6 +196,7 @@
             
         }
     }
+    CGContextRestoreGState(context);
     
     CGContextRestoreGState(context);
     self.cachedPoint = [actions.lastObject points].lastObject;

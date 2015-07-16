@@ -15,6 +15,7 @@ struct PxpTelestrationActionData {
     } color;
     Float32 width;
     UInt32 type;
+    UInt32 n_points;
     struct PxpTelestrationPointData points[]; // defined when allocating
 };
 
