@@ -26,6 +26,8 @@
 #import "ListPopoverController.h"
 #import "EncoderClasses/EncoderProtocol.h"
 
+#import "PxpTelestrationViewController.h"
+
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
 #define TOTAL_WIDTH          1024
@@ -35,6 +37,12 @@
 #define CONTROL_SPACER_Y       50
 #define PADDING                 5
 
+
+@interface Live2BenchViewController ()
+
+@property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
+
+@end
 
 
 @implementation Live2BenchViewController{
@@ -122,7 +130,8 @@ static void * eventContext      = &eventContext;
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
     }
     
-    
+    _telestrationViewController = [[PxpTelestrationViewController alloc] init];
+    [self addChildViewController:_telestrationViewController];
   
     __block Live2BenchViewController * weakSelf = self;
     tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -575,6 +584,12 @@ static void * eventContext      = &eventContext;
     telestration.delegate = self;
      */
 
+    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0);
+    
+    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
+    
+    self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.telestrationViewController.showsControls = NO;
     
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer:pinchGesture];
