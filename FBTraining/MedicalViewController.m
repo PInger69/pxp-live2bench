@@ -397,7 +397,8 @@
                                                                                                            @"duration": [NSString stringWithFormat:@"%i",(int)roundf(telestration.duration)],
                                                                                                            @"starttime": [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                            @"displaytime" : [NSString stringWithFormat:@"%f",telestration.startTime],
-                                                                                                           @"telestration" : telestration.data
+                                                                                                           @"telestration" : telestration.data,
+                                                                                                           @"image" : telestration.thumbnail
                                                                                                            }];
     
     
