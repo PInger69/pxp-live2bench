@@ -1724,7 +1724,8 @@
     NSMutableDictionary *tData = [[NSMutableDictionary alloc]initWithDictionary:data];
     [tData removeObjectForKey:@"telefull"];
     [tData removeObjectForKey:@"teleurl"];
-    [tData removeObjectForKey:@"url"];
+    [tData setObject:[tData objectForKey:@"time"] forKey:@"starttime"];
+    //[tData removeObjectForKey:@"url"];
     
     if ([tData objectForKey:@"id"]) {
         if ([_allEvents objectForKey:[tData objectForKey:@"event"]]){
