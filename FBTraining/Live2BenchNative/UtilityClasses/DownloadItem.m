@@ -174,6 +174,10 @@
     if([self.delegate respondsToSelector:@selector(onDownloadComplete:)]) {
         [self.delegate onDownloadComplete:self];
     }
+    if (self.onComplete){
+        self.onComplete();
+    }
+    
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

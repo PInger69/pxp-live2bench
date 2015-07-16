@@ -250,6 +250,18 @@ static void * eventContext      = &eventContext;
 
 -(void)eventChanged:(NSNotification*)note
 {
+<<<<<<< HEAD
+    if (_teamPick){ // pick teams is up get rid of it safly
+        [_teamPick clear];
+        [_teamPick dismissPopoverAnimated:NO];
+        _teamPick = nil;
+=======
+    if ([[note.object event].name isEqualToString:_currentEvent.name]) {
+        [self onEventChange];
+        return;
+>>>>>>> 2680cd33263491ed9d96081c218165c2cc446d36
+    }
+    
     if (_currentEvent != nil) {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
@@ -262,7 +274,9 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
 
-    } else {
+    }
+    
+    if ([((id <EncoderProtocol>) note.object) event]) {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
         [self turnSwitchOn];
         [_feedSwitch watchCurrentEvent:_currentEvent];
@@ -273,6 +287,7 @@ static void * eventContext      = &eventContext;
         if (_currentEvent.live) {
             [self gotLiveEvent];
         }
+
     }
     
     [_videoBarViewController update];
@@ -443,59 +458,28 @@ static void * eventContext      = &eventContext;
 
 -(void)gotLiveEvent
 {
-        Feed *info = [_currentEvent.feeds allValues] [0];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+    Feed *info = [_currentEvent.feeds allValues] [0];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
     
-        _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[_currentEvent.rawData[@"homeTeam"], _currentEvent.rawData[@"visitTeam"]]];
+    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[_currentEvent.rawData[@"homeTeam"], _currentEvent.rawData[@"visitTeam"]]];
     
-        [_teamPick addOnCompletionBlock:^(NSString *pick){
-            [UserCenter getInstance].userPick = pick;
-            [self displayLable];
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
-                                                             userInfo:@{@"tabName":@"Live2Bench"}];
-        }];
-        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
-                                   animated:YES];
+    __block Live2BenchViewController *weakSelf = self;
+    [_teamPick addOnCompletionBlock:^(NSString *pick){
+        [UserCenter getInstance].userPick = pick;
+        [weakSelf displayLable];
+        [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
+                                                         userInfo:@{@"tabName":@"Live2Bench"}];
+    }];
+    [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                               animated:YES];
     
-        self.videoPlayer.live = YES;
-        [_pipController pipsAndVideoPlayerToLive:info];
-        [_videoBarViewController.tagMarkerController cleanTagMarkers];
-        [_videoBarViewController.tagMarkerController createTagMarkers];
+    self.videoPlayer.live = YES;
+    [_pipController pipsAndVideoPlayerToLive:info];
+    [_videoBarViewController.tagMarkerController cleanTagMarkers];
+    [_videoBarViewController.tagMarkerController createTagMarkers];
     
 }
 
-/*-(void)gotLiveEvent
-{
-    if (_encoderManager.primaryEncoder == nil) {
-        _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
-    }
-    eventOnPrimaryEncoder = _encoderManager.primaryEncoder;
-   if (eventOnPrimaryEncoder.event == _encoderManager.masterEncoder.liveEvent) {
-        _appDel.encoderManager.primaryEncoder = _appDel.encoderManager.masterEncoder;
-        eventOnPrimaryEncoder = _encoderManager.primaryEncoder;
-        
-        Feed *info = [_appDel.encoderManager.masterEncoder.liveEvent.feeds allValues] [0];
-       [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-       
-        Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
-        _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
-        [_teamPick addOnCompletionBlock:^(NSString *pick){
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
-                                                             userInfo:@{@"tabName":@"Live2Bench"}];
-            
-            NSString *info = @"Live";
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
-        }];
-        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
-                                   animated:YES];
-       
-       [_pipController pipsAndVideoPlayerToLive:info];
-       [_videoBarViewController.tagMarkerController cleanTagMarkers];
-       [_videoBarViewController.tagMarkerController createTagMarkers];
-   }
-    
-}*/
 
 #pragma mark -
 #pragma mark Gesture
@@ -776,12 +760,7 @@ static void * eventContext      = &eventContext;
 {
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
-<<<<<<< HEAD
-        Feed *info = [_currentEvent.feeds allValues] [0];
-         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
-=======
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
->>>>>>> 2e1c0b8d876440f365d99ccedb7aed01ddcbd2b4
         [_videoBarViewController.tagMarkerController cleanTagMarkers];
         [_videoBarViewController.tagMarkerController createTagMarkers];
         return;
@@ -792,37 +771,7 @@ static void * eventContext      = &eventContext;
     
 }
 
-/*- (void)goToLive
-{
-    Feed *info = [_appDel.encoderManager.masterEncoder.liveEvent.feeds allValues] [0];
-    if (_appDel.encoderManager.liveEventName == nil) {
-        NSLog(@"NO LIVE EVENT");
-        return;
-    }
 
-    if ([_encoderManager.primaryEncoder event] != _encoderManager.masterEncoder.liveEvent) {
-        _encoderManager.primaryEncoder = _encoderManager.masterEncoder;
-        _encoderManager.primaryEncoder.event = _encoderManager.masterEncoder.liveEvent;
-        Event *liveEvent = [_appDel.encoderManager getEventByName:_appDel.encoderManager.liveEventName];
-        
-        //info = [_appDel.encoderManager.masterEncoder.liveEvent.feeds allValues] [0];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAGS_ARE_READY object:nil];
-        _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[liveEvent.rawData[@"homeTeam"], liveEvent.rawData[@"visitTeam"]]];
-        [_teamPick addOnCompletionBlock:^(NSString *pick){
-            [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_USER_CENTER_UPDATE  object:nil userInfo:@{@"userPick":pick}];
-            NSString *info = @"Live";
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateInfoLabel" object:nil userInfo:@{@"info":info}];
-        }];
-        [_teamPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
-                                   animated:YES];
-        }
-     [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
-    [_pipController pipsAndVideoPlayerToLive:info];
-    [_videoBarViewController.tagMarkerController cleanTagMarkers];
-    [_videoBarViewController.tagMarkerController createTagMarkers];
-
-}*/
 
 /**
  *  This creates the side tag buttons from the userCenter

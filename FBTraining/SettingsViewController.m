@@ -135,7 +135,7 @@ SVSignalStatus signalStatus;
         
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterFound:) name:NOTIF_ENCODER_MASTER_FOUND object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(askUserToPickATeam) name:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
+
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showInformation) name:NOTIF_LIVE_EVENT_FOUND object:nil];
         
         
@@ -1045,18 +1045,6 @@ SVSignalStatus signalStatus;
     }
 }
 
-
--(void)askUserToPickATeam
-{
-    
-//    if (askUser && askUser.isPopoverVisible) return;
-//    askUser = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag",nil) buttonListNames:@[homeTeam,awayTeam]];
-//    __block UserCenter * weakSelf = userCenter;
-//    [askUser addOnCompletionBlock:^(NSString *pick) {
-//        weakSelf.userPick = pick;
-//    }];
-//    [askUser presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view animated:NO];
-}
 
 -(void) showInformation
 {

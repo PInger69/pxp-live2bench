@@ -393,10 +393,17 @@
     NSMutableDictionary * eventDic         = [self.masterEncoder.allEvents objectForKey:theEvent.name];
     
     if (theEvent.isBuilt){
-        NSString * videoFolderPath = [_localMediaManager saveEvent:eventDic]; // This makes a plist for the event and a location to save the video
-        NSString * savedFileName   = [encoderSource lastPathComponent];
-        NSString * downloaderKey   = [NSString stringWithFormat:@"%@_%@",theEvent.name,source ];
-        (void)[Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:downloaderKey];
+        
+        __block Event * weakEvent = theEvent;
+
+        NSString * videoFolderPath      = [_localMediaManager saveEvent:eventDic]; // This makes a plist for the event and a location to save the video
+        __block Event * weakLocalEvent  = [_localMediaManager getEventByName:weakEvent.name];
+        NSString * savedFileName        = [encoderSource lastPathComponent];
+        NSString * downloaderKey        = [NSString stringWithFormat:@"%@_%@",theEvent.name,source ];
+        DownloadItem * item =         [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:downloaderKey];
+        [item setOnComplete:^{
+            [weakLocalEvent buildFeeds];
+        }];
     } else {
         PXPLog(@"Event Download Failed... Event was not built... please build");
     }

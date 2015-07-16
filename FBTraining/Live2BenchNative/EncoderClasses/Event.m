@@ -375,6 +375,27 @@
 }
 
 
+-(void)destroy
+{
+
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                @"name": self.name,
+                                                                                @"hid": self.hid
+                                                                                }];
+    
+    [self.parentEncoder issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+
+
+}
+
+// this rebuilds feeds this will add feeds that are missing from the event
+-(void)buildFeeds
+{
+    NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:[self buildFeeds:_rawData isLive:_live isLocal:YES]];
+    [temp addEntriesFromDictionary:_feeds];
+    _feeds = [temp copy];
+}
+
 // this builds
 -(void)build
 {

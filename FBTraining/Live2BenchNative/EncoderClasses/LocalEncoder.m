@@ -514,13 +514,15 @@ static LocalEncoder * instance;
 
 -(void)ondeleteEvent:(NSNotification *)note
 {
-//    Event *eventToDelete = note.object;
+    Event *eventToDelete = note.object;
 //    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
 //                                                                                @"name": eventToDelete.name,
 //                                                                                @"hid": eventToDelete.hid
 //                                                                                }];
 //    
 //    [self issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+    
+    [[LocalMediaManager getInstance] deleteEvent:eventToDelete];
 }
 
 -(void)onDownloadClip:(NSNotification *)note
