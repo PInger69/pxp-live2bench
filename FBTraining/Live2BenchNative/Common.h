@@ -299,6 +299,7 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
  */
 
 #define STRING_LIVE2BENCH_CONTEXT  @"Live2Bench Tab"
+#define STRING_MEDICAL_CONTEXT     @"Medical Tab"
 
 
 /**
