@@ -629,7 +629,7 @@
                                        }];
     
     
-    [self issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
     
 }
 
@@ -1013,7 +1013,7 @@
                                       @"requesttime"    : GET_NOW_TIME_STRING
                                       //,@"colour"         : [Utility hexStringFromColor: [tData objectForKey:@"colour"]]
                                     }];
-    
+  
     NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
@@ -1029,15 +1029,48 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      @"requesttime"    : GET_NOW_TIME_STRING
                                       }];
-
+    
     NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress] ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset/%@",self.ipAddress,jsonString] ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    encoderConnection.connectionType        = MAKE_TAG;
+    encoderConnection.connectionType        = MAKE_TELE_TAG;
     encoderConnection.timeStamp             = aTimeStamp;
+    
+   /* NSString *jsonString                    = [Utility dictToJSON:tData];
+    jsonString = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress]  ];
+    NSMutableURLRequest *someUrlRequest     = [NSMutableURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    [someUrlRequest setHTTPMethod:@"POST"];
+    
+    NSString *boundary = @"----WebKitFormBoundarycC4YiaUFwM44F6rT";
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+    [someUrlRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
+    NSMutableData *body = [NSMutableData data];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=tag\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
+    // Now we need to append the different data 'segments'. We first start by adding the boundary.
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    //[body appendData:[@"Content-Disposition: form-data; name=file; filename=picture.png\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // We now need to tell the receiver what content type we have
+    // In my case it's a png image. If you have a jpg, set it to 'image/jpg'
+    //[body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // Now we append the actual image data
+    [body appendData:[NSData dataWithData:imageData]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    // and again the delimiting boundary
+    //NSString *tempstr =[[NSString alloc]initWithData:body encoding:NSStringEncodingConversionAllowLossy];
+    [someUrlRequest setHTTPBody:body];
+    
+    urlRequest                              = someUrlRequest;
+    encoderConnection                       = [NSURLConnection connectionWithRequest:someUrlRequest delegate:self];
+    encoderConnection.connectionType        = MAKE_TELE_TAG;
+    encoderConnection.timeStamp             = aTimeStamp;*/
+
 }
 
 
