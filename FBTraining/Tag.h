@@ -40,6 +40,7 @@
 #import <Foundation/Foundation.h>
 #import "FilterItemProtocol.h"
 #import "Event.h"
+#import "PxpTelestration.h"
 
 typedef NS_ENUM (NSInteger,TagType){
     TagTypeNormal                  = 0,
@@ -104,7 +105,8 @@ typedef NS_ENUM (NSInteger,TagType){
 //@property (strong, nonatomic) NSString *requestTime;
 @property (strong, nonatomic) NSString      *durationID;
 
-
+/// The telestration accociated with the tag.
+@property (strong, nonatomic, nullable) PxpTelestration *telestration;
 
 +(void)clearDurationTags;
 +( NSString *)makeDurationID;

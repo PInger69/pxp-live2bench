@@ -63,6 +63,20 @@
 		AED2EBCD1B1DED25008AD159 /* NCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBC81B1DED25008AD159 /* NCPlayer.m */; };
 		AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBCA1B1DED25008AD159 /* NCPlayerContext.m */; };
 		AED2EBCF1B1DED25008AD159 /* NCPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AED2EBCC1B1DED25008AD159 /* NCPlayerView.m */; };
+		AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484951B56A23600769EEF /* PxpAddButton.m */; };
+		AED484B21B56A23600769EEF /* PxpArrowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484971B56A23600769EEF /* PxpArrowButton.m */; };
+		AED484B31B56A23600769EEF /* PxpCircleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484991B56A23600769EEF /* PxpCircleButton.m */; };
+		AED484B41B56A23600769EEF /* PxpColorPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = AED4849B1B56A23600769EEF /* PxpColorPicker.m */; };
+		AED484B51B56A23600769EEF /* PxpLineButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AED4849D1B56A23600769EEF /* PxpLineButton.m */; };
+		AED484B61B56A23600769EEF /* PxpTelestration.m in Sources */ = {isa = PBXBuildFile; fileRef = AED4849F1B56A23600769EEF /* PxpTelestration.m */; };
+		AED484B71B56A23600769EEF /* PxpTelestrationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484A11B56A23600769EEF /* PxpTelestrationAction.m */; };
+		AED484B81B56A23600769EEF /* PxpTelestrationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484A31B56A23600769EEF /* PxpTelestrationButton.m */; };
+		AED484B91B56A23600769EEF /* PxpTelestrationCaptureArea.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484A51B56A23600769EEF /* PxpTelestrationCaptureArea.m */; };
+		AED484BA1B56A23600769EEF /* PxpTelestrationPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484A71B56A23600769EEF /* PxpTelestrationPoint.m */; };
+		AED484BB1B56A23600769EEF /* PxpTelestrationRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484A91B56A23600769EEF /* PxpTelestrationRenderer.m */; };
+		AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484AB1B56A23600769EEF /* PxpTelestrationRenderView.m */; };
+		AED484BD1B56A23600769EEF /* PxpTelestrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484AD1B56A23600769EEF /* PxpTelestrationViewController.m */; };
+		AED484BE1B56A23600769EEF /* PxpUndoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AED484B01B56A23600769EEF /* PxpUndoButton.m */; };
 		AEDD7C791B4AB717003C82F3 /* PxpLoadAction.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7C741B4AB717003C82F3 /* PxpLoadAction.m */; };
 		AEDD7C7A1B4AB717003C82F3 /* PxpPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7C761B4AB717003C82F3 /* PxpPlayer.m */; };
 		AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7C781B4AB717003C82F3 /* PxpPlayerContext.m */; };
@@ -223,6 +237,7 @@
 		D779390C1822F8F90037CF82 /* signalStrength.png in Resources */ = {isa = PBXBuildFile; fileRef = D779390B1822F8F90037CF82 /* signalStrength.png */; };
 		D77939101823E82A0037CF82 /* signalStrength.gif in Resources */ = {isa = PBXBuildFile; fileRef = D779390E1823E82A0037CF82 /* signalStrength.gif */; };
 		D77939111823E82A0037CF82 /* signalStrength@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = D779390F1823E82A0037CF82 /* signalStrength@2x.gif */; };
+		D77BE0241B5556A4007C5E9B /* MedicalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D77BE0231B5556A4007C5E9B /* MedicalViewController.m */; };
 		D7807BF1181830100061305A /* live@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7807BF0181830100061305A /* live@2x.png */; };
 		D7807BF318185F000061305A /* extendendsec.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47917F5C73200D5C185 /* extendendsec.png */; };
 		D7807BF418185F040061305A /* extendstartsec.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1D47717F5C73200D5C185 /* extendstartsec.png */; };
@@ -530,6 +545,35 @@
 		AED2EBCA1B1DED25008AD159 /* NCPlayerContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCPlayerContext.m; sourceTree = "<group>"; };
 		AED2EBCB1B1DED25008AD159 /* NCPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCPlayerView.h; sourceTree = "<group>"; };
 		AED2EBCC1B1DED25008AD159 /* NCPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCPlayerView.m; sourceTree = "<group>"; };
+		AED484941B56A23600769EEF /* PxpAddButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpAddButton.h; sourceTree = "<group>"; };
+		AED484951B56A23600769EEF /* PxpAddButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpAddButton.m; sourceTree = "<group>"; };
+		AED484961B56A23600769EEF /* PxpArrowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpArrowButton.h; sourceTree = "<group>"; };
+		AED484971B56A23600769EEF /* PxpArrowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpArrowButton.m; sourceTree = "<group>"; };
+		AED484981B56A23600769EEF /* PxpCircleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpCircleButton.h; sourceTree = "<group>"; };
+		AED484991B56A23600769EEF /* PxpCircleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpCircleButton.m; sourceTree = "<group>"; };
+		AED4849A1B56A23600769EEF /* PxpColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpColorPicker.h; sourceTree = "<group>"; };
+		AED4849B1B56A23600769EEF /* PxpColorPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpColorPicker.m; sourceTree = "<group>"; };
+		AED4849C1B56A23600769EEF /* PxpLineButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpLineButton.h; sourceTree = "<group>"; };
+		AED4849D1B56A23600769EEF /* PxpLineButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpLineButton.m; sourceTree = "<group>"; };
+		AED4849E1B56A23600769EEF /* PxpTelestration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestration.h; sourceTree = "<group>"; };
+		AED4849F1B56A23600769EEF /* PxpTelestration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestration.m; sourceTree = "<group>"; };
+		AED484A01B56A23600769EEF /* PxpTelestrationAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationAction.h; sourceTree = "<group>"; };
+		AED484A11B56A23600769EEF /* PxpTelestrationAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationAction.m; sourceTree = "<group>"; };
+		AED484A21B56A23600769EEF /* PxpTelestrationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationButton.h; sourceTree = "<group>"; };
+		AED484A31B56A23600769EEF /* PxpTelestrationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationButton.m; sourceTree = "<group>"; };
+		AED484A41B56A23600769EEF /* PxpTelestrationCaptureArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationCaptureArea.h; sourceTree = "<group>"; };
+		AED484A51B56A23600769EEF /* PxpTelestrationCaptureArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationCaptureArea.m; sourceTree = "<group>"; };
+		AED484A61B56A23600769EEF /* PxpTelestrationPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationPoint.h; sourceTree = "<group>"; };
+		AED484A71B56A23600769EEF /* PxpTelestrationPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationPoint.m; sourceTree = "<group>"; };
+		AED484A81B56A23600769EEF /* PxpTelestrationRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationRenderer.h; sourceTree = "<group>"; };
+		AED484A91B56A23600769EEF /* PxpTelestrationRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationRenderer.m; sourceTree = "<group>"; };
+		AED484AA1B56A23600769EEF /* PxpTelestrationRenderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationRenderView.h; sourceTree = "<group>"; };
+		AED484AB1B56A23600769EEF /* PxpTelestrationRenderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationRenderView.m; sourceTree = "<group>"; };
+		AED484AC1B56A23600769EEF /* PxpTelestrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationViewController.h; sourceTree = "<group>"; };
+		AED484AD1B56A23600769EEF /* PxpTelestrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpTelestrationViewController.m; sourceTree = "<group>"; };
+		AED484AE1B56A23600769EEF /* PxpTimeProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTimeProvider.h; sourceTree = "<group>"; };
+		AED484AF1B56A23600769EEF /* PxpUndoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpUndoButton.h; sourceTree = "<group>"; };
+		AED484B01B56A23600769EEF /* PxpUndoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpUndoButton.m; sourceTree = "<group>"; };
 		AEDD7C731B4AB717003C82F3 /* PxpLoadAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpLoadAction.h; sourceTree = "<group>"; };
 		AEDD7C741B4AB717003C82F3 /* PxpLoadAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpLoadAction.m; sourceTree = "<group>"; };
 		AEDD7C751B4AB717003C82F3 /* PxpPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayer.h; sourceTree = "<group>"; };
@@ -808,6 +852,8 @@
 		D779390B1822F8F90037CF82 /* signalStrength.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = signalStrength.png; sourceTree = "<group>"; };
 		D779390E1823E82A0037CF82 /* signalStrength.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = signalStrength.gif; sourceTree = "<group>"; };
 		D779390F1823E82A0037CF82 /* signalStrength@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "signalStrength@2x.gif"; sourceTree = "<group>"; };
+		D77BE0221B5556A4007C5E9B /* MedicalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalViewController.h; sourceTree = "<group>"; };
+		D77BE0231B5556A4007C5E9B /* MedicalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalViewController.m; sourceTree = "<group>"; };
 		D7807BF0181830100061305A /* live@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "live@2x.png"; sourceTree = "<group>"; };
 		D781900A1A70649800B964B4 /* EncoderManagerActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderManagerActionPack.h; path = EncoderClasses/EncoderManagerActionPack.h; sourceTree = "<group>"; };
 		D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderManagerActionPack.m; path = EncoderClasses/EncoderManagerActionPack.m; sourceTree = "<group>"; };
@@ -1239,6 +1285,42 @@
 				AED2EBCC1B1DED25008AD159 /* NCPlayerView.m */,
 			);
 			name = NCPlayer;
+			sourceTree = "<group>";
+		};
+		AED484931B56A22600769EEF /* PxpTelestration */ = {
+			isa = PBXGroup;
+			children = (
+				AED484941B56A23600769EEF /* PxpAddButton.h */,
+				AED484951B56A23600769EEF /* PxpAddButton.m */,
+				AED484961B56A23600769EEF /* PxpArrowButton.h */,
+				AED484971B56A23600769EEF /* PxpArrowButton.m */,
+				AED484981B56A23600769EEF /* PxpCircleButton.h */,
+				AED484991B56A23600769EEF /* PxpCircleButton.m */,
+				AED4849A1B56A23600769EEF /* PxpColorPicker.h */,
+				AED4849B1B56A23600769EEF /* PxpColorPicker.m */,
+				AED4849C1B56A23600769EEF /* PxpLineButton.h */,
+				AED4849D1B56A23600769EEF /* PxpLineButton.m */,
+				AED4849E1B56A23600769EEF /* PxpTelestration.h */,
+				AED4849F1B56A23600769EEF /* PxpTelestration.m */,
+				AED484A01B56A23600769EEF /* PxpTelestrationAction.h */,
+				AED484A11B56A23600769EEF /* PxpTelestrationAction.m */,
+				AED484A21B56A23600769EEF /* PxpTelestrationButton.h */,
+				AED484A31B56A23600769EEF /* PxpTelestrationButton.m */,
+				AED484A41B56A23600769EEF /* PxpTelestrationCaptureArea.h */,
+				AED484A51B56A23600769EEF /* PxpTelestrationCaptureArea.m */,
+				AED484A61B56A23600769EEF /* PxpTelestrationPoint.h */,
+				AED484A71B56A23600769EEF /* PxpTelestrationPoint.m */,
+				AED484A81B56A23600769EEF /* PxpTelestrationRenderer.h */,
+				AED484A91B56A23600769EEF /* PxpTelestrationRenderer.m */,
+				AED484AA1B56A23600769EEF /* PxpTelestrationRenderView.h */,
+				AED484AB1B56A23600769EEF /* PxpTelestrationRenderView.m */,
+				AED484AC1B56A23600769EEF /* PxpTelestrationViewController.h */,
+				AED484AD1B56A23600769EEF /* PxpTelestrationViewController.m */,
+				AED484AE1B56A23600769EEF /* PxpTimeProvider.h */,
+				AED484AF1B56A23600769EEF /* PxpUndoButton.h */,
+				AED484B01B56A23600769EEF /* PxpUndoButton.m */,
+			);
+			name = PxpTelestration;
 			sourceTree = "<group>";
 		};
 		AEDD7C721B4AB6CF003C82F3 /* PxpPlayer */ = {
@@ -1886,6 +1968,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D77BE0221B5556A4007C5E9B /* MedicalViewController.h */,
+				D77BE0231B5556A4007C5E9B /* MedicalViewController.m */,
 				D70E21641B434E2600F6C1D5 /* BonjourModule.h */,
 				D70E21651B434E2600F6C1D5 /* BonjourModule.m */,
 				D788262B1B42D9D400969D43 /* LocalMediaManager.h */,
@@ -2074,6 +2158,7 @@
 		D7A9394916ADA65E006CBAB2 /* Live2BenchNative */ = {
 			isa = PBXGroup;
 			children = (
+				AED484931B56A22600769EEF /* PxpTelestration */,
 				AEDD7C721B4AB6CF003C82F3 /* PxpPlayer */,
 				D70E33081AEEDC0B00CE5BFB /* LooseImages */,
 				BD95AB03183A72AB00A910AE /* Live2BenchNative.entitlements */,
@@ -2777,6 +2862,7 @@
 				D7A188C81A0D2D4F00513909 /* BitRateViewController.m in Sources */,
 				D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */,
 				D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */,
+				AED484BD1B56A23600769EEF /* PxpTelestrationViewController.m in Sources */,
 				D7C931041B320CB000E725B9 /* ListViewFullScreenViewController.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
 				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
@@ -2809,8 +2895,10 @@
 				D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */,
 				D79D708B19D603E2001FBE16 /* CustomTabViewController.m in Sources */,
 				D784EF3D1AA4B0570068D260 /* ARCalendarTableViewCell.m in Sources */,
+				AED484BB1B56A23600769EEF /* PxpTelestrationRenderer.m in Sources */,
 				D7383061198AECD60053F0A1 /* BreadCrumbView.m in Sources */,
 				AEDD7C831B4AB7CD003C82F3 /* PxpClipContext.m in Sources */,
+				AED484B81B56A23600769EEF /* PxpTelestrationButton.m in Sources */,
 				D7A673DB180EC8A1001C68D1 /* BookmarkViewController.m in Sources */,
 				AEDD7C961B4AB830003C82F3 /* PxpPlayerControlSlider.m in Sources */,
 				9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */,
@@ -2823,6 +2911,7 @@
 				AEDD7C971B4AB830003C82F3 /* PxpPlayerControlToolbar.m in Sources */,
 				D784EF4D1AA4B6620068D260 /* RangeSlider.m in Sources */,
 				BDE05E9017F08AAD00CD6012 /* UIColor+Expanded.m in Sources */,
+				D77BE0241B5556A4007C5E9B /* MedicalViewController.m in Sources */,
 				D713AAC319C1E604004A74AF /* AirPlayDetector.m in Sources */,
 				D786C1FD17EC9EF30042DD96 /* BorderlessButton.m in Sources */,
 				D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */,
@@ -2856,6 +2945,7 @@
 				D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */,
 				AED2EBCD1B1DED25008AD159 /* NCPlayer.m in Sources */,
 				D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */,
+				AED484B51B56A23600769EEF /* PxpLineButton.m in Sources */,
 				AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */,
 				D7CCE7E81AC1C77D00D85095 /* RatingAndCommentingField.m in Sources */,
 				D784EF411AA4B0570068D260 /* CalendarTableViewController.m in Sources */,
@@ -2880,15 +2970,19 @@
 				D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */,
 				D738304F198A94D60053F0A1 /* FilterTabViewController.m in Sources */,
 				D7A2E5C019AF76F000022795 /* CoachFilterProcessor.m in Sources */,
+				AED484B21B56A23600769EEF /* PxpArrowButton.m in Sources */,
 				D75C464F1A9E54AE001BD50B /* Downloader.m in Sources */,
 				D7CCE7F61AC1E48500D85095 /* ButtonViewManager.m in Sources */,
 				D7B0913716B998390082111C /* thumbnailCell.m in Sources */,
 				D7581EF0196454B00029C5DD /* CommentingField.m in Sources */,
+				AED484B71B56A23600769EEF /* PxpTelestrationAction.m in Sources */,
+				AED484B61B56A23600769EEF /* PxpTelestration.m in Sources */,
 				AEDD7C931B4AB830003C82F3 /* PxpCancelButton.m in Sources */,
 				D700801B19DF2456000144CF /* Utility.m in Sources */,
 				BD9BC31C17EB63F8001B67DE /* ClipCornerView.m in Sources */,
 				AEDD7C841B4AB7CD003C82F3 /* PxpEventContext.m in Sources */,
 				D786C23817F371070042DD96 /* CustomButton.m in Sources */,
+				AED484BE1B56A23600769EEF /* PxpUndoButton.m in Sources */,
 				AEDD7CB01B4AB97A003C82F3 /* PxpPlayerGridView.m in Sources */,
 				D7581EE9196441160029C5DD /* MemoryBar.m in Sources */,
 				D7581EE519634B6D0029C5DD /* NumberedSeekerButton.m in Sources */,
@@ -2905,6 +2999,7 @@
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
 				D7A9F10D1B25EE72005C8B3E /* EncoderCommander.m in Sources */,
 				D79D709219DD8ED2001FBE16 /* ExternalScreenButton.m in Sources */,
+				AED484B41B56A23600769EEF /* PxpColorPicker.m in Sources */,
 				D738306F19915B3B0053F0A1 /* UserColourView.m in Sources */,
 				D706AC961B2735610091C02C /* CameraDetails.m in Sources */,
 				D79BC1DC19E8720100ECD8DB /* Pip.m in Sources */,
@@ -2919,6 +3014,7 @@
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
 				AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */,
 				AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */,
+				AED484B91B56A23600769EEF /* PxpTelestrationCaptureArea.m in Sources */,
 				D7A7B61216D3C6C3000D3A84 /* LogoViewController.m in Sources */,
 				D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */,
 				D73CDBE41AA8BF66002D682D /* DeletableTableViewController.m in Sources */,
@@ -2933,11 +3029,14 @@
 				BD9BC31117EB480A001B67DE /* SpinnerView.m in Sources */,
 				D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */,
 				D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */,
+				AED484B31B56A23600769EEF /* PxpCircleButton.m in Sources */,
 				D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */,
 				AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */,
+				AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
+				AED484BA1B56A23600769EEF /* PxpTelestrationPoint.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
@@ -2974,6 +3073,7 @@
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
 				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
+				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,
 				D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */,
 				D75CD0AE17CBF26700DD24E8 /* SoccerBottomViewController.m in Sources */,

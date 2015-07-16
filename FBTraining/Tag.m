@@ -234,17 +234,19 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 -(NSDictionary *)modifiedData{
+    NSMutableDictionary *output = [NSMutableDictionary dictionary];
     
-    NSDictionary * output = @{ @"coachpick":(self.coachPick?@"1":@"0"),
-                               @"comment": (self.comment?self.comment:@""),
-                               @"duration":[NSString stringWithFormat:@"%i",self.duration],
-                               @"starttime":[NSString stringWithFormat:@"%f",self.startTime],
-                               @"rating": [NSString stringWithFormat:@"%ld", (long)self.rating],
-                               @"type":  [NSNumber numberWithInteger:self.type],
-                               @"time":  [NSNumber numberWithInteger:self.time]
-                               };
+    output[@"coachpick"] = (self.coachPick?@"1":@"0");
+    output[@"comment"] = (self.comment?self.comment:@"");
+    output[@"duration"] = [NSString stringWithFormat:@"%i",self.duration];
+    output[@"starttime"] = [NSString stringWithFormat:@"%f",self.startTime];
+    output[@"rating"] = [NSString stringWithFormat:@"%ld", (long)self.rating];
+    output[@"type"] = [NSNumber numberWithInteger:self.type];
+    output[@"time"] = [NSNumber numberWithInteger:self.time];
     
-    
+    if (self.telestration) {
+        output[@"telestration"] = self.telestration.data;
+    }
     
     return output;
     
@@ -303,6 +305,10 @@ static NSMutableDictionary * openDurationTagsWithID;
         [tagDict addEntriesFromDictionary:@{@"durationID": self.durationID}];
     }
     
+    if (self.telestration) {
+        tagDict[@"telestration"] = self.telestration.data;
+    }
+    
     return tagDict;
 }
 
@@ -341,6 +347,11 @@ static NSMutableDictionary * openDurationTagsWithID;
         NSString *url = [[self.thumbnails allValues] firstObject];
         [tagData setObject:url forKey:@"url"];
     }
+    
+    if (self.telestration) {
+        tagData[@"telestration"] = self.telestration.data;
+    }
+    
     
     return tagData;
     
@@ -388,6 +399,8 @@ static NSMutableDictionary * openDurationTagsWithID;
         durationTagWarningTimer = nil;
     }
     
+    NSString *telestrationData = tagData[@"telestration"];
+    _telestration = telestrationData ? [PxpTelestration telestrationFromData:telestrationData] : nil;
 }
 
 -(NSString *)ID{
