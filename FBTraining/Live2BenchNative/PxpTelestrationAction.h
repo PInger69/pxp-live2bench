@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "PxpTelestrationPoint.h"
 
+/*!
+ * @breif The C data structure used to store an action in a binary format.
+ * @author Nicholas Cvitak
+ */
 struct PxpTelestrationActionData {
     struct {
         UInt8 r, g, b, a;
@@ -19,6 +23,10 @@ struct PxpTelestrationActionData {
     struct PxpTelestrationPointData points[]; // defined when allocating
 };
 
+/*!
+ * @breif The bitmask representing type information of a telestration action.
+ * @author Nicholas Cvitak
+ */
 typedef enum : UInt32 {
     PxpClear = 0,
     PxpDraw = 0x1 << 0,
@@ -42,13 +50,13 @@ typedef enum : UInt32 {
 /// The action's type.
 @property (assign, nonatomic) PxpTelestrationActionType type;
 
-/// The telestration points drawn by the action sorted by their displayTime.
+/// The telestration points drawn by the action sorted by their displayTime. (read-only).
 @property (readonly, strong, nonatomic, nonnull) NSArray *points;
 
-/// The displayTime of the action.
+/// The displayTime of the action. (read-only).
 @property (readonly, assign, nonatomic) NSTimeInterval displayTime;
 
-/// The sort method used on the points.
+/// The sort method on the points.
 + (nonnull NSComparator)sortMethod;
 
 /// Initializes a telestration action from a coder.

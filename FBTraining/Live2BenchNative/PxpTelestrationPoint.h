@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+/*!
+ * @breif The C data structure used to store a point in a binary format.
+ * @author Nicholas Cvitak
+ */
 struct PxpTelestrationPointData {
     Float64 time;
     struct {
@@ -21,13 +25,13 @@ struct PxpTelestrationPointData {
  */
 @interface PxpTelestrationPoint : NSObject<NSCoding, NSCopying>
 
-/// The time that the point should be displayed in an animation.
+/// The time that the point should be displayed in an animation. (read-only)
 @property (readonly, assign, nonatomic) NSTimeInterval displayTime;
 
-/// The normalized position of the point.
+/// The normalized position of the point. (read-only)
 @property (readonly, assign, nonatomic) CGPoint position;
 
-/// The data structure representation of the point;
+/// The data structure representation of the point. (read-only)
 @property (readonly, assign, nonatomic) struct PxpTelestrationPointData pointData;
 
 /// Initializes a point with it's C data structure.
@@ -36,7 +40,7 @@ struct PxpTelestrationPointData {
 /// Initializes a point with a position and display time.
 - (nonnull instancetype)initWithPosition:(CGPoint)position displayTime:(NSTimeInterval)displayTime;
 
-/// Initializes a point from a coder.
+/// Initializes a point from a decoder.
 - (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder;
 
 @end
