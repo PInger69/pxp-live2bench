@@ -20,7 +20,7 @@
 #define PADDING                 5
 #define LITTLE_ICON_DIMENSIONS 40
 
-@interface MedicalViewController () <PxpTimeProvider>
+@interface MedicalViewController () <PxpTelestrationViewControllerDelegate>
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
@@ -311,7 +311,7 @@
     startButton.hidden = true;
     stopButton.hidden = false;
     
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
+    //self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
 }
 
 - (void)stopButtonClicked {
@@ -323,8 +323,11 @@
     [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
     startButton.hidden = false;
     stopButton.hidden = true;
+    /*
+    PxpTelestration *telestration = self.telestrationViewController.telestration;
     
-    if (self.telestrationViewController.telestration) {
+    if (telestration) {
+        [telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.videoPlayer.currentTime]];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                           @"time": [NSString stringWithFormat:@"%f",startTime],
                                                                                                           @"duration": [NSString stringWithFormat:@"%i",(int)roundf(duration)],
@@ -332,7 +335,9 @@
                                                                                                           }];
     }
     
-    self.telestrationViewController.telestration = nil;
+    //self.telestrationViewController.telestration = nil;
+     
+    */
 }
 
 
@@ -356,7 +361,19 @@
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     [self.videoPlayer.view addSubview:self.telestrationViewController.view];
-    self.telestrationViewController.timeProvider = self;
+    self.telestrationViewController.timeProvider = self.videoPlayer;
+    self.telestrationViewController.delegate = self;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    
+    self.telestrationViewController.telestration = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -366,6 +383,29 @@
 
 - (NSTimeInterval)currentTime {
     return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);;
+}
+
+- (void)telestration:(nonnull PxpTelestration *)telestration didStartInViewController:(nonnull PxpTelestrationViewController *)viewController {
+    
+}
+
+- (void)telestration:(nonnull PxpTelestration *)telestration didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
+    
+    
+    
+    NSTimeInterval newStartTime = MAX(0.0, telestration.startTime - 1.0);
+    NSTimeInterval newDuration = telestration.duration + 1.0;
+    
+    [telestration pushAction:[PxpTelestrationAction clearActionAtTime:newStartTime + newDuration]];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
+                                                                                                           @"time": [NSString stringWithFormat:@"%f",newStartTime],
+                                                                                                           @"duration": [NSString stringWithFormat:@"%i",(int)roundf(newDuration)],
+                                                                                                           @"telestration" : telestration.data
+                                                                                                           }];
+    
+    
+    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
 }
 
 /*
