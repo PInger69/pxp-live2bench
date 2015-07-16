@@ -87,6 +87,11 @@ static NSMutableDictionary * openDurationTagsWithID;
         _coachPick           = [tagData[@"coachpick"] boolValue];
        [self builtTelestration:tagData];
         
+        if (_type == TagTypeTele) {
+            self.startTime = self.time;
+        }
+        
+        
         NSString *teleData = tagData[@"telestration"];
         if (teleData) {
             _telestration = [PxpTelestration telestrationFromData:teleData];
