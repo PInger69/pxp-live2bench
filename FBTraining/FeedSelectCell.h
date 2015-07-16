@@ -26,6 +26,8 @@
 
 - (instancetype)initWithImageData:(NSString *)url andName: (NSString *)name;
 
+- (nonnull instancetype)initWithTag:(nonnull Tag *)tag source:(nullable NSString *)source;
+
 - (void)positionWithFrame:(CGRect)frame;
 @end
 

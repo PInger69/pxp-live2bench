@@ -85,10 +85,10 @@
         [self.view addSubview:gotoLiveButton];
         
         startButton = [self makeStartButton];
-        [self.view addSubview:startButton];
+        //[self.view addSubview:startButton];
         
         stopButton = [self makeStopButton];
-        [self.view addSubview:stopButton];
+        //[self.view addSubview:stopButton];
         
         activeElements = @[gotoLiveButton,startButton,stopButton];
         [self revealThese:@[]];
@@ -391,16 +391,10 @@
 
 - (void)telestration:(nonnull PxpTelestration *)telestration didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
-    
-    
-    NSTimeInterval newStartTime = MAX(0.0, telestration.startTime - 1.0);
-    NSTimeInterval newDuration = telestration.duration + 1.0;
-    
-    [telestration pushAction:[PxpTelestrationAction clearActionAtTime:newStartTime + newDuration]];
-    
+    [telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.videoPlayer.currentTime]];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
-                                                                                                           @"time": [NSString stringWithFormat:@"%f",newStartTime],
-                                                                                                           @"duration": [NSString stringWithFormat:@"%i",(int)roundf(newDuration)],
+                                                                                                           @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
+                                                                                                           @"duration": [NSString stringWithFormat:@"%i",(int)roundf(telestration.duration)],
                                                                                                            @"telestration" : telestration.data
                                                                                                            }];
     

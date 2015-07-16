@@ -17,6 +17,8 @@
 #import "Tag.h"
 #import "RatingOutput.h"
 
+#import "AVAsset+Image.h"
+
 
 #define CELLS_ON_SCREEN         12
 #define TOTAL_WIDTH             1024
@@ -562,7 +564,14 @@ static void * encoderTagContext = &encoderTagContext;
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView ];
+    Feed *feed = tagSelect.event.feeds.allValues.firstObject;
+    UIImage *thumb = feed ? [[AVAsset assetWithURL:feed.path] imageForTime:CMTimeMakeWithSeconds(tagSelect.startTime, 1)] : nil;
+    
+    if (thumb) {
+        cell.imageView.image = thumb;
+    } else {
+        [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView ];
+    }
     
     [cell setDeletingMode: self.isEditing];
     
