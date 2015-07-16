@@ -121,4 +121,6 @@ typedef NS_ENUM (NSInteger,TagType){
 -(NSDictionary *) makeTagData;
 -(void) replaceDataWithDictionary: (NSDictionary *) tagData;
 
+- (nullable UIImage *)thumbnailForSource:(nullable NSString *)source;
+
 @end

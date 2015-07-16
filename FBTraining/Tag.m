@@ -8,6 +8,7 @@
 
 #import "Tag.h"
 #import "Feed.h"
+#import "AVAsset+Image.h"
 
 //#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 
@@ -438,4 +439,28 @@ static NSMutableDictionary * openDurationTagsWithID;
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver: tagModifyObserver];
 }
+
+- (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
+    Feed *feed = source && self.event.feeds[source] ? self.event.feeds[source] : self.event.feeds.allValues.firstObject;
+    
+    if (feed.path) {
+        NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
+        
+        UIImage *thumb = [[AVAsset assetWithURL:feed.path] imageForTime:CMTimeMakeWithSeconds(time, 1)];
+        
+        if (thumb && self.telestration) {
+            UIGraphicsBeginImageContext(thumb.size);
+            
+            [thumb drawInRect:CGRectMake(0.0, 0.0, thumb.size.width, thumb.size.height)];
+            [self.telestration.thumbnail drawInRect:CGRectMake(0.0, 0.0, thumb.size.width, thumb.size.height)];
+            
+            thumb = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+        return thumb;
+    } else {
+        return nil;
+    }
+}
+
 @end

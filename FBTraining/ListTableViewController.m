@@ -350,8 +350,7 @@
     ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     NSString *url = [[tag.thumbnails allValues] firstObject];
     
-    Feed *feed = tag.event.feeds.allValues.firstObject;
-    UIImage *thumb = feed ? [[AVAsset assetWithURL:feed.path] imageForTime:CMTimeMakeWithSeconds(tag.startTime, 1)] : nil;
+    UIImage *thumb = [tag thumbnailForSource:nil];
     
     if (thumb) {
         cell.tagImage.image = thumb;

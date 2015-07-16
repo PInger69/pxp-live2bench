@@ -19,6 +19,7 @@
 @property (readonly, assign, nonatomic) NSTimeInterval startTime;
 @property (readonly, assign, nonatomic) NSTimeInterval duration;
 
+@property (readonly, assign, nonatomic) NSTimeInterval thumbnailTime;
 @property (readonly, strong, nonatomic, nonnull) UIImage *thumbnail;
 
 + (nonnull instancetype)telestrationFromData:(nonnull NSString *)data;

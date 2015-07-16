@@ -71,9 +71,7 @@
         unsigned long n;
         _feedName.text = sscanf(source.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : source;
         
-        Feed *feed = tag.event.feeds[source];
-        feed = feed ? feed : tag.event.feeds.allValues.firstObject;
-        UIImage *thumb = [[AVAsset assetWithURL:feed.path] imageForTime:CMTimeMake(tag.startTime, 1)];
+        UIImage *thumb = [tag thumbnailForSource:source];
         
         ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
         

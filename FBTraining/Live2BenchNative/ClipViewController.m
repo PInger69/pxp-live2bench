@@ -564,8 +564,7 @@ static void * encoderTagContext = &encoderTagContext;
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    Feed *feed = tagSelect.event.feeds.allValues.firstObject;
-    UIImage *thumb = feed ? [[AVAsset assetWithURL:feed.path] imageForTime:CMTimeMakeWithSeconds(tagSelect.startTime, 1)] : nil;
+    UIImage *thumb = [tagSelect thumbnailForSource:nil];
     
     if (thumb) {
         cell.imageView.image = thumb;
