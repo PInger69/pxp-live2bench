@@ -428,6 +428,7 @@ static LocalEncoder * instance;
     NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    UIImage *image = [data objectForKey:@"image"] ;
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -440,6 +441,7 @@ static LocalEncoder * instance;
                                        @"duration"      : tagDuration,
                                        @"type"          : [NSNumber numberWithInteger:TagTypeTele],
                                        @"telestration"  : teleData,
+                                       @"image"         : image,
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
     
@@ -602,6 +604,7 @@ static LocalEncoder * instance;
     newTag.uniqueID                 = tagArePresentCount;
     newTag.startTime                = newTag.time;
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
+
     
     newTag.own                      = YES;
     newTag.homeTeam                 = self.event.teams[@"homeTeam"];
