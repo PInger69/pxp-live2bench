@@ -366,6 +366,8 @@
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.delegate = self;
     self.telestrationViewController.showsClearButton = YES;
+    
+    self.view.backgroundColor = [UIColor blackColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
