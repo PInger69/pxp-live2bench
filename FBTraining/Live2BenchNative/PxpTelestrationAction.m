@@ -14,7 +14,7 @@ static __nonnull NSComparator _pxpTelestrationActionSortMethod;
 
 @implementation PxpTelestrationAction
 {
-    __nonnull NSMutableArray *_points;
+    NSMutableArray * __nonnull _points;
 }
 
 @synthesize points = _points;

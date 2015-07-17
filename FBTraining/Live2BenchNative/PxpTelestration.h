@@ -16,6 +16,9 @@
 @property (readonly, strong, nonatomic, nonnull) NSArray *sortedActions;
 @property (readonly, strong, nonatomic, nonnull) NSString *data;
 
+@property (readonly, assign, nonatomic) NSTimeInterval startTime;
+@property (readonly, assign, nonatomic) NSTimeInterval duration;
+
 + (nonnull instancetype)telestrationFromData:(nonnull NSString *)data;
 
 - (nonnull instancetype)initWithSize:(CGSize)size;

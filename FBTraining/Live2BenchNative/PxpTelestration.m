@@ -10,7 +10,7 @@
 
 @implementation PxpTelestration
 {
-    __nonnull NSMutableArray *_actionStack;
+    NSMutableArray * __nonnull _actionStack;
 }
 
 @synthesize actionStack = _actionStack;
@@ -62,6 +62,25 @@
     NSString *base64 = [[NSKeyedArchiver archivedDataWithRootObject:self] base64EncodedStringWithOptions:0];
     
     return [[base64 stringByReplacingOccurrencesOfString:@"+" withString:@"("] stringByReplacingOccurrencesOfString:@"/" withString:@")"];
+}
+
+- (NSTimeInterval)startTime {
+    NSTimeInterval time = INFINITY;
+    for (PxpTelestrationAction *action in self.actionStack) {
+        time = MIN(time, action.points.firstObject ? [action.points.firstObject displayTime] : +INFINITY);
+    }
+    return MAX(0.0, time);
+}
+
+- (NSTimeInterval)duration {
+    NSTimeInterval time = -INFINITY;
+    for (PxpTelestrationAction *action in self.actionStack) {
+        time = MAX(time, action.points.lastObject ? [action.points.lastObject displayTime] : -INFINITY);
+    }
+    
+    NSTimeInterval duration = time - self.startTime;
+    
+    return isfinite(duration) ? MAX(0.0, duration) : 0.0;
 }
 
 - (void)pushAction:(nonnull PxpTelestrationAction *)action {

@@ -489,6 +489,7 @@
                 [self removeIndexPathFromDeletion];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];
+                [self.tableView cellForRowAtIndexPath:self.editingIndexPath];
                 [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
                 [self removeIndexPathFromDeletion];
@@ -502,6 +503,7 @@
     
     [self checkDeleteAllButton];
 }
+
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *indexPathsToRemove = [[NSMutableSet alloc]init];

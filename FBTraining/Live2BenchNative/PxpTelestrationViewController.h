@@ -9,8 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "PxpTelestrationRenderer.h"
 
+@class PxpTelestrationViewController;
+
+@protocol PxpTelestrationViewControllerDelegate
+
+- (void)telestration:(nonnull PxpTelestration *)telestration didStartInViewController:(nonnull PxpTelestrationViewController *)viewController;
+- (void)telestration:(nonnull PxpTelestration *)telestration didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController;
+
+@end
+
 @interface PxpTelestrationViewController : UIViewController
 
+@property (weak, nonatomic, nullable) id<PxpTelestrationViewControllerDelegate> delegate;
 @property (weak, nonatomic, nullable) id<PxpTimeProvider> timeProvider;
 
 @property (assign, nonatomic) BOOL showsTelestrationControls;

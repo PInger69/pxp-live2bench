@@ -33,6 +33,8 @@
 
 @property (strong, nonatomic, nonnull) UIButton *telestrationButton;
 
+@property (assign, nonatomic) BOOL activeTelestration;
+
 @end
 
 @implementation PxpTelestrationViewController
@@ -219,10 +221,18 @@
 #pragma mark - Private Methods
 
 - (void)setShowsTelestrationControls:(BOOL)showsTelestrationControls animated:(BOOL)animated {
+    
     [self willChangeValueForKey:@"showsTelestrationControls"];
     _showsTelestrationControls = showsTelestrationControls;
     
     if (showsTelestrationControls) {
+        
+        if (!self.activeTelestration) {
+            self.activeTelestration = YES;
+            [self.delegate telestration:self.telestration didStartInViewController:self];
+        }
+        
+        
         if (animated) {
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration:0.2];
@@ -262,6 +272,12 @@
         if (animated) {
             [UIView commitAnimations];
         }
+        
+        if (self.activeTelestration) {
+            self.activeTelestration = NO;
+            [self.delegate telestration:self.telestration didFinishInViewController:self];
+        }
+        
     }
     
     [self didChangeValueForKey:@"showsTelestrationControls"];

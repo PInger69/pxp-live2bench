@@ -286,7 +286,7 @@
     prevMode = _mode;
     [self willChangeValueForKey:@"mode"];
     _mode = mode;
-    
+
     switch (_mode) {
         case L2BFullScreenModeDisable :
             //[self _revealThese:liveElements];// should be @[]
