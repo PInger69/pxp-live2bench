@@ -558,9 +558,10 @@ static void * eventContext      = &eventContext;
     telestration.delegate = self;
      */
 
-    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0);
+    self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     
-    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
+    // we need the control bar to be first responder.
+    [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.telestrationViewController.showsControls = YES;

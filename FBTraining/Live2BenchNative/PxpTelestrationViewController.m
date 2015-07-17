@@ -255,12 +255,12 @@
             [UIView setAnimationDuration:0.2];
         }
         
-        self.undoButton.frame = CGRectMake(20.0f, self.view.bounds.size.height - 100.0f, 45.0f, 65.0f);
-        self.lineButton.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height - 180.0f, 45.0f, 45.0f);
-        self.arrowButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height - 180.0f, 45.0f, 45.0f);
+        self.undoButton.frame = CGRectMake(20.0f, self.view.bounds.size.height - 100.0f - 44.0f, 45.0f, 65.0f);
+        self.lineButton.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height - 180.0f - 44.0f, 45.0f, 45.0f);
+        self.arrowButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height - 180.0f - 44.0f, 45.0f, 45.0f);
         
-        self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height - 130.0f, 110.0f, 110.0f);
-        self.clearButton.frame = CGRectMake(20.0f, self.view.bounds.size.height - 180.0f, 45.0f, 65.0f);
+        self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height - 130.0f - 44.0f, 110.0f, 110.0f);
+        self.clearButton.frame = CGRectMake(20.0f, self.view.bounds.size.height - 180.0f - 44.0f, 45.0f, 65.0f);
         
         self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, 20.0f, 45.0f, 45.0f);
         
@@ -282,7 +282,7 @@
         self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height + 130.0f, 110.0f, 110.0f);
         self.clearButton.frame = CGRectMake(20.0f, self.view.bounds.size.height + 180.0f, 45.0f, 65.0f);
         
-        self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height - 65.0f, 45.0f, 45.0f);
+        self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height - 65.0f - 44.0f, 45.0f, 45.0f);
         
         self.telestrationButton.selected = NO;
         

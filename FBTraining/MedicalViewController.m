@@ -357,10 +357,12 @@
     [super viewDidLoad];
     
     NSLog(@"%@", [NSValue valueWithCGRect:self.view.frame]);
-    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0f);
+    self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
+    // we need the control bar to be first responder.
+    [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
+    
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.delegate = self;
     self.telestrationViewController.showsClearButton = YES;
@@ -393,7 +395,9 @@
 - (void)telestration:(nonnull PxpTelestration *)telestration didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
     if (telestration.actionStack.count) {
-        [telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.videoPlayer.currentTime]];
+        
+        NSTimeInterval clearTime = MAX(self.videoPlayer.currentTime, telestration.startTime + telestration.duration + 1.0);
+        [telestration pushAction:[PxpTelestrationAction clearActionAtTime:clearTime]];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                                @"duration": [NSString stringWithFormat:@"%i",(int)roundf(telestration.duration)],
