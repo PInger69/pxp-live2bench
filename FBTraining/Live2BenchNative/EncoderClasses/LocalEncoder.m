@@ -1369,5 +1369,9 @@ static LocalEncoder * instance;
     return txt;
 }
 
+- (nullable Event *)getEventByName:(NSString *)eventName {
+    return self.allEvents[eventName];
+}
+
 
 @end
