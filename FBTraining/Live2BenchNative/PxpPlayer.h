@@ -16,7 +16,7 @@
  * @breif A video player optimized for live video, synchronization, and looping.
  * @author Nicholas Cvitak
  */
-@interface PxpPlayer : AVPlayer<PxpTimeProvider>
+@interface PxpPlayer : AVPlayer
 
 /// The player's context.
 @property (weak, nonatomic, nullable) PxpPlayerContext *context;
