@@ -10,12 +10,13 @@
 
 #import "PxpPlayerContext.h"
 #import "PxpLoadAction.h"
+#import "PxpTimeProvider.h"
 
 /**
  * @breif A video player optimized for live video, synchronization, and looping.
  * @author Nicholas Cvitak
  */
-@interface PxpPlayer : AVPlayer
+@interface PxpPlayer : AVPlayer<PxpTimeProvider>
 
 /// The player's context.
 @property (weak, nonatomic, nullable) PxpPlayerContext *context;
