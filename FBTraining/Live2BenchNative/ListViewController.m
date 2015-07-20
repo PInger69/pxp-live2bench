@@ -152,9 +152,9 @@ NSMutableArray *oldEventNames;
 
          [self.view addSubview:self.videoPlayer.view];
         
-        self.playerViewController.view.frame = CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT);
+        self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight + 44.0);
         self.playerViewController.multiView.context = self.context;
-        //[self.view addSubview:self.playerViewController.view];
+        [self.view addSubview:self.playerViewController.view];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -216,10 +216,10 @@ NSMutableArray *oldEventNames;
     }
     
     // update the context
-    /*
+    
     self.context = [PxpEventContext contextWithEvent:_currentEvent];
     self.playerViewController.multiView.context = self.context;
-    */
+    
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -1793,7 +1793,7 @@ NSMutableArray *oldEventNames;
     
     [newVideoControlBar setTagName:selectedTag.name];
     
-    /*
+    
     // find the first player with the source name we are looking for
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
     PxpPlayer *player = [self.context.players filteredArrayUsingPredicate:predicate].firstObject;
@@ -1805,7 +1805,7 @@ NSMutableArray *oldEventNames;
     
     // update the loop range.
     self.context.mainPlayer.range = timeRange;
-     */
+    
 }
 
 
