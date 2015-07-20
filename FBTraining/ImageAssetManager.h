@@ -12,12 +12,12 @@
 
 @interface ImageAssetManager : NSObject 
 
-@property (strong, nonatomic) NSString *pathForFolderContainingImages;
+@property (strong, nonatomic, nullable) NSString *pathForFolderContainingImages;
 @property (assign, nonatomic) NSTimeInterval timeOutInterval;
 
 
--(void)imageForURL: (NSString *) imageURLString atImageView: (UIImageView *) viewReference;
--(void)imageForURL: (NSString *) imageURLString atImageView: (UIImageView *) viewReference withTelestration:(nullable PxpTelestration *)telestration;
+-(void)imageForURL: (nonnull NSString *) imageURLString atImageView: (nonnull UIImageView *) viewReference;
+-(void)imageForURL: (nonnull NSString *) imageURLString atImageView: (nonnull UIImageView *) viewReference withTelestration:(nullable PxpTelestration *)telestration;
 
 
 @end
