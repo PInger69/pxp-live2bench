@@ -613,7 +613,6 @@
     NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
-    UIImage *image = [data objectForKey:@"image"] ;
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -626,7 +625,6 @@
                                        @"duration"      : tagDuration,
                                        @"type"          : [NSNumber numberWithInteger:TagTypeTele],
                                        @"telestration"  : teleData,
-                                       @"image"     : image,
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
     
@@ -1027,8 +1025,16 @@
 -(void)makeTeleTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     //UIImage *img = [UIImage imageNamed:@"painting.png"];
-    NSData *imageData = UIImagePNGRepresentation([tData objectForKey:@"image"]) ;
+    
+    // Create a transparent Image to send to server (duct tape to work with legacy code)
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(1.0, 1.0), NO, 1.0);
+    UIImage *ductTape = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // NSData *imageData = UIImagePNGRepresentation([tData objectForKey:@"image"]) ;
     [tData removeObjectForKey:@"image"];
+    
+    NSData *imageData = UIImagePNGRepresentation(ductTape);
     
     NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
     

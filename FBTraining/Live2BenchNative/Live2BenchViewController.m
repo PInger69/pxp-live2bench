@@ -1006,7 +1006,6 @@ static void * eventContext      = &eventContext;
                                                                                                                @"starttime": [NSString stringWithFormat:@"%f",tele.startTime],
                                                                                                                @"displaytime" : [NSString stringWithFormat:@"%f",tele.startTime],
                                                                                                                @"telestration" : tele.data,
-                                                                                                               @"image" : tele.thumbnail
                                                                                                                }];
     }
     

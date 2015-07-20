@@ -406,8 +406,7 @@
                                                                                                                @"starttime": [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                                @"displaytime" : [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                                @"telestration" : telestration.data,
-                                                                                                               @"image" : telestration.thumbnail
-                                                                                                               }];
+                                                                                                }];
         
     }
     

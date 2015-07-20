@@ -446,7 +446,8 @@ static NSMutableDictionary * openDurationTagsWithID;
     if (feed.path) {
         NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
         
-        UIImage *thumb = [[AVAsset assetWithURL:feed.path] imageForTime:CMTimeMakeWithSeconds(time, 1)];
+        AVAsset *asset = [AVURLAsset URLAssetWithURL:feed.path options:nil];
+        UIImage *thumb = [asset imageForTime:CMTimeMakeWithSeconds(time, 1)];
         
         if (thumb && self.telestration) {
             UIGraphicsBeginImageContext(thumb.size);

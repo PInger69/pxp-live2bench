@@ -355,7 +355,7 @@
     if (thumb) {
         cell.tagImage.image = thumb;
     } else {
-        [imageAssetManager imageForURL:url atImageView:cell.tagImage];
+        [imageAssetManager imageForURL:url atImageView:cell.tagImage withTelestration:tag.telestration];
     }
     
     

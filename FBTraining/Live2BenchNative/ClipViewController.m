@@ -569,7 +569,7 @@ static void * encoderTagContext = &encoderTagContext;
     if (thumb) {
         cell.imageView.image = thumb;
     } else {
-        [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView ];
+        [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView withTelestration:tagSelect.telestration];
     }
     
     [cell setDeletingMode: self.isEditing];
