@@ -68,6 +68,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self = [super init];
     if (self) {
         _status         = RJLPS_Offline;
+        _avPlayer = [[AVPlayer alloc] init];
         // This listens to the app if it wants the player to do something
         self.isAlive = YES;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
@@ -85,7 +86,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         liveBuffer = [[ValueBuffer alloc]initWithValue:6 coolDownValue:10000000 coolDownTick:50];
         restoreAfterPauseRate = 1;
-
     }
     return self;
 }
@@ -95,6 +95,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self = [super init];
     if (self) {
         _status         = RJLPS_Offline;
+        _avPlayer = [[AVPlayer alloc] init];
         self.isAlive = YES;
         // This listens to the app if it wants the player to do something
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
@@ -826,14 +827,16 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.playerItem = nil;
     }
     
+    /*
     if (self.avPlayer) {
         [self.avPlayer removeObserver:self forKeyPath:@"currentItem"];
         [self.avPlayer removeObserver:self forKeyPath:@"rate"];
         self.avPlayer = nil;
     }
+     */
     
     
-        [self setPlayer:nil];
+        //[self setPlayer:nil];
         [self.playBackView setPlayer:nil];
         
         self.zoomManager.enabled = NO;
@@ -1310,10 +1313,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     if (!self.avPlayer)
     {
         /* Get a new AVPlayer initialized to play the specified player item. */
-        [self setPlayer:[AVPlayer playerWithPlayerItem:self.playerItem]];
+        //[self setPlayer:[AVPlayer playerWithPlayerItem:self.playerItem]];
         
         
-        [self.playBackView setPlayer:self.avPlayer];
+        //[self.playBackView setPlayer:self.avPlayer];
         
         /* Observe the AVPlayer "currentItem" property to find out when any
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
@@ -1330,6 +1333,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                          context:ViewControllerRateObservationContext];
         self.avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndPause;
     }
+    
+    [self.playBackView setPlayer:self.avPlayer];
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
     if (self.avPlayer.currentItem != self.playerItem)
