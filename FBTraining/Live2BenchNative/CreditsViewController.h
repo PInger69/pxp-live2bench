@@ -11,7 +11,6 @@
 
 @interface CreditsViewController : SettingViewController
 
-@property (weak, nonatomic) IBOutlet UIVisualEffectView *blurView;
 @property (weak, nonatomic) IBOutlet UIView *creditsView;
 
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel;
