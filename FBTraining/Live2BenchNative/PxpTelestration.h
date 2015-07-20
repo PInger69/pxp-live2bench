@@ -15,6 +15,9 @@
  */
 @interface PxpTelestration : NSObject<NSCoding>
 
+/// The source name that the telestration was drawn on.
+@property (copy, nonatomic, nullable) NSString *sourceName;
+
 /// The size of the telestration. (read-only)
 @property (readonly, assign, nonatomic) CGSize size;
 

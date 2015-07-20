@@ -400,6 +400,14 @@
         
         NSTimeInterval clearTime = MAX(self.videoPlayer.currentTimeInSeconds, telestration.startTime + telestration.duration + 1.0);
         [telestration pushAction:[PxpTelestrationAction clearActionAtTime:clearTime]];
+        
+        for (NSString *k in _currentEvent.feeds.keyEnumerator) {
+            if (_currentEvent.feeds[k] == self.videoPlayer.feed) {
+                telestration.sourceName = k;
+                break;
+            }
+        }
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                                @"duration": [NSString stringWithFormat:@"%i",(int)roundf(telestration.duration)],
