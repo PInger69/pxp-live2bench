@@ -635,14 +635,15 @@ static CMClockRef _pxpPlayerMasterClock;
                 CMTime difference = CMTimeSubtract(currentTime, player.currentTime);
                 
                 distribution = CMTimeMaximum(distribution, CMTimeAbsoluteValue(difference));
-                average = CMTimeAdd(average, difference);
+                average = CMTimeAdd(average, CMTIME_IS_NUMERIC(difference) ? difference : kCMTimeZero);
             }
         }
         
         BOOL synced = CMTimeCompare(distribution, self.syncThreshold) <= 0;
         
         if (self.contextPlayers.count > 1) {
-            average = CMTimeMultiplyByRatio(average, 1, (unsigned int) self.contextPlayers.count - 1);
+            Float64 f = 1.0 / (self.contextPlayers.count - 1);
+            average = CMTimeMultiplyByFloat64(average, f);
         }
         
         if (!synced && CMTimeCompare(CMTimeAbsoluteValue(average), CMTimeMake(10, 1)) < 0) {

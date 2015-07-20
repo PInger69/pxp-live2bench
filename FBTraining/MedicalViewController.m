@@ -319,7 +319,7 @@
     self.videoPlayer.liveIndicatorLight.tintColor = [UIColor greenColor];
     [self.videoPlayer.liveIndicatorLight setHidden: self.videoPlayer.live?NO:YES];
     [self.videoPlayer.videoControlBar setEnable:YES];
-    float duration = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime) - startTime;
+    //float duration = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime) - startTime;
     [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
     startButton.hidden = false;
     stopButton.hidden = true;

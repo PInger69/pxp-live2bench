@@ -122,7 +122,7 @@ NSMutableArray *oldEventNames;
         //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
         
-        //[self addChildViewController:self.playerViewController];
+        [self addChildViewController:self.playerViewController];
         
         
         /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -152,9 +152,9 @@ NSMutableArray *oldEventNames;
 
          [self.view addSubview:self.videoPlayer.view];
         
-        self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight + 44.0);
+        self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
         self.playerViewController.multiView.context = self.context;
-        [self.view addSubview:self.playerViewController.view];
+        //[self.view addSubview:self.playerViewController.view];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -217,7 +217,7 @@ NSMutableArray *oldEventNames;
     
     // update the context
     
-    self.context = [PxpEventContext contextWithEvent:_currentEvent];
+    //self.context = [PxpEventContext contextWithEvent:_currentEvent];
     self.playerViewController.multiView.context = self.context;
     
 }
@@ -2380,9 +2380,11 @@ NSMutableArray *oldEventNames;
 
 - (void)didReceiveMemoryWarning
 {
+    /*
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
     if ([self.view window] == nil) self.view = nil;
+     */
 }
 
 /*-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {

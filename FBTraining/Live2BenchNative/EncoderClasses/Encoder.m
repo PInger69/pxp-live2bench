@@ -2231,4 +2231,8 @@
     isAlive = NO;
 }
 
+- (void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary *)dict {
+    // IMPLEMENT ME!
+}
+
 @end

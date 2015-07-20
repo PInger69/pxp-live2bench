@@ -24,6 +24,8 @@ typedef NS_OPTIONS (NSInteger,FeedModes){
 
 @interface Feed : NSObject
 
+NS_ASSUME_NONNULL_BEGIN
+
 @property (nonatomic, assign)            int            quality;
 @property (nonatomic, assign,readonly)   BOOL           hasHighQuality;
 @property (nonatomic, assign,readonly)   BOOL           hasLowQuality;
@@ -38,6 +40,8 @@ typedef NS_OPTIONS (NSInteger,FeedModes){
 @property (readonly, strong, nonatomic, nullable) AVAsset *lqAsset;
 @property (readonly, strong, nonatomic, nullable) AVAsset *hqAsset;
 @property (readonly, strong, nonatomic, nullable) AVAsset *anyAsset;
+
+NS_ASSUME_NONNULL_END
 
 
 -(nonnull instancetype)initWithURLDict:(nonnull NSDictionary *)aDict;
