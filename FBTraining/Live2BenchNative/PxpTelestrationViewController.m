@@ -204,7 +204,7 @@
 
 - (void)clearAction:(UIButton *)button {
     if (self.telestration.actionStack.count) {
-        [self.telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.currentTime]];
+        [self.telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.currentTimeInSeconds]];
     }
 }
 
@@ -231,8 +231,8 @@
     return type;
 }
 
-- (NSTimeInterval)currentTime {
-    return self.timeProvider.currentTime;
+- (NSTimeInterval)currentTimeInSeconds {
+    return self.timeProvider.currentTimeInSeconds;
 }
 
 #pragma mark - Private Methods

@@ -1402,11 +1402,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     return displayTime;
 }
 
--(Float64)durationInSeconds{
+-(NSTimeInterval)durationInSeconds{
     AVPlayerItem* currentItem = self.avPlayer.currentItem;
     NSArray* seekableRanges = currentItem.seekableTimeRanges;
     
-    Float64 duration = 0;
+    NSTimeInterval duration = 0;
     
     CMTime itemDuration = kCMTimeInvalid;
     itemDuration = [self.playerItem duration];
@@ -1424,9 +1424,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     return duration;
 }
 
--(Float64)currentTimeInSeconds{
+-(NSTimeInterval)currentTimeInSeconds{
     CMTimeScale timeScale = [self.avPlayer currentTime].timescale;
-    Float64 returnTime = timeScale != 0 ? [self.avPlayer currentTime].value / timeScale : 0;
+    NSTimeInterval returnTime = timeScale != 0 ? [self.avPlayer currentTime].value / timeScale : 0;
     return returnTime;
 }
 
@@ -1599,10 +1599,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 
     
-}
-
-- (NSTimeInterval)currentTime {
-    return CMTimeGetSeconds(self.avPlayer.currentTime);
 }
 
 @end

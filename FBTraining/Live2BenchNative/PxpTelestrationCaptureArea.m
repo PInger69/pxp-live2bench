@@ -96,7 +96,7 @@
         CGPoint location = [touch locationInView:self];
         
         // get capture time.
-        NSTimeInterval time = self.timeProvider ? self.timeProvider.currentTime : 0.0;
+        NSTimeInterval time = self.timeProvider ? self.timeProvider.currentTimeInSeconds : 0.0;
         
         // add the point to the action.
         [self.action addPoint:[[PxpTelestrationPoint alloc] initWithPosition:location displayTime:time]];

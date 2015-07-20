@@ -711,4 +711,10 @@ static CMClockRef _pxpPlayerMasterClock;
     }
 }
 
+#pragma mark - PxpTimeProvider
+
+- (NSTimeInterval)currentTimeInSeconds {
+    return CMTimeGetSeconds(self.currentTime);
+}
+
 @end

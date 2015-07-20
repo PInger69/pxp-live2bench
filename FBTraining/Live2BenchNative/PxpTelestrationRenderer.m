@@ -214,7 +214,7 @@
 }
 
 - (NSTimeInterval)currentTime {
-    return self.timeProvider ? self.timeProvider.currentTime : INFINITY;
+    return self.timeProvider ? self.timeProvider.currentTimeInSeconds : INFINITY;
 }
 
 #pragma mark - Private Methods
