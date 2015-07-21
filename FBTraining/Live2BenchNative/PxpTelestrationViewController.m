@@ -89,7 +89,7 @@
     self.view.clipsToBounds = YES;
     
     self.renderView.frame = self.view.bounds;
-    self.captureArea.frame = self.renderView.bounds;
+    self.captureArea.frame = self.view.bounds;
     self.renderView.backgroundColor = [UIColor clearColor];
     
     // make sure we run the setters :)
@@ -105,7 +105,7 @@
     [self.telestrationButton addTarget:self action:@selector(telestrationAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.renderView];
-    [self.renderView addSubview:self.captureArea];
+    [self.view addSubview:self.captureArea];
     
     [self.view addSubview:self.undoButton];
     [self.view addSubview:self.lineButton];

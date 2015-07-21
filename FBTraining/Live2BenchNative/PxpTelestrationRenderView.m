@@ -71,4 +71,8 @@
     [self.layer setNeedsDisplay];
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event {
+    return NO;
+}
+
 @end

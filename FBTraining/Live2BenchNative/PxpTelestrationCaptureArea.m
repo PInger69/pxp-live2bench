@@ -103,6 +103,10 @@
     }
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event {
+    return self.captureEnabled ? [super pointInside:point withEvent:event] : NO;
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
