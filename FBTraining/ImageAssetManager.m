@@ -57,7 +57,7 @@
     //UIImage *theImage = [self checkImageCacheForImageURL:imageURLString];
     if(theImage){
         
-        if (telestration) {
+        if (telestration && (telestration)) {
             CGFloat ratio = theImage.size.width / theImage.size.height;
             CGSize bounds = viewReference.bounds.size;
             CGSize size = bounds.width > bounds.height ? CGSizeMake(bounds.width, bounds.width / ratio) : CGSizeMake(bounds.height * ratio, bounds.height);

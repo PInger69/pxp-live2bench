@@ -443,13 +443,22 @@ static NSMutableDictionary * openDurationTagsWithID;
 - (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
     Feed *feed = source && self.event.feeds[source] ? self.event.feeds[source] : self.event.feeds.allValues.firstObject;
     
+    if (!source && self.telestration) {
+        for (NSString *k in self.event.feeds.keyEnumerator) {
+            if ([self.telestration.sourceName isEqualToString:k]) {
+                feed = self.event.feeds[k];
+                break;
+            }
+        }
+    }
+    
     if (feed.path) {
         NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
         
         AVAsset *asset = [AVURLAsset URLAssetWithURL:feed.path options:nil];
         UIImage *thumb = [asset imageForTime:CMTimeMakeWithSeconds(time, 1)];
         
-        if (thumb && self.telestration) {
+        if (thumb && (self.telestration.sourceName == feed.sourceName || [self.telestration.sourceName isEqualToString:feed.sourceName])) {
             UIGraphicsBeginImageContext(thumb.size);
             
             [thumb drawInRect:CGRectMake(0.0, 0.0, thumb.size.width, thumb.size.height)];

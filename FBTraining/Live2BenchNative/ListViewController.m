@@ -145,6 +145,8 @@ NSMutableArray *oldEventNames;
         CGFloat playerWidth = COMMENTBOX_WIDTH + 10;
         CGFloat playerHeight = playerWidth / (16.0 / 9.0);
         
+        NSLog(@"%@", [NSValue valueWithCGSize:CGSizeMake(playerWidth, playerHeight)]);
+        
         self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
         //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
         self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
@@ -375,8 +377,6 @@ NSMutableArray *oldEventNames;
     
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
-    
-    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
     //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
     //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
@@ -1770,6 +1770,9 @@ NSMutableArray *oldEventNames;
     CMTime cmDur            = CMTimeMake(dur, 1);
     
     CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
+    Feed *feed = [userInfo objectForKey:@"feed"];
+    
+    selectedTag = userInfo[@"forWhole"];
     
    /* NSString *pick = [userInfo objectForKey:@"feed"];
     
@@ -1780,11 +1783,10 @@ NSMutableArray *oldEventNames;
                                                                                                               //@"state":[NSNumber numberWithInteger:PS_Play]}];*/
     
 
-    [self.videoPlayer playClipWithFeed:[userInfo objectForKey:@"feed"] andTimeRange:timeRange];
+    [self.videoPlayer playClipWithFeed:feed andTimeRange:timeRange];
     
-    selectedTag = userInfo[@"forWhole"];
-    
-    self.telestrationViewController.telestration = selectedTag.telestration;
+    // only show the telestration on the correct source.
+    self.telestrationViewController.telestration = selectedTag.telestration.sourceName == feed.sourceName || [selectedTag.telestration.sourceName isEqualToString:feed.sourceName] ? selectedTag.telestration : nil;;
     
     [commentingField clear];
     commentingField.enabled             = YES;

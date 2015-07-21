@@ -148,20 +148,14 @@
     self.renderView.telestration = telestration;
     [self.captureArea bindTelestration:telestration];
     
-    if (telestration) {
-        self.telestrationButton.hidden = !self.showsControls;
-        self.telestrating = self.telestrating;
-    } else {
-        self.telestrationButton.hidden = YES;
-        self.telestrating = NO;
-    }
+    if (!telestration) self.telestrating = NO;
 }
 
 - (void)setShowsControls:(BOOL)showsControls {
     _showsControls = showsControls;
     
     if (showsControls) {
-        self.telestrationButton.hidden = !self.telestration;
+        self.telestrationButton.hidden = NO;
         self.lineButton.hidden = NO;
         self.arrowButton.hidden = NO;
         self.colorPicker.hidden = NO;
@@ -246,6 +240,7 @@
         
         if (!self.activeTelestration) {
             self.activeTelestration = YES;
+            self.telestration = [[PxpTelestration alloc] initWithSize:self.view.bounds.size];
             [self.delegate telestration:self.telestration didStartInViewController:self];
         }
         

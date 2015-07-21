@@ -52,6 +52,10 @@
 
 - (void)renderInContext:(nullable CGContextRef)context size:(CGSize)size atTime:(NSTimeInterval)time {
     
+    if (self.telestration.isStill) {
+        time = self.telestration.thumbnailTime;
+    }
+    
     CGVector scale = self.telestration.size.width && self.telestration.size.height ? CGVectorMake(size.width / self.telestration.size.width, size.height / self.telestration.size.height) : CGVectorMake(1.0, 1.0);
     
     CGContextSaveGState(context);

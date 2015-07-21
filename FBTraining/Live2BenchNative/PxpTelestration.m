@@ -48,6 +48,7 @@
         
         _size = [aDecoder decodeCGSizeForKey:@"s"];
         _sourceName = [aDecoder decodeObjectForKey:@"n"];
+        _isStill = [aDecoder decodeBoolForKey:@"i"];
         _actionStack = actions ? [NSMutableArray arrayWithArray:actions] : [NSMutableArray array];
     }
     return self;
@@ -56,6 +57,7 @@
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
     [aCoder encodeCGSize:self.size forKey:@"s"];
     [aCoder encodeObject:self.sourceName forKey:@"n"];
+    [aCoder encodeBool:self.isStill forKey:@"i"];
     [aCoder encodeObject:self.actionStack forKey:@"a"];
 }
 

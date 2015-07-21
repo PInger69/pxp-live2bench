@@ -366,18 +366,13 @@
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.delegate = self;
     self.telestrationViewController.showsClearButton = YES;
+    self.telestrationViewController.showsControls = YES;
     
     self.view.backgroundColor = [UIColor blackColor];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
-}
-
 - (void)viewDidDisappear:(BOOL)animated {
-    
+    [super viewDidDisappear:animated];
     self.telestrationViewController.telestration = nil;
 }
 
@@ -401,12 +396,8 @@
         NSTimeInterval clearTime = MAX(self.videoPlayer.currentTimeInSeconds, telestration.startTime + telestration.duration + 1.0);
         [telestration pushAction:[PxpTelestrationAction clearActionAtTime:clearTime]];
         
-        for (NSString *k in _currentEvent.feeds.keyEnumerator) {
-            if (_currentEvent.feeds[k] == self.videoPlayer.feed) {
-                telestration.sourceName = k;
-                break;
-            }
-        }
+        telestration.sourceName = self.videoPlayer.feed.sourceName;
+        telestration.isStill = NO;
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",telestration.startTime],

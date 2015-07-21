@@ -80,7 +80,9 @@
         if (thumb) {
             self.feedView.image = thumb;
         } else {
-            [imageAssetManager imageForURL:tag.thumbnails[source] atImageView:self.feedView];
+            PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:source] ? tag.telestration : nil;
+            
+            [imageAssetManager imageForURL:tag.thumbnails[source] atImageView:self.feedView withTelestration:tele];
         }
         
         _downloadButton = [[DownloadButton alloc] init];;

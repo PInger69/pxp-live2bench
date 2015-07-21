@@ -219,7 +219,13 @@ static void * eventContext      = &eventContext;
     [durationLabel setText:@"Duration"];
     [self.view addSubview:durationLabel];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipViewPlayFeedNotification:) name:NOTIF_SET_PLAYER_FEED object:nil];
+    
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SET_PLAYER_FEED object:nil];
 }
 
 #pragma mark- Encoder Observers
@@ -754,8 +760,6 @@ static void * eventContext      = &eventContext;
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
     self.videoPlayer.mute = NO;
-
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -990,6 +994,16 @@ static void * eventContext      = &eventContext;
     [super didReceiveMemoryWarning];
 }
 
+- (void)clipViewPlayFeedNotification:(NSNotification *)note {
+    if ([note.userInfo[@"context"] isEqualToString: STRING_LIVE2BENCH_CONTEXT]) {
+        Feed *feed = note.userInfo[@"feed"];
+        PxpTelestration *tele = note.userInfo[@"telestration"];
+        
+        self.telestrationViewController.telestration = tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
+        
+    }
+}
+
 - (void)telestration:(nonnull PxpTelestration *)telestration didStartInViewController:(nonnull PxpTelestrationViewController *)viewController {
     self.videoPlayer.videoControlBar.enable = NO;
     [self.videoPlayer pause];
@@ -998,6 +1012,8 @@ static void * eventContext      = &eventContext;
 - (void)telestration:(nonnull PxpTelestration *)tele didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
     if (tele.actionStack.count) {
+        tele.isStill = YES;
+        tele.sourceName = self.videoPlayer.feed.sourceName;
         [tele pushAction:[PxpTelestrationAction clearActionAtTime:tele.startTime + 1.0]];
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
