@@ -38,7 +38,7 @@
 #define PADDING                 5
 
 
-@interface Live2BenchViewController () <PxpTelestrationViewControllerDelegate>
+@interface Live2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider>
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
@@ -573,7 +573,7 @@ static void * eventContext      = &eventContext;
     self.telestrationViewController.showsControls = YES;
     self.telestrationViewController.showsClearButton = NO;
     self.telestrationViewController.delegate = self;
-    self.telestrationViewController.timeProvider = self.videoPlayer;
+    self.telestrationViewController.timeProvider = self;
     
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer:pinchGesture];
@@ -1028,6 +1028,10 @@ static void * eventContext      = &eventContext;
     self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
     
     self.videoPlayer.videoControlBar.enable = YES;
+}
+
+- (NSTimeInterval)currentTimeInSeconds {
+    return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
 }
 
 @end

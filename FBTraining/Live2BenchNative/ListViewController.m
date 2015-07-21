@@ -156,7 +156,7 @@ NSMutableArray *oldEventNames;
         
         self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
         self.playerViewController.multiView.context = self.context;
-        //[self.view addSubview:self.playerViewController.view];
+        [self.view addSubview:self.playerViewController.view];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -219,7 +219,7 @@ NSMutableArray *oldEventNames;
     
     // update the context
     
-    //self.context = [PxpEventContext contextWithEvent:_currentEvent];
+    self.context = [PxpEventContext contextWithEvent:_currentEvent];
     self.playerViewController.multiView.context = self.context;
     
 }

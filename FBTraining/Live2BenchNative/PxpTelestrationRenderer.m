@@ -253,7 +253,7 @@
         UIBezierPath *path = [[UIBezierPath alloc] init];
         
         
-        
+        /*
         if (points.count < 4) {
             [path moveToPoint:[points[0] position]];
             
@@ -288,7 +288,7 @@
             
         }
         
-        
+        */
         
         /*
         for (NSUInteger i = 0; i < points.count - 4 && points.count > 4; i++) {
@@ -299,12 +299,12 @@
         }
         */
         
-        /*
+        
         [path moveToPoint:[points.firstObject position]];
         for (NSUInteger i = 1; i < points.count; i++) {
             [path addLineToPoint:[points[i] position]];
         }
-        */
+        
         
         return path;
     } else {

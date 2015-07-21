@@ -1425,9 +1425,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 }
 
 -(NSTimeInterval)currentTimeInSeconds{
-    CMTimeScale timeScale = [self.avPlayer currentTime].timescale;
-    NSTimeInterval returnTime = timeScale != 0 ? [self.avPlayer currentTime].value / timeScale : 0;
-    return returnTime;
+    return CMTimeGetSeconds(self.avPlayer.currentTime);
 }
 
 
