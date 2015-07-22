@@ -19,6 +19,8 @@
 #import "LocalMediaManager.h"
 #import "Downloader.h"
 
+#import "AVAsset+Image.h"
+
 @interface ListTableViewController ()
 
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
@@ -173,7 +175,7 @@
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
-        NSDictionary *urls = tag.thumbnails;
+        // NSDictionary *urls = tag.thumbnails;
         
         /*FeedSelectCell *collapsableCell;
         NSString *key;
@@ -205,7 +207,7 @@
         
         NSArray *keys = [[NSMutableArray arrayWithArray:[tag.event.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
         NSString *key = keys[indexPath.row - firstIndexPath.row];
-        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
+        FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithTag:tag source:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
         
         
 
@@ -345,14 +347,16 @@
         
     }
     
-    
-    
-    
-    //Setting the Image
     ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     NSString *url = [[tag.thumbnails allValues] firstObject];
-    [imageAssetManager imageForURL:url atImageView:cell.tagImage];
     
+    UIImage *thumb = [tag thumbnailForSource:nil];
+    
+    if (thumb) {
+        cell.tagImage.image = thumb;
+    } else {
+        [imageAssetManager imageForURL:url atImageView:cell.tagImage];
+    }
     
     
     [cell.tagname setText:[tag.name stringByRemovingPercentEncoding]];

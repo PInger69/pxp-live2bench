@@ -103,7 +103,7 @@
 
         selector_ = NSSelectorFromString(@"encoderStatusInvocker:type:timeout:");
         statusPath          = [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress];
-        
+
         timeout             = 6 ;
         statusInvocation    = [self _buildInvokSel:selector_ path:statusPath  type:STATUS       timeout:&timeout];
         syncMeInvocation      = [self _buildInvokSel:selector_ path:syncMePath type:SYNC_ME       timeout:&timeout];
@@ -193,8 +193,26 @@
    if (!statusSync)return;
 
     urlRequest                          = [NSURLRequest requestWithURL: [ NSURL URLWithString: aPath ] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:aTimeOut];
+
     encoderConnection                   = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     connectType                         = aType;
+    
+    // debugging
+    if ([connectType isEqualToString:@"SYNC_ME"]) {
+       
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:@{
+                                                                                     @"user"         : [UserCenter getInstance].userHID,
+                                                                                     @"requesttime"  : GET_NOW_TIME_STRING, //[NSString stringWithFormat:@"%f",0]
+                                                                                     @"event"        : @"live",
+                                                                                     @"device"       : [UserCenter getInstance].customerAuthorization
+                                                                                     }];
+        
+        
+            PXPLogAjax(@"http://%@/min/ajax/syncme/%@", ipAddress,dict);
+    } else {
+            PXPLogAjax(aPath);
+    }
+    
     startRequestTime                    = [NSDate date];
     statusSync                          = NO;
     flag                                = !flag;
@@ -255,6 +273,7 @@
 -(void)checking
 {
     NSURL * checkURL            = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequestShutdown          = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:1];
     encoderConnectionShutdown   = [NSURLConnection connectionWithRequest:urlRequestShutdown delegate:self];
     connectType                 = SHUTDOWN_RESPONCE;

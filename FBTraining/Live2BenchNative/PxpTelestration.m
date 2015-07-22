@@ -7,6 +7,7 @@
 //
 
 #import "PxpTelestration.h"
+#import "PxpTelestrationRenderer.h"
 
 @implementation PxpTelestration
 {
@@ -81,6 +82,32 @@
     NSTimeInterval duration = time - self.startTime;
     
     return isfinite(duration) ? MAX(0.0, duration) : 0.0;
+}
+
+- (NSTimeInterval)thumbnailTime {
+    NSTimeInterval t = self.startTime + self.duration;
+    
+    NSArray *sortedActions = self.sortedActions;
+    for (PxpTelestrationAction *action in sortedActions.reverseObjectEnumerator) {
+        if (action.type == PxpClear) {
+            t = action.displayTime - (1.0 / 60.0);
+            break;
+        }
+    }
+    
+    return t;
+}
+
+- (nonnull UIImage *)thumbnail {
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    [[[PxpTelestrationRenderer alloc] initWithTelestration:self] renderInContext:ctx size:self.size atTime:self.thumbnailTime];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 - (void)pushAction:(nonnull PxpTelestrationAction *)action {

@@ -10,28 +10,32 @@
 #import "ImageAssetManager.h"
 #import "DownloadItem.h"
 
-
+#import "Tag.h"
+#import "Feed.h"
+#import "AVAsset+Image.h"
 
 @implementation FeedSelectCell
 
-- (instancetype)initWithImageData:(NSString *)url andName: (NSString *)name{
+- (nonnull instancetype)initWithImageData:(nullable NSString *)url andName: (nullable NSString *)name{
     self = [super init];
     if (self) {
         _feedName = [[UILabel alloc] init];
         _feedView = [[UIImageView alloc] init];
         
-        _dicKey = name;
+        _dicKey = name ? name : @"";
         
         unsigned long n;
         _feedName.text = sscanf(name.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : name;
         
         ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+        
+        
         [imageAssetManager imageForURL:url atImageView:self.feedView];
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
-        self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+        _playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         //don't set tag to 0, by default, uiview's tag is 0
         [self.playButton setTag:101];
         [self.playButton setEnabled:YES];
@@ -51,17 +55,71 @@
     return self;
 }
 
+- (nonnull instancetype)initWithTag:(nonnull Tag *)tag source:(nullable NSString *)source {
+    self = [super init];
+    if (self) {
+        _feedName = [[UILabel alloc] init];
+        _feedView = [[UIImageView alloc] init];
+        
+        if (!source) {
+            source = tag.event.feeds.allKeys.firstObject;
+        }
+        
+        __nonnull NSString *src = source ? source : @"";
+        source = source;
+        
+        _dicKey = src;
+        
+        unsigned long n;
+        _feedName.text = sscanf(source.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : source;
+        
+        UIImage *thumb = [tag thumbnailForSource:source];
+        
+        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+        
+        if (thumb) {
+            self.feedView.image = thumb;
+        } else {
+            [imageAssetManager imageForURL:tag.thumbnails[source] atImageView:self.feedView];
+        }
+        
+        _downloadButton = [[DownloadButton alloc] init];;
+        [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        _playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+        //don't set tag to 0, by default, uiview's tag is 0
+        [self.playButton setTag:101];
+        [self.playButton setEnabled:YES];
+        [self.playButton setPlayButton];
+        [self.playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.playButton setShowsTouchWhenHighlighted: YES];
+        [self.contentView setBackgroundColor:[UIColor colorWithRed:0.955 green:0.955 blue:0.955 alpha:0.8]];
+        
+        [self.contentView addSubview: self.feedName];
+        [self.contentView addSubview:self.feedView];
+        [self.contentView addSubview: self.downloadButton];
+        [self.contentView addSubview:self.playButton];
+        
+        [self setSelectionStyle:UITableViewCellEditingStyleNone];
+    }
+    return self;
+}
+
 -(void)setFrame:(CGRect)frame{
     [super setFrame:frame];
     [self positionWithFrame:frame];
 }
 
 - (void)downloadButtonPressed:(id)sender {
-    self.downloadButtonBlock();
+    if (self.downloadButtonBlock) {
+        self.downloadButtonBlock();
+    }
 }
 
 - (void)playButtonPressed:(id)sender {
-    self.sendUserInfo(_dicKey);
+    if (self.sendUserInfo) {
+        self.sendUserInfo(_dicKey);
+    }
 }
 
 - (void)positionWithFrame:(CGRect)frame {

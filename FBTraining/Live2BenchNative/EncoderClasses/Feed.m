@@ -155,6 +155,7 @@
 }
 
 -(id) copy{
+
     Feed *feedToReturn = [[Feed alloc] initWithURLDict: [_qualities copy]];
     return feedToReturn;
 }

@@ -142,7 +142,10 @@ NSMutableArray *oldEventNames;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         
-        self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
+        CGFloat playerWidth = COMMENTBOX_WIDTH + 10;
+        CGFloat playerHeight = playerWidth / (16.0 / 9.0);
+        
+        self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
         //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
         self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
         //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];

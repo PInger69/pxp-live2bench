@@ -50,10 +50,7 @@
 @property (nonatomic,weak)  id <EventDelegate>  delegate;
 
 
-// These need to be cleaned
 @property (nonatomic,strong) NSDictionary        * teams;
-@property (nonatomic,strong) NSDictionary        * playerData;
-@property (nonatomic,strong) NSDictionary        * league;
 
 @property (nonatomic,strong) id <EncoderProtocol> parentEncoder;
 

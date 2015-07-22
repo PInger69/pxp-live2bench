@@ -14,17 +14,19 @@
 
 @interface FeedSelectCell : UITableViewCell
 
-@property (strong, nonatomic) UIImageView *feedView;
-@property (strong, nonatomic) UILabel *feedName;
-@property (strong, nonatomic) NSString *dicKey;
+@property (readonly, strong, nonatomic, nonnull) UIImageView *feedView;
+@property (readonly, strong, nonatomic, nonnull) UILabel *feedName;
+@property (strong, nonatomic, nonnull) NSString *dicKey;
 
-@property (strong, nonatomic) DownloadButton *downloadButton;
-@property (strong, nonatomic) CustomButton *playButton;
-@property (nonatomic, copy) void(^downloadButtonBlock)();
-@property (nonatomic, copy) void(^sendUserInfo)();
-@property (nonatomic,strong)    Event           * event;
+@property (readonly, strong, nonatomic, nonnull) DownloadButton *downloadButton;
+@property (readonly, strong, nonatomic, nonnull) CustomButton *playButton;
+@property (nonatomic, copy, nullable) void(^downloadButtonBlock)();
+@property (nonatomic, copy, nullable) void(^sendUserInfo)();
+@property (nonatomic,strong, nullable)    Event           * event;
 
-- (instancetype)initWithImageData:(NSString *)url andName: (NSString *)name;
+- (nonnull instancetype)initWithImageData:(nullable NSString *)url andName: (nullable NSString *)name;
+
+- (nonnull instancetype)initWithTag:(nonnull Tag *)tag source:(nullable NSString *)source;
 
 - (void)positionWithFrame:(CGRect)frame;
 @end

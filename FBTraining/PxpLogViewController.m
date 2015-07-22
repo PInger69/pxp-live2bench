@@ -37,5 +37,9 @@
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     [self.textView setText: [PxpLog getInstance].text];
+    if(self.textView.text.length > 0 ) {
+        NSRange bottom = NSMakeRange(self.textView.text.length -1, 1);
+        [self.textView scrollRangeToVisible:bottom];
+    }
 }
 @end

@@ -33,6 +33,9 @@ typedef NS_OPTIONS (NSInteger,FeedModes){
 @property (nonatomic, strong)           NSString       * type;
 @property (nonatomic,assign)             FeedModes      mode;
 
+@property (nonatomic,strong)            NSArray         * feedErrors;  // This gets populated when sent thru the Feed Inspector
+
+
 -(id)initWithURLDict:(NSDictionary *)aDict;
 -(id)initWithURLString:(NSString *)aPath quality:(int)qlty;
 -(instancetype) initWithFileURL: (NSString *) fileURL;

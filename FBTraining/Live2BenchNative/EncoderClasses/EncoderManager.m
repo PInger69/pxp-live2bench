@@ -72,7 +72,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onLiveEventFound:)             name:NOTIF_LIVE_EVENT_FOUND             object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterFound:)                name:NOTIF_ENCODER_MASTER_FOUND         object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onMasterLost:)                 name:NOTIF_ENCODER_MASTER_HAS_FALLEN    object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteEvent:)                name:NOTIF_DELETE_EVENT_SERVER          object:nil];
+        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDeleteEvent:)                name:NOTIF_DELETE_EVENT_SERVER          object:nil];
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterCommands:)               name:NOTIF_MASTER_COMMAND               object:nil]; // watch whole app for start or stop events
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)      name:NOTIF_ENCODER_STAT                 object:nil];

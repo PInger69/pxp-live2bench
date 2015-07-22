@@ -103,11 +103,11 @@ EncoderManager      * encoderManager;
     dropboxTab.tintColor = [UIColor darkGrayColor];
     dropboxTab.tag = 3;
     
-    googleDriveTab = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"googleDrive"] style:UIBarButtonItemStyleBordered target:self action:@selector(showGoogleDrive)];
+    googleDriveTab = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"googleDrive"] style:UIBarButtonItemStylePlain target:self action:@selector(showGoogleDrive)];
     googleDriveTab.tintColor = [UIColor darkGrayColor];
     googleDriveTab.tag = 4;
     
-    settingsTab = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settingsButton"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettings:)];
+    settingsTab = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settingsButton"] style:UIBarButtonItemStylePlain target:self action:@selector(showSettings:)];
     settingsTab.tag = 5;
     //////////////////////////////////////////////
     

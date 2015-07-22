@@ -177,8 +177,8 @@
         return NO;
     }
     
-    NSDateComponents *day = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:date1];
-    NSDateComponents *day2 = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:date2];
+    NSDateComponents *day = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date1];
+    NSDateComponents *day2 = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date2];
     return ([day2 day] == [day day] &&
             [day2 month] == [day month] &&
             [day2 year] == [day year] &&
@@ -434,8 +434,10 @@
         for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
             [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
             [indexPathsArray addObject: cellIndexPath];
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : self.tableData[cellIndexPath.row]}];
-            [((Event *)self.tableData[cellIndexPath.row]).downloadedSources removeAllObjects];
+            Event *eventToDelete = self.tableData[cellIndexPath.row];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : self.tableData[cellIndexPath.row]}];
+            [eventToDelete.downloadedSources removeAllObjects];
+            [[LocalMediaManager getInstance] deleteEvent:[[LocalMediaManager getInstance]getEventByName:eventToDelete.name]];
             if (buttonIndex == 0) {
                 //Post a notification to delete it from server.
             }
@@ -465,7 +467,8 @@
             Event *eventToRemove = self.tableData[self.editingIndexPath.row];
             
             if (buttonIndex == 0) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
+                [eventToRemove destroy];
+                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];
                 [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -476,7 +479,7 @@
             [[LocalMediaManager getInstance]deleteEvent:[[LocalMediaManager getInstance]getEventByName:eventToRemove.name]];
 //            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT object:nil userInfo:@{@"Event" : eventToRemove}];
             [eventToRemove.downloadedSources removeAllObjects];
-            [eventToRemove destroy];// deletes event from the server
+            //[eventToRemove destroy];// deletes event from the server
             [self removeIndexPathFromDeletion];
             
             if (buttonIndex == 1) {
@@ -485,7 +488,8 @@
         } else {
             if (buttonIndex == 0) {
                 Event *eventToRemove = self.tableData[self.editingIndexPath.row];
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
+                [eventToRemove destroy];
+                //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_EVENT_SERVER object:eventToRemove];
                 [self removeIndexPathFromDeletion];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];

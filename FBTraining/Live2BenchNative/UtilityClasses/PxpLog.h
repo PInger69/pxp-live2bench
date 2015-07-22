@@ -10,6 +10,8 @@
 
 #define PXPLog(s,...) [PxpLog log:(s),##__VA_ARGS__]
 
+#define PXPLogAjax(s,...) //[PxpLog log:@""], [PxpLog log:(s),##__VA_ARGS__]
+
 @interface PxpLog : NSObject
 
 @property (nonatomic,strong) NSMutableString * text;
@@ -17,4 +19,5 @@
 +(void)log:(NSString*)log,...;
 +(instancetype)getInstance;
 +(NSMutableString*)output;
++(void)clear;
 @end

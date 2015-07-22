@@ -8,8 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+/*!
+ * @breif A protocol for any object that has a time associated with it.
+ * @author Nicholas Cvitak
+ */
 @protocol PxpTimeProvider
 
+/// The currentTime of the object in seconds. (read-only)
 @property (readonly, assign, nonatomic) NSTimeInterval currentTime;
 
 @end

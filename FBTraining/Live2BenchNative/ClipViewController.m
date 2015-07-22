@@ -17,6 +17,8 @@
 #import "Tag.h"
 #import "RatingOutput.h"
 
+#import "AVAsset+Image.h"
+
 
 #define CELLS_ON_SCREEN         12
 #define TOTAL_WIDTH             1024
@@ -399,7 +401,7 @@ static void * encoderTagContext = &encoderTagContext;
         [cell setDeletingMode: self.isEditing];
     }
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"Live2Bench Tab"}];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT}];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
 }
 
@@ -562,7 +564,13 @@ static void * encoderTagContext = &encoderTagContext;
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView ];
+    UIImage *thumb = [tagSelect thumbnailForSource:nil];
+    
+    if (thumb) {
+        cell.imageView.image = thumb;
+    } else {
+        [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView ];
+    }
     
     [cell setDeletingMode: self.isEditing];
     

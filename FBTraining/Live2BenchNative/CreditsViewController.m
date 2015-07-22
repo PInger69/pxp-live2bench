@@ -51,7 +51,9 @@
 {
 
     // test
-    
+    // DELETE ME
+    [PxpLog clear];
+    PXPLog(@"");
 }
 
 

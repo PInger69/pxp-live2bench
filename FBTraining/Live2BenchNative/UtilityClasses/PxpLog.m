@@ -47,6 +47,11 @@ static PxpLog * instance;
     return instance.text;
 }
 
++(void)clear
+{
+    instance.text = [[NSMutableString alloc]init];
+}
+
 +(instancetype)getInstance
 {
     if (!instance) {
@@ -63,5 +68,7 @@ static PxpLog * instance;
     }
     return self;
 }
+
+
 
 @end

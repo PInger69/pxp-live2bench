@@ -77,7 +77,7 @@ typedef NS_ENUM (NSInteger,TagType){
 @interface Tag : NSObject<FilterItemProtocol>
 
 
-@property (strong, nonatomic) NSDictionary *rawData;
+@property (strong, nonatomic) NSDictionary  *rawData;
 @property (strong, nonatomic) NSString      *colour;
 @property (strong, nonatomic) NSString      *comment;
 @property (strong, nonatomic) NSString      *deviceID;
@@ -120,5 +120,7 @@ typedef NS_ENUM (NSInteger,TagType){
 -(NSDictionary *) modifiedData;
 -(NSDictionary *) makeTagData;
 -(void) replaceDataWithDictionary: (NSDictionary *) tagData;
+
+- (nullable UIImage *)thumbnailForSource:(nullable NSString *)source;
 
 @end
