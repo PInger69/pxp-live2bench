@@ -79,7 +79,7 @@
     
     if (event) {
         // default sync parameters
-        self.mainPlayer.syncThreshold = CMTimeMake(1, 3);
+        self.mainPlayer.syncThreshold = CMTimeMake(1, 1);
         self.mainPlayer.syncInterval = CMTimeMake(5, 1);
         
         [self.mainPlayer addLoadAction:[PxpLoadAction loadActionWithTarget:self action:@selector(loadComplete:)]];

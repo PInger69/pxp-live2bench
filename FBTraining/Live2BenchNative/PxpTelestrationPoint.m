@@ -10,6 +10,8 @@
 
 @implementation PxpTelestrationPoint
 
+@synthesize pointData = _pointData;
+
 - (nonnull instancetype)initWithPointData:(struct PxpTelestrationPointData)pointData {
     self = [super init];
     if (self) {

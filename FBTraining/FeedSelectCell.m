@@ -16,13 +16,13 @@
 
 @implementation FeedSelectCell
 
-- (instancetype)initWithImageData:(NSString *)url andName: (NSString *)name{
+- (nonnull instancetype)initWithImageData:(nullable NSString *)url andName: (nullable NSString *)name{
     self = [super init];
     if (self) {
         _feedName = [[UILabel alloc] init];
         _feedView = [[UIImageView alloc] init];
         
-        _dicKey = name;
+        _dicKey = name ? name : @"";
         
         unsigned long n;
         _feedName.text = sscanf(name.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : name;
@@ -35,7 +35,7 @@
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
-        self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+        _playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         //don't set tag to 0, by default, uiview's tag is 0
         [self.playButton setTag:101];
         [self.playButton setEnabled:YES];
@@ -55,7 +55,7 @@
     return self;
 }
 
-- (instancetype)initWithTag:(nonnull Tag *)tag source:(nullable NSString *)source {
+- (nonnull instancetype)initWithTag:(nonnull Tag *)tag source:(nullable NSString *)source {
     self = [super init];
     if (self) {
         _feedName = [[UILabel alloc] init];
@@ -63,30 +63,32 @@
         
         if (!source) {
             source = tag.event.feeds.allKeys.firstObject;
-            source = source ? source : @"";
         }
         
-        _dicKey = source;
+        __nonnull NSString *src = source ? source : @"";
+        source = source;
+        
+        _dicKey = src;
         
         unsigned long n;
         _feedName.text = sscanf(source.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : source;
         
-        Feed *feed = tag.event.feeds[source];
-        feed = feed ? feed : tag.event.feeds.allValues.firstObject;
-        UIImage *thumb = [[AVAsset assetWithURL:feed.path] imageForTime:CMTimeMake(tag.startTime, 1)];
+        UIImage *thumb = [tag thumbnailForSource:source];
         
         ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
         
         if (thumb) {
             self.feedView.image = thumb;
         } else {
-            [imageAssetManager imageForURL:tag.thumbnails[source] atImageView:self.feedView];
+            PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:source] ? tag.telestration : nil;
+            
+            [imageAssetManager imageForURL:tag.thumbnails[source] atImageView:self.feedView withTelestration:tele];
         }
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
-        self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+        _playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         //don't set tag to 0, by default, uiview's tag is 0
         [self.playButton setTag:101];
         [self.playButton setEnabled:YES];
@@ -111,11 +113,15 @@
 }
 
 - (void)downloadButtonPressed:(id)sender {
-    self.downloadButtonBlock();
+    if (self.downloadButtonBlock) {
+        self.downloadButtonBlock();
+    }
 }
 
 - (void)playButtonPressed:(id)sender {
-    self.sendUserInfo(_dicKey);
+    if (self.sendUserInfo) {
+        self.sendUserInfo(_dicKey);
+    }
 }
 
 - (void)positionWithFrame:(CGRect)frame {

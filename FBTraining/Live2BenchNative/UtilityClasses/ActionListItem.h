@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ActionListItemDelegate.h"
-
+@class ActionList;
 
 /**
  * This is the object that you add to the object list
@@ -39,6 +39,9 @@
 -(void)start;
 
 @optional
+
+@property (nonatomic,weak)  ActionList      * listItemOwner;
+
 /**
  *  should toggle isFinished and success
  *

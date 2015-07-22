@@ -428,7 +428,6 @@ static LocalEncoder * instance;
     NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
-    UIImage *image = [data objectForKey:@"image"] ;
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -441,7 +440,6 @@ static LocalEncoder * instance;
                                        @"duration"      : tagDuration,
                                        @"type"          : [NSNumber numberWithInteger:TagTypeTele],
                                        @"telestration"  : teleData,
-                                       @"image"         : image,
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
     
@@ -1367,6 +1365,10 @@ static LocalEncoder * instance;
     NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark",_localPath];
     NSString * txt = [NSString stringWithFormat:@" %@: %ld - %@   - %@\nBookmark Path:%@",self.name,(long)self.status,self.event.name,self.event.eventType,  bookmarkPath ];
     return txt;
+}
+
+- (nullable Event *)getEventByName:(NSString *)eventName {
+    return self.allEvents[eventName];
 }
 
 

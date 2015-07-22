@@ -13,6 +13,7 @@
 @interface NSURLImageConnection : NSURLConnection
 @property (weak, nonatomic) UIImageView *imageViewReference;
 @property (strong, nonatomic) NSMutableData *imageData;
+@property (strong, nonatomic) PxpTelestration *telestration;
 @end
 @implementation NSURLImageConnection
 
@@ -40,7 +41,11 @@
     return self;
 }
 
--(void)imageForURL: (NSString *) imageURLString atImageView: (UIImageView *) viewReference{
+- (void)imageForURL:(NSString *)imageURLString atImageView:(UIImageView *)viewReference {
+    [self imageForURL:imageURLString atImageView:viewReference withTelestration:nil];
+}
+
+-(void)imageForURL: (NSString *) imageURLString atImageView: (UIImageView *) viewReference withTelestration:(nullable PxpTelestration *)telestration {
     NSURL *imageURL =[NSURL URLWithString:imageURLString];
     viewReference.image = [UIImage imageNamed:@"live.png"];
 
@@ -51,6 +56,22 @@
     }
     //UIImage *theImage = [self checkImageCacheForImageURL:imageURLString];
     if(theImage){
+        
+        if (telestration && (telestration)) {
+            CGFloat ratio = theImage.size.width / theImage.size.height;
+            CGSize bounds = viewReference.bounds.size;
+            CGSize size = bounds.width > bounds.height ? CGSizeMake(bounds.width, bounds.width / ratio) : CGSizeMake(bounds.height * ratio, bounds.height);
+            
+            UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+            
+            [theImage drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+            [telestration.thumbnail drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+            
+            theImage = UIGraphicsGetImageFromCurrentImageContext();
+            
+            UIGraphicsEndImageContext();
+        }
+        
         viewReference.image = theImage;
     }else{
         
@@ -62,6 +83,7 @@
         
         imageConnection.imageData = [[NSMutableData alloc]init];
         imageConnection.imageViewReference = viewReference;
+        imageConnection.telestration = telestration;
         [self.queueOfConnections addObject: imageConnection ];
        // [imageConnection start];
         
@@ -89,6 +111,23 @@
 - (void)connectionDidFinishLoading:(NSURLImageConnection *)connection {
     UIImage *receivedImage = [UIImage imageWithData:connection.imageData];
     //[connection.imageViewReference stopAnimating];
+    
+    if (connection.telestration) {
+        CGFloat ratio = receivedImage.size.width / receivedImage.size.height;
+        CGSize bounds = connection.imageViewReference.bounds.size;
+        CGSize size = bounds.width > bounds.height ? CGSizeMake(bounds.width, bounds.width / ratio) : CGSizeMake(bounds.height * ratio, bounds.height);
+        
+        UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+        
+        [receivedImage drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+        [connection.telestration.thumbnail drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+        
+        receivedImage = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+    }
+    
+    
     [connection.imageViewReference setImage: receivedImage];
     [self.queueOfConnections removeObject:connection];
 

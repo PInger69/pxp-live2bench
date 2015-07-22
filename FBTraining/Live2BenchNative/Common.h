@@ -140,7 +140,10 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor orangeColor]
 #define TERTIARY_APP_COLOR  [UIColor orangeColor]
 
-#define DEBUG_MODE                          0
+#define DEBUG_MODE                          1
+
+
+
 
 //#if DEBUG_MODE == 0
 //#define DebugLog(...)
@@ -307,5 +310,12 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
  */
 
 #define MAX_NUM_TAG_BUTTONS     12
+
+/*!
+ * The Golden Ratio
+ */
+
+#define PHI ((1.0 + sqrt(5.0)) / 2.0)
+#define PHI_INV (1.0 / PHI)
 
 #endif

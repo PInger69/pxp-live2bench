@@ -30,6 +30,12 @@
  */
 -(void)clear;
 
+
+/**
+ *  Clears list as well and runs completetion block
+ */
+-(void)clear;
+
 /**
  *  Add Item to end of the list
  *

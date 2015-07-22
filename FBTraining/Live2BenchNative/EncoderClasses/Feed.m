@@ -15,6 +15,7 @@
 
     NSDictionary    * _qualities;
     NSURL           * _urlPath;
+    NSMutableDictionary *_assets;
 }
 
 
@@ -24,6 +25,8 @@
 @synthesize isAlive;
 @synthesize info;
 @synthesize mode        = _mode;
+
+@synthesize assets = _assets;
 
 /**
  *  this is to be used right from the JSON data
@@ -40,14 +43,21 @@
         NSArray             * keys          = [aDict allKeys];
         NSMutableDictionary * tempDict      = [[NSMutableDictionary alloc]init];
         NSURL               * defaultURL;
+        
+        _assets = [NSMutableDictionary dictionary];
         for (NSString * k in keys)
         {
-            [tempDict setObject:[NSURL URLWithString:[aDict objectForKey:k]] forKey:k];
+            NSURL *url = [NSURL URLWithString:aDict[k]];
             
-            if (defaultURL == nil) {
-                defaultURL = [tempDict objectForKey:[k lowercaseString]];
-            } else if ([[k lowercaseString] isEqualToString:LOW_QUALITY]) {   // The default is LOW_QUALITY
-                defaultURL = [tempDict objectForKey:[k lowercaseString]];
+            if (url) {
+                tempDict[k] = url;
+                _assets[k] = [AVURLAsset URLAssetWithURL:url options:nil];
+                
+                if (defaultURL == nil) {
+                    defaultURL = [tempDict objectForKey:[k lowercaseString]];
+                } else if ([[k lowercaseString] isEqualToString:LOW_QUALITY]) {   // The default is LOW_QUALITY
+                    defaultURL = [tempDict objectForKey:[k lowercaseString]];
+                }
             }
         }
         _qualities = [tempDict copy];
@@ -67,7 +77,11 @@
         if (qlty>=1) correctedQuality = HIGH_QUALITY;
         if (qlty<=0) correctedQuality = LOW_QUALITY;
         
-        _qualities = @{correctedQuality:[NSURL URLWithString:aPath]};
+        NSURL *url = [NSURL URLWithString:aPath];
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+        
+        _qualities = @{correctedQuality:url};
+        _assets = [NSMutableDictionary dictionaryWithDictionary:@{correctedQuality:asset}];
         
         _urlPath = [_qualities objectForKey:correctedQuality];
         self.type =FEED_TYPE_ENCODER;
@@ -80,9 +94,16 @@
     if (self) {
         [self assignModes:fileURL];
         self.isAlive = YES;
-        _qualities = @{HIGH_QUALITY: [NSURL fileURLWithPath: fileURL]};
+        
+        NSURL *url = [NSURL fileURLWithPath: fileURL];
+        
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+        
+        _qualities = @{HIGH_QUALITY: url};
+        _assets = [NSMutableDictionary dictionaryWithDictionary:@{HIGH_QUALITY: asset}];
         _urlPath = [_qualities objectForKey: HIGH_QUALITY];
         self.type =FEED_TYPE_LOCAL;
+        
     }
     if (_mode == FeedModesReady) {
         return  self;
@@ -155,6 +176,7 @@
 }
 
 -(id) copy{
+
     Feed *feedToReturn = [[Feed alloc] initWithURLDict: [_qualities copy]];
     return feedToReturn;
 }
@@ -163,5 +185,16 @@
     self.isAlive = NO;
 }
 
+- (nullable AVAsset *)lqAsset {
+    return self.assets[LOW_QUALITY] ? self.assets[LOW_QUALITY] : self.anyAsset;
+}
+
+- (nullable AVAsset *)hqAsset {
+    return self.assets[HIGH_QUALITY] ? self.assets[HIGH_QUALITY] : self.anyAsset;
+}
+
+- (nullable AVAsset *)anyAsset {
+    return self.assets.allValues.firstObject;
+}
 
 @end

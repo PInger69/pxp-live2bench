@@ -130,24 +130,36 @@ static void * actionContext = &actionContext;
 -(void)addItem:(id<ActionListItem>)item
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist addObject:@{ACTION_ITEM:item}];
 }
 
 -(void)addItem:(id<ActionListItem>)item onItemFinish:(void (^)(BOOL succsess))onFinish
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist addObject:@{ACTION_ITEM:item,FINISH_BLOCK:onFinish}];
 }
 
 -(void)addItem:(id<ActionListItem>)item   onItemStart:(void (^)())onStart onItemFinish:(void (^)(BOOL succsess))onFinish
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist addObject:@{ACTION_ITEM:item, FINISH_BLOCK:onFinish, START_BLOCK:onStart}];
 }
 
 -(void)addItem:(id<ActionListItem>)item onItemStart:(void (^)())onStart
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist addObject:@{ACTION_ITEM:item, START_BLOCK:onStart}];
 }
 
@@ -156,24 +168,36 @@ static void * actionContext = &actionContext;
 -(void)unShiftItem:(id<ActionListItem>)item
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist insertObject:@{ACTION_ITEM:item} atIndex:0];
 }
 
 -(void)unShiftItem:(id<ActionListItem>)item onItemFinish:(void (^)(BOOL succsess))onFinish
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist insertObject:@{ACTION_ITEM:item,FINISH_BLOCK:onFinish} atIndex:0];
 }
 
 -(void)unShiftItem:(id<ActionListItem>)item   onItemStart:(void (^)())onStart onItemFinish:(void (^)(BOOL succsess))onFinish
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist insertObject:@{ACTION_ITEM:item, FINISH_BLOCK:onFinish, START_BLOCK:onStart} atIndex:0];
 }
 
 -(void)unShiftItem:(id<ActionListItem>)item onItemStart:(void (^)())onStart
 {
     item.isFinished = NO;
+    if ([item respondsToSelector:@selector(setListItemOwner:)]){
+        item.listItemOwner = self;
+    }
     [_alist insertObject:@{ACTION_ITEM:item, START_BLOCK:onStart} atIndex:0];
 }
 

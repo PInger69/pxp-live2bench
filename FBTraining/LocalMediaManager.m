@@ -580,7 +580,7 @@ static LocalMediaManager * instance;
     //localEvent.tags = encoderEvent.tags;
     //localEvent.isBuilt = true;
 
-
+// Take data from the normal event and add it to local
     
     
     [localEvent.rawData writeToFile:plistNamePath atomically:YES];

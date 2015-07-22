@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 
 #define FEED_TYPE_LOCAL     @"local"
 #define FEED_TYPE_LIVE      @"live"
@@ -23,6 +24,8 @@ typedef NS_OPTIONS (NSInteger,FeedModes){
 
 @interface Feed : NSObject
 
+NS_ASSUME_NONNULL_BEGIN
+
 @property (nonatomic, assign)            int            quality;
 @property (nonatomic, assign,readonly)   BOOL           hasHighQuality;
 @property (nonatomic, assign,readonly)   BOOL           hasLowQuality;
@@ -33,10 +36,21 @@ typedef NS_OPTIONS (NSInteger,FeedModes){
 @property (nonatomic, strong)           NSString       * type;
 @property (nonatomic,assign)             FeedModes      mode;
 
--(id)initWithURLDict:(NSDictionary *)aDict;
--(id)initWithURLString:(NSString *)aPath quality:(int)qlty;
--(instancetype) initWithFileURL: (NSString *) fileURL;
--(NSURL *)path;
+@property (nonatomic,strong)            NSArray         * feedErrors;  // This gets populated when sent thru the Feed Inspector
+
+
+@property (readonly, strong, nonatomic, nonnull) NSDictionary *assets;
+@property (readonly, strong, nonatomic, nullable) AVAsset *lqAsset;
+@property (readonly, strong, nonatomic, nullable) AVAsset *hqAsset;
+@property (readonly, strong, nonatomic, nullable) AVAsset *anyAsset;
+
+NS_ASSUME_NONNULL_END
+
+
+-(nonnull instancetype)initWithURLDict:(nonnull NSDictionary *)aDict;
+-(nonnull instancetype)initWithURLString:(nonnull NSString *)aPath quality:(int)qlty;
+-(nonnull instancetype) initWithFileURL: (nonnull NSString *) fileURL;
+-(nullable NSURL *)path;
 
 
 

@@ -24,6 +24,9 @@
 #import "UserCenter.h"
 #import "RatingOutput.h"
 
+#import "Encoder.h"
+
+#import "FeedInspector.h"
 
 
 @interface DebuggingTabViewController ()
@@ -35,8 +38,8 @@
     Pip    * pip2;
     UIView * rectOutline;
     
-    EncoderManager       * EM;
-    UserCenter          * UC;
+    EncoderManager              * EM;
+    UserCenter                  * UC;
     FeedSwitchView              * feedSwitch ;
     PipViewController           * pipController;
     BitrateMonitor              * testRate;
@@ -132,6 +135,27 @@ static void *  debugContext = &debugContext;
     [self.view addSubview:closeButton];
     [self.view addSubview:openButton];
     
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(checkup:) name:NOTIF_FEED_INSPECTION_COMPLETE object:nil];
+    Encoder * testestset = (Encoder*)EM.primaryEncoder;
+    
+    Event * theE = testestset.event;
+    
+    Feed * someFeed = [[theE.feeds allValues]firstObject];
+    
+    Feed * someFeed2 = [[Feed alloc]initWithURLString:@"http://192.168.1.109/events/live/video/listzz.m3u8" quality:0];
+    
+    [FeedInspector investigate:someFeed2];
+    
+    
+}
+
+
+-(void)checkup:(NSNotification*)note
+{
+
+    Feed * someFeed = note.object;
+
 }
 
 -(void)onOpen:(id)sender

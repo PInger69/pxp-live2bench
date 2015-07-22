@@ -286,7 +286,8 @@ static UserCenter * instance;
     
     request.timeoutInterval = currentCommand.timeOut;
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/activate/ajax"]]];
-    
+
+    PXPLogAjax(@"http://myplayxplay.net/max/activate/ajax");
     urlRequest = request;
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = CE_VERIFY_GET;
@@ -329,7 +330,8 @@ static UserCenter * instance;
     [request setValue:postDataLength forHTTPHeaderField:@"Content-Length"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Current=Type"];
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/requesttagnames/ajax"]]];
-    
+
+    PXPLogAjax(@"http://myplayxplay.net/max/requesttagnames/ajax");
     request.timeoutInterval = currentCommand.timeOut;
     [request setHTTPBody:postData];
     
@@ -357,7 +359,8 @@ static UserCenter * instance;
     NSMutableURLRequest *request               = [[NSMutableURLRequest alloc]init];
     
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://myplayxplay.net/max/deactivate/ajax"]]];
-    
+
+    PXPLogAjax(@"http://myplayxplay.net/max/deactivate/ajax");
     //create post request
     [request setHTTPMethod:@"POST"];
     [request setValue:postDataLength forHTTPHeaderField:@"Content-Length"];

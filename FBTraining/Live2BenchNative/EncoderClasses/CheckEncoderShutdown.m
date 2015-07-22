@@ -41,6 +41,7 @@
 -(void)checking
 {
     NSURL * checkURL    = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest          = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:1];
     encoderConnection   = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
 }

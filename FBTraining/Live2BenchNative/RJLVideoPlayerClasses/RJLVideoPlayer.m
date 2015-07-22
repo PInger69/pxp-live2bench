@@ -68,6 +68,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self = [super init];
     if (self) {
         _status         = RJLPS_Offline;
+        _avPlayer = [[AVPlayer alloc] init];
         // This listens to the app if it wants the player to do something
         self.isAlive = YES;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
@@ -85,7 +86,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         
         liveBuffer = [[ValueBuffer alloc]initWithValue:6 coolDownValue:10000000 coolDownTick:50];
         restoreAfterPauseRate = 1;
-
     }
     return self;
 }
@@ -95,6 +95,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self = [super init];
     if (self) {
         _status         = RJLPS_Offline;
+        _avPlayer = [[AVPlayer alloc] init];
         self.isAlive = YES;
         // This listens to the app if it wants the player to do something
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(notificationCommands:) name:NOTIF_COMMAND_VIDEO_PLAYER object:nil];
@@ -738,9 +739,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
         };
     } else {
-        [self.avPlayer play];
+        [self.avPlayer setRate:self.slowmo ? SLOWMO_SPEED : 1.0];
         [freezeMonitor start];
-        if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
         self.status                                 = _status | RJLPS_Play;
         self.status                                 = _status & ~(RJLPS_Paused);
         [self.videoControlBar setHidden:NO];
@@ -826,14 +826,16 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.playerItem = nil;
     }
     
+    /*
     if (self.avPlayer) {
         [self.avPlayer removeObserver:self forKeyPath:@"currentItem"];
         [self.avPlayer removeObserver:self forKeyPath:@"rate"];
         self.avPlayer = nil;
     }
+     */
     
     
-        [self setPlayer:nil];
+        //[self setPlayer:nil];
         [self.playBackView setPlayer:nil];
         
         self.zoomManager.enabled = NO;
@@ -1091,15 +1093,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
 }
 
--(BOOL)slowmo
-{
-    if (!self.avPlayer) return NO;
-    return (self.avPlayer.rate <=.5 && self.avPlayer.rate >0)? YES : NO;
-}
-
 -(void)setSlowmo:(BOOL)slowmo
 {
-    [self willChangeValueForKey:@"slowmo"];
+    _slowmo = slowmo;
     float newRate;
     if (slowmo) {
 
@@ -1112,8 +1108,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
        self.status = _status & ~(RJLPS_Slomo);
         
     }
-    [self didChangeValueForKey:@"slowmo"];
-    [self.avPlayer setRate:newRate];
+    if (self.avPlayer.rate) {
+        [self.avPlayer setRate:newRate];
+    }
 }
 
 -(BOOL)mute
@@ -1310,10 +1307,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     if (!self.avPlayer)
     {
         /* Get a new AVPlayer initialized to play the specified player item. */
-        [self setPlayer:[AVPlayer playerWithPlayerItem:self.playerItem]];
+        //[self setPlayer:[AVPlayer playerWithPlayerItem:self.playerItem]];
         
         
-        [self.playBackView setPlayer:self.avPlayer];
+        //[self.playBackView setPlayer:self.avPlayer];
         
         /* Observe the AVPlayer "currentItem" property to find out when any
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
@@ -1330,6 +1327,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                          context:ViewControllerRateObservationContext];
         self.avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndPause;
     }
+    
+    [self.playBackView setPlayer:self.avPlayer];
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
     if (self.avPlayer.currentItem != self.playerItem)
@@ -1397,11 +1396,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     return displayTime;
 }
 
--(Float64)durationInSeconds{
+-(NSTimeInterval)durationInSeconds{
     AVPlayerItem* currentItem = self.avPlayer.currentItem;
     NSArray* seekableRanges = currentItem.seekableTimeRanges;
     
-    Float64 duration = 0;
+    NSTimeInterval duration = 0;
     
     CMTime itemDuration = kCMTimeInvalid;
     itemDuration = [self.playerItem duration];
@@ -1419,10 +1418,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     return duration;
 }
 
--(Float64)currentTimeInSeconds{
-    CMTimeScale timeScale = [self.avPlayer currentTime].timescale;
-    Float64 returnTime = timeScale != 0 ? [self.avPlayer currentTime].value / timeScale : 0;
-    return returnTime;
+-(NSTimeInterval)currentTimeInSeconds{
+    return CMTimeGetSeconds(self.avPlayer.currentTime);
 }
 
 
@@ -1594,10 +1591,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
 
     
-}
-
-- (NSTimeInterval)currentTime {
-    return CMTimeGetSeconds(self.avPlayer.currentTime);
 }
 
 @end

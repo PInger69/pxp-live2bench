@@ -177,8 +177,8 @@
         return NO;
     }
     
-    NSDateComponents *day = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:date1];
-    NSDateComponents *day2 = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:date2];
+    NSDateComponents *day = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date1];
+    NSDateComponents *day2 = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date2];
     return ([day2 day] == [day day] &&
             [day2 month] == [day month] &&
             [day2 year] == [day year] &&
@@ -493,6 +493,7 @@
                 [self removeIndexPathFromDeletion];
                 [self.arrayOfAllData removeObject:eventToRemove];
                 [self.tableData removeObject: eventToRemove];
+                [self.tableView cellForRowAtIndexPath:self.editingIndexPath];
                 [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
                 [self removeIndexPathFromDeletion];
@@ -506,6 +507,7 @@
     
     [self checkDeleteAllButton];
 }
+
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *indexPathsToRemove = [[NSMutableSet alloc]init];

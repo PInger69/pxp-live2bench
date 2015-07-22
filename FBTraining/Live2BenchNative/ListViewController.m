@@ -96,7 +96,7 @@ NSMutableArray *oldEventNames;
         //        globals = [Globals instance];
         
         _context = nil;
-        _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        //_playerViewController = [[PxpPlayerMultiViewController alloc] init];
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         [self addChildViewController:_telestrationViewController];
@@ -142,16 +142,23 @@ NSMutableArray *oldEventNames;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         
-        self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
+        CGFloat playerWidth = COMMENTBOX_WIDTH + 10;
+        CGFloat playerHeight = playerWidth / (16.0 / 9.0);
+        
+        NSLog(@"%@", [NSValue valueWithCGSize:CGSizeMake(playerWidth, playerHeight)]);
+        
+        self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
         //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
         self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
         //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
 
          [self.view addSubview:self.videoPlayer.view];
         
-        self.playerViewController.view.frame = CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT);
+        /*
+        self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
         self.playerViewController.multiView.context = self.context;
-        //[self.view addSubview:self.playerViewController.view];
+        [self.view addSubview:self.playerViewController.view];
+         */
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -213,10 +220,10 @@ NSMutableArray *oldEventNames;
     }
     
     // update the context
-    /*
-    self.context = [PxpEventContext contextWithEvent:_currentEvent];
-    self.playerViewController.multiView.context = self.context;
-    */
+    
+    //self.context = [PxpEventContext contextWithEvent:_currentEvent];
+    //self.playerViewController.multiView.context = self.context;
+    
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -372,8 +379,6 @@ NSMutableArray *oldEventNames;
     
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
-    
-    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0, 52, COMMENTBOX_WIDTH +10 , SMALL_MEDIA_PLAYER_HEIGHT )];
     //[self.videoPlayer initializeVideoPlayerWithFrame:CGRectMake(2, 114, COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
     //[self.videoPlayer playFeed:_feedSwitch.primaryFeed];
@@ -1767,6 +1772,9 @@ NSMutableArray *oldEventNames;
     CMTime cmDur            = CMTimeMake(dur, 1);
     
     CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
+    Feed *feed = [userInfo objectForKey:@"feed"];
+    
+    selectedTag = userInfo[@"forWhole"];
     
    /* NSString *pick = [userInfo objectForKey:@"feed"];
     
@@ -1776,12 +1784,10 @@ NSMutableArray *oldEventNames;
                                                                                                               @"duration":[userInfo objectForKey:@"duration"],
                                                                                                               //@"state":[NSNumber numberWithInteger:PS_Play]}];*/
     
-
-    [self.videoPlayer playClipWithFeed:[userInfo objectForKey:@"feed"] andTimeRange:timeRange];
+    [self.videoPlayer playClipWithFeed:feed andTimeRange:timeRange];
     
-    selectedTag = userInfo[@"forWhole"];
-    
-    self.telestrationViewController.telestration = selectedTag.telestration;
+    // only show the telestration on the correct source.
+    self.telestrationViewController.telestration = selectedTag.telestration.sourceName == feed.sourceName || [selectedTag.telestration.sourceName isEqualToString:feed.sourceName] ? selectedTag.telestration : nil;;
     
     [commentingField clear];
     commentingField.enabled             = YES;
@@ -1790,7 +1796,7 @@ NSMutableArray *oldEventNames;
     
     [newVideoControlBar setTagName:selectedTag.name];
     
-    /*
+    
     // find the first player with the source name we are looking for
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
     PxpPlayer *player = [self.context.players filteredArrayUsingPredicate:predicate].firstObject;
@@ -1802,7 +1808,7 @@ NSMutableArray *oldEventNames;
     
     // update the loop range.
     self.context.mainPlayer.range = timeRange;
-     */
+    
 }
 
 
@@ -2377,9 +2383,11 @@ NSMutableArray *oldEventNames;
 
 - (void)didReceiveMemoryWarning
 {
+    /*
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
     if ([self.view window] == nil) self.view = nil;
+     */
 }
 
 /*-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {

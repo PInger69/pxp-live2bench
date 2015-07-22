@@ -14,14 +14,16 @@
 #import "EncoderManager.h"
 #import "CameraDetails.h"
 #import "UserCenter.h"
-
+#import "League.h"
+#import "LeagueTeam.h"
+#import "TeamPlayer.h"
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
 
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trim(s)  [Utility removeSubString:@":timeStamp:" in:(s)]
 #define SYNC_ME             @"SYNC_ME"
-
+#define IS_AUTHENTICATING NO
 
 
 // HELPER CLASSES  // // // // // // // // // // // // // // // // // // // // // // // //
@@ -615,7 +617,6 @@
     NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
-    UIImage *image = [data objectForKey:@"image"] ;
     NSString *period = [data objectForKey:@"period"];
     
     // This is the starndard info that is collected from the encoder
@@ -629,8 +630,7 @@
                                        @"duration"      : tagDuration,
                                        @"type"          : [NSNumber numberWithInteger:TagTypeTele],
                                        @"telestration"  : teleData,
-                                       @"image"     : image,
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
     if (period) {
         [tagData setValue:period forKey:@"period"];
@@ -943,9 +943,10 @@
  */
 -(void)buildEncoderRequest
 {
-    [self issueCommand:BUILD            priority:3 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
-    [self issueCommand:CAMERAS_GET      priority:2 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
-    [self issueCommand:TEAMS_GET        priority:1 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+    [self issueCommand:TEAMS_GET        priority:3 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+    [self issueCommand:BUILD            priority:2 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+    [self issueCommand:CAMERAS_GET      priority:1 timeoutInSec:15 tagData:nil timeStamp:GET_NOW_TIME];
+
 }
 
 
@@ -953,7 +954,7 @@
 {
 
     
-    PXPLog(@"Encoder Warning: Version check in Authenticate Disabled");
+    
     if ([self.version isEqualToString:@"0.94.5"]){
 
 //    if ([Utility sumOfVersion:self.version] <= [Utility sumOfVersion:OLD_VERSION]){
@@ -967,6 +968,7 @@
 
         [self removeFromQueue:currentCommand];
         [self runNextCommand]; // this line is for testing
+        PXPLog(@"Encoder Warning: Version check in Authenticate Disabled");
         return;
     }
     
@@ -974,6 +976,7 @@
     NSString * json = [Utility dictToJSON:@{@"id":customerID}];
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/auth/%@",self.ipAddress,json]  ];
+    PXPLogAjax(@"http://%@/min/ajax/auth/%@",self.ipAddress,@{@"id":customerID});
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = AUTHENTICATE;
@@ -985,6 +988,7 @@
 -(void)buildEncoder:(NSMutableDictionary *)data timeStamp:(NSNumber *)aTimeStamp
 {
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",self.ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = BUILD;
@@ -994,6 +998,7 @@
 -(void)requestVersion:(NSMutableDictionary *)data timeStamp:(NSNumber *)aTimeStamp
 {
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/version",self.ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = VERSION;
@@ -1003,6 +1008,7 @@
 -(void)shutdown:(NSMutableDictionary *)data timeStamp:(NSNumber *)aTimeStamp
 {
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encshutdown",self.ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = SHUTDOWN;
@@ -1023,6 +1029,7 @@
   
     NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"http://%@/min/ajax/tagset/%@",self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = MAKE_TAG;
@@ -1032,8 +1039,16 @@
 -(void)makeTeleTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     //UIImage *img = [UIImage imageNamed:@"painting.png"];
-    NSData *imageData = UIImagePNGRepresentation([tData objectForKey:@"image"]) ;
+    
+    // Create a transparent Image to send to server (duct tape to work with legacy code)
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(1.0, 1.0), NO, 1.0);
+    UIImage *ductTape = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // NSData *imageData = UIImagePNGRepresentation([tData objectForKey:@"image"]) ;
     [tData removeObjectForKey:@"image"];
+    
+    NSData *imageData = UIImagePNGRepresentation(ductTape);
     
     NSString *encodedName = [Utility encodeSpecialCharacters:[tData objectForKey:@"name"]];
     
@@ -1055,6 +1070,7 @@
     NSString *jsonString                    = [Utility dictToJSON:tData];
     jsonString = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
      NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     NSMutableURLRequest *someUrlRequest     = [NSMutableURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     [someUrlRequest setHTTPMethod:@"POST"];
     
@@ -1119,6 +1135,7 @@
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"http://%@/min/ajax/tagmod/%@",self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = MODIFY_TAG;
@@ -1129,7 +1146,7 @@
     
    // NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/evtdelete/?name=%@&event=%@",self.ipAddress,[tData objectForKey:@"name"],[tData objectForKey:@"hid"]]  ];
-    
+    PXPLogAjax(@"http://%@/min/ajax/evtdelete/?name=%@&event=%@",self.ipAddress,[tData objectForKey:@"name"],[tData objectForKey:@"hid"]);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = DELETE_EVENT;
@@ -1150,6 +1167,7 @@
     }
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/sumget/%@",self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"http://%@/min/ajax/sumget/%@",self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = SUMMARY_GET;
@@ -1169,6 +1187,7 @@
     }
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/sumset/%@",self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"http://%@/min/ajax/sumset/%@",self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = SUMMARY_PUT;
@@ -1179,6 +1198,7 @@
 {
  
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teamsget",self.ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = TEAMS_GET;
@@ -1189,6 +1209,7 @@
 {
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getcameras",self.ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = CAMERAS_GET;
@@ -1205,6 +1226,7 @@
     NSString *jsonString                    = [Utility dictToJSON:tData];
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/gametags/%@",self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"http://%@/min/ajax/gametags/%@",self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
@@ -1219,6 +1241,7 @@
     NSString *jsonString                    = [Utility dictToJSON:tData];
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/gametags/%@",self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"http://%@/min/ajax/gametags/%@",self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
@@ -1231,6 +1254,7 @@
 {
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",self.ipAddress]  ];
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = LIVE_EVENT_GET;
@@ -1256,6 +1280,7 @@
     
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encstop/%@",self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"http://%@/min/ajax/encstop/%@",self.ipAddress,jsonString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = STOP_EVENT;
@@ -1269,6 +1294,7 @@
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encpause/",self.ipAddress]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    PXPLogAjax(checkURL.absoluteString);
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = PAUSE_EVENT;
     encoderConnection.timeStamp             = aTimeStamp;
@@ -1279,6 +1305,7 @@
     
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encresume/",self.ipAddress]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
+    PXPLogAjax(checkURL.absoluteString);
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = RESUME_EVENT;
     encoderConnection.timeStamp             = aTimeStamp;
@@ -1307,7 +1334,7 @@
     unencoded = [unencoded stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSURL * checkURL                        = [NSURL URLWithString:unencoded  ];
-    
+    PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = START_EVENT;
@@ -1453,23 +1480,19 @@
  */
 -(void)authenticateResponse:(NSData *)data
 {
-    
-//    PXPLog(@"Encoder Authentication DISABLED!!!");
-//    [self willChangeValueForKey:@"authenticated"];
-//    _authenticated = YES;
-//    PXPLog(@"Warning: JSON was malformed");
-//    [self didChangeValueForKey:@"authenticated"];
-//    isAuthenticate = YES;
-//    return;
-//    
-//    
-    
+    if (!IS_AUTHENTICATING){
+        [self willChangeValueForKey:@"authenticated"];
+        _authenticated = YES;
+        PXPLog(@"Warning: define no authenticating");
+        [self didChangeValueForKey:@"authenticated"];
+        if (!isAuthenticate) [self buildEncoderRequest];
+        isAuthenticate = YES;
+        return;
+    }
     
     
     NSDictionary    * results;
-    
-    //NSDictionary    * results =[Utility JSONDatatoDict:data];
-    
+
     if(NSClassFromString(@"NSJSONSerialization"))
     {
         NSError *error = nil;
@@ -1483,6 +1506,7 @@
             [self willChangeValueForKey:@"authenticated"];
             _authenticated = YES;
             PXPLog(@"Warning: JSON was malformed");
+            PXPLog(@"Default: User Authenticated");
             [self didChangeValueForKey:@"authenticated"];
         }
         
@@ -1501,6 +1525,16 @@
              when editing). You could have just made object an NSDictionary *
              in the first place but stylistically you might prefer to keep
              the question of type open until it's confirmed */
+            
+            if (!_authenticated){
+                PXPLog(@"");
+                PXPLog(@"##############################################################");
+                PXPLog(@"Warning: User Failed to authenticate to Encoder %@",self.name);
+                PXPLog(@"  ID:     @%",[UserCenter getInstance].customerID);
+                PXPLog(@"  E-mail: @%",[UserCenter getInstance].customerEmail);
+                PXPLog(@"##############################################################");
+                PXPLog(@"");                
+            }
         }
         else
         {
@@ -1545,20 +1579,88 @@
     isVersion = YES;
 }
 
+
+// this build the Leagus, teams and players on this encoder
 -(void)teamsResponse:(NSData *)data
 {
     NSDictionary    * results =[Utility JSONDatatoDict:data];
-    
-    if([results isKindOfClass:[NSDictionary class]])
+    if(![results isKindOfClass:[NSDictionary class]])
     {
-        if ([results objectForKey:@"success"] && ![[results objectForKey:@"success"]boolValue]) {
-            PXPLog(@"Encoder Error!");
-            PXPLog(@"  reason: %@",results[@"msg"]);
-        }
-        self.encoderTeams      = [results objectForKey:@"teams"];
-//            self.playerData = [results objectForKey:@"teamsetup"];
-        self.encoderLeagues     = [results objectForKey:@"leagues"];
+            isTeamsGet = YES;
+        return;
     }
+    if ([results objectForKey:@"success"] && ![[results objectForKey:@"success"]boolValue]) {
+        PXPLog(@"Encoder Error!");
+        PXPLog(@"  reason: %@",results[@"msg"]);
+    }
+    
+    
+    // building leagues
+    NSMutableDictionary * leaguePool        = [[NSMutableDictionary alloc]init]; // this is the final
+    NSMutableDictionary * leagueTempHIDPool = [[NSMutableDictionary alloc]init];
+    NSArray * rawleagues = [[results objectForKey:@"leagues"]allValues];
+
+    for (NSDictionary * lData in rawleagues) {
+        League * aLeague    = [[League alloc]init];
+        aLeague.hid         = lData[@"hid"];
+        aLeague.name        = lData[@"name"];
+        aLeague.shortName   = lData[@"short"];
+        aLeague.sport       = lData[@"sport"];
+        
+        
+        [leaguePool setObject:aLeague forKey:aLeague.name];
+
+        [leagueTempHIDPool setObject:aLeague forKey:aLeague.hid];
+    }
+    
+    
+    
+    // Build Teams
+    NSMutableDictionary * teamTempHIDPool = [[NSMutableDictionary alloc]init];
+    NSArray             * rawTeams          = [[results objectForKey:@"teams"]allValues];
+
+    for (NSDictionary * tData in rawTeams) {
+        LeagueTeam  * lTeam = [[LeagueTeam alloc]init];
+        NSString    * lHID  = tData[@"league"];
+        lTeam.extra         = tData[@"extra"];
+        lTeam.hid           = tData[@"hid"];
+        lTeam.name          = tData[@"name"];
+        lTeam.sport         = tData[@"sport"];
+        lTeam.txt_name      = tData[@"txt_name"];
+    
+        League * owningLeague = (League *)[leagueTempHIDPool objectForKey:lHID];
+        [owningLeague addTeam:lTeam];
+        [teamTempHIDPool setObject:lTeam forKey:lTeam.hid];
+    }
+    
+    // build players
+    
+    NSArray             * rawTeamSetup          = [[results objectForKey:@"teamsetup"]allValues];
+    for (NSArray * pList in rawTeamSetup) {
+        
+        // each item in the Array should all be the same team
+        NSString    * tHID      = pList[0][@"team"];
+        LeagueTeam * owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+        for (NSDictionary * pData in pList) {
+            TeamPlayer * aPlayer    = [[TeamPlayer alloc]init];
+            aPlayer.jersey          = pData[@"jersey"];
+            aPlayer.line            = pData[@"line"];
+            aPlayer.player          = pData[@"player"];
+            aPlayer.position        = pData[@"position"];
+            aPlayer.role            = pData[@"role"];
+            
+            tHID      = pData[@"team"];
+            owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+            [owningTeam addPlayer:aPlayer];
+            
+            NSLog(@"");
+        }
+    }
+    
+    
+    self.encoderLeagues = [leaguePool copy];
+    
+
     isTeamsGet = YES;
 }
 
@@ -1592,8 +1694,6 @@
     NSMutableDictionary *checkEventDic = ([type isEqualToString:EVENT_GET_TAGS])?[_allEvents objectForKey:extra[@"event"]]:nil ;
     Event * checkEvent = checkEventDic[@"non-local"];
     
-    NSString *s = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
-    ;
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
@@ -2037,6 +2137,23 @@
                     Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
                     anEvent.parentEncoder = self;
                     
+                    // populating teams based off data
+                    League      * league        = [self.encoderLeagues objectForKey:value[@"league"]];
+                    LeagueTeam  * homeTeam      = [league.teams objectForKey:value[@"homeTeam"]];
+                    LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
+                    if (!homeTeam) {
+                            homeTeam     = [LeagueTeam new];
+                        PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+                    }
+                    if (!visitTeam) {
+                            visitTeam   = [LeagueTeam new];
+                        PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+                    }
+                    
+                    
+                    anEvent.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
+
+                    
                     
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
@@ -2238,6 +2355,10 @@
 -(void)dealloc
 {
     isAlive = NO;
+}
+
+- (void)eventTagsGetResponce:(NSData *)data extraData:(NSDictionary *)dict {
+    // IMPLEMENT ME!
 }
 
 @end

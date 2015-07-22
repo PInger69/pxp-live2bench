@@ -11,7 +11,7 @@
 
 @implementation PxpTelestration
 {
-    __nonnull NSMutableArray *_actionStack;
+    NSMutableArray * __nonnull _actionStack;
 }
 
 @synthesize actionStack = _actionStack;
@@ -47,6 +47,8 @@
         NSArray *actions = [aDecoder decodeObjectForKey:@"a"];
         
         _size = [aDecoder decodeCGSizeForKey:@"s"];
+        _sourceName = [aDecoder decodeObjectForKey:@"n"];
+        _isStill = [aDecoder decodeBoolForKey:@"i"];
         _actionStack = actions ? [NSMutableArray arrayWithArray:actions] : [NSMutableArray array];
     }
     return self;
@@ -54,6 +56,8 @@
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
     [aCoder encodeCGSize:self.size forKey:@"s"];
+    [aCoder encodeObject:self.sourceName forKey:@"n"];
+    [aCoder encodeBool:self.isStill forKey:@"i"];
     [aCoder encodeObject:self.actionStack forKey:@"a"];
 }
 
@@ -84,21 +88,25 @@
     return isfinite(duration) ? MAX(0.0, duration) : 0.0;
 }
 
-- (nonnull UIImage *)thumbnail {
+- (NSTimeInterval)thumbnailTime {
     NSTimeInterval t = self.startTime + self.duration;
     
-     NSArray *sortedActions = self.sortedActions;
-    for (PxpTelestrationAction *action in sortedActions) {
+    NSArray *sortedActions = self.sortedActions;
+    for (PxpTelestrationAction *action in sortedActions.reverseObjectEnumerator) {
         if (action.type == PxpClear) {
             t = action.displayTime - (1.0 / 60.0);
             break;
         }
     }
     
+    return t;
+}
+
+- (nonnull UIImage *)thumbnail {
     UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
-    [[[PxpTelestrationRenderer alloc] initWithTelestration:self] renderInContext:ctx size:self.size atTime:t];
+    [[[PxpTelestrationRenderer alloc] initWithTelestration:self] renderInContext:ctx size:self.size atTime:self.thumbnailTime];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

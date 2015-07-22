@@ -8,6 +8,7 @@
 
 #import "Tag.h"
 #import "Feed.h"
+#import "AVAsset+Image.h"
 
 //#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 
@@ -334,16 +335,16 @@ static NSMutableDictionary * openDurationTagsWithID;
 -(NSDictionary *) makeTagData{
     
     NSMutableDictionary *tagData = [[NSMutableDictionary alloc]initWithDictionary:@{
-                                                                                  @"colour"      : self.colour,
+                                                                                    @"colour"      : self.colour ? self.colour : @"000000",
                                                                                   @"deviceid"    : (self.deviceID)?self.deviceID:@"",
                                                                                   @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
-                                                                                  @"displaytime" : self.displayTime,
+                                                                                    @"displaytime" : self.displayTime ? self.displayTime : @"",
                                                                                   @"duration"    : (self.duration)?[NSString stringWithFormat: @"%i", self.duration]:@"",
                                                                                   @"event"       : (self.event.name)?self.event.name:@"",
-                                                                                  @"name"        : self.name,
+                                                                                  @"name"        : self.name ? self.name : @"",
                                                                                   @"requestime"  : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
                                                                                   @"time"        : [NSString stringWithFormat:@"%f", self.time],
-                                                                                  @"user"        : self.user,
+                                                                                  @"user"        : self.user ? self.user : @"",
                                                                                   @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
                                                                                   @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
                                                                                   @"comment"     : (self.comment)?self.comment:@"",
@@ -445,4 +446,38 @@ static NSMutableDictionary * openDurationTagsWithID;
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver: tagModifyObserver];
 }
+
+- (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
+    Feed *feed = source && self.event.feeds[source] ? self.event.feeds[source] : self.event.feeds.allValues.firstObject;
+    
+    if (!source && self.telestration) {
+        for (NSString *k in self.event.feeds.keyEnumerator) {
+            if ([self.telestration.sourceName isEqualToString:k]) {
+                feed = self.event.feeds[k];
+                break;
+            }
+        }
+    }
+    
+    if (feed.path) {
+        NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
+        
+        AVAsset *asset = [AVURLAsset URLAssetWithURL:feed.path options:nil];
+        UIImage *thumb = [asset imageForTime:CMTimeMakeWithSeconds(time, 1)];
+        
+        if (thumb && (self.telestration.sourceName == feed.sourceName || [self.telestration.sourceName isEqualToString:feed.sourceName])) {
+            UIGraphicsBeginImageContext(thumb.size);
+            
+            [thumb drawInRect:CGRectMake(0.0, 0.0, thumb.size.width, thumb.size.height)];
+            [self.telestration.thumbnail drawInRect:CGRectMake(0.0, 0.0, thumb.size.width, thumb.size.height)];
+            
+            thumb = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+        return thumb;
+    } else {
+        return nil;
+    }
+}
+
 @end

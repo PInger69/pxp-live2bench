@@ -41,7 +41,7 @@
 #define PADDING                 5
 
 
-@interface Live2BenchViewController ()
+@interface Live2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider>
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
@@ -224,7 +224,13 @@ static void * eventContext      = &eventContext;
     [durationLabel setText:@"Duration"];
     [self.view addSubview:durationLabel];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipViewPlayFeedNotification:) name:NOTIF_SET_PLAYER_FEED object:nil];
+    
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SET_PLAYER_FEED object:nil];
 }
 
 #pragma mark- Encoder Observers
@@ -573,12 +579,16 @@ static void * eventContext      = &eventContext;
     telestration.delegate = self;
      */
 
-    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0);
+    self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     
-    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
+    // we need the control bar to be first responder.
+    [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.telestrationViewController.showsControls = NO;
+    self.telestrationViewController.showsControls = YES;
+    self.telestrationViewController.showsClearButton = NO;
+    self.telestrationViewController.delegate = self;
+    self.telestrationViewController.timeProvider = self;
     
     pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer:pinchGesture];
@@ -769,7 +779,6 @@ static void * eventContext      = &eventContext;
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
     self.videoPlayer.mute = NO;
-
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -778,6 +787,7 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
     self.videoPlayer.mute = YES;
+    self.telestrationViewController.telestration = nil;
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -1003,6 +1013,46 @@ static void * eventContext      = &eventContext;
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
+}
+
+- (void)clipViewPlayFeedNotification:(NSNotification *)note {
+    if ([note.userInfo[@"context"] isEqualToString: STRING_LIVE2BENCH_CONTEXT]) {
+        Feed *feed = note.userInfo[@"feed"];
+        PxpTelestration *tele = note.userInfo[@"telestration"];
+        
+        self.telestrationViewController.telestration = tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
+        
+    }
+}
+
+- (void)telestration:(nonnull PxpTelestration *)telestration didStartInViewController:(nonnull PxpTelestrationViewController *)viewController {
+    self.videoPlayer.videoControlBar.enable = NO;
+    [self.videoPlayer pause];
+}
+
+- (void)telestration:(nonnull PxpTelestration *)tele didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
+    
+    if (tele.actionStack.count) {
+        tele.isStill = YES;
+        tele.sourceName = self.videoPlayer.feed.sourceName;
+        [tele pushAction:[PxpTelestrationAction clearActionAtTime:tele.startTime + 1.0]];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
+                                                                                                               @"time": [NSString stringWithFormat:@"%f",tele.startTime],
+                                                                                                               @"duration": [NSString stringWithFormat:@"%i",(int)roundf(tele.duration)],
+                                                                                                               @"starttime": [NSString stringWithFormat:@"%f",tele.startTime],
+                                                                                                               @"displaytime" : [NSString stringWithFormat:@"%f",tele.startTime],
+                                                                                                               @"telestration" : tele.data,
+                                                                                                               }];
+    }
+    
+    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
+    
+    self.videoPlayer.videoControlBar.enable = YES;
+}
+
+- (NSTimeInterval)currentTimeInSeconds {
+    return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
 }
 
 @end
