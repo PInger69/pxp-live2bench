@@ -157,20 +157,25 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)onTagChanged:(NSNotification *)note{
     
     for (Tag *tag in _currentEvent.tags ) {
+        
         if (![self.allTagsArray containsObject:tag]) {
             if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
             [self.allTagsArray insertObject:tag atIndex:0];
         }
+        
         if(tag.modified && [self.allTagsArray containsObject:tag]){
             [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
             if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
                 [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            }
-            if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
+            }else if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
+        }
+        
+        if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine) && ![self.tagsToDisplay containsObject:tag]) {
+            [self.tagsToDisplay insertObject:tag atIndex:0];
         }
     }
     
@@ -178,7 +183,7 @@ static void * encoderTagContext = &encoderTagContext;
     for (Tag *tag in self.allTagsArray ){
         
         if (![_currentEvent.tags containsObject:tag]) {
-            toBeRemoved = tag;
+        toBeRemoved = tag;
         }
     }
     if (toBeRemoved) {
@@ -186,6 +191,7 @@ static void * encoderTagContext = &encoderTagContext;
         [self.tagsToDisplay removeObject:toBeRemoved];
     }
 
+       
     
     componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];

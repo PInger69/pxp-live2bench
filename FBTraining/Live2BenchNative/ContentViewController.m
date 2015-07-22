@@ -13,11 +13,32 @@
 @end
 
 @implementation ContentViewController
-@synthesize collectionView=_collectionView;
-@synthesize gameItems=_gameItems;
-@synthesize selectedNumbers =_selectedNumbers;
-@synthesize currentLine;
-@synthesize playerMap;
+@synthesize scrollView = _scrollView;
+@synthesize playerList = _playerList;
+@synthesize bottomViewController = _bottomViewController;
+//@synthesize collectionView=_collectionView;
+//@synthesize gameItems=_gameItems;
+//@synthesize selectedNumbers =_selectedNumbers;
+//@synthesize currentLine;
+//@synthesize playerMap;
+
+-(id)initWithFrame:(CGRect)frame /*bottomViewController:(UIViewController*)bottomViewController*/{
+    self = [super init];
+    self.view.frame = frame;
+    
+    _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    BorderButton* cell =[BorderButton buttonWithType:UIButtonTypeCustom];
+    [_scrollView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    _scrollView.showsVerticalScrollIndicator = true;
+    [self.view addSubview:_scrollView];
+    
+    //_bottomViewController = bottomViewController;
+    
+    _playerList = @[@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"15"];
+    [self createCells:_playerList];
+
+    return self;
+}
 
 - (id)initWithIndex:(NSInteger)i side:(NSString*)whichSide
 {
@@ -123,21 +144,40 @@
     return self;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section
+/*- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section
 {
     return [[self.gameItems objectForKey:@"Players"] count];
-}
+}*/
 
 //- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
 //    
 //} 
 
-- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
+/*- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
     return 1;
+}*/
+
+-(void)createCells:(NSArray*)playerLists{
+    //create the cell, use the player for the given indexpath
+    for(NSString *playerNumber in playerLists){
+        
+        NSInteger i = [playerLists indexOfObject: playerNumber];
+        NSInteger rowNum = ceil(i/5);
+        NSInteger colNum = (i+1)%5>0 ? (i+1)%5 : 5;
+        
+        BorderButton* cell =[BorderButton buttonWithType:UIButtonTypeCustom];
+        [cell setFrame:CGRectMake((colNum * 56)-37, (rowNum*40)+10, 40, 25)];
+        [cell setBackgroundColor:[UIColor clearColor]];
+        [cell setTitle:playerNumber forState:UIControlStateNormal];
+        [cell setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        [cell setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        [_scrollView addSubview:cell];
+
+    }
 }
 
--(void)createCells
-{
+//-(void)createCells
+//{
     //create the cell, use the player for the given indexpath
 //    for(NSString *playerNumber in globals.ARRAY_OF_HOCKEY_PLAYERS)
 //    {
@@ -182,10 +222,10 @@
 //    }
 //    [scrollView addSubview:cell];
 //    }
-}
+//}
 
 #pragma mark - UICollectionViewDelegate
-- (void) didSelectItemAtIndexPath:(id)sender
+/*- (void) didSelectItemAtIndexPath:(id)sender
 {
     BorderButton *button = (BorderButton*)sender;
     
@@ -234,18 +274,21 @@
         [vw removeFromSuperview];
     }
 
-}
+}*/
 
 
-- (void)viewWillAppear:(BOOL)animated
+/*- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self createCells];
-//    [scrollView setContentSize:CGSizeMake(self.view.frame.size.width, ceilf((globals.ARRAY_OF_HOCKEY_PLAYERS.count/3)*50)+15)];
+    [_scrollView setContentSize:CGSizeMake(self.view.frame.size.width,self.view.frame.size.height*2) ];
+                                           //ceilf((_playerList.count/3)*50)+15)
+}*/
+
+-(void)viewDidLayoutSubviews{
+    [_scrollView setContentSize:CGSizeMake(self.view.frame.size.width,ceilf((_playerList.count/3)*50)+15)];
 }
 
-
-- (void)viewDidLoad
+/*- (void)viewDidLoad
 {
     [super viewDidLoad];
     
@@ -270,7 +313,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return nil; // to supress warning
-}
+}*/
 
 
 @end

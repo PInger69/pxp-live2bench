@@ -27,6 +27,9 @@
 #import "EncoderClasses/EncoderProtocol.h"
 
 #import "PxpTelestrationViewController.h"
+#import "HockeyBottomViewController.h"
+#import "PxpVideoPlayerProtocol.h"
+#import "RJLVideoPlayer.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -54,7 +57,7 @@
     L2BVideoBarViewController           * _videoBarViewController;      // player updated control bar
     Live2BenchTagUIViewController       * _tagButtonController;         // side tags
     L2BFullScreenViewController         * _fullscreenViewController;    // fullscreen class to manage all actions in full
-    ReusableBottomViewController        * _theBottomViewController;
+    //ReusableBottomViewController        * _theBottomViewController;
     PipViewController                   * _pipController;
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
@@ -81,6 +84,8 @@
     id <EncoderProtocol>                _observedEncoder;
     
     UISwitch                            *durationSwitch;
+    
+    HockeyBottomViewController *bottomViewController;
     
 }
 
@@ -181,7 +186,7 @@ static void * eventContext      = &eventContext;
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     
-    [center addObserverForName:@"BottomViewControllerInit" object:nil queue:nil usingBlock:^(NSNotification *notification)
+    /*[center addObserverForName:@"BottomViewControllerInit" object:nil queue:nil usingBlock:^(NSNotification *notification)
      {
          void(^initBottomViewController)(NSDictionary *dataDictionary, NSDictionary *plistDictionary);
          initBottomViewController = notification.userInfo[@"Block"];
@@ -194,7 +199,7 @@ static void * eventContext      = &eventContext;
          void(^initBottomViewController)(NSDictionary *dataDictionary, NSDictionary *plistDictionary);
          initBottomViewController = notification.userInfo[@"Block"];
          initBottomViewController(nil, plistDictionary);
-     }];
+     }];*/
     
     [center addObserverForName:NOTIF_EVENT_FEEDS_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
         [self restartPlayer];
@@ -292,6 +297,13 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         [self displayLable];
+        
+        bottomViewController = [[HockeyBottomViewController alloc]init];
+        bottomViewController.currentEvent = _currentEvent;
+        [self.view addSubview:bottomViewController.view];
+        [bottomViewController update];
+        
+        
         if (_currentEvent.live) {
             [self gotLiveEvent];
         }
@@ -304,6 +316,7 @@ static void * eventContext      = &eventContext;
 
 -(void)onTagChanged:(NSNotification *)note
 {
+    bottomViewController.currentEvent = _currentEvent;
     [_videoBarViewController onTagChanged:_currentEvent];
 }
 
@@ -485,6 +498,7 @@ static void * eventContext      = &eventContext;
     [_pipController pipsAndVideoPlayerToLive:info];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
+    [bottomViewController postTagsAtBeginning];
     
 }
 
@@ -522,9 +536,9 @@ static void * eventContext      = &eventContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    ReusableBottomViewController *bottomViewController = [[ReusableBottomViewController alloc] init];
-    [self.view addSubview:bottomViewController.view];
-    _theBottomViewController = bottomViewController;
+    //ReusableBottomViewController *bottomViewController = [[ReusableBottomViewController alloc] init];
+    //[self.view addSubview:bottomViewController.view];
+    //_theBottomViewController = bottomViewController;
 
     //label to show current event title
     currentEventTitle                   = [[UILabel alloc] initWithFrame:CGRectMake(156.0f, 71.0f, MEDIA_PLAYER_WIDTH, 21.0f)];
@@ -541,9 +555,9 @@ static void * eventContext      = &eventContext;
 
     //__block Live2BenchViewController * weakSelf = self;
     //tagsReadyObserver =
-    /*[[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
-        [weakSelf createTagButtons];
-    }];*/
+    [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [self createTagButtons];
+    }];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserverForName:NOTIF_EVENT_FEEDS_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -553,6 +567,7 @@ static void * eventContext      = &eventContext;
     
     
     self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    //bottomViewController.videoPlayer = self.videoPlayer;
     /*! Disabled For Demo
     telestration = [[TeleViewController alloc]initWithController:self.videoPlayer];
     telestration.delegate = self;
@@ -711,6 +726,7 @@ static void * eventContext      = &eventContext;
     if (!self.videoPlayer.feed && _encoderManager.currentEvent != nil) {
      [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
     }
+    
 
 //    [currentEventTitle setNeedsDisplay];
     
@@ -740,6 +756,9 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
     
+    
+    bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
+    [bottomViewController update];
     // just to update UI
 }
 
@@ -833,7 +852,8 @@ static void * eventContext      = &eventContext;
     if (button.mode == SideTagButtonModeRegular) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
          @"name":button.titleLabel.text,
-         @"time":[NSString stringWithFormat:@"%f",currentTime]
+         @"time":[NSString stringWithFormat:@"%f",currentTime],
+         @"period":[bottomViewController currentPeriod]
          }];
     } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
         [_tagButtonController disEnableButton];
@@ -845,7 +865,8 @@ static void * eventContext      = &eventContext;
                                                                                                           @"name":button.titleLabel.text,
                                                                                                           @"time":[NSString stringWithFormat:@"%f",currentTime],
                                                                                                           @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
-                                                                                                          @"dtagid": button.durationID
+                                                                                                          @"dtagid": button.durationID,
+                                                                                                          @"period": [bottomViewController currentPeriod]
                                                                                                           }];
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
         [_tagButtonController onEventChange:nil];

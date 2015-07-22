@@ -86,7 +86,10 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
        [self builtTelestration:tagData];
-        
+        if ([tagData objectForKey:@"period"]) {
+            self.period          = [tagData[@"period"]intValue];
+        }
+
         if (_type == TagTypeTele) {
             self.startTime = self.time;
         }
@@ -344,7 +347,7 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
                                                                                   @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
                                                                                   @"comment"     : (self.comment)?self.comment:@"",
-                                                                                   @"rating"     : (self.rating)?[NSString stringWithFormat:@"%ld", (long)self.rating]:@""
+                                                                                  @"rating"     : (self.rating)?[NSString stringWithFormat:@"%ld", (long)self.rating]:@""
                                                                                   
                                                                                   }];
     if (self.durationID) {
@@ -366,6 +369,10 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (self.telestration) {
         tagData[@"telestration"] = self.telestration.data;
+    }
+    
+    if (self.period) {
+        tagData[@"period"] = [NSString stringWithFormat:@"%ld",(long)self.period];
     }
     
     

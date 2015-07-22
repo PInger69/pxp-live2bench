@@ -578,6 +578,7 @@
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    NSString *period = [data objectForKey:@"period"];
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -587,7 +588,8 @@
                                        @"user"          : [UserCenter getInstance].userHID,
                                        @"time"          : tagTime,
                                        @"name"          : tagName,
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                       @"period"        : period
 
                                        }];
     if (isDuration){ // Add extra data for duration Tags
@@ -614,6 +616,7 @@
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
     UIImage *image = [data objectForKey:@"image"] ;
+    NSString *period = [data objectForKey:@"period"];
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -627,9 +630,11 @@
                                        @"type"          : [NSNumber numberWithInteger:TagTypeTele],
                                        @"telestration"  : teleData,
                                        @"image"     : image,
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
                                        }];
-    
+    if (period) {
+        [tagData setValue:period forKey:@"period"];
+    }
     
     [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
     
@@ -1767,13 +1772,15 @@
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
                 
-                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine) {
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
                         [self onModifyTags:tag];
                     }else if([tag[@"modified"]boolValue]){
                         [self onModifyTags:tag];
                     }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
                         [self onModifyTags:tag];
+                    }else if ([tag[@"type"]intValue] == TagTypeTele){
+                        [self onTeleTags:tag];
                     }
                     else{
                         [self onNewTags:tag];
