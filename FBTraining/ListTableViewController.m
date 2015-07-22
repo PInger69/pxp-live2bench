@@ -348,14 +348,28 @@
     }
     
     ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
-    NSString *url = [[tag.thumbnails allValues] firstObject];
+    NSString *src = tag.thumbnails.allKeys.firstObject;
+    
+    if (tag.telestration) {
+        for (NSString *k in tag.thumbnails.keyEnumerator) {
+            if ([tag.telestration.sourceName isEqualToString:k]) {
+                src = k;
+                break;
+            }
+        }
+    }
+    
+    NSString *url = tag.thumbnails[src];
     
     UIImage *thumb = [tag thumbnailForSource:nil];
     
     if (thumb) {
         cell.tagImage.image = thumb;
     } else {
-        [imageAssetManager imageForURL:url atImageView:cell.tagImage];
+        
+        PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:src] ? tag.telestration : nil;
+        
+        [imageAssetManager imageForURL:url atImageView:cell.tagImage withTelestration:tele];
     }
     
     

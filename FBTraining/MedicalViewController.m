@@ -14,26 +14,45 @@
 #import "SeekButton.h"
 #import "BorderButton.h"
 #import "Event.h"
+#import "UserCenter.h"
+
+#import "NCRecordButton.h"
 
 #import "PxpTelestrationViewController.h"
+#import "TagSelectTableViewController.h"
+
+#import "UIColor+Highlight.h"
 
 #define PADDING                 5
 #define LITTLE_ICON_DIMENSIONS 40
+#define BAR_HEIGHT 75.0
 
-@interface MedicalViewController () <PxpTelestrationViewControllerDelegate>
+@interface MedicalViewController () <PxpTelestrationViewControllerDelegate, NCRecordButtonDelegate, TagSelectResponder>
+
+@property (copy, nonatomic, nullable) NSString *activeTagName;
+@property (copy, nonatomic, nullable) NSString *durationTagID;
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
+@property (strong, nonatomic, nonnull) UIView *container;
+
+@property (strong, nonatomic, nonnull) UIView *bottomBar;
+
+@property (readonly, assign, nonatomic) CGFloat tagSelectWidth;
+@property (strong, nonatomic, nonnull) UIButton *tagSelectButton;
+@property (strong, nonatomic, nonnull) TagSelectTableViewController *tagSelectController;
+
+@property (strong, nonatomic, nonnull) NCRecordButton *recordButton;
+@property (strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
+@property (strong, nonatomic, nonnull) SeekButton *forwardSeekButton;
+@property (strong, nonatomic, nonnull) Slomo *slomoButton;
+
+@property (strong, nonatomic, nonnull) LiveButton *liveButton;
+@property (strong, nonatomic, nonnull) UILabel *durationLabel;
+
 @end
 
-@implementation MedicalViewController{
-    LiveButton                          *gotoLiveButton;
-    UIButton                            *startButton;
-    UIButton                            *stopButton;
-    NSString                            *timeString;
-    float                               startTime;
-    NSTimer                             *recordingTimer;
-    NSArray                             *activeElements;
+@implementation MedicalViewController {
     id <EncoderProtocol>                _observedEncoder;
     Event                               * _currentEvent;
     EncoderManager                      * _encoderManager;
@@ -48,13 +67,52 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Medical", nil) imageName:@"live2BenchTab"];
         
+        
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         _encoderManager         = mainappDelegate.encoderManager;
         
-        CGRect screenBounds;
+        _tagSelectController = [[TagSelectTableViewController alloc] init];
+        
+        _container = [[UIView alloc] initWithFrame:CGRectMake(0.0, 55.0, 1024.0, 768.0 - 55.0)];
+        
+        
+        _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, 768.0 - 55.0 - BAR_HEIGHT, 1024.0, BAR_HEIGHT)];
+        
+        _recordButton = [[NCRecordButton alloc] init];
+        
+        const CGFloat seekButtonOffest = 512.0 * (1.0 - PHI_INV);
+        const CGFloat seekButtonWidth = 45.0;
+        const CGFloat seekButtonHeight = 75.0;
+        CGPoint backwardPoint = CGPointMake(seekButtonOffest, 768.0 - seekButtonHeight);
+        CGPoint forwardPoint = CGPointMake(1024.0 - seekButtonOffest - seekButtonWidth, 768.0 - seekButtonHeight);
+        
+        _tagSelectWidth = seekButtonOffest;
+        
+        _backwardSeekButton = [SeekButton makeFullScreenBackwardAt:backwardPoint];
+        _forwardSeekButton = [SeekButton makeFullScreenForwardAt:forwardPoint];
+        
+        [_backwardSeekButton onPressSeekPerformSelector:@selector(seekButtonAction:) addTarget:self];
+        [_forwardSeekButton onPressSeekPerformSelector:@selector(seekButtonAction:) addTarget:self];
+        
+        _tagSelectButton = [[UIButton alloc] initWithFrame:CGRectMake(15.0, 0.0, seekButtonOffest - 30.0, BAR_HEIGHT)];
+        [_tagSelectButton addTarget:self action:@selector(tagSelectButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        _slomoButton = [[Slomo alloc] initWithFrame:CGRectMake(seekButtonOffest + 60.0, 0.0, BAR_HEIGHT, BAR_HEIGHT)];
+        [_slomoButton addTarget:self action:@selector(slomoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        const CGFloat labelWidth = 512.0 - seekButtonOffest - 60.0;
+        const CGFloat liveButtonWidth = 130.0, liveButtonHeight = 40.0;
+        const CGFloat liveButtonX = seekButtonOffest + 60.0 + BAR_HEIGHT + 15.0;
+        const CGFloat liveButtonY = (BAR_HEIGHT - liveButtonHeight) / 2.0;
+        
+        _durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(512.0, 0.0, labelWidth, BAR_HEIGHT)];
+        _liveButton = [[LiveButton alloc] initWithFrame:CGRectMake(liveButtonX,liveButtonY, liveButtonWidth, liveButtonHeight)];
+        [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        CGRect screenBounds = self.container.bounds;
         
         CGFloat playerWidth = 1024.0, playerHeight = playerWidth / (16.0 / 9.0);
-        CGFloat playerY = (768.0 - playerHeight + 55.0) / 2.0;
+        CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
         
         self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
         
@@ -79,33 +137,62 @@
         self.videoPlayer.liveIndicatorLight.frame                = [((NSValue *)[fullScreenFramesParts objectForKey:@"light"]) CGRectValue];
         self.videoPlayer.videoControlBar.frame               = [((NSValue *)[fullScreenFramesParts objectForKey:@"bar"]) CGRectValue];
         self.videoPlayer.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
-        [self.view addSubview:self.videoPlayer.view];
         
-        gotoLiveButton = [self makeLive];
-        [self.view addSubview:gotoLiveButton];
+        [self.container addSubview:self.videoPlayer.view];
         
-        startButton = [self makeStartButton];
-        //[self.view addSubview:startButton];
-        
-        stopButton = [self makeStopButton];
-        //[self.view addSubview:stopButton];
-        
-        activeElements = @[gotoLiveButton,startButton,stopButton];
-        [self revealThese:@[]];
-        
-        //self.telestrationViewController.telestration = [[PxpTelestration alloc] init];
         [self addChildViewController:_telestrationViewController];
-        
+        [self addChildViewController:_tagSelectController];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         
+        [self.view addSubview:self.container];
         
     }
         
     
     
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+}
+
+- (void)setActiveTagName:(nullable NSString *)activeTagName {
+    _activeTagName = activeTagName;
+    
+    [self.tagSelectButton setTitle:activeTagName forState:UIControlStateNormal];
+    
+    if (self.recordButton.enabled && !activeTagName) {
+        self.recordButton.enabled = NO;
+    }
+}
+
+- (void)sideTagsReady:(NSNotification *)note {
+    NSArray *tagDescriptors = _appDel.userCenter.tagNames;
+    
+    // find the first valid tag name.
+    NSString *newActiveTagName = nil;
+    for (NSDictionary *tagDescriptor in tagDescriptors) {
+        NSString *tagName = tagDescriptor[@"name"];
+        if (tagName.length > 0 && ![tagName hasPrefix:@"-"]) {
+            newActiveTagName = tagName;
+            break;
+        }
+    }
+    
+    if (self.activeTagName) {
+        for (NSDictionary *tagDescriptor in tagDescriptors) {
+            if ([tagDescriptor[@"name"] isEqualToString:self.activeTagName]) {
+                newActiveTagName = self.activeTagName;
+            }
+        }
+    }
+    
+    self.activeTagName = newActiveTagName;
+    self.tagSelectController.tagDescriptors = tagDescriptors;
 }
 
 -(void)addEventObserver:(NSNotification*)note
@@ -155,135 +242,6 @@
     }
 }
 
--(void)setMode:(MedicalScreenModes)mode
-{
-    if (_mode == mode) return;
-    _mode = mode;
-    
-    switch (_mode) {
-        case MedicaScreenDisable :
-            [self revealThese:@[]];
-            break;
-        case MedicalScreenRegular :
-            [self revealThese:@[startButton]];
-            break;
-        case MedicalScreenLive:
-            [self revealThese:@[gotoLiveButton,startButton]];
-            break;
-        default:
-            break;
-    }
-}
-
-
-
-#pragma mark Button Helper Methods
--(UIImage *)readyToRecordButtonWithSize: (CGSize) buttonSize{
-    UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
-    
-    UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
-    
-    [[UIColor whiteColor] setStroke];
-    [whiteCirclePath stroke];
-    
-    UIBezierPath *innerRedCircle = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - whiteCirclePath.lineWidth - 5 ) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    
-    [[UIColor redColor] setFill];
-    
-    [innerRedCircle fill];
-    
-    
-    UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return recordButtonImage;
-}
-
-- (void)updateRecodingTime {
-    float time = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
-    NSInteger second = 00;
-    NSInteger minute = 00;
-    NSInteger hour = 00;
-    second = time;
-    if (second >= 60 && second < 3600) {
-        minute = second / 60;
-        second = second % 60;
-    } else if (second >= 3600){
-        hour = second / 3600;
-        minute = second % 3600 / 60;
-        second = second - (minute*60+hour*60*60);
-    }
-    
-    timeString = [NSString stringWithFormat:@"%01ld:%02ld:%02ld", (long)hour ,(long)minute, (long)second];
-    [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
-}
-
--(UIImage *)recordingButtonWithSize: (CGSize) buttonSize{
-    UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
-    
-    UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
-    
-    [[UIColor whiteColor] setStroke];
-    [whiteCirclePath stroke];
-    
-    CGRect innerSquareFrame = CGRectMake(buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.height* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.width - 2 * (buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2), buttonSize.height - 2 *( buttonSize.width* 0.149096+ whiteCirclePath.lineWidth/2));
-    UIBezierPath *innerSquarePath = [UIBezierPath bezierPathWithRoundedRect:innerSquareFrame cornerRadius:buttonSize.width / 10 + whiteCirclePath.lineWidth + 2];
-    
-    [[UIColor redColor] setFill];
-    
-    [innerSquarePath fill];
-    
-    
-    UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return recordButtonImage;
-}
-
-
-
-
-#pragma mark Make Buttons
-
-
--(LiveButton*)makeLive
-{
-    LiveButton * btn = [[LiveButton alloc]initWithFrame:CGRectMake(450,700, 130, LITTLE_ICON_DIMENSIONS)];
-    [btn addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
-   
-    return btn;
-}
-
-- (UIButton *)makeStartButton {
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(1024 - 75, 690,70.0f, 70.0f)];
-    [btn addTarget:self action:@selector(startButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    [btn setBackgroundImage:[self readyToRecordButtonWithSize:CGSizeMake(65, 65)] forState:UIControlStateNormal];
-    //timeString = @"00:00:00";
-    startButton.hidden = true;
-    stopButton.hidden = false;
-    return btn;
-}
-
-- (UIButton *)makeStopButton {
-    //timeString = @"00:00";
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(1024 - 75, 690,70.0f, 70.0f)];
-    [btn setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
-    [btn.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
-    [btn.titleLabel setTextAlignment: NSTextAlignmentCenter];
-    [btn addTarget:self action:@selector(stopButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    [btn setBackgroundImage:[self recordingButtonWithSize:CGSizeMake(65, 65)] forState:UIControlStateNormal];
-    startButton.hidden = false;
-    stopButton.hidden = true;
-    return btn;
-}
-
-
-
-
 #pragma mark Buttons' Method
 
 - (void)goToLive
@@ -299,64 +257,18 @@
         [self.videoPlayer playFeed:self.videoPlayer.feed];
     }
     [self.videoPlayer gotolive];
-}
-
-- (void)startButtonClicked {
-    [self.videoPlayer.videoControlBar setEnable:NO];
-    self.videoPlayer.liveIndicatorLight.tintColor = [UIColor redColor];
-    [self.videoPlayer.liveIndicatorLight setHidden:NO];
-    [self updateRecodingTime];
-    startTime = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
-    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateRecodingTime) userInfo:nil repeats:YES];
-    startButton.hidden = true;
-    stopButton.hidden = false;
-    
-    //self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
-}
-
-- (void)stopButtonClicked {
-    recordingTimer = nil;
-    self.videoPlayer.liveIndicatorLight.tintColor = [UIColor greenColor];
-    [self.videoPlayer.liveIndicatorLight setHidden: self.videoPlayer.live?NO:YES];
-    [self.videoPlayer.videoControlBar setEnable:YES];
-    float duration = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime) - startTime;
-    [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
-    startButton.hidden = false;
-    stopButton.hidden = true;
-    /*
-    PxpTelestration *telestration = self.telestrationViewController.telestration;
-    
-    if (telestration) {
-        [telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.videoPlayer.currentTime]];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
-                                                                                                          @"time": [NSString stringWithFormat:@"%f",startTime],
-                                                                                                          @"duration": [NSString stringWithFormat:@"%i",(int)roundf(duration)],
-                                                                                                          @"telestration" : self.telestrationViewController.telestration.data
-                                                                                                          }];
-    }
-    
-    //self.telestrationViewController.telestration = nil;
-     
-    */
-}
-
-
--(void)revealThese:(NSArray*)list
-{
-    for (UIView * v in activeElements) {
-        [v setHidden:YES];
-    }
-    for (UIView * v in list) {
-        [v setHidden:NO];
-    }
+    self.videoPlayer.slowmo = NO;
+    self.slomoButton.slomoOn = NO;
 }
 
 
 - (void)viewDidLoad {
     // Do any additional setup after loading the view.
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor blackColor];
     
-    NSLog(@"%@", [NSValue valueWithCGRect:self.view.frame]);
+    self.bottomBar.backgroundColor = [UIColor blackColor];
+    
     self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -366,18 +278,58 @@
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.delegate = self;
     self.telestrationViewController.showsClearButton = YES;
+    self.telestrationViewController.showsControls = YES;
     
-    self.view.backgroundColor = [UIColor blackColor];
+    self.tagSelectButton.titleLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
+    self.tagSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    [self.tagSelectButton setTitle:@"Medical" forState:UIControlStateNormal];
+    [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateHighlighted];
+    [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateSelected];
+    [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateDisabled];
+    
+    self.tagSelectController.tagSelectResponder = self;
+    
+    self.recordButton.frame = CGRectMake(self.bottomBar.bounds.size.width - self.bottomBar.bounds.size.height, 0.0, self.bottomBar.bounds.size.height, self.bottomBar.bounds.size.height);
+    self.recordButton.delegate = self;
+    self.recordButton.timeProvider = self.videoPlayer;
+    self.recordButton.displaysTime = NO;
+    
+    self.durationLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
+    self.durationLabel.textColor = [UIColor lightGrayColor];
+    self.durationLabel.text = @"00:00:00";
+    self.durationLabel.textAlignment = NSTextAlignmentCenter;
+    self.durationLabel.adjustsFontSizeToFitWidth = YES;
+    
+    [self.container addSubview:self.bottomBar];
+    [self.bottomBar addSubview:self.tagSelectButton];
+    [self.bottomBar addSubview:self.recordButton];
+    [self.bottomBar addSubview:self.slomoButton];
+    [self.bottomBar addSubview:self.liveButton];
+    [self.bottomBar addSubview:self.durationLabel];
+    [self.view addSubview:self.backwardSeekButton];
+    [self.view addSubview:self.forwardSeekButton];
+    
+    [self.container addSubview:self.tagSelectController.view];
+    [self setShowsTagSelectMenu:NO];
+    
+    self.recordButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    //self.backwardSeekButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    //self.forwardSeekButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    
+    //self.view.backgroundColor = [UIColor blackColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
+    self.slomoButton.slomoOn = self.videoPlayer.slowmo;
+    [self.view bringSubviewToFront:self.backwardSeekButton];
+    [self.view bringSubviewToFront:self.forwardSeekButton];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    
+    [super viewDidDisappear:animated];
     self.telestrationViewController.telestration = nil;
 }
 
@@ -392,26 +344,192 @@
 
 - (void)telestration:(nonnull PxpTelestration *)telestration didStartInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
+    [self teleStarted];
 }
 
 - (void)telestration:(nonnull PxpTelestration *)telestration didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
     if (telestration.actionStack.count) {
         
-        NSTimeInterval clearTime = MAX(self.videoPlayer.currentTime, telestration.startTime + telestration.duration + 1.0);
+        NSTimeInterval clearTime = MAX(self.videoPlayer.currentTimeInSeconds, telestration.startTime + telestration.duration + 1.0);
         [telestration pushAction:[PxpTelestrationAction clearActionAtTime:clearTime]];
+        
+        telestration.sourceName = self.videoPlayer.feed.sourceName;
+        telestration.isStill = NO;
+        
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                                @"duration": [NSString stringWithFormat:@"%i",(int)roundf(telestration.duration)],
                                                                                                                @"starttime": [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                                @"displaytime" : [NSString stringWithFormat:@"%f",telestration.startTime],
                                                                                                                @"telestration" : telestration.data,
-                                                                                                               @"image" : telestration.thumbnail
-                                                                                                               }];
+                                                                                                }];
         
     }
     
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
+    viewController.telestration = nil;
+    
+    [self teleEnded];
+}
+
+#pragma mark - Button Actions
+
+- (void)seekButtonAction:(SeekButton *)button {
+    [self.videoPlayer seekBy:button.speed];
+}
+
+- (void)slomoButtonAction:(Slomo *)slomo {
+    self.videoPlayer.slowmo = !self.videoPlayer.slowmo;
+    slomo.slomoOn = self.videoPlayer.slowmo;
+}
+
+- (void)liveButtonAction:(LiveButton *)liveButton {
+    [self goToLive];
+}
+
+- (void)tagSelectButtonAction:(UIButton *)tagSelectButton {
+    [self setShowsTagSelectMenu:!self.tagSelectButton.selected animated:YES];
+}
+
+#pragma mark - Record Button Delegate
+
+- (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
+    NSTimeInterval time = self.videoPlayer.currentTimeInSeconds;
+    
+    self.durationTagID = [Tag makeDurationID];
+    if (self.durationTagID && self.activeTagName) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+                                                                                                          @"name":self.activeTagName,
+                                                                                                          @"time":[NSString stringWithFormat:@"%f", time],
+                                                                                                          @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+                                                                                                          @"dtagid": self.durationTagID
+                                                                                                          }];
+    }
+    
+    
+    [self recordingStarted];
+}
+
+- (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
+    
+    NSTimeInterval endTime = self.videoPlayer.currentTimeInSeconds;
+    
+    if (self.durationTagID) {
+        Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
+        
+        if (tag) {
+            NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tag makeTagData]];
+            
+            [tagData setValue:[NSString stringWithFormat:@"%f", endTime] forKey:@"closetime"];
+            [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
+            [tagData setValue:self.durationTagID forKey:@"dtagid"];
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:nil userInfo:tagData];
+        }
+    }
+    
+    self.durationTagID = nil;
+    [self recordingEnded];
+}
+
+- (void)recordingDidTerminateInRecordButton:(nonnull NCRecordButton *)recordButton {
+    
+    if (self.durationTagID) {
+        Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
+        if (tag) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+        }
+    }
+    
+    self.durationTagID = nil;
+    [self recordingEnded];
+}
+
+- (void)recordingTimeDidUpdateInRecordButton:(nonnull NCRecordButton *)recordButton {
+    self.durationLabel.text = recordButton.recordingTimeString;
+}
+
+#pragma mark - TagSelectResponder
+
+- (void)didSelectTagName:(nonnull NSString *)tagName {
+    self.activeTagName = tagName;
+    [self setShowsTagSelectMenu:NO animated:YES];
+}
+
+#pragma mark - Private Methods
+
+- (void)recordingStarted {
+    self.tagSelectButton.enabled = NO;
+    self.forwardSeekButton.enabled = NO;
+    self.backwardSeekButton.enabled = NO;
+    self.liveButton.enabled = NO;
+    self.videoPlayer.videoControlBar.enable = NO;
+    self.telestrationViewController.showsControls = NO;
+    
+    [self setShowsTagSelectMenu:NO animated:YES];
+    
+    self.durationLabel.textColor = [UIColor whiteColor];
+}
+
+- (void)recordingEnded {
+    self.tagSelectButton.enabled = YES;
+    self.forwardSeekButton.enabled = YES;
+    self.backwardSeekButton.enabled = YES;
+    self.liveButton.enabled = _currentEvent.live;
+    self.videoPlayer.videoControlBar.enable = YES;
+    self.telestrationViewController.showsControls = YES;
+    
+    self.durationLabel.textColor = [UIColor lightGrayColor];
+}
+
+- (void)teleStarted {
+    self.recordButton.enabled = NO;
+    
+    self.tagSelectButton.enabled = NO;
+    self.liveButton.enabled = NO;
+    [self setShowsTagSelectMenu:NO animated:YES];
+}
+
+- (void)teleEnded {
+    self.recordButton.enabled = YES;
+    
+    self.tagSelectButton.enabled = YES;
+    self.liveButton.enabled = _currentEvent.live;
+}
+
+- (void)setShowsTagSelectMenu:(BOOL)showsTagSelectMenu {
+    [self setShowsTagSelectMenu:showsTagSelectMenu animated:NO];
+}
+
+- (void)setShowsTagSelectMenu:(BOOL)showsTagSelectMenu animated:(BOOL)animated {
+    if (showsTagSelectMenu) {
+        
+        if (animated) {
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.2];
+        }
+        
+        self.tagSelectController.view.frame = CGRectMake(0.0, 0.0, self.tagSelectWidth, self.container.bounds.size.height - BAR_HEIGHT);
+        
+        if (animated) {
+            [UIView commitAnimations];
+        }
+        
+    } else {
+        
+        if (animated) {
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.2];
+        }
+        
+        self.tagSelectController.view.frame = CGRectMake(0.0, self.container.bounds.size.height - BAR_HEIGHT, self.tagSelectWidth, 0.0);
+        
+        if (animated) {
+            [UIView commitAnimations];
+        }
+    }
+    
+    self.tagSelectButton.selected = showsTagSelectMenu;
 }
 
 /*

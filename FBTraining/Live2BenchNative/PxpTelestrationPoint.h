@@ -24,6 +24,10 @@ struct PxpTelestrationPointData {
  * @author Nicholas Cvitak
  */
 @interface PxpTelestrationPoint : NSObject<NSCoding, NSCopying>
+{
+    @public
+    struct PxpTelestrationPointData _pointData;
+}
 
 /// The time that the point should be displayed in an animation. (read-only)
 @property (readonly, assign, nonatomic) NSTimeInterval displayTime;

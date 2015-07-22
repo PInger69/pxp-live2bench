@@ -89,7 +89,7 @@
     self.view.clipsToBounds = YES;
     
     self.renderView.frame = self.view.bounds;
-    self.captureArea.frame = self.renderView.bounds;
+    self.captureArea.frame = self.view.bounds;
     self.renderView.backgroundColor = [UIColor clearColor];
     
     // make sure we run the setters :)
@@ -105,7 +105,7 @@
     [self.telestrationButton addTarget:self action:@selector(telestrationAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.renderView];
-    [self.renderView addSubview:self.captureArea];
+    [self.view addSubview:self.captureArea];
     
     [self.view addSubview:self.undoButton];
     [self.view addSubview:self.lineButton];
@@ -148,20 +148,14 @@
     self.renderView.telestration = telestration;
     [self.captureArea bindTelestration:telestration];
     
-    if (telestration) {
-        self.telestrationButton.hidden = !self.showsControls;
-        self.telestrating = self.telestrating;
-    } else {
-        self.telestrationButton.hidden = YES;
-        self.telestrating = NO;
-    }
+    if (!telestration) self.telestrating = NO;
 }
 
 - (void)setShowsControls:(BOOL)showsControls {
     _showsControls = showsControls;
     
     if (showsControls) {
-        self.telestrationButton.hidden = !self.telestration;
+        self.telestrationButton.hidden = NO;
         self.lineButton.hidden = NO;
         self.arrowButton.hidden = NO;
         self.colorPicker.hidden = NO;
@@ -204,7 +198,7 @@
 
 - (void)clearAction:(UIButton *)button {
     if (self.telestration.actionStack.count) {
-        [self.telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.currentTime]];
+        [self.telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.currentTimeInSeconds]];
     }
 }
 
@@ -231,8 +225,8 @@
     return type;
 }
 
-- (NSTimeInterval)currentTime {
-    return self.timeProvider.currentTime;
+- (NSTimeInterval)currentTimeInSeconds {
+    return self.timeProvider.currentTimeInSeconds;
 }
 
 #pragma mark - Private Methods
@@ -246,6 +240,7 @@
         
         if (!self.activeTelestration) {
             self.activeTelestration = YES;
+            self.telestration = [[PxpTelestration alloc] initWithSize:self.view.bounds.size];
             [self.delegate telestration:self.telestration didStartInViewController:self];
         }
         

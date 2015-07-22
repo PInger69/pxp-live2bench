@@ -55,9 +55,13 @@
 		AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A31AFC1DCE002C361D /* TabsSettingViewController.m */; };
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
+		AE60EC141B5ED9F700425196 /* PxpPlayerSwapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE60EC131B5ED9F700425196 /* PxpPlayerSwapViewController.m */; };
+		AE70C2111B5FF141008A9203 /* TagSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2101B5FF141008A9203 /* TagSelectTableViewController.m */; };
+		AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2161B600395008A9203 /* UIColor+Highlight.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
 		AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */; };
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
+		AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = AEB631FF1B5D3A93002E54D2 /* MultiFeed.m */; };
 		AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* DualViewPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */; };
@@ -534,12 +538,21 @@
 		AE5073A61AFC1DCE002C361D /* ToggleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleSettingViewController.h; sourceTree = "<group>"; };
 		AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToggleSettingViewController.m; sourceTree = "<group>"; };
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
+		AE60EC121B5ED9F700425196 /* PxpPlayerSwapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerSwapViewController.h; sourceTree = "<group>"; };
+		AE60EC131B5ED9F700425196 /* PxpPlayerSwapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPlayerSwapViewController.m; sourceTree = "<group>"; };
+		AE70C20F1B5FF141008A9203 /* TagSelectTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagSelectTableViewController.h; sourceTree = "<group>"; };
+		AE70C2101B5FF141008A9203 /* TagSelectTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagSelectTableViewController.m; sourceTree = "<group>"; };
+		AE70C2121B5FF27C008A9203 /* TagSelectResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagSelectResponder.h; sourceTree = "<group>"; };
+		AE70C2151B600395008A9203 /* UIColor+Highlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Highlight.h"; sourceTree = "<group>"; };
+		AE70C2161B600395008A9203 /* UIColor+Highlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Highlight.m"; sourceTree = "<group>"; };
 		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
 		AE7EDCE51B5806A400998CF6 /* AVAsset+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+Image.h"; sourceTree = "<group>"; };
 		AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+Image.m"; sourceTree = "<group>"; };
 		AE848FFF1B0D083D007A19E8 /* NCRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCRecordButton.h; sourceTree = "<group>"; };
 		AE8490001B0D083D007A19E8 /* NCRecordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCRecordButton.m; sourceTree = "<group>"; };
+		AEB631FE1B5D3A93002E54D2 /* MultiFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiFeed.h; sourceTree = "<group>"; };
+		AEB631FF1B5D3A93002E54D2 /* MultiFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiFeed.m; sourceTree = "<group>"; };
 		AECB9A6C1B0CC0B3005DDB32 /* DualViewClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewClipTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewClipTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AECF63131B0BC07F00C98555 /* DualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewTabViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1438,6 +1451,8 @@
 			children = (
 				AEDD7CA21B4AB92C003C82F3 /* PxpPlayerSwapView.h */,
 				AEDD7CA31B4AB92C003C82F3 /* PxpPlayerSwapView.m */,
+				AE60EC121B5ED9F700425196 /* PxpPlayerSwapViewController.h */,
+				AE60EC131B5ED9F700425196 /* PxpPlayerSwapViewController.m */,
 			);
 			name = Swap;
 			sourceTree = "<group>";
@@ -1995,6 +2010,9 @@
 				D77BE0221B5556A4007C5E9B /* MedicalViewController.h */,
 				D7BA253B1B58081200DECA65 /* painting.png */,
 				D77BE0231B5556A4007C5E9B /* MedicalViewController.m */,
+				AE70C2121B5FF27C008A9203 /* TagSelectResponder.h */,
+				AE70C20F1B5FF141008A9203 /* TagSelectTableViewController.h */,
+				AE70C2101B5FF141008A9203 /* TagSelectTableViewController.m */,
 				D70E21641B434E2600F6C1D5 /* BonjourModule.h */,
 				D70E21651B434E2600F6C1D5 /* BonjourModule.m */,
 				D788262B1B42D9D400969D43 /* LocalMediaManager.h */,
@@ -2486,6 +2504,8 @@
 				D7DB754E17EA6068009C402F /* UIFont+Default.m */,
 				D78F68B3180736810096C793 /* UIImage+animatedGIF.h */,
 				D78F68B4180736820096C793 /* UIImage+animatedGIF.m */,
+				AE70C2151B600395008A9203 /* UIColor+Highlight.h */,
+				AE70C2161B600395008A9203 /* UIColor+Highlight.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2530,6 +2550,8 @@
 				D75042B019FA966F00D9851D /* EncoderStatusMonitor.m */,
 				D75042AC19F9640C00D9851D /* CheckEncoderShutdown.h */,
 				D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */,
+				AEB631FE1B5D3A93002E54D2 /* MultiFeed.h */,
+				AEB631FF1B5D3A93002E54D2 /* MultiFeed.m */,
 				D72708A31A1BA4B30086BCB8 /* Feed.h */,
 				D72708A41A1BA4B30086BCB8 /* Feed.m */,
 				D7EE84CE19F19DC000DEC82B /* EncoderManager.h */,
@@ -2927,6 +2949,7 @@
 				AEDD7C831B4AB7CD003C82F3 /* PxpClipContext.m in Sources */,
 				AED484B81B56A23600769EEF /* PxpTelestrationButton.m in Sources */,
 				D7A673DB180EC8A1001C68D1 /* BookmarkViewController.m in Sources */,
+				AE60EC141B5ED9F700425196 /* PxpPlayerSwapViewController.m in Sources */,
 				AEDD7C961B4AB830003C82F3 /* PxpPlayerControlSlider.m in Sources */,
 				9482F26A199A59E7000670B0 /* FootballTrainingCollectionViewController.m in Sources */,
 				D79FB04A1A5C8AB7003F0CFA /* TablePopoverController.m in Sources */,
@@ -2959,6 +2982,7 @@
 				AEDD7C991B4AB830003C82F3 /* PxpPlayPauseButton.m in Sources */,
 				AEE595361B0FA75700DCABE6 /* FeedSelectionController.m in Sources */,
 				D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */,
+				AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */,
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
@@ -3072,6 +3096,7 @@
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
 				D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */,
+				AE70C2111B5FF141008A9203 /* TagSelectTableViewController.m in Sources */,
 				D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
@@ -3103,6 +3128,7 @@
 				D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
 				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
+				AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,
@@ -3245,7 +3271,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
 				INFOPLIST_FILE = "Live2BenchNative/Live2BenchNative-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3284,7 +3310,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Live2BenchNative/Live2BenchNative-Prefix.pch";
 				INFOPLIST_FILE = "Live2BenchNative/Live2BenchNative-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",

@@ -124,7 +124,7 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
     
-    NSString *path = clip.videoFiles.firstObject;
+    NSString *path = clip.videoFiles.firstObject ? clip.videoFiles.firstObject : @"";
     
     unsigned long srcID;
     if (sscanf(path.UTF8String, "%*[^+]+%lu.mp4", &srcID) != 1) {

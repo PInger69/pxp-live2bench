@@ -15,6 +15,12 @@
  */
 @interface PxpTelestration : NSObject<NSCoding>
 
+/// True if the telestration is to be displayed as a still.
+@property (assign, nonatomic) BOOL isStill;
+
+/// The source name that the telestration was drawn on.
+@property (copy, nonatomic, nullable) NSString *sourceName;
+
 /// The size of the telestration. (read-only)
 @property (readonly, assign, nonatomic) CGSize size;
 

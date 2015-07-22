@@ -144,4 +144,10 @@
     }
 }
 
+#pragma mark - PxpTimeProvider
+
+- (NSTimeInterval)currentTimeInSeconds {
+    return CMTimeGetSeconds(self.mainPlayer.currentTime);
+}
+
 @end

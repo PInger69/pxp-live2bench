@@ -76,6 +76,7 @@ typedef NS_ENUM (NSInteger,TagType){
 
 @interface Tag : NSObject<FilterItemProtocol>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) NSDictionary  *rawData;
 @property (strong, nonatomic) NSString      *colour;
@@ -108,18 +109,20 @@ typedef NS_ENUM (NSInteger,TagType){
 /// The telestration accociated with the tag.
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
 
+NS_ASSUME_NONNULL_END
+
 +(void)clearDurationTags;
-+( NSString *)makeDurationID;
-+(void)addOpenDurationTag:(Tag*)tag dtid:(NSString*)uid;
-+(Tag*)getOpenTagByDurationId:(NSString*)uid;
++(nonnull NSString *)makeDurationID;
++(void)addOpenDurationTag:(nonnull Tag*)tag dtid:(nonnull NSString*)uid;
++(nullable Tag*)getOpenTagByDurationId:(nonnull NSString*)uid;
 
 
 
--(instancetype) initWithData: (NSDictionary *)tagData event:(Event*)aEvent;
--(NSDictionary *) tagDictionary;
--(NSDictionary *) modifiedData;
--(NSDictionary *) makeTagData;
--(void) replaceDataWithDictionary: (NSDictionary *) tagData;
+-(nonnull instancetype) initWithData: (nonnull NSDictionary *)tagData event:(nonnull Event*)aEvent;
+-(nonnull NSDictionary *) tagDictionary;
+-(nonnull NSDictionary *) modifiedData;
+-(nonnull NSDictionary *) makeTagData;
+-(void) replaceDataWithDictionary: (nonnull NSDictionary *) tagData;
 
 - (nullable UIImage *)thumbnailForSource:(nullable NSString *)source;
 

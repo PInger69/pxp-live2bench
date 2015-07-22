@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PxpTimeProvider.h"
 
 @class PxpPlayer;
 
@@ -14,7 +15,7 @@
  * @breif An object used to manage multiple players playing similar content, such as multiple camera angles.
  * @author Nicholas Cvitak
  */
-@interface PxpPlayerContext : NSObject
+@interface PxpPlayerContext : NSObject<PxpTimeProvider>
 
 /// The number of players managed by the context
 @property (assign, nonatomic) NSUInteger playerCount;

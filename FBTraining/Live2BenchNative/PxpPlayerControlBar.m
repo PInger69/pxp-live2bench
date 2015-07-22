@@ -26,8 +26,7 @@
 
 @property (strong, nonatomic, nonnull) UIView *container;
 
-@property (strong, nonatomic, nonnull) UIVisualEffectView *blurView;
-@property (strong, nonatomic, nonnull) UIVisualEffectView *vibrancyView;
+@property (strong, nonatomic, nonnull) UIView *blurView;
 
 @property (strong, nonatomic, nonnull) PxpPlayerControlToolbar *toolbar;
 @property (strong, nonatomic, nonnull) PxpPlayerControlSlider *slider;
@@ -77,7 +76,13 @@
         _container = [[UIView alloc] initWithFrame:self.bounds];
         _container.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+            _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        } else {
+            _blurView = [[UIView alloc] init];
+            _blurView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        }
+        
         _blurView.frame = _container.bounds;
         _blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         

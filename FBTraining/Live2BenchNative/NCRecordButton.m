@@ -63,7 +63,8 @@
 }
 
 - (NSTimeInterval)recordingTime {
-    return self.isRecording ? CACurrentMediaTime() - self.startTime : 0.0;
+    NSTimeInterval currentTime = self.timeProvider ? self.timeProvider.currentTimeInSeconds : CACurrentMediaTime();
+    return self.isRecording ? currentTime - self.startTime : 0.0;
 }
 
 - (NSString *)recordingTimeString {
@@ -87,7 +88,7 @@
 #pragma mark - Actions
 
 - (void)startRecording {
-    self.startTime = CACurrentMediaTime();
+    self.startTime = self.timeProvider ? self.timeProvider.currentTimeInSeconds : CACurrentMediaTime();
     
     [self removeTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
     [self addTarget:self action:@selector(stopRecording) forControlEvents:UIControlEventTouchUpInside];

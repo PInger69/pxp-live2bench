@@ -15,6 +15,6 @@
 @protocol PxpTimeProvider
 
 /// The currentTime of the object in seconds. (read-only)
-@property (readonly, assign, nonatomic) NSTimeInterval currentTime;
+@property (readonly, assign, nonatomic) NSTimeInterval currentTimeInSeconds;
 
 @end

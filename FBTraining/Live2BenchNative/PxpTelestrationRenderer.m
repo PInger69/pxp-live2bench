@@ -52,6 +52,10 @@
 
 - (void)renderInContext:(nullable CGContextRef)context size:(CGSize)size atTime:(NSTimeInterval)time {
     
+    if (self.telestration.isStill) {
+        time = self.telestration.thumbnailTime;
+    }
+    
     CGVector scale = self.telestration.size.width && self.telestration.size.height ? CGVectorMake(size.width / self.telestration.size.width, size.height / self.telestration.size.height) : CGVectorMake(1.0, 1.0);
     
     CGContextSaveGState(context);
@@ -214,7 +218,7 @@
 }
 
 - (NSTimeInterval)currentTime {
-    return self.timeProvider ? self.timeProvider.currentTime : INFINITY;
+    return self.timeProvider ? self.timeProvider.currentTimeInSeconds : INFINITY;
 }
 
 #pragma mark - Private Methods
@@ -249,7 +253,7 @@
         UIBezierPath *path = [[UIBezierPath alloc] init];
         
         
-        
+        /*
         if (points.count < 4) {
             [path moveToPoint:[points[0] position]];
             
@@ -284,7 +288,7 @@
             
         }
         
-        
+        */
         
         /*
         for (NSUInteger i = 0; i < points.count - 4 && points.count > 4; i++) {
@@ -295,12 +299,12 @@
         }
         */
         
-        /*
+        
         [path moveToPoint:[points.firstObject position]];
         for (NSUInteger i = 1; i < points.count; i++) {
             [path addLineToPoint:[points[i] position]];
         }
-        */
+        
         
         return path;
     } else {

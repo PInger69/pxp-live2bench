@@ -569,7 +569,20 @@ static void * encoderTagContext = &encoderTagContext;
     if (thumb) {
         cell.imageView.image = thumb;
     } else {
-        [_imageAssetManager imageForURL: [[tagSelect.thumbnails allValues] firstObject] atImageView: cell.imageView ];
+        NSString *src = tagSelect.thumbnails.allKeys.firstObject;
+        
+        // get the key of the source with the telestration
+        if (tagSelect.telestration) {
+            for (NSString* k in tagSelect.thumbnails.keyEnumerator) {
+                if ([tagSelect.telestration.sourceName isEqualToString:k]) {
+                    src = k;
+                    break;
+                }
+            }
+        }
+        
+        PxpTelestration *tele = tagSelect.thumbnails.count <= 1 || [tagSelect.telestration.sourceName isEqualToString:src] ? tagSelect.telestration : nil;
+        [_imageAssetManager imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
     }
     
     [cell setDeletingMode: self.isEditing];
@@ -725,17 +738,18 @@ static void * encoderTagContext = &encoderTagContext;
         [sourceSelectPopover setListOfButtonNames:listOfScource];
         
         //This is where the Thumbnail images are added to the popover
-        NSDictionary *tagSelect = selectedCell.data.thumbnails ;
+        NSDictionary *tagThumbnails = selectedCell.data.thumbnails ;
         
         int i = 0;
-        for (NSString *url in listOfScource){
+        for (NSString *src in listOfScource){
             //NSString *url = urls[[NSString stringWithFormat: @"s_0%i" , i +1 ]];
             
             
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, POP_WIDTH - 10, BUTTON_HEIGHT - 10)];
             
+            PxpTelestration *tele = listOfScource.count <= 1 || [selectedCell.data.telestration.sourceName isEqualToString:src] ? selectedCell.data.telestration : nil;
             
-            [_imageAssetManager imageForURL: tagSelect[url] atImageView:imageView ];
+            [_imageAssetManager imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
             
             [(UIButton *)sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
             ++i;
@@ -752,11 +766,18 @@ static void * encoderTagContext = &encoderTagContext;
                 PXPLog(@"You Picked a feed: %@",pick);
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                                      @"feed":feed,
-                                                                                                                      @"time": [NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
-                                                                                                                      @"duration": [NSString stringWithFormat:@"%d", selectedCell.data.duration ],
-                                                                                                                      @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                userInfo[@"context"] = STRING_LIVE2BENCH_CONTEXT;
+                userInfo[@"feed"] = feed;
+                userInfo[@"time"] = [NSString stringWithFormat:@"%f", selectedCell.data.startTime ];
+                userInfo[@"duration"] = [NSString stringWithFormat:@"%d", selectedCell.data.duration ];
+                userInfo[@"state"] = [NSNumber numberWithInteger:RJLPS_Play];
+                
+                if (selectedCell.data.telestration) {
+                    userInfo[@"telestration"] = selectedCell.data.telestration;
+                }
+                
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
             }];
             
             [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
@@ -781,13 +802,19 @@ static void * encoderTagContext = &encoderTagContext;
                                                            object:nil userInfo:@{@"tabName":@"Live2Bench"}];
         
         //NSString * key =        listOfScource[0];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-                                                                                                              //@"feed":selectedCell.data.name,
-                                                                                                              @"feed":feed,
-                                                                                                              @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
-                                                                                                              @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration ],
-                                                                                                              @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
         
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        userInfo[@"context"] = STRING_LIVE2BENCH_CONTEXT;
+        userInfo[@"feed"] = feed;
+        userInfo[@"time"] = [NSString stringWithFormat:@"%f", selectedCell.data.startTime ];
+        userInfo[@"duration"] = [NSString stringWithFormat:@"%d", selectedCell.data.duration ];
+        userInfo[@"state"] = [NSNumber numberWithInteger:RJLPS_Play];
+        
+        if (selectedCell.data.telestration) {
+            userInfo[@"telestration"] = selectedCell.data.telestration;
+        }
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
     }
     
     [selectedCell setSelected:NO];

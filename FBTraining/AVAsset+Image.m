@@ -11,12 +11,11 @@
 @implementation AVAsset (Image)
 
 - (nullable UIImage *)imageForTime:(CMTime)time {
-    CMTime actualTime;
     NSError *error;
     
     AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:self];
     
-    CGImageRef imageRef = [generator copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    CGImageRef imageRef = [generator copyCGImageAtTime:time actualTime:NULL error:&error];
     UIImage *image = [UIImage imageWithCGImage:imageRef];
     CGImageRelease(imageRef);
     

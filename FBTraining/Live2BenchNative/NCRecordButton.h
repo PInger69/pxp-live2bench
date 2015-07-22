@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PxpTimeProvider.h"
 
 @class NCRecordButton;
 
@@ -22,6 +23,7 @@
 @interface NCRecordButton : UIButton
 
 @property (weak, nonatomic, nullable) id<NCRecordButtonDelegate> delegate;
+@property (weak, nonatomic, nullable) id<PxpTimeProvider> timeProvider;
 
 @property (nonatomic) BOOL displaysTime;
 

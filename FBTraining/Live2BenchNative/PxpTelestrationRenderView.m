@@ -56,19 +56,23 @@
     self.renderer.timeProvider = self;
 }
 
-- (NSTimeInterval)currentTime {
-    return self.timeProvider.currentTime;
+- (NSTimeInterval)currentTimeInSeconds {
+    return self.timeProvider.currentTimeInSeconds;
 }
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     // Drawing code
-    [self.renderer renderInContext:UIGraphicsGetCurrentContext() size:self.bounds.size atTime:self.timeProvider ? self.timeProvider.currentTime : INFINITY];
+    [self.renderer renderInContext:UIGraphicsGetCurrentContext() size:self.bounds.size atTime:self.timeProvider ? self.timeProvider.currentTimeInSeconds : INFINITY];
 }
 
 - (void)displayLinkAction:(CADisplayLink *)displayLink {
     [self.layer setNeedsDisplay];
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event {
+    return NO;
 }
 
 @end

@@ -311,4 +311,11 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
 
 #define MAX_NUM_TAG_BUTTONS     12
 
+/*!
+ * The Golden Ratio
+ */
+
+#define PHI ((1.0 + sqrt(5.0)) / 2.0)
+#define PHI_INV (1.0 / PHI)
+
 #endif
