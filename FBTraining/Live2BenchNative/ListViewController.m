@@ -96,7 +96,7 @@ NSMutableArray *oldEventNames;
         //        globals = [Globals instance];
         
         _context = nil;
-        _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        //_playerViewController = [[PxpPlayerMultiViewController alloc] init];
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         [self addChildViewController:_telestrationViewController];
@@ -122,7 +122,7 @@ NSMutableArray *oldEventNames;
         //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
         
-        [self addChildViewController:self.playerViewController];
+        //[self addChildViewController:self.playerViewController];
         
         
         /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -154,9 +154,11 @@ NSMutableArray *oldEventNames;
 
          [self.view addSubview:self.videoPlayer.view];
         
+        /*
         self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
         self.playerViewController.multiView.context = self.context;
         [self.view addSubview:self.playerViewController.view];
+         */
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
@@ -219,8 +221,8 @@ NSMutableArray *oldEventNames;
     
     // update the context
     
-    self.context = [PxpEventContext contextWithEvent:_currentEvent];
-    self.playerViewController.multiView.context = self.context;
+    //self.context = [PxpEventContext contextWithEvent:_currentEvent];
+    //self.playerViewController.multiView.context = self.context;
     
 }
 
@@ -1782,7 +1784,6 @@ NSMutableArray *oldEventNames;
                                                                                                               @"duration":[userInfo objectForKey:@"duration"],
                                                                                                               //@"state":[NSNumber numberWithInteger:PS_Play]}];*/
     
-
     [self.videoPlayer playClipWithFeed:feed andTimeRange:timeRange];
     
     // only show the telestration on the correct source.

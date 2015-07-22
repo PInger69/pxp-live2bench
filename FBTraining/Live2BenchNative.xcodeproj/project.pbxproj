@@ -56,6 +56,8 @@
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE60EC141B5ED9F700425196 /* PxpPlayerSwapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE60EC131B5ED9F700425196 /* PxpPlayerSwapViewController.m */; };
+		AE70C2111B5FF141008A9203 /* TagSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2101B5FF141008A9203 /* TagSelectTableViewController.m */; };
+		AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2161B600395008A9203 /* UIColor+Highlight.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
 		AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */; };
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
@@ -534,6 +536,11 @@
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		AE60EC121B5ED9F700425196 /* PxpPlayerSwapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerSwapViewController.h; sourceTree = "<group>"; };
 		AE60EC131B5ED9F700425196 /* PxpPlayerSwapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPlayerSwapViewController.m; sourceTree = "<group>"; };
+		AE70C20F1B5FF141008A9203 /* TagSelectTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagSelectTableViewController.h; sourceTree = "<group>"; };
+		AE70C2101B5FF141008A9203 /* TagSelectTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagSelectTableViewController.m; sourceTree = "<group>"; };
+		AE70C2121B5FF27C008A9203 /* TagSelectResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagSelectResponder.h; sourceTree = "<group>"; };
+		AE70C2151B600395008A9203 /* UIColor+Highlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Highlight.h"; sourceTree = "<group>"; };
+		AE70C2161B600395008A9203 /* UIColor+Highlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Highlight.m"; sourceTree = "<group>"; };
 		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
 		AE7EDCE51B5806A400998CF6 /* AVAsset+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+Image.h"; sourceTree = "<group>"; };
@@ -1983,6 +1990,9 @@
 				D77BE0221B5556A4007C5E9B /* MedicalViewController.h */,
 				D7BA253B1B58081200DECA65 /* painting.png */,
 				D77BE0231B5556A4007C5E9B /* MedicalViewController.m */,
+				AE70C2121B5FF27C008A9203 /* TagSelectResponder.h */,
+				AE70C20F1B5FF141008A9203 /* TagSelectTableViewController.h */,
+				AE70C2101B5FF141008A9203 /* TagSelectTableViewController.m */,
 				D70E21641B434E2600F6C1D5 /* BonjourModule.h */,
 				D70E21651B434E2600F6C1D5 /* BonjourModule.m */,
 				D788262B1B42D9D400969D43 /* LocalMediaManager.h */,
@@ -2474,6 +2484,8 @@
 				D7DB754E17EA6068009C402F /* UIFont+Default.m */,
 				D78F68B3180736810096C793 /* UIImage+animatedGIF.h */,
 				D78F68B4180736820096C793 /* UIImage+animatedGIF.m */,
+				AE70C2151B600395008A9203 /* UIColor+Highlight.h */,
+				AE70C2161B600395008A9203 /* UIColor+Highlight.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2950,6 +2962,7 @@
 				AEDD7C991B4AB830003C82F3 /* PxpPlayPauseButton.m in Sources */,
 				AEE595361B0FA75700DCABE6 /* FeedSelectionController.m in Sources */,
 				D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */,
+				AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */,
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
@@ -3061,6 +3074,7 @@
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
 				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
 				D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */,
+				AE70C2111B5FF141008A9203 /* TagSelectTableViewController.m in Sources */,
 				D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
