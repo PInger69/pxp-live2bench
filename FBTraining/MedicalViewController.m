@@ -53,13 +53,6 @@
 @end
 
 @implementation MedicalViewController {
-    LiveButton                          *gotoLiveButton;
-    UIButton                            *startButton;
-    UIButton                            *stopButton;
-    NSString                            *timeString;
-    float                               startTime;
-    NSTimer                             *recordingTimer;
-    NSArray                             *activeElements;
     id <EncoderProtocol>                _observedEncoder;
     Event                               * _currentEvent;
     EncoderManager                      * _encoderManager;
@@ -147,22 +140,8 @@
         
         [self.container addSubview:self.videoPlayer.view];
         
-        //gotoLiveButton = [self makeLive];
-        //[self.view addSubview:gotoLiveButton];
-        
-        //startButton = [self makeStartButton];
-        //[self.view addSubview:startButton];
-        
-        //stopButton = [self makeStopButton];
-        //[self.view addSubview:stopButton];
-        
-        //activeElements = @[gotoLiveButton,startButton,stopButton];
-        //[self revealThese:@[]];
-        
-        //self.telestrationViewController.telestration = [[PxpTelestration alloc] init];
         [self addChildViewController:_telestrationViewController];
         [self addChildViewController:_tagSelectController];
-        
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -263,135 +242,6 @@
     }
 }
 
--(void)setMode:(MedicalScreenModes)mode
-{
-    if (_mode == mode) return;
-    _mode = mode;
-    
-    switch (_mode) {
-        case MedicaScreenDisable :
-            [self revealThese:@[]];
-            break;
-        case MedicalScreenRegular :
-            [self revealThese:@[startButton]];
-            break;
-        case MedicalScreenLive:
-            [self revealThese:@[gotoLiveButton,startButton]];
-            break;
-        default:
-            break;
-    }
-}
-
-
-
-#pragma mark Button Helper Methods
--(UIImage *)readyToRecordButtonWithSize: (CGSize) buttonSize{
-    UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
-    
-    UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
-    
-    [[UIColor whiteColor] setStroke];
-    [whiteCirclePath stroke];
-    
-    UIBezierPath *innerRedCircle = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - whiteCirclePath.lineWidth - 5 ) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    
-    [[UIColor redColor] setFill];
-    
-    [innerRedCircle fill];
-    
-    
-    UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return recordButtonImage;
-}
-
-- (void)updateRecodingTime {
-    float time = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
-    NSInteger second = 00;
-    NSInteger minute = 00;
-    NSInteger hour = 00;
-    second = time;
-    if (second >= 60 && second < 3600) {
-        minute = second / 60;
-        second = second % 60;
-    } else if (second >= 3600){
-        hour = second / 3600;
-        minute = second % 3600 / 60;
-        second = second - (minute*60+hour*60*60);
-    }
-    
-    timeString = [NSString stringWithFormat:@"%01ld:%02ld:%02ld", (long)hour ,(long)minute, (long)second];
-    [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
-}
-
--(UIImage *)recordingButtonWithSize: (CGSize) buttonSize{
-    UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
-    
-    UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
-    
-    [[UIColor whiteColor] setStroke];
-    [whiteCirclePath stroke];
-    
-    CGRect innerSquareFrame = CGRectMake(buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.height* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.width - 2 * (buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2), buttonSize.height - 2 *( buttonSize.width* 0.149096+ whiteCirclePath.lineWidth/2));
-    UIBezierPath *innerSquarePath = [UIBezierPath bezierPathWithRoundedRect:innerSquareFrame cornerRadius:buttonSize.width / 10 + whiteCirclePath.lineWidth + 2];
-    
-    [[UIColor redColor] setFill];
-    
-    [innerSquarePath fill];
-    
-    
-    UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return recordButtonImage;
-}
-
-
-
-
-#pragma mark Make Buttons
-
-
--(LiveButton*)makeLive
-{
-    LiveButton * btn = [[LiveButton alloc]initWithFrame:CGRectMake(450,700, 130, LITTLE_ICON_DIMENSIONS)];
-    [btn addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
-   
-    return btn;
-}
-
-- (UIButton *)makeStartButton {
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(1024 - 75, 690,70.0f, 70.0f)];
-    [btn addTarget:self action:@selector(startButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    [btn setBackgroundImage:[self readyToRecordButtonWithSize:CGSizeMake(65, 65)] forState:UIControlStateNormal];
-    //timeString = @"00:00:00";
-    startButton.hidden = true;
-    stopButton.hidden = false;
-    return btn;
-}
-
-- (UIButton *)makeStopButton {
-    //timeString = @"00:00";
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setFrame:CGRectMake(1024 - 75, 690,70.0f, 70.0f)];
-    [btn setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
-    [btn.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
-    [btn.titleLabel setTextAlignment: NSTextAlignmentCenter];
-    [btn addTarget:self action:@selector(stopButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    [btn setBackgroundImage:[self recordingButtonWithSize:CGSizeMake(65, 65)] forState:UIControlStateNormal];
-    startButton.hidden = false;
-    stopButton.hidden = true;
-    return btn;
-}
-
-
-
-
 #pragma mark Buttons' Method
 
 - (void)goToLive
@@ -407,56 +257,8 @@
         [self.videoPlayer playFeed:self.videoPlayer.feed];
     }
     [self.videoPlayer gotolive];
-}
-
-- (void)startButtonClicked {
-    [self.videoPlayer.videoControlBar setEnable:NO];
-    self.videoPlayer.liveIndicatorLight.tintColor = [UIColor redColor];
-    [self.videoPlayer.liveIndicatorLight setHidden:NO];
-    [self updateRecodingTime];
-    startTime = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
-    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateRecodingTime) userInfo:nil repeats:YES];
-    startButton.hidden = true;
-    stopButton.hidden = false;
-    
-    //self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
-}
-
-- (void)stopButtonClicked {
-    recordingTimer = nil;
-    self.videoPlayer.liveIndicatorLight.tintColor = [UIColor greenColor];
-    [self.videoPlayer.liveIndicatorLight setHidden: self.videoPlayer.live?NO:YES];
-    [self.videoPlayer.videoControlBar setEnable:YES];
-    //float duration = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime) - startTime;
-    [stopButton setTitle:[NSString stringWithFormat:@"%@", timeString] forState:UIControlStateNormal];
-    startButton.hidden = false;
-    stopButton.hidden = true;
-    /*
-    PxpTelestration *telestration = self.telestrationViewController.telestration;
-    
-    if (telestration) {
-        [telestration pushAction:[PxpTelestrationAction clearActionAtTime:self.videoPlayer.currentTime]];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
-                                                                                                          @"time": [NSString stringWithFormat:@"%f",startTime],
-                                                                                                          @"duration": [NSString stringWithFormat:@"%i",(int)roundf(duration)],
-                                                                                                          @"telestration" : self.telestrationViewController.telestration.data
-                                                                                                          }];
-    }
-    
-    //self.telestrationViewController.telestration = nil;
-     
-    */
-}
-
-
--(void)revealThese:(NSArray*)list
-{
-    for (UIView * v in activeElements) {
-        [v setHidden:YES];
-    }
-    for (UIView * v in list) {
-        [v setHidden:NO];
-    }
+    self.videoPlayer.slowmo = NO;
+    self.slomoButton.slomoOn = NO;
 }
 
 
@@ -564,6 +366,8 @@
                                                                                                 }];
         
     }
+    
+    viewController.telestration = nil;
     
     [self teleEnded];
 }
