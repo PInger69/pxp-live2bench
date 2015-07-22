@@ -739,9 +739,8 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
         };
     } else {
-        [self.avPlayer play];
+        [self.avPlayer setRate:self.slowmo ? SLOWMO_SPEED : 1.0];
         [freezeMonitor start];
-        if (_status & RJLPS_Paused) [self.avPlayer setRate:restoreAfterPauseRate];
         self.status                                 = _status | RJLPS_Play;
         self.status                                 = _status & ~(RJLPS_Paused);
         [self.videoControlBar setHidden:NO];
@@ -1094,15 +1093,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
 }
 
--(BOOL)slowmo
-{
-    if (!self.avPlayer) return NO;
-    return (self.avPlayer.rate <=.5 && self.avPlayer.rate >0)? YES : NO;
-}
-
 -(void)setSlowmo:(BOOL)slowmo
 {
-    [self willChangeValueForKey:@"slowmo"];
+    _slowmo = slowmo;
     float newRate;
     if (slowmo) {
 
@@ -1115,8 +1108,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
        self.status = _status & ~(RJLPS_Slomo);
         
     }
-    [self didChangeValueForKey:@"slowmo"];
-    [self.avPlayer setRate:newRate];
+    if (self.avPlayer.rate) {
+        [self.avPlayer setRate:newRate];
+    }
 }
 
 -(BOOL)mute
