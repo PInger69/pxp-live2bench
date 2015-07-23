@@ -1650,6 +1650,7 @@
             
             NSLog(@"");
         }
+           NSLog(@"%lu",(unsigned long)[owningTeam.players count]);
     }
     
     

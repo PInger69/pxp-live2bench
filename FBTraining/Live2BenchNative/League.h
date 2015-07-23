@@ -20,5 +20,6 @@
 
 // this adds a team and makes the team know the league it belongs too
 -(void)addTeam:(LeagueTeam *)team;
+-(NSDictionary*)asDictionary;
 
 @end

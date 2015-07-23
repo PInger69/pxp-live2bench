@@ -38,6 +38,15 @@
     [temp setObject:team forKey:team.name];
     _teams = [temp copy];
 }
-
+-(NSDictionary*)asDictionary
+{
+    NSDictionary * dict = @{
+                            @"hid"      : _hid,
+                            @"name"     : _name,
+                            @"sport"    : _sport,
+                            @"short"    : _shortName
+                            };
+    return dict;
+}
 
 @end
