@@ -259,6 +259,7 @@
         [_playerDrawerLeft.view.layer setBorderWidth:1.0f];
         [_playerDrawerLeft.view setHidden:true];
         [_leftView addSubview:_playerDrawerLeft.view];
+        //_playerDrawerLeft.playerList = _currentEvent.teams
         
         _defenseLabel = [CustomLabel labelWithStyle:CLStyleBlack];
         _defenseLabel.frame = CGRectMake(110.0f, 0.0f, 60.0f, 44.0f);

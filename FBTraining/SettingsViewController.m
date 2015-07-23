@@ -13,6 +13,8 @@
 #import "TablePopoverController.h"
 #import "UserCenter.h"
 #import "ListPopoverController.h"
+#import "LeagueTeam.h"
+#import "League.h"
 
 @interface SettingsViewController ()
 
@@ -352,7 +354,9 @@ SVSignalStatus signalStatus;
         NSMutableArray  * collection    = [[NSMutableArray alloc]init];
         NSArray         * keys          = [input allKeys];
         for (NSString * item in keys) {
-            NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
+            League *league = [input objectForKey:item];
+            NSString * nam = league.name;
+            //NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
             [collection addObject:nam];
         }
 
@@ -638,9 +642,11 @@ SVSignalStatus signalStatus;
     if ([league isEqualToString:DEFAULT_LEAGUE]){
         teamNames   = grabNames(encoderManager.masterEncoder.encoderTeams);
     } else {
-        NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
+        /*NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
         NSArray * myList1        = [[tempDict1 allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]];
-        NSString * leagueHID     = myList1[0][@"hid"];
+        League *l = myList1[0];
+        NSString * leagueHID     = l.hid;
+        //NSString * leagueHID     = myList1[0][@"hid"];
         
         NSDictionary * tempDict = [encoderManager.masterEncoder.encoderTeams copy];
         
@@ -651,10 +657,19 @@ SVSignalStatus signalStatus;
         for (NSDictionary * item in myList) {
             NSString    * nam  = [item objectForKey:@"name"];
             [collection addObject:nam];
+        }*/
+        
+        League *currentLeague = [encoderManager.masterEncoder.encoderLeagues objectForKey:league];
+        NSArray *teamsCollection = [currentLeague.teams allValues];
+        NSMutableArray *teamsNameCollection = [[NSMutableArray alloc]init];
+        for (LeagueTeam * team in teamsCollection) {
+            NSString    * teamName  = team.name;
+            [teamsNameCollection addObject:teamName];
         }
+        teamNames = [[NSSet setWithArray:teamsNameCollection]allObjects];
 
         
-        teamNames   = [[NSSet setWithArray:collection]allObjects];
+        //teamNames   = [[NSSet setWithArray:collection]allObjects];
     }
     if (teamNames) {
         UIButton *popButton = (UIButton*)sender;
@@ -676,9 +691,11 @@ SVSignalStatus signalStatus;
     if ([league isEqualToString:DEFAULT_LEAGUE]){
         teamNames   = grabNames(encoderManager.masterEncoder.encoderTeams);
     } else {
-        NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
+        /*NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
         NSArray * myList1        = [[tempDict1 allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]];
-        NSString * leagueHID     = myList1[0][@"hid"];
+        League *l = myList1[0];
+        NSString * leagueHID     = l.hid;
+        //NSString * leagueHID     = myList1[0][@"hid"];
         
         NSDictionary * tempDict = [encoderManager.masterEncoder.encoderTeams copy];
         
@@ -689,10 +706,19 @@ SVSignalStatus signalStatus;
         for (NSDictionary * item in myList) {
             NSString    * nam  = [item objectForKey:@"name"];
             [collection addObject:nam];
+        }*/
+        
+        League *currentLeague = [encoderManager.masterEncoder.encoderLeagues objectForKey:league];
+        NSArray *teamsCollection = [currentLeague.teams allValues];
+        NSMutableArray *teamsNameCollection = [[NSMutableArray alloc]init];
+        for (LeagueTeam * team in teamsCollection) {
+            NSString    * teamName  = team.name;
+            [teamsNameCollection addObject:teamName];
         }
+        teamNames = [[NSSet setWithArray:teamsNameCollection]allObjects];
+
         
-        
-        teamNames   = [[NSSet setWithArray:collection]allObjects];
+        //teamNames   = [[NSSet setWithArray:collection]allObjects];
     }
     
     if (teamNames) {
@@ -736,7 +762,11 @@ SVSignalStatus signalStatus;
 
 -(void)checkUserSelection
 {
-    NSString * leagueHid = [[[encoderManager.masterEncoder.encoderLeagues copy] allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]][0][@"hid"];
+    
+    League *league = [encoderManager.masterEncoder.encoderLeagues objectForKey:league];
+    NSString *leagueHid = league.hid;
+    
+    //NSString * leagueHid = [[[encoderManager.masterEncoder.encoderLeagues copy] allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]][0][@"hid"];
     
     NSArray * teamsDataList =[[encoderManager.masterEncoder.encoderTeams copy] allValues];
     

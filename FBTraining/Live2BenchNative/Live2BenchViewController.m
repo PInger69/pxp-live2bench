@@ -30,6 +30,7 @@
 #import "HockeyBottomViewController.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "RJLVideoPlayer.h"
+#import "LeagueTeam.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -250,16 +251,20 @@ static void * eventContext      = &eventContext;
 
 -(void)displayLable{
     NSString *content;
+    
+    LeagueTeam *homeTeam = [_currentEvent.teams objectForKey:@"homeTeam"];
+    LeagueTeam *visitTeam = [_currentEvent.teams objectForKey:@"visitTeam"];
+    
     if (_currentEvent.live) {
-        if ([UserCenter getInstance].userPick && ([[UserCenter getInstance].userPick isEqualToString:_currentEvent.rawData[@"homeTeam"]]|| [[UserCenter getInstance].userPick isEqualToString: _currentEvent.rawData[@"visitTeam"]])) {
-            content = [NSString stringWithFormat:@"Live - Tagging team: %@", [UserCenter getInstance].userPick];
+        if ([UserCenter getInstance].taggingTeam.name && ([[UserCenter getInstance].taggingTeam.name isEqualToString:homeTeam.name] || [[UserCenter getInstance].taggingTeam.name isEqualToString:visitTeam.name])) {
+            content = [NSString stringWithFormat:@"Live - Tagging team: %@", [UserCenter getInstance].taggingTeam.name];
         }
         else{
             content = @"Live - Tagging team:";
         }
     }
     else{
-         content = [NSString stringWithFormat:@"%@ - Tagging team: %@", _currentEvent.date, _appDel.userCenter.userPick];
+         content = [NSString stringWithFormat:@"%@ - Tagging team: %@", _currentEvent.date, [UserCenter getInstance].taggingTeam.name];
     }
     [informationLabel setText:content];
 }
@@ -488,11 +493,16 @@ static void * eventContext      = &eventContext;
     Feed *info = [_currentEvent.feeds allValues] [0];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
     
-    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[_currentEvent.rawData[@"homeTeam"], _currentEvent.rawData[@"visitTeam"]]];
+    LeagueTeam *homeTeam = [_currentEvent.teams objectForKey:@"homeTeam"];
+    LeagueTeam *awayTeam = [_currentEvent.teams objectForKey:@"visitTeam"];
+    NSDictionary *team = @{homeTeam.name:homeTeam,awayTeam.name:awayTeam};
+    
+    _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[[[team allKeys]firstObject], [[team allKeys]lastObject]]];
     
     __block Live2BenchViewController *weakSelf = self;
     [_teamPick addOnCompletionBlock:^(NSString *pick){
-        [UserCenter getInstance].userPick = pick;
+        
+        [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
         [weakSelf displayLable];
         [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
                                                          userInfo:@{@"tabName":@"Live2Bench"}];

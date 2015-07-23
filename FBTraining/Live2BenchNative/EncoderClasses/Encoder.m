@@ -2224,6 +2224,22 @@
         if ([(NSDictionary *)value objectForKey:@"live"] || [(NSDictionary *)value objectForKey:@"live_2"] ) {
             Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
             anEvent.parentEncoder = self;
+            
+            League      * league        = [self.encoderLeagues objectForKey:value[@"league"]];
+            LeagueTeam  * homeTeam      = [league.teams objectForKey:value[@"homeTeam"]];
+            LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
+            if (!homeTeam) {
+                homeTeam     = [LeagueTeam new];
+                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+            }
+            if (!visitTeam) {
+                visitTeam   = [LeagueTeam new];
+                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+            }
+            
+            
+            anEvent.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
+            
             _liveEvent = anEvent;
             NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
             [_allEvents setObject:eventFinal forKey:anEvent.name];
