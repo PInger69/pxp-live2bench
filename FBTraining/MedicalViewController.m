@@ -19,7 +19,8 @@
 #import "NCRecordButton.h"
 
 #import "PxpTelestrationViewController.h"
-#import "TagSelectTableViewController.h"
+#import "TagNameSelectTableViewController.h"
+#import "TeleSelectTableViewController.h"
 
 #import "UIColor+Highlight.h"
 
@@ -27,7 +28,7 @@
 #define LITTLE_ICON_DIMENSIONS 40
 #define BAR_HEIGHT 75.0
 
-@interface MedicalViewController () <PxpTelestrationViewControllerDelegate, NCRecordButtonDelegate, TagSelectResponder>
+@interface MedicalViewController () <PxpTelestrationViewControllerDelegate, NCRecordButtonDelegate, TagNameSelectResponder, TagSelectResponder>
 
 @property (copy, nonatomic, nullable) NSString *activeTagName;
 @property (copy, nonatomic, nullable) NSString *durationTagID;
@@ -40,7 +41,11 @@
 
 @property (readonly, assign, nonatomic) CGFloat tagSelectWidth;
 @property (strong, nonatomic, nonnull) UIButton *tagSelectButton;
-@property (strong, nonatomic, nonnull) TagSelectTableViewController *tagSelectController;
+@property (strong, nonatomic, nonnull) TagNameSelectTableViewController *tagNameSelectController;
+
+@property (readonly, assign, nonatomic) CGFloat teleSelectWidth;
+@property (strong, nonatomic, nonnull) UIButton *teleSelectButton;
+@property (strong, nonatomic, nonnull) TeleSelectTableViewController *teleSelectController;
 
 @property (strong, nonatomic, nonnull) NCRecordButton *recordButton;
 @property (strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
@@ -70,8 +75,10 @@
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         _encoderManager         = mainappDelegate.encoderManager;
+        _currentEvent = _encoderManager.primaryEncoder.event;
         
-        _tagSelectController = [[TagSelectTableViewController alloc] init];
+        _tagNameSelectController = [[TagNameSelectTableViewController alloc] init];
+        _teleSelectController = [[TeleSelectTableViewController alloc] init];
         
         _container = [[UIView alloc] initWithFrame:CGRectMake(0.0, 55.0, 1024.0, 768.0 - 55.0)];
         
@@ -99,6 +106,12 @@
         
         _slomoButton = [[Slomo alloc] initWithFrame:CGRectMake(seekButtonOffest + 60.0, 0.0, BAR_HEIGHT, BAR_HEIGHT)];
         [_slomoButton addTarget:self action:@selector(slomoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        
+        _teleSelectWidth = 512 * PHI_INV;
+        _teleSelectButton = [[UIButton alloc] init];
+        [_teleSelectButton addTarget:self action:@selector(teleSelectButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         
         const CGFloat labelWidth = 512.0 - seekButtonOffest - 60.0;
         const CGFloat liveButtonWidth = 130.0, liveButtonHeight = 40.0;
@@ -141,7 +154,8 @@
         [self.container addSubview:self.videoPlayer.view];
         
         [self addChildViewController:_telestrationViewController];
-        [self addChildViewController:_tagSelectController];
+        [self addChildViewController:_tagNameSelectController];
+        [self addChildViewController:_teleSelectController];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -149,6 +163,7 @@
         
         [self.view addSubview:self.container];
         
+        _teleSelectController.event = _currentEvent;
     }
         
     
@@ -192,7 +207,7 @@
     }
     
     self.activeTagName = newActiveTagName;
-    self.tagSelectController.tagDescriptors = tagDescriptors;
+    self.tagNameSelectController.tagDescriptors = tagDescriptors;
 }
 
 -(void)addEventObserver:(NSNotification*)note
@@ -225,6 +240,8 @@
             [self.videoPlayer gotolive];
         }
     }
+    
+    self.teleSelectController.event = _currentEvent;
     
     [self onEventChange];
 }
@@ -269,6 +286,9 @@
     
     self.bottomBar.backgroundColor = [UIColor blackColor];
     
+    const CGFloat playerHeight = self.container.bounds.size.width / (16.0 / 9.0);
+    const CGFloat teleSelectY = self.container.bounds.size.height - BAR_HEIGHT - playerHeight;
+    
     self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -282,13 +302,24 @@
     
     self.tagSelectButton.titleLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
     self.tagSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    [self.tagSelectButton setTitle:@"Medical" forState:UIControlStateNormal];
+    [self.tagSelectButton setTitle:@"" forState:UIControlStateNormal];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateHighlighted];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateSelected];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateDisabled];
     
-    self.tagSelectController.tagSelectResponder = self;
+    self.teleSelectButton.frame = CGRectMake(self.container.bounds.size.width - self.teleSelectWidth, 0.0, self.teleSelectWidth, teleSelectY);
+    
+    self.teleSelectButton.titleLabel.font = [UIFont systemFontOfSize:self.teleSelectButton.frame.size.height * PHI_INV];
+    self.teleSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    [self.teleSelectButton setTitle:@"|✎     Telestrations     ✎|" forState:UIControlStateNormal];
+    [self.teleSelectButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [self.teleSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateHighlighted];
+    [self.teleSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateSelected];
+    [self.teleSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateDisabled];
+    
+    self.tagNameSelectController.tagNameSelectResponder = self;
+    self.teleSelectController.tagSelectResponder = self;
     
     self.recordButton.frame = CGRectMake(self.bottomBar.bounds.size.width - self.bottomBar.bounds.size.height, 0.0, self.bottomBar.bounds.size.height, self.bottomBar.bounds.size.height);
     self.recordButton.delegate = self;
@@ -310,8 +341,14 @@
     [self.view addSubview:self.backwardSeekButton];
     [self.view addSubview:self.forwardSeekButton];
     
-    [self.container addSubview:self.tagSelectController.view];
-    [self setShowsTagSelectMenu:NO];
+    [self.container addSubview:self.tagNameSelectController.view];
+    [self.container addSubview:self.teleSelectController.view];
+    [self.container addSubview:self.teleSelectButton];
+    
+    
+    
+    [self setShowsTagSelectMenu:NO animated:NO];
+    [self setShowsTeleSelectMenu:NO animated:NO];
     
     self.recordButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     //self.backwardSeekButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
@@ -391,6 +428,10 @@
     [self setShowsTagSelectMenu:!self.tagSelectButton.selected animated:YES];
 }
 
+- (void)teleSelectButtonAction:(UIButton *)teleSelectButton {
+    [self setShowsTeleSelectMenu:!self.teleSelectButton.selected animated:YES];
+}
+
 #pragma mark - Record Button Delegate
 
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
@@ -449,16 +490,27 @@
     self.durationLabel.text = recordButton.recordingTimeString;
 }
 
-#pragma mark - TagSelectResponder
+#pragma mark - TagNameSelectResponder
 
 - (void)didSelectTagName:(nonnull NSString *)tagName {
     self.activeTagName = tagName;
     [self setShowsTagSelectMenu:NO animated:YES];
 }
 
+#pragma mark -TagSelectResponder
+
+- (void)didSelectTag:(nonnull Tag *)tag source:(nonnull NSString *)source {
+    Feed *feed = tag.event.feeds[source] ? tag.event.feeds[source] : tag.event.feeds.allValues.firstObject;
+    self.telestrationViewController.telestration = tag.telestration;
+    [self.videoPlayer playClipWithFeed:feed andTimeRange:CMTimeRangeMake(CMTimeMake(tag.startTime, 1), CMTimeMake(tag.duration, 1))];
+    
+    [self setShowsTeleSelectMenu:NO animated:YES];
+}
+
 #pragma mark - Private Methods
 
 - (void)recordingStarted {
+    self.teleSelectButton.enabled = NO;
     self.tagSelectButton.enabled = NO;
     self.forwardSeekButton.enabled = NO;
     self.backwardSeekButton.enabled = NO;
@@ -467,11 +519,15 @@
     self.telestrationViewController.showsControls = NO;
     
     [self setShowsTagSelectMenu:NO animated:YES];
+    [self setShowsTeleSelectMenu:NO animated:YES];
     
     self.durationLabel.textColor = [UIColor whiteColor];
+    
+    [self.videoPlayer cancelClip];
 }
 
 - (void)recordingEnded {
+    self.teleSelectButton.enabled = YES;
     self.tagSelectButton.enabled = YES;
     self.forwardSeekButton.enabled = YES;
     self.backwardSeekButton.enabled = YES;
@@ -485,20 +541,21 @@
 - (void)teleStarted {
     self.recordButton.enabled = NO;
     
+    self.teleSelectButton.enabled = NO;
     self.tagSelectButton.enabled = NO;
     self.liveButton.enabled = NO;
     [self setShowsTagSelectMenu:NO animated:YES];
+    [self setShowsTeleSelectMenu:NO animated:YES];
+    
+    [self.videoPlayer cancelClip];
 }
 
 - (void)teleEnded {
     self.recordButton.enabled = YES;
     
+    self.teleSelectButton.enabled = YES;
     self.tagSelectButton.enabled = YES;
     self.liveButton.enabled = _currentEvent.live;
-}
-
-- (void)setShowsTagSelectMenu:(BOOL)showsTagSelectMenu {
-    [self setShowsTagSelectMenu:showsTagSelectMenu animated:NO];
 }
 
 - (void)setShowsTagSelectMenu:(BOOL)showsTagSelectMenu animated:(BOOL)animated {
@@ -509,12 +566,13 @@
             [UIView setAnimationDuration:0.2];
         }
         
-        self.tagSelectController.view.frame = CGRectMake(0.0, 0.0, self.tagSelectWidth, self.container.bounds.size.height - BAR_HEIGHT);
+        self.tagNameSelectController.view.frame = CGRectMake(0.0, 0.0, self.tagSelectWidth, self.container.bounds.size.height - BAR_HEIGHT);
         
         if (animated) {
             [UIView commitAnimations];
         }
         
+        [self setShowsTeleSelectMenu:NO animated:animated];
     } else {
         
         if (animated) {
@@ -522,7 +580,7 @@
             [UIView setAnimationDuration:0.2];
         }
         
-        self.tagSelectController.view.frame = CGRectMake(0.0, self.container.bounds.size.height - BAR_HEIGHT, self.tagSelectWidth, 0.0);
+        self.tagNameSelectController.view.frame = CGRectMake(0.0, self.container.bounds.size.height - BAR_HEIGHT, self.tagSelectWidth, 0.0);
         
         if (animated) {
             [UIView commitAnimations];
@@ -530,6 +588,43 @@
     }
     
     self.tagSelectButton.selected = showsTagSelectMenu;
+}
+
+- (void)setShowsTeleSelectMenu:(BOOL)showsTeleSelectMenu animated:(BOOL)animated {
+    
+    const CGFloat halfWidth = self.container.bounds.size.width / 2.0;
+    const CGFloat playerHeight = self.container.bounds.size.width / (16.0 / 9.0);
+    const CGFloat teleSelectY = self.container.bounds.size.height - BAR_HEIGHT - playerHeight;
+    
+    if (showsTeleSelectMenu) {
+        
+        if (animated) {
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.2];
+        }
+        
+        self.teleSelectController.view.frame = CGRectMake(halfWidth + halfWidth * (1.0 - PHI_INV), teleSelectY, halfWidth * PHI_INV, self.container.bounds.size.height - BAR_HEIGHT - teleSelectY);
+        
+        if (animated) {
+            [UIView commitAnimations];
+        }
+        
+        [self setShowsTagSelectMenu:NO animated:animated];
+    } else {
+        
+        if (animated) {
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.2];
+        }
+        
+        self.teleSelectController.view.frame = CGRectMake(halfWidth + halfWidth * (1.0 - PHI_INV), teleSelectY, halfWidth * PHI_INV, 0.0);
+        
+        if (animated) {
+            [UIView commitAnimations];
+        }
+    }
+    
+    self.teleSelectButton.selected = showsTeleSelectMenu;
 }
 
 /*

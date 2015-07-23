@@ -1,20 +1,20 @@
 //
-//  TagSelectTableViewController.m
+//  TagNameSelectTableViewController.m
 //  Live2BenchNative
 //
 //  Created by Nico Cvitak on 2015-07-22.
 //  Copyright © 2015 DEV. All rights reserved.
 //
 
-#import "TagSelectTableViewController.h"
+#import "TagNameSelectTableViewController.h"
 
-@interface TagSelectTableViewController ()
+@interface TagNameSelectTableViewController ()
 
 @property (strong, nonatomic, nonnull) NSArray *tagNames;
 
 @end
 
-@implementation TagSelectTableViewController
+@implementation TagNameSelectTableViewController
 
 - (nonnull instancetype)init {
     self = [super init];
@@ -111,7 +111,7 @@
 }
 
 - (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    [self.tagSelectResponder didSelectTagName:self.tagNames[indexPath.row]];
+    [self.tagNameSelectResponder didSelectTagName:self.tagNames[indexPath.row]];
 }
 
 - (nullable NSIndexPath *)tableView:(nonnull UITableView *)tableView willSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
