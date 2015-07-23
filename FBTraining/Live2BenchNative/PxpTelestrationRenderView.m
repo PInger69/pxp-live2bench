@@ -23,10 +23,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.opaque = NO;
-        self.clearsContextBeforeDrawing = NO;
-        self.backgroundColor = nil;
+        self.backgroundColor = [UIColor clearColor];
         
         _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction:)];
+        _displayLink.frameInterval = 2;
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     }
     return self;
@@ -36,10 +36,10 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.opaque = NO;
-        self.clearsContextBeforeDrawing = NO;
         self.backgroundColor = [UIColor clearColor];
         
         _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction:)];
+        _displayLink.frameInterval = 2;
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     }
     return self;
@@ -68,7 +68,7 @@
 }
 
 - (void)displayLinkAction:(CADisplayLink *)displayLink {
-    [self.layer setNeedsDisplay];
+    [self setNeedsDisplay];
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event {
