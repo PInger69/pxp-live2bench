@@ -433,11 +433,12 @@
     [self updateOffenseButtons];
     [self updateDefenseButtons];
     
+    __block HockeyBottomViewController *weakSelf = self;
     periodBoundaryObserver = [self.videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
-        [self updatePeriodSegment];
-        [self updateStrengthSegment];
-        [self updateOffenseButtons];
-        [self updateDefenseButtons];
+        [weakSelf updatePeriodSegment];
+        [weakSelf updateStrengthSegment];
+        [weakSelf updateOffenseButtons];
+        [weakSelf updateDefenseButtons];
     }];
 }
 
