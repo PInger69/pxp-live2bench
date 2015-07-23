@@ -16,23 +16,26 @@
 @class HockeyBottomViewController;
 @interface ContentViewController : UIViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource>
 {
-    IBOutlet UIScrollView *scrollView;
-    NSMutableDictionary *_gameItems;
-    NSMutableArray *_selectedNumbers;
-    HockeyBottomViewController *BVController;
-    NSInteger currentIndex;
-    NSMutableArray *currentLine;
-    NSMutableDictionary *playerMap;
-    int numberOfPlayersAllowed;
+    //IBOutlet UIScrollView *scrollView;
+    //NSMutableDictionary *_gameItems;
+    //NSMutableArray *_selectedNumbers;
+    //HockeyBottomViewController *BVController;
+    //NSInteger currentIndex;
+    //NSMutableArray *currentLine;
+    //NSMutableDictionary *playerMap;
+    //int numberOfPlayersAllowed;
 //    Globals *globals;
 }
-@property NSMutableArray *currentLine;
-@property NSMutableArray *selectedNumbers;
-@property NSMutableDictionary *gameItems;
-@property IBOutlet UICollectionView *collectionView;
-@property NSMutableDictionary *playerMap;
+//@property NSMutableArray *currentLine;
+//@property NSMutableArray *selectedNumbers;
+//@property NSMutableDictionary *gameItems;
+//@property (strong,nonatomic) UICollectionView *collectionView;
+//@property NSMutableDictionary *playerMap;
+@property (strong,nonatomic)UIScrollView *scrollView;
+@property (strong,nonatomic)NSArray *playerList;
+@property (strong,nonatomic)UIViewController *bottomViewController;
 
 - (id)initWithIndex:(NSInteger)i side:(NSString*)whichSide;
-
+-(id)initWithFrame:(CGRect)frame;
 
 @end

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ActionList.h"
 #import "EncoderTask.h"
+#import "LeagueTeam.h"
 
 
 @interface UserCenter : NSObject
@@ -21,7 +22,8 @@
 }
 
 @property (nonatomic,strong) NSMutableArray         * tagNames;
-@property (nonatomic,strong) NSString               * userPick;// team pic
+//@property (nonatomic,strong) NSString               * userPick;// team pic
+@property (nonatomic,strong) LeagueTeam               * taggingTeam;
 
 @property (nonatomic,strong) NSMutableDictionary    * currentEventThumbnails;
 @property (nonatomic,assign) BOOL                   isLoggedIn;

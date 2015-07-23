@@ -580,6 +580,7 @@
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    NSString *period = [data objectForKey:@"period"];
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -589,7 +590,8 @@
                                        @"user"          : [UserCenter getInstance].userHID,
                                        @"time"          : tagTime,
                                        @"name"          : tagName,
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                       @"period"        : period
 
                                        }];
     if (isDuration){ // Add extra data for duration Tags
@@ -615,6 +617,7 @@
     NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    NSString *period = [data objectForKey:@"period"];
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -629,7 +632,9 @@
                                        @"telestration"  : teleData,
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
-    
+    if (period) {
+        [tagData setValue:period forKey:@"period"];
+    }
     
     [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
     
@@ -1867,13 +1872,15 @@
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
                 
-                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine) {
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
                         [self onModifyTags:tag];
                     }else if([tag[@"modified"]boolValue]){
                         [self onModifyTags:tag];
                     }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
                         [self onModifyTags:tag];
+                    }else if ([tag[@"type"]intValue] == TagTypeTele){
+                        [self onTeleTags:tag];
                     }
                     else{
                         [self onNewTags:tag];
@@ -2217,6 +2224,22 @@
         if ([(NSDictionary *)value objectForKey:@"live"] || [(NSDictionary *)value objectForKey:@"live_2"] ) {
             Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
             anEvent.parentEncoder = self;
+            
+            League      * league        = [self.encoderLeagues objectForKey:value[@"league"]];
+            LeagueTeam  * homeTeam      = [league.teams objectForKey:value[@"homeTeam"]];
+            LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
+            if (!homeTeam) {
+                homeTeam     = [LeagueTeam new];
+                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+            }
+            if (!visitTeam) {
+                visitTeam   = [LeagueTeam new];
+                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+            }
+            
+            
+            anEvent.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
+            
             _liveEvent = anEvent;
             NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
             [_allEvents setObject:eventFinal forKey:anEvent.name];

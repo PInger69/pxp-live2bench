@@ -19,6 +19,7 @@
 #import "SpinnerView.h"
 #import "Downloader.h"
 #import "LocalMediaManager.h"
+#import "LeagueTeam.h"
 
 @interface ARCalendarTableViewController ()
 
@@ -241,8 +242,13 @@
         collapsableCell.sendUserInfo = ^(NSString *key){
             _teamPick = nil;
             
-            NSString *homeName = event.teams[@"homeTeam"];
-            NSString *visitName = event.teams[@"visitTeam"];
+            
+            LeagueTeam *homeTeam = event.teams[@"homeTeam"];
+            LeagueTeam *visitTeam = event.teams[@"visitTeam"];
+            NSDictionary *team = @{homeTeam.name:homeTeam,visitTeam.name:visitTeam};
+            
+            //NSString *homeName = event.teams[@"homeTeam"];
+            //NSString *visitName = event.teams[@"visitTeam"];
             
             
             if (_teamPick){
@@ -253,7 +259,7 @@
             
             
             _teamPick = [[ListPopoverController alloc]initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team")
-                                                      buttonListNames:@[homeName, visitName]];
+                                                      buttonListNames:@[[[team allKeys]firstObject],[[team allKeys]lastObject]]];
             
             _teamPick.contentViewController.modalInPopover = NO;
             
@@ -261,7 +267,7 @@
             
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
                 
-                [UserCenter getInstance].userPick = pick;
+                [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
 
                 
                 

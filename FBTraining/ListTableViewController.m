@@ -377,7 +377,7 @@
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
     NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
-    NSString *periodString = [NSString stringWithFormat:@"%.02f", tag.time];
+    NSString *periodString = [NSString stringWithFormat:@"%ld", (long)tag.period];
     
     [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@ ", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString]];
     

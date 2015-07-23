@@ -44,10 +44,10 @@
 
 typedef NS_ENUM (NSInteger,TagType){
     TagTypeNormal                  = 0,
-    TagTypeLine                    = 2,
+    //TagTypeLine                    = 2,
     TagTypeDeleted                 = 3,
     TagTypeTele                    = 4,
-    TagTypeStrength                = 10,
+    //TagTypeStrength                = 10,
     TagTypeOpenDuration            = 99,
     TagTypeCloseDuration           = 100,
     
@@ -70,7 +70,10 @@ typedef NS_ENUM (NSInteger,TagType){
     TagTypeFootballDownStart       = 19,
     TagTypeFootballDownStop        = 20,
     TagTypeFootballQuarterStart    = 21,
-    TagTypeFootballQuarterStop     = 22
+    TagTypeFootballQuarterStop     = 22,
+    
+    TagTypePeriod                  = 1002,
+    TagTypeStrength                = 1004
     
 };
 
@@ -105,6 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSDictionary  *feeds;
 //@property (strong, nonatomic) NSString *requestTime;
 @property (strong, nonatomic) NSString      *durationID;
+@property (assign, nonatomic) NSInteger     *period;
 
 /// The telestration accociated with the tag.
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
