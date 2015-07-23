@@ -16,7 +16,7 @@
 @property (nonatomic,strong) NSString       * name;
 @property (nonatomic,strong) NSString       * sport;
 @property (nonatomic,strong) NSString       * txt_name;
-@property (nonatomic,strong) League         * league;
+@property (nonatomic,weak)   League         * league;
 @property (nonatomic,strong) NSDictionary   * players;
 
 
