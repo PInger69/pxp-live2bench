@@ -2007,6 +2007,8 @@
 			isa = PBXGroup;
 			children = (
 				AE8750AC1B612F310055A7C2 /* TagSelectResponder.h */,
+				D7BA25401B5848D600DECA65 /* AbstractBottomViewController.h */,
+				D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */,
 				D74860FA1B5FDD3300CEC9DD /* TeamPlayer.h */,
 				D74860FD1B5FDE4300CEC9DD /* LeagueTeam.h */,
 				D74860FE1B5FDE4300CEC9DD /* LeagueTeam.m */,
