@@ -76,5 +76,6 @@ typedef NS_OPTIONS (NSInteger,PlayerStatus){
 -(void)playClipWithFeed: (Feed*)aFeed andTimeRange:(CMTimeRange)aRange;
 -(NSTimeInterval)durationInSeconds;
 -(NSTimeInterval)currentTimeInSeconds;
+-(void)cancelClip;
 
 @end

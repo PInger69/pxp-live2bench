@@ -17,6 +17,7 @@
 @end
 
 @implementation ContentViewController
+@synthesize scrollView = _scrollView;
 @synthesize playerList = _playerList;
 //@synthesize collectionView=_collectionView;
 //@synthesize gameItems=_gameItems;
@@ -157,14 +158,6 @@
 
 /*- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
     return 1;
-}*/
-
-/*-(void)setPlayerList:(NSArray *)playerList{
-    _playerList = playerList;
-    
-    if (_cellList.count == 0) {
-        _cellList = [self createCells:_playerList];
-    }
 }*/
 
 -(void)createCells:(NSArray*)playerLists{

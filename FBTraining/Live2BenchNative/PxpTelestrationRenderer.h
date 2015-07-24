@@ -20,10 +20,10 @@
 @property (weak, nonatomic, nullable) id<PxpTimeProvider> timeProvider;
 
 /// The renderer's telestration to render.
-@property (strong, nonatomic, nonnull) PxpTelestration *telestration;
+@property (weak, nonatomic, nullable) PxpTelestration *telestration;
 
 /// Initializes a renderer with a telestration.
-- (nonnull instancetype)initWithTelestration:(nonnull PxpTelestration *)telestration;
+- (nonnull instancetype)initWithTelestration:(nullable PxpTelestration *)telestration;
 
 /// Renderes the telestration at INFINITY time in the given context.
 - (void)renderInContext:(nullable CGContextRef)context size:(CGSize)size;

@@ -24,7 +24,7 @@
 
 @implementation PxpTelestrationRenderer
 
-- (nonnull instancetype)initWithTelestration:(nonnull PxpTelestration *)telestration {
+- (nonnull instancetype)initWithTelestration:(nullable PxpTelestration *)telestration {
     self = [super init];
     if (self) {
         _telestration = telestration;
@@ -38,7 +38,7 @@
 - (nonnull instancetype)init {
     self = [super init];
     if (self) {
-        _telestration = [[PxpTelestration alloc] init];
+        _telestration = nil;
         _layer = nil;
         _cache = nil;
         _cachedPoint = nil;
@@ -51,6 +51,9 @@
 }
 
 - (void)renderInContext:(nullable CGContextRef)context size:(CGSize)size atTime:(NSTimeInterval)time {
+    if (!self.telestration) {
+        return;
+    }
     
     if (self.telestration.isStill) {
         time = self.telestration.thumbnailTime;
