@@ -180,7 +180,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED
                                                         object:self
                                                       userInfo:@{
-                                                                 @"tags": @[tagToBeModded]
+                                                                 @"tags": tagToBeModded ?  @[tagToBeModded] : @[]
                                                                  }];
     tagToBeModded.modified = false;
 }

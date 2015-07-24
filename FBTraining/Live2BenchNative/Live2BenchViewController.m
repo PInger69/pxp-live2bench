@@ -1080,7 +1080,6 @@ static void * eventContext      = &eventContext;
     if (tele.actionStack.count) {
         tele.isStill = YES;
         tele.sourceName = self.videoPlayer.feed.sourceName;
-        [tele pushAction:[PxpTelestrationAction clearActionAtTime:tele.startTime + 1.0]];
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",tele.startTime],

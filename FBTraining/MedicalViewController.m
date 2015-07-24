@@ -500,7 +500,14 @@
 - (void)didSelectTag:(nonnull Tag *)tag source:(nonnull NSString *)source {
     Feed *feed = tag.event.feeds[source] ? tag.event.feeds[source] : tag.event.feeds.allValues.firstObject;
     self.telestrationViewController.telestration = tag.telestration;
-    [self.videoPlayer playClipWithFeed:feed andTimeRange:CMTimeRangeMake(CMTimeMake(tag.startTime, 1), CMTimeMake(tag.duration, 1))];
+    
+    if (tag.telestration.isStill) {
+        [self.videoPlayer cancelClip];
+        [self.videoPlayer pause];
+        [self.videoPlayer seekToInSec:tag.telestration.thumbnailTime];
+    } else {
+        [self.videoPlayer playClipWithFeed:feed andTimeRange:CMTimeRangeMake(CMTimeMake(tag.startTime, 1), CMTimeMake(tag.duration, 1))];
+    }
     
     [self setShowsTeleSelectMenu:NO animated:YES];
 }
@@ -545,7 +552,6 @@
     [self setShowsTagSelectMenu:NO animated:YES];
     [self setShowsTeleSelectMenu:NO animated:YES];
     
-    [self.videoPlayer pause];
     [self.videoPlayer cancelClip];
 }
 
