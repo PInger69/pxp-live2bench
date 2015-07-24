@@ -413,6 +413,7 @@
 		D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */; };
 		D7B7C4DB1AD6CDF800A5DEC3 /* FeedSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */; };
 		D7BA253C1B58081200DECA65 /* painting.png in Resources */ = {isa = PBXBuildFile; fileRef = D7BA253B1B58081200DECA65 /* painting.png */; };
+		D7BA25421B5848D600DECA65 /* AbstractBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */; };
 		D7C5F38119BF894A008190CE /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5F38019BF894A008190CE /* ScreenController.m */; };
 		D7C624E8180EDBF700C2DDD7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C624E7180EDBF700C2DDD7 /* Reachability.m */; };
 		D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = D7C903AB17F4B7A0002A1FDD /* continue_unselected.png */; };
@@ -1114,6 +1115,8 @@
 		D7B7C4D91AD6CDF800A5DEC3 /* FeedSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectCell.h; sourceTree = "<group>"; };
 		D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectCell.m; sourceTree = "<group>"; };
 		D7BA253B1B58081200DECA65 /* painting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = painting.png; sourceTree = "<group>"; };
+		D7BA25401B5848D600DECA65 /* AbstractBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractBottomViewController.h; sourceTree = "<group>"; };
+		D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractBottomViewController.m; sourceTree = "<group>"; };
 		D7C5F37F19BF894A008190CE /* ScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenController.h; sourceTree = "<group>"; };
 		D7C5F38019BF894A008190CE /* ScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenController.m; sourceTree = "<group>"; };
 		D7C624E6180EDBF700C2DDD7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -1999,6 +2002,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7BA25401B5848D600DECA65 /* AbstractBottomViewController.h */,
+				D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */,
 				D74860FA1B5FDD3300CEC9DD /* TeamPlayer.h */,
 				D74860FD1B5FDE4300CEC9DD /* LeagueTeam.h */,
 				D74860FE1B5FDE4300CEC9DD /* LeagueTeam.m */,
@@ -2942,6 +2947,7 @@
 				BD5D6BBC17FA01A100B422EE /* NSArray+BinarySearch.m in Sources */,
 				D7A9395D16ADA65E006CBAB2 /* Live2BenchViewController.m in Sources */,
 				D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */,
+				D7BA25421B5848D600DECA65 /* AbstractBottomViewController.m in Sources */,
 				D79D708B19D603E2001FBE16 /* CustomTabViewController.m in Sources */,
 				D784EF3D1AA4B0570068D260 /* ARCalendarTableViewCell.m in Sources */,
 				AED484BB1B56A23600769EEF /* PxpTelestrationRenderer.m in Sources */,

@@ -215,7 +215,17 @@
 // once the encoder is registered completed you can do what you want with it
 -(void)onRegisterEncoderCompleted:(Encoder*)registerEncoder
 {
-
+    if (!registerEncoder.authenticated){
+        CustomAlertView *alert = [[CustomAlertView alloc] init];
+        alert.type = AlertImportant;
+        NSString * msg = [NSString stringWithFormat:@"You don’t have the credentials to use encoder %@",registerEncoder.name];
+        [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+        [alert setMessage:NSLocalizedString(msg,nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Ok",nil)];
+        [alert show];
+    
+    }
+    
     if (registerEncoder.authenticated  && ![_authenticatedEncoders containsObject:registerEncoder]) {
         [_authenticatedEncoders addObject:registerEncoder];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];

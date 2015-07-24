@@ -128,7 +128,8 @@ static UserCenter * instance;
 }
 
 @synthesize tagNames                = _tagNames;
-@synthesize userPick                = _userPick;
+//@synthesize userPick                = _userPick;
+@synthesize taggingTeam             = _taggingTeam;
 @synthesize currentEventThumbnails  = _currentEventThumbnails;
 @synthesize isLoggedIn              = _isLoggedIn;
 @synthesize isEULA                  = _isEULA;

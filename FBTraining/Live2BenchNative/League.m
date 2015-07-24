@@ -49,4 +49,18 @@
     return dict;
 }
 
+//-(NSString*)description
+//{
+//    NSMutableString * tmpText = [[NSMutableString alloc]initWithString:@"League:"];
+//    [tmpText appendString:self.name];
+//    [tmpText appendString:@"\nTeams:"];
+//    
+//   
+//    for (LeagueTeam * t in _teams) {
+//        [tmpText appendFormat:@"  %@",t.name];
+//    }
+//
+//    return [tmpText copy];
+//}
+
 @end

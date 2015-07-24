@@ -580,6 +580,7 @@
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    NSString *period = [data objectForKey:@"period"];
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -589,7 +590,8 @@
                                        @"user"          : [UserCenter getInstance].userHID,
                                        @"time"          : tagTime,
                                        @"name"          : tagName,
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                       @"period"        : period
 
                                        }];
     if (isDuration){ // Add extra data for duration Tags
@@ -615,6 +617,7 @@
     NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    NSString *period = [data objectForKey:@"period"];
     
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
@@ -629,7 +632,9 @@
                                        @"telestration"  : teleData,
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
                                        }];
-    
+    if (period) {
+        [tagData setValue:period forKey:@"period"];
+    }
     
     [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
     
@@ -1589,7 +1594,8 @@
         PXPLog(@"  reason: %@",results[@"msg"]);
     }
     
-    
+    NSLog(@" ");
+    NSLog(@"Building Leagues ===============================");
     // building leagues
     NSMutableDictionary * leaguePool        = [[NSMutableDictionary alloc]init]; // this is the final
     NSMutableDictionary * leagueTempHIDPool = [[NSMutableDictionary alloc]init];
@@ -1603,13 +1609,20 @@
         aLeague.sport       = lData[@"sport"];
         
         
+        if ([leaguePool objectForKey:aLeague.name]){
+            
+            aLeague.name = [NSString stringWithFormat:@"%@ (Duplicate)",aLeague.name];
+            PXPLog(@"Warning Duplicate League: %@",aLeague.name);
+            NSLog(@"Warning Duplicate League: %@",aLeague.name);
+        }
         [leaguePool setObject:aLeague forKey:aLeague.name];
 
         [leagueTempHIDPool setObject:aLeague forKey:aLeague.hid];
     }
     
-    
-    
+    NSLog(@"Leagues =============================== %lu = %lu ",(unsigned long)[leaguePool count] , (unsigned long)[leagueTempHIDPool count]);
+    NSLog(@" ");
+    NSLog(@"Building Teams ===============================");
     // Build Teams
     NSMutableDictionary * teamTempHIDPool = [[NSMutableDictionary alloc]init];
     NSArray             * rawTeams          = [[results objectForKey:@"teams"]allValues];
@@ -1623,20 +1636,44 @@
         lTeam.sport         = tData[@"sport"];
         lTeam.txt_name      = tData[@"txt_name"];
     
+        if ([lTeam.name isEqualToString: @"Bayonne"]){
+        
+        }
         League * owningLeague = (League *)[leagueTempHIDPool objectForKey:lHID];
+        if (!owningLeague) {
+            owningLeague = [[League alloc]init];
+            owningLeague.name  = @"Teams Has No League...";
+            owningLeague.hid   = lHID;
+            owningLeague.sport = lTeam.sport;
+            
+//            [leagueTempHIDPool setObject:owningLeague forKey:lHID];
+//            [leaguePool setObject:owningLeague forKey:owningLeague.name];
+//            NSLog(@"Team has no League, making a League: %@",lTeam.name);
+              NSLog(@"Team has no League: %@",lTeam.name);
+        }
+        
+        
         [owningLeague addTeam:lTeam];
         [teamTempHIDPool setObject:lTeam forKey:lTeam.hid];
     }
     
+    NSLog(@"Teams =============================== %lu = %lu ",(unsigned long)[rawTeams count] , (unsigned long)[teamTempHIDPool count]);
+    NSLog(@" ");
+    NSLog(@"Building Players ===============================");
     // build players
     
     NSArray             * rawTeamSetup          = [[results objectForKey:@"teamsetup"]allValues];
+    NSInteger playerCount = 0;
     for (NSArray * pList in rawTeamSetup) {
         
         // each item in the Array should all be the same team
         NSString    * tHID      = pList[0][@"team"];
         LeagueTeam * owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+        
+        
+        
         for (NSDictionary * pData in pList) {
+            playerCount++;
             TeamPlayer * aPlayer    = [[TeamPlayer alloc]init];
             aPlayer.jersey          = pData[@"jersey"];
             aPlayer.line            = pData[@"line"];
@@ -1645,14 +1682,30 @@
             aPlayer.role            = pData[@"role"];
             
             tHID      = pData[@"team"];
+            if ([tHID isEqualToString: @"2a5ac580e608daa6d2cd4b6c20326e1518baadd5"]){
+                
+            }
             owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+            if (!owningTeam)  {
+
+                owningTeam =  [[LeagueTeam alloc]init];
+                owningTeam.name = @"NO NAME BRAND";
+                owningTeam.hid  = tHID;
+                owningTeam.extra         = @"";
+                owningTeam.sport         = @"Reading";
+                owningTeam.txt_name      = @"NO_NAME_BRAND";
+                
+//                [teamTempHIDPool setObject:owningTeam forKey:tHID];
+//                NSLog(@"Player does not have a team, Making a new one");
+                 NSLog(@"Player does not have a team %@",tHID);
+            }
             [owningTeam addPlayer:aPlayer];
             
-            NSLog(@"");
+           
         }
-           NSLog(@"%lu",(unsigned long)[owningTeam.players count]);
+//           NSLog(@"%@ \tTeams have %lu players",owningTeam.name,(unsigned long)[owningTeam.players count]);
     }
-    
+    NSLog(@"players =============================== %lu",(long)playerCount);
     
     self.encoderLeagues = [leaguePool copy];
     
@@ -1868,13 +1921,15 @@
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
                 
-                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine) {
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
                         [self onModifyTags:tag];
                     }else if([tag[@"modified"]boolValue]){
                         [self onModifyTags:tag];
                     }else if([tag[@"type"]intValue] == TagTypeCloseDuration){
                         [self onModifyTags:tag];
+                    }else if ([tag[@"type"]intValue] == TagTypeTele){
+                        [self onTeleTags:tag];
                     }
                     else{
                         [self onNewTags:tag];
@@ -2218,6 +2273,22 @@
         if ([(NSDictionary *)value objectForKey:@"live"] || [(NSDictionary *)value objectForKey:@"live_2"] ) {
             Event * anEvent = [[Event alloc]initWithDict:(NSDictionary *)value isLocal:NO andlocalPath:nil];
             anEvent.parentEncoder = self;
+            
+            League      * league        = [self.encoderLeagues objectForKey:value[@"league"]];
+            LeagueTeam  * homeTeam      = [league.teams objectForKey:value[@"homeTeam"]];
+            LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
+            if (!homeTeam) {
+                homeTeam     = [LeagueTeam new];
+                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+            }
+            if (!visitTeam) {
+                visitTeam   = [LeagueTeam new];
+                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+            }
+            
+            
+            anEvent.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
+            
             _liveEvent = anEvent;
             NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
             [_allEvents setObject:eventFinal forKey:anEvent.name];

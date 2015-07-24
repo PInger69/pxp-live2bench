@@ -107,7 +107,9 @@ static LocalMediaManager * instance;
                     anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                     
                 
-                
+                if ([dict objectForKey:@"savedTeamData"]){
+                   anEvent.teams =  [self parsedTeamData:[dict objectForKey:@"savedTeamData"]];
+                }
                 
                     NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
                     [_allEvents setValue: eventFinal forKey:anEvent.name];// this is the new kind of build that events have their own feed
@@ -600,14 +602,19 @@ static LocalMediaManager * instance;
             [playerPool addObject:[player asDictionary]];
         }
         [teamSaveData[@"teamsetup"] setObject:playerPool  forKey:team.hid];
+        
+         NSLog(@"%@ Teams have %lu",team.name,(unsigned long)[team.players count]);
     }
     
     
-    [localEvent.rawData setObject:teamSaveData forKey:@"savedTeamData"];
+    NSMutableDictionary * combinedTeamData = [NSMutableDictionary dictionaryWithDictionary:localEvent.rawData];
+    
+    
+   
     
     localEvent.teams = [self parsedTeamData:localEventRawData]; // add teams to the new local event
-    
-    [localEvent.rawData writeToFile:plistNamePath atomically:YES];
+     [combinedTeamData setObject:teamSaveData forKey:@"savedTeamData"];
+    [combinedTeamData writeToFile:plistNamePath atomically:YES];
     
     [eventDic setObject:localEvent forKey:@"local"];
     [eventDic setObject:encoderEvent forKey:@"non-local"];
@@ -782,9 +789,17 @@ static LocalMediaManager * instance;
     
     
     // populating teams based off data
-    League      * league        = [leaguePool objectForKey:dict[@"league"]];
+    
+    NSDictionary * dic = [[dict[@"leagues"]allValues]firstObject];
+    NSString * lName = [dic objectForKey:@"name"] ;
+    League      * league        = [leaguePool objectForKey:lName];
     LeagueTeam  * homeTeam      = [league.teams objectForKey:dict[@"homeTeam"]];
     LeagueTeam  * visitTeam     = [league.teams objectForKey:dict[@"visitTeam"]];
+    
+    if ([league.teams count]==1){
+        homeTeam = visitTeam = [[league.teams allValues]firstObject];
+    }
+    
     if (!homeTeam) {
         homeTeam     = [LeagueTeam new];
         PXPLog(@"homeTeam: %@ is not found in League: %@",dict[@"homeTeam"],dict[@"league"]);

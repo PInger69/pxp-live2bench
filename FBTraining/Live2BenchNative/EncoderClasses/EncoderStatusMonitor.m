@@ -207,8 +207,10 @@
                                                                                      @"device"       : [UserCenter getInstance].customerAuthorization
                                                                                      }];
         
+        if (dict) {
+            PXPLogAjax(@"http://%@/min/ajax/syncme/%@", ipAddress, dict);
+        }
         
-            PXPLogAjax(@"http://%@/min/ajax/syncme/%@", ipAddress,dict);
     } else {
             PXPLogAjax(aPath);
     }

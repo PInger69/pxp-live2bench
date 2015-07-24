@@ -16,7 +16,7 @@
 @property (nonatomic,strong) NSString   * player;
 @property (nonatomic,strong) NSString   * position;
 @property (nonatomic,strong) NSString   * role;
-@property (nonatomic,strong) LeagueTeam * team;
+@property (nonatomic,weak)   LeagueTeam * team;
 
 
 // This returns a primmative dict ready for json

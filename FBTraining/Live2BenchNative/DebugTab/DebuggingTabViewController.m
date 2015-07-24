@@ -137,11 +137,11 @@ static void *  debugContext = &debugContext;
     
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(checkup:) name:NOTIF_FEED_INSPECTION_COMPLETE object:nil];
-    Encoder * testestset = (Encoder*)EM.primaryEncoder;
+    // Encoder * testestset = (Encoder*)EM.primaryEncoder;
     
-    Event * theE = testestset.event;
+    // Event * theE = testestset.event;
     
-    Feed * someFeed = [[theE.feeds allValues]firstObject];
+    // Feed * someFeed = [[theE.feeds allValues]firstObject];
     
     Feed * someFeed2 = [[Feed alloc]initWithURLString:@"http://192.168.1.109/events/live/video/listzz.m3u8" quality:0];
     
@@ -154,7 +154,7 @@ static void *  debugContext = &debugContext;
 -(void)checkup:(NSNotification*)note
 {
 
-    Feed * someFeed = note.object;
+    // Feed * someFeed = note.object;
 
 }
 

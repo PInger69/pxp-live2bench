@@ -95,14 +95,14 @@
     //BOOL contain = [_tags containsObject:newtag];
     //int  index = [_tags indexOfObject:newtag];
     //BOOL mem = (newtag == [_tags objectAtIndex:index]);
-    if (newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) {
+    if ((newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine) {
         return;
     }
     
     [_tags addObject:newtag];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
     
-    if (newtag.type != TagTypeOpenDuration && _primary && notifPost ) {
+    if ((newtag.type == TagTypeCloseDuration || newtag.type == TagTypeTele || newtag.type == TagTypeNormal || newtag.type == TagTypeHockeyStrengthStart || newtag.type == TagTypeHockeyStartOLine || newtag.type == TagTypeHockeyStopOLine || newtag.type == TagTypeHockeyStartDLine || newtag.type == TagTypeHockeyStopDLine) && _primary && notifPost ) {
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
                                                                                                       @"msg":newtag.name,
