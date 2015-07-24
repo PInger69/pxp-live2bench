@@ -10,6 +10,9 @@
 //#import "NSArray+BinarySearch.h"
 #import "CustomLabel.h"
 #import "Tag.h"
+#import "TeamPlayer.h"
+#import "LeagueTeam.h"
+#import "UserCenter.h"
 #define PLAYERBUTTON_X              190
 #define PLAYERBUTTON_Y              100
 #define PLAYERBUTTON_WIDTH           42
@@ -25,12 +28,15 @@
     
     CustomLabel *_zoneLabel;
     NSArray *zoneValueArray;
+    NSString *currentZone;
     UISegmentedControl *_zoneSegmentedControl;
     
     CustomLabel *_halfLabel;
     NSArray *periodValueArray;
     UISegmentedControl *_periodSegmentedControl;
     
+    NSMutableArray *_cellList;
+    NSArray *_playerList;
     
     id periodBoundaryObserver;
     UIColor *tintColor;
@@ -46,6 +52,7 @@
         
         self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
         tintColor = PRIMARY_APP_COLOR;
+        _cellList = [[NSMutableArray alloc]init];
         
         // Setup zone Lable
         _zoneLabel = [CustomLabel labelWithStyle:CLStyleBlack];
@@ -83,7 +90,9 @@
         [segmentControlView addSubview:_halfLabel];
         [segmentControlView addSubview:_periodSegmentedControl];
 
-
+        // Player
+        LeagueTeam *team = [UserCenter getInstance].taggingTeam;
+        _playerList = [self populatePlayerList:[team.players allValues]];
         
     }
     return self;
@@ -138,6 +147,7 @@
     if ([self getTags:TagTypeSoccerZoneStart secondType:TagTypeSoccerZoneStop].count == 0) {
         NSDictionary *dic = @{@"name":@"MID.3RD",@"line":@"MID.3RD",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeSoccerZoneStart],@"period":@"1"};
         _zoneSegmentedControl.selectedSegmentIndex = 1;
+        currentZone = @"MID.3RD";
         [super postTag:dic];
     }
     
@@ -199,8 +209,12 @@
     float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
     NSString *name = [zoneValueArray objectAtIndex:_zoneSegmentedControl.selectedSegmentIndex];
     
-    NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeSoccerZoneStart],@"time":[NSString stringWithFormat:@"%f",time],@"line":name};
-    [super postTag:tagDic];
+    if (![name isEqualToString:currentZone]) {
+        currentZone = name;
+        NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeSoccerZoneStart],@"time":[NSString stringWithFormat:@"%f",time],@"line":name};
+        [super postTag:tagDic];
+
+    }
 }
 
 // Actually Update the zone segment
@@ -217,6 +231,7 @@
                 NSString *name = array[i][@"name"];
                 NSInteger index = [zoneValueArray indexOfObject:name];
                 _zoneSegmentedControl.selectedSegmentIndex = index;
+                currentZone = name;
                 return;
             }
         }
@@ -224,6 +239,77 @@
     }
 }
 
+#pragma mark - Player Button Related Methods
+//Populate Player List with all Player jersey
+-(NSArray*)populatePlayerList:(NSArray *)players{
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    for (TeamPlayer *player in players) {
+        [array addObject:player.jersey];
+    }
+    return [array copy];
+}
+
+-(void)createPlayerButton{
+    //players' buttons
+    int playerCount=1;
+    
+    NSArray *regularPlayers = [_playerList objectAtIndex:0];
+    NSArray *subPlayers = [_playerList objectAtIndex:1];
+  
+        //get all the non sub players count which will be used to center all the player buttons
+    NSInteger *notSubPlayersCount = subPlayers.count;
+    NSNumber *buttonWidth = [NSNumber numberWithFloat:(800/([notSubPlayersCount intValue]+5))];
+    //    for(NSObject *obj in globals.TEAM_SETUP)
+    //    {
+    //        NSString *jerseyNumber = [[obj valueForKey:@"jersey"] stringValue];
+    //        if([[obj valueForKey:@"role"] intValue]!=8)
+    //        {
+    //            BorderButton *playerButton = [BorderButton buttonWithType:UIButtonTypeCustom];
+    //            float playerButtonY = (notSubPlayersCount == globals.TEAM_SETUP.count) ? PLAYERBUTTON_Y + 25.0f : PLAYERBUTTON_Y;
+    //            [playerButton setFrame:CGRectMake((playerCount-1)*(buttonWidth+10)+(1024 - notSubPlayersCount*(buttonWidth+10) +10)/2.0, playerButtonY, buttonWidth, PLAYERBUTTON_WIDTH)];
+    //            [playerButton setTitle:jerseyNumber forState:UIControlStateNormal];
+    //            [playerButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+    //            [playerButton setTag:playerCount];
+    //            [self.view addSubview:playerButton];
+    //            [playerButtons addObject:playerButton];
+    //            playerCount++;
+    //        }
+    //    }
+    //
+    //    if(!subsLabel)
+    //    {
+    //        subsLabel = [CustomLabel labelWithStyle:CLStyleGrey];
+    //    }
+    //    [subsLabel setFrame:CGRectMake(((BorderButton*)[playerButtons firstObject]).frame.origin.x -SUBSLABEL_WIDTH, SUBSBUTTON_Y, SUBSLABEL_WIDTH, PLAYERBUTTON_WIDTH)];
+    //    [subsLabel setText:@"Subs:"];
+    //    [self.view addSubview:subsLabel];
+    //    [playerButtons addObject:subsLabel];
+    //    if (notSubPlayersCount == globals.TEAM_SETUP.count) {
+    //        //no subs player, hide the subslabel
+    //        [subsLabel setHidden:TRUE];
+    //    }else{
+    //        //have subs player,display the subslabel
+    //        [subsLabel setHidden:FALSE];
+    //    }
+    //    int count=1;
+    //    for(NSObject *obj in globals.TEAM_SETUP){
+    //
+    //        NSString *jerseyNumber = [[obj valueForKey:@"jersey"] stringValue];
+    //        if([[obj valueForKey:@"role"] intValue]==8)
+    //        {
+    //            BorderButton *subsButton = [BorderButton buttonWithType:UIButtonTypeCustom];
+    //            [subsButton setFrame:CGRectMake(((count-1)*(buttonWidth+PADDING))+CGRectGetMaxX(subsLabel.frame), SUBSBUTTON_Y, buttonWidth, PLAYERBUTTON_WIDTH)];
+    //            [subsButton setTitle:jerseyNumber forState:UIControlStateNormal];
+    //            [subsButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+    //            [subsButton setTag:count];
+    //            [playerButtons addObject:subsButton];
+    //            [self.view addSubview:subsButton];
+    //             count++;
+    //        }
+    //       
+    //    }
+
+}*/
 
 
 //@synthesize live2BenchViewController;

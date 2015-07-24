@@ -324,6 +324,7 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
         [self addBottomViewController];
+        [UserCenter getInstance].taggingTeam = nil;
 
     }
     

@@ -590,8 +590,7 @@
                                        @"user"          : [UserCenter getInstance].userHID,
                                        @"time"          : tagTime,
                                        @"name"          : tagName,
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
-                                       @"period"        : period
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
 
                                        }];
     if (isDuration){ // Add extra data for duration Tags
@@ -602,6 +601,10 @@
                                               };
         [tagData addEntriesFromDictionary:durationData];
         
+    }
+    
+    if (period) {
+        [tagData setValue:period forKey:@"period"];
     }
     
     [tagData addEntriesFromDictionary:data];

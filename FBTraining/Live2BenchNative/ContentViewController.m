@@ -17,8 +17,8 @@
 @end
 
 @implementation ContentViewController
-@synthesize scrollView = _scrollView;
-@synthesize playerList = _playerList;
+//@synthesize scrollView = _scrollView;
+//@synthesize playerList = _playerList;
 //@synthesize collectionView=_collectionView;
 //@synthesize gameItems=_gameItems;
 //@synthesize selectedNumbers =_selectedNumbers;
