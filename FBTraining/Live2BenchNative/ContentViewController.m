@@ -27,7 +27,7 @@
     self.view.frame = frame;
     
     _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-    BorderButton* cell =[BorderButton buttonWithType:UIButtonTypeCustom];
+    
     [_scrollView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     _scrollView.showsVerticalScrollIndicator = true;
     [self.view addSubview:_scrollView];

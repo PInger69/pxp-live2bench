@@ -310,8 +310,8 @@
     
     self.teleSelectButton.frame = CGRectMake(self.container.bounds.size.width - self.teleSelectWidth, 0.0, self.teleSelectWidth, teleSelectY);
     
-    self.teleSelectButton.titleLabel.font = [UIFont systemFontOfSize:self.teleSelectButton.frame.size.height * PHI_INV];
-    self.teleSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.teleSelectButton.titleLabel.font = [UIFont systemFontOfSize:self.teleSelectButton.frame.size.height * 0.45];
+    self.teleSelectButton.titleLabel.adjustsFontSizeToFitWidth = NO;
     [self.teleSelectButton setTitle:@"|✎     Telestrations     ✎|" forState:UIControlStateNormal];
     [self.teleSelectButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.teleSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateHighlighted];

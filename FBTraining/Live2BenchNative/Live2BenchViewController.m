@@ -157,6 +157,7 @@ static void * eventContext      = &eventContext;
 
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(oberverForEncoderStatus:)  name:NOTIF_ENCODER_STAT     object:nil];
     
+    /*
     NSDictionary *theEntireDataDictionary = @{
                                               @"Half":@{@"initializationArray":@[@{@"Name": @"1", @"Value": @"s_00"},
                                                                                  @{@"Name": @"2", @"Value": @"s_01"},
@@ -180,10 +181,11 @@ static void * eventContext      = &eventContext;
                                                         @"segmentQuantity":[NSNumber numberWithInteger:1],
                                                         @"selectedIndex":@[[NSNumber numberWithInt:1]]}
                                               };
+     */
     
     
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"SoccerBottomViewController" ofType:@"plist"];
-    NSDictionary *plistDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+    //NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"SoccerBottomViewController" ofType:@"plist"];
+    //NSDictionary *plistDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     
