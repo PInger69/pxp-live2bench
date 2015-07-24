@@ -67,7 +67,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 
 @implementation SettingsViewController{
     
-    UILabel                 * encStateLabel;
+    UILabel                 * _encStateLabel;
     int                     encStateCounter;
     BOOL                    encoderAvailable;
     BOOL                    dismissEnabled;
@@ -86,9 +86,9 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     id                     observerForLostMaster;
     UITapGestureRecognizer *tapBehindGesture;
     
-    NSString                * homeTeam;
-    NSString                * awayTeam;
-    NSString                * league;
+    NSString                * _homeTeam;
+    NSString                * _awayTeam;
+    NSString                * _leagueName;
     
     NSArray * (^grabNames)(NSDictionary * input);
     
@@ -122,11 +122,11 @@ SVSignalStatus signalStatus;
         encoderHomeText.text    = @"Encoder is not available.";
         
 //        __block SettingsViewController * weakSelf = self;
-        __block UILabel * weakStateLable    =  encStateLabel;
+        __block UILabel * weakStateLable    =  _encStateLabel;
         __block UILabel * weakHomeLable     =  encoderHomeText;
         __block NSObject <EncoderProtocol> * weakMasterEncoder =  masterEncoder;
         
-        [encStateLabel setHidden:YES];
+        [_encStateLabel setHidden:YES];
         // observers
         //        observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
         //            masterEncoder = encoderManager.masterEncoder;
@@ -153,9 +153,9 @@ SVSignalStatus signalStatus;
         }];
         
         
-        homeTeam            = DEFAULT_HOME_TEAM;
-        awayTeam            = DEFAULT_AWAY_TEAM;
-        league              = DEFAULT_LEAGUE;
+        _leagueName              = DEFAULT_LEAGUE;
+        _homeTeam            = DEFAULT_HOME_TEAM;
+        _awayTeam            = DEFAULT_AWAY_TEAM;
         
         
         self.pauseAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Pause Event", nil) message:NSLocalizedString(@"Are you sure you want to pause the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
@@ -493,7 +493,7 @@ SVSignalStatus signalStatus;
 
     if ([stringStatus isEqualToString:@"stopped"]) stringStatus= @"ready"; // This is just to make the display more user friendly
     
-    [encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
+    [_encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }
 
 
@@ -501,7 +501,7 @@ SVSignalStatus signalStatus;
 {
     masterEncoder = encoderManager.masterEncoder;
     encoderHomeText.text = @"Encoder Home";
-    [encStateLabel setHidden:NO];
+    [_encStateLabel setHidden:NO];
     [encoderHomeText setAlpha:1];
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
     [masterEncoder addObserver:self forKeyPath:@"isAlive" options:NSKeyValueObservingOptionNew context:nil];
@@ -641,7 +641,7 @@ SVSignalStatus signalStatus;
 -(void)pickHome:(id)sender
 {
     
-    if ([league isEqualToString:DEFAULT_LEAGUE]){
+    if ([_leagueName isEqualToString:DEFAULT_LEAGUE]){
         teamNames   = grabNames(encoderManager.masterEncoder.encoderTeams);
     } else {
         /*NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
@@ -661,7 +661,7 @@ SVSignalStatus signalStatus;
             [collection addObject:nam];
         }*/
         
-        League *currentLeague = [encoderManager.masterEncoder.encoderLeagues objectForKey:league];
+        League *currentLeague = [encoderManager.masterEncoder.encoderLeagues objectForKey:_leagueName];
         NSArray *teamsCollection = [currentLeague.teams allValues];
         NSMutableArray *teamsNameCollection = [[NSMutableArray alloc]init];
         for (LeagueTeam * team in teamsCollection) {
@@ -681,7 +681,7 @@ SVSignalStatus signalStatus;
         [homeTeamPick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
             //popButton.selected = NO;
-            weakSelf -> awayTeam = pick;
+            weakSelf -> _awayTeam = pick;
         }];
         
         [homeTeamPick presentPopoverFromRect:popButton.frame inView:selectHomeContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -690,7 +690,7 @@ SVSignalStatus signalStatus;
 
 -(void)pickAway:(id)sender
 {
-    if ([league isEqualToString:DEFAULT_LEAGUE]){
+    if ([_leagueName isEqualToString:DEFAULT_LEAGUE]){
         teamNames   = grabNames(encoderManager.masterEncoder.encoderTeams);
     } else {
         /*NSDictionary * tempDict1 = [encoderManager.masterEncoder.encoderLeagues copy];
@@ -710,7 +710,7 @@ SVSignalStatus signalStatus;
             [collection addObject:nam];
         }*/
         
-        League *currentLeague = [encoderManager.masterEncoder.encoderLeagues objectForKey:league];
+        League *currentLeague = [encoderManager.masterEncoder.encoderLeagues objectForKey:_leagueName];
         NSArray *teamsCollection = [currentLeague.teams allValues];
         NSMutableArray *teamsNameCollection = [[NSMutableArray alloc]init];
         for (LeagueTeam * team in teamsCollection) {
@@ -731,7 +731,7 @@ SVSignalStatus signalStatus;
         [visitTeamPick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
             //popButton.selected = NO;
-            weakSelf -> awayTeam = pick;
+            weakSelf -> _awayTeam = pick;
         }];
         
         [visitTeamPick presentPopoverFromRect:popButton.frame inView:selectAwayContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -749,7 +749,7 @@ SVSignalStatus signalStatus;
         [LeaguePick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
             //popButton.selected = NO;
-            weakSelf -> league = pick;
+            weakSelf -> _leagueName = pick;
             [weakSelf checkUserSelection];
         }];
         
@@ -765,7 +765,7 @@ SVSignalStatus signalStatus;
 -(void)checkUserSelection
 {
     
-    League *league = [encoderManager.masterEncoder.encoderLeagues objectForKey:league];
+    League *league = [encoderManager.masterEncoder.encoderLeagues objectForKey:_leagueName];
     NSString *leagueHid = league.hid;
     
     //NSString * leagueHid = [[[encoderManager.masterEncoder.encoderLeagues copy] allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]][0][@"hid"];
@@ -796,7 +796,7 @@ SVSignalStatus signalStatus;
     
     [selectHomeTeam setFrame:CGRectMake(0.0f, 0.0f, selectHomeContainer.bounds.size.width, selectHomeContainer.bounds.size.height)];
     selectHomeTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [selectHomeTeam setTitle:homeTeam forState:UIControlStateNormal];
+    [selectHomeTeam setTitle:_homeTeam forState:UIControlStateNormal];
     [selectHomeTeam setTag:0];
     [selectHomeTeam addTarget:self action:@selector(pickHome:) forControlEvents:UIControlEventTouchUpInside];
     [selectHomeContainer addSubview:selectHomeTeam];
@@ -805,7 +805,7 @@ SVSignalStatus signalStatus;
     
     [selectAwayTeam setFrame:CGRectMake(0.0f, 0.0f, selectAwayContainer.bounds.size.width, selectAwayContainer.bounds.size.height)];
     selectAwayTeam.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [selectAwayTeam setTitle:awayTeam forState:UIControlStateNormal];
+    [selectAwayTeam setTitle:_awayTeam forState:UIControlStateNormal];
     [selectAwayTeam setTag:1];
     [selectAwayTeam addTarget:self action:@selector(pickAway:) forControlEvents:UIControlEventTouchUpInside];
     [selectAwayContainer addSubview:selectAwayTeam];
@@ -814,7 +814,7 @@ SVSignalStatus signalStatus;
     
     [selectLeague setFrame:CGRectMake(0.0f, 0.0f, selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
     selectLeague.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [selectLeague setTitle:league forState:UIControlStateNormal];
+    [selectLeague setTitle:_leagueName forState:UIControlStateNormal];
     [selectLeague setTag:2];
     [selectLeague addTarget:self action:@selector(pickLeague:) forControlEvents:UIControlEventTouchUpInside];
     [selectLeagueContainer addSubview:selectLeague];
@@ -891,8 +891,8 @@ SVSignalStatus signalStatus;
     [encHomeButton setUserInteractionEnabled:YES];
     
     //encoder state label
-    encStateLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(encHomeButton.frame), 10, encoderHomeLabel.frame.size.width - encHomeButton.frame.size.width , encoderHomeLabel.frame.size.height)];
-    [encoderHomeLabel addSubview:encStateLabel];
+    _encStateLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(encHomeButton.frame), 10, encoderHomeLabel.frame.size.width - encHomeButton.frame.size.width , encoderHomeLabel.frame.size.height)];
+    [encoderHomeLabel addSubview:_encStateLabel];
     
     [doNotShowContainer setHidden:TRUE];
     [self updateForStatus];
@@ -1040,7 +1040,7 @@ SVSignalStatus signalStatus;
     if (![Utility hasWiFi]) {
         encoderHomeText.text = @"Encoder is not available.";
         [encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
-        [encStateLabel setText:@""];
+        [_encStateLabel setText:@""];
         [encHomeButton removeFromSuperview];
         [encHomeButton setUserInteractionEnabled:NO];
         [encoderHomeLabel addSubview:encoderHomeText];

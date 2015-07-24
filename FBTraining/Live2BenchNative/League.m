@@ -36,5 +36,15 @@
     _teams[team.name] = team;
     team.league = self;
 }
+-(NSDictionary*)asDictionary
+{
+    NSDictionary * dict = @{
+                            @"hid"      : _hid,
+                            @"name"     : _name,
+                            @"sport"    : _sport,
+                            @"short"    : _shortName
+                            };
+    return dict;
+}
 
 @end

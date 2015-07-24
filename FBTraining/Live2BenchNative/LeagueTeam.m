@@ -53,4 +53,10 @@
     return dict;
 }
 
+-(NSInteger)playerCount
+{
+    return [[_players allValues] count];
+}
+
+
 @end

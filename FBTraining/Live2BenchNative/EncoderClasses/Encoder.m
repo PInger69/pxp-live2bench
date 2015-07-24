@@ -1597,7 +1597,8 @@
         PXPLog(@"  reason: %@",results[@"msg"]);
     }
     
-    
+    NSLog(@" ");
+    NSLog(@"Building Leagues ===============================");
     // building leagues
     NSMutableDictionary * leaguePool        = [[NSMutableDictionary alloc]init]; // this is the final
     NSMutableDictionary * leagueTempHIDPool = [[NSMutableDictionary alloc]init];
@@ -1611,13 +1612,20 @@
         aLeague.sport       = lData[@"sport"];
         
         
+        if ([leaguePool objectForKey:aLeague.name]){
+            
+            aLeague.name = [NSString stringWithFormat:@"%@ (Duplicate)",aLeague.name];
+            PXPLog(@"Warning Duplicate League: %@",aLeague.name);
+            NSLog(@"Warning Duplicate League: %@",aLeague.name);
+        }
         [leaguePool setObject:aLeague forKey:aLeague.name];
 
         [leagueTempHIDPool setObject:aLeague forKey:aLeague.hid];
     }
     
-    
-    
+    NSLog(@"Leagues =============================== %lu = %lu ",(unsigned long)[leaguePool count] , (unsigned long)[leagueTempHIDPool count]);
+    NSLog(@" ");
+    NSLog(@"Building Teams ===============================");
     // Build Teams
     NSMutableDictionary * teamTempHIDPool = [[NSMutableDictionary alloc]init];
     NSArray             * rawTeams          = [[results objectForKey:@"teams"]allValues];
@@ -1631,20 +1639,44 @@
         lTeam.sport         = tData[@"sport"];
         lTeam.txt_name      = tData[@"txt_name"];
     
+        if ([lTeam.name isEqualToString: @"Bayonne"]){
+        
+        }
         League * owningLeague = (League *)[leagueTempHIDPool objectForKey:lHID];
+        if (!owningLeague) {
+            owningLeague = [[League alloc]init];
+            owningLeague.name  = @"Teams Has No League...";
+            owningLeague.hid   = lHID;
+            owningLeague.sport = lTeam.sport;
+            
+//            [leagueTempHIDPool setObject:owningLeague forKey:lHID];
+//            [leaguePool setObject:owningLeague forKey:owningLeague.name];
+//            NSLog(@"Team has no League, making a League: %@",lTeam.name);
+              NSLog(@"Team has no League: %@",lTeam.name);
+        }
+        
+        
         [owningLeague addTeam:lTeam];
         [teamTempHIDPool setObject:lTeam forKey:lTeam.hid];
     }
     
+    NSLog(@"Teams =============================== %lu = %lu ",(unsigned long)[rawTeams count] , (unsigned long)[teamTempHIDPool count]);
+    NSLog(@" ");
+    NSLog(@"Building Players ===============================");
     // build players
     
     NSArray             * rawTeamSetup          = [[results objectForKey:@"teamsetup"]allValues];
+    NSInteger playerCount = 0;
     for (NSArray * pList in rawTeamSetup) {
         
         // each item in the Array should all be the same team
         NSString    * tHID      = pList[0][@"team"];
         LeagueTeam * owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+        
+        
+        
         for (NSDictionary * pData in pList) {
+            playerCount++;
             TeamPlayer * aPlayer    = [[TeamPlayer alloc]init];
             aPlayer.jersey          = [pData[@"jersey"]stringValue];
             aPlayer.line = [pData objectForKey:@"line"];
@@ -1654,13 +1686,30 @@
             aPlayer.role            = pData[@"role"];
             
             tHID      = pData[@"team"];
+            if ([tHID isEqualToString: @"2a5ac580e608daa6d2cd4b6c20326e1518baadd5"]){
+                
+            }
             owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+            if (!owningTeam)  {
+
+                owningTeam =  [[LeagueTeam alloc]init];
+                owningTeam.name = @"NO NAME BRAND";
+                owningTeam.hid  = tHID;
+                owningTeam.extra         = @"";
+                owningTeam.sport         = @"Reading";
+                owningTeam.txt_name      = @"NO_NAME_BRAND";
+                
+//                [teamTempHIDPool setObject:owningTeam forKey:tHID];
+//                NSLog(@"Player does not have a team, Making a new one");
+                 NSLog(@"Player does not have a team %@",tHID);
+            }
             [owningTeam addPlayer:aPlayer];
             
-            NSLog(@"");
+           
         }
+//           NSLog(@"%@ \tTeams have %lu players",owningTeam.name,(unsigned long)[owningTeam.players count]);
     }
-    
+    NSLog(@"players =============================== %lu",(long)playerCount);
     
     self.encoderLeagues = [leaguePool copy];
     
