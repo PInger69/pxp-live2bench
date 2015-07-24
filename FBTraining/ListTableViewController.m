@@ -439,8 +439,7 @@
         ListViewCell *lastSelectedCell = (ListViewCell*)[self.tableView cellForRowAtIndexPath: self.previouslySelectedIndexPath];
         lastSelectedCell.selected = NO;
         
-        NSArray *arrayToRemove = [NSArray array];
-        arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         [self.arrayOfCollapsableIndexPaths removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
         

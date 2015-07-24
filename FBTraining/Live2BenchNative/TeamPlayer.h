@@ -10,6 +10,8 @@
 
 @class LeagueTeam;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TeamPlayer : NSObject
 @property (nonatomic,strong) NSString   * jersey;
 @property (nonatomic,strong) NSString   * line;
@@ -18,8 +20,9 @@
 @property (nonatomic,strong) NSString   * role;
 @property (nonatomic,weak)   LeagueTeam * team;
 
+NS_ASSUME_NONNULL_END
 
 // This returns a primmative dict ready for json
--(NSDictionary*)asDictionary;
+- (nonnull NSDictionary *)asDictionary;
 
 @end

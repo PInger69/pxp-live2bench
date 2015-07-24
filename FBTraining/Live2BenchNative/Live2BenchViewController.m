@@ -816,6 +816,8 @@ static void * eventContext      = &eventContext;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     [CustomAlertView removeAll];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];

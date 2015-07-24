@@ -376,20 +376,28 @@
     
 }
 
-+(NSString*)myWifiName
++ (NSString *)myWifiName
 {
     CFArrayRef myArray = CNCopySupportedInterfaces();
     // Get the dictionary containing the captive network infomation
     if (myArray) {
-        CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
-        //    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
-        NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
-        NSString* ssid = [dict objectForKey:@"SSID"];
-        //    NSLog(@"network name: %@",ssid);
+        CFStringRef inferfaceName = CFArrayGetValueAtIndex(myArray, 0);
+        CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(inferfaceName);
+        
+        NSString *ssid = nil;
+        
+        if (captiveNtwrkDict) {
+            CFStringRef key = CFSTR("SSID");
+            ssid = (__bridge NSString *) CFDictionaryGetValue(captiveNtwrkDict, key);
+            CFRelease(key);
+            CFRelease(captiveNtwrkDict);
+        }
+        
         if(!ssid){
             ssid = @"Unavailable";
         }
         
+        CFRelease(myArray);
         return ssid;
     }
     
@@ -543,7 +551,6 @@
         }
     }
     
-    CFRelease(reachability);
     return NO;
     
     //    return [uController hasConnectivity];

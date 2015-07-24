@@ -1647,6 +1647,7 @@
         for (NSDictionary * pData in pList) {
             TeamPlayer * aPlayer    = [[TeamPlayer alloc]init];
             aPlayer.jersey          = [pData[@"jersey"]stringValue];
+            aPlayer.line = [pData objectForKey:@"line"];
             aPlayer.line            = pData[@"line"];
             aPlayer.player          = pData[@"player"];
             aPlayer.position        = pData[@"position"];

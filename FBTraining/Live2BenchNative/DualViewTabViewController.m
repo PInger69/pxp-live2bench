@@ -298,6 +298,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     [self updateSideTags];
     
     self.timeLabel.text = @"00:00:00";
@@ -353,6 +355,7 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     
     self.resumeRate = self.mainPlayer.rate;
     self.resumeTime = self.mainPlayer.currentTime;

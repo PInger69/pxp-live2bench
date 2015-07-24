@@ -110,8 +110,8 @@ int viewWillAppearCalled;
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"My Clip", nil) imageName:@"myClipTab"];
+        externalControlScreen = _appDel.screenController;
     }
-    externalControlScreen = _appDel.screenController;
     return self;
 }
 

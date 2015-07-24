@@ -122,14 +122,12 @@
         _liveButton = [[LiveButton alloc] initWithFrame:CGRectMake(liveButtonX,liveButtonY, liveButtonWidth, liveButtonHeight)];
         [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        CGRect screenBounds = self.container.bounds;
-        
         CGFloat playerWidth = 1024.0, playerHeight = playerWidth / (16.0 / 9.0);
         CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
         
         self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
         
-        screenBounds = CGRectMake(0, 0, 1024, 768);
+        CGRect screenBounds = CGRectMake(0, 0, 1024, 768);
         NSDictionary *fullScreenFramesParts = @{
                                                 @"light" : [NSValue valueWithCGRect:CGRectMake(screenBounds.size.width-32,
                                                                                                60,
