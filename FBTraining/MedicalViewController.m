@@ -158,6 +158,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
         [self.view addSubview:self.container];
         
@@ -171,6 +172,7 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
 }
 
 - (void)setActiveTagName:(nullable NSString *)activeTagName {
@@ -181,6 +183,10 @@
     if (self.recordButton.enabled && !activeTagName) {
         self.recordButton.enabled = NO;
     }
+}
+
+- (void)clipCanceledHandler:(NSNotification *)note {
+    self.telestrationViewController.telestration = nil;
 }
 
 - (void)sideTagsReady:(NSNotification *)note {

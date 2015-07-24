@@ -235,6 +235,7 @@ static void * eventContext      = &eventContext;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SET_PLAYER_FEED object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
 }
 
 #pragma mark- Encoder Observers
@@ -1097,6 +1098,18 @@ static void * eventContext      = &eventContext;
 
 - (NSTimeInterval)currentTimeInSeconds {
     return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
+}
+
+- (void)setVideoPlayer:(UIViewController<PxpVideoPlayerProtocol> *)videoPlayer {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:videoPlayer];
+    
+    _videoPlayer = videoPlayer;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:videoPlayer];
+}
+
+- (void)clipCanceledHandler:(NSNotification *)note {
+    self.telestrationViewController.telestration = nil;
 }
 
 @end
