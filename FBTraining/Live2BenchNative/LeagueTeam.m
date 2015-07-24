@@ -10,37 +10,37 @@
 #import "TeamPlayer.h"
 
 @implementation LeagueTeam
+{
+    __nonnull NSMutableDictionary *_players;
+}
 
-@synthesize extra = _extra;
-@synthesize hid = _hid;
-@synthesize name = _name;
-@synthesize sport = _sport;
-@synthesize txt_name = _txt_name;
-@synthesize league = _league;
 @synthesize players = _players;
 
-- (instancetype)init
+- (nonnull instancetype)init
 {
     self = [super init];
     if (self) {
-        
+        _extra = @"";
+        _name = @"";
+        _sport = @"";
+        _txt_name = @"";
+        _league = nil;
+        _players = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
--(void)addPlayer:(TeamPlayer*)player
+- (void)addPlayer:(nonnull TeamPlayer *)player
 {
-
-    NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:_players];
+    if (player.team) {
+        [player.team->_players removeObjectForKey:player.jersey];
+    }
+    
+    _players[player.jersey] = player;
     player.team = self;
-    [temp setObject:player forKey:player.jersey];
-    _players = [temp copy];
-
-
-
 }
 
--(NSDictionary*)asDictionary
+- (nonnull NSDictionary *)asDictionary
 {
     NSDictionary * dict = @{
                             @"extra"    : _extra,
@@ -52,5 +52,11 @@
                             };
     return dict;
 }
+
+-(NSInteger)playerCount
+{
+    return [[_players allValues] count];
+}
+
 
 @end

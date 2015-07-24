@@ -122,14 +122,12 @@
         _liveButton = [[LiveButton alloc] initWithFrame:CGRectMake(liveButtonX,liveButtonY, liveButtonWidth, liveButtonHeight)];
         [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        CGRect screenBounds = self.container.bounds;
-        
         CGFloat playerWidth = 1024.0, playerHeight = playerWidth / (16.0 / 9.0);
         CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
         
         self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
         
-        screenBounds = CGRectMake(0, 0, 1024, 768);
+        CGRect screenBounds = CGRectMake(0, 0, 1024, 768);
         NSDictionary *fullScreenFramesParts = @{
                                                 @"light" : [NSValue valueWithCGRect:CGRectMake(screenBounds.size.width-32,
                                                                                                60,
@@ -502,7 +500,14 @@
 - (void)didSelectTag:(nonnull Tag *)tag source:(nonnull NSString *)source {
     Feed *feed = tag.event.feeds[source] ? tag.event.feeds[source] : tag.event.feeds.allValues.firstObject;
     self.telestrationViewController.telestration = tag.telestration;
-    [self.videoPlayer playClipWithFeed:feed andTimeRange:CMTimeRangeMake(CMTimeMake(tag.startTime, 1), CMTimeMake(tag.duration, 1))];
+    
+    if (tag.telestration.isStill) {
+        [self.videoPlayer cancelClip];
+        [self.videoPlayer pause];
+        [self.videoPlayer seekToInSec:tag.telestration.thumbnailTime];
+    } else {
+        [self.videoPlayer playClipWithFeed:feed andTimeRange:CMTimeRangeMake(CMTimeMake(tag.startTime, 1), CMTimeMake(tag.duration, 1))];
+    }
     
     [self setShowsTeleSelectMenu:NO animated:YES];
 }

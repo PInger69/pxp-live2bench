@@ -509,7 +509,7 @@ NSMutableArray *oldEventNames;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
+    [super viewWillAppear:animated];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){
@@ -2127,9 +2127,6 @@ NSMutableArray *oldEventNames;
         return;
     }
 
-
-    int newDuration = tagToBeModified.duration + 5;
-
     float startTime = tagToBeModified.startTime;
     
     float endTime = startTime + tagToBeModified.duration;
@@ -2152,7 +2149,7 @@ NSMutableArray *oldEventNames;
     
         }
         //get the new duration
-        newDuration = endTime - startTime;
+        int newDuration = newDuration = endTime - startTime;
     if (newDuration > tagToBeModified.duration) {
         tagToBeModified.duration = newDuration;
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tagToBeModified];
@@ -2163,6 +2160,8 @@ NSMutableArray *oldEventNames;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     [componentFilter close:YES];
     [self.dismissFilterButton removeFromSuperview];
     
@@ -2377,17 +2376,6 @@ NSMutableArray *oldEventNames;
 //after finish commenting, touch any other part of the view except commentTextView, will resign the keyboard
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-}
-
-
-
-- (void)didReceiveMemoryWarning
-{
-    /*
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
-    [super didReceiveMemoryWarning];
-    if ([self.view window] == nil) self.view = nil;
-     */
 }
 
 /*-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {

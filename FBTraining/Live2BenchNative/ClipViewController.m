@@ -526,6 +526,8 @@ static void * encoderTagContext = &encoderTagContext;
 ///NOTE: when filterbox.view is all the way up, customer goes to another screen and comes back, filterbox.view cannot be interacted with
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
+    
     [componentFilter close:YES];
     [self.dismissFilterButton removeFromSuperview];
     

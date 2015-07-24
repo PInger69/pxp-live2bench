@@ -40,7 +40,6 @@
     CustomLabel *_subLabel;
     NSMutableArray *_cellList;
     NSArray *_playerList;
-    BOOL _isDuration;
     
     id periodBoundaryObserver;
     UIColor *tintColor;

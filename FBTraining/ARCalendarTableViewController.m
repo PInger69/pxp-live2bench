@@ -577,8 +577,7 @@
     
     if(![indexPath isEqual:self.lastSelectedIndexPath])
     {
-        NSArray *arrayToRemove = [NSArray array];
-        arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
         if ([event.feeds allValues].count > 1) {

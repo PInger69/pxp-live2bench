@@ -126,14 +126,6 @@
     [super viewDidAppear:animated];
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
-
-// return controll bar back to normal
-    // set touch areas
-
-}
-
 
 -(Slomo*)_makeSlomo:(UIViewController <PxpVideoPlayerProtocol>*)vp
 {
@@ -155,8 +147,7 @@
 
 -(BorderButton *)_makeContinueButton
 {
-    BorderButton * btn       = [[BorderButton alloc]init];
-    btn = [BorderButton buttonWithType:UIButtonTypeCustom];
+    BorderButton *btn = [BorderButton buttonWithType:UIButtonTypeCustom];
     [btn setFrame:CGRectMake( (CGRectGetMidX(screenBounds)-(130/2))-180 ,controlOffsetY+10, 130, 30)];
     [btn setContentMode:UIViewContentModeScaleAspectFill];
     [btn setBackgroundImage:[UIImage imageNamed:@"continue_unselected.png"] forState:UIControlStateNormal];
@@ -262,8 +253,7 @@
 
 -(BorderButton *)_makeTeleSaveButton
 {
-    BorderButton * btn       = [[BorderButton alloc]init];
-    btn = [BorderButton buttonWithType:UIButtonTypeCustom];
+    BorderButton *btn = [BorderButton buttonWithType:UIButtonTypeCustom];
     [btn setFrame:CGRectMake(377.0f-10, 700.0f, 123.0f, 33.0f)];
     [btn setTitle:NSLocalizedString(@"Save",nil) forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(_saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -272,8 +262,7 @@
 
 -(BorderButton *)_makeTeleClearButton
 {
-    BorderButton * btn       = [[BorderButton alloc]init];
-    btn = [BorderButton buttonWithType:UIButtonTypeCustom];
+    BorderButton *btn = [BorderButton buttonWithType:UIButtonTypeCustom];
     [btn setFrame:CGRectMake(500+10, 700.0f,123.0f, 33.0f)];
     [btn setTitle:NSLocalizedString(@"Close",nil) forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(_clearButtonClicked) forControlEvents:UIControlEventTouchUpInside];

@@ -123,9 +123,9 @@ PopTableController * myTableViewController;
 
 - (id)init
 {
-    myTableViewController   = [[PopTableController alloc]init];
     self = [super initWithContentViewController:myTableViewController];
     if (self) {
+        myTableViewController   = [[PopTableController alloc]init];
         myTableView                     = [[UITableView alloc] initWithFrame:myTableViewController.view.bounds style:UITableViewStylePlain];
         myTableView.backgroundColor     = [UIColor whiteColor];
         [myTableView setSeparatorInset:UIEdgeInsetsMake(0.0f, 15.0f, 0.0f, 15.0f)];

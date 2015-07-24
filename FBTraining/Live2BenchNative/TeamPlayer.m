@@ -10,15 +10,7 @@
 #import "LeagueTeam.h"
 @implementation TeamPlayer
 
-@synthesize jersey	    = _jersey;
-@synthesize line	    = _line;
-@synthesize player	    = _player;
-@synthesize position	= _position;
-@synthesize role	    = _role;
-@synthesize team	    = _team;
-
-
--(NSDictionary*)asDictionary
+- (nonnull NSDictionary *)asDictionary
 {
     NSDictionary * dict = @{
                             @"jersey"   : _jersey,

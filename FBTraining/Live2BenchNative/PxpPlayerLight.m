@@ -56,6 +56,7 @@
     CGPathAddEllipseInRect(path, NULL, CGRectMake(0, 0, size, size));
     
     self.layer.path = path;
+    CGPathRelease(path);
 }
 
 /*

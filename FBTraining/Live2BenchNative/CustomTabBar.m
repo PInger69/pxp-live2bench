@@ -18,7 +18,6 @@
 #import "ListViewController.h"
 #import "BookmarkViewController.h"
 #import "TabBarButton.h"
-#import "Reachability.h"
 #import "UploadButton.h"
 #import "LoginViewController.h"
 #import "CustomTabBar.h"
@@ -197,7 +196,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     [self createTabButtons];
 }
 

@@ -123,14 +123,14 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self addEncoder];
-    [super viewDidAppear:animated];
 }
 
--(void)viewWillDisappear:(BOOL)animated{
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self removeEncoder];
-    [super viewDidDisappear:animated];
 }
 
 

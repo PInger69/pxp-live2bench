@@ -11,7 +11,8 @@
 #import "Clip.h"
 #import "LocalEncoder.h"
 #import "Tag.h"
-
+#import "LeagueTeam.h"
+#import "TeamPlayer.h"
 
 #define LOCAL_PLIST  @"EventsHid.plist"
 #define VIDEO_EXT    @"mp4"
@@ -105,14 +106,10 @@ static LocalMediaManager * instance;
                     anEvent.isBuilt             = YES;
                     anEvent.downloadedSources   = [[self listDownloadSourcesFor:anEvent] mutableCopy];
                     
-                    /*NSArray *tags    = [anEvent.rawData[@"tags"] allValues];
-                    NSMutableArray *newTags = [[NSMutableArray alloc]init];
-                    for (NSDictionary *tagDic in tags) {
-                        Tag *newTag = [[Tag alloc] initWithData:tagDic event:anEvent];
-                        [newTags addObject:newTag];
-                    }
-                    
-                    [anEvent setTags:newTags];*/
+                
+                if ([dict objectForKey:@"savedTeamData"]){
+                   anEvent.teams =  [self parsedTeamData:[dict objectForKey:@"savedTeamData"]];
+                }
                 
                     NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
                     [_allEvents setValue: eventFinal forKey:anEvent.name];// this is the new kind of build that events have their own feed
@@ -579,11 +576,45 @@ static LocalMediaManager * instance;
     localEvent.local = true;
     //localEvent.tags = encoderEvent.tags;
     //localEvent.isBuilt = true;
+    
+    [encoderEvent.teams allKeys];
+    
 
-// Take data from the normal event and add it to local
+    // This is all the pooled data from the team data added to the savePlist
+    // this is parsing out the data the data the same way that its being recieved from the encoder
+    NSMutableDictionary * teamSaveData = [[NSMutableDictionary  alloc]init];
+    [teamSaveData setObject:    [NSMutableDictionary new] forKey:@"leagues"];
+    [teamSaveData setObject:    [NSMutableDictionary new] forKey:@"teams"];
+    [teamSaveData setObject:    [NSMutableDictionary new] forKey:@"teamsetup"];
+    
+    for (NSString *key in [encoderEvent.teams allKeys]) {
+        
+        LeagueTeam * team =  (LeagueTeam *) [encoderEvent.teams objectForKey:key];
+
+        [teamSaveData[@"leagues"] setObject:[team.league asDictionary]  forKey:team.league.hid]; // i know that this will get overwriten for each team because they are both in the same league
+        
+        [teamSaveData[@"teams"] setObject:[team asDictionary]  forKey:team.hid];
+        
+        
+        NSMutableArray * playerPool = [NSMutableArray new];
+        NSArray * playersInTeam     = [team.players allValues];
+        for (TeamPlayer* player in playersInTeam) {
+            [playerPool addObject:[player asDictionary]];
+        }
+        [teamSaveData[@"teamsetup"] setObject:playerPool  forKey:team.hid];
+        
+         NSLog(@"%@ Teams have %lu",team.name,(unsigned long)[team.players count]);
+    }
     
     
-    [localEvent.rawData writeToFile:plistNamePath atomically:YES];
+    NSMutableDictionary * combinedTeamData = [NSMutableDictionary dictionaryWithDictionary:localEvent.rawData];
+    
+    
+   
+    
+    localEvent.teams = [self parsedTeamData:localEventRawData]; // add teams to the new local event
+     [combinedTeamData setObject:teamSaveData forKey:@"savedTeamData"];
+    [combinedTeamData writeToFile:plistNamePath atomically:YES];
     
     [eventDic setObject:localEvent forKey:@"local"];
     [eventDic setObject:encoderEvent forKey:@"non-local"];
@@ -691,6 +722,99 @@ static LocalMediaManager * instance;
     }
     return [collection copy];
 }
+
+// This returns @{@"homeTeam":<LeagueTeam>,@"visitTeam":<LeagueTeam>} // to be added to the event
+// This is basically the same as in the Encoder class. One day I would like to make one or two classes that focus on parsing
+-(NSDictionary*)parsedTeamData:(NSDictionary*)dict
+{
+
+    NSMutableDictionary * leaguePool        = [[NSMutableDictionary alloc]init]; // this is the final
+    NSMutableDictionary * leagueTempHIDPool = [[NSMutableDictionary alloc]init];
+    NSArray * rawleagues = [[dict objectForKey:@"leagues"]allValues];
+    
+    for (NSDictionary * lData in rawleagues) {
+        League * aLeague    = [[League alloc]init];
+        aLeague.hid         = lData[@"hid"];
+        aLeague.name        = lData[@"name"];
+        aLeague.shortName   = lData[@"short"];
+        aLeague.sport       = lData[@"sport"];
+        
+        
+        [leaguePool setObject:aLeague forKey:aLeague.name];
+        
+        [leagueTempHIDPool setObject:aLeague forKey:aLeague.hid];
+    }
+    
+    
+    
+    // Build Teams
+    NSMutableDictionary * teamTempHIDPool = [[NSMutableDictionary alloc]init];
+    NSArray             * rawTeams          = [[dict objectForKey:@"teams"]allValues];
+    
+    for (NSDictionary * tData in rawTeams) {
+        LeagueTeam  * lTeam = [[LeagueTeam alloc]init];
+        NSString    * lHID  = tData[@"league"];
+        lTeam.extra         = tData[@"extra"];
+        lTeam.hid           = tData[@"hid"];
+        lTeam.name          = tData[@"name"];
+        lTeam.sport         = tData[@"sport"];
+        lTeam.txt_name      = tData[@"txt_name"];
+        
+        League * owningLeague = (League *)[leagueTempHIDPool objectForKey:lHID];
+        [owningLeague addTeam:lTeam];
+        [teamTempHIDPool setObject:lTeam forKey:lTeam.hid];
+    }
+    
+    // build players
+    
+    NSArray             * rawTeamSetup          = [[dict objectForKey:@"teamsetup"]allValues];
+    for (NSArray * pList in rawTeamSetup) {
+        
+        // each item in the Array should all be the same team
+        NSString    * tHID      = pList[0][@"team"];
+        LeagueTeam * owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+        for (NSDictionary * pData in pList) {
+            TeamPlayer * aPlayer    = [[TeamPlayer alloc]init];
+            aPlayer.jersey          = pData[@"jersey"];
+            aPlayer.line            = pData[@"line"];
+            aPlayer.player          = pData[@"player"];
+            aPlayer.position        = pData[@"position"];
+            aPlayer.role            = pData[@"role"];
+            
+            tHID      = pData[@"team"];
+            owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
+            [owningTeam addPlayer:aPlayer];
+        }
+    }
+    
+    
+    // populating teams based off data
+    
+    NSDictionary * dic = [[dict[@"leagues"]allValues]firstObject];
+    NSString * lName = [dic objectForKey:@"name"] ;
+    League      * league        = [leaguePool objectForKey:lName];
+    LeagueTeam  * homeTeam      = [league.teams objectForKey:dict[@"homeTeam"]];
+    LeagueTeam  * visitTeam     = [league.teams objectForKey:dict[@"visitTeam"]];
+    
+    if ([league.teams count]==1){
+        homeTeam = visitTeam = [[league.teams allValues]firstObject];
+    }
+    
+    if (!homeTeam) {
+        homeTeam     = [LeagueTeam new];
+        PXPLog(@"homeTeam: %@ is not found in League: %@",dict[@"homeTeam"],dict[@"league"]);
+    }
+    if (!visitTeam) {
+        visitTeam   = [LeagueTeam new];
+        PXPLog(@"visitTeam: %@ is not found in League: %@",dict[@"visitTeam"],dict[@"league"]);
+    }
+
+    
+    
+
+    return @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
+}
+
 
 
 @end
