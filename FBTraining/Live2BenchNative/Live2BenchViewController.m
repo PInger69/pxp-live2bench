@@ -527,7 +527,7 @@ static void * eventContext      = &eventContext;
         
         [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
         [weakSelf displayLable];
-         [self addBottomViewController];
+        [weakSelf addBottomViewController];
         [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
                                                          userInfo:@{@"tabName":@"Live2Bench"}];
     }];

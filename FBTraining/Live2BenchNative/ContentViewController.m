@@ -8,16 +8,17 @@
 
 #import "ContentViewController.h"
 
-@interface ContentViewController (){
-    UIScrollView *_scrollView;
-    //NSArray *_playerList;
-    NSMutableArray *_cellList;
-}
+@interface ContentViewController ()
+
+@property (strong, nonatomic, nonnull) UIScrollView *scrollView;
 
 @end
 
 @implementation ContentViewController
-@synthesize scrollView = _scrollView;
+{
+    NSMutableArray *_cellList;
+}
+
 @synthesize playerList = _playerList;
 //@synthesize collectionView=_collectionView;
 //@synthesize gameItems=_gameItems;
