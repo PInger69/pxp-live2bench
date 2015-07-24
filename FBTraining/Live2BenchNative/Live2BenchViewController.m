@@ -893,24 +893,34 @@ static void * eventContext      = &eventContext;
     
 
     if (button.mode == SideTagButtonModeRegular) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
-         @"name":button.titleLabel.text,
-         @"time":[NSString stringWithFormat:@"%f",currentTime],
-         @"period":[bottomViewController currentPeriod]
-         }];
+        
+        NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                         @"name":button.titleLabel.text,
+                                                                                         @"time":[NSString stringWithFormat:@"%f",currentTime]
+                                                                                         }];
+        if (bottomViewController && [bottomViewController respondsToSelector:@selector(currentPeriod)]) {
+            [userInfo setObject:[bottomViewController currentPeriod] forKey:@"period"];
+        }
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:[userInfo copy]];
+        
     } else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
         [_tagButtonController disEnableButton];
         [_tagButtonController onEventChange:_currentEvent];
         //[_tagButtonController unHighlightButton:button];
         button.isOpen = YES;
         // Open Duration Tag
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
-                                                                                                          @"name":button.titleLabel.text,
-                                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime],
-                                                                                                          @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
-                                                                                                          @"dtagid": button.durationID,
-                                                                                                          @"period": [bottomViewController currentPeriod]
-                                                                                                          }];
+        
+        NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                         @"name":button.titleLabel.text,
+                                                                                         @"time":[NSString stringWithFormat:@"%f",currentTime],
+                                                                                         @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+                                                                                         @"dtagid": button.durationID
+                                                                                         }];
+        if (bottomViewController && [bottomViewController respondsToSelector:@selector(currentPeriod)]) {
+            [userInfo setObject:[bottomViewController currentPeriod] forKey:@"period"];
+        }
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:userInfo];
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
         [_tagButtonController onEventChange:nil];
         // Close Duration Tag

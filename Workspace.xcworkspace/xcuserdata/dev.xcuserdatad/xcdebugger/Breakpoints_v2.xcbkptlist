@@ -585,8 +585,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "714"
             endingLineNumber = "714"
-            landmarkName = "-onCloseTeleView:"
-            landmarkType = "5">
+            landmarkName = "@implementation Live2BenchViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
