@@ -51,10 +51,10 @@
     //UIView *_segmentControlView;
 }
 
--(id)init;
--(void)update;
--(void)postTagsAtBeginning;
--(NSString *)currentPeriod;
+//-(id)init;
+//-(void)update;
+//-(void)postTagsAtBeginning;
+//-(NSString *)currentPeriod;
 //-(id)initWithController:(Live2BenchViewController *)l2b;
 //-(void)updateArray:(NSMutableArray*)arr index:(int)i;
 //-(void)sendTagInfo:(NSDictionary *)dict;

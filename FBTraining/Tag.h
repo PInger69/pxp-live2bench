@@ -63,10 +63,17 @@ typedef NS_ENUM (NSInteger,TagType){
     TagTypeHockeyOppDLineStop      = 12,
     TagTypeHockeyStrengthStart     = 13,
     TagTypeHockeyStrengthStop      = 14,
-    TagTypeSoccerHalfStart         = 15,
+    
+    /*TagTypeSoccerHalfStart         = 15,
     TagTypeSoccerHalfStop          = 16,
     TagTypeSoccerZoneStart         = 17,
-    TagTypeSoccerZoneStop          = 18,
+    TagTypeSoccerZoneStop          = 18,*/
+    
+    TagTypeSoccerHalfStart         = 17,
+    TagTypeSoccerHalfStop          = 18,
+    TagTypeSoccerZoneStart         = 15,
+    TagTypeSoccerZoneStop          = 16,
+    
     TagTypeFootballDownStart       = 19,
     TagTypeFootballDownStop        = 20,
     TagTypeFootballQuarterStart    = 21,

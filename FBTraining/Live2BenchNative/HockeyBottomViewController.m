@@ -11,6 +11,9 @@
 #import "Tag.h"
 #import "Event.h"
 #import "ContentViewController.h"
+#import "LeagueTeam.h"
+#import "UserCenter.h"
+#import "TeamPlayer.h"
 
 @interface HockeyBottomViewController ()
 
@@ -20,25 +23,38 @@
     UIView *_segmentControlView;
     UIView *_leftView;
     UIView *_rightView;
+    
     ContentViewController *_playerDrawerLeft;
-    ContentViewController *_playerDrawerRight;
     UIImageView *_leftArrow;
+    
+    ContentViewController *_playerDrawerRight;
     UIImageView *_rightArrow;
-    UISegmentedControl *_periodSegmentedControl;
-    UISegmentedControl *_homeSegControl;
-    UISegmentedControl *_awaySegControl;
+    
+    NSArray *playerList;
+    NSDictionary *lineDic;
+    BOOL stopUpdateOffense;
+    BOOL stopUpdateDefense;
+    
     CustomLabel *_periodLabel;
+    NSArray *periodValueArray;
+    UISegmentedControl *_periodSegmentedControl;
+    
     CustomLabel *_strengthLabel;
     CustomLabel *_strengthHomeLabel;
     CustomLabel *_strengthAwayLabel;
+    NSArray *strengthValueArray;
+    UISegmentedControl *_homeSegControl;
+    UISegmentedControl *_awaySegControl;
+    
     CustomLabel *_offenseLabel;
     CustomLabel *_defenseLabel;
     NSMutableDictionary *offenseButton;
     NSMutableDictionary *defenseButton;
-    NSArray *periodValueArray;
-    NSArray *strengthValueArray;
+    
     id periodBoundaryObserver;
     UIColor *tintColor;
+    
+   
 }
 
 @synthesize currentEvent = _currentEvent;
@@ -131,8 +147,13 @@
         
         self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
         tintColor = PRIMARY_APP_COLOR;
+        
+        
         offenseButton = [[NSMutableDictionary alloc]init];
         defenseButton = [[NSMutableDictionary alloc]init];
+        LeagueTeam *team = [UserCenter getInstance].taggingTeam;
+        lineDic = [self populateLine:[team.players allValues]];
+        playerList = [self populatePlayerList:[team.players allValues]] ;
         
         // Period Setup
         _periodLabel = [CustomLabel labelWithStyle:CLStyleBlack];
@@ -253,13 +274,13 @@
         [_leftView addSubview:_leftArrow];
         [_leftArrow setHidden:true];
         
-        _playerDrawerLeft = [[ContentViewController alloc] initWithFrame:CGRectMake(40, O1.center.y+37, 300, 110)];
+        _playerDrawerLeft = [[ContentViewController alloc] initWithFrame:CGRectMake(40, O1.center.y+37, 300, 110) playerList:playerList];
         [_playerDrawerLeft.view setBackgroundColor:[UIColor clearColor]];
         [_playerDrawerLeft.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
         [_playerDrawerLeft.view.layer setBorderWidth:1.0f];
         [_playerDrawerLeft.view setHidden:true];
         [_leftView addSubview:_playerDrawerLeft.view];
-        //_playerDrawerLeft.playerList = _currentEvent.teams
+        //_playerDrawerLeft.playerList = playerList;
         
         _defenseLabel = [CustomLabel labelWithStyle:CLStyleBlack];
         _defenseLabel.frame = CGRectMake(110.0f, 0.0f, 60.0f, 44.0f);
@@ -321,20 +342,70 @@
         [_rightView addSubview:_rightArrow];
         [_rightArrow setHidden:true];
         
-        _playerDrawerRight = [[ContentViewController alloc] initWithFrame:CGRectMake(-5,D1.center.y+37,300,110)];
+        _playerDrawerRight = [[ContentViewController alloc] initWithFrame:CGRectMake(-5,D1.center.y+37,300,110) playerList:playerList];
         [_playerDrawerRight.view setBackgroundColor:[UIColor clearColor]];
         [_playerDrawerRight.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
         [_playerDrawerRight.view.layer setBorderWidth:1.0f];
         [_playerDrawerRight.view setHidden:true];
         [_rightView addSubview:_playerDrawerRight.view];
-        
+        //_playerDrawerRight.playerList = playerList;
 
-
+        stopUpdateOffense = false;
+        stopUpdateDefense = false;
     }
     return self;
 }
 
 #pragma mark - Helper Methods
+
+//Populate Offense and Defense Line
+-(NSDictionary*)populateLine:(NSArray*)players{
+    NSMutableArray *O1 = [[NSMutableArray alloc]init];
+    NSMutableArray *O2 = [[NSMutableArray alloc]init];
+    NSMutableArray *O3 = [[NSMutableArray alloc]init];
+    NSMutableArray *O4 = [[NSMutableArray alloc]init];
+    NSMutableArray *D1 = [[NSMutableArray alloc]init];
+    NSMutableArray *D2 = [[NSMutableArray alloc]init];
+    NSMutableArray *D3 = [[NSMutableArray alloc]init];
+    NSMutableArray *D4 = [[NSMutableArray alloc]init];
+    for (TeamPlayer *player in players) {
+        NSArray *words = [player.line componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"G,L"]];
+        if ([words[0] isEqualToString:@"O"] ) {
+            if ([words[1] isEqualToString:@"1"]) {
+                [O1 addObject:player.jersey];
+            }else if([words[1] isEqualToString:@"2"]){
+                [O2 addObject:player.jersey];
+            }else if ([words[1] isEqualToString:@"3"]){
+                [O3 addObject:player.jersey];
+            }else if ([words[1] isEqualToString:@"4"]){
+                [O4 addObject:player.jersey];
+            }
+        }else if ([words[0] isEqualToString:@"D"]){
+            if ([words[1] isEqualToString:@"1"]) {
+                [D1 addObject:player.jersey];
+            }else if ([words[1] isEqualToString:@"2"]){
+                [D2 addObject:player.jersey];
+            }else if ([words[1] isEqualToString:@"3"]){
+                [D3 addObject:player.jersey];
+            }else if ([words[1] isEqualToString:@"4"]){
+                [D4 addObject:player.jersey];
+            }
+        }
+    }
+    NSDictionary *offenseLine = @{@"1":O1,@"2":O2,@"3":O3,@"4":O4};
+    NSDictionary *defenseLine = @{@"1":D1,@"2":D2,@"3":D3,@"4":D4};
+    NSDictionary *final = @{@"offense":offenseLine,@"defense":defenseLine};
+    return final;
+}
+
+//Populate Player List with all Player jersey
+-(NSArray*)populatePlayerList:(NSArray *)players{
+    NSMutableArray *pleaseWork = [[NSMutableArray alloc]init];
+    for (TeamPlayer *player in players) {
+        [pleaseWork addObject:player.jersey];
+    }
+    return [pleaseWork copy];
+}
 
 // Pass the name of the tag you want and you will get the tag if it exists and get nill if it doesn't exist
 -(Tag *)checkTags:(NSString *)name{
@@ -352,7 +423,7 @@
     NSMutableDictionary *timeDicUnordered = [[NSMutableDictionary alloc]init];
     for (Tag *tag in _currentEvent.tags) {
         if (tag.type == type || tag.type == secondType) {
-            [timeDicUnordered setObject:tag.name forKey:[NSString stringWithFormat:@"%f",tag.time]];
+            timeDicUnordered[[NSNumber numberWithFloat:tag.time]] = tag.name;
         }
     }
     
@@ -364,13 +435,11 @@
     // populate the dic with all the times and names in order
     NSMutableArray *timeDicOrdered = [[NSMutableArray alloc]init];
     for (int i  = 0; i < timesArray.count; i++) {
-        //NSDictionary *dic = @{@"time":timesArray[i],@"name":[[timeDicUnordered allKeysForObject:timesArray[i]]firstObject]};
-        NSDictionary *dic = @{@"time":timesArray[i],@"name":[timeDicUnordered objectForKey:timesArray[i]]};
+        NSDictionary *dic = @{@"time":timesArray[i],@"name":timeDicUnordered[timesArray[i]]};
         [timeDicOrdered insertObject:dic atIndex:i];
     }
     
     return [timeDicOrdered copy];
-    
 }
 
 //Unhighlightt all Button
@@ -387,7 +456,6 @@
         button.backgroundColor = [UIColor clearColor];
     }
 }
-
 
 // Post tags at the very beginning of a new event
 -(void)postTagsAtBeginning{
@@ -441,6 +509,7 @@
     }];
 }
 
+// get Current Period
 -(NSString *)currentPeriod{
     NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeHockeyPeriodStart secondType:TagTypeHockeyPeriodStop];
@@ -563,7 +632,7 @@
     [_playerDrawerLeft.view setHidden:true];
     
     
-    if (![button isEqual:[offenseButton objectForKey:@"current"]]) {
+    if (![button isEqual:[offenseButton objectForKey:@"current"]] || stopUpdateOffense) {
         [self unHighlightOffenseButtons];
         button.backgroundColor = tintColor;
         button.selected = true;
@@ -574,10 +643,16 @@
 
     }
     
+    stopUpdateOffense = false;
+    
 }
 
 // Actually Update Offense Buttons
 -(void)updateOffenseButtons{
+    
+    if (stopUpdateOffense == true) {
+        return;
+    }
     
     NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeHockeyStartOLine secondType:TagTypeHockeyStopOLine];
@@ -603,7 +678,17 @@
 
 -(void)OffenseSwipe:(id)sender{
     
+    stopUpdateOffense = true;
+    
     CustomButton *button = (CustomButton*)sender;
+    
+    if (![button isEqual:[offenseButton objectForKey:@"current"]]) {
+    
+        [self unHighlightOffenseButtons];
+        button.backgroundColor = tintColor;
+        button.selected = true;
+        [offenseButton setValue:button forKey:@"current"];
+    }
     
     [_playerDrawerLeft.view setHidden:false];
     [_leftArrow setHidden:false];
@@ -615,7 +700,10 @@
                      }
                      completion:^(BOOL finished){ }];
     
+    NSArray *array = lineDic[@"offense"][button.titleLabel.text];
+    [_playerDrawerLeft selectPlayers:array];
 }
+
 
 #pragma mark - Defense Tags Related Methods
 
@@ -628,7 +716,7 @@
     [_playerDrawerRight.view setHidden:true];
     [_rightArrow setHidden:true];
     
-    if (![button isEqual:[defenseButton objectForKey:@"current"]]) {
+    if (![button isEqual:[defenseButton objectForKey:@"current"]] || stopUpdateDefense) {
         [self unHighlightDefenseButtons];
         button.backgroundColor = tintColor;
         button.selected = true;
@@ -639,10 +727,16 @@
         
     }
     
+    stopUpdateDefense = false;
+    
 }
 
 // Actually Update Defense Buttons
 -(void)updateDefenseButtons{
+    
+    if (stopUpdateDefense == true) {
+        return;
+    }
     
     NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeHockeyStartDLine secondType:TagTypeHockeyStopDLine];
@@ -668,7 +762,17 @@
 
 -(void)DefenseSwipe:(id)sender{
     
+    stopUpdateDefense = true;
+    
     CustomButton *button = (CustomButton*)sender;
+    
+    if (![button isEqual:[defenseButton objectForKey:@"current"]]) {
+        
+        [self unHighlightOffenseButtons];
+        button.backgroundColor = tintColor;
+        button.selected = true;
+        [defenseButton setValue:button forKey:@"current"];
+    }
     
     [_playerDrawerRight.view setHidden:false];
     [_rightArrow setHidden:false];
@@ -680,7 +784,11 @@
                      }
                      completion:^(BOOL finished){ }];
     
+    NSArray *array = lineDic[@"defense"][button.titleLabel.text];
+    [_playerDrawerRight selectPlayers:array];
 }
+
+
 
 
 //-(void)OffenseSwipe

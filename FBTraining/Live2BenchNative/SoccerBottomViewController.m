@@ -7,7 +7,9 @@
 //
 
 #import "SoccerBottomViewController.h"
-#import "NSArray+BinarySearch.h"
+//#import "NSArray+BinarySearch.h"
+#import "CustomLabel.h"
+#import "Tag.h"
 #define PLAYERBUTTON_X              190
 #define PLAYERBUTTON_Y              100
 #define PLAYERBUTTON_WIDTH           42
@@ -19,15 +21,218 @@
 
 @end
 
-@implementation SoccerBottomViewController
+@implementation SoccerBottomViewController{
+    
+    CustomLabel *_zoneLabel;
+    NSArray *zoneValueArray;
+    UISegmentedControl *_zoneSegmentedControl;
+    
+    CustomLabel *_halfLabel;
+    NSArray *periodValueArray;
+    UISegmentedControl *_periodSegmentedControl;
+    
+    
+    id periodBoundaryObserver;
+    UIColor *tintColor;
+}
 
-@synthesize live2BenchViewController;
-@synthesize periodSegmentedControl;
-@synthesize zoneSegmentedControl;
-@synthesize playerbuttonWasSelected;
-@synthesize responseData;
+@synthesize currentEvent = _currentEvent;
 
-- (id)initWithController:(Live2BenchViewController *)l2b
+
+-(id)init{
+    self = [super init];
+    
+    if (self) {
+        
+        self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
+        tintColor = PRIMARY_APP_COLOR;
+        
+        // Setup zone Lable
+        _zoneLabel = [CustomLabel labelWithStyle:CLStyleBlack];
+        _zoneLabel.frame = CGRectMake(0, 0, 80.0f, 30.0f);
+        [_zoneLabel setText:@"Zone"];
+
+        zoneValueArray = @[@"OFF.3RD",@"MID.3RD",@"DEF.3RD"];
+        _zoneSegmentedControl = [[UISegmentedControl alloc] initWithItems:zoneValueArray];
+        [_zoneSegmentedControl setFrame:CGRectMake(_zoneLabel.frame.origin.x, CGRectGetMaxY(_zoneLabel.frame), _zoneSegmentedControl.numberOfSegments*80.0f, 30.0f)];
+        [_zoneSegmentedControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
+        [_zoneSegmentedControl addTarget:self action:@selector(zoneValueChanged:) forControlEvents:UIControlEventValueChanged];
+        
+        
+        // Setup period Lable
+        float halfLabelX = CGRectGetMaxX(_zoneSegmentedControl.frame) + 80.0f;
+        float periodSegmentY = _zoneSegmentedControl.frame.origin.y;
+        
+        _halfLabel = [CustomLabel labelWithStyle:CLStyleBlack];
+        _halfLabel.frame = CGRectMake(halfLabelX, 0, 80.0f, 30.0f);
+        [_halfLabel setText:@"Half"];
+        
+        periodValueArray = @[@"1",@"2",@"EXTRA",@"PS"];
+        _periodSegmentedControl = [[UISegmentedControl alloc] initWithItems:periodValueArray];
+        [_periodSegmentedControl setFrame:CGRectMake(_halfLabel.frame.origin.x, periodSegmentY, _periodSegmentedControl.numberOfSegments*80.0f, 30.0f)];
+        [_periodSegmentedControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
+        [_periodSegmentedControl addTarget:self action:@selector(halfValueChanged:) forControlEvents:UIControlEventValueChanged];
+        
+        
+        // Base View
+        UIView *segmentControlView = [[UIView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - (_zoneSegmentedControl.numberOfSegments + _periodSegmentedControl.numberOfSegments + 1)*80.0f)/2, 20.0f, (_zoneSegmentedControl.numberOfSegments + _periodSegmentedControl.numberOfSegments + 1)*80.0f, 70.0f)];
+        segmentControlView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [self.view addSubview:segmentControlView];
+        [segmentControlView addSubview:_zoneLabel];
+        [segmentControlView addSubview:_zoneSegmentedControl];
+        [segmentControlView addSubview:_halfLabel];
+        [segmentControlView addSubview:_periodSegmentedControl];
+
+
+        
+    }
+    return self;
+}
+
+#pragma mark - Helper Methods
+// Pass the name of the tag you want and you will get the tag if it exists and get nill if it doesn't exist
+-(Tag *)checkTags:(NSString *)name{
+    for (Tag *tag in _currentEvent.tags) {
+        if ([tag.name isEqualToString:name]) {
+            return tag;
+        }
+    }
+    return nil;
+}
+
+// Get all the tags that was asked for in the order from highest time to lowest time as an array
+-(NSArray*)getTags:(TagType)type secondType:(TagType)secondType{
+    // Get a dictionary with all the times and names
+    NSMutableDictionary *timeDicUnordered = [[NSMutableDictionary alloc]init];
+    for (Tag *tag in _currentEvent.tags) {
+        if (tag.type == type || tag.type == secondType) {
+            timeDicUnordered[[NSNumber numberWithFloat:tag.time]] = tag.name;
+        }
+    }
+
+    // sort the times form smallest to biggest
+    NSSortDescriptor *highestToLowest = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO];
+    NSMutableArray *timesArray = [[NSMutableArray alloc]initWithArray:[timeDicUnordered allKeys]];
+    [timesArray sortUsingDescriptors:[NSArray arrayWithObject:highestToLowest]];
+    
+    // populate the dic with all the times and names in order
+    NSMutableArray *timeDicOrdered = [[NSMutableArray alloc]init];
+    for (int i  = 0; i < timesArray.count; i++) {
+        NSDictionary *dic = @{@"time":timesArray[i],@"name":timeDicUnordered[timesArray[i]]};
+        [timeDicOrdered insertObject:dic atIndex:i];
+    }
+    
+    return [timeDicOrdered copy];
+    
+}
+
+
+// Post tags at the very beginning of a new event
+-(void)postTagsAtBeginning{
+    if ([self getTags:TagTypeSoccerHalfStart secondType:TagTypeSoccerHalfStop].count == 0) {
+        NSDictionary *dic = @{@"name":@"1",@"period":@"1",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeSoccerHalfStart]};
+        _periodSegmentedControl.selectedSegmentIndex = 0;
+        [super postTag:dic];
+    }
+    
+    if ([self getTags:TagTypeSoccerZoneStart secondType:TagTypeSoccerZoneStop].count == 0) {
+        NSDictionary *dic = @{@"name":@"MID.3RD",@"line":@"MID.3RD",@"time":[NSString stringWithFormat:@"%f",0.0],@"type":[NSNumber numberWithInteger:TagTypeSoccerZoneStart],@"period":@"1"};
+        _zoneSegmentedControl.selectedSegmentIndex = 1;
+        [super postTag:dic];
+    }
+    
+}
+
+// add observer so the period segment get updated
+-(void)update{
+    [self updatePeriodSegment];
+    [self updateZoneSegment];
+    periodBoundaryObserver = [self.videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
+        [self updatePeriodSegment];
+        [self updateZoneSegment];
+    }];
+}
+
+// get Current Period
+-(NSString *)currentPeriod{
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSArray *array = [self getTags:TagTypeSoccerHalfStart secondType:TagTypeSoccerHalfStop];
+    
+    if (array.count > 0) {
+        NSNumber *startTime;
+        for (int i = 0; i < array.count; i++) {
+            startTime = array[i][@"time"];
+            if ( [time floatValue] >= [startTime floatValue] ) {
+                NSString *name = array[i][@"name"];
+                return name;
+            }
+        }
+        
+    }
+    return @"1";
+}
+
+#pragma mark - Half Tags Related Methods
+// Post half tag
+-(void)halfValueChanged:(UISegmentedControl *)segment{
+    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
+    
+    if (![self checkTags:name]) {
+        NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeSoccerHalfStart],@"time":[NSString stringWithFormat:@"%f",time]};
+        [super postTag:tagDic];
+    }
+
+}
+
+// Actually update the period segment
+-(void)updatePeriodSegment{
+    NSString *name = [self currentPeriod];
+    NSInteger index = [periodValueArray indexOfObject:name];
+    _periodSegmentedControl.selectedSegmentIndex = index;
+}
+
+
+#pragma mark - Zone Tags Related Methods
+// Post zone tag
+-(void)zoneValueChanged:(UISegmentedControl *)segment{
+    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    NSString *name = [zoneValueArray objectAtIndex:_zoneSegmentedControl.selectedSegmentIndex];
+    
+    NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeSoccerZoneStart],@"time":[NSString stringWithFormat:@"%f",time],@"line":name};
+    [super postTag:tagDic];
+}
+
+// Actually Update the zone segment
+-(void)updateZoneSegment{
+    
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSArray *array = [self getTags:TagTypeSoccerZoneStart secondType:TagTypeSoccerZoneStop];
+    
+    if (array.count > 0) {
+        NSNumber *startTime;
+        for (int i = 0; i < array.count; i++) {
+            startTime = array[i][@"time"];
+            if ( [time floatValue] >= [startTime floatValue] ) {
+                NSString *name = array[i][@"name"];
+                NSInteger index = [zoneValueArray indexOfObject:name];
+                _zoneSegmentedControl.selectedSegmentIndex = index;
+                return;
+            }
+        }
+        
+    }
+}
+
+
+
+//@synthesize live2BenchViewController;
+//@synthesize periodSegmentedControl;
+//@synthesize zoneSegmentedControl;
+//@synthesize playerbuttonWasSelected;
+//@synthesize responseData;
+
+/*- (id)initWithController:(Live2BenchViewController *)l2b
 {
     self = [super init];
      live2BenchViewController = l2b;
@@ -965,6 +1170,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
+}*/
 
 @end

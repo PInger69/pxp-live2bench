@@ -618,7 +618,7 @@
     NSData *teleData = [data objectForKey:@"telestration"];
     NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
     NSString *period = [data objectForKey:@"period"];
-    
+
     // This is the starndard info that is collected from the encoder
     NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
                                      @{
@@ -1643,7 +1643,7 @@
         LeagueTeam * owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
         for (NSDictionary * pData in pList) {
             TeamPlayer * aPlayer    = [[TeamPlayer alloc]init];
-            aPlayer.jersey          = pData[@"jersey"];
+            aPlayer.jersey          = [pData[@"jersey"]stringValue];
             aPlayer.line            = pData[@"line"];
             aPlayer.player          = pData[@"player"];
             aPlayer.position        = pData[@"position"];
@@ -1872,7 +1872,7 @@
             NSArray * allTags = [[results objectForKey: @"tags"] allValues];
             for (NSDictionary *tag in allTags) {
                 
-                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine) {
+                if (![tag[@"deviceid"] isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]] || [tag[@"type"]intValue] == TagTypeHockeyStrengthStop || [tag[@"type"]intValue] == TagTypeHockeyStopOLine || [tag[@"type"]intValue] == TagTypeHockeyStopDLine ||  [tag[@"type"]intValue] == TagTypeSoccerZoneStop) {
                     if ([tag[@"type"]intValue] == TagTypeDeleted) {
                         [self onModifyTags:tag];
                     }else if([tag[@"modified"]boolValue]){
