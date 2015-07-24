@@ -10,19 +10,20 @@
 #import "League.h"
 @class TeamPlayer;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LeagueTeam : NSObject
-@property (nonatomic,strong) NSString       * extra;
-@property (nonatomic,strong) NSString       * hid;
-@property (nonatomic,strong) NSString       * name;
-@property (nonatomic,strong) NSString       * sport;
-@property (nonatomic,strong) NSString       * txt_name;
-@property (nonatomic,weak)   League         * league;
-@property (nonatomic,strong) NSDictionary   * players;
+@property (nonatomic, strong) NSString       * extra;
+@property (nonatomic, strong) NSString       * hid;
+@property (nonatomic, strong) NSString       * name;
+@property (nonatomic, strong) NSString       * sport;
+@property (nonatomic, strong) NSString       * txt_name;
+@property (nonatomic, weak)   League         * league;
+@property (readonly, nonatomic,strong) NSDictionary   *players;
 
+NS_ASSUME_NONNULL_END
 
-
--(void)addPlayer:(TeamPlayer*)player;
--(NSDictionary*)asDictionary;
--(NSInteger)playerCount;
+- (void)addPlayer:(nonnull TeamPlayer *)player;
+- (nonnull NSDictionary *)asDictionary;
 
 @end

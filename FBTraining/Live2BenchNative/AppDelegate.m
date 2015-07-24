@@ -86,10 +86,6 @@
     self.window.tintColor           = PRIMARY_APP_COLOR;
     [self.window makeKeyAndVisible];
     
-    NSFileManager *fileManager;
-    fileManager = [NSFileManager defaultManager];
-    
-    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutApp:) name:NOTIF_USER_LOGGED_OUT object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(memoryWarning:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
     

@@ -9,34 +9,32 @@
 #import "League.h"
 #import "LeagueTeam.h"
 @implementation League
+{
+    __nonnull NSMutableDictionary *_teams;
+}
 
-
-@synthesize  hid   = _hid;
-@synthesize  name  = _name;
-@synthesize  shortName = _shortName;
-@synthesize  sport = _sport;
 @synthesize  teams = _teams;
 
-- (instancetype)init
+- (nonnull instancetype)init
 {
     self = [super init];
     if (self) {
-        
+        _hid = @"";
+        _name = @"";
+        _shortName = @"";
+        _sport = @"";
+        _teams = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
-
-
-
-
-
 -(void)addTeam:(LeagueTeam *)team
 {
-    NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:_teams];
+    if (team.league) {
+        [team.league->_teams removeObjectForKey:team.name];
+    }
+    _teams[team.name] = team;
     team.league = self;
-    [temp setObject:team forKey:team.name];
-    _teams = [temp copy];
 }
 -(NSDictionary*)asDictionary
 {
@@ -48,19 +46,5 @@
                             };
     return dict;
 }
-
-//-(NSString*)description
-//{
-//    NSMutableString * tmpText = [[NSMutableString alloc]initWithString:@"League:"];
-//    [tmpText appendString:self.name];
-//    [tmpText appendString:@"\nTeams:"];
-//    
-//   
-//    for (LeagueTeam * t in _teams) {
-//        [tmpText appendFormat:@"  %@",t.name];
-//    }
-//
-//    return [tmpText copy];
-//}
 
 @end

@@ -377,6 +377,8 @@ SVSignalStatus signalStatus;
  */
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     [signalTimer invalidate];
     signalTimer = nil;
     

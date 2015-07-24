@@ -121,9 +121,6 @@
     [self.view addSubview:rightView];
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    
-}
 //timer that highlights lines, period, strength
 -(void)updateControlInfo{
 //

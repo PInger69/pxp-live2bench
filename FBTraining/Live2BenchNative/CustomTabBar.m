@@ -196,7 +196,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     [self createTabButtons];
 }
 

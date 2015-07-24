@@ -70,7 +70,7 @@
         
         
         NSMutableArray * listOfVideos = [NSMutableArray arrayWithArray:[self videoFiles]];
-        BOOL modFlag;
+        BOOL modFlag = NO;
          // this checks to see if the clip is are on the device if not then remove from Dict
         for (NSString * videoPathsToCheck  in listOfVideos) {
             if ( ![[NSFileManager defaultManager] fileExistsAtPath:videoPathsToCheck] ){

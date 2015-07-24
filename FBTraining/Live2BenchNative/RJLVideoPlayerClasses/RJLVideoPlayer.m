@@ -1408,10 +1408,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     
     NSTimeInterval duration = 0;
     
-    CMTime itemDuration = kCMTimeInvalid;
-    itemDuration = [self.playerItem duration];
-    itemDuration = [[self.playerItem asset] duration];
-    
   if ([seekableRanges count] > 0)
    {
         CMTimeRange tempRange = [[seekableRanges objectAtIndex:0] CMTimeRangeValue];
