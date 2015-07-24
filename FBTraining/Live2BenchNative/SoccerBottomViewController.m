@@ -259,8 +259,8 @@
     NSArray *subPlayers = [_playerList objectAtIndex:1];
   
         //get all the non sub players count which will be used to center all the player buttons
-    NSInteger *notSubPlayersCount = subPlayers.count;
-    NSNumber *buttonWidth = [NSNumber numberWithFloat:(800/([notSubPlayersCount intValue]+5))];
+    NSUInteger notSubPlayersCount = subPlayers.count;
+    NSNumber *buttonWidth = [NSNumber numberWithFloat:(800/(notSubPlayersCount + 5))];
     //    for(NSObject *obj in globals.TEAM_SETUP)
     //    {
     //        NSString *jerseyNumber = [[obj valueForKey:@"jersey"] stringValue];
@@ -311,7 +311,7 @@
     //       
     //    }
 
-}*/
+}
 
 
 //@synthesize live2BenchViewController;
