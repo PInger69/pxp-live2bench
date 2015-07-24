@@ -13,6 +13,8 @@
 #import "TeamPlayer.h"
 #import "LeagueTeam.h"
 #import "UserCenter.h"
+#import "SideTagButton.h"
+#import "BorderButton.h"
 #define PLAYERBUTTON_X              190
 #define PLAYERBUTTON_Y              100
 #define PLAYERBUTTON_WIDTH           42
@@ -35,6 +37,7 @@
     NSArray *periodValueArray;
     UISegmentedControl *_periodSegmentedControl;
     
+    CustomLabel *_subLabel;
     NSMutableArray *_cellList;
     NSArray *_playerList;
     
@@ -93,6 +96,13 @@
         // Player
         LeagueTeam *team = [UserCenter getInstance].taggingTeam;
         _playerList = [self populatePlayerList:[team.players allValues]];
+        _subLabel = [CustomLabel labelWithStyle:CLStyleGrey];
+        [_subLabel setFrame:CGRectMake(187-SUBSLABEL_WIDTH, SUBSBUTTON_Y, SUBSLABEL_WIDTH, PLAYERBUTTON_WIDTH)];
+        [_subLabel setText:@"Subs:"];
+        [_subLabel setHidden:true];
+        [self.view addSubview:_subLabel];
+        [self createPlayerButton];
+        [self allToggleOnOpenTags];
         
     }
     return self;
@@ -244,11 +254,21 @@
 #pragma mark - Player Button Related Methods
 //Populate Player List with all Player jersey
 -(NSArray*)populatePlayerList:(NSArray *)players{
-    NSMutableArray *array = [[NSMutableArray alloc]init];
+    NSMutableArray *regularPlayer = [[NSMutableArray alloc]init];
+    NSMutableArray *subPlayer = [[NSMutableArray alloc]init];
     for (TeamPlayer *player in players) {
-        [array addObject:player.jersey];
+        
+        if ([player.role intValue] == 8) {
+            [subPlayer addObject:player.jersey];
+        }else{
+            [regularPlayer addObject:player.jersey];
+        }
+        
     }
-    return [array copy];
+    
+    NSArray *array = @[regularPlayer,subPlayer];
+    
+    return array;
 }
 
 -(void)createPlayerButton{
@@ -258,59 +278,145 @@
     NSArray *regularPlayers = [_playerList objectAtIndex:0];
     NSArray *subPlayers = [_playerList objectAtIndex:1];
   
-        //get all the non sub players count which will be used to center all the player buttons
-    NSUInteger notSubPlayersCount = subPlayers.count;
-    NSNumber *buttonWidth = [NSNumber numberWithFloat:(800/(notSubPlayersCount + 5))];
-    //    for(NSObject *obj in globals.TEAM_SETUP)
-    //    {
-    //        NSString *jerseyNumber = [[obj valueForKey:@"jersey"] stringValue];
-    //        if([[obj valueForKey:@"role"] intValue]!=8)
-    //        {
-    //            BorderButton *playerButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-    //            float playerButtonY = (notSubPlayersCount == globals.TEAM_SETUP.count) ? PLAYERBUTTON_Y + 25.0f : PLAYERBUTTON_Y;
-    //            [playerButton setFrame:CGRectMake((playerCount-1)*(buttonWidth+10)+(1024 - notSubPlayersCount*(buttonWidth+10) +10)/2.0, playerButtonY, buttonWidth, PLAYERBUTTON_WIDTH)];
-    //            [playerButton setTitle:jerseyNumber forState:UIControlStateNormal];
-    //            [playerButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
-    //            [playerButton setTag:playerCount];
-    //            [self.view addSubview:playerButton];
-    //            [playerButtons addObject:playerButton];
-    //            playerCount++;
-    //        }
-    //    }
-    //
-    //    if(!subsLabel)
-    //    {
-    //        subsLabel = [CustomLabel labelWithStyle:CLStyleGrey];
-    //    }
-    //    [subsLabel setFrame:CGRectMake(((BorderButton*)[playerButtons firstObject]).frame.origin.x -SUBSLABEL_WIDTH, SUBSBUTTON_Y, SUBSLABEL_WIDTH, PLAYERBUTTON_WIDTH)];
-    //    [subsLabel setText:@"Subs:"];
-    //    [self.view addSubview:subsLabel];
-    //    [playerButtons addObject:subsLabel];
-    //    if (notSubPlayersCount == globals.TEAM_SETUP.count) {
-    //        //no subs player, hide the subslabel
-    //        [subsLabel setHidden:TRUE];
-    //    }else{
-    //        //have subs player,display the subslabel
-    //        [subsLabel setHidden:FALSE];
-    //    }
-    //    int count=1;
-    //    for(NSObject *obj in globals.TEAM_SETUP){
-    //
-    //        NSString *jerseyNumber = [[obj valueForKey:@"jersey"] stringValue];
-    //        if([[obj valueForKey:@"role"] intValue]==8)
-    //        {
-    //            BorderButton *subsButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-    //            [subsButton setFrame:CGRectMake(((count-1)*(buttonWidth+PADDING))+CGRectGetMaxX(subsLabel.frame), SUBSBUTTON_Y, buttonWidth, PLAYERBUTTON_WIDTH)];
-    //            [subsButton setTitle:jerseyNumber forState:UIControlStateNormal];
-    //            [subsButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
-    //            [subsButton setTag:count];
-    //            [playerButtons addObject:subsButton];
-    //            [self.view addSubview:subsButton];
-    //             count++;
-    //        }
-    //       
-    //    }
+    //get all the non sub players count which will be used to center all the player buttons
+    int notSubPlayersCount = (int)regularPlayers.count;
+    float buttonWidth = 800/(notSubPlayersCount+5);
+    
+    for(NSString *jersey in regularPlayers)
+    {
+        float playerButtonY = (notSubPlayersCount == (notSubPlayersCount + subPlayers.count)) ? PLAYERBUTTON_Y + 25.0f : PLAYERBUTTON_Y;
+        SideTagButton *playerButton = [[SideTagButton alloc]initWithFrame:CGRectMake((playerCount-1)*(buttonWidth+10)+(1024 - notSubPlayersCount*(buttonWidth+10) +10)/2.0, playerButtonY, buttonWidth, PLAYERBUTTON_WIDTH)];
+        [playerButton setTitle:jersey forState:UIControlStateNormal];
+        [playerButton setMode:SideTagButtonModeRegular];
+        [playerButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:playerButton];
+        [_cellList addObject:playerButton];
+        playerCount++;
+    
+    }
+    
+     if (subPlayers.count != 0) {
+         [_subLabel setHidden:false];
+    
+     }
 
+    int count=1;
+    for(NSString *jersey in subPlayers)
+    {
+        SideTagButton *subsButton = [[SideTagButton alloc]initWithFrame:CGRectMake(((count-1)*(buttonWidth+PADDING))+CGRectGetMaxX(_subLabel.frame), SUBSBUTTON_Y, buttonWidth, PLAYERBUTTON_WIDTH)];
+        [subsButton setTitle:jersey forState:UIControlStateNormal];
+        [subsButton setMode:SideTagButtonModeRegular];
+        [subsButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [_cellList addObject:subsButton];
+        [self.view addSubview:subsButton];
+        count++;
+    }
+
+}
+
+-(void)playerButtonSelected:(id)sender{
+    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    
+    SideTagButton *button = sender;
+    NSString *name = [NSString stringWithFormat:@"Pl. %@",button.titleLabel.text];
+    
+    if (button.mode == SideTagButtonModeRegular) {
+        
+        NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeNormal],@"time":[NSString stringWithFormat:@"%f",time],@"player":button.titleLabel.text};
+        [super postTag:tagDic];
+        
+    }else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
+        //Open Duration Tag
+        [self disEnableButton];
+        button.isOpen = YES;
+        NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],@"time":[NSString stringWithFormat:@"%f",time],@"player":button.titleLabel.text,@"dtagid": button.durationID};
+        [super postTag:tagDic];
+        
+    } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
+        
+            // Close Duration Tag, Collect and mod tag data for close tag
+            Tag * tagToBeClosed;
+            if ([Tag getOpenTagByDurationId:button.durationID]) {
+                tagToBeClosed = [Tag getOpenTagByDurationId:button.durationID];
+            }else{
+                for (Tag *tag in _currentEvent.tags) {
+                    if ([tag.name isEqualToString:button.titleLabel.text] && tag.type == TagTypeOpenDuration) {
+                        tagToBeClosed = tag;
+                    }
+                }
+            }
+        
+            NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tagToBeClosed makeTagData]];
+            
+            [tagData setValue:[NSString stringWithFormat:@"%f",time] forKey:@"closetime"];
+            [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
+            [tagData setValue:button.durationID forKey:@"dtagid"];
+        
+            [self modifyTag:tagData];
+            button.isOpen = NO;
+
+    }
+}
+
+-(void)setIsDurationVariable:(SideTagButtonModes)buttonMode{
+    for (SideTagButton *button in _cellList) {
+        [button setMode:buttonMode];
+    }
+}
+
+-(void)closeAllOpenTagButtons
+{
+    for (SideTagButton * btn1 in _cellList){
+        if (btn1.isOpen) {
+            [btn1 sendActionsForControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+    
+}
+
+// diable user interaction for all the side button until we receive the open duration tag from the server
+-(void)disEnableButton
+{
+    for (SideTagButton * btn1 in _cellList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = false;
+        }
+    }
+    
+}
+
+// enable all the buttons again
+-(void)enableButton
+{
+    for (SideTagButton * btn1 in _cellList){
+        if (btn1.mode == SideTagButtonModeToggle) {
+            btn1.userInteractionEnabled = true;
+        }
+    }
+}
+
+-(void)allToggleOnOpenTags
+{
+    NSMutableArray *eventTags = _currentEvent.tags;
+
+    for (SideTagButton * btn1 in _cellList) {
+        btn1.isOpen = NO;
+    }
+    
+    for (Tag * tag in eventTags) {
+        for (SideTagButton * btn2 in _cellList) {
+            // if the tag is open and has a duration Id and is from this divice
+            if ([tag.name isEqualToString:btn2.titleLabel.text] && tag.type == TagTypeOpenDuration && [tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]){
+                btn2.isOpen = YES;
+                btn2.durationID = tag.durationID;
+            }
+        }
+    }
+}
+
+-(void)setCurrentEvent:(Event * __nullable)currentEvent{
+    _currentEvent = currentEvent;
+    [self enableButton];
 }
 
 

@@ -35,10 +35,10 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:tagDic];
 }
 
--(void)modifyTag:(Tag*)tag{
+-(void)modifyTag:(NSDictionary*)tagDic{
     //float time = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
     //tag.time = time;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG  object:nil userInfo:[tag makeTagData]];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG  object:nil userInfo:tagDic];
 }
 
 -(void)deleteTag:(Tag*)tag{
@@ -59,6 +59,10 @@
 
 - (nonnull NSString *)currentPeriod {
     return @"";
+}
+
+-(void)setIsDurationVariable:(SideTagButtonModes)buttonMode{
+    
 }
 
 /*

@@ -1607,6 +1607,15 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459464404.088125"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
+            landmarkName = "-postTagsAtBeginning"
+=======
             filePath = "FBTraining/Live2BenchNative/UtilityClasses/FeedInspector.m"
             timestampString = "459203132.298807"
             startingColumnNumber = "9223372036854775807"
@@ -1662,6 +1671,7 @@
             startingLineNumber = "1668"
             endingLineNumber = "1668"
             landmarkName = "-teamsResponse:"
+>>>>>>> d9d120101b5f38f44f1c16d115c73ddc39c1586a
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1671,6 +1681,15 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459464404.088125"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
+            landmarkName = "-createPlayerButton"
+=======
             filePath = "FBTraining/LocalMediaManager.m"
             timestampString = "459451486.790018"
             startingColumnNumber = "9223372036854775807"
@@ -1838,6 +1857,7 @@
             startingLineNumber = "1587"
             endingLineNumber = "1587"
             landmarkName = "-teamsResponse:"
+>>>>>>> d9d120101b5f38f44f1c16d115c73ddc39c1586a
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
