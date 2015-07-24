@@ -547,6 +547,7 @@
     [self setShowsTagSelectMenu:NO animated:YES];
     [self setShowsTeleSelectMenu:NO animated:YES];
     
+    [self.videoPlayer pause];
     [self.videoPlayer cancelClip];
 }
 
