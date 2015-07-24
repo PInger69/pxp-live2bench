@@ -28,6 +28,7 @@
 
 #import "PxpTelestrationViewController.h"
 #import "HockeyBottomViewController.h"
+#import "SoccerBottomViewController.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "RJLVideoPlayer.h"
 #import "LeagueTeam.h"
@@ -86,7 +87,7 @@
     
     UISwitch                            *durationSwitch;
     
-    HockeyBottomViewController *bottomViewController;
+    AbstractBottomViewController *bottomViewController;
     
 }
 
@@ -275,6 +276,29 @@ static void * eventContext      = &eventContext;
     [informationLabel setText:@""];
 }
 
+-(void)addBottomViewController{
+    NSString *sport = [UserCenter getInstance].taggingTeam.league.sport;
+    if (bottomViewController) {
+        [bottomViewController.view removeFromSuperview];
+        bottomViewController = nil;
+    }
+    
+    if ([sport isEqualToString:@"Hockey"] && !bottomViewController && _currentEvent) {
+        bottomViewController = [[HockeyBottomViewController alloc]init];
+        [self.view addSubview:bottomViewController.view];
+        bottomViewController.currentEvent = _currentEvent;
+        [bottomViewController update];
+        [bottomViewController postTagsAtBeginning];
+        
+    }else if ([sport isEqualToString:@"Soccer"] && !bottomViewController && _currentEvent){
+        bottomViewController = [[SoccerBottomViewController alloc]init];
+        [self.view addSubview:bottomViewController.view];
+        bottomViewController.currentEvent = _currentEvent;
+        [bottomViewController update];
+        [bottomViewController postTagsAtBeginning];
+    }
+}
+
 -(void)eventChanged:(NSNotification*)note
 {
     if (_teamPick){ // pick teams is up get rid of it safly
@@ -299,6 +323,7 @@ static void * eventContext      = &eventContext;
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
+        [self addBottomViewController];
 
     }
     
@@ -311,15 +336,11 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         [self displayLable];
         
-        bottomViewController = [[HockeyBottomViewController alloc]init];
-        bottomViewController.currentEvent = _currentEvent;
-        [self.view addSubview:bottomViewController.view];
-        [bottomViewController update];
-        
-        
         if (_currentEvent.live) {
             [self gotLiveEvent];
         }
+        
+        [self addBottomViewController];
 
     }
     
@@ -506,6 +527,7 @@ static void * eventContext      = &eventContext;
         
         [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
         [weakSelf displayLable];
+         [self addBottomViewController];
         [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
                                                          userInfo:@{@"tabName":@"Live2Bench"}];
     }];
@@ -516,8 +538,6 @@ static void * eventContext      = &eventContext;
     [_pipController pipsAndVideoPlayerToLive:info];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [_videoBarViewController.tagMarkerController createTagMarkers];
-    [bottomViewController postTagsAtBeginning];
-    
 }
 
 

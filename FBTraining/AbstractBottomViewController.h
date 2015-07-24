@@ -18,5 +18,13 @@
 -(void)postTag:(NSDictionary*)tagDic;
 -(void)modifyTag:(Tag*)tag;
 -(void)deleteTag:(Tag*)tag;
+-(void)clear;
+
+// To be override by subclasses
+-(id)init;
+-(void)update;
+-(void)postTagsAtBeginning;
+-(NSString *)currentPeriod;
+
 
 @end
