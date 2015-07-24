@@ -8,6 +8,8 @@
 
 #import "PxpTelestrationViewController.h"
 
+#import "NCGhostView.h"
+
 #import "PxpTelestrationCaptureArea.h"
 #import "PxpTelestrationRenderView.h"
 
@@ -80,6 +82,10 @@
         _showsClearButton = YES;
     }
     return self;
+}
+
+- (void)loadView {
+    self.view = [[NCGhostView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
 }
 
 - (void)viewDidLoad {

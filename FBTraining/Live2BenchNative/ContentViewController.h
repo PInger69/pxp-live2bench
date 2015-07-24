@@ -14,7 +14,7 @@
 #import "BorderButton.h"
 
 @class HockeyBottomViewController;
-@interface ContentViewController : UIViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface ContentViewController : UIViewController
 {
     //IBOutlet UIScrollView *scrollView;
     //NSMutableDictionary *_gameItems;

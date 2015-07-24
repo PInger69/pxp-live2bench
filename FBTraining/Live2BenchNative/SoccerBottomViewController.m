@@ -157,9 +157,11 @@
 -(void)update{
     [self updatePeriodSegment];
     [self updateZoneSegment];
+    
+    __block SoccerBottomViewController *weakSelf = self;
     periodBoundaryObserver = [self.videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
-        [self updatePeriodSegment];
-        [self updateZoneSegment];
+        [weakSelf updatePeriodSegment];
+        [weakSelf updateZoneSegment];
     }];
 }
 

@@ -12,19 +12,20 @@
 
 @interface AbstractBottomViewController : UIViewController
 
-@property (nonatomic,strong)    AVPlayer    * videoPlayer;
-@property (nonatomic,strong)    Event * currentEvent;
+@property (strong, nonatomic, nullable)    AVPlayer *videoPlayer;
+@property (strong, nonatomic, nullable)    Event *currentEvent;
 
--(void)postTag:(NSDictionary*)tagDic;
--(void)modifyTag:(Tag*)tag;
--(void)deleteTag:(Tag*)tag;
+@property (readonly, copy, nonatomic, nonnull) NSString *currentPeriod;
+
+-(void)postTag:(nonnull NSDictionary *)tagDic;
+-(void)modifyTag:(nonnull Tag *)tag;
+-(void)deleteTag:(nonnull Tag *)tag;
 -(void)clear;
 
 // To be override by subclasses
--(id)init;
+-(nonnull instancetype)init;
 -(void)update;
 -(void)postTagsAtBeginning;
--(NSString *)currentPeriod;
 
 
 @end
