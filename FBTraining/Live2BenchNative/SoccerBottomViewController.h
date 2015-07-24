@@ -44,6 +44,7 @@
 //@property (strong, nonatomic) CustomButton *playerbuttonWasSelected;
 //@property (strong, nonatomic) NSMutableData *responseData;
 
+//@property (assign,nonatomic) BOOL *isDuration;
 
 //- (id)initWithController:(Live2BenchViewController *)l2b;
 //- (void)halfValueChanged:(id)sender;

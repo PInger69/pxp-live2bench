@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVPlayer.h>
 #import "Event.h"
-
+#import "SideTagButton.h"
 @interface AbstractBottomViewController : UIViewController
 
 @property (strong, nonatomic, nullable)    AVPlayer *videoPlayer;
@@ -18,7 +18,7 @@
 @property (readonly, copy, nonatomic, nonnull) NSString *currentPeriod;
 
 -(void)postTag:(nonnull NSDictionary *)tagDic;
--(void)modifyTag:(nonnull Tag *)tag;
+-(void)modifyTag:(nonnull NSDictionary *)tagDic;
 -(void)deleteTag:(nonnull Tag *)tag;
 -(void)clear;
 
@@ -26,6 +26,7 @@
 -(nonnull instancetype)init;
 -(void)update;
 -(void)postTagsAtBeginning;
+-(void)setIsDurationVariable:(SideTagButtonModes)buttonMode;
 
 
 @end

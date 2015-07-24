@@ -1019,8 +1019,10 @@ static void * eventContext      = &eventContext;
 {
     if (durationSwitch.on == true &&_currentEvent) {
         [_tagButtonController setButtonState:SideTagButtonModeToggle];
+        [bottomViewController setIsDurationVariable:SideTagButtonModeToggle];
     }else if(durationSwitch.on == false &&_currentEvent){
         [_tagButtonController setButtonState:SideTagButtonModeRegular];
+        [bottomViewController setIsDurationVariable:SideTagButtonModeRegular];
     }
 }
 
