@@ -78,13 +78,20 @@
 
 -(void)addAllTags:(NSDictionary *)allTagData
 {
+    NSMutableArray *tagsReceived = [NSMutableArray array];
+    
      NSArray *tagArray = [allTagData allValues];
      for (NSDictionary *newTagDic in tagArray) {
          Tag *newTag = [[Tag alloc] initWithData: newTagDic event:self];
          [_tags addObject:newTag];
+         [tagsReceived addObject:newTag];
      }
      self.isBuilt = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
+                                                        object:self
+                                                      userInfo:@{
+                                                                 @"tags": tagsReceived
+                                                                 }];
 }
 
 
@@ -95,14 +102,18 @@
     //BOOL contain = [_tags containsObject:newtag];
     //int  index = [_tags indexOfObject:newtag];
     //BOOL mem = (newtag == [_tags objectAtIndex:index]);
-    if ((newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine) {
+    if ((newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine && newtag.type != TagTypeSoccerZoneStop) {
         return;
     }
     
     [_tags addObject:newtag];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
+                                                        object:self
+                                                      userInfo:@{
+                                                                 @"tags": @[newtag]
+                                                                 }];
     
-    if ((newtag.type == TagTypeCloseDuration || newtag.type == TagTypeTele || newtag.type == TagTypeNormal || newtag.type == TagTypeHockeyStrengthStart || newtag.type == TagTypeHockeyStartOLine || newtag.type == TagTypeHockeyStopOLine || newtag.type == TagTypeHockeyStartDLine || newtag.type == TagTypeHockeyStopDLine) && _primary && notifPost ) {
+    if ((newtag.type == TagTypeCloseDuration || newtag.type == TagTypeTele || newtag.type == TagTypeNormal || newtag.type == TagTypeHockeyStrengthStart || newtag.type == TagTypeHockeyStartOLine || newtag.type == TagTypeHockeyStopOLine || newtag.type == TagTypeHockeyStartDLine || newtag.type == TagTypeHockeyStopDLine || newtag.type == TagTypeSoccerZoneStart || newtag.type == TagTypeSoccerZoneStop) && _primary && notifPost ) {
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
                                                                                                       @"msg":newtag.name,
@@ -166,7 +177,11 @@
             [tagToBeModded replaceDataWithDictionary:modifiedData];
         }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_MODIFIED
+                                                        object:self
+                                                      userInfo:@{
+                                                                 @"tags": @[tagToBeModded]
+                                                                 }];
     tagToBeModded.modified = false;
 }
 

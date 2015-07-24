@@ -744,8 +744,10 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         self.status                                 = _status | RJLPS_Play;
         self.status                                 = _status & ~(RJLPS_Paused);
         [self.videoControlBar setHidden:NO];
-        //self.videoControlBar.playButton.selected    = FALSE;
-
+        
+        if (self.videoControlBar.playButton.selected) {
+            self.videoControlBar.playButton.selected = NO;
+        }
     
     }
 }
@@ -754,7 +756,11 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     if (_status & RJLPS_Paused) return;
     restoreAfterPauseRate = [self.avPlayer rate];
     [self.avPlayer pause];
-    //self.videoControlBar.playButton.selected    = TRUE;
+    
+    if (!self.videoControlBar.playButton.selected) {
+        self.videoControlBar.playButton.selected = YES;
+    }
+    
     self.status                                 = _status & ~( RJLPS_Live | RJLPS_Play);
     self.status                                 = _status | RJLPS_Paused;
 }

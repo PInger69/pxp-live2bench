@@ -354,10 +354,10 @@ SVSignalStatus signalStatus;
         NSMutableArray  * collection    = [[NSMutableArray alloc]init];
         NSArray         * keys          = [input allKeys];
         for (NSString * item in keys) {
-            League *league = [input objectForKey:item];
-            NSString * nam = league.name;
+            League *itemLeague = [input objectForKey:item];
+            NSString * name = itemLeague.name;
             //NSString    * nam  = [[input objectForKey:item] objectForKey:@"name"];
-            [collection addObject:nam];
+            [collection addObject:name];
         }
 
         return [[NSSet setWithArray:collection]allObjects];

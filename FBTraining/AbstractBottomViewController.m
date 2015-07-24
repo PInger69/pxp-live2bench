@@ -16,6 +16,10 @@
 
 @implementation AbstractBottomViewController
 
+- (nonnull instancetype)init {
+    return [super init];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -43,6 +47,18 @@
 
 -(void)clear{
     [self.view removeFromSuperview];
+}
+
+- (void)update {
+    
+}
+
+- (void)postTagsAtBeginning {
+    
+}
+
+- (nonnull NSString *)currentPeriod {
+    return @"";
 }
 
 /*

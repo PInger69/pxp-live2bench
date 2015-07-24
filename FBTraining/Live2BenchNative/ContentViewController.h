@@ -14,7 +14,7 @@
 #import "BorderButton.h"
 
 @class HockeyBottomViewController;
-@interface ContentViewController : UIViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface ContentViewController : UIViewController
 {
     //IBOutlet UIScrollView *scrollView;
     //NSMutableDictionary *_gameItems;
@@ -31,11 +31,12 @@
 //@property NSMutableDictionary *gameItems;
 //@property (strong,nonatomic) UICollectionView *collectionView;
 //@property NSMutableDictionary *playerMap;
-@property (strong,nonatomic)UIScrollView *scrollView;
+//@property (strong,nonatomic)UIScrollView *scrollView;
 @property (strong,nonatomic)NSArray *playerList;
-@property (strong,nonatomic)UIViewController *bottomViewController;
+//@property (strong,nonatomic)UIViewController *bottomViewController;
 
 - (id)initWithIndex:(NSInteger)i side:(NSString*)whichSide;
--(id)initWithFrame:(CGRect)frame;
+-(id)initWithFrame:(CGRect)frame playerList:(NSArray*)playerList;
+-(void)selectPlayers:(NSArray*)selectPlayers;
 
 @end
