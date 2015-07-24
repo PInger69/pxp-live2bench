@@ -23,5 +23,6 @@ NS_ASSUME_NONNULL_END
 
 // this adds a team and makes the team know the league it belongs too
 -(void)addTeam:(nonnull LeagueTeam *)team;
+-(nonnull NSDictionary *)asDictionary;
 
 @end
