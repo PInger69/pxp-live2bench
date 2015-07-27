@@ -186,7 +186,9 @@
 }
 
 - (void)clipCanceledHandler:(NSNotification *)note {
-    self.telestrationViewController.telestration = nil;
+    if (!self.telestrationViewController.telestrating) {
+        self.telestrationViewController.telestration = nil;
+    }
 }
 
 - (void)sideTagsReady:(NSNotification *)note {
