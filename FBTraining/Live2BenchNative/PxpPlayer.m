@@ -423,6 +423,10 @@ static CMClockRef _pxpPlayerMasterClock;
     if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
     time = [self clampTime:time];
     
+    if (CMTIME_IS_INVALID(time)) {
+        return;
+    }
+    
     if (multi) {
         self.seeking = YES;
         NSUInteger total = self.contextPlayers.count;
@@ -466,6 +470,7 @@ static CMClockRef _pxpPlayerMasterClock;
     _feed = [item.asset isKindOfClass:[AVURLAsset class]] ? [[Feed alloc] initWithURLString:((AVURLAsset *)item.asset).URL.absoluteString quality:0] : nil;
     [self didChangeValueForKey:@"feed"];
     
+    [super replaceCurrentItemWithPlayerItem:nil];
     [super replaceCurrentItemWithPlayerItem:item];
 }
 

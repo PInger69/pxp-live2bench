@@ -38,41 +38,30 @@
 - (void)setEvent:(nullable Event *)event {
     _event = event;
     
-    NSMutableArray *names = [NSMutableArray array];
-    NSMutableArray *items = [NSMutableArray array];
-    
+    NSMutableDictionary *feeds = [NSMutableDictionary dictionary];
     if (event) {
         
         if (event.live || event.local || !event.mp4s) { // use the provided feed (HLS for live, mp4 for local)
-            for (NSString *name in event.feeds) {
-                
-                Feed *feed = event.feeds[name];
-                
-                // get the data
-                [names addObject:name];
-                [items addObject:[AVPlayerItem playerItemWithURL:feed.path]];
+            for (NSString *name in event.feeds.keyEnumerator) {
+                feeds[name] = event.feeds[name];
             }
         } else { // use mp4 from encoder
-            for (NSString *name in event.mp4s) {
-                
-                NSString *path = event.mp4s[name];
-                
-                // get the data
-                [names addObject:name];
-                [items addObject:[AVPlayerItem playerItemWithURL:[NSURL URLWithString:path]]];
+            for (NSString *name in event.mp4s.keyEnumerator) {
+                feeds[name] = [[Feed alloc] initWithURLString:event.mp4s[name] quality:0];
             }
         }
         
     }
     
-    [self setPlayerCount:items.count];
+    [self setPlayerCount:feeds.allKeys.count];
     
     // update the player data
     for (NSUInteger i = 0; i < self.players.count; i++) {
         PxpPlayer *player = self.players[i];
+        NSString *name = feeds.allKeys[i];
         
-        player.name = names[i];
-        [player replaceCurrentItemWithPlayerItem:items[i]];
+        player.name = name;
+        player.feed = feeds[name];
     }
     
     [self sortPlayers];

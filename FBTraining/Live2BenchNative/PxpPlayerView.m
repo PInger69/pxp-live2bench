@@ -25,6 +25,14 @@
     return [AVPlayerLayer class];
 }
 
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.layer.needsDisplayOnBoundsChange = YES;
+    }
+    return self;
+}
+
 @end
 
 @interface PxpPlayerView () <UIScrollViewDelegate>
@@ -52,6 +60,14 @@
     
     void *_failedObserverContext;
     void *_motionObserverContext;
+}
+
+- (void)setNeedsDisplay {
+    [super setNeedsDisplay];
+    
+    AVPlayerItem *playerItem = self.player.currentItem;
+    [self.player replaceCurrentItemWithPlayerItem:nil];
+    [self.player replaceCurrentItemWithPlayerItem:playerItem];
 }
 
 - (void)initPlayerView {
@@ -194,8 +210,11 @@
 - (void)setPlayer:(nullable PxpPlayer *)player {
     [self willChangeValueForKey:@"player"];
     self.avPlayerView.layer.player = player;
-    [self.avPlayerView.layer setNeedsDisplay];
     [self didChangeValueForKey:@"player"];
+    
+    
+    [self setNeedsDisplay];
+    
 }
 
 - (nullable PxpPlayer *)player {

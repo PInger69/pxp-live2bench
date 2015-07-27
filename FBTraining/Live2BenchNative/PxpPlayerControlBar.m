@@ -25,6 +25,7 @@
 @property (readonly, strong, nonatomic, nonnull) PxpPlayPauseButton *playPauseButton;
 
 @property (strong, nonatomic, nonnull) UIView *container;
+@property (strong, nonatomic, nonnull) UIView *blurContainer;
 
 @property (strong, nonatomic, nonnull) UIView *blurView;
 
@@ -38,6 +39,9 @@
 @property (strong, nonatomic, nonnull) UIBarButtonItem *rangeCancelButton;
 @property (strong, nonatomic, nonnull) UIBarButtonItem *defaultItem;
 
+@property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *hideGestureRecognizer;
+@property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *showGestureRecognizer;
+
 @property (strong, nonatomic, nullable) id periodicObserver;
 
 @end
@@ -50,6 +54,8 @@
 - (nonnull instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        _container = [[UIView alloc] initWithFrame:self.bounds];
+        _container.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         _playPauseButton = [[PxpPlayPauseButton alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
         _playPauseButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
@@ -73,8 +79,8 @@
         
         _defaultItem = [[UIBarButtonItem alloc] init];
         
-        _container = [[UIView alloc] initWithFrame:self.bounds];
-        _container.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _blurContainer = [[UIView alloc] initWithFrame:_container.bounds];
+        _blurContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
             _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
@@ -83,10 +89,10 @@
             _blurView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         }
         
-        _blurView.frame = _container.bounds;
+        _blurView.frame = _blurContainer.bounds;
         _blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        _toolbar = [[PxpPlayerControlToolbar alloc] initWithFrame:self.bounds];
+        _toolbar = [[PxpPlayerControlToolbar alloc] initWithFrame:_container.bounds];
         _toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _toolbar.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_playPauseButton];
         
@@ -98,7 +104,7 @@
         _slider.minimumValue = 0.0;
         _slider.maximumValue = 1.0;
         
-        _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(49.5, 0, 55, self.bounds.size.height)];
+        _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(49.5, 0, 55, _container.bounds.size.height)];
         _leftLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
         _leftLabel.font = [UIFont systemFontOfSize:18.0];
         _leftLabel.adjustsFontSizeToFitWidth = YES;
@@ -111,7 +117,7 @@
         _leftLabel.layer.shadowOpacity = 1.0;
         _leftLabel.layer.shadowOffset = CGSizeZero;
         
-        _rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 49.5 - 55, 0, 55, self.bounds.size.height)];
+        _rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(_container.bounds.size.width - 49.5 - 55, 0, 55, _container.bounds.size.height)];
         _rightLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
         _rightLabel.font = [UIFont systemFontOfSize:18.0];
         _rightLabel.adjustsFontSizeToFitWidth = YES;
@@ -125,11 +131,23 @@
         _rightLabel.layer.shadowOffset = CGSizeZero;
         
         [self addSubview:_container];
-        [_container addSubview:_blurView];
-        [self addSubview:_toolbar];
+        [_container addSubview:_blurContainer];
+        [_blurContainer addSubview:_blurView];
+        [_container addSubview:_toolbar];
         [_toolbar addSubview:_slider];
-        [self addSubview:_leftLabel];
-        [self addSubview:_rightLabel];
+        [_container addSubview:_leftLabel];
+        [_container addSubview:_rightLabel];
+        
+        _hideGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(controlBarHideGestureRecognized:)];
+        _hideGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+        
+        _showGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(controlBarHideGestureRecognized:)];
+        _showGestureRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+        
+        [self addGestureRecognizer:_hideGestureRecognizer];
+        [self addGestureRecognizer:_showGestureRecognizer];
+        
+        self.clipsToBounds = YES;
         
         _rateObserverContext = &_rateObserverContext;
         
@@ -154,7 +172,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.toolbar.frame = self.bounds;
+    self.toolbar.frame = _container.bounds;
     self.slider.frame = CGRectMake(110, 0, self.toolbar.bounds.size.width - 2 * 110, self.toolbar.bounds.size.height);
 }
 
@@ -172,6 +190,20 @@
         
     }
 }
+
+- (void)setVisible:(BOOL)visible animated:(BOOL)animated {
+    
+    [UIView animateWithDuration:animated ? 0.1 : 0.0
+                     animations:^() {
+                         if (visible) {
+                             self.container.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
+                         } else {
+                             self.container.frame = CGRectMake(0.0, self.bounds.size.height, self.bounds.size.width, self.bounds.size.height);
+                         }
+                     }];
+}
+
+
 
 - (void)tintColorDidChange {
     [super tintColorDidChange];
@@ -290,6 +322,16 @@
         } else {
             [self.player play];
         }
+    }
+}
+
+#pragma mark - Gesture Recognizers
+
+- (void)controlBarHideGestureRecognized:(UISwipeGestureRecognizer *)recognizer {
+    if (recognizer.direction == UISwipeGestureRecognizerDirectionDown) {
+        [self setVisible:NO animated:YES];
+    } else if (recognizer.direction == UISwipeGestureRecognizerDirectionUp) {
+        [self setVisible:YES animated:YES];
     }
 }
 

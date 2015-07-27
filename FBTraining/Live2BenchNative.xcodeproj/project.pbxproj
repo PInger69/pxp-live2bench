@@ -63,7 +63,6 @@
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
 		AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8750AA1B612EBE0055A7C2 /* TeleSelectTableViewController.m */; };
 		AE8AA8731B629AED002457B0 /* NCGhostView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8AA8721B629AED002457B0 /* NCGhostView.m */; };
-		AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = AEB631FF1B5D3A93002E54D2 /* MultiFeed.m */; };
 		AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* DualViewPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */; };
@@ -559,8 +558,6 @@
 		AE8750AC1B612F310055A7C2 /* TagSelectResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagSelectResponder.h; sourceTree = "<group>"; };
 		AE8AA8711B629AED002457B0 /* NCGhostView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCGhostView.h; sourceTree = "<group>"; };
 		AE8AA8721B629AED002457B0 /* NCGhostView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCGhostView.m; sourceTree = "<group>"; };
-		AEB631FE1B5D3A93002E54D2 /* MultiFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiFeed.h; sourceTree = "<group>"; };
-		AEB631FF1B5D3A93002E54D2 /* MultiFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiFeed.m; sourceTree = "<group>"; };
 		AECB9A6C1B0CC0B3005DDB32 /* DualViewClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewClipTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewClipTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AECF63131B0BC07F00C98555 /* DualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewTabViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2569,8 +2566,6 @@
 				D75042B019FA966F00D9851D /* EncoderStatusMonitor.m */,
 				D75042AC19F9640C00D9851D /* CheckEncoderShutdown.h */,
 				D75042AD19F9640C00D9851D /* CheckEncoderShutdown.m */,
-				AEB631FE1B5D3A93002E54D2 /* MultiFeed.h */,
-				AEB631FF1B5D3A93002E54D2 /* MultiFeed.m */,
 				D72708A31A1BA4B30086BCB8 /* Feed.h */,
 				D72708A41A1BA4B30086BCB8 /* Feed.m */,
 				D7EE84CE19F19DC000DEC82B /* EncoderManager.h */,
@@ -3150,7 +3145,6 @@
 				D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
 				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
-				AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,
