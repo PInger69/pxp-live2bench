@@ -173,9 +173,16 @@ NSMutableArray *oldEventNames;
             [self.listViewFullScreenViewController setTagName:selectedTag.name];
         }];
         
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
+        
     }
     return self;
     
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
 }
 
 -(void)addEventObserver:(NSNotification *)note
@@ -1758,7 +1765,11 @@ NSMutableArray *oldEventNames;
 //}
 
 
-
+- (void)clipCanceledHandler:(NSNotification *)notification {
+    if (!self.telestrationViewController.telestrating) {
+        self.telestrationViewController.telestration = nil;
+    }
+}
 
 
 -(void) feedSelected: (NSNotification *) notification
