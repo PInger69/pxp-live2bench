@@ -46,7 +46,8 @@
 }
 
 @synthesize currentEvent = _currentEvent;
-
+@synthesize videoPlayer = _videoPlayer;
+@synthesize mainView = _mainView;
 
 -(id)init{
     self = [super init];
@@ -56,6 +57,7 @@
         self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
         tintColor = PRIMARY_APP_COLOR;
         _cellList = [[NSMutableArray alloc]init];
+        _mainView = self.view;
         
         // Setup zone Lable
         _zoneLabel = [CustomLabel labelWithStyle:CLStyleBlack];
@@ -169,7 +171,7 @@
     [self updateZoneSegment];
     
     __block SoccerBottomViewController *weakSelf = self;
-    periodBoundaryObserver = [self.videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
+    periodBoundaryObserver = [_videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
         [weakSelf updatePeriodSegment];
         [weakSelf updateZoneSegment];
     }];
@@ -177,7 +179,7 @@
 
 // get Current Period
 -(NSString *)currentPeriod{
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeSoccerHalfStart secondType:TagTypeSoccerHalfStop];
     
     if (array.count > 0) {
@@ -197,7 +199,7 @@
 #pragma mark - Half Tags Related Methods
 // Post half tag
 -(void)halfValueChanged:(UISegmentedControl *)segment{
-    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
     
     if (![self checkTags:name]) {
@@ -218,7 +220,7 @@
 #pragma mark - Zone Tags Related Methods
 // Post zone tag
 -(void)zoneValueChanged:(UISegmentedControl *)segment{
-    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     NSString *name = [zoneValueArray objectAtIndex:_zoneSegmentedControl.selectedSegmentIndex];
     
     if (![name isEqualToString:currentZone]) {
@@ -232,7 +234,7 @@
 // Actually Update the zone segment
 -(void)updateZoneSegment{
     
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeSoccerZoneStart secondType:TagTypeSoccerZoneStop];
     
     if (array.count > 0) {
@@ -315,7 +317,7 @@
 }
 
 -(void)playerButtonSelected:(id)sender{
-    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     
     SideTagButton *button = sender;
     NSString *name = [NSString stringWithFormat:@"Pl. %@",button.titleLabel.text];

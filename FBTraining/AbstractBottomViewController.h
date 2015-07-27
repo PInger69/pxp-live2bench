@@ -12,21 +12,21 @@
 #import "SideTagButton.h"
 @interface AbstractBottomViewController : UIViewController
 
-@property (strong, nonatomic, nullable)    AVPlayer *videoPlayer;
-@property (strong, nonatomic, nullable)    Event *currentEvent;
+//@property (strong, nonatomic, nullable)    AVPlayer *videoPlayer;
+//@property (strong, nonatomic, nullable)    Event *currentEvent;
 
-@property (readonly, copy, nonatomic, nonnull) NSString *currentPeriod;
+//@property (readonly, copy, nonatomic, nonnull) NSString *currentPeriod;
 
 -(void)postTag:(nonnull NSDictionary *)tagDic;
 -(void)modifyTag:(nonnull NSDictionary *)tagDic;
--(void)deleteTag:(nonnull Tag *)tag;
+//-(void)deleteTag:(nonnull Tag *)tag;
 -(void)clear;
 
-// To be override by subclasses
+/*// To be override by subclasses
 -(nonnull instancetype)init;
 -(void)update;
 -(void)postTagsAtBeginning;
--(void)setIsDurationVariable:(SideTagButtonModes)buttonMode;
+-(void)setIsDurationVariable:(SideTagButtonModes)buttonMode;*/
 
 
 @end

@@ -889,6 +889,7 @@
 		D77BE0221B5556A4007C5E9B /* MedicalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalViewController.h; sourceTree = "<group>"; };
 		D77BE0231B5556A4007C5E9B /* MedicalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalViewController.m; sourceTree = "<group>"; };
 		D7807BF0181830100061305A /* live@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "live@2x.png"; sourceTree = "<group>"; };
+		D780B8921B66693700CB7ED8 /* BottomViewControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomViewControllerProtocol.h; sourceTree = "<group>"; };
 		D781900A1A70649800B964B4 /* EncoderManagerActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EncoderManagerActionPack.h; path = EncoderClasses/EncoderManagerActionPack.h; sourceTree = "<group>"; };
 		D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderManagerActionPack.m; path = EncoderClasses/EncoderManagerActionPack.m; sourceTree = "<group>"; };
 		D781900D1A70697D00B964B4 /* UserCenterActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserCenterActionPack.h; path = Live2BenchNative/UserCenterActionPack.h; sourceTree = "<group>"; };
@@ -2009,6 +2010,7 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D780B8921B66693700CB7ED8 /* BottomViewControllerProtocol.h */,
 				AE8750AC1B612F310055A7C2 /* TagSelectResponder.h */,
 				D7BA25401B5848D600DECA65 /* AbstractBottomViewController.h */,
 				D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */,

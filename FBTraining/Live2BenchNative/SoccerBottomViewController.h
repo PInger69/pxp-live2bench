@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "AbstractBottomViewController.h"
+#import "BottomViewControllerProtocol.h"
 //#import "Live2BenchViewController.h"
 //#import "CustomLabel.h"
 
 //@class Live2BenchViewController;
-@interface SoccerBottomViewController : AbstractBottomViewController
+@interface SoccerBottomViewController : AbstractBottomViewController <BottomViewControllerProtocol>
    // UISegmentedControl *zoneSegmentedControl;
    // UISegmentedControl *periodSegmentedControl;
    // Live2BenchViewController *live2BenchViewController;

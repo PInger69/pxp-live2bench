@@ -41,15 +41,15 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG  object:nil userInfo:tagDic];
 }
 
--(void)deleteTag:(Tag*)tag{
+/*-(void)deleteTag:(Tag*)tag{
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-}
+}*/
 
 -(void)clear{
     [self.view removeFromSuperview];
 }
 
-- (void)update {
+/*- (void)update {
     
 }
 
@@ -63,7 +63,7 @@
 
 -(void)setIsDurationVariable:(SideTagButtonModes)buttonMode{
     
-}
+}*/
 
 /*
 #pragma mark - Navigation
