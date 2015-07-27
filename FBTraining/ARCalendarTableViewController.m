@@ -7,7 +7,7 @@
 //
 
 #import "ARCalendarTableViewController.h"
-#import "CalendarTableCell.h"
+
 #import "ARCalendarTableViewCell.h"
 #import "Downloader.h"
 #import "DownloadItem.h"
@@ -37,7 +37,7 @@
 -(instancetype)init{
     self = [super init];
     if(self){
-        //[self.tableView registerClass:[CalendarTableCell class] forCellReuseIdentifier: @"CalendarTableCell"];
+
         [self.tableView registerClass:[ARCalendarTableViewCell class] forCellReuseIdentifier: @"ARCalendarTableViewCell"];
         self.arrayOfCollapsableIndexPaths = [NSMutableArray array];
         //Set the frame for deleteAllButton

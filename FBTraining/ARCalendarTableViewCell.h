@@ -20,6 +20,7 @@
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UILabel *titleLabel;
 @property (strong, nonatomic) UILabel *downloadInfoLabel;
+@property (strong, nonatomic) UILabel *leagueLabel;
 //@property (strong, nonatomic) DownloadItem *downloadItem;
 
 //@property (nonatomic, copy) void(^sendUserInfo)();

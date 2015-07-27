@@ -14,6 +14,11 @@
 @end
 
 @implementation ARCalendarTableViewCell
+{
+    UILabel * _dateDescription;
+    UILabel * _leagueDescription;
+}
+
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -27,19 +32,44 @@
 
 -(void)setupView{
     [super setupView];
+    
+    CGFloat leftMargin      = 5;
+    CGFloat topMargin       = 5;
+    CGFloat txtBoxHeight    = 26;
+    
     self.deleteButton.frame = CGRectMake(448, 0, 70 , 79);
     //self.shareButton.frame = CGRectMake(0, 0, 70 , 44);
     
-    self.dateLabel =[[UILabel alloc] initWithFrame:CGRectMake(5, 5, 150, 40)];
-    self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(175, 5, 200, 40)];
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 35, 400, 40)];
-    [self.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     
-    self.downloadInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(350, 0, 200, 50)];
-    [self.downloadInfoLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
+    _dateDescription =    [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin+txtBoxHeight, 120, txtBoxHeight)];
+    [_dateDescription setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
+    _dateDescription.text   = @"Event start time:";
+    
+    
+    _leagueDescription =    [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin+txtBoxHeight+txtBoxHeight, 60, txtBoxHeight)];
+    [_leagueDescription setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
+    _leagueDescription.text   = @"League:";
+    
+    self.dateLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+leftMargin, topMargin+txtBoxHeight, 100, txtBoxHeight)];
+    [self.dateLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
+   
+    self.timeLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+105,      topMargin+txtBoxHeight, 50, txtBoxHeight)];
+   [self.timeLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
+    
+    
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin, 380, txtBoxHeight)];
+    [self.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
+    
+    self.downloadInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(390, topMargin, 100, 50)];
+    [self.downloadInfoLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
     self.downloadInfoLabel.numberOfLines = 2;
     self.downloadInfoLabel.lineBreakMode = NSLineBreakByClipping;
-    
+
+//    self.downloadInfoLabel.layer.borderWidth = 1;
+//    self.dateLabel.layer.borderWidth = 1;
+//    self.timeLabel.layer.borderWidth = 1;
+//    self.titleLabel.layer.borderWidth = 1;
+
 //    self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
 //    [self.playButton setFrame:CGRectMake(460, 15, 30,30)];
 //    //don't set tag to 0, by default, uiview's tag is 0
@@ -59,7 +89,9 @@
     [self.myContentView addSubview: self.dateLabel];
     [self.myContentView addSubview: self.timeLabel];
     [self.myContentView addSubview: self.titleLabel];
-//    [self.myContentView addSubview: self.downloadButton];
+    [self.myContentView addSubview: _dateDescription];
+    [self.myContentView addSubview: _leagueDescription];
+    
     //[self.myContentView addSubview: self.playButton];
 }
 //-(void)prepareForReuse{

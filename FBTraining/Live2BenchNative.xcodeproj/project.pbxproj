@@ -160,7 +160,6 @@
 		D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779921A30F0D50034DD66 /* EncoderTask.m */; };
 		D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */; };
 		D72779A81A3609620034DD66 /* ListPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779A71A3609620034DD66 /* ListPopoverController.m */; };
-		D72779AB1A37498E0034DD66 /* CalendarTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779AA1A37498E0034DD66 /* CalendarTableCell.m */; };
 		D72779AE1A38994E0034DD66 /* Live2BenchTagUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779AD1A38994E0034DD66 /* Live2BenchTagUIViewController.m */; };
 		D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72779B01A38DBE30034DD66 /* TagFlagViewController.m */; };
 		D72B833517CFDBAE0035A1C4 /* EulaString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D72B833417CFDBAE0035A1C4 /* EulaString.txt */; };
@@ -726,8 +725,6 @@
 		D72779A41A32605B0034DD66 /* BottomViewControllerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BottomViewControllerBase.m; path = Live2BenchNative/Live2BenchTab/BottomViewClasses/BottomViewControllerBase.m; sourceTree = "<group>"; };
 		D72779A61A3609620034DD66 /* ListPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ListPopoverController.h; path = Live2BenchNative/GeneralUIClasses/ListPopoverController.h; sourceTree = "<group>"; };
 		D72779A71A3609620034DD66 /* ListPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ListPopoverController.m; path = Live2BenchNative/GeneralUIClasses/ListPopoverController.m; sourceTree = "<group>"; };
-		D72779A91A37498E0034DD66 /* CalendarTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CalendarTableCell.h; path = Live2BenchNative/CalendarTab/CalendarTableCell.h; sourceTree = "<group>"; };
-		D72779AA1A37498E0034DD66 /* CalendarTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CalendarTableCell.m; path = Live2BenchNative/CalendarTab/CalendarTableCell.m; sourceTree = "<group>"; };
 		D72779AC1A38994E0034DD66 /* Live2BenchTagUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Live2BenchTagUIViewController.h; path = Live2BenchNative/Live2BenchTab/Live2BenchTagUIViewController.h; sourceTree = "<group>"; };
 		D72779AD1A38994E0034DD66 /* Live2BenchTagUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Live2BenchTagUIViewController.m; path = Live2BenchNative/Live2BenchTab/Live2BenchTagUIViewController.m; sourceTree = "<group>"; };
 		D72779AF1A38DBE30034DD66 /* TagFlagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagFlagViewController.h; path = Live2BenchTab/TagFlagViewController.h; sourceTree = "<group>"; };
@@ -2124,8 +2121,6 @@
 				D749B7AB1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m */,
 				D72779AC1A38994E0034DD66 /* Live2BenchTagUIViewController.h */,
 				D72779AD1A38994E0034DD66 /* Live2BenchTagUIViewController.m */,
-				D72779A91A37498E0034DD66 /* CalendarTableCell.h */,
-				D72779AA1A37498E0034DD66 /* CalendarTableCell.m */,
 				D76B6DD31A8AC07300601BAF /* ToastObserver.h */,
 				D76B6DD41A8AC07300601BAF /* ToastObserver.m */,
 				D76B6DD61A8AC08500601BAF /* ImageAssetManager.h */,
@@ -2995,7 +2990,6 @@
 				AEDD7C941B4AB830003C82F3 /* PxpGlowButton.m in Sources */,
 				D719869A19C8BA6E00122CAA /* VideoControlBar.m in Sources */,
 				D75ED5001ACC4713003AF856 /* RJLFreezeMonitor.m in Sources */,
-				D72779AB1A37498E0034DD66 /* CalendarTableCell.m in Sources */,
 				D7DB750417E8F419009C402F /* PopoverButton.m in Sources */,
 				AEDD7C991B4AB830003C82F3 /* PxpPlayPauseButton.m in Sources */,
 				AEE595361B0FA75700DCABE6 /* FeedSelectionController.m in Sources */,
