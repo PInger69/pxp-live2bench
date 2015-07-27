@@ -54,6 +54,8 @@
     id periodBoundaryObserver;
     UIColor *tintColor;
     
+    
+    NSMutableArray *currentlyPostingTags;
    
 }
 
@@ -150,6 +152,7 @@
         self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
         tintColor = PRIMARY_APP_COLOR;
         _mainView = self.view;
+        currentlyPostingTags = [[NSMutableArray alloc]init];
         
         
         offenseButton = [[NSMutableDictionary alloc]init];
@@ -430,7 +433,14 @@
         }
     }
     
-    // sort the times form smallest to biggest
+    // Look for the tags that are just posted but encoder haven't respond back
+    for (NSDictionary *dict in currentlyPostingTags) {
+        if ([[dict objectForKey:@"type"] intValue] == type | [[dict objectForKey:@"type"] intValue] == secondType) {
+            timeDicUnordered[dict[@"time"]] = dict[@"name"];
+        }
+    }
+    
+    // sort the times from biggest to smallest
     NSSortDescriptor *highestToLowest = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO];
     NSMutableArray *timesArray = [[NSMutableArray alloc]initWithArray:[timeDicUnordered allKeys]];
     [timesArray sortUsingDescriptors:[NSArray arrayWithObject:highestToLowest]];
@@ -532,6 +542,26 @@
     return @"1";
 }
 
+// when the encoder respond back and now have the just made tag,remove it from currentlyPostingTags array
+-(void)clearCurrentlyPostingTags{
+    if (currentlyPostingTags.count == 0) {
+        return;
+    }
+    
+    NSDictionary *toBeRemoved;
+    for (NSDictionary *dict in currentlyPostingTags) {
+        Tag *tag = [self checkTags:dict[@"name"]];
+        if (tag.type == [dict[@"type"]intValue] && tag.time == [dict[@"time"] doubleValue]) {
+            toBeRemoved = dict;
+        }
+    }
+    [currentlyPostingTags removeObject:toBeRemoved];
+}
+
+-(void)setCurrentEvent:(Event * __nullable)currentEvent{
+    _currentEvent = currentEvent;
+    [self clearCurrentlyPostingTags];
+}
 #pragma mark - Period Tags Related Methods
 // Post period tag
 -(void)periodSegmentValueChanged:(UISegmentedControl *)segment
@@ -539,10 +569,10 @@
     float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
     
-    if (![self checkTags:name]) {
-        NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart],@"time":[NSString stringWithFormat:@"%f",time]};
-        [super postTag:tagDic];
-    }
+    NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart],@"time":[NSString stringWithFormat:@"%f",time]};
+    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]}];
+    [super postTag:tagDic];
+    
     
     /*if ([self checkTags:name]) {
         Tag *tag = [self checkTags:name];
@@ -576,6 +606,7 @@
     NSString *name = [NSString stringWithFormat:@"%d,%d",homeValue,awayValue];
     
     NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStrengthStart],@"strength":name,@"period":[self currentPeriod]};
+    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]}];
     [super postTag:dic];
         
     //if i have more players the the other team then the H view is green, other wise it is red
@@ -643,6 +674,7 @@
         [offenseButton setValue:button forKey:@"current"];
         NSString *name =[[@"line_" stringByAppendingString:@"f_"] stringByAppendingString:button.titleLabel.text];
         NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine],@"period":[self currentPeriod],@"line":name};
+        [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartOLine]}];
         [super postTag:dic];
 
     }
@@ -727,6 +759,7 @@
         [defenseButton setValue:button forKey:@"current"];
         NSString *name =[[@"line_" stringByAppendingString:@"d_"] stringByAppendingString:button.titleLabel.text];
         NSDictionary *dic = @{@"name":name,@"time":[NSString stringWithFormat:@"%f",time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine],@"period":[self currentPeriod],@"line":name};
+        [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyStartDLine]}];
         [super postTag:dic];
         
     }

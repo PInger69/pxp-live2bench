@@ -36,27 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459719058.997961"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "717"
-            endingLineNumber = "717"
-            landmarkName = "-DefensePressed:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "801"
-            endingLineNumber = "801"
+            startingLineNumber = "834"
+            endingLineNumber = "834"
             landmarkName = "@implementation HockeyBottomViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -68,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459717685.346684"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "286"
-            endingLineNumber = "286"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
             landmarkName = "-init"
             landmarkType = "5">
          </BreakpointContent>
@@ -84,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459717685.346684"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "354"
-            endingLineNumber = "354"
+            startingLineNumber = "357"
+            endingLineNumber = "357"
             landmarkName = "-init"
             landmarkType = "5">
          </BreakpointContent>
@@ -100,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459717685.346684"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
+            startingLineNumber = "358"
+            endingLineNumber = "358"
             landmarkName = "-init"
             landmarkType = "5">
          </BreakpointContent>
@@ -116,11 +100,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459717685.346684"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "359"
-            endingLineNumber = "359"
+            startingLineNumber = "362"
+            endingLineNumber = "362"
             landmarkName = "-init"
             landmarkType = "5">
          </BreakpointContent>
@@ -173,43 +157,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459719058.997961"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "703"
-            endingLineNumber = "703"
-            landmarkName = "-OffenseSwipe:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "677"
-            endingLineNumber = "677"
-            landmarkName = "-updateOffenseButtons"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
             landmarkName = "-postTagsAtBeginning"
             landmarkType = "5">
          </BreakpointContent>
@@ -221,51 +173,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459719058.997961"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "481"
-            endingLineNumber = "481"
-            landmarkName = "-postTagsAtBeginning"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/Live2BenchViewController.m"
-            timestampString = "459699329.984723"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
-            landmarkName = "-addBottomViewController"
-            landmarkType = "5">
-            <Actions>
-               <BreakpointActionProxy
-                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
-                  <ActionContent
-                     consoleCommand = "po sport">
-                  </ActionContent>
-               </BreakpointActionProxy>
-            </Actions>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
-            timestampString = "459699292.522986"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
+            startingLineNumber = "491"
+            endingLineNumber = "491"
             landmarkName = "-postTagsAtBeginning"
             landmarkType = "5">
          </BreakpointContent>
@@ -277,28 +189,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
-            timestampString = "459699292.522986"
+            timestampString = "459719058.997961"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "302"
-            endingLineNumber = "302"
-            landmarkName = "-createPlayerButton"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/Live2BenchTab/TablePopoverController.m"
-            timestampString = "459467093.333859"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "-presentPopoverFromRect:inView:permittedArrowDirections:animated:"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
+            landmarkName = "-postTagsAtBeginning"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -324,13 +220,237 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/Live2BenchViewController.m"
-            timestampString = "459699350.003893"
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459719506.730756"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "345"
-            endingLineNumber = "345"
-            landmarkName = "-eventChanged:"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
+            landmarkName = "-halfValueChanged:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459719506.730756"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
+            landmarkName = "-playerButtonSelected:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459719506.730756"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
+            landmarkName = "-playerButtonSelected:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SoccerBottomViewController playerButtonSelected:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+                  timestampString = "459717685.490228"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "332"
+                  endingLineNumber = "332"
+                  offsetFromSymbolStart = "940">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SoccerBottomViewController playerButtonSelected:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+                  timestampString = "459717685.490458"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "332"
+                  endingLineNumber = "332"
+                  offsetFromSymbolStart = "944">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459719506.730756"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "372"
+            endingLineNumber = "372"
+            landmarkName = "-playerButtonSelected:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SoccerBottomViewController playerButtonSelected:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+                  timestampString = "459717685.491536"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "339"
+                  endingLineNumber = "339"
+                  offsetFromSymbolStart = "1714">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SoccerBottomViewController playerButtonSelected:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+                  timestampString = "459717685.491755"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "339"
+                  endingLineNumber = "339"
+                  offsetFromSymbolStart = "1718">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459719506.730756"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "388"
+            endingLineNumber = "388"
+            landmarkName = "-playerButtonSelected:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459719506.730756"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "393"
+            endingLineNumber = "393"
+            landmarkName = "-playerButtonSelected:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459719058.997961"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "-init"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "459714549.427817"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1762"
+            endingLineNumber = "1762"
+            landmarkName = "-getEventTags:extraData:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "459714564.117793"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1939"
+            endingLineNumber = "1939"
+            landmarkName = "-onTagsChange:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RugbyBottomViewController.m"
+            timestampString = "459719506.730756"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
+            landmarkName = "-halfValueChanged:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
+            timestampString = "459719058.997961"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "531"
+            endingLineNumber = "531"
+            landmarkName = "-currentPeriod"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

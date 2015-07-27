@@ -77,10 +77,7 @@ typedef NS_ENUM (NSInteger,TagType){
     TagTypeFootballDownStart       = 19,
     TagTypeFootballDownStop        = 20,
     TagTypeFootballQuarterStart    = 21,
-    TagTypeFootballQuarterStop     = 22,
-    
-    TagTypePeriod                  = 1002,
-    TagTypeStrength                = 1004
+    TagTypeFootballQuarterStop     = 22
     
 };
 
