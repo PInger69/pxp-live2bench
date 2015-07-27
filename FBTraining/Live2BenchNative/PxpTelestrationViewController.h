@@ -29,4 +29,6 @@
 
 @property (assign, nonatomic) BOOL showsClearButton;
 
+@property (readonly, assign, nonatomic) BOOL telestrating;
+
 @end
