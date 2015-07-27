@@ -29,6 +29,7 @@
 #import "PxpTelestrationViewController.h"
 #import "HockeyBottomViewController.h"
 #import "SoccerBottomViewController.h"
+#import "RugbyBottomViewController.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "RJLVideoPlayer.h"
 #import "LeagueTeam.h"
@@ -297,6 +298,16 @@ static void * eventContext      = &eventContext;
         _bottomViewController.currentEvent = _currentEvent;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
+        [self switchPressed];
+        [_bottomViewController allToggleOnOpenTags];
+    }else if ([sport isEqualToString:@"Rugby"] && !_bottomViewController && _currentEvent){
+        _bottomViewController = [[RugbyBottomViewController alloc]init];
+        [self.view addSubview:_bottomViewController.mainView];
+        _bottomViewController.currentEvent = _currentEvent;
+        [_bottomViewController update];
+        [_bottomViewController postTagsAtBeginning];
+        [self switchPressed];
+        [_bottomViewController allToggleOnOpenTags];
     }
 }
 
@@ -320,6 +331,7 @@ static void * eventContext      = &eventContext;
 
     if (!_currentEvent.live) {
         [_tagButtonController closeAllOpenTagButtons];
+        [_bottomViewController closeAllOpenTagButtons];
     }
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
@@ -343,7 +355,7 @@ static void * eventContext      = &eventContext;
         }
         
         [self addBottomViewController];
-
+        
     }
     
     [_videoBarViewController update];
@@ -1055,6 +1067,7 @@ static void * eventContext      = &eventContext;
 
 -(void) onAppTerminate:(NSNotification *)note{
     [_tagButtonController closeAllOpenTagButtons];
+    [_bottomViewController closeAllOpenTagButtons];
 }
 
 - (void)didReceiveMemoryWarning
