@@ -22,8 +22,11 @@
 }
 
 - (void)initMultiViewController {
+    _telestrationViewController = [[PxpTelestrationViewController alloc] init];
     _controlBar = [[PxpPlayerControlBar alloc] init];
     _playerObserverContext = &_playerObserverContext;
+    
+    [self addChildViewController:_telestrationViewController];
     
     [self addObserver:self forKeyPath:@"multiView.context.mainPlayer" options:0 context:_playerObserverContext];
 }
@@ -51,12 +54,17 @@
 - (void)loadView {
     self.view = [[PxpPlayerMultiView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
     
+    [self.view addSubview:self.telestrationViewController.view];
     [self.view addSubview:self.controlBar];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.telestrationViewController.view.frame = self.view.bounds;
+    self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    
     self.controlBar.frame = CGRectMake(0, self.view.bounds.size.height - 44.0, self.view.bounds.size.width, 44.0);
     self.controlBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.controlBar.player = self.multiView.context.mainPlayer;

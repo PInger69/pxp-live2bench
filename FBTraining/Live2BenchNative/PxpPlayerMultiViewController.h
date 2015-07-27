@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "PxpPlayerMultiView.h"
+#import "PxpTelestrationViewController.h"
 
 @interface PxpPlayerMultiViewController : UIViewController
 
 @property (strong, nonatomic, nullable) PxpPlayerMultiView *multiView;
+
+@property (readonly, strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
 @end

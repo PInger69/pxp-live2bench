@@ -141,6 +141,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.showsControls = self.showsControls;
+}
+
 #pragma mark - Getters / Setters
 
 - (void)setTelestrating:(BOOL)telestrating {
