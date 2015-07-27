@@ -22,10 +22,10 @@
 
 -(id)initWithMessage:(NSString*)aMessage buttonListNames:(NSArray*)aListOfNames
 {
-    
-    self                            = [super initWithContentViewController:contentVC];
+    UIViewController *viewController = [[UIViewController alloc] init];
+    self                            = [super initWithContentViewController:viewController];
     if (self) {
-        contentVC                       = [[UIViewController alloc] init];
+        contentVC = viewController;
         content                     = contentVC.view;
         content.backgroundColor     = [UIColor whiteColor];
         
