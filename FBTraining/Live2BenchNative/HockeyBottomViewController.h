@@ -13,11 +13,12 @@
 //#import "CustomButton.h"
 #import "CustomLabel.h"
 #import "AbstractBottomViewController.h"
+#import "BottomViewControllerProtocol.h"
 
 //@class ContentViewController;
 //@class Live2BenchViewController;
 
-@interface HockeyBottomViewController : AbstractBottomViewController
+@interface HockeyBottomViewController : AbstractBottomViewController <BottomViewControllerProtocol>
 {
     //UIView *leftView;
     //NSMutableDictionary *_tagNames;

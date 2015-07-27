@@ -32,6 +32,7 @@
 #import "PxpVideoPlayerProtocol.h"
 #import "RJLVideoPlayer.h"
 #import "LeagueTeam.h"
+#import "BottomViewControllerProtocol.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -87,8 +88,7 @@
     
     UISwitch                            *durationSwitch;
     
-    AbstractBottomViewController *bottomViewController;
-    
+    id <BottomViewControllerProtocol>   _bottomViewController;
 }
 
 // Context
@@ -235,6 +235,7 @@ static void * eventContext      = &eventContext;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SET_PLAYER_FEED object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
 }
 
 #pragma mark- Encoder Observers
@@ -278,24 +279,24 @@ static void * eventContext      = &eventContext;
 
 -(void)addBottomViewController{
     NSString *sport = [UserCenter getInstance].taggingTeam.league.sport;
-    if (bottomViewController) {
-        [bottomViewController.view removeFromSuperview];
-        bottomViewController = nil;
+    if (_bottomViewController) {
+        [_bottomViewController clear];
+        _bottomViewController = nil;
     }
     
-    if ([sport isEqualToString:@"Hockey"] && !bottomViewController && _currentEvent) {
-        bottomViewController = [[HockeyBottomViewController alloc]init];
-        [self.view addSubview:bottomViewController.view];
-        bottomViewController.currentEvent = _currentEvent;
-        [bottomViewController update];
-        [bottomViewController postTagsAtBeginning];
+    if ([sport isEqualToString:@"Hockey"] && !_bottomViewController && _currentEvent) {
+        _bottomViewController = [[HockeyBottomViewController alloc]init];
+        [self.view addSubview:_bottomViewController.mainView];
+        _bottomViewController.currentEvent = _currentEvent;
+        [_bottomViewController update];
+        [_bottomViewController postTagsAtBeginning];
         
-    }else if ([sport isEqualToString:@"Soccer"] && !bottomViewController && _currentEvent){
-        bottomViewController = [[SoccerBottomViewController alloc]init];
-        [self.view addSubview:bottomViewController.view];
-        bottomViewController.currentEvent = _currentEvent;
-        [bottomViewController update];
-        [bottomViewController postTagsAtBeginning];
+    }else if ([sport isEqualToString:@"Soccer"] && !_bottomViewController && _currentEvent){
+        _bottomViewController = [[SoccerBottomViewController alloc]init];
+        [self.view addSubview:_bottomViewController.mainView];
+        _bottomViewController.currentEvent = _currentEvent;
+        [_bottomViewController update];
+        [_bottomViewController postTagsAtBeginning];
     }
 }
 
@@ -351,7 +352,7 @@ static void * eventContext      = &eventContext;
 
 -(void)onTagChanged:(NSNotification *)note
 {
-    bottomViewController.currentEvent = _currentEvent;
+    _bottomViewController.currentEvent = _currentEvent;
     [_videoBarViewController onTagChanged:_currentEvent];
 }
 
@@ -800,8 +801,8 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController.tagMarkerController createTagMarkers];
     
     
-    bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
-    [bottomViewController update];
+    _bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
+    [_bottomViewController update];
     // just to update UI
 }
 
@@ -900,8 +901,8 @@ static void * eventContext      = &eventContext;
                                                                                          @"name":button.titleLabel.text,
                                                                                          @"time":[NSString stringWithFormat:@"%f",currentTime]
                                                                                          }];
-        if (bottomViewController && [bottomViewController respondsToSelector:@selector(currentPeriod)]) {
-            [userInfo setObject:[bottomViewController currentPeriod] forKey:@"period"];
+        if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
+            [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
         }
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:[userInfo copy]];
@@ -919,8 +920,8 @@ static void * eventContext      = &eventContext;
                                                                                          @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
                                                                                          @"dtagid": button.durationID
                                                                                          }];
-        if (bottomViewController && [bottomViewController respondsToSelector:@selector(currentPeriod)]) {
-            [userInfo setObject:[bottomViewController currentPeriod] forKey:@"period"];
+        if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
+            [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
         }
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:userInfo];
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
@@ -1031,8 +1032,10 @@ static void * eventContext      = &eventContext;
 {
     if (durationSwitch.on == true &&_currentEvent) {
         [_tagButtonController setButtonState:SideTagButtonModeToggle];
+        [_bottomViewController setIsDurationVariable:SideTagButtonModeToggle];
     }else if(durationSwitch.on == false &&_currentEvent){
         [_tagButtonController setButtonState:SideTagButtonModeRegular];
+        [_bottomViewController setIsDurationVariable:SideTagButtonModeRegular];
     }
 }
 
@@ -1080,7 +1083,6 @@ static void * eventContext      = &eventContext;
     if (tele.actionStack.count) {
         tele.isStill = YES;
         tele.sourceName = self.videoPlayer.feed.sourceName;
-        [tele pushAction:[PxpTelestrationAction clearActionAtTime:tele.startTime + 1.0]];
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",tele.startTime],
@@ -1098,6 +1100,18 @@ static void * eventContext      = &eventContext;
 
 - (NSTimeInterval)currentTimeInSeconds {
     return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
+}
+
+- (void)setVideoPlayer:(UIViewController<PxpVideoPlayerProtocol> *)videoPlayer {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:videoPlayer];
+    
+    _videoPlayer = videoPlayer;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:videoPlayer];
+}
+
+- (void)clipCanceledHandler:(NSNotification *)note {
+    self.telestrationViewController.telestration = nil;
 }
 
 @end

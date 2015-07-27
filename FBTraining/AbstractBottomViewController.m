@@ -35,21 +35,21 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:tagDic];
 }
 
--(void)modifyTag:(Tag*)tag{
+-(void)modifyTag:(NSDictionary*)tagDic{
     //float time = CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
     //tag.time = time;
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG  object:nil userInfo:[tag makeTagData]];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG  object:nil userInfo:tagDic];
 }
 
--(void)deleteTag:(Tag*)tag{
+/*-(void)deleteTag:(Tag*)tag{
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-}
+}*/
 
 -(void)clear{
     [self.view removeFromSuperview];
 }
 
-- (void)update {
+/*- (void)update {
     
 }
 
@@ -60,6 +60,10 @@
 - (nonnull NSString *)currentPeriod {
     return @"";
 }
+
+-(void)setIsDurationVariable:(SideTagButtonModes)buttonMode{
+    
+}*/
 
 /*
 #pragma mark - Navigation

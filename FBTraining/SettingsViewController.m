@@ -79,7 +79,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     UserCenter             * userCenter;
     TablePopoverController * homeTeamPick;
     TablePopoverController * visitTeamPick;
-    TablePopoverController * LeaguePick;
+    TablePopoverController * _leaguePick;
     NSArray                * teamNames;
     NSArray                * leagueNames;
     //    id                     observerForFoundMaster;
@@ -116,7 +116,7 @@ SVSignalStatus signalStatus;
         masterContext           = &masterContext;
         homeTeamPick            = [[TablePopoverController alloc]init];
         visitTeamPick           = [[TablePopoverController alloc]init];
-        LeaguePick              = [[TablePopoverController alloc]init];
+        _leaguePick              = [[TablePopoverController alloc]init];
         
         encoderHomeText         = [CustomLabel labelWithStyle:CLStyleOrange];
         encoderHomeText.text    = @"Encoder is not available.";
@@ -745,15 +745,15 @@ SVSignalStatus signalStatus;
         UIButton *popButton = (UIButton*)sender;
         //popButton.selected = YES;
         __block SettingsViewController * weakSelf = self;
-        [LeaguePick populateWith:leagueNames];
-        [LeaguePick addOnCompletionBlock:^(NSString *pick) {
+        [_leaguePick populateWith:leagueNames];
+        [_leaguePick addOnCompletionBlock:^(NSString *pick) {
             [popButton setTitle:pick forState:UIControlStateNormal];
             //popButton.selected = NO;
             weakSelf -> _leagueName = pick;
             [weakSelf checkUserSelection];
         }];
         
-        [LeaguePick presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        [_leaguePick presentPopoverFromRect:popButton.frame inView:selectLeagueContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     }
     
 

@@ -35,7 +35,6 @@
 
 @property (strong, nonatomic, nonnull) UIButton *telestrationButton;
 
-@property (assign, nonatomic) BOOL telestrating;
 @property (assign, nonatomic) BOOL activeTelestration;
 
 @end

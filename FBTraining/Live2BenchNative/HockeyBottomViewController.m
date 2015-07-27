@@ -58,6 +58,8 @@
 }
 
 @synthesize currentEvent = _currentEvent;
+@synthesize videoPlayer = _videoPlayer;
+@synthesize mainView  = _mainView;
 //@synthesize leftView;
 //@synthesize middleView;
 //@synthesize rightView;
@@ -147,6 +149,7 @@
         
         self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
         tintColor = PRIMARY_APP_COLOR;
+        _mainView = self.view;
         
         
         offenseButton = [[NSMutableDictionary alloc]init];
@@ -502,7 +505,7 @@
     [self updateDefenseButtons];
     
     __block HockeyBottomViewController *weakSelf = self;
-    periodBoundaryObserver = [self.videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
+    periodBoundaryObserver = [_videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
         [weakSelf updatePeriodSegment];
         [weakSelf updateStrengthSegment];
         [weakSelf updateOffenseButtons];
@@ -512,7 +515,7 @@
 
 // get Current Period
 -(NSString *)currentPeriod{
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeHockeyPeriodStart secondType:TagTypeHockeyPeriodStop];
     
     if (array.count > 0) {
@@ -533,7 +536,7 @@
 // Post period tag
 -(void)periodSegmentValueChanged:(UISegmentedControl *)segment
 {
-    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
     
     if (![self checkTags:name]) {
@@ -564,7 +567,7 @@
 // Post Tag when Strength Segment pressed
 -(void)segmentValueChanged:(UISegmentedControl *)segment
 {
-    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     
     NSInteger homeIndex = _homeSegControl.selectedSegmentIndex;
     NSInteger awayIndex = _awaySegControl.selectedSegmentIndex;
@@ -600,7 +603,7 @@
 // Actually Update the strengths' segment
 -(void)updateStrengthSegment{
     
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeHockeyStrengthStart secondType:TagTypeHockeyStrengthStop];
     
     if (array.count > 0) {
@@ -626,7 +629,7 @@
 // Post an Offense Tag
 -(void)OffensePressed:(id)sender
 {
-    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     CustomButton *button = (CustomButton*)sender;
     
     [_leftArrow setHidden:true];
@@ -655,7 +658,7 @@
         return;
     }
     
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeHockeyStartOLine secondType:TagTypeHockeyStopOLine];
     
     if (array.count > 0) {
@@ -711,7 +714,7 @@
 // Post an Defense Tag
 -(void)DefensePressed:(id)sender
 {
-    float time = CMTimeGetSeconds(self.videoPlayer.currentTime);
+    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     CustomButton *button = (CustomButton*)sender;
     
     [_playerDrawerRight.view setHidden:true];
@@ -739,7 +742,7 @@
         return;
     }
     
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(self.videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
     NSArray *array = [self getTags:TagTypeHockeyStartDLine secondType:TagTypeHockeyStopDLine];
     
     if (array.count > 0) {
