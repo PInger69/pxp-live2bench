@@ -8,13 +8,7 @@
 
 #import "PxpPlayerMultiView.h"
 
-#import "PxpPlayerPipCompanionView.h"
-#import "PxpPlayerGridView.h"
-
 @interface PxpPlayerMultiView () <PxpPlayerGridViewDelegate>
-
-@property (strong, nonatomic, nonnull) PxpPlayerGridView *gridView;
-@property (strong, nonatomic, nonnull) PxpPlayerPipCompanionView *companionView;
 
 @end
 

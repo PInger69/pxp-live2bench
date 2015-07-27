@@ -10,25 +10,31 @@
 
 #import "PxpPlayerControlBar.h"
 
-@interface PxpPlayerMultiViewController ()
-
-@property (strong, nonatomic, nonnull) PxpPlayerControlBar *controlBar;
-
-@end
-
 @implementation PxpPlayerMultiViewController
 {
+    __nonnull PxpPlayerControlBar *_controlBar;
+    
     void *_playerObserverContext;
+    void *_companionViewHiddenObserverContext;
+    void *_companionViewZoomObserverContext;
+    void *_telestrationObserverContext;
 }
 
 - (void)initMultiViewController {
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
     _controlBar = [[PxpPlayerControlBar alloc] init];
+    
     _playerObserverContext = &_playerObserverContext;
+    _companionViewHiddenObserverContext = &_companionViewHiddenObserverContext;
+    _companionViewZoomObserverContext = &_companionViewZoomObserverContext;
+    _telestrationObserverContext = &_telestrationObserverContext;
     
     [self addChildViewController:_telestrationViewController];
     
     [self addObserver:self forKeyPath:@"multiView.context.mainPlayer" options:0 context:_playerObserverContext];
+    [self addObserver:self forKeyPath:@"multiView.companionView.hidden" options:0 context:_companionViewHiddenObserverContext];
+    [self addObserver:self forKeyPath:@"multiView.companionView.zoomLevel" options:0 context:_companionViewZoomObserverContext];
+    [self addObserver:self forKeyPath:@"telestrationViewController.telestration" options:0 context:_telestrationObserverContext];
 }
 
 - (instancetype)init {
@@ -49,13 +55,16 @@
 
 - (void)dealloc {
     [self removeObserver:self forKeyPath:@"multiView.context.mainPlayer" context:_playerObserverContext];
+    [self removeObserver:self forKeyPath:@"multiView.companionView.hidden" context:_companionViewHiddenObserverContext];
+    [self removeObserver:self forKeyPath:@"multiView.companionView.zoomLevel" context:_companionViewZoomObserverContext];
+    [self removeObserver:self forKeyPath:@"telestrationViewController.telestration" context:_telestrationObserverContext];
 }
 
 - (void)loadView {
     self.view = [[PxpPlayerMultiView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
     
     [self.view addSubview:self.telestrationViewController.view];
-    [self.view addSubview:self.controlBar];
+    [self.view addSubview:_controlBar];
 }
 
 - (void)viewDidLoad {
@@ -65,9 +74,9 @@
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     
-    self.controlBar.frame = CGRectMake(0, self.view.bounds.size.height - 44.0, self.view.bounds.size.width, 44.0);
-    self.controlBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    self.controlBar.player = self.multiView.context.mainPlayer;
+    _controlBar.frame = CGRectMake(0, self.view.bounds.size.height - 44.0, self.view.bounds.size.width, 44.0);
+    _controlBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    _controlBar.player = self.multiView.context.mainPlayer;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,9 +84,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)updateTeleVisibiliy {
+    BOOL hidden = self.multiView.companionView.hidden || self.multiView.companionView.zoomLevel != 1.0;
+    _telestrationViewController.view.hidden = hidden;
+}
+
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _playerObserverContext) {
-        self.controlBar.player = self.multiView.context.mainPlayer;
+        _controlBar.player = self.multiView.context.mainPlayer;
+    } else if (context == _companionViewHiddenObserverContext) {
+        [self updateTeleVisibiliy];
+    } else if (context == _companionViewZoomObserverContext) {
+        [self updateTeleVisibiliy];
+    } else if (context == _telestrationObserverContext) {
+        self.multiView.companionView.zoomEnabled = !self.telestrationViewController.telestration;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }

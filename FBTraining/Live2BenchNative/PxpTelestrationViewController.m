@@ -298,6 +298,7 @@
         if (self.activeTelestration) {
             self.activeTelestration = NO;
             [self.delegate telestration:self.telestration didFinishInViewController:self];
+            self.telestration = nil;
         }
         
     }

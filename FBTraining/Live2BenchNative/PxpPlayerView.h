@@ -32,6 +32,9 @@
 /// Specifies whether or not the view displays the zoom level.
 @property (assign, nonatomic) BOOL showsZoomLevel;
 
+/// The zoom level of the player.
+@property (readonly, assign, nonatomic) CGFloat zoomLevel;
+
 /// Specifies whether or not zoom is enabled.
 @property (assign, nonatomic) BOOL zoomEnabled;
 

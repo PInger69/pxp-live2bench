@@ -74,6 +74,8 @@
     _scrollView = [[UIScrollView alloc] init];
     _avPlayerView = [[PxpAVPlayerView alloc] init];
     
+    _zoomLevel = 1.0;
+    
     _nameLabel = [[UILabel alloc] init];
     _nameLabel.font = [UIFont systemFontOfSize:18.0];
     _nameLabel.textColor = [UIColor whiteColor];
@@ -316,6 +318,9 @@
 }
 
 - (void)scrollViewDidZoom:(nonnull UIScrollView *)scrollView {
+    [self willChangeValueForKey:@"zoomLevel"];
+    _zoomLevel = self.scrollView.zoomScale;
+    [self didChangeValueForKey:@"zoomLevel"];
     self.zoomLabel.text = self.scrollView.zoomScale > 1.0 ? [NSString stringWithFormat:@"%.1fx", self.scrollView.zoomScale] : nil;
 }
 
