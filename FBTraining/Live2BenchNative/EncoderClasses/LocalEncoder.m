@@ -538,7 +538,7 @@ static LocalEncoder * instance;
     __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
     
 
-        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",self.event.name,tag.ID, srcID];
+        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@hq.mp4",self.event.name,tag.ID, srcID];
  
 //        //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
         NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
@@ -548,8 +548,8 @@ static LocalEncoder * instance;
     CMTime dur = CMTimeMakeWithSeconds(tag.duration, 600);
     CMTimeRange tr = CMTimeRangeMake(sTime, dur);
 
-    DownloadItem * dli = [Downloader trimVideoURL:vidURL to:pth withTimeRange:tr];
-    
+    DownloadItem * dli = [Downloader trimVideoURL:vidURL to:pth withTimeRange:tr key:[NSString stringWithFormat:@"%@-%@",tag.ID,srcID ]];
+
         dItemBlock(dli);
 
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
