@@ -18,7 +18,6 @@
 
 @implementation VideoTrimItem
 {
-    void(^progressBlock)(float,NSInteger);
     CMTimeRange timeRange;
     NSString *videoFilePath;
     NSString *destinationPath;
