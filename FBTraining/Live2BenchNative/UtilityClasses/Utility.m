@@ -551,6 +551,10 @@
         }
     }
     
+    if (reachability) {
+        CFRelease(reachability);
+    }
+    
     return NO;
     
     //    return [uController hasConnectivity];

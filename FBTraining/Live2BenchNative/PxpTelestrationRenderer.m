@@ -12,10 +12,6 @@
 
 @interface PxpTelestrationRenderer ()
 
-/// GPU optimized target used to store path rendering.
-@property (assign, nonatomic, nullable) CGLayerRef layer;
-@property (assign, nonatomic, nullable) CGLayerRef cache;
-
 @property (strong, nonatomic, nullable) PxpTelestrationPoint *cachedPoint;
 @property (assign, nonatomic) NSUInteger cachedIndex;
 @property (readonly, assign, nonatomic) NSTimeInterval currentTime;
@@ -23,6 +19,10 @@
 @end
 
 @implementation PxpTelestrationRenderer
+{
+    CGLayerRef __nullable _layer;
+    CGLayerRef __nullable _cache;
+}
 
 - (nonnull instancetype)initWithTelestration:(nullable PxpTelestration *)telestration {
     self = [super init];
@@ -44,6 +44,11 @@
         _cachedPoint = nil;
     }
     return self;
+}
+
+- (void)dealloc {
+    CGLayerRelease(_layer);
+    CGLayerRelease(_cache);
 }
 
 - (void)renderInContext:(CGContextRef)context size:(CGSize)size {
@@ -73,16 +78,16 @@
     
     CGSize pixelSize = CGSizeMake([UIScreen mainScreen].scale * size.width, [UIScreen mainScreen].scale * size.height);
     
-    if (!self.layer || !CGSizeEqualToSize(CGLayerGetSize(self.layer), pixelSize))  {
-        CGLayerRelease(self.layer);
-        CGLayerRelease(self.cache);
-        self.layer = CGLayerCreateWithContext(context, pixelSize, NULL);
-        self.cache = CGLayerCreateWithContext(context, pixelSize, NULL);
+    if (!_layer || !CGSizeEqualToSize(CGLayerGetSize(_layer), pixelSize))  {
+        CGLayerRelease(_layer);
+        CGLayerRelease(_cache);
+        _layer = CGLayerCreateWithContext(context, pixelSize, NULL);
+        _cache = CGLayerCreateWithContext(context, pixelSize, NULL);
         
         self.cachedPoint = nil;
     }
     
-    CGContextRef ctx = CGLayerGetContext(self.layer);
+    CGContextRef ctx = CGLayerGetContext(_layer);
     CGContextSaveGState(ctx);
     
     CGContextSetBlendMode(ctx, kCGBlendModeCopy);
@@ -102,7 +107,7 @@
     
     // draw old image
     if (cached) {
-        CGContextDrawLayerInRect(ctx, CGRectMake(0.0, 0.0, size.width, size.height), self.cache);
+        CGContextDrawLayerInRect(ctx, CGRectMake(0.0, 0.0, size.width, size.height), _cache);
     } else {
         self.cachedPoint = nil;
     }
@@ -129,12 +134,12 @@
     
     CGContextRestoreGState(ctx);
     
-    CGContextRef bctx = CGLayerGetContext(self.cache);
+    CGContextRef bctx = CGLayerGetContext(_cache);
     CGContextSetBlendMode(bctx, kCGBlendModeCopy);
     CGContextSetFillColorWithColor(bctx, [UIColor clearColor].CGColor);
     CGContextFillRect(bctx, CGRectMake(0.0, 0.0, pixelSize.width, pixelSize.height));
-    CGContextDrawLayerInRect(bctx, CGRectMake(0.0, 0.0, pixelSize.width, pixelSize.height), self.layer);
-    CGContextDrawLayerInRect(context, CGRectMake(0.0, 0.0, size.width, size.height), self.layer);
+    CGContextDrawLayerInRect(bctx, CGRectMake(0.0, 0.0, pixelSize.width, pixelSize.height), _layer);
+    CGContextDrawLayerInRect(context, CGRectMake(0.0, 0.0, size.width, size.height), _layer);
     
     CGContextSaveGState(context);
     CGContextScaleCTM(context, scale.dx, scale.dy);
