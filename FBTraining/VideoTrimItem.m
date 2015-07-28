@@ -38,7 +38,9 @@
 -(void)createClip{
     
     //videoFilePath =
-    NSURL *videoToTrimURL = [[NSURL alloc] initWithString: videoFilePath];
+    NSURL *videoToTrimURL = videoFilePath;
+    
+  
     //NSURL *anotherURL = [[NSURL alloc] ini]
     
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoToTrimURL options:nil];

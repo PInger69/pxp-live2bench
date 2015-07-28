@@ -25,7 +25,7 @@
 #import "Tag.h"
 #import "UserCenter.h"
 #import "LocalMediaManager.h"
-
+#import "UserCenter.h"
 
 #define LOCAL_PLIST     @"EventsHid.plist"
 #define VIDEO_EXT       @"mp4"
@@ -527,7 +527,48 @@ static LocalEncoder * instance;
 
 -(void)onDownloadClip:(NSNotification *)note
 {
-// this should cut an MP4
+
+    
+    Tag *tag = note.userInfo[@"tag"];
+    NSString * srcID = note.userInfo[@"key"];
+    NSString * srcIDwithQ = note.userInfo[@"scr"];
+    
+    NSString * vidURL = [[self.event.feeds objectForKey:srcID]path];
+    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+    
+
+        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",self.event.name,tag.ID, srcID];
+ 
+//        //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
+        NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
+//        DownloadItem * dli = [Downloader downloadURL:vidURL to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tag.ID,srcIDwithQ ]];
+    
+    CMTime sTime  = CMTimeMake(tag.startTime, 600);
+    CMTime dur = CMTimeMake(tag.duration, 600);
+    CMTimeRange tr = CMTimeRangeMake(sTime, dur);
+
+    DownloadItem * dli = [Downloader trimVideoURL:vidURL to:pth withTimeRange:tr];
+    
+        dItemBlock(dli);
+
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
+            // is the object what we ware downloading
+            if (note.object == dli) {
+                NSLog(@"Download Complete");
+                [[LocalMediaManager getInstance] saveClip:videoName withData:tag.rawData];
+
+            }
+        }];
+
+    
+    
+
+    PXPLog(@"Downloading Clip!");
+    
+    
+
+    
+    
 }
 
 

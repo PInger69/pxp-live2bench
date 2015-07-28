@@ -249,7 +249,8 @@
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
                                                                                                                    @"block": blockName,
                                                                                                                    @"tag": tag,
-                                                                                                                   @"src":src}];
+                                                                                                                   @"src":src,
+                                                                                                                   @"key":key}];
             
             
         };
