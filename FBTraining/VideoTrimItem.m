@@ -38,7 +38,7 @@
 -(void)createClip{
     
     //videoFilePath =
-    NSURL *videoToTrimURL = videoFilePath;
+    NSURL *videoToTrimURL = [NSURL URLWithString:videoFilePath];
     
   
     //NSURL *anotherURL = [[NSURL alloc] ini]
@@ -74,6 +74,7 @@
     [exportSession exportAsynchronouslyWithCompletionHandler:^(void)
      {
          switch (exportSession.status) {
+                 
              case AVAssetExportSessionStatusCompleted:
                  //[self writeVideoToPhotoLibrary:[NSURL fileURLWithPath:outputURL]];
                  NSLog(@"Export Complete %ld %@", (long)exportSession.status, exportSession.error);

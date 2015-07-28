@@ -533,7 +533,9 @@ static LocalEncoder * instance;
     NSString * srcID = note.userInfo[@"key"];
     NSString * srcIDwithQ = note.userInfo[@"scr"];
     
-    NSString * vidURL = [[self.event.feeds objectForKey:srcID]path];
+    Feed *feed = self.event.feeds[srcID];
+    NSString *vidURL = feed.path.absoluteString;
+
     __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
     
 
