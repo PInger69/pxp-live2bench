@@ -35,6 +35,9 @@
 #import "LeagueTeam.h"
 #import "BottomViewControllerProtocol.h"
 
+#import "PxpPlayerMultiViewController.h"
+#import "PxpEventContext.h"
+
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
 #define TOTAL_WIDTH          1024
@@ -48,6 +51,7 @@
 @interface Live2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider>
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
+@property (strong, nonatomic, nonnull) PxpPlayerMultiViewController *playerViewController;
 
 @end
 
@@ -136,6 +140,9 @@ static void * eventContext      = &eventContext;
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
+        
+        _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        [self addChildViewController:_playerViewController];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -473,6 +480,8 @@ static void * eventContext      = &eventContext;
         [informationLabel setText:@""];
     }
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
+    
+    self.playerViewController.multiView.context = [PxpEventContext contextWithEvent:_currentEvent];
 }
 
 
@@ -715,6 +724,9 @@ static void * eventContext      = &eventContext;
 //    [unZoomButton addTarget:self action:@selector(unZoomPressed) forControlEvents:UIControlEventTouchUpInside];
 //    unZoomButton.backgroundColor = [UIColor blueColor];
 //    [self.view addSubview: unZoomButton];
+    
+    self.playerViewController.view.frame = CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT);
+    [self.view addSubview:self.playerViewController.view];
 }
 
 //-(void) zoomPressed{
@@ -791,7 +803,7 @@ static void * eventContext      = &eventContext;
      if(!(self.videoPlayer.view.superview == self.view))
      {
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-         [self.view addSubview:self.videoPlayer.view];
+         //[self.view addSubview:self.videoPlayer.view];
          [_videoBarViewController viewDidAppear:animated];
          
          //[self.videoPlayer play];
