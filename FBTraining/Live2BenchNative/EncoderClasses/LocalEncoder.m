@@ -531,10 +531,9 @@ static LocalEncoder * instance;
     
     Tag *tag = note.userInfo[@"tag"];
     NSString * srcID = note.userInfo[@"key"];
-    NSString * srcIDwithQ = note.userInfo[@"scr"];
     
     Feed *feed = self.event.feeds[srcID];
-    NSString *vidURL = feed.path.absoluteString;
+    NSString *vidURL = feed.path.path;
 
     __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
     
@@ -545,8 +544,8 @@ static LocalEncoder * instance;
         NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
 //        DownloadItem * dli = [Downloader downloadURL:vidURL to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tag.ID,srcIDwithQ ]];
     
-    CMTime sTime  = CMTimeMake(tag.startTime, 600);
-    CMTime dur = CMTimeMake(tag.duration, 600);
+    CMTime sTime  = CMTimeMakeWithSeconds(tag.startTime, 600);
+    CMTime dur = CMTimeMakeWithSeconds(tag.duration, 600);
     CMTimeRange tr = CMTimeRangeMake(sTime, dur);
 
     DownloadItem * dli = [Downloader trimVideoURL:vidURL to:pth withTimeRange:tr];
