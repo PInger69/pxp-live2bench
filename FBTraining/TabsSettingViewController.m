@@ -47,6 +47,9 @@
                                             @"Identifier": TAB_CALENDAR
                                             },
                                         @{
+                                            @"Name": NSLocalizedString(@"Medical", nil),
+                                            @"Identifier":TAB_MEDICAL},
+                                        @{
                                             @"Name": NSLocalizedString(@"Injury", nil),
                                             @"Identifier": TAB_INJURY
                                             },
@@ -70,9 +73,6 @@
                                             @"Name": NSLocalizedString(@"My Clip", nil),
                                             @"Identifier": TAB_MYCLIP
                                             },
-                                        @{
-                                            @"Name": NSLocalizedString(@"Medical", nil),
-                                            @"Identifier":TAB_MEDICAL},
 #if DEBUG_MODE == 1
                                         @{
                                             @"Name": NSLocalizedString(@"Debug", nil),
@@ -96,6 +96,7 @@
         
         self.tabClassForIdentifier = @{
                                        TAB_CALENDAR: [CalendarViewController class],
+                                       TAB_MEDICAL: [MedicalViewController class],
                                        TAB_INJURY: [InjuryViewController class],
                                        TAB_LIVE2BENCH: [Live2BenchViewController class],
                                        TAB_CLIPVIEW: [ClipViewController class],
@@ -103,7 +104,6 @@
                                        TAB_MYCLIP: [BookmarkViewController class],
                                        TAB_DEBUG: [DebuggingTabViewController class],
                                        TAB_FOOTBALL_TRAINING: [DualViewTabViewController class],
-                                       TAB_MEDICAL: [MedicalViewController class],
                                        };
         self.delegate = self;
         
