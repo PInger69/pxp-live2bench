@@ -240,6 +240,7 @@
                  __block FeedSelectCell *weakerCell = weakCell;
                 [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
                     weakerCell.downloadButton.progress = progress;
+                    weakerCell.downloadButton.downloadComplete = progress == 1.0;
                     [weakerCell.downloadButton setNeedsDisplay];
                 }];
             };
