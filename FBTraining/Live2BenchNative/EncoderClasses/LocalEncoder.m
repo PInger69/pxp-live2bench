@@ -531,23 +531,22 @@ static LocalEncoder * instance;
     
     Tag *tag = note.userInfo[@"tag"];
     NSString * srcID = note.userInfo[@"key"];
-    NSString * srcIDwithQ = note.userInfo[@"scr"];
     
-    NSURL * url  = [((Feed*)[self.event.feeds objectForKey:srcID]) path] ;
-    NSString * vidURL = [url absoluteString];
-    
+    Feed *feed = self.event.feeds[srcID];
+    NSString *vidURL = feed.path.path;
+
     __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
     
 
-        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",self.event.name,tag.ID, srcID];
+        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@hq.mp4",self.event.name,tag.ID, srcID];
  
 //        //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
         NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
 //        DownloadItem * dli = [Downloader downloadURL:vidURL to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tag.ID,srcIDwithQ ]];
     
-    CMTime sTime    = CMTimeMake(tag.startTime, 1);
-    CMTime dur      = CMTimeMake(tag.duration, 1);
-    CMTimeRange tr  = CMTimeRangeMake(sTime, dur);
+    CMTime sTime  = CMTimeMakeWithSeconds(tag.startTime, 600);
+    CMTime dur = CMTimeMakeWithSeconds(tag.duration, 600);
+    CMTimeRange tr = CMTimeRangeMake(sTime, dur);
 
     DownloadItem * dli = [Downloader trimVideoURL:vidURL to:pth withTimeRange:tr key:[NSString stringWithFormat:@"%@-%@",tag.ID,srcID ]];
 
