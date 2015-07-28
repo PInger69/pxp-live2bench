@@ -19,6 +19,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 @implementation Tag{
     id tagModifyObserver;
     NSTimer        * durationTagWarningTimer;
+    UIImage * __nullable _cachedThumbnail;
 }
 
 @synthesize type = _type;
@@ -139,6 +140,8 @@ static NSMutableDictionary * openDurationTagsWithID;
 //                self.startTime = modifiedTag.startTime;
             }
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarningHandler:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
     }
     return self;
 }
@@ -445,9 +448,14 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver: tagModifyObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
 }
 
 - (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
+    if (_cachedThumbnail) {
+        return _cachedThumbnail;
+    }
+    
     Feed *feed = source && self.event.feeds[source] ? self.event.feeds[source] : self.event.feeds.allValues.firstObject;
     
     if (!source && self.telestration) {
@@ -474,10 +482,14 @@ static NSMutableDictionary * openDurationTagsWithID;
             thumb = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
         }
-        return thumb;
-    } else {
-        return nil;
+        _cachedThumbnail = thumb;
     }
+    
+    return _cachedThumbnail;
+}
+
+- (void)memoryWarningHandler:(NSNotification *)note {
+    _cachedThumbnail = nil;
 }
 
 @end
