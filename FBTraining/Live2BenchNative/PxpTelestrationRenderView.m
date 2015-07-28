@@ -16,8 +16,8 @@
 
 @implementation PxpTelestrationRenderView
 {
-    __nonnull PxpTelestrationRenderer *_renderer;
-    __nonnull CADisplayLink *_displayLink;
+    PxpTelestrationRenderer * __nonnull _renderer;
+     CADisplayLink * __nonnull _displayLink;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame {

@@ -10,19 +10,19 @@
 
 @implementation NCGhostView
 
-- (void)touchesBegan:(nonnull NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event {
+- (void)touchesBegan:(nonnull NSSet *)touches withEvent:(nullable UIEvent *)event {
     [self.nextResponder touchesBegan:touches withEvent:event];
 }
 
-- (void)touchesMoved:(nonnull NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event {
+- (void)touchesMoved:(nonnull NSSet *)touches withEvent:(nullable UIEvent *)event {
     [self.nextResponder touchesMoved:touches withEvent:event];
 }
 
-- (void)touchesEnded:(nonnull NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event {
+- (void)touchesEnded:(nonnull NSSet *)touches withEvent:(nullable UIEvent *)event {
     [self.nextResponder touchesCancelled:touches withEvent:event];
 }
 
-- (void)touchesCancelled:(nullable NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event {
+- (void)touchesCancelled:(nullable NSSet *)touches withEvent:(nullable UIEvent *)event {
     [self.nextResponder touchesCancelled:touches withEvent:event];
 }
 

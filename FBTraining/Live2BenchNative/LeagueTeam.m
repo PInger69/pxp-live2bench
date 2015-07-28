@@ -11,7 +11,7 @@
 
 @implementation LeagueTeam
 {
-    __nonnull NSMutableDictionary *_players;
+    NSMutableDictionary * __nonnull _players;
 }
 
 @synthesize players = _players;

@@ -65,7 +65,7 @@
             source = tag.event.feeds.allKeys.firstObject;
         }
         
-        __nonnull NSString *src = source ? source : @"";
+        NSString * __nonnull src = source ? source : @"";
         source = source;
         
         _dicKey = src;

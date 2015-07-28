@@ -18,8 +18,8 @@
 
 @implementation TeleSelectTableViewCell
 {
-    __nonnull UIImageView *_thumbnailView;
-    __nonnull UILabel *_timeLabel;
+    UIImageView * __nonnull _thumbnailView;
+     UILabel * __nonnull _timeLabel;
 }
 
 - (nonnull instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier {
@@ -79,7 +79,7 @@
 
 @end
 
-static __nonnull NSPredicate *_tagFilterPredicate;
+static  NSPredicate * __nonnull _tagFilterPredicate;
 static __nonnull NSComparator _tagSortBlock;
 
 @implementation TeleSelectTableViewController

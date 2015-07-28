@@ -10,7 +10,7 @@
 #import "LeagueTeam.h"
 @implementation League
 {
-    __nonnull NSMutableDictionary *_teams;
+    NSMutableDictionary * __nonnull _teams;
 }
 
 @synthesize  teams = _teams;
