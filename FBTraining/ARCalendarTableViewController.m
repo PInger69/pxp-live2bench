@@ -245,6 +245,18 @@
             
             LeagueTeam *homeTeam = event.teams[@"homeTeam"];
             LeagueTeam *visitTeam = event.teams[@"visitTeam"];
+            
+            if (!homeTeam) {
+                homeTeam = [[LeagueTeam alloc] init];
+                homeTeam.name = event.rawData[@"homeTeam"];
+            }
+            
+            if (!visitTeam) {
+                visitTeam = [[LeagueTeam alloc] init];
+                visitTeam.name = event.rawData[@"visitTeam"];
+            }
+            
+            
             NSDictionary *team = @{homeTeam.name:homeTeam,visitTeam.name:visitTeam};
             
             //NSString *homeName = event.teams[@"homeTeam"];

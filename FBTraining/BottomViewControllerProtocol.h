@@ -23,5 +23,6 @@
 -(void)closeAllOpenTagButtons;
 -(void)clear;
 -(nonnull NSString *)currentPeriod;
+-(void)allToggleOnOpenTags;
 
 @end

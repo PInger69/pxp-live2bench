@@ -126,6 +126,7 @@
         CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
         
         self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
+        self.videoPlayer.mute = YES;
         
         CGRect screenBounds = CGRectMake(0, 0, 1024, 768);
         NSDictionary *fullScreenFramesParts = @{
@@ -369,11 +370,14 @@
     self.slomoButton.slomoOn = self.videoPlayer.slowmo;
     [self.view bringSubviewToFront:self.backwardSeekButton];
     [self.view bringSubviewToFront:self.forwardSeekButton];
+    
+    self.videoPlayer.mute = NO;
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewDidAppear:animated];
     self.telestrationViewController.telestration = nil;
+    self.videoPlayer.mute = YES;
 }
 
 - (void)didReceiveMemoryWarning {

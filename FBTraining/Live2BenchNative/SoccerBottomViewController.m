@@ -43,6 +43,8 @@
     
     id periodBoundaryObserver;
     UIColor *tintColor;
+    
+    NSMutableArray *currentlyPostingTags;
 }
 
 @synthesize currentEvent = _currentEvent;
@@ -58,6 +60,7 @@
         tintColor = PRIMARY_APP_COLOR;
         _cellList = [[NSMutableArray alloc]init];
         _mainView = self.view;
+        currentlyPostingTags = [[NSMutableArray alloc]init];
         
         // Setup zone Lable
         _zoneLabel = [CustomLabel labelWithStyle:CLStyleBlack];
@@ -104,7 +107,7 @@
         [_subLabel setHidden:true];
         [self.view addSubview:_subLabel];
         [self createPlayerButton];
-        [self allToggleOnOpenTags];
+        //[self allToggleOnOpenTags];
         
     }
     return self;
@@ -131,7 +134,15 @@
         }
     }
 
-    // sort the times form smallest to biggest
+    // Look for the tags that are just posted but encoder haven't respond back
+    for (NSDictionary *dict in currentlyPostingTags) {
+        if ([[dict objectForKey:@"type"] intValue] == type | [[dict objectForKey:@"type"] intValue] == secondType) {
+            timeDicUnordered[dict[@"time"]] = dict[@"name"];
+        }
+    }
+
+    
+    // sort the times from biggest to smallest
     NSSortDescriptor *highestToLowest = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO];
     NSMutableArray *timesArray = [[NSMutableArray alloc]initWithArray:[timeDicUnordered allKeys]];
     [timesArray sortUsingDescriptors:[NSArray arrayWithObject:highestToLowest]];
@@ -196,16 +207,37 @@
     return @"1";
 }
 
+// when the encoder respond back and now have the just made tag,remove it from currentlyPostingTags array
+-(void)clearCurrentlyPostingTags{
+    if (currentlyPostingTags.count == 0) {
+        return;
+    }
+    
+    NSDictionary *toBeRemoved;
+    for (NSDictionary *dict in currentlyPostingTags) {
+        Tag *tag = [self checkTags:dict[@"name"]];
+        if (tag.type == [dict[@"type"]intValue] && tag.time == [dict[@"time"] doubleValue]) {
+            toBeRemoved = dict;
+        }
+    }
+    [currentlyPostingTags removeObject:toBeRemoved];
+}
+
+-(void)setCurrentEvent:(Event * __nullable)currentEvent{
+    _currentEvent = currentEvent;
+    [self enableButton];
+    [self clearCurrentlyPostingTags];
+}
+
 #pragma mark - Half Tags Related Methods
 // Post half tag
 -(void)halfValueChanged:(UISegmentedControl *)segment{
     float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
     
-    if (![self checkTags:name]) {
-        NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeSoccerHalfStart],@"time":[NSString stringWithFormat:@"%f",time]};
-        [super postTag:tagDic];
-    }
+    NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeSoccerHalfStart],@"time":[NSString stringWithFormat:@"%f",time]};
+    [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeSoccerHalfStart]}];
+    [super postTag:tagDic];
 
 }
 
@@ -226,6 +258,7 @@
     if (![name isEqualToString:currentZone]) {
         currentZone = name;
         NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeSoccerZoneStart],@"time":[NSString stringWithFormat:@"%f",time],@"line":name};
+        [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeSoccerZoneStart]}];
         [super postTag:tagDic];
 
     }
@@ -273,6 +306,7 @@
     return array;
 }
 
+// Create all player buttons
 -(void)createPlayerButton{
     //players' buttons
     int playerCount=1;
@@ -316,6 +350,7 @@
 
 }
 
+// post tag(regular or duration) when player button is pressed
 -(void)playerButtonSelected:(id)sender{
     float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     
@@ -342,7 +377,8 @@
                 tagToBeClosed = [Tag getOpenTagByDurationId:button.durationID];
             }else{
                 for (Tag *tag in _currentEvent.tags) {
-                    if ([tag.name isEqualToString:button.titleLabel.text] && tag.type == TagTypeOpenDuration) {
+                     NSArray *words = [tag.name componentsSeparatedByString:@" "];
+                    if ([[words lastObject] isEqualToString:button.titleLabel.text] && tag.type == TagTypeOpenDuration) {
                         tagToBeClosed = tag;
                     }
                 }
@@ -360,12 +396,14 @@
     }
 }
 
+//set player button mode
 -(void)setIsDurationVariable:(SideTagButtonModes)buttonMode{
     for (SideTagButton *button in _cellList) {
         [button setMode:buttonMode];
     }
 }
 
+// close all duration tags
 -(void)closeAllOpenTagButtons
 {
     for (SideTagButton * btn1 in _cellList){
@@ -397,30 +435,29 @@
     }
 }
 
+// hightlight any duration tag that is still open and is made on this device
 -(void)allToggleOnOpenTags
 {
-    NSMutableArray *eventTags = _currentEvent.tags;
+    NSArray *eventTags = _currentEvent.tags;
 
     for (SideTagButton * btn1 in _cellList) {
         btn1.isOpen = NO;
     }
     
     for (Tag * tag in eventTags) {
+        //NSCharacterSet *filters = [[NSCharacterSet alloc]ini]
+        NSArray *words = [tag.name componentsSeparatedByString:@" "];
+        
+        //NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
         for (SideTagButton * btn2 in _cellList) {
             // if the tag is open and has a duration Id and is from this divice
-            if ([tag.name isEqualToString:btn2.titleLabel.text] && tag.type == TagTypeOpenDuration && [tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]){
+            if ([[words lastObject] isEqualToString:btn2.titleLabel.text] && tag.type == TagTypeOpenDuration && [tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]){
                 btn2.isOpen = YES;
                 btn2.durationID = tag.durationID;
             }
         }
     }
 }
-
--(void)setCurrentEvent:(Event * __nullable)currentEvent{
-    _currentEvent = currentEvent;
-    [self enableButton];
-}
-
 
 //@synthesize live2BenchViewController;
 //@synthesize periodSegmentedControl;

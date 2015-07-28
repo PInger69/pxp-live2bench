@@ -98,10 +98,6 @@
 
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost
 {
-    //BOOL type = (newtag.type == TagTypeDeleted);
-    //BOOL contain = [_tags containsObject:newtag];
-    //int  index = [_tags indexOfObject:newtag];
-    //BOOL mem = (newtag == [_tags objectAtIndex:index]);
     if ((newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine && newtag.type != TagTypeSoccerZoneStop) {
         return;
     }
