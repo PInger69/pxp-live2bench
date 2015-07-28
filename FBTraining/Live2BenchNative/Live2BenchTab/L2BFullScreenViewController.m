@@ -69,14 +69,14 @@
     [self.view addSubview:_seekForward];
     [self.view addSubview:_seekBackward];
     [self.view addSubview:_slomo];
-    [self.view addSubview:_teleButton];
+    //[self.view addSubview:_teleButton];
     [self.view addSubview:_liveButton];
     [self.view addSubview:_continuePlay];
     [self.view addSubview:_tagEventName];
     [self.view addSubview:_startRangeModifierButton];
     [self.view addSubview:_endRangeModifierButton];
-    [self.view addSubview:_saveTeleButton];
-    [self.view addSubview:_clearTeleButton];
+    //[self.view addSubview:_saveTeleButton];
+    //[self.view addSubview:_clearTeleButton];
     
     
     eventElements   = @[_seekForward, _seekBackward, _slomo, _teleButton];

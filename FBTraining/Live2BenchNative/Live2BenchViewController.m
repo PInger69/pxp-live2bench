@@ -640,7 +640,7 @@ static void * eventContext      = &eventContext;
     [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.telestrationViewController.showsControls = YES;
+    self.telestrationViewController.showsControls = NO;
     self.telestrationViewController.showsClearButton = NO;
     self.telestrationViewController.delegate = self;
     self.telestrationViewController.timeProvider = self;
@@ -1094,7 +1094,9 @@ static void * eventContext      = &eventContext;
         PxpTelestration *tele = note.userInfo[@"telestration"];
         
         self.telestrationViewController.telestration = tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
-        
+        if (tele.isStill) {
+            [self.videoPlayer pause];
+        }
     }
 }
 

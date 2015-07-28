@@ -106,7 +106,8 @@
     UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
-    [[[PxpTelestrationRenderer alloc] initWithTelestration:self] renderInContext:ctx size:self.size atTime:self.thumbnailTime];
+    PxpTelestrationRenderer *renderer = [[PxpTelestrationRenderer alloc] initWithTelestration:self];
+    [renderer renderInContext:ctx size:self.size atTime:self.thumbnailTime];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

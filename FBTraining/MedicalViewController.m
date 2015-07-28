@@ -375,7 +375,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    [super viewWillDisappear:animated];
     self.telestrationViewController.telestration = nil;
     self.videoPlayer.mute = YES;
 }
