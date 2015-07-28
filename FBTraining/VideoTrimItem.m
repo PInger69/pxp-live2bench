@@ -38,8 +38,9 @@
 -(void)createClip{
     
     //videoFilePath =
-    NSURL *videoToTrimURL = videoFilePath;
-    
+    NSURL *videoToTrimURL = [NSURL fileURLWithPath: videoFilePath];
+//    [NSURL fileURLWithPath: videoFilePath];
+    BOOL isFile = [[NSFileManager defaultManager] fileExistsAtPath:videoFilePath];
   
     //NSURL *anotherURL = [[NSURL alloc] ini]
     
