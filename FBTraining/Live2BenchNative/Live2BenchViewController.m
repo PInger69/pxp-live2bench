@@ -627,7 +627,7 @@ static void * eventContext      = &eventContext;
     }];
     
     
-    self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    //! self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
     //bottomViewController.videoPlayer = self.videoPlayer;
     /*! Disabled For Demo
     telestration = [[TeleViewController alloc]initWithController:self.videoPlayer];
@@ -659,14 +659,14 @@ static void * eventContext      = &eventContext;
     
     // Richard
     
-    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    //!_videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
     [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
     [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     //_videoBarViewController.tagMarkerController.arrayOfAllTags =
-    [self.view addSubview:_videoBarViewController.view];
+    //![self.view addSubview:_videoBarViewController.view];
 
-    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    //!_fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
     [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
@@ -688,7 +688,7 @@ static void * eventContext      = &eventContext;
     
     _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 64, 38)];
     
-    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
+    //!_pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
     _pipController.videoControlBar = _videoBarViewController;
     [_pipController addPip:_pip];
@@ -704,7 +704,10 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:multiButton];
     [multiButton setHidden:!([_encoderManager.feeds count]>1)];
     
-    _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.videoPlayer.view.frame.origin.x+32,PADDING + self.videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
+    self.playerViewController.view.frame = CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT);
+    [self.view addSubview:self.playerViewController.view];
+    
+    _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.playerViewController.view.frame.origin.x+32,PADDING + self.playerViewController.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
     [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_gotoLiveButton];
@@ -724,9 +727,6 @@ static void * eventContext      = &eventContext;
 //    [unZoomButton addTarget:self action:@selector(unZoomPressed) forControlEvents:UIControlEventTouchUpInside];
 //    unZoomButton.backgroundColor = [UIColor blueColor];
 //    [self.view addSubview: unZoomButton];
-    
-    self.playerViewController.view.frame = CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT);
-    [self.view addSubview:self.playerViewController.view];
 }
 
 //-(void) zoomPressed{
@@ -825,7 +825,7 @@ static void * eventContext      = &eventContext;
     [_videoBarViewController.tagMarkerController createTagMarkers];
     
     
-    _bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
+    //!_bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
     [_bottomViewController update];
     // just to update UI
 }
@@ -866,6 +866,9 @@ static void * eventContext      = &eventContext;
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
         [_videoBarViewController.tagMarkerController cleanTagMarkers];
         [_videoBarViewController.tagMarkerController createTagMarkers];
+        
+        self.playerViewController.multiView.context.mainPlayer.live = YES;
+        
         return;
     }
     
@@ -1126,9 +1129,11 @@ static void * eventContext      = &eventContext;
 }
 
 - (NSTimeInterval)currentTimeInSeconds {
-    return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
+    //return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
+    return self.playerViewController.multiView.context.currentTimeInSeconds;
 }
 
+/*
 - (void)setVideoPlayer:(UIViewController<PxpVideoPlayerProtocol> *)videoPlayer {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:videoPlayer];
     
@@ -1136,6 +1141,7 @@ static void * eventContext      = &eventContext;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:videoPlayer];
 }
+*/
 
 - (void)clipCanceledHandler:(NSNotification *)note {
     self.telestrationViewController.telestration = nil;

@@ -646,7 +646,7 @@ static CMClockRef _pxpPlayerMasterClock;
             
             
             [self pause];
-            [self seekToTime:CMTimeSubtract(self.duration, CMTimeMake(2, 1)) multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete){
+            [self seekToTime:CMTimeSubtract(self.duration, CMTimeMake(2, 1)) multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
                 [self prerollAtRate:self.playRate completionHandler:^(BOOL complete) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [self setRate:self.playRate];
