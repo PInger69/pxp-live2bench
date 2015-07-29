@@ -19,6 +19,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 @implementation Tag{
     id tagModifyObserver;
     NSTimer        * durationTagWarningTimer;
+    UIImage * __nullable _cachedThumbnail;
 }
 
 @synthesize type = _type;
@@ -139,6 +140,8 @@ static NSMutableDictionary * openDurationTagsWithID;
 //                self.startTime = modifiedTag.startTime;
             }
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarningHandler:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
     }
     return self;
 }
@@ -292,7 +295,7 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
              @"event"       : self.event.name,
-             @"homeTeam"    : self.homeTeam,
+             @"homeTeam"    : (self.homeTeam)?self.homeTeam:@"",
              @"id"          : [NSString stringWithFormat: @"%i", self.uniqueID],
              @"isLive"      : [NSString stringWithFormat: @"%i", self.isLive],
              @"name"        : self.name,
@@ -304,9 +307,9 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"success"     : @"1",
              @"time"        : [NSString stringWithFormat:@"%f", self.time],
              @"type"        : [NSString stringWithFormat:@"%li", (long)self.type],
-             @"url"         : self.thumbnails,
+             @"url"         : (self.thumbnails)?self.thumbnails:@{},
              @"user"        : self.user,
-             @"visitTeam"   : self.visitTeam,
+             @"visitTeam"   : (self.visitTeam)?self.visitTeam:@"",
              @"synced"      : [NSString stringWithFormat:@"%i", self.synced]
              //@"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              //@"requrl": (self.requestURL? self.requestURL: @"nil"),
@@ -445,9 +448,14 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver: tagModifyObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
 }
 
 - (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
+    if (_cachedThumbnail) {
+        return _cachedThumbnail;
+    }
+    
     Feed *feed = source && self.event.feeds[source] ? self.event.feeds[source] : self.event.feeds.allValues.firstObject;
     
     if (!source && self.telestration) {
@@ -474,10 +482,14 @@ static NSMutableDictionary * openDurationTagsWithID;
             thumb = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
         }
-        return thumb;
-    } else {
-        return nil;
+        _cachedThumbnail = thumb;
     }
+    
+    return _cachedThumbnail;
+}
+
+- (void)memoryWarningHandler:(NSNotification *)note {
+    _cachedThumbnail = nil;
 }
 
 @end
