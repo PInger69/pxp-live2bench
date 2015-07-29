@@ -13,10 +13,14 @@ typedef enum : NSUInteger {
     SEEK_DIRECTION_RIGHT
     
 } Direction;
+
+IB_DESIGNABLE
 @interface SeekButton : UIView <UIGestureRecognizerDelegate>
 
 @property (nonatomic,assign)    float speed;
 @property (nonatomic,assign)    BOOL enabled;
+
+@property (assign, nonatomic) BOOL backward;
 
 +(id)makeForwardAt:(CGPoint)pt;
 +(id)makeBackwardAt:(CGPoint)pt;

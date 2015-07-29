@@ -165,6 +165,7 @@ static NSMutableArray   * allSeekButtonsBackward;
  *
  *  @return customized instance of the seeker button
  */
+
 -(id)initWithFrame:(CGRect)frame direction:(NSString *) dir isFullScreen:(BOOL) isFull
 {
     self = [super initWithFrame:frame];
@@ -181,11 +182,7 @@ static NSMutableArray   * allSeekButtonsBackward;
         for (id object in listOfSpeeds) {
             NumberedSeekerButton * btn ;
             CGRect r = CGRectMake(0, 0, iconSize, iconSize);
-            if (isFullScreen){
-                btn = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardLargeWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardLargeWithFrame:r];
-            } else {
-                btn = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardNormalWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardNormalWithFrame:r];
-            }
+            btn = [[NumberedSeekerButton alloc] initWithFrame:r backward:[direction isEqualToString:BACKWARD]];
             [btn setTextNumber:[object floatValue]];
             [buttonList addObject:btn];
         }
@@ -199,11 +196,7 @@ static NSMutableArray   * allSeekButtonsBackward;
         // set up button size based of full screen or not
         
         CGRect r = CGRectMake(margin, (frame.size.height - (iconSize + margin)) , iconSize, iconSize);
-        if (isFullScreen){
-            mainButton = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardLargeWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardLargeWithFrame:r];
-        } else {
-            mainButton = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardNormalWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardNormalWithFrame:r];
-        }
+        mainButton = [[NumberedSeekerButton alloc] initWithFrame:r backward:[direction isEqualToString:BACKWARD]];
         [self addSubview:mainButton];
         
         for (int i=0; i<buttonList.count; i++) {
@@ -247,6 +240,20 @@ static NSMutableArray   * allSeekButtonsBackward;
     }
     return self;
 }
+
+/*
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    backPlate.frame = self.bounds;
+    
+    for (NSUInteger i= 0; i < buttonList.count; i++) {
+        NumberedSeekerButton * button = ((NumberedSeekerButton*)buttonList[i]);
+        button.frame = CGRectMake(margin, (frame.size.height - (iconSize + margin)) - (iconSize + margin)  * (i+1), iconSize, iconSize);
+        [self addSubview:button];
+    }
+}
+*/
 
 -(void)setEnabled:(BOOL)enabled{
     _enabled = enabled;

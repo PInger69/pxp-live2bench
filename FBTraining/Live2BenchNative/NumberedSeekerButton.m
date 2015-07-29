@@ -7,154 +7,85 @@
 //
 
 #import "NumberedSeekerButton.h"
-#define LITTLE_ICON_DIMENSIONS      30 //the image is really 33x36
-#define LARGE_ICON_DIMENSIONS       50 // this image is really 46x51
-#define NORMAL                      @"normal"
-#define LARGE                       @"large"
 
-static UIImage *circleArrowNorm;
-static UIImage *circleArrowLarge;
-static NSDictionary    *fonrSizeDict;
+#import "UIColor+Highlight.h"
 
-
+static UIImage * __nonnull _circleArrow;
 
 @implementation NumberedSeekerButton
 {
-    UILabel *numberLabel;
-    UIImage *circleArrow;
-    NSString *iconType;
-    NSArray *fontSizes;
+    UILabel * __nonnull _numberLabel;
 }
 
-/**
- *  Builds all static content when needed
- */
-+(void)staticInit
-{
-
-    circleArrowNorm         = [[UIImage imageNamed: @"seek.png"]    imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    circleArrowLarge        = [[UIImage imageNamed: @"seeklarge.png"]    imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-
-
-    fonrSizeDict            = @{
-                         NORMAL:@[
-                                 [NSNumber numberWithFloat:14.00f],
-                                 [NSNumber numberWithFloat:19.00f],
-                                 [NSNumber numberWithFloat:17.00f]
-                                 ],
-                         LARGE:@[
-                                 [NSNumber numberWithFloat:22.0f],
-                                 [NSNumber numberWithFloat:35.0f],
-                                 [NSNumber numberWithFloat:26.0f]
-                                 ]
-                         };
++ (void)initialize {
+    _circleArrow = [[UIImage imageNamed: @"seeklarge.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
-
--(id)initForwardLargeWithFrame:(CGRect)frame
-{
-    CGRect nframe = CGRectMake(frame.origin.x,frame.origin.y,LARGE_ICON_DIMENSIONS,LARGE_ICON_DIMENSIONS);
-    self = [super initWithFrame:nframe];
-    if (self) {
-        iconType = LARGE;
-        circleArrow = circleArrowLarge;
-        [self setupGraphics];
-    }
-    return self;
-}
-
--(void)setEnabled:(BOOL)enabled{
-    [super setEnabled:enabled];
-    numberLabel.enabled = enabled;
-}
-
--(id)initBackwardLargeWithFrame:(CGRect)frame
-{
-    CGRect nframe = CGRectMake(frame.origin.x,frame.origin.y,LARGE_ICON_DIMENSIONS,LARGE_ICON_DIMENSIONS);
-    self = [super initWithFrame:nframe];
-    if (self) {
-        iconType = LARGE;
-        circleArrow = circleArrowLarge;
-        [self setupGraphics];
-        self.transform = CGAffineTransformMakeScale(-1, 1); 
-        numberLabel.transform = CGAffineTransformMakeScale(-1, 1); 
-    }
-    return self;
-}
-
-
--(id)initForwardNormalWithFrame:(CGRect)frame
-{
-    CGRect nframe = CGRectMake(frame.origin.x,frame.origin.y,LITTLE_ICON_DIMENSIONS,LITTLE_ICON_DIMENSIONS);
-    self = [super initWithFrame:nframe];
-    if (self) {
-        iconType = NORMAL;
-        circleArrow = circleArrowNorm;
-        [self setupGraphics];
-    }
-    return self;
-}
-
--(id)initBackwardNormalWithFrame:(CGRect)frame
-{
-    CGRect nframe = CGRectMake(frame.origin.x,frame.origin.y,LITTLE_ICON_DIMENSIONS,LITTLE_ICON_DIMENSIONS);
-    self = [super initWithFrame:nframe];
-    if (self) {
-        iconType = NORMAL;
-        circleArrow = circleArrowNorm;
-        [self setupGraphics];
-        self.transform = CGAffineTransformMakeScale(-1, 1); 
-        numberLabel.transform = CGAffineTransformMakeScale(-1, 1); 
-    }
-    return self;
-}
-
-
-
-
-
--(void)setupGraphics
-{
-    // Initialization code
-    if (!circleArrowNorm) [NumberedSeekerButton staticInit];
-    fontSizes = fonrSizeDict[iconType];
-    
-    [self setImage:circleArrowLarge forState:UIControlStateNormal];
-    numberLabel                 = [[UILabel alloc]initWithFrame:CGRectMake(0,0, self.frame.size.width,self.frame.size.height)];
-    numberLabel.text            = @"X";
-    numberLabel.textColor       = self.tintColor;
-    numberLabel.textAlignment   = NSTextAlignmentCenter;
-    numberLabel.font            = [UIFont fontWithName:numberLabel.font.fontName size:[fontSizes[1]floatValue]];
-    [self addSubview:numberLabel];
-    
-}
-
-
-/**
- *  This method is part of the UIbutton class and it run when ever the buttond becomes selected
- *
- *  @param highlighted
- */
--(void)setHighlighted:(BOOL)highlighted
-{
-    [super setHighlighted:highlighted];
-    if (highlighted){
-         numberLabel.textColor = [Utility darkerColorOf:self.tintColor];
-    } else {
-         numberLabel.textColor = self.tintColor;
-    }
-}
-
-
-
-
-- (id)initWithFrame:(CGRect)frame
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setupGraphics];
+        const CGFloat w = self.bounds.size.width, h = self.bounds.size.height, s = MIN(w, h);
+        const CGRect labelFrame = w > h ? CGRectMake((w - h) / 2.0, 0.0, h, h) : CGRectMake(0.0, (h - w) / 2.0, w, w);
+        
+        _numberLabel = [[UILabel alloc] initWithFrame:labelFrame];
+        _numberLabel.text = @"";
+        _numberLabel.textColor = self.tintColor;
+        _numberLabel.textAlignment = NSTextAlignmentCenter;
+        _numberLabel.font = [UIFont systemFontOfSize:0.5 * s];
+        _numberLabel.adjustsFontSizeToFitWidth = YES;
+        
+        [self setImage:_circleArrow forState:UIControlStateNormal];
+        [self addSubview:_numberLabel];
+        
+        self.backward = backward;
+        self.textNumber = 1.0;
     }
     return self;
+}
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
+    return [self initWithFrame:frame backward:NO];
+}
+
+#pragma mark - NSCoding
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _numberLabel = [[UILabel alloc] init];
+        _numberLabel.textColor = self.tintColor;
+        _numberLabel.textAlignment = NSTextAlignmentCenter;
+        _numberLabel.adjustsFontSizeToFitWidth = YES;
+        
+        [self setImage:_circleArrow forState:UIControlStateNormal];
+        [self addSubview:_numberLabel];
+        
+        self.backward = [aDecoder decodeBoolForKey:@"backward"];
+        self.textNumber = [aDecoder decodeFloatForKey:@"textNumber"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
+    
+    [aCoder encodeBool:_backward forKey:@"backward"];
+    [aCoder encodeFloat:_textNumber forKey:@"textNumber"];
+}
+
+#pragma mark - Getters / Setters
+
+- (void)setBackward:(BOOL)backward {
+    _backward = backward;
+    
+    if (backward) {
+        self.transform = CGAffineTransformMakeScale(-1.0, 1.0);
+        _numberLabel.transform = CGAffineTransformMakeScale(-1.0, 1.0);
+    } else {
+        self.transform = CGAffineTransformMakeScale(1.0, 1.0);
+        _numberLabel.transform = CGAffineTransformMakeScale(1.0, 1.0);
+    }
 }
 
 /**
@@ -163,35 +94,53 @@ static NSDictionary    *fonrSizeDict;
  *
  *  @param num nubmer to be displayed
  */
--(void)setTextNumber:(float)num
-{
-    NSString * txtNum;
-    float fntSize;
+- (void)setTextNumber:(CGFloat)textNumber {
+    _textNumber = textNumber;
     
-    if (num < .25){
-        txtNum = [NSString stringWithFormat:@"%.02f",num];
+    NSString *txtNum;
+    if (textNumber < .25){
+        txtNum = [NSString stringWithFormat:@"%.02f",textNumber];
         txtNum = @"F";
-        fntSize = [fontSizes[1]floatValue];
-    } else if (num < 1){
-        txtNum = [NSString stringWithFormat:@"%.02f",num];
+    } else if (textNumber < 1){
+        txtNum = [NSString stringWithFormat:@"%.02f",textNumber];
         txtNum = [txtNum substringFromIndex:1];
-        fntSize = [fontSizes[0]floatValue];
-    } else if (num >= 1 && num <= 9) {
-        txtNum = [NSString stringWithFormat:@"%.f",num];
-        fntSize = [fontSizes[1]floatValue];
+    } else if (textNumber >= 1 && textNumber <= 9) {
+        txtNum = [NSString stringWithFormat:@"%.f",textNumber];
     } else {
-        txtNum = [NSString stringWithFormat:@"%.f",num];
-        fntSize = [fontSizes[2]floatValue];
+        txtNum = [NSString stringWithFormat:@"%.f",textNumber];
     }
-
-    numberLabel.font = [UIFont fontWithName:numberLabel.font.fontName size:fntSize];
-    numberLabel.text = txtNum;
+    
+    _numberLabel.text = txtNum;
 }
 
--(void)tintColorDidChange
-{
+#pragma mark - Overrides
+
+- (void)setEnabled:(BOOL)enabled{
+    [super setEnabled:enabled];
+    
+    _numberLabel.enabled = enabled;
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    
+    _numberLabel.textColor = self.highlighted ? self.tintColor.highlightedColor : self.tintColor;
+}
+
+- (void)tintColorDidChange {
     [super tintColorDidChange];
-    numberLabel.textColor = self.tintColor;
+    
+    _numberLabel.textColor = self.highlighted ? self.tintColor.highlightedColor : self.tintColor;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    const CGFloat w = self.bounds.size.width, h = self.bounds.size.height, s = MIN(w, h);
+    const CGRect labelFrame = w > h ? CGRectMake((w - h) / 2.0, 0.0, h, h) : CGRectMake(0.0, (h - w) / 2.0, w, w);
+    
+    _numberLabel.frame = labelFrame;
+    _numberLabel.font = [UIFont systemFontOfSize:0.5 * s];
 }
 
 @end
