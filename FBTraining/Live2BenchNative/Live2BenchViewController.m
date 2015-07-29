@@ -845,7 +845,7 @@ static void * eventContext      = &eventContext;
     
     [CustomAlertView removeAll];
     [_videoBarViewController.tagMarkerController cleanTagMarkers];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
+    //![[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
     self.videoPlayer.mute = YES;
     self.telestrationViewController.telestration = nil;
 }
@@ -919,7 +919,8 @@ static void * eventContext      = &eventContext;
 {
     SideTagButton *button = (SideTagButton*)sender;
     
-    float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
+    //!float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
+    NSTimeInterval currentTime = self.currentTimeInSeconds;
     
 
     if (button.mode == SideTagButtonModeRegular) {
