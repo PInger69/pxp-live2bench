@@ -821,7 +821,8 @@ static void * eventContext      = &eventContext;
     // just to update UI
     
     PxpVideoBar *bar = [[PxpVideoBar alloc] initWithFrame:_videoBarViewController.view.frame];
-    //[_videoBarViewController.view.superview addSubview:bar];
+    bar.player = self.videoPlayer.avPlayer;
+    [_videoBarViewController.view.superview addSubview:bar];
 }
 
 
