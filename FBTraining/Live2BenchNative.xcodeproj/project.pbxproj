@@ -49,6 +49,7 @@
 		AAFCA6FF195B84B000D0F0E6 /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA6FD195B84B000D0F0E6 /* share@2x.png */; };
 		AAFCA702195B84DE00D0F0E6 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA700195B84DE00D0F0E6 /* trash.png */; };
 		AAFCA703195B84DE00D0F0E6 /* trash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA701195B84DE00D0F0E6 /* trash@2x.png */; };
+		AE06A3791B696A3A001840D0 /* PxpVideoBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AE06A3781B696A3A001840D0 /* PxpVideoBar.m */; };
 		AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */; };
 		AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */; };
 		AE5073AA1AFC1DCE002C361D /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A11AFC1DCE002C361D /* SettingViewController.m */; };
@@ -533,6 +534,8 @@
 		AAFCA6FD195B84B000D0F0E6 /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		AAFCA700195B84DE00D0F0E6 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash.png; sourceTree = "<group>"; };
 		AAFCA701195B84DE00D0F0E6 /* trash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash@2x.png"; sourceTree = "<group>"; };
+		AE06A3771B696A3A001840D0 /* PxpVideoBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpVideoBar.h; sourceTree = "<group>"; };
+		AE06A3781B696A3A001840D0 /* PxpVideoBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpVideoBar.m; sourceTree = "<group>"; };
 		AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertsSettingViewController.m; sourceTree = "<group>"; };
 		AE50739E1AFC1DCE002C361D /* InfoSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSettingViewController.h; sourceTree = "<group>"; };
 		AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
@@ -1876,6 +1879,8 @@
 				D7A2E5F019B7711E00022795 /* FullVideoBarMyClipViewController.m */,
 				D73FE32E1A40882600341D57 /* L2BVideoBarViewController.h */,
 				D73FE32F1A40882600341D57 /* L2BVideoBarViewController.m */,
+				AE06A3771B696A3A001840D0 /* PxpVideoBar.h */,
+				AE06A3781B696A3A001840D0 /* PxpVideoBar.m */,
 			);
 			name = VideoBarViewControllers;
 			sourceTree = "<group>";
@@ -3123,6 +3128,7 @@
 				D72708A01A1520900086BCB8 /* LocalEncoder.m in Sources */,
 				D7581F3E196461ED0029C5DD /* HeaderBar.m in Sources */,
 				D769AB8919BDFEA900DF68BC /* VideoBarListViewController.m in Sources */,
+				AE06A3791B696A3A001840D0 /* PxpVideoBar.m in Sources */,
 				D738305A198AC9A30053F0A1 /* MyClipFilterViewController.m in Sources */,
 				D786C20117ECA00E0042DD96 /* CustomLabel.m in Sources */,
 				D7A7B61816D3C852000D3A84 /* TeleViewController.m in Sources */,

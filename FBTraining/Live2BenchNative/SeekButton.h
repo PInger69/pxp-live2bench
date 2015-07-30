@@ -13,29 +13,28 @@ typedef enum : NSUInteger {
     SEEK_DIRECTION_RIGHT
     
 } Direction;
-@interface SeekButton : UIView <UIGestureRecognizerDelegate>
 
-@property (nonatomic,assign)    float speed;
-@property (nonatomic,assign)    BOOL enabled;
+IB_DESIGNABLE
+@interface SeekButton : UIControl
 
-+(id)makeForwardAt:(CGPoint)pt;
-+(id)makeBackwardAt:(CGPoint)pt;
-+(id)makeFullScreenForwardAt:(CGPoint)pt;
-+(id)makeFullScreenBackwardAt:(CGPoint)pt;
+@property (readonly, assign, nonatomic) CGFloat speed;
+@property (readonly, assign, nonatomic) BOOL isOpen;
 
-/**
- *  This preforms a selector when ever you tap on any of the buttons in this seeker are tapped
- *  
- *  Usage:
- *  -(void)seekerMethod:(id)theSeekerItSelf
- *  {
- *      NSLog(@"Speed is: %f ",((SeekButton*)theSeekerItSelf).speed);
- *  }
- *
- *  @param sel    method to run
- *  @param target object that contains method
- */
--(void)onPressSeekPerformSelector:(SEL)sel addTarget:(id)target;
+@property (assign, nonatomic) IBInspectable BOOL backward;
+@property (assign, nonatomic) IBInspectable CGFloat margin;
+@property (assign, nonatomic) IBInspectable CGFloat textNumber;
 
--(BOOL)isOpen;
+@property (strong, nonatomic, nonnull) NSArray *speeds;
+
++ (nonnull instancetype)makeForwardAt:(CGPoint)pt;
++ (nonnull instancetype)makeBackwardAt:(CGPoint)pt;
++ (nonnull instancetype)makeFullScreenForwardAt:(CGPoint)pt;
++ (nonnull instancetype)makeFullScreenBackwardAt:(CGPoint)pt;
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward;
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward margin:(CGFloat)margin;
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward margin:(CGFloat)margin speeds:(nonnull NSArray *)speeds;
+
+- (void)onPressSeekPerformSelector:(nullable SEL)sel addTarget:(nullable id)target;
+
 @end

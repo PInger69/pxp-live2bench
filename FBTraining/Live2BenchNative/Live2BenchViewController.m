@@ -35,6 +35,8 @@
 #import "LeagueTeam.h"
 #import "BottomViewControllerProtocol.h"
 
+#import "PxpVideoBar.h"
+
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
 #define TOTAL_WIDTH          1024
@@ -783,6 +785,7 @@ static void * eventContext      = &eventContext;
      [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
     }
     
+    
 
 //    [currentEventTitle setNeedsDisplay];
     
@@ -816,6 +819,9 @@ static void * eventContext      = &eventContext;
     _bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
     [_bottomViewController update];
     // just to update UI
+    
+    PxpVideoBar *bar = [[PxpVideoBar alloc] initWithFrame:_videoBarViewController.view.frame];
+    //[_videoBarViewController.view.superview addSubview:bar];
 }
 
 
