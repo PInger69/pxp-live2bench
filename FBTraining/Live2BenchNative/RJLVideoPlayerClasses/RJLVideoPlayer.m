@@ -770,6 +770,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     self.feed = aFeed;
     self.URL = [self.feed path];
     [self play];
+    
+    
+    PXPLog(@"MainPlayer URL: %@",[[aFeed path]absoluteString]);
 }
 
 -(void)playFeed:(Feed*)aFeed withRange:(CMTimeRange)aRange

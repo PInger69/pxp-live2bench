@@ -39,6 +39,8 @@
 #import "TeamPlayer.h"
 #import "ContentViewController.h"
 
+#import "PxpVideoBar.h"
+
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
 #define TOTAL_WIDTH          1024
@@ -363,9 +365,6 @@ static void * eventContext      = &eventContext;
         _bottomViewController = [[FootballBottomViewController alloc]init];
         [self.view addSubview:_bottomViewController.mainView];
         _bottomViewController.currentEvent = _currentEvent;
-    }else if ([sport isEqualToString:@"Football Training"] && !_bottomViewController && _currentEvent){
-        FootballTrainingBottomViewController *fbbvc = [[FootballTrainingBottomViewController alloc]init];
-        [self.view addSubview:fbbvc.view];
     }
 }
 
@@ -691,7 +690,7 @@ static void * eventContext      = &eventContext;
     [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.telestrationViewController.showsControls = YES;
+    self.telestrationViewController.showsControls = NO;
     self.telestrationViewController.showsClearButton = NO;
     self.telestrationViewController.delegate = self;
     self.telestrationViewController.timeProvider = self;
@@ -843,6 +842,7 @@ static void * eventContext      = &eventContext;
      [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
     }
     
+    
 
 //    [currentEventTitle setNeedsDisplay];
     
@@ -876,6 +876,9 @@ static void * eventContext      = &eventContext;
     _bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
     [_bottomViewController update];
     // just to update UI
+    
+    PxpVideoBar *bar = [[PxpVideoBar alloc] initWithFrame:_videoBarViewController.view.frame];
+    //[_videoBarViewController.view.superview addSubview:bar];
 }
 
 
@@ -909,6 +912,7 @@ static void * eventContext      = &eventContext;
 
 - (void)goToLive
 {
+    PXPLog(@"Pressed Live Button");
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
@@ -919,7 +923,7 @@ static void * eventContext      = &eventContext;
     
     [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
-    
+
 }
 
 
@@ -1180,7 +1184,9 @@ static void * eventContext      = &eventContext;
         PxpTelestration *tele = note.userInfo[@"telestration"];
         
         self.telestrationViewController.telestration = tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
-        
+        if (tele.isStill) {
+            [self.videoPlayer pause];
+        }
     }
 }
 

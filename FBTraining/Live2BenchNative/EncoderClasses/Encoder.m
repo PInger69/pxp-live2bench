@@ -2172,6 +2172,9 @@
                      options:0
                      error:&error];
         
+
+        PXPLog(@"%@",object);
+
         if([object isKindOfClass:[NSDictionary class]])
         {
             rawEncoderData                  = object;
@@ -2196,11 +2199,11 @@
                     LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
                     if (!homeTeam) {
                             homeTeam     = [LeagueTeam new];
-                        PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+//                        PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
                     }
                     if (!visitTeam) {
                             visitTeam   = [LeagueTeam new];
-                        PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+//                        PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
                     }
                     
                     
@@ -2283,11 +2286,11 @@
             LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
             if (!homeTeam) {
                 homeTeam     = [LeagueTeam new];
-                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+//                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
             }
             if (!visitTeam) {
                 visitTeam   = [LeagueTeam new];
-                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+//                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
             }
             
             

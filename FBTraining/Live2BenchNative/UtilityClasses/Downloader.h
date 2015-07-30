@@ -25,7 +25,7 @@
 +(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path type:(DownloadType)aType;
 +(DownloadItem *)downloadURL:(NSString*)url to:(NSString*)path type:(DownloadType)aType key:(NSString*)aKey;
 +(VideoTrimItem *)trimVideoURL: (NSString*)url to:(NSString*)path withTimeRange: (CMTimeRange) range;
-
++(VideoTrimItem *)trimVideoURL: (NSString*)url to:(NSString*)path withTimeRange: (CMTimeRange) range key:(NSString*)aKey;
 -(void)addToQueue:(DownloadItem *)item;
 -(void)addToQueue:(DownloadItem *)item key:(NSString*)key;
 -(void)removeFromQueue:(DownloadItem *)item;

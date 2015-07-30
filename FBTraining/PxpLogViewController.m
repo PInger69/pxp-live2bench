@@ -39,7 +39,7 @@
     [self.textView setText: [PxpLog getInstance].text];
     if(self.textView.text.length > 0 ) {
         NSRange bottom = NSMakeRange(self.textView.text.length -1, 1);
-        [self.textView scrollRangeToVisible:bottom];
+//        [self.textView scrollRangeToVisible:bottom];
     }
 }
 @end

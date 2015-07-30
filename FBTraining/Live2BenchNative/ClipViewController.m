@@ -874,9 +874,9 @@ static void * encoderTagContext = &encoderTagContext;
 - (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
     NSMutableArray *tags = [NSMutableArray array];
     for (Tag *tag in tagsToDisplay) {
-        if (tag.type == TagTypeNormal) {
+//        if (tag.type == TagTypeNormal) {
             [tags addObject:tag];
-        }
+//        }
     }
     _tagsToDisplay = tags;
 }

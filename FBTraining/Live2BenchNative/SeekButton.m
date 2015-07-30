@@ -12,58 +12,37 @@
 
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
-
-
-
-#define FORWARD @"forward"
-#define BACKWARD @"backward"
 #define LITTLE_ICON_DIMENSIONS      30 //the image is really 33x36
 #define LARGE_ICON_DIMENSIONS       50 // this image is really 46x51
 #define NORMAL_MARGIN               5
 #define LARGE_MARGIN                10
-#define WIDTH                       40
-#define HEIGHT                      145
-#define FULL_WIDTH                  70
-#define FULL_HEIGHT                 250
-#define DEFAULT_INDEX               2   // This is what the app graphics and speed start at
 
-/**
- *  This class will manage all the seeking buttons in the project.
- *  all buttons will have the same velocity in their declared direction.
- *
- *  Usage:
- *  SeekButton * seeker = [SeekButton makeForwardAt:CGPointMake(50, 100)];
- *  [seeker onPressSeekPerformSelector:@selector(seekerMethod:) addTarget:self]; // seekerMethod is where you adjust video seek speed
- *  [self.view addSubview:seeker];
- */
+#define NOTIF_SEEK_BUTTON_SYNC_TEXT_NUMBER @"seekButtonSyncTextNumber"
+
+@interface SeekButton ()
+
+@property (assign, nonatomic) BOOL showsSeekControlView;
+@property (readonly, assign, nonatomic) CGRect marginBounds;
+
+@end
 
 @implementation SeekButton
 {
-    NumberedSeekerButton *mainButton;
-    NSMutableArray *buttonList;
-    UIView *backPlate;
-    UILongPressGestureRecognizer *longPressGesture;
-    NSString *direction;
-    BOOL isFullScreen;
-    SEL onSeekSelector;
-    id seekingTarget;
-    float   velocity;
+    NumberedSeekerButton * __nonnull _mainButton;
+    SEL __nullable _onSeekSelector;
+    id __nullable _seekingTarget;
+    
+    NSMutableArray * __nonnull _buttons;
+    UIView * __nonnull _backPlate;
 }
 
-@synthesize speed = _speed;
+static NSNotificationCenter * __nonnull _localCenter;
+static NSArray * __nonnull _defaultSpeeds;
+static CGFloat _textNumbers[2] = { 1.0, 1.0 };
 
-static NSInteger              currentForwardButtonIndex;
-static NSInteger              currentBackwardButtonIndex;
-static NSArray          * listOfSpeeds;
-static NSMutableArray   * allSeekButtonsForward;
-static NSMutableArray   * allSeekButtonsBackward;
-
-+(void)initializeStatics
-{
-    allSeekButtonsForward 				= [[NSMutableArray alloc]init];
-    allSeekButtonsBackward               = [[NSMutableArray alloc]init];
-    
-    listOfSpeeds                = @[ // in seconds
++ (void)initialize {
+    _localCenter = [[NSNotificationCenter alloc] init];
+    _defaultSpeeds                = @[ // in seconds
                                     [NSNumber numberWithFloat:0.1f],
                                     [NSNumber numberWithFloat:0.25f],
                                     [NSNumber numberWithFloat:1.00f],
@@ -72,310 +51,235 @@ static NSMutableArray   * allSeekButtonsBackward;
                                     [NSNumber numberWithFloat:15.00f],
                                     [NSNumber numberWithFloat:20.00f]
                                     ];
-    currentForwardButtonIndex = currentBackwardButtonIndex = (DEFAULT_INDEX >listOfSpeeds.count-1)? listOfSpeeds.count-1:DEFAULT_INDEX;
-    
-    
 }
 
-
-/**
- *  This updates all the main button images that are made by the Class methods
- */
-+(void)updateAll:( NSString *)direct
-{
-    if ([direct isEqualToString:FORWARD] ) {
-        for(SeekButton* eachButton in allSeekButtonsForward) {
-            [eachButton setMainButtonImageIndex:currentForwardButtonIndex];
-            [eachButton hideSeekControlView:nil];
-        }
-    } else if ([direct isEqualToString:BACKWARD]) {
-        for(SeekButton* eachButton in allSeekButtonsBackward) {
-            [eachButton setMainButtonImageIndex:currentBackwardButtonIndex];
-            [eachButton hideSeekControlView:nil];
-        }
-        
-    } else {
-        for(SeekButton* eachButtonF in allSeekButtonsForward) {
-            [eachButtonF setMainButtonImageIndex:currentForwardButtonIndex];
-            [eachButtonF hideSeekControlView:nil];
-        }
-        for(SeekButton* eachButtonB in allSeekButtonsBackward) {
-            [eachButtonB setMainButtonImageIndex:currentBackwardButtonIndex];
-            [eachButtonB hideSeekControlView:nil];
-        }
-    }
++ (nonnull instancetype)makeForwardAt:(CGPoint)pt {
+    return [[self alloc] initWithFrame:CGRectMake(pt.x, pt.y, LITTLE_ICON_DIMENSIONS + NORMAL_MARGIN, LITTLE_ICON_DIMENSIONS + NORMAL_MARGIN) backward:NO margin:NORMAL_MARGIN / 2.0];
 }
 
-
-+(id)makeForwardAt:(CGPoint)pt
-{
-    if (!allSeekButtonsForward) [SeekButton initializeStatics];
-    
-    float newHeight = ((LITTLE_ICON_DIMENSIONS+ NORMAL_MARGIN) * (listOfSpeeds.count+1))+ NORMAL_MARGIN;
-    float newWidth = LITTLE_ICON_DIMENSIONS + NORMAL_MARGIN*2;
-    
-    CGRect buttonSizing = CGRectMake(pt.x, pt.y - newHeight + NORMAL_MARGIN*2 + LITTLE_ICON_DIMENSIONS ,newWidth,newHeight);
-    SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:FORWARD isFullScreen:NO];
-    return mySeeker;
++ (nonnull instancetype)makeBackwardAt:(CGPoint)pt {
+    return [[self alloc] initWithFrame:CGRectMake(pt.x, pt.y, LITTLE_ICON_DIMENSIONS + NORMAL_MARGIN, LITTLE_ICON_DIMENSIONS + NORMAL_MARGIN) backward:YES margin:NORMAL_MARGIN / 2.0];
 }
 
-+(id)makeBackwardAt:(CGPoint)pt
-{
-    if (!allSeekButtonsBackward) [SeekButton initializeStatics];
-    
-    float newHeight = ((LITTLE_ICON_DIMENSIONS+ NORMAL_MARGIN) * (listOfSpeeds.count+1))+ NORMAL_MARGIN;
-    float newWidth = LITTLE_ICON_DIMENSIONS + NORMAL_MARGIN*2;
-    
-    CGRect buttonSizing = CGRectMake(pt.x , pt.y - newHeight  + NORMAL_MARGIN*2 + LITTLE_ICON_DIMENSIONS ,newWidth,newHeight); // this positions the graphic by main Button top left
-    SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:BACKWARD isFullScreen:NO];
-    return mySeeker;
++ (nonnull instancetype)makeFullScreenForwardAt:(CGPoint)pt {
+    return [[self alloc] initWithFrame:CGRectMake(pt.x, pt.y, LARGE_ICON_DIMENSIONS + LARGE_MARGIN, LARGE_ICON_DIMENSIONS + LARGE_MARGIN) backward:NO margin:LARGE_MARGIN / 2.0];
 }
 
-+(id)makeFullScreenForwardAt:(CGPoint)pt
-{
-    if (!allSeekButtonsForward) [SeekButton initializeStatics];
-    
-    float newHeight = ((LARGE_ICON_DIMENSIONS+ LARGE_MARGIN) * (listOfSpeeds.count+1))+ LARGE_MARGIN;
-    float newWidth = LARGE_ICON_DIMENSIONS + LARGE_MARGIN*2;
-    
-    CGRect buttonSizing = CGRectMake(pt.x, pt.y - newHeight+LARGE_MARGIN*2+ LARGE_ICON_DIMENSIONS, newWidth,newHeight); // this positions the graphic by main Button top left
-    SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:FORWARD isFullScreen:YES];
-    return mySeeker;
++ (nonnull instancetype)makeFullScreenBackwardAt:(CGPoint)pt {
+    return [[self alloc] initWithFrame:CGRectMake(pt.x, pt.y, LARGE_ICON_DIMENSIONS + LARGE_MARGIN, LARGE_ICON_DIMENSIONS + LARGE_MARGIN) backward:YES margin:LARGE_MARGIN / 2.0];
 }
 
-+(id)makeFullScreenBackwardAt:(CGPoint)pt
-{
-    if (!allSeekButtonsBackward) [SeekButton initializeStatics];
-    
-    float newHeight = ((LARGE_ICON_DIMENSIONS+ LARGE_MARGIN) * (listOfSpeeds.count+1))+ LARGE_MARGIN;
-    float newWidth = LARGE_ICON_DIMENSIONS + LARGE_MARGIN*2;
-    
-    CGRect buttonSizing = CGRectMake(pt.x, pt.y - newHeight+LARGE_MARGIN*2+ LARGE_ICON_DIMENSIONS , newWidth,newHeight);// this positions the graphic by main Button top left
-    SeekButton *mySeeker = [[SeekButton alloc]initWithFrame:buttonSizing direction:BACKWARD isFullScreen:YES];
-    return mySeeker;
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
+    return [self initWithFrame:frame backward:NO margin:0.0 speeds:_defaultSpeeds];
 }
 
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward {
+    return [self initWithFrame:frame backward:backward margin:0.0 speeds:_defaultSpeeds];
+}
 
-/**
- *  This is used by the class to construct the buttons needed. With out the use of modifying
- *
- *  @param frame  based off the Class method pt and static rect size
- *  @param dir    this lets the instance know what images to use as well as the speeds
- *  @param isFull this is for full screen or not
- *
- *  @return customized instance of the seeker button
- */
--(id)initWithFrame:(CGRect)frame direction:(NSString *) dir isFullScreen:(BOOL) isFull
-{
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward margin:(CGFloat)margin {
+    return [self initWithFrame:frame backward:backward margin:margin speeds:_defaultSpeeds];
+}
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward margin:(CGFloat)margin speeds:(nonnull NSArray *)speeds {
     self = [super initWithFrame:frame];
     if (self) {
-        if (!allSeekButtonsForward) [SeekButton initializeStatics];
-        buttonList = [[NSMutableArray alloc]init];
+        _backward = backward;
+        _speeds = speeds;
+        _margin = margin;
         
-        direction           = dir;
-        isFullScreen        = isFull;
-        float iconSize      = (isFullScreen)? LARGE_ICON_DIMENSIONS : LITTLE_ICON_DIMENSIONS;
-        float margin        = (isFullScreen)? LARGE_MARGIN : NORMAL_MARGIN;
+        _buttons = [NSMutableArray arrayWithCapacity:_speeds.count];
         
+        _backPlate = [[UIView alloc] initWithFrame:self.bounds];
+        _backPlate.backgroundColor = [UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3];
+        _backPlate.hidden = YES;
         
-        for (id object in listOfSpeeds) {
-            NumberedSeekerButton * btn ;
-            CGRect r = CGRectMake(0, 0, iconSize, iconSize);
-            if (isFullScreen){
-                btn = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardLargeWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardLargeWithFrame:r];
-            } else {
-                btn = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardNormalWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardNormalWithFrame:r];
-            }
-            [btn setTextNumber:[object floatValue]];
-            [buttonList addObject:btn];
-        }
+        _mainButton = [[NumberedSeekerButton alloc] initWithFrame:self.bounds backward:_backward];
+        _mainButton.textNumber = _textNumbers[_backward ? 1 : 0];
+        [_mainButton addTarget:self action:@selector(seekAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        // Backplace
-        backPlate                   = [[UIView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        backPlate.backgroundColor   = [UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3];
-        backPlate.hidden            = YES;
-        [self addSubview:backPlate];
+        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPressSeekControl:)];
+        recognizer.minimumPressDuration = 0.5; //seconds
+        [_mainButton addGestureRecognizer:recognizer];
         
-        // set up button size based of full screen or not
+        [self addSubview:_backPlate];
+        [self addSubview:_mainButton];
+        [self rebuildButtons];
         
-        CGRect r = CGRectMake(margin, (frame.size.height - (iconSize + margin)) , iconSize, iconSize);
-        if (isFullScreen){
-            mainButton = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardLargeWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardLargeWithFrame:r];
-        } else {
-            mainButton = ([direction isEqualToString:FORWARD])? [[NumberedSeekerButton alloc]initForwardNormalWithFrame:r] : [[NumberedSeekerButton alloc]initBackwardNormalWithFrame:r];
-        }
-        [self addSubview:mainButton];
-        
-        for (int i=0; i<buttonList.count; i++) {
-            NumberedSeekerButton * button = ((NumberedSeekerButton*)buttonList[i]);
-            button.frame = CGRectMake(margin, (frame.size.height - (iconSize + margin)) - (iconSize + margin)  * (i+1), iconSize, iconSize);
-            [self addSubview:button];
-        }
-        
-        // set up all other buttons
-        
-        for (int i=0; i<buttonList.count; i++) {
-            NumberedSeekerButton * button = ((NumberedSeekerButton*)buttonList[i]);
-            [button addTarget:self action:@selector(onPressSeekButton:) forControlEvents:UIControlEventTouchUpInside];
-            [button addTarget:self action:@selector(hideSeekControlView:) forControlEvents:UIControlEventTouchDragInside];
-            button.hidden = YES;
-            button.tag = i;
-        }
-        
-        // set up the main button
-        [mainButton addTarget:self action:@selector(onPressSeekButton:) forControlEvents:UIControlEventTouchUpInside];
-        mainButton.tag = -1;
-        longPressGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(onLongPressSeekControl:)];
-        longPressGesture.minimumPressDuration = 0.5; //seconds
-        longPressGesture.delegate = self;
-        [mainButton addGestureRecognizer:longPressGesture];
-        
-        
-        if ([dir isEqualToString:FORWARD] ) {
-            [mainButton setTextNumber:[listOfSpeeds[currentForwardButtonIndex]floatValue]];
-            velocity = [listOfSpeeds[currentForwardButtonIndex] floatValue];
-            [allSeekButtonsForward addObject:self]; // add to static list for update
-        } else if ([dir isEqualToString:BACKWARD]) {
-            [mainButton setTextNumber:[listOfSpeeds[currentBackwardButtonIndex]floatValue]];
-            velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
-            [allSeekButtonsBackward addObject:self]; // add to static list for update
-        }
-        
-        self.enabled = YES;
-        
-        
+        [_localCenter addObserver:self selector:@selector(syncTextNumberHandler:) name:NOTIF_SEEK_BUTTON_SYNC_TEXT_NUMBER object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [_localCenter removeObserver:self];
+}
+
+#pragma mark - Overrides
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    const CGFloat x = self.bounds.origin.x, y = self.bounds.origin.y, w = self.bounds.size.width, h = self.bounds.size.height;
+    const NSUInteger i = _buttons.count;
+    
+    _backPlate.frame = _showsSeekControlView ? CGRectMake(x, y - (i * h), w, h + (i * h)) : self.bounds;
+    _mainButton.frame = self.marginBounds;
+    
+    for (NSUInteger i = 0; i < _buttons.count; i++) {
+        NumberedSeekerButton *button = _buttons[i];
+        button.frame = [self marginBoundsForBounds:CGRectMake(x, y - (i + 1) * h, w, h)];
+    }
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event {
+    return self.isOpen ? [_backPlate pointInside:[_backPlate convertPoint:point fromView:self] withEvent:event] : [super pointInside:point withEvent:event];
+}
+
+- (UIControlEvents)allControlEvents {
+    return UIControlEventTouchUpInside;
+}
+
+#pragma mark - Getters / Setters
+
+- (void)setBackward:(BOOL)backward {
+    _backward = backward;
+    
+    _mainButton.backward = backward;
+    for (NumberedSeekerButton *button in _buttons) {
+        button.backward = backward;
+    }
+}
+
+- (void)setMargin:(CGFloat)margin {
+    _margin = margin;
+    
+    [self setNeedsLayout];
+}
+
+- (void)setSpeeds:(nonnull NSArray *)speeds {
+    _speeds = speeds;
+    
+    [self rebuildButtons];
 }
 
 -(void)setEnabled:(BOOL)enabled{
-    _enabled = enabled;
-    mainButton.enabled = enabled;
-}
-/**
- *  This is the default method. Please do not use.
- *
- *  @param frame only the "x" and "y" will be used
- *
- *  @return instance made from the class method
- */
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [SeekButton makeForwardAt:CGPointMake(frame.origin.x, frame.origin.y)];
-    NSLog(@"MADE A NORMAL FORWARD SEEK BUTTON!"); // Please use Class methods to make the buttons
-    return self;
-}
-
-
-/**
- *  When a star is pressed run this selector
- *
- *  @param sel    method to be run
- *  @param target object that contains the method
- */
--(void)onPressSeekPerformSelector:(SEL)sel addTarget:(id)target
-{
-    seekingTarget = target;
-    onSeekSelector = sel;
-}
-
-
-/**
- *  This is to update the image to the correct image in the Class Dict
- *
- *  @param index of image ot retrieve from the class dictionary
- */
--(void)setMainButtonImageIndex:(NSInteger)index
-{
-    [ mainButton setTextNumber:[listOfSpeeds[index]  floatValue]];
-    return;
-}
-
-
-/**
- *  This hides the back plate and all the setting buttons
- *
- *  @param sender used (nil)
- */
--(void)hideSeekControlView:(id)sender{
-    backPlate.hidden = YES;
-    for (NumberedSeekerButton * btn in buttonList) {
-        btn.hidden = YES;
+    [super setEnabled:enabled];
+    
+    _mainButton.enabled = enabled;
+    if (!enabled) {
+        self.showsSeekControlView = NO;
     }
 }
 
-
-/**
- *  On a press that is .5 seconds, it will reveal all the setting buttons and backplate
- *
- *  @param gestureRecognizer from the main button
- */
-- (void)onLongPressSeekControl:(UILongPressGestureRecognizer *)gestureRecognizer
-{
-    backPlate.hidden = NO;
-    for (NumberedSeekerButton * btn in buttonList) {
-        btn.hidden = NO;
+- (void)setShowsSeekControlView:(BOOL)showsSeekControlView {
+    _showsSeekControlView = showsSeekControlView;
+    
+    const CGFloat x = self.bounds.origin.x, y = self.bounds.origin.y, w = self.bounds.size.width, h = self.bounds.size.height;
+    const NSUInteger i = _buttons.count;
+    
+    _backPlate.frame = showsSeekControlView ? CGRectMake(x, y - (i * h), w, h + (i * h)) : self.bounds;
+    _backPlate.hidden = !showsSeekControlView;
+    for (NumberedSeekerButton *button in _buttons) {
+        button.hidden = !showsSeekControlView;
     }
 }
 
+- (BOOL)isOpen {
+    return !_backPlate.hidden;
+}
 
-/**
- *  This is run for each button in the seeker
- *
- *  @param sender the button pressed
- */
--(void)onPressSeekButton:(id)sender{
-    NumberedSeekerButton *button = (NumberedSeekerButton*)sender;
+- (CGFloat)speed {
+    return self.textNumber * (_backward ? -1.0 : 1.0);
+}
+
+- (void)setTextNumber:(CGFloat)textNumber {
+    _mainButton.textNumber = textNumber;
+    _textNumbers[_backward ? 1 : 0] = textNumber;
     
-    if (button.tag > -1) {
-        if ([direction isEqualToString:FORWARD] ) {
-            currentForwardButtonIndex = button.tag; //  "-1" is the tag for the main button
-            velocity = [listOfSpeeds[currentForwardButtonIndex] floatValue];
-        } else if ([direction isEqualToString:BACKWARD]) {
-            currentBackwardButtonIndex = button.tag; //  "-1" is the tag for the main button
-            velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
-        }
-    } else {
-        if ([direction isEqualToString:FORWARD] ) {
-            velocity = [listOfSpeeds[currentForwardButtonIndex] floatValue];
-        } else if ([direction isEqualToString:BACKWARD]) {
-            velocity = [listOfSpeeds[currentBackwardButtonIndex] floatValue];
-        }
+    [_localCenter postNotificationName:NOTIF_SEEK_BUTTON_SYNC_TEXT_NUMBER object:self];
+}
+
+- (CGFloat)textNumber {
+    return _mainButton.textNumber;
+}
+
+- (CGRect)marginBounds {
+    return [self marginBoundsForBounds:self.bounds];
+}
+
+#pragma mark - Notification Handlers
+
+- (void)syncTextNumberHandler:(NSNotification *)note {
+    SeekButton *sender = note.object;
+    if ([sender isKindOfClass:[SeekButton class]] && sender != self && sender.backward == _backward) {
+        _mainButton.textNumber = sender.textNumber;
     }
-    
-    if (onSeekSelector) [seekingTarget performSelector:onSeekSelector withObject:self];
-    
-    [SeekButton updateAll:direction]; //updates all instance graphics
 }
 
-/**
- *  This is a quick way to tell if the buttons are open.
- *  The main purpouse of this method is to adjust the hitArea by what is seen
- *
- *  @return if open or not
- */
--(BOOL)isOpen
-{
-    return !backPlate.hidden; //If you can't see the plate then its close :)
+#pragma mark - Actions
+
+- (void)speedSelectAction:(NumberedSeekerButton *)button {
+    self.textNumber = button.textNumber;
+    self.showsSeekControlView = NO;
 }
 
-// Getter and Setter
--(float) speed
-{
-    return ([direction  isEqual: FORWARD])?velocity:-velocity;
-}
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    if (self.isOpen) {
-        return YES;
-    } else if (point.x >= 0 && point.x <= self.frame.size.width && point.y >= self.frame.size.height *7/8 && point.y <= self.frame.size.height) {
-        return YES;
-    } else {
-        return NO;
+- (void)seekAction:(NumberedSeekerButton *)button {
+    [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+    if (_seekingTarget && _onSeekSelector) {
+        [_seekingTarget performSelector:_onSeekSelector withObject:self];
     }
-    
 }
 
+- (void)hideSeekControlViewAction:(NumberedSeekerButton *)button {
+    self.showsSeekControlView = NO;
+}
+
+#pragma mark - Gesture Recognizers
+
+- (void)onLongPressSeekControl:(UILongPressGestureRecognizer *)gestureRecognizer {
+    self.showsSeekControlView = YES;
+}
+
+#pragma mark - Public Methods
+
+- (void)onPressSeekPerformSelector:(nullable SEL)sel addTarget:(nullable id)target {
+    _seekingTarget = target;
+    _onSeekSelector = sel;
+}
+
+#pragma mark - Private Methods
+
+/// Rebuilds the numbered seeker buttons in the view
+- (void)rebuildButtons {
+    const CGFloat x = self.bounds.origin.x, y = self.bounds.origin.y, w = self.bounds.size.width, h = self.bounds.size.height;
+    
+    // remove existing buttons
+    for (NumberedSeekerButton *button in _buttons) {
+        [button removeFromSuperview];
+    }
+    [_buttons removeAllObjects];
+    
+    // create new buttons
+    for (NSUInteger i = 0; i < _speeds.count; i++) {
+        NSNumber *speed = _speeds[i];
+        
+        NumberedSeekerButton *button = [[NumberedSeekerButton alloc] initWithFrame:[self marginBoundsForBounds:CGRectMake(x, y - (i + 1) * h, w, h)] backward:_backward];
+        button.textNumber = speed.floatValue;
+        
+        [_buttons addObject:button];
+        [self addSubview:button];
+        
+        [button addTarget:self action:@selector(speedSelectAction:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(hideSeekControlViewAction:) forControlEvents:UIControlEventTouchDragInside];
+        button.hidden = YES;
+    }
+}
+
+/// Returns the given bounds with the button's margin applied
+- (CGRect)marginBoundsForBounds:(CGRect)bounds {
+    return CGRectMake(bounds.origin.x + _margin, bounds.origin.y + _margin, bounds.size.height - 2.0 * _margin, bounds.size.height - 2.0 * _margin);
+}
 
 @end
 

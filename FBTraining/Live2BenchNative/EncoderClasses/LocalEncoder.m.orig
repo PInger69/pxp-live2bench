@@ -25,7 +25,7 @@
 #import "Tag.h"
 #import "UserCenter.h"
 #import "LocalMediaManager.h"
-
+#import "UserCenter.h"
 
 #define LOCAL_PLIST     @"EventsHid.plist"
 #define VIDEO_EXT       @"mp4"
@@ -56,11 +56,10 @@ static LocalEncoder * instance;
     NSURLDataConnection *encoderConnection;
 }
 
-//@synthesize name            = _name;
+@synthesize name            = _name;
 @synthesize event           = _event;
 @synthesize status          = _status;
-//@synthesize allEvents       = _allEvents;
-//@synthesize clips           = _clips;
+@synthesize allEvents       = _allEvents;
 
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
@@ -299,6 +298,8 @@ static LocalEncoder * instance;
         [self modTag:tData];
     } else if ([methodName isEqualToString: EVENT_GET_TAGS]) {
      //   [self eventTagsGetResponce: tData eventNameKey:extra];
+    }else if ([methodName isEqualToString:MAKE_TELE_TAG]){
+        [self teleTag:tData];
     }
     
     
@@ -307,10 +308,11 @@ static LocalEncoder * instance;
 -(void) writeToPlist{
     
 // local event write to plist
-    NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
+    //NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.event.datapath]stringByAppendingPathExtension:@"plist"];
     
     for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
         Event *localEvent = eventDic[@"local"];
+        NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:localEvent.datapath]stringByAppendingPathExtension:@"plist"];
         [localEvent.rawData writeToFile:plistNamePath atomically:YES];
     }
 
@@ -420,28 +422,29 @@ static LocalEncoder * instance;
 
 -(void)onTelePost:(NSNotification *)note
 {
-//    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
-//    
-//    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
-//    NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
-//    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
-//    
-//    // This is the starndard info that is collected from the encoder
-//    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-//                                     @{
-//                                       @"event"         : eventNm,
-//                                       @"colour"        : [UserCenter getInstance].customerColor,
-//                                       @"user"          : [UserCenter getInstance].userHID,
-//                                       @"time"          : tagTime,
-//                                       @"name"          : tagName,
-//                                       @"duration"      : @"1",
-//                                       @"type"          : @"4",
-//                                       }];
-//    
-//    [tagData addEntriesFromDictionary:data];
-//    
-//    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
+    NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
     
+    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+    NSString *tagDuration = [data objectForKey:@"duration"];// just to make sure they are added
+    NSData *teleData = [data objectForKey:@"telestration"];
+    NSString *eventNm = (self.event.live)?LIVE_EVENT:self.event.name;
+    
+    // This is the starndard info that is collected from the encoder
+    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{
+                                       @"event"         : eventNm,
+                                       @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                       @"user"          : [UserCenter getInstance].userHID,
+                                       @"time"          : tagTime,
+                                       @"name"          : @"Tele",
+                                       @"duration"      : tagDuration,
+                                       @"type"          : [NSNumber numberWithInteger:TagTypeTele],
+                                       @"telestration"  : teleData,
+                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                       }];
+    
+    
+    [self issueCommand:MAKE_TELE_TAG priority:1 timeoutInSec:20 tagData:tagData timeStamp:GET_NOW_TIME];
 }
 
 -(void)onModTag:(NSNotification *)note
@@ -511,18 +514,74 @@ static LocalEncoder * instance;
 
 -(void)ondeleteEvent:(NSNotification *)note
 {
-//    Event *eventToDelete = note.object;
+    Event *eventToDelete = note.object;
 //    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
 //                                                                                @"name": eventToDelete.name,
 //                                                                                @"hid": eventToDelete.hid
 //                                                                                }];
 //    
 //    [self issueCommand:DELETE_EVENT priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
+    
+    [[LocalMediaManager getInstance] deleteEvent:eventToDelete];
 }
 
 -(void)onDownloadClip:(NSNotification *)note
 {
-// this should cut an MP4
+
+    
+    Tag *tag = note.userInfo[@"tag"];
+    NSString * srcID = note.userInfo[@"key"];
+    
+<<<<<<< HEAD
+    NSURL * url  = [((Feed*)[self.event.feeds objectForKey:srcID]) path] ;
+    NSString * vidURL = [url absoluteString];
+    
+=======
+    Feed *feed = self.event.feeds[srcID];
+    NSString *vidURL = feed.path.path;
+
+>>>>>>> b500175fe74ec38ec8c28d8aebeca752fb4cae20
+    __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
+    
+
+        NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",self.event.name,tag.ID, srcID];
+ 
+//        //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
+        NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
+//        DownloadItem * dli = [Downloader downloadURL:vidURL to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tag.ID,srcIDwithQ ]];
+    
+<<<<<<< HEAD
+    CMTime sTime    = CMTimeMake(tag.startTime, 1);
+    CMTime dur      = CMTimeMake(tag.duration, 1);
+    CMTimeRange tr  = CMTimeRangeMake(sTime, dur);
+
+    DownloadItem * dli = [Downloader trimVideoURL:vidURL to:pth withTimeRange:tr key:[NSString stringWithFormat:@"%@-%@",tag.ID,srcID ]];
+=======
+    CMTime sTime  = CMTimeMakeWithSeconds(tag.startTime, 600);
+    CMTime dur = CMTimeMakeWithSeconds(tag.duration, 600);
+    CMTimeRange tr = CMTimeRangeMake(sTime, dur);
+>>>>>>> b500175fe74ec38ec8c28d8aebeca752fb4cae20
+
+        dItemBlock(dli);
+
+        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
+            // is the object what we ware downloading
+            if (note.object == dli) {
+                NSLog(@"Download Complete");
+                [[LocalMediaManager getInstance] saveClip:videoName withData:tag.rawData];
+
+            }
+        }];
+
+    
+    
+
+    PXPLog(@"Downloading Clip!");
+    
+    
+
+    
+    
 }
 
 
@@ -585,6 +644,32 @@ static LocalEncoder * instance;
 
 }
 
+-(void)teleTag:(NSMutableDictionary *)tData{
+    
+    [tData addEntriesFromDictionary:@{
+                                      @"requesttime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      }];
+    
+    Tag *newTag                     = [[Tag alloc] initWithData:tData event:self.event];
+    NSDictionary *tagArePresent     = [[NSDictionary alloc]initWithDictionary:self.event.rawData[@"tags"]];
+    double tagArePresentCount       = tagArePresent.count + 1;
+    newTag.uniqueID                 = tagArePresentCount;
+    newTag.startTime                = newTag.time;
+    newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
+    
+    newTag.own                      = YES;
+    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
+    newTag.visitTeam                = self.event.teams[@"visitTeam"];
+    newTag.synced                   = NO;
+    
+    [self.event addTag:newTag extraData:true];
+    
+    [self.localTags addObject:newTag];
+    
+    [self writeToPlist];
+
+}
+
 -(void)modTag:(NSMutableDictionary *)tData {
     
     
@@ -613,11 +698,7 @@ static LocalEncoder * instance;
         
         
         [[LocalMediaManager getInstance] assignEncoderVersionEvent:self.encoderManager.masterEncoder.allEvents];
-        if (!self.localTags && !self.modifiedTags) {
-            [self syncTagsFromEncoder];
-        }else{
-            [self builtEncoderEvent];
-        }
+        [self builtEncoderEvent];
         
         //[self checkLocalTags];
         //[self syncEvents];
@@ -639,11 +720,16 @@ static LocalEncoder * instance;
         [eventToBeBuilt addObject:tag.event];
     }
     
+    for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
+        Event *localEvent = [eventDic objectForKey:@"local"];
+        [eventToBeBuilt addObject:localEvent];
+    }
+    
     for (Event *event in eventToBeBuilt) {
         NSMutableDictionary *eventFinal = [[LocalMediaManager getInstance].allEvents objectForKey:event.name];
         Event *encoderEvent = [eventFinal objectForKey:@"non-local"];
 
-        if (!encoderEvent.isBuilt) {
+        if (!encoderEvent.isBuilt && encoderEvent) {
             allBuilt = false;
         }
     }
@@ -689,12 +775,18 @@ static LocalEncoder * instance;
         [eventToBeBuilt addObject:tag.event];
     }
     
+    for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
+        Event *localEvent = [eventDic objectForKey:@"local"];
+        [eventToBeBuilt addObject:localEvent];
+    }
+    
     for (Event *event in eventToBeBuilt ) {
         NSMutableDictionary *eventDic = [[LocalMediaManager getInstance].allEvents objectForKey:event.name];
         Event *encoderEvent = [eventDic objectForKey:@"non-local"];
         if (!encoderEvent.isBuilt && encoderEvent) {
             [encoderEvent setDelegate:self];
-//            [self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
+            [encoderEvent build];
+            //[self.encoderManager requestTagDataForEvent:encoderEvent.name onComplete:nil];
         }
     }
 }
@@ -707,7 +799,7 @@ static LocalEncoder * instance;
         for (Tag *tag in self.localTags) {
             NSMutableDictionary *eventFinal = [[LocalMediaManager getInstance].allEvents objectForKey:tag.event.name];
             Event *encoderEvent = [eventFinal objectForKey:@"non-local"];
-            if (encoderEvent) {
+            if (encoderEvent.isBuilt) {
                 [encoderEvent.parentEncoder issueCommand:MAKE_TAG priority:1 timeoutInSec:20 tagData:[[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]] timeStamp:GET_NOW_TIME];
             }
         }
@@ -718,7 +810,7 @@ static LocalEncoder * instance;
             
             NSMutableDictionary *eventFinal = [[LocalMediaManager getInstance].allEvents objectForKey:tag.event.name];
             Event *encoderEvent = [eventFinal objectForKey:@"non-local"];
-            if (encoderEvent) {
+            if (encoderEvent.isBuilt) {
                 [encoderEvent.parentEncoder issueCommand:MODIFY_TAG priority:1 timeoutInSec:20 tagData:[[NSMutableDictionary alloc]initWithDictionary:[tag makeTagData]] timeStamp:GET_NOW_TIME];
             }
         }
@@ -739,7 +831,13 @@ static LocalEncoder * instance;
             for (Tag *tag in encoderEvent.tags) {
                 if (![localEvent.tags containsObject:tag]) {
                     Tag *localTag = [[Tag alloc]initWithData:[tag makeTagData] event:localEvent];
-                    [localEvent.tags addObject:tag];
+                    [localEvent.tags addObject:localTag];
+                }
+            }
+            NSArray *localEventArray = [localEvent.tags copy];
+            for (Tag *tag in localEventArray) {
+                if (![encoderEvent.tags containsObject:tag]) {
+                    [localEvent.tags removeObject:tag];
                 }
             }
         }
@@ -762,7 +860,7 @@ static LocalEncoder * instance;
 
 
 #pragma mark - Event Download
--(void)syncEvents{
+/*-(void)syncEvents{
     NSArray *allEvents = [[LocalMediaManager getInstance].allEvents allValues];
     for (int i = 0; i < [LocalMediaManager getInstance].allEvents.count; ++i) {
         Event *eventToSync = allEvents[i];
@@ -784,7 +882,7 @@ static LocalEncoder * instance;
         encoderConnection                       = [[NSURLDataConnection alloc] initWithRequest:urlRequest delegate:self];
         //encoderConnection.context        = TAG_SYNC;
     }
-}
+}*/
 
 #pragma mark - Responces
 
@@ -813,7 +911,7 @@ static LocalEncoder * instance;
     }
 }
 
--(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
+/*-(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
     if (connection.context == NEW_TAG_UPLOAD) {
         NSData *dataToBeUsed = [connection.cumulatedData copy];
         NSDictionary    * results =[Utility JSONDatatoDict: dataToBeUsed];
@@ -842,7 +940,7 @@ static LocalEncoder * instance;
         }
     }
     
-}
+}*/
 
 /*-(void)connectionDidFinishLoading:(NSURLDataConnection *)connection{
     if (connection.context == TAG_UPLOAD) {
@@ -933,13 +1031,8 @@ static LocalEncoder * instance;
     NSString *keyToBeRemoved = dicToBeRemoved[@"id"];
     [self.localTags removeObjectForKey:keyToBeRemoved];*/
     //[self.localTags removeObjectAtIndex:0];
-<<<<<<< HEAD
     [self.localTags removeObjectAtIndex:0];
 //    [self checkLocalTags];
-=======
-    //[self.localTags removeObjectAtIndex:0];
-    //[self checkLocalTags];
->>>>>>> c3ebedd3d6de08a35ab55891f2bebb670aa26e1b
     isSuccess   = NO;
     isFinished  = YES;
     if (self.delegate) {
@@ -1326,6 +1419,10 @@ static LocalEncoder * instance;
     NSString * bookmarkPath = [NSString stringWithFormat:@"%@/bookmark",_localPath];
     NSString * txt = [NSString stringWithFormat:@" %@: %ld - %@   - %@\nBookmark Path:%@",self.name,(long)self.status,self.event.name,self.event.eventType,  bookmarkPath ];
     return txt;
+}
+
+- (nullable Event *)getEventByName:(NSString *)eventName {
+    return self.allEvents[eventName];
 }
 
 

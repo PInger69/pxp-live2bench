@@ -65,7 +65,7 @@
             source = tag.event.feeds.allKeys.firstObject;
         }
         
-        __nonnull NSString *src = source ? source : @"";
+        NSString * __nonnull src = source ? source : @"";
         source = source;
         
         _dicKey = src;
@@ -86,7 +86,6 @@
         }
         
         _downloadButton = [[DownloadButton alloc] init];;
-        [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         _playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         //don't set tag to 0, by default, uiview's tag is 0
@@ -99,7 +98,13 @@
         
         [self.contentView addSubview: self.feedName];
         [self.contentView addSubview:self.feedView];
-        [self.contentView addSubview: self.downloadButton];
+        
+        if (tag.type != TagTypeTele) {
+            [self.downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            [self.contentView addSubview: self.downloadButton];
+        }
+        
+
         [self.contentView addSubview:self.playButton];
         
         [self setSelectionStyle:UITableViewCellEditingStyleNone];
