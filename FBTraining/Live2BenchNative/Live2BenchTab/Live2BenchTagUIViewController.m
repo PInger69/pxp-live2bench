@@ -9,6 +9,9 @@
 #import "Live2BenchTagUIViewController.h"
 
 #import "UserCenter.h"
+#import "TeamPlayer.h"
+#import "ContentViewController.h"
+
 //#import "Globals.h"
 
 
@@ -56,6 +59,7 @@
     }
     return self;
 }
+
 
 
 - (void)oneFingerSwipeLeft:(UITapGestureRecognizer *)recognizer
@@ -172,7 +176,6 @@
     id fullScreenObserver;
     Tray   * _leftTray;
     Tray   * _rightTray;
-
 }
 
 @synthesize currentEvent                = _currentEvent;
@@ -207,6 +210,7 @@
 
     return self;
 }
+
 
 // this builds the tags from the supplied data
 -(void)inputTagData:(NSArray*)listOfDicts

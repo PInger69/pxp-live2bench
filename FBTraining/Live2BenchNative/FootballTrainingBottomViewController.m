@@ -11,7 +11,7 @@
 #import "CustomLabel.h"
 #define kDEFAULT_NUM_OF_GROUPS 6
 
-NSMutableDictionary *offenseGroupDictionary;
+/*NSMutableDictionary *offenseGroupDictionary;
 NSMutableDictionary *defenseGroupDictionary;
 NSMutableDictionary *otherGroupDictionary;
 NSMutableDictionary *playersDictionary;
@@ -30,27 +30,32 @@ float buttonHeight;
 float spacing;
 int numOfRows;
 
-//Globals *globals;
 
 NSString *offenseGroupTagID;
 NSString *defenseGroupTagID;
 NSString *otherGroupTagID;
-NSMutableData *responseData;
+NSMutableData *responseData;*/
 
 @interface FootballTrainingBottomViewController ()
 
 @end
 
-@implementation FootballTrainingBottomViewController
+@implementation FootballTrainingBottomViewController{
+    BorderlessButton *offenseGroupButton;
+    BorderlessButton *defenseGroupButton;
+}
 
-@synthesize currentOffenseGroup;
-@synthesize currentDefenseGroup;
-@synthesize currentOtherGroup;
-@synthesize currentGroupPlayers;
+@synthesize currentEvent = _currentEvent;
+@synthesize videoPlayer = _videoPlayer;
+@synthesize mainView = _mainView;
+//@synthesize currentOffenseGroup;
+//@synthesize currentDefenseGroup;
+//@synthesize currentOtherGroup;
+//@synthesize currentGroupPlayers;
 
 #pragma mark - Init and View Setup
 
-- (id)initWithController:(Live2BenchViewController *)l2b
+/*- (id)initWithController:(Live2BenchViewController *)l2b
 {
     self = [super init];
     if (self) {
@@ -61,9 +66,38 @@ NSMutableData *responseData;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewElementsForNotification:) name:NOTIF_DURATION_TAG object:nil];
     }
     return self;
+}*/
+
+-(id)init{
+    self = [super init];
+    if (self) {
+        
+        self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
+        _mainView = self.view;
+        
+        offenseGroupButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
+        [offenseGroupButton setTitle:@"Offense" forState:UIControlStateNormal];
+        [offenseGroupButton setTitleColor:[UIColor colorWithRed:0.7f green:0.35f blue:0.0f alpha:1.0f] forState:UIControlStateSelected];
+        [offenseGroupButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        [offenseGroupButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [offenseGroupButton addTarget:self action:@selector(displayOffensePlayers) forControlEvents:UIControlEventTouchUpInside];
+        [offenseGroupButton setFrame:CGRectMake(10.0f, 0.0f, 80.0f, 25.0f)];
+        [self.view addSubview:offenseGroupButton];
+        
+        defenseGroupButton = [BorderlessButton buttonWithType:UIButtonTypeCustom];
+        [defenseGroupButton setTitle:@"Defense" forState:UIControlStateNormal];
+        [defenseGroupButton setTitleColor:[UIColor colorWithRed:0.7f green:0.35f blue:0.0f alpha:1.0f] forState:UIControlStateSelected];
+        [defenseGroupButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+        [defenseGroupButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [defenseGroupButton addTarget:self action:@selector(displayDefensePlayers) forControlEvents:UIControlEventTouchUpInside];
+        [defenseGroupButton setFrame:CGRectMake(self.view.frame.size.width - kDEFAULT_NUM_OF_GROUPS*44.0f - offenseGroupButton.frame.origin.x, 0.0f, offenseGroupButton.frame.size.width, 25.0f)];
+        [defenseGroupButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
+        [self.view addSubview:defenseGroupButton];
+    }
+    return self;
 }
 
-- (void)viewDidLoad
+/*- (void)viewDidLoad
 {
     [super viewDidLoad];
     
@@ -966,7 +1000,7 @@ NSMutableData *responseData;
         playersArray = [NSArray arrayWithObject:playersArray];
     }
     return playersArray;
-}
+}*/
 
 
 @end

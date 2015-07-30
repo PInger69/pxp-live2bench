@@ -109,7 +109,7 @@
                                                                  @"tags": @[newtag]
                                                                  }];
     
-    if ((newtag.type == TagTypeCloseDuration || newtag.type == TagTypeTele || newtag.type == TagTypeNormal || newtag.type == TagTypeHockeyStrengthStart || newtag.type == TagTypeHockeyStartOLine || newtag.type == TagTypeHockeyStopOLine || newtag.type == TagTypeHockeyStartDLine || newtag.type == TagTypeHockeyStopDLine || newtag.type == TagTypeSoccerZoneStart || newtag.type == TagTypeSoccerZoneStop) && _primary && notifPost ) {
+    if ((newtag.type == TagTypeCloseDuration || newtag.type == TagTypeTele || newtag.type == TagTypeNormal || newtag.type == TagTypeHockeyStrengthStart || newtag.type == TagTypeHockeyStartOLine || newtag.type == TagTypeHockeyStopOLine || newtag.type == TagTypeHockeyStartDLine || newtag.type == TagTypeHockeyStopDLine || newtag.type == TagTypeSoccerZoneStart || newtag.type == TagTypeSoccerZoneStop || newtag.type == TagTypeFootballDownTags) && _primary && notifPost ) {
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
                                                                                                       @"msg":newtag.name,

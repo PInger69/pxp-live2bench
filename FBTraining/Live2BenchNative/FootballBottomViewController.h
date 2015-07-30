@@ -7,15 +7,30 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AbstractBottomViewController.h"
+#import "BottomViewControllerProtocol.h"
 //#import "Globals.h"
-#import "Live2BenchViewController.h"
-#import "CustomButton.h"
+//#import "Live2BenchViewController.h"
+//#import "CustomButton.h"
 
-@class Live2BenchViewController;
-@interface FootballBottomViewController : UIViewController<UIPickerViewDataSource,UIPickerViewDelegate>
+//@class Live2BenchViewController;
+
+typedef NS_OPTIONS (NSInteger,FootballModes){
+    
+    FootballDisable,
+    FootballOffenseStart,
+    FootballDefenseStart,
+    FootballOffenseCalculate,
+    FootballDefenseCalculate,
+    FootballOffenseSend,
+    FootballDefenseSend
+};
+
+
+@interface FootballBottomViewController : AbstractBottomViewController <BottomViewControllerProtocol,UIPickerViewDataSource,UIPickerViewDelegate>
 
 {
-    UILabel *seriesLabel;
+    /*UILabel *seriesLabel;
     UIPickerView *sTPickerView;
     UILabel *sTLabel;
     NSArray *specialTeamsArray;
@@ -26,12 +41,12 @@
 //    UIPickerView *playCallPickerView;
 //    NSMutableArray *playCallOppArray;
 //    NSMutableArray *playCallArray;
-    UILabel *fieldPosSliderPos;
+    UILabel *fieldPosSliderPos;*/
     
 }
 
 
-@property (nonatomic,strong) UIPickerView *playCallOppPickerView;
+/*@property (nonatomic,strong) UIPickerView *playCallOppPickerView;
 @property (nonatomic,strong) UIPickerView *playCallPickerView;
 @property (nonatomic,strong) NSMutableArray *playCallOppArray;
 @property (nonatomic,strong) NSMutableArray *playCallArray;
@@ -67,6 +82,6 @@
 @property (nonatomic) BOOL isNewTurn;
 @property (nonatomic) BOOL isNextPlay;
 
-- (id)initWithController:(Live2BenchViewController *)fv;
+- (id)initWithController:(Live2BenchViewController *)fv;*/
 
 @end
