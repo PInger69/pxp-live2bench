@@ -771,6 +771,7 @@ static LocalMediaManager * instance;
     for (NSArray * pList in rawTeamSetup) {
         
         // each item in the Array should all be the same team
+        if (![pList count]) break ;
         NSString    * tHID      = pList[0][@"team"];
         LeagueTeam * owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
         for (NSDictionary * pData in pList) {
@@ -802,11 +803,11 @@ static LocalMediaManager * instance;
     
     if (!homeTeam) {
         homeTeam     = [LeagueTeam new];
-        PXPLog(@"homeTeam: %@ is not found in League: %@",dict[@"homeTeam"],dict[@"league"]);
+//        PXPLog(@"homeTeam: %@ is not found in League: %@",dict[@"homeTeam"],dict[@"league"]);
     }
     if (!visitTeam) {
         visitTeam   = [LeagueTeam new];
-        PXPLog(@"visitTeam: %@ is not found in League: %@",dict[@"visitTeam"],dict[@"league"]);
+//        PXPLog(@"visitTeam: %@ is not found in League: %@",dict[@"visitTeam"],dict[@"league"]);
     }
 
     

@@ -33,6 +33,14 @@
 
 #import "PxpTelestrationViewController.h"
 
+
+// Debug
+
+#import "SamplePxpFilterModule.h"
+#import "PxpFilterButtonScrollView.h"
+//End debug
+
+
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
 #define NOTCOACHPICK                  0
@@ -80,6 +88,11 @@
     
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
+    
+    // for debug
+    SamplePxpFilterModule       * sample;
+    
+    PxpFilterButtonScrollView * test;
 }
 @synthesize breadCrumbsView;
 @synthesize selectedCellRows;
@@ -176,6 +189,16 @@ NSMutableArray *oldEventNames;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
+        
+        
+        _pxpFilter = [[PxpFilter alloc]init];
+        _pxpFilter.delegate = self;
+        
+    //    sample = [[SamplePxpFilterModule alloc]initWithArray:@[@"PP",@"COACH CALL",@"PK"]];
+//        [_pxpFilter addModules:@[sample]];
+//        [_pxpFilter.filtersOwnPredicates addObject:[NSPredicate predicateWithFormat:@"name != %@", @"PP"]];
+//        [_pxpFilter.filtersOwnPredicates addObject:[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeNormal]];
+//        [NSString stringWithFormat:@"type != %ld", (long)TagTypeNormal ];
     }
     return self;
     
@@ -769,8 +792,15 @@ NSMutableArray *oldEventNames;
 
 - (void)slideFilterBox
 {
+    if (!test)test = [[PxpFilterButtonScrollView alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
 
+    [self.view addSubview:test];
+    [test buildButtonsWith:@[@"PP",@"PK",@"HEAD SHOT",@"COACH CALL"]];
+    test.parentFilter = _pxpFilter;
+    test.sortByPropertyKey = @"name";
+    [_pxpFilter addModules:@[test]];
     
+    [_pxpFilter filterTags:[self.allTags copy]];
     /*if (!componentFilter) {
         componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.tagsToDisplay];
         componentFilter = [TestFilterViewController commonFilter];
@@ -2389,19 +2419,6 @@ NSMutableArray *oldEventNames;
     [super touchesBegan:touches withEvent:event];
 }
 
-/*-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
-    NSMutableArray *tagsToSort = [NSMutableArray arrayWithArray:tags];
-    
-    if (componentFilter) {
-        componentFilter.rawTagArray = tagsToSort;
-        tagsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
-    }
-    //else{
-       // componentFilter = [TestFilterViewController commonFilter];
-    //}
-    
-    return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
-}*/
 
 -(void)clear{
     [self.allTags removeAllObjects];
@@ -2438,6 +2455,19 @@ NSMutableArray *oldEventNames;
 //        }
     }
     _tagsToDisplay = tags;
+}
+
+
+// Pxp
+-(void)onFilterComplete:(PxpFilter*)filter
+{
+
+
+}
+
+-(void)onFilterChange:(PxpFilter *)filter
+{
+    [filter filterTags:self.allTags];
 }
 
 @end

@@ -20,9 +20,13 @@
 #import "TestFilterViewController.h"
 #import "Tag.h"
 
+
+#import "PxpFilter.h"
+#import "PxpFilterDelegate.h"
+
 @class TeleViewController, ExportPlayersPopoverController;
 
-@interface ListViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate>{
+@interface ListViewController : CustomTabViewController<UITextViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate,PxpFilterDelegate>{
     BOOL fullScreenMode;
     int cellCounter;            //number of cells created in list view
     int coachPickMode;          //if it is a coach pick tag, this value is equal to 1; else is 0
@@ -67,6 +71,7 @@
 @property (nonatomic,strong) UIScrollView                * breadCrumbsView; //scrollview used to show which filter elements are selected currently
 @property (nonatomic,strong) NSMutableArray              * aCopyOfUnfinishedTags;
 
+@property (nonatomic,strong) PxpFilter                  * pxpFilter;
 
 
 -(void)slideFilterBox; //swipe to slide out/in the filter view

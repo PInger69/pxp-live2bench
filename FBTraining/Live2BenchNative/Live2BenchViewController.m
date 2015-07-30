@@ -849,6 +849,7 @@ static void * eventContext      = &eventContext;
 
 - (void)goToLive
 {
+    PXPLog(@"Pressed Live Button");
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
@@ -859,7 +860,7 @@ static void * eventContext      = &eventContext;
     
     [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
-    
+
 }
 
 
