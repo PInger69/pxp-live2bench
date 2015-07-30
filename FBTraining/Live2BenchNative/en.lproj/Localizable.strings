@@ -186,6 +186,8 @@
 "Name"            =          "Name";
 "Duration"        =          "Duration";
 "Period"          =          "Period";
+"Half"            =          "Half";
+"Quarter"         =          "Quarter";
 "Player(s)"       =          "Player(s)";
 "Time"            =          "Time";
 

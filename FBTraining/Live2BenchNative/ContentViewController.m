@@ -43,6 +43,25 @@
     return self;
 }
 
+-(id)initWithPlayerList:(NSArray*)playerList{
+    self = [super init];
+    
+    _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    [_scrollView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    _scrollView.showsVerticalScrollIndicator = true;
+    [self.view addSubview:_scrollView];
+    
+    _cellList = [[NSMutableArray alloc]init];
+    _playerList = playerList;
+    [self createCells:playerList];
+    
+    return self;
+}
+
+-(void)assignFrame:(CGRect)frame{
+    self.view.frame = frame;
+}
+
 - (id)initWithIndex:(NSInteger)i side:(NSString*)whichSide
 {
 ////    if(!globals)
@@ -195,6 +214,16 @@
     }
 }
 
+-(NSArray*)getSelectedPlayers{
+    NSMutableArray *players = [[NSMutableArray alloc]init];
+    for (BorderButton *button in _cellList) {
+        if (button.selected) {
+            [players addObject:button.titleLabel.text];
+        }
+    }
+    return [players copy];
+}
+
 -(void)unHighlightAllButtons{
     for (BorderButton *cell in _cellList) {
         cell.selected = false;
@@ -205,7 +234,7 @@
     BorderButton *button = sender;
     if (button.selected) {
         button.selected = false;
-    }else if (button.selected){
+    }else if (!button.selected){
         button.selected = true;
     }
 }

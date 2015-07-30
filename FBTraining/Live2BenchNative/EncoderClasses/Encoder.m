@@ -574,8 +574,8 @@
 -(void)onTagPost:(NSNotification *)note
 {
     NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
-    BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
-    [data removeObjectForKey:@"duration"];
+    //BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
+    //[data removeObjectForKey:@"duration"];
     
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
@@ -593,7 +593,7 @@
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
 
                                        }];
-    if (isDuration){ // Add extra data for duration Tags
+    /*if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
                                               
                                               @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
@@ -601,7 +601,7 @@
                                               };
         [tagData addEntriesFromDictionary:durationData];
         
-    }
+    }*/
     
     if (period) {
         [tagData setValue:period forKey:@"period"];
