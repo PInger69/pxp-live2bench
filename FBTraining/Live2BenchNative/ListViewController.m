@@ -734,7 +734,7 @@
 
 - (void)pressFilterButton
 {
-    if (!test)test = [[PxpFilterButtonScrollView alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
+    /*if (!test)test = [[PxpFilterButtonScrollView alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
     
     [self.view addSubview:test];
     [test buildButtonsWith:@[@"PP",@"PK",@"HEAD SHOT",@"COACH CALL"]];
@@ -742,8 +742,16 @@
     test.sortByPropertyKey = @"name";
     [_pxpFilter addModules:@[test]];
     
-    [_pxpFilter filterTags:[self.allTags copy]];
+    [_pxpFilter filterTags:[self.allTags copy]];*/
+    TabView *newOne = [[TabView alloc] initWithNibName:@"TabView" bundle:nil];
     
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:newOne];
+    
+    popoverController.popoverContentSize = newOne.view.bounds.size;
+    [popoverController presentPopoverFromRect:self.view.frame
+                                       inView:self.view
+                     permittedArrowDirections:0
+                                     animated:YES];
     
 }
 

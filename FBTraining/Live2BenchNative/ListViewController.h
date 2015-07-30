@@ -13,6 +13,8 @@
 #import "PxpVideoPlayerProtocol.h"
 #import "Tag.h"
 
+#import "TabView.h"
+
 #import "PxpFilter.h"
 #import "PxpFilterDelegate.h"
 
