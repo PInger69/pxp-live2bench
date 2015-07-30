@@ -34,33 +34,17 @@
  *
  *  @return view that is touched
  */
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    
-    
-    CGPoint pointForTargetView;
-    NSInteger tounchCount = touchables.count-1;
-    UIView * object;
-    
-    for (NSInteger i =tounchCount; i >= 0 ; i--){
-        object = [touchables objectAtIndex:i];
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event {
+    for (UIView *view in touchables) {
+        const CGPoint p = [view convertPoint:point fromView:self];
         
-//        // This removes it from touchables if its not on the view
-//        if ( object.superview == nil || object.superview != self) {
-//            [touchables removeObject:object];
-//            continue;
-//        }
-        
-        // check the tap
-        pointForTargetView = [object convertPoint:point fromView:self];
-        if (CGRectContainsPoint(object.bounds, pointForTargetView)) {
-            return [object hitTest:pointForTargetView withEvent:event];
+        if ([view pointInside:p withEvent:event]) {
+            return [view hitTest:p withEvent:event];
         }
-    
     }
     
-
     return [super hitTest:point withEvent:event];
 }
-
 
 @end
