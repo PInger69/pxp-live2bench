@@ -20,11 +20,6 @@ IB_DESIGNABLE
 @property (weak, nonatomic, nullable) AVPlayer *player;
 @property (weak, nonatomic, nullable) Event *event;
 
-@property (readonly, strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
-@property (readonly, strong, nonatomic, nonnull) SeekButton *forwardSeekButton;
-
-@property (readonly, strong, nonatomic, nonnull) Slomo *slomoButton;
-
 @property (strong, nonatomic, nullable) Tag *selectedTag;
 
 @end

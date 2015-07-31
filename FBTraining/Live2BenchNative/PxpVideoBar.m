@@ -20,12 +20,20 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 @implementation PxpVideoBar
 {
+    CADisplayLink * __nonnull _displayLink;
+    
     TagView * __nonnull _tagView;
-    NSTimer * __nullable _tagViewTimer;
     UILabel * __nonnull _tagLabel;
     
     CustomButton * __nonnull _tagExtendStartButton;
     CustomButton * __nonnull _tagExtendEndButton;
+    
+    SeekButton * __nonnull _backwardSeekButton;
+    SeekButton * __nonnull _forwardSeekButton;
+    
+    Slomo * __nonnull _slomoButton;
+    
+    void *_rateObserverContext;
 }
 
 + (void)initialize {
@@ -36,6 +44,7 @@ static UIImage * __nonnull _tagExtendEndImage;
 - (void)initVideoBar {
     _tagView = [[TagView alloc] init];
     _tagView.backgroundColor = [UIColor clearColor];
+    _tagView.dataSource = self;
     _tagLabel = [[UILabel alloc] init];
     _tagLabel.backgroundColor = [UIColor lightGrayColor];
     _tagLabel.layer.borderWidth = 1.0;
@@ -58,7 +67,12 @@ static UIImage * __nonnull _tagExtendEndImage;
     
     _backwardSeekButton = [[SeekButton alloc] initWithFrame:CGRectZero backward:YES];
     _forwardSeekButton = [[SeekButton alloc] initWithFrame:CGRectZero backward:NO];
+    
+    [_backwardSeekButton addTarget:self action:@selector(seekAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_forwardSeekButton addTarget:self action:@selector(seekAction:) forControlEvents:UIControlEventTouchUpInside];
+    
     _slomoButton = [[Slomo alloc] init];
+    [_slomoButton addTarget:self action:@selector(slomoAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [self addSubview:_tagView];
     [self addSubview:_tagLabel];
@@ -67,6 +81,13 @@ static UIImage * __nonnull _tagExtendEndImage;
     [self addSubview:_backwardSeekButton];
     [self addSubview:_forwardSeekButton];
     [self addSubview:_slomoButton];
+    
+    _rateObserverContext = &_rateObserverContext;
+    [self addObserver:self forKeyPath:@"player.rate" options:0 context:_rateObserverContext];
+    
+    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction:)];
+    _displayLink.frameInterval = 4;
+    [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     
     self.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
 }
@@ -88,10 +109,25 @@ static UIImage * __nonnull _tagExtendEndImage;
 }
 
 - (void)dealloc {
-    [_tagViewTimer invalidate];
+    [_displayLink invalidate];
+    [self removeObserver:self forKeyPath:@"player.rate" context:_rateObserverContext];
 }
 
 #pragma mark - Overrides
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
+    if (context == _rateObserverContext) {
+        if (_player.rate != 0) {
+            if (_player.rate != 1.0 && !_slomoButton.slomoOn) {
+                _player.rate = 1.0;
+            } else if (_player.rate != 0.5 && _slomoButton.slomoOn) {
+                _player.rate = 0.5;
+            }
+        }
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
 
 - (void)tintColorDidChange {
     [super tintColorDidChange];
@@ -140,9 +176,6 @@ static UIImage * __nonnull _tagExtendEndImage;
         _tagExtendStartButton.hidden = !selectedTag;
         _tagExtendEndButton.hidden = !selectedTag;
         _tagLabel.text = selectedTag.name;
-        
-        [_tagViewTimer invalidate];
-        _tagViewTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(tagViewTimerEvent:) userInfo:nil repeats:YES];
     }
 }
 
@@ -160,6 +193,18 @@ static UIImage * __nonnull _tagExtendEndImage;
     if (_selectedTag) {
         _selectedTag.duration += fabs(_forwardSeekButton.speed);
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
+    }
+}
+
+- (void)seekAction:(SeekButton *)seekButton {
+    CMTime currentTime = _player.currentTime;
+    [_player seekToTime:CMTimeAdd(currentTime, CMTimeMakeWithSeconds(seekButton.speed, currentTime.timescale))];
+}
+
+- (void)slomoAction:(Slomo *)slomoButton {
+    slomoButton.slomoOn = !slomoButton.slomoOn;
+    if (_player.rate) {
+        _player.rate = slomoButton.slomoOn ? 0.5 : 1.0;
     }
 }
 
@@ -186,7 +231,7 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 #pragma mark - Private Methods
 
-- (void)tagViewTimerEvent:(NSTimer *)timer {
+- (void)displayLinkAction:(CADisplayLink *)displayLink {
     if (!self.hidden) {
         [_tagView setNeedsDisplay];
     }

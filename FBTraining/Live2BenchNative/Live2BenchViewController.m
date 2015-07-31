@@ -64,7 +64,6 @@
     UserCenter                          * _userCenter;                  // any userdata from plists
     NSString                            * _eventType;                   // Sport or medical
     LiveButton                          * _gotoLiveButton;              // live button
-    L2BVideoBarViewController           * _videoBarViewController;      // player updated control bar
     Live2BenchTagUIViewController       * _tagButtonController;         // side tags
     L2BFullScreenViewController         * _fullscreenViewController;    // fullscreen class to manage all actions in full
     //ReusableBottomViewController        * _theBottomViewController;
@@ -104,6 +103,8 @@
     
     ContentViewController *_playerDrawerRight;
     UIImageView *_rightArrow;
+    
+    PxpVideoBar *_videoBar;
 }
 
 // Context
@@ -150,6 +151,7 @@ static void * eventContext      = &eventContext;
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
+        _videoBar = [[PxpVideoBar alloc] init];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -416,14 +418,12 @@ static void * eventContext      = &eventContext;
         
     }
     
-    [_videoBarViewController update];
     [self onEventChange];
 }
 
 -(void)onTagChanged:(NSNotification *)note
 {
     _bottomViewController.currentEvent = _currentEvent;
-    [_videoBarViewController onTagChanged:_currentEvent];
 }
 
 -(void)liveEventStopped:(NSNotification *)note
@@ -503,7 +503,6 @@ static void * eventContext      = &eventContext;
 -(void)onEventChange
 {
     if (_appDel.encoderManager.liveEvent != nil){
-        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
@@ -511,7 +510,6 @@ static void * eventContext      = &eventContext;
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
-        [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
@@ -520,7 +518,6 @@ static void * eventContext      = &eventContext;
         //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
-        [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
@@ -531,6 +528,7 @@ static void * eventContext      = &eventContext;
         [informationLabel setText:@""];
     }
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
+    _videoBar.event = _currentEvent;
 }
 
 
@@ -609,8 +607,6 @@ static void * eventContext      = &eventContext;
     
     self.videoPlayer.live = YES;
     [_pipController pipsAndVideoPlayerToLive:info];
-    [_videoBarViewController.tagMarkerController cleanTagMarkers];
-    [_videoBarViewController.tagMarkerController createTagMarkers];
 }
 
 
@@ -709,12 +705,6 @@ static void * eventContext      = &eventContext;
     
     // Richard
     
-    _videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
-    [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    //_videoBarViewController.tagMarkerController.arrayOfAllTags =
-    [self.view addSubview:_videoBarViewController.view];
 
     _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
@@ -740,7 +730,6 @@ static void * eventContext      = &eventContext;
     
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
-    _pipController.videoControlBar = _videoBarViewController;
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
@@ -763,6 +752,9 @@ static void * eventContext      = &eventContext;
     
     
     ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;
+    
+    _videoBar.frame = CGRectMake(_videoPlayer.view.frame.origin.x, _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height, _videoPlayer.view.frame.size.width, 40.0);
+    [self.view addSubview:_videoBar];
     
     
 //    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
@@ -852,7 +844,6 @@ static void * eventContext      = &eventContext;
      {
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
          [self.view addSubview:self.videoPlayer.view];
-         [_videoBarViewController viewDidAppear:animated];
          
          //[self.videoPlayer play];
          [self.view addSubview:_fullscreenViewController.view];
@@ -868,18 +859,14 @@ static void * eventContext      = &eventContext;
      }
 
     //[self createTagButtons]; // temp place
-
-    [_videoBarViewController.tagMarkerController cleanTagMarkers];
-    [_videoBarViewController.tagMarkerController createTagMarkers];
     
     
     _bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
     [_bottomViewController update];
     // just to update UI
     
-    PxpVideoBar *bar = [[PxpVideoBar alloc] initWithFrame:_videoBarViewController.view.frame];
-    bar.player = self.videoPlayer.avPlayer;
-    [_videoBarViewController.view.superview addSubview:bar];
+    _videoBar.player = self.videoPlayer.avPlayer;
+    [self.view bringSubviewToFront:_videoBar];
 }
 
 
@@ -896,7 +883,6 @@ static void * eventContext      = &eventContext;
     [super viewWillDisappear:animated];
     
     [CustomAlertView removeAll];
-    [_videoBarViewController.tagMarkerController cleanTagMarkers];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
     self.videoPlayer.mute = YES;
     self.telestrationViewController.telestration = nil;
@@ -917,8 +903,6 @@ static void * eventContext      = &eventContext;
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
-        [_videoBarViewController.tagMarkerController cleanTagMarkers];
-        [_videoBarViewController.tagMarkerController createTagMarkers];
         return;
     }
     
