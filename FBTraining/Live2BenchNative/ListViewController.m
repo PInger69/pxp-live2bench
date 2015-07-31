@@ -221,10 +221,12 @@
             if (self.pinchGesture.scale >1) {
                 //self.fullScreenViewController.enable = YES;
                 self.listViewFullScreenViewController.enable = YES;
+                [self.view bringSubviewToFront:_listViewFullScreenViewController.view];
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (self.pinchGesture.scale < 1){
                 //self.fullScreenViewController.enable = NO;
                 self.listViewFullScreenViewController.enable = NO;
+                [self.view bringSubviewToFront:_videoBar];
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }

@@ -623,11 +623,13 @@ static void * eventContext      = &eventContext;
             if (pinchGesture.scale >1) {
                 _fullscreenViewController.enable = YES;
                 [_pipController.multi fullScreen];
+                [self.view bringSubviewToFront:_fullscreenViewController.view];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 [telestration forceCloseTele];
                 _fullscreenViewController.enable = NO;
                 [_pipController.multi normalScreen];
+                [self.view bringSubviewToFront:_videoBar];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
