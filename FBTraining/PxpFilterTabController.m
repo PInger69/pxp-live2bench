@@ -14,6 +14,18 @@
 
 @implementation PxpFilterTabController
 
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
+    return [self initWithNibName:nibNameOrNil bundle:nibBundleOrNil tabImage:nil];
+}
+
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabImage:(nullable UIImage *)tabImage {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        _tabImage = tabImage;
+    }
+    return self;
+}
+
 - (void)setPxpFilter:(PxpFilter*)pxpFilter{
     [_pxpFilter removeAllModules];
     _pxpFilter = pxpFilter;

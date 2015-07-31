@@ -23,6 +23,8 @@
 @property (strong, nonatomic) IBOutlet UIScrollView *myRightScrollView;
 
 
+@property (readonly, strong, nonatomic, nullable) UIImage *tabImage;
+
 //scroll view
 /*
  - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;

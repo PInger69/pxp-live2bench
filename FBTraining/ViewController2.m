@@ -14,6 +14,9 @@
 
 @implementation ViewController2
 
+
+@synthesize tabImage;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -27,10 +30,13 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.title = @"VC2";
+        
+        self.modules = [[NSMutableArray alloc]initWithObjects:
+                        @"A",@"B",@"A",
+                        @"B",@"C",nil];
+        tabImage =  [UIImage imageNamed:@"teleButton.png"];
     }
-    self.modules = [[NSMutableArray alloc]initWithObjects:
-                    @"A",@"B",@"A",
-                    @"B",@"C",nil];
     return self;
 }
 

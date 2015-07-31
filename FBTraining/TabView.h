@@ -10,14 +10,13 @@
 #import "PxpFilter.h"
 
 @interface TabView : UIViewController<UITabBarDelegate> {
-    UITabBar *mainTabBar;
-    NSMutableDictionary *tabs; //view controller of all tabs
+    UITabBar *_mainTabBar;
 }
 
 @property (nonatomic, retain) PxpFilter *pxpFilter;
 
 @property (nonatomic, retain) IBOutlet UITabBar *mainTabBar;
 
-@property (nonatomic, retain) NSMutableDictionary *tabs;
+@property (nonatomic, retain) NSArray *tabs;
 
 @end

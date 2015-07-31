@@ -13,55 +13,63 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="VAj-9B-THu">
-            <rect key="frame" x="0.0" y="0.0" width="500" height="500"/>
+        <view autoresizesSubviews="NO" contentMode="scaleToFill" id="VAj-9B-THu">
+            <rect key="frame" x="0.0" y="0.0" width="800" height="500"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iaI-dN-ve1">
-                    <rect key="frame" x="0.0" y="93" width="500" height="264"/>
+                <view autoresizesSubviews="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iaI-dN-ve1">
+                    <rect key="frame" x="0.0" y="107" width="800" height="264"/>
                     <subviews>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdZ-1l-n9C">
-                            <rect key="frame" x="256" y="8" width="244" height="249"/>
-                            <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <connections>
-                                <outlet property="delegate" destination="-1" id="UWO-gJ-KMl"/>
-                            </connections>
-                        </scrollView>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O5E-1I-2Iy">
-                            <rect key="frame" x="0.0" y="8" width="248" height="248"/>
-                            <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <rect key="frame" x="12" y="2" width="250" height="260"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                             <connections>
                                 <outlet property="delegate" destination="-1" id="aTh-XC-NpZ"/>
                             </connections>
                         </scrollView>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iuH-K8-nby">
+                            <rect key="frame" x="275" y="2" width="250" height="260"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="ycR-BQ-c08"/>
+                            </connections>
+                        </scrollView>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdZ-1l-n9C">
+                            <rect key="frame" x="538" y="2" width="250" height="260"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="UWO-gJ-KMl"/>
+                            </connections>
+                        </scrollView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                    <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAi-9W-11z">
-                    <rect key="frame" x="8" y="70" width="42" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Player" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAi-9W-11z">
+                    <rect key="frame" x="8" y="84" width="67" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KvN-Hc-ehu">
-                    <rect key="frame" x="739" y="55" width="46" height="30"/>
-                    <state key="normal" title="Button">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5mJ-fB-5MN">
-                    <rect key="frame" x="262" y="70" width="42" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Period" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5mJ-fB-5MN">
+                    <rect key="frame" x="278" y="84" width="70" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="kJL-Og-eCb">
-                    <rect key="frame" x="31" y="409" width="118" height="31"/>
+                    <rect key="frame" x="31" y="437" width="219" height="31"/>
                 </slider>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SubTag" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ml5-Lc-2Ct">
+                    <rect key="frame" x="554" y="84" width="83" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
-            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="404" y="-64"/>
+            <point key="canvasLocation" x="448" y="-131"/>
         </view>
     </objects>
 </document>

@@ -16,6 +16,8 @@
 
 @implementation ViewController
 
+@synthesize tabImage;
+
 
 UIColor* color()
 {
@@ -28,10 +30,13 @@ UIColor* color()
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.title = @"VC1";
+        tabImage =  [UIImage imageNamed:@"settings.png"];
+        self.modules = [[NSMutableArray alloc]initWithObjects:
+                        @"1",@"2",@"5",@"4",
+                        @"3", nil];
     }
-    self.modules = [[NSMutableArray alloc]initWithObjects:
-                    @"1",@"2",@"5",@"4",
-                    @"3", nil];
+    
     
     return self;
 }
@@ -216,7 +221,7 @@ UIColor* color()
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initScrollView];
+    //[self initScrollView];
     //myTableView = [self addTableView];
     //scrollView = [self addScrollView];
     

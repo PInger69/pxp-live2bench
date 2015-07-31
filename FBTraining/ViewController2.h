@@ -11,4 +11,7 @@
 
 @interface ViewController2 : PxpFilterTabController
 
+
+@property (readonly, strong, nonatomic, nullable) UIImage *tabImage;
+
 @end

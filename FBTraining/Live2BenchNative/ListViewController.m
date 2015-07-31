@@ -27,6 +27,9 @@
 #import "PxpFilterButtonScrollView.h"
 //End debug
 
+//test
+#import "ViewController.h"
+#import "ViewController2.h"
 
 
 @interface ListViewController ()
@@ -743,7 +746,9 @@
     [_pxpFilter addModules:@[test]];
     
     [_pxpFilter filterTags:[self.allTags copy]];*/
-    TabView *newOne = [[TabView alloc] initWithNibName:@"TabView" bundle:nil];
+    TabView *newOne = [[TabView alloc] init];
+    
+    newOne.tabs = @[[[ViewController alloc]init],[[ViewController2 alloc]init]];
     
     UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:newOne];
     
