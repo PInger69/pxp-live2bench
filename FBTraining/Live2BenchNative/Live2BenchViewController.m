@@ -79,6 +79,9 @@
     UIButton                            * multiButton;
     UIPinchGestureRecognizer            * pinchGesture;
     UISwipeGestureRecognizer            * swipeGesture;
+    UISwipeGestureRecognizer            * swipeLeftGesture;
+    UISwipeGestureRecognizer            * swipeRightGesture;
+    UITapGestureRecognizer              * tapGesture;
     
     UILabel                             *informationLabel;
     ListPopoverController               *_teamPick;
@@ -454,6 +457,23 @@ static void * eventContext      = &eventContext;
     }
 }
 
+-(void)swipeLeftNoticed:(UISwipeGestureRecognizer *)swipeLeftRecognizer{
+    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"backward"]];
+}
+
+-(void)swipeRightNoticed:(UISwipeGestureRecognizer *)swipeRightRecognizer{
+    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"forward"]];
+}
+
+#pragma mark - Tap Gesture Recognizer methods
+
+-(void)tapNoticed:(UITapGestureRecognizer *) tapRecognizer{
+    if (!self.videoPlayer.videoControlBar.hidden){
+        [self.videoPlayer.videoControlBar setHidden:true];
+    }else{
+        [self.videoPlayer.videoControlBar setHidden:false];
+    }
+}
 
 #pragma mark - Observers and Observer Methods
 
@@ -626,11 +646,15 @@ static void * eventContext      = &eventContext;
             
             if (pinchGesture.scale >1) {
                 _fullscreenViewController.enable = YES;
+                [_bottomViewController.mainView setHidden:true];
+                [_tagButtonController setButtonColor:true];
                 [_pipController.multi fullScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 [telestration forceCloseTele];
                 _fullscreenViewController.enable = NO;
+                [_bottomViewController.mainView setHidden:false];
+                [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
@@ -704,8 +728,16 @@ static void * eventContext      = &eventContext;
     [self.videoPlayer.view addGestureRecognizer: swipeGesture];
     [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
     
+    tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapNoticed:)];
+    [self.videoPlayer.view addGestureRecognizer:tapGesture];
     
+    swipeLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeftNoticed:)];
+    swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.videoPlayer.view addGestureRecognizer:swipeLeftGesture];
     
+    swipeRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRightNoticed:)];
+    swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.videoPlayer.view addGestureRecognizer:swipeRightGesture];
     
     // Richard
     
@@ -722,6 +754,7 @@ static void * eventContext      = &eventContext;
     [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
 //    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
     _fullscreenViewController.teleViewController =telestration;
+    _tagButtonController.fullScreenViewController = _fullscreenViewController;
 
     self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
     
@@ -954,7 +987,8 @@ static void * eventContext      = &eventContext;
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
+    [self viewWillAppear:true];
 }
 
 -(void)tagButtonSwiped:(id)sender{
