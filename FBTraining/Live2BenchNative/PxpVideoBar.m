@@ -46,7 +46,6 @@ static UIImage * __nonnull _tagExtendEndImage;
     _tagView.backgroundColor = [UIColor clearColor];
     _tagView.dataSource = self;
     _tagLabel = [[UILabel alloc] init];
-    _tagLabel.backgroundColor = [UIColor lightGrayColor];
     _tagLabel.layer.borderWidth = 1.0;
     _tagLabel.layer.borderColor = self.tintColor.CGColor;
     _tagLabel.textColor = self.tintColor;
