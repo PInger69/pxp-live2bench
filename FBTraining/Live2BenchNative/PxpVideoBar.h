@@ -7,15 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
+#import "PxpTimeProvider.h"
 #import "SeekButton.h"
 #import "Slomo.h"
+#import "Event.h"
 
+IB_DESIGNABLE
 @interface PxpVideoBar : UIView
 
-@property (readonly, strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
-@property (readonly, strong, nonatomic, nonnull) SeekButton *forwardSeekButton;
+@property (weak, nonatomic, nullable) AVPlayer *player;
+@property (weak, nonatomic, nullable) Event *event;
 
-@property (readonly, strong, nonatomic, nonnull) Slomo *slomoButton;
+@property (strong, nonatomic, nullable) Tag *selectedTag;
 
 @end

@@ -21,6 +21,7 @@
 #import "PxpPlayerMultiViewController.h"
 #import "LocalMediaManager.h"
 #import "PxpTelestrationViewController.h"
+#import "PxpVideoBar.h"
 // Debug
 
 #import "SamplePxpFilterModule.h"
@@ -44,7 +45,6 @@
     
     HeaderBarForListView            * headerBar;
     CommentingRatingField           * commentingField;
-    VideoBarListViewController      * newVideoControlBar;
     
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
@@ -52,6 +52,8 @@
     // for debug
     SamplePxpFilterModule       * sample;
     PxpFilterButtonScrollView * test;
+    
+    PxpVideoBar *_videoBar;
 }
 
 @synthesize selectedCellRows;
@@ -63,6 +65,7 @@
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
         
         _context = nil;
+        _videoBar = [[PxpVideoBar alloc] init];
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         [self addChildViewController:_telestrationViewController];
 
@@ -90,14 +93,14 @@
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             selectedTag = note.object;
-            [newVideoControlBar setMode:LISTVIEW_MODE_CLIP];
             [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_CLIP];
+            
+            _videoBar.selectedTag = selectedTag;
         
             [commentingField clear];
             commentingField.enabled             = YES;
             commentingField.text                = selectedTag.comment;
             commentingField.ratingScale.rating  = selectedTag.rating;
-            [newVideoControlBar setTagName: selectedTag.name];
             [self.listViewFullScreenViewController setTagName:selectedTag.name];
         }];
         
@@ -153,11 +156,9 @@
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
         [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
-        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
         [self.videoPlayer playFeed:nil];
     }else{
         _currentEvent = [((id <EncoderProtocol>) note.object) event];
-        [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
         [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_REGULAR];
         //[self.videoPlayer playFeed:[[_currentEvent.feeds allValues]firstObject] ];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
@@ -220,10 +221,12 @@
             if (self.pinchGesture.scale >1) {
                 //self.fullScreenViewController.enable = YES;
                 self.listViewFullScreenViewController.enable = YES;
+                [self.view bringSubviewToFront:_listViewFullScreenViewController.view];
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (self.pinchGesture.scale < 1){
                 //self.fullScreenViewController.enable = NO;
                 self.listViewFullScreenViewController.enable = NO;
+                [self.view bringSubviewToFront:_videoBar];
                 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
@@ -251,16 +254,7 @@
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
 
     self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
-    newVideoControlBar = [[VideoBarListViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    [newVideoControlBar.startRangeModifierButton addTarget:self action:@selector(startRangeBeenModified: ) forControlEvents:UIControlEventTouchUpInside];
-    [newVideoControlBar.endRangeModifierButton addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:newVideoControlBar.view];
-    if (_currentEvent) {
-        [newVideoControlBar setMode:LISTVIEW_MODE_REGULAR];
-    }
-    else{
-        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
-    }
+    
     [self.view addSubview:self.videoPlayer.view];
     self.listViewFullScreenViewController = [[ListViewFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     self.listViewFullScreenViewController.context = @"ListView Tab";
@@ -288,6 +282,11 @@
     
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.showsControls = NO;
+    
+    _videoBar.frame = CGRectMake(_videoPlayer.view.frame.origin.x, _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height, _videoPlayer.view.frame.size.width, 40.0);
+    _videoBar.player = _videoPlayer.avPlayer;
+    
+    [self.view addSubview:_videoBar];
 }
 
 -(void)getNextTag
@@ -316,8 +315,12 @@
     [commentingField clear];
     commentingField.text                = selectedTag.comment;
     commentingField.ratingScale.rating  = selectedTag.rating;
-    [newVideoControlBar setTagName: selectedTag.name];
     [self.listViewFullScreenViewController setTagName:selectedTag.name];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.view bringSubviewToFront:_videoBar];
 }
 
 -(void)getPrevTag
@@ -345,7 +348,6 @@
     [commentingField clear];
     commentingField.text                = selectedTag.comment;
     commentingField.ratingScale.rating  = selectedTag.rating;
-    [newVideoControlBar setTagName: selectedTag.name];
     [self.listViewFullScreenViewController setTagName:selectedTag.name];
 }
 
@@ -423,9 +425,6 @@
     commentingField.enabled             = YES;
     commentingField.text                = selectedTag.comment;
     commentingField.ratingScale.rating  = selectedTag.rating;
-    
-    [newVideoControlBar setTagName:selectedTag.name];
-    
     
     // find the first player with the source name we are looking for
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
@@ -672,7 +671,6 @@
         _currentEvent = nil;
         [self clear];
         selectedTag = nil;
-        [newVideoControlBar setMode:LISTVIEW_MODE_DISABLE];
         [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
         
         [commentingField clear];
