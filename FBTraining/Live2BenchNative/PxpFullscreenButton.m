@@ -8,6 +8,8 @@
 
 #import "PxpFullscreenButton.h"
 
+#import "UIColor+Highlight.h"
+
 @implementation PxpFullscreenButton
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame {
@@ -39,13 +41,19 @@
     [self setNeedsDisplay];
 }
 
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    
+    [self setNeedsDisplay];
+}
+
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     CGContextSaveGState(ctx);
     
     CGContextSetLineWidth(ctx, 0.05 * MIN(self.bounds.size.width, self.bounds.size.height));
-    CGContextSetStrokeColorWithColor(ctx, self.tintColor.CGColor);
+    CGContextSetStrokeColorWithColor(ctx, self.highlighted ? self.tintColor.highlightedColor.CGColor : self.tintColor.CGColor);
     CGContextSetLineCap(ctx, kCGLineCapRound);
     
     CGMutablePathRef path = CGPathCreateMutable();
