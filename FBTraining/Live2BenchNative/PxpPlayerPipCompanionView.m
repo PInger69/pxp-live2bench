@@ -77,16 +77,16 @@
         PxpPlayerView *playerView = (PxpPlayerView *)recognizer.view;
         
         if (playerView == self && playerView.player && !self.pipView.player) {
-            self.pipView.player = playerView.player;
             self.pipView.hidden = NO;
+            self.pipView.player = playerView.player;
         } else if (playerView == self || playerView == self.pipView) {
             self.pipView.hidden = YES;
             self.pipView.player = nil;
+            
+            [self setNeedsDisplay];
+            [self.pipView setNeedsDisplay];
         }
     }
-    
-    [self setNeedsDisplay];
-    [self.pipView setNeedsDisplay];
 }
 
 - (void)swapGestureRecognized:(UIGestureRecognizer *)recognizer {

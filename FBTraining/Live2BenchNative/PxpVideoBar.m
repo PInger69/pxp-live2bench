@@ -10,6 +10,7 @@
 
 #import "TagView.h"
 #import "UIColor+Highlight.h"
+#import "PxpFullscreenButton.h"
 
 @interface PxpVideoBar ()<TagViewDataSource>
 
@@ -29,6 +30,7 @@ static UIImage * __nonnull _tagExtendEndImage;
     CustomButton * __nonnull _tagExtendEndButton;
     
     Slomo * __nonnull _slomoButton;
+    PxpFullscreenButton * __nonnull _fullscreenButton;
     
     void *_rateObserverContext;
 }
@@ -70,6 +72,8 @@ static UIImage * __nonnull _tagExtendEndImage;
     _slomoButton = [[Slomo alloc] init];
     [_slomoButton addTarget:self action:@selector(slomoAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    _fullscreenButton = [[PxpFullscreenButton alloc] init];
+    
     [self addSubview:_tagView];
     [self addSubview:_tagLabel];
     [self addSubview:_tagExtendStartButton];
@@ -77,6 +81,7 @@ static UIImage * __nonnull _tagExtendEndImage;
     [self addSubview:_backwardSeekButton];
     [self addSubview:_forwardSeekButton];
     [self addSubview:_slomoButton];
+    [self addSubview:_fullscreenButton];
     
     _rateObserverContext = &_rateObserverContext;
     [self addObserver:self forKeyPath:@"player.rate" options:0 context:_rateObserverContext];
@@ -150,6 +155,7 @@ static UIImage * __nonnull _tagExtendEndImage;
     _forwardSeekButton.margin = h / 16.0;
     
     _slomoButton.frame = CGRectMake(2.0 * h, 0.0, 1.5 * h, h);
+    _fullscreenButton.frame = CGRectMake(w - 2.0 * h - 1.25 * h, 0.0, h, h);
 }
 
 - (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event {

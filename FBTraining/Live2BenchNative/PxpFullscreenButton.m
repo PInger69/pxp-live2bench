@@ -10,6 +10,22 @@
 
 @implementation PxpFullscreenButton
 
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self addTarget:self action:@selector(toggleFullscreenAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return self;
+}
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self addTarget:self action:@selector(toggleFullscreenAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return self;
+}
+
 - (void)layoutSubviews {
     self.stroke = YES;
     self.layer.lineWidth = 0.05 * MIN(self.bounds.size.width, self.bounds.size.height);
@@ -25,39 +41,48 @@
 - (void)updateLayer {
     CGMutablePathRef path = CGPathCreateMutable();
     
-    CGAffineTransform t = CGAffineTransformMakeScale(0.95, 0.95);
-    t = CGAffineTransformTranslate(t, 0.025 * self.bounds.size.width, 0.025 * self.bounds.size.height);
+    CGAffineTransform t = CGAffineTransformMakeScale(0.5 * self.bounds.size.width, 0.5 * self.bounds.size.height);
+    t = CGAffineTransformTranslate(t, 1.0, 1.0);
+    t = CGAffineTransformScale(t, 0.8, 0.8);
     
-    CGFloat w = 0.5 * PHI_INV * self.bounds.size.width, h = 0.5 * PHI_INV * self.bounds.size.height;
+    CGPathAddRect(path, &t, CGRectMake(-1.0, -1.0, 2.0, 2.0));
     
-    CGPathMoveToPoint(path, &t, self.bounds.size.width, 0.0);
-    CGPathAddLineToPoint(path, &t, self.bounds.size.width - w, h);
+    t = CGAffineTransformScale(t, PHI_INV, PHI_INV);
     
-    CGPathMoveToPoint(path, &t, 0.0, self.bounds.size.height);
-    CGPathAddLineToPoint(path, &t, w, self.bounds.size.height - h);
+    CGFloat w = PHI_INV, h = PHI_INV;
+    
+    CGPathMoveToPoint(path, &t, 1.0, -1.0);
+    CGPathAddLineToPoint(path, &t, 1.0 - w, -1.0 + h);
+    
+    CGPathMoveToPoint(path, &t, -1.0, 1.0);
+    CGPathAddLineToPoint(path, &t, -1.0 + w, 1.0 - h);
     
     if (!self.selected) {
-        CGPathMoveToPoint(path, &t, self.bounds.size.width - w, 0.0);
-        CGPathAddLineToPoint(path, &t, self.bounds.size.width, 0.0);
-        CGPathAddLineToPoint(path, &t, self.bounds.size.width, h);
+        CGPathMoveToPoint(path, &t, 1.0 - w, -1.0);
+        CGPathAddLineToPoint(path, &t, 1.0, -1.0);
+        CGPathAddLineToPoint(path, &t, 1.0, -1.0 + h);
         
-        CGPathMoveToPoint(path, &t, w, self.bounds.size.height);
-        CGPathAddLineToPoint(path, &t, 0.0, self.bounds.size.height);
-        CGPathAddLineToPoint(path, &t, 0.0, self.bounds.size.height - h);
+        CGPathMoveToPoint(path, &t, -1.0 + w, 1.0);
+        CGPathAddLineToPoint(path, &t, -1.0, 1.0);
+        CGPathAddLineToPoint(path, &t, -1.0, 1.0 - h);
         
     } else {
-        CGPathMoveToPoint(path, &t, self.bounds.size.width - w, 0.0);
-        CGPathAddLineToPoint(path, &t, self.bounds.size.width - w, h);
-        CGPathAddLineToPoint(path, &t, self.bounds.size.width, h);
+        CGPathMoveToPoint(path, &t, 1.0 - w, -1.0);
+        CGPathAddLineToPoint(path, &t, 1.0 - w, -1.0 + h);
+        CGPathAddLineToPoint(path, &t, 1.0, -1.0 + h);
         
-        CGPathMoveToPoint(path, &t, w, self.bounds.size.height);
-        CGPathAddLineToPoint(path, &t, w, self.bounds.size.height - h);
-        CGPathAddLineToPoint(path, &t, 0.0, self.bounds.size.height - h);
+        CGPathMoveToPoint(path, &t, -1.0 + w, 1.0);
+        CGPathAddLineToPoint(path, &t, -1.0 + w, 1.0 - h);
+        CGPathAddLineToPoint(path, &t, -1.0, 1.0 - h);
         
     }
     
     self.layer.path = path;
     CGPathRelease(path);
+}
+
+- (void)toggleFullscreenAction:(UIButton *)sender {
+    self.selected = !self.selected;
 }
 
 @end

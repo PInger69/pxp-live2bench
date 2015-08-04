@@ -135,18 +135,21 @@
             CGContextStrokeRectWithWidth(context, selectionRect, self.selectionStrokeWidth);
         }
         
+        CGContextSaveGState(context);
+        
+        CGContextSetStrokeColorWithColor(context, self.selectionStrokeColor.CGColor);
+        
+        CGContextSetLineWidth(context, 2.0);
+        CGContextMoveToPoint(context, 0.0, 0.0);
+        CGContextAddLineToPoint(context, 0.0, rect.size.height);
+        CGContextMoveToPoint(context, rect.size.width, 0.0);
+        CGContextAddLineToPoint(context, rect.size.width, rect.size.height);
+        CGContextDrawPath(context, kCGPathStroke);
+        
+        CGContextRestoreGState(context);
+        
     }
     
-    CGContextSaveGState(context);
-    
-    CGContextSetLineWidth(context, 2.0);
-    CGContextMoveToPoint(context, 0.0, 0.0);
-    CGContextAddLineToPoint(context, 0.0, rect.size.height);
-    CGContextMoveToPoint(context, rect.size.width, 0.0);
-    CGContextAddLineToPoint(context, rect.size.width, rect.size.height);
-    CGContextDrawPath(context, kCGPathStroke);
-    
-    CGContextRestoreGState(context);
 }
 
 @end

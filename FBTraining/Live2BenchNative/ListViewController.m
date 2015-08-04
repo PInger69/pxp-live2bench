@@ -109,7 +109,7 @@
         self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
         self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
 
-        [self.view addSubview:self.videoPlayer.view];
+        //[self.view addSubview:self.videoPlayer.view];
         
         
         self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
@@ -309,7 +309,7 @@
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.showsControls = NO;
     
-    _videoBar.frame = CGRectMake(_videoPlayer.view.frame.origin.x, _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height, _videoPlayer.view.frame.size.width, 40.0);
+    _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     _videoBar.player = _videoPlayer.avPlayer;
     
     [self.view addSubview:_videoBar];
