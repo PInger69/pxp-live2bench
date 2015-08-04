@@ -12,6 +12,7 @@
 @implementation SideTagButton
 {
     SideTagButtonModes           prevMode;
+    UIColor         *backgroundColor;
 }
 
 @synthesize durationID = _durationID;
@@ -34,6 +35,7 @@
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         
         self.mode = SideTagButtonModeDisable;
+        backgroundColor = [UIColor clearColor];
         [self setEnabled:false];
 
     }
@@ -70,7 +72,7 @@
     if (highlighted) {
         if (!self.selected) self.backgroundColor = self.tintColor;
     } else {
-        if (!self.selected) self.backgroundColor = [UIColor clearColor];
+        if (!self.selected) self.backgroundColor = backgroundColor;
     }
     
 }
@@ -84,7 +86,7 @@
     if (selected) {
         self.backgroundColor = self.tintColor;
     } else {
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = backgroundColor;
     }
 
 }
@@ -150,7 +152,15 @@
     _isOpen = isOpen;
 }
 
-
+-(void)setColor:(BOOL)fullScreen{
+    if (fullScreen) {
+        backgroundColor = [UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3];
+        self.backgroundColor = backgroundColor;
+    }else{
+        backgroundColor = [UIColor clearColor];
+        self.backgroundColor = backgroundColor;
+    }
+}
 
 
 

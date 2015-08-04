@@ -37,6 +37,10 @@
 
 - (id)initWithIndex:(NSInteger)i side:(NSString*)whichSide;
 -(id)initWithFrame:(CGRect)frame playerList:(NSArray*)playerList;
+-(id)initWithPlayerList:(NSArray*)playerList;
+-(void)assignFrame:(CGRect)frame;
 -(void)selectPlayers:(NSArray*)selectPlayers;
+-(NSArray*)getSelectedPlayers;
+-(void)unHighlightAllButtons;
 
 @end

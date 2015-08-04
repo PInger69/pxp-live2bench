@@ -574,8 +574,8 @@
 -(void)onTagPost:(NSNotification *)note
 {
     NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:note.userInfo];
-    BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
-    [data removeObjectForKey:@"duration"];
+    //BOOL isDuration                 = ([note.userInfo objectForKey:@"duration"])?[[note.userInfo objectForKey:@"duration"] boolValue ]:FALSE;
+    //[data removeObjectForKey:@"duration"];
     
     NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
     NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
@@ -593,7 +593,7 @@
                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
 
                                        }];
-    if (isDuration){ // Add extra data for duration Tags
+    /*if (isDuration){ // Add extra data for duration Tags
         NSDictionary *durationData =        @{
                                               
                                               @"type"     : [NSNumber numberWithInteger:TagTypeOpenDuration]
@@ -601,7 +601,7 @@
                                               };
         [tagData addEntriesFromDictionary:durationData];
         
-    }
+    }*/
     
     if (period) {
         [tagData setValue:period forKey:@"period"];
@@ -2172,6 +2172,9 @@
                      options:0
                      error:&error];
         
+
+        PXPLog(@"%@",object);
+
         if([object isKindOfClass:[NSDictionary class]])
         {
             rawEncoderData                  = object;
@@ -2196,11 +2199,11 @@
                     LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
                     if (!homeTeam) {
                             homeTeam     = [LeagueTeam new];
-                        PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+//                        PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
                     }
                     if (!visitTeam) {
                             visitTeam   = [LeagueTeam new];
-                        PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+//                        PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
                     }
                     
                     
@@ -2283,11 +2286,11 @@
             LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
             if (!homeTeam) {
                 homeTeam     = [LeagueTeam new];
-                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
+//                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
             }
             if (!visitTeam) {
                 visitTeam   = [LeagueTeam new];
-                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
+//                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
             }
             
             

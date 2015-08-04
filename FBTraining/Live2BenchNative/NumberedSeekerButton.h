@@ -8,14 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+IB_DESIGNABLE
 @interface NumberedSeekerButton : UIButton
 
--(id)initForwardLargeWithFrame:(CGRect)frame;
--(id)initBackwardLargeWithFrame:(CGRect)frame;
--(id)initForwardNormalWithFrame:(CGRect)frame;
--(id)initBackwardNormalWithFrame:(CGRect)frame;
+@property (assign, nonatomic) IBInspectable BOOL backward;
+@property (assign, nonatomic) IBInspectable CGFloat textNumber;
 
+- (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward;
 
-
--(void)setTextNumber:(float)num;
 @end

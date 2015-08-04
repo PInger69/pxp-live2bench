@@ -30,10 +30,16 @@
 #import "HockeyBottomViewController.h"
 #import "SoccerBottomViewController.h"
 #import "RugbyBottomViewController.h"
+#import "FootballBottomViewController.h"
+#import "FootballTrainingBottomViewController.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "RJLVideoPlayer.h"
 #import "LeagueTeam.h"
 #import "BottomViewControllerProtocol.h"
+#import "TeamPlayer.h"
+#import "ContentViewController.h"
+
+#import "PxpVideoBar.h"
 
 #import "PxpPlayerMultiViewController.h"
 #import "PxpEventContext.h"
@@ -62,7 +68,6 @@
     UserCenter                          * _userCenter;                  // any userdata from plists
     NSString                            * _eventType;                   // Sport or medical
     LiveButton                          * _gotoLiveButton;              // live button
-    L2BVideoBarViewController           * _videoBarViewController;      // player updated control bar
     Live2BenchTagUIViewController       * _tagButtonController;         // side tags
     L2BFullScreenViewController         * _fullscreenViewController;    // fullscreen class to manage all actions in full
     //ReusableBottomViewController        * _theBottomViewController;
@@ -77,6 +82,9 @@
     UIButton                            * multiButton;
     UIPinchGestureRecognizer            * pinchGesture;
     UISwipeGestureRecognizer            * swipeGesture;
+    UISwipeGestureRecognizer            * swipeLeftGesture;
+    UISwipeGestureRecognizer            * swipeRightGesture;
+    UITapGestureRecognizer              * tapGesture;
     
     UILabel                             *informationLabel;
     ListPopoverController               *_teamPick;
@@ -94,6 +102,16 @@
     UISwitch                            *durationSwitch;
     
     id <BottomViewControllerProtocol>   _bottomViewController;
+    NSArray *playerList;
+    NSArray *pickedPlayer;
+    
+    ContentViewController *_playerDrawerLeft;
+    UIImageView *_leftArrow;
+    
+    ContentViewController *_playerDrawerRight;
+    UIImageView *_rightArrow;
+    
+    PxpVideoBar *_videoBar;
 }
 
 // Context
@@ -218,8 +236,6 @@ static void * eventContext      = &eventContext;
         //[self createTagButtons];
     }];
     
-    
-    
     informationLabel = [[UILabel alloc] initWithFrame:CGRectMake(156, 50, MEDIA_PLAYER_WIDTH, 50)];
     [informationLabel setTextAlignment:NSTextAlignmentRight];
     [self.view addSubview:informationLabel];
@@ -239,6 +255,47 @@ static void * eventContext      = &eventContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipViewPlayFeedNotification:) name:NOTIF_SET_PLAYER_FEED object:nil];
     
     return self;
+}
+
+-(NSArray*)playerList{
+    NSArray *players = [[UserCenter getInstance].taggingTeam.players allValues];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    for (TeamPlayer *player in players) {
+        [array addObject:player.jersey];
+    }
+    return [array copy];
+}
+
+-(void)addPlayerView{
+    
+    if (![UserCenter getInstance].taggingTeam) {
+        return;
+    }
+    
+    playerList = [self playerList];
+
+    _leftArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ortrileft.png"]];
+    [_leftArrow setContentMode:UIViewContentModeScaleAspectFit];
+    [_leftArrow setAlpha:1.0f];
+    [self.view addSubview:_leftArrow];
+    [_leftArrow setHidden:true];
+    
+    _playerDrawerLeft = [[ContentViewController alloc] initWithPlayerList:playerList];
+    [_playerDrawerLeft.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
+    [_playerDrawerLeft.view.layer setBorderWidth:1.0f];
+    [_playerDrawerLeft.view setBackgroundColor:[UIColor whiteColor]];
+    
+    _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ortriright.png"]];
+    [_rightArrow setContentMode:UIViewContentModeScaleAspectFit];
+    [_rightArrow setAlpha:1.0f];
+    [self.view addSubview:_rightArrow];
+    [_rightArrow setHidden:true];
+    
+    _playerDrawerRight = [[ContentViewController alloc] initWithPlayerList:playerList];
+    [_playerDrawerRight.view setBackgroundColor:[UIColor clearColor]];
+    [_playerDrawerRight.view.layer setBorderColor:PRIMARY_APP_COLOR.CGColor];
+    [_playerDrawerRight.view.layer setBorderWidth:1.0f];
+    [_playerDrawerRight.view setBackgroundColor:[UIColor whiteColor]];
 }
 
 - (void)dealloc {
@@ -315,6 +372,10 @@ static void * eventContext      = &eventContext;
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
         [_bottomViewController allToggleOnOpenTags];
+    }else if ([sport isEqualToString:@"Football"] && !_bottomViewController && _currentEvent){
+        _bottomViewController = [[FootballBottomViewController alloc]init];
+        [self.view addSubview:_bottomViewController.mainView];
+        _bottomViewController.currentEvent = _currentEvent;
     }
 }
 
@@ -362,17 +423,16 @@ static void * eventContext      = &eventContext;
         }
         
         [self addBottomViewController];
+        [self addPlayerView];
         
     }
     
-    [_videoBarViewController update];
     [self onEventChange];
 }
 
 -(void)onTagChanged:(NSNotification *)note
 {
     _bottomViewController.currentEvent = _currentEvent;
-    [_videoBarViewController onTagChanged:_currentEvent];
 }
 
 -(void)liveEventStopped:(NSNotification *)note
@@ -403,6 +463,23 @@ static void * eventContext      = &eventContext;
     }
 }
 
+-(void)swipeLeftNoticed:(UISwipeGestureRecognizer *)swipeLeftRecognizer{
+    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"backward"]];
+}
+
+-(void)swipeRightNoticed:(UISwipeGestureRecognizer *)swipeRightRecognizer{
+    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"forward"]];
+}
+
+#pragma mark - Tap Gesture Recognizer methods
+
+-(void)tapNoticed:(UITapGestureRecognizer *) tapRecognizer{
+    if (!self.videoPlayer.videoControlBar.hidden){
+        [self.videoPlayer.videoControlBar setHidden:true];
+    }else{
+        [self.videoPlayer.videoControlBar setHidden:false];
+    }
+}
 
 #pragma mark - Observers and Observer Methods
 
@@ -452,7 +529,6 @@ static void * eventContext      = &eventContext;
 -(void)onEventChange
 {
     if (_appDel.encoderManager.liveEvent != nil){
-        [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
@@ -460,7 +536,6 @@ static void * eventContext      = &eventContext;
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
-        [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
@@ -469,7 +544,6 @@ static void * eventContext      = &eventContext;
         //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
-        [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
@@ -551,6 +625,7 @@ static void * eventContext      = &eventContext;
         [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
         [weakSelf displayLable];
         [weakSelf addBottomViewController];
+        [weakSelf addPlayerView];
         [[NSNotificationCenter defaultCenter]postNotificationName: NOTIF_SELECT_TAB          object:nil
                                                          userInfo:@{@"tabName":@"Live2Bench"}];
     }];
@@ -559,8 +634,6 @@ static void * eventContext      = &eventContext;
     
     self.videoPlayer.live = YES;
     [_pipController pipsAndVideoPlayerToLive:info];
-    [_videoBarViewController.tagMarkerController cleanTagMarkers];
-    [_videoBarViewController.tagMarkerController createTagMarkers];
 }
 
 
@@ -576,12 +649,18 @@ static void * eventContext      = &eventContext;
             
             if (pinchGesture.scale >1) {
                 _fullscreenViewController.enable = YES;
+                [_bottomViewController.mainView setHidden:true];
+                [_tagButtonController setButtonColor:true];
                 [_pipController.multi fullScreen];
+                [self.view bringSubviewToFront:_fullscreenViewController.view];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 [telestration forceCloseTele];
                 _fullscreenViewController.enable = NO;
+                [_bottomViewController.mainView setHidden:false];
+                [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
+                [self.view bringSubviewToFront:_videoBar];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
@@ -654,8 +733,16 @@ static void * eventContext      = &eventContext;
     [self.videoPlayer.view addGestureRecognizer: swipeGesture];
     [[((RJLVideoPlayer *)self.videoPlayer).zoomManager panGestureRecognizer] requireGestureRecognizerToFail: swipeGesture];
     
+    tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapNoticed:)];
+    [self.videoPlayer.view addGestureRecognizer:tapGesture];
     
+    swipeLeftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeftNoticed:)];
+    swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.videoPlayer.view addGestureRecognizer:swipeLeftGesture];
     
+    swipeRightGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRightNoticed:)];
+    swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.videoPlayer.view addGestureRecognizer:swipeRightGesture];
     
     // Richard
     
@@ -672,6 +759,7 @@ static void * eventContext      = &eventContext;
     [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
 //    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
     _fullscreenViewController.teleViewController =telestration;
+    _tagButtonController.fullScreenViewController = _fullscreenViewController;
 
     self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
     
@@ -690,7 +778,6 @@ static void * eventContext      = &eventContext;
     
     //!_pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
-    _pipController.videoControlBar = _videoBarViewController;
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
@@ -716,6 +803,9 @@ static void * eventContext      = &eventContext;
     
     
     ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;
+    
+    _videoBar.frame = CGRectMake(_videoPlayer.view.frame.origin.x, _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height, _videoPlayer.view.frame.size.width, 40.0);
+    [self.view addSubview:_videoBar];
     
     
 //    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
@@ -795,6 +885,7 @@ static void * eventContext      = &eventContext;
      [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
     }
     
+    
 
 //    [currentEventTitle setNeedsDisplay];
     
@@ -820,14 +911,14 @@ static void * eventContext      = &eventContext;
      }
 
     //[self createTagButtons]; // temp place
-
-    [_videoBarViewController.tagMarkerController cleanTagMarkers];
-    [_videoBarViewController.tagMarkerController createTagMarkers];
     
     
     //!_bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
     [_bottomViewController update];
     // just to update UI
+    
+    _videoBar.player = self.videoPlayer.avPlayer;
+    [self.view bringSubviewToFront:_videoBar];
 }
 
 
@@ -861,6 +952,7 @@ static void * eventContext      = &eventContext;
 
 - (void)goToLive
 {
+    PXPLog(@"Pressed Live Button");
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
@@ -874,7 +966,7 @@ static void * eventContext      = &eventContext;
     
     [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
-    
+
 }
 
 
@@ -899,12 +991,31 @@ static void * eventContext      = &eventContext;
     
     //Add Actions
     [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
+    [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSwiped:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    if ([_eventType isEqualToString:SPORT_FOOTBALL_TRAINING]) {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showFootballTrainingCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
+    [self viewWillAppear:true];
+}
+
+-(void)tagButtonSwiped:(id)sender{
+     SideTagButton *button = sender;
+    
+    if ([button.accessibilityValue isEqualToString:@"left"]) {
+        [self.view addSubview:_playerDrawerLeft.view];
+        [_leftArrow setFrame:CGRectMake(button.center.x+button.frame.size.width/2, button.center.y+button.frame.size.height/2+77, 15, 15)];
+        [_playerDrawerLeft assignFrame:CGRectMake(_leftArrow.center.x+_leftArrow.frame.size.width/2, button.center.y+button.frame.size.height/2+69, 300, 110)];
+        [_leftArrow setHidden:false];
+    }else if ([button.accessibilityValue isEqualToString:@"right"]){
+        [self.view addSubview:_playerDrawerRight.view];
+        [_rightArrow setFrame:CGRectMake(self.view.bounds.size.width-(button.center.x+button.frame.size.width/2+14), button.center.y+button.frame.size.height/2+77,15 , 15)];
+        [_playerDrawerRight assignFrame:CGRectMake(self.view.bounds.size.width-button.frame.size.width-_rightArrow.frame.size.width-299, button.center.y+button.frame.size.height/2+69, 300, 110)];
+        [_rightArrow setHidden:false];
+    }
+    
 }
 
 
@@ -922,6 +1033,19 @@ static void * eventContext      = &eventContext;
     //!float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
     NSTimeInterval currentTime = self.currentTimeInSeconds;
     
+    NSArray *players;
+    if (_playerDrawerLeft.view.superview == self.view) {
+        players = [_playerDrawerLeft getSelectedPlayers];
+        [_playerDrawerLeft.view removeFromSuperview];
+        [_playerDrawerLeft unHighlightAllButtons];
+        [_leftArrow setHidden:true];
+    }else if (_playerDrawerRight.view.superview == self.view){
+        players = [_playerDrawerRight getSelectedPlayers];
+        [_playerDrawerRight.view removeFromSuperview];
+        [_playerDrawerRight unHighlightAllButtons];
+        [_rightArrow setHidden:true];
+    }
+    
 
     if (button.mode == SideTagButtonModeRegular) {
         
@@ -931,6 +1055,10 @@ static void * eventContext      = &eventContext;
                                                                                          }];
         if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
             [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
+        }
+        
+        if (players.count > 0) {
+            [userInfo setObject:players forKey:@"players"];
         }
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:[userInfo copy]];
@@ -950,6 +1078,9 @@ static void * eventContext      = &eventContext;
                                                                                          }];
         if (_bottomViewController && [_bottomViewController respondsToSelector:@selector(currentPeriod)]) {
             [userInfo setObject:[_bottomViewController currentPeriod] forKey:@"period"];
+        }
+        if (players.count > 0) {
+            [userInfo setObject:players forKey:@"players"];
         }
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:userInfo];
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {

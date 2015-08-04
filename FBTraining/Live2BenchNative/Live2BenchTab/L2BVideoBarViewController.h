@@ -54,4 +54,6 @@
 
 -(void)onTagChanged:(Event *)currentEvent;
 
+-(CGFloat)getSeekSpeed:(NSString *)direction;
+
 @end
