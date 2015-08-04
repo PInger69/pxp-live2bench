@@ -261,8 +261,6 @@
 		D78093C31B6ACA25006488A9 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093B61B6ACA25006488A9 /* ViewController.xib */; };
 		D78093C41B6ACA25006488A9 /* ViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093B81B6ACA25006488A9 /* ViewController2.m */; };
 		D78093C51B6ACA25006488A9 /* ViewController2.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093B91B6ACA25006488A9 /* ViewController2.xib */; };
-		D78093C61B6ACA25006488A9 /* ScrollViewTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093BB1B6ACA25006488A9 /* ScrollViewTest.m */; };
-		D78093C71B6ACA25006488A9 /* ScrollViewTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093BC1B6ACA25006488A9 /* ScrollViewTest.xib */; };
 		D780B8951B66951100CB7ED8 /* RugbyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D780B8941B66951100CB7ED8 /* RugbyBottomViewController.m */; };
 		D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */; };
 		D781900F1A70697D00B964B4 /* UserCenterActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900E1A70697D00B964B4 /* UserCenterActionPack.m */; };
@@ -923,9 +921,6 @@
 		D78093B71B6ACA25006488A9 /* ViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController2.h; sourceTree = "<group>"; };
 		D78093B81B6ACA25006488A9 /* ViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController2.m; sourceTree = "<group>"; };
 		D78093B91B6ACA25006488A9 /* ViewController2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController2.xib; sourceTree = "<group>"; };
-		D78093BA1B6ACA25006488A9 /* ScrollViewTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollViewTest.h; sourceTree = "<group>"; };
-		D78093BB1B6ACA25006488A9 /* ScrollViewTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollViewTest.m; sourceTree = "<group>"; };
-		D78093BC1B6ACA25006488A9 /* ScrollViewTest.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScrollViewTest.xib; sourceTree = "<group>"; };
 		D780B8921B66693700CB7ED8 /* BottomViewControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomViewControllerProtocol.h; sourceTree = "<group>"; };
 		D780B8931B66951100CB7ED8 /* RugbyBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RugbyBottomViewController.h; sourceTree = "<group>"; };
 		D780B8941B66951100CB7ED8 /* RugbyBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RugbyBottomViewController.m; sourceTree = "<group>"; };
@@ -2062,9 +2057,6 @@
 				D78093B71B6ACA25006488A9 /* ViewController2.h */,
 				D78093B81B6ACA25006488A9 /* ViewController2.m */,
 				D78093B91B6ACA25006488A9 /* ViewController2.xib */,
-				D78093BA1B6ACA25006488A9 /* ScrollViewTest.h */,
-				D78093BB1B6ACA25006488A9 /* ScrollViewTest.m */,
-				D78093BC1B6ACA25006488A9 /* ScrollViewTest.xib */,
 				D743D47D1B696EF400533070 /* PxpFilterButtonScrollView.h */,
 				D743D47E1B696EF400533070 /* PxpFilterButtonScrollView.m */,
 				D743D4771B6950ED00533070 /* SamplePxpFilterModule.h */,
@@ -2871,7 +2863,6 @@
 				BDD2D2F817ECDD11004D5D9A /* clip-back-old@2x.png in Resources */,
 				D797CCFB170DD8D400A6E62B /* logo@2x.png in Resources */,
 				BD8C368417F330360094CBAD /* mailselected@2x.png in Resources */,
-				D78093C71B6ACA25006488A9 /* ScrollViewTest.xib in Resources */,
 				BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */,
 				D7CCE7FC1AC1EA3B00D85095 /* SoccerBottomViewController.plist in Resources */,
 				BD3104FF183590A80094AE6D /* dropboxicoSel@2x.png in Resources */,
@@ -3189,7 +3180,6 @@
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */,
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
-				D78093C61B6ACA25006488A9 /* ScrollViewTest.m in Sources */,
 				AED484BA1B56A23600769EEF /* PxpTelestrationPoint.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,

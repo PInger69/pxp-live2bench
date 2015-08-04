@@ -19,4 +19,7 @@
 
 @property (nonatomic, retain) NSArray *tabs;
 
+//@property (nonatomic, strong) UISwipeGestureRecognizer *rightSwipGestureRecognizer;
+//@property (nonatomic, strong) UISwipeGestureRecognizer *leftSwipGestureRecognizer;
+
 @end

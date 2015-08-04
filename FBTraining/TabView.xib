@@ -28,8 +28,9 @@
                 </tabBar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="237" y="819"/>
+            <point key="canvasLocation" x="67" y="741"/>
         </view>
     </objects>
 </document>

@@ -31,7 +31,7 @@ UIColor* color()
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"VC1";
-        tabImage =  [UIImage imageNamed:@"settings.png"];
+        tabImage =  [UIImage imageNamed:@"settingsButton"];
         self.modules = [[NSMutableArray alloc]initWithObjects:
                         @"1",@"2",@"5",@"4",
                         @"3", nil];

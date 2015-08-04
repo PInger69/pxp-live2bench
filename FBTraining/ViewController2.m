@@ -35,7 +35,7 @@
         self.modules = [[NSMutableArray alloc]initWithObjects:
                         @"A",@"B",@"A",
                         @"B",@"C",nil];
-        tabImage =  [UIImage imageNamed:@"teleButton.png"];
+        tabImage =  [UIImage imageNamed:@"settingsButton"];
     }
     return self;
 }
