@@ -159,7 +159,7 @@ static void * encoderTagContext = &encoderTagContext;
     for (Tag *tag in _currentEvent.tags ) {
         
         if (![self.allTagsArray containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
             [self.allTagsArray insertObject:tag atIndex:0];

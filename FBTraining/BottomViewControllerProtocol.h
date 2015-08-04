@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Event.h"
+#import "SideTagButton.h"
 
 @protocol BottomViewControllerProtocol <NSObject>
 
@@ -19,7 +20,6 @@
 -(void)update;
 -(void)postTagsAtBeginning;
 -(void)setIsDurationVariable:(SideTagButtonModes)buttonMode;
--(void)enableButton;
 -(void)closeAllOpenTagButtons;
 -(void)clear;
 -(nonnull NSString *)currentPeriod;

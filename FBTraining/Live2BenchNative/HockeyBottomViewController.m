@@ -406,11 +406,11 @@
 
 //Populate Player List with all Player jersey
 -(NSArray*)populatePlayerList:(NSArray *)players{
-    NSMutableArray *pleaseWork = [[NSMutableArray alloc]init];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
     for (TeamPlayer *player in players) {
-        [pleaseWork addObject:player.jersey];
+        [array addObject:player.jersey];
     }
-    return [pleaseWork copy];
+    return [array copy];
 }
 
 // Pass the name of the tag you want and you will get the tag if it exists and get nill if it doesn't exist
@@ -825,7 +825,18 @@
     [_playerDrawerRight selectPlayers:array];
 }
 
+#pragma mark - Methods That Just Need To Be Here
+-(void)setIsDurationVariable:(SideTagButtonModes)buttonMode{
+    
+}
 
+-(void)closeAllOpenTagButtons{
+    
+}
+
+-(void)allToggleOnOpenTags{
+    
+}
 
 
 //-(void)OffenseSwipe

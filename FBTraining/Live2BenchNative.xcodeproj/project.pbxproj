@@ -342,6 +342,8 @@
 		D79F9B8017F5ED0B0081C5E9 /* myplayXplay_phonecall.png in Resources */ = {isa = PBXBuildFile; fileRef = D79F9B7E17F5ED0B0081C5E9 /* myplayXplay_phonecall.png */; };
 		D79F9B8117F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D79F9B7F17F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png */; };
 		D79FB04A1A5C8AB7003F0CFA /* TablePopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */; };
+		D7A0223B1B6A7A6000959EBE /* ortrileft.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A022391B6A7A6000959EBE /* ortrileft.png */; };
+		D7A0223C1B6A7A6000959EBE /* ortriright.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A0223A1B6A7A6000959EBE /* ortriright.png */; };
 		D7A067EF16AF0475002A2892 /* live.png in Resources */ = {isa = PBXBuildFile; fileRef = D7A067EE16AF0474002A2892 /* live.png */; };
 		D7A0681C16B041F0002A2892 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A0681B16B041F0002A2892 /* QuartzCore.framework */; };
 		D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A0682416B079FE002A2892 /* OverlayViewController.m */; };
@@ -1025,6 +1027,8 @@
 		D79F9B7F17F5ED0B0081C5E9 /* myplayXplay_phonecall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myplayXplay_phonecall@2x.png"; sourceTree = "<group>"; };
 		D79FB0481A5C8AB7003F0CFA /* TablePopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TablePopoverController.h; path = Live2BenchNative/Live2BenchTab/TablePopoverController.h; sourceTree = "<group>"; };
 		D79FB0491A5C8AB7003F0CFA /* TablePopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TablePopoverController.m; path = Live2BenchNative/Live2BenchTab/TablePopoverController.m; sourceTree = "<group>"; };
+		D7A022391B6A7A6000959EBE /* ortrileft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ortrileft.png; sourceTree = "<group>"; };
+		D7A0223A1B6A7A6000959EBE /* ortriright.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ortriright.png; sourceTree = "<group>"; };
 		D7A067EE16AF0474002A2892 /* live.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = live.png; sourceTree = "<group>"; };
 		D7A0681B16B041F0002A2892 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D7A0682316B079FE002A2892 /* OverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OverlayViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2068,6 +2072,8 @@
 				D73E85EF1B25E4F000CAB5BA /* EncoderStatusMonitorProtocol.h */,
 				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
 				D7F2BFB11B39970B00EA8BF0 /* CreditsView.xib */,
+				D7A022391B6A7A6000959EBE /* ortrileft.png */,
+				D7A0223A1B6A7A6000959EBE /* ortriright.png */,
 				D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */,
 				D72CC2891AFA858100E26B60 /* RatingOutput.m */,
 				D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */,
@@ -2771,6 +2777,7 @@
 				BDD2D30217ECF343004D5D9A /* chevrect@2x.png in Resources */,
 				D78F68C718073DC70096C793 /* GreenSettingsButton.png in Resources */,
 				D773A36C16D87DE5007A0BA9 /* coach@2x.png in Resources */,
+				D7A0223B1B6A7A6000959EBE /* ortrileft.png in Resources */,
 				D786C1EC17EB9BF90042DD96 /* myClipTabSelect@2x.png in Resources */,
 				D779390C1822F8F90037CF82 /* signalStrength.png in Resources */,
 				D773A36D16D87DE5007A0BA9 /* coachPicked.png in Resources */,
@@ -2833,6 +2840,7 @@
 				D797CCFB170DD8D400A6E62B /* logo@2x.png in Resources */,
 				BD8C368417F330360094CBAD /* mailselected@2x.png in Resources */,
 				BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */,
+				D7A0223C1B6A7A6000959EBE /* ortriright.png in Resources */,
 				D7CCE7FC1AC1EA3B00D85095 /* SoccerBottomViewController.plist in Resources */,
 				BD3104FF183590A80094AE6D /* dropboxicoSel@2x.png in Resources */,
 				D78F68D218073DC70096C793 /* OrangeSettingsButtonSelect@2x.png in Resources */,
