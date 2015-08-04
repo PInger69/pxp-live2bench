@@ -50,6 +50,7 @@
 		AAFCA702195B84DE00D0F0E6 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA700195B84DE00D0F0E6 /* trash.png */; };
 		AAFCA703195B84DE00D0F0E6 /* trash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA701195B84DE00D0F0E6 /* trash@2x.png */; };
 		AE06A3711B691E02001840D0 /* PxpFullscreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */; };
+		AE06A3791B696A3A001840D0 /* PxpVideoBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AE06A3781B696A3A001840D0 /* PxpVideoBar.m */; };
 		AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */; };
 		AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */; };
 		AE5073AA1AFC1DCE002C361D /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A11AFC1DCE002C361D /* SettingViewController.m */; };
@@ -537,6 +538,8 @@
 		AAFCA701195B84DE00D0F0E6 /* trash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash@2x.png"; sourceTree = "<group>"; };
 		AE06A36F1B691E02001840D0 /* PxpFullscreenButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFullscreenButton.h; sourceTree = "<group>"; };
 		AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFullscreenButton.m; sourceTree = "<group>"; };
+		AE06A3771B696A3A001840D0 /* PxpVideoBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpVideoBar.h; sourceTree = "<group>"; };
+		AE06A3781B696A3A001840D0 /* PxpVideoBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpVideoBar.m; sourceTree = "<group>"; };
 		AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertsSettingViewController.m; sourceTree = "<group>"; };
 		AE50739E1AFC1DCE002C361D /* InfoSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSettingViewController.h; sourceTree = "<group>"; };
 		AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
@@ -3083,6 +3086,7 @@
 				D7B0913716B998390082111C /* thumbnailCell.m in Sources */,
 				D7581EF0196454B00029C5DD /* CommentingField.m in Sources */,
 				AE06A3711B691E02001840D0 /* PxpFullscreenButton.m in Sources */,
+				D743D47F1B696EF400533070 /* PxpFilterButtonScrollView.m in Sources */,
 				AED484B71B56A23600769EEF /* PxpTelestrationAction.m in Sources */,
 				AED484B61B56A23600769EEF /* PxpTelestration.m in Sources */,
 				AEDD7C931B4AB830003C82F3 /* PxpCancelButton.m in Sources */,

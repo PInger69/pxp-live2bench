@@ -26,8 +26,6 @@
 @property (weak, nonatomic, nullable) id<TagViewDataSource> dataSource;
 @property (assign, nonatomic) CGFloat tagAlpha;
 @property (assign, nonatomic) CGFloat tagWidth;
-@property (strong, nonatomic, nonnull) UIColor *selectionFillColor;
-@property (strong, nonatomic, nonnull) UIColor *selectionStrokeColor;
 @property (assign, nonatomic) CGFloat selectionStrokeWidth;
 
 @end

@@ -39,10 +39,9 @@
 #import "TeamPlayer.h"
 #import "ContentViewController.h"
 
-#import "PxpVideoBar.h"
-
 #import "PxpPlayerMultiViewController.h"
 #import "PxpEventContext.h"
+#import "PxpVideoBar.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -161,6 +160,7 @@ static void * eventContext      = &eventContext;
         
         _playerViewController = [[PxpPlayerMultiViewController alloc] init];
         [self addChildViewController:_playerViewController];
+        _videoBar = [[PxpVideoBar alloc] init];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -464,11 +464,11 @@ static void * eventContext      = &eventContext;
 }
 
 -(void)swipeLeftNoticed:(UISwipeGestureRecognizer *)swipeLeftRecognizer{
-    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"backward"]];
+    [self.videoPlayer seekBy:_videoBar.backwardSeekButton.speed];
 }
 
 -(void)swipeRightNoticed:(UISwipeGestureRecognizer *)swipeRightRecognizer{
-    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"forward"]];
+    [self.videoPlayer seekBy:_videoBar.forwardSeekButton.speed];
 }
 
 #pragma mark - Tap Gesture Recognizer methods
@@ -556,6 +556,8 @@ static void * eventContext      = &eventContext;
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
     
     self.playerViewController.multiView.context = [PxpEventContext contextWithEvent:_currentEvent];
+    _videoBar.player = self.playerViewController.multiView.context.mainPlayer;
+    _videoBar.event = _currentEvent;
 }
 
 
@@ -747,9 +749,6 @@ static void * eventContext      = &eventContext;
     // Richard
     
     //!_videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_DISABLE];
-    [_videoBarViewController.startRangeModifierButton   addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-    [_videoBarViewController.endRangeModifierButton     addTarget:self action:@selector(endRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
     //_videoBarViewController.tagMarkerController.arrayOfAllTags =
     //![self.view addSubview:_videoBarViewController.view];
 
@@ -804,7 +803,7 @@ static void * eventContext      = &eventContext;
     
     ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;
     
-    _videoBar.frame = CGRectMake(_videoPlayer.view.frame.origin.x, _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height, _videoPlayer.view.frame.size.width, 40.0);
+    _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     [self.view addSubview:_videoBar];
     
     
@@ -894,8 +893,7 @@ static void * eventContext      = &eventContext;
      if(!(self.videoPlayer.view.superview == self.view))
      {
          [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-         //[self.view addSubview:self.videoPlayer.view];
-         [_videoBarViewController viewDidAppear:animated];
+         [self.view addSubview:self.videoPlayer.view];
          
          //[self.videoPlayer play];
          [self.view addSubview:_fullscreenViewController.view];
@@ -917,7 +915,6 @@ static void * eventContext      = &eventContext;
     [_bottomViewController update];
     // just to update UI
     
-    _videoBar.player = self.videoPlayer.avPlayer;
     [self.view bringSubviewToFront:_videoBar];
 }
 
@@ -935,8 +932,7 @@ static void * eventContext      = &eventContext;
     [super viewWillDisappear:animated];
     
     [CustomAlertView removeAll];
-    [_videoBarViewController.tagMarkerController cleanTagMarkers];
-    //![[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
     self.videoPlayer.mute = YES;
     self.telestrationViewController.telestration = nil;
 }
@@ -956,8 +952,6 @@ static void * eventContext      = &eventContext;
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
-        [_videoBarViewController.tagMarkerController cleanTagMarkers];
-        [_videoBarViewController.tagMarkerController createTagMarkers];
         
         self.playerViewController.multiView.context.mainPlayer.live = YES;
         

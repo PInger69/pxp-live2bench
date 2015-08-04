@@ -28,9 +28,6 @@ static UIImage * __nonnull _tagExtendEndImage;
     CustomButton * __nonnull _tagExtendStartButton;
     CustomButton * __nonnull _tagExtendEndButton;
     
-    SeekButton * __nonnull _backwardSeekButton;
-    SeekButton * __nonnull _forwardSeekButton;
-    
     Slomo * __nonnull _slomoButton;
     
     void *_rateObserverContext;

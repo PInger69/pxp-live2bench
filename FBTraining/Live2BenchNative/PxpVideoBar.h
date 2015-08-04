@@ -22,4 +22,7 @@ IB_DESIGNABLE
 
 @property (strong, nonatomic, nullable) Tag *selectedTag;
 
+@property (readonly, strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
+@property (readonly, strong, nonatomic, nonnull) SeekButton *forwardSeekButton;
+
 @end

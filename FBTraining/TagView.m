@@ -10,6 +10,9 @@
 
 @interface TagView ()
 
+@property (readonly, strong, nonatomic, nonnull) UIColor *selectionStrokeColor;
+@property (readonly, strong, nonatomic, nonnull) UIColor *selectionFillColor;
+
 @end
 
 @implementation TagView
@@ -17,8 +20,6 @@
 @synthesize dataSource = _dataSource;
 @synthesize tagAlpha = _tagAlpha;
 @synthesize tagWidth = _tagWidth;
-@synthesize selectionFillColor = _selectionFillColor;
-@synthesize selectionStrokeColor = _selectionStrokeColor;
 @synthesize selectionStrokeWidth = _selectionStrokeWidth;
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -30,11 +31,22 @@
         self.dataSource = nil;
         self.tagAlpha = 1.0;
         self.tagWidth = 5.0;
-        self.selectionFillColor = [PRIMARY_APP_COLOR colorWithAlphaComponent:0.5];
-        self.selectionStrokeColor = PRIMARY_APP_COLOR;
         self.selectionStrokeWidth = 2.0;
     }
     return self;
+}
+
+- (nonnull UIColor *)selectionStrokeColor {
+    return self.tintColor ? self.tintColor : [UIColor clearColor];
+}
+
+- (nonnull UIColor *)selectionFillColor {
+    return [self.selectionStrokeColor colorWithAlphaComponent:0.5];
+}
+
+- (void)tintColorDidChange {
+    [super tintColorDidChange];
+    [self setNeedsDisplay];
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -125,6 +137,16 @@
         
     }
     
+    CGContextSaveGState(context);
+    
+    CGContextSetLineWidth(context, 2.0);
+    CGContextMoveToPoint(context, 0.0, 0.0);
+    CGContextAddLineToPoint(context, 0.0, rect.size.height);
+    CGContextMoveToPoint(context, rect.size.width, 0.0);
+    CGContextAddLineToPoint(context, rect.size.width, rect.size.height);
+    CGContextDrawPath(context, kCGPathStroke);
+    
+    CGContextRestoreGState(context);
 }
 
 @end

@@ -67,6 +67,7 @@
         _context = nil;
         _playerViewController = [[PxpPlayerMultiViewController alloc] init];
         
+        _videoBar = [[PxpVideoBar alloc] init];
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         [self addChildViewController:_telestrationViewController];
 
@@ -80,6 +81,7 @@
         [self addChildViewController:_tableViewController];
         //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
+ 
         
         [self addChildViewController:self.playerViewController];
         
@@ -107,7 +109,7 @@
         self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
         self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
 
-         [self.view addSubview:self.videoPlayer.view];
+        [self.view addSubview:self.videoPlayer.view];
         
         
         self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
