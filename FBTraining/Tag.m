@@ -92,7 +92,13 @@ static NSMutableDictionary * openDurationTagsWithID;
             self.period          = [tagData[@"period"]intValue];
         }
 
-        if (_type == TagTypeTele) {
+        if ([tagData objectForKey:@"players"]) {
+            self.players = tagData[@"players"];
+        }else if ([tagData objectForKey:@"player"]){
+            self.players = tagData[@"player"];
+        }
+        
+        if (_type == TagTypeTele || _type == TagTypeFootballDownTags) {
             self.startTime = self.time;
         }
         
@@ -377,6 +383,10 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (self.period) {
         tagData[@"period"] = [NSString stringWithFormat:@"%ld",(long)self.period];
+    }
+    
+    if (self.players) {
+        tagData[@"players"] = self.players;
     }
     
     

@@ -227,7 +227,7 @@
     cancelPath.lineCapStyle = kCGLineCapRound;
     cancelPath.lineWidth = 4.0;
     
-    [cancelPath moveToPoint:CGPointMake(1, 1)];
+    [cancelPath moveToPoint:CGPointMake(1, 11)];
     [cancelPath addLineToPoint: CGPointMake(19, 19)];
     
     [cancelPath moveToPoint:CGPointMake(19, 1)];

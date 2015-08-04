@@ -10,76 +10,41 @@
 
 @implementation Slomo
 
-@synthesize slomoOn = _slomoOn;
+static UIImage * _normalSpeedImage;
+static UIImage * _slowSpeedImage;
 
-static UIImage * normalSpeed;
-static UIImage * slowSpeed;
-static BOOL * isStaticInit;
-
-
-+(void)staticInit
-{
-	normalSpeed = [[UIImage imageNamed:@"normalsp.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-	slowSpeed   = [[UIImage imageNamed:@"slowmo.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
++ (void)initialize {
+    _normalSpeedImage = [[UIImage imageNamed:@"normalsp.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    _slowSpeedImage   = [[UIImage imageNamed:@"slowmo.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-    	if (!isStaticInit) [Slomo staticInit];
-		_slomoOn = NO;
-
-		[self setFrame:frame];
-		[self setContentMode:UIViewContentModeScaleAspectFill];
+		[self setContentMode:UIViewContentModeScaleAspectFit];
 	
-		[self setImage:normalSpeed forState:UIControlStateNormal];
+		[self setImage:_normalSpeedImage forState:UIControlStateNormal];
+        [self setImage:_slowSpeedImage forState:UIControlStateSelected];
     }
     return self;
 }
 
+#pragma mark - Overrides
 
-//-(void)setHighlighted:(BOOL)highlighted
-//{
-//    [super setHighlighted:highlighted];
-//    if (!highlighted) {
-//        slomoOn = !slomoOn;
-//        if (slomoOn){
-//            [self setImage:slowSpeed forState:UIControlStateNormal];
-//            [self setImage:slowSpeed forState:UIControlStateHighlighted];
-//        } else {
-//            [self setImage:normalSpeed forState:UIControlStateNormal];
-//            [self setImage:normalSpeed forState:UIControlStateHighlighted];
-//        }
-//    }
-//}
-
--(void)tintColorDidChange
-{
-    [super tintColorDidChange];
-
+- (void)setSelected:(BOOL)selected {
+    [self willChangeValueForKey:@"slomoOn"];
+    [super setSelected:selected];
+    [self didChangeValueForKey:@"slomoOn"];
 }
 
+#pragma mark - Getters / Setters
 
--(void)setSlomoOn:(BOOL)slomoOn
-{
-    _slomoOn = slomoOn;
-    
-    if (!_slomoOn){
-        [self setImage:normalSpeed forState:UIControlStateNormal];
-    } else {
-         [self setImage:slowSpeed forState:UIControlStateNormal];
-    }
-
+- (void)setSlomoOn:(BOOL)slomoOn {
+    self.selected = slomoOn;
 }
 
-
--(BOOL)slomoOn
-{
-
-    return _slomoOn;
-
+- (BOOL)slomoOn {
+    return self.selected;
 }
-
 
 @end

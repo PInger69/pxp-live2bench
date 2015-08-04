@@ -1025,7 +1025,6 @@ static void *FeedAliveContext                               = &FeedAliveContext;
     }
 }
 
-
 #pragma mark -
 #pragma mark Getters and Setters
 

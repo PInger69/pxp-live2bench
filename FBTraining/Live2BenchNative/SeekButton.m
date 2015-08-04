@@ -87,6 +87,7 @@ static CGFloat _textNumbers[2] = { 1.0, 1.0 };
         _backward = backward;
         _speeds = speeds;
         _margin = margin;
+        _independent = NO;
         
         _buttons = [NSMutableArray arrayWithCapacity:_speeds.count];
         
@@ -197,7 +198,9 @@ static CGFloat _textNumbers[2] = { 1.0, 1.0 };
     _mainButton.textNumber = textNumber;
     _textNumbers[_backward ? 1 : 0] = textNumber;
     
-    [_localCenter postNotificationName:NOTIF_SEEK_BUTTON_SYNC_TEXT_NUMBER object:self];
+    if (!_independent) {
+        [_localCenter postNotificationName:NOTIF_SEEK_BUTTON_SYNC_TEXT_NUMBER object:self];
+    }
 }
 
 - (CGFloat)textNumber {
@@ -212,7 +215,7 @@ static CGFloat _textNumbers[2] = { 1.0, 1.0 };
 
 - (void)syncTextNumberHandler:(NSNotification *)note {
     SeekButton *sender = note.object;
-    if ([sender isKindOfClass:[SeekButton class]] && sender != self && sender.backward == _backward) {
+    if (!_independent && [sender isKindOfClass:[SeekButton class]] && sender != self && sender.backward == _backward) {
         _mainButton.textNumber = sender.textNumber;
     }
 }

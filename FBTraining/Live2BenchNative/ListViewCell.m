@@ -115,7 +115,7 @@
     tagInfoText = [[UITextView alloc]initWithFrame:CGRectMake(tagname.frame.origin.x - 4, tagname.frame.origin.y + tagname.frame.size.height -5.0f, self.frame.size.width, 50)];
     //[self.tagInfoText setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleRightMargin];
     [tagInfoText setBackgroundColor:[UIColor clearColor]];
-    [tagInfoText setText: [NSString stringWithFormat:@"%@: \n%@: ", NSLocalizedString(@"Duration", nil), NSLocalizedString(@"Period", nil)]];
+    //[tagInfoText setText: [NSString stringWithFormat:@"%@: \n%@: ", NSLocalizedString(@"Duration", nil), NSLocalizedString(@"Period", nil)]];
     [tagInfoText setTextAlignment:NSTextAlignmentLeft];
     [tagInfoText setFont:[UIFont defaultFontOfSize:17.0f]];
     [tagInfoText setEditable:FALSE];
@@ -126,21 +126,23 @@
     [playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
     [playersLabel setTextAlignment:NSTextAlignmentLeft];
     [playersLabel setFont:[UIFont defaultFontOfSize:17.0f]];
-    [self addSubview:playersLabel];
+    [self.myContentView addSubview:playersLabel];
     
-    tagPlayersView = [[UIScrollView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(playersLabel.frame), CGRectGetMaxY(tagInfoText.frame)-5.0f ,self.frame.size.width - tagImage.frame.size.width-playersLabel.frame.size.width-20, 25.0f)];
+    //tagPlayersView = [[UIScrollView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(playersLabel.frame), CGRectGetMaxY(tagInfoText.frame)-5.0f ,self.frame.size.width - tagImage.frame.size.width-playersLabel.frame.size.width-20, 25.0f)];
+    tagPlayersView = [[UIScrollView alloc]initWithFrame:CGRectMake(tagname.frame.origin.x+68, CGRectGetMaxY(tagInfoText.frame)-5.0f ,100.0f, 25.0f)];
     tagPlayersView.delegate = self;
     tagPlayersView.scrollEnabled = TRUE;
     tagPlayersView.showsHorizontalScrollIndicator = YES;
+    //[tagPlayersView setBackgroundColor:[UIColor greenColor]];
     [tagPlayersView setContentSize:CGSizeMake(1.5*tagPlayersView.frame.size.width, tagPlayersView.frame.size.height)];
     tagPlayersView.bounces = TRUE;
-    //[self addSubview:tagPlayersView];
+    [self.myContentView addSubview:tagPlayersView];
     
-    playersNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, tagPlayersView.frame.size.width, tagPlayersView.frame.size.height)];
+    playersNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, tagPlayersView.frame.size.width*2, tagPlayersView.frame.size.height)];
     [playersNumberLabel setText:@""];
     [playersNumberLabel setTextAlignment:NSTextAlignmentLeft];
     [playersNumberLabel setFont:[UIFont defaultFontOfSize:17.0f]];
-    //[tagPlayersView addSubview:playersNumberLabel];
+    [tagPlayersView addSubview:playersNumberLabel];
     
     tagtime = [[UILabel alloc] initWithFrame:CGRectMake(tagImage.frame.size.width -72, tagImage.frame.size.height - 18.0f, 70.0f, 17.0f)];
     [self.tagtime setAutoresizingMask: UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin];

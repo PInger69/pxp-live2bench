@@ -438,6 +438,15 @@
     }
 }
 
+-(CGFloat)getSeekSpeed:(NSString *)direction{
+    if ([direction isEqualToString:@"forward"]) {
+        return [forwardButton speed];
+    }else if ([direction isEqualToString:@"backward"]){
+        return [backwardButton speed];
+    }
+    return 0;
+}
+
 #pragma mark - TagViewDataSource
 
 - (NSTimeInterval)durationInTagView:(nonnull TagView *)tagView {

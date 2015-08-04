@@ -20,6 +20,7 @@
 #import "Downloader.h"
 
 #import "AVAsset+Image.h"
+#import "LeagueTeam.h"
 
 @interface ListTableViewController ()
 
@@ -381,9 +382,35 @@
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
     NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
+  
+    NSString *periodLabel;
+    LeagueTeam *team = [[tag.event.teams allValues]firstObject];
+    if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
+        periodLabel = NSLocalizedString(@"Half", nil);
+    }else if ([team.league.sport isEqualToString:@"Hockey"]){
+        periodLabel = NSLocalizedString(@"Period", nil);
+    }else if ([team.league.sport isEqualToString:@"Football"]){
+        periodLabel = NSLocalizedString(@"Quarter", nil);
+    }else{
+        periodLabel = NSLocalizedString(@"Period", nil);
+    }
     NSString *periodString = [NSString stringWithFormat:@"%ld", (long)tag.period];
     
-    [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@ ", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString]];
+    NSString *players;
+    for (NSString *jersey in tag.players) {
+        if (!players) {
+            players = [NSString stringWithFormat:@"%@",jersey];
+        }else{
+            players = [NSString stringWithFormat:@"%@, %@",players,jersey];
+        }
+    }
+    
+    
+    [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,periodLabel,periodString]];
+    //[cell.playersLabel setText:[NSString stringWithFormat:@"%@: %@",NSLocalizedString(@"Player(s):", nil),players]];
+    [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
+    [cell.playersNumberLabel setText:players];
+    //[cell.playersNumberLabel setBackgroundColor:[UIColor greenColor]];
     
     [cell.tagtime setText: tag.displayTime];
     
