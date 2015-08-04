@@ -23,6 +23,7 @@ IB_DESIGNABLE
 @property (assign, nonatomic) IBInspectable BOOL backward;
 @property (assign, nonatomic) IBInspectable CGFloat margin;
 @property (assign, nonatomic) IBInspectable CGFloat textNumber;
+@property (assign, nonatomic) IBInspectable BOOL independent;
 
 @property (strong, nonatomic, nonnull) NSArray *speeds;
 

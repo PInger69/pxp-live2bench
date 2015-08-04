@@ -24,6 +24,7 @@ typedef NS_OPTIONS (NSInteger,SideTagButtonModes){
 @property (nonatomic,assign) BOOL                   isOpen;
 @property (nonatomic,assign) SideTagButtonModes     mode;
 
+-(void)setColor:(BOOL)fullScreen;
 
 
 @end

@@ -302,7 +302,6 @@
     [buttons removeAllObjects];
 }
 
-
 /*-(BorderButton *)_buildButton:(NSDictionary*)dict
 {
     BorderButton * btn = [BorderButton buttonWithType:UIButtonTypeCustom];
@@ -375,6 +374,7 @@
                                  ( [tagButtonsLeft count] * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
+        
         
         [tagButtonsLeft addObject:btn];
         [_leftTray addSubview:btn];
@@ -551,7 +551,8 @@
    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_FULLSCREEN     object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_SMALLSCREEN    object:nil];
-     _fullScreenViewController = fullScreenViewController;
+     //_fullScreenViewController = fullScreenViewController;
+    //[_fullScreenViewController.view setBackgroundColor:[UIColor whiteColor]];
     
     // add observers
 //   [_fullScreenViewController addObserver:self forKeyPath:@"enable" options:NSKeyValueObservingOptionNew context:fullScreenContext];
@@ -667,6 +668,13 @@
         }
     }
 
+}
+
+-(void)setButtonColor:(BOOL)fullScreen{
+    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    for (SideTagButton *btn1 in tempList) {
+        [btn1 setColor:fullScreen];
+    }
 }
 
 

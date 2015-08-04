@@ -52,6 +52,7 @@
     ImageAssetManager               * _imageAssetManager;
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
+    UIButton                        *deSelectButton;
     
 }
 
@@ -107,7 +108,6 @@ static void * encoderTagContext = &encoderTagContext;
                 componentFilter.rawTagArray = self.tagsToDisplay;
             };
         }];*/
-         
             
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
@@ -347,6 +347,13 @@ static void * encoderTagContext = &encoderTagContext;
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
+    
+    deSelectButton = [[UIButton alloc]initWithFrame:CGRectMake(900, 65, 80, 30)];
+    [deSelectButton setTitle:@"Deselect" forState:UIControlStateNormal];
+    [deSelectButton setBackgroundColor:[UIColor grayColor]];
+    deSelectButton.titleLabel.adjustsFontSizeToFitWidth = true;
+    [deSelectButton addTarget:self action:@selector(deselectAllCell) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:deSelectButton];
     
     componentFilter = [TestFilterViewController commonFilter];
     [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
@@ -881,5 +888,13 @@ static void * encoderTagContext = &encoderTagContext;
     _tagsToDisplay = tags;
 }
 
+-(void)deselectAllCell{
+    for (thumbnailCell *cell in self.collectionView.visibleCells) {
+        [cell setDeletingMode: NO];
+    }
+    self.isEditing = NO;
+    [self.setOfSelectedCells removeAllObjects];
+    [self checkDeleteAllButton];
+}
 
 @end
