@@ -1,6 +1,6 @@
 //
 //  PxpFilterTabController.h
-//  CWPopupDemo
+//  Test12
 //
 //  Created by colin on 7/30/15.
 //  Copyright (c) 2015 Cezary Wojcik. All rights reserved.
@@ -11,8 +11,12 @@
 
 @interface PxpFilterTabController : UIViewController
 
-@property (nonatomic, retain) NSMutableArray *modules;
+@property (strong, nonatomic, nonnull)  NSMutableArray *modules;
 
 @property (weak, nonatomic) PxpFilter *pxpFilter;
+
+@property (readonly, strong, nonatomic, nullable) UIImage *tabImage;
+
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabImage:(nullable UIImage *)tabImage;
 
 @end

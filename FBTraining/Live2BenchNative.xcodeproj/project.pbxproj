@@ -257,12 +257,10 @@
 		D78093BF1B6ACA25006488A9 /* TabView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093B01B6ACA25006488A9 /* TabView.m */; };
 		D78093C01B6ACA25006488A9 /* TabView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093B11B6ACA25006488A9 /* TabView.xib */; };
 		D78093C11B6ACA25006488A9 /* PxpFilterTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093B31B6ACA25006488A9 /* PxpFilterTabController.m */; };
-		D78093C21B6ACA25006488A9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093B51B6ACA25006488A9 /* ViewController.m */; };
-		D78093C31B6ACA25006488A9 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093B61B6ACA25006488A9 /* ViewController.xib */; };
-		D78093C41B6ACA25006488A9 /* ViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093B81B6ACA25006488A9 /* ViewController2.m */; };
-		D78093C51B6ACA25006488A9 /* ViewController2.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093B91B6ACA25006488A9 /* ViewController2.xib */; };
-		D78093C61B6ACA25006488A9 /* ScrollViewTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093BB1B6ACA25006488A9 /* ScrollViewTest.m */; };
-		D78093C71B6ACA25006488A9 /* ScrollViewTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093BC1B6ACA25006488A9 /* ScrollViewTest.xib */; };
+		D78093C21B6ACA25006488A9 /* PxpFilterTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093B51B6ACA25006488A9 /* PxpFilterTabViewController.m */; };
+		D78093C31B6ACA25006488A9 /* PxpFilterTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093B61B6ACA25006488A9 /* PxpFilterTabViewController.xib */; };
+		D78093C41B6ACA25006488A9 /* PxpFilterTabViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = D78093B81B6ACA25006488A9 /* PxpFilterTabViewController2.m */; };
+		D78093C51B6ACA25006488A9 /* PxpFilterTabViewController2.xib in Resources */ = {isa = PBXBuildFile; fileRef = D78093B91B6ACA25006488A9 /* PxpFilterTabViewController2.xib */; };
 		D780B8951B66951100CB7ED8 /* RugbyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D780B8941B66951100CB7ED8 /* RugbyBottomViewController.m */; };
 		D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */; };
 		D781900F1A70697D00B964B4 /* UserCenterActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900E1A70697D00B964B4 /* UserCenterActionPack.m */; };
@@ -919,15 +917,12 @@
 		D78093B11B6ACA25006488A9 /* TabView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TabView.xib; sourceTree = "<group>"; };
 		D78093B21B6ACA25006488A9 /* PxpFilterTabController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterTabController.h; sourceTree = "<group>"; };
 		D78093B31B6ACA25006488A9 /* PxpFilterTabController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterTabController.m; sourceTree = "<group>"; };
-		D78093B41B6ACA25006488A9 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		D78093B51B6ACA25006488A9 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		D78093B61B6ACA25006488A9 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
-		D78093B71B6ACA25006488A9 /* ViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController2.h; sourceTree = "<group>"; };
-		D78093B81B6ACA25006488A9 /* ViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController2.m; sourceTree = "<group>"; };
-		D78093B91B6ACA25006488A9 /* ViewController2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController2.xib; sourceTree = "<group>"; };
-		D78093BA1B6ACA25006488A9 /* ScrollViewTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollViewTest.h; sourceTree = "<group>"; };
-		D78093BB1B6ACA25006488A9 /* ScrollViewTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollViewTest.m; sourceTree = "<group>"; };
-		D78093BC1B6ACA25006488A9 /* ScrollViewTest.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScrollViewTest.xib; sourceTree = "<group>"; };
+		D78093B41B6ACA25006488A9 /* PxpFilterTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterTabViewController.h; sourceTree = "<group>"; };
+		D78093B51B6ACA25006488A9 /* PxpFilterTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterTabViewController.m; sourceTree = "<group>"; };
+		D78093B61B6ACA25006488A9 /* PxpFilterTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterTabViewController.xib; sourceTree = "<group>"; };
+		D78093B71B6ACA25006488A9 /* PxpFilterTabViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterTabViewController2.h; sourceTree = "<group>"; };
+		D78093B81B6ACA25006488A9 /* PxpFilterTabViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterTabViewController2.m; sourceTree = "<group>"; };
+		D78093B91B6ACA25006488A9 /* PxpFilterTabViewController2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterTabViewController2.xib; sourceTree = "<group>"; };
 		D780B8921B66693700CB7ED8 /* BottomViewControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomViewControllerProtocol.h; sourceTree = "<group>"; };
 		D780B8931B66951100CB7ED8 /* RugbyBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RugbyBottomViewController.h; sourceTree = "<group>"; };
 		D780B8941B66951100CB7ED8 /* RugbyBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RugbyBottomViewController.m; sourceTree = "<group>"; };
@@ -2060,15 +2055,12 @@
 				D78093B11B6ACA25006488A9 /* TabView.xib */,
 				D78093B21B6ACA25006488A9 /* PxpFilterTabController.h */,
 				D78093B31B6ACA25006488A9 /* PxpFilterTabController.m */,
-				D78093B41B6ACA25006488A9 /* ViewController.h */,
-				D78093B51B6ACA25006488A9 /* ViewController.m */,
-				D78093B61B6ACA25006488A9 /* ViewController.xib */,
-				D78093B71B6ACA25006488A9 /* ViewController2.h */,
-				D78093B81B6ACA25006488A9 /* ViewController2.m */,
-				D78093B91B6ACA25006488A9 /* ViewController2.xib */,
-				D78093BA1B6ACA25006488A9 /* ScrollViewTest.h */,
-				D78093BB1B6ACA25006488A9 /* ScrollViewTest.m */,
-				D78093BC1B6ACA25006488A9 /* ScrollViewTest.xib */,
+				D78093B41B6ACA25006488A9 /* PxpFilterTabViewController.h */,
+				D78093B51B6ACA25006488A9 /* PxpFilterTabViewController.m */,
+				D78093B61B6ACA25006488A9 /* PxpFilterTabViewController.xib */,
+				D78093B71B6ACA25006488A9 /* PxpFilterTabViewController2.h */,
+				D78093B81B6ACA25006488A9 /* PxpFilterTabViewController2.m */,
+				D78093B91B6ACA25006488A9 /* PxpFilterTabViewController2.xib */,
 				D743D47D1B696EF400533070 /* PxpFilterButtonScrollView.h */,
 				D743D47E1B696EF400533070 /* PxpFilterButtonScrollView.m */,
 				D743D4771B6950ED00533070 /* SamplePxpFilterModule.h */,
@@ -2778,7 +2770,7 @@
 				D7AA943917F4893E000EDAD5 /* ContactLabelString.txt in Resources */,
 				D78F68D018073DC70096C793 /* RedSettingsButtonSelect@2x.png in Resources */,
 				D78F68C618073DC70096C793 /* GreenSettingsButton@2x.png in Resources */,
-				D78093C31B6ACA25006488A9 /* ViewController.xib in Resources */,
+				D78093C31B6ACA25006488A9 /* PxpFilterTabViewController.xib in Resources */,
 				94E8DB881939167100B92CD1 /* lineButtonSelect.png in Resources */,
 				D786C24017F39CA10042DD96 /* youtubeSelect@2x.png in Resources */,
 				D7C903AD17F4B7A0002A1FDD /* continue_unselected.png in Resources */,
@@ -2835,7 +2827,7 @@
 				94F9596A1921834D00B7D201 /* playbackRateButtonBack.png in Resources */,
 				94F9596C1921834D00B7D201 /* playbackRateButtonForward.png in Resources */,
 				D7F2BFB21B39970B00EA8BF0 /* CreditsView.xib in Resources */,
-				D78093C51B6ACA25006488A9 /* ViewController2.xib in Resources */,
+				D78093C51B6ACA25006488A9 /* PxpFilterTabViewController2.xib in Resources */,
 				D79F9B7D17F5D5F00081C5E9 /* myplayXplay_tagging@2x.png in Resources */,
 				D79F9B8017F5ED0B0081C5E9 /* myplayXplay_phonecall.png in Resources */,
 				BDD2D2FA17ECDD11004D5D9A /* clip-back-just@2x.png in Resources */,
@@ -2878,7 +2870,6 @@
 				BDD2D2F817ECDD11004D5D9A /* clip-back-old@2x.png in Resources */,
 				D797CCFB170DD8D400A6E62B /* logo@2x.png in Resources */,
 				BD8C368417F330360094CBAD /* mailselected@2x.png in Resources */,
-				D78093C71B6ACA25006488A9 /* ScrollViewTest.xib in Resources */,
 				BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */,
 				D7A0223C1B6A7A6000959EBE /* ortriright.png in Resources */,
 				D7CCE7FC1AC1EA3B00D85095 /* SoccerBottomViewController.plist in Resources */,
@@ -3031,7 +3022,7 @@
 				AED2EBCF1B1DED25008AD159 /* NCPlayerView.m in Sources */,
 				AEDD7CB41B4AB98A003C82F3 /* PxpPlayerMultiView.m in Sources */,
 				D7F04ED71AE1A5CC0028FBE4 /* Tag.m in Sources */,
-				D78093C41B6ACA25006488A9 /* ViewController2.m in Sources */,
+				D78093C41B6ACA25006488A9 /* PxpFilterTabViewController2.m in Sources */,
 				D7A2E5B919AE226A00022795 /* UserSettings.m in Sources */,
 				D7A5E5A91A9F7A1F00E3D4DB /* DownloadItem.m in Sources */,
 				AEDD7C7A1B4AB717003C82F3 /* PxpPlayer.m in Sources */,
@@ -3115,7 +3106,7 @@
 				AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */,
 				D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */,
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
-				D78093C21B6ACA25006488A9 /* ViewController.m in Sources */,
+				D78093C21B6ACA25006488A9 /* PxpFilterTabViewController.m in Sources */,
 				D78093C11B6ACA25006488A9 /* PxpFilterTabController.m in Sources */,
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
 				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
@@ -3197,7 +3188,6 @@
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */,
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
-				D78093C61B6ACA25006488A9 /* ScrollViewTest.m in Sources */,
 				AED484BA1B56A23600769EEF /* PxpTelestrationPoint.m in Sources */,
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,

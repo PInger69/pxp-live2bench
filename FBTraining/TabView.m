@@ -1,102 +1,111 @@
 //
 //  TabView.m
-//  CWPopupDemo
+//  Test12
 //
 //  Created by colin on 7/29/15.
 //  Copyright (c) 2015 Cezary Wojcik. All rights reserved.
 //
 
 #import "TabView.h"
-#import "ViewController.h"
-#import "ViewController2.h"
+#import "PxpFilterTabViewController.h"
+#import "PxpFilterTabViewController2.h"
 #import "PxpFilterTabController.h"
 
 @interface TabView ()
+
+
 
 @end
 
 
 @implementation TabView
+{
+    NSMutableArray *_tabs; //view controller of all tabs
+}
 
-@synthesize tabs;
-@synthesize mainTabBar;
+- (id)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        _tabs = [NSMutableArray array];
+        
+    }
+    return self;
+}
 
-- (void)show:(NSInteger)tag_num{
-    PxpFilterTabController *temp = [tabs objectForKey:[NSNumber numberWithInteger:tag_num]];
-    [self.view insertSubview:temp.view belowSubview:mainTabBar];
+-(void)show:(NSUInteger)tabIndex{
+    PxpFilterTabController *temp = _tabs[tabIndex];
+
+    [self.view insertSubview:temp.view belowSubview:_mainTabBar];
+        [temp setPxpFilter:self.pxpFilter];
+}
+
+- (void)customizeTabBarAppearance{
+   
+    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIColor orangeColor], NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     
-    //test PxpFilter
-    [temp setPxpFilter:self.pxpFilter];
+    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor], NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
     
 }
 
-//Use hard coded dict as a initializer for all the tabs
+- (void)updateTabBar {
+    
+    
+    if (_mainTabBar) {
+        _mainTabBar.tintColor = [UIColor orangeColor];
+        _mainTabBar.translucent = NO;
+        NSMutableArray *tabItems = [NSMutableArray arrayWithCapacity:_tabs.count];
+        [[UITabBarItem appearance]setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Arial" size:25.0f], NSFontAttributeName,nil]forState:UIControlStateNormal];
+        for (PxpFilterTabController *vc in _tabs) {
+            [vc.tabImage drawInRect:CGRectMake(0, 0, 30, 30)];
+            UITabBarItem *tabItem = [[UITabBarItem alloc] initWithTitle:vc.title image:vc.tabImage selectedImage:nil];
+            //position adjustment for tabitem titles and images
+            tabItem.imageInsets = UIEdgeInsetsMake(15, -50, -15, 50);
+            tabItem.titlePositionAdjustment = UIOffsetMake(20+40.0/_tabs.count,0);
+            [tabItems addObject:tabItem];
+        };
+        
+        [_mainTabBar setItems:tabItems animated:YES];
+        [_mainTabBar setSelectedItem:_mainTabBar.items[0]];
+        [self show:0];
 
--(void)initAllTabs{
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                                 [NSNumber numberWithInteger:1],@"ViewController",
-                                 [NSNumber numberWithInteger:2],@"ViewController2",nil];
-    for(id key in dict){
-        PxpFilterTabController *temp = [[NSClassFromString(key) alloc] initWithNibName:key bundle:nil];
-        tabs[dict[key]] = temp;
     }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
-    tabs = [[NSMutableDictionary alloc]init];
-    [self initAllTabs];
     
-    //self.pxpFilter = [[PxpFilter alloc] init];
-    //[self.pxpFilter init_];
-    
-    //show the first tab
-    [self show:1];
+    [self customizeTabBarAppearance];
+    [self updateTabBar];
 }
+
+#pragma mark - Getters / Setters
+
+- (void)setTabs:(NSArray *)tabs {
+    _tabs = [NSMutableArray arrayWithArray:tabs];
+    
+    [self updateTabBar];
+}
+
+#pragma mark - Public Methods
 
 - (void)addTab:(PxpFilterTabController *)newTab{
+    [_tabs addObject:newTab];
     
+    [self updateTabBar];
 }
 
+#pragma mark - TabBarDelegate
+
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
-    // test adding tab
-    if(item.tag == 100){
-//        [self addTab()];
-    }
-    [self show:item.tag];
+    NSUInteger itemIndex = [tabBar.items indexOfObject:item];
     
-    //test pxpFilter
-    
-    //[self.pxpFilter viewPxpFilterModules];
+    [self show:itemIndex];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    //UIToolbar *toolbarBackground = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 44, 200, 106)];
-    //[self.view addSubview:toolbarBackground];
-    //[self.view sendSubviewToBack:toolbarBackground];
     // Dispose of any resources that can be recreated.
 }
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

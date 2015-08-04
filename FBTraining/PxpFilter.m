@@ -89,6 +89,7 @@
     if (_delegate && [_delegate respondsToSelector:@selector(onFilterChange:)]){
         [_delegate onFilterChange:self];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FITER_TAG_CHANGE  object:self];
 }
 
 
@@ -163,7 +164,7 @@
     if (_delegate){
         [_delegate onFilterComplete:self];
     }
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FITER_TAG_CHANGE  object:self];
 }
 
 @end

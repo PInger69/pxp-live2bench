@@ -1,6 +1,6 @@
 //
 //  PxpFilterTabController.m
-//  CWPopupDemo
+//  Test12
 //
 //  Created by colin on 7/30/15.
 //  Copyright (c) 2015 Cezary Wojcik. All rights reserved.
@@ -13,10 +13,26 @@
 @end
 
 @implementation PxpFilterTabController
+@synthesize pxpFilter = _pxpFilter;
+
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
+    return [self initWithNibName:nibNameOrNil bundle:nibBundleOrNil tabImage:nil];
+}
+
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabImage:(nullable UIImage *)tabImage {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        _tabImage = tabImage;
+    }
+    return self;
+}
 
 - (void)setPxpFilter:(PxpFilter*)pxpFilter{
     [_pxpFilter removeAllModules];
     _pxpFilter = pxpFilter;
+    for (id <PxpFilterModuleProtocol> mod in _modules) {
+        mod.parentFilter = _pxpFilter;
+    }
     if(_modules)[pxpFilter addModules:self.modules];
 }
 

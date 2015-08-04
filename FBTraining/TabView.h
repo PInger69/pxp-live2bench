@@ -1,6 +1,6 @@
 //
 //  TabView.h
-//  CWPopupDemo
+//  Test12
 //
 //  Created by colin on 7/29/15.
 //  Copyright (c) 2015 Cezary Wojcik. All rights reserved.
@@ -10,14 +10,13 @@
 #import "PxpFilter.h"
 
 @interface TabView : UIViewController<UITabBarDelegate> {
-    UITabBar *mainTabBar;
-    NSMutableDictionary *tabs; //view controller of all tabs
+    UITabBar *_mainTabBar;
 }
 
-@property (nonatomic, retain) PxpFilter *pxpFilter;
+@property (strong, nonatomic) PxpFilter *pxpFilter;
 
-@property (nonatomic, retain) IBOutlet UITabBar *mainTabBar;
+@property (strong, nonatomic) IBOutlet UITabBar *mainTabBar;
 
-@property (nonatomic, retain) NSMutableDictionary *tabs;
+@property (strong, nonatomic) NSArray *tabs;
 
 @end

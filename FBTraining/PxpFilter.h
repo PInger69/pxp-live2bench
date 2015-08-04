@@ -16,6 +16,7 @@
 @property (nonatomic,weak)      PxpFilter  * parentFilter;
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter;
+-(void)reset;
 
 @end
 
