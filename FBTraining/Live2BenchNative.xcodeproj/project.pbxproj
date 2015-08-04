@@ -58,7 +58,6 @@
 		AE5073AC1AFC1DCE002C361D /* ToastObserverSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A51AFC1DCE002C361D /* ToastObserverSettingViewController.m */; };
 		AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A71AFC1DCE002C361D /* ToggleSettingViewController.m */; };
 		AE60EC141B5ED9F700425196 /* PxpPlayerSwapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE60EC131B5ED9F700425196 /* PxpPlayerSwapViewController.m */; };
-		AE683C4F1B71040100458F80 /* PxpFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE683C4E1B71040100458F80 /* PxpFullscreenViewController.m */; };
 		AE70C2111B5FF141008A9203 /* TagNameSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2101B5FF141008A9203 /* TagNameSelectTableViewController.m */; };
 		AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2161B600395008A9203 /* UIColor+Highlight.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
@@ -555,8 +554,6 @@
 		AE5073AE1AFCECDA002C361D /* AlertsSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertsSettingViewController.h; sourceTree = "<group>"; };
 		AE60EC121B5ED9F700425196 /* PxpPlayerSwapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerSwapViewController.h; sourceTree = "<group>"; };
 		AE60EC131B5ED9F700425196 /* PxpPlayerSwapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPlayerSwapViewController.m; sourceTree = "<group>"; };
-		AE683C4D1B71040100458F80 /* PxpFullscreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFullscreenViewController.h; sourceTree = "<group>"; };
-		AE683C4E1B71040100458F80 /* PxpFullscreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFullscreenViewController.m; sourceTree = "<group>"; };
 		AE70C20F1B5FF141008A9203 /* TagNameSelectTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagNameSelectTableViewController.h; sourceTree = "<group>"; };
 		AE70C2101B5FF141008A9203 /* TagNameSelectTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagNameSelectTableViewController.m; sourceTree = "<group>"; };
 		AE70C2121B5FF27C008A9203 /* TagNameSelectResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagNameSelectResponder.h; sourceTree = "<group>"; };
@@ -1307,8 +1304,6 @@
 		AE683C4C1B71029100458F80 /* PxpFullscreen */ = {
 			isa = PBXGroup;
 			children = (
-				AE683C4D1B71040100458F80 /* PxpFullscreenViewController.h */,
-				AE683C4E1B71040100458F80 /* PxpFullscreenViewController.m */,
 			);
 			name = PxpFullscreen;
 			sourceTree = "<group>";
@@ -3085,7 +3080,6 @@
 				AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */,
 				D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */,
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
-				AE683C4F1B71040100458F80 /* PxpFullscreenViewController.m in Sources */,
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
 				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,
