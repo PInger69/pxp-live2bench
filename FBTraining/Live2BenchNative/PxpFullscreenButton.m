@@ -26,19 +26,28 @@
     return self;
 }
 
-- (void)layoutSubviews {
-    self.stroke = YES;
-    self.layer.lineWidth = 0.05 * MIN(self.bounds.size.width, self.bounds.size.height);
-    [super layoutSubviews];
-    [self updateLayer];
+- (void)tintColorDidChange {
+    [super tintColorDidChange];
+    [self setNeedsDisplay];
 }
 
 - (void)setSelected:(BOOL)selected {
+    [self willChangeValueForKey:@"isFullscreen"];
     [super setSelected:selected];
-    [self updateLayer];
+    [self didChangeValueForKey:@"isFullscreen"];
+    
+    [self setNeedsDisplay];
 }
 
-- (void)updateLayer {
+- (void)drawRect:(CGRect)rect {
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    CGContextSaveGState(ctx);
+    
+    CGContextSetLineWidth(ctx, 0.05 * MIN(self.bounds.size.width, self.bounds.size.height));
+    CGContextSetStrokeColorWithColor(ctx, self.tintColor.CGColor);
+    CGContextSetLineCap(ctx, kCGLineCapRound);
+    
     CGMutablePathRef path = CGPathCreateMutable();
     
     CGAffineTransform t = CGAffineTransformMakeScale(0.5 * self.bounds.size.width, 0.5 * self.bounds.size.height);
@@ -77,12 +86,23 @@
         
     }
     
-    self.layer.path = path;
+    CGContextAddPath(ctx, path);
+    CGContextDrawPath(ctx, kCGPathStroke);
+    
     CGPathRelease(path);
+    CGContextRestoreGState(ctx);
+}
+
+- (BOOL)isFullscreen {
+    return self.selected;
+}
+
+- (void)setIsFullscreen:(BOOL)isFullscreen {
+    self.selected = isFullscreen;
 }
 
 - (void)toggleFullscreenAction:(UIButton *)sender {
-    self.selected = !self.selected;
+    self.isFullscreen = !self.isFullscreen;
 }
 
 @end

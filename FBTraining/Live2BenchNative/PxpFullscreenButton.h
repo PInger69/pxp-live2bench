@@ -8,6 +8,8 @@
 
 #import "PxpGlowButton.h"
 
-@interface PxpFullscreenButton : PxpGlowButton
+@interface PxpFullscreenButton : UIButton
+
+@property (assign, nonatomic) BOOL isFullscreen;
 
 @end
