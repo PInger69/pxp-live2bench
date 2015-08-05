@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "PxpFilterTabController.h"
 #import "PxpFilterButtonScrollView.h"
+#import "PxpFilterRangeSliderView.h"
+#import "RangeSlider.h"
 
 @interface PxpFilterTabViewController: PxpFilterTabController
 
@@ -18,5 +20,10 @@
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonScrollView *leftScrollView;
 @property (strong, nonatomic, nullable) IBOutlet UILabel *filteredTagLabel;
 @property (strong, nonatomic, nullable) IBOutlet UILabel *totalTagLabel;
+@property (strong, nonatomic, nullable) IBOutlet PxpFilterRangeSliderView *sliderView;
+
+//Test rangeSlider
+
+@property (strong, nonatomic, nullable) RangeSlider *rangeSlider;
 
 @end

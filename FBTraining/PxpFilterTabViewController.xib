@@ -11,6 +11,7 @@
                 <outlet property="leftScrollView" destination="O5E-1I-2Iy" id="F7v-yk-0Dk"/>
                 <outlet property="middleScrollView" destination="iuH-K8-nby" id="T2f-zc-bpa"/>
                 <outlet property="rightScrollView" destination="WdZ-1l-n9C" id="o77-vJ-jbd"/>
+                <outlet property="sliderView" destination="LAt-rz-bdd" id="KF2-UO-kZ1"/>
                 <outlet property="totalTagLabel" destination="BSH-qC-JS5" id="fnM-ke-45o"/>
                 <outlet property="view" destination="VAj-9B-THu" id="Pge-IE-kyy"/>
             </connections>
@@ -57,31 +58,29 @@
                     <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="F6k-mE-PXf">
-                    <rect key="frame" x="18" y="432" width="236" height="31"/>
-                </slider>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uaW-bk-dDt">
-                    <rect key="frame" x="754" y="48" width="38" height="30"/>
+                    <rect key="frame" x="724" y="48" width="53" height="30"/>
                     <state key="normal" title="Show"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v6v-EV-CxZ">
+                    <rect key="frame" x="662" y="48" width="54" height="30"/>
+                    <state key="normal" title="Clear"/>
+                    <connections>
+                        <action selector="clearButtonPressed:" destination="-1" eventType="touchUpInside" id="CB7-IZ-0cU"/>
+                    </connections>
                 </button>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rto-dn-97l">
                     <rect key="frame" x="541" y="421" width="251" height="71"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="USER" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tsv-ZF-7DU">
-                    <rect key="frame" x="488" y="390" width="44" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Total Tags: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSH-qC-JS5">
-                    <rect key="frame" x="181" y="455" width="278" height="21"/>
+                    <rect key="frame" x="488" y="390" width="59" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fitered Tag: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6e0-Wv-xDh">
-                    <rect key="frame" x="326" y="402" width="133" height="21"/>
+                    <rect key="frame" x="326" y="408" width="154" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -92,17 +91,20 @@
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v6v-EV-CxZ">
-                    <rect key="frame" x="690" y="48" width="36" height="30"/>
-                    <state key="normal" title="Clear"/>
-                    <connections>
-                        <action selector="clearButtonPressed:" destination="-1" eventType="touchUpInside" id="CB7-IZ-0cU"/>
-                    </connections>
-                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Total Tags: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSH-qC-JS5">
+                    <rect key="frame" x="326" y="457" width="154" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAt-rz-bdd" customClass="PxpFilterRangeSliderView">
+                    <rect key="frame" x="8" y="419" width="258" height="73"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-176" y="-95"/>
+            <point key="canvasLocation" x="250" y="-65"/>
         </view>
     </objects>
 </document>

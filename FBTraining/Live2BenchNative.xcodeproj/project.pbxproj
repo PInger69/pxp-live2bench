@@ -236,6 +236,8 @@
 		D760737319D4A513000E35C2 /* FullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D760737219D4A513000E35C2 /* FullScreenViewController.m */; };
 		D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7652C501B39C40A006B46E3 /* SideTagButton.m */; };
 		D766F6271ACC8C5E005FC63A /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = D766F6261ACC8C5E005FC63A /* Event.m */; };
+		D767EEED1B724CC600DDD815 /* PxpFilterRangeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D767EEEC1B724CC600DDD815 /* PxpFilterRangeSlider.m */; };
+		D767EEF01B72560700DDD815 /* PxpFilterRangeSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D767EEEF1B72560700DDD815 /* PxpFilterRangeSliderView.m */; };
 		D769AB8919BDFEA900DF68BC /* VideoBarListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8819BDFEA900DF68BC /* VideoBarListViewController.m */; };
 		D769AB8D19BE5E8400DF68BC /* RangeModifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8C19BE5E8400DF68BC /* RangeModifierButton.m */; };
 		D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D76B6DD41A8AC07300601BAF /* ToastObserver.m */; };
@@ -890,6 +892,10 @@
 		D766F6261ACC8C5E005FC63A /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Event.m; path = EncoderClasses/Event.m; sourceTree = "<group>"; };
 		D767A7D616BC84810050783A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		D767A7D716BC84810050783A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		D767EEEB1B724CC600DDD815 /* PxpFilterRangeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterRangeSlider.h; sourceTree = "<group>"; };
+		D767EEEC1B724CC600DDD815 /* PxpFilterRangeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterRangeSlider.m; sourceTree = "<group>"; };
+		D767EEEE1B72560700DDD815 /* PxpFilterRangeSliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterRangeSliderView.h; sourceTree = "<group>"; };
+		D767EEEF1B72560700DDD815 /* PxpFilterRangeSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterRangeSliderView.m; sourceTree = "<group>"; };
 		D769AB8719BDFEA900DF68BC /* VideoBarListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBarListViewController.h; sourceTree = "<group>"; };
 		D769AB8819BDFEA900DF68BC /* VideoBarListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoBarListViewController.m; sourceTree = "<group>"; };
 		D769AB8B19BE5E8400DF68BC /* RangeModifierButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeModifierButton.h; sourceTree = "<group>"; };
@@ -2052,6 +2058,10 @@
 			children = (
 				D78093AF1B6ACA25006488A9 /* TabView.h */,
 				D78093B01B6ACA25006488A9 /* TabView.m */,
+				D767EEEB1B724CC600DDD815 /* PxpFilterRangeSlider.h */,
+				D767EEEC1B724CC600DDD815 /* PxpFilterRangeSlider.m */,
+				D767EEEE1B72560700DDD815 /* PxpFilterRangeSliderView.h */,
+				D767EEEF1B72560700DDD815 /* PxpFilterRangeSliderView.m */,
 				D78093B11B6ACA25006488A9 /* TabView.xib */,
 				D78093B21B6ACA25006488A9 /* PxpFilterTabController.h */,
 				D78093B31B6ACA25006488A9 /* PxpFilterTabController.m */,
@@ -2998,6 +3008,7 @@
 				D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */,
 				D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */,
 				AED484BD1B56A23600769EEF /* PxpTelestrationViewController.m in Sources */,
+				D767EEF01B72560700DDD815 /* PxpFilterRangeSliderView.m in Sources */,
 				D7C931041B320CB000E725B9 /* ListViewFullScreenViewController.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
 				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
@@ -3072,6 +3083,7 @@
 				D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */,
 				AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */,
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
+				D767EEED1B724CC600DDD815 /* PxpFilterRangeSlider.m in Sources */,
 				D7A2E5EE19B6749100022795 /* VideoBarContainerView.m in Sources */,
 				D7A2E5E819B6254800022795 /* VideoBarMyClipViewController.m in Sources */,
 				AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */,

@@ -25,7 +25,7 @@
         self.title = @"VC1";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FITER_TAG_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
 
     }
     
@@ -42,15 +42,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    PxpFilter.rawTags; //NSMutableSet
-    NSArray * rawTags;
+    /*NSArray * rawTags;
     NSMutableSet * tempSet = [[NSMutableSet alloc]init];
     
     for (Tag * tag in rawTags) {
         [tempSet addObject:tag.name];
-    }
+    }*/
 
     
-    [_rightScrollView buildButtonsWith:[tempSet allObjects]];
+    //[_rightScrollView buildButtonsWith:[tempSet allObjects]];
+    [_rightScrollView buildButtonsWith:@[@"ABC",@"CBA"]];
     _rightScrollView.sortByPropertyKey = @"name";
     [_middleScrollView buildButtonsWith:@[@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c"]];
     _middleScrollView.sortByPropertyKey = @"name";
@@ -58,7 +59,16 @@
     _leftScrollView.sortByPropertyKey = @"name";
     
     self.modules = [[NSMutableArray alloc]initWithObjects:
-                    _rightScrollView,_middleScrollView,_leftScrollView, nil];
+                    _rightScrollView,_middleScrollView,_leftScrollView,_sliderView, nil];
+    
+    //Test
+    
+    [_sliderView initSlider];
+    
+    [_sliderView setEndTime:(1000)];
+    
+    //Test RangeSlider
+    
     // Do any additional setup after loading the view from its nib
     
 }
@@ -66,6 +76,10 @@
     for(id<PxpFilterModuleProtocol> module in self.modules){
         [module reset];
     }
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning {

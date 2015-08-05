@@ -30,10 +30,12 @@
 - (void)setPxpFilter:(PxpFilter*)pxpFilter{
     [_pxpFilter removeAllModules];
     _pxpFilter = pxpFilter;
-    for (id <PxpFilterModuleProtocol> mod in _modules) {
+    
+    for (id <PxpFilterModuleProtocol> mod in _modules){
         mod.parentFilter = _pxpFilter;
     }
     if(_modules)[pxpFilter addModules:self.modules];
+    
 }
 
 - (void)viewDidLoad {
