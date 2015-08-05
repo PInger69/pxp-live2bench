@@ -28,6 +28,9 @@
 #import "PxpFilterButtonScrollView.h"
 //End debug
 
+//test
+#import "PxpFilterTabViewController.h"
+#import "PxpFilterTabViewController2.h"
 
 
 @interface ListViewController ()
@@ -747,7 +750,7 @@
 
 - (void)pressFilterButton
 {
-    if (!test)test = [[PxpFilterButtonScrollView alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
+    /*if (!test)test = [[PxpFilterButtonScrollView alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
     
     [self.view addSubview:test];
     [test buildButtonsWith:@[@"PP",@"PK",@"HEAD SHOT",@"COACH CALL"]];
@@ -755,7 +758,20 @@
     test.sortByPropertyKey = @"name";
     [_pxpFilter addModules:@[test]];
     
-    [_pxpFilter filterTags:[self.allTags copy]];
+    [_pxpFilter filterTags:[self.allTags copy]];*/
+    TabView *newOne = [[TabView alloc] init];
+    
+    newOne.tabs = @[[[PxpFilterTabViewController alloc]init],[[PxpFilterTabViewController2 alloc]init]];
+    
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:newOne];
+    
+    newOne .pxpFilter = _pxpFilter;
+    
+    popoverController.popoverContentSize = newOne.view.bounds.size;
+    [popoverController presentPopoverFromRect:self.view.frame
+                                       inView:self.view
+                     permittedArrowDirections:0
+                                     animated:YES];
     
     
 }

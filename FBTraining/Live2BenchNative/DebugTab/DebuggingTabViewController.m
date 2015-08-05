@@ -27,7 +27,8 @@
 #import "Encoder.h"
 
 #import "FeedInspector.h"
-#import "PxpUserFilter.h"
+
+#import "PxpFilterUserButtons.h"
 
 @interface DebuggingTabViewController ()
 {
@@ -150,7 +151,7 @@ static void *  debugContext = &debugContext;
     ////
     
     
-    PxpUserFilter * testFilterUser = [[PxpUserFilter alloc]initWithFrame:CGRectMake(100, 600, 420,50)];
+    PxpFilterUserButtons * testFilterUser = [[PxpFilterUserButtons alloc]initWithFrame:CGRectMake(100, 600, 420,50)];
     
     
     [testFilterUser buildButtonsWith:@[

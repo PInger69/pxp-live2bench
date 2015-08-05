@@ -1,12 +1,12 @@
 //
-//  PxpUserFilter.m
+//  PxpFilterUserButtons.m
 //  Live2BenchNative
 //
-//  Created by dev on 2015-08-04.
+//  Created by dev on 2015-08-05.
 //  Copyright © 2015 DEV. All rights reserved.
 //
 
-#import "PxpUserFilter.h"
+#import "PxpFilterUserButtons.h"
 #import "UserColorButton.h"
 
 
@@ -15,7 +15,7 @@
 #define PADDING                         3
 
 
-@implementation PxpUserFilter
+@implementation PxpFilterUserButtons
 {
     NSInteger           _selectedCount;
     NSMutableArray      * _buttonList;
@@ -32,6 +32,7 @@
         _buttonList      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
         _userToColor     = [NSMutableDictionary new];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -43,6 +44,7 @@
         _buttonList      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
         _userToColor     = [NSMutableDictionary new];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -85,9 +87,9 @@
         }
     }
     _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
-
-
-
+    
+    
+    
 }
 
 
@@ -113,7 +115,7 @@
     } else {
         [_userSelected removeObject:button.titleLabel.text];
     }
-
+    
     // rebuild filter
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
     for (CustomButton  *b in _buttonList) {
@@ -124,7 +126,7 @@
     }
     _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     
-
+    
     
 }
 
@@ -136,7 +138,8 @@
 
 
 
-
+-(void)reset
+{}
 
 
 
@@ -144,7 +147,7 @@
 {
     for (CustomButton  *b in _buttonList) {
         b.selected = NO;
-       [b setAlpha:0.1f];
+        [b setAlpha:0.1f];
     }
     _selectedCount = 0;
     [_userSelected removeAllObjects];
