@@ -30,8 +30,11 @@
 
 -(void)filterTags:(NSArray*)tags
 {
+    
     [_filteredTags removeAllObjects];
     _filteredTags = [NSMutableArray arrayWithArray:tags];
+    
+    
     
     for (NSPredicate * pred in _filtersOwnPredicates) {
         [_filteredTags filterUsingPredicate:pred];
@@ -89,6 +92,7 @@
     if (_delegate && [_delegate respondsToSelector:@selector(onFilterChange:)]){
         [_delegate onFilterChange:self];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FILTER_TAG_CHANGE  object:self];
 }
 
 
@@ -163,7 +167,8 @@
     if (_delegate){
         [_delegate onFilterComplete:self];
     }
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FILTER_TAG_CHANGE  object:self];
+    
 }
 
 @end

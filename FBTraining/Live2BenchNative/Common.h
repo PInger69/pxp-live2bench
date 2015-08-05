@@ -61,6 +61,9 @@
 #define NOTIF_CLIP_SELECTED                 @"NOTIF_CLIP_SELECTED"
 #define NOTIF_REMOVE_INFORMATION            @"removeInformation"
 
+//Filter Request -- Colin
+#define NOTIF_FILTER_TAG_CHANGE             @"NOTIF_FILTER_TAG_CHANGE"
+#define NOTIF_FILTER_SLIDER_CHANGE          @"NOTIF_FILTER_SLIDER_CHANGE"
 
 //TypeDef for ToastObserver
 typedef NS_OPTIONS (NSInteger, toastType) {

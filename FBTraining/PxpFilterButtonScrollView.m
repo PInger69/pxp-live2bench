@@ -27,6 +27,7 @@
         _buttonMargin    = CGSizeMake(3, 3);
         _buttonList      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
+        [self setScrollEnabled:YES];
     }
     return self;
 }
@@ -46,6 +47,7 @@
         _buttonList      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
         
+        [self setScrollEnabled:YES];
     }
     return self;
 }
@@ -80,6 +82,7 @@
         [self addSubview:eventButton];
     }
 
+    [self setContentSize:CGSizeMake((colNum+1)*_buttonSize.width, self.frame.size.height)];
     
     
     // rebuild filter
@@ -114,7 +117,6 @@
     [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
     eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
-    
     eventButton.selected = [_userSelected containsObject:btnTxt];
     [self addSubview:eventButton];
     [_buttonList addObject:eventButton];
@@ -126,6 +128,7 @@
 // This calls a selector and tells the next object to update
 -(void)cellSelected:(id)sender
 {
+    
     CustomButton    * button   = (CustomButton *)sender;
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
     selectedCount              = 0;
@@ -143,6 +146,8 @@
     
     combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     [_parentFilter refresh];
+    
+    
 }
 
 -(void)deselect
@@ -162,6 +167,9 @@
     [tagsToFilter filterUsingPredicate:combo];
 }
 
+-(void)reset{
+    [self deselect];
+}
 
 
 @end
