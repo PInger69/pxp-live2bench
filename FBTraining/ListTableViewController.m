@@ -384,7 +384,7 @@
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
     NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
-    NSString *periodString = [NSString stringWithFormat:@"%ld", (long)tag.period];
+    NSString *periodString = tag.period;
     
     NSString *players;
     for (NSString *jersey in tag.players) {
