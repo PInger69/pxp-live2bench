@@ -215,11 +215,20 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)setPlayRate:(float)playRate {
+    for (PxpPlayer* player in self.contextPlayers) {
+        [player willChangeValueForKey:@"playRate"];
+        player->_playRate = playRate;
+        [player didChangeValueForKey:@"playRate"];
+    }
     _playRate = playRate;
     
     if (self.playing) {
         self.rate = playRate;
     }
+}
+
+- (BOOL)playing {
+    return self.rate != 0.0;
 }
 
 - (void)setRange:(CMTimeRange)range {
@@ -452,6 +461,10 @@ static CMClockRef _pxpPlayerMasterClock;
         });
     } else {
         [self.currentItem cancelPendingSeeks];
+        
+        if (CMTIME_IS_INDEFINITE(time)) {
+            time = kCMTimePositiveInfinity;
+        }
         
         if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
             [super seekToTime:time completionHandler:completionHandler];

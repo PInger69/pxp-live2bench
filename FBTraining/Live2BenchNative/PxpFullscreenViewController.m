@@ -21,6 +21,13 @@
     
     IBOutlet SeekButton * __nonnull _backwardSeekButton;
     IBOutlet SeekButton * __nonnull _forwardSeekButton;
+    
+    IBOutlet Slomo * __nonnull _slomoButton;
+    IBOutlet PxpFullscreenButton * __nonnull _fullscreenButton;
+    
+    CGRect _initialFrame;
+    
+    void * _playRateObserverContext;
 }
 
 @synthesize contentView = _contentView;
@@ -30,12 +37,23 @@
 @synthesize backwardSeekButton = _backwardSeekButton;
 @synthesize forwardSeekButton = _forwardSeekButton;
 
+@synthesize slomoButton = _slomoButton;
+@synthesize fullscreenButton = _fullscreenButton;
+
 - (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        
+        _playRateObserverContext = &_playRateObserverContext;
+        
+        [_playerViewController.multiView addObserver:self forKeyPath:@"context.mainPlayer.playRate" options:0 context:_playRateObserverContext];
     }
     return self;
+}
+
+- (void)dealloc {
+    [_playerViewController.multiView removeObserver:self forKeyPath:@"context.mainPlayer.playRate"];
 }
 
 - (void)viewDidLoad {
@@ -46,8 +64,7 @@
     _playerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [_playerContainer addSubview:_playerViewController.view];
     
-    [_backwardSeekButton addTarget:self action:@selector(backwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_forwardSeekButton addTarget:self action:@selector(forwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,12 +72,91 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)backwardSeekAction:(SeekButton *)sender {
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
+    if (context == _playRateObserverContext) {
+        self.slomoButton.slomoOn = _playerViewController.multiView.context.mainPlayer.playRate == 0.5;
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+#pragma mark - Getters / Setters
+
+- (void)setHidden:(BOOL)hidden {
+    [self setHidden:hidden animated:NO];
+}
+
+- (BOOL)hidden {
+    return self.view.hidden;
+}
+
+#pragma mark - Actions
+
+- (IBAction)backwardSeekAction:(SeekButton *)sender {
     [_playerViewController.multiView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
 }
 
-- (void)forwardSeekAction:(SeekButton *)sender {
+- (IBAction)forwardSeekAction:(SeekButton *)sender {
     [_playerViewController.multiView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
+}
+
+- (IBAction)slomoButtonAction:(Slomo *)sender {
+    sender.slomoOn = !sender.slomoOn;
+    _playerViewController.multiView.context.mainPlayer.playRate = sender.slomoOn ? 0.5 : 1.0;
+}
+
+- (IBAction)fullscreenButtonAction:(PxpFullscreenButton *)sender {
+    [self setHidden:YES animated:YES frame:_targetFrame];
+}
+
+#pragma mark - Gesture Recognizers
+
+- (void)dismissFullscreenGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
+    [self setHidden:YES animated:YES frame:_targetFrame];
+}
+
+#pragma mark - Public Methods
+
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated frame:(CGRect)frame {
+    if (self.view.hidden != hidden) {
+        
+        if (hidden) {
+            self.bottomBar.hidden = YES;
+            self.topBar.hidden = YES;
+            self.forwardSeekButton.hidden = YES;
+            self.backwardSeekButton.hidden = YES;
+        } else  {
+            self.view.frame = frame;
+            self.view.hidden = NO;
+            [self.view.superview bringSubviewToFront:self.view];
+        }
+        
+        [self.view layoutIfNeeded];
+        
+        [UIView animateWithDuration:animated ? 0.2 : 0.0 animations:^() {
+            if (hidden) {
+                self.view.frame = frame;
+            } else {
+                self.view.frame = self.view.superview.bounds;
+            }
+            
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            if (hidden) {
+                self.view.hidden = YES;
+            } else {
+                self.bottomBar.hidden = NO;
+                self.topBar.hidden = NO;
+                self.forwardSeekButton.hidden = NO;
+                self.backwardSeekButton.hidden = NO;
+            }
+        }];
+        
+    }
+}
+
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated {
+    [self setHidden:hidden animated:animated frame:_targetFrame];
 }
 
 /*

@@ -13,7 +13,9 @@
                 <outlet property="_bottomBar" destination="z7F-Cu-vmX" id="p3v-3V-1BP"/>
                 <outlet property="_contentView" destination="mJn-xy-KG2" id="9u4-0E-Nbw"/>
                 <outlet property="_forwardSeekButton" destination="COm-6p-rn2" id="RVK-jk-ZOl"/>
+                <outlet property="_fullscreenButton" destination="9Sl-tz-VhT" id="Aee-iY-umD"/>
                 <outlet property="_playerContainer" destination="2lU-0m-5H5" id="nS0-Z8-LiQ"/>
+                <outlet property="_slomoButton" destination="pV6-6l-QSl" id="7b9-8h-nc2"/>
                 <outlet property="_topBar" destination="5VE-8Z-xAP" id="v6K-6x-JAZ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -41,17 +43,36 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7F-Cu-vmX" userLabel="BottomBar">
                             <rect key="frame" x="0.0" y="645" width="1024" height="67.5"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pV6-6l-QSl" customClass="Slomo">
-                                    <rect key="frame" x="205.5" y="0.0" width="101.5" height="67.5"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pV6-6l-QSl" customClass="Slomo">
+                                    <rect key="frame" x="205" y="0.0" width="101.5" height="67.5"/>
                                     <animations/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="pV6-6l-QSl" secondAttribute="height" multiplier="3:2" id="Ffq-jg-ghE"/>
                                     </constraints>
+                                    <connections>
+                                        <action selector="slomoButtonAction:" destination="-1" eventType="touchUpInside" id="Yzs-oO-bxm"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Sl-tz-VhT" customClass="PxpFullscreenButton">
+                                    <rect key="frame" x="735" y="0.0" width="67.5" height="67.5"/>
+                                    <animations/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="9Sl-tz-VhT" secondAttribute="height" multiplier="1:1" id="UZP-HS-42d"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isFullscreen" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="fullscreenButtonAction:" destination="-1" eventType="touchUpInside" id="qi8-FR-eBQ"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <animations/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="pV6-6l-QSl" secondAttribute="bottom" id="2h0-b6-XZs"/>
+                                <constraint firstAttribute="bottom" secondItem="9Sl-tz-VhT" secondAttribute="bottom" id="D8z-sO-8ON"/>
+                                <constraint firstItem="9Sl-tz-VhT" firstAttribute="centerX" secondItem="z7F-Cu-vmX" secondAttribute="centerX" multiplier="1.5" id="U3f-FS-YEO"/>
+                                <constraint firstItem="9Sl-tz-VhT" firstAttribute="top" secondItem="z7F-Cu-vmX" secondAttribute="top" id="Wyv-G6-wBN"/>
                                 <constraint firstItem="pV6-6l-QSl" firstAttribute="top" secondItem="z7F-Cu-vmX" secondAttribute="top" id="nz0-f1-aTX"/>
                                 <constraint firstItem="pV6-6l-QSl" firstAttribute="centerX" secondItem="z7F-Cu-vmX" secondAttribute="centerX" multiplier="0.5" id="z4e-dw-Eiw"/>
                             </constraints>
@@ -66,6 +87,9 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="backward" value="YES"/>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="independent" value="NO"/>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="backwardSeekAction:" destination="-1" eventType="touchUpInside" id="LPz-YT-0zN"/>
+                            </connections>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="COm-6p-rn2" customClass="SeekButton">
                             <rect key="frame" x="836" y="645" width="68" height="68"/>
@@ -77,6 +101,9 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="backward" value="NO"/>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="independent" value="NO"/>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="forwardSeekAction:" destination="-1" eventType="touchUpInside" id="5he-en-OOu"/>
+                            </connections>
                         </view>
                     </subviews>
                     <animations/>
@@ -104,7 +131,7 @@
             <animations/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="mJn-xy-KG2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="55" id="1NS-Nz-Nxw"/>
+                <constraint firstItem="mJn-xy-KG2" firstAttribute="top" relation="lessThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="55" id="1NS-Nz-Nxw"/>
                 <constraint firstItem="mJn-xy-KG2" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="9de-nL-GFv"/>
                 <constraint firstAttribute="bottom" secondItem="mJn-xy-KG2" secondAttribute="bottom" id="TP3-h3-uW1"/>
                 <constraint firstAttribute="trailing" secondItem="mJn-xy-KG2" secondAttribute="trailing" id="sIN-1e-2KN"/>

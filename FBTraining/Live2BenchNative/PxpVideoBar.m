@@ -29,10 +29,7 @@ static UIImage * __nonnull _tagExtendEndImage;
     CustomButton * __nonnull _tagExtendStartButton;
     CustomButton * __nonnull _tagExtendEndButton;
     
-    Slomo * __nonnull _slomoButton;
-    PxpFullscreenButton * __nonnull _fullscreenButton;
-    
-    void *_rateObserverContext;
+    void *_playRateObserverContext;
 }
 
 + (void)initialize {
@@ -83,8 +80,8 @@ static UIImage * __nonnull _tagExtendEndImage;
     [self addSubview:_slomoButton];
     [self addSubview:_fullscreenButton];
     
-    _rateObserverContext = &_rateObserverContext;
-    [self addObserver:self forKeyPath:@"player.rate" options:0 context:_rateObserverContext];
+    _playRateObserverContext = &_playRateObserverContext;
+    [self addObserver:self forKeyPath:@"player.playRate" options:0 context:_playRateObserverContext];
     
     _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction:)];
     _displayLink.frameInterval = 4;
@@ -111,19 +108,15 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 - (void)dealloc {
     [_displayLink invalidate];
-    [self removeObserver:self forKeyPath:@"player.rate" context:_rateObserverContext];
+    [self removeObserver:self forKeyPath:@"player.playRate" context:_playRateObserverContext];
 }
 
 #pragma mark - Overrides
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
-    if (context == _rateObserverContext) {
-        if (_player.rate != 0) {
-            if (_player.rate != 1.0 && !_slomoButton.slomoOn) {
-                _player.rate = 1.0;
-            } else if (_player.rate != 0.5 && _slomoButton.slomoOn) {
-                _player.rate = 0.5;
-            }
+    if (context == _playRateObserverContext) {
+        if (_player) {
+            _slomoButton.slomoOn = _player.playRate < 1.0;
         }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -205,9 +198,7 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 - (void)slomoAction:(Slomo *)slomoButton {
     slomoButton.slomoOn = !slomoButton.slomoOn;
-    if (_player.rate) {
-        _player.rate = slomoButton.slomoOn ? 0.5 : 1.0;
-    }
+    _player.playRate = slomoButton.slomoOn ? 0.5 : 1.0;
 }
 
 #pragma mark - TagViewDataSource

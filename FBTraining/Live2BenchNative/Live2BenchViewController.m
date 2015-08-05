@@ -42,6 +42,7 @@
 #import "PxpPlayerMultiViewController.h"
 #import "PxpEventContext.h"
 #import "PxpVideoBar.h"
+#import "PxpFullscreenViewController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -68,7 +69,6 @@
     NSString                            * _eventType;                   // Sport or medical
     LiveButton                          * _gotoLiveButton;              // live button
     Live2BenchTagUIViewController       * _tagButtonController;         // side tags
-    L2BFullScreenViewController         * _fullscreenViewController;    // fullscreen class to manage all actions in full
     //ReusableBottomViewController        * _theBottomViewController;
     PipViewController                   * _pipController;
     Pip                                 * _pip;
@@ -111,6 +111,7 @@
     UIImageView *_rightArrow;
     
     PxpVideoBar *_videoBar;
+    PxpFullscreenViewController *_fullscreenViewController;
 }
 
 // Context
@@ -161,6 +162,7 @@ static void * eventContext      = &eventContext;
         _playerViewController = [[PxpPlayerMultiViewController alloc] init];
         [self addChildViewController:_playerViewController];
         _videoBar = [[PxpVideoBar alloc] init];
+        _fullscreenViewController = [[PxpFullscreenViewController alloc] init];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -529,14 +531,12 @@ static void * eventContext      = &eventContext;
 -(void)onEventChange
 {
     if (_appDel.encoderManager.liveEvent != nil){
-        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
         [_gotoLiveButton isActive:YES];
         [self switchPressed];
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
-        [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
@@ -544,7 +544,6 @@ static void * eventContext      = &eventContext;
         //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
-        [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
@@ -555,9 +554,11 @@ static void * eventContext      = &eventContext;
     }
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
     
-    self.playerViewController.multiView.context = [PxpEventContext contextWithEvent:_currentEvent];
+    PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
+    _playerViewController.multiView.context = context;
     _videoBar.player = self.playerViewController.multiView.context.mainPlayer;
     _videoBar.event = _currentEvent;
+    _fullscreenViewController.playerViewController.multiView.context = context;
 }
 
 
@@ -650,15 +651,12 @@ static void * eventContext      = &eventContext;
         {
             
             if (pinchGesture.scale >1) {
-                _fullscreenViewController.enable = YES;
                 [_bottomViewController.mainView setHidden:true];
                 [_tagButtonController setButtonColor:true];
                 [_pipController.multi fullScreen];
-                [self.view bringSubviewToFront:_fullscreenViewController.view];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 [telestration forceCloseTele];
-                _fullscreenViewController.enable = NO;
                 [_bottomViewController.mainView setHidden:false];
                 [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
@@ -753,12 +751,12 @@ static void * eventContext      = &eventContext;
     //![self.view addSubview:_videoBarViewController.view];
 
     //!_fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
-    [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
+    //_fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
+    //[_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
+    //[_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
 //    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
-    _fullscreenViewController.teleViewController =telestration;
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_fullscreenViewController.teleViewController =telestration;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
 
     self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
     
@@ -806,6 +804,10 @@ static void * eventContext      = &eventContext;
     _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     [self.view addSubview:_videoBar];
     
+    [self.view addSubview:_fullscreenViewController.view];
+    _fullscreenViewController.targetFrame = _playerViewController.view.frame;
+    
+    [_videoBar.fullscreenButton addTarget:self action:@selector(fullscreenButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     
 //    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
 //    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -830,14 +832,16 @@ static void * eventContext      = &eventContext;
 ////    [videoPlayer zoomIntoView: CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
 //}
 
-
+- (void)fullscreenButtonAction:(PxpFullscreenButton *)button {
+    [_fullscreenViewController setHidden:NO animated:YES];
+}
 
 
 -(void)onOpenTeleView:(TeleViewController *)tvc
 {
     [self.videoPlayer pause];
     self.videoPlayer.videoControlBar.hidden = YES;
-    [_fullscreenViewController setMode:L2BFullScreenModeTele];
+    //[_fullscreenViewController setMode:L2BFullScreenModeTele];
 }
 
 
@@ -847,7 +851,7 @@ static void * eventContext      = &eventContext;
     
     [self.videoPlayer play];
     self.videoPlayer.videoControlBar.hidden = NO;
-    [_fullscreenViewController setMode:_fullscreenViewController.prevMode];
+    //[_fullscreenViewController setMode:_fullscreenViewController.prevMode];
     
 }
 
@@ -878,7 +882,7 @@ static void * eventContext      = &eventContext;
     [super viewWillAppear:animated];
 
   
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
     
     if (!self.videoPlayer.feed && _encoderManager.currentEvent != nil) {
      [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
@@ -896,7 +900,7 @@ static void * eventContext      = &eventContext;
          [self.view addSubview:self.videoPlayer.view];
          
          //[self.videoPlayer play];
-         [self.view addSubview:_fullscreenViewController.view];
+         //[self.view addSubview:_fullscreenViewController.view];
 //         //add swipe gesture: swipe left: seek back ; swipe right: seek forward
 //         UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
 //         [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];

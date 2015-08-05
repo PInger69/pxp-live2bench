@@ -8,8 +8,9 @@
 
 #import "PxpGlowButton.h"
 
+IB_DESIGNABLE
 @interface PxpFullscreenButton : UIButton
 
-@property (assign, nonatomic) BOOL isFullscreen;
+@property (assign, nonatomic) IBInspectable BOOL isFullscreen;
 
 @end

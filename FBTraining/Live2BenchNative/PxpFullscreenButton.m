@@ -12,22 +12,6 @@
 
 @implementation PxpFullscreenButton
 
-- (nonnull instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self addTarget:self action:@selector(toggleFullscreenAction:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return self;
-}
-
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self addTarget:self action:@selector(toggleFullscreenAction:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return self;
-}
-
 - (void)tintColorDidChange {
     [super tintColorDidChange];
     [self setNeedsDisplay];
@@ -107,10 +91,6 @@
 
 - (void)setIsFullscreen:(BOOL)isFullscreen {
     self.selected = isFullscreen;
-}
-
-- (void)toggleFullscreenAction:(UIButton *)sender {
-    self.isFullscreen = !self.isFullscreen;
 }
 
 @end

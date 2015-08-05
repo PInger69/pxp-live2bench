@@ -310,7 +310,7 @@
     self.telestrationViewController.showsControls = NO;
     
     _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
-    _videoBar.player = _videoPlayer.avPlayer;
+    //_videoBar.player = _videoPlayer.avPlayer;
     
     [self.view addSubview:_videoBar];
 }
