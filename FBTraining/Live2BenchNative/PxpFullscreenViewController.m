@@ -61,11 +61,11 @@
     
     _playerViewController.view.frame = _playerContainer.bounds;
     _playerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    //[_playerContainer addSubview:_playerViewController.view];
+    [_playerContainer addSubview:_playerViewController.view];
     
     NCTriPinchGestureRecognizer *dismissFullscreedGestureRecognizer = [[NCTriPinchGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFullscreenGestureRecognized:)];
     
-    [_playerContainer addGestureRecognizer:dismissFullscreedGestureRecognizer];
+    [self.view addGestureRecognizer:dismissFullscreedGestureRecognizer];
     
     self.hidden = YES;
 }
