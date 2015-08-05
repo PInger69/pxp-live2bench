@@ -285,7 +285,15 @@ static UIImage * __nonnull _tagExtendEndImage;
 }
 
 - (nonnull NSArray *)tagsInTagView:(nonnull TagView *)tagView {
-    return _event.tags && _player ? _event.tags : @[];
+    NSMutableArray *arrayOfTagsToDisplay = [[NSMutableArray alloc]init];
+    for (Tag *tag in _event.tags ) {
+        if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) {
+            [arrayOfTagsToDisplay insertObject:tag atIndex:0];
+        }
+    }
+    
+    return arrayOfTagsToDisplay;
+    //return _event.tags && _player ? _event.tags : @[];
 }
 
 - (NSTimeInterval)selectedTimeInTagView:(nonnull TagView *)tagView {

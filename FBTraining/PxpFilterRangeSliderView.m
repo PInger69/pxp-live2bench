@@ -10,24 +10,28 @@
 
 @implementation PxpFilterRangeSliderView
 {
-    NSInteger endPoint;
-    NSInteger startPoint;
+    int endPoint;
+    int startPoint;
     NSPredicate * combo;
 }
 
 - (void)timeUpdate:(NSNotification*)note {
     NSDictionary *userInfo = note.userInfo;
-    startPoint = userInfo[@"startTime"];
-    endPoint = userInfo[@"endTime"];
+    startPoint = [userInfo[@"startTime"] intValue];
+    endPoint =  [userInfo[@"endTime"] intValue];
     
-    combo = [NSPredicate predicateWithFormat:@"%K < %d AND %K > %d", _sortByPropertyKey, endPoint,startPoint];
+    //NSLog(@"%d",startPoint);
+    //NSLog(@"%d",endPoint);
+    combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
     [_parentFilter refresh];
 }
 
 - (void)initPxpFilterRangeSlider{
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeUpdate:) name:NOTIF_FILTER_SLIDER_CHANGE object:nil];
-    //[_parentTab.view addSubview:self.rangeSlider];
+    
+    self.rangeSlider = [[PxpFilterRangeSlider alloc]initWithFrame:CGRectMake(0, self.frame.size.height/4, self.frame.size.width, self.frame.size.height/2)];
+    [self addSubview:self.rangeSlider];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -54,11 +58,6 @@
     return self;
 }
 
--(void)initSlider{
-    
-    self.rangeSlider = [[PxpFilterRangeSlider alloc]initWithFrame:CGRectMake(0, self.frame.size.height/4, self.frame.size.width, self.frame.size.height/2)];
-    [self addSubview:self.rangeSlider];
-}
 
 -(void)setEndTime:(NSInteger)endTime{
     [self.rangeSlider setHighestValue:endTime];
