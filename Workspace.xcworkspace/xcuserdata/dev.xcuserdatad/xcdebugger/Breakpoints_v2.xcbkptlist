@@ -243,6 +243,7 @@
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
+<<<<<<< HEAD
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/PxpVideoBar.m"
             timestampString = "460062922.283817"
@@ -412,6 +413,25 @@
             endingLineNumber = "93"
             landmarkName = "-displayClip:"
             landmarkType = "5">
+=======
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/PxpFilter.m"
+            timestampString = "460393238.604189"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
+            landmarkName = "-filteringComplete"
+            landmarkType = "5">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent
+                     consoleCommand = "po _tags">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+>>>>>>> d6d068c1726b4b081f9ff7eaf94ed4288e2c0b72
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

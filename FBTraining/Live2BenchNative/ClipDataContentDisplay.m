@@ -94,7 +94,7 @@ typedef enum : NSUInteger {
     float offset = (isLeague)?115:100;
     [self.ratingAndCommentingView.view removeFromSuperview];
     _ratingAndCommentingView = nil;
-    _ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, offset, self.frame.size.width, (self.frame.size.height+20)) andData: clip.rawData];
+    _ratingAndCommentingView = [[RatingAndCommentingField alloc] initWithFrame:CGRectMake(0, offset, self.frame.size.width, (self.frame.size.height+20)) andData: clip.localRawData];
     [self addSubview:self.ratingAndCommentingView.view];
 }
 
