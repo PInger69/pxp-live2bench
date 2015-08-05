@@ -162,9 +162,6 @@
 -(void)write {
     NSMutableDictionary *rawData = [[NSMutableDictionary alloc]initWithDictionary:self.rawData];
     [rawData addEntriesFromDictionary:self.localRawData];
-    
-    //[_localRawData addEntriesFromDictionary:self.rawData];
-    //_localRawData[@"event"] = _eventName;
     [rawData writeToFile: self.path atomically:YES];
 }
 

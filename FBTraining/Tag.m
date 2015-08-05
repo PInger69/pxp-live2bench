@@ -90,7 +90,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         _coachPick           = [tagData[@"coachpick"] boolValue];
        [self builtTelestration:tagData];
         if ([tagData objectForKey:@"period"]) {
-            self.period          = [tagData[@"period"]intValue];
+            self.period          = tagData[@"period"];
         }
 
         if ([tagData objectForKey:@"players"]) {
@@ -278,6 +278,14 @@ static NSMutableDictionary * openDurationTagsWithID;
         output[@"telestration"] = self.telestration.data;
     }
     
+    if (self.players) {
+        output[@"players"] = self.players;
+    }
+    
+    if (self.period) {
+        output[@"period"] = self.period;
+    }
+    
     return output;
     
 }
@@ -317,7 +325,7 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"url"         : (self.thumbnails)?self.thumbnails:@{},
              @"user"        : self.user,
              @"visitTeam"   : (self.visitTeam)?self.visitTeam:@"",
-             @"synced"      : [NSString stringWithFormat:@"%i", self.synced]
+             @"synced"      : [NSString stringWithFormat:@"%i", self.synced],
              //@"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              //@"requrl": (self.requestURL? self.requestURL: @"nil"),
              //@"feeds" : (self.feeds ? self.feeds: @"nil")
@@ -337,6 +345,14 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (self.telestration) {
         tagDict[@"telestration"] = self.telestration.data;
+    }
+    
+    if (self.players) {
+        tagDict[@"players"] = self.players;
+    }
+    
+    if (self.period) {
+        tagDict[@"period"] = self.period;
     }
     
     return tagDict;
@@ -383,7 +399,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     }
     
     if (self.period) {
-        tagData[@"period"] = [NSString stringWithFormat:@"%ld",(long)self.period];
+        tagData[@"period"] = self.period;
     }
     
     if (self.players) {

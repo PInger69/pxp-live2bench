@@ -114,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSDictionary  *feeds;
 //@property (strong, nonatomic) NSString *requestTime;
 @property (strong, nonatomic) NSString      *durationID;
-@property (assign, nonatomic) NSInteger     *period;
+@property (assign, nonatomic) NSString     *period;
 @property (strong,nonatomic) NSArray        *players;
 
 /// The telestration accociated with the tag.
