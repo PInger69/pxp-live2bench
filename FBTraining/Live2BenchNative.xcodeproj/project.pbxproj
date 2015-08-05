@@ -63,6 +63,7 @@
 		AE70C2111B5FF141008A9203 /* TagNameSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2101B5FF141008A9203 /* TagNameSelectTableViewController.m */; };
 		AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2161B600395008A9203 /* UIColor+Highlight.m */; };
 		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
+		AE7DCBD61B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */; };
 		AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */; };
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
 		AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8750AA1B612EBE0055A7C2 /* TeleSelectTableViewController.m */; };
@@ -566,6 +567,8 @@
 		AE70C2161B600395008A9203 /* UIColor+Highlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Highlight.m"; sourceTree = "<group>"; };
 		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
+		AE7DCBD41B726E5100BEE2EE /* NCTriPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCTriPinchGestureRecognizer.h; sourceTree = "<group>"; };
+		AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTriPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		AE7EDCE51B5806A400998CF6 /* AVAsset+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+Image.h"; sourceTree = "<group>"; };
 		AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+Image.m"; sourceTree = "<group>"; };
 		AE848FFF1B0D083D007A19E8 /* NCRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCRecordButton.h; sourceTree = "<group>"; };
@@ -2281,6 +2284,8 @@
 				D7EE84D419F19EBC00DEC82B /* EncoderClasses */,
 				AE8AA8711B629AED002457B0 /* NCGhostView.h */,
 				AE8AA8721B629AED002457B0 /* NCGhostView.m */,
+				AE7DCBD41B726E5100BEE2EE /* NCTriPinchGestureRecognizer.h */,
+				AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */,
 			);
 			path = Live2BenchNative;
 			sourceTree = "<group>";
@@ -3010,6 +3015,7 @@
 				D7A2E5B919AE226A00022795 /* UserSettings.m in Sources */,
 				D7A5E5A91A9F7A1F00E3D4DB /* DownloadItem.m in Sources */,
 				AEDD7C7A1B4AB717003C82F3 /* PxpPlayer.m in Sources */,
+				AE7DCBD61B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m in Sources */,
 				BD5D6BBC17FA01A100B422EE /* NSArray+BinarySearch.m in Sources */,
 				D7A9395D16ADA65E006CBAB2 /* Live2BenchViewController.m in Sources */,
 				D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */,

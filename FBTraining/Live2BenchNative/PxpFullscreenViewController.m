@@ -7,6 +7,7 @@
 //
 
 #import "PxpFullscreenViewController.h"
+#import "NCTriPinchGestureRecognizer.h"
 
 @interface PxpFullscreenViewController ()
 
@@ -24,8 +25,6 @@
     
     IBOutlet Slomo * __nonnull _slomoButton;
     IBOutlet PxpFullscreenButton * __nonnull _fullscreenButton;
-    
-    CGRect _initialFrame;
     
     void * _playRateObserverContext;
 }
@@ -47,7 +46,7 @@
         
         _playRateObserverContext = &_playRateObserverContext;
         
-        [_playerViewController.multiView addObserver:self forKeyPath:@"context.mainPlayer.playRate" options:0 context:_playRateObserverContext];
+        [_playerViewController.multiView addObserver:self forKeyPath:@"context.mainPlayer.playRate"options:0 context:_playRateObserverContext];
     }
     return self;
 }
@@ -62,7 +61,11 @@
     
     _playerViewController.view.frame = _playerContainer.bounds;
     _playerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [_playerContainer addSubview:_playerViewController.view];
+    //[_playerContainer addSubview:_playerViewController.view];
+    
+    NCTriPinchGestureRecognizer *dismissFullscreedGestureRecognizer = [[NCTriPinchGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFullscreenGestureRecognized:)];
+    
+    [_playerContainer addGestureRecognizer:dismissFullscreedGestureRecognizer];
     
     self.hidden = YES;
 }
@@ -111,8 +114,13 @@
 
 #pragma mark - Gesture Recognizers
 
-- (void)dismissFullscreenGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
-    [self setHidden:YES animated:YES frame:_targetFrame];
+- (void)dismissFullscreenGestureRecognized:(NCTriPinchGestureRecognizer *)recognizer {
+    
+    NSLog(@"s: %f, v: %f", recognizer.scale, recognizer.velocity);
+    
+    if (recognizer.velocity < -100.0) {
+        [self setHidden:YES animated:YES frame:_targetFrame];
+    }
 }
 
 #pragma mark - Public Methods

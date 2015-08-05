@@ -725,8 +725,8 @@ static void * eventContext      = &eventContext;
     self.telestrationViewController.delegate = self;
     self.telestrationViewController.timeProvider = self;
     
-    pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
-    [self.view addGestureRecognizer:pinchGesture];
+    //pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
+    //[self.view addGestureRecognizer:pinchGesture];
     
     swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
     swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
@@ -996,7 +996,7 @@ static void * eventContext      = &eventContext;
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
     [self viewWillAppear:true];
 }
 
