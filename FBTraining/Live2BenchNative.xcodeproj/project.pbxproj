@@ -257,6 +257,7 @@
 		D780B8951B66951100CB7ED8 /* RugbyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D780B8941B66951100CB7ED8 /* RugbyBottomViewController.m */; };
 		D781900C1A70649800B964B4 /* EncoderManagerActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */; };
 		D781900F1A70697D00B964B4 /* UserCenterActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D781900E1A70697D00B964B4 /* UserCenterActionPack.m */; };
+		D782A0271B715F3900495F22 /* PxpUserFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = D782A0261B715F3900495F22 /* PxpUserFilter.m */; };
 		D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF271AA4B0560068D260 /* CKCalendarView.m */; };
 		D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF291AA4B0560068D260 /* CKViewController.m */; };
 		D784EF3D1AA4B0570068D260 /* ARCalendarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF2B1AA4B0560068D260 /* ARCalendarTableViewCell.m */; };
@@ -912,6 +913,8 @@
 		D781900B1A70649800B964B4 /* EncoderManagerActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EncoderManagerActionPack.m; path = EncoderClasses/EncoderManagerActionPack.m; sourceTree = "<group>"; };
 		D781900D1A70697D00B964B4 /* UserCenterActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserCenterActionPack.h; path = Live2BenchNative/UserCenterActionPack.h; sourceTree = "<group>"; };
 		D781900E1A70697D00B964B4 /* UserCenterActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserCenterActionPack.m; path = Live2BenchNative/UserCenterActionPack.m; sourceTree = "<group>"; };
+		D782A0251B715F3900495F22 /* PxpUserFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpUserFilter.h; sourceTree = "<group>"; };
+		D782A0261B715F3900495F22 /* PxpUserFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpUserFilter.m; sourceTree = "<group>"; };
 		D784EF271AA4B0560068D260 /* CKCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCalendarView.m; sourceTree = "<group>"; };
 		D784EF281AA4B0560068D260 /* CKCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCalendarView.h; sourceTree = "<group>"; };
 		D784EF291AA4B0560068D260 /* CKViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKViewController.m; sourceTree = "<group>"; };
@@ -2032,6 +2035,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D782A0251B715F3900495F22 /* PxpUserFilter.h */,
+				D782A0261B715F3900495F22 /* PxpUserFilter.m */,
 				D743D47D1B696EF400533070 /* PxpFilterButtonScrollView.h */,
 				D743D47E1B696EF400533070 /* PxpFilterButtonScrollView.m */,
 				D743D4771B6950ED00533070 /* SamplePxpFilterModule.h */,
@@ -3126,6 +3131,7 @@
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
+				D782A0271B715F3900495F22 /* PxpUserFilter.m in Sources */,
 				AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */,
 				AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */,
 				AED484B91B56A23600769EEF /* PxpTelestrationCaptureArea.m in Sources */,
