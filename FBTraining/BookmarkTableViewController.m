@@ -119,7 +119,7 @@
     Clip *clip = self.tableData[indexPath.row];
     
     //[cell.eventDate setText: [Utility dateFromEvent: clip.rawData[@"event"]]];
-    [cell.eventDate setText: [Utility dateFromEvent: clip.event.name]];
+    [cell.eventDate setText: [Utility dateFromEvent: clip.eventName]];
     //[cell.tagTime setText: clip.rawData[ @"displaytime"]];
     [cell.tagTime setText: clip.displayTime];
     [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
