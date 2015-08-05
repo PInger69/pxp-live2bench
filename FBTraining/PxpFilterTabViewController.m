@@ -61,11 +61,9 @@
     self.modules = [[NSMutableArray alloc]initWithObjects:
                     _rightScrollView,_middleScrollView,_leftScrollView,_sliderView, nil];
     
-    //Test
+    _sliderView.sortByPropertyKey = @"time";
     
-    [_sliderView initSlider];
-    
-    [_sliderView setEndTime:(1000)];
+    [_sliderView setEndTime:(2000)];
     
     //Test RangeSlider
     
