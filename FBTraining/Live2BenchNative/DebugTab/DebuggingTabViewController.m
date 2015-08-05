@@ -27,7 +27,7 @@
 #import "Encoder.h"
 
 #import "FeedInspector.h"
-
+#import "PxpUserFilter.h"
 
 @interface DebuggingTabViewController ()
 {
@@ -147,7 +147,18 @@ static void *  debugContext = &debugContext;
     
     [FeedInspector investigate:someFeed2];
     
+    ////
     
+    
+    PxpUserFilter * testFilterUser = [[PxpUserFilter alloc]initWithFrame:CGRectMake(100, 600, 420,50)];
+    
+    
+    [testFilterUser buildButtonsWith:@[
+  @{@"user":@"alsdkfj",@"color":[UIColor redColor]},
+  @{@"user":@"aaaaa",@"color":[UIColor greenColor]},
+  @{@"user":@"bbbb",@"color":[UIColor blueColor]},
+  @{@"user":@"ccc",@"color":[UIColor yellowColor]}  ]];
+    [self.view addSubview:testFilterUser];
 }
 
 

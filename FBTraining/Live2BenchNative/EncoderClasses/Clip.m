@@ -20,26 +20,35 @@
  *
  *  @return <#return value description#>
  */
+
 -(instancetype)initWithPlistPath:(NSString*)aPath data:(NSDictionary*)data
 {
-    self = [super init];
+    self = [super initWithData:data event:nil];
     if (self) {
         
-        _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
-        _name               = [_rawData objectForKey:@"name"];
-        _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
-        _rating             = [[_rawData objectForKey:@"rating"] intValue];
-        _comment            = [_rawData objectForKey:@"comment"];
+        _localRawData         = [[NSMutableDictionary alloc]initWithDictionary:self.rawData];
+        //_rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
+        //_name               = [_rawData objectForKey:@"name"];
+        _clipId               = self.ID;
+        //_clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
+        //_rating             = [[_rawData objectForKey:@"rating"] intValue];
+        //_comment            = [_rawData objectForKey:@"comment"];
         _path               = aPath;
-        _videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
-        _event = _rawData[@"event"];
-        _displayTime = _rawData[@"displaytime"];
+        _videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
+        _localRawData[@"plistPath"] = aPath;
+        _localRawData[@"fileNamesByKey"] = _videosBySrcKey;
+        //_localRawData[@"fileNames"] = data[@"fileNames"];
+        _eventName = data[@"event"];
+        _localRawData[@"event"] = _eventName;
+        //_videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
+        //_event = _rawData[@"event"];
+        //_displayTime = _rawData[@"displaytime"];
         
-        _rawData[@"plistPath"] = aPath;
+       // _rawData[@"plistPath"] = aPath;
         
         
-        
-        [_rawData writeToFile:self.path atomically:YES];
+        [_localRawData writeToFile:self.path atomically:YES];
+        //[_rawData writeToFile:self.path atomically:YES];
         
         // just save
     }
@@ -56,17 +65,27 @@
  */
 -(instancetype)initWithDict:(NSDictionary*)data
 {
-    self = [super init];
+    self = [super initWithData:data event:nil];
+    //self = [super initWithData:data event:]
     if (self) {
-        _rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
-        _name               = [_rawData objectForKey:@"name"];
-        _clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
-        _rating             = [[_rawData objectForKey:@"rating"] intValue];
-        _comment            = [_rawData objectForKey:@"comment"];
-        _path               = [_rawData objectForKey:@"plistName"];
-        _videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
-        _event = _rawData[@"event"];
-        _displayTime = _rawData[@"displaytime"];
+         _localRawData         = [[NSMutableDictionary alloc]initWithDictionary:self.rawData];
+        //_rawData            = [NSMutableDictionary dictionaryWithDictionary:data];
+        //_name               = [_rawData objectForKey:@"name"];
+        _clipId              = self.ID;
+        //_clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
+        //_rating             = [[_rawData objectForKey:@"rating"] intValue];
+        //_comment            = [_rawData objectForKey:@"comment"];
+        _path               = [data objectForKey:@"plistPath"];
+        //_path               = [_rawData objectForKey:@"plistName"];
+        _videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
+        _localRawData[@"plistPath"] = _path;
+        _localRawData[@"fileNamesByKey"] = _videosBySrcKey;
+        _localRawData[@"fileNames"] = data[@"fileNames"];
+        _eventName = data[@"event"];
+        _localRawData[@"event"] = _eventName;
+        //_videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
+        //_event = _rawData[@"event"];
+        //_displayTime = _rawData[@"displaytime"];
         
         
         NSMutableArray * listOfVideos = [NSMutableArray arrayWithArray:[self videoFiles]];
@@ -94,15 +113,17 @@
             }
         }
         
+       
         
-        if (modFlag) [_rawData writeToFile:self.path atomically:YES];
+        if (modFlag) [_localRawData writeToFile:_path atomically:YES];
+        //if (modFlag) [_rawData writeToFile:self.path atomically:YES];
     }
     return self;
 }
 
 #pragma mark - custom getter and setter methods
 
--(void)setRating:(NSInteger)rating{
+/*-(void)setRating:(NSInteger)rating{
     _rating = rating;
     [self modClipData: @{@"rating": [NSNumber numberWithInteger: rating]}];
     [self write];
@@ -116,7 +137,7 @@
         [self modClipData: @{@"comment": @""}];
     }
     [self write];
-}
+}*/
 
 -(NSArray *)videoFiles {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -124,7 +145,7 @@
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
     NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
     
-    NSMutableArray *filePaths = [NSMutableArray arrayWithArray:_rawData[@"fileNames"]];
+    NSMutableArray *filePaths = [NSMutableArray arrayWithArray:_localRawData[@"fileNames"]];
     for (NSUInteger i = 0; i < filePaths.count; i++) {
         filePaths[i] = [path stringByAppendingPathComponent:filePaths[i]];
     }
@@ -133,22 +154,23 @@
 }
 
 -(void)write {
-    [_rawData writeToFile: self.path atomically:YES];
+    [_localRawData addEntriesFromDictionary:self.rawData];
+    [_localRawData writeToFile: self.path atomically:YES];
 }
 
 
 -(void)modClipData:(NSDictionary*)aDict
 {
-    NSMutableDictionary *mutableDict = [_rawData mutableCopy];
+    NSMutableDictionary *mutableDict = [_localRawData mutableCopy];
     for (NSString *key in [aDict allKeys]) {
         mutableDict[key] = aDict[key];
     }
-    _rawData = mutableDict;
+    _localRawData = mutableDict;
 }
 
 -(void)addSourceToClip:(NSDictionary*)aDict
 {
-    NSMutableDictionary *mutableDict = [_rawData mutableCopy];
+    NSMutableDictionary *mutableDict = [_localRawData mutableCopy];
     
     if (![mutableDict objectForKey:@"fileNames"]){
         [mutableDict setObject:[[NSMutableArray alloc]init] forKey:@"fileNames"];
@@ -187,10 +209,10 @@
     NSSet * uniqueFileNames = [[NSSet alloc]initWithArray:list];
     mutableDict[@"fileNames"]   = [uniqueFileNames allObjects];
     
-    _rawData = mutableDict;
+    _localRawData = mutableDict;
     
     @try {
-        [_rawData writeToFile:self.path atomically:YES];
+        [_localRawData writeToFile:self.path atomically:YES];
     }
     @catch (NSException *exception) {
         NSLog(@"EXCEPTION: %@", exception);
@@ -202,8 +224,9 @@
 -(void)breakClipId
 {
     
-    [_rawData setObject:  [NSNumber numberWithInteger:CFAbsoluteTimeGetCurrent()]   forKey:@"id"]  ;
-    _clipId = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
+    [_localRawData setObject:  [NSNumber numberWithInteger:CFAbsoluteTimeGetCurrent()]   forKey:@"id"]  ;
+    _clipId = self.ID;
+    //[NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
     [self write];
 }
 
@@ -222,7 +245,7 @@
     NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
     
     
-    for (NSString *fileName in [_rawData objectForKey:@"fileNames"]) {
+    for (NSString *fileName in [_localRawData objectForKey:@"fileNames"]) {
         NSString *filePath = [path stringByAppendingPathComponent: fileName];
         
         BOOL vidDestroyed = [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
@@ -236,7 +259,7 @@
 
 - (NSString *)globalID {
 //    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
-    return [NSString stringWithFormat:@"%@_%@", _event, _clipId];
+    return [NSString stringWithFormat:@"%@_%@", self.event.name, _clipId];
 }
 
 

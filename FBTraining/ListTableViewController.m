@@ -26,7 +26,6 @@
 
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) ListPopoverControllerWithImages *sourceSelectPopover;
-@property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 //@property (strong, nonatomic) NSMutableSet *setOfDeletingCells;
 //@property (strong, assign) UIButton *deleteButton;
 
@@ -329,16 +328,18 @@
     cell.backgroundView = nil;
     cell.selectedBackgroundView = [[UIView alloc]initWithFrame:CGRectZero];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
-    //cell.backgroundColor = [UIColor redColor];
+    cell.backgroundColor = [UIColor redColor];
     
     UIView* backgroundView = [ [ UIView alloc ] initWithFrame:cell.frame ];
     backgroundView.backgroundColor = [UIColor clearColor];
     backgroundView.layer.borderColor = [PRIMARY_APP_COLOR CGColor];
     cell.backgroundView = backgroundView;
-    
+
     //This is the condition where a cell that is selected is reused
     [cell.translucentEditingView removeFromSuperview];
     cell.translucentEditingView = nil;
+    //[cell.myContentView setBackgroundColor:[UIColor whiteColor]];
+    //[cell setBackgroundColor:[UIColor whiteColor]];
     
     // This condition is if the user is scrolling up and down and the
     // cell is selected
@@ -348,7 +349,8 @@
         [cell.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
         [cell.translucentEditingView setAlpha:0.3];
         [cell.translucentEditingView setUserInteractionEnabled:FALSE];
-        [cell addSubview:cell.translucentEditingView];
+        [cell insertSubview:cell.translucentEditingView belowSubview:cell.tagname];
+        //[cell.myContentView setBackgroundColor:[UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:0.3f]];
         
     }
     
@@ -382,18 +384,6 @@
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
     NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
-  
-    NSString *periodLabel;
-    LeagueTeam *team = [[tag.event.teams allValues]firstObject];
-    if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
-        periodLabel = NSLocalizedString(@"Half", nil);
-    }else if ([team.league.sport isEqualToString:@"Hockey"]){
-        periodLabel = NSLocalizedString(@"Period", nil);
-    }else if ([team.league.sport isEqualToString:@"Football"]){
-        periodLabel = NSLocalizedString(@"Quarter", nil);
-    }else{
-        periodLabel = NSLocalizedString(@"Period", nil);
-    }
     NSString *periodString = [NSString stringWithFormat:@"%ld", (long)tag.period];
     
     NSString *players;
@@ -406,10 +396,30 @@
     }
     
     
-    [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,periodLabel,periodString]];
+    LeagueTeam *team = [[tag.event.teams allValues]firstObject];
+    if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Half", nil),periodString]];
+        [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
+        [cell.playersNumberLabel setText:players];
+    }else if ([team.league.sport isEqualToString:@"Hockey"]){
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString]];
+        [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
+        [cell.playersNumberLabel setText:players];
+    }else if ([team.league.sport isEqualToString:@"Football"]){
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Quarter", nil),periodString]];
+        [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
+        [cell.playersNumberLabel setText:players];
+    }else{
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
+        [cell.tagPlayersView setHidden:true];
+    }
+    
+    
+    
+    
     //[cell.playersLabel setText:[NSString stringWithFormat:@"%@: %@",NSLocalizedString(@"Player(s):", nil),players]];
-    [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
-    [cell.playersNumberLabel setText:players];
+    
+    
     //[cell.playersNumberLabel setBackgroundColor:[UIColor greenColor]];
     
     [cell.tagtime setText: tag.displayTime];
@@ -469,6 +479,7 @@
         
         ListViewCell *lastSelectedCell = (ListViewCell*)[self.tableView cellForRowAtIndexPath: self.previouslySelectedIndexPath];
         lastSelectedCell.selected = NO;
+        [lastSelectedCell.myContentView setBackgroundColor:[UIColor whiteColor]];
         
         NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         [self.arrayOfCollapsableIndexPaths removeAllObjects];

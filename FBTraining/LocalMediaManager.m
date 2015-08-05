@@ -306,7 +306,7 @@ static LocalMediaManager * instance;
         // validate file names
         if ([self myClipPlistNameCheck:filename]) {
             [_bookmarkPlistNames addObject:filename]; // add names to clean list
-            NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:[bookmarkPath stringByAppendingPathComponent:filename]];
+            NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithContentsOfFile:[bookmarkPath stringByAppendingPathComponent:filename]];
             Clip * clipFromPlist = [[Clip alloc]initWithDict:dict];
             clipFromPlist.path = filename;
             [_clips setObject:clipFromPlist forKey:clipFromPlist.globalID];
@@ -488,6 +488,8 @@ static LocalMediaManager * instance;
         NSMutableDictionary *clipData = [NSMutableDictionary dictionaryWithDictionary:tagData];
         clipData[@"plistPath"] = bookmarkPlistPath;
         
+        //Event *encoderEvent = [[LocalEncoder getInstance] searchEventByName:event];
+        //clipData[@"event"] = encoderEvent;
         Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: clipData];
         [buildClip addSourceToClip:@{@"fileNames": @[aName]}];
         [_clips setObject:buildClip forKey:buildClip.globalID];

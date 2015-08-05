@@ -10,6 +10,22 @@
 
 @implementation UserColorButton
 
+
+- (id)initWithFrame:(CGRect)frame btnColor:(UIColor*)btnColor accessibilityLabel:(NSString*)aLabel
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+
+        [self setBackgroundColor:btnColor];
+        [self setTitle:aLabel forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+        [self setAccessibilityLabel:aLabel];
+        [self setSelected:NO];
+        
+    }
+    return self;
+}
+
 - (id)initWithFrame:(CGRect)frame btnText:(NSString*)btnTxt accessibilityLabel:(NSString*)aLabel
 {
     self = [super initWithFrame:frame];

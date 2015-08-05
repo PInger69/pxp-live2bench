@@ -24,6 +24,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 @synthesize type = _type;
 @synthesize durationID;
+@synthesize rating = _rating;
 
 + (void)initialize {
     if (self == [Tag self]) {
@@ -300,7 +301,7 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"deleted"     : @"1",
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
-             @"event"       : self.event.name,
+             @"event"       : (self.event.name)?self.event.name:@"",
              @"homeTeam"    : (self.homeTeam)?self.homeTeam:@"",
              @"id"          : [NSString stringWithFormat: @"%i", self.uniqueID],
              @"isLive"      : [NSString stringWithFormat: @"%i", self.isLive],

@@ -66,6 +66,7 @@
         //UIBarButtonItem *cancelClipButton = [[UIBarButtonItem alloc]initWithCustomView:cancelButtonView];
         UIBarButtonItem *cancelClipButton = [[UIBarButtonItem alloc]initWithImage:[self cancelClipImage] style:UIBarButtonItemStylePlain target:self action:@selector(cancelClip)];
         cancelClipButton.image = [[self cancelClipImage] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        cancelClipButton.width = 1.0f;
 
         [self setItems:@[playButtonItem,leftTimeLabelItem, self.timeSliderItem, rightTimeLabelItem, cancelClipButton]];
         
@@ -227,7 +228,7 @@
     cancelPath.lineCapStyle = kCGLineCapRound;
     cancelPath.lineWidth = 4.0;
     
-    [cancelPath moveToPoint:CGPointMake(1, 11)];
+    [cancelPath moveToPoint:CGPointMake(1, 1)];
     [cancelPath addLineToPoint: CGPointMake(19, 19)];
     
     [cancelPath moveToPoint:CGPointMake(19, 1)];

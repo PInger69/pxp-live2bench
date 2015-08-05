@@ -156,13 +156,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "460476592.186825"
+            filePath = "FBTraining/PxpUserFilter.m"
+            timestampString = "460483334.071274"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2139"
-            endingLineNumber = "2139"
-            landmarkName = "-startResponce:"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
+            landmarkName = "-cellSelected:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -172,13 +172,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "460476593.082632"
+            filePath = "FBTraining/PxpUserFilter.m"
+            timestampString = "460483370.485485"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2146"
-            endingLineNumber = "2146"
-            landmarkName = "-pauseResponce:"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "-buildButton:btnColor:accessibilityLabel:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -188,29 +188,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "460476593.506447"
+            filePath = "FBTraining/PxpUserFilter.m"
+            timestampString = "460483723.72622"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2152"
-            endingLineNumber = "2152"
-            landmarkName = "-resumeResponce:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "460476746.422918"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1486"
-            endingLineNumber = "1486"
-            landmarkName = "-authenticateResponse:"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "-cellSelected:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

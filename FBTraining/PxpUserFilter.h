@@ -17,6 +17,8 @@
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter;
 
+-(void)buildButtonsWith:(NSArray*)userColors;
+
 
 
 @end

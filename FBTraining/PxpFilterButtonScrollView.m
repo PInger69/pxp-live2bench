@@ -150,10 +150,12 @@
 {
     for (CustomButton  *b in _buttonList) {
         b.selected = NO;
+  
     }
     selectedCount = 0;
     [_userSelected removeAllObjects];
 }
+
 
 
 // Protocol methods
