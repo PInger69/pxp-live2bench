@@ -22,6 +22,7 @@ IB_DESIGNABLE
 @property (weak, nonatomic, nullable) Event *event;
 
 @property (strong, nonatomic, nullable) Tag *selectedTag;
+-(CGFloat)getSeekSpeed:(nonnull NSString *)direction;
 
 @property (readonly, strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
 @property (readonly, strong, nonatomic, nonnull) SeekButton *forwardSeekButton;

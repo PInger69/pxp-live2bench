@@ -661,7 +661,8 @@ static void * eventContext      = &eventContext;
                 [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
                 [self.view bringSubviewToFront:_videoBar];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
+                [_tagButtonController _fullScreen];
+                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
         return;
@@ -995,7 +996,7 @@ static void * eventContext      = &eventContext;
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
+    _tagButtonController.fullScreenViewController = _fullscreenViewController;
     [self viewWillAppear:true];
 }
 

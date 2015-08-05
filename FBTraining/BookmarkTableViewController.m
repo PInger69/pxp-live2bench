@@ -118,8 +118,10 @@
     BookmarkViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookmarkViewCell" forIndexPath:indexPath];
     Clip *clip = self.tableData[indexPath.row];
     
-    [cell.eventDate setText: [Utility dateFromEvent: clip.rawData[@"event"]]];
-    [cell.tagTime setText: clip.rawData[ @"displaytime"]];
+    //[cell.eventDate setText: [Utility dateFromEvent: clip.rawData[@"event"]]];
+    [cell.eventDate setText: [Utility dateFromEvent: clip.event.name]];
+    //[cell.tagTime setText: clip.rawData[ @"displaytime"]];
+    [cell.tagTime setText: clip.displayTime];
     [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
