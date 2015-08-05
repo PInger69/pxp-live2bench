@@ -8,27 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import "FilterItemProtocol.h"
+#import "Tag.h"
 
 /**
  Its kinda like the Event Class but is used to only manage the sources for local content
  */
 
-@interface Clip : NSObject<FilterItemProtocol>
+@interface Clip : Tag<FilterItemProtocol>
 
-@property (nonatomic,strong)            NSString       * name;
-@property (assign,nonatomic)            double         time;
-@property (assign,nonatomic)            int            duration;
+//@property (nonatomic,strong)            NSString       * name;
+//@property (assign,nonatomic)            double         time;
+//@property (assign,nonatomic)            int            duration;
 @property (nonatomic,strong)            NSString       * clipId;
-@property (nonatomic,assign)            NSInteger            rating;
-@property (nonatomic,strong)            NSString       * comment;
-@property (nonatomic,strong)            NSMutableDictionary   * rawData;
+//@property (nonatomic,assign)            NSInteger            rating;
+//@property (nonatomic,strong)            NSString       * comment;
+@property (nonatomic,strong)            NSMutableDictionary   * localRawData;
 @property (nonatomic,strong)            NSString       * path;
-@property (nonatomic,strong)            NSString       * user;
+//@property (nonatomic,strong)            NSString       * user;
 @property (nonatomic, readonly)         NSArray        * videoFiles;
 @property (nonatomic, strong)         NSMutableDictionary        * videosBySrcKey;
 
-@property (strong, nonatomic) NSString *event;
-@property (strong, nonatomic) NSString *displayTime;
+@property (strong, nonatomic) NSString *eventName;
+//@property (strong, nonatomic) NSString *displayTime;
 
 @property (readonly, nonatomic) NSString *globalID;
 

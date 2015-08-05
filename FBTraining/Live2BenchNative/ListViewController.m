@@ -156,6 +156,13 @@
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
         [self.listViewFullScreenViewController setMode:LISTVIEW_FULLSCREEN_MODE_DISABLE];
+        selectedTag = nil;
+        _videoBar.selectedTag = nil;
+        
+        [commentingField clear];
+        commentingField.enabled             = NO;
+        [self.listViewFullScreenViewController setTagName:@""];
+        
         [self.videoPlayer playFeed:nil];
     }else{
         _currentEvent = [((id <EncoderProtocol>) note.object) event];
@@ -176,7 +183,7 @@
     
     for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTags containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             }
@@ -191,6 +198,11 @@
                 [self.tagsToDisplay insertObject:tag atIndex:0];
             }
         }
+        
+        if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
+            [self.tagsToDisplay insertObject:tag atIndex:0];
+        }
+
     }
     
     Tag *toBeRemoved;
@@ -353,6 +365,9 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    self.listViewFullScreenViewController.enable = NO;
+    [self.view bringSubviewToFront:_videoBar];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){
@@ -570,7 +585,7 @@
     if ([button.accessibilityValue isEqualToString:@"extend"]) {
         
         //extend the duration 5 seconds by decreasing the start time 5 seconds
-        newStartTime = tagToBeModified.startTime - 5;
+        newStartTime = tagToBeModified.startTime - [_videoBar getSeekSpeed:@"backward"];
         //if the new start time is smaller than 0, set it to 0
         if (newStartTime <0) {
             newStartTime = 0;
@@ -578,7 +593,7 @@
         
     }else{
         //subtract the duration 5 seconds by increasing the start time 5 seconds
-        newStartTime = tagToBeModified.startTime + 5;
+        newStartTime = tagToBeModified.startTime + [_videoBar getSeekSpeed:@"backward"];
         
         //if the start time is greater than the endtime, it will cause a problem for tag looping. So set it to endtime minus one
         if (newStartTime > endTime) {
@@ -619,7 +634,7 @@
  
     if ([button.accessibilityValue isEqualToString:@"extend"]) {
            //increase end time by 5 seconds
-            endTime = endTime + 5;
+            endTime = endTime + [_videoBar getSeekSpeed:@"forward"];
             //if new end time is greater the duration of video, set it to the video's duration
             if (endTime > [self.videoPlayer durationInSeconds]) {
                 endTime = [self.videoPlayer durationInSeconds];
@@ -627,7 +642,7 @@
     
         }else{
             //subtract end time by 5 seconds
-            endTime = endTime - 5;
+            endTime = endTime - [_videoBar getSeekSpeed:@"forward"];
             //if the new end time is smaller than the start time,it will cause a problem for tag looping. So set it to start time plus one.
             if (endTime < startTime) {
                 endTime = startTime + 1;

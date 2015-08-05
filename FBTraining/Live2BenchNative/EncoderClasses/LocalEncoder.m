@@ -684,13 +684,17 @@ static LocalEncoder * instance;
 -(void)checkEncoder{
     if (self.encoderManager.masterEncoder) {
         
-        
         [[LocalMediaManager getInstance] assignEncoderVersionEvent:self.encoderManager.masterEncoder.allEvents];
         [self builtEncoderEvent];
         
         //[self checkLocalTags];
         //[self syncEvents];
     }
+}
+
+-(Event*)searchEventByName:(NSString*)eventName{
+    NSDictionary *dict = [self.encoderManager.masterEncoder.allEvents objectForKey:eventName];
+    return dict[@"non-local"];
 }
 
 // Check if all event that need to be build before updating tags is build

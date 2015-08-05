@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_END
 
 
 
--(nonnull instancetype) initWithData: (nonnull NSDictionary *)tagData event:(nonnull Event*)aEvent;
+-(nonnull instancetype) initWithData: (nonnull NSDictionary *)tagData event:(nullable Event*)aEvent;
 -(nonnull NSDictionary *) tagDictionary;
 -(nonnull NSDictionary *) modifiedData;
 -(nonnull NSDictionary *) makeTagData;

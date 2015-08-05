@@ -65,6 +65,7 @@
 @property (nonatomic,assign) BOOL isFinished;
 @property (nonatomic,assign) BOOL isSuccess;
 @property (nonatomic,weak)  id <ActionListItemDelegate>  delegate;
+-(Event*)searchEventByName:(NSString*)eventName;
 
 -(void)start;
 -(void)checkEncoder;

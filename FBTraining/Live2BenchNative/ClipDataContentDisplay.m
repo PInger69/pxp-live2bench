@@ -89,7 +89,7 @@ typedef enum : NSUInteger {
         [self addSubview:self.ratingAndCommentingView.view];
         return;
     }
-    [self makeText:[clip.rawData copy]];
+    [self makeText:[clip.localRawData copy]];
     
     float offset = (isLeague)?115:100;
     [self.ratingAndCommentingView.view removeFromSuperview];

@@ -294,14 +294,14 @@
     
     if (button.mode == SideTagButtonModeRegular) {
         
-        NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeNormal],@"time":[NSString stringWithFormat:@"%f",time],@"player":button.titleLabel.text};
+        NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeNormal],@"time":[NSString stringWithFormat:@"%f",time],@"player":@[button.titleLabel.text]};
         [super postTag:tagDic];
         
     }else if (button.mode == SideTagButtonModeToggle && !button.isOpen) {
         //Open Duration Tag
         [self disEnableButton];
         button.isOpen = YES;
-        NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],@"time":[NSString stringWithFormat:@"%f",time],@"player":button.titleLabel.text,@"dtagid": button.durationID};
+        NSDictionary *tagDic = @{@"name":name,@"period":[self currentPeriod], @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],@"time":[NSString stringWithFormat:@"%f",time],@"player":@[button.titleLabel.text],@"dtagid": button.durationID};
         [super postTag:tagDic];
         
     } else if (button.mode == SideTagButtonModeToggle && button.isOpen) {
