@@ -2058,11 +2058,11 @@
 			children = (
 				D78093AF1B6ACA25006488A9 /* TabView.h */,
 				D78093B01B6ACA25006488A9 /* TabView.m */,
+				D78093B11B6ACA25006488A9 /* TabView.xib */,
 				D767EEEB1B724CC600DDD815 /* PxpFilterRangeSlider.h */,
 				D767EEEC1B724CC600DDD815 /* PxpFilterRangeSlider.m */,
 				D767EEEE1B72560700DDD815 /* PxpFilterRangeSliderView.h */,
 				D767EEEF1B72560700DDD815 /* PxpFilterRangeSliderView.m */,
-				D78093B11B6ACA25006488A9 /* TabView.xib */,
 				D78093B21B6ACA25006488A9 /* PxpFilterTabController.h */,
 				D78093B31B6ACA25006488A9 /* PxpFilterTabController.m */,
 				D78093B41B6ACA25006488A9 /* PxpFilterTabViewController.h */,

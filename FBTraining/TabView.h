@@ -13,10 +13,12 @@
     UITabBar *_mainTabBar;
 }
 
-@property (strong, nonatomic) PxpFilter *pxpFilter;
+@property (strong, nonatomic, nullable) PxpFilter *pxpFilter;
 
-@property (strong, nonatomic) IBOutlet UITabBar *mainTabBar;
+@property (strong, nonatomic, nullable) IBOutlet UITabBar *mainTabBar;
 
-@property (strong, nonatomic) NSArray *tabs;
+@property (strong, nonatomic, nullable) NSArray *tabs;
+
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
 
 @end

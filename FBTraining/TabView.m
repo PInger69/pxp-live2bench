@@ -32,6 +32,14 @@
     return self;
 }
 
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        _tabs = [NSMutableArray arrayWithArray:tabs];
+    }
+    return self;
+}
+
 -(void)show:(NSUInteger)tabIndex{
     PxpFilterTabController *temp = _tabs[tabIndex];
 
@@ -60,7 +68,7 @@
             UITabBarItem *tabItem = [[UITabBarItem alloc] initWithTitle:vc.title image:vc.tabImage selectedImage:nil];
             //position adjustment for tabitem titles and images
             tabItem.imageInsets = UIEdgeInsetsMake(15, -50, -15, 50);
-            tabItem.titlePositionAdjustment = UIOffsetMake(20+40.0/_tabs.count,0);
+            tabItem.titlePositionAdjustment = UIOffsetMake(20 + 40.0/_tabs.count,0);
             [tabItems addObject:tabItem];
         };
         

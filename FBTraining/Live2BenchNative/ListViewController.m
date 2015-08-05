@@ -759,15 +759,16 @@
     [_pxpFilter addModules:@[test]];
     
     [_pxpFilter filterTags:[self.allTags copy]];*/
-    TabView *newOne = [[TabView alloc] init];
     
-    newOne.tabs = @[[[PxpFilterTabViewController alloc]init],[[PxpFilterTabViewController2 alloc]init]];
+    TabView *popupTabBar = [[TabView alloc] init];
     
-    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:newOne];
+    popupTabBar.tabs = @[[[PxpFilterTabViewController alloc]init],[[PxpFilterTabViewController2 alloc]init]];
     
-    newOne .pxpFilter = _pxpFilter;
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
     
-    popoverController.popoverContentSize = newOne.view.bounds.size;
+    popupTabBar.pxpFilter = _pxpFilter;
+    
+    popoverController.popoverContentSize = popupTabBar.view.bounds.size;
     [popoverController presentPopoverFromRect:self.view.frame
                                        inView:self.view
                      permittedArrowDirections:0
