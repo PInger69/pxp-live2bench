@@ -24,6 +24,7 @@ static NSMutableDictionary * openDurationTagsWithID;
 
 @synthesize type = _type;
 @synthesize durationID;
+@synthesize rating = _rating;
 
 + (void)initialize {
     if (self == [Tag self]) {
@@ -266,10 +267,10 @@ static NSMutableDictionary * openDurationTagsWithID;
     NSMutableDictionary *output = [NSMutableDictionary dictionary];
     
     output[@"coachpick"] = (self.coachPick?@"1":@"0");
-    output[@"comment"] = (self.comment?self.comment:@"");
+    output[@"comment"] = (_comment?_comment:@"");
     output[@"duration"] = [NSString stringWithFormat:@"%i",self.duration];
     output[@"starttime"] = [NSString stringWithFormat:@"%f",self.startTime];
-    output[@"rating"] = [NSString stringWithFormat:@"%ld", (long)self.rating];
+    output[@"rating"] = [NSString stringWithFormat:@"%ld", (long)_rating];
     output[@"type"] = [NSNumber numberWithInteger:self.type];
     output[@"time"] = [NSNumber numberWithInteger:self.time];
     
@@ -296,18 +297,18 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     [tagDict addEntriesFromDictionary: @{
              @"colour"      : self.colour,
-             @"comment"     : self.comment,
+             @"comment"     : (_comment)?_comment:@"",
              @"deleted"     : @"1",
              @"displaytime" : self.displayTime,
              @"duration"    : [NSString stringWithFormat: @"%i", self.duration],
-             @"event"       : self.event.name,
+             @"event"       : (self.event.name)?self.event.name:@"",
              @"homeTeam"    : (self.homeTeam)?self.homeTeam:@"",
              @"id"          : [NSString stringWithFormat: @"%i", self.uniqueID],
              @"isLive"      : [NSString stringWithFormat: @"%i", self.isLive],
              @"name"        : self.name,
              @"newTagID"    : [NSString stringWithFormat: @"%i",self.uniqueID],
              @"own"         : [NSString stringWithFormat: @"%i",self.own],
-             @"rating"      : [NSString stringWithFormat:@"%ld", (long)self.rating],
+             @"rating"      : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@"",
              @"sender"      : @".min",
              @"starttime"   : [NSString stringWithFormat:@"%f", self.startTime],
              @"success"     : @"1",
@@ -356,8 +357,8 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   @"user"        : self.user ? self.user : @"",
                                                                                   @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
                                                                                   @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
-                                                                                  @"comment"     : (self.comment)?self.comment:@"",
-                                                                                  @"rating"     : (self.rating)?[NSString stringWithFormat:@"%ld", (long)self.rating]:@""
+                                                                                  @"comment"     : (_comment)?_comment:@"",
+                                                                                  @"rating"     : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@""
                                                                                   
                                                                                   }];
     if (self.durationID) {

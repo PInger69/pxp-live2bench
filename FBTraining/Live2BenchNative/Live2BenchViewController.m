@@ -458,11 +458,11 @@ static void * eventContext      = &eventContext;
 }
 
 -(void)swipeLeftNoticed:(UISwipeGestureRecognizer *)swipeLeftRecognizer{
-//    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"backward"]];
+    [self.videoPlayer seekBy:[_videoBar getSeekSpeed:@"backward"]];
 }
 
 -(void)swipeRightNoticed:(UISwipeGestureRecognizer *)swipeRightRecognizer{
-//    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"forward"]];
+    [self.videoPlayer seekBy:[_videoBar getSeekSpeed:@"forward"]];
 }
 
 #pragma mark - Tap Gesture Recognizer methods
@@ -645,8 +645,10 @@ static void * eventContext      = &eventContext;
                 [_bottomViewController.mainView setHidden:true];
                 [_tagButtonController setButtonColor:true];
                 [_pipController.multi fullScreen];
+                //_tagButtonController.fullScreenViewController = _fullscreenViewController;
                 [self.view bringSubviewToFront:_fullscreenViewController.view];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
+                [_tagButtonController _fullScreen];
+                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 [telestration forceCloseTele];
                 _fullscreenViewController.enable = NO;
@@ -654,7 +656,8 @@ static void * eventContext      = &eventContext;
                 [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
                 [self.view bringSubviewToFront:_videoBar];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
+                [_tagButtonController _fullScreen];
+                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
             }
         }
         return;
@@ -974,7 +977,7 @@ static void * eventContext      = &eventContext;
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
+    _tagButtonController.fullScreenViewController = _fullscreenViewController;
     [self viewWillAppear:true];
 }
 

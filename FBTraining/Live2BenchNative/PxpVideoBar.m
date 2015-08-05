@@ -7,6 +7,7 @@
 //
 
 #import "PxpVideoBar.h"
+#import "LocalMediaManager.h"
 
 #import "TagView.h"
 #import "UIColor+Highlight.h"
@@ -182,9 +183,36 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 - (void)extendStartAction:(CustomButton *)button {
     if (_selectedTag) {
-        _selectedTag.startTime -= fabs(_backwardSeekButton.speed);
+        
+        if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
+            [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        }
+        
+        
+        float newStartTime = 0;
+        float endTime = _selectedTag.startTime + _selectedTag.duration;
+            
+        //extend the duration 5 seconds by decreasing the start time 5 seconds
+        newStartTime = _selectedTag.startTime - fabs(_backwardSeekButton.speed);
+        //if the new start time is smaller than 0, set it to 0
+        if (newStartTime <0) {
+            newStartTime = 0;
+        }
+        
+        //set the new duration to tag end time minus new start time
+        int newDuration = endTime - newStartTime;
+        
+        _selectedTag.startTime = newStartTime;
+        
+        if (newDuration > _selectedTag.duration) {
+            _selectedTag.duration = newDuration;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
+        }
+        
+        /*_selectedTag.startTime -= fabs(_backwardSeekButton.speed);
         _selectedTag.duration += fabs(_backwardSeekButton.speed);
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];*/
     }
 }
 
@@ -193,6 +221,32 @@ static UIImage * __nonnull _tagExtendEndImage;
         _selectedTag.duration += fabs(_forwardSeekButton.speed);
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
     }
+    
+    
+    if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
+        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
+        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+    }
+    
+    
+    float startTime = _selectedTag.startTime;
+    
+    float endTime = startTime + _selectedTag.duration;
+    
+    //increase end time by 5 seconds
+    endTime = endTime + 5;
+    //if new end time is greater the duration of video, set it to the video's duration
+    if (endTime > [self durationOfVideoPlayer]) {
+        endTime = [self durationOfVideoPlayer];
+    }
+    
+    //get the new duration
+    int newDuration = newDuration = endTime - startTime;
+    if (newDuration > _selectedTag.duration) {
+        _selectedTag.duration = newDuration;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
+    }
+
 }
 
 - (void)seekAction:(SeekButton *)seekButton {
@@ -213,6 +267,21 @@ static UIImage * __nonnull _tagExtendEndImage;
     CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
     NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
     return isfinite(duration) ? duration : 0.0;
+}
+
+-(NSTimeInterval)durationOfVideoPlayer{
+    CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
+    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
+    return isfinite(duration) ? duration : 0.0;
+}
+
+-(CGFloat)getSeekSpeed:(NSString *)direction{
+    if ([direction isEqualToString:@"forward"]) {
+        return _forwardSeekButton.speed;
+    }else if ([direction isEqualToString:@"backward"]){
+        return _backwardSeekButton.speed;
+    }
+    return 0;
 }
 
 - (nonnull NSArray *)tagsInTagView:(nonnull TagView *)tagView {

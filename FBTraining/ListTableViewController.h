@@ -27,6 +27,7 @@
 //@property (strong, nonatomic) NSMutableArray *tagsToDisplay;
 @property (assign, nonatomic) BOOL isEditable;
 @property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
-
+@property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
+- (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath;
 
 @end

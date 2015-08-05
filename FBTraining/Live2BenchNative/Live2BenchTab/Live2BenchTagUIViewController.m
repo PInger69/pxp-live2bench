@@ -549,9 +549,9 @@
 //        [_fullScreenViewController removeObserver:self forKeyPath:@"enable" context:fullScreenContext];
     }
    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_FULLSCREEN     object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_SMALLSCREEN    object:nil];
-     //_fullScreenViewController = fullScreenViewController;
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_FULLSCREEN     object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(_fullScreen) name:NOTIF_SMALLSCREEN    object:nil];
+    // _fullScreenViewController = fullScreenViewController;
     //[_fullScreenViewController.view setBackgroundColor:[UIColor whiteColor]];
     
     // add observers

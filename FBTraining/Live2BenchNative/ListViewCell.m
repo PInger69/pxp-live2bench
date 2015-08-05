@@ -123,7 +123,7 @@
     [self.myContentView addSubview:tagInfoText];
     
     playersLabel = [[UILabel alloc]initWithFrame:CGRectMake(tagname.frame.origin.x+1, CGRectGetMaxY(tagInfoText.frame)-5.0f, 70, 25.0f)];
-    [playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
+    //[playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
     [playersLabel setTextAlignment:NSTextAlignmentLeft];
     [playersLabel setFont:[UIFont defaultFontOfSize:17.0f]];
     [self.myContentView addSubview:playersLabel];
@@ -235,11 +235,20 @@
 //        [self.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
         [self.translucentEditingView setAlpha:0.3];
         [self.translucentEditingView setUserInteractionEnabled:FALSE];
-        [self addSubview: self.translucentEditingView];
-        
+        [self insertSubview:self.translucentEditingView belowSubview:self.tagname];
+        //[self.myContentView setBackgroundColor:[UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
+        //[self.myContentView setBackgroundColor:[UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
+        //[self.myContentView setAlpha:0.3];
+        //UIColor *color = [Utility ligherColorOf:self.tintColor];
+        //[self.myContentView setBackgroundColor:[UIColor orangeColor]];
+        //self.myContentView.backgroundColor = color;
     }else{
+        //self.myContentView.backgroundColor = [UIColor whiteColor];
         [self.translucentEditingView removeFromSuperview];
         self.translucentEditingView = nil;
+        //[self.myContentView setBackgroundColor:[UIColor whiteColor]];
+        //[self.myContentView setBackgroundColor:[UIColor whiteColor]];
+       // [self.myContentView setAlpha:1.0];
     }
 }
 
