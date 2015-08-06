@@ -18,16 +18,25 @@
 @end
 
 
+
+static TabView* sharedFilter;
+
 @implementation TabView
 {
     NSMutableArray *_tabs; //view controller of all tabs
 }
 
++(TabView*)sharedFilterTab
+{
+    if (!sharedFilter) sharedFilter= [[TabView alloc]init];
+    return sharedFilter;
+}
+
+
 - (id)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray array];
-        
     }
     return self;
 }

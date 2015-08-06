@@ -27,8 +27,11 @@
 @property (nonatomic,weak)      id <PxpFilterDelegate>  delegate;
 @property (nonatomic,strong)    NSMutableArray          * filtersOwnPredicates;
 @property (nonatomic,strong)    NSMutableArray          * filterModules;
-@property (nonatomic,strong)    NSArray                 * tags;
-@property (nonatomic,strong)    NSArray                 * unfilteredTags;
+
+@property (nonatomic,strong)    NSArray                 * filteredTags;     // This is all tags after user has filtered
+@property (nonatomic,strong)    NSArray                 * unfilteredTags;   // This is all tags minus the ignored tags from the predicate
+@property (nonatomic,strong)    NSArray                 * rawTags;          // This is all the tag with out filtering and ignoring
+
 
 // this will add a new list and clear out previous tags
 -(void)filterTags:(NSArray*)tags;

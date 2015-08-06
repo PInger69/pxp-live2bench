@@ -10,7 +10,6 @@
 #import "PxpFilterTabController.h"
 #import "PxpFilterButtonScrollView.h"
 #import "PxpFilterRangeSliderView.h"
-#import "RangeSlider.h"
 #import "PxpFilterUserButtons.h"
 
 @interface PxpFilterTabViewController: PxpFilterTabController
@@ -24,8 +23,5 @@
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterRangeSliderView *sliderView;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterUserButtons       *userButtons;
 
-//Test rangeSlider
-
-@property (strong, nonatomic, nullable) RangeSlider *rangeSlider;
 
 @end
