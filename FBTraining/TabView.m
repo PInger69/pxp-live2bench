@@ -7,8 +7,8 @@
 //
 
 #import "TabView.h"
-#import "PxpFilterTabViewController.h"
-#import "PxpFilterTabViewController2.h"
+#import "PxpFilterDefaultTabViewController.h"
+#import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterTabController.h"
 
 @interface TabView ()
@@ -21,13 +21,15 @@
 @implementation TabView
 {
     NSMutableArray *_tabs; //view controller of all tabs
+    NSInteger previousIndex;
 }
+
 
 - (id)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray array];
-        
+        previousIndex=-1;
     }
     return self;
 }
@@ -36,15 +38,23 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray arrayWithArray:tabs];
+        previousIndex=-1;
     }
     return self;
 }
 
 -(void)show:(NSUInteger)tabIndex{
     PxpFilterTabController *temp = _tabs[tabIndex];
-
+    if(previousIndex >= 0){
+        PxpFilterTabController *temp2 = _tabs[previousIndex];
+        [temp2.view removeFromSuperview];
+        [temp2 hide];
+    }
     [self.view insertSubview:temp.view belowSubview:_mainTabBar];
-        [temp setPxpFilter:self.pxpFilter];
+    [temp show];
+    [temp setPxpFilter:self.pxpFilter];
+    previousIndex = tabIndex;
+    
 }
 
 - (void)customizeTabBarAppearance{
