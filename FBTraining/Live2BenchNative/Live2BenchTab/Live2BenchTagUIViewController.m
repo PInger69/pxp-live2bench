@@ -359,6 +359,7 @@
 
 -(SideTagButton *)_buildButton:(NSDictionary*)dict
 {
+    
     SideTagButton * btn = [SideTagButton buttonWithType:UIButtonTypeCustom];
     [btn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
     [btn setTag:tagCount++];

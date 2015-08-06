@@ -3,7 +3,7 @@
 //  Test12
 //
 //  Created by colin on 7/29/15.
-//  Copyright (c) 2015 Cezary Wojcik. All rights reserved.
+//  Copyright (c) DEV. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -26,6 +26,7 @@
 - (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
 
 - (void)addTab:(nonnull PxpFilterTabController*) newTab;
+
 - (BOOL)removeTab:(nonnull PxpFilterTabController*) tabToRemove;
 
 @end
