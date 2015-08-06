@@ -392,8 +392,8 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     _highestValue = endTime;
     _lowestValue = startTime;
     
-    _lowerValue = (float)(startTime)/self.highestOriginalValue*10.0;
-    _upperValue = (float)(endTime)/self.highestOriginalValue*10.0;
+    _lowerValue = (!startTime)?   0:(float)(startTime)/self.highestOriginalValue*10.0;
+    _upperValue = (!endTime)?     0:(float)(endTime)/self.highestOriginalValue*10.0;
     [self setLayerFrames];
     [self update];
 }

@@ -62,7 +62,7 @@
     }
     [_buttonList removeAllObjects];
     [_userToColor removeAllObjects];
-    
+    _selectedCount = 0;
     
     for (NSInteger i=0; i<data.count; i++) {
         NSDictionary    * userInfo = data[i];
@@ -98,6 +98,8 @@
     CustomButton  *eventButton = [[UserColorButton alloc]initWithFrame:frame btnColor:btnColor accessibilityLabel:aLabel];
     [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:eventButton];
+    
+    [eventButton setSelected:[_userSelected containsObject:aLabel]];
     [_buttonList addObject:eventButton];
     return eventButton;
 }
@@ -139,7 +141,9 @@
 
 
 -(void)reset
-{}
+{
+    [self deselect];
+}
 
 
 
