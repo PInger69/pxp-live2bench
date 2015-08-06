@@ -242,8 +242,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "118"
             endingLineNumber = "118"
-            landmarkName = "-initWithAppDelegate:"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -537,8 +537,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "776"
             endingLineNumber = "776"
-            landmarkName = "-pressFilterButton"
-            landmarkType = "5">
+            landmarkName = "@implementation ListViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
