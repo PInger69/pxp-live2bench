@@ -29,8 +29,9 @@
 //End debug
 
 //test
-#import "PxpFilterTabViewController.h"
-#import "PxpFilterTabViewController2.h"
+#import "PxpFilterDefaultTabViewController.h"
+#import "PxpFilterHockeyTabViewController.h"
+//#import "PxpFilterFootballTabViewController.h"
 
 
 @interface ListViewController ()
@@ -752,30 +753,31 @@
 {
     
     [_pxpFilter filterTags:[self.allTags copy]];
-
-    TabView *newOne = [TabView sharedFilterTab];
+    TabView *popupTabBar = [TabView sharedFilterTab];
     
     // setFilter to this view. This is the default filtering for ListView
     // what ever is added to these predicates will be ignored in the filters raw tags
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
+    [_pxpFilter filterTags:[self.allTags copy]];
     
     NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
                                                                                    [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
                                                                                    ]];
-    
+
     [_pxpFilter addPredicates:@[ignoreThese]];
+    
+    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 
-    
-    if (!newOne.pxpFilter)          newOne.pxpFilter = _pxpFilter;
-    if ([newOne.tabs count]== 0)    newOne.tabs = @[[[PxpFilterTabViewController alloc]init],[[PxpFilterTabViewController2 alloc]init]];
-    
-    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:newOne];
+    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
     
 
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
     
-    popoverController.popoverContentSize = newOne.view.bounds.size;
+    popupTabBar.pxpFilter = _pxpFilter;
+    
+    popoverController.popoverContentSize = popupTabBar.view.bounds.size;
     [popoverController presentPopoverFromRect:self.view.frame
                                        inView:self.view
                      permittedArrowDirections:0

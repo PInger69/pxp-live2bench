@@ -19,4 +19,8 @@
 
 - (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabImage:(nullable UIImage *)tabImage;
 
+- (void)show;
+- (void)hide;
+
+
 @end

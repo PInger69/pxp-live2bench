@@ -26,6 +26,9 @@
 
 -(void)setEndTime:(NSInteger)endTime;
 
+- (void)show;
+- (void)hide;
+
 // Protocol
 -(void)filterTags:(NSMutableArray *)tagsToFilter;
 

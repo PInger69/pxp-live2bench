@@ -290,6 +290,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
+    //if(touch.view != self)return NO;
     _previousTouchPoint = [touch locationInView:self];
     
     
@@ -386,6 +387,16 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 }
 
 #pragma mark - Filter Component Methods
+
+-(void) setKnobWithStart:(NSInteger)startTime withEnd:(NSInteger)endTime{
+    _highestValue = endTime;
+    _lowestValue = startTime;
+    
+    _lowerValue = (float)(startTime)/self.highestOriginalValue*10.0;
+    _upperValue = (float)(endTime)/self.highestOriginalValue*10.0;
+    [self setLayerFrames];
+    [self update];
+}
 
 
 -(void)deselectAll

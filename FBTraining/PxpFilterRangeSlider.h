@@ -22,6 +22,10 @@
 @property (nonatomic) float knobBorderThickness;
 
 -(void)deselectAll;
+-(void)redrawLayers;
+-(void)setLayerFrames;
+
+-(void) setKnobWithStart:(NSInteger)startTime withEnd:(NSInteger)endTime;
 
 @end
 

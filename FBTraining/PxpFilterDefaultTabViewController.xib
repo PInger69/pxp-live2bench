@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.14"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PxpFilterTabViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PxpFilterDefaultTabViewController">
             <connections>
                 <outlet property="filteredTagLabel" destination="6e0-Wv-xDh" id="wOO-F9-gCH"/>
                 <outlet property="leftScrollView" destination="O5E-1I-2Iy" id="F7v-yk-0Dk"/>
@@ -13,7 +13,6 @@
                 <outlet property="rightScrollView" destination="WdZ-1l-n9C" id="o77-vJ-jbd"/>
                 <outlet property="sliderView" destination="LAt-rz-bdd" id="KF2-UO-kZ1"/>
                 <outlet property="totalTagLabel" destination="BSH-qC-JS5" id="fnM-ke-45o"/>
-                <outlet property="userButtons" destination="Rto-dn-97l" id="PNs-nM-5ea"/>
                 <outlet property="view" destination="VAj-9B-THu" id="Pge-IE-kyy"/>
             </connections>
         </placeholder>
@@ -70,7 +69,7 @@
                         <action selector="clearButtonPressed:" destination="-1" eventType="touchUpInside" id="CB7-IZ-0cU"/>
                     </connections>
                 </button>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rto-dn-97l" customClass="PxpFilterUserButtons">
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rto-dn-97l">
                     <rect key="frame" x="541" y="421" width="251" height="71"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
@@ -105,7 +104,7 @@
             </subviews>
             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="426" y="-168"/>
+            <point key="canvasLocation" x="590" y="-154"/>
         </view>
     </objects>
 </document>

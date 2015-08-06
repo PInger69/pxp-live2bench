@@ -48,6 +48,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)show{
+    
+}
+
+- (void)hide{
+    
+}
 /*
 #pragma mark - Navigation
 
