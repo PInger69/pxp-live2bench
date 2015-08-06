@@ -18,10 +18,19 @@
 @end
 
 
+
+static TabView* sharedFilter;
+
 @implementation TabView
 {
     NSMutableArray *_tabs; //view controller of all tabs
     PxpFilterTabController *previousTab;
+}
+
++(TabView*)sharedFilterTab
+{
+    if (!sharedFilter) sharedFilter= [[TabView alloc]init];
+    return sharedFilter;
 }
 
 
