@@ -160,6 +160,7 @@ static void *  downLoaderContext = &downLoaderContext;
         self.pause = NO;
         if (_IOAlertView) {
             if (![_IOAlertView display]) {
+                [_IOAlertView display];
                 [CustomAlertView removeAlert:_IOAlertView];
             }
         }
@@ -251,8 +252,9 @@ static void *  downLoaderContext = &downLoaderContext;
 }
 
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView viewFinished];
     [CustomAlertView removeAlert:_IOAlertView];
 }
 

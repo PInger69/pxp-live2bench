@@ -371,7 +371,7 @@ static void * encoderTagContext = &encoderTagContext;
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
     [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert show];
+    [alert showView];
 }
 
 
@@ -512,7 +512,7 @@ static void * encoderTagContext = &encoderTagContext;
     [alert setDelegate:self];
     [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert show];
+    [alert showView];
     
 }
 
@@ -621,11 +621,11 @@ static void * encoderTagContext = &encoderTagContext;
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
     [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert show];
+    [alert showView];
     
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
      if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
@@ -686,6 +686,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
         
     }
+    [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
     
     [self checkDeleteAllButton];
