@@ -458,19 +458,12 @@ static void * eventContext      = &eventContext;
 }
 
 -(void)swipeLeftNoticed:(UISwipeGestureRecognizer *)swipeLeftRecognizer{
-<<<<<<< HEAD
-//    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"backward"]];
-}
 
--(void)swipeRightNoticed:(UISwipeGestureRecognizer *)swipeRightRecognizer{
-//    [self.videoPlayer seekBy:[_videoBarViewController getSeekSpeed:@"forward"]];
-=======
     [self.videoPlayer seekBy:[_videoBar getSeekSpeed:@"backward"]];
 }
 
 -(void)swipeRightNoticed:(UISwipeGestureRecognizer *)swipeRightRecognizer{
     [self.videoPlayer seekBy:[_videoBar getSeekSpeed:@"forward"]];
->>>>>>> 044a2cfc7a79fae836cf98a99dad737a2d001654
 }
 
 #pragma mark - Tap Gesture Recognizer methods

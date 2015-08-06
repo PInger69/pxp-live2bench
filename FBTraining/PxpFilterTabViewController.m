@@ -36,7 +36,7 @@
 - (void)UIUpdate:(NSNotification*)note {
     PxpFilter * filter = (PxpFilter *) note.object;
     _filteredTagLabel.text = [NSString stringWithFormat:@"Filtered Tag(s): %lu",(unsigned long)filter.tags.count];
-    _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)2147483647*2+1];
+    _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)filter.unfilteredTags.count];
 }
 
 - (void)viewDidLoad {
@@ -67,6 +67,12 @@
     
     //Test RangeSlider
     
+    [_userButtons buildButtonsWith:@[
+                                       @{@"user":@"alsdkfj",@"color":[UIColor redColor]},
+                                       @{@"user":@"aaaaa",@"color":[UIColor greenColor]},
+                                       @{@"user":@"bbbb",@"color":[UIColor blueColor]},
+                                       @{@"user":@"ccc",@"color":[UIColor yellowColor]}  ]];
+
     // Do any additional setup after loading the view from its nib
     
 }

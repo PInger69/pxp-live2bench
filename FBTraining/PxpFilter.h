@@ -28,6 +28,7 @@
 @property (nonatomic,strong)    NSMutableArray          * filtersOwnPredicates;
 @property (nonatomic,strong)    NSMutableArray          * filterModules;
 @property (nonatomic,strong)    NSArray                 * tags;
+@property (nonatomic,strong)    NSArray                 * unfilteredTags;
 
 // this will add a new list and clear out previous tags
 -(void)filterTags:(NSArray*)tags;

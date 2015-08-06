@@ -13,7 +13,7 @@
 @implementation PxpFilter
 {
     NSMutableArray * _filteredTags;
-
+    NSMutableSet  * _unfilteredTagsSet;
 }
 
 - (instancetype)init
@@ -23,6 +23,7 @@
         _filteredTags           = [[NSMutableArray alloc]init];
         _filterModules          = [[NSMutableArray alloc]init];
         _filtersOwnPredicates   = [[NSMutableArray alloc]init];
+        _unfilteredTagsSet         = [[NSMutableSet alloc]init];
     }
     return self;
 }
@@ -30,7 +31,8 @@
 
 -(void)filterTags:(NSArray*)tags
 {
-    
+    [_unfilteredTagsSet removeAllObjects];
+    [_unfilteredTagsSet addObjectsFromArray:tags];
     [_filteredTags removeAllObjects];
     _filteredTags = [NSMutableArray arrayWithArray:tags];
     
@@ -55,7 +57,7 @@
 -(void)addTags:(NSArray*)tags
 {
     NSMutableArray * addedTags =  [[NSMutableArray alloc]initWithArray:tags];
-  
+    [_unfilteredTagsSet addObjectsFromArray:tags];
     for (NSPredicate * pred in _filtersOwnPredicates) {
         [addedTags filterUsingPredicate:pred];
     }
@@ -76,6 +78,7 @@
     for (Tag * tag  in tags) {
         if ([_filteredTags containsObject:tag]){
             [_filteredTags removeObject:tag];
+            [_unfilteredTagsSet removeObject:tag];
         }
     }
     [self filteringComplete];
@@ -169,6 +172,11 @@
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FILTER_TAG_CHANGE  object:self];
     
+}
+
+-(NSArray*)unfilteredTags
+{
+    return [_unfilteredTagsSet allObjects];
 }
 
 @end

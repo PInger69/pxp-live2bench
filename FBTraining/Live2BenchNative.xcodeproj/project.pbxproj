@@ -202,6 +202,7 @@
 		D74860FC1B5FDD3300CEC9DD /* TeamPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D74860FB1B5FDD3300CEC9DD /* TeamPlayer.m */; };
 		D74860FF1B5FDE4300CEC9DD /* LeagueTeam.m in Sources */ = {isa = PBXBuildFile; fileRef = D74860FE1B5FDE4300CEC9DD /* LeagueTeam.m */; };
 		D74861021B5FE59400CEC9DD /* League.m in Sources */ = {isa = PBXBuildFile; fileRef = D74861011B5FE59400CEC9DD /* League.m */; };
+		D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = D7493D4C1B7282710081075C /* PxpFilterUserButtons.m */; };
 		D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B75C1A72ADED00258D63 /* AppDelegateActionPack.m */; };
 		D749B7641A7931A200258D63 /* RJLVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7631A7931A200258D63 /* RJLVideoPlayer.m */; };
 		D749B7671A795AC000258D63 /* RJLVideoPlayerPlaybackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D749B7661A795AC000258D63 /* RJLVideoPlayerPlaybackView.m */; };
@@ -825,6 +826,8 @@
 		D74860FE1B5FDE4300CEC9DD /* LeagueTeam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeagueTeam.m; path = Live2BenchNative/LeagueTeam.m; sourceTree = "<group>"; };
 		D74861001B5FE59400CEC9DD /* League.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = League.h; path = Live2BenchNative/League.h; sourceTree = "<group>"; };
 		D74861011B5FE59400CEC9DD /* League.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = League.m; path = Live2BenchNative/League.m; sourceTree = "<group>"; };
+		D7493D4B1B7282710081075C /* PxpFilterUserButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterUserButtons.h; sourceTree = "<group>"; };
+		D7493D4C1B7282710081075C /* PxpFilterUserButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterUserButtons.m; sourceTree = "<group>"; };
 		D749B75B1A72ADED00258D63 /* AppDelegateActionPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegateActionPack.h; sourceTree = "<group>"; };
 		D749B75C1A72ADED00258D63 /* AppDelegateActionPack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegateActionPack.m; sourceTree = "<group>"; };
 		D749B7621A7931A200258D63 /* RJLVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RJLVideoPlayer.h; path = RJLVideoPlayerClasses/RJLVideoPlayer.h; sourceTree = "<group>"; };
@@ -2056,6 +2059,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7493D4B1B7282710081075C /* PxpFilterUserButtons.h */,
+				D7493D4C1B7282710081075C /* PxpFilterUserButtons.m */,
 				D78093AF1B6ACA25006488A9 /* TabView.h */,
 				D78093B01B6ACA25006488A9 /* TabView.m */,
 				D78093B11B6ACA25006488A9 /* TabView.xib */,
@@ -3236,6 +3241,7 @@
 				D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */,
 				D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
+				D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */,
 				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
 				AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,

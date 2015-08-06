@@ -84,7 +84,10 @@ typedef NS_ENUM (NSInteger,TagType){
 };
 
 @interface Tag : NSObject<FilterItemProtocol>
+{
 
+    NSInteger _rating;
+}
 NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) NSDictionary  *rawData;
