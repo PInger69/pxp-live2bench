@@ -21,7 +21,7 @@
 @implementation TabView
 {
     NSMutableArray *_tabs; //view controller of all tabs
-    NSInteger previousIndex;
+    PxpFilterTabController *previousTab;
 }
 
 
@@ -29,7 +29,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray array];
-        previousIndex=-1;
+        previousTab=nil;
     }
     return self;
 }
@@ -38,22 +38,26 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray arrayWithArray:tabs];
-        previousIndex=-1;
+        previousTab=nil;
     }
     return self;
 }
 
+-(BOOL)checkTabAvailability:(PxpFilterTabController*)targetTab{
+    return targetTab&&[_tabs indexOfObject:targetTab]!=NSNotFound;
+}
+
 -(void)show:(NSUInteger)tabIndex{
     PxpFilterTabController *temp = _tabs[tabIndex];
-    if(previousIndex >= 0){
-        PxpFilterTabController *temp2 = _tabs[previousIndex];
+    if([self checkTabAvailability:previousTab]){
+        PxpFilterTabController *temp2 = previousTab;
         [temp2.view removeFromSuperview];
         [temp2 hide];
     }
     [self.view insertSubview:temp.view belowSubview:_mainTabBar];
     [temp show];
     [temp setPxpFilter:self.pxpFilter];
-    previousIndex = tabIndex;
+    previousTab = temp;
     
 }
 
@@ -77,8 +81,12 @@
             [vc.tabImage drawInRect:CGRectMake(0, 0, 30, 30)];
             UITabBarItem *tabItem = [[UITabBarItem alloc] initWithTitle:vc.title image:vc.tabImage selectedImage:nil];
             //position adjustment for tabitem titles and images
-            tabItem.imageInsets = UIEdgeInsetsMake(15, -50, -15, 50);
-            tabItem.titlePositionAdjustment = UIOffsetMake(20 + 40.0/_tabs.count,0);
+            
+            CGSize textSize = [vc.title sizeWithAttributes:@{ NSFontAttributeName : [UIFont fontWithName:@"Arial" size:25.0f] }];
+            
+            tabItem.imageInsets = UIEdgeInsetsMake(15, -50-textSize.width/2.0, -15, 50+textSize.width/2.0);
+            tabItem.titlePositionAdjustment = UIOffsetMake(40.0/_tabs.count,0);
+            
             [tabItems addObject:tabItem];
         };
         
@@ -111,6 +119,15 @@
     [_tabs addObject:newTab];
     
     [self updateTabBar];
+}
+
+- (BOOL)removeTab: (PxpFilterTabController *)tabToRemove{
+    if([self checkTabAvailability:previousTab]){
+        [_tabs removeObject:tabToRemove];
+        return YES;
+    }else{
+        return NO;
+    }
 }
 
 #pragma mark - TabBarDelegate

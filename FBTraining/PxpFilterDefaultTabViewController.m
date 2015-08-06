@@ -25,7 +25,6 @@
         self.title = @"Default";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
 
     }
     
@@ -51,6 +50,7 @@
 
     
     //[_rightScrollView buildButtonsWith:[tempSet allObjects]];
+    
     [_rightScrollView buildButtonsWith:@[@"ABC",@"CBA"]];
     _rightScrollView.sortByPropertyKey = @"name";
     [_middleScrollView buildButtonsWith:@[@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c"]];
@@ -85,9 +85,6 @@
 }
 
 
-- (void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

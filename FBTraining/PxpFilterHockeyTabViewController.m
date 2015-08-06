@@ -24,7 +24,6 @@
         self.title = @"Hockey";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
         
     }
     
@@ -82,9 +81,6 @@
 }
 - (void)hide{
     [_sliderView hide];
-}
-- (void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning {

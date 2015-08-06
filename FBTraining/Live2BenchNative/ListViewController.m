@@ -31,7 +31,7 @@
 //test
 #import "PxpFilterDefaultTabViewController.h"
 #import "PxpFilterHockeyTabViewController.h"
-//#import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterFootballTabViewController.h"
 
 
 @interface ListViewController ()
@@ -763,7 +763,7 @@
     
     TabView *popupTabBar = [[TabView alloc] init];
     
-    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
+    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init], [[PxpFilterFootballTabViewController alloc]init]];
     
     UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
     
