@@ -768,9 +768,11 @@
 
     [_pxpFilter addPredicates:@[ignoreThese]];
     
-    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init], [[PxpFilterFootballTabViewController alloc]init]];
-    
+    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 
+    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
+    
+    
     UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
     
     popupTabBar.pxpFilter = _pxpFilter;

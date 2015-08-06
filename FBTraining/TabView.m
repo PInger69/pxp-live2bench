@@ -9,6 +9,7 @@
 #import "TabView.h"
 #import "PxpFilterDefaultTabViewController.h"
 #import "PxpFilterHockeyTabViewController.h"
+#import "PxpFilterFootballTabViewController.h"
 #import "PxpFilterTabController.h"
 
 @interface TabView ()
@@ -29,7 +30,7 @@ static TabView* sharedFilter;
 
 +(TabView*)sharedFilterTab
 {
-    if (!sharedFilter) sharedFilter= [[TabView alloc]init];
+    if (!sharedFilter) sharedFilter = [[TabView alloc]init];
     return sharedFilter;
 }
 
@@ -56,18 +57,26 @@ static TabView* sharedFilter;
     return targetTab&&[_tabs indexOfObject:targetTab]!=NSNotFound;
 }
 
+-(void)showTab:(PxpFilterTabController*)targetTab{
+    [self.view insertSubview:targetTab.view belowSubview:_mainTabBar];
+    [targetTab show];
+}
+
+-(void)hideTab:(PxpFilterTabController*)targetTab{
+    [targetTab.view removeFromSuperview];
+    [targetTab hide];
+}
+
 -(void)show:(NSUInteger)tabIndex{
-    PxpFilterTabController *temp = _tabs[tabIndex];
-    if([self checkTabAvailability:previousTab]){
-        PxpFilterTabController *temp2 = previousTab;
-        [temp2.view removeFromSuperview];
-        [temp2 hide];
-    }
-    [self.view insertSubview:temp.view belowSubview:_mainTabBar];
-    [temp show];
-    [temp setPxpFilter:self.pxpFilter];
-    previousTab = temp;
     
+    PxpFilterTabController *currentTab = _tabs[tabIndex];
+    
+    if([self checkTabAvailability:previousTab])
+        [self hideTab:previousTab];
+    
+    [self showTab:currentTab];
+    
+    previousTab = currentTab;
 }
 
 - (void)customizeTabBarAppearance{
@@ -89,8 +98,8 @@ static TabView* sharedFilter;
         for (PxpFilterTabController *vc in _tabs) {
             [vc.tabImage drawInRect:CGRectMake(0, 0, 30, 30)];
             UITabBarItem *tabItem = [[UITabBarItem alloc] initWithTitle:vc.title image:vc.tabImage selectedImage:nil];
-            //position adjustment for tabitem titles and images
             
+            //position adjustment for tabitem titles and images
             CGSize textSize = [vc.title sizeWithAttributes:@{ NSFontAttributeName : [UIFont fontWithName:@"Arial" size:25.0f] }];
             
             tabItem.imageInsets = UIEdgeInsetsMake(15, -50-textSize.width/2.0, -15, 50+textSize.width/2.0);
@@ -131,10 +140,19 @@ static TabView* sharedFilter;
 }
 
 - (BOOL)removeTab: (PxpFilterTabController *)tabToRemove{
-    if([self checkTabAvailability:previousTab]){
+    if([self checkTabAvailability:tabToRemove]){
         [_tabs removeObject:tabToRemove];
+        if(tabToRemove == previousTab){
+            [self hideTab:previousTab];
+            if(_tabs.count > 0){
+                previousTab = _tabs[0];
+                [self showTab:previousTab];
+            }
+        }
+        [self updateTabBar];
         return YES;
     }else{
+        [self updateTabBar];
         return NO;
     }
 }
@@ -143,7 +161,6 @@ static TabView* sharedFilter;
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
     NSUInteger itemIndex = [tabBar.items indexOfObject:item];
-    
     [self show:itemIndex];
 }
 

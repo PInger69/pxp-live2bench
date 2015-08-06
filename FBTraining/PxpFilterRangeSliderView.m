@@ -22,8 +22,6 @@
     startPoint = [userInfo[@"startTime"] intValue];
     endPoint =  [userInfo[@"endTime"] intValue];
     
-    //NSLog(@"%d",startPoint);
-    //NSLog(@"%d",endPoint);
     combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
     [_parentFilter refresh];
 }
