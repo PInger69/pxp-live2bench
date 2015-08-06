@@ -24,9 +24,9 @@
     if (self) {
         self.title = @"VC2";
         
-        self.modules = [[NSMutableArray alloc]initWithObjects:
+        /*self.modules = [[NSMutableArray alloc]initWithObjects:
                         @"A",@"B",@"A",
-                        @"B",@"C",nil];
+                        @"B",@"C",nil];*/
         tabImage =  [UIImage imageNamed:@"settingsButton"];
     }
     return self;

@@ -23,6 +23,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabImage = tabImage;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
     }
     return self;
 }
@@ -40,6 +41,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
     // Do any additional setup after loading the view.
 }
 
@@ -48,6 +51,18 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)show{
+    
+}
+
+- (void)hide{
+    
+}
+
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 /*
 #pragma mark - Navigation
 

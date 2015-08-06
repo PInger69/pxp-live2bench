@@ -26,7 +26,8 @@
 
 -(void)setEndTime:(NSInteger)endTime;
 
--(void)initSlider;
+- (void)show;
+- (void)hide;
 
 // Protocol
 -(void)filterTags:(NSMutableArray *)tagsToFilter;

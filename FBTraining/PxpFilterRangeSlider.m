@@ -205,8 +205,8 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
         self.rightLabel = [[UILabel alloc]init];
         self.leftLabel = [[UILabel alloc]init];
         
-        [self.leftLabel setTextColor:[UIColor whiteColor]];
-        [self.rightLabel setTextColor:[UIColor whiteColor]];
+        [self.leftLabel setTextColor:[UIColor orangeColor]];
+        [self.rightLabel setTextColor:[UIColor orangeColor]];
         
         [self.layer addSublayer:self.rightLabel.layer];
         [self.layer addSublayer:self.leftLabel.layer];
@@ -243,20 +243,36 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     
     //Checking to make sure the 2 labels do not collide
     
-    if ( (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x) < 30){
-        float difference = 30 - (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x);
+    float labelPositionOffset = 20; //offset can be used to adjust the relative position of the two labels
+    float relativeDistance = 30;
+    if ( (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x) < relativeDistance + labelPositionOffset * 2){
         
-        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2 + difference/2, -20, 80, 20)];
+        //Checking to make sure the labels are not out of the view
+        
+        float positionThreshold = 50;
+        
+        float dynamicPositionOffset = 0;
+        
+        if(_upperKnobLayer.frame.origin.x < positionThreshold)dynamicPositionOffset += positionThreshold - _upperKnobLayer.frame.origin.x;
+        
+        if(self.frame.size.width - _knobWidth -_lowerKnobLayer.frame.origin.x < positionThreshold)dynamicPositionOffset += (self.frame.size.width - _knobWidth - _lowerKnobLayer.frame.origin.x) - positionThreshold;
+        
+        dynamicPositionOffset /= 2;
+        
+        float difference = labelPositionOffset*2 + relativeDistance - (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x);
+        
+        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2 + difference/2 - labelPositionOffset + dynamicPositionOffset, -20, 80, 20)];
         [self.rightLabel setNeedsDisplay];
         
-        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53 - difference/2, -20, 80, 20)];
+        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53 - difference/2 + labelPositionOffset + dynamicPositionOffset, -20, 80, 20)];
         [self.leftLabel setNeedsDisplay];
         
     } else{
-        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2,  -20, 80, 20)];
+        
+        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2- labelPositionOffset,  -20, 80, 20)];
         [self.rightLabel setNeedsDisplay];
         
-        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53, -20, 80, 20)];
+        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53 + labelPositionOffset, -20, 80, 20)];
         [self.leftLabel setNeedsDisplay];
     }
     
@@ -274,6 +290,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
+    //if(touch.view != self)return NO;
     _previousTouchPoint = [touch locationInView:self];
     
     
@@ -371,6 +388,16 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 
 #pragma mark - Filter Component Methods
 
+-(void) setKnobWithStart:(NSInteger)startTime withEnd:(NSInteger)endTime{
+    _highestValue = endTime;
+    _lowestValue = startTime;
+    
+    _lowerValue = (float)(startTime)/self.highestOriginalValue*10.0;
+    _upperValue = (float)(endTime)/self.highestOriginalValue*10.0;
+    [self setLayerFrames];
+    [self update];
+}
+
 
 -(void)deselectAll
 {
@@ -378,9 +405,15 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     [self update];
 }
 
+-(void)notify{
+    NSInteger start = (_lowerValue/10) * self.highestOriginalValue;
+    NSInteger end = (_upperValue/10) * self.highestOriginalValue;
+    NSDictionary * userInfo = @{ @"startTime" : [NSNumber numberWithInteger:start], @"endTime" : [NSNumber numberWithInteger:end]};
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FILTER_SLIDER_CHANGE object:self userInfo:userInfo];
+}
+
 -(void)update{
-    /*NSDictionary * userInfo = @{ @"startTime" : [NSNumber numberWithInteger:(_lowerValue/10) * self.highestOriginalValue],@"endTime" : [NSNumber numberWithInteger:(_upperValue/10) * self.highestOriginalValue] };
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FILTER_SLIDER_CHANGE object:self userInfo:userInfo];*/
+    [self notify];
 }
 
 /**

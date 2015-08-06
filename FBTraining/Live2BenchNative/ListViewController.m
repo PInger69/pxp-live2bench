@@ -29,8 +29,9 @@
 //End debug
 
 //test
-#import "PxpFilterTabViewController.h"
-#import "PxpFilterTabViewController2.h"
+#import "PxpFilterDefaultTabViewController.h"
+#import "PxpFilterHockeyTabViewController.h"
+#import "PxpFilterFootballTabViewController.h"
 
 
 @interface ListViewController ()
@@ -750,24 +751,31 @@
 
 - (void)pressFilterButton
 {
-    /*if (!test)test = [[PxpFilterButtonScrollView alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
     
-    [self.view addSubview:test];
-    [test buildButtonsWith:@[@"PP",@"PK",@"HEAD SHOT",@"COACH CALL"]];
-    test.parentFilter = _pxpFilter;
-    test.sortByPropertyKey = @"name";
-    [_pxpFilter addModules:@[test]];
+    [_pxpFilter filterTags:[self.allTags copy]];
+    TabView *popupTabBar = [TabView sharedFilterTab];
     
-    [_pxpFilter filterTags:[self.allTags copy]];*/
-    TabView *newOne = [[TabView alloc] init];
+    // setFilter to this view. This is the default filtering for ListView
+    // what ever is added to these predicates will be ignored in the filters raw tags
+    _pxpFilter.delegate = self;
+    [_pxpFilter removeAllPredicates];
+    [_pxpFilter filterTags:[self.allTags copy]];
     
-    newOne.tabs = @[[[PxpFilterTabViewController alloc]init],[[PxpFilterTabViewController2 alloc]init]];
+    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                   ]];
+
+    [_pxpFilter addPredicates:@[ignoreThese]];
     
-    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:newOne];
+    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init], [[PxpFilterFootballTabViewController alloc]init]];
     
-    newOne .pxpFilter = _pxpFilter;
+
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
     
-    popoverController.popoverContentSize = newOne.view.bounds.size;
+    popupTabBar.pxpFilter = _pxpFilter;
+    
+    popoverController.popoverContentSize = popupTabBar.view.bounds.size;
     [popoverController presentPopoverFromRect:self.view.frame
                                        inView:self.view
                      permittedArrowDirections:0
@@ -780,13 +788,18 @@
 // Pxp
 -(void)onFilterComplete:(PxpFilter*)filter
 {
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
 
-
+    [_tableViewController reloadData];
 }
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
     [filter filterTags:self.allTags];
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    [_tableViewController reloadData];
 }
 
 @end

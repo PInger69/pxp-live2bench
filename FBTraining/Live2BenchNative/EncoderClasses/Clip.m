@@ -21,7 +21,7 @@
  *  @return <#return value description#>
  */
 
-@synthesize rating = _rating;
+//@synthesize rating = _rating;
 @synthesize comment = _comment;
 -(instancetype)initWithPlistPath:(NSString*)aPath data:(NSDictionary*)data
 {

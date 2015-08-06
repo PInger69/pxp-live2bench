@@ -243,20 +243,22 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     
     //Checking to make sure the 2 labels do not collide
     
-    if ( (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x) < 30){
-        float difference = 30 - (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x);
+    float labelPositionOffset = 20; //offset can be used to adjust the relative position of the two labels (Colin)
+    
+    if ( (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x) < 30 + labelPositionOffset*2){
+        float difference = 30 + labelPositionOffset*2 - (_upperKnobLayer.frame.origin.x - _lowerKnobLayer.frame.origin.x);
         
-        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2 + difference/2, -20, 80, 20)];
+        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2 + difference/2 - labelPositionOffset, -20, 80, 20)];
         [self.rightLabel setNeedsDisplay];
         
-        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53 - difference/2, -20, 80, 20)];
+        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53 - difference/2 + labelPositionOffset, -20, 80, 20)];
         [self.leftLabel setNeedsDisplay];
         
     } else{
-        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2,  -20, 80, 20)];
+        [self.rightLabel setFrame:CGRectMake(upperKnobCentre - _knobWidth / 2- labelPositionOffset,  -20, 80, 20)];
         [self.rightLabel setNeedsDisplay];
         
-        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53, -20, 80, 20)];
+        [self.leftLabel setFrame:CGRectMake(lowerKnobCentre - _knobWidth / 2  - 53 + labelPositionOffset, -20, 80, 20)];
         [self.leftLabel setNeedsDisplay];
     }
     

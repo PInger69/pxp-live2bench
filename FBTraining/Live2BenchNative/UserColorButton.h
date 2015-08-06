@@ -9,7 +9,7 @@
 #import "CustomButton.h"
 
 @interface UserColorButton : CustomButton
-
+- (id)initWithFrame:(CGRect)frame btnColor:(UIColor*)btnColor accessibilityLabel:(NSString*)aLabel;
 - (id)initWithFrame:(CGRect)frame btnText:(NSString*)btnTxt accessibilityLabel:(NSString*)aLabel;
 
 @end

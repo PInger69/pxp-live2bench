@@ -12,22 +12,26 @@
 {
     NSInteger endPoint;
     NSInteger startPoint;
+    NSInteger highestValue;
     NSPredicate * combo;
 }
 
 - (void)timeUpdate:(NSNotification*)note {
+    if(note.object != self.rangeSlider)return;
     NSDictionary *userInfo = note.userInfo;
-    startPoint = userInfo[@"startTime"];
-    endPoint = userInfo[@"endTime"];
+    startPoint = [userInfo[@"startTime"] intValue];
+    endPoint =  [userInfo[@"endTime"] intValue];
     
-    combo = [NSPredicate predicateWithFormat:@"%K < %d AND %K > %d", _sortByPropertyKey, endPoint,startPoint];
+    //NSLog(@"%d",startPoint);
+    //NSLog(@"%d",endPoint);
+    combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
     [_parentFilter refresh];
 }
 
 - (void)initPxpFilterRangeSlider{
-    
+    startPoint = 0;
+    endPoint = -1;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeUpdate:) name:NOTIF_FILTER_SLIDER_CHANGE object:nil];
-    //[_parentTab.view addSubview:self.rangeSlider];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -54,14 +58,27 @@
     return self;
 }
 
--(void)initSlider{
-    
+-(void)show{
     self.rangeSlider = [[PxpFilterRangeSlider alloc]initWithFrame:CGRectMake(0, self.frame.size.height/4, self.frame.size.width, self.frame.size.height/2)];
+    [self.rangeSlider setHighestValue:highestValue];
+    if(startPoint > endPoint) endPoint = startPoint; //making sure endPoint is greater or equal to startPoint
+    [self.rangeSlider setKnobWithStart:startPoint withEnd:endPoint];
     [self addSubview:self.rangeSlider];
+    
 }
 
+-(void)hide{
+    [self.rangeSlider removeFromSuperview];
+    self.rangeSlider = nil;
+}
+
+
 -(void)setEndTime:(NSInteger)endTime{
-    [self.rangeSlider setHighestValue:endTime];
+    if(self.rangeSlider)
+        [self.rangeSlider setHighestValue:endTime];
+    else
+        highestValue = endTime;
+    if(endPoint < 0)endPoint = highestValue; //If the endpoint hasn't been initialized initialize now
 }
 
 //protocol
@@ -74,6 +91,7 @@
     if(combo)
         [tagsToFilter filterUsingPredicate:combo];
 }
+
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
