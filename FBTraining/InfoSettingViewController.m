@@ -112,9 +112,9 @@
         errorView = [[CustomAlertView alloc]
                      initWithTitle: @"myplayXplay"
                      message: @"Please connect to the internet to log out."
-                     delegate: nil
+                     delegate: self
                      cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [errorView show];
+        [errorView showView];
     }else{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
         CustomAlertView *alertView;
@@ -124,7 +124,7 @@
                      delegate: self
                      cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
         alertView.accessibilityValue = @"appLogOut";
-        [alertView show];
+        [alertView showView];
     }
 }
 
@@ -185,11 +185,12 @@
 
 #pragma mark - UIAlertViewDelegate
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Yes"]) {
         //logout the user
         [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
     }
+    [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
 }
 
