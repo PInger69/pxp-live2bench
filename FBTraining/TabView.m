@@ -75,7 +75,7 @@ static TabView* sharedFilter;
         [self hideTab:previousTab];
     
     [self showTab:currentTab];
-    
+    [currentTab setPxpFilter:_pxpFilter];
     previousTab = currentTab;
 }
 

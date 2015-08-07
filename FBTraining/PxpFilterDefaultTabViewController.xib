@@ -104,7 +104,7 @@
             </subviews>
             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="590" y="-154"/>
+            <point key="canvasLocation" x="833" y="-46"/>
         </view>
     </objects>
 </document>
