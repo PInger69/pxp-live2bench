@@ -65,7 +65,7 @@
     
     NCTriPinchGestureRecognizer *dismissFullscreedGestureRecognizer = [[NCTriPinchGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFullscreenGestureRecognized:)];
     
-    [self.view addGestureRecognizer:dismissFullscreedGestureRecognizer];
+    [_playerContainer addGestureRecognizer:dismissFullscreedGestureRecognizer];
     
     self.hidden = YES;
 }
@@ -115,9 +115,6 @@
 #pragma mark - Gesture Recognizers
 
 - (void)dismissFullscreenGestureRecognized:(NCTriPinchGestureRecognizer *)recognizer {
-    
-    NSLog(@"s: %f, v: %f", recognizer.scale, recognizer.velocity);
-    
     if (recognizer.velocity < -100.0) {
         [self setHidden:YES animated:YES frame:_targetFrame];
     }

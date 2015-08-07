@@ -18,6 +18,8 @@ static int fakeCounter;
 @synthesize event=_event;
 @synthesize allEvents=_allEvents;
 
+@synthesize playerContext = _playerContext;
+
 +(instancetype)make
 {
     
@@ -37,6 +39,8 @@ static int fakeCounter;
         _status = ENCODER_STATUS_READY;
         fakeCounter = (!fakeCounter)?0:fakeCounter+1;
         _name =@"Fake";
+        
+        _playerContext = [PxpEventContext context];
     }
     return self;
 }

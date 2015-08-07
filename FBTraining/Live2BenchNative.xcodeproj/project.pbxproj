@@ -569,6 +569,7 @@
 		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
 		AE7DCBD41B726E5100BEE2EE /* NCTriPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCTriPinchGestureRecognizer.h; sourceTree = "<group>"; };
 		AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTriPinchGestureRecognizer.m; sourceTree = "<group>"; };
+		AE7DCBD71B72BC1100BEE2EE /* EncoderProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EncoderProtocol.h; path = EncoderClasses/EncoderProtocol.h; sourceTree = "<group>"; };
 		AE7EDCE51B5806A400998CF6 /* AVAsset+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+Image.h"; sourceTree = "<group>"; };
 		AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+Image.m"; sourceTree = "<group>"; };
 		AE848FFF1B0D083D007A19E8 /* NCRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCRecordButton.h; sourceTree = "<group>"; };
@@ -2615,6 +2616,7 @@
 		D7EE84D419F19EBC00DEC82B /* EncoderClasses */ = {
 			isa = PBXGroup;
 			children = (
+				AE7DCBD71B72BC1100BEE2EE /* EncoderProtocol.h */,
 				D72779911A30F0D50034DD66 /* EncoderTask.h */,
 				D72779921A30F0D50034DD66 /* EncoderTask.m */,
 				D727798E1A30C8120034DD66 /* CloudEncoder.h */,

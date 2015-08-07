@@ -50,7 +50,7 @@
                                         <constraint firstAttribute="width" secondItem="pV6-6l-QSl" secondAttribute="height" multiplier="3:2" id="Ffq-jg-ghE"/>
                                     </constraints>
                                     <connections>
-                                        <action selector="slomoButtonAction:" destination="-1" eventType="touchUpInside" id="Yzs-oO-bxm"/>
+                                        <action selector="slomoButtonAction:" destination="-1" eventType="touchUpInside" id="6E4-CR-Zm7"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Sl-tz-VhT" customClass="PxpFullscreenButton">
@@ -63,7 +63,7 @@
                                         <userDefinedRuntimeAttribute type="boolean" keyPath="isFullscreen" value="YES"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
-                                        <action selector="fullscreenButtonAction:" destination="-1" eventType="touchUpInside" id="qi8-FR-eBQ"/>
+                                        <action selector="fullscreenButtonAction:" destination="-1" eventType="touchUpInside" id="GG3-vF-a5I"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -88,7 +88,7 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="independent" value="NO"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="backwardSeekAction:" destination="-1" eventType="touchUpInside" id="LPz-YT-0zN"/>
+                                <action selector="backwardSeekAction:" destination="-1" eventType="touchUpInside" id="tde-yL-m65"/>
                             </connections>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="COm-6p-rn2" customClass="SeekButton">
@@ -102,7 +102,7 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="independent" value="NO"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="forwardSeekAction:" destination="-1" eventType="touchUpInside" id="5he-en-OOu"/>
+                                <action selector="forwardSeekAction:" destination="-1" eventType="touchUpInside" id="Suv-OB-bJh"/>
                             </connections>
                         </view>
                     </subviews>
