@@ -6,14 +6,17 @@
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 
-#import "CustomButton.h"
+#import <UIKit/UIKit.h>
+
 typedef enum : NSUInteger {
-    RangeButtonNormalLeft,
-    RangeButtonNormalRight,
-    RangeButtonLargeLeft,
-    RangeButtonLargeRight
-    
+    RangeButtonExtendStart,
+    RangeButtonExtendEnd,
 } RangeButtonType;
-@interface RangeModifierButton : CustomButton
+
+@interface RangeModifierButton : UIButton
+
+@property (assign, nonatomic) RangeButtonType type;
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame type:(RangeButtonType)type;
 
 @end

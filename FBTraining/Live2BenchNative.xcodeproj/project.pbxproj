@@ -387,7 +387,6 @@
 		D7A7B61816D3C852000D3A84 /* TeleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A7B61616D3C852000D3A84 /* TeleViewController.m */; };
 		D7A7B63816D3CD0D000D3A84 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A7B63716D3CD0D000D3A84 /* CFNetwork.framework */; };
 		D7A7B63A16D3CD1B000D3A84 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A7B63916D3CD1B000D3A84 /* MobileCoreServices.framework */; };
-		D7A7B63C16D3CD39000D3A84 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A7B63B16D3CD39000D3A84 /* libz.dylib */; };
 		D7A9394416ADA65E006CBAB2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A9394316ADA65E006CBAB2 /* UIKit.framework */; };
 		D7A9394816ADA65E006CBAB2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A9394716ADA65E006CBAB2 /* CoreGraphics.framework */; };
 		D7A9395016ADA65E006CBAB2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A9394F16ADA65E006CBAB2 /* main.m */; };
@@ -1121,7 +1120,6 @@
 		D7A7B61616D3C852000D3A84 /* TeleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TeleViewController.m; sourceTree = "<group>"; };
 		D7A7B63716D3CD0D000D3A84 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D7A7B63916D3CD1B000D3A84 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		D7A7B63B16D3CD39000D3A84 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D7A9393F16ADA65E006CBAB2 /* Live2BenchNative.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Live2BenchNative.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7A9394316ADA65E006CBAB2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D7A9394516ADA65E006CBAB2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1288,7 +1286,6 @@
 				D797CCF5170DB9CB00A6E62B /* Social.framework in Frameworks */,
 				D7A49124170CAB850070A7DB /* MessageUI.framework in Frameworks */,
 				D7581EDF196342A50029C5DD /* Crashlytics.framework in Frameworks */,
-				D7A7B63C16D3CD39000D3A84 /* libz.dylib in Frameworks */,
 				D7A7B63A16D3CD1B000D3A84 /* MobileCoreServices.framework in Frameworks */,
 				D7A7B63816D3CD0D000D3A84 /* CFNetwork.framework in Frameworks */,
 				D7B4865216CBF05C000AA878 /* ImageIO.framework in Frameworks */,
@@ -1345,6 +1342,7 @@
 		AE683C4C1B71029100458F80 /* PxpFullscreen */ = {
 			isa = PBXGroup;
 			children = (
+				AE7AE3AC1B74EC8C0021EC03 /* L2B */,
 				AE683C501B7148DA00458F80 /* PxpFullscreenViewController.h */,
 				AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */,
 				AE683C521B7148DA00458F80 /* PxpFullscreenViewController.xib */,
@@ -1359,6 +1357,13 @@
 				AE76FFC11B01065B0089F53F /* TagView.m */,
 			);
 			name = TagView;
+			sourceTree = "<group>";
+		};
+		AE7AE3AC1B74EC8C0021EC03 /* L2B */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = L2B;
 			sourceTree = "<group>";
 		};
 		AE848FFE1B0D081F007A19E8 /* RecordButton */ = {
@@ -2282,7 +2287,6 @@
 				D797CCF6170DB9D300A6E62B /* Accounts.framework */,
 				D797CCF4170DB9CB00A6E62B /* Social.framework */,
 				D7A49123170CAB850070A7DB /* MessageUI.framework */,
-				D7A7B63B16D3CD39000D3A84 /* libz.dylib */,
 				D7A7B63916D3CD1B000D3A84 /* MobileCoreServices.framework */,
 				D7A7B63716D3CD0D000D3A84 /* CFNetwork.framework */,
 				D7B4867816CC037C000AA878 /* SDWebImage.framework */,

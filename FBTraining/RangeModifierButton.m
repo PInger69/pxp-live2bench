@@ -9,26 +9,48 @@
 #import "RangeModifierButton.h"
 
 @implementation RangeModifierButton
-#define LITTLE_ICON_DIMENSIONS       30
-- (id)initWithFrame:(CGRect)frame
-{
+
+static UIImage * __nullable _extendStartImage;
+static UIImage * __nullable _extendEndImage;
+
++ (void)initialize {
+    _extendStartImage = [UIImage imageNamed:@"extendstartsec"];
+    _extendEndImage = [UIImage imageNamed:@"extendendsec"];
+}
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame type:(RangeButtonType)type {
     self = [super initWithFrame:frame];
     if (self) {
-
-        [self setContentMode:UIViewContentModeScaleAspectFill];
-        [self setImage:[UIImage imageNamed:@"extendstartsec.png"] forState:UIControlStateNormal];
-//        [self addTarget:self action:@selector(startRangeBeenModified:) forControlEvents:UIControlEventTouchUpInside];
-//        [startRangeModifierButton setAccessibilityValue:@"extend"];
-        
-//        UILongPressGestureRecognizer *modifiedTagDurationByStartTimeLongpressgesture = [[UILongPressGestureRecognizer alloc]
-//                                                                                        initWithTarget:self action:@selector(changeDurationModifierButtonIcon:)];
-//        modifiedTagDurationByStartTimeLongpressgesture.minimumPressDuration = 0.5; //seconds
-//        modifiedTagDurationByStartTimeLongpressgesture.delegate = self;
-//        [startRangeModifierButton addGestureRecognizer:modifiedTagDurationByStartTimeLongpressgesture];
+        self.type = type;
+        self.contentMode = UIViewContentModeScaleAspectFill;
     }
     return self;
 }
 
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
+    return [self initWithFrame:frame type:RangeButtonExtendStart];
+}
 
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.type = [aDecoder decodeIntegerForKey:@"rangeButtonType"];
+        self.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeInteger:_type forKey:@"rangeButtonType"];
+}
+
+#pragma mark - Getters / Setters
+
+- (void)setType:(RangeButtonType)type {
+    _type = type;
+    
+    [self setImage:_type == RangeButtonExtendStart ? _extendStartImage : _type == RangeButtonExtendEnd ? _extendEndImage : nil forState:UIControlStateNormal];
+}
 
 @end
