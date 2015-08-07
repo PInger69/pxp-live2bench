@@ -1369,6 +1369,10 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_PROGRESS object:self userInfo:nil];
 }
 
+-(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView viewFinished];
+}
 
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -1390,6 +1394,12 @@
     }  else if ([connectionType isEqualToString: STOP_EVENT]) {
         [self stopResponce:     finishedData];
     }  else if ([connectionType isEqualToString: START_EVENT]) {
+        NSDictionary    * results =[Utility JSONDatatoDict:finishedData];
+        if ([results[@"success"]intValue] == 0) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:self];
+            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Start Event" message:results[@"msg"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert showView];
+        }
         [self startResponce:    finishedData];
     } else if ([connectionType isEqualToString: PAUSE_EVENT]) {
         [self pauseResponce:     finishedData];

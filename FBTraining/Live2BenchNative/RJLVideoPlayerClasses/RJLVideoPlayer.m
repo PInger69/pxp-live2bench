@@ -689,7 +689,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
  *  This takes the video right to the end of the current feed and stops all seek or anything else
  */
 -(void)gotolive{
-    [self.videoControlBar setHidden:NO];
+    //[self.videoControlBar setHidden:NO];
     [self.clipControlBar setHidden:YES];
     self.looping                                = NO;
     self.videoControlBar.playButton.selected    = FALSE;
@@ -743,7 +743,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
         [freezeMonitor start];
         self.status                                 = _status | RJLPS_Play;
         self.status                                 = _status & ~(RJLPS_Paused);
-        [self.videoControlBar setHidden:NO];
+        //[self.videoControlBar setHidden:NO];
         
         if (self.videoControlBar.playButton.selected) {
             self.videoControlBar.playButton.selected = NO;

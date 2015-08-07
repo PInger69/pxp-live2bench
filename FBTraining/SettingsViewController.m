@@ -507,7 +507,29 @@ SVSignalStatus signalStatus;
 }
 
 -(void)changeStatusString:(NSNotification*)note{
-    [_encStateLabel setText:[NSString stringWithFormat:@"( %@ )", note.userInfo[@"text"]]];
+    if (note.userInfo) {
+        [_encStateLabel setText:[NSString stringWithFormat:@"( %@ )", note.userInfo[@"text"]]];
+    }else{
+        [_encStateLabel setText:@"( ready )"];
+        [pauseButton setHidden:true];
+        [startButton setHidden:false];
+        [startButton setEnabled:true];
+        [startButton setAlpha:1.0];
+        [stopButton setHidden:true];
+        [shutdownButton setHidden:false];
+        [shutdownButton setEnabled:true];
+        [shutdownButton setAlpha:1.0];
+        [selectHomeTeam setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
+        [selectHomeTeam setUserInteractionEnabled:true];
+        [selectHomeTeam setAlpha:1.0];
+        [selectAwayTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
+        [selectAwayTeam setUserInteractionEnabled:true];
+        [selectAwayTeam setAlpha:1.0];
+        [selectLeague setTitle:DEFAULT_LEAGUE forState:UIControlStateNormal];
+        [selectLeague setUserInteractionEnabled:true];
+        [selectLeague setAlpha:1.0];
+    }
+    
 }
 
 -(void)onMasterFound:(NSNotification*)note
