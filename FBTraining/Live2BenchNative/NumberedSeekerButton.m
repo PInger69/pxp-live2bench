@@ -99,7 +99,6 @@ static UIImage * __nonnull _circleArrow;
     
     NSString *txtNum;
     if (textNumber < .25){
-        txtNum = [NSString stringWithFormat:@"%.02f",textNumber];
         txtNum = @"F";
     } else if (textNumber < 1){
         txtNum = [NSString stringWithFormat:@"%.02f",textNumber];
