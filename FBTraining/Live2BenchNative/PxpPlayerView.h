@@ -1,18 +1,17 @@
 //
 //  PxpPlayerView.h
-//  PxpPlayer
+//  Live2BenchNative
 //
-//  Created by Nico Cvitak on 2015-06-10.
-//  Copyright © 2015 Nicholas Cvitak. All rights reserved.
+//  Created by Nico Cvitak on 2015-08-07.
+//  Copyright © 2015 DEV. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
 
 #import "PxpPlayer.h"
 
 /**
- * @breif A view capable of displaying the contents of a single PxpPlayer object.
+ * @breif Abstract PxpPlayerView class
  * @author Nicholas Cvitak
  */
 @interface PxpPlayerView : UIView
@@ -20,23 +19,10 @@
 /// The player who's contents should be displayed by the view.
 @property (strong, nonatomic, nullable) PxpPlayer *player;
 
-/// The current size and position of the video image as displayed within the receiver's bounds. (read-only)
-@property (readonly, nonatomic) CGRect videoRect;
+/// The player's context.
+@property (readonly, strong, nonatomic, nullable) PxpPlayerContext *context;
 
-/// Specifies how the video is displayed within a player layer’s bounds.
-@property (copy, nonatomic, nonnull) NSString *videoGravity;
-
-/// Specifies whether or not the view displays the player's name.
-@property (assign, nonatomic) BOOL showsName;
-
-/// Specifies whether or not the view displays the zoom level.
-@property (assign, nonatomic) BOOL showsZoomLevel;
-
-/// The zoom level of the player.
-@property (readonly, assign, nonatomic) CGFloat zoomLevel;
-
-/// Specifies whether or not zoom is enabled.
-@property (assign, nonatomic) BOOL zoomEnabled;
-
+/// True if the playerView is only viewing a single PxpPlayer.
+@property (readonly, assign, nonatomic) BOOL fullView;
 
 @end

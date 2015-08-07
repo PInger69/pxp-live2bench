@@ -13,9 +13,13 @@
 @end
 
 @implementation PxpPlayerMultiView
+{
+    void *_fullViewObserver;
+}
+
+@synthesize fullView = _fullView;
 
 - (void)initMultiView {
-    _context = [PxpPlayerContext context];
     
     _gridView = [[PxpPlayerGridView alloc] init];
     _companionView = [[PxpPlayerPipCompanionView alloc] init];
@@ -33,6 +37,14 @@
     
     [self addSubview:_gridView];
     [self addSubview:_companionView];
+    
+    _fullViewObserver = &_fullViewObserver;
+    
+    [self addObserver:_companionView forKeyPath:@"fullView" options:0 context:_fullViewObserver];
+}
+
+- (void)dealloc {
+    [self removeObserver:_companionView forKeyPath:@"fullView" context:_fullViewObserver];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -51,14 +63,6 @@
     return self;
 }
 
-- (void)dealloc {
-    
-}
-
-- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
-    
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
     
@@ -66,49 +70,49 @@
     self.companionView.frame = self.bounds;
 }
 
-#pragma mark - Getters / Setters
-
-- (void)setContext:(nonnull PxpPlayerContext *)context {
-    _context = context;
-    
-    self.gridView.context = context;
-    self.gridView.hidden = YES;
-    
-    self.companionView.context = context;
-    self.companionView.hidden = NO;
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
+    if (context == _fullViewObserver) {
+        if (!_companionView.hidden) {
+            [self willChangeValueForKey:@"fullView"];
+            _fullView = _companionView.fullView;
+            [self didChangeValueForKey:@"fullView"];
+        }
+    } else {
+        return [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
+#pragma mark - Getters / Setters
+
 - (void)setPlayer:(PxpPlayer *)player {
-    if (self.context != player.context) {
-        self.context = player.context;
-    }
+    [super setPlayer:player];
     
     self.companionView.player = player;
     self.companionView.hidden = NO;
     
     self.gridView.hidden = YES;
     [self.context.mainPlayer sync];
-}
-
-- (nullable PxpPlayer *)player {
-    return self.companionView.player;
+    
+    [self willChangeValueForKey:@"fullView"];
+    _fullView = _companionView.fullView;
+    [self didChangeValueForKey:@"fullView"];
 }
 
 #pragma mark - PxpPlayerGridViewDelegate
 
-- (void)playerView:(nonnull PxpPlayerView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView {
+- (void)playerView:(nonnull PxpPlayerSingleView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView {
     [playerView addGestureRecognizer:[self createFocusGestureRecognizer]];
 }
 
-- (void)playerView:(nonnull PxpPlayerView *)playerView didUnloadInGridView:(nonnull PxpPlayerGridView *)gridView {
+- (void)playerView:(nonnull PxpPlayerSingleView *)playerView didUnloadInGridView:(nonnull PxpPlayerGridView *)gridView {
     
 }
 
 #pragma mark - Gesture Recognizers
 
 - (void)focusGestureRecognized:(UIGestureRecognizer *)recognizer {
-    if ([recognizer.view isKindOfClass:[PxpPlayerView class]]) {
-        PxpPlayerView *playerView = (PxpPlayerView *)recognizer.view;
+    if ([recognizer.view isKindOfClass:[PxpPlayerSingleView class]]) {
+        PxpPlayerSingleView *playerView = (PxpPlayerSingleView *)recognizer.view;
         
         if (playerView == self.companionView && self.companionView.player && self.context.players.count > 1) {
             self.gridView.hidden = NO;
@@ -117,13 +121,25 @@
             self.companionView.player = nil;
             
             [self.context.mainPlayer sync];
+            
+            [self willChangeValueForKey:@"fullView"];
+            _fullView = _gridView.fullView;
+            [self didChangeValueForKey:@"fullView"];
+            
         } else if (playerView.player && !self.companionView.player) {
             self.companionView.player = playerView.player;
             self.companionView.hidden = NO;
             
             self.gridView.hidden = YES;
             [self.context.mainPlayer sync];
+            
+            [self willChangeValueForKey:@"fullView"];
+            _fullView = _companionView.fullView;
+            [self didChangeValueForKey:@"fullView"];
+            
         }
+        
+        
         
     }
     

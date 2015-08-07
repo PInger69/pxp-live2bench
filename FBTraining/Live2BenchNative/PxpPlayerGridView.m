@@ -16,12 +16,8 @@
 @end
 
 @implementation PxpPlayerGridView
-{
-    void *_contextPlayerObserverContext;
-}
 
 - (void)initGridView {
-    _context = [PxpPlayerContext context];
     
     _playerViews = [NSMutableArray array];
     _containerView = [[UIView alloc] init];
@@ -30,10 +26,6 @@
     _dataSource = self;
     
     [self addSubview:_containerView];
-    
-    _contextPlayerObserverContext = &_contextPlayerObserverContext;
-    
-    [self addObserver:self forKeyPath:@"context.players" options:0 context:_contextPlayerObserverContext];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -52,18 +44,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [self removeObserver:self forKeyPath:@"context.players" context:_contextPlayerObserverContext];
-}
-
-- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
-    if (context == _contextPlayerObserverContext) {
-        [self reloadData];
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
 #pragma mark - Overrides
 
 - (void)layoutSubviews {
@@ -76,10 +56,14 @@
 
 #pragma mark - Getters / Setters
 
-- (void)setContext:(nonnull PxpPlayerContext *)context {
-    _context = context;
+- (void)setPlayer:(nullable PxpPlayer *)player {
+    [super setPlayer:player];
     
     [self reloadData];
+}
+
+- (BOOL)fullView {
+    return NO;
 }
 
 #pragma mark - Public Methods
@@ -91,7 +75,7 @@
     
     // remove unnecessary views
     while (self.playerViews.count > rows * columns) {
-        PxpPlayerView *playerView = self.playerViews.lastObject;
+        PxpPlayerSingleView *playerView = self.playerViews.lastObject;
         [playerView removeFromSuperview];
         [self.playerViews removeLastObject];
         
@@ -100,7 +84,7 @@
     
     // add necessary views
     while (self.playerViews.count < rows * columns) {
-        PxpPlayerView *playerView = [[PxpPlayerView alloc] init];
+        PxpPlayerSingleView *playerView = [[PxpPlayerSingleView alloc] init];
         [self.playerViews addObject:playerView];
         [self.containerView addSubview:playerView];
 
@@ -116,7 +100,7 @@
             
             NSUInteger i = (c * rows + r) % (rows * columns);
             
-            PxpPlayerView *playerView = self.playerViews[i];
+            PxpPlayerSingleView *playerView = self.playerViews[i];
             playerView.frame = CGRectMake(c * width, r * height, width, height);
             playerView.player = self.dataSource ? self.context.players[[self.dataSource contextIndexForPlayerGridView:self forRow:r column:c]] : self.context.players.firstObject;
         }

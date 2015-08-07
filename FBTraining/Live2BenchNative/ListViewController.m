@@ -117,7 +117,7 @@
         
         
         self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
-        self.playerViewController.multiView.context = self.context;
+        self.playerViewController.multiView.player = self.context.mainPlayer;
         [self.view addSubview:self.playerViewController.view];
         
         
@@ -205,7 +205,7 @@
     // update the context
     
     self.context = [PxpEventContext contextWithEvent:_currentEvent];
-    self.playerViewController.multiView.context = self.context;
+    self.playerViewController.multiView.player = self.context.mainPlayer;
     
 }
 

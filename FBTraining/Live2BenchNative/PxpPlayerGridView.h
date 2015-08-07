@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "PxpPlayerView.h"
+#import "PxpPlayerSingleView.h"
 
 @class PxpPlayerGridView;
 
@@ -30,10 +30,10 @@
 @protocol PxpPlayerGridViewDelegate
 
 /// Invoked when a new player view is loaded into the grid view.
-- (void)playerView:(nonnull PxpPlayerView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView;
+- (void)playerView:(nonnull PxpPlayerSingleView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView;
 
 /// Invoked when a player view is unloaded from the grid view.
-- (void)playerView:(nonnull PxpPlayerView *)playerView didUnloadInGridView:(nonnull PxpPlayerGridView *)gridView;
+- (void)playerView:(nonnull PxpPlayerSingleView *)playerView didUnloadInGridView:(nonnull PxpPlayerGridView *)gridView;
 
 @end
 
@@ -41,16 +41,13 @@
  * @breif A view capable of displaying multiple PxpPlayers in a grid format.
  * @author Nicholas Cvitak
  */
-@interface PxpPlayerGridView : UIView
+@interface PxpPlayerGridView : PxpPlayerView
 
 /// The data source of the grid view.
 @property (weak, nonatomic, nullable) id<PxpPlayerGridViewDataSource> dataSource;
 
 /// The delegate of the grid view.
 @property (weak, nonatomic, nullable) id<PxpPlayerGridViewDelegate> delegate;
-
-/// The context used to populate the grid view.
-@property (strong, nonatomic, nonnull) PxpPlayerContext *context;
 
 /// reloads the data of the grid view.
 - (void)reloadData;

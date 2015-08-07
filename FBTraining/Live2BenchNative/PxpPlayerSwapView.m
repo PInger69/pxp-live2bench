@@ -21,12 +21,8 @@
 @end
 
 @implementation PxpPlayerSwapView
-{
-    void *_contextObserverContext;
-}
 
 - (void)initSwapView {
-    _context = [PxpPlayerContext context];
     
     _tapToAdvanceEnabled = YES;
     _playerContextIndex = NSNotFound;
@@ -49,8 +45,6 @@
     layer.shadowRadius = 11.0;
     layer.masksToBounds = NO;
     
-    _contextObserverContext = &_contextObserverContext;
-    
     UITapGestureRecognizer *advanceGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(advanceGestureRecognized:)];
     advanceGestureRecognizer.numberOfTouchesRequired = 1;
     
@@ -59,8 +53,6 @@
     
     [self addGestureRecognizer:advanceGestureRecognizer];
     [self addGestureRecognizer:listGestureRecognizer];
-    
-    //[self addObserver:self forKeyPath:@"context.players" options:0 context:_contextObserverContext];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -80,36 +72,12 @@
     return self;
 }
 
-- (void)dealloc {
-    // [self removeObserver:self forKeyPath:@"context.players" context:_contextObserverContext];
-}
-
-- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
-    if (context == _contextObserverContext) {
-        //self.playerContextIndex = self.context ? [self.context.players indexOfObject:self.player] : NSNotFound;
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
 #pragma mark - Overrides
 
 - (void)setPlayer:(nullable PxpPlayer *)player {
     [super setPlayer:player];
     
-    if (player.context != self.context) {
-        //[self willChangeValueForKey:@"context"];
-        _context = player.context ? player.context : [PxpPlayerContext contextWithPlayer:player];
-        //[self didChangeValueForKey:@"context"];
-    }
-    
     self.playerContextIndex = self.player.context ? [self.player.context.players indexOfObject:self.player] : NSNotFound;
-}
-
-- (void)setContext:(nonnull PxpPlayerContext *)context {
-    _context = context;
-    
-    self.player = context.players.firstObject;
 }
 
 #pragma mark - Gesture Recognizers

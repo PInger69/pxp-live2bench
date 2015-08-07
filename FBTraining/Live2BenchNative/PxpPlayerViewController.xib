@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8121.20" systemVersion="15A226f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8121.20"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PxpPlayerViewController">
+            <connections>
+                <outlet property="_controlBar" destination="IcP-sk-Ffp" id="VMl-pL-SFc"/>
+                <outlet property="_playerContainer" destination="3aq-0z-7Gc" id="RHU-eq-JhF"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3aq-0z-7Gc" userLabel="_player Container">
+                    <rect key="frame" x="0.0" y="131.5" width="600" height="337.5"/>
+                    <animations/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="3aq-0z-7Gc" secondAttribute="height" multiplier="16:9" id="oma-5y-7J7"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcP-sk-Ffp" customClass="PxpPlayerControlBar">
+                    <rect key="frame" x="0.0" y="425" width="600" height="44"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="tk2-tP-xXt"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="3aq-0z-7Gc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ZPa-HR-ZMY"/>
+                <constraint firstItem="3aq-0z-7Gc" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="fY5-JN-V6j"/>
+                <constraint firstItem="IcP-sk-Ffp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="fzc-yF-bfS"/>
+                <constraint firstAttribute="trailing" secondItem="IcP-sk-Ffp" secondAttribute="trailing" id="gEP-Dk-Imd"/>
+                <constraint firstAttribute="trailing" secondItem="3aq-0z-7Gc" secondAttribute="trailing" id="gUb-o7-YbR"/>
+                <constraint firstItem="IcP-sk-Ffp" firstAttribute="bottom" secondItem="3aq-0z-7Gc" secondAttribute="bottom" id="sGv-50-ahW"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+        </view>
+    </objects>
+</document>

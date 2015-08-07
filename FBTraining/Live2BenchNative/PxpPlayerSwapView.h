@@ -8,16 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "PxpPlayerView.h"
+#import "PxpPlayerSingleView.h"
 
 /**
  * @breif A player view capable of swaping its player with players in the same context
  * @author Nicholas Cvitak
  */
-@interface PxpPlayerSwapView : PxpPlayerView
-
-/// The context used to populate the swap view.
-@property (strong, nonatomic, nonnull) PxpPlayerContext *context;
+@interface PxpPlayerSwapView : PxpPlayerSingleView
 
 /// Specifies whether or not the view swaps to the next player with a tap.
 @property (assign, nonatomic) BOOL tapToAdvanceEnabled;

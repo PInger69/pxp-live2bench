@@ -555,10 +555,10 @@ static void * eventContext      = &eventContext;
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
     
     PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
-    _playerViewController.multiView.context = context;
-    _videoBar.player = self.playerViewController.multiView.context.mainPlayer;
+    _playerViewController.multiView.player = context.mainPlayer;
+    _videoBar.player = self.playerViewController.multiView.player;
     _videoBar.event = _currentEvent;
-    _fullscreenViewController.playerViewController.multiView.context = context;
+    _fullscreenViewController.playerViewController.multiView.player = context.mainPlayer;
 }
 
 
