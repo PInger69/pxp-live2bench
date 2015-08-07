@@ -210,6 +210,10 @@
     }
 }
 
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    [alertView viewFinished];
+}
+
 // once the encoder is registered completed you can do what you want with it
 -(void)onRegisterEncoderCompleted:(Encoder*)registerEncoder
 {
@@ -220,7 +224,8 @@
         [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
         [alert setMessage:NSLocalizedString(msg,nil)];
         [alert addButtonWithTitle:NSLocalizedString(@"Ok",nil)];
-        [alert show];
+        [alert setDelegate:self];
+        [alert showView];
     
     }
     

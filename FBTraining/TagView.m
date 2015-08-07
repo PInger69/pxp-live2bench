@@ -84,6 +84,7 @@
             // calculate tag dimensions
             NSInteger tagX = pixelWidth * (tag.time) / duration - self.tagWidth / 2.0;
             
+            
             for (NSInteger i = 0; i < self.tagWidth; i++) {
                 
                 // only insert tag if it will fit in the frame
@@ -125,6 +126,11 @@
             
             // create selection rect
             CGFloat selectionX = pixelWidth * selectedTime / duration - self.tagWidth / 2.0;
+            
+            // adjust the position of the selection rect so that it will not be cut off
+            if(selectionX + self.tagWidth > pixelWidth - 1)selectionX = pixelWidth - self.tagWidth - 1;
+            if(selectionX < 1)selectionX = 1;
+            
             CGRect selectionRect = CGRectMake(selectionX, 0, self.tagWidth, rect.size.height);
             
             // draw selection

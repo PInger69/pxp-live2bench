@@ -28,6 +28,10 @@
 #import "PxpFilterButtonScrollView.h"
 //End debug
 
+//test
+#import "PxpFilterDefaultTabViewController.h"
+#import "PxpFilterHockeyTabViewController.h"
+#import "PxpFilterFootballTabViewController.h"
 
 
 @interface ListViewController ()
@@ -773,15 +777,37 @@
 
 - (void)pressFilterButton
 {
-    if (!test)test = [[PxpFilterButtonScrollView alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
-    
-    [self.view addSubview:test];
-    [test buildButtonsWith:@[@"PP",@"PK",@"HEAD SHOT",@"COACH CALL"]];
-    test.parentFilter = _pxpFilter;
-    test.sortByPropertyKey = @"name";
-    [_pxpFilter addModules:@[test]];
     
     [_pxpFilter filterTags:[self.allTags copy]];
+    TabView *popupTabBar = [TabView sharedFilterTab];
+    
+    // setFilter to this view. This is the default filtering for ListView
+    // what ever is added to these predicates will be ignored in the filters raw tags
+    _pxpFilter.delegate = self;
+    [_pxpFilter removeAllPredicates];
+    [_pxpFilter filterTags:[self.allTags copy]];
+    
+    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                   ]];
+
+    [_pxpFilter addPredicates:@[ignoreThese]];
+    
+    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
+
+    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
+    
+    
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
+    
+    popupTabBar.pxpFilter = _pxpFilter;
+    
+    popoverController.popoverContentSize = popupTabBar.view.bounds.size;
+    [popoverController presentPopoverFromRect:self.view.frame
+                                       inView:self.view
+                     permittedArrowDirections:0
+                                     animated:YES];
     
     
 }
@@ -790,13 +816,18 @@
 // Pxp
 -(void)onFilterComplete:(PxpFilter*)filter
 {
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
 
-
+    [_tableViewController reloadData];
 }
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
     [filter filterTags:self.allTags];
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    [_tableViewController reloadData];
 }
 
 @end

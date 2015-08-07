@@ -58,6 +58,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 @property (strong, nonatomic, nonnull) CustomAlertView *pauseAlertView;
 @property (strong, nonatomic, nonnull) CustomAlertView *stopAlertView;
 @property (strong, nonatomic, nonnull) CustomAlertView *shutdownAlertView;
+@property (strong, nonatomic, nonnull) CustomAlertView *startAlertView;
 
 #define DEFAULT_LEAGUE @"League"
 #define DEFAULT_HOME_TEAM @"Home Team"
@@ -166,6 +167,9 @@ SVSignalStatus signalStatus;
         
         self.shutdownAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Shutdown Encoder", nil) message:NSLocalizedString(@"Are you sure you want to shutdown the encoder?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
         self.shutdownAlertView.type = AlertIndecisive;
+        
+        self.startAlertView = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:@"Please select Home team, Away team and League to start the encoder" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+
         
     }
     return self;
@@ -542,13 +546,14 @@ SVSignalStatus signalStatus;
         if (masterEncoder.status == ENCODER_STATUS_READY || masterEncoder.status == ENCODER_STATUS_STOP)
             //        if([globals.CURRENT_ENC_STATUS isEqualToString:encStateReady] || [globals.CURRENT_ENC_STATUS isEqualToString:encStateStopped])
         {
-            CustomAlertView *alert = [[CustomAlertView alloc]
+            /*CustomAlertView *alert = [[CustomAlertView alloc]
                                       initWithTitle: @"myplayXplay"
                                       message: @"Please select Home team, Away team and League to start the encoder"
-                                      delegate: nil
+                                      delegate: self
                                       cancelButtonTitle:@"OK"
-                                      otherButtonTitles:nil];
-            [alert show];
+                                      otherButtonTitles:nil];*/
+            [self.startAlertView showView];
+            //[alert showView];
             //            [globals.ARRAY_OF_POPUP_ALERT_VIEWS addObject:alert];
             return;
         }
@@ -575,6 +580,7 @@ SVSignalStatus signalStatus;
 }
 
 - (void)pauseEnc:(id)sender {
+    [self.pauseAlertView display];
     if(![self.pauseAlertView display]) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
     }
@@ -1064,15 +1070,21 @@ SVSignalStatus signalStatus;
     }
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView viewFinished];
     if (buttonIndex == 0) {
         if (alertView == self.pauseAlertView) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
+            //[self.pauseAlertView viewFinished];
         } else if (alertView == self.stopAlertView) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop"  : [NSNumber numberWithBool:YES]}];
+            //[self.stopAlertView viewFinished];
         } else if (alertView == self.shutdownAlertView) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"shutdown"  : [NSNumber numberWithBool:YES]}];
+            //[self.shutdownAlertView viewFinished];
+        } else if (alertView == self.startAlertView){
+            //[self.startAlertView viewFinished];
         }
     }
 }

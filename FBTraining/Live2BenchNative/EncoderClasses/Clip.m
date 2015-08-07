@@ -21,6 +21,8 @@
  *  @return <#return value description#>
  */
 
+//@synthesize rating = _rating;
+@synthesize comment = _comment;
 -(instancetype)initWithPlistPath:(NSString*)aPath data:(NSDictionary*)data
 {
     self = [super initWithData:data event:nil];
@@ -33,6 +35,8 @@
         //_clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
         //_rating             = [[_rawData objectForKey:@"rating"] intValue];
         //_comment            = [_rawData objectForKey:@"comment"];
+        _rating             = [data[@"rating"] intValue];
+        _comment            = data[@"comment"];
         _path               = aPath;
         _videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
         _localRawData[@"plistPath"] = aPath;
@@ -75,6 +79,8 @@
         //_clipId             = [NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
         //_rating             = [[_rawData objectForKey:@"rating"] intValue];
         //_comment            = [_rawData objectForKey:@"comment"];
+        _rating             = [data[@"rating"] intValue];
+        _comment            = data[@"comment"];
         _path               = [data objectForKey:@"plistPath"];
         //_path               = [_rawData objectForKey:@"plistName"];
         _videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
@@ -123,7 +129,7 @@
 
 #pragma mark - custom getter and setter methods
 
-/*-(void)setRating:(NSInteger)rating{
+-(void)setRating:(NSInteger)rating{
     _rating = rating;
     [self modClipData: @{@"rating": [NSNumber numberWithInteger: rating]}];
     [self write];
@@ -137,7 +143,7 @@
         [self modClipData: @{@"comment": @""}];
     }
     [self write];
-}*/
+}
 
 -(NSArray *)videoFiles {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -154,8 +160,9 @@
 }
 
 -(void)write {
-    [_localRawData addEntriesFromDictionary:self.rawData];
-    [_localRawData writeToFile: self.path atomically:YES];
+    NSMutableDictionary *rawData = [[NSMutableDictionary alloc]initWithDictionary:self.rawData];
+    [rawData addEntriesFromDictionary:self.localRawData];
+    [rawData writeToFile: self.path atomically:YES];
 }
 
 

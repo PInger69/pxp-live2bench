@@ -28,7 +28,7 @@
 // Protocol
 -(void)filterTags:(NSMutableArray *)tagsToFilter;
 
-
+-(void)reset;
 
 
 @end

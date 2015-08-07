@@ -137,7 +137,7 @@
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
     [alert addButtonWithTitle:@"Yes"];
     [alert addButtonWithTitle:@"No"];
-    [alert show];
+    [alert showView];
 }
 
 #pragma mark - Table view data source
@@ -384,7 +384,7 @@
     [cell.tagname setFont:[UIFont boldSystemFontOfSize:18.f]];
     
     NSString *durationString = [NSString stringWithFormat:@"%@s", [Utility translateTimeFormat:tag.duration]];
-    NSString *periodString = [NSString stringWithFormat:@"%ld", (long)tag.period];
+    NSString *periodString = tag.period;
     
     NSString *players;
     for (NSString *jersey in tag.players) {
@@ -564,7 +564,7 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert addButtonWithTitle:@"Yes"];
         [alert addButtonWithTitle:@"No"];
-        [alert show];
+        [alert showView];
 
 
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -572,7 +572,7 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
 
     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
@@ -633,6 +633,7 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
         [UIView commitAnimations];
 
    }*/
+    [alertView viewFinished];
     [self.tableView reloadData];
     [self checkDeleteAllButton];
 

@@ -119,7 +119,7 @@
     Clip *clip = self.tableData[indexPath.row];
     
     //[cell.eventDate setText: [Utility dateFromEvent: clip.rawData[@"event"]]];
-    [cell.eventDate setText: [Utility dateFromEvent: clip.event.name]];
+    [cell.eventDate setText: [Utility dateFromEvent: clip.eventName]];
     //[cell.tagTime setText: clip.rawData[ @"displaytime"]];
     [cell.tagTime setText: clip.displayTime];
     [cell.tagName setText: [clip.name stringByRemovingPercentEncoding] ];
@@ -258,10 +258,10 @@
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
     [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert show];
+    [alert showView];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == YES_BUTTON) {
         NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
@@ -280,6 +280,7 @@
         [self.tableView reloadData];
     }
     
+    [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
     [self checkDeleteAllButton]; // hides the delete all button if shown
 }
