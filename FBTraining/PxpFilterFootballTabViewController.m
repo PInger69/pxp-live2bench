@@ -31,9 +31,9 @@
 }
 
 - (void)UIUpdate:(NSNotification*)note {
-    PxpFilter * filter = (PxpFilter *) note.object;
+    /*PxpFilter * filter = (PxpFilter *) note.object;
     _filteredTagLabel.text = [NSString stringWithFormat:@"Filtered Tag(s): %lu",(unsigned long)filter.tags.count];
-    _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)2147483647*2+1];
+    _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)2147483647*2+1];*/
 }
 
 - (void)viewDidLoad {
