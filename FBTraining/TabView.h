@@ -14,10 +14,10 @@
     UITabBar *_mainTabBar;
 }
 
-+(TabView*)sharedFilterTab;
++(nonnull instancetype)sharedFilterTab;
 
 
-@property (strong, nonatomic, nullable) PxpFilter *pxpFilter;
+@property (weak, nonatomic, nullable) PxpFilter *pxpFilter;
 
 @property (strong, nonatomic, nullable) IBOutlet UITabBar *mainTabBar;
 

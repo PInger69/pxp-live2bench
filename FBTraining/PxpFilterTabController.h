@@ -13,7 +13,7 @@
 
 @property (strong, nonatomic, nonnull)  NSMutableArray *modules;
 
-@property (weak, nonatomic) PxpFilter *pxpFilter;
+@property (strong, nonatomic, nonnull) PxpFilter *pxpFilter;
 
 @property (readonly, strong, nonatomic, nullable) UIImage *tabImage;
 

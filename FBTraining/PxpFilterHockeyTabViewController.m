@@ -57,7 +57,7 @@
     _leftScrollView.sortByPropertyKey = @"name";
     
     self.modules = [[NSMutableArray alloc]initWithObjects:
-                    _rightScrollView,_middleScrollView,_leftScrollView, _sliderView, nil];
+                    _rightScrollView,_middleScrollView,_leftScrollView, nil]; // removed the slider
     
      _sliderView.sortByPropertyKey = @"time";
     
