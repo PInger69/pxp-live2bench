@@ -119,6 +119,7 @@
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagsReady:) name:NOTIF_TAGS_ARE_READY object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedsReady:) name:NOTIF_EVENT_FEEDS_READY object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
         
         // BEGIN NC PLAYER
         
@@ -152,9 +153,19 @@
     return self;
 }
 
+-(void)tabJustBeingAdded:(NSNotification*)note{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAB_CREATED object:nil];
+    _observedEncoder = _appDel.encoderManager.masterEncoder;
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    _currentEvent = [_appDel.encoderManager.primaryEncoder event];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+}
+
 // encoderOberver
 -(void)addEventObserver:(NSNotification *)note
 {
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAB_CREATED object:nil];
     if (_observedEncoder != nil) {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
     }

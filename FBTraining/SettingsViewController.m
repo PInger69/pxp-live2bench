@@ -55,10 +55,12 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 //
 //}EventButtonControlStates;
 
+
 @property (strong, nonatomic, nonnull) CustomAlertView *pauseAlertView;
 @property (strong, nonatomic, nonnull) CustomAlertView *stopAlertView;
 @property (strong, nonatomic, nonnull) CustomAlertView *shutdownAlertView;
 @property (strong, nonatomic, nonnull) CustomAlertView *startAlertView;
+@property (strong, nonatomic, nonnull) CustomAlertView *noTeamAlertView;
 
 #define DEFAULT_LEAGUE @"League"
 #define DEFAULT_HOME_TEAM @"Home Team"
@@ -98,7 +100,6 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 }
 
 static void *masterContext;
-
 @synthesize logoutButton,appVersionLabel,timerCounter,spinnerTimer,encHomeButton;
 @synthesize waitEncoderResponseCounter;
 
@@ -141,6 +142,8 @@ SVSignalStatus signalStatus;
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showInformation) name:NOTIF_LIVE_EVENT_FOUND object:nil];
         
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeStatusString:) name:NOTIF_STATUS_LABEL_CHANGED object:nil];
+        
         
         observerForLostMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (weakMasterEncoder != nil){
@@ -168,8 +171,9 @@ SVSignalStatus signalStatus;
         self.shutdownAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Shutdown Encoder", nil) message:NSLocalizedString(@"Are you sure you want to shutdown the encoder?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
         self.shutdownAlertView.type = AlertIndecisive;
         
-        self.startAlertView = [[CustomAlertView alloc]initWithTitle:@"myplayXplay" message:@"Please select Home team, Away team and League to start the encoder" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        self.startAlertView = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"myplayXplay", nil) message:@"Please select Home team, Away team and League to start the encoder" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 
+        self.noTeamAlertView = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"No Team", nil) message:NSLocalizedString(@"There is no team for this league", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         
     }
     return self;
@@ -496,10 +500,37 @@ SVSignalStatus signalStatus;
     
 
     if ([stringStatus isEqualToString:@"stopped"]) stringStatus= @"ready"; // This is just to make the display more user friendly
-    
+    if ([stringStatus length] == 0) {
+        stringStatus = @"No Encoder";
+    }
     [_encStateLabel setText:[NSString stringWithFormat:@"( %@ )",stringStatus]];
 }
 
+-(void)changeStatusString:(NSNotification*)note{
+    if (note.userInfo) {
+        [_encStateLabel setText:[NSString stringWithFormat:@"( %@ )", note.userInfo[@"text"]]];
+    }else{
+        [_encStateLabel setText:@"( ready )"];
+        [pauseButton setHidden:true];
+        [startButton setHidden:false];
+        [startButton setEnabled:true];
+        [startButton setAlpha:1.0];
+        [stopButton setHidden:true];
+        [shutdownButton setHidden:false];
+        [shutdownButton setEnabled:true];
+        [shutdownButton setAlpha:1.0];
+        [selectHomeTeam setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
+        [selectHomeTeam setUserInteractionEnabled:true];
+        [selectHomeTeam setAlpha:1.0];
+        [selectAwayTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
+        [selectAwayTeam setUserInteractionEnabled:true];
+        [selectAwayTeam setAlpha:1.0];
+        [selectLeague setTitle:DEFAULT_LEAGUE forState:UIControlStateNormal];
+        [selectLeague setUserInteractionEnabled:true];
+        [selectLeague setAlpha:1.0];
+    }
+    
+}
 
 -(void)onMasterFound:(NSNotification*)note
 {
@@ -763,37 +794,39 @@ SVSignalStatus signalStatus;
     }
     
 
-
-    
-
 }
 
 -(void)checkUserSelection
 {
-    
     League *league = [encoderManager.masterEncoder.encoderLeagues objectForKey:_leagueName];
-    NSString *leagueHid = league.hid;
+    if ([league.teams allValues].count == 0) {
+        [self.noTeamAlertView showView];
+    }
+
+    
+    //League *league = [encoderManager.masterEncoder.encoderLeagues objectForKey:_leagueName];
+    //NSString *leagueHid = league.hid;
     
     //NSString * leagueHid = [[[encoderManager.masterEncoder.encoderLeagues copy] allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",league ]][0][@"hid"];
     
-    NSArray * teamsDataList =[[encoderManager.masterEncoder.encoderTeams copy] allValues];
+    //NSArray * teamsDataList =[[encoderManager.masterEncoder.encoderTeams copy] allValues];
     
-    NSArray * filter1 = [teamsDataList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",homeTeamPick.userPick ]];
-    NSArray * filter2 = [teamsDataList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",visitTeamPick.userPick ]];
-    NSString * homeTeamLeagueHid = ([filter1 count])?filter1[0][@"league"]:@"";
-    NSString * awayTeamLeagueHid = ([filter2 count])?filter1[0][@"league"]:@"";
+    //NSArray * filter1 = [teamsDataList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",homeTeamPick.userPick ]];
+    //NSArray * filter2 = [teamsDataList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@",visitTeamPick.userPick ]];
+    //NSString * homeTeamLeagueHid = ([filter1 count])?filter1[0][@"league"]:@"";
+    //NSString * awayTeamLeagueHid = ([filter2 count])?filter1[0][@"league"]:@"";
     
-    if (![homeTeamLeagueHid isEqualToString:leagueHid]) {
-        homeTeamPick.userPick = DEFAULT_HOME_TEAM;
+    //if (![homeTeamLeagueHid isEqualToString:leagueHid]) {
+        //homeTeamPick.userPick = DEFAULT_HOME_TEAM;
         [selectHomeTeam  setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
-    }
+    //}
     
     
-    if (![awayTeamLeagueHid isEqualToString:leagueHid]) {
-        visitTeamPick.userPick = DEFAULT_AWAY_TEAM;
+    // (![awayTeamLeagueHid isEqualToString:leagueHid]) {
+        //visitTeamPick.userPick = DEFAULT_AWAY_TEAM;
         [selectAwayTeam setTitle:DEFAULT_AWAY_TEAM forState:UIControlStateNormal];
 
-    }
+    //}
 }
 
 -(void)initialiseLayout

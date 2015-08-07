@@ -21,7 +21,7 @@
 
 #import "ListPopoverController.h"
 #import "FakeEncoder.h"
-
+#import "SettingsViewController.h"
 //#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
@@ -324,6 +324,11 @@
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
+    if (_authenticatedEncoders.count == 0) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Encoder"}];
+        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"No Encoder" message:@"No Encoder is connected" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert showView];
+    }
 
 }
 

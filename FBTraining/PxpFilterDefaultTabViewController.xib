@@ -13,6 +13,7 @@
                 <outlet property="rightScrollView" destination="WdZ-1l-n9C" id="o77-vJ-jbd"/>
                 <outlet property="sliderView" destination="LAt-rz-bdd" id="KF2-UO-kZ1"/>
                 <outlet property="totalTagLabel" destination="BSH-qC-JS5" id="fnM-ke-45o"/>
+                <outlet property="userButtons" destination="Rto-dn-97l" id="M0X-uR-ffl"/>
                 <outlet property="view" destination="VAj-9B-THu" id="Pge-IE-kyy"/>
             </connections>
         </placeholder>
@@ -69,7 +70,7 @@
                         <action selector="clearButtonPressed:" destination="-1" eventType="touchUpInside" id="CB7-IZ-0cU"/>
                     </connections>
                 </button>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rto-dn-97l">
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rto-dn-97l" customClass="PxpFilterUserButtons">
                     <rect key="frame" x="541" y="421" width="251" height="71"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
