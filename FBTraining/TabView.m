@@ -9,6 +9,7 @@
 #import "TabView.h"
 #import "PxpFilterDefaultTabViewController.h"
 #import "PxpFilterHockeyTabViewController.h"
+#import "PxpFilterFootballTabViewController.h"
 #import "PxpFilterTabController.h"
 
 @interface TabView ()
@@ -24,12 +25,12 @@ static TabView* sharedFilter;
 @implementation TabView
 {
     NSMutableArray *_tabs; //view controller of all tabs
-    NSInteger previousIndex;
+    PxpFilterTabController *previousTab;
 }
 
-+(TabView*)sharedFilterTab
++(nonnull instancetype)sharedFilterTab
 {
-    if (!sharedFilter) sharedFilter= [[TabView alloc]init];
+    if (!sharedFilter) sharedFilter = [[TabView alloc]init];
     return sharedFilter;
 }
 
@@ -38,7 +39,7 @@ static TabView* sharedFilter;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray array];
-        previousIndex=-1;
+        previousTab=nil;
     }
     return self;
 }
@@ -47,23 +48,35 @@ static TabView* sharedFilter;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray arrayWithArray:tabs];
-        previousIndex=-1;
+        previousTab=nil;
     }
     return self;
 }
 
+-(BOOL)checkTabAvailability:(PxpFilterTabController*)targetTab{
+    return targetTab&&[_tabs indexOfObject:targetTab]!=NSNotFound;
+}
+
+-(void)showTab:(PxpFilterTabController*)targetTab{
+    [self.view insertSubview:targetTab.view belowSubview:_mainTabBar];
+    [targetTab show];
+}
+
+-(void)hideTab:(PxpFilterTabController*)targetTab{
+    [targetTab.view removeFromSuperview];
+    [targetTab hide];
+}
+
 -(void)show:(NSUInteger)tabIndex{
-    PxpFilterTabController *temp = _tabs[tabIndex];
-    if(previousIndex >= 0){
-        PxpFilterTabController *temp2 = _tabs[previousIndex];
-        [temp2.view removeFromSuperview];
-        [temp2 hide];
-    }
-    [self.view insertSubview:temp.view belowSubview:_mainTabBar];
-    [temp show];
-    [temp setPxpFilter:self.pxpFilter];
-    previousIndex = tabIndex;
     
+    PxpFilterTabController *currentTab = _tabs[tabIndex];
+    
+    if([self checkTabAvailability:previousTab])
+        [self hideTab:previousTab];
+    
+    [self showTab:currentTab];
+    
+    previousTab = currentTab;
 }
 
 - (void)customizeTabBarAppearance{
@@ -85,9 +98,13 @@ static TabView* sharedFilter;
         for (PxpFilterTabController *vc in _tabs) {
             [vc.tabImage drawInRect:CGRectMake(0, 0, 30, 30)];
             UITabBarItem *tabItem = [[UITabBarItem alloc] initWithTitle:vc.title image:vc.tabImage selectedImage:nil];
+            
             //position adjustment for tabitem titles and images
-            tabItem.imageInsets = UIEdgeInsetsMake(15, -50, -15, 50);
-            tabItem.titlePositionAdjustment = UIOffsetMake(20 + 40.0/_tabs.count,0);
+            CGSize textSize = [vc.title sizeWithAttributes:@{ NSFontAttributeName : [UIFont fontWithName:@"Arial" size:25.0f] }];
+            
+            tabItem.imageInsets = UIEdgeInsetsMake(15, -50-textSize.width/2.0, -15, 50+textSize.width/2.0);
+            tabItem.titlePositionAdjustment = UIOffsetMake(40.0/_tabs.count,0);
+            
             [tabItems addObject:tabItem];
         };
         
@@ -111,22 +128,55 @@ static TabView* sharedFilter;
 - (void)setTabs:(NSArray *)tabs {
     _tabs = [NSMutableArray arrayWithArray:tabs];
     
+    for (PxpFilterTabController * items in tabs) {
+            items.pxpFilter = self.pxpFilter;
+    }
+    
     [self updateTabBar];
 }
+
+
+-(void)setPxpFilter:(PxpFilter * __nullable)pxpFilter
+{
+    _pxpFilter = pxpFilter;
+    for (PxpFilterTabController * items in _tabs) {
+        items.pxpFilter = self.pxpFilter;
+    }
+}
+
 
 #pragma mark - Public Methods
 
 - (void)addTab:(PxpFilterTabController *)newTab{
     [_tabs addObject:newTab];
     
+    newTab.pxpFilter = self.pxpFilter;
+    
     [self updateTabBar];
+}
+
+- (BOOL)removeTab: (PxpFilterTabController *)tabToRemove{
+    if([self checkTabAvailability:tabToRemove]){
+        [_tabs removeObject:tabToRemove];
+        if(tabToRemove == previousTab){
+            [self hideTab:previousTab];
+            if(_tabs.count > 0){
+                previousTab = _tabs[0];
+                [self showTab:previousTab];
+            }
+        }
+        [self updateTabBar];
+        return YES;
+    }else{
+        [self updateTabBar];
+        return NO;
+    }
 }
 
 #pragma mark - TabBarDelegate
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
     NSUInteger itemIndex = [tabBar.items indexOfObject:item];
-    
     [self show:itemIndex];
 }
 

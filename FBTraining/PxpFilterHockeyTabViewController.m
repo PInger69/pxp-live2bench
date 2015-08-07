@@ -24,7 +24,6 @@
         self.title = @"Hockey";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
         
     }
     
@@ -58,7 +57,7 @@
     _leftScrollView.sortByPropertyKey = @"name";
     
     self.modules = [[NSMutableArray alloc]initWithObjects:
-                    _rightScrollView,_middleScrollView,_leftScrollView, _sliderView, nil];
+                    _rightScrollView,_middleScrollView,_leftScrollView, nil]; // removed the slider
     
      _sliderView.sortByPropertyKey = @"time";
     
@@ -82,9 +81,6 @@
 }
 - (void)hide{
     [_sliderView hide];
-}
-- (void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning {

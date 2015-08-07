@@ -22,10 +22,12 @@
     startPoint = [userInfo[@"startTime"] intValue];
     endPoint =  [userInfo[@"endTime"] intValue];
     
-    //NSLog(@"%d",startPoint);
-    //NSLog(@"%d",endPoint);
-    combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
-    [_parentFilter refresh];
+    if ( endPoint != 0 && startPoint != endPoint){
+        combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
+        [_parentFilter refresh];
+    } else {
+        combo = nil;
+    }
 }
 
 - (void)initPxpFilterRangeSlider{
@@ -74,11 +76,23 @@
 
 
 -(void)setEndTime:(NSInteger)endTime{
-    if(self.rangeSlider)
+
+    if(self.rangeSlider){
+        if (self.rangeSlider.highestValue == highestValue) {
+            highestValue = endTime;
+            endPoint = endTime;
+           //[self.rangeSlider setKnobWithStart:startPoint withEnd:highestValue];
+
+        }
         [self.rangeSlider setHighestValue:endTime];
-    else
+        
+    } else {
         highestValue = endTime;
+    }
+    
     if(endPoint < 0)endPoint = highestValue; //If the endpoint hasn't been initialized initialize now
+    
+    
 }
 
 //protocol
@@ -88,14 +102,15 @@
 }
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{
+
     if(combo)
         [tagsToFilter filterUsingPredicate:combo];
 }
 
 
-/*- (void)dealloc{
+- (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}*/
+}
 
 
 /*

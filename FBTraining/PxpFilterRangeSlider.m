@@ -135,6 +135,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 
 
 -(void)setHighestValue:(Float64)highestValue{
+    
     _highestValue = highestValue;
     _highestOriginalValue = highestValue;
     
@@ -360,7 +361,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     
     [CATransaction commit];
     
-    [self update];
+//    [self update];
     
     return YES;
 }

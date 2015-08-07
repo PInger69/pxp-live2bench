@@ -179,7 +179,7 @@
     [alert addButtonWithTitle: NSLocalizedString(@"Yes(From server and local device)", nil)];
     [alert addButtonWithTitle: NSLocalizedString(@"Yes(Only local)", nil)];
     [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
-    [alert show];
+    [alert showView];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -202,7 +202,7 @@
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     
     if ([alertView.message isEqualToString:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]] && buttonIndex == 0) {
@@ -260,6 +260,7 @@
         }
         
     }
+    [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
     
     [self checkDeleteAllButton];

@@ -10,6 +10,7 @@
 #import "AlertsSettingViewController.h"
 
 static NSMutableArray * alertPool;
+static NSMutableArray *_currentViews;
 
 
 
@@ -21,6 +22,7 @@ static AlertType    allowedTypes;
 +(void)staticInit {
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
+    _currentViews       = [[NSMutableArray alloc]init];
     
     // all enabled by default
     allowedTypes = AlertImportant | AlertNotification | AlertEncoder | AlertDevice | AlertIndecisive;
@@ -140,7 +142,8 @@ static AlertType    allowedTypes;
 -(BOOL)display
 {
     if (allowedTypes & self.type) {
-        [super show];
+        //[super show];
+        [self showView];
         return YES;
     } else {
         return NO;
@@ -153,6 +156,29 @@ static AlertType    allowedTypes;
     return self;
 }
 
+// Add new alert view to alert view arrays
+-(void)showView{
+    if (![_currentViews containsObject:self]) {
+        [_currentViews addObject:self];
+        if (_currentViews.count == 1) {
+            [self actuallyShowView];
+        }
+    }
+}
+
+// Actually show the alert on screen (Needed to avoid complecations in other places
+-(void)actuallyShowView{
+    [super show];
+}
+
+// The current alert is now done, so remove it from the alert view arrays, and if there is any more alert views in the array, display it
+-(void)viewFinished{
+    [_currentViews removeObjectAtIndex:0] ;
+    if (_currentViews.count != 0) {
+        CustomAlertView *toBeDisplayer = [_currentViews objectAtIndex:0];
+        [toBeDisplayer actuallyShowView];
+    }
+}
 
 
 @end

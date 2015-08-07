@@ -24,7 +24,7 @@
     if (self) {
         self.title = @"Default";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
-        
+    
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
 
     }
@@ -39,10 +39,17 @@
     _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)filter.unfilteredTags.count];
 }
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.modules = [[NSMutableArray alloc]initWithObjects:
-                    _rightScrollView,_middleScrollView,_leftScrollView,_sliderView,_userButtons, nil];
+    self.modules = [[NSMutableArray alloc]initWithArray:@[
+                                                          _rightScrollView
+//                                                          ,_middleScrollView
+//                                                          ,_leftScrollView
+                                                          ,_sliderView
+                                                          ,_userButtons]
+                    ];
     
     
     _middleScrollView.sortByPropertyKey     = @"name";
@@ -59,7 +66,9 @@
 }
 
 - (void)show{
+
     [_sliderView show];
+            [self refreshUI];
 }
 - (void)hide{
     [_sliderView hide];
@@ -94,7 +103,7 @@
     [_rightScrollView buildButtonsWith:[tempSet allObjects]];
     [_middleScrollView buildButtonsWith:@[@"none"]];
     [_leftScrollView buildButtonsWith:@[@"none"]];
-    [_sliderView setEndTime:latestTagTime+1];
+    [_sliderView setEndTime:latestTagTime];
     
     
     
@@ -105,7 +114,7 @@
     _filteredTagLabel.text = [NSString stringWithFormat:@"Filtered Tag(s): %lu",(unsigned long)self.pxpFilter.filteredTags.count];
     _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)self.pxpFilter.unfilteredTags.count];
     
-    
+    [self.pxpFilter refresh];
 }
 
 
@@ -117,9 +126,6 @@
 }
 
 
-- (void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

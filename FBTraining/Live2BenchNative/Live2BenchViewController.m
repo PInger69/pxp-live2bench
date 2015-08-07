@@ -926,8 +926,9 @@ static void * eventContext      = &eventContext;
     self.telestrationViewController.telestration = nil;
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+-(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
 //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
+    [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
 }
 

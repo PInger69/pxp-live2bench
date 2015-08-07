@@ -166,6 +166,8 @@
 		D72B833517CFDBAE0035A1C4 /* EulaString.txt in Resources */ = {isa = PBXBuildFile; fileRef = D72B833417CFDBAE0035A1C4 /* EulaString.txt */; };
 		D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = D72CC2891AFA858100E26B60 /* RatingOutput.m */; };
 		D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72FA56B180ECDAE009ACA87 /* BookmarkFilterViewController.m */; };
+		D7341A861B73C01D005156E9 /* PxpFilterFootballTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7341A841B73C01D005156E9 /* PxpFilterFootballTabViewController.m */; };
+		D7341A871B73C01D005156E9 /* PxpFilterFootballTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7341A851B73C01D005156E9 /* PxpFilterFootballTabViewController.xib */; };
 		D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D735290417CBEEDD003E3722 /* FootballBottomViewController.m */; };
 		D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D737F5AF17F0DFC40053081F /* CalendarViewController.m */; };
 		D738304C198A94D60053F0A1 /* FilterProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = D7383045198A94D60053F0A1 /* FilterProcessor.m */; };
@@ -756,6 +758,9 @@
 		D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RatingOutput.h; sourceTree = "<group>"; };
 		D72FA56A180ECDAE009ACA87 /* BookmarkFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkFilterViewController.h; sourceTree = "<group>"; };
 		D72FA56B180ECDAE009ACA87 /* BookmarkFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkFilterViewController.m; sourceTree = "<group>"; };
+		D7341A831B73C01D005156E9 /* PxpFilterFootballTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterFootballTabViewController.h; sourceTree = "<group>"; };
+		D7341A841B73C01D005156E9 /* PxpFilterFootballTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterFootballTabViewController.m; sourceTree = "<group>"; };
+		D7341A851B73C01D005156E9 /* PxpFilterFootballTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterFootballTabViewController.xib; sourceTree = "<group>"; };
 		D735290317CBEEDD003E3722 /* FootballBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballBottomViewController.h; sourceTree = "<group>"; };
 		D735290417CBEEDD003E3722 /* FootballBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FootballBottomViewController.m; sourceTree = "<group>"; };
 		D737F5AE17F0DFC40053081F /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
@@ -2074,6 +2079,9 @@
 				D78093B51B6ACA25006488A9 /* PxpFilterDefaultTabViewController.m */,
 				D78093B61B6ACA25006488A9 /* PxpFilterDefaultTabViewController.xib */,
 				D767EF0F1B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.h */,
+				D7341A831B73C01D005156E9 /* PxpFilterFootballTabViewController.h */,
+				D7341A841B73C01D005156E9 /* PxpFilterFootballTabViewController.m */,
+				D7341A851B73C01D005156E9 /* PxpFilterFootballTabViewController.xib */,
 				D767EF101B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m */,
 				D767EF111B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib */,
 				D743D47D1B696EF400533070 /* PxpFilterButtonScrollView.h */,
@@ -2947,6 +2955,7 @@
 				D786C1F517EBA4B20042DD96 /* logoTab@2x.png in Resources */,
 				D786C24817F3A6E30042DD96 /* TaggingString.txt in Resources */,
 				D786C1F917EBA6BE0042DD96 /* live2BenchTabSelect@2x.png in Resources */,
+				D7341A871B73C01D005156E9 /* PxpFilterFootballTabViewController.xib in Resources */,
 				D786C23B17F3904A0042DD96 /* HardwareString.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3197,6 +3206,7 @@
 				D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */,
 				D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */,
 				AED484B31B56A23600769EEF /* PxpCircleButton.m in Sources */,
+				D7341A861B73C01D005156E9 /* PxpFilterFootballTabViewController.m in Sources */,
 				D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */,
 				AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */,
 				AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */,

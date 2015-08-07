@@ -111,7 +111,7 @@
     CustomButton  *button = (CustomButton *)sender;
     BOOL isButtonSelected = button.isSelected ? FALSE : TRUE;
     [button setSelected:isButtonSelected];
-    
+    _selectedCount = 0;    
     if(button.isSelected){
         [_userSelected addObject:button.titleLabel.text];
     } else {
@@ -127,7 +127,7 @@
         }
     }
     _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
-    
+    [_parentFilter refresh];
     
     
 }

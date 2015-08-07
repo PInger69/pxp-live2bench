@@ -443,7 +443,7 @@
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these events?"] && (buttonIndex == 0 || buttonIndex == 1)) {
         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
@@ -480,6 +480,7 @@
     } else{
         if (alertView.numberOfButtons == 3) {
             if (buttonIndex == 2) {
+                [alertView viewFinished];
                 return;
             }
             Event *eventToRemove = self.tableData[self.editingIndexPath.row];
@@ -516,13 +517,14 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
                 [self removeIndexPathFromDeletion];
             } else {
+                [alertView viewFinished];
                 return;
             }
         }
     }
     
     [CustomAlertView removeAlert:alertView];
-    
+    [alertView viewFinished];
     [self checkDeleteAllButton];
 }
 
