@@ -167,7 +167,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/HockeyBottomViewController.m"
@@ -218,14 +218,21 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/SoccerBottomViewController.m"
+            timestampString = "459975678.962908"
+=======
             filePath = "FBTraining/VideoTrimItem.m"
             timestampString = "459810278.903577"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "90"
             endingLineNumber = "90"
             landmarkName = "-createClip"
             landmarkType = "5">
+<<<<<<< HEAD
+=======
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -242,6 +249,7 @@
             endingLineNumber = "118"
             landmarkName = "-initWithAppDelegate:"
             landmarkType = "5">
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -275,6 +283,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/Live2BenchViewController.m"
+            timestampString = "460659852.264567"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "483"
+            endingLineNumber = "483"
+            landmarkName = "-swipeNoticed:"
+=======
             filePath = "FBTraining/TabView.m"
             timestampString = "460583994.833518"
             startingColumnNumber = "9223372036854775807"
@@ -298,6 +315,7 @@
             startingLineNumber = "102"
             endingLineNumber = "102"
             landmarkName = "-updateTabBar"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -307,6 +325,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
+            timestampString = "460050435.638954"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "933"
+            endingLineNumber = "933"
+            landmarkName = "-seekBy:"
+=======
             filePath = "FBTraining/TabView.m"
             timestampString = "460581816.397725"
             startingColumnNumber = "9223372036854775807"
@@ -330,6 +357,7 @@
             startingLineNumber = "60"
             endingLineNumber = "60"
             landmarkName = "-showTab:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -337,6 +365,17 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
+<<<<<<< HEAD
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
+            timestampString = "460050560.344802"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "945"
+            endingLineNumber = "945"
+            landmarkName = "-seekBy:"
+=======
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/PxpFilterTabController.h"
@@ -440,6 +479,7 @@
             startingLineNumber = "147"
             endingLineNumber = "147"
             landmarkName = "-cellSelected:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -449,6 +489,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
+            timestampString = "460050561.640753"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "949"
+            endingLineNumber = "949"
+            landmarkName = "-seekBy:"
+=======
             filePath = "FBTraining/PxpFilterTabController.m"
             timestampString = "460569188.866269"
             startingColumnNumber = "9223372036854775807"
@@ -536,6 +585,7 @@
             startingLineNumber = "776"
             endingLineNumber = "776"
             landmarkName = "-pressFilterButton"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -545,6 +595,16 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
+            timestampString = "460050592.676556"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "953"
+            endingLineNumber = "953"
+            landmarkName = "-seekBy:"
+            landmarkType = "5">
+=======
             filePath = "FBTraining/PxpFilterTabViewController.h"
             timestampString = "460481593.389871"
             startingColumnNumber = "9223372036854775807"
@@ -615,6 +675,7 @@
             endingLineNumber = "27"
             landmarkName = "rangeSlider"
             landmarkType = "19">
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -623,12 +684,23 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/RJLVideoPlayerClasses/RJLVideoPlayer.m"
+            timestampString = "460050595.023932"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "952"
+            endingLineNumber = "952"
+            landmarkName = "-seekBy:"
+            landmarkType = "5">
+=======
             filePath = "FBTraining/PxpFilter.m"
             timestampString = "460474732.659684"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "171"
             endingLineNumber = "171">
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -637,12 +709,23 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/PxpVideoBar.m"
+            timestampString = "460062922.283817"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "282"
+            endingLineNumber = "282"
+            landmarkName = "-getSeekSpeed:"
+            landmarkType = "5">
+=======
             filePath = "FBTraining/PxpFilter.m"
             timestampString = "460474205.954321"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "42"
             endingLineNumber = "42">
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -651,12 +734,23 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/PxpVideoBar.m"
+            timestampString = "460062922.283817"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
+            landmarkName = "-getSeekSpeed:"
+            landmarkType = "5">
+=======
             filePath = "FBTraining/PxpFilter.m"
             timestampString = "460474234.731902"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "48"
             endingLineNumber = "48">
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -665,6 +759,16 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/PxpVideoBar.m"
+            timestampString = "460062922.283817"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "-extendStartAction:"
+            landmarkType = "5">
+=======
             filePath = "FBTraining/PxpFilterTabController.m"
             timestampString = "460569188.866269"
             startingColumnNumber = "9223372036854775807"
@@ -719,6 +823,7 @@
                   offsetFromSymbolStart = "210">
                </Location>
             </Locations>
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -727,6 +832,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/PxpVideoBar.m"
+            timestampString = "460062922.283817"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "-extendStartAction:"
+=======
             filePath = "FBTraining/PxpFilterRangeSliderView.m"
             timestampString = "460583994.833518"
             startingColumnNumber = "9223372036854775807"
@@ -734,6 +848,7 @@
             startingLineNumber = "31"
             endingLineNumber = "31"
             landmarkName = "-initPxpFilterRangeSlider"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -743,6 +858,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/PxpVideoBar.m"
+            timestampString = "460062713.154185"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "185"
+            endingLineNumber = "185"
+            landmarkName = "-extendStartAction:"
+=======
             filePath = "FBTraining/PxpFilterRangeSlider.m"
             timestampString = "460482102.116088"
             startingColumnNumber = "9223372036854775807"
@@ -750,6 +874,7 @@
             startingLineNumber = "158"
             endingLineNumber = "158"
             landmarkName = "-initWithFrame:Name:AccessLable:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -759,6 +884,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/PxpVideoBar.m"
+            timestampString = "460062922.283817"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
+            landmarkName = "-extendStartAction:"
+=======
             filePath = "FBTraining/PxpFilterRangeSlider.m"
             timestampString = "460482117.381358"
             startingColumnNumber = "9223372036854775807"
@@ -766,6 +900,7 @@
             startingLineNumber = "172"
             endingLineNumber = "172"
             landmarkName = "-initWithFrame:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -775,6 +910,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/LocalEncoder.m"
+            timestampString = "460398542.00383"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "697"
+            endingLineNumber = "697"
+            landmarkName = "-searchEventByName:"
+=======
             filePath = "FBTraining/PxpFilterRangeSlider.m"
             timestampString = "460482135.945589"
             startingColumnNumber = "9223372036854775807"
@@ -782,6 +926,7 @@
             startingLineNumber = "181"
             endingLineNumber = "181"
             landmarkName = "-initWithFrame:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -791,6 +936,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Clip.m"
+            timestampString = "460484809.324262"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
+            landmarkName = "-write"
+=======
             filePath = "FBTraining/PxpFilterRangeSlider.m"
             timestampString = "460505188.789448"
             startingColumnNumber = "9223372036854775807"
@@ -814,6 +968,7 @@
             startingLineNumber = "328"
             endingLineNumber = "328"
             landmarkName = "-continueTrackingWithTouch:withEvent:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -823,6 +978,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Tag.m"
+            timestampString = "460483497.922942"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
+            landmarkName = "-setComment:"
+=======
             filePath = "FBTraining/PxpFilterRangeSlider.m"
             timestampString = "460505188.789448"
             startingColumnNumber = "9223372036854775807"
@@ -830,6 +994,7 @@
             startingLineNumber = "372"
             endingLineNumber = "372"
             landmarkName = "-endTrackingWithTouch:withEvent:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -839,6 +1004,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Tag.m"
+            timestampString = "460483499.035138"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
+            landmarkName = "-setRating:"
+=======
             filePath = "FBTraining/PxpFilterRangeSliderView.m"
             timestampString = "460583994.833518"
             startingColumnNumber = "9223372036854775807"
@@ -846,6 +1020,7 @@
             startingLineNumber = "26"
             endingLineNumber = "26"
             landmarkName = "-timeUpdate:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -855,14 +1030,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilterRangeSliderView.m"
-            timestampString = "460485254.490378"
+            filePath = "FBTraining/ARCalendarTableViewController.m"
+            timestampString = "460581471.778035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "13"
-            endingLineNumber = "13"
-            landmarkName = "@implementation PxpFilterRangeSliderView"
-            landmarkType = "3">
+            startingLineNumber = "483"
+            endingLineNumber = "483"
+            landmarkName = "-alertView:clickedButtonAtIndex:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -871,6 +1046,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/ARCalendarTableViewController.m"
+            timestampString = "460581471.778035"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "520"
+            endingLineNumber = "520"
+            landmarkName = "-alertView:clickedButtonAtIndex:"
+=======
             filePath = "FBTraining/PxpFilterRangeSlider.m"
             timestampString = "460567763.111462"
             startingColumnNumber = "9223372036854775807"
@@ -878,6 +1062,7 @@
             startingLineNumber = "401"
             endingLineNumber = "401"
             landmarkName = "-deselectAll"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -887,6 +1072,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/ARCalendarTableViewController.m"
+            timestampString = "460581471.778035"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "527"
+            endingLineNumber = "527"
+            landmarkName = "-alertView:clickedButtonAtIndex:"
+=======
             filePath = "FBTraining/PxpFilterRangeSliderView.m"
             timestampString = "460583994.833518"
             startingColumnNumber = "9223372036854775807"
@@ -894,6 +1088,7 @@
             startingLineNumber = "27"
             endingLineNumber = "27"
             landmarkName = "-timeUpdate:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -903,6 +1098,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/ListTableViewController.m"
+            timestampString = "460503547.687261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "-deleteAllButtonTarget"
+=======
             filePath = "FBTraining/PxpFilterRangeSliderView.m"
             timestampString = "460583994.833518"
             startingColumnNumber = "9223372036854775807"
@@ -910,6 +1114,7 @@
             startingLineNumber = "90"
             endingLineNumber = "90"
             landmarkName = "-filterTags:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -919,6 +1124,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/DeletableTableViewController.m"
+            timestampString = "460503586.914033"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
+            landmarkName = "-deleteAllButtonTarget"
+=======
             filePath = "FBTraining/PxpFilterTabViewController.m"
             timestampString = "460495781.352543"
             startingColumnNumber = "9223372036854775807"
@@ -926,6 +1140,7 @@
             startingLineNumber = "26"
             endingLineNumber = "26"
             landmarkName = "-initWithNibName:bundle:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -935,12 +1150,19 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/SettingsViewController.m"
+            timestampString = "460590893.903575"
+=======
             filePath = "FBTraining/PxpFilterDefaultTabViewController.m"
             timestampString = "460499906.935914"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "9"
-            endingLineNumber = "9">
+            startingLineNumber = "780"
+            endingLineNumber = "780"
+            landmarkName = "-checkUserSelection"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -949,13 +1171,19 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilterHockeyTabViewController.m"
-            timestampString = "460569188.866269"
+            filePath = "FBTraining/SettingsViewController.m"
+            timestampString = "460590893.903575"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
+            startingLineNumber = "781"
+            endingLineNumber = "781"
+            landmarkName = "-checkUserSelection"
+=======
             startingLineNumber = "42"
             endingLineNumber = "42"
             landmarkName = "-viewDidLoad"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -965,6 +1193,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/CustomTabBar.m"
+            timestampString = "460668518.958846"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
+            landmarkName = "-toggleTabs:"
+=======
             filePath = "FBTraining/PxpFilterDefaultTabViewController.m"
             timestampString = "460569188.866269"
             startingColumnNumber = "9223372036854775807"
@@ -972,7 +1209,40 @@
             startingLineNumber = "43"
             endingLineNumber = "43"
             landmarkName = "-viewDidLoad"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[CustomTabBar toggleTabs:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/CustomTabBar.m"
+                  timestampString = "460659959.133752"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "240"
+                  endingLineNumber = "240"
+                  offsetFromSymbolStart = "908">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[CustomTabBar toggleTabs:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/CustomTabBar.m"
+                  timestampString = "460659959.134023"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "240"
+                  endingLineNumber = "240"
+                  offsetFromSymbolStart = "926">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -981,6 +1251,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/CustomTabBar.m"
+            timestampString = "460668518.958846"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
+            landmarkName = "-check:array:"
+=======
             filePath = "FBTraining/TabView.m"
             timestampString = "460581307.744439"
             startingColumnNumber = "9223372036854775807"
@@ -1034,7 +1313,16 @@
             startingLineNumber = "61"
             endingLineNumber = "61"
             landmarkName = "-show"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent
+                     consoleCommand = "po vcName">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1043,6 +1331,15 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/CustomTabBar.m"
+            timestampString = "460668518.958846"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "245"
+            endingLineNumber = "245"
+            landmarkName = "-toggleTabs:"
+=======
             filePath = "FBTraining/PxpFilterRangeSliderView.m"
             timestampString = "460583994.833518"
             startingColumnNumber = "9223372036854775807"
@@ -1050,12 +1347,25 @@
             startingLineNumber = "70"
             endingLineNumber = "70"
             landmarkName = "-hide"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+<<<<<<< HEAD
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/EncoderManager.m"
+            timestampString = "460665580.684998"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
+            landmarkName = "-registerEncoder:ip:"
+=======
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -1066,43 +1376,78 @@
             startingLineNumber = "64"
             endingLineNumber = "64"
             landmarkName = "-show"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilter.m"
-            timestampString = "460566574.022913"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "460665754.051205"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95">
+            startingLineNumber = "1383"
+            endingLineNumber = "1383"
+            landmarkName = "-connectionDidFinishLoading:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "460665760.708895"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1486"
+            endingLineNumber = "1486"
+            landmarkName = "-authenticateResponse:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "460665876.33041"
+=======
             filePath = "FBTraining/PxpFilter.m"
             timestampString = "460566584.509042"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92">
+            startingLineNumber = "1393"
+            endingLineNumber = "1393"
+            landmarkName = "-connectionDidFinishLoading:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
+            timestampString = "460665955.82868"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1382"
+            endingLineNumber = "1382"
+            landmarkName = "-connectionDidFinishLoading:"
+=======
             filePath = "FBTraining/TabView.m"
             timestampString = "460583994.833518"
             startingColumnNumber = "9223372036854775807"
@@ -1430,7 +1775,16 @@
             startingLineNumber = "111"
             endingLineNumber = "111"
             landmarkName = "-drawRect:"
+>>>>>>> 3721c16377694d29de33e103a120c67ac0028ca8
             landmarkType = "5">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent
+                     consoleCommand = "po results">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

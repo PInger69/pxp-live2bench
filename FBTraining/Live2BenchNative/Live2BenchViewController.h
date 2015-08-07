@@ -52,6 +52,7 @@
 @property (nonatomic,strong)    UIAlertView
 * videoPlaybackFailedAlertView;
 
+
 //@property (nonatomic, strong)   TagMarker                                    * currentPlayingTagMarker;
 //@property (nonatomic,strong)    TagMarker                                    * tagMarker;
 

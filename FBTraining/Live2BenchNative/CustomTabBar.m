@@ -159,7 +159,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     }
 }
 
-- (void)refreshTabs {
+/*- (void)refreshTabs {
     
     // Remove all tabs except for the settings tab
     for (CustomTabViewController *vc in [self.tabs copy]) {
@@ -185,13 +185,74 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
         [self addChildViewController:vc];
     }
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_CHANGE object:nil];
     [self createTabButtons];
     
+}*/
+
+// check if self.tabs have the tab that should be visible
+-(Boolean)check:(NSString*)name{
+    for (CustomTabViewController *vc in self.tabs) {
+        NSArray *words = [vc.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+        NSString *vcName;
+        if (words.count > 1 ) {
+            vcName = [NSString stringWithFormat:@"%@%@",words[0],words[1]];
+        }else{
+            vcName = words[0];
+        }
+        if ([vcName isEqualToString:name]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// check if the tab in self.tabs should be visible
+-(Boolean)check:(CustomTabViewController*)vc array:(NSArray*)array{
+    NSArray *words = [vc.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+    NSString *vcName;
+    if (words.count > 1 ) {
+        vcName = [NSString stringWithFormat:@"%@%@",words[0],words[1]];
+    }else{
+        vcName = words[0];
+    }
+    
+    for (NSString *name in array) {
+        if ([vcName isEqualToString:name]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 -(void)toggleTabs:(NSNotification *)note {
+    NSArray *tabsName = note.userInfo[@"TabsName"];
+    NSArray *tabs = note.userInfo[@"Tabs"];
     
-    [self refreshTabs];
+    // If there is tab that is not already visible, add it
+    for (NSString *name in tabsName) {
+        if(![self check:name]) {
+            NSInteger index = [tabsName indexOfObject:name];
+            Class tabClass = [tabs objectAtIndex:index];
+            CustomTabViewController *vc = [[tabClass alloc]initWithAppDelegate:appDel];
+            [self.tabs addObject:vc];
+            [self addChildViewController:vc];
+        }
+    }
+    
+    // If there is tab that is already gone, remove it
+    for (CustomTabViewController *vc in [self.tabs copy]) {
+        if (![self check:vc array:tabsName] && ![vc isKindOfClass:[SettingsPageViewController class]]) {
+            [vc removeFromParentViewController];
+            [self.tabs removeObject:vc];
+        }
+
+    }
+    
+    // this notification allows some tab to set itself up
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAB_CREATED object:nil];
+    [self createTabButtons];
+    //[self refreshTabs];
 }
 
 -(void)viewDidAppear:(BOOL)animated

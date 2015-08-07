@@ -160,6 +160,7 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
         
         [self.view addSubview:self.container];
         
@@ -217,8 +218,25 @@
     self.tagNameSelectController.tagDescriptors = tagDescriptors;
 }
 
+-(void)tabJustBeingAdded:(NSNotification*)note{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAB_CREATED object:nil];
+    _observedEncoder = _appDel.encoderManager.masterEncoder;
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    _currentEvent = [_appDel.encoderManager.primaryEncoder event];
+    [self.videoPlayer playFeed:[[_currentEvent.feeds allValues] firstObject]];
+    if (_currentEvent.live) {
+        [self.videoPlayer gotolive];
+    }
+
+    self.teleSelectController.event = _currentEvent;
+
+    [self onEventChange];
+
+}
+
 -(void)addEventObserver:(NSNotification*)note
 {
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAB_CREATED object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
     
     if (note.object == nil) {
