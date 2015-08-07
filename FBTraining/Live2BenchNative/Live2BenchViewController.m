@@ -39,7 +39,8 @@
 #import "TeamPlayer.h"
 #import "ContentViewController.h"
 
-#import "PxpPlayerMultiViewController.h"
+#import "PxpPlayerViewController.h"
+#import "PxpPlayerMultiView.h"
 #import "PxpEventContext.h"
 #import "PxpVideoBar.h"
 #import "PxpFullscreenViewController.h"
@@ -57,7 +58,7 @@
 @interface Live2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider>
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
-@property (strong, nonatomic, nonnull) PxpPlayerMultiViewController *playerViewController;
+@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
 
 @end
 
@@ -159,7 +160,7 @@ static void * eventContext      = &eventContext;
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
         
-        _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        _playerViewController = [[PxpPlayerViewController alloc] initWithPlayerViewClass:[PxpPlayerMultiView class]];
         [self addChildViewController:_playerViewController];
         _videoBar = [[PxpVideoBar alloc] init];
         _fullscreenViewController = [[PxpFullscreenViewController alloc] init];
@@ -555,8 +556,8 @@ static void * eventContext      = &eventContext;
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
     
     PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
-    _playerViewController.multiView.player = context.mainPlayer;
-    _videoBar.player = self.playerViewController.multiView.player;
+    _playerViewController.playerView.player = context.mainPlayer;
+    _videoBar.player = context.mainPlayer;
     _videoBar.event = _currentEvent;
     _fullscreenViewController.playerViewController.multiView.player = context.mainPlayer;
 }
@@ -959,7 +960,7 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
         
-        self.playerViewController.multiView.context.mainPlayer.live = YES;
+        self.playerViewController.playerView.player.live = YES;
         
         return;
     }
@@ -1262,7 +1263,7 @@ static void * eventContext      = &eventContext;
 
 - (NSTimeInterval)currentTimeInSeconds {
     //return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
-    return self.playerViewController.multiView.context.currentTimeInSeconds;
+    return self.playerViewController.playerView.player.currentTimeInSeconds;
 }
 
 /*

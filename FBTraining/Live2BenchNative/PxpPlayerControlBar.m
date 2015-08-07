@@ -29,15 +29,12 @@
 
 @property (strong, nonatomic, nonnull) UIView *blurView;
 
-@property (strong, nonatomic, nonnull) PxpPlayerControlToolbar *toolbar;
 @property (strong, nonatomic, nonnull) PxpPlayerControlSlider *slider;
 @property (strong, nonatomic, nonnull) UILabel *leftLabel;
 @property (strong, nonatomic, nonnull) UILabel *rightLabel;
 
-@property (strong, nonatomic, nonnull) UIBarButtonItem *liveLight;
-@property (strong, nonatomic, nonnull) UIBarButtonItem *recordingLight;
-@property (strong, nonatomic, nonnull) UIBarButtonItem *rangeCancelButton;
-@property (strong, nonatomic, nonnull) UIBarButtonItem *defaultItem;
+@property (strong, nonatomic, nonnull) PxpPlayerLight *liveLight;
+@property (strong, nonatomic, nonnull) PxpCancelButton *rangeCancelButton;
 
 @property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *hideGestureRecognizer;
 @property (strong, nonatomic, nonnull) UISwipeGestureRecognizer *showGestureRecognizer;
@@ -51,107 +48,107 @@
     void *_rateObserverContext;
 }
 
+- (void)initControlBar {
+    _container = [[UIView alloc] initWithFrame:self.bounds];
+    _container.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    _playPauseButton = [[PxpPlayPauseButton alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
+    _playPauseButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
+    _playPauseButton.delegate = self;
+    
+    _liveLight = [[PxpPlayerLight alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
+    _liveLight.color = [UIColor greenColor];
+    
+    _rangeCancelButton = [[PxpCancelButton alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
+    _rangeCancelButton.tintColor = [UIColor redColor];
+    
+    [_rangeCancelButton addTarget:self action:@selector(cancelRange:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _blurContainer = [[UIView alloc] initWithFrame:_container.bounds];
+    _blurContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+        _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    } else {
+        _blurView = [[UIView alloc] init];
+        _blurView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    }
+    
+    _blurView.frame = _blurContainer.bounds;
+    _blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    _slider = [[PxpPlayerControlSlider alloc] initWithFrame:CGRectMake(110, 0, _container.bounds.size.width - 2 * 110, _container.bounds.size.height)];
+    _slider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [_slider addTarget:self action:@selector(seekDidBegin:) forControlEvents:UIControlEventTouchDown];
+    [_slider addTarget:self action:@selector(seekDidUpdate:) forControlEvents:UIControlEventValueChanged];
+    [_slider addTarget:self action:@selector(seekDidEnd:) forControlEvents:UIControlEventTouchCancel | UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    _slider.minimumValue = 0.0;
+    _slider.maximumValue = 1.0;
+    
+    _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(49.5, 0, 55, _container.bounds.size.height)];
+    _leftLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
+    _leftLabel.font = [UIFont systemFontOfSize:18.0];
+    _leftLabel.adjustsFontSizeToFitWidth = YES;
+    _leftLabel.textAlignment = NSTextAlignmentCenter;
+    _leftLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+    _leftLabel.text = @"00:00:00";
+    _leftLabel.textColor = [UIColor whiteColor];
+    _leftLabel.layer.shadowColor = [UIColor whiteColor].CGColor;
+    _leftLabel.layer.shadowRadius = 11.0;
+    _leftLabel.layer.shadowOpacity = 1.0;
+    _leftLabel.layer.shadowOffset = CGSizeZero;
+    
+    _rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(_container.bounds.size.width - 49.5 - 55, 0, 55, _container.bounds.size.height)];
+    _rightLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+    _rightLabel.font = [UIFont systemFontOfSize:18.0];
+    _rightLabel.adjustsFontSizeToFitWidth = YES;
+    _rightLabel.textAlignment = NSTextAlignmentCenter;
+    _rightLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+    _rightLabel.text = @"00:00:00";
+    _rightLabel.textColor = [UIColor whiteColor];
+    _rightLabel.layer.shadowColor = [UIColor whiteColor].CGColor;
+    _rightLabel.layer.shadowRadius = 11.0;
+    _rightLabel.layer.shadowOpacity = 1.0;
+    _rightLabel.layer.shadowOffset = CGSizeZero;
+    
+    [self addSubview:_container];
+    [_container addSubview:_blurContainer];
+    [_blurContainer addSubview:_blurView];
+    [_container addSubview:_slider];
+    [_container addSubview:_playPauseButton];
+    [_container addSubview:_liveLight];
+    [_container addSubview:_rangeCancelButton];
+    [_container addSubview:_leftLabel];
+    [_container addSubview:_rightLabel];
+    
+    _hideGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(controlBarHideGestureRecognized:)];
+    _hideGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+    
+    _showGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(controlBarHideGestureRecognized:)];
+    _showGestureRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+    
+    [self addGestureRecognizer:_hideGestureRecognizer];
+    [self addGestureRecognizer:_showGestureRecognizer];
+    
+    self.clipsToBounds = YES;
+    
+    _rateObserverContext = &_rateObserverContext;
+    
+    [self addObserver:self forKeyPath:@"player.rate" options:0 context:_rateObserverContext];
+}
+
 - (nonnull instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _container = [[UIView alloc] initWithFrame:self.bounds];
-        _container.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-        _playPauseButton = [[PxpPlayPauseButton alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
-        _playPauseButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
-        _playPauseButton.delegate = self;
-        
-        PxpPlayerLight *greenLight = [[PxpPlayerLight alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
-        greenLight.color = [UIColor greenColor];
-        
-        PxpPlayerLight *redLight = [[PxpPlayerLight alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
-        redLight.color = [UIColor redColor];
-        
-        _liveLight = [[UIBarButtonItem alloc] initWithCustomView:greenLight];
-        _recordingLight = [[UIBarButtonItem alloc] initWithCustomView:redLight];
-        
-        PxpCancelButton *cancelButton = [[PxpCancelButton alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
-        cancelButton.tintColor = [UIColor redColor];
-        
-        [cancelButton addTarget:self action:@selector(cancelRange:) forControlEvents:UIControlEventTouchUpInside];
-        
-        _rangeCancelButton = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
-        
-        _defaultItem = [[UIBarButtonItem alloc] init];
-        
-        _blurContainer = [[UIView alloc] initWithFrame:_container.bounds];
-        _blurContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
-            _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
-        } else {
-            _blurView = [[UIView alloc] init];
-            _blurView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-        }
-        
-        _blurView.frame = _blurContainer.bounds;
-        _blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-        _toolbar = [[PxpPlayerControlToolbar alloc] initWithFrame:_container.bounds];
-        _toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _toolbar.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_playPauseButton];
-        
-        _slider = [[PxpPlayerControlSlider alloc] initWithFrame:CGRectMake(110, 0, _toolbar.bounds.size.width - 2 * 110, _toolbar.bounds.size.height)];
-        _slider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [_slider addTarget:self action:@selector(seekDidBegin:) forControlEvents:UIControlEventTouchDown];
-        [_slider addTarget:self action:@selector(seekDidUpdate:) forControlEvents:UIControlEventValueChanged];
-        [_slider addTarget:self action:@selector(seekDidEnd:) forControlEvents:UIControlEventTouchCancel | UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
-        _slider.minimumValue = 0.0;
-        _slider.maximumValue = 1.0;
-        
-        _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(49.5, 0, 55, _container.bounds.size.height)];
-        _leftLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
-        _leftLabel.font = [UIFont systemFontOfSize:18.0];
-        _leftLabel.adjustsFontSizeToFitWidth = YES;
-        _leftLabel.textAlignment = NSTextAlignmentCenter;
-        _leftLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-        _leftLabel.text = @"00:00:00";
-        _leftLabel.textColor = [UIColor whiteColor];
-        _leftLabel.layer.shadowColor = [UIColor whiteColor].CGColor;
-        _leftLabel.layer.shadowRadius = 11.0;
-        _leftLabel.layer.shadowOpacity = 1.0;
-        _leftLabel.layer.shadowOffset = CGSizeZero;
-        
-        _rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(_container.bounds.size.width - 49.5 - 55, 0, 55, _container.bounds.size.height)];
-        _rightLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
-        _rightLabel.font = [UIFont systemFontOfSize:18.0];
-        _rightLabel.adjustsFontSizeToFitWidth = YES;
-        _rightLabel.textAlignment = NSTextAlignmentCenter;
-        _rightLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-        _rightLabel.text = @"00:00:00";
-        _rightLabel.textColor = [UIColor whiteColor];
-        _rightLabel.layer.shadowColor = [UIColor whiteColor].CGColor;
-        _rightLabel.layer.shadowRadius = 11.0;
-        _rightLabel.layer.shadowOpacity = 1.0;
-        _rightLabel.layer.shadowOffset = CGSizeZero;
-        
-        [self addSubview:_container];
-        [_container addSubview:_blurContainer];
-        [_blurContainer addSubview:_blurView];
-        [_container addSubview:_toolbar];
-        [_toolbar addSubview:_slider];
-        [_container addSubview:_leftLabel];
-        [_container addSubview:_rightLabel];
-        
-        _hideGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(controlBarHideGestureRecognized:)];
-        _hideGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-        
-        _showGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(controlBarHideGestureRecognized:)];
-        _showGestureRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
-        
-        [self addGestureRecognizer:_hideGestureRecognizer];
-        [self addGestureRecognizer:_showGestureRecognizer];
-        
-        self.clipsToBounds = YES;
-        
-        _rateObserverContext = &_rateObserverContext;
-        
-        [self addObserver:self forKeyPath:@"player.rate" options:0 context:_rateObserverContext];
+        [self initControlBar];
+    }
+    return self;
+}
+
+- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initControlBar];
     }
     return self;
 }
@@ -172,8 +169,11 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.toolbar.frame = _container.bounds;
-    self.slider.frame = CGRectMake(110, 0, self.toolbar.bounds.size.width - 2 * 110, self.toolbar.bounds.size.height);
+    self.slider.frame = CGRectMake(110, 0, self.container.bounds.size.width - 2 * 110, self.container.bounds.size.height);
+    
+    self.playPauseButton.center = CGPointMake(22.0, 0.5 * self.container.bounds.size.height);
+    self.liveLight.center = CGPointMake(self.container.bounds.size.width - 22.0, 0.5 * self.container.bounds.size.height);
+    self.rangeCancelButton.center = CGPointMake(self.container.bounds.size.width - 22.0, 0.5 * self.container.bounds.size.height);
 }
 
 #pragma mark - Getters / Setters
@@ -272,11 +272,14 @@
     self.backgroundColor = CMTIMERANGE_IS_VALID(self.player.range) ? [self.tintColor colorWithAlphaComponent:0.5] : [UIColor clearColor];
     
     if (self.player.live) {
-        self.toolbar.rightBarButtonItem = self.liveLight;
+        _liveLight.hidden = NO;
+        _rangeCancelButton.hidden = YES;
     } else if (CMTIMERANGE_IS_VALID(self.player.range)) {
-        self.toolbar.rightBarButtonItem = self.rangeCancelButton;
+        _liveLight.hidden = YES;
+        _rangeCancelButton.hidden = NO;
     } else {
-        self.toolbar.rightBarButtonItem = self.defaultItem;
+        _liveLight.hidden = YES;
+        _rangeCancelButton.hidden = YES;
     }
     
     // calculate the range to display on the slider
