@@ -32,7 +32,8 @@ static UIImage * __nonnull _goToLiveImageTemplate;
         [self setContentEdgeInsets:UIEdgeInsetsMake(3, 5, 3, 5)];
         
         [self setTitleColor:self.tintColor forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted | UIControlStateSelected];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         
         self.titleLabel.font = [UIFont systemFontOfSize:17.0];
     }
@@ -53,7 +54,8 @@ static UIImage * __nonnull _goToLiveImageTemplate;
         [self setContentEdgeInsets:UIEdgeInsetsMake(3, 5, 3, 5)];
         
         [self setTitleColor:self.tintColor forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted | UIControlStateSelected];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         
         self.titleLabel.font = [UIFont systemFontOfSize:17.0];
     }
@@ -68,7 +70,6 @@ static UIImage * __nonnull _goToLiveImageTemplate;
     } else {
         if (!self.selected) self.backgroundColor = [UIColor clearColor];
     }
-    
 }
 
 

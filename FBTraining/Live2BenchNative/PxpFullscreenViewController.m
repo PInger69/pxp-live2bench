@@ -9,6 +9,8 @@
 #import "PxpFullscreenViewController.h"
 #import "NCTriPinchGestureRecognizer.h"
 
+#import "LiveButton.h"
+
 @interface PxpFullscreenViewController ()
 
 @end
@@ -25,6 +27,8 @@
     
     IBOutlet Slomo * __nonnull _slomoButton;
     IBOutlet PxpFullscreenButton * __nonnull _fullscreenButton;
+    
+    IBOutlet LiveButton * __nonnull _liveButton;
     
     void * _playRateObserverContext;
 }
@@ -109,11 +113,15 @@
 
 - (IBAction)slomoButtonAction:(Slomo *)sender {
     sender.slomoOn = !sender.slomoOn;
-    _playerViewController.playerView.context.mainPlayer.playRate = sender.slomoOn ? 0.5 : 1.0;
+    _playerViewController.playerView.player.playRate = sender.slomoOn ? 0.5 : 1.0;
 }
 
 - (IBAction)fullscreenButtonAction:(PxpFullscreenButton *)sender {
     [self setHidden:YES animated:YES frame:_targetFrame];
+}
+
+- (IBAction)liveButtonAction:(LiveButton *)sender {
+    _playerViewController.playerView.player.live = YES;
 }
 
 #pragma mark - Gesture Recognizers
