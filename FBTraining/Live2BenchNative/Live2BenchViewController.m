@@ -163,7 +163,7 @@ static void * eventContext      = &eventContext;
         _playerViewController = [[PxpPlayerViewController alloc] initWithPlayerViewClass:[PxpPlayerMultiView class]];
         [self addChildViewController:_playerViewController];
         _videoBar = [[PxpVideoBar alloc] init];
-        _fullscreenViewController = [[PxpFullscreenViewController alloc] init];
+        _fullscreenViewController = [[PxpFullscreenViewController alloc] initWithPlayerViewClass:[PxpPlayerMultiView class]];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -559,7 +559,7 @@ static void * eventContext      = &eventContext;
     _playerViewController.playerView.player = context.mainPlayer;
     _videoBar.player = context.mainPlayer;
     _videoBar.event = _currentEvent;
-    _fullscreenViewController.playerViewController.multiView.player = context.mainPlayer;
+    _fullscreenViewController.playerViewController.playerView.player = context.mainPlayer;
 }
 
 

@@ -39,20 +39,24 @@
 @synthesize slomoButton = _slomoButton;
 @synthesize fullscreenButton = _fullscreenButton;
 
-- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (nonnull instancetype)init {
+    return [self initWithPlayerViewClass:nil];
+}
+
+- (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
+    self = [super init];
     if (self) {
-        _playerViewController = [[PxpPlayerMultiViewController alloc] init];
+        _playerViewController = [[PxpPlayerViewController alloc] initWithPlayerViewClass:playerViewClass];
         
         _playRateObserverContext = &_playRateObserverContext;
         
-        [_playerViewController.multiView addObserver:self forKeyPath:@"context.mainPlayer.playRate"options:0 context:_playRateObserverContext];
+        [_playerViewController.playerView addObserver:self forKeyPath:@"player.playRate"options:0 context:_playRateObserverContext];
     }
     return self;
 }
 
 - (void)dealloc {
-    [_playerViewController.multiView removeObserver:self forKeyPath:@"context.mainPlayer.playRate"];
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.playRate"];
 }
 
 - (void)viewDidLoad {
@@ -65,7 +69,7 @@
     
     NCTriPinchGestureRecognizer *dismissFullscreedGestureRecognizer = [[NCTriPinchGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFullscreenGestureRecognized:)];
     
-    [_playerContainer addGestureRecognizer:dismissFullscreedGestureRecognizer];
+    [_playerViewController.playerView addGestureRecognizer:dismissFullscreedGestureRecognizer];
     
     self.hidden = YES;
 }
@@ -77,7 +81,7 @@
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _playRateObserverContext) {
-        self.slomoButton.slomoOn = _playerViewController.multiView.context.mainPlayer.playRate == 0.5;
+        self.slomoButton.slomoOn = _playerViewController.playerView.player.playRate == 0.5;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -96,16 +100,16 @@
 #pragma mark - Actions
 
 - (IBAction)backwardSeekAction:(SeekButton *)sender {
-    [_playerViewController.multiView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
+    [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
 }
 
 - (IBAction)forwardSeekAction:(SeekButton *)sender {
-    [_playerViewController.multiView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
+    [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
 }
 
 - (IBAction)slomoButtonAction:(Slomo *)sender {
     sender.slomoOn = !sender.slomoOn;
-    _playerViewController.multiView.context.mainPlayer.playRate = sender.slomoOn ? 0.5 : 1.0;
+    _playerViewController.playerView.context.mainPlayer.playRate = sender.slomoOn ? 0.5 : 1.0;
 }
 
 - (IBAction)fullscreenButtonAction:(PxpFullscreenButton *)sender {

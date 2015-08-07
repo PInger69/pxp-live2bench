@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PxpPlayerMultiViewController.h"
+#import "PxpPlayerViewController.h"
 #import "SeekButton.h"
 #import "Slomo.h"
 #import "PxpFullscreenButton.h"
 
 @interface PxpFullscreenViewController : UIViewController
 
-@property (readonly, strong, nonatomic, nonnull) PxpPlayerMultiViewController *playerViewController;
+@property (readonly, strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
 @property (readonly, strong, nonatomic, nonnull) UIView *topBar;
 @property (readonly, strong, nonatomic, nonnull) UIView *bottomBar;
 @property (readonly, strong, nonatomic, nonnull) UIView *contentView;
@@ -29,7 +29,8 @@
 
 @property (assign, nonatomic) CGRect targetFrame;
 
-- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
+- (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass;
 
+- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 
 @end
