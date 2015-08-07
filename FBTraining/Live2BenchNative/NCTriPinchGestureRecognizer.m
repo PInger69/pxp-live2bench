@@ -34,6 +34,13 @@ static CGFloat _sign(CGFloat n) {
     return n > 0.0 ? +1.0 : n < 0.0 ? -1.0 : 0.0;
 }
 
+@interface NCTriPinchGestureRecognizer ()
+
+@property (readwrite, assign, nonatomic) CGFloat scale;
+@property (readwrite, assign, nonatomic) CGFloat velocity;
+
+@end
+
 @implementation NCTriPinchGestureRecognizer
 {
     CGFloat _initialDistance;
@@ -46,8 +53,8 @@ static CGFloat _sign(CGFloat n) {
 - (void)reset {
     [super reset];
     
-    _scale = 1.0;
-    _velocity = 0.0;
+    self.scale = 1.0;
+    self.velocity = 0.0;
     
     _initialDistance = 0.0;
     _previousDistance = 0.0;
@@ -67,8 +74,8 @@ static CGFloat _sign(CGFloat n) {
     if (gestureTouches.count == 3) {
         if (self.state == UIGestureRecognizerStatePossible) {
             
-            _scale = 1.0;
-            _velocity = 0.0;
+            self.scale = 1.0;
+            self.velocity = 0.0;
             
             _initialDistance = [self maxDistanceBetweenTouches:gestureTouches];
             _previousDistance = _initialDistance;
@@ -85,8 +92,8 @@ static CGFloat _sign(CGFloat n) {
             const NSTimeInterval dt = [currentDate timeIntervalSinceDate:_previousDate];
             
             
-            _scale = currentDistance / _initialDistance;
-            _velocity = ds / dt;
+            self.scale = currentDistance / _initialDistance;
+            self.velocity = ds / dt;
             
             _previousDistance = currentDistance;
             _previousDate = currentDate;
@@ -108,8 +115,8 @@ static CGFloat _sign(CGFloat n) {
     const CGFloat ds = currentDistance - _previousDistance;
     const NSTimeInterval dt = [currentDate timeIntervalSinceDate:_previousDate];
     
-    _scale = currentDistance / _initialDistance;
-    _velocity = ds / dt;
+    self.scale = currentDistance / _initialDistance;
+    self.velocity = ds / dt;
     
     _previousDistance = currentDistance;
     _previousDate = currentDate;

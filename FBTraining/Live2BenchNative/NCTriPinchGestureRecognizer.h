@@ -8,9 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * @breif Gesture Recognizer that detected a three finger pinch.
+ * @author Nicholas Cvitak
+ */
 @interface NCTriPinchGestureRecognizer : UIGestureRecognizer
 
+/// The scale factor of the pinch relative to the initial size. (read-only)
 @property (readonly, assign, nonatomic) CGFloat scale;
+
+/// The velocity of the pinch. (read-only)
 @property (readonly, assign, nonatomic) CGFloat velocity;
 
 @end
