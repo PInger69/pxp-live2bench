@@ -24,7 +24,7 @@
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
     self = [super init];
     if (self) {
-        _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PxpPlayerView alloc] init];
+        _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PXP_PLAYER_VIEW_DEFAULT alloc] init];
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         
         _playerObserverContext = &_playerObserverContext;

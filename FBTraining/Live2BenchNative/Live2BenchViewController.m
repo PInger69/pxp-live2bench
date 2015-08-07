@@ -43,7 +43,7 @@
 #import "PxpPlayerMultiView.h"
 #import "PxpEventContext.h"
 #import "PxpVideoBar.h"
-#import "PxpFullscreenViewController.h"
+#import "PxpLive2BenchFullscreenViewController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -59,6 +59,7 @@
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
+@property (strong, nonatomic, nonnull) PxpLive2BenchFullscreenViewController *fullscreenViewController;
 
 @end
 
@@ -112,7 +113,6 @@
     UIImageView *_rightArrow;
     
     PxpVideoBar *_videoBar;
-    PxpFullscreenViewController *_fullscreenViewController;
 }
 
 // Context
@@ -160,10 +160,10 @@ static void * eventContext      = &eventContext;
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
         
-        _playerViewController = [[PxpPlayerViewController alloc] initWithPlayerViewClass:[PxpPlayerMultiView class]];
+        _playerViewController = [[PxpPlayerViewController alloc] init];
         [self addChildViewController:_playerViewController];
         _videoBar = [[PxpVideoBar alloc] init];
-        _fullscreenViewController = [[PxpFullscreenViewController alloc] initWithPlayerViewClass:[PxpPlayerMultiView class]];
+        _fullscreenViewController = [[PxpFullscreenViewController alloc] init];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -533,20 +533,20 @@ static void * eventContext      = &eventContext;
 {
     if (_appDel.encoderManager.liveEvent != nil){
         //self.videoPlayer.live = YES;
-        [_gotoLiveButton isActive:YES];
+        _gotoLiveButton.enabled = YES;
         [self switchPressed];
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         [self switchPressed];
         //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
         //[self switchPressed];
         //_tagButtonController.enabled = NO;
@@ -580,7 +580,7 @@ static void * eventContext      = &eventContext;
     if (_encoderManager.masterEncoder.liveEvent != nil){
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
-        [_gotoLiveButton isActive:YES];
+        _gotoLiveButton.enabled = YES;
         _tagButtonController.enabled = YES;
     }
     else if (eventOnPrimaryEncoder.event != nil){
@@ -588,21 +588,21 @@ static void * eventContext      = &eventContext;
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         _tagButtonController.enabled = YES;
     }
     else if(_encoderManager.masterEncoder.event != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         _tagButtonController.enabled = YES;
     }
     else if (eventOnPrimaryEncoder.event == nil  && _encoderManager.masterEncoder.liveEvent == nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         _tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
@@ -797,7 +797,7 @@ static void * eventContext      = &eventContext;
     [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_gotoLiveButton];
-        [_gotoLiveButton isActive:NO];
+    _gotoLiveButton.enabled = NO;
    //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
     
     
@@ -1262,7 +1262,6 @@ static void * eventContext      = &eventContext;
 }
 
 - (NSTimeInterval)currentTimeInSeconds {
-    //return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
     return self.playerViewController.playerView.player.currentTimeInSeconds;
 }
 

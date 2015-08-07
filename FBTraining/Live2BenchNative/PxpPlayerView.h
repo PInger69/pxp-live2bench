@@ -10,6 +10,9 @@
 
 #import "PxpPlayer.h"
 
+// Change this to what ever player view your heart desires
+#define PXP_PLAYER_VIEW_DEFAULT NSClassFromString(@"PxpPlayerMultiView")
+
 /**
  * @breif Abstract PxpPlayerView class
  * @author Nicholas Cvitak

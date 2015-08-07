@@ -66,6 +66,7 @@
 		AE7AE3B21B74F4C80021EC03 /* PxpPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B11B74F4C80021EC03 /* PxpPlayerView.m */; };
 		AE7AE3B61B74FAAA0021EC03 /* PxpPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B41B74FAAA0021EC03 /* PxpPlayerViewController.m */; };
 		AE7AE3B71B74FAAA0021EC03 /* PxpPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE7AE3B51B74FAAA0021EC03 /* PxpPlayerViewController.xib */; };
+		AE7AE3BA1B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B91B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m */; };
 		AE7DCBD61B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */; };
 		AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */; };
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
@@ -586,6 +587,8 @@
 		AE7AE3B31B74FAAA0021EC03 /* PxpPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerViewController.h; sourceTree = "<group>"; };
 		AE7AE3B41B74FAAA0021EC03 /* PxpPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPlayerViewController.m; sourceTree = "<group>"; };
 		AE7AE3B51B74FAAA0021EC03 /* PxpPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpPlayerViewController.xib; sourceTree = "<group>"; };
+		AE7AE3B91B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpLive2BenchFullscreenViewController.m; sourceTree = "<group>"; };
+		AE7AE3BB1B753B120021EC03 /* PxpLive2BenchFullscreenViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PxpLive2BenchFullscreenViewController.h; sourceTree = "<group>"; };
 		AE7DCBD41B726E5100BEE2EE /* NCTriPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCTriPinchGestureRecognizer.h; sourceTree = "<group>"; };
 		AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTriPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		AE7DCBD71B72BC1100BEE2EE /* EncoderProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EncoderProtocol.h; path = EncoderClasses/EncoderProtocol.h; sourceTree = "<group>"; };
@@ -1354,6 +1357,8 @@
 				AE683C501B7148DA00458F80 /* PxpFullscreenViewController.h */,
 				AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */,
 				AE683C521B7148DA00458F80 /* PxpFullscreenViewController.xib */,
+				AE7AE3BB1B753B120021EC03 /* PxpLive2BenchFullscreenViewController.h */,
+				AE7AE3B91B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m */,
 			);
 			name = PxpFullscreen;
 			sourceTree = "<group>";
@@ -3168,6 +3173,7 @@
 				D7A188BF19FFE6A200513909 /* FeedSwitchView.m in Sources */,
 				D727798D1A30C5870034DD66 /* UserCenter.m in Sources */,
 				D738304E198A94D60053F0A1 /* FilterTab.m in Sources */,
+				AE7AE3BA1B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m in Sources */,
 				AEDD7C791B4AB717003C82F3 /* PxpLoadAction.m in Sources */,
 				D7DA236316B85B4500143102 /* ClipViewController.m in Sources */,
 				D7A7380419A2920D0080B882 /* SortArrow.m in Sources */,

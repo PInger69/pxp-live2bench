@@ -58,9 +58,11 @@
     
     _liveLight = [[PxpPlayerLight alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
     _liveLight.color = [UIColor greenColor];
+    _liveLight.hidden = YES;
     
     _rangeCancelButton = [[PxpCancelButton alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
     _rangeCancelButton.tintColor = [UIColor redColor];
+    _rangeCancelButton.hidden = YES;
     
     [_rangeCancelButton addTarget:self action:@selector(cancelRange:) forControlEvents:UIControlEventTouchUpInside];
     
