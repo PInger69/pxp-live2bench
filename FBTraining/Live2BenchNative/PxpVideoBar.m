@@ -12,13 +12,11 @@
 #import "TagView.h"
 #import "UIColor+Highlight.h"
 #import "PxpFullscreenButton.h"
+#import "PxpRangeModifierButton.h"
 
 @interface PxpVideoBar ()<TagViewDataSource>
 
 @end
-
-static UIImage * __nonnull _tagExtendStartImage;
-static UIImage * __nonnull _tagExtendEndImage;
 
 @implementation PxpVideoBar
 {
@@ -27,15 +25,10 @@ static UIImage * __nonnull _tagExtendEndImage;
     TagView * __nonnull _tagView;
     UILabel * __nonnull _tagLabel;
     
-    CustomButton * __nonnull _tagExtendStartButton;
-    CustomButton * __nonnull _tagExtendEndButton;
+    PxpRangeModifierButton * __nonnull _tagExtendStartButton;
+    PxpRangeModifierButton * __nonnull _tagExtendEndButton;
     
     void *_playRateObserverContext;
-}
-
-+ (void)initialize {
-    _tagExtendStartImage = [UIImage imageNamed:@"extendstartsec"];
-    _tagExtendEndImage = [UIImage imageNamed:@"extendendsec"];
 }
 
 - (void)initVideoBar {
@@ -50,12 +43,10 @@ static UIImage * __nonnull _tagExtendEndImage;
     _tagLabel.textAlignment = NSTextAlignmentCenter;
     _tagLabel.hidden = YES;
     
-    _tagExtendStartButton = [[CustomButton alloc] init];
-    _tagExtendEndButton = [[CustomButton alloc] init];
+    _tagExtendStartButton = [[PxpRangeModifierButton alloc] initWithFrame:CGRectZero end:NO];
+    _tagExtendEndButton = [[PxpRangeModifierButton alloc] initWithFrame:CGRectZero end:YES];
     _tagExtendStartButton.contentMode = UIViewContentModeCenter;
     _tagExtendEndButton.contentMode = UIViewContentModeCenter;
-    [_tagExtendStartButton setImage:_tagExtendStartImage forState:UIControlStateNormal];
-    [_tagExtendEndButton setImage:_tagExtendEndImage forState:UIControlStateNormal];
     [_tagExtendStartButton addTarget:self action:@selector(extendStartAction:) forControlEvents:UIControlEventTouchUpInside];
     [_tagExtendEndButton addTarget:self action:@selector(extendEndAction:) forControlEvents:UIControlEventTouchUpInside];
     _tagExtendStartButton.hidden = YES;

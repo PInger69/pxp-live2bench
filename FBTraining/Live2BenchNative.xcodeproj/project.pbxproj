@@ -66,7 +66,6 @@
 		AE7AE3B21B74F4C80021EC03 /* PxpPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B11B74F4C80021EC03 /* PxpPlayerView.m */; };
 		AE7AE3B61B74FAAA0021EC03 /* PxpPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B41B74FAAA0021EC03 /* PxpPlayerViewController.m */; };
 		AE7AE3B71B74FAAA0021EC03 /* PxpPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE7AE3B51B74FAAA0021EC03 /* PxpPlayerViewController.xib */; };
-		AE7AE3BA1B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B91B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m */; };
 		AE7DCBD61B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */; };
 		AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7EDCE61B5806A400998CF6 /* AVAsset+Image.m */; };
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
@@ -251,7 +250,7 @@
 		D767EF121B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D767EF101B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m */; };
 		D767EF131B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D767EF111B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib */; };
 		D769AB8919BDFEA900DF68BC /* VideoBarListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8819BDFEA900DF68BC /* VideoBarListViewController.m */; };
-		D769AB8D19BE5E8400DF68BC /* RangeModifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8C19BE5E8400DF68BC /* RangeModifierButton.m */; };
+		D769AB8D19BE5E8400DF68BC /* PxpRangeModifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D769AB8C19BE5E8400DF68BC /* PxpRangeModifierButton.m */; };
 		D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D76B6DD41A8AC07300601BAF /* ToastObserver.m */; };
 		D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D76B6DD71A8AC08500601BAF /* ImageAssetManager.m */; };
 		D76B6DDB1A8AC13000601BAF /* ListPopoverControllerWithImages.m in Sources */ = {isa = PBXBuildFile; fileRef = D76B6DDA1A8AC13000601BAF /* ListPopoverControllerWithImages.m */; };
@@ -587,8 +586,6 @@
 		AE7AE3B31B74FAAA0021EC03 /* PxpPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerViewController.h; sourceTree = "<group>"; };
 		AE7AE3B41B74FAAA0021EC03 /* PxpPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPlayerViewController.m; sourceTree = "<group>"; };
 		AE7AE3B51B74FAAA0021EC03 /* PxpPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpPlayerViewController.xib; sourceTree = "<group>"; };
-		AE7AE3B91B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpLive2BenchFullscreenViewController.m; sourceTree = "<group>"; };
-		AE7AE3BB1B753B120021EC03 /* PxpLive2BenchFullscreenViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PxpLive2BenchFullscreenViewController.h; sourceTree = "<group>"; };
 		AE7DCBD41B726E5100BEE2EE /* NCTriPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCTriPinchGestureRecognizer.h; sourceTree = "<group>"; };
 		AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTriPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		AE7DCBD71B72BC1100BEE2EE /* EncoderProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EncoderProtocol.h; path = EncoderClasses/EncoderProtocol.h; sourceTree = "<group>"; };
@@ -928,8 +925,8 @@
 		D767EF111B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterHockeyTabViewController.xib; sourceTree = "<group>"; };
 		D769AB8719BDFEA900DF68BC /* VideoBarListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoBarListViewController.h; sourceTree = "<group>"; };
 		D769AB8819BDFEA900DF68BC /* VideoBarListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoBarListViewController.m; sourceTree = "<group>"; };
-		D769AB8B19BE5E8400DF68BC /* RangeModifierButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeModifierButton.h; sourceTree = "<group>"; };
-		D769AB8C19BE5E8400DF68BC /* RangeModifierButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RangeModifierButton.m; sourceTree = "<group>"; };
+		D769AB8B19BE5E8400DF68BC /* PxpRangeModifierButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpRangeModifierButton.h; sourceTree = "<group>"; };
+		D769AB8C19BE5E8400DF68BC /* PxpRangeModifierButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpRangeModifierButton.m; sourceTree = "<group>"; };
 		D76B6DD31A8AC07300601BAF /* ToastObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToastObserver.h; sourceTree = "<group>"; };
 		D76B6DD41A8AC07300601BAF /* ToastObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToastObserver.m; sourceTree = "<group>"; };
 		D76B6DD61A8AC08500601BAF /* ImageAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAssetManager.h; sourceTree = "<group>"; };
@@ -1357,8 +1354,6 @@
 				AE683C501B7148DA00458F80 /* PxpFullscreenViewController.h */,
 				AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */,
 				AE683C521B7148DA00458F80 /* PxpFullscreenViewController.xib */,
-				AE7AE3BB1B753B120021EC03 /* PxpLive2BenchFullscreenViewController.h */,
-				AE7AE3B91B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m */,
 			);
 			name = PxpFullscreen;
 			sourceTree = "<group>";
@@ -2295,8 +2290,8 @@
 				D79D709119DD8ED2001FBE16 /* ExternalScreenButton.m */,
 				D7C5F37F19BF894A008190CE /* ScreenController.h */,
 				D7C5F38019BF894A008190CE /* ScreenController.m */,
-				D769AB8B19BE5E8400DF68BC /* RangeModifierButton.h */,
-				D769AB8C19BE5E8400DF68BC /* RangeModifierButton.m */,
+				D769AB8B19BE5E8400DF68BC /* PxpRangeModifierButton.h */,
+				D769AB8C19BE5E8400DF68BC /* PxpRangeModifierButton.m */,
 				D7A2E5BE19AF76F000022795 /* CoachFilterProcessor.h */,
 				D7A2E5BF19AF76F000022795 /* CoachFilterProcessor.m */,
 				D7581EDE196342A50029C5DD /* Crashlytics.framework */,
@@ -3173,7 +3168,6 @@
 				D7A188BF19FFE6A200513909 /* FeedSwitchView.m in Sources */,
 				D727798D1A30C5870034DD66 /* UserCenter.m in Sources */,
 				D738304E198A94D60053F0A1 /* FilterTab.m in Sources */,
-				AE7AE3BA1B752D050021EC03 /* PxpLive2BenchFullscreenViewController.m in Sources */,
 				AEDD7C791B4AB717003C82F3 /* PxpLoadAction.m in Sources */,
 				D7DA236316B85B4500143102 /* ClipViewController.m in Sources */,
 				D7A7380419A2920D0080B882 /* SortArrow.m in Sources */,
@@ -3285,7 +3279,7 @@
 				D72779AE1A38994E0034DD66 /* Live2BenchTagUIViewController.m in Sources */,
 				94B9A582192FEE750009547B /* TeleView.m in Sources */,
 				AEDD7CA01B4AB8E2003C82F3 /* PxpPlayerSingleView.m in Sources */,
-				D769AB8D19BE5E8400DF68BC /* RangeModifierButton.m in Sources */,
+				D769AB8D19BE5E8400DF68BC /* PxpRangeModifierButton.m in Sources */,
 				D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */,
 				AE5073AA1AFC1DCE002C361D /* SettingViewController.m in Sources */,
 				D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */,

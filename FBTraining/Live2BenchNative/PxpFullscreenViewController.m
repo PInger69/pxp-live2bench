@@ -9,8 +9,6 @@
 #import "PxpFullscreenViewController.h"
 #import "NCTriPinchGestureRecognizer.h"
 
-#import "LiveButton.h"
-
 @interface PxpFullscreenViewController ()
 
 @end
@@ -30,6 +28,9 @@
     
     IBOutlet LiveButton * __nonnull _liveButton;
     
+    IBOutlet PxpRangeModifierButton * __nonnull _rangeStartModifierButton;
+    IBOutlet PxpRangeModifierButton * __nonnull _rangeEndModifierButton;
+    
     void * _playRateObserverContext;
 }
 
@@ -42,6 +43,11 @@
 
 @synthesize slomoButton = _slomoButton;
 @synthesize fullscreenButton = _fullscreenButton;
+
+@synthesize liveButton = _liveButton;
+
+@synthesize rangeStartModifierButton = _rangeStartModifierButton;
+@synthesize rangeEndModifierButton = _rangeEndModifierButton;
 
 - (nonnull instancetype)init {
     return [self initWithPlayerViewClass:nil];

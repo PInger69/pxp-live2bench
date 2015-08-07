@@ -43,7 +43,7 @@
 #import "PxpPlayerMultiView.h"
 #import "PxpEventContext.h"
 #import "PxpVideoBar.h"
-#import "PxpLive2BenchFullscreenViewController.h"
+#import "PxpFullscreenViewController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -59,7 +59,7 @@
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
-@property (strong, nonatomic, nonnull) PxpLive2BenchFullscreenViewController *fullscreenViewController;
+@property (strong, nonatomic, nonnull) PxpFullscreenViewController *fullscreenViewController;
 
 @end
 

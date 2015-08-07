@@ -16,6 +16,8 @@
                 <outlet property="_fullscreenButton" destination="9Sl-tz-VhT" id="Aee-iY-umD"/>
                 <outlet property="_liveButton" destination="n3C-Qv-Zow" id="Tmb-L4-vxk"/>
                 <outlet property="_playerContainer" destination="2lU-0m-5H5" id="nS0-Z8-LiQ"/>
+                <outlet property="_rangeEndModifierButton" destination="vCm-A9-epK" id="4Xf-Le-UAP"/>
+                <outlet property="_rangeStartModifierButton" destination="9EQ-BQ-5rF" id="GyW-Rg-bPH"/>
                 <outlet property="_slomoButton" destination="pV6-6l-QSl" id="7b9-8h-nc2"/>
                 <outlet property="_topBar" destination="5VE-8Z-xAP" id="v6K-6x-JAZ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -87,19 +89,25 @@
                                         <action selector="liveButtonAction:" destination="-1" eventType="touchUpInside" id="scP-lN-JF0"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9EQ-BQ-5rF" customClass="RangeModifierButton">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9EQ-BQ-5rF" customClass="PxpRangeModifierButton">
                                     <rect key="frame" x="8" y="8" width="60" height="51.5"/>
                                     <animations/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="9EQ-BQ-5rF" secondAttribute="height" multiplier="70:60" id="jUn-WO-0yo"/>
                                     </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="end" value="NO"/>
+                                    </userDefinedRuntimeAttributes>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vCm-A9-epK" customClass="RangeModifierButton">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vCm-A9-epK" customClass="PxpRangeModifierButton">
                                     <rect key="frame" x="956" y="8" width="59.5" height="51"/>
                                     <animations/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="vCm-A9-epK" secondAttribute="height" multiplier="70:60" id="fr2-is-vV4"/>
                                     </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="end" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
                                 </button>
                             </subviews>
                             <animations/>

@@ -11,6 +11,8 @@
 #import "SeekButton.h"
 #import "Slomo.h"
 #import "PxpFullscreenButton.h"
+#import "LiveButton.h"
+#import "PxpRangeModifierButton.h"
 
 @interface PxpFullscreenViewController : UIViewController
 
@@ -24,6 +26,11 @@
 
 @property (readonly, strong, nonatomic, nonnull) Slomo *slomoButton;
 @property (readonly, strong, nonatomic, nonnull) PxpFullscreenButton *fullscreenButton;
+
+@property (readonly, strong, nonatomic, nonnull) LiveButton *liveButton;
+
+@property (readonly, strong, nonatomic, nonnull) PxpRangeModifierButton *rangeStartModifierButton;
+@property (readonly, strong, nonatomic, nonnull) PxpRangeModifierButton *rangeEndModifierButton;
 
 @property (assign, nonatomic) BOOL hidden;
 

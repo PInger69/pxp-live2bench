@@ -1,14 +1,14 @@
 //
-//  RangeModifierButton.m
+//  PxpRangeModifierButton.m
 //  Live2BenchNative
 //
 //  Created by dev on 9/8/2014.
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 
-#import "RangeModifierButton.h"
+#import "PxpRangeModifierButton.h"
 
-@implementation RangeModifierButton
+@implementation PxpRangeModifierButton
 
 static UIImage * __nullable _extendStartImage;
 static UIImage * __nullable _extendEndImage;
@@ -18,23 +18,23 @@ static UIImage * __nullable _extendEndImage;
     _extendEndImage = [UIImage imageNamed:@"extendendsec"];
 }
 
-- (nonnull instancetype)initWithFrame:(CGRect)frame type:(RangeButtonType)type {
+- (nonnull instancetype)initWithFrame:(CGRect)frame end:(BOOL)end {
     self = [super initWithFrame:frame];
     if (self) {
-        self.type = type;
+        self.end = end;
         self.contentMode = UIViewContentModeScaleAspectFill;
     }
     return self;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame {
-    return [self initWithFrame:frame type:RangeButtonExtendStart];
+    return [self initWithFrame:frame end:NO];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.type = [aDecoder decodeIntegerForKey:@"rangeButtonType"];
+        self.end = [aDecoder decodeBoolForKey:@"rangeButtonEnd"];
         self.contentMode = UIViewContentModeScaleAspectFill;
     }
     return self;
@@ -42,15 +42,15 @@ static UIImage * __nullable _extendEndImage;
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
     [super encodeWithCoder:aCoder];
-    [aCoder encodeInteger:_type forKey:@"rangeButtonType"];
+    [aCoder encodeBool:_end forKey:@"rangeButtonEnd"];
 }
 
 #pragma mark - Getters / Setters
 
-- (void)setType:(RangeButtonType)type {
-    _type = type;
+- (void)setEnd:(BOOL)end {
+    _end = end;
     
-    [self setImage:_type == RangeButtonExtendStart ? _extendStartImage : _type == RangeButtonExtendEnd ? _extendEndImage : nil forState:UIControlStateNormal];
+    [self setImage:_end ? _extendEndImage : _extendStartImage forState:UIControlStateNormal];
 }
 
 @end
