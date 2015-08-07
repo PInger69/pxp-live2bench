@@ -108,6 +108,8 @@
     UIImageView *_rightArrow;
     
     PxpVideoBar *_videoBar;
+    
+    CustomAlertView *eventStopped;
 }
 
 // Context
@@ -144,7 +146,9 @@ static void * eventContext      = &eventContext;
     _userCenter             = mainappDelegate.userCenter;
     needDelete = true;
 
-
+    eventStopped = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    
+    
     // observers //@"currentEventType"
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEventType))  options:NSKeyValueObservingOptionNew context:&eventTypeContext];
     [_encoderManager addObserver:self forKeyPath:NSStringFromSelector(@selector(currentEvent))      options:NSKeyValueObservingOptionNew context:&eventContext];
@@ -167,6 +171,7 @@ static void * eventContext      = &eventContext;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
     
@@ -299,8 +304,29 @@ static void * eventContext      = &eventContext;
 
 #pragma mark- Encoder Observers
 
+-(void)tabJustBeingAdded:(NSNotification*)note{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAB_CREATED object:nil];
+    _observedEncoder = _appDel.encoderManager.masterEncoder;
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:_observedEncoder];
+    _currentEvent = [_appDel.encoderManager.primaryEncoder event];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+    [self createTagButtons];
+    [self turnSwitchOn];
+    [_feedSwitch watchCurrentEvent:_currentEvent];
+    [_tagButtonController allToggleOnOpenTags:_currentEvent];
+    [self displayLable];
+    [self addBottomViewController];
+    [self addPlayerView];
+    if (_currentEvent.live) {
+        [self gotLiveEvent];
+    }
+    [self onEventChange];
+}
+
 -(void)addEventObserver:(NSNotification*)note
 {
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAB_CREATED object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
     
     if (note.object == nil) {
@@ -400,6 +426,7 @@ static void * eventContext      = &eventContext;
         _currentEvent = nil;
         [self addBottomViewController];
         [UserCenter getInstance].taggingTeam = nil;
+        [eventStopped showView];
 
     }
     

@@ -1,9 +1,9 @@
 //
 //  TabView.m
-//  Test12
+//
 //
 //  Created by colin on 7/29/15.
-//  Copyright (c) 2015 Cezary Wojcik. All rights reserved.
+//  Copyright (c) DEV. All rights reserved.
 //
 
 #import "TabView.h"
@@ -24,8 +24,8 @@ static TabView* sharedFilter;
 
 @implementation TabView
 {
-    NSMutableArray *_tabs; //view controller of all tabs
-    PxpFilterTabController *previousTab;
+    NSMutableArray *_tabs; //Array of PxpFilterTabControllers
+    PxpFilterTabController *previousTab;  //The previous tab showed
 }
 
 +(nonnull instancetype)sharedFilterTab
@@ -44,7 +44,7 @@ static TabView* sharedFilter;
     return self;
 }
 
-- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs{
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs{  //init using an array of PxpFilterTabControllers
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _tabs = [NSMutableArray arrayWithArray:tabs];
@@ -53,21 +53,21 @@ static TabView* sharedFilter;
     return self;
 }
 
--(BOOL)checkTabAvailability:(PxpFilterTabController*)targetTab{
+-(BOOL)checkTabAvailability:(PxpFilterTabController*)targetTab{  //Check whether the targetTab is available for showing or removing
     return targetTab&&[_tabs indexOfObject:targetTab]!=NSNotFound;
 }
 
--(void)showTab:(PxpFilterTabController*)targetTab{
+-(void)showTab:(nonnull PxpFilterTabController*)targetTab{   //Show the target tab in the tab view ()
     [self.view insertSubview:targetTab.view belowSubview:_mainTabBar];
     [targetTab show];
 }
 
--(void)hideTab:(PxpFilterTabController*)targetTab{
+-(void)hideTab:(nonnull PxpFilterTabController*)targetTab{   //Hide the target tab in the tab view
     [targetTab.view removeFromSuperview];
     [targetTab hide];
 }
 
--(void)show:(NSUInteger)tabIndex{
+-(void)show:(NSUInteger)tabIndex{                   //Show a tab in the tabs array with tabIndex (Hide the previous tab at the same time)
     
     PxpFilterTabController *currentTab = _tabs[tabIndex];
     
@@ -79,7 +79,7 @@ static TabView* sharedFilter;
     previousTab = currentTab;
 }
 
-- (void)customizeTabBarAppearance{
+- (void)customizeTabBarAppearance{          //Customize the tab bar appearance by setting the title color (normal state and selected state)
    
     [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIColor orangeColor], NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     
@@ -87,9 +87,8 @@ static TabView* sharedFilter;
     
 }
 
-- (void)updateTabBar {
-    
-    
+- (void)updateTabBar {                      //Update the tab bar by readding the tab items based on tabs array
+
     if (_mainTabBar) {
         _mainTabBar.tintColor = [UIColor orangeColor];
         _mainTabBar.translucent = NO;
@@ -102,7 +101,7 @@ static TabView* sharedFilter;
             //position adjustment for tabitem titles and images
             CGSize textSize = [vc.title sizeWithAttributes:@{ NSFontAttributeName : [UIFont fontWithName:@"Arial" size:25.0f] }];
             
-            tabItem.imageInsets = UIEdgeInsetsMake(15, -50-textSize.width/2.0, -15, 50+textSize.width/2.0);
+            tabItem.imageInsets = UIEdgeInsetsMake(15, -30-textSize.width/2.0, -15, 30+textSize.width/2.0);
             tabItem.titlePositionAdjustment = UIOffsetMake(40.0/_tabs.count,0);
             
             [tabItems addObject:tabItem];
@@ -115,9 +114,8 @@ static TabView* sharedFilter;
     }
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad {       //After the tab view is load, custom setting will be set and the tab bar will be created
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
     [self customizeTabBarAppearance];
     [self updateTabBar];
@@ -147,7 +145,7 @@ static TabView* sharedFilter;
 
 #pragma mark - Public Methods
 
-- (void)addTab:(PxpFilterTabController *)newTab{
+- (void)addTab:(PxpFilterTabController *)newTab{        //adding a new tab
     [_tabs addObject:newTab];
     
     newTab.pxpFilter = self.pxpFilter;
@@ -155,7 +153,7 @@ static TabView* sharedFilter;
     [self updateTabBar];
 }
 
-- (BOOL)removeTab: (PxpFilterTabController *)tabToRemove{
+- (BOOL)removeTab: (PxpFilterTabController *)tabToRemove{   //removing a tab (return NO if there is no such tab)
     if([self checkTabAvailability:tabToRemove]){
         [_tabs removeObject:tabToRemove];
         if(tabToRemove == previousTab){
@@ -175,7 +173,7 @@ static TabView* sharedFilter;
 
 #pragma mark - TabBarDelegate
 
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item { 
     NSUInteger itemIndex = [tabBar.items indexOfObject:item];
     [self show:itemIndex];
 }

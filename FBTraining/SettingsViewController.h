@@ -16,6 +16,7 @@
 #import "AppDelegate.h"
 @class EncoderManager;
 
+
 @interface SettingsViewController : UIViewController<UIScrollViewDelegate,UIAlertViewDelegate,UIPopoverControllerDelegate,UIGestureRecognizerDelegate>/*Removed: DBNetworkRequestDelegate no imp found*/
 {
     UILabel *userName;
@@ -61,7 +62,9 @@
 @property (nonatomic) int waitEncoderResponseCounter;
 @property (nonatomic,strong)NSTimer *spinnerTimer;
 
+
 -(id)initWithAppDelegate:(AppDelegate*)appDel;
+-(void)changeStatusString:(NSString*)statusString;
 
 -(void)startEnc:(id)sender;
 -(void)pauseEnc:(id)sender;

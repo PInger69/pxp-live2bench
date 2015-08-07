@@ -90,8 +90,8 @@
         self.settingData[TAB_LISTVIEW] = @YES;
         self.settingData[TAB_MYCLIP] = @YES;
         self.settingData[TAB_DEBUG] = @NO;
-        self.settingData[TAB_FOOTBALL_TRAINING] = @YES;
-        self.settingData[TAB_MEDICAL] = @YES;
+        self.settingData[TAB_FOOTBALL_TRAINING] = @NO;
+        self.settingData[TAB_MEDICAL] = @NO;
         
         
         self.tabClassForIdentifier = @{
@@ -149,17 +149,19 @@
 
 - (void)toggleStateDidChangeWithIdentifier:(nonnull NSString *)identifier state:(BOOL)on {
     
+    NSMutableArray *tabsName = [NSMutableArray array];
     NSMutableArray *tabs = [NSMutableArray array];
     
     for (NSDictionary *toggle in self.toggles) {
         NSString *identifier = toggle[@"Identifier"];
-        
         if ([self.settingData[identifier] boolValue]) {
+            [tabsName addObject:identifier];
             [tabs addObject:self.tabClassForIdentifier[identifier]];
         }
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TABS_SETTING_CHANGED object:nil userInfo:@{ @"Tabs": tabs }];
+
+    // tabsName is for comparing, tabs is for getting the actual tab
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TABS_SETTING_CHANGED object:nil userInfo:@{ @"Tabs": tabs, @"TabsName":tabsName }];
 }
 
 /*

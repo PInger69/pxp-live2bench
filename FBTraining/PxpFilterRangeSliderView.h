@@ -2,7 +2,7 @@
 //  PxpFilterRangeSliderView.h
 //  Live2BenchNative
 //
-//  Created by andrei on 2015-08-05.
+//  Created by Colin on 2015-08-05.
 //  Copyright © 2015 DEV. All rights reserved.
 //
 
@@ -19,10 +19,6 @@
 
 // Protocol
 @property (nonatomic,weak) PxpFilter * parentFilter;
-
-
-//Debug
-@property (nonatomic,weak) PxpFilterTabController *parentTab;
 
 -(void)setEndTime:(NSInteger)endTime;
 

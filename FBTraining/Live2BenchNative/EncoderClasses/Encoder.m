@@ -1378,7 +1378,7 @@
     NSData * finishedData       = connection.cumulatedData;
     NSDictionary * extra            = connection.extra;
     
-    
+     NSDictionary    * results =[Utility JSONDatatoDict:finishedData];
     if ([connectionType isEqualToString: AUTHENTICATE]){
         [self authenticateResponse: finishedData];
     }  else if ([connectionType isEqualToString: VERSION]){

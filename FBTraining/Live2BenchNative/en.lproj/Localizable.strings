@@ -100,9 +100,12 @@
 "Yes(From server)"       =         "Yes(From server)";
 "Already Linked"         =         "Already Linked";
 "Okay"                   =         "Okay";
+"No Encoder"             =         "No Encoder";
+"Event Stopped"          =         "Event Stopped";
 
 
-
+"Live Event is stopped"                                                                         =               "Live Event is stopped";
+"No Encoder is connected"                                                                       =               "No Encoder is connected";
 "Encoder is not available."                                                                     =               "Encoder is not available.";
 "Please connect to the internet to log out."                                                    =               "Please connect to the internet to log out.";
 "Are you sure you want to delete all these clips?"                                              =               "Are you sure you want to delete all these clips?";
@@ -115,6 +118,7 @@
 "Are you sure you want to delete this"                                                          =               "Are you sure you want to delete this";
 "Please select Home team, Away team and League to start the encoder"                            =               "Please select Home team, Away team and League to start the encoder";
 "If you log out, you need internet to log in. Are you sure you want to log out?"                =               "If you log out, you need internet to log in. Are you sure you want to log out?";
+"Please select Home team, Away team and League to start the encoder"                            =               "Please select Home team, Away team and League to start the encoder";
 
 
 
