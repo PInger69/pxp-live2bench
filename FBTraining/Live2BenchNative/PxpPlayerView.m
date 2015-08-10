@@ -43,6 +43,10 @@
     return _player.context;
 }
 
+- (void)setContext:(nullable PxpPlayerContext *)context {
+    self.player = context.mainPlayer;
+}
+
 - (void)setPlayer:(nullable PxpPlayer *)player {
     if (_player.context != player.context) {
         [self willChangeValueForKey:@"context"];

@@ -33,4 +33,7 @@
 
 - (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 
+- (void)showAnimated;
+- (void)hideAnimated;
+
 @end

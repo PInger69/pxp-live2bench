@@ -30,7 +30,7 @@ IB_DESIGNABLE
 @property (strong, nonatomic, nullable) PxpPlayer *player;
 
 /// The player's context.
-@property (readonly, strong, nonatomic, nullable) PxpPlayerContext *context;
+@property (strong, nonatomic, nullable) PxpPlayerContext *context;
 
 /// True if the playerView is only viewing a single PxpPlayer.
 @property (readonly, assign, nonatomic) BOOL fullView;

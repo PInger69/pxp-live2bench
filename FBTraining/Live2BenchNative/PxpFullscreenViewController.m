@@ -216,6 +216,14 @@
     [self setHidden:hidden animated:animated frame:_targetFrame];
 }
 
+- (void)showAnimated {
+    [self setHidden:NO animated:YES];
+}
+
+- (void)hideAnimated {
+    [self setHidden:YES animated:YES];
+}
+
 /*
 #pragma mark - Navigation
 
