@@ -17,39 +17,10 @@
 
 @implementation PxpFullscreenViewController
 {
-    IBOutlet UIView * __nonnull _contentView;
-    IBOutlet UIView * __nonnull _playerContainer;
-    IBOutlet UIView * __nonnull _topBar;
-    IBOutlet UIView * __nonnull _bottomBar;
-    
-    IBOutlet SeekButton * __nonnull _backwardSeekButton;
-    IBOutlet SeekButton * __nonnull _forwardSeekButton;
-    
-    IBOutlet Slomo * __nonnull _slomoButton;
-    IBOutlet PxpFullscreenButton * __nonnull _fullscreenButton;
-    
-    IBOutlet LiveButton * __nonnull _liveButton;
-    
-    IBOutlet PxpRangeModifierButton * __nonnull _rangeStartModifierButton;
-    IBOutlet PxpRangeModifierButton * __nonnull _rangeEndModifierButton;
+    UIView * __nonnull _playerContainer;
     
     void * _playRateObserverContext;
 }
-
-@synthesize contentView = _contentView;
-@synthesize topBar = _topBar;
-@synthesize bottomBar = _bottomBar;
-
-@synthesize backwardSeekButton = _backwardSeekButton;
-@synthesize forwardSeekButton = _forwardSeekButton;
-
-@synthesize slomoButton = _slomoButton;
-@synthesize fullscreenButton = _fullscreenButton;
-
-@synthesize liveButton = _liveButton;
-
-@synthesize rangeStartModifierButton = _rangeStartModifierButton;
-@synthesize rangeEndModifierButton = _rangeEndModifierButton;
 
 - (nonnull instancetype)init {
     return [self initWithPlayerViewClass:nil];
@@ -58,6 +29,19 @@
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
     self = [super init];
     if (self) {
+        
+        _contentView = [[UIView alloc] init];
+        _playerContainer = [[UIView alloc] init];
+        _topBar = [[UIView alloc] init];
+        _bottomBar = [[UIView alloc] init];
+        
+        _backwardSeekButton = [[SeekButton alloc] initWithBackward:YES];
+        _forwardSeekButton = [[SeekButton alloc] initWithBackward:NO];
+        
+        _slomoButton = [[Slomo alloc] init];
+        _fullscreenButton = [[PxpFullscreenButton alloc] init];
+        _fullscreenButton.isFullscreen = YES;
+        
         _playerViewController = [[PxpPlayerViewController alloc] initWithPlayerViewClass:playerViewClass];
         
         _playRateObserverContext = &_playRateObserverContext;
@@ -75,7 +59,24 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    _playerViewController.view.frame = _playerContainer.bounds;
+    [self.view addSubview:_contentView];
+    [_contentView addSubview:_playerContainer];
+    [_contentView addSubview:_topBar];
+    [_contentView addSubview:_bottomBar];
+    [_contentView addSubview:_backwardSeekButton];
+    [_contentView addSubview:_forwardSeekButton];
+    
+    [_bottomBar addSubview:_slomoButton];
+    [_bottomBar addSubview:_fullscreenButton];
+    
+    [_backwardSeekButton addTarget:self action:@selector(backwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_forwardSeekButton addTarget:self action:@selector(forwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_slomoButton addTarget:self action:@selector(slomoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_fullscreenButton addTarget:self action:@selector(fullscreenButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.view.backgroundColor = [UIColor blackColor];
+    _playerContainer.backgroundColor = [UIColor darkGrayColor];
+    
     _playerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [_playerContainer addSubview:_playerViewController.view];
     
@@ -83,10 +84,42 @@
     
     [_playerViewController.playerView addGestureRecognizer:dismissFullscreedGestureRecognizer];
     
-    _rangeStartModifierButton.hidden = YES;
-    _rangeEndModifierButton.hidden = YES;
-    
     self.hidden = YES;
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    // contentView
+    
+    _contentView.frame = CGRectMake(0.0, 55.0, self.view.bounds.size.width, self.view.bounds.size.height - 55.0);
+    
+    const CGFloat contentWidth = _contentView.bounds.size.width, contentHeight = _contentView.bounds.size.height;
+    
+    // player
+    const CGFloat playerWidth = contentWidth, playerHeight = playerWidth / (16.0 / 9.0);
+    const CGFloat playerX = 0.0, playerY = (contentHeight - playerHeight) / 2.0;
+    
+    _playerContainer.frame = CGRectMake(playerX, playerY, playerWidth, playerHeight);
+    _topBar.frame = CGRectMake(0.0, 0.0, playerWidth, playerY);
+    _bottomBar.frame = CGRectMake(0.0, playerY + playerHeight, playerWidth, playerY);
+    
+    _playerViewController.view.frame = _playerContainer.bounds;
+    
+    // button size
+    const CGFloat buttonHeight = contentHeight - playerY - playerHeight;
+    
+    // seek buttons
+    const CGFloat seekButtonY = playerY + playerHeight;
+    
+    _backwardSeekButton.frame = CGRectMake(1.5 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
+    _forwardSeekButton.frame = CGRectMake(contentWidth - buttonHeight - 1.5 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
+    
+    // bottom bar buttons
+    const CGFloat margin = 8.0;
+    
+    _slomoButton.frame = CGRectMake(2.5 * buttonHeight + margin, margin, 1.5 * buttonHeight - 2.0 * margin, buttonHeight - 2.0 * margin);
+    _fullscreenButton.frame = CGRectMake(contentWidth - buttonHeight - 2.75 * buttonHeight + margin, margin, buttonHeight - 2.0 * margin, buttonHeight - 2.0 * margin);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -114,93 +147,21 @@
 
 #pragma mark - Actions
 
-- (IBAction)backwardSeekAction:(SeekButton *)sender {
+- (void)backwardSeekAction:(SeekButton *)sender {
     [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
 }
 
-- (IBAction)forwardSeekAction:(SeekButton *)sender {
+- (void)forwardSeekAction:(SeekButton *)sender {
     [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(sender.speed, 600)];
 }
 
-- (IBAction)slomoButtonAction:(Slomo *)sender {
+- (void)slomoButtonAction:(Slomo *)sender {
     sender.slomoOn = !sender.slomoOn;
     _playerViewController.playerView.player.playRate = sender.slomoOn ? 0.5 : 1.0;
 }
 
-- (IBAction)fullscreenButtonAction:(PxpFullscreenButton *)sender {
+- (void)fullscreenButtonAction:(PxpFullscreenButton *)sender {
     [self setHidden:YES animated:YES frame:_targetFrame];
-}
-
-- (IBAction)liveButtonAction:(LiveButton *)sender {
-    _playerViewController.playerView.player.live = YES;
-}
-
-- (void)extendStartAction:(UIButton *)button {
-    if (_tag) {
-        
-        if ([[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil]){
-            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil];
-            [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
-        }
-        
-        
-        float newStartTime = 0;
-        float endTime = _tag.startTime + _tag.duration;
-        
-        //extend the duration by decreasing the start time 5 seconds
-        newStartTime = _tag.startTime - 5;
-        //if the new start time is smaller than 0, set it to 0
-        if (newStartTime <0) {
-            newStartTime = 0;
-        }
-        
-        //set the new duration to tag end time minus new start time
-        int newDuration = endTime - newStartTime;
-        
-        _tag.startTime = newStartTime;
-        
-        if (newDuration > _tag.duration) {
-            _tag.duration = newDuration;
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];
-        }
-        
-        /*_tag.startTime -= fabs(_backwardSeekButton.speed);
-         _tag.duration += fabs(_backwardSeekButton.speed);
-         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];*/
-    }
-}
-
-- (void)extendEndAction:(UIButton *)button {
-    if (_tag) {
-        _tag.duration += fabs(_forwardSeekButton.speed);
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];
-    }
-    
-    
-    if ([[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil]){
-        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil];
-        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
-    }
-    
-    
-    float startTime = _tag.startTime;
-    
-    float endTime = startTime + _tag.duration;
-    
-    //increase end time by 5 seconds
-    endTime = endTime + 5;
-    //if new end time is greater the duration of video, set it to the video's duration
-    if (endTime > [self durationOfVideoPlayer]) {
-        endTime = [self durationOfVideoPlayer];
-    }
-    
-    //get the new duration
-    int newDuration = newDuration = endTime - startTime;
-    if (newDuration > _tag.duration) {
-        _tag.duration = newDuration;
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];
-    }
-    
 }
 
 #pragma mark - Gesture Recognizers
@@ -253,14 +214,6 @@
 
 - (void)setHidden:(BOOL)hidden animated:(BOOL)animated {
     [self setHidden:hidden animated:animated frame:_targetFrame];
-}
-
-#pragma mark - Private Methods
-
-- (NSTimeInterval)durationOfVideoPlayer{
-    CMTimeRange range = [_playerViewController.playerView.player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
-    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
-    return isfinite(duration) ? duration : 0.0;
 }
 
 /*

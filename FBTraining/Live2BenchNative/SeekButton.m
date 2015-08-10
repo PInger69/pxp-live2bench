@@ -69,6 +69,10 @@ static CGFloat _textNumbers[2] = { 1.0, 1.0 };
     return [[self alloc] initWithFrame:CGRectMake(pt.x, pt.y, LARGE_ICON_DIMENSIONS + LARGE_MARGIN, LARGE_ICON_DIMENSIONS + LARGE_MARGIN) backward:YES margin:LARGE_MARGIN / 2.0];
 }
 
+- (nonnull instancetype)initWithBackward:(BOOL)backward {
+    return [self initWithFrame:CGRectZero backward:backward margin:0.0 speeds:_defaultSpeeds];
+}
+
 - (nonnull instancetype)initWithFrame:(CGRect)frame {
     return [self initWithFrame:frame backward:NO margin:0.0 speeds:_defaultSpeeds];
 }
