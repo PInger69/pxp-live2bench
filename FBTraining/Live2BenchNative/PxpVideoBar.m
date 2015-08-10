@@ -168,7 +168,7 @@
 
 #pragma mark - Actions
 
-- (void)extendStartAction:(CustomButton *)button {
+- (void)extendStartAction:(UIButton *)button {
     if (_selectedTag) {
         
         if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
@@ -180,8 +180,8 @@
         float newStartTime = 0;
         float endTime = _selectedTag.startTime + _selectedTag.duration;
             
-        //extend the duration 5 seconds by decreasing the start time 5 seconds
-        newStartTime = _selectedTag.startTime - fabs(_backwardSeekButton.speed);
+        //extend the duration by decreasing the start time 5 seconds
+        newStartTime = _selectedTag.startTime - 5;
         //if the new start time is smaller than 0, set it to 0
         if (newStartTime <0) {
             newStartTime = 0;
@@ -203,7 +203,7 @@
     }
 }
 
-- (void)extendEndAction:(CustomButton *)button {
+- (void)extendEndAction:(UIButton *)button {
     if (_selectedTag) {
         _selectedTag.duration += fabs(_forwardSeekButton.speed);
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
@@ -249,15 +249,7 @@
 #pragma mark - TagViewDataSource
 
 - (NSTimeInterval)durationInTagView:(nonnull TagView *)tagView {
-    CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
-    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
-    return isfinite(duration) ? duration : 0.0;
-}
-
--(NSTimeInterval)durationOfVideoPlayer{
-    CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
-    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
-    return isfinite(duration) ? duration : 0.0;
+    return self.durationOfVideoPlayer;
 }
 
 -(CGFloat)getSeekSpeed:(NSString *)direction{
@@ -296,6 +288,12 @@
     if (!self.hidden) {
         [_tagView setNeedsDisplay];
     }
+}
+
+- (NSTimeInterval)durationOfVideoPlayer{
+    CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
+    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
+    return isfinite(duration) ? duration : 0.0;
 }
 
 /*

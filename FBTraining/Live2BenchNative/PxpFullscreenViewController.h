@@ -14,6 +14,8 @@
 #import "LiveButton.h"
 #import "PxpRangeModifierButton.h"
 
+#import "Tag.h"
+
 @interface PxpFullscreenViewController : UIViewController
 
 @property (readonly, strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
@@ -35,6 +37,8 @@
 @property (assign, nonatomic) BOOL hidden;
 
 @property (assign, nonatomic) CGRect targetFrame;
+
+@property (strong, nonatomic, nullable) Tag *tag;
 
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass;
 

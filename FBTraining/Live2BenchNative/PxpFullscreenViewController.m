@@ -9,6 +9,8 @@
 #import "PxpFullscreenViewController.h"
 #import "NCTriPinchGestureRecognizer.h"
 
+#import "LocalMediaManager.h"
+
 @interface PxpFullscreenViewController ()
 
 @end
@@ -81,6 +83,9 @@
     
     [_playerViewController.playerView addGestureRecognizer:dismissFullscreedGestureRecognizer];
     
+    _rangeStartModifierButton.hidden = YES;
+    _rangeEndModifierButton.hidden = YES;
+    
     self.hidden = YES;
 }
 
@@ -128,6 +133,74 @@
 
 - (IBAction)liveButtonAction:(LiveButton *)sender {
     _playerViewController.playerView.player.live = YES;
+}
+
+- (void)extendStartAction:(UIButton *)button {
+    if (_tag) {
+        
+        if ([[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil];
+            [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        }
+        
+        
+        float newStartTime = 0;
+        float endTime = _tag.startTime + _tag.duration;
+        
+        //extend the duration by decreasing the start time 5 seconds
+        newStartTime = _tag.startTime - 5;
+        //if the new start time is smaller than 0, set it to 0
+        if (newStartTime <0) {
+            newStartTime = 0;
+        }
+        
+        //set the new duration to tag end time minus new start time
+        int newDuration = endTime - newStartTime;
+        
+        _tag.startTime = newStartTime;
+        
+        if (newDuration > _tag.duration) {
+            _tag.duration = newDuration;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];
+        }
+        
+        /*_tag.startTime -= fabs(_backwardSeekButton.speed);
+         _tag.duration += fabs(_backwardSeekButton.speed);
+         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];*/
+    }
+}
+
+- (void)extendEndAction:(UIButton *)button {
+    if (_tag) {
+        _tag.duration += fabs(_forwardSeekButton.speed);
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];
+    }
+    
+    
+    if ([[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil]){
+        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_tag scrKey:nil];
+        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+    }
+    
+    
+    float startTime = _tag.startTime;
+    
+    float endTime = startTime + _tag.duration;
+    
+    //increase end time by 5 seconds
+    endTime = endTime + 5;
+    //if new end time is greater the duration of video, set it to the video's duration
+    if (endTime > [self durationOfVideoPlayer]) {
+        endTime = [self durationOfVideoPlayer];
+    }
+    
+    //get the new duration
+    int newDuration = newDuration = endTime - startTime;
+    if (newDuration > _tag.duration) {
+        _tag.duration = newDuration;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_tag];
+    }
+    
 }
 
 #pragma mark - Gesture Recognizers
@@ -180,6 +253,14 @@
 
 - (void)setHidden:(BOOL)hidden animated:(BOOL)animated {
     [self setHidden:hidden animated:animated frame:_targetFrame];
+}
+
+#pragma mark - Private Methods
+
+- (NSTimeInterval)durationOfVideoPlayer{
+    CMTimeRange range = [_playerViewController.playerView.player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
+    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
+    return isfinite(duration) ? duration : 0.0;
 }
 
 /*
