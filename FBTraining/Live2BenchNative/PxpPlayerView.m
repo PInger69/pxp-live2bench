@@ -8,9 +8,36 @@
 
 #import "PxpPlayerView.h"
 
+#define DEFAULT_PLAYER_VIEW_IDENTIFIER [[NSUUID UUID] UUIDString]
+
 @implementation PxpPlayerView
 
 #pragma mark - Getters / Setters
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        _identifier = DEFAULT_PLAYER_VIEW_IDENTIFIER;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPlayerHandler:) name:NOTIF_PXP_PLAYER_VIEW_SET_PLAYER object:nil];
+    }
+    return self;
+}
+
+- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        NSString *identifier = [aDecoder decodeObjectForKey:@"identifier"];
+        _identifier = [identifier isKindOfClass:[NSString class]] ? identifier : DEFAULT_PLAYER_VIEW_IDENTIFIER;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setPlayerHandler:) name:NOTIF_PXP_PLAYER_VIEW_SET_PLAYER object:nil];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (nullable PxpPlayerContext *)context {
     return _player.context;
@@ -28,6 +55,15 @@
 
 - (BOOL)fullView {
     return NO;
+}
+
+- (void)setPlayerHandler:(NSNotification *)notification {
+    NSString *identifier = notification.userInfo[@"identifier"];
+    PxpPlayer *player = notification.userInfo[@"player"];
+    
+    if ([identifier isKindOfClass:[NSString class]] && [identifier isEqualToString:self.identifier] && (player == nil || [player isKindOfClass:[PxpPlayer class]])) {
+        self.player = player;
+    }
 }
 
 /*

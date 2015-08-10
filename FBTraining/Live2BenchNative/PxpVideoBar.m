@@ -170,7 +170,6 @@
 
 - (void)extendStartAction:(UIButton *)button {
     if (_selectedTag) {
-        
         if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
             Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
             [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
@@ -196,44 +195,36 @@
             _selectedTag.duration = newDuration;
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
         }
-        
-        /*_selectedTag.startTime -= fabs(_backwardSeekButton.speed);
-        _selectedTag.duration += fabs(_backwardSeekButton.speed);
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];*/
     }
 }
 
 - (void)extendEndAction:(UIButton *)button {
     if (_selectedTag) {
-        _selectedTag.duration += fabs(_forwardSeekButton.speed);
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
-    }
-    
-    
-    if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
-        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
-        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
-    }
-    
-    
-    float startTime = _selectedTag.startTime;
-    
-    float endTime = startTime + _selectedTag.duration;
-    
-    //increase end time by 5 seconds
-    endTime = endTime + 5;
-    //if new end time is greater the duration of video, set it to the video's duration
-    if (endTime > [self durationOfVideoPlayer]) {
-        endTime = [self durationOfVideoPlayer];
-    }
-    
-    //get the new duration
-    int newDuration = newDuration = endTime - startTime;
-    if (newDuration > _selectedTag.duration) {
-        _selectedTag.duration = newDuration;
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
-    }
+        if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
+            [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        }
+        
+        
+        float startTime = _selectedTag.startTime;
+        
+        float endTime = startTime + _selectedTag.duration;
+        
+        //increase end time by 5 seconds
+        endTime = endTime + 5;
+        //if new end time is greater the duration of video, set it to the video's duration
+        if (endTime > [self durationOfVideoPlayer]) {
+            endTime = [self durationOfVideoPlayer];
+        }
+        
+        //get the new duration
+        int newDuration = newDuration = endTime - startTime;
+        if (newDuration > _selectedTag.duration) {
+            _selectedTag.duration = newDuration;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
+        }
 
+    }
 }
 
 - (void)seekAction:(SeekButton *)seekButton {

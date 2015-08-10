@@ -44,6 +44,7 @@
 #import "PxpEventContext.h"
 #import "PxpVideoBar.h"
 #import "PxpL2BFullscreenViewController.h"
+#import "PxpListViewFullscreenViewController.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -167,7 +168,7 @@ static void * eventContext      = &eventContext;
         _playerViewController = [[PxpPlayerViewController alloc] init];
         [self addChildViewController:_playerViewController];
         _videoBar = [[PxpVideoBar alloc] init];
-        _fullscreenViewController = [[PxpL2BFullscreenViewController alloc] init];
+        _fullscreenViewController = [[PxpListViewFullscreenViewController alloc] init];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];

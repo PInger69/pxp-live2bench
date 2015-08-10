@@ -22,6 +22,8 @@
 #import "LocalMediaManager.h"
 #import "PxpTelestrationViewController.h"
 #import "PxpVideoBar.h"
+#import "PxpPlayer+Tag.h"
+
 // Debug
 
 #import "SamplePxpFilterModule.h"
@@ -481,8 +483,7 @@
     }
     
     // update the loop range.
-    self.context.mainPlayer.range = timeRange;
-    
+    self.context.mainPlayer.tag = selectedTag;
 }
 
 
@@ -829,6 +830,25 @@
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     [_tableViewController reloadData];
+}
+
+- (Tag *)tagAfterTag:(nullable Tag *)tag {
+    if (tag && _tagsToDisplay.count) {
+        NSUInteger i = [_tagsToDisplay indexOfObject:tag] + 1;
+        return _tagsToDisplay[i < _tagsToDisplay.count ? i : 0];
+    } else {
+        return nil;
+    }
+    
+}
+
+- (Tag *)tagBeforeTag:(nullable Tag *)tag {
+    if (tag && _tagsToDisplay.count) {
+        NSUInteger i = [_tagsToDisplay indexOfObject:tag] - 1;
+        return _tagsToDisplay[i < _tagsToDisplay.count ? i : _tagsToDisplay.count];
+    } else {
+        return nil;
+    }
 }
 
 @end

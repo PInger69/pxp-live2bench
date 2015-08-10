@@ -8,6 +8,7 @@
 
 #import "PxpClipContext.h"
 
+#import "PxpPlayer+Feed.h"
 #import "Clip.h"
 #import "Feed.h"
 

@@ -71,6 +71,12 @@
 		AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8750AA1B612EBE0055A7C2 /* TeleSelectTableViewController.m */; };
 		AE8AA8731B629AED002457B0 /* NCGhostView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8AA8721B629AED002457B0 /* NCGhostView.m */; };
 		AEA25F8C1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F8B1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.m */; };
+		AEA25F901B78F009006C83C3 /* PxpListViewFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F8F1B78F009006C83C3 /* PxpListViewFullscreenViewController.m */; };
+		AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F951B78F6E5006C83C3 /* PxpBorderButton.m */; };
+		AEA25F991B78FD2A006C83C3 /* PxpBorderLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F981B78FD2A006C83C3 /* PxpBorderLabel.m */; };
+		AEA25F9D1B790A65006C83C3 /* PxpPlayer+Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F9C1B790A65006C83C3 /* PxpPlayer+Tag.m */; };
+		AEA25FA01B790C6E006C83C3 /* PxpPlayerContext+Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */; };
+		AEA25FA31B790FF1006C83C3 /* PxpPlayer+Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */; };
 		AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* DualViewPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */; };
@@ -602,6 +608,18 @@
 		AE8AA8721B629AED002457B0 /* NCGhostView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCGhostView.m; sourceTree = "<group>"; };
 		AEA25F8A1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpL2BFullscreenViewController.h; sourceTree = "<group>"; };
 		AEA25F8B1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpL2BFullscreenViewController.m; sourceTree = "<group>"; };
+		AEA25F8E1B78F009006C83C3 /* PxpListViewFullscreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpListViewFullscreenViewController.h; sourceTree = "<group>"; };
+		AEA25F8F1B78F009006C83C3 /* PxpListViewFullscreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpListViewFullscreenViewController.m; sourceTree = "<group>"; };
+		AEA25F941B78F6E5006C83C3 /* PxpBorderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpBorderButton.h; sourceTree = "<group>"; };
+		AEA25F951B78F6E5006C83C3 /* PxpBorderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpBorderButton.m; sourceTree = "<group>"; };
+		AEA25F971B78FD2A006C83C3 /* PxpBorderLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpBorderLabel.h; sourceTree = "<group>"; };
+		AEA25F981B78FD2A006C83C3 /* PxpBorderLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpBorderLabel.m; sourceTree = "<group>"; };
+		AEA25F9B1B790A65006C83C3 /* PxpPlayer+Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PxpPlayer+Tag.h"; sourceTree = "<group>"; };
+		AEA25F9C1B790A65006C83C3 /* PxpPlayer+Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpPlayer+Tag.m"; sourceTree = "<group>"; };
+		AEA25F9E1B790C6E006C83C3 /* PxpPlayerContext+Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PxpPlayerContext+Tag.h"; sourceTree = "<group>"; };
+		AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpPlayerContext+Tag.m"; sourceTree = "<group>"; };
+		AEA25FA11B790FF1006C83C3 /* PxpPlayer+Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PxpPlayer+Feed.h"; sourceTree = "<group>"; };
+		AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpPlayer+Feed.m"; sourceTree = "<group>"; };
 		AECB9A6C1B0CC0B3005DDB32 /* DualViewClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewClipTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewClipTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AECF63131B0BC07F00C98555 /* DualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewTabViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1360,6 +1378,7 @@
 		AE683C4C1B71029100458F80 /* PxpFullscreen */ = {
 			isa = PBXGroup;
 			children = (
+				AEA25F8D1B78EFD5006C83C3 /* ListView */,
 				AE7AE3AC1B74EC8C0021EC03 /* L2B */,
 				AE683C501B7148DA00458F80 /* PxpFullscreenViewController.h */,
 				AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */,
@@ -1392,6 +1411,28 @@
 				AE8490001B0D083D007A19E8 /* NCRecordButton.m */,
 			);
 			name = RecordButton;
+			sourceTree = "<group>";
+		};
+		AEA25F8D1B78EFD5006C83C3 /* ListView */ = {
+			isa = PBXGroup;
+			children = (
+				AEA25F8E1B78F009006C83C3 /* PxpListViewFullscreenViewController.h */,
+				AEA25F8F1B78F009006C83C3 /* PxpListViewFullscreenViewController.m */,
+			);
+			name = ListView;
+			sourceTree = "<group>";
+		};
+		AEA25F9A1B790A21006C83C3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AEA25F9B1B790A65006C83C3 /* PxpPlayer+Tag.h */,
+				AEA25F9C1B790A65006C83C3 /* PxpPlayer+Tag.m */,
+				AEA25F9E1B790C6E006C83C3 /* PxpPlayerContext+Tag.h */,
+				AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */,
+				AEA25FA11B790FF1006C83C3 /* PxpPlayer+Feed.h */,
+				AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		AECF63121B0BC02900C98555 /* DualView */ = {
@@ -1477,6 +1518,7 @@
 				AEDD7C781B4AB717003C82F3 /* PxpPlayerContext.m */,
 				AEDD7C731B4AB717003C82F3 /* PxpLoadAction.h */,
 				AEDD7C741B4AB717003C82F3 /* PxpLoadAction.m */,
+				AEA25F9A1B790A21006C83C3 /* Extensions */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -1903,6 +1945,8 @@
 			children = (
 				D786C1FF17ECA00E0042DD96 /* CustomLabel.h */,
 				D786C20017ECA00E0042DD96 /* CustomLabel.m */,
+				AEA25F971B78FD2A006C83C3 /* PxpBorderLabel.h */,
+				AEA25F981B78FD2A006C83C3 /* PxpBorderLabel.m */,
 			);
 			name = Labels;
 			sourceTree = "<group>";
@@ -2076,6 +2120,8 @@
 				D7DB750017E8D967009C402F /* BorderButton.m */,
 				D786C24417F39F3F0042DD96 /* IconButton.h */,
 				D786C24517F39F3F0042DD96 /* IconButton.m */,
+				AEA25F941B78F6E5006C83C3 /* PxpBorderButton.h */,
+				AEA25F951B78F6E5006C83C3 /* PxpBorderButton.m */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -3097,6 +3143,7 @@
 				D749B75D1A72ADED00258D63 /* AppDelegateActionPack.m in Sources */,
 				D73CDBDB1AA77F33002D682D /* BookmarkTableViewController.m in Sources */,
 				D7CCE7F71AC1E48500D85095 /* PopoverViewController.m in Sources */,
+				AEA25F901B78F009006C83C3 /* PxpListViewFullscreenViewController.m in Sources */,
 				D7A7380719A3A27B0080B882 /* TagPopOverContent.m in Sources */,
 				D7A9395416ADA65E006CBAB2 /* AppDelegate.m in Sources */,
 				D7CCE7F81AC1E48500D85095 /* SegmentedView.m in Sources */,
@@ -3217,6 +3264,7 @@
 				D700801B19DF2456000144CF /* Utility.m in Sources */,
 				BD9BC31C17EB63F8001B67DE /* ClipCornerView.m in Sources */,
 				AEA25F8C1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.m in Sources */,
+				AEA25F9D1B790A65006C83C3 /* PxpPlayer+Tag.m in Sources */,
 				AEDD7C841B4AB7CD003C82F3 /* PxpEventContext.m in Sources */,
 				D786C23817F371070042DD96 /* CustomButton.m in Sources */,
 				AED484BE1B56A23600769EEF /* PxpUndoButton.m in Sources */,
@@ -3227,6 +3275,7 @@
 				D786C24617F39F3F0042DD96 /* IconButton.m in Sources */,
 				AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */,
 				D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */,
+				AEA25FA01B790C6E006C83C3 /* PxpPlayerContext+Tag.m in Sources */,
 				94B9A516192521CD0009547B /* SnapshotView.m in Sources */,
 				D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */,
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
@@ -3251,6 +3300,7 @@
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
 				D7DB750717E904D8009C402F /* TabBarButton.m in Sources */,
+				AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */,
 				D78F68B5180736830096C793 /* UIImage+animatedGIF.m in Sources */,
 				AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */,
 				AE5073AD1AFC1DCE002C361D /* ToggleSettingViewController.m in Sources */,
@@ -3272,6 +3322,7 @@
 				D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */,
 				AED484B31B56A23600769EEF /* PxpCircleButton.m in Sources */,
 				D7341A861B73C01D005156E9 /* PxpFilterFootballTabViewController.m in Sources */,
+				AEA25F991B78FD2A006C83C3 /* PxpBorderLabel.m in Sources */,
 				D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */,
 				AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */,
 				AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */,
@@ -3284,6 +3335,7 @@
 				BDD2D2F117ECCB67004D5D9A /* AMBlurView.m in Sources */,
 				D7581EF4196455360029C5DD /* RatingInput.m in Sources */,
 				D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */,
+				AEA25FA31B790FF1006C83C3 /* PxpPlayer+Feed.m in Sources */,
 				D784EF421AA4B0570068D260 /* CalendarBar.m in Sources */,
 				D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */,
 				AE70C2111B5FF141008A9203 /* TagNameSelectTableViewController.m in Sources */,

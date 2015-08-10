@@ -12,10 +12,6 @@
 #import "PxpLoadAction.h"
 #import "PxpTimeProvider.h"
 
-#define NOTIF_PXP_PLAYER_SET_FEED @"PxpPlayerSetFeed"
-
-@class Feed;
-
 /**
  * @breif A video player optimized for live video, synchronization, and looping.
  * @author Nicholas Cvitak
@@ -54,12 +50,6 @@
 
 /// The motion status of the player's feed. (read-only)
 @property (readonly, assign, nonatomic) BOOL motion;
-
-/// The current feed of the player.
-@property (strong, nonatomic, nullable) Feed *feed;
-
-/// The preferred feed quality of the player.
-@property (copy, nonatomic, nullable) NSString *quality;
 
 /// Seeks forward or backward releative to the current time.
 - (void)seekBy:(CMTime)time;

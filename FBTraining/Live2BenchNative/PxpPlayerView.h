@@ -13,11 +13,18 @@
 // Change this to what ever player view your heart desires
 #define PXP_PLAYER_VIEW_DEFAULT NSClassFromString(@"PxpPlayerMultiView")
 
+// Post to set player with userInfo = @{ @"identifier": playerViewIdentifer, @"player": playerToSet }
+#define NOTIF_PXP_PLAYER_VIEW_SET_PLAYER @"PxpPlayerSetPlayer"
+
 /**
  * @breif Abstract PxpPlayerView class
  * @author Nicholas Cvitak
  */
+IB_DESIGNABLE
 @interface PxpPlayerView : UIView
+
+/// The identifier of the player view.
+@property (copy, nonatomic, nonnull) IBInspectable NSString *identifier;
 
 /// The player who's contents should be displayed by the view.
 @property (strong, nonatomic, nullable) PxpPlayer *player;

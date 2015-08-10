@@ -10,7 +10,6 @@
 
 #import <CoreMedia/CoreMedia.h>
 #import "PxpLoadAction.h"
-#import "Feed.h"
 
 #define MAX_SYNCS 3
 #define MAX_RELOADS 3
@@ -91,7 +90,6 @@ static CMClockRef _pxpPlayerMasterClock;
     [self addObserver:self forKeyPath:@"currentItem.seekableTimeRanges" options:0 context:_currentItemObserverContext];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(motionObserved:) name:NOTIF_MOTION_ALARM object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setFeedHandler:) name:NOTIF_PXP_PLAYER_SET_FEED object:nil];
     
     __block PxpPlayer *player = self;
     
@@ -130,7 +128,6 @@ static CMClockRef _pxpPlayerMasterClock;
     [self removeObserver:self forKeyPath:@"currentItem.seekableTimeRanges" context:_currentItemObserverContext];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_MOTION_ALARM object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PXP_PLAYER_SET_FEED object:nil];
     
     [self.syncTimer invalidate];
 }
@@ -322,28 +319,6 @@ static CMClockRef _pxpPlayerMasterClock;
     return self.context ? self.context.players : @[self];
 }
 
-- (void)setFeed:(nullable Feed *)feed {
-    _feed = feed;
-    
-    AVAsset *asset = self.quality && feed.assets[self.quality] ? feed.assets[self.quality] : feed.anyAsset;
-    
-    CMTime time = self.currentTime;
-    float rate = self.rate;
-    
-    [super replaceCurrentItemWithPlayerItem:asset ? [AVPlayerItem playerItemWithAsset:asset] : nil];
-    
-    __block PxpPlayer *player = self;
-    [self addLoadAction:[PxpLoadAction loadActionWithBlock:^(BOOL ready) {
-        if (ready) {
-            [player seekToTime:time completionHandler:^(BOOL complete) {
-                [player prerollAtRate:ready completionHandler:^(BOOL complete) {
-                    [player setRate:rate];
-                }];
-            }];
-        }
-    }]];
-}
-
 #pragma mark - Context Control
 
 - (void)setRate:(float)rate multi:(BOOL)multi {
@@ -479,10 +454,6 @@ static CMClockRef _pxpPlayerMasterClock;
 #pragma mark - Overrides
 
 - (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
-    [self willChangeValueForKey:@"feed"];
-    _feed = [item.asset isKindOfClass:[AVURLAsset class]] ? [[Feed alloc] initWithURLString:((AVURLAsset *)item.asset).URL.absoluteString quality:0] : nil;
-    [self didChangeValueForKey:@"feed"];
-    
     [super replaceCurrentItemWithPlayerItem:nil];
     [super replaceCurrentItemWithPlayerItem:item];
 }
@@ -554,15 +525,6 @@ static CMClockRef _pxpPlayerMasterClock;
         [self willChangeValueForKey:@"motion"];
         _motion = [note.userInfo[@"alarms"] containsObject:self.name];
         [self didChangeValueForKey:@"motion"];
-    }
-}
-
-- (void)setFeedHandler:(NSNotification *)note {
-    NSString *name = note.userInfo[@"name"];
-    Feed *feed = note.userInfo[@"feed"];
-    
-    if ([name isEqualToString:self.name]) {
-        self.feed = feed;
     }
 }
 

@@ -31,6 +31,10 @@ static UIImage * __nullable _extendEndImage;
     return [self initWithFrame:frame end:NO];
 }
 
+- (nonnull instancetype)initWithEnd:(BOOL)end {
+    return [self initWithFrame:CGRectZero end:end];
+}
+
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {

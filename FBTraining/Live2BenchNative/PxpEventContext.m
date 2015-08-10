@@ -7,6 +7,7 @@
 //
 
 #import "PxpEventContext.h"
+#import "PxpPlayer+Feed.h"
 
 #import "Event.h"
 #import "Feed.h"

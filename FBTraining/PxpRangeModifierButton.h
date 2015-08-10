@@ -13,6 +13,7 @@ IB_DESIGNABLE
 
 @property (assign, nonatomic) IBInspectable BOOL end;
 
+- (nonnull instancetype)initWithEnd:(BOOL)end;
 - (nonnull instancetype)initWithFrame:(CGRect)frame end:(BOOL)end;
 
 @end
