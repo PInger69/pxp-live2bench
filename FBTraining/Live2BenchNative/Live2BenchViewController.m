@@ -60,7 +60,7 @@
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
-@property (strong, nonatomic, nonnull) PxpFullscreenViewController *fullscreenViewController;
+@property (strong, nonatomic, nonnull) PxpL2BFullscreenViewController *fullscreenViewController;
 
 @end
 
@@ -168,7 +168,7 @@ static void * eventContext      = &eventContext;
         _playerViewController = [[PxpPlayerViewController alloc] init];
         [self addChildViewController:_playerViewController];
         _videoBar = [[PxpVideoBar alloc] init];
-        _fullscreenViewController = [[PxpListViewFullscreenViewController alloc] init];
+        _fullscreenViewController = [[PxpL2BFullscreenViewController alloc] init];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -562,12 +562,14 @@ static void * eventContext      = &eventContext;
     if (_appDel.encoderManager.liveEvent != nil){
         //self.videoPlayer.live = YES;
         _gotoLiveButton.enabled = YES;
+        _fullscreenViewController.liveButton.enabled = YES;
         [self switchPressed];
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
         self.videoPlayer.live = NO;
         _gotoLiveButton.enabled = NO;
+        _fullscreenViewController.liveButton.enabled = NO;
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         [self switchPressed];
         //_tagButtonController.enabled = YES;
@@ -575,6 +577,7 @@ static void * eventContext      = &eventContext;
     else if (_currentEvent == nil){
         self.videoPlayer.live = NO;
         _gotoLiveButton.enabled = NO;
+        _fullscreenViewController.liveButton.enabled = NO;
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
         //[self switchPressed];
         //_tagButtonController.enabled = NO;

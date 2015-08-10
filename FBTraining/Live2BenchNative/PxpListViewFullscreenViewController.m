@@ -40,8 +40,12 @@
     [self.bottomBar addSubview:_previousTagButton];
     [self.bottomBar addSubview:_nextTagButton];
     
-    _currentTagLabel.text = @"COACH CALL";
     _currentTagLabel.highlighted = YES;
+    _currentTagLabel.hidden = YES;
+    _startRangeModifierButton.hidden = YES;
+    _endRangeModifierButton.hidden = YES;
+    _previousTagButton.hidden = YES;
+    _nextTagButton.hidden = YES;
     
     [_previousTagButton setTitle:NSLocalizedString(@"PREVIOUS", nil) forState:UIControlStateNormal];
     [_nextTagButton setTitle:NSLocalizedString(@"NEXT", nil) forState:UIControlStateNormal];

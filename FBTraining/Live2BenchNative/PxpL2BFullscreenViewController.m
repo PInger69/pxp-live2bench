@@ -29,6 +29,7 @@
     [self.bottomBar addSubview:_liveButton];
     
     [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    _liveButton.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {
