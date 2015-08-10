@@ -785,7 +785,7 @@
     // what ever is added to these predicates will be ignored in the filters raw tags
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
-    [_pxpFilter filterTags:[self.allTags copy]];
+
     
     NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
                                                                                    [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
@@ -794,14 +794,15 @@
 
     [_pxpFilter addPredicates:@[ignoreThese]];
     
-    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
+    
+  
 
     if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
-    
-    
+
+    [_pxpFilter filterTags:[self.allTags copy]];
+
     UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
     
-    popupTabBar.pxpFilter = _pxpFilter;
     
     popoverController.popoverContentSize = popupTabBar.view.bounds.size;
     [popoverController presentPopoverFromRect:self.view.frame
@@ -809,7 +810,7 @@
                      permittedArrowDirections:0
                                      animated:YES];
     
-    
+    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 }
 
 

@@ -174,6 +174,9 @@
 		D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72FA56B180ECDAE009ACA87 /* BookmarkFilterViewController.m */; };
 		D7341A861B73C01D005156E9 /* PxpFilterFootballTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7341A841B73C01D005156E9 /* PxpFilterFootballTabViewController.m */; };
 		D7341A871B73C01D005156E9 /* PxpFilterFootballTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7341A851B73C01D005156E9 /* PxpFilterFootballTabViewController.xib */; };
+		D7341A8A1B74E714005156E9 /* PxpFilterButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7341A891B74E714005156E9 /* PxpFilterButtonView.m */; };
+		D7341A901B7530FC005156E9 /* PxpFilterUserInputScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7341A8F1B7530FC005156E9 /* PxpFilterUserInputScrollView.m */; };
+		D7341A931B753A6A005156E9 /* PxpFilterUserInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7341A921B753A6A005156E9 /* PxpFilterUserInputView.m */; };
 		D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D735290417CBEEDD003E3722 /* FootballBottomViewController.m */; };
 		D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D737F5AF17F0DFC40053081F /* CalendarViewController.m */; };
 		D738304C198A94D60053F0A1 /* FilterProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = D7383045198A94D60053F0A1 /* FilterProcessor.m */; };
@@ -777,6 +780,12 @@
 		D7341A831B73C01D005156E9 /* PxpFilterFootballTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterFootballTabViewController.h; sourceTree = "<group>"; };
 		D7341A841B73C01D005156E9 /* PxpFilterFootballTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterFootballTabViewController.m; sourceTree = "<group>"; };
 		D7341A851B73C01D005156E9 /* PxpFilterFootballTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterFootballTabViewController.xib; sourceTree = "<group>"; };
+		D7341A881B74E714005156E9 /* PxpFilterButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterButtonView.h; sourceTree = "<group>"; };
+		D7341A891B74E714005156E9 /* PxpFilterButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterButtonView.m; sourceTree = "<group>"; };
+		D7341A8E1B7530FC005156E9 /* PxpFilterUserInputScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterUserInputScrollView.h; sourceTree = "<group>"; };
+		D7341A8F1B7530FC005156E9 /* PxpFilterUserInputScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterUserInputScrollView.m; sourceTree = "<group>"; };
+		D7341A911B753A6A005156E9 /* PxpFilterUserInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterUserInputView.h; sourceTree = "<group>"; };
+		D7341A921B753A6A005156E9 /* PxpFilterUserInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterUserInputView.m; sourceTree = "<group>"; };
 		D735290317CBEEDD003E3722 /* FootballBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FootballBottomViewController.h; sourceTree = "<group>"; };
 		D735290417CBEEDD003E3722 /* FootballBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FootballBottomViewController.m; sourceTree = "<group>"; };
 		D737F5AE17F0DFC40053081F /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
@@ -2103,6 +2112,10 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7341A8E1B7530FC005156E9 /* PxpFilterUserInputScrollView.h */,
+				D7341A911B753A6A005156E9 /* PxpFilterUserInputView.h */,
+				D7341A921B753A6A005156E9 /* PxpFilterUserInputView.m */,
+				D7341A8F1B7530FC005156E9 /* PxpFilterUserInputScrollView.m */,
 				D7493D4B1B7282710081075C /* PxpFilterUserButtons.h */,
 				D7493D4C1B7282710081075C /* PxpFilterUserButtons.m */,
 				D78093AF1B6ACA25006488A9 /* TabView.h */,
@@ -2122,6 +2135,8 @@
 				D7341A841B73C01D005156E9 /* PxpFilterFootballTabViewController.m */,
 				D7341A851B73C01D005156E9 /* PxpFilterFootballTabViewController.xib */,
 				D767EF101B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m */,
+				D7341A881B74E714005156E9 /* PxpFilterButtonView.h */,
+				D7341A891B74E714005156E9 /* PxpFilterButtonView.m */,
 				D767EF111B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib */,
 				D743D47D1B696EF400533070 /* PxpFilterButtonScrollView.h */,
 				D743D47E1B696EF400533070 /* PxpFilterButtonScrollView.m */,
@@ -3136,6 +3151,7 @@
 				D78093BF1B6ACA25006488A9 /* TabView.m in Sources */,
 				AEDD7C991B4AB830003C82F3 /* PxpPlayPauseButton.m in Sources */,
 				AEE595361B0FA75700DCABE6 /* FeedSelectionController.m in Sources */,
+				D7341A931B753A6A005156E9 /* PxpFilterUserInputView.m in Sources */,
 				D7A0682616B079FF002A2892 /* OverlayViewController.m in Sources */,
 				AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */,
 				D749B7AC1A8567A000258D63 /* RJLVideoPlayer+RJLVideoPlayer_Gesture.m in Sources */,
@@ -3258,6 +3274,7 @@
 				AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */,
 				AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
+				D7341A8A1B74E714005156E9 /* PxpFilterButtonView.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */,
 				D73CDBED1AAE17FC002D682D /* SettingsPageViewController.m in Sources */,
@@ -3290,6 +3307,7 @@
 				AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */,
 				D784EF431AA4B0570068D260 /* HeaderBarForListView.m in Sources */,
 				D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */,
+				D7341A901B7530FC005156E9 /* PxpFilterUserInputScrollView.m in Sources */,
 				D72708A51A1BA4B30086BCB8 /* Feed.m in Sources */,
 				AEDD7CA81B4AB943003C82F3 /* PxpPlayerPipView.m in Sources */,
 				D735290617CBEEDF003E3722 /* FootballBottomViewController.m in Sources */,

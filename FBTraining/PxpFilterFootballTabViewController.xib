@@ -8,6 +8,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PxpFilterFootballTabViewController">
             <connections>
                 <outlet property="filteredTagLabel" destination="W7G-XB-iCv" id="iiu-Zn-LGb"/>
+                <outlet property="leftButtonView" destination="MAQ-sD-YEg" id="YpT-ge-Lv9"/>
+                <outlet property="middleUserInputView" destination="agm-lB-6d9" id="tt4-5V-PPb"/>
                 <outlet property="totalTagLabel" destination="Vz8-Wd-Ywj" id="9vE-X8-dRi"/>
                 <outlet property="view" destination="r5O-6h-WT0" id="1Q4-aL-1eU"/>
             </connections>
@@ -20,18 +22,32 @@
                 <view autoresizesSubviews="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="obr-BK-z28">
                     <rect key="frame" x="0.0" y="107" width="800" height="264"/>
                     <subviews>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kOp-kd-eVe" customClass="PxpFilterButtonScrollView">
-                            <rect key="frame" x="12" y="2" width="250" height="260"/>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        </scrollView>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ydc-hI-S9a" customClass="PxpFilterButtonScrollView">
-                            <rect key="frame" x="275" y="2" width="250" height="260"/>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        </scrollView>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aBD-z1-xt6" customClass="PxpFilterButtonScrollView">
-                            <rect key="frame" x="538" y="2" width="250" height="260"/>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        </scrollView>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MAQ-sD-YEg" customClass="PxpFilterButtonView">
+                            <rect key="frame" x="10" y="8" width="250" height="248"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Offense" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gqI-j6-Ik9">
+                                    <rect key="frame" x="8" y="8" width="65" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Defense" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t6Y-dC-87f">
+                                    <rect key="frame" x="8" y="109" width="71" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="agm-lB-6d9" customClass="PxpFilterUserInputView">
+                            <rect key="frame" x="275" y="8" width="250" height="248"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7lm-je-Xyb">
+                            <rect key="frame" x="539" y="8" width="250" height="248"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                     <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
@@ -100,7 +116,7 @@
             </subviews>
             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="645" y="-169"/>
+            <point key="canvasLocation" x="978" y="-153"/>
         </view>
     </objects>
 </document>

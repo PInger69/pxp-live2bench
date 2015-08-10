@@ -28,7 +28,7 @@ static TabView* sharedFilter;
     PxpFilterTabController *previousTab;  //The previous tab showed
 }
 
-+(TabView*)sharedFilterTab  //Allows sharing the same tab view
++(nonnull instancetype)sharedFilterTab
 {
     if (!sharedFilter) sharedFilter = [[TabView alloc]init];
     return sharedFilter;
@@ -75,7 +75,7 @@ static TabView* sharedFilter;
         [self hideTab:previousTab];
     
     [self showTab:currentTab];
-    
+    [currentTab setPxpFilter:_pxpFilter];
     previousTab = currentTab;
 }
 
@@ -125,13 +125,30 @@ static TabView* sharedFilter;
 
 - (void)setTabs:(NSArray *)tabs {
     _tabs = [NSMutableArray arrayWithArray:tabs];
+    
+    for (PxpFilterTabController * items in tabs) {
+            items.pxpFilter = self.pxpFilter;
+    }
+    
     [self updateTabBar];
 }
+
+
+-(void)setPxpFilter:(PxpFilter * __nullable)pxpFilter
+{
+    _pxpFilter = pxpFilter;
+    for (PxpFilterTabController * items in _tabs) {
+        items.pxpFilter = self.pxpFilter;
+    }
+}
+
 
 #pragma mark - Public Methods
 
 - (void)addTab:(PxpFilterTabController *)newTab{        //adding a new tab
     [_tabs addObject:newTab];
+    
+    newTab.pxpFilter = self.pxpFilter;
     
     [self updateTabBar];
 }

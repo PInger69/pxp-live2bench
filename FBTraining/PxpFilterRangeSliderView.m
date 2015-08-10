@@ -23,8 +23,12 @@
     startPoint = [userInfo[@"startTime"] intValue];
     endPoint =  [userInfo[@"endTime"] intValue];
     
-    combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
-    [_parentFilter refresh];
+    if ( endPoint != 0 && startPoint != endPoint){
+        combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
+        [_parentFilter refresh];
+    } else {
+        combo = nil;
+    }
 }
 
 - (void)initPxpFilterRangeSlider{
@@ -95,14 +99,5 @@
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end

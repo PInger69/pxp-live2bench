@@ -85,9 +85,19 @@
         
         SwipeableTableViewCell *color = cells[5];
         color.myTextLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"Color", nil)];
-        [color.functionalButton setTitle:@"" forState:UIControlStateNormal];
-        [color.functionalButton setBackgroundColor:self.userCenter.customerColor];
+        /*[color.functionalButton setTitle:@"" forState:UIControlStateNormal];
+        [color.functionalButton setFrame:CGRectMake(color.frame.size.width - 240, 30, 120, color.frame.size.height-50)];
+        color.functionalButton.layer.cornerRadius = 10.0;
+        color.functionalButton.clipsToBounds  = YES;
+        [color.functionalButton setBackgroundColor:self.userCenter.customerColor];*/
+        UIButton *colorButton = [[UIButton alloc]initWithFrame:CGRectMake(color.frame.size.width+230, 5, 120, color.frame.size.height-10)];
+        [colorButton setBackgroundColor:[UserCenter getInstance].customerColor];
+        colorButton.layer.cornerRadius = 10.0;
+        colorButton.clipsToBounds = YES;
+        [color addSubview:colorButton];
         self.colorCell = color;
+
+        
         
         self.cells = cells;
         
