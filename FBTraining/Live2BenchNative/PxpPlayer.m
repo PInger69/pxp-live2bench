@@ -680,7 +680,7 @@ static CMClockRef _pxpPlayerMasterClock;
             // players in sync
             self.syncing = 0;
             self.syncs = 0;
-            NSLog(@"Players SYNCED!");
+            //NSLog(@"Players SYNCED!");
             
         } /* else if (self.syncs < MAX_SYNCS && NO) {
             if (self.live) {

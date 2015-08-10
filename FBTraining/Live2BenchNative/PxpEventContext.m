@@ -48,7 +48,14 @@
             }
         } else { // use mp4 from encoder
             for (NSString *name in event.mp4s.keyEnumerator) {
-                feeds[name] = [[Feed alloc] initWithURLString:event.mp4s[name] quality:0];
+                
+                id mp4 = event.mp4s[name];
+                
+                if ([mp4 isKindOfClass:[NSString class]]) {
+                    feeds[name] = [[Feed alloc] initWithURLString:mp4 quality:0];
+                } else if ([mp4 isKindOfClass:[NSDictionary class]]) {
+                    feeds[name] = [[Feed alloc] initWithURLString:mp4[@"hq"] quality:0];
+                }
             }
         }
         
