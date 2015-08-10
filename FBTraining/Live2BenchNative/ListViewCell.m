@@ -165,6 +165,7 @@
     [coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coach.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [coachpickButton setBackgroundImage:[[UIImage imageNamed:@"coachPicked.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
     [coachpickButton setFrame:CGRectMake(CGRectGetMaxX(tagImage.frame) + 44, CGRectGetMaxY(tagPlayersView.frame) + 5, 32.0f, 32.0f)];
+    [coachpickButton addTarget:self action:@selector(coachPickSelected) forControlEvents:UIControlEventTouchUpInside];
     //[coachpickButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
     [self.myContentView addSubview:coachpickButton];
     
@@ -269,6 +270,27 @@
     
     CGRect newRect = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
     return newRect;
+}
+
+-(void)coachPickSelected{
+    if (!coachpickButton.selected) {
+        [coachpickButton setSelected:true];
+        _currentTag.coachPick = true;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_currentTag];
+    }else if (coachpickButton.selected){
+        [coachpickButton setSelected:false];
+        _currentTag.coachPick = false;
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_currentTag];
+    }
+}
+
+-(void)setCurrentTag:(Tag *)currentTag{
+    if (currentTag.coachPick) {
+        [coachpickButton setSelected:true];
+    }else{
+        [coachpickButton setSelected:false];
+    }
+    _currentTag = currentTag;
 }
 
 /*- (void)setRatingStars:(int)number {
