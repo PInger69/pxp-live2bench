@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString       * name;
 @property (nonatomic, strong) NSString       * sport;
 @property (nonatomic, strong) NSString       * txt_name;
-@property (nonatomic, weak)   League         * league;
+@property (nonatomic, strong)   League         * league;
 @property (readonly, nonatomic,strong) NSDictionary   *players;
 
 NS_ASSUME_NONNULL_END

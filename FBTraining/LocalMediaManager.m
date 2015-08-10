@@ -108,7 +108,7 @@ static LocalMediaManager * instance;
                     
                 
                 if ([dict objectForKey:@"savedTeamData"]){
-                   anEvent.teams =  [self parsedTeamData:[dict objectForKey:@"savedTeamData"]];
+                   anEvent.teams =  [self parsedTeamData:dict];
                 }
                 
                     NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
@@ -118,7 +118,7 @@ static LocalMediaManager * instance;
                 }
             }
             
-        
+        Event *event = [[[_allEvents allValues]firstObject]objectForKey:@"local"];
         NSMutableArray *localTempPool = [[NSMutableArray alloc]init];
         NSArray *localplishPaths = [self grabAllFiles:_localPath ext:@"plist"];
         for (NSString *localPths in localplishPaths) {
@@ -727,9 +727,9 @@ static LocalMediaManager * instance;
 
 // This returns @{@"homeTeam":<LeagueTeam>,@"visitTeam":<LeagueTeam>} // to be added to the event
 // This is basically the same as in the Encoder class. One day I would like to make one or two classes that focus on parsing
--(NSDictionary*)parsedTeamData:(NSDictionary*)dict
+-(NSDictionary*)parsedTeamData:(NSDictionary*)mainDict
 {
-
+    NSDictionary *dict = [mainDict objectForKey:@"savedTeamData"];
     NSMutableDictionary * leaguePool        = [[NSMutableDictionary alloc]init]; // this is the final
     NSMutableDictionary * leagueTempHIDPool = [[NSMutableDictionary alloc]init];
     NSArray * rawleagues = [[dict objectForKey:@"leagues"]allValues];
@@ -763,6 +763,7 @@ static LocalMediaManager * instance;
         lTeam.txt_name      = tData[@"txt_name"];
         
         League * owningLeague = (League *)[leagueTempHIDPool objectForKey:lHID];
+        lTeam.league        = owningLeague;
         [owningLeague addTeam:lTeam];
         [teamTempHIDPool setObject:lTeam forKey:lTeam.hid];
     }
@@ -783,6 +784,7 @@ static LocalMediaManager * instance;
             aPlayer.player          = pData[@"player"];
             aPlayer.position        = pData[@"position"];
             aPlayer.role            = pData[@"role"];
+            aPlayer.team            = owningTeam;
             
             tHID      = pData[@"team"];
             owningTeam = (LeagueTeam *)[teamTempHIDPool objectForKey:tHID];
@@ -796,8 +798,8 @@ static LocalMediaManager * instance;
     NSDictionary * dic = [[dict[@"leagues"]allValues]firstObject];
     NSString * lName = [dic objectForKey:@"name"] ;
     League      * league        = [leaguePool objectForKey:lName];
-    LeagueTeam  * homeTeam      = [league.teams objectForKey:dict[@"homeTeam"]];
-    LeagueTeam  * visitTeam     = [league.teams objectForKey:dict[@"visitTeam"]];
+    LeagueTeam  * homeTeam      = [league.teams objectForKey:mainDict[@"homeTeam"]];
+    LeagueTeam  * visitTeam     = [league.teams objectForKey:mainDict[@"visitTeam"]];
     
     if ([league.teams count]==1){
         homeTeam = visitTeam = [[league.teams allValues]firstObject];
