@@ -56,6 +56,16 @@
 
 #pragma mark - Overrides
 
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    [self updateColors];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    [self updateColors];
+}
+
 - (void)tintColorDidChange {
     [super tintColorDidChange];
     [self updateColors];
@@ -82,8 +92,11 @@
 #pragma mark - Private Methods
 
 - (void)updateColors {
-    self.borderColor = self.highlighted ? self.tintColor.highlightedColor : self.tintColor;
-    self.textColor = self.highlighted ? self.tintColor.highlightedColor : self.tintColor;
+    self.borderColor = self.enabled ? self.tintColor : self.tintColor.highlightedColor;
+    self.backgroundColor = !self.highlighted ? [UIColor clearColor] : self.enabled ? self.tintColor : self.tintColor.highlightedColor;
+    
+    UIColor *textColor = self.highlighted ? [UIColor whiteColor] : self.tintColor;
+    self.textColor = self.enabled ? textColor : textColor.highlightedColor;
 }
 
 /*

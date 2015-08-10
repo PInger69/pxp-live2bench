@@ -185,7 +185,6 @@
         } else  {
             self.view.frame = frame;
             self.view.hidden = NO;
-            [self.view.superview bringSubviewToFront:self.view];
         }
         
         [self.view layoutIfNeeded];

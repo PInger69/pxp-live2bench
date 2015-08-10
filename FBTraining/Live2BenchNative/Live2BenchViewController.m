@@ -381,14 +381,14 @@ static void * eventContext      = &eventContext;
     
     if ([sport isEqualToString:@"Hockey"] && !_bottomViewController && _currentEvent) {
         _bottomViewController = [[HockeyBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         
     }else if ([sport isEqualToString:@"Soccer"] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[SoccerBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
@@ -396,7 +396,7 @@ static void * eventContext      = &eventContext;
         [_bottomViewController allToggleOnOpenTags];
     }else if ([sport isEqualToString:@"Rugby"] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[RugbyBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
@@ -404,7 +404,7 @@ static void * eventContext      = &eventContext;
         [_bottomViewController allToggleOnOpenTags];
     }else if ([sport isEqualToString:@"Football"] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[FootballBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
     }
 }
@@ -692,7 +692,6 @@ static void * eventContext      = &eventContext;
                 [_bottomViewController.mainView setHidden:false];
                 [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
-                [self.view bringSubviewToFront:_videoBar];
                 [_tagButtonController _fullScreen];
                 //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
             }
@@ -952,7 +951,11 @@ static void * eventContext      = &eventContext;
     [_bottomViewController update];
     // just to update UI
     
+    [self.view bringSubviewToFront:_bottomViewController.mainView];
     [self.view bringSubviewToFront:_videoBar];
+    [self.view bringSubviewToFront:_fullscreenViewController.view];
+    [self.view bringSubviewToFront:_tagButtonController.leftTray];
+    [self.view bringSubviewToFront:_tagButtonController.rightTray];
 }
 
 

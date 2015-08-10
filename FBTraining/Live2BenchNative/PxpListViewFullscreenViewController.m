@@ -40,7 +40,7 @@
     [self.bottomBar addSubview:_previousTagButton];
     [self.bottomBar addSubview:_nextTagButton];
     
-    _currentTagLabel.highlighted = YES;
+    _currentTagLabel.enabled = NO;
     _currentTagLabel.hidden = YES;
     _startRangeModifierButton.hidden = YES;
     _endRangeModifierButton.hidden = YES;

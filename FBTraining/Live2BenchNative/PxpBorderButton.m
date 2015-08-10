@@ -64,6 +64,11 @@
     [self updateColors];
 }
 
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    [self updateColors];
+}
+
 - (void)tintColorDidChange {
     [super tintColorDidChange];
     [self updateColors];
@@ -90,12 +95,11 @@
 #pragma mark - Private Methods
 
 - (void)updateColors {
-    self.borderColor = self.highlighted ? self.tintColor.highlightedColor : self.tintColor;
-    self.backgroundColor = !self.selected ? [UIColor clearColor] : self.highlighted ? self.tintColor.highlightedColor : self.tintColor;
+    self.borderColor = self.enabled ? self.tintColor : self.tintColor.highlightedColor;
+    self.backgroundColor = !self.highlighted ? [UIColor clearColor] : self.enabled ? self.tintColor : self.tintColor.highlightedColor;
     
-    [self setTitleColor:self.tintColor forState:UIControlStateNormal];
-    [self setTitleColor:self.tintColor.highlightedColor forState:UIControlStateHighlighted];
-    [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    UIColor *textColor = self.highlighted ? [UIColor whiteColor] : self.tintColor;
+    [self setTitleColor:self.enabled ? textColor : textColor.highlightedColor forState:UIControlStateNormal];
 }
 
 /*

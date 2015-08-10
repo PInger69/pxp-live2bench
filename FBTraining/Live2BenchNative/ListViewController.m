@@ -362,6 +362,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
+    [self.view bringSubviewToFront:_fullscreenViewController.view];
+    
+    _fullscreenViewController.targetFrame = _playerViewController.view.frame;
 }
 
 -(void)getPrevTag
