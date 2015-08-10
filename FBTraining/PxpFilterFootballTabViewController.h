@@ -7,10 +7,14 @@
 //
 
 #import "PxpFilterTabController.h"
+#import "PxpFilterButtonView.h"
+#import "PxpFilterUserInputView.h"
 
 @interface PxpFilterFootballTabViewController : PxpFilterTabController
 
 @property (strong, nonatomic, nullable) IBOutlet UILabel *filteredTagLabel;
 @property (strong, nonatomic, nullable) IBOutlet UILabel *totalTagLabel;
+@property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonView *leftButtonView;
+@property (strong, nonatomic, nullable) IBOutlet PxpFilterUserInputView *middleUserInputView;
 
 @end
