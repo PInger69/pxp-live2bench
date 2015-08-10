@@ -12,6 +12,23 @@
 
 @implementation PxpFullscreenButton
 
+- (nonnull instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.contentMode = UIViewContentModeRedraw;
+    }
+    return self;
+}
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.contentMode = UIViewContentModeRedraw;
+    }
+    return self;
+}
+
+
 - (void)tintColorDidChange {
     [super tintColorDidChange];
     [self setNeedsDisplay];
