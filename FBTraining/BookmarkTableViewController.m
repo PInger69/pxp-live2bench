@@ -280,8 +280,8 @@
         [self.tableView reloadData];
     }
     
-    [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
+    [alertView viewFinished];
     [self checkDeleteAllButton]; // hides the delete all button if shown
 }
 
