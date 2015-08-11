@@ -87,6 +87,7 @@
             [self.pipView setNeedsDisplay];
         }
     }
+    
 }
 
 - (void)swapGestureRecognized:(UIGestureRecognizer *)recognizer {
@@ -97,11 +98,11 @@
             PxpPlayer *temp = self.player;
             self.player = self.pipView.player;
             self.pipView.player = temp;
+            
+            [self setNeedsDisplay];
+            [self.pipView setNeedsDisplay];
         }
     }
-    
-    [self setNeedsDisplay];
-    [self.pipView setNeedsDisplay];
 }
 
 #pragma mark - Private Methods

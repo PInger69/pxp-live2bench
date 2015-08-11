@@ -139,6 +139,8 @@ static CMClockRef _pxpPlayerMasterClock;
             
             if (self.currentItem.status == AVPlayerItemStatusFailed) {
                 NSLog(@"%@", self.currentItem.error);
+                
+                [self replaceCurrentItemWithPlayerItem:self.currentItem];
             }
             
             if (self.currentItem.status == AVPlayerItemStatusReadyToPlay) {

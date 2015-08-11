@@ -127,16 +127,14 @@
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (!selectedTag) {
-                selectedTag = note.object;
                 
-                _videoBar.selectedTag = selectedTag;
                 
                 [commentingField clear];
                 commentingField.enabled             = YES;
                 commentingField.text                = selectedTag.comment;
                 commentingField.ratingScale.rating  = selectedTag.rating;
                 
-                _fullscreenViewController.selectedTag = selectedTag;
+
             }
         }];
         
