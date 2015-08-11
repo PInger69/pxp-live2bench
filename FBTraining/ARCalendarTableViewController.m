@@ -204,6 +204,8 @@
     // This condition is to add an empty cell at the end of the tableview
     if (indexPath.row >= (self.tableData.count + self.arrayOfCollapsableIndexPaths.count) || !self.tableData) {
         ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
+        [cell.dateDescription setHidden:true];
+        [cell.leagueDescription setHidden:true];
         [cell.timeLabel setText: @" "];
         [cell.dateLabel setText: @" "];
         [cell.titleLabel setText: @" "];

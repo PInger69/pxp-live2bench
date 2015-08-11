@@ -15,8 +15,8 @@
 
 @implementation ARCalendarTableViewCell
 {
-    UILabel * _dateDescription;
-    UILabel * _leagueDescription;
+    //UILabel * _dateDescription;
+    //UILabel * _leagueDescription;
 }
 
 
