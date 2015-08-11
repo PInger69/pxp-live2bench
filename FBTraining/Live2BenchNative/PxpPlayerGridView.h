@@ -27,7 +27,7 @@
 @end
 
 /// @author Nicholas Cvitak
-@protocol PxpPlayerGridViewDelegate
+@protocol PxpPlayerGridViewDelegate <PxpPlayerViewDelegate>
 
 /// Invoked when a new player view is loaded into the grid view.
 - (void)playerView:(nonnull PxpPlayerSingleView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView;

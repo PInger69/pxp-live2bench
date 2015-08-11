@@ -62,8 +62,6 @@
     void *_motionObserverContext;
 }
 
-@synthesize fullView = _fullView;
-
 - (void)setNeedsDisplay {
     [super setNeedsDisplay];
     
@@ -218,7 +216,7 @@
 }
 
 - (BOOL)fullView {
-    return YES;
+    return [super fullView] && self.zoomLevel == 1.0;
 }
 
 - (CGRect)videoRect {
@@ -319,14 +317,9 @@
     [self willChangeValueForKey:@"zoomLevel"];
     _zoomLevel = self.scrollView.zoomScale;
     [self didChangeValueForKey:@"zoomLevel"];
-    self.zoomLabel.text = self.scrollView.zoomScale > 1.0 ? [NSString stringWithFormat:@"%.1fx", self.scrollView.zoomScale] : nil;
+    self.zoomLabel.text = _zoomLevel > 1.0 ? [NSString stringWithFormat:@"%.1fx", _zoomLevel] : nil;
     
-    BOOL full = self.scrollView.zoomScale == 1.0;
-    if (_fullView != full) {
-        [self willChangeValueForKey:@"fullView"];
-        _fullView = full;
-        [self didChangeValueForKey:@"fullView"];
-    }
+    [self.delegate playerView:self changedFullViewStatus:self.fullView];
 }
 
 /*

@@ -58,7 +58,7 @@
 }
 
 - (BOOL)fullView {
-    return NO;
+    return YES;
 }
 
 - (void)setPlayerHandler:(NSNotification *)notification {

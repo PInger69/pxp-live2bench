@@ -13,11 +13,6 @@
 @end
 
 @implementation PxpPlayerMultiView
-{
-    void *_fullViewObserver;
-}
-
-@synthesize fullView = _fullView;
 
 - (void)initMultiView {
     
@@ -28,23 +23,15 @@
     _companionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     _gridView.delegate = self;
-
-    _companionView.tapToAdvanceEnabled = NO;
+    _companionView.delegate = self;
     
+    _companionView.tapToAdvanceEnabled = NO;
     _companionView.hidden = YES;
     
     [_companionView addGestureRecognizer:[self createFocusGestureRecognizer]];
     
     [self addSubview:_gridView];
     [self addSubview:_companionView];
-    
-    _fullViewObserver = &_fullViewObserver;
-    
-    [self addObserver:_companionView forKeyPath:@"fullView" options:0 context:_fullViewObserver];
-}
-
-- (void)dealloc {
-    [self removeObserver:_companionView forKeyPath:@"fullView" context:_fullViewObserver];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -70,18 +57,6 @@
     self.companionView.frame = self.bounds;
 }
 
-- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
-    if (context == _fullViewObserver) {
-        if (!_companionView.hidden) {
-            [self willChangeValueForKey:@"fullView"];
-            _fullView = _companionView.fullView;
-            [self didChangeValueForKey:@"fullView"];
-        }
-    } else {
-        return [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
 #pragma mark - Getters / Setters
 
 - (void)setPlayer:(PxpPlayer *)player {
@@ -93,9 +68,11 @@
     self.gridView.hidden = YES;
     [self.context.mainPlayer sync];
     
-    [self willChangeValueForKey:@"fullView"];
-    _fullView = _companionView.fullView;
-    [self didChangeValueForKey:@"fullView"];
+    [self.delegate playerView:self changedFullViewStatus:self.fullView];
+}
+
+- (BOOL)fullView {
+    return [super fullView] && (_gridView.hidden ? _companionView.fullView : _gridView.fullView);
 }
 
 #pragma mark - PxpPlayerGridViewDelegate
@@ -108,6 +85,10 @@
     
 }
 
+- (void)playerView:(nonnull PxpPlayerView *)playerView changedFullViewStatus:(BOOL)fullView {
+    [self.delegate playerView:self changedFullViewStatus:self.fullView];
+}
+
 #pragma mark - Gesture Recognizers
 
 - (void)focusGestureRecognized:(UIGestureRecognizer *)recognizer {
@@ -115,6 +96,7 @@
         PxpPlayerSingleView *playerView = (PxpPlayerSingleView *)recognizer.view;
         
         if (playerView == self.companionView && self.companionView.player && self.context.players.count > 1) {
+            
             self.gridView.hidden = NO;
             
             self.companionView.hidden = YES;
@@ -122,21 +104,18 @@
             
             [self.context.mainPlayer sync];
             
-            [self willChangeValueForKey:@"fullView"];
-            _fullView = _gridView.fullView;
-            [self didChangeValueForKey:@"fullView"];
+            [self.delegate playerView:self changedFullViewStatus:self.fullView];
             
         } else if (playerView.player && !self.companionView.player) {
+            
             self.companionView.player = playerView.player;
             self.companionView.hidden = NO;
             
             self.gridView.hidden = YES;
             [self.context.mainPlayer sync];
             
-            [self willChangeValueForKey:@"fullView"];
-            _fullView = _companionView.fullView;
-            [self didChangeValueForKey:@"fullView"];
             
+            [self.delegate playerView:self changedFullViewStatus:self.fullView];
         }
         
         

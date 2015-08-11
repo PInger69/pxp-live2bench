@@ -17,6 +17,8 @@
 
 @implementation PxpPlayerGridView
 
+@dynamic delegate;
+
 - (void)initGridView {
     
     _playerViews = [NSMutableArray array];

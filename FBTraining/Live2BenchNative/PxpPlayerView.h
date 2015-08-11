@@ -16,12 +16,22 @@
 // Post to set player with userInfo = @{ @"identifier": playerViewIdentifer, @"player": playerToSet }
 #define NOTIF_PXP_PLAYER_VIEW_SET_PLAYER @"PxpPlayerSetPlayer"
 
+@class PxpPlayerView;
+
+@protocol PxpPlayerViewDelegate
+
+- (void)playerView:(nonnull PxpPlayerView *)playerView changedFullViewStatus:(BOOL)fullView;
+
+@end
+
 /**
  * @breif Abstract PxpPlayerView class
  * @author Nicholas Cvitak
  */
 IB_DESIGNABLE
 @interface PxpPlayerView : UIView
+
+@property (weak, nonatomic, nullable) id<PxpPlayerViewDelegate> delegate;
 
 /// The identifier of the player view.
 @property (copy, nonatomic, nonnull) IBInspectable NSString *identifier;

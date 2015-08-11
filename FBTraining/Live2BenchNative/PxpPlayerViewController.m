@@ -9,7 +9,7 @@
 #import "PxpPlayerViewController.h"
 #import "PxpPlayerControlBar.h"
 
-@interface PxpPlayerViewController ()
+@interface PxpPlayerViewController () <PxpPlayerViewDelegate>
 
 @end
 
@@ -25,6 +25,8 @@
     self = [super initWithNibName:@"PxpPlayerViewController" bundle:nil];
     if (self) {
         _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PXP_PLAYER_VIEW_DEFAULT_CLASS alloc] init];
+        _playerView.delegate = self;
+        
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         
         _fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];
@@ -73,6 +75,10 @@
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (void)playerView:(nonnull PxpPlayerView *)playerView changedFullViewStatus:(BOOL)fullView {
+    _telestrationViewController.view.hidden = !fullView;
 }
 
 /*
