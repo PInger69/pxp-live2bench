@@ -179,7 +179,6 @@
 
 -(void)eventChanged:(NSNotification *)note
 {
-    id<EncoderProtocol> encoder = note.object;
     
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
         return;
@@ -212,7 +211,7 @@
     }
     
     // update the context
-    PxpPlayerContext *context = encoder.eventContext;
+    PxpPlayerContext *context = _appDel.encoderManager.primaryEncoder.eventContext;
     self.playerViewController.playerView.context = context;
     self.fullscreenViewController.playerViewController.playerView.context = context;
     
