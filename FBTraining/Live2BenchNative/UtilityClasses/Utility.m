@@ -376,6 +376,19 @@
     
 }
 
++(BOOL)isDeviceSupportedMultiCam:(NSString *)platform{
+    BOOL result = FALSE;
+    if ([platform containsString:@"iPad"]) {
+        NSArray *words = [platform componentsSeparatedByString:@","];
+        platform = words[0];
+        words = [platform componentsSeparatedByString:@"iPad"];
+        if ([words[1] intValue] >= 4) {
+            result = TRUE;
+        }
+    }
+    return result;
+}
+
 + (NSString *)myWifiName
 {
     CFArrayRef myArray = CNCopySupportedInterfaces();
