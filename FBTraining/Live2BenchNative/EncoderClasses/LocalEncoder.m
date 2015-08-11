@@ -54,6 +54,7 @@ static LocalEncoder * instance;
     //NSComparisonResult(^plistSort)(id obj1, id obj2);
     NSMutableArray  * tagSyncConnections;
     NSURLDataConnection *encoderConnection;
+    NSDictionary    * closeTags;
 }
 
 @synthesize name            = _name;
@@ -87,6 +88,8 @@ static LocalEncoder * instance;
         _localTags                      = [[NSMutableArray alloc] init];
         _modifiedTags                   = [[NSMutableArray alloc] init];
         tagSyncConnections              = [NSMutableArray array];
+        
+        closeTags = @{[NSNumber numberWithInteger:TagTypeSoccerZoneStart]:[NSNumber numberWithInteger:TagTypeSoccerZoneStop],[NSNumber numberWithInteger:TagTypeSoccerHalfStart]:[NSNumber numberWithInteger:TagTypeSoccerHalfStop],[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]:[NSNumber numberWithInteger:TagTypeHockeyPeriodStop],[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]:[NSNumber numberWithInteger:TagTypeHockeyStrengthStop],[NSNumber numberWithInteger:TagTypeHockeyStartOLine]:[NSNumber numberWithInteger:TagTypeHockeyStopOLine],[NSNumber numberWithInteger:TagTypeHockeyStartDLine]:[NSNumber numberWithInteger:TagTypeHockeyStopDLine],[NSNumber numberWithInteger:TagTypeFootballQuarterStart]:[NSNumber numberWithInteger:TagTypeFootballQuarterStop]};
         
        /* // build folder structue if not there
         
@@ -619,6 +622,18 @@ static LocalEncoder * instance;
     [self.localTags addObject:newTag];
     
     [self writeToPlist];
+    
+    if ([closeTags objectForKey:[NSNumber numberWithInteger:newTag.type]]) {
+        for (Tag *tag in self.event.tags) {
+            if (tag.type == newTag.type && tag != newTag)
+            {
+                tag.duration = newTag.time - tag.time;
+                tag.type = [[closeTags objectForKey:[NSNumber numberWithInteger:newTag.type]]intValue];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:tag];
+            }
+        }
+    }
+    
    /* //[self.event.localTags setObject:newTag.makeTagData forKey: [NSString stringWithFormat:@"%lu",(unsigned long)self.event.localTags.count]];
     [self.localTags setObject:[newTag makeTagData] forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
     

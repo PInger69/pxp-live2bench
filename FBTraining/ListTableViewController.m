@@ -293,6 +293,7 @@
     }
     ListViewCell *cell = (ListViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
     [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
+    cell.currentTag = tag;
     
 //    if (!self.downloadEnabled) {
 //        cell.bookmarkButton.enabled = NO;
@@ -410,7 +411,7 @@
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else{
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),@" "]];
         [cell.tagPlayersView setHidden:true];
     }
     
@@ -472,6 +473,7 @@
     //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     
     ListViewCell *cell = (ListViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+    cell.currentTag = tag;
     
     if(![indexPath isEqual:self.previouslySelectedIndexPath])
     {

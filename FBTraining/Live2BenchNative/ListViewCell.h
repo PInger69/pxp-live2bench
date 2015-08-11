@@ -11,6 +11,7 @@
 #import "ClipCornerView.h"
 #import "DownloadButton.h"
 #import "RatingOutput.h"
+#import "Tag.h"
 
 @interface ListViewCell : DeletableTableViewCell<UIScrollViewDelegate>{
     
@@ -55,6 +56,7 @@
 //@property (nonatomic, strong) UIImageView *checkmarkOverlay;
 @property (nonatomic, strong) UILabel *playersLabel;
 @property (nonatomic,strong) RatingOutput *ratingscale;
+@property (nonatomic,strong) Tag *currentTag;
 
 
 //@property (nonatomic, strong) id <UITableViewDataSource> tableViewDataSource;

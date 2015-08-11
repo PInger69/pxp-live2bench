@@ -24,6 +24,7 @@
 +(NSString *)dateFromEvent: (NSString *) eventName;
 +(NSString *)platformString;
 +(BOOL)isDeviceBlurSupported:(NSString *)platform;
++(BOOL)isDeviceSupportedMultiCam:(NSString *)platform;
 +(BOOL)hasInternet;
 +(NSString*)myWifiName;
 

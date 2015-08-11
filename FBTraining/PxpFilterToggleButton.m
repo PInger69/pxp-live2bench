@@ -7,6 +7,7 @@
 //
 
 #import "PxpFilterToggleButton.h"
+#import "Tag.h"
 
 @implementation PxpFilterToggleButton
 
@@ -53,8 +54,10 @@
 // Protocol methods
 -(void)filterTags:(NSMutableArray *)tagsToFilter
 {
+    
+
     if (self.selected)
-        [tagsToFilter filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %@",_filterPropertyKey, _filterPropertyValue]];
+        [tagsToFilter filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %@",_filterPropertyKey, [NSNumber numberWithBool:[_filterPropertyValue boolValue]] ]];
 }
 
 -(void)reset{
