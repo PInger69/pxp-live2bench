@@ -247,7 +247,7 @@
     NSNumber *seek = self.seek;
     
     if (CMTIME_IS_NUMERIC(time)) {
-        [self.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL seekFinished) {
+        [self.player seekToTime:time completionHandler:^(BOOL seekFinished) {
             
             [self.player prerollAtRate:seek.floatValue completionHandler:^(BOOL prerollFinished) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

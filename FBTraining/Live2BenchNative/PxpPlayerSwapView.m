@@ -136,7 +136,6 @@
 - (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     if (indexPath.row < self.context.players.count) {
         self.player = self.context.players[indexPath.row];
-        [self.player sync];
         [self.popoverController dismissPopoverAnimated:YES];
     }
 }

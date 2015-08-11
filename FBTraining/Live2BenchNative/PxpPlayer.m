@@ -79,6 +79,7 @@ static CMClockRef _pxpPlayerMasterClock;
     _range = kCMTimeRangeInvalid;
     _syncs = 0;
     _reloads = 0;
+    _failed = NO;
     
     _loadActionQueue = [NSMutableArray array];
     _statusObserverContext = &_statusObserverContext;
@@ -154,10 +155,11 @@ static CMClockRef _pxpPlayerMasterClock;
             }
         }
         
+        /*
         [self willChangeValueForKey:@"failed"];
         _failed = self.currentItem.status == AVPlayerItemStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
         [self didChangeValueForKey:@"failed"];
-        
+        */
         
     } else if (context == _rateObserverContext) {
         
@@ -170,9 +172,11 @@ static CMClockRef _pxpPlayerMasterClock;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.syncBlock(self.currentTime);
         
+        /*
         [self willChangeValueForKey:@"failed"];
         _failed = self.currentItem.status == AVPlayerItemStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
         [self didChangeValueForKey:@"failed"];
+         */
     });
 }
 
@@ -324,7 +328,7 @@ static CMClockRef _pxpPlayerMasterClock;
 #pragma mark - Context Control
 
 - (void)setRate:(float)rate multi:(BOOL)multi {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO];
     } else {
@@ -334,7 +338,7 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)setRate:(float)rate multi:(BOOL)multi time:(CMTime)itemTime atHostTime:(CMTime)hostClockTime {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO time:itemTime atHostTime:hostClockTime];
     } else {
@@ -343,7 +347,7 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)prerollAtRate:(float)rate multi:(BOOL)multi completionHandler:(nonnull void (^)(BOOL))completionHandler {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    
     if (multi) {
         self.prerolling = YES;
         
@@ -355,6 +359,7 @@ static CMClockRef _pxpPlayerMasterClock;
         void (^handler)(BOOL) = ^(BOOL success) {
             tried++, complete += success ? 1 : 0;
             
+            NSLog(@"PR t: %lu, n: %lu", (unsigned long)tried, (unsigned long)total);
             if (tried >= total) {
                 completionHandler(complete >= total);
                 self.prerolling = NO;
@@ -364,14 +369,17 @@ static CMClockRef _pxpPlayerMasterClock;
         for (PxpPlayer *player in self.contextPlayers) [player prerollAtRate:rate multi:NO completionHandler:handler];
     } else {
         [super cancelPendingPrerolls];
-        [super prerollAtRate:rate completionHandler:^(BOOL success) {
-            completionHandler(success);
-        }];
+        if (self.status != AVPlayerStatusReadyToPlay) {
+            completionHandler(NO);
+        } else {
+            [super prerollAtRate:rate completionHandler:completionHandler];
+        }
+        
     }
 }
 
 - (void)cancelPendingPrerollsMulti:(BOOL)multi {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player cancelPendingPrerollsMulti:NO];
     } else {
@@ -380,7 +388,7 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)seekToDate:(nonnull NSDate *)date multi:(BOOL)multi completionHandler:(nonnull void (^)(BOOL))completionHandler {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         self.seeking = YES;
         NSUInteger total = self.contextPlayers.count;
@@ -406,14 +414,10 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)seekToTime:(CMTime)time multi:(BOOL)multi toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nonnull void (^)(BOOL))completionHandler {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
     time = [self clampTime:time];
     
-    if (CMTIME_IS_INVALID(time)) {
-        return;
-    }
-    
     if (multi) {
+        [self cancelPendingSeeks];
         self.seeking = YES;
         NSUInteger total = self.contextPlayers.count;
         
@@ -423,6 +427,7 @@ static CMClockRef _pxpPlayerMasterClock;
         void (^handler)(BOOL) = ^(BOOL success) {
             tried++, complete += success ? 1 : 0;
             
+            NSLog(@"SK t: %lu, n: %lu", (unsigned long)tried, (unsigned long)total);
             if (tried >= total) {
                 completionHandler(complete >= total);
                 self.seeking = NO;
@@ -431,19 +436,20 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handler];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (tried < total) {
                 [self cancelPendingSeeks];
             }
         });
     } else {
-        [self.currentItem cancelPendingSeeks];
         
         if (CMTIME_IS_INDEFINITE(time)) {
             time = kCMTimePositiveInfinity;
         }
         
-        if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
+        if (self.status != AVPlayerStatusReadyToPlay || CMTIME_IS_INVALID(time)) {
+            completionHandler(NO);
+        } else if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
             [super seekToTime:time completionHandler:completionHandler];
         } else {
             [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
@@ -456,7 +462,7 @@ static CMClockRef _pxpPlayerMasterClock;
 #pragma mark - Overrides
 
 - (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
-    [super replaceCurrentItemWithPlayerItem:nil];
+    //[super replaceCurrentItemWithPlayerItem:nil];
     [super replaceCurrentItemWithPlayerItem:item];
 }
 
@@ -547,7 +553,7 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)addLoadAction:(nonnull PxpLoadAction *)loadAction {
-    NSUInteger total = self.contextPlayers.count;
+    const NSUInteger total = self.contextPlayers.count;
     
     __block NSUInteger tried = 0;
     __block NSUInteger complete = 0;
@@ -556,16 +562,17 @@ static CMClockRef _pxpPlayerMasterClock;
         tried++;
         complete += ready ? 1 : 0;
         
+        NSLog(@"tried: %lu, total: %lu", (unsigned long)tried, (unsigned long)total);
         if (tried >= total) {
             [loadAction runWithSuccess:complete >= total];
         }
     };
     
     for (PxpPlayer *player in self.contextPlayers) {
-        if (player.currentItem.status == AVPlayerItemStatusUnknown) {
+        if (player.currentItem.status == AVPlayerStatusUnknown) {
             [player.loadActionQueue addObject:[PxpLoadAction loadActionWithBlock:handler]];
         } else {
-            handler(player.currentItem.status == AVPlayerItemStatusReadyToPlay);
+            handler(player.currentItem.status == AVPlayerStatusReadyToPlay);
         }
     }
 }
@@ -642,7 +649,7 @@ static CMClockRef _pxpPlayerMasterClock;
 
 /// Synchronizes all other players to the player
 - (void)sync:(CMTime)currentTime {
-    
+    return;
     static CMTime smartSync;
     if (!CMTIME_IS_NUMERIC(smartSync)) {
         smartSync = kCMTimeZero;
@@ -713,7 +720,7 @@ static CMClockRef _pxpPlayerMasterClock;
             for (PxpPlayer *player in self.contextPlayers) {
                 if (player != self) {
                     
-                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
                         
                         // ensure no players get stuck
                         for (PxpPlayer *player in self.contextPlayers) {

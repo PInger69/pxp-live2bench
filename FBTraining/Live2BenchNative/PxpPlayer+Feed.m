@@ -11,23 +11,28 @@
 @implementation PxpPlayer (Feed)
 
 - (void)setFeed:(nullable Feed *)feed {
-    AVAsset *asset = feed.anyAsset;
-    
+    NSURL *url = feed.path;
     CMTime time = self.currentTime;
     float rate = self.rate;
     
-    [super replaceCurrentItemWithPlayerItem:asset ? [AVPlayerItem playerItemWithAsset:asset] : nil];
     
-    __block PxpPlayer *player = self;
-    [self addLoadAction:[PxpLoadAction loadActionWithBlock:^(BOOL ready) {
-        if (ready) {
-            [player seekToTime:time completionHandler:^(BOOL complete) {
-                [player prerollAtRate:ready completionHandler:^(BOOL complete) {
-                    [player setRate:rate];
+    [super replaceCurrentItemWithPlayerItem:url ? [AVPlayerItem playerItemWithURL:url] : nil];
+    
+    
+    if (url) {
+        __block PxpPlayer *player = self;
+        [self addLoadAction:[PxpLoadAction loadActionWithBlock:^(BOOL ready) {
+            NSLog(@"READY: %d", ready);
+            if (ready) {
+                [player seekToTime:time completionHandler:^(BOOL complete) {
+                    [player prerollAtRate:ready completionHandler:^(BOOL complete) {
+                        [player setRate:rate];
+                    }];
                 }];
-            }];
-        }
-    }]];
+            }
+        }]];
+    }
+    
 }
 
 @end

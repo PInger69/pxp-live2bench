@@ -79,16 +79,14 @@
 }
 
 - (void)loadComplete:(PxpLoadAction *)loadAction {
-    if (loadAction.success) {
-        if (self.event.live) {
-            self.mainPlayer.live = YES;
-        } else {
-            [self.mainPlayer seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-                [self.mainPlayer prerollAtRate:self.mainPlayer.playRate completionHandler:^(BOOL finished) {
-                    [self.mainPlayer setRate:self.mainPlayer.playRate];
-                }];
+    if (self.event.live) {
+        self.mainPlayer.live = YES;
+    } else {
+        [self.mainPlayer seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+            [self.mainPlayer prerollAtRate:self.mainPlayer.playRate completionHandler:^(BOOL finished) {
+                [self.mainPlayer setRate:self.mainPlayer.playRate];
             }];
-        }
+        }];
     }
 }
 

@@ -197,7 +197,7 @@
     } else if (context == _motionObserverContext) {
         self.nameLabel.textColor = self.player.motion ? self.tintColor : [UIColor whiteColor];
     } else if (context == _failedObserverContext) {
-        self.blurView.hidden = self.player.currentItem.status == AVPlayerItemStatusUnknown || self.player.currentItem.seekableTimeRanges.firstObject;
+        //self.blurView.hidden = self.player.status == AVPlayerStatusUnknown;
     }
 }
 

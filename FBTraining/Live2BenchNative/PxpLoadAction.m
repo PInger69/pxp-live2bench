@@ -64,7 +64,7 @@
 - (void)runWithSuccess:(BOOL)success {
     
     // on the run the action if it has not ran before
-    if (!self.complete) {
+    if (!_complete) {
         
         // update the success property
         [self willChangeValueForKey:@"success"];
@@ -72,8 +72,8 @@
         [self didChangeValueForKey:@"success"];
         
         // run the block
-        if (self.block) {
-            self.block(success);
+        if (_block) {
+            _block(success);
         }
         
         // signal the completion
