@@ -569,6 +569,7 @@
 		AE06A3781B696A3A001840D0 /* PxpVideoBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpVideoBar.m; sourceTree = "<group>"; };
 		AE44C32F1B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFullscreenGestureRecognizer.h; sourceTree = "<group>"; };
 		AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFullscreenGestureRecognizer.m; sourceTree = "<group>"; };
+		AE44C3321B7A374300B3EBDD /* PxpFullscreenResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFullscreenResponder.h; sourceTree = "<group>"; };
 		AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertsSettingViewController.m; sourceTree = "<group>"; };
 		AE50739E1AFC1DCE002C361D /* InfoSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSettingViewController.h; sourceTree = "<group>"; };
 		AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
@@ -1359,6 +1360,17 @@
 			name = FootballTrainingCollectionViewController;
 			sourceTree = "<group>";
 		};
+		AE44C3351B7A3A5600B3EBDD /* PxpFullscreenResponders */ = {
+			isa = PBXGroup;
+			children = (
+				AE44C32F1B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.h */,
+				AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */,
+				AE06A36F1B691E02001840D0 /* PxpFullscreenButton.h */,
+				AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */,
+			);
+			name = PxpFullscreenResponders;
+			sourceTree = "<group>";
+		};
 		AE50739C1AFC1DBF002C361D /* SettingViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1385,8 +1397,8 @@
 				AE7AE3AC1B74EC8C0021EC03 /* L2B */,
 				AE683C501B7148DA00458F80 /* PxpFullscreenViewController.h */,
 				AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */,
-				AE44C32F1B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.h */,
-				AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */,
+				AE44C3321B7A374300B3EBDD /* PxpFullscreenResponder.h */,
+				AE44C3351B7A3A5600B3EBDD /* PxpFullscreenResponders */,
 			);
 			name = PxpFullscreen;
 			sourceTree = "<group>";
@@ -1558,8 +1570,6 @@
 				AEDD7C861B4AB830003C82F3 /* PxpCancelButton.m */,
 				AEDD7C911B4AB830003C82F3 /* PxpPlayPauseButton.h */,
 				AEDD7C921B4AB830003C82F3 /* PxpPlayPauseButton.m */,
-				AE06A36F1B691E02001840D0 /* PxpFullscreenButton.h */,
-				AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";

@@ -7,15 +7,8 @@
 //
 
 #import "NCTriPinchGestureRecognizer.h"
+#import "PxpFullscreenResponder.h"
 
-typedef NS_ENUM(NSUInteger, PxpFullscreenGestureResult) {
-    PxpFullscreenGestureResultUnknown,
-    PxpFullscreenGestureResultShow,
-    PxpFullscreenGestureResultHide,
-};
-
-@interface PxpFullscreenGestureRecognizer : NCTriPinchGestureRecognizer
-
-@property (readonly, assign, nonatomic) PxpFullscreenGestureResult result;
+@interface PxpFullscreenGestureRecognizer : NCTriPinchGestureRecognizer<PxpFullscreenResponder>
 
 @end

@@ -72,7 +72,7 @@
     [_backwardSeekButton addTarget:self action:@selector(backwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
     [_forwardSeekButton addTarget:self action:@selector(forwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
     [_slomoButton addTarget:self action:@selector(slomoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenButton addTarget:self action:@selector(fullscreenActionHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [_fullscreenButton addTarget:self action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     
     self.view.backgroundColor = [UIColor blackColor];
     _playerContainer.backgroundColor = [UIColor darkGrayColor];
@@ -80,7 +80,7 @@
     _playerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [_playerContainer addSubview:_playerViewController.view];
     
-    [_playerViewController.fullscreenGestureRecognizer addTarget:self action:@selector(fullscreenActionHandler:)];
+    [_playerViewController.fullscreenGestureRecognizer addTarget:self action:@selector(fullscreenResponseHandler:)];
     
     self.hidden = YES;
 }
@@ -205,19 +205,13 @@
     [self setHidden:hidden animated:animated frame:_targetFrame];
 }
 
-- (void)fullscreenActionHandler:(nullable id)sender {
-    if ([sender isKindOfClass:[PxpFullscreenGestureRecognizer class]]) {
-        PxpFullscreenGestureRecognizer *recognizer = sender;
-        if (recognizer.result == PxpFullscreenGestureResultHide) {
+- (void)fullscreenResponseHandler:(nullable id<PxpFullscreenResponder>)sender {
+    if ([sender conformsToProtocol:@protocol(PxpFullscreenResponder)]) {
+        if (sender.fullscreenResponse == PxpFullscreenResponseHide) {
             [self setHidden:YES animated:YES];
-        } else if (recognizer.result == PxpFullscreenGestureResultShow) {
+        } else if (sender.fullscreenResponse == PxpFullscreenResponseShow) {
             [self setHidden:NO animated:YES];
         }
-    } else if ([sender isKindOfClass:[PxpFullscreenButton class]]) {
-        PxpFullscreenButton *button = sender;
-        [self setHidden:button.isFullscreen animated:YES];
-    } else {
-        
     }
 }
 

@@ -110,4 +110,8 @@
     self.selected = isFullscreen;
 }
 
+- (PxpFullscreenResponse)fullscreenResponse {
+    return self.isFullscreen ? PxpFullscreenResponseHide : PxpFullscreenResponseShow;
+}
+
 @end

@@ -11,6 +11,7 @@
 #import "SeekButton.h"
 #import "Slomo.h"
 #import "PxpFullscreenButton.h"
+#import "PxpFullscreenResponder.h"
 
 @interface PxpFullscreenViewController : UIViewController
 
@@ -51,6 +52,6 @@
 - (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 
 /// Handler for PxpFullscreenButton and PxpFullscreenGestureRecognizer events.
-- (void)fullscreenActionHandler:(nullable id)sender;
+- (void)fullscreenResponseHandler:(nullable id<PxpFullscreenResponder>)sender;
 
 @end

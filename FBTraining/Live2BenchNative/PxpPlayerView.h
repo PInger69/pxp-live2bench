@@ -11,7 +11,7 @@
 #import "PxpPlayer.h"
 
 // Change this to what ever player view your heart desires
-#define PXP_PLAYER_VIEW_DEFAULT NSClassFromString(@"PxpPlayerMultiView")
+#define PXP_PLAYER_VIEW_DEFAULT_CLASS NSClassFromString(@"PxpPlayerMultiView")
 
 // Post to set player with userInfo = @{ @"identifier": playerViewIdentifer, @"player": playerToSet }
 #define NOTIF_PXP_PLAYER_VIEW_SET_PLAYER @"PxpPlayerSetPlayer"

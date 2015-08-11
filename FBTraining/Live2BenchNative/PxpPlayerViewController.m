@@ -24,7 +24,7 @@
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
     self = [super initWithNibName:@"PxpPlayerViewController" bundle:nil];
     if (self) {
-        _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PXP_PLAYER_VIEW_DEFAULT alloc] init];
+        _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PXP_PLAYER_VIEW_DEFAULT_CLASS alloc] init];
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         
         _fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];

@@ -7,9 +7,10 @@
 //
 
 #import "PxpGlowButton.h"
+#import "PxpFullscreenResponder.h"
 
 IB_DESIGNABLE
-@interface PxpFullscreenButton : UIButton
+@interface PxpFullscreenButton : UIButton<PxpFullscreenResponder>
 
 @property (assign, nonatomic) IBInspectable BOOL isFullscreen;
 

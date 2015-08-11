@@ -839,8 +839,8 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_fullscreenViewController.view];
     _fullscreenViewController.targetFrame = _playerViewController.view.frame;
     
-    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenActionHandler:) forControlEvents:UIControlEventTouchUpInside];
-    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenActionHandler:)];
+    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
     
 //    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
 //    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];

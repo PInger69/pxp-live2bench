@@ -12,9 +12,9 @@
 
 @implementation PxpFullscreenGestureRecognizer
 
-- (PxpFullscreenGestureResult)result {
+- (PxpFullscreenResponse)fullscreenResponse {
     const CGFloat velocty = self.velocity;
-    return velocty > FULLSCREEN_GESTURE_VELOCITY ? PxpFullscreenGestureResultShow : velocty < -FULLSCREEN_GESTURE_VELOCITY ? PxpFullscreenGestureResultHide : PxpFullscreenGestureResultUnknown;
+    return velocty > FULLSCREEN_GESTURE_VELOCITY ? PxpFullscreenResponseShow : velocty < -FULLSCREEN_GESTURE_VELOCITY ? PxpFullscreenResponseHide : PxpFullscreenResponseUnknown;
 }
 
 @end
