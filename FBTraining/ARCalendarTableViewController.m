@@ -204,9 +204,12 @@
     // This condition is to add an empty cell at the end of the tableview
     if (indexPath.row >= (self.tableData.count + self.arrayOfCollapsableIndexPaths.count) || !self.tableData) {
         ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
+        [cell.dateDescription setHidden:true];
+        [cell.leagueDescription setHidden:true];
         [cell.timeLabel setText: @" "];
         [cell.dateLabel setText: @" "];
         [cell.titleLabel setText: @" "];
+        [cell.leagueLabel setText:@" "];
         [cell.downloadInfoLabel setText:@" "];
         cell.swipeRecognizerLeft.enabled = NO;
         cell.swipeRecognizerRight.enabled = NO;
@@ -345,6 +348,7 @@
     [cell.dateLabel setTextColor:[UIColor blackColor]];
     [cell.timeLabel setTextColor:[UIColor blackColor]];
     [cell.titleLabel setTextColor:[UIColor blackColor]];
+    [cell.leagueLabel setTextColor:[UIColor blackColor]];
     cell.backgroundColor = [UIColor whiteColor];
     cell.layer.borderWidth = 0.0f;
     
@@ -365,6 +369,7 @@
     
     NSString *dateString = event.date;
     NSArray *bothStrings = [dateString componentsSeparatedByString:@" "];
+    NSString *leagueString = [[[[event.teams allValues] firstObject] league] name];
     
     //    cell.downloadButton.hidden = NO;
     //    cell.playButton.hidden = NO;
@@ -373,6 +378,7 @@
     [cell.dateLabel setText: bothStrings[0]];
     [cell.titleLabel setText: [NSString stringWithFormat: @"%@ at %@", event.rawData[@"visitTeam"], event.rawData[@"homeTeam"]]];
     [cell.downloadInfoLabel setText:@"0 / 0"];
+    [cell.leagueLabel setText:leagueString];
 
     
 //    if ()

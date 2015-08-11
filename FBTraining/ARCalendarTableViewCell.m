@@ -15,8 +15,8 @@
 
 @implementation ARCalendarTableViewCell
 {
-    UILabel * _dateDescription;
-    UILabel * _leagueDescription;
+    //UILabel * _dateDescription;
+    //UILabel * _leagueDescription;
 }
 
 
@@ -56,6 +56,8 @@
     self.timeLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+105,      topMargin+txtBoxHeight, 50, txtBoxHeight)];
    [self.timeLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     
+    self.leagueLabel = [[UILabel alloc]initWithFrame:CGRectMake(125+leftMargin, topMargin+txtBoxHeight+txtBoxHeight, 260, txtBoxHeight)];
+    [self.leagueLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin, 380, txtBoxHeight)];
     [self.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
@@ -89,6 +91,7 @@
     [self.myContentView addSubview: self.dateLabel];
     [self.myContentView addSubview: self.timeLabel];
     [self.myContentView addSubview: self.titleLabel];
+    [self.myContentView addSubview: self.leagueLabel];
     [self.myContentView addSubview: _dateDescription];
     [self.myContentView addSubview: _leagueDescription];
     
@@ -126,12 +129,14 @@
         self.myContentView.backgroundColor = color;
         [self.dateLabel setTextColor:textColor];
         [self.timeLabel setTextColor:textColor];
+        [self.leagueLabel setTextColor:textColor];
         //self.backgroundColor = color;
     }else{
         self.myContentView.backgroundColor = [UIColor whiteColor];
         [self.dateLabel setTextColor:[UIColor blackColor]];
         [self.timeLabel setTextColor:[UIColor blackColor]];
         [self.titleLabel setTextColor:[UIColor blackColor]];
+        [self.leagueLabel setTextColor:[UIColor blackColor]];
     }
     // Configure the view for the selected state
 }
