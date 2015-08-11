@@ -195,14 +195,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return self.tableData.count + self.arrayOfCollapsableIndexPaths.count + 1;
+    return self.tableData.count + self.arrayOfCollapsableIndexPaths.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // This condition is to add an empty cell at the end of the tableview
-    if (indexPath.row >= (self.tableData.count + self.arrayOfCollapsableIndexPaths.count) || !self.tableData) {
+    /*if (indexPath.row >= (self.tableData.count + self.arrayOfCollapsableIndexPaths.count) || !self.tableData) {
         ARCalendarTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ARCalendarTableViewCell" forIndexPath:indexPath];
         [cell.dateDescription setHidden:true];
         [cell.leagueDescription setHidden:true];
@@ -215,8 +215,8 @@
         cell.swipeRecognizerRight.enabled = NO;
         [cell setCellAccordingToState:cellStateNormal];
         [cell isSelected:NO];
-        return cell;
-    }
+        return nil;
+    }*/
     
     NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {

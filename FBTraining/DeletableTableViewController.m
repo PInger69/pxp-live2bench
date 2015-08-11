@@ -194,7 +194,7 @@
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert addButtonWithTitle: NSLocalizedString(@"Yes", nil)];
         [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
-        [alert show];
+        [alert showView];
         
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
