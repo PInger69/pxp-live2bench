@@ -396,6 +396,10 @@
         }
     }
     
+    if (!players) {
+        [cell.tagPlayersView setHidden:true];
+    }
+    
     
     LeagueTeam *team = [[tag.event.teams allValues]firstObject];
     if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
@@ -412,9 +416,7 @@
         [cell.playersNumberLabel setText:players];
     }else{
         [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),@" "]];
-        [cell.tagPlayersView setHidden:true];
     }
-    
     
     
     
