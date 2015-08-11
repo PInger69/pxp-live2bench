@@ -40,6 +40,7 @@ static TabView* sharedFilter;
     if (self) {
         _tabs = [NSMutableArray array];
         previousTab=nil;
+        
     }
     return self;
 }
@@ -75,7 +76,7 @@ static TabView* sharedFilter;
         [self hideTab:previousTab];
     
     [self showTab:currentTab];
-    
+    [currentTab setPxpFilter:_pxpFilter];
     previousTab = currentTab;
 }
 

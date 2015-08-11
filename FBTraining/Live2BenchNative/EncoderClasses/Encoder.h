@@ -49,7 +49,7 @@
 #define RESUME_EVENT    @"resumeEvent:timeStamp:"
 #define START_EVENT     @"startEvent:timeStamp:"
 
-@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderProtocol,EncoderStatusMonitorProtocol,ActionListItem>
+@interface Encoder : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate,EncoderProtocol,EncoderStatusMonitorProtocol,ActionListItem,UIAlertViewDelegate>
 {
     
     

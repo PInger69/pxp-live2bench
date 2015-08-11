@@ -1,23 +1,21 @@
 //
-//  PxpFilterButtonScrollView.m
+//  PxpFilterButtonView.m
 //  Live2BenchNative
 //
-//  Created by dev on 2015-07-29.
+//  Created by andrei on 2015-08-07.
 //  Copyright © 2015 DEV. All rights reserved.
 //
 
-#import "PxpFilterButtonScrollView.h"
+#import "PxpFilterButtonView.h"
 #import "CustomButton.h"
 
-
-
-
-@implementation PxpFilterButtonScrollView
+@implementation PxpFilterButtonView
 {
     NSInteger   selectedCount;
     NSPredicate * combo;
     NSMutableSet * _userSelected;
-    
+    NSMutableArray * buttonPredicate;
+    NSMutableArray *buttonPool;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -27,8 +25,9 @@
         _buttonSize      = CGSizeMake(120, 25);
         _buttonMargin    = CGSizeMake(3, 3);
         _buttonList      = [NSMutableArray new];
+        buttonPool      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
-        [self setScrollEnabled:YES];
+        
     }
     return self;
 }
@@ -46,56 +45,72 @@
         _buttonSize      = CGSizeMake(120, 25);
         _buttonMargin    = CGSizeMake(3, 3);
         _buttonList      = [NSMutableArray new];
+        buttonPool      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
-        
-        [self setScrollEnabled:YES];
     }
     return self;
 }
 
+-(void)addButtonToPool:(NSDictionary *)dict{    // add a button to buttonPool
+    [buttonPool addObject:dict];
+}
 
--(void)buildButtonsWith:(NSArray *)buttonLabels
+-(void)buildButtons{    // build buttons with buttonPool
+    [self buildButtonsWith:buttonPool];
+}
+
+-(void)buildButtonsWith:(NSArray *)buttons  // build buttons with the buttons array
 {
-
-    for (CustomButton * buttonObj in _buttonList) {
+    
+    for (NSDictionary* dict in _buttonList) {
+        CustomButton * buttonObj = dict[@"Object"];
         [buttonObj removeFromSuperview];
     }
     [_buttonList removeAllObjects];
-
-    NSUInteger colNum = 0;
-    NSUInteger rowNum = 0;
-    NSUInteger rowCount = (NSUInteger)self.frame.size.height / (_buttonSize.height+_buttonMargin.height);
-    for (NSUInteger k = 0; k < buttonLabels.count; k++ ) {
+    
+    NSDictionary *defaultSetting = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    @"None", @"Label",
+                                    [NSNumber numberWithInteger:_buttonSize.width], @"Width",
+                                    [NSNumber numberWithInteger:_buttonSize.height], @"Height",
+                                    [NSNumber numberWithInteger:0], @"PositionX",
+                                    [NSNumber numberWithInteger:0], @"PositionY",
+                                    nil];
+    
+    for(NSUInteger k = 0; k < buttons.count; k++ ) {
         
+        NSDictionary *dict = [buttons objectAtIndex:k];
+        NSMutableDictionary *finalDict = [[NSMutableDictionary alloc]init];
         
+        // Apply default setting if there is no such key in the dictionary
         
-        NSString    *tagLabel       = [buttonLabels objectAtIndex:k];
-        CGRect      rect            =  CGRectMake(colNum * (_buttonSize.width+_buttonMargin.width),
-                                                  rowNum * (_buttonSize.height+_buttonMargin.height),
-                                                  _buttonSize.width, _buttonSize.height);
-        
-        if (++rowNum ==rowCount){
-            rowNum = 0;
-            colNum++;
+        for(id key in defaultSetting){
+            if(dict[key])
+                finalDict[key] = dict[key];
+            else
+                finalDict[key] = defaultSetting[key];
         }
         
-        CustomButton  *eventButton = [self buildButton:rect btnText:tagLabel];
+        NSInteger Width = [[finalDict objectForKey:@"Width"] integerValue];
+        NSInteger Height = [[finalDict objectForKey:@"Height"] integerValue];
+        NSInteger PositionX = [[finalDict objectForKey:@"PositionX"] integerValue];
+        NSInteger PositionY = [[finalDict objectForKey:@"PositionY"] integerValue];
+        
+        NSString *Label = [finalDict objectForKey:@"Label"];
+        
+        // Initialize predicate for the button
+        
+        NSPredicate *Predicate;
+        if(dict[@"Predicate"])
+            Predicate = dict[@"Predicate"];
+        else
+            Predicate = [NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, Label];
+        
+        CGRect rect = CGRectMake(PositionX, PositionY, Width, Height);
+        
+        CustomButton  *eventButton = [self buildButton:rect btnText:Label predicate:Predicate];
+        
         [self addSubview:eventButton];
     }
-
-    [self setContentSize:CGSizeMake((colNum+1)*_buttonSize.width, self.frame.size.height)];
-    
-    
-    // rebuild filter
-    NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
-    for (CustomButton  *b in _buttonList) {
-        if(b.selected == YES){
-            selectedCount++;
-            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
-        }
-    }
-    combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
-
 }
 
 /**
@@ -107,7 +122,8 @@
  *
  *  @return produced button
  */
--(CustomButton *)buildButton:(CGRect)frame btnText:(NSString*)btnTxt
+
+-(CustomButton *)buildButton:(CGRect)frame btnText:(NSString*)btnTxt predicate:(NSPredicate*)Predicate
 {
     CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
     [eventButton setFrame:frame];
@@ -120,7 +136,8 @@
     eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
     eventButton.selected = [_userSelected containsObject:btnTxt];
     [self addSubview:eventButton];
-    [_buttonList addObject:eventButton];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:eventButton, @"Object", Predicate, @"Predicate",  nil];
+    [_buttonList addObject:dict];
     return eventButton;
 }
 
@@ -135,27 +152,26 @@
     selectedCount              = 0;
     button.selected            = !button.selected;
     
-    for (CustomButton  *b in _buttonList) {
+    for (NSDictionary *dict in _buttonList) {
+        CustomButton  *b = dict[@"Object"];
         if(b.selected == YES){
             selectedCount++;
-            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
+            [toCombo addObject:dict[@"Predicate"]];
             [_userSelected addObject:b.titleLabel.text];
         } else {
             [_userSelected removeObject:b.titleLabel.text];
         }
     }
     
-    combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    combo = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     [_parentFilter refresh];
-    
-    
 }
 
 -(void)deselect
 {
-    for (CustomButton  *b in _buttonList) {
+    for (NSDictionary *dict in _buttonList) {
+        CustomButton  *b = dict[@"Object"];
         b.selected = NO;
-  
     }
     selectedCount = 0;
     [_userSelected removeAllObjects];

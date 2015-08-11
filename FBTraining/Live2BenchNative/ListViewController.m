@@ -152,6 +152,7 @@
     }
     
     if (_currentEvent != nil) {
+        [[TabView sharedFilterTab] dismissViewControllerAnimated:NO completion:nil];// remove filter if up
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
     }
@@ -487,12 +488,19 @@
 //user clicked out of a textbox field - animate the screen to move down with the keyboard
 - (void)keyboardWillHide:(NSNotification *)note
 {
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          //what to do for animation
                          [self.view setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                      }
                      completion:^(BOOL finished){
+                         
+                         if (self.isViewLoaded && self.view.window) {
+                                [TabView sharedFilterTab].view.frame =  CGRectMake(0, 0, [TabView sharedFilterTab].preferredContentSize.width,[TabView sharedFilterTab].preferredContentSize.height);
+                         }
+                         
+                      
                      }];
 }
 
@@ -678,9 +686,9 @@
 
 
 -(void)clear{
+    [[TabView sharedFilterTab] dismissViewControllerAnimated:NO completion:nil];// close filter if filtering
     [self.allTags removeAllObjects];
     [self.tagsToDisplay removeAllObjects];
-    //_tableViewController.tableData = [NSMutableArray array];
     [_tableViewController reloadData];
 }
 
@@ -772,18 +780,19 @@
   
 
     if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
+    popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
+    popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
+
+
+    UIPopoverPresentationController *presentationController = [popupTabBar popoverPresentationController];
+    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
+    presentationController.sourceView               = self.view;
+    presentationController.permittedArrowDirections = 0;
+
+    [self presentViewController:popupTabBar animated:YES completion:nil];
 
     [_pxpFilter filterTags:[self.allTags copy]];
 
-    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:popupTabBar];
-    
-    
-    popoverController.popoverContentSize = popupTabBar.view.bounds.size;
-    [popoverController presentPopoverFromRect:self.view.frame
-                                       inView:self.view
-                     permittedArrowDirections:0
-                                     animated:YES];
-    
     if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 }
 

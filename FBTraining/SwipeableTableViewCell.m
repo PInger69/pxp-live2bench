@@ -84,7 +84,8 @@ NS_OPTIONS(NSInteger, style){
                     action:@selector(functionalButtonClicked)
           forControlEvents:UIControlEventTouchUpInside];
         functionalityButton.frame = CGRectMake(self.myContentView.frame.size.width - 120, 5, 60, self.myContentView.frame.size.height);
-        [functionalityButton.titleLabel setTextAlignment: NSTextAlignmentRight];
+        //[functionalityButton.titleLabel setTextAlignment: NSTextAlignmentRight];
+        [functionalityButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         [functionalityButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         //button2.backgroundColor =[UIColor colorWithRed:0.95 green:0.01 blue:0.01 alpha:0.75];
         //button2.tintColor = [UIColor whiteColor];
@@ -215,7 +216,7 @@ NS_OPTIONS(NSInteger, style){
     [self.toggoButton setFrame:CGRectMake(self.frame.size.width - 60, 6, 10, 10)];
     [self.button1 setFrame: CGRectMake(self.frame.size.width - 60, 0, 60, self.frame.size.height)];
     [self.button2 setFrame: CGRectMake(self.frame.size.width - 120, 0, 60, self.frame.size.height)];
-    [self.functionalButton setFrame: CGRectMake(self.frame.size.width - 120, 0, 120, self.frame.size.height)];
+    [self.functionalButton setFrame: CGRectMake(self.frame.size.width - 240, 0, 210, self.frame.size.height)];
     
 }
 

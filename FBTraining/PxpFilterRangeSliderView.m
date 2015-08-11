@@ -20,11 +20,14 @@
     if(note.object != self.rangeSlider)return;
     
     NSDictionary *userInfo = note.userInfo;
+    if (startPoint == [userInfo[@"startTime"] intValue] && endPoint == [userInfo[@"endTime"] intValue]){
+        return;
+    }
     startPoint = [userInfo[@"startTime"] intValue];
     endPoint =  [userInfo[@"endTime"] intValue];
     
     if ( endPoint != 0 && startPoint != endPoint){
-        combo = [NSPredicate predicateWithFormat:@"%K <= %d AND %K >= %d", _sortByPropertyKey, endPoint,_sortByPropertyKey, startPoint];
+        combo = [NSPredicate predicateWithFormat:@"%K >= %d AND %K <= %d ",_sortByPropertyKey, startPoint, _sortByPropertyKey, endPoint+1];
         [_parentFilter refresh];
     } else {
         combo = nil;
@@ -35,6 +38,7 @@
     startPoint = 0;
     endPoint = -1;  // endPoint is initially set to -1 to indicate the initial value
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeUpdate:) name:NOTIF_FILTER_SLIDER_CHANGE object:nil];
+        self.backgroundColor = [UIColor clearColor];    
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -42,6 +46,7 @@
     self = [super initWithCoder:coder];
     if (self) {
         [self initPxpFilterRangeSlider];
+
     }
     return self;
 }
@@ -99,14 +104,5 @@
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end
