@@ -72,7 +72,7 @@
     [_backwardSeekButton addTarget:self action:@selector(backwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
     [_forwardSeekButton addTarget:self action:@selector(forwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
     [_slomoButton addTarget:self action:@selector(slomoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenButton addTarget:self action:@selector(fullscreenButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_fullscreenButton addTarget:self action:@selector(fullscreenActionHandler:) forControlEvents:UIControlEventTouchUpInside];
     
     self.view.backgroundColor = [UIColor blackColor];
     _playerContainer.backgroundColor = [UIColor darkGrayColor];
@@ -80,9 +80,7 @@
     _playerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [_playerContainer addSubview:_playerViewController.view];
     
-    NCTriPinchGestureRecognizer *dismissFullscreedGestureRecognizer = [[NCTriPinchGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFullscreenGestureRecognized:)];
-    
-    [_playerViewController.playerView addGestureRecognizer:dismissFullscreedGestureRecognizer];
+    [_playerViewController.fullscreenGestureRecognizer addTarget:self action:@selector(fullscreenActionHandler:)];
     
     self.hidden = YES;
 }
@@ -164,14 +162,6 @@
     [self setHidden:YES animated:YES frame:_targetFrame];
 }
 
-#pragma mark - Gesture Recognizers
-
-- (void)dismissFullscreenGestureRecognized:(NCTriPinchGestureRecognizer *)recognizer {
-    if (recognizer.velocity < -100.0) {
-        [self setHidden:YES animated:YES frame:_targetFrame];
-    }
-}
-
 #pragma mark - Public Methods
 
 - (void)setHidden:(BOOL)hidden animated:(BOOL)animated frame:(CGRect)frame {
@@ -215,12 +205,20 @@
     [self setHidden:hidden animated:animated frame:_targetFrame];
 }
 
-- (void)showAnimated {
-    [self setHidden:NO animated:YES];
-}
-
-- (void)hideAnimated {
-    [self setHidden:YES animated:YES];
+- (void)fullscreenActionHandler:(nullable id)sender {
+    if ([sender isKindOfClass:[PxpFullscreenGestureRecognizer class]]) {
+        PxpFullscreenGestureRecognizer *recognizer = sender;
+        if (recognizer.result == PxpFullscreenGestureResultHide) {
+            [self setHidden:YES animated:YES];
+        } else if (recognizer.result == PxpFullscreenGestureResultShow) {
+            [self setHidden:NO animated:YES];
+        }
+    } else if ([sender isKindOfClass:[PxpFullscreenButton class]]) {
+        PxpFullscreenButton *button = sender;
+        [self setHidden:button.isFullscreen animated:YES];
+    } else {
+        
+    }
 }
 
 /*

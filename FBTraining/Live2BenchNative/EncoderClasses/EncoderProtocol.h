@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PxpEventContext.h"
+
 #define AUTHENTICATE    @"authenticate:timeStamp:"
 #define BUILD           @"buildEncoder:timeStamp:"
 #define VERSION         @"requestVersion:timeStamp:"
@@ -29,7 +31,6 @@
 
 @class Event;
 @class EncoderManager;
-
 
 typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
     ENCODER_STATUS_UNKNOWN        = 0,
@@ -59,6 +60,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    NSString                * statusAsString;
 @property (nonatomic,strong)    Event                   * event;        // the current event the encoder is looking at
 @property (nonatomic,strong)    NSDictionary            * allEvents;    // all events on the encoder keyed by HID
+@property (readonly, strong, nonatomic) PxpEventContext *eventContext;
 
 -(id <EncoderProtocol>)makePrimary;
 -(id <EncoderProtocol>)removeFromPrimary;

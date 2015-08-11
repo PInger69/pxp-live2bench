@@ -12,12 +12,6 @@
 #import "Event.h"
 #import "Feed.h"
 
-@interface PxpEventContext ()
-
-@property (strong, nonatomic, nullable) Event *event;
-
-@end
-
 @implementation PxpEventContext
 
 + (nonnull instancetype)contextWithEvent:(nullable Event *)event {

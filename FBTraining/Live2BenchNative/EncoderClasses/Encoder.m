@@ -376,6 +376,8 @@
 @synthesize isAlive;
 @synthesize allEvents       = _allEvents;
 
+@synthesize eventContext = _eventContext;
+
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
 
@@ -404,6 +406,8 @@
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
         encoderSync             = [[EncoderDataSync alloc]init];
+        
+        _eventContext = [PxpEventContext context];
     }
     return self;
 }
@@ -449,6 +453,8 @@
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
+    
+    _eventContext.event = event;
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];

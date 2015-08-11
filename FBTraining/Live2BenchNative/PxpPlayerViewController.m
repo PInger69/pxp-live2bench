@@ -27,6 +27,8 @@
         _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PXP_PLAYER_VIEW_DEFAULT alloc] init];
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         
+        _fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];
+        
         _playerObserverContext = &_playerObserverContext;
         
         [_playerView addObserver:self forKeyPath:@"player" options:0 context:_playerObserverContext];
@@ -56,6 +58,8 @@
     [_playerContainer addSubview:_telestrationViewController.view];
     
     _controlBar.player = _playerView.player;
+    
+    [_playerView addGestureRecognizer:_fullscreenGestureRecognizer];
 }
 
 - (void)didReceiveMemoryWarning {

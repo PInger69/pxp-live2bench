@@ -51,6 +51,7 @@
 		AAFCA703195B84DE00D0F0E6 /* trash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA701195B84DE00D0F0E6 /* trash@2x.png */; };
 		AE06A3711B691E02001840D0 /* PxpFullscreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */; };
 		AE06A3791B696A3A001840D0 /* PxpVideoBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AE06A3781B696A3A001840D0 /* PxpVideoBar.m */; };
+		AE44C3311B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */; };
 		AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */; };
 		AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */; };
 		AE5073AA1AFC1DCE002C361D /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5073A11AFC1DCE002C361D /* SettingViewController.m */; };
@@ -566,6 +567,8 @@
 		AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFullscreenButton.m; sourceTree = "<group>"; };
 		AE06A3771B696A3A001840D0 /* PxpVideoBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpVideoBar.h; sourceTree = "<group>"; };
 		AE06A3781B696A3A001840D0 /* PxpVideoBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpVideoBar.m; sourceTree = "<group>"; };
+		AE44C32F1B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFullscreenGestureRecognizer.h; sourceTree = "<group>"; };
+		AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFullscreenGestureRecognizer.m; sourceTree = "<group>"; };
 		AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertsSettingViewController.m; sourceTree = "<group>"; };
 		AE50739E1AFC1DCE002C361D /* InfoSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoSettingViewController.h; sourceTree = "<group>"; };
 		AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoSettingViewController.m; sourceTree = "<group>"; };
@@ -1382,6 +1385,8 @@
 				AE7AE3AC1B74EC8C0021EC03 /* L2B */,
 				AE683C501B7148DA00458F80 /* PxpFullscreenViewController.h */,
 				AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */,
+				AE44C32F1B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.h */,
+				AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */,
 			);
 			name = PxpFullscreen;
 			sourceTree = "<group>";
@@ -3378,6 +3383,7 @@
 				D76B6DD51A8AC07300601BAF /* ToastObserver.m in Sources */,
 				D75CD0AE17CBF26700DD24E8 /* SoccerBottomViewController.m in Sources */,
 				D727798A1A2FBEBE0034DD66 /* LiveButton.m in Sources */,
+				AE44C3311B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m in Sources */,
 				D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */,
 				D74861021B5FE59400CEC9DD /* League.m in Sources */,
 				D767EF121B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m in Sources */,

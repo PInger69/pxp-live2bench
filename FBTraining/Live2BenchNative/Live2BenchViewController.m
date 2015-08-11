@@ -586,11 +586,11 @@ static void * eventContext      = &eventContext;
     }
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
     
-    PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
-    _playerViewController.playerView.player = context.mainPlayer;
+    PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
+    _playerViewController.playerView.context = context;
     _videoBar.player = context.mainPlayer;
     _videoBar.event = _currentEvent;
-    _fullscreenViewController.playerViewController.playerView.player = context.mainPlayer;
+    _fullscreenViewController.playerViewController.playerView.context = context;
 }
 
 
@@ -839,7 +839,8 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_fullscreenViewController.view];
     _fullscreenViewController.targetFrame = _playerViewController.view.frame;
     
-    [_videoBar.fullscreenButton addTarget:self action:@selector(fullscreenButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenActionHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenActionHandler:)];
     
 //    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
 //    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -863,10 +864,6 @@ static void * eventContext      = &eventContext;
 ////    RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
 ////    [videoPlayer zoomIntoView: CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
 //}
-
-- (void)fullscreenButtonAction:(PxpFullscreenButton *)button {
-    [_fullscreenViewController setHidden:NO animated:YES];
-}
 
 
 -(void)onOpenTeleView:(TeleViewController *)tvc
@@ -1280,6 +1277,7 @@ static void * eventContext      = &eventContext;
     if (tele.actionStack.count) {
         tele.isStill = YES;
         tele.sourceName = self.videoPlayer.feed.sourceName;
+        
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",tele.startTime],

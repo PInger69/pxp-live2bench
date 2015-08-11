@@ -179,6 +179,8 @@
 
 -(void)eventChanged:(NSNotification *)note
 {
+    id<EncoderProtocol> encoder = note.object;
+    
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
         return;
     }
@@ -210,10 +212,11 @@
     }
     
     // update the context
-    PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
+    PxpPlayerContext *context = encoder.eventContext;
     self.playerViewController.playerView.context = context;
     self.fullscreenViewController.playerViewController.playerView.context = context;
     
+    _videoBar.player = context.mainPlayer;
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -465,7 +468,7 @@
     selectedTag = userInfo[@"forWhole"];
     
  
-    [self.videoPlayer playClipWithFeed:feed andTimeRange:timeRange];
+    //[self.videoPlayer playClipWithFeed:feed andTimeRange:timeRange];
     
     // only show the telestration on the correct source.
     self.telestrationViewController.telestration = selectedTag.telestration.sourceName == feed.sourceName || [selectedTag.telestration.sourceName isEqualToString:feed.sourceName] ? selectedTag.telestration : nil;;

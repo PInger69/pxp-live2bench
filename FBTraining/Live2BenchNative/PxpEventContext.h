@@ -17,7 +17,7 @@
 @interface PxpEventContext : PxpPlayerContext
 
 /// The event to be presented.
-@property (readonly, strong, nonatomic, nullable) Event *event;
+@property (strong, nonatomic, nullable) Event *event;
 
 /// Creates a new context with an Event.
 + (nonnull instancetype)contextWithEvent:(nullable Event *)event;

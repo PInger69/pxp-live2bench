@@ -46,6 +46,8 @@ static CGFloat _sign(CGFloat n) {
     CGFloat _initialDistance;
     CGFloat _previousDistance;
     NSDate * __nullable _previousDate;
+    
+    NSUInteger _nTouches;
 }
 
 #pragma mark - Overrides
@@ -59,6 +61,8 @@ static CGFloat _sign(CGFloat n) {
     _initialDistance = 0.0;
     _previousDistance = 0.0;
     _previousDate = nil;
+    
+    _nTouches = 0;
 }
 
 - (void)touchesBegan:(nonnull NSSet *)touches withEvent:(nonnull UIEvent *)event {
@@ -66,6 +70,8 @@ static CGFloat _sign(CGFloat n) {
     
     if (gestureTouches.count > 3) {
         self.state = UIGestureRecognizerStateFailed;
+    } else {
+        _nTouches = gestureTouches.count;
     }
 }
 
@@ -101,9 +107,10 @@ static CGFloat _sign(CGFloat n) {
             self.state = UIGestureRecognizerStateChanged;
             
         }
-    } else if (self.state != UIGestureRecognizerStatePossible) {
+    } else if (self.state != UIGestureRecognizerStatePossible || gestureTouches.count < _nTouches) {
         self.state = UIGestureRecognizerStateFailed;
     }
+    _nTouches = gestureTouches.count;
 }
 
 - (void)touchesEnded:(nonnull NSSet *)touches withEvent:(nonnull UIEvent *)event {
