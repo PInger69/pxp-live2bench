@@ -26,7 +26,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Default";
-        tabImage =  [UIImage imageNamed:@"settingsButton"];
+        tabImage =  [UIImage imageNamed:@"filter"];
     
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
         
@@ -53,6 +53,7 @@
                                                           ,_ratingButtons
                                                           ,_userInputView
                                                           ,_favoriteButton
+                                                          ,_telestrationButton
                                                           ]
                     ];
     
@@ -67,6 +68,12 @@
     [_preFilterSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
     _favoriteButton.filterPropertyKey       = @"coachPick";
     _favoriteButton.filterPropertyValue     = @"1";
+    
+    _telestrationButton.titleLabel.text     = @"";
+    _telestrationButton.filterPropertyKey   = @"type";
+    _telestrationButton.filterPropertyValue = @"4";
+//    [_telestrationButton setBackgroundImage:@"" forState:UIControlStateNormal];
+//    [_telestrationButton setBackgroundImage:@"" forState:UIControlStateSelected];
 }
 
 -(void)viewDidAppear:(BOOL)animated

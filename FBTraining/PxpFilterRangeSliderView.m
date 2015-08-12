@@ -86,9 +86,10 @@
 
 
 -(void)setEndTime:(NSInteger)endTime{   //set the maximum time of the slider
-    if(self.rangeSlider)
+    if(self.rangeSlider){
         [self.rangeSlider setHighestValue:endTime];
-    else
+    }
+    
         highestValue = endTime;
     if(endPoint < 0)endPoint = highestValue; //If the endpoint hasn't been initialized initialize now
 }
@@ -100,8 +101,9 @@
 }
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{ 
-    if(combo)
+    if(combo) {
         [tagsToFilter filterUsingPredicate:combo];
+    }
 }
 
 
