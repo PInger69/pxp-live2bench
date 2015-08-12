@@ -158,7 +158,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 -(instancetype)initWithFrame: (CGRect) frame Name: (NSString *)name AccessLable: (NSString *)accessLabel{
     
     self = [self initWithFrame: frame];
-    
+    [self setBackgroundColor:[UIColor clearColor]];
     [self redrawLayers];
     if (self) {
     }
