@@ -17,17 +17,20 @@
     NSInteger   selectedCount;
     NSPredicate * combo;
     NSMutableSet * _userSelected;
-    
+    UIImage * _buttonHighlightPixel;
+    UIImage * _buttonNormalPixel;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
     if (self) {
-        _buttonSize      = CGSizeMake(120, 26);
-        _buttonMargin    = CGSizeMake(4, 4);
-        _buttonList      = [NSMutableArray new];
-        _userSelected    = [NSMutableSet new];
+        _buttonSize             = CGSizeMake(120, 26);
+        _buttonMargin           = CGSizeMake(4, 4);
+        _buttonList             = [NSMutableArray new];
+        _userSelected           = [NSMutableSet new];
+        _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+        _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
         [self setScrollEnabled:YES];
     }
     return self;
@@ -43,11 +46,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _buttonSize      = CGSizeMake(120, 25);
-        _buttonMargin    = CGSizeMake(3, 3);
-        _buttonList      = [NSMutableArray new];
-        _userSelected    = [NSMutableSet new];
-        
+        _buttonSize             = CGSizeMake(120, 26);
+        _buttonMargin           = CGSizeMake(4, 4);
+        _buttonList             = [NSMutableArray new];
+        _userSelected           = [NSMutableSet new];
+        _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+        _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
         [self setScrollEnabled:YES];
     }
     return self;
@@ -111,12 +115,12 @@
 {
     CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
     [eventButton setFrame:frame];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+    [eventButton setBackgroundImage:_buttonNormalPixel forState:UIControlStateNormal];
+    [eventButton setBackgroundImage:_buttonHighlightPixel forState:UIControlStateSelected];
     [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
     [eventButton setTitle:btnTxt forState:UIControlStateNormal];
-    [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
+    [eventButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
     eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
     eventButton.selected = [_userSelected containsObject:btnTxt];
     [self addSubview:eventButton];

@@ -166,8 +166,8 @@
                         <action selector="clearButtonPressed:" destination="-1" eventType="touchUpInside" id="CB7-IZ-0cU"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hxl-9B-oHL" customClass="PxpFilterToggleButton">
-                    <rect key="frame" x="647" y="272" width="64" height="48"/>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hxl-9B-oHL" customClass="PxpFilterToggleButton">
+                    <rect key="frame" x="646" y="268" width="64" height="56"/>
                     <state key="normal" title="Tele Button"/>
                 </button>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O5E-1I-2Iy" customClass="PxpFilterButtonScrollView">
