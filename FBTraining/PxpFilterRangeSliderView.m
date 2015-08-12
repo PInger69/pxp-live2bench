@@ -38,7 +38,11 @@
     startPoint = 0;
     endPoint = -1;  // endPoint is initially set to -1 to indicate the initial value
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeUpdate:) name:NOTIF_FILTER_SLIDER_CHANGE object:nil];
-        self.backgroundColor = [UIColor clearColor];    
+//       self.backgroundColor = [UIColor clearColor];
+//    self.layer.borderWidth = .5;
+//    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
+//    self.layer.cornerRadius = 5;
+//    self.layer.masksToBounds = YES;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -67,7 +71,7 @@
 }
 
 -(void)show{  //initialize a PxpFilterRangeSlider with the start point and end point stored by the view
-    self.rangeSlider = [[PxpFilterRangeSlider alloc]initWithFrame:CGRectMake(0, self.frame.size.height/4, self.frame.size.width, self.frame.size.height/2)];
+    self.rangeSlider = [[PxpFilterRangeSlider alloc]initWithFrame:CGRectMake(30, self.frame.size.height/3, self.frame.size.width-60, self.frame.size.height/2)];
     [self.rangeSlider setHighestValue:highestValue];
     if(startPoint > endPoint) endPoint = startPoint; //making sure endPoint is greater or equal to startPoint
     [self.rangeSlider setKnobWithStart:startPoint withEnd:endPoint];

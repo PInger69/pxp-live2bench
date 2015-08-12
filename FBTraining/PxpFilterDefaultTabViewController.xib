@@ -25,14 +25,14 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view autoresizesSubviews="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iaI-dN-ve1">
-                    <rect key="frame" x="0.0" y="107" width="523" height="264"/>
+                    <rect key="frame" x="20" y="107" width="532" height="264"/>
                     <subviews>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O5E-1I-2Iy" customClass="PxpFilterButtonScrollView">
-                            <rect key="frame" x="6" y="5" width="308" height="251"/>
+                            <rect key="frame" x="6" y="5" width="317" height="251"/>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         </scrollView>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HCZ-dh-i3n" customClass="PxpFilterUserInputView">
-                            <rect key="frame" x="322" y="5" width="193" height="251"/>
+                            <rect key="frame" x="331" y="5" width="193" height="251"/>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         </view>
                     </subviews>
@@ -40,25 +40,19 @@
                     <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tag Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAi-9W-11z">
-                    <rect key="frame" x="18" y="84" width="78" height="21"/>
+                    <rect key="frame" x="38" y="84" width="78" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add Tag Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ml5-Lc-2Ct">
-                    <rect key="frame" x="322" y="84" width="113" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8mt-cF-b3C">
-                    <rect key="frame" x="531" y="93" width="49" height="21"/>
+                    <rect key="frame" x="342" y="84" width="113" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Favorite" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Csj-K9-jJd">
-                    <rect key="frame" x="546" y="277" width="61" height="21"/>
+                    <rect key="frame" x="571" y="267" width="61" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -72,7 +66,7 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tsv-ZF-7DU">
-                    <rect key="frame" x="531" y="166" width="59" height="21"/>
+                    <rect key="frame" x="561" y="166" width="59" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -88,17 +82,17 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAt-rz-bdd" customClass="PxpFilterRangeSliderView">
-                    <rect key="frame" x="76" y="419" width="336" height="73"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <rect key="frame" x="28" y="411" width="516" height="73"/>
+                    <color key="backgroundColor" red="0.79467892650000005" green="0.79399555919999998" blue="0.81499749420000001" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Time Range" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pt5-l1-tDs">
-                    <rect key="frame" x="76" y="395" width="92" height="21"/>
+                    <rect key="frame" x="28" y="382" width="92" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rto-dn-97l" customClass="PxpFilterUserButtons">
-                    <rect key="frame" x="531" y="190" width="251" height="66"/>
+                    <rect key="frame" x="561" y="190" width="221" height="66"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tags before filtering:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xad-8Q-12B">
@@ -114,30 +108,32 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="p4r-y2-smy">
-                    <rect key="frame" x="698" y="327" width="51" height="31"/>
+                    <rect key="frame" x="691" y="313" width="51" height="31"/>
                 </switch>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iiD-9o-fvU" customClass="PxpFilterRatingView">
-                    <rect key="frame" x="534" y="113" width="251" height="45"/>
+                    <rect key="frame" x="560" y="113" width="225" height="45"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Use Pre-filter:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VkH-85-WN1">
-                    <rect key="frame" x="661" y="274" width="107" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Use Pre-filter" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VkH-85-WN1">
+                    <rect key="frame" x="661" y="274" width="102" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KRR-lC-kly">
-                    <rect key="frame" x="397" y="372" width="240" height="128"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </view>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bJT-CT-8hV" customClass="PxpFilterToggleButton">
-                    <rect key="frame" x="546" y="306" width="66" height="66"/>
+                    <rect key="frame" x="571" y="296" width="66" height="66"/>
                     <state key="normal" image="coach.png"/>
                     <state key="selected" image="coachPicked.png"/>
                     <state key="highlighted" image="coachPicked.png"/>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8mt-cF-b3C">
+                    <rect key="frame" x="560" y="84" width="49" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
-            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.85367751120000002" green="0.85294079779999998" blue="0.87558001279999997" alpha="1" colorSpace="calibratedRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="834" y="-46"/>
         </view>

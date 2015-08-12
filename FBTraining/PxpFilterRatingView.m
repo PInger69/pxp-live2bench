@@ -63,9 +63,11 @@
   //  _selectedCount = 0;
     
     for(int i = 0;i<5;i++) {
-        UIButton *ratingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        UIButton * ratingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        CGFloat sqSize = (self.frame.size.width - (MARGIN *4))/5;
+
         
-        [ratingButton setFrame:CGRectMake((STAR_SIZE+MARGIN)*i, 0, STAR_SIZE,STAR_SIZE)];
+        [ratingButton setFrame:CGRectMake((sqSize+MARGIN)*i, 0, sqSize,sqSize)];
         [ratingButton setImage:_starOffImage forState:UIControlStateNormal];
         [ratingButton setImage:_starOnImage forState:UIControlStateSelected];
         ratingButton.selected = (i < _selectedCount)?YES:NO;
