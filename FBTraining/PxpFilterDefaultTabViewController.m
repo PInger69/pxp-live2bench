@@ -72,8 +72,12 @@
     _telestrationButton.titleLabel.text     = @"";
     _telestrationButton.filterPropertyKey   = @"type";
     _telestrationButton.filterPropertyValue = @"4";
-//    [_telestrationButton setBackgroundImage:@"" forState:UIControlStateNormal];
-//    [_telestrationButton setBackgroundImage:@"" forState:UIControlStateSelected];
+
+    [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
+    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
+    
+    [_telestrationButton setTitle:@"" forState:UIControlStateSelected];
+    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOn"] forState:UIControlStateSelected];
 }
 
 -(void)viewDidAppear:(BOOL)animated

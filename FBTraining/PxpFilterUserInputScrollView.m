@@ -14,6 +14,8 @@
     NSInteger   selectedCount;
     NSMutableSet * userSelected;
     NSMutableArray     * filterOptionList;
+    UIImage * _buttonHighlightPixel;
+    UIImage * _buttonNormalPixel;
 }
 
 
@@ -46,6 +48,8 @@
         [self initUIInfo];
         [self initView];
         [self setScrollEnabled:YES];
+        _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+        _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
     }
     return self;
 }
@@ -63,6 +67,8 @@
         [self initUIInfo];
         [self initView];
         [self setScrollEnabled:YES];
+        _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+        _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
     }
     return self;
 }
@@ -132,13 +138,13 @@
 {
     CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
     [eventButton setFrame:frame];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+    [eventButton setBackgroundImage:_buttonNormalPixel forState:UIControlStateNormal];
+    [eventButton setBackgroundImage:_buttonHighlightPixel forState:UIControlStateSelected];
     [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
     [eventButton setTitle:btnTxt forState:UIControlStateNormal];
     [eventButton setTitle:btnTxt forState:UIControlStateHighlighted];
-    [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
+    [eventButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
     eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
     eventButton.selected = [userSelected containsObject:btnTxt];
     return eventButton;

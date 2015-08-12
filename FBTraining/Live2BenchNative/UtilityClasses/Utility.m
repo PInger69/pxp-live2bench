@@ -619,6 +619,20 @@
     return starImage;
 }
 
++(UIImage*)makeOnePixelUIImageWithColor:(UIColor*)color
+{
+    CGSize pixelSize = CGSizeMake(1, 1);
+
+    UIGraphicsBeginImageContextWithOptions(pixelSize, NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context,(CGRect){CGPointZero, pixelSize});
+    CGContextSaveGState(context);
+    UIImage *pixel = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+  
+    return  pixel;
+}
 
 @end
 
