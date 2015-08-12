@@ -72,4 +72,7 @@
 /// Reloads all players in the context.
 - (void)reload;
 
+/// Returns the first player in the context named 'name'.
+- (nullable PxpPlayer *)playerForName:(nonnull NSString *)name;
+
 @end

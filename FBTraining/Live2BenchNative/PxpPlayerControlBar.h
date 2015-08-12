@@ -10,6 +10,13 @@
 
 @class PxpPlayer;
 @class PxpPlayerContext;
+@class PxpPlayerControlBar;
+
+@protocol PxpPlayerControlBarDelegate
+
+- (void)didCancelTimeRangeInControlBar:(nonnull PxpPlayerControlBar *)controlBar;
+
+@end
 
 /**
  * @breif A view that displays user interface elements to control a player.
@@ -17,7 +24,10 @@
  */
 IB_DESIGNABLE @interface PxpPlayerControlBar : UIView
 
-/// The player to be controlled
+/// The control bar's delegate.
+@property (weak, nonatomic, nullable) id<PxpPlayerControlBarDelegate> delegate;
+
+/// The player to be controlled.
 @property (weak, nonatomic, nullable) PxpPlayer *player;
 
 @end

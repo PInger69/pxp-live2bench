@@ -211,6 +211,30 @@
     return [super fullView] && self.zoomLevel == 1.0;
 }
 
+- (void)setLockFullView:(BOOL)lockFullView {
+    [super setLockFullView:lockFullView];
+    
+    if (lockFullView) {
+
+        self.scrollView.zoomScale = 1.0;
+        self.scrollView.contentSize = self.scrollView.bounds.size;
+            
+        self.avPlayerView.frame = self.scrollView.bounds;
+        
+        self.scrollView.maximumZoomScale = 1.0;
+        
+    } else {
+        if (!_zoomEnabled) {
+            self.scrollView.zoomScale = 1.0;
+            self.scrollView.contentSize = self.scrollView.bounds.size;
+            
+            self.avPlayerView.frame = self.scrollView.bounds;
+        }
+        
+        self.scrollView.maximumZoomScale = _zoomEnabled ? MAX_ZOOM_SCALE : 1.0;
+    }
+}
+
 - (CGRect)videoRect {
     
     CGRect rect = self.avPlayerView.layer.videoRect;
@@ -254,14 +278,16 @@
 - (void)setZoomEnabled:(BOOL)zoomEnabled {
     [self willChangeValueForKey:@"zoomEnabled"];
     
-    if (!zoomEnabled) {
-        self.scrollView.zoomScale = 1.0;
-        self.scrollView.contentSize = self.scrollView.bounds.size;
+    if (!self.lockFullView) {
+        if (!zoomEnabled) {
+            self.scrollView.zoomScale = 1.0;
+            self.scrollView.contentSize = self.scrollView.bounds.size;
+            
+            self.avPlayerView.frame = self.scrollView.bounds;
+        }
         
-        self.avPlayerView.frame = self.scrollView.bounds;
+        self.scrollView.maximumZoomScale = zoomEnabled ? MAX_ZOOM_SCALE : 1.0;
     }
-    
-    self.scrollView.maximumZoomScale = zoomEnabled ? MAX_ZOOM_SCALE : 1.0;
     
     _zoomEnabled = zoomEnabled;
     

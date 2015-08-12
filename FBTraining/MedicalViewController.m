@@ -21,8 +21,11 @@
 #import "PxpTelestrationViewController.h"
 #import "TagNameSelectTableViewController.h"
 #import "TeleSelectTableViewController.h"
+#import "PxpPlayerViewController.h"
+#import "PxpPlayerSwapView.h"
 
 #import "UIColor+Highlight.h"
+#import "PxpPlayer+Tag.h"
 
 #define PADDING                 5
 #define LITTLE_ICON_DIMENSIONS 40
@@ -33,6 +36,7 @@
 @property (copy, nonatomic, nullable) NSString *activeTagName;
 @property (copy, nonatomic, nullable) NSString *durationTagID;
 
+@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
 @property (strong, nonatomic, nonnull) UIView *container;
@@ -72,6 +76,7 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Medical", nil) imageName:@"live2BenchTab"];
         
+        _playerViewController = [[PxpPlayerViewController alloc] init];
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         _encoderManager         = mainappDelegate.encoderManager;
@@ -125,6 +130,7 @@
         CGFloat playerWidth = 1024.0, playerHeight = playerWidth / (16.0 / 9.0);
         CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
         
+        /*
         self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
         self.videoPlayer.mute = YES;
         
@@ -151,18 +157,13 @@
         self.videoPlayer.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
         
         [self.container addSubview:self.videoPlayer.view];
-        
-        [self addChildViewController:_telestrationViewController];
-        [self addChildViewController:_tagNameSelectController];
-        [self addChildViewController:_teleSelectController];
+        */
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
-        
-        [self.view addSubview:self.container];
         
         _teleSelectController.event = _currentEvent;
     }
@@ -250,6 +251,7 @@
 
 -(void)eventChanged:(NSNotification*)note
 {
+    id<EncoderProtocol> encoder = note.object;
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
         [self onEventChange];
         return;
@@ -267,6 +269,7 @@
     }
     
     self.teleSelectController.event = _currentEvent;
+    self.playerViewController.playerView.context = encoder.eventContext;
     
     [self onEventChange];
 }
@@ -301,12 +304,15 @@
     [self.videoPlayer gotolive];
     self.videoPlayer.slowmo = NO;
     self.slomoButton.slomoOn = NO;
+    
+    self.playerViewController.playerView.player.live = YES;
 }
 
 
 - (void)viewDidLoad {
     // Do any additional setup after loading the view.
     [super viewDidLoad];
+    
     self.view.backgroundColor = [UIColor blackColor];
     
     self.bottomBar.backgroundColor = [UIColor blackColor];
@@ -317,13 +323,17 @@
     self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    // we need the control bar to be first responder.
-    [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
+    self.playerViewController.view.frame = self.container.bounds;
     
-    self.telestrationViewController.timeProvider = self.videoPlayer;
-    self.telestrationViewController.delegate = self;
-    self.telestrationViewController.showsClearButton = YES;
-    self.telestrationViewController.showsControls = YES;
+    [self.view addSubview:self.container];
+    [self.container addSubview:self.playerViewController.view];
+    
+    // we need the control bar to be first responder.
+    //[self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
+    
+    self.playerViewController.telestrationViewController.delegate = self;
+    self.playerViewController.telestrationViewController.showsClearButton = YES;
+    self.playerViewController.telestrationViewController.showsControls = YES;
     
     self.tagSelectButton.titleLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
     self.tagSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -528,9 +538,10 @@
 #pragma mark -TagSelectResponder
 
 - (void)didSelectTag:(nonnull Tag *)tag source:(nonnull NSString *)source {
-    Feed *feed = tag.event.feeds[source] ? tag.event.feeds[source] : tag.event.feeds.allValues.firstObject;
-    self.telestrationViewController.telestration = tag.telestration;
+    //Feed *feed = tag.event.feeds[source] ? tag.event.feeds[source] : tag.event.feeds.allValues.firstObject;
     
+    
+    /*
     if (tag.telestration.isStill) {
         [self.videoPlayer cancelClip];
         [self.videoPlayer pause];
@@ -538,6 +549,11 @@
     } else {
         [self.videoPlayer playClipWithFeed:feed andTimeRange:CMTimeRangeMake(CMTimeMake(tag.startTime, 1), CMTimeMake(tag.duration, 1))];
     }
+    */
+    
+    self.playerViewController.playerView.player = [self.playerViewController.playerView.player.context playerForName:source];
+    self.playerViewController.playerView.player.tag = tag;
+    self.playerViewController.telestrationViewController.telestration = tag.telestration;
     
     [self setShowsTeleSelectMenu:NO animated:YES];
 }

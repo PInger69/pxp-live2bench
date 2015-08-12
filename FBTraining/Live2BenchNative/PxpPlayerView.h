@@ -45,5 +45,7 @@ IB_DESIGNABLE
 /// True if the playerView is only viewing a single PxpPlayer.
 @property (readonly, assign, nonatomic) BOOL fullView;
 
+/// Locks the playerView to full.
+@property (assign, nonatomic) BOOL lockFullView;
 
 @end

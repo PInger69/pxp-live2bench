@@ -595,8 +595,8 @@ static void * eventContext      = &eventContext;
     }
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
     
-    //PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
-    PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
+    PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
+    //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
     _playerViewController.playerView.context = context;
     _videoBar.player = context.mainPlayer;
     _videoBar.event = _currentEvent;

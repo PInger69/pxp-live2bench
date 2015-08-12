@@ -150,6 +150,15 @@
     }
 }
 
+- (nullable PxpPlayer *)playerForName:(nonnull NSString *)name {
+    for (PxpPlayer *player in self.players) {
+        if ([player.name isEqualToString:name]) {
+            return player;
+        }
+    }
+    return self.players.firstObject;
+}
+
 #pragma mark - PxpTimeProvider
 
 - (NSTimeInterval)currentTimeInSeconds {

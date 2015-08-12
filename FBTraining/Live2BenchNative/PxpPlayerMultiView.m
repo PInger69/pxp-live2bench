@@ -76,6 +76,24 @@
     return [super fullView] && (_gridView.hidden ? _companionView.fullView : _gridView.fullView);
 }
 
+- (void)setLockFullView:(BOOL)lockFullView {
+    [super setLockFullView:lockFullView];
+    [_companionView setLockFullView:lockFullView];
+    [_gridView setLockFullView:lockFullView];
+    
+    if (!_companionView.player) {
+        _companionView.player = self.context.mainPlayer;
+        _companionView.hidden = NO;
+        
+        _gridView.hidden = YES;
+        [self.context.mainPlayer sync];
+        
+        [self.delegate playerView:self changedFullViewStatus:self.fullView];
+        
+        [_companionView.player reload];
+    }
+}
+
 #pragma mark - PxpPlayerGridViewDelegate
 
 - (void)playerView:(nonnull PxpPlayerSingleView *)playerView didLoadInGridView:(nonnull PxpPlayerGridView *)gridView {
@@ -93,7 +111,7 @@
 #pragma mark - Gesture Recognizers
 
 - (void)focusGestureRecognized:(UIGestureRecognizer *)recognizer {
-    if ([recognizer.view isKindOfClass:[PxpPlayerSingleView class]]) {
+    if ([recognizer.view isKindOfClass:[PxpPlayerSingleView class]] && !self.lockFullView) {
         PxpPlayerSingleView *playerView = (PxpPlayerSingleView *)recognizer.view;
         
         

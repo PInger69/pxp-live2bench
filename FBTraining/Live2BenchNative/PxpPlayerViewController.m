@@ -9,7 +9,7 @@
 #import "PxpPlayerViewController.h"
 #import "PxpPlayerControlBar.h"
 
-@interface PxpPlayerViewController () <PxpPlayerViewDelegate>
+@interface PxpPlayerViewController () <PxpPlayerViewDelegate, PxpTimeProvider, PxpPlayerControlBarDelegate>
 
 @end
 
@@ -19,6 +19,7 @@
     IBOutlet PxpPlayerControlBar * __nonnull _controlBar;
     
     void * _playerObserverContext;
+    void * _telestrationObserverContext;
 }
 
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
@@ -28,12 +29,15 @@
         _playerView.delegate = self;
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
+        _telestrationViewController.timeProvider = self;
         
         //_fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];
         
         _playerObserverContext = &_playerObserverContext;
+        _telestrationObserverContext = &_telestrationObserverContext;
         
         [_playerView addObserver:self forKeyPath:@"player" options:0 context:_playerObserverContext];
+        [_telestrationViewController addObserver:self forKeyPath:@"telestration" options:0 context:_telestrationObserverContext];
     }
     return self;
 }
@@ -44,11 +48,13 @@
 
 - (void)dealloc {
     [_playerView removeObserver:self forKeyPath:@"player" context:_playerObserverContext];
+    [_telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    _controlBar.delegate = self;
     
     _playerView.frame = _playerContainer.bounds;
     _telestrationViewController.view.frame = _playerContainer.bounds;
@@ -72,13 +78,29 @@
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _playerObserverContext) {
         _controlBar.player = _playerView.player;
+    } else if (context == _telestrationObserverContext) {
+        _playerView.lockFullView = _telestrationViewController.telestration;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
+#pragma mark - PxpPlayerViewDelegate
+
 - (void)playerView:(nonnull PxpPlayerView *)playerView changedFullViewStatus:(BOOL)fullView {
     _telestrationViewController.view.hidden = !fullView;
+}
+
+#pragma mark - PxpPlayerControlBarDelegate
+
+- (void)didCancelTimeRangeInControlBar:(nonnull PxpPlayerControlBar *)controlBar {
+    _telestrationViewController.telestration = nil;
+}
+
+#pragma mark - PxpTimeProvider
+
+- (NSTimeInterval)currentTimeInSeconds {
+    return _playerView.player.currentTimeInSeconds;
 }
 
 /*
