@@ -24,32 +24,33 @@
     NSInteger height = self.frame.size.height;
     NSInteger marginX = 10;
     NSInteger marginY = 10;
-    NSInteger topSize = 20;
+    NSInteger topSize = 40;
     
     scrollViewSize = CGSizeMake(width-marginX*2, height/4*3);
     scrollViewMargin = CGSizeMake(marginX, marginY*2 + topSize);
     _addButtonSize = CGSizeMake(topSize,topSize);
-    _addButtonMargin = CGSizeMake (width - marginX*4, marginY);
-    _textFieldSize = CGSizeMake(width - marginX*6 , topSize);
+    _addButtonMargin = CGSizeMake (width - marginX-_addButtonSize.width, marginY);
+    _textFieldSize = CGSizeMake(width - marginX*2 , topSize);
     _textFieldMargin = CGSizeMake(marginX,marginY);
 }
 - (void)initUserInputArea{
     inputField = [[UITextField alloc]initWithFrame:CGRectMake(_textFieldMargin.width, _textFieldMargin.height, _textFieldSize.width, _textFieldSize.height)];
     
     inputField.backgroundColor = [UIColor whiteColor];
-    [inputField setBorderStyle:UITextBorderStyleLine];
-    [inputField setTextColor:[UIColor blackColor]];
+    [inputField setBorderStyle:UITextBorderStyleRoundedRect];
     
+    [inputField setTextColor:[UIColor blackColor]];
+
     [self addSubview:inputField];
     
-    addButton = [[UIButton alloc]initWithFrame:CGRectMake(_addButtonMargin.width, _addButtonMargin.height, _addButtonSize.width, _addButtonSize.height)];
+    addButton = [[UIButton alloc]initWithFrame:CGRectMake(_addButtonMargin.width, _addButtonMargin.height-2, _addButtonSize.width, _addButtonSize.height)];
     
-    addButton.backgroundColor = [UIColor greenColor];
-    
+    addButton.backgroundColor = [UIColor clearColor];
+
     [addButton setTitle:@"+" forState:UIControlStateNormal];
-    [addButton setTitle:@"+" forState:UIControlStateHighlighted];
-    [addButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [addButton setTitleColor:[UIColor yellowColor] forState:UIControlStateHighlighted];
+    addButton.titleLabel.font = [UIFont systemFontOfSize:30.0];
+    [addButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [addButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     
     [self addSubview:addButton];
     
@@ -106,6 +107,7 @@
     
     if([self checkContent:inputField.text]){
         [scrollView addNewOption:inputField.text withPredicate:[self getPredicate]];
+        inputField.text = @"";
     }else{
         // need to complete
     }

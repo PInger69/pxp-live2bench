@@ -591,7 +591,7 @@
 //    [lastCell isSelected:NO];
     ARCalendarTableViewCell *currentCell = (ARCalendarTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     [currentCell isSelected:YES];
-    if (event.mp4s.count >= 1) {
+    if ([event.feeds allValues].count >= 1) {
         [self.arrayOfSelectedEvent addObject:event.name];
     }
     
@@ -616,7 +616,7 @@
                 
                 self.lastSelectedIndexPath = indexPath;
             }
-        } else if (event.feeds.count == 1) {
+        } else if ([event.feeds allValues].count == 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];

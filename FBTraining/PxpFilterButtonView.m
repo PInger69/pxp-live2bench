@@ -27,6 +27,7 @@
         _buttonList      = [NSMutableArray new];
         buttonPool      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
+        
     }
     return self;
 }

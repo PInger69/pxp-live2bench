@@ -24,6 +24,7 @@
 +(NSString *)dateFromEvent: (NSString *) eventName;
 +(NSString *)platformString;
 +(BOOL)isDeviceBlurSupported:(NSString *)platform;
++(BOOL)isDeviceSupportedMultiCam:(NSString *)platform;
 +(BOOL)hasInternet;
 +(NSString*)myWifiName;
 
@@ -35,6 +36,9 @@
 
 +(NSString *)getIPAddress;
 +(BOOL)hasWiFi;
+
++(UIImage *)starImageSelected: (BOOL) selected size:(CGSize)size;
+
 @end
 
 

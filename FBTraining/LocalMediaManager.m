@@ -117,8 +117,7 @@ static LocalMediaManager * instance;
                     //[_allEvents setValue:anEvent forKey:itemHid];// this is the new kind of build that events have their own feed
                 }
             }
-            
-        Event *event = [[[_allEvents allValues]firstObject]objectForKey:@"local"];
+        
         NSMutableArray *localTempPool = [[NSMutableArray alloc]init];
         NSArray *localplishPaths = [self grabAllFiles:_localPath ext:@"plist"];
         for (NSString *localPths in localplishPaths) {

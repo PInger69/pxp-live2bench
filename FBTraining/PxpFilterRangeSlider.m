@@ -1,3 +1,4 @@
+
 //
 //  PxpFilterRangeSlider.m
 //  Live2BenchNative
@@ -139,6 +140,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     _highestValue = highestValue;
     _highestOriginalValue = highestValue;
     
+    [self resetKnobs];
     [self setLayerFrames];
 }
 

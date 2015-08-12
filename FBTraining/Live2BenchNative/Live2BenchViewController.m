@@ -409,6 +409,15 @@ static void * eventContext      = &eventContext;
     }
 }
 
+-(void)checkIpadVersion{
+    BOOL result = [Utility isDeviceSupportedMultiCam:[Utility platformString]];
+    if (!result && [_currentEvent.feeds allValues].count > 1) {
+        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+        [alert showView];
+    }
+    
+}
+
 -(void)eventChanged:(NSNotification*)note
 {
     if (_teamPick){ // pick teams is up get rid of it safly
@@ -455,6 +464,7 @@ static void * eventContext      = &eventContext;
         
         [self addBottomViewController];
         [self addPlayerView];
+        [self checkIpadVersion];
         
     }
     

@@ -64,7 +64,7 @@
 
     NSUInteger colNum = 0;
     NSUInteger rowNum = 0;
-    NSUInteger rowCount = (NSUInteger)self.frame.size.height / _buttonSize.height;
+    NSUInteger rowCount = (NSUInteger)self.frame.size.height / (_buttonSize.height+_buttonMargin.height);
     for (NSUInteger k = 0; k < buttonLabels.count; k++ ) {
         
         

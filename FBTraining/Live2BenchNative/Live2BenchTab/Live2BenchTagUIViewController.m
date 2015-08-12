@@ -409,8 +409,8 @@
     }
     
     //This check is to make the filler buttons blank
-    
-    if ([[dict objectForKey:@"name"] isEqualToString:@"--"] || [[dict objectForKey:@"name"] isEqualToString:@"-"]) {
+
+    if ([[[dict objectForKey:@"name"]substringToIndex:1] isEqualToString:@"-"]) {
         btn.hidden = YES;
     }
     
