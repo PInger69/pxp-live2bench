@@ -208,8 +208,8 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
         self.rightLabel = [[UILabel alloc]init];
         self.leftLabel = [[UILabel alloc]init];
         
-        [self.leftLabel setTextColor:[UIColor orangeColor]];
-        [self.rightLabel setTextColor:[UIColor orangeColor]];
+        [self.leftLabel setTextColor:[UIColor whiteColor]];
+        [self.rightLabel setTextColor:[UIColor whiteColor]];
         
         [self.layer addSublayer:self.rightLabel.layer];
         [self.layer addSublayer:self.leftLabel.layer];

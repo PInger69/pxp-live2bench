@@ -96,14 +96,15 @@ static TabView* sharedFilter;
         NSMutableArray *tabItems = [NSMutableArray arrayWithCapacity:_tabs.count];
         [[UITabBarItem appearance]setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Arial" size:25.0f], NSFontAttributeName,nil]forState:UIControlStateNormal];
         for (PxpFilterTabController *vc in _tabs) {
-            [vc.tabImage drawInRect:CGRectMake(0, 0, 30, 30)];
+            [vc.tabImage drawInRect:CGRectMake(0,0, 30, 30)];
             UITabBarItem *tabItem = [[UITabBarItem alloc] initWithTitle:vc.title image:vc.tabImage selectedImage:nil];
             
             //position adjustment for tabitem titles and images
             CGSize textSize = [vc.title sizeWithAttributes:@{ NSFontAttributeName : [UIFont fontWithName:@"Arial" size:25.0f] }];
             
-            tabItem.imageInsets = UIEdgeInsetsMake(15, -30-textSize.width/2.0, -15, 30+textSize.width/2.0);
-            tabItem.titlePositionAdjustment = UIOffsetMake(40.0/_tabs.count,0);
+            tabItem.imageInsets = UIEdgeInsetsMake(8, -25-textSize.width/2.0, -8, 25+textSize.width/2.0);
+
+            tabItem.titlePositionAdjustment = UIOffsetMake(40.0/_tabs.count,-4);
             
             [tabItems addObject:tabItem];
         };

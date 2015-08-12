@@ -24,8 +24,8 @@
 {
     self = [super initWithCoder:coder];
     if (self) {
-        _buttonSize      = CGSizeMake(120, 25);
-        _buttonMargin    = CGSizeMake(3, 3);
+        _buttonSize      = CGSizeMake(120, 26);
+        _buttonMargin    = CGSizeMake(4, 4);
         _buttonList      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
         [self setScrollEnabled:YES];
