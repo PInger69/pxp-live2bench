@@ -573,6 +573,51 @@
     //    return [uController hasConnectivity];
 }
 
++(UIImage *)starImageSelected: (BOOL) selected size:(CGSize)size
+{
+    CGSize imageSize = size;
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *starPath = [UIBezierPath bezierPath];
+//    UIBezierPath *outLinePath = [UIBezierPath bezierPath];
+    
+    [starPath moveToPoint:      CGPointMake(imageSize.width*0.175,  imageSize.height)];         // bottom left
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.5,    0)];                        // top
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.825,  imageSize.height)];         // bottom right
+    [starPath addLineToPoint:   CGPointMake(0,                      imageSize.height*0.382)];   //left
+    [starPath addLineToPoint:   CGPointMake(imageSize.width,        imageSize.height*0.382)];   //right
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.175,  imageSize.height)];         // bottom left
+    
+//    
+//    [outLinePath moveToPoint: CGPointMake(17.5/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(50/2, (100 -23.61)/2 )];
+//    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(70/2, 61.8/2)];
+//    [outLinePath addLineToPoint: CGPointMake(100/2, 38.2/2)];
+//    [outLinePath addLineToPoint: CGPointMake(0, 38.2/2)];
+//    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(50/2, 0)];
+//    [outLinePath addLineToPoint: CGPointMake(17.5/2, 100/2)]; // bottom left
+//    
+    
+    if (selected) {
+        [PRIMARY_APP_COLOR setFill];
+        [PRIMARY_APP_COLOR setStroke];
+    }else{
+        [[UIColor lightGrayColor] setFill];
+        [[UIColor lightGrayColor] setStroke];
+    }
+    
+    
+//    
+//    outLinePath.lineWidth = 5.0;
+//    [outLinePath stroke];
+    [starPath fill];
+    
+    UIImage *starImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return starImage;
+}
 
 
 @end

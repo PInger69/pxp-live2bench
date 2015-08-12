@@ -40,6 +40,7 @@ static TabView* sharedFilter;
     if (self) {
         _tabs = [NSMutableArray array];
         previousTab=nil;
+        
     }
     return self;
 }

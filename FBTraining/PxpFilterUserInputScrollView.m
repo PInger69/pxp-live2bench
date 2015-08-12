@@ -22,14 +22,14 @@
 
 - (void)initUIInfo{
     NSInteger width = self.frame.size.width;
-    NSInteger marginX = 5;
+    NSInteger marginX = 0;
     NSInteger marginY = 5;
-    NSInteger size = 20;
+    NSInteger size    = 30;
     
     _buttonSize      = CGSizeMake(width, size);
     _buttonMargin    = CGSizeMake(marginX, marginY);
     _deleteButtonSize      = CGSizeMake(size, size);
-    _deleteButtonMargin    = CGSizeMake(width - size, marginY);
+    _deleteButtonMargin    = CGSizeMake(width - size-6, marginY);
     
     filterOptionList      = [NSMutableArray new];
     userSelected    = [NSMutableSet new];
@@ -106,9 +106,9 @@
     [deleteButton setTitle:@"X" forState:UIControlStateNormal];
     [deleteButton setTitle:@"X" forState:UIControlStateHighlighted];
     [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [deleteButton setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
-    [deleteButton setBackgroundColor:[UIColor redColor]];
-    
+    [deleteButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+//    [deleteButton setBackgroundColor:[UIColor redColor]];
+    deleteButton.titleLabel.font=[UIFont fontWithName:@"Helvetica" size:20.0f];
     [self addSubview:eventButton];
     [self addSubview:deleteButton];
     
@@ -137,6 +137,7 @@
     [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
     [eventButton setTitle:btnTxt forState:UIControlStateNormal];
     [eventButton setTitle:btnTxt forState:UIControlStateHighlighted];
+    [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [eventButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateSelected];
     eventButton.titleLabel.font=[UIFont systemFontOfSize:14.0f];
     eventButton.selected = [userSelected containsObject:btnTxt];

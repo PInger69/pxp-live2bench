@@ -36,6 +36,9 @@
 
 +(NSString *)getIPAddress;
 +(BOOL)hasWiFi;
+
++(UIImage *)starImageSelected: (BOOL) selected size:(CGSize)size;
+
 @end
 
 
