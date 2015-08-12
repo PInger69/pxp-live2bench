@@ -34,6 +34,7 @@
         [self.ratingScale onPressRatePerformSelector:@selector(sendRatingNew:) addTarget:self];
         [self.ratingScale.ratingLabel setText:@"Rating:"];
         [self.ratingScale.ratingLabel setTextColor:[UIColor blackColor]];
+        self.ratingScale.ratingLabel.adjustsFontSizeToFitWidth = YES;
         [self.ratingScale.ratingLabel setFont:[UIFont boldSystemFontOfSize:18.0f]];
  
         

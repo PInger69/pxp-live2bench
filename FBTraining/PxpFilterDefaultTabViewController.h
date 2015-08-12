@@ -27,6 +27,7 @@
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterUserInputView     * userInputView;
 @property (strong, nonatomic, nullable) IBOutlet UISwitch                   * preFilterSwitch;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterToggleButton      * favoriteButton;
+@property (strong, nonatomic, nullable) IBOutlet PxpFilterToggleButton      * telestrationButton;
 
 
 @end

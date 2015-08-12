@@ -170,11 +170,12 @@
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
 
-    tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
+    
 
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
+        tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
         // NSDictionary *urls = tag.thumbnails;
         
         /*FeedSelectCell *collapsableCell;
