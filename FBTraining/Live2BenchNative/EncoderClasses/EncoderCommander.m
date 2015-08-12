@@ -18,6 +18,8 @@
 @synthesize event = _event;
 @synthesize allEvents = _allEvents;
 
+@synthesize eventContext = _eventContext;
+
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
@@ -363,6 +365,8 @@
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
+    
+    _eventContext = [PxpEventContext contextWithEvent:_event];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:nil];
 }
 
