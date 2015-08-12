@@ -144,6 +144,12 @@
     }
 }
 
+- (void)reload {
+    for (PxpPlayer *player in self.players) {
+        [player reload];
+    }
+}
+
 #pragma mark - PxpTimeProvider
 
 - (NSTimeInterval)currentTimeInSeconds {

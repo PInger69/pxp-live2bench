@@ -69,4 +69,7 @@
 /// Mutes all players in the context expect for the specified player.
 - (void)muteAllButPlayer:(nullable PxpPlayer *)player;
 
+/// Reloads all players in the context.
+- (void)reload;
+
 @end

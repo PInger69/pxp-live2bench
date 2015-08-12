@@ -29,7 +29,7 @@
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         
-        _fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];
+        //_fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];
         
         _playerObserverContext = &_playerObserverContext;
         
@@ -61,7 +61,7 @@
     
     _controlBar.player = _playerView.player;
     
-    [_playerView addGestureRecognizer:_fullscreenGestureRecognizer];
+    //[_playerView addGestureRecognizer:_fullscreenGestureRecognizer];
 }
 
 - (void)didReceiveMemoryWarning {

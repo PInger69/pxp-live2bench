@@ -66,6 +66,7 @@
     self.companionView.hidden = NO;
     
     self.gridView.hidden = YES;
+    self.gridView.player = player;
     [self.context.mainPlayer sync];
     
     [self.delegate playerView:self changedFullViewStatus:self.fullView];
@@ -95,6 +96,7 @@
     if ([recognizer.view isKindOfClass:[PxpPlayerSingleView class]]) {
         PxpPlayerSingleView *playerView = (PxpPlayerSingleView *)recognizer.view;
         
+        
         if (playerView == self.companionView && self.companionView.player && self.context.players.count > 1) {
             
             self.gridView.hidden = NO;
@@ -105,7 +107,7 @@
             [self.context.mainPlayer sync];
             
             [self.delegate playerView:self changedFullViewStatus:self.fullView];
-            
+            [self.context reload];
         } else if (playerView.player && !self.companionView.player) {
             
             self.companionView.player = playerView.player;
@@ -116,6 +118,7 @@
             
             
             [self.delegate playerView:self changedFullViewStatus:self.fullView];
+            [playerView.player reload];
         }
         
         

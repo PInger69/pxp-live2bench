@@ -62,14 +62,6 @@
     void *_motionObserverContext;
 }
 
-- (void)setNeedsDisplay {
-    [super setNeedsDisplay];
-    
-    AVPlayerItem *playerItem = self.player.currentItem;
-    [self.player replaceCurrentItemWithPlayerItem:nil];
-    [self.player replaceCurrentItemWithPlayerItem:playerItem];
-}
-
 - (void)initPlayerView {
     _scrollView = [[UIScrollView alloc] init];
     _avPlayerView = [[PxpAVPlayerView alloc] init];
@@ -197,7 +189,7 @@
     } else if (context == _motionObserverContext) {
         self.nameLabel.textColor = self.player.motion ? self.tintColor : [UIColor whiteColor];
     } else if (context == _failedObserverContext) {
-        //self.blurView.hidden = self.player.status == AVPlayerStatusUnknown;
+        self.blurView.hidden = self.player.status != AVPlayerStatusFailed;
     }
 }
 

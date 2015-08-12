@@ -12,7 +12,6 @@
 #import "PxpLoadAction.h"
 
 #define MAX_SYNCS 3
-#define MAX_RELOADS 3
 
 #define NOTIF_MOTION_ALARM                  @"motionAlarm"
 
@@ -45,9 +44,6 @@ static CMClockRef _pxpPlayerMasterClock;
 /// The number of sync attempt that have been made.
 @property (assign, nonatomic) NSUInteger syncs;
 
-/// The number of reloads executed by the player.
-@property (assign, nonatomic) NSUInteger reloads;
-
 @property (copy, nonatomic, nonnull) void(^syncBlock)(CMTime);
 @property (strong, nonatomic, nullable) NSTimer *syncTimer;
 
@@ -78,7 +74,6 @@ static CMClockRef _pxpPlayerMasterClock;
     _playRate = 1.0;
     _range = kCMTimeRangeInvalid;
     _syncs = 0;
-    _reloads = 0;
     _failed = NO;
     
     _loadActionQueue = [NSMutableArray array];
@@ -86,7 +81,7 @@ static CMClockRef _pxpPlayerMasterClock;
     _rateObserverContext = &_rateObserverContext;
     _currentItemObserverContext = &_currentItemObserverContext;
     
-    [self addObserver:self forKeyPath:@"currentItem.status" options:0 context:_statusObserverContext];
+    [self addObserver:self forKeyPath:@"status" options:0 context:_statusObserverContext];
     [self addObserver:self forKeyPath:@"rate" options:0 context:_rateObserverContext];
     [self addObserver:self forKeyPath:@"currentItem.seekableTimeRanges" options:0 context:_currentItemObserverContext];
     
@@ -124,7 +119,7 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"currentItem.status" context:_statusObserverContext];
+    [self removeObserver:self forKeyPath:@"status" context:_statusObserverContext];
     [self removeObserver:self forKeyPath:@"rate" context:_rateObserverContext];
     [self removeObserver:self forKeyPath:@"currentItem.seekableTimeRanges" context:_currentItemObserverContext];
     
@@ -136,30 +131,29 @@ static CMClockRef _pxpPlayerMasterClock;
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     
     if (context == _statusObserverContext || context == _currentItemObserverContext) {
-        if (self.currentItem.status != AVPlayerItemStatusUnknown) {
+        if (self.status != AVPlayerStatusUnknown) {
             
-            if (self.currentItem.status == AVPlayerItemStatusFailed) {
-                NSLog(@"%@", self.currentItem.error);
+            if (self.status == AVPlayerStatusFailed) {
+                NSLog(@"%@", self.error);
                 
-                [self replaceCurrentItemWithPlayerItem:self.currentItem];
+                
+                //[self reload];
             }
             
-            if (self.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                // run actions
-                for (PxpLoadAction *action in self.loadActionQueue) {
-                    [action runWithSuccess:self.currentItem.status == AVPlayerItemStatusReadyToPlay];
-                }
-                
-                // flush
-                [self.loadActionQueue removeAllObjects];
+            // run actions
+            for (PxpLoadAction *action in self.loadActionQueue) {
+                [action runWithSuccess:self.status == AVPlayerStatusReadyToPlay];
             }
+            
+            // flush
+            [self.loadActionQueue removeAllObjects];
         }
         
-        /*
+        
         [self willChangeValueForKey:@"failed"];
-        _failed = self.currentItem.status == AVPlayerItemStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
+        _failed = self.status == AVPlayerStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
         [self didChangeValueForKey:@"failed"];
-        */
+        
         
     } else if (context == _rateObserverContext) {
         
@@ -359,7 +353,6 @@ static CMClockRef _pxpPlayerMasterClock;
         void (^handler)(BOOL) = ^(BOOL success) {
             tried++, complete += success ? 1 : 0;
             
-            NSLog(@"PR t: %lu, n: %lu", (unsigned long)tried, (unsigned long)total);
             if (tried >= total) {
                 completionHandler(complete >= total);
                 self.prerolling = NO;
@@ -427,7 +420,6 @@ static CMClockRef _pxpPlayerMasterClock;
         void (^handler)(BOOL) = ^(BOOL success) {
             tried++, complete += success ? 1 : 0;
             
-            NSLog(@"SK t: %lu, n: %lu", (unsigned long)tried, (unsigned long)total);
             if (tried >= total) {
                 completionHandler(complete >= total);
                 self.seeking = NO;
@@ -460,11 +452,6 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 #pragma mark - Overrides
-
-- (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
-    //[super replaceCurrentItemWithPlayerItem:nil];
-    [super replaceCurrentItemWithPlayerItem:item];
-}
 
 - (void)play {
     [self setRate:self.playRate];
@@ -585,27 +572,12 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)reload {
-    // save player state
-    CMTime time = self.currentTime;
-    float rate = self.rate;
+    if (self.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+        AVPlayerItem *item = self.currentItem;
+        [self replaceCurrentItemWithPlayerItem:nil];
+        [self replaceCurrentItemWithPlayerItem:item];
+    }
     
-    [self pause];
-    
-    // reload the asset
-    [super replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithAsset:self.currentItem.asset]];
-    
-    // resume state
-    __block PxpPlayer *player = self;
-    
-    [self addLoadAction:[PxpLoadAction loadActionWithBlock:^(BOOL ready) {
-        if (ready) {
-            [player seekToTime:time completionHandler:^(BOOL complete) {
-                [player prerollAtRate:ready completionHandler:^(BOOL complete) {
-                    [player setRate:rate];
-                }];
-            }];
-        }
-    }]];
 }
 
 #pragma mark - Private Methods
@@ -650,6 +622,7 @@ static CMClockRef _pxpPlayerMasterClock;
 /// Synchronizes all other players to the player
 - (void)sync:(CMTime)currentTime {
     return;
+    
     static CMTime smartSync;
     if (!CMTIME_IS_NUMERIC(smartSync)) {
         smartSync = kCMTimeZero;
@@ -720,7 +693,7 @@ static CMClockRef _pxpPlayerMasterClock;
             for (PxpPlayer *player in self.contextPlayers) {
                 if (player != self) {
                     
-                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
+                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
                         
                         // ensure no players get stuck
                         for (PxpPlayer *player in self.contextPlayers) {

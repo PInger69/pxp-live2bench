@@ -15,9 +15,7 @@
     CMTime time = self.currentTime;
     float rate = self.rate;
     
-    
-    [super replaceCurrentItemWithPlayerItem:url ? [AVPlayerItem playerItemWithURL:url] : nil];
-    
+    [super replaceCurrentItemWithPlayerItem:url ? [AVPlayerItem playerItemWithAsset:[AVURLAsset assetWithURL:url] automaticallyLoadedAssetKeys:@[@"playable", @"tracks", @"duration"]] : nil];
     
     if (url) {
         __block PxpPlayer *player = self;
