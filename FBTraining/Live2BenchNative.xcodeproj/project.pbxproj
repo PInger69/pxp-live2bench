@@ -471,6 +471,10 @@
 		D7D1EBD416EA9D8A0005CBC0 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D1EBD316EA9D8A0005CBC0 /* settings.png */; };
 		D7D2F6961B791A5500DC0DC5 /* PxpFilterRatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D2F6951B791A5500DC0DC5 /* PxpFilterRatingView.m */; };
 		D7D2F6991B7A780500DC0DC5 /* PxpFilterToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D2F6981B7A780400DC0DC5 /* PxpFilterToggleButton.m */; };
+		D7D2F69E1B7BED6F00DC0DC5 /* telestrationIconOff.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69A1B7BED6F00DC0DC5 /* telestrationIconOff.png */; };
+		D7D2F69F1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69B1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png */; };
+		D7D2F6A01B7BED6F00DC0DC5 /* telestrationIconOn.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69C1B7BED6F00DC0DC5 /* telestrationIconOn.png */; };
+		D7D2F6A11B7BED6F00DC0DC5 /* telestrationIconOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69D1B7BED6F00DC0DC5 /* telestrationIconOn@2x.png */; };
 		D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D43F6D1B5D4A56007B188D /* FeedInspector.m */; };
 		D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D86CD416B2D84500F48523 /* ContentViewController.m */; };
 		D7DA233016B713FA00143102 /* BG.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA232F16B713FA00143102 /* BG.png */; };
@@ -1261,6 +1265,10 @@
 		D7D2F6951B791A5500DC0DC5 /* PxpFilterRatingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterRatingView.m; sourceTree = "<group>"; };
 		D7D2F6971B7A780400DC0DC5 /* PxpFilterToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterToggleButton.h; sourceTree = "<group>"; };
 		D7D2F6981B7A780400DC0DC5 /* PxpFilterToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterToggleButton.m; sourceTree = "<group>"; };
+		D7D2F69A1B7BED6F00DC0DC5 /* telestrationIconOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = telestrationIconOff.png; sourceTree = "<group>"; };
+		D7D2F69B1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "telestrationIconOff@2x.png"; sourceTree = "<group>"; };
+		D7D2F69C1B7BED6F00DC0DC5 /* telestrationIconOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = telestrationIconOn.png; sourceTree = "<group>"; };
+		D7D2F69D1B7BED6F00DC0DC5 /* telestrationIconOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "telestrationIconOn@2x.png"; sourceTree = "<group>"; };
 		D7D43F6C1B5D4A56007B188D /* FeedInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeedInspector.h; path = Live2BenchNative/UtilityClasses/FeedInspector.h; sourceTree = "<group>"; };
 		D7D43F6D1B5D4A56007B188D /* FeedInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedInspector.m; path = Live2BenchNative/UtilityClasses/FeedInspector.m; sourceTree = "<group>"; };
 		D7D86CD316B2D84400F48523 /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
@@ -1706,6 +1714,10 @@
 		D70E33081AEEDC0B00CE5BFB /* LooseImages */ = {
 			isa = PBXGroup;
 			children = (
+				D7D2F69A1B7BED6F00DC0DC5 /* telestrationIconOff.png */,
+				D7D2F69B1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png */,
+				D7D2F69C1B7BED6F00DC0DC5 /* telestrationIconOn.png */,
+				D7D2F69D1B7BED6F00DC0DC5 /* telestrationIconOn@2x.png */,
 				AA222B4F195B836600820BCD /* filter.png */,
 				AA222B50195B836600820BCD /* filter@2x.png */,
 				AAFCA6FC195B84B000D0F0E6 /* share.png */,
@@ -2913,6 +2925,7 @@
 				94E8DB871939167100B92CD1 /* lineButton@2x.png in Resources */,
 				D7807BF1181830100061305A /* live@2x.png in Resources */,
 				D7AB2D2416B6F4AD0093465F /* ToolBarValues.plist in Resources */,
+				D7D2F69E1B7BED6F00DC0DC5 /* telestrationIconOff.png in Resources */,
 				D7AA943917F4893E000EDAD5 /* ContactLabelString.txt in Resources */,
 				D78F68D018073DC70096C793 /* RedSettingsButtonSelect@2x.png in Resources */,
 				D78F68C618073DC70096C793 /* GreenSettingsButton@2x.png in Resources */,
@@ -2942,6 +2955,7 @@
 				D7A0E66A16CE9F7900A6F82C /* ortri.png in Resources */,
 				D786C22217F0CCEB0042DD96 /* settingsButton.png in Resources */,
 				D7AFD98116D412C1000CA781 /* normalsp.png in Resources */,
+				D7D2F69F1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png in Resources */,
 				D7AFD98216D412C1000CA781 /* normalsp@2x.png in Resources */,
 				D7AFD98716D520D6000CA781 /* slowmo.png in Resources */,
 				D79F9B7517F5BC1F0081C5E9 /* vertical_myplayXplay_case@2x.png in Resources */,
@@ -2996,6 +3010,7 @@
 				D767EF131B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.xib in Resources */,
 				94B28D861935202A0000E804 /* undoButton.png in Resources */,
 				D7B1AF841704E86C00013C95 /* Default-Landscape@2x.png in Resources */,
+				D7D2F6A11B7BED6F00DC0DC5 /* telestrationIconOn@2x.png in Resources */,
 				D7DB754817EA0EFC009C402F /* gotolive.png in Resources */,
 				D7B1AF861704EBC600013C95 /* Default-568.png in Resources */,
 				D7B1AF8B1704EC2500013C95 /* cline.png in Resources */,
@@ -3055,6 +3070,7 @@
 				94B28D891935202A0000E804 /* undoButtonSelect@2x.png in Resources */,
 				94B28D881935202A0000E804 /* undoButtonSelect.png in Resources */,
 				D797791E1AEEB4B0008A99E0 /* orangeSelect.png in Resources */,
+				D7D2F6A01B7BED6F00DC0DC5 /* telestrationIconOn.png in Resources */,
 				D727089A1A141AD90086BCB8 /* Localizable.strings in Resources */,
 				BDD2D2F717ECDD11004D5D9A /* clip-back-old.png in Resources */,
 				D7D1D47E17F5C73200D5C185 /* extendendsec@2x.png in Resources */,

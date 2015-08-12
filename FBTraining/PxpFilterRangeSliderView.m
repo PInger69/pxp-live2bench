@@ -101,7 +101,7 @@
 }
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{ 
-    if(combo) {
+    if(combo && endPoint != highestValue && startPoint != 0) {
         [tagsToFilter filterUsingPredicate:combo];
     }
 }
