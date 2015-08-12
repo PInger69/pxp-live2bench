@@ -51,9 +51,9 @@
     //[_rightScrollView buildButtonsWith:[tempSet allObjects]];
     [_rightScrollView buildButtonsWith:@[@"ABC",@"CBA"]];
     _rightScrollView.sortByPropertyKey = @"name";
-    [_middleScrollView buildButtonsWith:@[@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c",@"b",@"c"]];
-    _middleScrollView.sortByPropertyKey = @"name";
-    [_leftScrollView buildButtonsWith:@[@"PP",@"PK"]];
+    [_middleScrollView buildButtonsWith:@[@"1",@"2",@"3",@"OT",@"PS"]];
+    _middleScrollView.sortByPropertyKey = @"period";
+    [_leftScrollView buildButtonsWith:@[@"line_f_1",@"line_f_2",@"line_f_3",@"line_f_4",@"line_d_1",@"line_d_2",@"line_d_3",@"line_d_4"]];
     _leftScrollView.sortByPropertyKey = @"name";
     
     self.modules = [[NSMutableArray alloc]initWithObjects:

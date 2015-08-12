@@ -33,11 +33,11 @@ BOOL _upperKnobLayerSelected;
 
 
 
-@property (nonatomic) float maximumValue;
-@property (nonatomic) float minimumValue;
-@property (nonatomic) float upperValue;
-@property (nonatomic) float lowerValue;
-@property (nonatomic) Float64 highestOriginalValue;
+@property (nonatomic,assign) float maximumValue;
+@property (nonatomic,assign) float minimumValue;
+@property (nonatomic,assign) float upperValue;
+@property (nonatomic,assign) float lowerValue;
+@property (nonatomic,assign) Float64 highestOriginalValue;
 
 
 - (float) positionForValue:(float)value;

@@ -23,7 +23,7 @@
 
 @property (strong, nonatomic, nullable) NSArray *tabs;
 
-- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
+- (nonnull instancetype)ag:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
 
 - (void)addTab:(nonnull PxpFilterTabController*) newTab;
 
