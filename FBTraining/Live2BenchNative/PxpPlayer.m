@@ -134,9 +134,11 @@ static CMClockRef _pxpPlayerMasterClock;
         if (self.status != AVPlayerStatusUnknown) {
             
             if (self.status == AVPlayerStatusFailed) {
-                NSLog(@"%@", self.error);
+                PXPLog(@"%@: %@", self, self.error);
                 
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 
+                [alert show];
                 //[self reload];
             }
             
@@ -175,10 +177,6 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 #pragma mark - Setters / Getters
-
-- (void)setName:(nonnull NSString *)name {
-    _name = name;
-}
 
 - (void)setContext:(nullable PxpPlayerContext *)context {
     if (_context != context) {
@@ -452,6 +450,10 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 #pragma mark - Overrides
+
+- (nullable NSString *)description {
+    return [NSString stringWithFormat:@"%@(%@)", [super description], self.name];
+}
 
 - (void)play {
     [self setRate:self.playRate];

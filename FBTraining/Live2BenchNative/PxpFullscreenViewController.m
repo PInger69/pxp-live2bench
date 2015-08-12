@@ -19,11 +19,37 @@
 {
     UIView * __nonnull _playerContainer;
     
+    UIView * __nullable _targetView;
+    NSUInteger _targetIndex;
+    CGRect _targetFrame;
+    
     void * _playRateObserverContext;
 }
 
 - (nonnull instancetype)init {
     return [self initWithPlayerViewClass:nil];
+}
+
+- (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
+    self = [super init];
+    if (self) {
+        _contentView = [[UIView alloc] init];
+        _playerContainer = [[UIView alloc] init];
+        _topBar = [[UIView alloc] init];
+        _bottomBar = [[UIView alloc] init];
+        
+        _backwardSeekButton = [[SeekButton alloc] initWithBackward:YES];
+        _forwardSeekButton = [[SeekButton alloc] initWithBackward:NO];
+        
+        _slomoButton = [[Slomo alloc] init];
+        _fullscreenButton = [[PxpFullscreenButton alloc] init];
+        _fullscreenButton.isFullscreen = YES;
+        
+        _playRateObserverContext = &_playRateObserverContext;
+        
+        self.playerViewController = playerViewController;
+    }
+    return self;
 }
 
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
@@ -77,12 +103,9 @@
     self.view.backgroundColor = [UIColor blackColor];
     _playerContainer.backgroundColor = [UIColor darkGrayColor];
     
-    _playerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [_playerContainer addSubview:_playerViewController.view];
-    
     [_playerViewController.fullscreenGestureRecognizer addTarget:self action:@selector(fullscreenResponseHandler:)];
     
-    self.hidden = YES;
+    self.fullscreen = NO;
 }
 
 - (void)viewWillLayoutSubviews {
@@ -102,7 +125,9 @@
     _topBar.frame = CGRectMake(0.0, 0.0, playerWidth, playerY);
     _bottomBar.frame = CGRectMake(0.0, playerY + playerHeight, playerWidth, playerY);
     
-    _playerViewController.view.frame = _playerContainer.bounds;
+    if ([_playerViewController.view isDescendantOfView:_playerContainer]) {
+        _playerViewController.view.frame = _playerContainer.bounds;
+    }
     
     // button size
     const CGFloat buttonHeight = contentHeight - playerY - playerHeight;
@@ -135,12 +160,20 @@
 
 #pragma mark - Getters / Setters
 
-- (void)setHidden:(BOOL)hidden {
-    [self setHidden:hidden animated:NO];
+- (void)setFullscreen:(BOOL)fullscreen {
+    [self setFullscreen:fullscreen animated:NO];
 }
 
 - (BOOL)hidden {
     return self.view.hidden;
+}
+
+- (void)setPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.playRate" context:_playRateObserverContext];
+    
+    _playerViewController = playerViewController;
+    
+    [_playerViewController.playerView addObserver:self forKeyPath:@"player.playRate"options:0 context:_playRateObserverContext];
 }
 
 #pragma mark - Actions
@@ -159,36 +192,52 @@
 }
 
 - (void)fullscreenButtonAction:(PxpFullscreenButton *)sender {
-    [self setHidden:YES animated:YES frame:_targetFrame];
+    [self setFullscreen:NO animated:YES];
 }
 
 #pragma mark - Public Methods
 
-- (void)setHidden:(BOOL)hidden animated:(BOOL)animated frame:(CGRect)frame {
-    if (self.view.hidden != hidden) {
+- (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated {
+    if (self.view.hidden == fullscreen) {
         
-        if (hidden) {
+        if (!fullscreen) {
             self.bottomBar.hidden = YES;
             self.topBar.hidden = YES;
             self.forwardSeekButton.hidden = YES;
             self.backwardSeekButton.hidden = YES;
         } else  {
-            self.view.frame = frame;
+            _targetView = _playerViewController.view.superview;
+            _targetIndex = [_targetView.subviews indexOfObject:_playerViewController.view];
+            _targetFrame = _playerViewController.view.frame;
+            
+            [_playerViewController.view removeFromSuperview];
+            
+            self.view.frame = _targetFrame;
+            
+            _playerViewController.view.frame = _playerContainer.bounds;
+            [_playerContainer addSubview:_playerViewController.view];
+            
             self.view.hidden = NO;
         }
         
         [self.view layoutIfNeeded];
         
         [UIView animateWithDuration:animated ? 0.2 : 0.0 animations:^() {
-            if (hidden) {
-                self.view.frame = frame;
+            if (!fullscreen) {
+                self.view.frame = _targetFrame;
             } else {
                 self.view.frame = self.view.superview.bounds;
             }
             
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            if (hidden) {
+            if (!fullscreen) {
+                if ([_playerViewController.view isDescendantOfView:_playerContainer]) {
+                    [_playerViewController.view removeFromSuperview];
+                    _playerViewController.view.frame = _targetFrame;
+                    [_targetView insertSubview:_playerViewController.view atIndex:_targetIndex];
+                }
+                
                 self.view.hidden = YES;
             } else {
                 self.bottomBar.hidden = NO;
@@ -201,16 +250,12 @@
     }
 }
 
-- (void)setHidden:(BOOL)hidden animated:(BOOL)animated {
-    [self setHidden:hidden animated:animated frame:_targetFrame];
-}
-
 - (void)fullscreenResponseHandler:(nullable id<PxpFullscreenResponder>)sender {
     if ([sender conformsToProtocol:@protocol(PxpFullscreenResponder)]) {
         if (sender.fullscreenResponse == PxpFullscreenResponseHide) {
-            [self setHidden:YES animated:YES];
+            [self setFullscreen:NO animated:YES];
         } else if (sender.fullscreenResponse == PxpFullscreenResponseShow) {
-            [self setHidden:NO animated:YES];
+            [self setFullscreen:YES animated:YES];
         }
     }
 }

@@ -16,8 +16,8 @@
 
 @implementation PxpListViewFullscreenViewController
 
-- (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
-    self = [super initWithPlayerViewClass:playerViewClass];
+- (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
+    self = [super initWithPlayerViewController:playerViewController];
     if (self) {
         _startRangeModifierButton = [[PxpRangeModifierButton alloc] initWithEnd:NO];
         _endRangeModifierButton = [[PxpRangeModifierButton alloc] initWithEnd:YES];

@@ -45,4 +45,5 @@ IB_DESIGNABLE
 /// True if the playerView is only viewing a single PxpPlayer.
 @property (readonly, assign, nonatomic) BOOL fullView;
 
+
 @end

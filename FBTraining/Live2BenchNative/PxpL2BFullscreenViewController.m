@@ -14,8 +14,8 @@
 
 @implementation PxpL2BFullscreenViewController
 
-- (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
-    self = [super initWithPlayerViewClass:playerViewClass];
+- (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
+    self = [super initWithPlayerViewController:playerViewController];
     if (self) {
         _liveButton = [[LiveButton alloc] init];
     }

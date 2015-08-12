@@ -166,9 +166,8 @@ static void * eventContext      = &eventContext;
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
         
         _playerViewController = [[PxpPlayerViewController alloc] init];
-        [self addChildViewController:_playerViewController];
         _videoBar = [[PxpVideoBar alloc] init];
-        _fullscreenViewController = [[PxpL2BFullscreenViewController alloc] init];
+        _fullscreenViewController = [[PxpL2BFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -848,7 +847,6 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_videoBar];
     
     [self.view addSubview:_fullscreenViewController.view];
-    _fullscreenViewController.targetFrame = _playerViewController.view.frame;
     
     [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];

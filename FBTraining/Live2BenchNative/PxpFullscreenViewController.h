@@ -40,16 +40,13 @@
 @property (readonly, strong, nonatomic, nonnull) PxpFullscreenButton *fullscreenButton;
 
 /// The view controller's view hidden state.
-@property (assign, nonatomic) BOOL hidden;
+@property (assign, nonatomic) BOOL fullscreen;
 
-/// The target frame where the view controller should animated its views to and from.
-@property (assign, nonatomic) CGRect targetFrame;
-
-/// Initializes the fullscreen view contoller to use specific player view class.
-- (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass;
+/// Initializes the fullscreen view contoller to use.
+- (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController;
 
 /// Sets The view controller's view to the requested hidden state.
-- (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
+- (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;
 
 /// Handler for PxpFullscreenButton and PxpFullscreenGestureRecognizer events.
 - (void)fullscreenResponseHandler:(nullable id<PxpFullscreenResponder>)sender;

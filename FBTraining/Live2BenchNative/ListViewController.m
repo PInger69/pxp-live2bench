@@ -77,7 +77,7 @@
         
         _videoBar = [[PxpVideoBar alloc] init];
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
-        _fullscreenViewController = [[PxpListViewFullscreenViewController alloc] init];
+        _fullscreenViewController = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
         
         [self addChildViewController:_telestrationViewController];
 
@@ -198,7 +198,7 @@
         commentingField.enabled             = NO;
         
         _fullscreenViewController.selectedTag = nil;
-        _fullscreenViewController.hidden = YES;
+        _fullscreenViewController.fullscreen = NO;
         
         [self.videoPlayer playFeed:nil];
     }else{
@@ -269,9 +269,9 @@
             
             
             if (self.pinchGesture.scale >1) {
-                [_fullscreenViewController setHidden:NO animated:YES];
+                //[_fullscreenViewController setHidden:NO animated:YES];
             }else if (self.pinchGesture.scale < 1){
-                [_fullscreenViewController setHidden:YES animated:YES];
+                //[_fullscreenViewController setHidden:YES animated:YES];
             }
         }
     }
@@ -365,8 +365,6 @@
     [super viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
     [self.view bringSubviewToFront:_fullscreenViewController.view];
-    
-    _fullscreenViewController.targetFrame = _playerViewController.view.frame;
 }
 
 -(void)getPrevTag
@@ -402,7 +400,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    _fullscreenViewController.hidden = YES;
+    _fullscreenViewController.fullscreen = NO;
     [self.view bringSubviewToFront:_videoBar];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
@@ -732,7 +730,7 @@
         [self clear];
         selectedTag = nil;
         
-        _fullscreenViewController.hidden = YES;
+        _fullscreenViewController.fullscreen = NO;
         
         [commentingField clear];
         commentingField.enabled             = NO;
