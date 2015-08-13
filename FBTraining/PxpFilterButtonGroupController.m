@@ -29,7 +29,7 @@
 
 -(void)addButtonToGroup:(PxpFilterButton*)button
 {
-    button.delegate = self;
+//    button.delegate = self;
     [_buttons addObject:button];
 }
 
@@ -45,9 +45,9 @@
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{
     if ([_userSelected count] == 0 || [_userSelected count] == [_buttons count]) return; // all or none are selected
-    _combo evaluateWithObject:<#(nullable id)#>
+//    _combo e
     [tagsToFilter filterUsingPredicate:_combo];
-    tagsToFilter f
+//    tagsToFilter f
 }
 
 #pragma mark - PxpFilterButtonGroupControllerDelegate Methods
@@ -59,7 +59,7 @@
     
     for (UIButton  *b in _buttons) {
         if(b.selected == YES){
-            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
+//            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
             [_userSelected addObject:b];
         } else {
             [_userSelected removeObject:b];
