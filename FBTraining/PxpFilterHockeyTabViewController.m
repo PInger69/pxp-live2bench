@@ -9,6 +9,7 @@
 #import "PxpFilterHockeyTabViewController.h"
 #import "Tag.h"
 #import "UserCenter.h"
+#import "PxpFilterButtonGroupController.h"
 
 @interface PxpFilterHockeyTabViewController ()
 
@@ -38,6 +39,205 @@
     PxpFilter * filter = (PxpFilter *) note.object;
     _filteredTagLabel.text = [NSString stringWithFormat:@"Filtered Tag(s): %lu",(unsigned long)filter.filteredTags.count];
     _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)filter.unfilteredTags.count];
+}
+
+-(void)buttonGroupView{
+    PxpFilterButtonGroupController *periodGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [periodGroupController addButtonToGroup:_period1];
+    [periodGroupController addButtonToGroup:_period2];
+    [periodGroupController addButtonToGroup:_period3];
+    [periodGroupController addButtonToGroup:_periodOT];
+    [periodGroupController addButtonToGroup:_periodPS];
+    
+    PxpFilterButtonGroupController *offenseLineGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [offenseLineGroupController addButtonToGroup:_offenseLine1];
+    [offenseLineGroupController addButtonToGroup:_offenseLine2];
+    [offenseLineGroupController addButtonToGroup:_offenseLine3];
+    [offenseLineGroupController addButtonToGroup:_offenseLine4];
+    
+    PxpFilterButtonGroupController *defenseLineGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [defenseLineGroupController addButtonToGroup:_defenseLine1];
+    [defenseLineGroupController addButtonToGroup:_defenseLine2];
+    [defenseLineGroupController addButtonToGroup:_defenseLine3];
+    [defenseLineGroupController addButtonToGroup:_defenseLine4];
+    
+    PxpFilterButtonGroupController *homeStrengthGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [homeStrengthGroupController addButtonToGroup:_homeStrength3];
+    [homeStrengthGroupController addButtonToGroup:_homeStrength4];
+    [homeStrengthGroupController addButtonToGroup:_homeStrength5];
+    [homeStrengthGroupController addButtonToGroup:_homeStrength6];
+    
+    PxpFilterButtonGroupController *awayStrengthGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [awayStrengthGroupController addButtonToGroup:_awayStrength3];
+    [awayStrengthGroupController addButtonToGroup:_awayStrength4];
+    [awayStrengthGroupController addButtonToGroup:_awayStrength5];
+    [awayStrengthGroupController addButtonToGroup:_awayStrength6];
+}
+
+-(void)buttonPredicate{
+    NSPredicate *period1Predicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _period1.accessibilityLabel? _period1.accessibilityLabel:_period1.titleLabel.text];
+    _period1.ownPredicate = period1Predicate;
+    NSPredicate *period2Predicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _period2.accessibilityLabel? _period2.accessibilityLabel:_period2.titleLabel.text];
+    _period2.ownPredicate = period2Predicate;
+    NSPredicate *period3Predicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _period3.accessibilityLabel? _period3.accessibilityLabel:_period3.titleLabel.text];
+    _period3.ownPredicate = period3Predicate;
+    NSPredicate *periodOTPredicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _periodOT.accessibilityLabel? _periodOT.accessibilityLabel:_periodOT.titleLabel.text];
+    _periodOT.ownPredicate = periodOTPredicate;
+    NSPredicate *periodPSPredicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _periodPS.accessibilityLabel? _periodPS.accessibilityLabel:_periodPS.titleLabel.text];
+    _periodPS.ownPredicate = periodPSPredicate;
+    
+    
+    NSPredicate *offenseLine1Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppOLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"f"] && [words[2] isEqualToString:@"1"]);
+        }
+        return NO;
+    }];
+    _offenseLine1.ownPredicate = offenseLine1Predicate;
+    NSPredicate *offenseLine2Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppOLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"f"] && [words[2] isEqualToString:@"2"]);
+        }
+        return NO;
+    }];
+    _offenseLine2.ownPredicate = offenseLine2Predicate;
+    NSPredicate *offenseLine3Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppOLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"f"] && [words[2] isEqualToString:@"3"]);
+        }
+        return NO;
+    }];
+    _offenseLine3.ownPredicate = offenseLine3Predicate;
+    NSPredicate *offenseLine4Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppOLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"f"] && [words[2] isEqualToString:@"4"]);
+        }
+        return NO;
+    }];
+    _offenseLine4.ownPredicate = offenseLine4Predicate;
+    
+    
+    NSPredicate *defenseLine1Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppDLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"d"] && [words[2] isEqualToString:@"1"]);
+        }
+        return NO;
+    }];
+    _defenseLine1.ownPredicate = defenseLine1Predicate;
+    NSPredicate *defenseLine2Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppDLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"d"] && [words[2] isEqualToString:@"2"]);
+        }
+        return NO;
+    }];
+    _defenseLine2.ownPredicate = defenseLine2Predicate;
+    NSPredicate *defenseLine3Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppDLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"d"] && [words[2] isEqualToString:@"3"]);
+        }
+        return NO;
+    }];
+    _defenseLine3.ownPredicate = defenseLine3Predicate;
+    NSPredicate *defenseLine4Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyOppDLineStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]];
+            return ([words[1] isEqualToString:@"d"] && [words[2] isEqualToString:@"4"]);
+        }
+        return NO;
+    }];
+    _defenseLine4.ownPredicate = defenseLine4Predicate;
+
+    
+    NSPredicate *homeStrength3Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[0] isEqualToString:@"3"]);
+        }
+        return NO;
+    }];
+    _homeStrength3.ownPredicate = homeStrength3Predicate;
+    NSPredicate *homeStrength4Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[0] isEqualToString:@"4"]);
+        }
+        return NO;
+    }];
+    _homeStrength4.ownPredicate = homeStrength4Predicate;
+    NSPredicate *homeStrength5Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[0] isEqualToString:@"5"]);
+        }
+        return NO;
+    }];
+    _homeStrength5.ownPredicate = homeStrength5Predicate;
+    NSPredicate *homeStrength6Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[0] isEqualToString:@"6"]);
+        }
+        return NO;
+    }];
+    _homeStrength6.ownPredicate = homeStrength6Predicate;
+    
+    
+    NSPredicate *awayStrength3Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[1] isEqualToString:@"3"]);
+        }
+        return NO;
+    }];
+    _awayStrength3.ownPredicate = awayStrength3Predicate;
+    NSPredicate *awayStrength4Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[1] isEqualToString:@"4"]);
+        }
+        return NO;
+    }];
+    _awayStrength4.ownPredicate = homeStrength4Predicate;
+    NSPredicate *awayStrength5Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[1] isEqualToString:@"5"]);
+        }
+        return NO;
+    }];
+    _awayStrength5.ownPredicate = awayStrength5Predicate;
+    NSPredicate *awayStrength6Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+        Tag *tag = evaluatedObject;
+        if (tag.type == TagTypeHockeyStrengthStop) {
+            NSArray *words = [tag.name componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            return ([words[1] isEqualToString:@"6"]);
+        }
+        return NO;
+    }];
+    _awayStrength6.ownPredicate = awayStrength6Predicate;
+
 }
 
 - (void)viewDidLoad {
