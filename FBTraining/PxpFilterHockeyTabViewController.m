@@ -254,6 +254,8 @@
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;
     [_preFilterSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
     _sliderView.sortByPropertyKey = @"time";
+    [self buttonGroupView];
+    [self buttonPredicate];
 
     //    PxpFilter.rawTags; //NSMutableSet
     /*NSArray * rawTags;
