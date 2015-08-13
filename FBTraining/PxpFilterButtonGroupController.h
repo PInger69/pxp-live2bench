@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "PxpFilter.h"
 #import "PxpFilterButtonGroupControllerDelegate.h"
-
+@class PxpFilterButton;
 
 
 @interface PxpFilterButtonGroupController : NSObject <PxpFilterModuleProtocol,PxpFilterButtonGroupControllerDelegate>
@@ -27,7 +27,7 @@
 
 -(void)addButtonToGroup:(PxpFilterButton*)button;
 
-@property
+
 
 
 @end
