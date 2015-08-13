@@ -71,6 +71,14 @@
     return YES;
 }
 
+- (nonnull NSString *)activePlayerName {
+    return self.player.name;
+}
+
+- (void)switchToContextPlayerNamed:(nonnull NSString *)name {
+    self.player = [self.context playerForName:name];
+}
+
 - (void)setPlayerHandler:(NSNotification *)notification {
     NSString *identifier = notification.userInfo[@"identifier"];
     PxpPlayer *player = notification.userInfo[@"player"];

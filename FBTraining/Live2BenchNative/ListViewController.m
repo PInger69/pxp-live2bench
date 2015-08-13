@@ -74,12 +74,8 @@
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
         
         _playerViewController = [[PxpPlayerViewController alloc] init];
-        
         _videoBar = [[PxpVideoBar alloc] init];
-        _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         _fullscreenViewController = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
-        
-        [self addChildViewController:_telestrationViewController];
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
@@ -296,6 +292,7 @@
     [headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
     [self.view addSubview:headerBar];
 
+    _playerViewController.telestrationViewController.showsControls = NO;
 
     
     

@@ -332,8 +332,8 @@
     //[self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
     self.playerViewController.telestrationViewController.delegate = self;
-    self.playerViewController.telestrationViewController.showsClearButton = YES;
     self.playerViewController.telestrationViewController.showsControls = YES;
+    self.playerViewController.telestrationViewController.stillMode = NO;
     
     self.tagSelectButton.titleLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
     self.tagSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -429,8 +429,7 @@
         NSTimeInterval clearTime = MAX(self.videoPlayer.currentTimeInSeconds, telestration.startTime + telestration.duration + 1.0);
         [telestration pushAction:[PxpTelestrationAction clearActionAtTime:clearTime]];
         
-        telestration.sourceName = self.videoPlayer.feed.sourceName;
-        telestration.isStill = NO;
+        telestration.sourceName = self.playerViewController.playerView.activePlayerName;
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
@@ -551,7 +550,7 @@
     }
     */
     
-    self.playerViewController.playerView.player = [self.playerViewController.playerView.player.context playerForName:source];
+    [self.playerViewController.playerView switchToContextPlayerNamed:source];
     self.playerViewController.playerView.player.tag = tag;
     self.playerViewController.telestrationViewController.telestration = tag.telestration;
     

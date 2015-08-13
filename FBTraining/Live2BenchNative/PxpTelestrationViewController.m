@@ -37,6 +37,8 @@
 
 @property (assign, nonatomic) BOOL activeTelestration;
 
+@property (assign, nonatomic) BOOL showsClearButton;
+
 @end
 
 @implementation PxpTelestrationViewController
@@ -192,6 +194,12 @@
     self.clearButton.hidden = !showsClearButton;
 }
 
+- (void)setStillMode:(BOOL)stillMode {
+    _stillMode = stillMode;
+    
+    self.showsClearButton = !stillMode;
+}
+
 #pragma mark - Buttons
 
 - (void)undoAction:(UIButton *)button {
@@ -250,7 +258,12 @@
         
         if (!self.activeTelestration) {
             self.activeTelestration = YES;
-            self.telestration = [[PxpTelestration alloc] initWithSize:self.view.bounds.size];
+            
+            PxpTelestration *telestration = [[PxpTelestration alloc] initWithSize:CGSizeMake(960, 540)];
+            telestration.isStill = _stillMode;
+            
+            self.telestration = telestration;
+            self.telestration.isStill = self.stillMode;
             [self.delegate telestration:self.telestration didStartInViewController:self];
         }
         

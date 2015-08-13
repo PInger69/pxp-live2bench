@@ -623,7 +623,6 @@ static CMClockRef _pxpPlayerMasterClock;
 
 /// Synchronizes all other players to the player
 - (void)sync:(CMTime)currentTime {
-    return;
     
     static CMTime smartSync;
     if (!CMTIME_IS_NUMERIC(smartSync)) {
@@ -700,7 +699,7 @@ static CMClockRef _pxpPlayerMasterClock;
                         // ensure no players get stuck
                         for (PxpPlayer *player in self.contextPlayers) {
                             if (player.rate == 0.0) {
-                                //[player setRate:self.playRate multi:NO];
+                                [player setRate:self.playRate multi:NO];
                             }
                         }
                         

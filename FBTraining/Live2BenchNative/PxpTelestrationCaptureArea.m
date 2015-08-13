@@ -92,14 +92,19 @@
 
 - (void)reportTouch:(nullable UITouch *)touch {
     if (self.telestration && touch) {
+        const CGSize captureSize = self.bounds.size, teleSize = self.telestration.size;
+        
         // get the touch's location in the cature area.
-        CGPoint location = [touch locationInView:self];
+        const CGPoint location = [touch locationInView:self];
         
         // get capture time.
-        NSTimeInterval time = self.timeProvider ? self.timeProvider.currentTimeInSeconds : 0.0;
+        const NSTimeInterval time = self.timeProvider ? self.timeProvider.currentTimeInSeconds : 0.0;
+        
+        // convert the point to the telestration's size.
+        const CGPoint position = CGPointMake((teleSize.width / captureSize.width) * location.x, (teleSize.height / captureSize.height) * location.y);
         
         // add the point to the action.
-        [self.action addPoint:[[PxpTelestrationPoint alloc] initWithPosition:location displayTime:time]];
+        [self.action addPoint:[[PxpTelestrationPoint alloc] initWithPosition:position displayTime:time]];
     }
 }
 

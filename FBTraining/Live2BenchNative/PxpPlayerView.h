@@ -48,4 +48,10 @@ IB_DESIGNABLE
 /// Locks the playerView to full.
 @property (assign, nonatomic) BOOL lockFullView;
 
+/// The name of the player in foreground.
+@property (readonly, copy, nonatomic, nonnull) NSString *activePlayerName;
+
+/// Switched the playerView's player to the player named 'name' in the current context.
+- (void)switchToContextPlayerNamed:(nonnull NSString *)name;
+
 @end

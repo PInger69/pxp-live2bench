@@ -316,7 +316,6 @@
 
 - (void)cancelRange:(PxpCancelButton *)cancelButton {
     self.player.range = kCMTimeRangeInvalid;
-    [self.delegate didCancelTimeRangeInControlBar:self];
 }
 
 #pragma mark - PxpPlayPauseButtonDelegate
@@ -340,6 +339,7 @@
         [self setVisible:YES animated:YES];
     }
 }
+
 
 @end
 

@@ -11,7 +11,18 @@
 @implementation PxpPlayer (Tag)
 
 - (void)setTag:(nullable Tag *)tag {
-    self.range = tag ? CMTimeRangeMake(CMTimeMakeWithSeconds(tag.startTime, 60), CMTimeMakeWithSeconds(tag.duration, 60)) : kCMTimeRangeInvalid;
+    
+    if (tag) {
+        if (tag.telestration.isStill) {
+            self.range = kCMTimeRangeInvalid;
+            [self pause];
+            [self seekToTime:CMTimeMakeWithSeconds(tag.telestration.startTime, 60) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+        } else {
+            self.range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.startTime, 60), CMTimeMakeWithSeconds(tag.duration, 60));
+        }
+    } else {
+        self.range = kCMTimeRangeInvalid;
+    }
 }
 
 @end

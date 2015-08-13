@@ -45,6 +45,7 @@
 #import "PxpVideoBar.h"
 #import "PxpL2BFullscreenViewController.h"
 #import "PxpListViewFullscreenViewController.h"
+#import "PxpPlayer+Tag.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -166,12 +167,12 @@ static void * eventContext      = &eventContext;
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
         
         _playerViewController = [[PxpPlayerViewController alloc] init];
-        _videoBar = [[PxpVideoBar alloc] init];
         _fullscreenViewController = [[PxpL2BFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        
+        _videoBar = [[PxpVideoBar alloc] init];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
-    [self addChildViewController:_telestrationViewController];
   
     __block Live2BenchViewController * weakSelf = self;
     tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -761,10 +762,7 @@ static void * eventContext      = &eventContext;
     [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.telestrationViewController.showsControls = NO;
-    self.telestrationViewController.showsClearButton = NO;
-    self.telestrationViewController.delegate = self;
-    self.telestrationViewController.timeProvider = self;
+    self.playerViewController.telestrationViewController.delegate = self;
     
     //pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     //[self.view addGestureRecognizer:pinchGesture];
@@ -840,9 +838,6 @@ static void * eventContext      = &eventContext;
     _gotoLiveButton.enabled = NO;
    //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
     
-    
-    ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;
-    
     _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     [self.view addSubview:_videoBar];
     
@@ -851,29 +846,8 @@ static void * eventContext      = &eventContext;
     [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
     
-//    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
-//    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];
-//    zoomButton.backgroundColor = [UIColor redColor];
-//    [self.view addSubview: zoomButton];
-//    
-//    unZoomButton = [[UIButton alloc]initWithFrame:CGRectMake(250, 600, 100, 50)];
-//    [unZoomButton addTarget:self action:@selector(unZoomPressed) forControlEvents:UIControlEventTouchUpInside];
-//    unZoomButton.backgroundColor = [UIColor blueColor];
-//    [self.view addSubview: unZoomButton];
+    _playerViewController.telestrationViewController.stillMode = YES;
 }
-
-//-(void) zoomPressed{
-//    [_externalControlScreen returnVideoToPreviousViewFromExternal];
-//    //RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
-//    //[videoPlayer zoomIntoView: CGRectMake(20, 30, 300, 300)];
-//}
-//
-//-(void) unZoomPressed{
-//    [_externalControlScreen moveVideoToExternalDisplay: self.videoPlayer];
-////    RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
-////    [videoPlayer zoomIntoView: CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-//}
-
 
 -(void)onOpenTeleView:(TeleViewController *)tvc
 {
@@ -1267,12 +1241,15 @@ static void * eventContext      = &eventContext;
 - (void)clipViewPlayFeedNotification:(NSNotification *)note {
     if ([note.userInfo[@"context"] isEqualToString: STRING_LIVE2BENCH_CONTEXT]) {
         Feed *feed = note.userInfo[@"feed"];
-        PxpTelestration *tele = note.userInfo[@"telestration"];
+        Tag *tag = note.userInfo[@"tag"];
+        PxpTelestration *tele = tag.telestration;
         
-        self.telestrationViewController.telestration = tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
-        if (tele.isStill) {
-            [self.videoPlayer pause];
-        }
+        [self.playerViewController.playerView switchToContextPlayerNamed:feed.sourceName];
+        
+        self.playerViewController.playerView.player.tag = tag;
+        self.playerViewController.telestrationViewController.telestration = tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
+        
+        
     }
 }
 
@@ -1284,8 +1261,7 @@ static void * eventContext      = &eventContext;
 - (void)telestration:(nonnull PxpTelestration *)tele didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
     if (tele.actionStack.count) {
-        tele.isStill = YES;
-        tele.sourceName = self.videoPlayer.feed.sourceName;
+        tele.sourceName = self.playerViewController.playerView.activePlayerName;
         
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
@@ -1296,8 +1272,6 @@ static void * eventContext      = &eventContext;
                                                                                                                @"telestration" : tele.data,
                                                                                                                }];
     }
-    
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
     
     self.videoPlayer.videoControlBar.enable = YES;
 }

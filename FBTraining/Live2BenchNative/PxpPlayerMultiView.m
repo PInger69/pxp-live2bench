@@ -72,6 +72,10 @@
     [self.delegate playerView:self changedFullViewStatus:self.fullView];
 }
 
+- (nonnull NSString *)activePlayerName {
+    return self.companionView.player ? self.companionView.player.name : [super activePlayerName];
+}
+
 - (BOOL)fullView {
     return [super fullView] && (_gridView.hidden ? _companionView.fullView : _gridView.fullView);
 }
