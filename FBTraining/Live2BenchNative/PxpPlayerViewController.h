@@ -12,7 +12,7 @@
 #import "PxpTelestrationViewController.h"
 #import "PxpFullscreenGestureRecognizer.h"
 
-@interface PxpPlayerViewController : UIViewController
+@interface PxpPlayerViewController : UIViewController <PxpTimeProvider>
 
 /// The underlying player view.
 @property (readonly, strong, nonatomic, nonnull) PxpPlayerView *playerView;
@@ -22,6 +22,8 @@
 
 /// The fullscreen gesture recognizer.
 @property (readonly, strong, nonatomic, nonnull) PxpFullscreenGestureRecognizer *fullscreenGestureRecognizer;
+
+@property (assign, nonatomic) BOOL enabled;
 
 /// Initializes a player view controller with a specific player view subclass.
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass;

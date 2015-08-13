@@ -374,7 +374,7 @@
     
     self.recordButton.frame = CGRectMake(self.bottomBar.bounds.size.width - self.bottomBar.bounds.size.height, 0.0, self.bottomBar.bounds.size.height, self.bottomBar.bounds.size.height);
     self.recordButton.delegate = self;
-    self.recordButton.timeProvider = self.videoPlayer;
+    self.recordButton.timeProvider = self.playerViewController;
     self.recordButton.displaysTime = NO;
     
     self.durationLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
@@ -488,7 +488,7 @@
 #pragma mark - Record Button Delegate
 
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
-    NSTimeInterval time = self.videoPlayer.currentTimeInSeconds;
+    NSTimeInterval time = self.playerViewController.currentTimeInSeconds;
     
     self.durationTagID = [Tag makeDurationID];
     if (self.durationTagID && self.activeTagName) {
@@ -506,7 +506,7 @@
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
     
-    NSTimeInterval endTime = self.videoPlayer.currentTimeInSeconds;
+    NSTimeInterval endTime = self.playerViewController.currentTimeInSeconds;
     
     if (self.durationTagID) {
         Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
@@ -581,15 +581,13 @@
     self.forwardSeekButton.enabled = NO;
     self.backwardSeekButton.enabled = NO;
     self.liveButton.enabled = NO;
-    self.videoPlayer.videoControlBar.enable = NO;
-    self.telestrationViewController.showsControls = NO;
+    self.playerViewController.enabled = NO;
     
     [self setShowsTagSelectMenu:NO animated:YES];
     [self setShowsTeleSelectMenu:NO animated:YES];
     
     self.durationLabel.textColor = [UIColor whiteColor];
     
-    [self.videoPlayer cancelClip];
 }
 
 - (void)recordingEnded {
@@ -598,8 +596,7 @@
     self.forwardSeekButton.enabled = YES;
     self.backwardSeekButton.enabled = YES;
     self.liveButton.enabled = _currentEvent.live;
-    self.videoPlayer.videoControlBar.enable = YES;
-    self.telestrationViewController.showsControls = YES;
+    self.playerViewController.enabled = YES;
     
     self.durationLabel.textColor = [UIColor lightGrayColor];
 }

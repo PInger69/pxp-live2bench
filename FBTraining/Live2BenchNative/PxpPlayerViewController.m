@@ -9,7 +9,7 @@
 #import "PxpPlayerViewController.h"
 #import "PxpPlayerControlBar.h"
 
-@interface PxpPlayerViewController () <PxpPlayerViewDelegate, PxpTimeProvider>
+@interface PxpPlayerViewController () <PxpPlayerViewDelegate>
 
 @end
 
@@ -29,6 +29,8 @@
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
     self = [super initWithNibName:@"PxpPlayerViewController" bundle:nil];
     if (self) {
+        _enabled = YES;
+        
         _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PXP_PLAYER_VIEW_DEFAULT_CLASS alloc] init];
         _playerView.delegate = self;
         
@@ -112,10 +114,23 @@
     }
 }
 
+#pragma mark - Getters / Setters
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    
+    if (!enabled) {
+        _telestrationViewController.telestration = nil;
+    }
+    
+    _telestrationViewController.view.hidden = !_playerView.fullView || !_enabled;
+    _controlBar.enabled = enabled;
+}
+
 #pragma mark - PxpPlayerViewDelegate
 
 - (void)playerView:(nonnull PxpPlayerView *)playerView changedFullViewStatus:(BOOL)fullView {
-    _telestrationViewController.view.hidden = !fullView;
+    _telestrationViewController.view.hidden = !fullView || !_enabled;
 }
 
 #pragma mark - PxpTimeProvider

@@ -49,6 +49,8 @@
 }
 
 - (void)initControlBar {
+    _enabled = YES;
+    
     _container = [[UIView alloc] initWithFrame:self.bounds];
     _container.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -193,6 +195,11 @@
     }
 }
 
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    self.slider.enabled = enabled;
+}
+
 - (void)setVisible:(BOOL)visible animated:(BOOL)animated {
     
     [UIView animateWithDuration:animated ? 0.1 : 0.0
@@ -204,8 +211,6 @@
                          }
                      }];
 }
-
-
 
 - (void)tintColorDidChange {
     [super tintColorDidChange];
