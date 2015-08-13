@@ -465,6 +465,7 @@
 		D7D2F69F1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69B1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png */; };
 		D7D2F6A01B7BED6F00DC0DC5 /* telestrationIconOn.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69C1B7BED6F00DC0DC5 /* telestrationIconOn.png */; };
 		D7D2F6A11B7BED6F00DC0DC5 /* telestrationIconOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69D1B7BED6F00DC0DC5 /* telestrationIconOn@2x.png */; };
+		D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D2F6A31B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m */; };
 		D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D43F6D1B5D4A56007B188D /* FeedInspector.m */; };
 		D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D86CD416B2D84500F48523 /* ContentViewController.m */; };
 		D7DA233016B713FA00143102 /* BG.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA232F16B713FA00143102 /* BG.png */; };
@@ -1237,6 +1238,9 @@
 		D7D2F69B1B7BED6F00DC0DC5 /* telestrationIconOff@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "telestrationIconOff@2x.png"; sourceTree = "<group>"; };
 		D7D2F69C1B7BED6F00DC0DC5 /* telestrationIconOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = telestrationIconOn.png; sourceTree = "<group>"; };
 		D7D2F69D1B7BED6F00DC0DC5 /* telestrationIconOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "telestrationIconOn@2x.png"; sourceTree = "<group>"; };
+		D7D2F6A21B7CE1FE00DC0DC5 /* PxpFilterButtonGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterButtonGroupController.h; sourceTree = "<group>"; };
+		D7D2F6A31B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterButtonGroupController.m; sourceTree = "<group>"; };
+		D7D2F6A51B7CE67B00DC0DC5 /* PxpFilterButtonGroupControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterButtonGroupControllerDelegate.h; sourceTree = "<group>"; };
 		D7D43F6C1B5D4A56007B188D /* FeedInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeedInspector.h; path = Live2BenchNative/UtilityClasses/FeedInspector.h; sourceTree = "<group>"; };
 		D7D43F6D1B5D4A56007B188D /* FeedInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedInspector.m; path = Live2BenchNative/UtilityClasses/FeedInspector.m; sourceTree = "<group>"; };
 		D7D86CD316B2D84400F48523 /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
@@ -2096,6 +2100,9 @@
 			children = (
 				D78536351B7CE2C700A53CA8 /* PxpFilterButton.h */,
 				D78536361B7CE2C700A53CA8 /* PxpFilterButton.m */,
+				D7D2F6A21B7CE1FE00DC0DC5 /* PxpFilterButtonGroupController.h */,
+				D7D2F6A31B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m */,
+				D7D2F6A51B7CE67B00DC0DC5 /* PxpFilterButtonGroupControllerDelegate.h */,
 				D7341A8E1B7530FC005156E9 /* PxpFilterUserInputScrollView.h */,
 				D7341A911B753A6A005156E9 /* PxpFilterUserInputView.h */,
 				D7341A921B753A6A005156E9 /* PxpFilterUserInputView.m */,
@@ -3303,6 +3310,7 @@
 				D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */,
 				D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
+				D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */,
 				D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */,
 				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
 				AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */,
