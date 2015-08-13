@@ -41,7 +41,7 @@
     _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)filter.unfilteredTags.count];
 }
 
--(void)buttonGroupView{
+-(NSArray*)buttonGroupView{
     PxpFilterButtonGroupController *periodGroupController = [[PxpFilterButtonGroupController alloc]init];
     [periodGroupController addButtonToGroup:_period1];
     [periodGroupController addButtonToGroup:_period2];
@@ -72,6 +72,9 @@
     [awayStrengthGroupController addButtonToGroup:_awayStrength4];
     [awayStrengthGroupController addButtonToGroup:_awayStrength5];
     [awayStrengthGroupController addButtonToGroup:_awayStrength6];
+    
+    NSArray *array = @[periodGroupController,offenseLineGroupController,defenseLineGroupController,homeStrengthGroupController,awayStrengthGroupController];
+    return array;
 }
 
 -(void)buttonPredicate{
@@ -242,11 +245,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSArray *groupViews = [self buttonGroupView];
+    [self buttonPredicate];
     self.modules = [[NSMutableArray alloc]initWithArray:@[
                                                           _tagNameScrollView,
-                                                          _sliderView
-                                                          ]
-                    ];
+                                                          _sliderView,
+                                                          groupViews[0],
+                                                          groupViews[1],
+                                                          groupViews[2],
+                                                          groupViews[3],
+                                                          groupViews[4]
+                                                          ]];
     
     _tagNameScrollView.sortByPropertyKey = @"name";
     _tagNameScrollView.buttonSize = CGSizeMake(130, 30);
@@ -254,8 +263,7 @@
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;
     [_preFilterSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
     _sliderView.sortByPropertyKey = @"time";
-    [self buttonGroupView];
-    [self buttonPredicate];
+  
 
     //    PxpFilter.rawTags; //NSMutableSet
     /*NSArray * rawTags;
