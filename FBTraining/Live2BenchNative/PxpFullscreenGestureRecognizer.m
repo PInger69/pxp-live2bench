@@ -14,7 +14,15 @@
 
 - (PxpFullscreenResponse)fullscreenResponse {
     const CGFloat velocty = self.velocity;
-    return velocty > FULLSCREEN_GESTURE_VELOCITY ? PxpFullscreenResponseShow : velocty < -FULLSCREEN_GESTURE_VELOCITY ? PxpFullscreenResponseHide : PxpFullscreenResponseUnknown;
+    const CGFloat scale = self.scale;
+    
+    if (scale > 1 && velocty >= FULLSCREEN_GESTURE_VELOCITY) {
+        return PxpFullscreenResponseEnter;
+    } else if (scale < 1 && velocty <= -FULLSCREEN_GESTURE_VELOCITY) {
+        return PxpFullscreenResponseLeave;
+    } else {
+        return PxpFullscreenResponseNone;
+    }
 }
 
 @end

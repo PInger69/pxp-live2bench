@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, PxpFullscreenResponse) {
-    PxpFullscreenResponseUnknown,
-    PxpFullscreenResponseShow,
-    PxpFullscreenResponseHide,
+    PxpFullscreenResponseNone,
+    PxpFullscreenResponseEnter,
+    PxpFullscreenResponseLeave,
 };
 
 

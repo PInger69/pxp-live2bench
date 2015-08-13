@@ -18,6 +18,7 @@
             [self pause];
             [self seekToTime:CMTimeMakeWithSeconds(tag.telestration.startTime, 60) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
         } else {
+            [self play];
             self.range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.startTime, 60), CMTimeMakeWithSeconds(tag.duration, 60));
         }
     } else {

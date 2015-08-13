@@ -58,10 +58,14 @@
 
 #pragma mark - Overrides
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)setFrame:(CGRect)frame {
+    if (self.frame.size.width && self.frame.size.height) {
+        self.pipView.frame = CGRectMake((frame.size.width / self.frame.size.width) * self.pipView.frame.origin.x, (frame.size.height / self.frame.size.height) * self.pipView.frame.origin.y, frame.size.width / 3.0, frame.size.height / 3.0);
+    } else {
+        self.pipView.frame = CGRectMake(self.pipView.frame.origin.x, self.pipView.frame.origin.y, frame.size.width / 3.0, frame.size.height / 3.0);
+    }
     
-    self.pipView.frame = CGRectMake(self.pipView.frame.origin.x, self.pipView.frame.origin.y, self.bounds.size.width / 3.0, self.bounds.size.height / 3.0);
+    [super setFrame:frame];
 }
 
 - (void)setPlayer:(nullable PxpPlayer *)player {

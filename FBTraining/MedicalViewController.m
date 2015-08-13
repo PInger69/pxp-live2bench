@@ -65,6 +65,8 @@
     id <EncoderProtocol>                _observedEncoder;
     Event                               * _currentEvent;
     EncoderManager                      * _encoderManager;
+    
+    void * _playerRateObserverContext;
 }
 
 @synthesize mode = _mode;
@@ -166,6 +168,10 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
         
         _teleSelectController.event = _currentEvent;
+        
+        _playerRateObserverContext = &_playerRateObserverContext;
+        
+        [_playerViewController.playerView addObserver:self forKeyPath:@"player.rate" options:0 context:_playerRateObserverContext];
     }
         
     
@@ -176,6 +182,16 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
+    
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.rate" context:_playerRateObserverContext];
+}
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
+    if (context == _playerRateObserverContext) {
+        self.slomoButton.slomoOn = _playerViewController.playerView.player.playRate == 0.5;
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (void)setActiveTagName:(nullable NSString *)activeTagName {
@@ -449,12 +465,12 @@
 #pragma mark - Button Actions
 
 - (void)seekButtonAction:(SeekButton *)button {
-    [self.videoPlayer seekBy:button.speed];
+    [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(button.speed, 60)];
 }
 
 - (void)slomoButtonAction:(Slomo *)slomo {
-    self.videoPlayer.slowmo = !self.videoPlayer.slowmo;
-    slomo.slomoOn = self.videoPlayer.slowmo;
+    slomo.slomoOn = !slomo.slomoOn;
+    _playerViewController.playerView.player.playRate = slomo.slomoOn ? 0.5 : 1.0;
 }
 
 - (void)liveButtonAction:(LiveButton *)liveButton {

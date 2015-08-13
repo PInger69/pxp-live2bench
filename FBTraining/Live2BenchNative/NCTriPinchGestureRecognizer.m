@@ -144,4 +144,8 @@ static CGFloat _sign(CGFloat n) {
     
 }
 
+- (BOOL)canPreventGestureRecognizer:(nonnull UIGestureRecognizer *)preventedGestureRecognizer {
+    return NO;
+}
+
 @end

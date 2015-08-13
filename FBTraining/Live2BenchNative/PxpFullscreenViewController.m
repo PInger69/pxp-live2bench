@@ -26,10 +26,6 @@
     void * _playRateObserverContext;
 }
 
-- (nonnull instancetype)init {
-    return [self initWithPlayerViewClass:nil];
-}
-
 - (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
     self = [super init];
     if (self) {
@@ -48,31 +44,6 @@
         _playRateObserverContext = &_playRateObserverContext;
         
         self.playerViewController = playerViewController;
-    }
-    return self;
-}
-
-- (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass {
-    self = [super init];
-    if (self) {
-        
-        _contentView = [[UIView alloc] init];
-        _playerContainer = [[UIView alloc] init];
-        _topBar = [[UIView alloc] init];
-        _bottomBar = [[UIView alloc] init];
-        
-        _backwardSeekButton = [[SeekButton alloc] initWithBackward:YES];
-        _forwardSeekButton = [[SeekButton alloc] initWithBackward:NO];
-        
-        _slomoButton = [[Slomo alloc] init];
-        _fullscreenButton = [[PxpFullscreenButton alloc] init];
-        _fullscreenButton.isFullscreen = YES;
-        
-        _playerViewController = [[PxpPlayerViewController alloc] initWithPlayerViewClass:playerViewClass];
-        
-        _playRateObserverContext = &_playRateObserverContext;
-        
-        [_playerViewController.playerView addObserver:self forKeyPath:@"player.playRate"options:0 context:_playRateObserverContext];
     }
     return self;
 }
@@ -252,9 +223,9 @@
 
 - (void)fullscreenResponseHandler:(nullable id<PxpFullscreenResponder>)sender {
     if ([sender conformsToProtocol:@protocol(PxpFullscreenResponder)]) {
-        if (sender.fullscreenResponse == PxpFullscreenResponseHide) {
+        if (sender.fullscreenResponse == PxpFullscreenResponseLeave) {
             [self setFullscreen:NO animated:YES];
-        } else if (sender.fullscreenResponse == PxpFullscreenResponseShow) {
+        } else if (sender.fullscreenResponse == PxpFullscreenResponseEnter) {
             [self setFullscreen:YES animated:YES];
         }
     }

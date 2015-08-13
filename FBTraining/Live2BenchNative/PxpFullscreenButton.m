@@ -111,7 +111,7 @@
 }
 
 - (PxpFullscreenResponse)fullscreenResponse {
-    return self.isFullscreen ? PxpFullscreenResponseHide : PxpFullscreenResponseShow;
+    return self.isFullscreen ? PxpFullscreenResponseLeave : PxpFullscreenResponseEnter;
 }
 
 @end
