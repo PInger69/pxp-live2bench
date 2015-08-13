@@ -49,47 +49,44 @@
     [periodGroupController addButtonToGroup:_periodOT];
     [periodGroupController addButtonToGroup:_periodPS];
     
-    PxpFilterButtonGroupController *offenseLineGroupController = [[PxpFilterButtonGroupController alloc]init];
-    [offenseLineGroupController addButtonToGroup:_offenseLine1];
-    [offenseLineGroupController addButtonToGroup:_offenseLine2];
-    [offenseLineGroupController addButtonToGroup:_offenseLine3];
-    [offenseLineGroupController addButtonToGroup:_offenseLine4];
+    PxpFilterButtonGroupController *lineGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [lineGroupController addButtonToGroup:_offenseLine1];
+    [lineGroupController addButtonToGroup:_offenseLine2];
+    [lineGroupController addButtonToGroup:_offenseLine3];
+    [lineGroupController addButtonToGroup:_offenseLine4];
+    [lineGroupController addButtonToGroup:_defenseLine1];
+    [lineGroupController addButtonToGroup:_defenseLine2];
+    [lineGroupController addButtonToGroup:_defenseLine3];
+    [lineGroupController addButtonToGroup:_defenseLine4];
+    [lineGroupController addButtonToGroup:_getAllStrengthTags];
     
-    PxpFilterButtonGroupController *defenseLineGroupController = [[PxpFilterButtonGroupController alloc]init];
-    [defenseLineGroupController addButtonToGroup:_defenseLine1];
-    [defenseLineGroupController addButtonToGroup:_defenseLine2];
-    [defenseLineGroupController addButtonToGroup:_defenseLine3];
-    [defenseLineGroupController addButtonToGroup:_defenseLine4];
+    PxpFilterButtonGroupController *strengthGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [strengthGroupController addButtonToGroup:_homeStrength3];
+    [strengthGroupController addButtonToGroup:_homeStrength4];
+    [strengthGroupController addButtonToGroup:_homeStrength5];
+    [strengthGroupController addButtonToGroup:_homeStrength6];
+    [strengthGroupController addButtonToGroup:_awayStrength3];
+    [strengthGroupController addButtonToGroup:_awayStrength4];
+    [strengthGroupController addButtonToGroup:_awayStrength5];
+    [strengthGroupController addButtonToGroup:_awayStrength6];
     
-    PxpFilterButtonGroupController *homeStrengthGroupController = [[PxpFilterButtonGroupController alloc]init];
-    [homeStrengthGroupController addButtonToGroup:_homeStrength3];
-    [homeStrengthGroupController addButtonToGroup:_homeStrength4];
-    [homeStrengthGroupController addButtonToGroup:_homeStrength5];
-    [homeStrengthGroupController addButtonToGroup:_homeStrength6];
-    
-    PxpFilterButtonGroupController *awayStrengthGroupController = [[PxpFilterButtonGroupController alloc]init];
-    [awayStrengthGroupController addButtonToGroup:_awayStrength3];
-    [awayStrengthGroupController addButtonToGroup:_awayStrength4];
-    [awayStrengthGroupController addButtonToGroup:_awayStrength5];
-    [awayStrengthGroupController addButtonToGroup:_awayStrength6];
-    
-    NSArray *array = @[periodGroupController,offenseLineGroupController,defenseLineGroupController,homeStrengthGroupController,awayStrengthGroupController];
+    NSArray *array = @[periodGroupController,lineGroupController,strengthGroupController];
     return array;
 }
 
 -(void)buttonPredicate{
-    NSPredicate *period1Predicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _period1.accessibilityLabel? _period1.accessibilityLabel:_period1.titleLabel.text];
+    NSPredicate *period1Predicate = [NSPredicate predicateWithFormat:@"period == %@", _period1.accessibilityLabel? _period1.accessibilityLabel:_period1.titleLabel.text];
     _period1.ownPredicate = period1Predicate;
-    NSPredicate *period2Predicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _period2.accessibilityLabel? _period2.accessibilityLabel:_period2.titleLabel.text];
+    NSPredicate *period2Predicate = [NSPredicate predicateWithFormat:@"period == %@", _period2.accessibilityLabel? _period2.accessibilityLabel:_period2.titleLabel.text];
     _period2.ownPredicate = period2Predicate;
-    NSPredicate *period3Predicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _period3.accessibilityLabel? _period3.accessibilityLabel:_period3.titleLabel.text];
+    NSPredicate *period3Predicate = [NSPredicate predicateWithFormat:@"period == %@", _period3.accessibilityLabel? _period3.accessibilityLabel:_period3.titleLabel.text];
     _period3.ownPredicate = period3Predicate;
-    NSPredicate *periodOTPredicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _periodOT.accessibilityLabel? _periodOT.accessibilityLabel:_periodOT.titleLabel.text];
+    NSPredicate *periodOTPredicate = [NSPredicate predicateWithFormat:@"period == %@", _periodOT.accessibilityLabel? _periodOT.accessibilityLabel:_periodOT.titleLabel.text];
     _periodOT.ownPredicate = periodOTPredicate;
-    NSPredicate *periodPSPredicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _periodPS.accessibilityLabel? _periodPS.accessibilityLabel:_periodPS.titleLabel.text];
+    NSPredicate *periodPSPredicate = [NSPredicate predicateWithFormat:@"period == %@", _periodPS.accessibilityLabel? _periodPS.accessibilityLabel:_periodPS.titleLabel.text];
     _periodPS.ownPredicate = periodPSPredicate;
     
-    NSPredicate *getAllStrengthTagsPredicate = [NSPredicate predicateWithFormat:@"%K = %ld",@"type",TagTypeHockeyStrengthStop];
+    NSPredicate *getAllStrengthTagsPredicate = [NSPredicate predicateWithFormat:@"type = %ld",TagTypeHockeyStrengthStop];
     _getAllStrengthTags.ownPredicate = getAllStrengthTagsPredicate;
     
     NSPredicate *offenseLine1Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
@@ -223,7 +220,7 @@
         }
         return NO;
     }];
-    _awayStrength4.ownPredicate = homeStrength4Predicate;
+    _awayStrength4.ownPredicate = awayStrength4Predicate;
     NSPredicate *awayStrength5Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
         Tag *tag = evaluatedObject;
         if (tag.type == TagTypeHockeyStrengthStop) {
@@ -247,16 +244,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSArray *groupViews = [self buttonGroupView];
     [self buttonPredicate];
+    NSArray *groupViews = [self buttonGroupView];
+    
     self.modules = [[NSMutableArray alloc]initWithArray:@[
                                                           _tagNameScrollView,
                                                           _sliderView,
                                                           groupViews[0],
                                                           groupViews[1],
-                                                          groupViews[2],
-                                                          groupViews[3],
-                                                          groupViews[4]
+                                                          groupViews[2]
                                                           ]];
     
     _tagNameScrollView.sortByPropertyKey = @"name";

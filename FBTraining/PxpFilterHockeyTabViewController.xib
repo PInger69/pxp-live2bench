@@ -7,24 +7,24 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PxpFilterHockeyTabViewController">
             <connections>
-                <outlet property="awayStrength3" destination="AZg-K8-1r3" id="PEg-dV-P9i"/>
-                <outlet property="awayStrength4" destination="vGq-5f-c7a" id="KQ4-eH-bST"/>
-                <outlet property="awayStrength5" destination="r7X-m5-pYj" id="5b3-8P-Wh7"/>
-                <outlet property="awayStrength6" destination="HK0-nw-R5d" id="3NU-Py-VMQ"/>
-                <outlet property="defenseLine1" destination="tyg-v5-EQA" id="xsr-3i-vyk"/>
-                <outlet property="defenseLine2" destination="SGr-pb-4xA" id="iHU-ZJ-xeJ"/>
-                <outlet property="defenseLine3" destination="xmV-h9-IJv" id="Anz-PD-s0C"/>
-                <outlet property="defenseLine4" destination="Ovo-Rh-XG3" id="my6-j2-KXP"/>
+                <outlet property="awayStrength3" destination="KDp-4W-Z56" id="2Cb-qo-2I9"/>
+                <outlet property="awayStrength4" destination="hDv-t7-bnL" id="VZ3-fp-aL0"/>
+                <outlet property="awayStrength5" destination="320-hm-NQP" id="IcH-do-gQb"/>
+                <outlet property="awayStrength6" destination="Wlw-AJ-ZCO" id="bT4-Sg-UyO"/>
+                <outlet property="defenseLine1" destination="F3O-d7-d9S" id="Ohh-2U-Wpa"/>
+                <outlet property="defenseLine2" destination="cYW-8v-egJ" id="e0C-8X-fhk"/>
+                <outlet property="defenseLine3" destination="eRe-vU-VrF" id="G2C-zM-beC"/>
+                <outlet property="defenseLine4" destination="HeB-cc-cCr" id="7lr-aj-30U"/>
                 <outlet property="filteredTagLabel" destination="d8w-a8-4sm" id="Zhj-IQ-SQY"/>
-                <outlet property="getAllStrengthTags" destination="fgp-h5-eIM" id="tCI-u9-q6B"/>
-                <outlet property="homeStrength3" destination="VKI-V0-M8Q" id="JcW-wG-VDt"/>
-                <outlet property="homeStrength4" destination="MJY-QZ-rb6" id="5jD-Xc-wc3"/>
-                <outlet property="homeStrength5" destination="w3K-X8-rs6" id="Gpw-vz-S01"/>
-                <outlet property="homeStrength6" destination="dzF-Zd-LND" id="bWR-pN-FYQ"/>
-                <outlet property="offenseLine1" destination="Ebi-jC-LsZ" id="hNa-Tm-jb2"/>
-                <outlet property="offenseLine2" destination="0kv-sl-5GJ" id="eO0-g4-3qA"/>
-                <outlet property="offenseLine3" destination="tvF-eK-yDR" id="f6L-rz-KqW"/>
-                <outlet property="offenseLine4" destination="Egn-vw-a2I" id="EYV-8a-cVn"/>
+                <outlet property="getAllStrengthTags" destination="Kbz-9A-VhE" id="BtB-Ig-aek"/>
+                <outlet property="homeStrength3" destination="axG-tQ-Hzd" id="TAu-Ta-oz5"/>
+                <outlet property="homeStrength4" destination="Wse-Nr-Bu6" id="e8Z-6W-gb4"/>
+                <outlet property="homeStrength5" destination="NEl-3p-MtU" id="bov-O5-Ahw"/>
+                <outlet property="homeStrength6" destination="nyT-4c-Xcj" id="zeT-J8-9Cp"/>
+                <outlet property="offenseLine1" destination="S20-Cx-3m7" id="ROB-M1-feA"/>
+                <outlet property="offenseLine2" destination="lnM-PI-XYK" id="bqy-FP-kzG"/>
+                <outlet property="offenseLine3" destination="yQA-Q3-VIJ" id="Vag-D6-bvb"/>
+                <outlet property="offenseLine4" destination="Esz-bf-UqZ" id="Clp-ja-Kcx"/>
                 <outlet property="period1" destination="nLC-5Z-j8d" id="ENR-n4-qwJ"/>
                 <outlet property="period2" destination="LiJ-Yj-xfm" id="Rya-V3-acS"/>
                 <outlet property="period3" destination="J3x-hF-6C6" id="3e7-CF-cN4"/>
@@ -43,39 +43,7 @@
             <rect key="frame" x="0.0" y="0.0" width="800" height="500"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1oa-F4-P8g">
-                    <rect key="frame" x="182" y="54" width="120" height="354"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Period" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qLb-Gc-ahq">
-                            <rect key="frame" x="39" y="8" width="43" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiJ-Yj-xfm" customClass="PxpFilterButton">
-                            <rect key="frame" x="37" y="81" width="46" height="30"/>
-                            <state key="normal" title="2"/>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XTq-dP-WAa" customClass="PxpFilterButton">
-                            <rect key="frame" x="37" y="195" width="46" height="30"/>
-                            <state key="normal" title="PS"/>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3x-hF-6C6" customClass="PxpFilterButton">
-                            <rect key="frame" x="37" y="119" width="46" height="30"/>
-                            <state key="normal" title="3"/>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nLC-5Z-j8d" customClass="PxpFilterButton">
-                            <rect key="frame" x="37" y="43" width="46" height="30"/>
-                            <state key="normal" title="1"/>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gf-7C-Jv1" customClass="PxpFilterButton">
-                            <rect key="frame" x="37" y="157" width="46" height="30"/>
-                            <state key="normal" title="OT"/>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
-                </view>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OV6-jR-zsv">
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OV6-jR-zsv" customClass="PxpFilterButtonGroupController">
                     <rect key="frame" x="305" y="95" width="120" height="313"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Offense" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GPO-Vi-hTN">
@@ -90,50 +58,38 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="erm-Qf-eVB">
-                            <rect key="frame" x="8" y="37" width="104" height="107"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ebi-jC-LsZ" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="8" width="46" height="30"/>
-                                    <state key="normal" title="L1"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0kv-sl-5GJ" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="8" width="46" height="30"/>
-                                    <state key="normal" title="L2"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tvF-eK-yDR" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="69" width="46" height="30"/>
-                                    <state key="normal" title="L3"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Egn-vw-a2I" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="69" width="46" height="30"/>
-                                    <state key="normal" title="L4"/>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </view>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EEH-8n-S1p">
-                            <rect key="frame" x="9" y="192" width="104" height="107"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tyg-v5-EQA" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="8" width="46" height="30"/>
-                                    <state key="normal" title="L1"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SGr-pb-4xA" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="8" width="46" height="30"/>
-                                    <state key="normal" title="L2"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xmV-h9-IJv" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="69" width="46" height="30"/>
-                                    <state key="normal" title="L3"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ovo-Rh-XG3" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="69" width="46" height="30"/>
-                                    <state key="normal" title="L4"/>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S20-Cx-3m7" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="45" width="46" height="30"/>
+                            <state key="normal" title="L1"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lnM-PI-XYK" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="45" width="46" height="30"/>
+                            <state key="normal" title="L2"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yQA-Q3-VIJ" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="109" width="46" height="30"/>
+                            <state key="normal" title="L3"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Esz-bf-UqZ" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="109" width="46" height="30"/>
+                            <state key="normal" title="L4"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eRe-vU-VrF" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="255" width="46" height="30"/>
+                            <state key="normal" title="L3"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cYW-8v-egJ" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="199" width="46" height="30"/>
+                            <state key="normal" title="L2"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HeB-cc-cCr" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="255" width="46" height="30"/>
+                            <state key="normal" title="L4"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F3O-d7-d9S" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="199" width="46" height="30"/>
+                            <state key="normal" title="L1"/>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
@@ -145,7 +101,7 @@
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PK/PP " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vW7-Ld-1Af">
                     <rect key="frame" x="468" y="67" width="43" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qyy-zJ-2u7">
@@ -286,7 +242,7 @@
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="quV-VD-VST">
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="quV-VD-VST" customClass="PxpFilterButtonGroupController">
                     <rect key="frame" x="429" y="95" width="120" height="313"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Home" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lie-OZ-UqE">
@@ -301,58 +257,74 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fgp-h5-eIM" customClass="PxpFilterButton">
-                            <rect key="frame" x="17" y="223" width="86" height="76"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kbz-9A-VhE" customClass="PxpFilterButton">
+                            <rect key="frame" x="17" y="229" width="86" height="76"/>
                             <state key="normal" title="All"/>
-                            <connections>
-                                <action selector="getAllStrengthTags:" destination="-1" eventType="touchUpInside" id="6lT-6F-Abu"/>
-                            </connections>
                         </button>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GUE-tQ-dvO">
-                            <rect key="frame" x="8" y="37" width="104" height="68"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VKI-V0-M8Q" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
-                                    <state key="normal" title="3"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MJY-QZ-rb6" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="0.0" width="46" height="30"/>
-                                    <state key="normal" title="4"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3K-X8-rs6" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="38" width="46" height="30"/>
-                                    <state key="normal" title="5"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dzF-Zd-LND" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="38" width="46" height="30"/>
-                                    <state key="normal" title="6"/>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </view>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rYO-eC-DoJ">
-                            <rect key="frame" x="8" y="142" width="104" height="68"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZg-K8-1r3" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
-                                    <state key="normal" title="3"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGq-5f-c7a" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="0.0" width="46" height="30"/>
-                                    <state key="normal" title="4"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r7X-m5-pYj" customClass="PxpFilterButton">
-                                    <rect key="frame" x="0.0" y="38" width="46" height="30"/>
-                                    <state key="normal" title="5"/>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HK0-nw-R5d" customClass="PxpFilterButton">
-                                    <rect key="frame" x="58" y="38" width="46" height="30"/>
-                                    <state key="normal" title="6"/>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="axG-tQ-Hzd" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="37" width="46" height="30"/>
+                            <state key="normal" title="3"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wse-Nr-Bu6" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="37" width="46" height="30"/>
+                            <state key="normal" title="4"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NEl-3p-MtU" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="75" width="46" height="30"/>
+                            <state key="normal" title="5"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nyT-4c-Xcj" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="75" width="46" height="30"/>
+                            <state key="normal" title="6"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hDv-t7-bnL" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="142" width="46" height="30"/>
+                            <state key="normal" title="4"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="320-hm-NQP" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="185" width="46" height="30"/>
+                            <state key="normal" title="5"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wlw-AJ-ZCO" customClass="PxpFilterButton">
+                            <rect key="frame" x="66" y="185" width="46" height="30"/>
+                            <state key="normal" title="6"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KDp-4W-Z56" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="142" width="46" height="30"/>
+                            <state key="normal" title="3"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1oa-F4-P8g" customClass="PxpFilterButtonGroupController">
+                    <rect key="frame" x="182" y="54" width="120" height="354"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Period" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qLb-Gc-ahq">
+                            <rect key="frame" x="39" y="8" width="43" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiJ-Yj-xfm" customClass="PxpFilterButton">
+                            <rect key="frame" x="37" y="81" width="46" height="30"/>
+                            <state key="normal" title="2"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XTq-dP-WAa" customClass="PxpFilterButton">
+                            <rect key="frame" x="37" y="195" width="46" height="30"/>
+                            <state key="normal" title="PS"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3x-hF-6C6" customClass="PxpFilterButton">
+                            <rect key="frame" x="37" y="119" width="46" height="30"/>
+                            <state key="normal" title="3"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nLC-5Z-j8d" customClass="PxpFilterButton">
+                            <rect key="frame" x="37" y="43" width="46" height="30"/>
+                            <state key="normal" title="1"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gf-7C-Jv1" customClass="PxpFilterButton">
+                            <rect key="frame" x="37" y="157" width="46" height="30"/>
+                            <state key="normal" title="OT"/>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>

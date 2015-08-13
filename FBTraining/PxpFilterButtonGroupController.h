@@ -12,7 +12,7 @@
 @class PxpFilterButton;
 
 
-@interface PxpFilterButtonGroupController : NSObject <PxpFilterModuleProtocol,PxpFilterButtonGroupControllerDelegate>
+@interface PxpFilterButtonGroupController : UIView <PxpFilterModuleProtocol,PxpFilterButtonGroupControllerDelegate>
 
 
 #pragma mark - PxpFilterModuleProtocol Methods
