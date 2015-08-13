@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PxpFilterButtonGroupControllerDelegate.h"
 
 @interface PxpFilterButton : UIButton
+@property (strong,nonatomic,nullable)NSPredicate *ownPredicate;
+@property (weak,nonatomic)id<PxpFilterButtonGroupControllerDelegate> ownDelegate;
 
 @end

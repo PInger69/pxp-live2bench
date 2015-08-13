@@ -7,7 +7,28 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PxpFilterHockeyTabViewController">
             <connections>
+                <outlet property="awayStrength3" destination="AZg-K8-1r3" id="PEg-dV-P9i"/>
+                <outlet property="awayStrength4" destination="vGq-5f-c7a" id="KQ4-eH-bST"/>
+                <outlet property="awayStrength5" destination="r7X-m5-pYj" id="5b3-8P-Wh7"/>
+                <outlet property="awayStrength6" destination="HK0-nw-R5d" id="3NU-Py-VMQ"/>
+                <outlet property="defenseLine1" destination="tyg-v5-EQA" id="xsr-3i-vyk"/>
+                <outlet property="defenseLine2" destination="SGr-pb-4xA" id="iHU-ZJ-xeJ"/>
+                <outlet property="defenseLine3" destination="xmV-h9-IJv" id="Anz-PD-s0C"/>
+                <outlet property="defenseLine4" destination="Ovo-Rh-XG3" id="my6-j2-KXP"/>
                 <outlet property="filteredTagLabel" destination="d8w-a8-4sm" id="Zhj-IQ-SQY"/>
+                <outlet property="homeStrength3" destination="VKI-V0-M8Q" id="JcW-wG-VDt"/>
+                <outlet property="homeStrength4" destination="MJY-QZ-rb6" id="5jD-Xc-wc3"/>
+                <outlet property="homeStrength5" destination="w3K-X8-rs6" id="Gpw-vz-S01"/>
+                <outlet property="homeStrength6" destination="dzF-Zd-LND" id="bWR-pN-FYQ"/>
+                <outlet property="offenseLine1" destination="Ebi-jC-LsZ" id="hNa-Tm-jb2"/>
+                <outlet property="offenseLine2" destination="0kv-sl-5GJ" id="eO0-g4-3qA"/>
+                <outlet property="offenseLine3" destination="tvF-eK-yDR" id="f6L-rz-KqW"/>
+                <outlet property="offenseLine4" destination="Egn-vw-a2I" id="EYV-8a-cVn"/>
+                <outlet property="period1" destination="nLC-5Z-j8d" id="ENR-n4-qwJ"/>
+                <outlet property="period2" destination="LiJ-Yj-xfm" id="Rya-V3-acS"/>
+                <outlet property="period3" destination="J3x-hF-6C6" id="3e7-CF-cN4"/>
+                <outlet property="periodOT" destination="5gf-7C-Jv1" id="88j-ne-rVp"/>
+                <outlet property="periodPS" destination="XTq-dP-WAa" id="tBb-A3-MN0"/>
                 <outlet property="periodView" destination="1oa-F4-P8g" id="vVI-nQ-5Zx"/>
                 <outlet property="preFilterSwitch" destination="2zw-pd-80e" id="DxY-o4-DKQ"/>
                 <outlet property="sliderView" destination="ac6-rH-F9q" id="lWW-z0-dZF"/>
@@ -30,17 +51,9 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xin-FQ-L5b" customClass="PxpFilterButton">
-                            <rect key="frame" x="37" y="43" width="46" height="30"/>
-                            <state key="normal" title="1"/>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiJ-Yj-xfm" customClass="PxpFilterButton">
                             <rect key="frame" x="37" y="81" width="46" height="30"/>
                             <state key="normal" title="2"/>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vsN-G5-FbI" customClass="PxpFilterButton">
-                            <rect key="frame" x="37" y="157" width="46" height="30"/>
-                            <state key="normal" title="OT"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XTq-dP-WAa" customClass="PxpFilterButton">
                             <rect key="frame" x="37" y="195" width="46" height="30"/>
@@ -49,6 +62,14 @@
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3x-hF-6C6" customClass="PxpFilterButton">
                             <rect key="frame" x="37" y="119" width="46" height="30"/>
                             <state key="normal" title="3"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nLC-5Z-j8d" customClass="PxpFilterButton">
+                            <rect key="frame" x="37" y="43" width="46" height="30"/>
+                            <state key="normal" title="1"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gf-7C-Jv1" customClass="PxpFilterButton">
+                            <rect key="frame" x="37" y="157" width="46" height="30"/>
+                            <state key="normal" title="OT"/>
                         </button>
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
