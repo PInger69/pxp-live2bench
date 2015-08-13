@@ -8,6 +8,7 @@
 
 #import "PxpFilterButtonView.h"
 #import "CustomButton.h"
+#import "PxpFilterToggleButton.h"
 
 @implementation PxpFilterButtonView
 {
@@ -57,6 +58,15 @@
 
 -(void)buildButtons{    // build buttons with buttonPool
     [self buildButtonsWith:buttonPool];
+}
+
+-(void)grabButton{
+    [_buttonList removeAllObjects];
+    for (NSObject *subView in self.subviews) {
+        if ([subView isKindOfClass:[PxpFilterToggleButton class]]) {
+            [_buttonList addObject:subView];
+        }
+    }
 }
 
 -(void)buildButtonsWith:(NSArray *)buttons  // build buttons with the buttons array

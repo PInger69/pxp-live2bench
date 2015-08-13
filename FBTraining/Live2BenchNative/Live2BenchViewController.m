@@ -1021,7 +1021,7 @@ static void * eventContext      = &eventContext;
 
 -(void)tagButtonSwiped:(id)sender{
      SideTagButton *button = sender;
-    
+
     if ([button.accessibilityValue isEqualToString:@"left"]) {
         [self.view addSubview:_playerDrawerLeft.view];
         [_leftArrow setFrame:CGRectMake(button.center.x+button.frame.size.width/2, button.center.y+button.frame.size.height/2+77, 15, 15)];

@@ -284,6 +284,7 @@
 		D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF461AA4B3090068D260 /* ARCalendarTableViewController.m */; };
 		D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF491AA4B6230068D260 /* TestFilterViewController.m */; };
 		D784EF4D1AA4B6620068D260 /* RangeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D784EF4C1AA4B6620068D260 /* RangeSlider.m */; };
+		D78536371B7CE2C700A53CA8 /* PxpFilterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D78536361B7CE2C700A53CA8 /* PxpFilterButton.m */; };
 		D786C1E817EB9BF90042DD96 /* myClipTab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D786C1D817EB9BF90042DD96 /* myClipTab@2x.png */; };
 		D786C1E917EB9BF90042DD96 /* settingsButtonSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D786C1D917EB9BF90042DD96 /* settingsButtonSelect@2x.png */; };
 		D786C1EA17EB9BF90042DD96 /* settingsButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D786C1DA17EB9BF90042DD96 /* settingsButton@2x.png */; };
@@ -983,6 +984,8 @@
 		D784EF491AA4B6230068D260 /* TestFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestFilterViewController.m; sourceTree = "<group>"; };
 		D784EF4B1AA4B6620068D260 /* RangeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeSlider.h; sourceTree = "<group>"; };
 		D784EF4C1AA4B6620068D260 /* RangeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RangeSlider.m; sourceTree = "<group>"; };
+		D78536351B7CE2C700A53CA8 /* PxpFilterButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterButton.h; sourceTree = "<group>"; };
+		D78536361B7CE2C700A53CA8 /* PxpFilterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterButton.m; sourceTree = "<group>"; };
 		D786C1D817EB9BF90042DD96 /* myClipTab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myClipTab@2x.png"; sourceTree = "<group>"; };
 		D786C1D917EB9BF90042DD96 /* settingsButtonSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settingsButtonSelect@2x.png"; sourceTree = "<group>"; };
 		D786C1DA17EB9BF90042DD96 /* settingsButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settingsButton@2x.png"; sourceTree = "<group>"; };
@@ -2091,6 +2094,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D78536351B7CE2C700A53CA8 /* PxpFilterButton.h */,
+				D78536361B7CE2C700A53CA8 /* PxpFilterButton.m */,
 				D7341A8E1B7530FC005156E9 /* PxpFilterUserInputScrollView.h */,
 				D7341A911B753A6A005156E9 /* PxpFilterUserInputView.h */,
 				D7341A921B753A6A005156E9 /* PxpFilterUserInputView.m */,
@@ -3051,6 +3056,7 @@
 				BD9209A817F0B1A1005E8648 /* LoginViewController.m in Sources */,
 				D73FE3301A40882600341D57 /* L2BVideoBarViewController.m in Sources */,
 				BD9209A717F0B199005E8648 /* BorderButton.m in Sources */,
+				D78536371B7CE2C700A53CA8 /* PxpFilterButton.m in Sources */,
 				BD1AEF8C17F0B14E00BD59A9 /* OBSlider.m in Sources */,
 				D79350EA1AD459C500D1751F /* DownloadEventItem.m in Sources */,
 				D738304D198A94D60053F0A1 /* FilterScrollView.m in Sources */,
