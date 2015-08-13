@@ -500,10 +500,10 @@
                      }
                      completion:^(BOOL finished){
                          
-                         if (self.isViewLoaded && self.view.window) {
-                                [TabView sharedFilterTab].view.frame =  CGRectMake(0, 0, [TabView sharedFilterTab].preferredContentSize.width,[TabView sharedFilterTab].preferredContentSize.height);
-                         }
-                         
+//                         if (self.isViewLoaded && self.view.window) {
+//                                [TabView sharedFilterTab].view.frame =  CGRectMake(0, 0, [TabView sharedFilterTab].preferredContentSize.width,[TabView sharedFilterTab].preferredContentSize.height);
+//                         }
+//                         
                       
                      }];
 }
@@ -767,6 +767,7 @@
     [_pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTab];
     
+    
     // setFilter to this view. This is the default filtering for ListView
     // what ever is added to these predicates will be ignored in the filters raw tags
     _pxpFilter.delegate = self;
@@ -783,7 +784,10 @@
 
     [_pxpFilter addPredicates:@[ignoreThese]];
     
-    
+    if (popupTabBar.isViewLoaded)
+    {
+        popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
+    }
   
 
     if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
@@ -797,7 +801,8 @@
     presentationController.permittedArrowDirections = 0;
 
     [self presentViewController:popupTabBar animated:YES completion:nil];
-
+ 
+    
     [_pxpFilter filterTags:[self.allTags copy]];
 
     if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;

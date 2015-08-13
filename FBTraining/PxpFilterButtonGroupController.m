@@ -29,7 +29,7 @@
 
 -(void)addButtonToGroup:(PxpFilterButton*)button
 {
-//    button.delegate = self;
+    button.ownDelegate = self;
     [_buttons addObject:button];
 }
 
@@ -51,14 +51,13 @@
 #pragma mark - PxpFilterButtonGroupControllerDelegate Methods
 -(void)onButtonSelected:(UIButton*)button
 {
-    PxpFilterButton * fButton = (PxpFilterButton *)button;
+
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
     button.selected            = !button.selected;
     
     for (PxpFilterButton * b in _buttons) {
         if(b.selected == YES){
-//            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
-//              [toCombo addObject:b.];
+              [toCombo addObject:b.ownPredicate];
             [_userSelected addObject:b];
         } else {
             [_userSelected removeObject:b];

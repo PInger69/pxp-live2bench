@@ -9,6 +9,7 @@
 #import "PxpFilterButton.h"
 
 @implementation PxpFilterButton
+@synthesize ownPredicate = _ownPredicate;
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
