@@ -89,6 +89,8 @@
     NSPredicate *periodPSPredicate = [NSPredicate predicateWithFormat:@"%K == %@",@"period", _periodPS.accessibilityLabel? _periodPS.accessibilityLabel:_periodPS.titleLabel.text];
     _periodPS.ownPredicate = periodPSPredicate;
     
+    NSPredicate *getAllStrengthTagsPredicate = [NSPredicate predicateWithFormat:@"%K = %ld",@"type",TagTypeHockeyStrengthStop];
+    _getAllStrengthTags.ownPredicate = getAllStrengthTagsPredicate;
     
     NSPredicate *offenseLine1Predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
         Tag *tag = evaluatedObject;

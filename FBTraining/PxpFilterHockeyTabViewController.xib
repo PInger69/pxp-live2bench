@@ -16,6 +16,7 @@
                 <outlet property="defenseLine3" destination="xmV-h9-IJv" id="Anz-PD-s0C"/>
                 <outlet property="defenseLine4" destination="Ovo-Rh-XG3" id="my6-j2-KXP"/>
                 <outlet property="filteredTagLabel" destination="d8w-a8-4sm" id="Zhj-IQ-SQY"/>
+                <outlet property="getAllStrengthTags" destination="fgp-h5-eIM" id="tCI-u9-q6B"/>
                 <outlet property="homeStrength3" destination="VKI-V0-M8Q" id="JcW-wG-VDt"/>
                 <outlet property="homeStrength4" destination="MJY-QZ-rb6" id="5jD-Xc-wc3"/>
                 <outlet property="homeStrength5" destination="w3K-X8-rs6" id="Gpw-vz-S01"/>
@@ -300,10 +301,13 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fgp-h5-eIM">
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fgp-h5-eIM" customClass="PxpFilterButton">
                             <rect key="frame" x="17" y="223" width="86" height="76"/>
                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                             <state key="normal" title="All"/>
+                            <connections>
+                                <action selector="getAllStrengthTags:" destination="-1" eventType="touchUpInside" id="6lT-6F-Abu"/>
+                            </connections>
                         </button>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GUE-tQ-dvO">
                             <rect key="frame" x="8" y="37" width="104" height="68"/>
