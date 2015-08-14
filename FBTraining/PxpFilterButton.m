@@ -16,18 +16,30 @@
     self = [super initWithCoder:coder];
     [[self layer] setBorderColor:[[UIColor clearColor] CGColor]];
     [[self layer] setBorderWidth:1];
-    UIImage *buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
-    UIImage *buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
-    [self setImage:buttonHighlightPixel forState:UIControlStateHighlighted];
-    [self setImage:buttonNormalPixel forState:UIControlStateNormal];
+    //UIImage *buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+    //UIImage *buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor redColor]];
+    [self addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
+    //[self setImage:buttonHighlightPixel forState:UIControlStateSelected];
+    //[self setImage:buttonNormalPixel forState:UIControlStateNormal];
     [self setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-    [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     return self;
 }
 
--(void)setHighlighted:(BOOL)highlighted{
-    [super setHighlighted:highlighted];
-    [self setNeedsDisplay];
+-(void)buttonSelected:(id)sender
+{
+    self.selected = !self.selected;
+    [_ownDelegate onButtonSelected:self];
+}
+
+
+-(void)deselect
+{
+    self.selected = NO;
+}
+
+-(void)reset{
+    [self deselect];
 }
 
 @end

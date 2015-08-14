@@ -53,7 +53,7 @@
 {
 
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
-    button.selected            = !button.selected;
+    //button.selected            = !button.selected;
     
     for (PxpFilterButton * b in _buttons) {
         if(b.selected == YES){

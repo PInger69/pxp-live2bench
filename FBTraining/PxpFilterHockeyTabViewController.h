@@ -22,7 +22,7 @@
 @property (strong, nonatomic,nullable) IBOutlet UISwitch *preFilterSwitch;
 @property (strong, nonatomic,nullable) IBOutlet UIView *periodView;
 
-
+@property (strong, nonatomic,nullable) IBOutlet PxpFilterButton *getAllStrengthTags;
 
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButton *period1;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButton *period2;
@@ -49,6 +49,7 @@
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButton *awayStrength4;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButton *awayStrength5;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButton *awayStrength6;
+
 
 //@property (readonly, strong, nonatomic, nullable) UIImage *tabImage;
 //@property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonScrollView *rightScrollView;

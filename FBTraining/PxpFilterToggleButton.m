@@ -56,8 +56,11 @@
 {
     
 
-    if (self.selected)
+    if (self.selected && _predicateToUse){
+        [tagsToFilter filterUsingPredicate:_predicateToUse];
+    } else if (self.selected){
         [tagsToFilter filterUsingPredicate:[NSPredicate predicateWithFormat:@"%K == %@",_filterPropertyKey, [NSNumber numberWithBool:[_filterPropertyValue boolValue]] ]];
+    }
 }
 
 -(void)reset{
