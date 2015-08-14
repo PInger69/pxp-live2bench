@@ -9,20 +9,49 @@
 #import "PxpFilterButton.h"
 
 @implementation PxpFilterButton
+{
+    UIImage * _buttonHighlightPixel;
+    UIImage * _buttonNormalPixel;
+
+
+}
+
 @synthesize ownPredicate = _ownPredicate;
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
-    [[self layer] setBorderColor:[[UIColor clearColor] CGColor]];
-    [[self layer] setBorderWidth:1];
-    //UIImage *buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
-    //UIImage *buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor redColor]];
-    [self addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
-    //[self setImage:buttonHighlightPixel forState:UIControlStateSelected];
-    //[self setImage:buttonNormalPixel forState:UIControlStateNormal];
-    [self setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-    [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    if (self) {
+        _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+        _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
+        [self addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [self setBackgroundImage:_buttonHighlightPixel forState:UIControlStateSelected];
+        [self setBackgroundImage:_buttonNormalPixel forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+    }
+    return self;
+}
+
+
+-(void)encodeWithCoder:(nonnull NSCoder *)aCoder
+{
+    [super encodeWithCoder:aCoder];
+}
+
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
+        _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
+        [self addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [self setBackgroundImage:_buttonHighlightPixel forState:UIControlStateSelected];
+        [self setBackgroundImage:_buttonNormalPixel forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+    }
     return self;
 }
 
