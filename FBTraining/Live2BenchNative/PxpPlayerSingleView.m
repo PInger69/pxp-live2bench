@@ -25,14 +25,6 @@
     return [AVPlayerLayer class];
 }
 
-- (nonnull instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.layer.needsDisplayOnBoundsChange = YES;
-    }
-    return self;
-}
-
 @end
 
 @interface PxpPlayerSingleView () <UIScrollViewDelegate>
@@ -138,7 +130,7 @@
     _failedObserverContext = &_failedObserverContext;
     _motionObserverContext = &_motionObserverContext;
     
-    [self addObserver:self forKeyPath:@"player.currentItem.status" options:0 context:_statusContext];
+    [self addObserver:self forKeyPath:@"player.status" options:0 context:_statusContext];
     [self addObserver:self forKeyPath:@"player.name" options:0 context:_nameContext];
     
     [self addObserver:self forKeyPath:@"player.failed" options:0 context:_failedObserverContext];
@@ -169,7 +161,7 @@
 }
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"player.currentItem.status" context:_statusContext];
+    [self removeObserver:self forKeyPath:@"player.status" context:_statusContext];
     [self removeObserver:self forKeyPath:@"player.name" context:_nameContext];
     
     [self removeObserver:self forKeyPath:@"player.failed" context:_failedObserverContext];
@@ -179,7 +171,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     
     if (context == _statusContext) {
-        if (self.player.currentItem.status == AVPlayerItemStatusUnknown) {
+        if (self.player.status == AVPlayerStatusUnknown) {
             [self.activityIndicator startAnimating];
         } else {
             [self.activityIndicator stopAnimating];
@@ -201,9 +193,14 @@
 
 - (void)setPlayer:(nullable PxpPlayer *)player {
     [super setPlayer:player];
+    
     self.avPlayerView.layer.player = player;
     
-    [self setNeedsDisplay];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [player reload];
+    });
+    
+    
     
 }
 

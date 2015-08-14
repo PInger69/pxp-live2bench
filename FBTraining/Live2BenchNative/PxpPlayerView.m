@@ -55,16 +55,6 @@
     } else {
         _player = player;
     }
-    
-    for (PxpPlayerView *subView in self.subviews) {
-        if ([subView isKindOfClass:[PxpPlayerView class]]) {
-            [subView.player reload];
-        }
-    }
-    PxpPlayerView *superView = (PxpPlayerView *) self.superview;
-    if ([superView isKindOfClass:[PxpPlayerView class]]) {
-        [superView.player reload];
-    }
 }
 
 - (BOOL)fullView {

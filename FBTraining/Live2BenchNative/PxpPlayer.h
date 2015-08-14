@@ -25,7 +25,7 @@
 @property (copy, nonatomic, nonnull) NSString *name;
 
 /// The live playback status of the player.
-@property (assign, nonatomic) BOOL live;
+@property (readonly, assign, nonatomic) BOOL live;
 
 /// The playing status of the player. (read-only)
 @property (readonly, assign, nonatomic) BOOL playing;
@@ -44,6 +44,9 @@
 
 /// The duration of the player's item. (read-only)
 @property (readonly, assign, nonatomic) CMTime duration;
+
+/// The time remaining till the end of the stream.
+@property (readonly, assign, nonatomic) CMTime remainingTime;
 
 /// The failed status of the player. (read-only)
 @property (readonly, assign, nonatomic) BOOL failed;
@@ -68,5 +71,8 @@
 
 /// Reloads the player's currentItem.
 - (void)reload;
+
+/// Brings the player to Live.
+- (void)goToLive;
 
 @end

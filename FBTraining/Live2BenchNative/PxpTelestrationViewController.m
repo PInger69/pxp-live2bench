@@ -148,6 +148,10 @@
     self.showsControls = self.showsControls;
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    self.telestration = nil;
+}
+
 #pragma mark - Getters / Setters
 
 - (void)setTelestrating:(BOOL)telestrating {

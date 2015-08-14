@@ -170,6 +170,9 @@ static void * eventContext      = &eventContext;
         _fullscreenViewController = [[PxpL2BFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
         
         _videoBar = [[PxpVideoBar alloc] init];
+        
+        [self addChildViewController:_playerViewController];
+        [self addChildViewController:_fullscreenViewController];
     }
     
     _telestrationViewController = [[PxpTelestrationViewController alloc] init];
@@ -599,7 +602,6 @@ static void * eventContext      = &eventContext;
     PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
     //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
     _playerViewController.playerView.context = context;
-    _videoBar.player = context.mainPlayer;
     _videoBar.event = _currentEvent;
     _fullscreenViewController.playerViewController.playerView.context = context;
 }
@@ -847,6 +849,7 @@ static void * eventContext      = &eventContext;
     [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
     
     _playerViewController.telestrationViewController.stillMode = YES;
+    _videoBar.playerViewController = _playerViewController;
 }
 
 -(void)onOpenTeleView:(TeleViewController *)tvc
@@ -954,7 +957,7 @@ static void * eventContext      = &eventContext;
     [CustomAlertView removeAll];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
     self.videoPlayer.mute = YES;
-    self.telestrationViewController.telestration = nil;
+    self.playerViewController.telestrationViewController.telestration = nil;
 }
 
 -(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -974,7 +977,7 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
         
-        self.playerViewController.playerView.player.live = YES;
+        [self.playerViewController.playerView.player goToLive];
         
         return;
     }

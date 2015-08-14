@@ -210,7 +210,6 @@
     self.playerViewController.playerView.context = context;
     self.fullscreenViewController.playerViewController.playerView.context = context;
     
-    _videoBar.player = context.mainPlayer;
 }
 
 -(void)onTagChanged:(NSNotification *)note{
@@ -323,6 +322,8 @@
     
     _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     //_videoBar.player = _videoPlayer.avPlayer;
+    
+    _videoBar.playerViewController = _playerViewController;
     
     [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];

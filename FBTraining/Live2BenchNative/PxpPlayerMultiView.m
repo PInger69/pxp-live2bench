@@ -85,7 +85,7 @@
     [_companionView setLockFullView:lockFullView];
     [_gridView setLockFullView:lockFullView];
     
-    if (!_companionView.player) {
+    if (lockFullView && !_companionView.player) {
         _companionView.player = self.context.mainPlayer;
         _companionView.hidden = NO;
         
@@ -94,7 +94,7 @@
         
         [self.delegate playerView:self changedFullViewStatus:self.fullView];
         
-        [_companionView.player reload];
+       [_companionView.player reload];
     }
 }
 
@@ -142,8 +142,6 @@
             [self.delegate playerView:self changedFullViewStatus:self.fullView];
             [playerView.player reload];
         }
-        
-        
         
     }
     

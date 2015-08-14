@@ -24,6 +24,7 @@
     CGRect _targetFrame;
     
     void * _playRateObserverContext;
+    void * _telestrationObserverContext;
 }
 
 - (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
@@ -42,6 +43,7 @@
         _fullscreenButton.isFullscreen = YES;
         
         _playRateObserverContext = &_playRateObserverContext;
+        _telestrationObserverContext = &_telestrationObserverContext;
         
         self.playerViewController = playerViewController;
     }
@@ -49,7 +51,8 @@
 }
 
 - (void)dealloc {
-    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.playRate"];
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.playRate" context:_telestrationObserverContext];
+    [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
 }
 
 - (void)viewDidLoad {
@@ -124,6 +127,9 @@
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _playRateObserverContext) {
         self.slomoButton.slomoOn = _playerViewController.playerView.player.playRate == 0.5;
+    } else if (context == _telestrationObserverContext) {
+        _backwardSeekButton.enabled = !self.teleIsStill;
+        _forwardSeekButton.enabled = !self.teleIsStill;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -135,16 +141,22 @@
     [self setFullscreen:fullscreen animated:NO];
 }
 
+- (BOOL)teleIsStill {
+    return _playerViewController.telestrationViewController.telestration.isStill;
+}
+
 - (BOOL)hidden {
     return self.view.hidden;
 }
 
 - (void)setPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
     [_playerViewController.playerView removeObserver:self forKeyPath:@"player.playRate" context:_playRateObserverContext];
+    [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
     
     _playerViewController = playerViewController;
     
     [_playerViewController.playerView addObserver:self forKeyPath:@"player.playRate"options:0 context:_playRateObserverContext];
+    [_playerViewController.telestrationViewController addObserver:self forKeyPath:@"telestration" options:0 context:_telestrationObserverContext];
 }
 
 #pragma mark - Actions
@@ -181,14 +193,20 @@
             _targetIndex = [_targetView.subviews indexOfObject:_playerViewController.view];
             _targetFrame = _playerViewController.view.frame;
             
+            [_playerViewController removeFromParentViewController];
             [_playerViewController.view removeFromSuperview];
             
             self.view.frame = _targetFrame;
-            
             _playerViewController.view.frame = _playerContainer.bounds;
+            
             [_playerContainer addSubview:_playerViewController.view];
+            [self addChildViewController:_playerViewController];
+            
             
             self.view.hidden = NO;
+            
+            
+            
         }
         
         [self.view layoutIfNeeded];
@@ -203,11 +221,14 @@
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
             if (!fullscreen) {
+                
+                [_playerViewController removeFromParentViewController];
                 if ([_playerViewController.view isDescendantOfView:_playerContainer]) {
                     [_playerViewController.view removeFromSuperview];
                     _playerViewController.view.frame = _targetFrame;
                     [_targetView insertSubview:_playerViewController.view atIndex:_targetIndex];
                 }
+                [self.parentViewController addChildViewController:_playerViewController];
                 
                 self.view.hidden = YES;
             } else {

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-#import "PxpPlayer.h"
+#import "PxpPlayerViewController.h"
 #import "SeekButton.h"
 #import "Slomo.h"
 #import "PxpFullscreenButton.h"
@@ -18,7 +18,7 @@
 IB_DESIGNABLE
 @interface PxpVideoBar : UIView
 
-@property (weak, nonatomic, nullable) PxpPlayer *player;
+@property (weak, nonatomic, nullable) PxpPlayerViewController *playerViewController;
 @property (weak, nonatomic, nullable) Event *event;
 
 @property (strong, nonatomic, nullable) Tag *selectedTag;
@@ -29,5 +29,7 @@ IB_DESIGNABLE
 
 @property (readonly, strong, nonatomic, nonnull) Slomo *slomoButton;
 @property (readonly, strong, nonatomic, nonnull) PxpFullscreenButton *fullscreenButton;
+
+@property (assign, nonatomic) BOOL enabled;
 
 @end

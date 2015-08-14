@@ -44,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, strong, nonatomic, nullable) AVAsset *hqAsset;
 @property (readonly, strong, nonatomic, nullable) AVAsset *anyAsset;
 
+@property (readonly, assign, nonatomic) BOOL assetsReady;
+
 NS_ASSUME_NONNULL_END
 
 

@@ -44,6 +44,7 @@
         NSMutableDictionary * tempDict      = [[NSMutableDictionary alloc]init];
         NSURL               * defaultURL;
         
+        _assetsReady = NO;
         _assets = [NSMutableDictionary dictionary];
         for (NSString * k in keys)
         {
@@ -81,6 +82,7 @@
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         
         _qualities = @{correctedQuality:url};
+        _assetsReady = NO;
         _assets = [NSMutableDictionary dictionaryWithDictionary:@{correctedQuality:asset}];
         
         _urlPath = [_qualities objectForKey:correctedQuality];
@@ -193,6 +195,26 @@
 
 - (nullable AVAsset *)anyAsset {
     return self.assets.allValues.firstObject;
+}
+
+- (void)loadAssets {
+    NSArray *assets = self.assets.allValues;
+    __block NSUInteger n = assets.count;
+    __block NSUInteger c = 0;
+    
+    void (^handler)() = ^() {
+        c++;
+        
+        if (n <= c) {
+            [self willChangeValueForKey:@"assetsReady"];
+            _assetsReady = YES;
+            [self didChangeValueForKey:@"assetsReady"];
+        }
+    };
+    
+    for (AVAsset *asset in assets) {
+        [asset loadValuesAsynchronouslyForKeys:@[@"playable"] completionHandler:handler];
+    }
 }
 
 @end

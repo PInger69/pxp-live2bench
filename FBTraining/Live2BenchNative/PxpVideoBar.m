@@ -29,9 +29,12 @@
     PxpRangeModifierButton * __nonnull _tagExtendEndButton;
     
     void *_playRateObserverContext;
+    void *_telestrationObserverContext;
 }
 
 - (void)initVideoBar {
+    _enabled = YES;
+    
     _tagView = [[TagView alloc] init];
     _tagView.backgroundColor = [UIColor clearColor];
     _tagView.dataSource = self;
@@ -73,7 +76,7 @@
     [self addSubview:_fullscreenButton];
     
     _playRateObserverContext = &_playRateObserverContext;
-    [self addObserver:self forKeyPath:@"player.playRate" options:0 context:_playRateObserverContext];
+    _telestrationObserverContext = &_telestrationObserverContext;
     
     _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction:)];
     _displayLink.frameInterval = 4;
@@ -100,16 +103,18 @@
 
 - (void)dealloc {
     [_displayLink invalidate];
-    [self removeObserver:self forKeyPath:@"player.playRate" context:_playRateObserverContext];
+    [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
 }
 
 #pragma mark - Overrides
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _playRateObserverContext) {
-        if (_player) {
-            _slomoButton.slomoOn = _player.playRate < 1.0;
+        if (_playerViewController.playerView.player) {
+            _slomoButton.slomoOn = _playerViewController.playerView.player.playRate == 0.5;
         }
+    } else if (context == _telestrationObserverContext) {
+        [self updateUserInterface];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -155,6 +160,25 @@
 
 #pragma mark - Getters / Setters
 
+- (void)setPlayerViewController:(PxpPlayerViewController *)playerViewController {
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.rate" context:_playRateObserverContext];
+    [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
+    
+    _playerViewController = playerViewController;
+    
+    [_playerViewController.playerView addObserver:self forKeyPath:@"player.rate" options:0 context:_playRateObserverContext];
+    [_playerViewController.telestrationViewController addObserver:self forKeyPath:@"telestration" options:0 context:_telestrationObserverContext];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    [self updateUserInterface];
+}
+
+- (BOOL)teleIsStill {
+    return _playerViewController.telestrationViewController.telestration.isStill;
+}
+
 - (void)setSelectedTag:(nullable Tag *)selectedTag {
     if (_selectedTag != selectedTag) {
         _selectedTag = selectedTag;
@@ -180,7 +204,7 @@
         float endTime = _selectedTag.startTime + _selectedTag.duration;
             
         //extend the duration by decreasing the start time 5 seconds
-        newStartTime = _selectedTag.startTime - 5;
+        newStartTime = _selectedTag.startTime - labs((NSInteger)_backwardSeekButton.speed);
         //if the new start time is smaller than 0, set it to 0
         if (newStartTime <0) {
             newStartTime = 0;
@@ -211,7 +235,7 @@
         float endTime = startTime + _selectedTag.duration;
         
         //increase end time by 5 seconds
-        endTime = endTime + 5;
+        endTime = endTime + labs((NSInteger)_forwardSeekButton.speed);
         //if new end time is greater the duration of video, set it to the video's duration
         if (endTime > [self durationOfVideoPlayer]) {
             endTime = [self durationOfVideoPlayer];
@@ -228,13 +252,12 @@
 }
 
 - (void)seekAction:(SeekButton *)seekButton {
-    CMTime currentTime = _player.currentTime;
-    [_player seekToTime:CMTimeAdd(currentTime, CMTimeMakeWithSeconds(seekButton.speed, currentTime.timescale))];
+    [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(seekButton.speed, 60)];
 }
 
 - (void)slomoAction:(Slomo *)slomoButton {
     slomoButton.slomoOn = !slomoButton.slomoOn;
-    _player.playRate = slomoButton.slomoOn ? 0.5 : 1.0;
+    _playerViewController.playerView.player.playRate = slomoButton.slomoOn ? 0.5 : 1.0;
 }
 
 #pragma mark - TagViewDataSource
@@ -265,12 +288,12 @@
 }
 
 - (NSTimeInterval)selectedTimeInTagView:(nonnull TagView *)tagView {
-    NSTimeInterval selectedTime = CMTimeGetSeconds(_player.currentTime);
+    NSTimeInterval selectedTime = _playerViewController.currentTimeInSeconds;
     return isfinite(selectedTime) ? selectedTime : 0.0;
 }
 
 - (BOOL)shouldDisplaySelectedTimeInTagView:(nonnull TagView *)tagView {
-    return _event.tags.count && _player;
+    return _event.tags.count && _playerViewController.playerView.player;
 }
 
 #pragma mark - Private Methods
@@ -281,10 +304,16 @@
     }
 }
 
-- (NSTimeInterval)durationOfVideoPlayer{
-    CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
-    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
+- (NSTimeInterval)durationOfVideoPlayer {
+    NSTimeInterval duration = CMTimeGetSeconds(_playerViewController.playerView.player.duration);
     return isfinite(duration) ? duration : 0.0;
+}
+
+- (void)updateUserInterface {
+    BOOL enabled = _enabled && !self.teleIsStill;
+    
+    _backwardSeekButton.enabled = enabled;
+    _forwardSeekButton.enabled = enabled;
 }
 
 /*

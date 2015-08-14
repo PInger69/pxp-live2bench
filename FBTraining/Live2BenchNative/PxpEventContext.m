@@ -80,7 +80,7 @@
 
 - (void)loadComplete:(PxpLoadAction *)loadAction {
     if (self.event.live) {
-        self.mainPlayer.live = YES;
+        [self.mainPlayer goToLive];
     } else {
         [self.mainPlayer seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
             [self.mainPlayer prerollAtRate:self.mainPlayer.playRate completionHandler:^(BOOL finished) {

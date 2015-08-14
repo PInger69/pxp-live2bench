@@ -17,6 +17,9 @@
 @end
 
 @implementation PxpPlayerPipCompanionView
+{
+    void * _pipPlayerObserverContext;
+}
 
 - (void)initPipCompanionView {
     _pipView = [[PxpPlayerPipView alloc] init];
@@ -38,6 +41,10 @@
     
     [self addGestureRecognizer:swapGestureRecognizer];
     [_pipView addGestureRecognizer:subPipGestureRecognizer];
+    
+    _pipPlayerObserverContext = &_pipPlayerObserverContext;
+    
+    [_pipView addObserver:self forKeyPath:@"player" options:0 context:_pipPlayerObserverContext];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -54,6 +61,19 @@
         [self initPipCompanionView];
     }
     return self;
+}
+
+- (void)dealloc {
+    [_pipView removeObserver:self forKeyPath:@"player" context:_pipPlayerObserverContext];
+}
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
+    if (context == _pipPlayerObserverContext) {
+        [self.player reload];
+        [_pipView.player reload];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 #pragma mark - Overrides

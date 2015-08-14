@@ -35,4 +35,7 @@
 /// Specifies whether or not zoom is enabled.
 @property (assign, nonatomic) BOOL zoomEnabled;
 
+
+@property (strong, nonatomic, nullable) AVPlayerItem *syncItem;
+
 @end

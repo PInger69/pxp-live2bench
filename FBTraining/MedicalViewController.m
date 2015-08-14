@@ -129,9 +129,6 @@
         _liveButton = [[LiveButton alloc] initWithFrame:CGRectMake(liveButtonX,liveButtonY, liveButtonWidth, liveButtonHeight)];
         [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        CGFloat playerWidth = 1024.0, playerHeight = playerWidth / (16.0 / 9.0);
-        CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
-        
         /*
         self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
         self.videoPlayer.mute = YES;
@@ -321,7 +318,7 @@
     self.videoPlayer.slowmo = NO;
     self.slomoButton.slomoOn = NO;
     
-    self.playerViewController.playerView.player.live = YES;
+    [self.playerViewController.playerView.player goToLive];
 }
 
 
@@ -334,12 +331,15 @@
     self.bottomBar.backgroundColor = [UIColor blackColor];
     
     const CGFloat playerHeight = self.container.bounds.size.width / (16.0 / 9.0);
+    const CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
     const CGFloat teleSelectY = self.container.bounds.size.height - BAR_HEIGHT - playerHeight;
     
     self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    self.playerViewController.view.frame = self.container.bounds;
+    
+    
+    self.playerViewController.view.frame = CGRectMake(0.0, playerY, self.container.bounds.size.width, playerHeight);
     
     [self.view addSubview:self.container];
     [self.container addSubview:self.playerViewController.view];

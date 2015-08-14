@@ -48,7 +48,7 @@
 #pragma mark - Actions
 
 - (void)liveButtonAction:(LiveButton *)sender {
-    self.playerViewController.playerView.player.live = YES;
+    [self.playerViewController.playerView.player goToLive];
 }
 
 /*

@@ -47,7 +47,7 @@
         _stillFlag = NO;
         
         [_playerView addObserver:self forKeyPath:@"player" options:0 context:_playerObserverContext];
-        [_playerView addObserver:self forKeyPath:@"player.range" options:0 context:_playerRangeObserverContext];
+        [_playerView addObserver:self forKeyPath:@"player.range" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:_playerRangeObserverContext];
         [_playerView addObserver:self forKeyPath:@"player.rate" options:0 context:_playerRateObserverContext];
         [_telestrationViewController addObserver:self forKeyPath:@"telestration" options:0 context:_telestrationObserverContext];
     }
@@ -81,6 +81,14 @@
     _controlBar.player = _playerView.player;
     
     [_playerView addGestureRecognizer:_fullscreenGestureRecognizer];
+    
+    [self addChildViewController:_telestrationViewController];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    //[_playerView.player.context reload];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -92,7 +100,12 @@
     if (context == _playerObserverContext) {
         _controlBar.player = _playerView.player;
     } else if (context == _playerRangeObserverContext) {
-        if (CMTIMERANGE_IS_INVALID(_playerView.player.range)) {
+        NSValue *oldValue = change[NSKeyValueChangeOldKey], *newValue = change[NSKeyValueChangeNewKey];
+        
+        CMTimeRange oldRange = ![oldValue isEqual: [NSNull null]] ? [oldValue CMTimeRangeValue] : kCMTimeRangeInvalid;
+        CMTimeRange newRange = ![newValue isEqual: [NSNull null]] ? [newValue CMTimeRangeValue] : kCMTimeRangeInvalid;
+        
+        if (CMTIMERANGE_IS_INVALID(newRange) && !CMTimeRangeEqual(oldRange, newRange)) {
             _telestrationViewController.telestration = nil;
         }
     } else if (context == _playerRateObserverContext) {
