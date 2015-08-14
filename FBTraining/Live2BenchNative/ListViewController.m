@@ -781,6 +781,7 @@
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
                                                                                    ]];
 
     [_pxpFilter addPredicates:@[ignoreThese]];
