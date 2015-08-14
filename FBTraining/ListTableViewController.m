@@ -404,15 +404,15 @@
     
     LeagueTeam *team = [[tag.event.teams allValues]firstObject];
     if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Half", nil),periodString]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Half", nil),periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else if ([team.league.sport isEqualToString:@"Hockey"]){
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else if ([team.league.sport isEqualToString:@"Football"]){
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Quarter", nil),periodString]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Quarter", nil),periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else{

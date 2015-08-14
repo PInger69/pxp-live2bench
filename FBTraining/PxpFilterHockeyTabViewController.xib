@@ -15,8 +15,8 @@
                 <outlet property="defenseLine2" destination="cYW-8v-egJ" id="e0C-8X-fhk"/>
                 <outlet property="defenseLine3" destination="eRe-vU-VrF" id="G2C-zM-beC"/>
                 <outlet property="defenseLine4" destination="HeB-cc-cCr" id="7lr-aj-30U"/>
-                <outlet property="favoriteButton" destination="ZA5-7L-qQ8" id="sQl-Nr-LHI"/>
-                <outlet property="filteredTagLabel" destination="d8w-a8-4sm" id="Zhj-IQ-SQY"/>
+                <outlet property="favoriteButton" destination="ZA5-7L-qQ8" id="Tbg-Cf-cv7"/>
+                <outlet property="filteredTagLabel" destination="j6A-vA-hsh" id="9xW-PN-HtD"/>
                 <outlet property="getAllStrengthTags" destination="Kbz-9A-VhE" id="BtB-Ig-aek"/>
                 <outlet property="homeStrength3" destination="axG-tQ-Hzd" id="TAu-Ta-oz5"/>
                 <outlet property="homeStrength4" destination="Wse-Nr-Bu6" id="e8Z-6W-gb4"/>
@@ -35,8 +35,9 @@
                 <outlet property="preFilterSwitch" destination="2zw-pd-80e" id="DxY-o4-DKQ"/>
                 <outlet property="sliderView" destination="ac6-rH-F9q" id="lWW-z0-dZF"/>
                 <outlet property="tagNameScrollView" destination="Xc3-Ei-6SJ" id="Zh9-Tc-NAk"/>
-                <outlet property="telestrationButton" destination="qhK-2f-VwR" id="sA7-7s-ZHk"/>
-                <outlet property="totalTagLabel" destination="8Ym-FJ-ceg" id="Tyt-Qc-Fka"/>
+                <outlet property="telestrationButton" destination="qhK-2f-VwR" id="THY-si-deZ"/>
+                <outlet property="totalTagLabel" destination="AoE-yf-ZxR" id="KNj-aB-8K5"/>
+                <outlet property="userButton" destination="Phf-Ud-OB6" id="GIj-yH-71q"/>
                 <outlet property="view" destination="RCB-Wd-sPE" id="EGL-rz-arx"/>
             </connections>
         </placeholder>
@@ -130,6 +131,16 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AoE-yf-ZxR">
+                            <rect key="frame" x="179" y="20" width="25" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j6A-vA-hsh">
+                            <rect key="frame" x="179" y="49" width="25" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tags after filering:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8w-a8-4sm">
                             <rect key="frame" x="23" y="49" width="154" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -195,7 +206,7 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhK-2f-VwR" customClass="PxpFilterToggleButton">
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qhK-2f-VwR" customClass="PxpFilterToggleButton">
                             <rect key="frame" x="8" y="37" width="64" height="48"/>
                             <state key="normal" title="Tele Button"/>
                         </button>

@@ -13,6 +13,7 @@
 #import "RangeSlider.h"
 #import "PxpFilterButton.h"
 #import "PxpFilterToggleButton.h"
+#import "PxpFilterUserButtons.h"
 
 @interface PxpFilterHockeyTabViewController : PxpFilterTabController
 
@@ -24,6 +25,8 @@
 @property (strong, nonatomic,nullable) IBOutlet UIView *periodView;
 
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButton *getAllStrengthTags;
+
+@property (strong, nonatomic,nullable) IBOutlet PxpFilterUserButtons *userButton;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterToggleButton *favoriteButton;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterToggleButton *telestrationButton;
 

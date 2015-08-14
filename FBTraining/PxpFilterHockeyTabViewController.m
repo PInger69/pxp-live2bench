@@ -37,8 +37,8 @@
 
 - (void)UIUpdate:(NSNotification*)note {
     PxpFilter * filter = (PxpFilter *) note.object;
-    _filteredTagLabel.text = [NSString stringWithFormat:@"Filtered Tag(s): %lu",(unsigned long)filter.filteredTags.count];
-    _totalTagLabel.text = [NSString stringWithFormat:@"Total Tag(s): %lu",(unsigned long)filter.unfilteredTags.count];
+    _filteredTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.filteredTags.count];
+    _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.unfilteredTags.count];
 }
 
 -(NSArray*)buttonGroupView{
@@ -254,7 +254,7 @@
                                                           groupViews[1],
                                                           groupViews[2],
                                                           _favoriteButton,
-                                                          _telestrationButton
+                                                          _userButton
                                                           ]];
     
     _tagNameScrollView.sortByPropertyKey = @"name";
@@ -268,8 +268,8 @@
     _favoriteButton.filterPropertyValue     = @"1";
     
     _telestrationButton.titleLabel.text     = @"";
-    _telestrationButton.filterPropertyKey   = @"type";
-    _telestrationButton.filterPropertyValue = @"4";
+    //_telestrationButton.filterPropertyKey   = @"type";
+    //_telestrationButton.filterPropertyValue = @"4";
     
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
@@ -356,6 +356,7 @@
     
     [_tagNameScrollView buildButtonsWith:([_preFilterSwitch isOn])?_prefilterTagNames :[tempSet allObjects]];
     [_sliderView setEndTime:latestTagTime];
+    [_userButton buildButtonsWith:[userDatadict allValues]];
 
     
     // Do any additional setup after loading the view from its nib
