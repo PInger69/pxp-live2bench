@@ -782,6 +782,8 @@
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
                                                                                    ]];
 
     [_pxpFilter addPredicates:@[ignoreThese]];
@@ -792,7 +794,7 @@
     }
   
 
-    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
+    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init],[[PxpFilterFootballTabViewController alloc]init]];
     popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
     popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
 

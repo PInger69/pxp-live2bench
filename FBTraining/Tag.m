@@ -88,6 +88,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
+        self.extraDic        = [self buildExtraDic:tagData];
        [self builtTelestration:tagData];
         if ([tagData objectForKey:@"period"]) {
             self.period          = tagData[@"period"];
@@ -151,6 +152,15 @@ static NSMutableDictionary * openDurationTagsWithID;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarningHandler:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
     }
     return self;
+}
+
+-(NSDictionary*)buildExtraDic:(NSDictionary*)data{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+    if ([data objectForKey:@"line"]) {
+        [dict setObject:[data objectForKey:@"line"] forKey:@"line"];
+    }
+    [dict addEntriesFromDictionary:[data objectForKey:@"extra"]];
+    return [dict copy];
 }
 
 -(void)builtTelestration:(NSDictionary*)data
@@ -273,6 +283,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     output[@"rating"] = [NSString stringWithFormat:@"%ld", (long)_rating];
     output[@"type"] = [NSNumber numberWithInteger:self.type];
     output[@"time"] = [NSNumber numberWithInteger:self.time];
+    output[@"extra"] = self.extraDic? self.extraDic:@{};
     
     if (self.telestration) {
         output[@"telestration"] = self.telestration.data;
@@ -326,6 +337,7 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"user"        : self.user,
              @"visitTeam"   : (self.visitTeam)?self.visitTeam:@"",
              @"synced"      : [NSString stringWithFormat:@"%i", self.synced],
+             @"extra"       : self.extraDic? self.extraDic:@{}
              //@"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              //@"requrl": (self.requestURL? self.requestURL: @"nil"),
              //@"feeds" : (self.feeds ? self.feeds: @"nil")
@@ -374,7 +386,8 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
                                                                                   @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
                                                                                   @"comment"     : (_comment)?_comment:@"",
-                                                                                  @"rating"     : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@""
+                                                                                  @"rating"     : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@"",
+                                                                                    @"extra"       :self.extraDic? self.extraDic:@{}
                                                                                   
                                                                                   }];
     if (self.durationID) {
@@ -430,6 +443,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     _time        = [tagData[@"time"] doubleValue];
     _type        = [tagData[@"type"] intValue];
     _user        = tagData[@"user"];
+    _extraDic    = tagData[@"extra"];
     //self.requestTime = tagData [@"requettime"];
     if ([tagData objectForKey: @"url_2"]) {
         NSDictionary *images = [tagData objectForKey: @"url_2"];

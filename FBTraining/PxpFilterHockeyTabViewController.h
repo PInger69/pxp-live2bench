@@ -67,6 +67,6 @@
 
 //Test rangeSlider
 
-@property (strong, nonatomic, nullable) RangeSlider *rangeSlider;
+//@property (strong, nonatomic, nullable) RangeSlider *rangeSlider;
 
 @end
