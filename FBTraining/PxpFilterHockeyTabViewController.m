@@ -252,7 +252,9 @@
                                                           _sliderView,
                                                           groupViews[0],
                                                           groupViews[1],
-                                                          groupViews[2]
+                                                          groupViews[2],
+                                                          _favoriteButton,
+                                                          _telestrationButton
                                                           ]];
     
     _tagNameScrollView.sortByPropertyKey = @"name";
@@ -261,6 +263,19 @@
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;
     [_preFilterSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
     _sliderView.sortByPropertyKey = @"time";
+    
+    _favoriteButton.filterPropertyKey       = @"coachPick";
+    _favoriteButton.filterPropertyValue     = @"1";
+    
+    _telestrationButton.titleLabel.text     = @"";
+    _telestrationButton.filterPropertyKey   = @"type";
+    _telestrationButton.filterPropertyValue = @"4";
+    
+    [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
+    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
+    
+    [_telestrationButton setTitle:@"" forState:UIControlStateSelected];
+    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOn"] forState:UIControlStateSelected];
   
 
     //    PxpFilter.rawTags; //NSMutableSet
