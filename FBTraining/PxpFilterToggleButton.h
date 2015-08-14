@@ -15,6 +15,7 @@
 @property (nonatomic,weak)   PxpFilter          * parentFilter;
 @property (nonatomic,strong) NSString           * filterPropertyKey;
 @property (nonatomic,strong) NSString           * filterPropertyValue;
+@property (nonatomic,strong) NSPredicate        * predicateToUse;
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter;
 @end
