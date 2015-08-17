@@ -15,7 +15,7 @@
 
 @property (strong, nonatomic, nonnull) PxpFilter *pxpFilter;
 
-@property (readonly, strong, nonatomic, nullable) UIImage *tabImage;
+@property (strong, nonatomic, nullable) UIImage *tabImage;
 
 - (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabImage:(nullable UIImage *)tabImage;
 

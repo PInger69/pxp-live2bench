@@ -17,7 +17,7 @@
 
 @interface PxpFilterDefaultTabViewController: PxpFilterTabController
 
-@property (readonly, strong, nonatomic, nullable) UIImage                   * tabImage;
+//@property (readonly, strong, nonatomic, nullable) UIImage                   * tabImage;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonScrollView  * leftScrollView;
 @property (strong, nonatomic, nullable) IBOutlet UILabel                    * filteredTagLabel;
 @property (strong, nonatomic, nullable) IBOutlet UILabel                    * totalTagLabel;

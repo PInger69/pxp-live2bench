@@ -23,7 +23,7 @@
 @property (strong, nonatomic, nullable) IBOutlet UILabel                    * filteredTagLabel;
 @property (strong, nonatomic, nullable) IBOutlet UILabel                    * totalTagLabel;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterRatingView        * ratingButtons;
-@property (strong, nonatomic, nullable) IBOutlet PxpFilterToggleButton      * favoriteButton;
+//@property (strong, nonatomic, nullable) IBOutlet PxpFilterToggleButton      * favoriteButton;
 
 
 

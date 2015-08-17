@@ -266,6 +266,7 @@ static void * encoderTagContext = &encoderTagContext;
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:true];
    
+    _pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
     
@@ -906,7 +907,7 @@ static void * encoderTagContext = &encoderTagContext;
     [self presentViewController:popupTabBar animated:YES completion:nil];
     
     
-//    [_pxpFilter filterTags:[self.allTags copy]];
+    [_pxpFilter filterTags:self.allTagsArray];
     
     if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 }
@@ -918,15 +919,15 @@ static void * encoderTagContext = &encoderTagContext;
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     
-//    [_tableViewController reloadData];
+    [_collectionView reloadData];
 }
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
-//    [filter filterTags:self.allTags];
+    [_pxpFilter filterTags:self.allTagsArray];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-//    [_tableViewController reloadData];
+    [_collectionView reloadData];
 }
 
 @end

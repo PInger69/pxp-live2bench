@@ -210,7 +210,9 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define UC_REQUEST_EVENT_HIDS               @"UC_REQUEST_EVENT_HIDS"   //@"block":(void(^)(NSArray*pooled))onCompleteGet
 #define UC_REQUEST_USER_INFO                @"UC_REQUEST_USER_INFO"     //@"block":(void(^)(NSDictionary*pooled))onCompleteGet
 
-
+// Filter
+#define NOTIF_DISABLE_TELE_FILTER           @"NOTIF_DISABLE_TELE_FILTER"
+#define NOTIF_ENABLE_TELE_FILTER            @"NOTIF_ENABLE_TELE_FILTER"
 
 // Encoder
 #define NOTIF_TAG_NAMES_FROM_CLOUD          @"tagNamesFromCloud"

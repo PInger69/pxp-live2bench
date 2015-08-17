@@ -16,7 +16,8 @@
 @end
 
 @implementation PxpFilterSoccerTabViewController{
-     NSArray * _prefilterTagNames;
+    BOOL    _isTelestrationActive;
+    NSArray * _prefilterTagNames;
 }
 
 @synthesize tabImage;
@@ -27,8 +28,11 @@
     if (self) {
         self.title = @"Soccer";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
-        
+                _isTelestrationActive = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_ENABLE_TELE_FILTER object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_DISABLE_TELE_FILTER object:nil];
+
     }
     
     
@@ -40,6 +44,14 @@
     _filteredTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.filteredTags.count];
     _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.unfilteredTags.count];
 }
+
+
+-(void)toggleTelestationFilterButton:(NSNotification*)note
+{
+    _isTelestrationActive = ([note.name isEqualToString:NOTIF_ENABLE_TELE_FILTER])?YES:NO;
+    self.telestrationButton.enabled = _isTelestrationActive;
+}
+
 
 -(NSArray*)buttonGroupView{
     PxpFilterButtonGroupController *halfGroupController = [[PxpFilterButtonGroupController alloc]init];
@@ -101,7 +113,8 @@
     
     _favoriteButton.filterPropertyKey       = @"coachPick";
     _favoriteButton.filterPropertyValue     = @"1";
-    
+
+    _telestrationButton.enabled = _isTelestrationActive;
     _telestrationButton.titleLabel.text     = @"";
     [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
         Tag * t =   (Tag *) evaluatedObject;

@@ -9,7 +9,6 @@
             <connections>
                 <outlet property="dateScrollView" destination="zOk-Yr-Jd5" id="6Cz-ZM-80m"/>
                 <outlet property="eventScrollView" destination="r99-og-cFB" id="dfa-Jm-j5R"/>
-                <outlet property="favoriteButton" destination="B5z-Wg-K6F" id="hwH-mc-HG6"/>
                 <outlet property="filteredTagLabel" destination="9aR-Ha-nKc" id="Zgh-I4-ryx"/>
                 <outlet property="playersScrollView" destination="hnn-bL-jdv" id="IQT-Hu-ngs"/>
                 <outlet property="ratingButtons" destination="gBU-m5-LVn" id="cue-4I-3SC"/>
@@ -37,33 +36,15 @@
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OxG-w2-tM2">
-                    <rect key="frame" x="554" y="239" width="80" height="97"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B5z-Wg-K6F" customClass="PxpFilterToggleButton">
-                            <rect key="frame" x="17" y="34" width="46" height="46"/>
-                            <state key="normal" image="coach.png"/>
-                            <state key="selected" image="coachPicked.png"/>
-                            <state key="highlighted" image="coachPicked.png"/>
-                        </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Favorite" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ueW-ZY-Tnk">
-                            <rect key="frame" x="10" y="5" width="61" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                    <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
-                </view>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9By-JS-x1B">
-                    <rect key="frame" x="636" y="239" width="166" height="97"/>
+                    <rect key="frame" x="554" y="239" width="248" height="97"/>
                     <subviews>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gBU-m5-LVn" customClass="PxpFilterRatingView">
-                            <rect key="frame" x="5" y="38" width="156" height="51"/>
+                            <rect key="frame" x="5" y="38" width="237" height="51"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rating" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AQc-2e-BTc">
-                            <rect key="frame" x="59" y="5" width="49" height="21"/>
+                            <rect key="frame" x="100" y="5" width="49" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -169,8 +150,4 @@
             <point key="canvasLocation" x="834" y="-46"/>
         </view>
     </objects>
-    <resources>
-        <image name="coach.png" width="82" height="91"/>
-        <image name="coachPicked.png" width="81" height="90"/>
-    </resources>
 </document>

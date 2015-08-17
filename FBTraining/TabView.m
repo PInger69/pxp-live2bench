@@ -10,6 +10,8 @@
 
 #import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
+#import "PxpFilterSoccerTabViewController.h"
 #import "PxpFilterTabController.h"
 
 @interface TabView ()
@@ -78,13 +80,13 @@ static NSString * currentFilterSport;
     } else if ([aSport isEqualToString:SPORT_FOOTBALL_TRAINING]) {
         
     } else if ([aSport isEqualToString:SPORT_SOCCER]) {
-        
+        [sharedFilter addTab:[[PxpFilterSoccerTabViewController alloc]init]];
     } else if ([aSport isEqualToString:SPORT_BASKETBALL]) {
         
     } else if ([aSport isEqualToString:SPORT_LACROSSE]) {
         
     } else if ([aSport isEqualToString:SPORT_RUGBY]) {
-        
+        [sharedFilter addTab:[[PxpFilterRugbyTabViewController alloc]init]];
     } else if ([aSport isEqualToString:SPORT_MEDICAL]) {
         
     }

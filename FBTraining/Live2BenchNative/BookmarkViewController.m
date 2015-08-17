@@ -32,6 +32,9 @@
 
 #import "PxpFilterMyClipTabViewController.h"
 
+
+#import "LocalMediaManager.h"
+
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
 #define LABEL_HEIGHT                 40
@@ -78,6 +81,7 @@
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
     ClipDataContentDisplay              * clipContentDisplay;
+    NSMutableArray                      * _tagsToDisplay;
 }
 
 
@@ -121,22 +125,8 @@ int viewWillAppearCalled;
 
         [_pxpFilterTab addTab:        [[PxpFilterMyClipTabViewController alloc]init]];
         
-        
-        //        if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
 
-        
-        
-//        NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
-//                                                                                       [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
-//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
-//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
-//                                                                                       ]];
-//        
-//        [_pxpFilter addPredicates:@[ignoreThese]];
-//        
+        _tagsToDisplay = [NSMutableArray new];
     }
     return self;
 }
@@ -176,14 +166,12 @@ int viewWillAppearCalled;
         
         [self.allClips removeObjectIdenticalTo:note.userInfo];
         componentFilter.rawTagArray = self.allClips;
-        //[componentFilter refresh];
+
     }];
     
     self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
-    
-    //allTags = [[NSMutableArray alloc]init];
-    
+
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
     _pip.isDragAble  = YES;
     _pip.hidden      = YES;
@@ -238,7 +226,9 @@ int viewWillAppearCalled;
 
 - (void)clipSaved:(NSNotification *)note {
     [self.allClips addObject:note.object];
-    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+//    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+    
+    self.tableViewController.tableData = _tagsToDisplay;
     [self.tableViewController reloadData];
 }
 
@@ -247,30 +237,17 @@ int viewWillAppearCalled;
 {
     
     [super viewWillAppear:animated];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
-//        if(feeds){
-//            self.feeds = feeds;
-//            //            Feed *theFeed = [[feeds allValues] firstObject];
-//            //            [self.videoPlayer playFeed:theFeed];
-//        }
-//        
-//        if(eventTags){
-//            if (self.allClips.count == 0) {
-//                self.allClips = [NSMutableArray arrayWithArray:[eventTags copy]];
-//                _tableViewController.tableData = self.allClips;
-//                [_tableViewController.tableView reloadData];
-//            }
-//        }
-//    }}];
-    //if (self.allClips.count == 0) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
-            self.allClips = [NSMutableArray arrayWithArray: clips];
-            
-            self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
-            [self.tableViewController.tableView reloadData];
-        }];
-    //}
+
     
+    self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
+    
+    [_pxpFilter filterTags:self.allClips];
+    
+    self.tableViewController.tableData = _tagsToDisplay;
+//    [self.tableViewController.tableView reloadData];
+    
+
+
     
     //get all the events information which will be used to display home team, visit team
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -318,10 +295,6 @@ int viewWillAppearCalled;
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    //[numTagsLabel setFrame:CGRectMake(self.tableView.frame.origin.x,
-    //                                      CGRectGetMaxY(self.tableView.frame),
-    //                                      self.tableView.frame.size.width,
-    //                                      21.0f)];
     UIEdgeInsets insets = {10, 50, 0, 50};
     [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets)];
 
@@ -515,7 +488,8 @@ int viewWillAppearCalled;
 #pragma mark - Richard Sort from headder
 -(void)sortFromHeaderBar:(id)sender
 {
-    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+    
+    self.tableViewController.tableData = [self filterAndSortClips:_tagsToDisplay];
     [self.tableViewController.tableView reloadData];
 }
 
@@ -563,16 +537,10 @@ int viewWillAppearCalled;
     _filterToolBoxView=nil;
     
     
-    [blurView removeFromSuperview];
-    //blurView=nil;
-    [self dismissFilterToolbox];
-   
+
  
     currentPlayingTag = nil;
-    
-    
 
-    
 }
 
 
@@ -692,8 +660,7 @@ int viewWillAppearCalled;
             [playbackRateForwardLabel setAlpha:1.0f];
         }];
     }
-    //    globals.PLAYBACK_SPEED = 0.0;
-    //    [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
+
 }
 
 -(void)playbackRateButtonUp:(id)sender
@@ -971,13 +938,20 @@ int viewWillAppearCalled;
 #pragma mark - PxpFilterDelegate Methods
 -(void)onFilterComplete:(PxpFilter*)filter
 {
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
 
+    [_tableViewController reloadData];
 }
 
--(void)onFilterChange:(PxpFilter*)filter
+-(void)onFilterChange:(PxpFilter *)filter
 {
-    
+    [filter filterTags:self.allClips];
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    [_tableViewController reloadData];
 }
+
 
 
 #pragma mark -

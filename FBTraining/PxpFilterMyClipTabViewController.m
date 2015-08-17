@@ -17,9 +17,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Default";
-//        tabImage =  [UIImage imageNamed:@"filter"];
-        
-
+       self.tabImage =  [UIImage imageNamed:@"filter"];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
     }
     
     
@@ -43,7 +42,7 @@
                                                           ,_dateScrollView
                                                           ,_ratingButtons
 
-                                                          ,_favoriteButton
+//                                                          ,_favoriteButton
 
                                                           ]
                     ];
@@ -67,8 +66,8 @@
     _dateScrollView.buttonSize              = CGSizeMake(_dateScrollView.frame.size.width, 40);
     
     
-    _favoriteButton.filterPropertyKey       = @"coachPick";
-    _favoriteButton.filterPropertyValue     = @"1";
+//    _favoriteButton.filterPropertyKey       = @"coachPick";
+//    _favoriteButton.filterPropertyValue     = @"1";
     
   [_ratingButtons buildButtons];// Has to be what was selected last
 

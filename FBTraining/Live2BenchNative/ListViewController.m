@@ -338,7 +338,7 @@
     [self.view bringSubviewToFront:_videoBar];
     
     // Set up filter for this Tab
-
+    _pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
     
@@ -690,7 +690,7 @@
 {
     [super viewWillDisappear:animated];
     self.videoPlayer.mute = YES;
-    [TabView sharedDefaultFilterTab].telestrationButton.enabled = YES;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENABLE_TELE_FILTER object:self];
 }
 
 
@@ -784,8 +784,6 @@
         popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
     }
   
-
-//    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
     popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
     popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
 
@@ -799,7 +797,8 @@
  
     
     [_pxpFilter filterTags:[self.allTags copy]];
-    [TabView sharedDefaultFilterTab].telestrationButton.enabled = NO;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DISABLE_TELE_FILTER object:self];
 
 }
 
