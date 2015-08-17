@@ -382,14 +382,14 @@ static void * eventContext      = &eventContext;
         _bottomViewController = nil;
     }
     
-    if ([sport isEqualToString:@"Hockey"] && !_bottomViewController && _currentEvent) {
+    if ([sport isEqualToString:SPORT_HOCKEY] && !_bottomViewController && _currentEvent) {
         _bottomViewController = [[HockeyBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         
-    }else if ([sport isEqualToString:@"Soccer"] && !_bottomViewController && _currentEvent){
+    }else if ([sport isEqualToString:SPORT_SOCCER] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[SoccerBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
@@ -397,7 +397,7 @@ static void * eventContext      = &eventContext;
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
         [_bottomViewController allToggleOnOpenTags];
-    }else if ([sport isEqualToString:@"Rugby"] && !_bottomViewController && _currentEvent){
+    }else if ([sport isEqualToString:SPORT_RUGBY] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[RugbyBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
@@ -405,7 +405,7 @@ static void * eventContext      = &eventContext;
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
         [_bottomViewController allToggleOnOpenTags];
-    }else if ([sport isEqualToString:@"Football"] && !_bottomViewController && _currentEvent){
+    }else if ([sport isEqualToString:SPORT_FOOTBALL] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[FootballBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
@@ -1021,7 +1021,7 @@ static void * eventContext      = &eventContext;
 
 -(void)tagButtonSwiped:(id)sender{
      SideTagButton *button = sender;
-    
+
     if ([button.accessibilityValue isEqualToString:@"left"]) {
         [self.view addSubview:_playerDrawerLeft.view];
         [_leftArrow setFrame:CGRectMake(button.center.x+button.frame.size.width/2, button.center.y+button.frame.size.height/2+77, 15, 15)];

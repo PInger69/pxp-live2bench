@@ -35,6 +35,8 @@
 #import "PxpFilterDefaultTabViewController.h"
 #import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterSoccerTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
 
 
 @interface ListViewController ()
@@ -237,6 +239,7 @@
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
             [self.tagsToDisplay insertObject:tag atIndex:0];
             [_pxpFilter addTags:@[tag]];
+            [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
         }
 
     }
@@ -529,10 +532,10 @@
                      }
                      completion:^(BOOL finished){
                          
-                         if (self.isViewLoaded && self.view.window) {
-                                [TabView sharedFilterTab].view.frame =  CGRectMake(0, 0, [TabView sharedFilterTab].preferredContentSize.width,[TabView sharedFilterTab].preferredContentSize.height);
-                         }
-                         
+//                         if (self.isViewLoaded && self.view.window) {
+//                                [TabView sharedFilterTab].view.frame =  CGRectMake(0, 0, [TabView sharedFilterTab].preferredContentSize.width,[TabView sharedFilterTab].preferredContentSize.height);
+//                         }
+//                         
                       
                      }];
 }
@@ -797,6 +800,7 @@
     [_pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTab];
     
+    
     // setFilter to this view. This is the default filtering for ListView
     // what ever is added to these predicates will be ignored in the filters raw tags
     _pxpFilter.delegate = self;
@@ -807,16 +811,23 @@
                                                                                    [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
                                                                                    ]];
 
     [_pxpFilter addPredicates:@[ignoreThese]];
     
-    
+    if (popupTabBar.isViewLoaded)
+    {
+        popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
+    }
   
 
-    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
+    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init],[[PxpFilterFootballTabViewController alloc]init],[[PxpFilterSoccerTabViewController alloc]init],[[PxpFilterRugbyTabViewController alloc]init]];
     popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
     popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
 
@@ -827,7 +838,8 @@
     presentationController.permittedArrowDirections = 0;
 
     [self presentViewController:popupTabBar animated:YES completion:nil];
-
+ 
+    
     [_pxpFilter filterTags:[self.allTags copy]];
 
     if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;

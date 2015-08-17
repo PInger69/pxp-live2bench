@@ -85,7 +85,7 @@
     CGFloat borderWidth = .5;
     
     [button setFrame:CGRectMake(-borderWidth, 70.0f+((50.0f-borderWidth)*aIndex), content.bounds.size.width+(borderWidth*2), 50.0f)];
-    button.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    button.layer.borderColor = [UIColor lightGrayColor].CGColor;
     button.layer.borderWidth = borderWidth;
     
     

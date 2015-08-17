@@ -123,6 +123,9 @@ static TabView* sharedFilter;
     [self updateTabBar];
 }
 
+
+
+
 #pragma mark - Getters / Setters
 
 - (void)setTabs:(NSArray *)tabs {

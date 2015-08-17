@@ -148,7 +148,9 @@
     NSMutableArray  *temp = [[NSMutableArray alloc] init];
     if (_appDel.encoderManager.masterEncoder) {
         for (NSMutableDictionary *eventDic in [_appDel.encoderManager.masterEncoder.allEvents allValues]) {
-            [temp addObject:eventDic[@"non-local"]];
+            if([eventDic[@"non-local"] live]== false) {
+                [temp addObject:eventDic[@"non-local"]];
+            }
         }
         for (NSMutableDictionary *eventDic in [[LocalMediaManager getInstance].allEvents allValues]) {
             if (![eventDic objectForKey:@"non-local"]) {

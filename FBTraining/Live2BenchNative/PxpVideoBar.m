@@ -39,9 +39,11 @@
     _tagView.backgroundColor = [UIColor clearColor];
     _tagView.dataSource = self;
     _tagLabel = [[UILabel alloc] init];
-    _tagLabel.layer.borderWidth = 1.0;
-    _tagLabel.layer.borderColor = self.tintColor.CGColor;
-    _tagLabel.textColor = self.tintColor;
+    _tagLabel.layer.borderColor      = [UIColor darkGrayColor].CGColor;
+    _tagLabel.layer.borderWidth      = .5;
+    _tagLabel.layer.cornerRadius     = 5;
+    _tagLabel.layer.backgroundColor  = [UIColor colorWithWhite:1.0f alpha:0.9f].CGColor;
+    _tagLabel.textColor = [UIColor darkGrayColor];
     _tagLabel.adjustsFontSizeToFitWidth = YES;
     _tagLabel.textAlignment = NSTextAlignmentCenter;
     _tagLabel.hidden = YES;
@@ -123,18 +125,18 @@
 - (void)tintColorDidChange {
     [super tintColorDidChange];
     
-    _tagLabel.layer.borderColor = self.tintColor.CGColor;
-    _tagLabel.textColor = self.tintColor;
+//    _tagLabel.layer.borderColor = self.tintColor.CGColor;
+//    _tagLabel.textColor = self.tintColor;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     
     const CGFloat w = self.bounds.size.width, h = self.bounds.size.height;
-    
+    const CGFloat lh = (h-10);
     _tagView.frame = CGRectMake(3.5 * h, 0.0, w - 7.0 * h, h);
-    _tagLabel.frame = CGRectMake((w - 5.0 * h) / 2.0, 0.0, 5.0 * h, h);
-    _tagLabel.font = [UIFont systemFontOfSize:PHI_INV * h];
+    _tagLabel.frame = CGRectMake((w - 5.0 * lh) / 2.0, 5.0, 5.0 * lh, lh);
+    _tagLabel.font = [UIFont systemFontOfSize:PHI_INV * lh];
     
     _tagExtendStartButton.frame = CGRectMake(0.0, 0.0, h, h);
     _tagExtendEndButton.frame = CGRectMake(w - h, 0.0, h, h);

@@ -1,71 +1,88 @@
 //
-//  ViewController.m
-//  Test12
+//  PxpFilterRugbyTabViewController.m
+//  Live2BenchNative
 //
-//  Created by colin on 7/29/15.
-//  Copyright (c) 2015 colin. All rights reserved.
+//  Created by dev on 2015-08-17.
+//  Copyright © 2015 DEV. All rights reserved.
 //
 
-#import "PxpFilterDefaultTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
 #import "Tag.h"
 #import "UserCenter.h"
-@interface PxpFilterDefaultTabViewController ()
+#import "PxpFilterButtonGroupController.h"
 
+@interface PxpFilterRugbyTabViewController ()
 
 @end
 
-@implementation PxpFilterDefaultTabViewController
-{
-
-    NSArray * _prefilterTagNames;
+@implementation PxpFilterRugbyTabViewController{
+     NSArray * _prefilterTagNames;
 }
+
 @synthesize tabImage;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = @"Default";
-        tabImage =  [UIImage imageNamed:@"filter"];
-    
+        self.title = @"Rugby";
+        tabImage =  [UIImage imageNamed:@"settingsButton"];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
         
     }
-    
-    
     return self;
 }
 
-- (void)UIUpdate:(NSNotification*)note {
+-(void)UIUpdate:(NSNotification*)note {
     PxpFilter * filter = (PxpFilter *) note.object;
     _filteredTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.filteredTags.count];
     _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.unfilteredTags.count];
 }
 
+-(NSArray*)buttonGroupView{
+    PxpFilterButtonGroupController *halfGroupController = [[PxpFilterButtonGroupController alloc]init];
+    [halfGroupController addButtonToGroup:_half1];
+    [halfGroupController addButtonToGroup:_half2];
+    [halfGroupController addButtonToGroup:_halfExtra];
+    
+    NSArray *array = @[halfGroupController];
+    return array;
+}
 
+-(void)buttonPredicate{
+    NSPredicate *half1Predicate = [NSPredicate predicateWithFormat:@"period == %@", _half1.accessibilityLabel? _half1.accessibilityLabel:_half1.titleLabel.text];
+    _half1.ownPredicate = half1Predicate;
+    NSPredicate *half2Predicate = [NSPredicate predicateWithFormat:@"period == %@", _half2.accessibilityLabel? _half2.accessibilityLabel:_half2.titleLabel.text];
+    _half2.ownPredicate = half2Predicate;
+    NSPredicate *halfExtraPredicate = [NSPredicate predicateWithFormat:@"period == %@",_halfExtra.accessibilityLabel? _halfExtra.accessibilityLabel:_halfExtra.titleLabel.text];
+    _halfExtra.ownPredicate = halfExtraPredicate;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self buttonPredicate];
+    NSArray *groupViews = [self buttonGroupView];
+    
     self.modules = [[NSMutableArray alloc]initWithArray:@[
-                                                          _leftScrollView
-                                                          ,_sliderView
-                                                          ,_userButtons
-                                                          ,_ratingButtons
-                                                          ,_userInputView
-                                                          ,_favoriteButton
-                                                          ,_telestrationButton
-                                                          ]
-                    ];
+                                                          _tagNameScrollView,
+                                                          _sliderView,
+                                                          _favoriteButton,
+                                                          _userButton,
+                                                          _telestrationButton,
+                                                          groupViews[0]
+                                                          ]];
     
     
-
-    _leftScrollView.sortByPropertyKey       = @"name";
-    _leftScrollView.buttonSize              = CGSizeMake(130, 30);
-    _sliderView.sortByPropertyKey           = @"time";
+    _tagNameScrollView.sortByPropertyKey = @"name";
+    _tagNameScrollView.buttonSize = CGSizeMake(130, 30);
+    
     _preFilterSwitch.onTintColor            = PRIMARY_APP_COLOR;
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;
-    [_userInputView loadView];
     [_preFilterSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
+    
+    _sliderView.sortByPropertyKey = @"time";
+    
     _favoriteButton.filterPropertyKey       = @"coachPick";
     _favoriteButton.filterPropertyValue     = @"1";
     
@@ -74,27 +91,17 @@
         Tag * t =   (Tag *) evaluatedObject;
         return (t.type == TagTypeTele);
     }]];
-
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
-    
     [_telestrationButton setTitle:@"" forState:UIControlStateSelected];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOn"] forState:UIControlStateSelected];
+
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self refreshUI];
-}
-
-- (void)show{
-
-    [_sliderView show];
-    [self refreshUI];
-}
-- (void)hide{
-    [_sliderView hide];
 }
 
 -(void)refreshUI
@@ -121,32 +128,31 @@
         NSInteger checkTime = tag.time;
         if (checkTime > latestTagTime) latestTagTime = checkTime;
     }
-
+    
     
     // This is so that if  user changes that it reflects
-        NSMutableSet * temp = [NSMutableSet new];
-        for (NSDictionary * d in [UserCenter getInstance].tagNames) {
-
-            if (![[d[@"name"] substringToIndex:1] isEqualToString:@"-"]) {
-                [temp addObject:d[@"name"]];
-            }
+    NSMutableSet * temp = [NSMutableSet new];
+    for (NSDictionary * d in [UserCenter getInstance].tagNames) {
+        
+        if (![[d[@"name"] substringToIndex:1] isEqualToString:@"-"]) {
+            [temp addObject:d[@"name"]];
         }
-        _prefilterTagNames = [temp allObjects];
-
+    }
+    _prefilterTagNames = [temp allObjects];
     
-
-    [_leftScrollView buildButtonsWith:([_preFilterSwitch isOn])?_prefilterTagNames :[tempSet allObjects]];
+    
+    
+    [_tagNameScrollView buildButtonsWith:([_preFilterSwitch isOn])?_prefilterTagNames :[tempSet allObjects]];
     [_sliderView setEndTime:latestTagTime];
-    [_ratingButtons buildButtons];// Has to be what was selected last
-    [_userButtons buildButtonsWith:[userDatadict allValues]];
+    [_userButton buildButtonsWith:[userDatadict allValues]];
+    
     
     // Do any additional setup after loading the view from its nib
     _filteredTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.filteredTags.count];
     _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.unfilteredTags.count];
-
+    
     [self.pxpFilter refresh];
 }
-
 
 - (IBAction)clearButtonPressed:(id)sender {
     for(id<PxpFilterModuleProtocol> module in self.modules){
@@ -159,9 +165,28 @@
     [self refreshUI];
 }
 
+- (void)show{
+    [_sliderView show];
+    [self refreshUI];
+}
+
+- (void)hide{
+    [_sliderView hide];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end
