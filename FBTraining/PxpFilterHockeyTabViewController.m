@@ -48,6 +48,7 @@
     [periodGroupController addButtonToGroup:_period3];
     [periodGroupController addButtonToGroup:_periodOT];
     [periodGroupController addButtonToGroup:_periodPS];
+    periodGroupController.displayAllTagIfAllFilterOn = true;
     
     PxpFilterButtonGroupController *lineGroupController = [[PxpFilterButtonGroupController alloc]init];
     [lineGroupController addButtonToGroup:_offenseLine1];
@@ -59,6 +60,7 @@
     [lineGroupController addButtonToGroup:_defenseLine3];
     [lineGroupController addButtonToGroup:_defenseLine4];
     [lineGroupController addButtonToGroup:_getAllStrengthTags];
+    lineGroupController.displayAllTagIfAllFilterOn = false;
     
     PxpFilterButtonGroupController *strengthGroupController = [[PxpFilterButtonGroupController alloc]init];
     [strengthGroupController addButtonToGroup:_homeStrength3];
@@ -69,6 +71,7 @@
     [strengthGroupController addButtonToGroup:_awayStrength4];
     [strengthGroupController addButtonToGroup:_awayStrength5];
     [strengthGroupController addButtonToGroup:_awayStrength6];
+    strengthGroupController.displayAllTagIfAllFilterOn = false;
     
     NSArray *array = @[periodGroupController,lineGroupController,strengthGroupController];
     return array;

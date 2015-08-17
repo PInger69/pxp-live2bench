@@ -45,6 +45,7 @@
     [halfGroupController addButtonToGroup:_half1];
     [halfGroupController addButtonToGroup:_half2];
     [halfGroupController addButtonToGroup:_halfExtra];
+    halfGroupController.displayAllTagIfAllFilterOn = true;
     
     NSArray *array = @[halfGroupController];
     return array;

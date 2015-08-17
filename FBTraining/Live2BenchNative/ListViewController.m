@@ -390,12 +390,12 @@
         
 
         
-        /*if(eventTags.count > 0 && !self.tagsToDisplay){
-            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+        if(eventTags.count > 0 && !self.tagsToDisplay){
+            //self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
 
             [_tableViewController reloadData];
-        }*/
+        }
 
 
         
@@ -826,7 +826,7 @@
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
-    [filter filterTags:self.tagsToDisplay];
+    [filter filterTags:self.allTags];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     [_tableViewController reloadData];

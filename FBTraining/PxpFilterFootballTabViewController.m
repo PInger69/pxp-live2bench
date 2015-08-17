@@ -47,6 +47,7 @@
     [quarterGroupController addButtonToGroup:_quarter2];
     [quarterGroupController addButtonToGroup:_quarter3];
     [quarterGroupController addButtonToGroup:_quarter4];
+    quarterGroupController.displayAllTagIfAllFilterOn = true;
     
     PxpFilterButtonGroupController *lineGroupController = [[PxpFilterButtonGroupController alloc]init];
     [lineGroupController addButtonToGroup:_offenseDown1];
@@ -55,11 +56,13 @@
     [lineGroupController addButtonToGroup:_defenseDown1];
     [lineGroupController addButtonToGroup:_defenseDown2];
     [lineGroupController addButtonToGroup:_defenseDown3];
+    lineGroupController.displayAllTagIfAllFilterOn = false;
     
     PxpFilterButtonGroupController *typeGroupController = [[PxpFilterButtonGroupController alloc]init];
     [typeGroupController addButtonToGroup:_passTypeButton];
     [typeGroupController addButtonToGroup:_runTypeButton];
     [typeGroupController addButtonToGroup:_kickTypeButton];
+    typeGroupController.displayAllTagIfAllFilterOn = false;
     
     NSArray *array = @[quarterGroupController,lineGroupController,typeGroupController];
     return array;
