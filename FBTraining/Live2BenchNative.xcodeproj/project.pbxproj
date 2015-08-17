@@ -470,6 +470,8 @@
 		D7D2F6A01B7BED6F00DC0DC5 /* telestrationIconOn.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69C1B7BED6F00DC0DC5 /* telestrationIconOn.png */; };
 		D7D2F6A11B7BED6F00DC0DC5 /* telestrationIconOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F69D1B7BED6F00DC0DC5 /* telestrationIconOn@2x.png */; };
 		D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D2F6A31B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m */; };
+		D7D2F6A81B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D2F6A71B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m */; };
+		D7D2F6AA1B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F6A91B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib */; };
 		D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D43F6D1B5D4A56007B188D /* FeedInspector.m */; };
 		D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D86CD416B2D84500F48523 /* ContentViewController.m */; };
 		D7DA233016B713FA00143102 /* BG.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA232F16B713FA00143102 /* BG.png */; };
@@ -1251,6 +1253,9 @@
 		D7D2F6A21B7CE1FE00DC0DC5 /* PxpFilterButtonGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterButtonGroupController.h; sourceTree = "<group>"; };
 		D7D2F6A31B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterButtonGroupController.m; sourceTree = "<group>"; };
 		D7D2F6A51B7CE67B00DC0DC5 /* PxpFilterButtonGroupControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterButtonGroupControllerDelegate.h; sourceTree = "<group>"; };
+		D7D2F6A61B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterMyClipTabViewController.h; sourceTree = "<group>"; };
+		D7D2F6A71B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterMyClipTabViewController.m; sourceTree = "<group>"; };
+		D7D2F6A91B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterMyClipTabViewController.xib; sourceTree = "<group>"; };
 		D7D43F6C1B5D4A56007B188D /* FeedInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeedInspector.h; path = Live2BenchNative/UtilityClasses/FeedInspector.h; sourceTree = "<group>"; };
 		D7D43F6D1B5D4A56007B188D /* FeedInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedInspector.m; path = Live2BenchNative/UtilityClasses/FeedInspector.m; sourceTree = "<group>"; };
 		D7D86CD316B2D84400F48523 /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
@@ -2138,7 +2143,10 @@
 				D78093B31B6ACA25006488A9 /* PxpFilterTabController.m */,
 				D78093B41B6ACA25006488A9 /* PxpFilterDefaultTabViewController.h */,
 				D78093B51B6ACA25006488A9 /* PxpFilterDefaultTabViewController.m */,
+				D7D2F6A61B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.h */,
+				D7D2F6A71B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m */,
 				D78093B61B6ACA25006488A9 /* PxpFilterDefaultTabViewController.xib */,
+				D7D2F6A91B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib */,
 				D767EF0F1B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.h */,
 				D7341A831B73C01D005156E9 /* PxpFilterFootballTabViewController.h */,
 				D7341A841B73C01D005156E9 /* PxpFilterFootballTabViewController.m */,
@@ -2997,6 +3005,7 @@
 				D7B79CCD182C304900F0876D /* saveToAlbum@2x.png in Resources */,
 				D786C1FA17EBA6BE0042DD96 /* live2BenchTab@2x.png in Resources */,
 				BD3104FE183590A80094AE6D /* dropboxicoSel.png in Resources */,
+				D7D2F6AA1B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib in Resources */,
 				BD90458F17F0FE2B001423FF /* checkmarkOverlay.png in Resources */,
 				94B28D891935202A0000E804 /* undoButtonSelect@2x.png in Resources */,
 				94B28D881935202A0000E804 /* undoButtonSelect.png in Resources */,
@@ -3206,6 +3215,7 @@
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
 				D78093C21B6ACA25006488A9 /* PxpFilterDefaultTabViewController.m in Sources */,
 				D78093C11B6ACA25006488A9 /* PxpFilterTabController.m in Sources */,
+				D7D2F6A81B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m in Sources */,
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
 				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,

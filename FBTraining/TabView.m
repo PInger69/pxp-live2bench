@@ -7,9 +7,11 @@
 //
 
 #import "TabView.h"
-#import "PxpFilterDefaultTabViewController.h"
+
 #import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
+#import "PxpFilterSoccerTabViewController.h"
 #import "PxpFilterTabController.h"
 
 @interface TabView ()
@@ -20,7 +22,9 @@
 
 
 
-static TabView* sharedFilter;
+static TabView  * sharedFilter;
+static PxpFilterDefaultTabViewController  * sharedDefaultFilterTab;
+static NSString * currentFilterSport;
 
 @implementation TabView
 {
@@ -28,11 +32,70 @@ static TabView* sharedFilter;
     PxpFilterTabController *previousTab;  //The previous tab showed
 }
 
-+(nonnull instancetype)sharedFilterTab
++(PxpFilterDefaultTabViewController*)sharedDefaultFilterTab
 {
-    if (!sharedFilter) sharedFilter = [[TabView alloc]init];
+    if (!sharedFilter) {
+        sharedFilter = [[TabView alloc]init];
+        sharedDefaultFilterTab = [PxpFilterDefaultTabViewController new];
+        [sharedFilter addTab:sharedDefaultFilterTab];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:nil];
+    }
+    
+
+    return sharedDefaultFilterTab;
+}
+
+
+
++(nonnull instancetype)sharedFilterTabBar
+{
+    if (!sharedFilter) {
+        sharedFilter = [[TabView alloc]init];
+        sharedDefaultFilterTab = [PxpFilterDefaultTabViewController new];
+        [sharedFilter addTab:sharedDefaultFilterTab];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:nil];
+    }
     return sharedFilter;
 }
+
++(void)eventChanged:(NSNotification *)note
+{
+    
+    NSString * aSport = note.userInfo[@"eventType"];
+    
+    if ([currentFilterSport isEqualToString:@""]) return;
+    
+    for (PxpFilterTabController *aTab in sharedFilter.tabs) {
+        if (![aTab isKindOfClass:[PxpFilterDefaultTabViewController class]]){
+            [sharedFilter removeTab:aTab];
+        }
+    }
+
+    
+
+    if ([aSport isEqualToString:SPORT_HOCKEY]) {
+        [sharedFilter addTab:[[PxpFilterHockeyTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_FOOTBALL]) {
+        [sharedFilter addTab:[[PxpFilterFootballTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+        
+    } else if ([aSport isEqualToString:SPORT_SOCCER]) {
+        [sharedFilter addTab:[[PxpFilterSoccerTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_BASKETBALL]) {
+        
+    } else if ([aSport isEqualToString:SPORT_LACROSSE]) {
+        
+    } else if ([aSport isEqualToString:SPORT_RUGBY]) {
+        [sharedFilter addTab:[[PxpFilterRugbyTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_MEDICAL]) {
+        
+    }
+
+    
+
+    
+}
+
 
 
 - (id)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
@@ -40,7 +103,7 @@ static TabView* sharedFilter;
     if (self) {
         _tabs = [NSMutableArray array];
         previousTab=nil;
-        
+        self.preferredContentSize = CGSizeMake(800, 500);        
     }
     return self;
 }
@@ -50,6 +113,7 @@ static TabView* sharedFilter;
     if (self) {
         _tabs = [NSMutableArray arrayWithArray:tabs];
         previousTab=nil;
+        self.preferredContentSize = CGSizeMake(800, 500);
     }
     return self;
 }

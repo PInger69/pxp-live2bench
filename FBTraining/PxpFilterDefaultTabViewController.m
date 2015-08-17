@@ -16,7 +16,7 @@
 
 @implementation PxpFilterDefaultTabViewController
 {
-
+    BOOL    _isTelestrationActive;
     NSArray * _prefilterTagNames;
 }
 @synthesize tabImage;
@@ -27,14 +27,16 @@
     if (self) {
         self.title = @"Default";
         tabImage =  [UIImage imageNamed:@"filter"];
-    
+        _isTelestrationActive = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_ENABLE_TELE_FILTER object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_DISABLE_TELE_FILTER object:nil];
     }
     
     
     return self;
 }
+
 
 - (void)UIUpdate:(NSNotification*)note {
     PxpFilter * filter = (PxpFilter *) note.object;
@@ -42,7 +44,12 @@
     _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.unfilteredTags.count];
 }
 
+-(void)toggleTelestationFilterButton:(NSNotification*)note
+{
+    _isTelestrationActive = ([note.name isEqualToString:NOTIF_ENABLE_TELE_FILTER])?YES:NO;
+    self.telestrationButton.enabled = _isTelestrationActive;
 
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -75,6 +82,7 @@
         return (t.type == TagTypeTele);
     }]];
 
+    _telestrationButton.enabled = _isTelestrationActive;
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
     

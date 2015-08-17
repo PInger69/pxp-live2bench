@@ -13,7 +13,8 @@
 #import "CustomTabBar.h"
 #import "CustomButton.h"
 #import "ClipCornerView.h"
-//#import "UIColor+Expanded.h"
+#import "PxpFilter.h"
+#import "TabView.h"
 
 
 
@@ -21,7 +22,7 @@
 @class CustomTabBar;
 @class thumbnailCell;
 
-@interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate>
+@interface ClipViewController : CustomTabViewController<UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,UIAlertViewDelegate, PxpFilterDelegate>
 {
     UICollectionView    * _collectionView;      //collection view for displaying thumbnails in clip view
     NSMutableArray      * _tagsToDisplay;       // array of tags which will display in clip view
@@ -33,6 +34,6 @@
 
 @property (nonatomic,strong) NSMutableArray *tagsToDisplay; // THIS IS WHAT YOU ADD TO THE SHOW UP ON SCREEN
 @property (nonatomic,strong) UICollectionView *collectionView;
-
+@property (nonatomic,weak)  PxpFilter           * pxpFilter;
 
 @end
