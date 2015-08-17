@@ -52,6 +52,8 @@
     
     void *_failedObserverContext;
     void *_motionObserverContext;
+    
+    void *_currentItemObserverContext;
 }
 
 - (void)initPlayerView {
@@ -130,11 +132,15 @@
     _failedObserverContext = &_failedObserverContext;
     _motionObserverContext = &_motionObserverContext;
     
+    _currentItemObserverContext = &_currentItemObserverContext;
+    
     [self addObserver:self forKeyPath:@"player.status" options:0 context:_statusContext];
     [self addObserver:self forKeyPath:@"player.name" options:0 context:_nameContext];
     
     [self addObserver:self forKeyPath:@"player.failed" options:0 context:_failedObserverContext];
     //[self addObserver:self forKeyPath:@"player.motion" options:0 context:_motionObserverContext];
+    
+    [self addObserver:self forKeyPath:@"player.currentItem" options:0 context:_currentItemObserverContext];
     
     self.backgroundColor = [UIColor blackColor];
     
@@ -194,6 +200,13 @@
 - (void)setPlayer:(nullable PxpPlayer *)player {
     [super setPlayer:player];
     
+    /*
+    CGRect frame = self.avPlayerView.frame;
+    [self.avPlayerView removeFromSuperview];
+    self.avPlayerView.layer.player = nil;
+    self.avPlayerView = [[PxpAVPlayerView alloc] initWithFrame:frame];
+    [self.scrollView addSubview:self.avPlayerView];
+     */
     self.avPlayerView.layer.player = player;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

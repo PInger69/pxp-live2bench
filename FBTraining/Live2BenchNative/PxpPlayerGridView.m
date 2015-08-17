@@ -116,7 +116,7 @@
 }
 
 - (NSUInteger)numberOfRowsInGridView:(nonnull PxpPlayerGridView *)gridView {
-    return ceil((CGFloat) self.context.players.count / [self numberOfColumnsInGridView:self]);
+    return MAX(ceil(sqrt(self.context.players.count)), 2);
 }
 
 - (NSUInteger)contextIndexForPlayerGridView:(nonnull PxpPlayerGridView *)gridView forRow:(NSUInteger)row column:(NSUInteger)column {

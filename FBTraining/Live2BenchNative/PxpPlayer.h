@@ -24,7 +24,7 @@
 /// The name of the player.
 @property (copy, nonatomic, nonnull) NSString *name;
 
-/// The live playback status of the player.
+/// The live playback status of the player. (read-only)
 @property (readonly, assign, nonatomic) BOOL live;
 
 /// The playing status of the player. (read-only)

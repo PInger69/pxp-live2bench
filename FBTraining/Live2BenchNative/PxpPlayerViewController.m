@@ -108,6 +108,7 @@
         if (CMTIMERANGE_IS_INVALID(newRange) && !CMTimeRangeEqual(oldRange, newRange)) {
             _telestrationViewController.telestration = nil;
         }
+        
     } else if (context == _playerRateObserverContext) {
         if (_telestrationViewController.telestration.isStill && _playerView.player.rate) {
             _telestrationViewController.telestration = nil;

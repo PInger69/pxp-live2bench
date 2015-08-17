@@ -66,7 +66,7 @@
     self.companionView.hidden = NO;
     
     self.gridView.hidden = YES;
-    self.gridView.player = player;
+    self.gridView.player = nil;
     [self.context.mainPlayer sync];
     
     [self.delegate playerView:self changedFullViewStatus:self.fullView];
@@ -90,6 +90,7 @@
         _companionView.hidden = NO;
         
         _gridView.hidden = YES;
+        _gridView.player = nil;
         [self.context.mainPlayer sync];
         
         [self.delegate playerView:self changedFullViewStatus:self.fullView];
@@ -119,12 +120,15 @@
         PxpPlayerSingleView *playerView = (PxpPlayerSingleView *)recognizer.view;
         
         
-        if (playerView == self.companionView && self.companionView.player && self.context.players.count > 1) {
+        if (playerView == self.companionView && self.companionView.player /* && self.context.players.count > 1 */) {
             
-            self.gridView.hidden = NO;
+            PxpPlayer *player = self.companionView.player;
             
             self.companionView.hidden = YES;
             self.companionView.player = nil;
+            
+            self.gridView.hidden = NO;
+            self.gridView.player = player;
             
             [self.context.mainPlayer sync];
             
@@ -132,15 +136,20 @@
             [self.context reload];
         } else if (playerView.player && !self.companionView.player) {
             
-            self.companionView.player = playerView.player;
+            PxpPlayer *player = playerView.player;
+            
+            self.gridView.player = nil;
+            self.gridView.hidden = YES;
+            
+            self.companionView.player = player;
             self.companionView.hidden = NO;
             
-            self.gridView.hidden = YES;
+            
             [self.context.mainPlayer sync];
             
             
             [self.delegate playerView:self changedFullViewStatus:self.fullView];
-            [playerView.player reload];
+            [player reload];
         }
         
     }

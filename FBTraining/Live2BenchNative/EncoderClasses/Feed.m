@@ -197,24 +197,12 @@
     return self.assets.allValues.firstObject;
 }
 
-- (void)loadAssets {
-    NSArray *assets = self.assets.allValues;
-    __block NSUInteger n = assets.count;
-    __block NSUInteger c = 0;
-    
-    void (^handler)() = ^() {
-        c++;
-        
-        if (n <= c) {
-            [self willChangeValueForKey:@"assetsReady"];
-            _assetsReady = YES;
-            [self didChangeValueForKey:@"assetsReady"];
-        }
-    };
-    
-    for (AVAsset *asset in assets) {
-        [asset loadValuesAsynchronouslyForKeys:@[@"playable"] completionHandler:handler];
-    }
+- (nullable NSURL *)lqPath {
+    return _qualities[LOW_QUALITY];
+}
+
+- (nullable NSURL *)hqPath {
+    return _qualities[HIGH_QUALITY];
 }
 
 @end

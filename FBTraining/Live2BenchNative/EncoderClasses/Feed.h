@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_END
 -(nonnull instancetype)initWithURLString:(nonnull NSString *)aPath quality:(int)qlty;
 -(nonnull instancetype) initWithFileURL: (nonnull NSString *) fileURL;
 -(nullable NSURL *)path;
+-(nullable NSURL *)hqPath;
+-(nullable NSURL *)lqPath;
 
 
 

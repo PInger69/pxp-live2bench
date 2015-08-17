@@ -580,13 +580,19 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)reload {
+    static BOOL canReload = YES;
     
-    if (self.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+    if (canReload && self.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+        canReload = NO;
+        
         AVPlayerItem *item = self.currentItem;
         [self replaceCurrentItemWithPlayerItem:nil];
         [self replaceCurrentItemWithPlayerItem:item];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            canReload = YES;
+        });
     }
-    
 }
 
 #pragma mark - Private Methods
@@ -628,7 +634,9 @@ static CMClockRef _pxpPlayerMasterClock;
             }];
         }
         
-        _live = YES;
+        [self willChangeValueForKey:@"live"];
+        _live = CMTIMERANGE_IS_INVALID(self.range);
+        [self didChangeValueForKey:@"live"];
     } else {
         self.live = YES;
     }
@@ -707,7 +715,7 @@ static CMClockRef _pxpPlayerMasterClock;
             self.syncs++;
            } */
         
-        else if (self.live) {
+        else if (self.live && CMTIMERANGE_IS_INVALID(self.range)) {
             NSLog(@"Syncing (Live)");
             [self goToLive];
             
