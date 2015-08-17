@@ -73,6 +73,7 @@
     [strengthGroupController addButtonToGroup:_awayStrength6];
     strengthGroupController.displayAllTagIfAllFilterOn = false;
     
+    
     NSArray *array = @[periodGroupController,lineGroupController,strengthGroupController];
     return array;
 }
