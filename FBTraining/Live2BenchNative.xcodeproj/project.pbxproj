@@ -3472,6 +3472,8 @@
 				D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */,
 				D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */,
 				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
+				D77351301B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m in Sources */,
+				AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,
 				D7581F2B196461ED0029C5DD /* DragDropManager.m in Sources */,

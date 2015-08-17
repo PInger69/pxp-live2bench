@@ -133,13 +133,27 @@ static CMClockRef _pxpPlayerMasterClock;
     if (context == _statusObserverContext || context == _currentItemObserverContext) {
         if (self.status != AVPlayerStatusUnknown) {
             
-            if (self.currentItem.status == AVPlayerStatusFailed) {
+            if (self.currentItem.status == AVPlayerItemStatusFailed) {
                 PXPLog(@"%@: %@", self, self.currentItem.error);
                 
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.currentItem.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 
-                [alert show];
-                //[self reload];
+                
+                if (self.status == AVPlayerStatusFailed) {
+                    
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.currentItem.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                     
+                     [alert show];
+                    
+                } else {
+                    // reload the asset
+                    AVAsset *asset = self.currentItem.asset;
+                    if ([asset isKindOfClass:[AVURLAsset class]]) {
+                        NSURL *url = ((AVURLAsset *)asset).URL;
+                        
+                        [self replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:url]];
+                    }
+                }
+                
             }
             
             // run actions
@@ -151,10 +165,11 @@ static CMClockRef _pxpPlayerMasterClock;
             [self.loadActionQueue removeAllObjects];
         }
         
-        
+        /*
         [self willChangeValueForKey:@"failed"];
         _failed = self.status == AVPlayerStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
         [self didChangeValueForKey:@"failed"];
+         */
         
         
     } else if (context == _rateObserverContext) {
@@ -632,11 +647,11 @@ static CMClockRef _pxpPlayerMasterClock;
                 }];
                  */
             }];
+            
+            [self willChangeValueForKey:@"live"];
+            _live = YES;
+            [self didChangeValueForKey:@"live"];
         }
-        
-        [self willChangeValueForKey:@"live"];
-        _live = CMTIMERANGE_IS_INVALID(self.range);
-        [self didChangeValueForKey:@"live"];
     } else {
         self.live = YES;
     }
