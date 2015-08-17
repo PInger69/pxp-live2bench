@@ -73,7 +73,9 @@
         
         // run the block
         if (_block) {
-            _block(success);
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                _block(success);
+            });
         }
         
         // signal the completion

@@ -481,28 +481,37 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)setRate:(float)rate {
-    if (self.live && rate != 1.0) self.live = NO;
-    [self setRate:rate multi:YES];
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        if (self.live && rate != 1.0) self.live = NO;
+        [self setRate:rate multi:YES];
+    });
 }
 
 - (void)setRate:(float)rate time:(CMTime)itemTime atHostTime:(CMTime)hostClockTime {
-    if (self.live && rate != 1.0) self.live = NO;
-    [self setRate:rate multi:YES time:itemTime atHostTime:hostClockTime];
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        if (self.live && rate != 1.0) self.live = NO;
+        [self setRate:rate multi:YES time:itemTime atHostTime:hostClockTime];
+    });
 }
 
 - (void)prerollAtRate:(float)rate completionHandler:( void (^)(BOOL))completionHandler {
     if (!completionHandler) completionHandler = ^(BOOL complete) {};
-    if (rate != 0.0) {
-        [self prerollAtRate:rate multi:YES completionHandler:completionHandler];
-    } else {
-        completionHandler(YES);
-    }
     
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        if (rate != 0.0) {
+            [self prerollAtRate:rate multi:YES completionHandler:completionHandler];
+        } else {
+            completionHandler(YES);
+        }
+    });
 }
 
 - (void)seekToDate:(nonnull NSDate *)date {
     self.live = NO;
-    [self seekToDate:date multi:YES completionHandler:^(BOOL finished) {}];
+    
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [self seekToDate:date multi:YES completionHandler:^(BOOL finished) {}];
+    });
 }
 
 - (void)seekToDate:(nonnull NSDate *)date completionHandler:(nonnull void (^)(BOOL))completionHandler {
@@ -512,22 +521,36 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)seekToTime:(CMTime)time {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {}];
+    
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {}];
+    });
+    
 }
 
 - (void)seekToTime:(CMTime)time completionHandler:(nonnull void (^)(BOOL))completionHandler {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:completionHandler];
+    
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:completionHandler];
+    });
 }
 
 - (void)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    [self seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL finished) {}];
+    
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [self seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL finished) {}];
+    });
+    
 }
 
 - (void)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nonnull void (^)(BOOL))completionHandler {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    [self seekToTime:time multi:YES toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+    
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [self seekToTime:time multi:YES toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+    });
 }
 
 - (void)cancelPendingPrerolls {

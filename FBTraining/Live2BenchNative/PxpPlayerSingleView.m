@@ -53,7 +53,7 @@
     void *_failedObserverContext;
     void *_motionObserverContext;
     
-    void *_currentItemObserverContext;
+    void *_currentItemDurationObserverContext;
 }
 
 - (void)initPlayerView {
@@ -132,7 +132,7 @@
     _failedObserverContext = &_failedObserverContext;
     _motionObserverContext = &_motionObserverContext;
     
-    _currentItemObserverContext = &_currentItemObserverContext;
+    _currentItemDurationObserverContext = &_currentItemDurationObserverContext;
     
     [self addObserver:self forKeyPath:@"player.status" options:0 context:_statusContext];
     [self addObserver:self forKeyPath:@"player.name" options:0 context:_nameContext];
@@ -140,7 +140,7 @@
     [self addObserver:self forKeyPath:@"player.failed" options:0 context:_failedObserverContext];
     //[self addObserver:self forKeyPath:@"player.motion" options:0 context:_motionObserverContext];
     
-    [self addObserver:self forKeyPath:@"player.currentItem" options:0 context:_currentItemObserverContext];
+    [self addObserver:self forKeyPath:@"player.currentItem.seekableTimeRanges" options:0 context:_currentItemDurationObserverContext];
     
     self.backgroundColor = [UIColor blackColor];
     
@@ -172,15 +172,17 @@
     
     [self removeObserver:self forKeyPath:@"player.failed" context:_failedObserverContext];
     //[self removeObserver:self forKeyPath:@"player.motion" context:_motionObserverContext];
+    
+    [self removeObserver:self forKeyPath:@"player.currentItem.seekableTimeRanges" context:_currentItemDurationObserverContext];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     
     if (context == _statusContext) {
         if (self.player.status == AVPlayerStatusUnknown) {
-            [self.activityIndicator startAnimating];
+            //[self.activityIndicator startAnimating];
         } else {
-            [self.activityIndicator stopAnimating];
+            //[self.activityIndicator stopAnimating];
         }
     } else if (context == _nameContext) {
         self.nameLabel.text = self.player.name;
@@ -188,6 +190,12 @@
         self.nameLabel.textColor = self.player.motion ? self.tintColor : [UIColor whiteColor];
     } else if (context == _failedObserverContext) {
         self.blurView.hidden = self.player.status != AVPlayerStatusFailed;
+    } else if (context == _currentItemDurationObserverContext) {
+        if (self.player.currentItem.seekableTimeRanges.count) {
+            [self.activityIndicator stopAnimating];
+        } else {
+            [self.activityIndicator startAnimating];
+        }
     }
 }
 

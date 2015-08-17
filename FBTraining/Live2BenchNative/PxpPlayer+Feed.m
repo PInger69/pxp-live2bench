@@ -11,9 +11,7 @@
 @implementation PxpPlayer (Feed)
 
 - (void)setFeed:(nullable Feed *)feed {
-    NSURL *url = feed.path;
-    
-    [super replaceCurrentItemWithPlayerItem:url ? [AVPlayerItem playerItemWithAsset:[AVURLAsset assetWithURL:url] automaticallyLoadedAssetKeys:@[@"playable", @"tracks", @"duration"]] : nil];
+    [super replaceCurrentItemWithPlayerItem:feed.path ? [AVPlayerItem playerItemWithURL:feed.path] : nil];
 }
 
 @end
