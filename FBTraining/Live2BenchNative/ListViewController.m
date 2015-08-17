@@ -218,7 +218,7 @@
     
     for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTags containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
                 [_pxpFilter addTags:@[tag]];
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
@@ -417,12 +417,12 @@
         
 
         
-        if(eventTags.count > 0 && !self.tagsToDisplay){
+        /*if(eventTags.count > 0 && !self.tagsToDisplay){
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
 
             [_tableViewController reloadData];
-        }
+        }*/
 
 
         
@@ -744,7 +744,7 @@
 }
 
 
-- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
+/*- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
     NSMutableArray *tags = [NSMutableArray array];
     for (Tag *tag in tagsToDisplay) {
 //        if (tag.type == TagTypeNormal) {
@@ -752,7 +752,7 @@
 //        }
     }
     _tagsToDisplay = tags;
-}
+}*/
 
 #pragma mark - Sorting Methods
 
@@ -797,7 +797,7 @@
 - (void)pressFilterButton
 {
     
-    [_pxpFilter filterTags:[self.allTags copy]];
+    [_pxpFilter filterTags:[self.tagsToDisplay copy]];
     TabView *popupTabBar = [TabView sharedFilterTab];
     
     
@@ -840,7 +840,7 @@
     [self presentViewController:popupTabBar animated:YES completion:nil];
  
     
-    [_pxpFilter filterTags:[self.allTags copy]];
+    [_pxpFilter filterTags:[self.tagsToDisplay copy]];
 
     if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 }
@@ -857,7 +857,7 @@
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
-    [filter filterTags:self.allTags];
+    [filter filterTags:self.tagsToDisplay];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     [_tableViewController reloadData];
