@@ -401,7 +401,7 @@
 
         
         if(eventTags.count > 0 && !self.tagsToDisplay){
-            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+            //self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
 
             [_tableViewController reloadData];
@@ -723,7 +723,7 @@
 }
 
 
-- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
+/*- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
     NSMutableArray *tags = [NSMutableArray array];
     for (Tag *tag in tagsToDisplay) {
 //        if (tag.type == TagTypeNormal) {
@@ -731,7 +731,7 @@
 //        }
     }
     _tagsToDisplay = tags;
-}
+}*/
 
 #pragma mark - Sorting Methods
 
@@ -778,6 +778,26 @@
     
     [_pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTabBar];
+    
+    
+    // setFilter to this view. This is the default filtering for ListView
+    // what ever is added to these predicates will be ignored in the filters raw tags
+    _pxpFilter.delegate = self;
+    [_pxpFilter removeAllPredicates];
+
+    
+    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                   ]];
+
+    [_pxpFilter addPredicates:@[ignoreThese]];
     
     if (popupTabBar.isViewLoaded)
     {

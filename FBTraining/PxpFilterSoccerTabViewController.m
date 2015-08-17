@@ -59,11 +59,13 @@
     [halfGroupController addButtonToGroup:_half2];
     [halfGroupController addButtonToGroup:_halfExtra];
     [halfGroupController addButtonToGroup:_halfPS];
+    halfGroupController.displayAllTagIfAllFilterOn = true;
     
     PxpFilterButtonGroupController *zoneGroupController = [[PxpFilterButtonGroupController alloc]init];
     [zoneGroupController addButtonToGroup:_zoneOFF];
     [zoneGroupController addButtonToGroup:_zoneMID];
     [zoneGroupController addButtonToGroup:_zoneDEF];
+    zoneGroupController.displayAllTagIfAllFilterOn = false;
     
     NSArray *array = @[halfGroupController,zoneGroupController];
     return array;
