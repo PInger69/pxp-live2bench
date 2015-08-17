@@ -246,8 +246,8 @@
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FWt-oY-QLb">
-                    <rect key="frame" x="305" y="54" width="247" height="183"/>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FWt-oY-QLb" customClass="PxpFilterButtonGroupController">
+                    <rect key="frame" x="305" y="148" width="247" height="89"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Type" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rQ4-l3-uW3">
                             <rect key="frame" x="102" y="8" width="42" height="21"/>
@@ -255,17 +255,17 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXB-An-0ks" customClass="PxpFilterButton">
-                            <rect key="frame" x="17" y="77" width="46" height="30"/>
-                            <state key="normal" title="Run"/>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RhQ-Ea-3JD" customClass="PxpFilterButton">
+                            <rect key="frame" x="100" y="51" width="46" height="30"/>
+                            <state key="normal" title="Pass"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hrb-ew-kpU" customClass="PxpFilterButton">
-                            <rect key="frame" x="193" y="77" width="46" height="30"/>
+                            <rect key="frame" x="193" y="51" width="46" height="30"/>
                             <state key="normal" title="Kick"/>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RhQ-Ea-3JD" customClass="PxpFilterButton">
-                            <rect key="frame" x="100" y="77" width="46" height="30"/>
-                            <state key="normal" title="Pass"/>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXB-An-0ks" customClass="PxpFilterButton">
+                            <rect key="frame" x="8" y="51" width="46" height="30"/>
+                            <state key="normal" title="Run"/>
                         </button>
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>

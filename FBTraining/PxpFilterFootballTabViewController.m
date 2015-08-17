@@ -32,8 +32,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
         
     }
-    
-    
     return self;
 }
 
@@ -144,7 +142,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self buttonPredicate];
-     NSArray *groupViews = [self buttonGroupView];
+    NSArray *groupViews = [self buttonGroupView];
     
     self.modules = [[NSMutableArray alloc]initWithArray:@[
                                                           _tagNameScrollView,
@@ -153,7 +151,8 @@
                                                           _userButton,
                                                           groupViews[0],
                                                           groupViews[1],
-                                                          groupViews[2]
+                                                          groupViews[2],
+                                                          _telestrationButton
                                                           ]];
     
     _tagNameScrollView.sortByPropertyKey = @"name";
@@ -169,8 +168,10 @@
     _favoriteButton.filterPropertyValue     = @"1";
     
     _telestrationButton.titleLabel.text     = @"";
-    _telestrationButton.filterPropertyKey   = @"type";
-    _telestrationButton.filterPropertyValue = @"4";
+    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+        Tag * t =   (Tag *) evaluatedObject;
+        return (t.type == TagTypeTele);
+    }]];
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
     [_telestrationButton setTitle:@"" forState:UIControlStateSelected];

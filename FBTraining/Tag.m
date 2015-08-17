@@ -88,10 +88,13 @@ static NSMutableDictionary * openDurationTagsWithID;
         self.user            = tagData[@"user"];
         self.modified        = [tagData[@"modified"] boolValue];
         _coachPick           = [tagData[@"coachpick"] boolValue];
-        self.extraDic        = [self buildExtraDic:tagData];
        [self builtTelestration:tagData];
         if ([tagData objectForKey:@"period"]) {
             self.period          = tagData[@"period"];
+        }
+        
+        if ([self buildExtraDic:tagData].count > 0) {
+            self.extraDic = [self buildExtraDic:tagData];
         }
 
         if ([tagData objectForKey:@"players"]) {
@@ -159,7 +162,9 @@ static NSMutableDictionary * openDurationTagsWithID;
     if ([data objectForKey:@"line"]) {
         [dict setObject:[data objectForKey:@"line"] forKey:@"line"];
     }
-    [dict addEntriesFromDictionary:[data objectForKey:@"extra"]];
+    if ([data objectForKey:@"extra"]) {
+        [dict addEntriesFromDictionary:[data objectForKey:@"extra"]];
+    }
     return [dict copy];
 }
 
@@ -283,7 +288,6 @@ static NSMutableDictionary * openDurationTagsWithID;
     output[@"rating"] = [NSString stringWithFormat:@"%ld", (long)_rating];
     output[@"type"] = [NSNumber numberWithInteger:self.type];
     output[@"time"] = [NSNumber numberWithInteger:self.time];
-    output[@"extra"] = self.extraDic? self.extraDic:@{};
     
     if (self.telestration) {
         output[@"telestration"] = self.telestration.data;
@@ -295,6 +299,10 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (self.period) {
         output[@"period"] = self.period;
+    }
+    
+    if (self.extraDic) {
+        output[@"extra"] = self.extraDic;
     }
     
     return output;
@@ -336,8 +344,7 @@ static NSMutableDictionary * openDurationTagsWithID;
              @"url"         : (self.thumbnails)?self.thumbnails:@{},
              @"user"        : self.user,
              @"visitTeam"   : (self.visitTeam)?self.visitTeam:@"",
-             @"synced"      : [NSString stringWithFormat:@"%i", self.synced],
-             @"extra"       : self.extraDic? self.extraDic:@{}
+             @"synced"      : [NSString stringWithFormat:@"%i", self.synced]
              //@"deviceid": (self.deviceID ? self.deviceID: @"nil"),
              //@"requrl": (self.requestURL? self.requestURL: @"nil"),
              //@"feeds" : (self.feeds ? self.feeds: @"nil")
@@ -357,6 +364,10 @@ static NSMutableDictionary * openDurationTagsWithID;
     
     if (self.telestration) {
         tagDict[@"telestration"] = self.telestration.data;
+    }
+    
+    if (self.extraDic) {
+        tagDict[@"extra"] = self.extraDic;
     }
     
     if (self.players) {
@@ -386,12 +397,15 @@ static NSMutableDictionary * openDurationTagsWithID;
                                                                                   @"id"          : [NSString stringWithFormat:@"%d", self.uniqueID],
                                                                                   @"type"        : [NSString stringWithFormat:@"%ld", (long)self.type],
                                                                                   @"comment"     : (_comment)?_comment:@"",
-                                                                                  @"rating"     : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@"",
-                                                                                    @"extra"       :self.extraDic? self.extraDic:@{}
+                                                                                  @"rating"     : (_rating)?[NSString stringWithFormat:@"%ld", (long)_rating]:@""
                                                                                   
                                                                                   }];
     if (self.durationID) {
         [tagData setObject:self.durationID forKey:@"dtagid"];
+    }
+    
+    if (self.extraDic) {
+        [tagData setObject:self.extraDic forKey:@"extra"];
     }
     
     if (self.thumbnails.count > 1) {

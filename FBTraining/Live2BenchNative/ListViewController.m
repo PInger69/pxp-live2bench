@@ -32,6 +32,8 @@
 #import "PxpFilterDefaultTabViewController.h"
 #import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterSoccerTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
 
 
 @interface ListViewController ()
@@ -784,6 +786,7 @@
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
                                                                                    ]];
 
     [_pxpFilter addPredicates:@[ignoreThese]];
@@ -794,7 +797,7 @@
     }
   
 
-    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init],[[PxpFilterFootballTabViewController alloc]init]];
+    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init],[[PxpFilterFootballTabViewController alloc]init],[[PxpFilterSoccerTabViewController alloc]init],[[PxpFilterRugbyTabViewController alloc]init]];
     popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
     popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
 

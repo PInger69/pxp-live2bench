@@ -254,26 +254,29 @@
                                                           groupViews[1],
                                                           groupViews[2],
                                                           _favoriteButton,
-                                                          _userButton
+                                                          _userButton,
+                                                          _telestrationButton
                                                           ]];
     
     _tagNameScrollView.sortByPropertyKey = @"name";
     _tagNameScrollView.buttonSize = CGSizeMake(130, 30);
+    
     _preFilterSwitch.onTintColor            = PRIMARY_APP_COLOR;
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;
     [_preFilterSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
+    
     _sliderView.sortByPropertyKey = @"time";
     
     _favoriteButton.filterPropertyKey       = @"coachPick";
     _favoriteButton.filterPropertyValue     = @"1";
     
     _telestrationButton.titleLabel.text     = @"";
-    //_telestrationButton.filterPropertyKey   = @"type";
-    //_telestrationButton.filterPropertyValue = @"4";
-    
+    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+        Tag * t =   (Tag *) evaluatedObject;
+        return (t.type == TagTypeTele);
+    }]];
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
-    
     [_telestrationButton setTitle:@"" forState:UIControlStateSelected];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOn"] forState:UIControlStateSelected];
   
