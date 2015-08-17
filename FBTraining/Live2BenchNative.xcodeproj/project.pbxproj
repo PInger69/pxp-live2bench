@@ -252,6 +252,10 @@
 		D76B6DD81A8AC08500601BAF /* ImageAssetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D76B6DD71A8AC08500601BAF /* ImageAssetManager.m */; };
 		D76B6DDB1A8AC13000601BAF /* ListPopoverControllerWithImages.m in Sources */ = {isa = PBXBuildFile; fileRef = D76B6DDA1A8AC13000601BAF /* ListPopoverControllerWithImages.m */; };
 		D76B6DE01A8AC6A900601BAF /* imageNotAvailable.png in Resources */ = {isa = PBXBuildFile; fileRef = D76B6DDF1A8AC6A900601BAF /* imageNotAvailable.png */; };
+		D773512D1B7E7DF600DDCA4A /* PxpFilterSoccerTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D773512C1B7E7DF600DDCA4A /* PxpFilterSoccerTabViewController.xib */; };
+		D77351301B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D773512F1B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m */; };
+		D77351321B821C9D00DDCA4A /* PxpFilterRugbyTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D77351311B821C9D00DDCA4A /* PxpFilterRugbyTabViewController.xib */; };
+		D77351351B821DA900DDCA4A /* PxpFilterRugbyTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D77351341B821DA900DDCA4A /* PxpFilterRugbyTabViewController.m */; };
 		D773A36B16D87DE5007A0BA9 /* coach.png in Resources */ = {isa = PBXBuildFile; fileRef = D773A36216D87DE5007A0BA9 /* coach.png */; };
 		D773A36C16D87DE5007A0BA9 /* coach@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D773A36316D87DE5007A0BA9 /* coach@2x.png */; };
 		D773A36D16D87DE5007A0BA9 /* coachPicked.png in Resources */ = {isa = PBXBuildFile; fileRef = D773A36416D87DE5007A0BA9 /* coachPicked.png */; };
@@ -937,6 +941,12 @@
 		D76B6DD91A8AC13000601BAF /* ListPopoverControllerWithImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListPopoverControllerWithImages.h; sourceTree = "<group>"; };
 		D76B6DDA1A8AC13000601BAF /* ListPopoverControllerWithImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListPopoverControllerWithImages.m; sourceTree = "<group>"; };
 		D76B6DDF1A8AC6A900601BAF /* imageNotAvailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imageNotAvailable.png; sourceTree = "<group>"; };
+		D773512C1B7E7DF600DDCA4A /* PxpFilterSoccerTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterSoccerTabViewController.xib; sourceTree = "<group>"; };
+		D773512E1B7E826800DDCA4A /* PxpFilterSoccerTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterSoccerTabViewController.h; sourceTree = "<group>"; };
+		D773512F1B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterSoccerTabViewController.m; sourceTree = "<group>"; };
+		D77351311B821C9D00DDCA4A /* PxpFilterRugbyTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterRugbyTabViewController.xib; sourceTree = "<group>"; };
+		D77351331B821DA900DDCA4A /* PxpFilterRugbyTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterRugbyTabViewController.h; sourceTree = "<group>"; };
+		D77351341B821DA900DDCA4A /* PxpFilterRugbyTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFilterRugbyTabViewController.m; sourceTree = "<group>"; };
 		D773A36216D87DE5007A0BA9 /* coach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coach.png; sourceTree = "<group>"; };
 		D773A36316D87DE5007A0BA9 /* coach@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "coach@2x.png"; sourceTree = "<group>"; };
 		D773A36416D87DE5007A0BA9 /* coachPicked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coachPicked.png; sourceTree = "<group>"; };
@@ -2103,6 +2113,12 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D77351311B821C9D00DDCA4A /* PxpFilterRugbyTabViewController.xib */,
+				D77351331B821DA900DDCA4A /* PxpFilterRugbyTabViewController.h */,
+				D77351341B821DA900DDCA4A /* PxpFilterRugbyTabViewController.m */,
+				D773512E1B7E826800DDCA4A /* PxpFilterSoccerTabViewController.h */,
+				D773512F1B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m */,
+				D773512C1B7E7DF600DDCA4A /* PxpFilterSoccerTabViewController.xib */,
 				D78536351B7CE2C700A53CA8 /* PxpFilterButton.h */,
 				D78536361B7CE2C700A53CA8 /* PxpFilterButton.m */,
 				D7D2F6A21B7CE1FE00DC0DC5 /* PxpFilterButtonGroupController.h */,
@@ -2831,6 +2847,7 @@
 				AA222B5C195B839100820BCD /* sort@2x.png in Resources */,
 				D78F68CB18073DC70096C793 /* BlueSettingsButtonSelect.png in Resources */,
 				D7A067EF16AF0475002A2892 /* live.png in Resources */,
+				D77351321B821C9D00DDCA4A /* PxpFilterRugbyTabViewController.xib in Resources */,
 				D786C24317F39CA10042DD96 /* youtube.png in Resources */,
 				AAFCA6FE195B84B000D0F0E6 /* share.png in Resources */,
 				D78F68CF18073DC70096C793 /* RedSettingsButton.png in Resources */,
@@ -2961,6 +2978,7 @@
 				D76B6DE01A8AC6A900601BAF /* imageNotAvailable.png in Resources */,
 				D786C1E817EB9BF90042DD96 /* myClipTab@2x.png in Resources */,
 				D7CCE7F51AC1E48500D85095 /* BottomViewController.plist in Resources */,
+				D773512D1B7E7DF600DDCA4A /* PxpFilterSoccerTabViewController.xib in Resources */,
 				BDF9C2E01836D87100F6661E /* dropboxico@2x.png in Resources */,
 				D7DFD4A81827FA5F00D98BE7 /* appicon@2x.png in Resources */,
 				94F959791922B86A00B7D201 /* playbackRateButtonBackSelected.png in Resources */,
@@ -3292,6 +3310,7 @@
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
 				D799748216F8C37700CAAABB /* playerCell.m in Sources */,
+				D77351351B821DA900DDCA4A /* PxpFilterRugbyTabViewController.m in Sources */,
 				D7EE1E4118244DB800CA36CF /* GraphView.m in Sources */,
 				D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */,
 				D766F6271ACC8C5E005FC63A /* Event.m in Sources */,
@@ -3323,6 +3342,7 @@
 				D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */,
 				D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */,
 				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
+				D77351301B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m in Sources */,
 				AEB632001B5D3A93002E54D2 /* MultiFeed.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,

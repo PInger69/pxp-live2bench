@@ -32,6 +32,8 @@
 #import "PxpFilterDefaultTabViewController.h"
 #import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterSoccerTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
 
 
 @interface ListViewController ()
@@ -179,7 +181,7 @@
     
     for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTags containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
                 [_pxpFilter addTags:@[tag]];
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
