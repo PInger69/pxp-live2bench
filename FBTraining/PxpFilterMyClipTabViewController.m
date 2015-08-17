@@ -119,6 +119,15 @@
         
     }
     
+    NSPredicate * p = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+        
+        Clip * clip = evaluatedObject;
+        
+//        clip.players
+        return YES;
+    }];
+    _playersScrollView.predicate =  p;
+    
     
     // This is so that if  user changes that it reflects
 //    NSMutableSet * temp = [NSMutableSet new];

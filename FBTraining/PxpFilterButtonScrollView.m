@@ -194,30 +194,6 @@
 }
 
 
-//-(void)cellSelected:(id)sender
-//{
-//    
-//    CustomButton    * button   = (CustomButton *)sender;
-//    NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
-//    selectedCount              = 0;
-//    button.selected            = !button.selected;
-//    
-//    for (CustomButton  *b in _buttonList) {
-//        if(b.selected == YES){
-//            selectedCount++;
-//            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
-//            [_userSelected addObject:b.titleLabel.text];
-//        } else {
-//            [_userSelected removeObject:b.titleLabel.text];
-//        }
-//    }
-//    
-//    combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
-//    [_parentFilter refresh];
-//    
-//    
-//}
-
 
 -(void)deselect
 {
