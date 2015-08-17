@@ -268,8 +268,11 @@
     _favoriteButton.filterPropertyValue     = @"1";
     
     _telestrationButton.titleLabel.text     = @"";
-    //_telestrationButton.filterPropertyKey   = @"type";
-    //_telestrationButton.filterPropertyValue = @"4";
+    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+        Tag * t =   (Tag *) evaluatedObject;
+        return (t.type == TagTypeTele);
+    }]];
+
     
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];

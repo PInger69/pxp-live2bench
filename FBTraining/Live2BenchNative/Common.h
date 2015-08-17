@@ -290,8 +290,8 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
  *  Sports
  */
 
-#define SPORT_HOCKEY                @"hockey"
-#define SPORT_FOOTBALL              @"football"
+#define SPORT_HOCKEY                @"Hockey"
+#define SPORT_FOOTBALL              @"Football"
 #define SPORT_FOOTBALL_TRAINING     @"football training"
 #define SPORT_SOCCER                @"soccer"
 #define SPORT_BASKETBALL            @"basketball"

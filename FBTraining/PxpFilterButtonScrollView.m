@@ -31,6 +31,7 @@
         _userSelected           = [NSMutableSet new];
         _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
         _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
+        _style                  = PxpFilterButtonScrollViewStyleLandscape;
         [self setScrollEnabled:YES];
     }
     return self;
@@ -52,6 +53,7 @@
         _userSelected           = [NSMutableSet new];
         _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
         _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
+        _style                  = PxpFilterButtonScrollViewStyleLandscape;
         [self setScrollEnabled:YES];
     }
     return self;
@@ -68,7 +70,17 @@
 
     NSUInteger colNum = 0;
     NSUInteger rowNum = 0;
-    NSUInteger rowCount = (NSUInteger)self.frame.size.height / (_buttonSize.height+_buttonMargin.height);
+    NSUInteger rowCount;
+    
+    
+   
+   
+    if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
+        rowCount   = (NSUInteger)self.frame.size.height / (_buttonSize.height+_buttonMargin.height);
+    } else {
+        rowCount   = (NSUInteger)self.frame.size.height / (_buttonSize.width+_buttonMargin.width);
+    }
+    
     for (NSUInteger k = 0; k < buttonLabels.count; k++ ) {
         
         
@@ -78,17 +90,32 @@
                                                   rowNum * (_buttonSize.height+_buttonMargin.height),
                                                   _buttonSize.width, _buttonSize.height);
         
-        if (++rowNum ==rowCount){
-            rowNum = 0;
-            colNum++;
+        
+        
+        
+        if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
+            if (++rowNum ==rowCount){
+                rowNum = 0;
+                colNum++;
+            }
+        } else {
+            if (++colNum ==rowCount){
+                colNum = 0;
+                rowNum++;
+            }
         }
+        
+        
+        
         
         CustomButton  *eventButton = [self buildButton:rect btnText:tagLabel];
         [self addSubview:eventButton];
     }
-
-    [self setContentSize:CGSizeMake((colNum+1)*_buttonSize.width, self.frame.size.height)];
-    
+    if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
+        [self setContentSize:CGSizeMake((colNum+1)*_buttonSize.width, self.frame.size.height)];
+    } else {
+        [self setContentSize:CGSizeMake(self.frame.size.width, (rowNum+1)*_buttonSize.height)];
+    }
     
     // rebuild filter
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
@@ -142,6 +169,17 @@
     for (CustomButton  *b in _buttonList) {
         if(b.selected == YES){
             selectedCount++;
+            
+            self.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+//                Clip * clp = (Clip *) evaluatedObject;
+                
+//                clp.aw
+                
+                return YES;
+            }];
+            
+//            [self.predicate predicateWithSubstitutionVariables:@{}]
+            
             [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
             [_userSelected addObject:b.titleLabel.text];
         } else {
@@ -154,6 +192,32 @@
     
     
 }
+
+
+//-(void)cellSelected:(id)sender
+//{
+//    
+//    CustomButton    * button   = (CustomButton *)sender;
+//    NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
+//    selectedCount              = 0;
+//    button.selected            = !button.selected;
+//    
+//    for (CustomButton  *b in _buttonList) {
+//        if(b.selected == YES){
+//            selectedCount++;
+//            [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
+//            [_userSelected addObject:b.titleLabel.text];
+//        } else {
+//            [_userSelected removeObject:b.titleLabel.text];
+//        }
+//    }
+//    
+//    combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+//    [_parentFilter refresh];
+//    
+//    
+//}
+
 
 -(void)deselect
 {

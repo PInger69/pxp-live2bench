@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "PxpFilter.h"
 
+typedef NS_ENUM (NSInteger,PxpFilterButtonScrollViewStyle){
+    PxpFilterButtonScrollViewStylePortrate                  = 0,
+    PxpFilterButtonScrollViewStyleLandscape                 = 1
+};
+
+
+
 @interface PxpFilterButtonScrollView : UIScrollView <UIScrollViewDelegate,PxpFilterModuleProtocol>
 
 
@@ -16,6 +23,8 @@
 @property (nonatomic,strong) NSMutableArray     * buttonList;
 @property (assign,nonatomic) CGSize             buttonSize; // used only during populate method
 @property (assign,nonatomic) CGSize             buttonMargin; // used only during populate method
+@property (nonatomic,assign) PxpFilterButtonScrollViewStyle style;
+@property (nonatomic,strong) NSPredicate        * predicate;
 
 // Protocol
 @property (nonatomic,weak) PxpFilter * parentFilter;

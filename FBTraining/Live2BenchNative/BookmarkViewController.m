@@ -30,6 +30,7 @@
 #import "Clip.h"
 #import "ClipDataContentDisplay.h"
 
+#import "PxpFilterMyClipTabViewController.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -111,6 +112,31 @@ int viewWillAppearCalled;
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"My Clip", nil) imageName:@"myClipTab"];
         externalControlScreen = _appDel.screenController;
+        _pxpFilter              = [[PxpFilter alloc]init];
+        _pxpFilter.delegate     = self;
+        
+        _pxpFilterTab                           = [[TabView alloc]init];
+        _pxpFilterTab.pxpFilter                 = _pxpFilter;
+        _pxpFilterTab.modalPresentationStyle    = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
+
+        [_pxpFilterTab addTab:        [[PxpFilterMyClipTabViewController alloc]init]];
+        
+        
+        //        if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init]];
+
+        
+        
+//        NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+//                                                                                       [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
+//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+//                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
+//                                                                                       ]];
+//        
+//        [_pxpFilter addPredicates:@[ignoreThese]];
+//        
     }
     return self;
 }
@@ -384,43 +410,70 @@ int viewWillAppearCalled;
     //    }
 }
 
+#pragma mark - Filter Button Pressed
+
+
 - (void)slideFilterBox
 {
     
-    if(!blurView)
+//    if(!blurView)
+//    {
+//        blurView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,0.0f,self.view.frame.size.width,self.view.frame.size.height)];
+//        blurView.backgroundColor = [UIColor colorWithRed:0.f
+//                                                   green:0.f
+//                                                    blue:0.f
+//                                                   alpha:0.7f];
+//        UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFilterToolbox)];
+//        [blurView addGestureRecognizer:tapRec];
+//        
+//        blurView.hidden = YES;
+//        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.allClips];
+//    }
+//    [self.view insertSubview:blurView aboveSubview:newVideoControlBar.view];
+//    [self.view insertSubview:_filterToolBoxView.view aboveSubview:blurView];
+//    
+//    blurView.hidden = NO;
+//    [_filterToolBoxView open:YES]; // Slide filter open
+//    
+//    componentFilter.rawTagArray = self.allClips;
+//    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
+//    
+//    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
+//    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
+//    componentFilter.finishedSwipe = TRUE;
+//    
+//    [self.view addSubview:componentFilter.view];
+//    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
+//    [componentFilter setOrigin:CGPointMake(60, 190)];
+//    [componentFilter close:NO];
+//    [componentFilter viewDidAppear:TRUE];
+//    
+//    
+//    [componentFilter open:YES];
+    
+
+
+    
+    if (_pxpFilterTab.isViewLoaded)
     {
-        blurView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,0.0f,self.view.frame.size.width,self.view.frame.size.height)];
-        blurView.backgroundColor = [UIColor colorWithRed:0.f
-                                                   green:0.f
-                                                    blue:0.f
-                                                   alpha:0.7f];
-        UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFilterToolbox)];
-        [blurView addGestureRecognizer:tapRec];
-        
-        blurView.hidden = YES;
-        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.allClips];
+        _pxpFilterTab.view.frame =  CGRectMake(0, 0, _pxpFilterTab.preferredContentSize.width,_pxpFilterTab.preferredContentSize.height);
     }
-    [self.view insertSubview:blurView aboveSubview:newVideoControlBar.view];
-    [self.view insertSubview:_filterToolBoxView.view aboveSubview:blurView];
+ 
+    UIPopoverPresentationController *presentationController = [_pxpFilterTab popoverPresentationController];
+    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
+    presentationController.sourceView               = self.view;
+    presentationController.permittedArrowDirections = 0;
     
-    blurView.hidden = NO;
-    [_filterToolBoxView open:YES]; // Slide filter open
-    
-    componentFilter.rawTagArray = self.allClips;
-    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
-    
-    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
-    componentFilter.finishedSwipe = TRUE;
-    
-    [self.view addSubview:componentFilter.view];
-    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
-    [componentFilter setOrigin:CGPointMake(60, 190)];
-    [componentFilter close:NO];
-    [componentFilter viewDidAppear:TRUE];
+    [self presentViewController:_pxpFilterTab animated:YES completion:nil];
     
     
-    [componentFilter open:YES];
+   [_pxpFilter filterTags:[self.allClips copy]];
+    
+
+    Clip * c = self.allClips[0];
+    
+    
+    
     
 }
 
@@ -915,6 +968,19 @@ int viewWillAppearCalled;
     return [self sortArrayFromHeaderBar:clipsToSort headerBarState:headerBar.headerBarSortType];
 }
 
+#pragma mark - PxpFilterDelegate Methods
+-(void)onFilterComplete:(PxpFilter*)filter
+{
+
+}
+
+-(void)onFilterChange:(PxpFilter*)filter
+{
+    
+}
+
+
+#pragma mark -
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
 }
