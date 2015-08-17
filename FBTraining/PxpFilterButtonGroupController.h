@@ -18,6 +18,7 @@
 #pragma mark - PxpFilterModuleProtocol Methods
 
 @property (nonatomic,weak) PxpFilter * parentFilter;
+@property (nonatomic,assign) BOOL displayAllTagIfAllFilterOn;
 
 -(void)filterTags:(NSMutableArray *)tagsToFilter;
 -(void)reset;

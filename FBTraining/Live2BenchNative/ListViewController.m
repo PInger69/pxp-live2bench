@@ -767,7 +767,7 @@
 - (void)pressFilterButton
 {
     
-    [_pxpFilter filterTags:[self.tagsToDisplay copy]];
+    [_pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTab];
     
     
@@ -783,7 +783,6 @@
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
@@ -810,7 +809,7 @@
     [self presentViewController:popupTabBar animated:YES completion:nil];
  
     
-    [_pxpFilter filterTags:[self.tagsToDisplay copy]];
+    [_pxpFilter filterTags:[self.allTags copy]];
 
     if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 }

@@ -16,6 +16,7 @@
     NSMutableSet    * _userSelected;
 }
 
+@synthesize displayAllTagIfAllFilterOn = _displayAllTagIfAllFilterOn;
 
 - (instancetype)init
 {
@@ -44,7 +45,7 @@
 }
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{
-    if ([_userSelected count] == 0 || [_userSelected count] == [_buttons count]) return; // all or none are selected
+    if ([_userSelected count] == 0 || ([_userSelected count] == [_buttons count] && _displayAllTagIfAllFilterOn)) return; // all or none are selected
     [tagsToFilter filterUsingPredicate:_combo];
 }
 
