@@ -18,8 +18,10 @@
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
         [self setBackgroundColor: [UIColor colorWithWhite:0.95f alpha:1.0f]];
-        [self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateNormal];
-        [self setBackgroundImage:[UIImage imageNamed:@"darkGreySelect"] forState:UIControlStateSelected];
+        //[self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateNormal];
+        //[self setBackgroundImage:[UIImage imageNamed:@"darkGreySelect"] forState:UIControlStateSelected];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]] forState:UIControlStateNormal];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor darkGrayColor]] forState:UIControlStateSelected];
         [self setImageEdgeInsets:UIEdgeInsetsMake(0.0f, -120.0f, 0.0f, 0.0f)];
         [self setTitleEdgeInsets:UIEdgeInsetsMake(0.0f, 50.0f, 0.0f, 50.0f)];
         [self setFont:[UIFont defaultFontOfSize:17.0f]];
