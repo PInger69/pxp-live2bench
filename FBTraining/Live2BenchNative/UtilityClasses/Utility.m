@@ -602,10 +602,10 @@
     
     if (selected) {
         [PRIMARY_APP_COLOR setFill];
-        [PRIMARY_APP_COLOR setStroke];
+        //[PRIMARY_APP_COLOR setStroke];
     }else{
         [[UIColor lightGrayColor] setFill];
-        [[UIColor lightGrayColor] setStroke];
+        //[[UIColor lightGrayColor] setStroke];
     }
     
     
