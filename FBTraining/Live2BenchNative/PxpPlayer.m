@@ -154,6 +154,9 @@ static CMClockRef _pxpPlayerMasterClock;
                     }
                 }
                 
+                
+                
+                //[self reload];
             }
             
             // run actions
@@ -165,11 +168,11 @@ static CMClockRef _pxpPlayerMasterClock;
             [self.loadActionQueue removeAllObjects];
         }
         
-        /*
+        
         [self willChangeValueForKey:@"failed"];
-        _failed = self.status == AVPlayerStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
+        _failed = self.status == AVPlayerStatusFailed;
         [self didChangeValueForKey:@"failed"];
-         */
+        
         
         
     } else if (context == _rateObserverContext) {
@@ -177,6 +180,12 @@ static CMClockRef _pxpPlayerMasterClock;
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [super replaceCurrentItemWithPlayerItem:item];
+    });
 }
 
 - (void)timerTick:(NSTimer *)timer {
@@ -346,8 +355,10 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO];
     } else {
-        [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
-        [super setRate:rate];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
+            [super setRate:rate];
+        });
     }
 }
 
@@ -356,7 +367,9 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO time:itemTime atHostTime:hostClockTime];
     } else {
-        [super setRate:rate time:itemTime atHostTime:hostClockTime];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super setRate:rate time:itemTime atHostTime:hostClockTime];
+        });
     }
 }
 
@@ -381,12 +394,14 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player prerollAtRate:rate multi:NO completionHandler:handler];
     } else {
-        [super cancelPendingPrerolls];
-        if (self.status != AVPlayerStatusReadyToPlay) {
-            completionHandler(NO);
-        } else {
-            [super prerollAtRate:rate completionHandler:completionHandler];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super cancelPendingPrerolls];
+            if (self.status != AVPlayerStatusReadyToPlay) {
+                completionHandler(NO);
+            } else {
+                [super prerollAtRate:rate completionHandler:completionHandler];
+            }
+        });
         
     }
 }
@@ -396,7 +411,9 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player cancelPendingPrerollsMulti:NO];
     } else {
-        [super cancelPendingPrerolls];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super cancelPendingPrerolls];
+        });
     }
 }
 
@@ -420,9 +437,11 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player seekToDate:date multi:NO completionHandler:handler];
     } else {
-        [super seekToDate:date completionHandler:^(BOOL success) {
-            completionHandler(success);
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super seekToDate:date completionHandler:^(BOOL success) {
+                completionHandler(success);
+            }];
+        });
     }
 }
 
@@ -453,19 +472,21 @@ static CMClockRef _pxpPlayerMasterClock;
             }
         });
     } else {
-        [self.currentItem cancelPendingSeeks];
+        
         if (CMTIME_IS_INDEFINITE(time)) {
             time = kCMTimePositiveInfinity;
         }
         
-        if (self.status != AVPlayerStatusReadyToPlay || CMTIME_IS_INVALID(time)) {
-            completionHandler(NO);
-        } else if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
-            [super seekToTime:time completionHandler:completionHandler];
-        } else {
-            [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
-        }
-        
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [self.currentItem cancelPendingSeeks];
+            if (self.status != AVPlayerStatusReadyToPlay || CMTIME_IS_INVALID(time)) {
+                completionHandler(NO);
+            } else if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
+                [super seekToTime:time completionHandler:completionHandler];
+            } else {
+                [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+            }
+        });
         
     }
 }
@@ -481,37 +502,28 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)setRate:(float)rate {
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        if (self.live && rate != 1.0) self.live = NO;
-        [self setRate:rate multi:YES];
-    });
+    if (self.live && rate != 1.0) self.live = NO;
+    [self setRate:rate multi:YES];
 }
 
 - (void)setRate:(float)rate time:(CMTime)itemTime atHostTime:(CMTime)hostClockTime {
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        if (self.live && rate != 1.0) self.live = NO;
-        [self setRate:rate multi:YES time:itemTime atHostTime:hostClockTime];
-    });
+    if (self.live && rate != 1.0) self.live = NO;
+    [self setRate:rate multi:YES time:itemTime atHostTime:hostClockTime];
 }
 
 - (void)prerollAtRate:(float)rate completionHandler:( void (^)(BOOL))completionHandler {
     if (!completionHandler) completionHandler = ^(BOOL complete) {};
+    if (rate != 0.0) {
+        [self prerollAtRate:rate multi:YES completionHandler:completionHandler];
+    } else {
+        completionHandler(YES);
+    }
     
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        if (rate != 0.0) {
-            [self prerollAtRate:rate multi:YES completionHandler:completionHandler];
-        } else {
-            completionHandler(YES);
-        }
-    });
 }
 
 - (void)seekToDate:(nonnull NSDate *)date {
     self.live = NO;
-    
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        [self seekToDate:date multi:YES completionHandler:^(BOOL finished) {}];
-    });
+    [self seekToDate:date multi:YES completionHandler:^(BOOL finished) {}];
 }
 
 - (void)seekToDate:(nonnull NSDate *)date completionHandler:(nonnull void (^)(BOOL))completionHandler {
@@ -521,36 +533,22 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)seekToTime:(CMTime)time {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {}];
-    });
-    
+    [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {}];
 }
 
 - (void)seekToTime:(CMTime)time completionHandler:(nonnull void (^)(BOOL))completionHandler {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:completionHandler];
-    });
+    [self seekToTime:time multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:completionHandler];
 }
 
 - (void)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        [self seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL finished) {}];
-    });
-    
+    [self seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL finished) {}];
 }
 
 - (void)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nonnull void (^)(BOOL))completionHandler {
     if (self.live && CMTimeCompare(time, self.duration) != 0) self.live = NO;
-    
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        [self seekToTime:time multi:YES toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
-    });
+    [self seekToTime:time multi:YES toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
 }
 
 - (void)cancelPendingPrerolls {
@@ -683,6 +681,7 @@ static CMClockRef _pxpPlayerMasterClock;
 
 /// Synchronizes all other players to the player
 - (void)sync:(CMTime)currentTime {
+    
     static CMTime smartSync;
     if (!CMTIME_IS_NUMERIC(smartSync)) {
         smartSync = kCMTimeZero;
@@ -729,7 +728,11 @@ static CMClockRef _pxpPlayerMasterClock;
             self.syncs = 0;
             //NSLog(@"Players SYNCED!");
             
-        } /* else if (self.syncs < MAX_SYNCS && NO) {
+        } else if (self.live && CMTIMERANGE_IS_INVALID(self.range)) {
+            NSLog(@"Syncing (Live)");
+            [self goToLive];
+            
+        }/* else if (self.syncs < MAX_SYNCS && NO) {
             if (self.live) {
                 NSLog(@"Syncing (Live)");
                 [self goToLive];
@@ -751,13 +754,7 @@ static CMClockRef _pxpPlayerMasterClock;
             }
             
             self.syncs++;
-           } */
-        
-        else if (self.live && CMTIMERANGE_IS_INVALID(self.range)) {
-            NSLog(@"Syncing (Live)");
-            [self goToLive];
-            
-        } else {
+           } */ else {
             NSLog(@"Syncing (Adaptive)");
             
             self.syncing = YES;
