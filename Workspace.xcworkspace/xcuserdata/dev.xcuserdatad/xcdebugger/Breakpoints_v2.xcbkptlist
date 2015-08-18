@@ -148,11 +148,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/ListViewController.m"
-            timestampString = "461537078.05358"
+            timestampString = "461600050.771379"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "779"
-            endingLineNumber = "779"
+            startingLineNumber = "783"
+            endingLineNumber = "783"
             landmarkName = "-pressFilterButton"
             landmarkType = "5">
          </BreakpointContent>
@@ -212,11 +212,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/ListViewController.m"
-            timestampString = "461537078.05358"
+            timestampString = "461600050.771379"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "813"
-            endingLineNumber = "813"
+            startingLineNumber = "817"
+            endingLineNumber = "817"
             landmarkName = "-pressFilterButton"
             landmarkType = "5">
          </BreakpointContent>
@@ -243,13 +243,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/ImageAssetManager.m"
-            timestampString = "461541453.853798"
+            filePath = "FBTraining/Live2BenchNative/CustomTabBar.m"
+            timestampString = "461601464.16513"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
-            landmarkName = "-connectionDidFinishLoading:"
+            startingLineNumber = "255"
+            endingLineNumber = "255"
+            landmarkName = "-changeButtonHighlightForTab:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -259,14 +259,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/ImageAssetManager.m"
-            timestampString = "461541453.853798"
+            filePath = "FBTraining/Live2BenchNative/TabBarButton.m"
+            timestampString = "461603344.355166"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
-            landmarkName = "-checkImageCacheForImageURL:"
-            landmarkType = "5">
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "@implementation TabBarButton"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
