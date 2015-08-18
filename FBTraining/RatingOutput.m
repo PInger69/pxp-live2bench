@@ -104,16 +104,16 @@ static UIImage* rateSelected;
     
     if (selected) {
         [PRIMARY_APP_COLOR setFill];
-        [PRIMARY_APP_COLOR setStroke];
+        //[PRIMARY_APP_COLOR setStroke];
     }else{
         [[UIColor lightGrayColor] setFill];
-        [[UIColor lightGrayColor] setStroke];
+        //[[UIColor lightGrayColor] setStroke];
     }
     
     
     
-    outLinePath.lineWidth = 5.0;
-    [outLinePath stroke];
+    //outLinePath.lineWidth = 5.0;
+    //[outLinePath stroke];
     [starPath fill];
     
     UIImage *starImage = UIGraphicsGetImageFromCurrentImageContext();

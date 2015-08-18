@@ -23,9 +23,9 @@ UIColor *accentColor;
         [self setContentEdgeInsets:UIEdgeInsetsMake(3, 5, 3, 5)];
         [self setTitleColor:accentColor forState:UIControlStateNormal];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        [self setBackgroundImage:[UIImage imageNamed:@"orangeSelect"] forState:UIControlStateHighlighted];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateHighlighted];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-        [self setBackgroundImage:[UIImage imageNamed:@"orangeSelect"] forState:UIControlStateSelected];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
         [self setFont:[UIFont defaultFontOfSize:17.0f]];
     }

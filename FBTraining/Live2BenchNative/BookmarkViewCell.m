@@ -135,10 +135,10 @@ static UIImage *starImage;
     
     
     [PRIMARY_APP_COLOR setFill];
-    [[UIColor blackColor] setStroke];
+    //[[UIColor blackColor] setStroke];
     
-    outLinePath.lineWidth = 5.0;
-    [outLinePath stroke];
+    //outLinePath.lineWidth = 5.0;
+    //[outLinePath stroke];
     [starPath fill];
     
 //    UIFont *font = [UIFont fontWithName:@"Palatino-Roman" size:14.0];

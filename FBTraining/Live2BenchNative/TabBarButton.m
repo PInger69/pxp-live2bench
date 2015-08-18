@@ -22,8 +22,10 @@
         [self setBorderColour:[UIColor colorWithWhite:0.8f alpha:1.0f]];
         [self setBorderWidth:1.0f];
         [self setBackgroundColor:[UIColor colorWithWhite:0.9f alpha:1.0f]];
-        [self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateSelected];
-        [self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateHighlighted];
+        //[self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateSelected];
+        //[self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateHighlighted];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]] forState:UIControlStateSelected];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor darkGrayColor]] forState:UIControlStateHighlighted];
         [self setTitleColor:[UIColor colorWithWhite:0.2f alpha:1.0f] forState:UIControlStateNormal];
         [self setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateSelected];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
