@@ -16,7 +16,7 @@
 {
     NSInteger   selectedCount;
     NSPredicate * combo;
-    NSMutableSet * _userSelected;
+
     UIImage * _buttonHighlightPixel;
     UIImage * _buttonNormalPixel;
 }
@@ -28,7 +28,7 @@
         _buttonSize             = CGSizeMake(120, 26);
         _buttonMargin           = CGSizeMake(4, 4);
         _buttonList             = [NSMutableArray new];
-        _userSelected           = [NSMutableSet new];
+        _userSelected           = [NSMutableArray new];
         _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
         _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
         _style                  = PxpFilterButtonScrollViewStyleLandscape;
@@ -50,7 +50,7 @@
         _buttonSize             = CGSizeMake(120, 26);
         _buttonMargin           = CGSizeMake(4, 4);
         _buttonList             = [NSMutableArray new];
-        _userSelected           = [NSMutableSet new];
+        _userSelected           = [NSMutableArray new];
         _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
         _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
         _style                  = PxpFilterButtonScrollViewStyleLandscape;
@@ -125,7 +125,7 @@
             [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
         }
     }
-    combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
 
 }
 
@@ -169,25 +169,23 @@
     for (CustomButton  *b in _buttonList) {
         if(b.selected == YES){
             selectedCount++;
-            
-            self.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
-//                Clip * clp = (Clip *) evaluatedObject;
-                
-//                clp.aw
-                
-                return YES;
-            }];
-            
-//            [self.predicate predicateWithSubstitutionVariables:@{}]
-            
             [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, b.titleLabel.text]];
-            [_userSelected addObject:b.titleLabel.text];
+            [_userSelected addObject:b];
         } else {
-            [_userSelected removeObject:b.titleLabel.text];
+            [_userSelected removeObject:b];
         }
     }
     
-    combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    if (self.delegate) {
+    
+    
+        [self.delegate onUserInput:self];
+    } else {
+        _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    }
+    
+    
+
     [_parentFilter refresh];
     
     
@@ -210,8 +208,8 @@
 // Protocol methods
 -(void)filterTags:(NSMutableArray *)tagsToFilter
 {
-    if (selectedCount == 0 || selectedCount == [_buttonList count]) return; // all or none are selected
-    [tagsToFilter filterUsingPredicate:combo];
+    if (selectedCount == 0 || (selectedCount && _displayAllTagIfAllFilterOn)) return; // all or none are selected || selectedCount == [_buttonList count]
+    [tagsToFilter filterUsingPredicate:_predicate];
 }
 
 -(void)reset{

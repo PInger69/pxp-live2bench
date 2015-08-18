@@ -58,9 +58,10 @@
     _teamsScrollView.buttonSize               = CGSizeMake(_teamsScrollView.frame.size.width, 40);
     
     _playersScrollView.sortByPropertyKey      = @"players";
+    _playersScrollView.displayAllTagIfAllFilterOn = NO;
     _playersScrollView.style                  = PxpFilterButtonScrollViewStylePortrate;
     _playersScrollView.buttonSize             = CGSizeMake(40, 40);
-    
+    _playersScrollView.delegate               = self;
     
     _dateScrollView.sortByPropertyKey       = @"date";
     _dateScrollView.buttonSize              = CGSizeMake(_dateScrollView.frame.size.width, 40);
@@ -119,15 +120,7 @@
         
     }
     
-    NSPredicate * p = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
-        
-        Clip * clip = evaluatedObject;
-        
-//        clip.players
-        return YES;
-    }];
-    _playersScrollView.predicate =  p;
-    
+
     
     // This is so that if  user changes that it reflects
 //    NSMutableSet * temp = [NSMutableSet new];
@@ -162,7 +155,23 @@
 }
 
 
+-(void)onUserInput:(id)inputObject
+{
+    PxpFilterButtonScrollView * sender = (PxpFilterButtonScrollView *)inputObject;
+    
+    
+    sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+        Clip * c = (Clip *)evaluatedObject;
+        for (UIButton * button in sender.userSelected) {
+            if ([c.players containsObject:button.titleLabel.text]){
+                return YES;
+            }
+        }
+        return NO;
+    }];
+    
 
+}
 
 
 - (IBAction)clearButtonPressed:(id)sender {

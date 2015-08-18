@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "PxpFilter.h"
-#import "PxpFilterButtonGroupControllerDelegate.h"
+#import "PxpFilterModuleDelegate.h"
 @class PxpFilterButton;
 
 
-@interface PxpFilterButtonGroupController : UIView <PxpFilterModuleProtocol,PxpFilterButtonGroupControllerDelegate>
+@interface PxpFilterButtonGroupController : UIView <PxpFilterModuleProtocol,PxpFilterModuleDelegate>
 
 
 #pragma mark - PxpFilterModuleProtocol Methods
@@ -24,10 +24,10 @@
 -(void)reset;
 
 
-#pragma mark - PxpFilterButtonGroupControllerDelegate Methods
+#pragma mark - PxpFilterModuleDelegate Methods
 
 -(void)addButtonToGroup:(PxpFilterButton*)button;
-
+-(void)onUserInput:(id)inputObject;
 
 
 
