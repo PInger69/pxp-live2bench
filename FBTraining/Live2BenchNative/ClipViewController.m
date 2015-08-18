@@ -857,6 +857,7 @@ static void * encoderTagContext = &encoderTagContext;
     if ([self.view window] == nil){
         self.view = nil;
     }
+    [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {

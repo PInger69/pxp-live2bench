@@ -771,6 +771,10 @@
     return [NSMutableArray arrayWithArray:[toSort sortedArrayUsingDescriptors:@[sorter]]];
 }
 
+-(void)didReceiveMemoryWarning{
+    [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
+}
+
 
 #pragma mark - Filtering Methods
 
