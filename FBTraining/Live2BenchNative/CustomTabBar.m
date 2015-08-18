@@ -241,13 +241,14 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 
 - (void)changeButtonHighlightForTab: (NSInteger)tabNum
 {
+    [((CustomTabViewController *)[self.viewControllers objectAtIndex:tabNum]).sectionTab setSelected:TRUE];
     
     for(CustomTabViewController *tabs in self.viewControllers)
     {
-        [((CustomTabViewController *)tabs).sectionTab setSelected:FALSE];
+        if ([self.viewControllers indexOfObject:tabs] != tabNum) {
+            [((CustomTabViewController *)tabs).sectionTab setSelected:FALSE];
+        }
     }
-    [((CustomTabViewController *)[self.viewControllers objectAtIndex:tabNum]).sectionTab setSelected:TRUE];
-    
     
     for(CustomButton *tempbtn in tabButtonItems)
     {
@@ -301,6 +302,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     //    if (self.selectedIndex != tagNum){
     //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SWITCH_MAIN_TAB object:self];
     //    }
+    [((CustomTabViewController *)[self.viewControllers objectAtIndex:tagNum]).sectionTab setHighlighted:true];
     [self selectTab:tagNum];
 }
 

@@ -149,7 +149,7 @@
             [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, theKey]];
         }
     }
-    _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    if (!self.delegate)_predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
 
     self.modified = NO;
 }
@@ -247,7 +247,7 @@
             [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, theKey]];
         }
     }
-    _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+       if (!self.delegate) _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     
     self.modified = NO;
 

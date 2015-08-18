@@ -108,9 +108,18 @@
     }
     
     [_eventScrollView buildButtonsWith:[[tempSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
-    [_dateScrollView buildButtonsWith:[[tempDateSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+    
     [_teamsScrollView buildButtonsWith:[[tempTeamSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
-    [_playersScrollView buildButtonsWith:[[tempPlayerSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+  
+    [_dateScrollView buildButtonsWith:[[tempDateSet allObjects]sortedArrayUsingComparator:^(id obj1, id obj2) {
+        return (NSComparisonResult) [obj1 integerValue] - [obj2 integerValue];
+    }]];
+
+    NSArray * playerList = [[tempPlayerSet allObjects] sortedArrayUsingComparator:^(id obj1, id obj2) {
+        return (NSComparisonResult) [obj1 integerValue] - [obj2 integerValue];
+    }];
+    
+    [_playersScrollView buildButtonsWith:playerList];
     
     // Do any additional setup after loading the view from its nib
     _filteredTagLabel.text  = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.filteredTags.count];
@@ -137,10 +146,30 @@
                 return NO;
             }];
     } else if (sender == _teamsScrollView) {
-    
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+            Clip * c = (Clip *)evaluatedObject;
+            NSString * teamVS = [NSString stringWithFormat:@"%@ VS %@",c.homeTeam,c.visitTeam];
+            for (UIButton * button in sender.userSelected) {
+                if ([button.titleLabel.text isEqualToString:teamVS]){
+                    return YES;
+                }
+            }
+            return NO;
+        }];
     
     } else if (sender == _dateScrollView) {
-        
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+            Clip * c = (Clip *)evaluatedObject;
+            NSString * clipDate = [Utility dateFromEvent: c.eventName];
+            
+            for (UIButton * button in sender.userSelected) {
+                
+                if ([button.titleLabel.text isEqualToString:clipDate]){
+                    return YES;
+                }
+            }
+            return NO;
+        }];
         
     }
 

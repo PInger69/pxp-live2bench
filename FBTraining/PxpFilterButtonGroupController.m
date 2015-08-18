@@ -42,6 +42,7 @@
         b.selected = NO;
     }
     [_userSelected removeAllObjects];
+
 }
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{
