@@ -134,11 +134,12 @@
     tagPlayersView.scrollEnabled = TRUE;
     tagPlayersView.showsHorizontalScrollIndicator = YES;
     //[tagPlayersView setBackgroundColor:[UIColor greenColor]];
-    [tagPlayersView setContentSize:CGSizeMake(1.5*tagPlayersView.frame.size.width, tagPlayersView.frame.size.height)];
+    //[tagPlayersView setContentSize:CGSizeMake(1.5*tagPlayersView.frame.size.width, tagPlayersView.frame.size.height)];
     tagPlayersView.bounces = TRUE;
+    [tagPlayersView setHidden:true];
     [self.myContentView addSubview:tagPlayersView];
     
-    playersNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, tagPlayersView.frame.size.width*2, tagPlayersView.frame.size.height)];
+    playersNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 5000, tagPlayersView.frame.size.height)];
     [playersNumberLabel setText:@""];
     [playersNumberLabel setTextAlignment:NSTextAlignmentLeft];
     [playersNumberLabel setFont:[UIFont defaultFontOfSize:17.0f]];

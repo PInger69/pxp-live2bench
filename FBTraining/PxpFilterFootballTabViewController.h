@@ -16,7 +16,7 @@
 #import "PxpFilterUserButtons.h"
 #import "RangeSlider.h"
 
-@interface PxpFilterFootballTabViewController : PxpFilterTabController
+@interface PxpFilterFootballTabViewController : PxpFilterTabController <PxpFilterModuleDelegate>
 
 /*@property (strong, nonatomic, nullable) IBOutlet UILabel *filteredTagLabel;
 @property (strong, nonatomic, nullable) IBOutlet UILabel *totalTagLabel;
@@ -24,6 +24,7 @@
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterUserInputView *middleUserInputView;*/
 
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButtonScrollView *tagNameScrollView;
+@property (strong, nonatomic,nullable) IBOutlet PxpFilterButtonScrollView *playersScrollView;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterRangeSliderView *sliderView;
 
 

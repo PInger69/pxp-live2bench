@@ -396,11 +396,9 @@
         }else{
             players = [NSString stringWithFormat:@"%@, %@",players,jersey];
         }
+        [cell.tagPlayersView setHidden:false];
     }
-    
-    if (!players) {
-        [cell.tagPlayersView setHidden:true];
-    }
+    [cell.tagPlayersView setContentSize:CGSizeMake(players.length*8, cell.tagPlayersView.frame.size.height)];
     
     
     LeagueTeam *team = [[tag.event.teams allValues]firstObject];
