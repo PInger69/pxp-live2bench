@@ -49,7 +49,7 @@
     NSString                        * eventType;
     EncoderManager                  * _encoderManager;
     id                              clipViewTagObserver;
-    ImageAssetManager               * _imageAssetManager;
+    //ImageAssetManager               * _imageAssetManager;
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
     UIButton                        *deSelectButton;
@@ -91,7 +91,7 @@ static void * encoderTagContext = &encoderTagContext;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
         
-        _imageAssetManager = appDel.imageAssetManager;
+        //_imageAssetManager = appDel.imageAssetManager;
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
@@ -584,7 +584,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
         
         PxpTelestration *tele = tagSelect.thumbnails.count <= 1 || [tagSelect.telestration.sourceName isEqualToString:src] ? tagSelect.telestration : nil;
-        [_imageAssetManager imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
+        [[ImageAssetManager getInstance] imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
     }
     
     [cell setDeletingMode: self.isEditing];
@@ -752,7 +752,7 @@ static void * encoderTagContext = &encoderTagContext;
             
             PxpTelestration *tele = listOfScource.count <= 1 || [selectedCell.data.telestration.sourceName isEqualToString:src] ? selectedCell.data.telestration : nil;
             
-            [_imageAssetManager imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
+            [[ImageAssetManager getInstance] imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
             
             [(UIButton *)sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
             ++i;
