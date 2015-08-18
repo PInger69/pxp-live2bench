@@ -88,7 +88,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    //[_playerView.player.context reload];
+    [_playerView.player reload];
 }
 
 - (void)didReceiveMemoryWarning {
