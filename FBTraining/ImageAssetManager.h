@@ -14,7 +14,9 @@
 
 @property (strong, nonatomic, nullable) NSString *pathForFolderContainingImages;
 @property (assign, nonatomic) NSTimeInterval timeOutInterval;
+@property (nonatomic,strong, nullable) NSMutableDictionary *arrayOfClipImages;
 
++(nonnull instancetype)getInstance;
 
 -(void)imageForURL: (nonnull NSString *) imageURLString atImageView: (nonnull UIImageView *) viewReference;
 -(void)imageForURL: (nonnull NSString *) imageURLString atImageView: (nonnull UIImageView *) viewReference withTelestration:(nullable PxpTelestration *)telestration;

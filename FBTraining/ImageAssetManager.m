@@ -30,13 +30,22 @@
 
 
 
-
+static ImageAssetManager * instance;
 @implementation ImageAssetManager
+
+@synthesize arrayOfClipImages = _arrayOfClipImages;
+
++(instancetype)getInstance
+{
+    return instance;
+}
 
 -(instancetype) init{
     self = [super init];
     if(self){
         self.timeOutInterval = (NSTimeInterval)10.0;
+        instance = self;
+        _arrayOfClipImages = [[NSMutableDictionary alloc]init];
     }
     return self;
 }
@@ -97,8 +106,9 @@
 }
 
 -(UIImage *) checkImageCacheForImageURL: (NSString *) imageURL{
-    NSString *filePath = [self.pathForFolderContainingImages stringByAppendingString: imageURL];
-    UIImage *returningImage = [UIImage imageWithContentsOfFile:filePath];
+    //NSString *filePath = [self.pathForFolderContainingImages stringByAppendingString: imageURL];
+    //UIImage *returningImage = [UIImage imageWithContentsOfFile:filePath];
+    UIImage *returningImage = _arrayOfClipImages[imageURL];
     return returningImage;
 }
 
@@ -127,6 +137,7 @@
         UIGraphicsEndImageContext();
     }
     
+    [_arrayOfClipImages setObject:receivedImage forKey:[connection.originalRequest.URL absoluteString]];
     
     [connection.imageViewReference setImage: receivedImage];
     [self.queueOfConnections removeObject:connection];

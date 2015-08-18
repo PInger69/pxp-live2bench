@@ -32,7 +32,8 @@ typedef NS_ENUM (NSInteger,PxpFilterButtonScrollViewStyle){
 @property (nonatomic,weak) id <PxpFilterModuleDelegate> delegate;
 
 // Protocol
-@property (nonatomic,weak) PxpFilter * parentFilter;
+@property (nonatomic,assign)    BOOL        modified;
+@property (nonatomic,weak)      PxpFilter   * parentFilter;
 
 
 -(void)buildButtonsWith:(NSArray*)buttonLabels;

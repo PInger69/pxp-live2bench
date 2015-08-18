@@ -49,7 +49,7 @@
     NSString                        * eventType;
     EncoderManager                  * _encoderManager;
     id                              clipViewTagObserver;
-    ImageAssetManager               * _imageAssetManager;
+    //ImageAssetManager               * _imageAssetManager;
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
     UIButton                        *deSelectButton;
@@ -91,7 +91,7 @@ static void * encoderTagContext = &encoderTagContext;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
         
-        _imageAssetManager = appDel.imageAssetManager;
+        //_imageAssetManager = appDel.imageAssetManager;
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
@@ -271,15 +271,18 @@ static void * encoderTagContext = &encoderTagContext;
     [_pxpFilter removeAllPredicates];
     
     
-    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+    NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
                                                                                    [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
                                                                                    ]];
     
-    [_pxpFilter addPredicates:@[ignoreThese]];
+    [_pxpFilter addPredicates:@[allowThese]];
     
     [_collectionView reloadData];
 
@@ -581,7 +584,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
         
         PxpTelestration *tele = tagSelect.thumbnails.count <= 1 || [tagSelect.telestration.sourceName isEqualToString:src] ? tagSelect.telestration : nil;
-        [_imageAssetManager imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
+        [[ImageAssetManager getInstance] imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
     }
     
     [cell setDeletingMode: self.isEditing];
@@ -749,7 +752,7 @@ static void * encoderTagContext = &encoderTagContext;
             
             PxpTelestration *tele = listOfScource.count <= 1 || [selectedCell.data.telestration.sourceName isEqualToString:src] ? selectedCell.data.telestration : nil;
             
-            [_imageAssetManager imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
+            [[ImageAssetManager getInstance] imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
             
             [(UIButton *)sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
             ++i;

@@ -42,10 +42,7 @@
                                                           ,_dateScrollView
                                                           ,_ratingButtons
 
-//                                                          ,_favoriteButton
-
-                                                          ]
-                    ];
+                                                          ]];
     
     
     
@@ -56,6 +53,7 @@
     _teamsScrollView.sortByPropertyKey        = @"teams";
     _teamsScrollView.style                    = PxpFilterButtonScrollViewStylePortrate;
     _teamsScrollView.buttonSize               = CGSizeMake(_teamsScrollView.frame.size.width, 40);
+    _teamsScrollView.delegate                 = self;
     
     _playersScrollView.sortByPropertyKey      = @"players";
     _playersScrollView.displayAllTagIfAllFilterOn = NO;
@@ -65,20 +63,9 @@
     
     _dateScrollView.sortByPropertyKey       = @"date";
     _dateScrollView.buttonSize              = CGSizeMake(_dateScrollView.frame.size.width, 40);
-    
-    
-//    _favoriteButton.filterPropertyKey       = @"coachPick";
-//    _favoriteButton.filterPropertyValue     = @"1";
-    
+    _dateScrollView.delegate                = self;
+
   [_ratingButtons buildButtons];// Has to be what was selected last
-
-    _teamsScrollView.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
-                Clip * t =   (Clip *) evaluatedObject;
-                return (t.type == TagTypeTele);
-    }];
-    
-
-
 
 }
 
@@ -120,56 +107,42 @@
         
     }
     
-
+    [_eventScrollView buildButtonsWith:[[tempSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+    [_dateScrollView buildButtonsWith:[[tempDateSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+    [_teamsScrollView buildButtonsWith:[[tempTeamSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+    [_playersScrollView buildButtonsWith:[[tempPlayerSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
     
-    // This is so that if  user changes that it reflects
-//    NSMutableSet * temp = [NSMutableSet new];
-//    for (NSDictionary * d in [UserCenter getInstance].tagNames) {
-//        
-//        if (![[d[@"name"] substringToIndex:1] isEqualToString:@"-"]) {
-//            [temp addObject:d[@"name"]];
-//        }
-//    }
-//    _prefilterTagNames = [temp allObjects];
-//    
-//    
-//
-    
-    // @"eventName"
-    
-        [_eventScrollView buildButtonsWith:[[tempSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
-        [_dateScrollView buildButtonsWith:[[tempDateSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
-        [_teamsScrollView buildButtonsWith:[[tempTeamSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
-        [_playersScrollView buildButtonsWith:[[tempPlayerSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
-    
-////    [_leftScrollView buildButtonsWith:([_preFilterSwitch isOn])?_prefilterTagNames :[tempSet allObjects]];
-//    [_sliderView setEndTime:latestTagTime];
-//    [_ratingButtons buildButtons];// Has to be what was selected last
-//    [_userButtons buildButtonsWith:[userDatadict allValues]];
-//    
     // Do any additional setup after loading the view from its nib
-    _filteredTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.filteredTags.count];
-    _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.unfilteredTags.count];
+    _filteredTagLabel.text  = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.filteredTags.count];
+    _totalTagLabel.text     = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.unfilteredTags.count];
     
     [self.pxpFilter refresh];
 }
 
-
+// custom filtering
 -(void)onUserInput:(id)inputObject
 {
+    
+    
     PxpFilterButtonScrollView * sender = (PxpFilterButtonScrollView *)inputObject;
     
+    if (sender == _playersScrollView) {
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+                Clip * c = (Clip *)evaluatedObject;
+                for (UIButton * button in sender.userSelected) {
+                    if ([c.players containsObject:button.titleLabel.text]){
+                        return YES;
+                    }
+                }
+                return NO;
+            }];
+    } else if (sender == _teamsScrollView) {
     
-    sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
-        Clip * c = (Clip *)evaluatedObject;
-        for (UIButton * button in sender.userSelected) {
-            if ([c.players containsObject:button.titleLabel.text]){
-                return YES;
-            }
-        }
-        return NO;
-    }];
     
+    } else if (sender == _dateScrollView) {
+        
+        
+    }
 
 }
 
