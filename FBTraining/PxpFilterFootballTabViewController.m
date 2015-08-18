@@ -17,6 +17,7 @@
 @end
 
 @implementation PxpFilterFootballTabViewController{
+    BOOL    _isTelestrationActive;
     NSArray * _prefilterTagNames;
 }
 
@@ -28,9 +29,11 @@
     if (self) {
         self.title = @"Football";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
-        
+        _isTelestrationActive = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_ENABLE_TELE_FILTER object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_DISABLE_TELE_FILTER object:nil];
+
     }
     return self;
 }
@@ -41,12 +44,20 @@
     _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.unfilteredTags.count];
 }
 
+
+-(void)toggleTelestationFilterButton:(NSNotification*)note
+{
+    _isTelestrationActive = ([note.name isEqualToString:NOTIF_ENABLE_TELE_FILTER])?YES:NO;
+    self.telestrationButton.enabled = _isTelestrationActive;
+}
+
 -(NSArray*)buttonGroupView{
     PxpFilterButtonGroupController *quarterGroupController = [[PxpFilterButtonGroupController alloc]init];
     [quarterGroupController addButtonToGroup:_quarter1];
     [quarterGroupController addButtonToGroup:_quarter2];
     [quarterGroupController addButtonToGroup:_quarter3];
     [quarterGroupController addButtonToGroup:_quarter4];
+    quarterGroupController.displayAllTagIfAllFilterOn = true;
     
     PxpFilterButtonGroupController *lineGroupController = [[PxpFilterButtonGroupController alloc]init];
     [lineGroupController addButtonToGroup:_offenseDown1];
@@ -55,11 +66,13 @@
     [lineGroupController addButtonToGroup:_defenseDown1];
     [lineGroupController addButtonToGroup:_defenseDown2];
     [lineGroupController addButtonToGroup:_defenseDown3];
+    lineGroupController.displayAllTagIfAllFilterOn = false;
     
     PxpFilterButtonGroupController *typeGroupController = [[PxpFilterButtonGroupController alloc]init];
     [typeGroupController addButtonToGroup:_passTypeButton];
     [typeGroupController addButtonToGroup:_runTypeButton];
     [typeGroupController addButtonToGroup:_kickTypeButton];
+    typeGroupController.displayAllTagIfAllFilterOn = false;
     
     NSArray *array = @[quarterGroupController,lineGroupController,typeGroupController];
     return array;
@@ -167,6 +180,7 @@
     _favoriteButton.filterPropertyKey       = @"coachPick";
     _favoriteButton.filterPropertyValue     = @"1";
     
+    _telestrationButton.enabled = _isTelestrationActive;
     _telestrationButton.titleLabel.text     = @"";
     [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
         Tag * t =   (Tag *) evaluatedObject;

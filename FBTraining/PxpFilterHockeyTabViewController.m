@@ -16,6 +16,7 @@
 @end
 
 @implementation PxpFilterHockeyTabViewController{
+     BOOL    _isTelestrationActive;
     NSArray * _prefilterTagNames;
 }
 
@@ -27,8 +28,11 @@
     if (self) {
         self.title = @"Hockey";
         tabImage =  [UIImage imageNamed:@"settingsButton"];
-        
+                _isTelestrationActive = YES;
          [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_ENABLE_TELE_FILTER object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleTelestationFilterButton:) name:NOTIF_DISABLE_TELE_FILTER object:nil];
+
     }
     
     
@@ -41,6 +45,13 @@
     _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)filter.unfilteredTags.count];
 }
 
+-(void)toggleTelestationFilterButton:(NSNotification*)note
+{
+    _isTelestrationActive = ([note.name isEqualToString:NOTIF_ENABLE_TELE_FILTER])?YES:NO;
+    self.telestrationButton.enabled = _isTelestrationActive;
+}
+
+
 -(NSArray*)buttonGroupView{
     PxpFilterButtonGroupController *periodGroupController = [[PxpFilterButtonGroupController alloc]init];
     [periodGroupController addButtonToGroup:_period1];
@@ -48,6 +59,7 @@
     [periodGroupController addButtonToGroup:_period3];
     [periodGroupController addButtonToGroup:_periodOT];
     [periodGroupController addButtonToGroup:_periodPS];
+    periodGroupController.displayAllTagIfAllFilterOn = true;
     
     PxpFilterButtonGroupController *lineGroupController = [[PxpFilterButtonGroupController alloc]init];
     [lineGroupController addButtonToGroup:_offenseLine1];
@@ -59,6 +71,7 @@
     [lineGroupController addButtonToGroup:_defenseLine3];
     [lineGroupController addButtonToGroup:_defenseLine4];
     [lineGroupController addButtonToGroup:_getAllStrengthTags];
+    lineGroupController.displayAllTagIfAllFilterOn = false;
     
     PxpFilterButtonGroupController *strengthGroupController = [[PxpFilterButtonGroupController alloc]init];
     [strengthGroupController addButtonToGroup:_homeStrength3];
@@ -69,6 +82,8 @@
     [strengthGroupController addButtonToGroup:_awayStrength4];
     [strengthGroupController addButtonToGroup:_awayStrength5];
     [strengthGroupController addButtonToGroup:_awayStrength6];
+    strengthGroupController.displayAllTagIfAllFilterOn = false;
+    
     
     NSArray *array = @[periodGroupController,lineGroupController,strengthGroupController];
     return array;
@@ -275,6 +290,7 @@
         Tag * t =   (Tag *) evaluatedObject;
         return (t.type == TagTypeTele);
     }]];
+    _telestrationButton.enabled = _isTelestrationActive;
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
     [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
     [_telestrationButton setTitle:@"" forState:UIControlStateSelected];

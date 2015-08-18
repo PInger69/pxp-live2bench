@@ -159,37 +159,6 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     }
 }
 
-/*- (void)refreshTabs {
-    
-    // Remove all tabs except for the settings tab
-    for (CustomTabViewController *vc in [self.tabs copy]) {
-        if (![vc isKindOfClass:[SettingsPageViewController class]]) {
-            [vc removeFromParentViewController];
-            [self.tabs removeObject:vc];
-        }
-    }
-    
-    // Obtain enabled tabs
-    __block NSArray *enabledTabs;
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_SETTINGS
-                                                        object:nil
-                                                      userInfo:@{
-                                                                 @"Class": [TabsSettingViewController class],
-                                                                 @"Block":^(NSArray *tabs) {enabledTabs = tabs;}
-                                                                 }];
-    
-    // Add the enabled tabs
-    for (Class tabClass in enabledTabs) {
-        CustomTabViewController *vc = [[tabClass alloc] initWithAppDelegate:appDel];
-        [self.tabs addObject:vc];
-        [self addChildViewController:vc];
-    }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_EVENT_CHANGE object:nil];
-    [self createTabButtons];
-    
-}*/
-
 // check if self.tabs have the tab that should be visible
 -(Boolean)check:(NSString*)name{
     for (CustomTabViewController *vc in self.tabs) {
@@ -272,13 +241,14 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 
 - (void)changeButtonHighlightForTab: (NSInteger)tabNum
 {
+    [((CustomTabViewController *)[self.viewControllers objectAtIndex:tabNum]).sectionTab setSelected:TRUE];
     
     for(CustomTabViewController *tabs in self.viewControllers)
     {
-        [((CustomTabViewController *)tabs).sectionTab setSelected:FALSE];
+        if ([self.viewControllers indexOfObject:tabs] != tabNum) {
+            [((CustomTabViewController *)tabs).sectionTab setSelected:FALSE];
+        }
     }
-    [((CustomTabViewController *)[self.viewControllers objectAtIndex:tabNum]).sectionTab setSelected:TRUE];
-    
     
     for(CustomButton *tempbtn in tabButtonItems)
     {
@@ -332,6 +302,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
     //    if (self.selectedIndex != tagNum){
     //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SWITCH_MAIN_TAB object:self];
     //    }
+    [((CustomTabViewController *)[self.viewControllers objectAtIndex:tagNum]).sectionTab setHighlighted:true];
     [self selectTab:tagNum];
 }
 

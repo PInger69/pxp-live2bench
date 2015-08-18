@@ -139,16 +139,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         
-        
-        
-        _pxpFilter = [[PxpFilter alloc]init];
-        _pxpFilter.delegate = self;
-        
-    //    sample = [[SamplePxpFilterModule alloc]initWithArray:@[@"PP",@"COACH CALL",@"PK"]];
-//        [_pxpFilter addModules:@[sample]];
-//        [_pxpFilter.filtersOwnPredicates addObject:[NSPredicate predicateWithFormat:@"name != %@", @"PP"]];
-//        [_pxpFilter.filtersOwnPredicates addObject:[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeNormal]];
-//        [NSString stringWithFormat:@"type != %ld", (long)TagTypeNormal ];
+        _pxpFilter = appDel.sharedFilter;
     }
     return self;
     
@@ -181,7 +172,7 @@
     }
     
     if (_currentEvent != nil) {
-        [[TabView sharedFilterTab] dismissViewControllerAnimated:NO completion:nil];// remove filter if up
+        [[TabView sharedFilterTabBar] dismissViewControllerAnimated:NO completion:nil];// remove filter if up
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAG_MODIFIED object:_currentEvent];
     }
@@ -418,12 +409,12 @@
         
 
         
-        /*if(eventTags.count > 0 && !self.tagsToDisplay){
-            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+        if(eventTags.count > 0 && !self.tagsToDisplay){
+            //self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
 
             [_tableViewController reloadData];
-        }*/
+        }
 
 
         
@@ -533,10 +524,8 @@
                      }
                      completion:^(BOOL finished){
                          
-//                         if (self.isViewLoaded && self.view.window) {
-//                                [TabView sharedFilterTab].view.frame =  CGRectMake(0, 0, [TabView sharedFilterTab].preferredContentSize.width,[TabView sharedFilterTab].preferredContentSize.height);
-//                         }
-//                         
+
+                         
                       
                      }];
 }
@@ -712,6 +701,7 @@
 {
     [super viewWillDisappear:animated];
     self.videoPlayer.mute = YES;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENABLE_TELE_FILTER object:self];
 }
 
 
@@ -723,7 +713,7 @@
 
 
 -(void)clear{
-    [[TabView sharedFilterTab] dismissViewControllerAnimated:NO completion:nil];// close filter if filtering
+    [[TabView sharedFilterTabBar] dismissViewControllerAnimated:NO completion:nil];// close filter if filtering
     [self.allTags removeAllObjects];
     [self.tagsToDisplay removeAllObjects];
     [_tableViewController reloadData];
@@ -792,14 +782,18 @@
     return [NSMutableArray arrayWithArray:[toSort sortedArrayUsingDescriptors:@[sorter]]];
 }
 
+-(void)didReceiveMemoryWarning{
+    [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
+}
+
 
 #pragma mark - Filtering Methods
 
 - (void)pressFilterButton
 {
     
-    [_pxpFilter filterTags:[self.tagsToDisplay copy]];
-    TabView *popupTabBar = [TabView sharedFilterTab];
+    [_pxpFilter filterTags:[self.allTags copy]];
+    TabView *popupTabBar = [TabView sharedFilterTabBar];
     
     
     // setFilter to this view. This is the default filtering for ListView
@@ -808,27 +802,24 @@
     [_pxpFilter removeAllPredicates];
 
     
-    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+    NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
                                                                                    [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
                                                                                    ]];
 
-    [_pxpFilter addPredicates:@[ignoreThese]];
+    [_pxpFilter addPredicates:@[allowThese]];
     
     if (popupTabBar.isViewLoaded)
     {
         popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
     }
   
-
-    if ([popupTabBar.tabs count]== 0)    popupTabBar.tabs = @[[[PxpFilterDefaultTabViewController alloc]init],[[PxpFilterHockeyTabViewController alloc]init],[[PxpFilterFootballTabViewController alloc]init],[[PxpFilterSoccerTabViewController alloc]init],[[PxpFilterRugbyTabViewController alloc]init]];
     popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
     popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
 
@@ -841,9 +832,10 @@
     [self presentViewController:popupTabBar animated:YES completion:nil];
  
     
-    [_pxpFilter filterTags:[self.tagsToDisplay copy]];
+    [_pxpFilter filterTags:[self.allTags copy]];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DISABLE_TELE_FILTER object:self];
 
-    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
 }
 
 
@@ -858,7 +850,7 @@
 
 -(void)onFilterChange:(PxpFilter *)filter
 {
-    [filter filterTags:self.tagsToDisplay];
+    [filter filterTags:self.allTags];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     [_tableViewController reloadData];

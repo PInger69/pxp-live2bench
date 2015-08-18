@@ -16,6 +16,7 @@
     NSMutableSet    * _userSelected;
 }
 
+@synthesize displayAllTagIfAllFilterOn = _displayAllTagIfAllFilterOn;
 
 - (instancetype)init
 {
@@ -41,23 +42,46 @@
         b.selected = NO;
     }
     [_userSelected removeAllObjects];
+
 }
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{
-    if ([_userSelected count] == 0 || [_userSelected count] == [_buttons count]) return; // all or none are selected
+    if ([_userSelected count] == 0 || ([_userSelected count] == [_buttons count] && _displayAllTagIfAllFilterOn)) return; // all or none are selected
     [tagsToFilter filterUsingPredicate:_combo];
 }
 
-#pragma mark - PxpFilterButtonGroupControllerDelegate Methods
--(void)onButtonSelected:(UIButton*)button
-{
 
+
+
+
+#pragma mark - PxpFilterModuleDelegate Methods
+//-(void)onButtonSelected:(UIButton*)button
+//{
+//
+//    NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
+//    //button.selected            = !button.selected;
+//    
+//    for (PxpFilterButton * b in _buttons) {
+//        if(b.selected == YES){
+//              [toCombo addObject:b.ownPredicate];
+//            [_userSelected addObject:b];
+//        } else {
+//            [_userSelected removeObject:b];
+//        }
+//    }
+//    
+//    _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+//    [_parentFilter refresh];
+//}
+
+-(void)onUserInput:(id)inputObject
+{
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
     //button.selected            = !button.selected;
     
     for (PxpFilterButton * b in _buttons) {
         if(b.selected == YES){
-              [toCombo addObject:b.ownPredicate];
+            [toCombo addObject:b.ownPredicate];
             [_userSelected addObject:b];
         } else {
             [_userSelected removeObject:b];
@@ -66,6 +90,8 @@
     
     _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     [_parentFilter refresh];
+
 }
+
 
 @end

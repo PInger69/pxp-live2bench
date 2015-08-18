@@ -12,7 +12,7 @@
 
 @protocol PxpFilterModuleProtocol <NSObject>
 
-
+@property (nonatomic,assign)    BOOL       modified;
 @property (nonatomic,weak)      PxpFilter  * parentFilter;
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter;

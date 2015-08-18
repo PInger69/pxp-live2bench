@@ -56,10 +56,10 @@
     if (thumb) {
         _thumbnailView.image = thumb;
     } else {
-        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc] init];
+        //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc] init];
         
         NSString *url = teleTag.telestration.sourceName && teleTag.thumbnails[teleTag.telestration.sourceName] ? teleTag.thumbnails[teleTag.telestration.sourceName] : teleTag.thumbnails.allValues.firstObject;
-        [imageAssetManager imageForURL:url atImageView:_thumbnailView withTelestration:teleTag.telestration];
+        [[ImageAssetManager getInstance] imageForURL:url atImageView:_thumbnailView withTelestration:teleTag.telestration];
     }
 }
 

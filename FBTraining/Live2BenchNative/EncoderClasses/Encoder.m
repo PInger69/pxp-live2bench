@@ -453,6 +453,7 @@
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
+    NSString * eventType = (_event)?_event.eventType:@"";
     
     _eventContext.event = event;
     
@@ -2009,7 +2010,7 @@
             self.liveEvent = nil;
             self.encoderManager.liveEvent = nil;
             self.encoderManager.liveEventName = nil;
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":@""}];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
         }
         

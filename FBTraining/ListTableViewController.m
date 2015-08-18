@@ -356,7 +356,7 @@
         
     }
     
-    ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+    //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     NSString *src = tag.thumbnails.allKeys.firstObject;
     
     if (tag.telestration) {
@@ -378,7 +378,7 @@
         
         PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:src] ? tag.telestration : nil;
         
-        [imageAssetManager imageForURL:url atImageView:cell.tagImage withTelestration:tele];
+        [[ImageAssetManager getInstance] imageForURL:url atImageView:cell.tagImage withTelestration:tele];
     }
     
     

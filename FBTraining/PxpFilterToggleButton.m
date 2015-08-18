@@ -54,7 +54,7 @@
 // Protocol methods
 -(void)filterTags:(NSMutableArray *)tagsToFilter
 {
-    
+    if (!self.enabled) return;
 
     if (self.selected && _predicateToUse){
         [tagsToFilter filterUsingPredicate:_predicateToUse];

@@ -18,6 +18,7 @@
 #import "SpinnerView.h"
 #import "ToastObserver.h"
 #import "CustomAlertView.h"
+#import "PxpFilterDefaultTabViewController.h"
 
 @implementation AppDelegate
 {
@@ -113,6 +114,12 @@
     _toastObserver.parentView = self.window.rootViewController.view;
     
     
+    
+    _sharedFilter       = [[PxpFilter alloc]init];
+    _sharedFilterTab    = [TabView sharedFilterTabBar];
+//    [_sharedFilterTab addTab:[[PxpFilterDefaultTabViewController alloc]init]];
+    
+    [_sharedFilterTab setPxpFilter:_sharedFilter];
     return YES;
 }
 
