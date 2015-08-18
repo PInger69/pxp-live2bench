@@ -128,7 +128,9 @@
 }
 
 - (void)setTagNames:(nonnull NSArray *)tagNames {
-    _tagNames = tagNames;
+    _tagNames = [tagNames filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary * __nullable bindings) {
+        return ![evaluatedObject hasPrefix:@"-"];
+    }]];
     
     for (NSString *tagName in self.tagNames) {
         self.periods[tagName] = [NSMutableArray array];

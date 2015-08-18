@@ -214,7 +214,7 @@
     NSString *newActiveTagName = nil;
     for (NSDictionary *tagDescriptor in tagDescriptors) {
         NSString *tagName = tagDescriptor[@"name"];
-        if (tagName.length > 0 && ![tagName hasPrefix:@"-"]) {
+        if (tagName.length > 0 && tagName && ![tagName hasPrefix:@"-"]) {
             newActiveTagName = tagName;
             break;
         }
@@ -353,7 +353,7 @@
     
     self.tagSelectButton.titleLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
     self.tagSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    [self.tagSelectButton setTitle:@"" forState:UIControlStateNormal];
+    [self.tagSelectButton setTitle:self.activeTagName forState:UIControlStateNormal];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateHighlighted];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateSelected];
@@ -410,6 +410,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [_playerViewController viewDidAppear:animated];
     
     self.slomoButton.slomoOn = self.videoPlayer.slowmo;
     [self.view bringSubviewToFront:self.backwardSeekButton];

@@ -368,6 +368,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [_playerViewController viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
     [self.view bringSubviewToFront:_fullscreenViewController.view];
 }

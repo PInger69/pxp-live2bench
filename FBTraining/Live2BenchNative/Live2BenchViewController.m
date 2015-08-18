@@ -945,6 +945,7 @@ static void * eventContext      = &eventContext;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [_playerViewController viewDidAppear:animated];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
     self.videoPlayer.mute = NO;
