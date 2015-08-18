@@ -162,7 +162,7 @@ static NSMutableDictionary * openDurationTagsWithID;
     if ([data objectForKey:@"line"]) {
         [dict setObject:[data objectForKey:@"line"] forKey:@"line"];
     }
-    if ([data objectForKey:@"extra"]) {
+    if ([[data objectForKey:@"extra"] isKindOfClass:[NSDictionary class]]) {
         [dict addEntriesFromDictionary:[data objectForKey:@"extra"]];
     }
     return [dict copy];

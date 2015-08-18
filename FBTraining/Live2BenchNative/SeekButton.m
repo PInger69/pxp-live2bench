@@ -38,7 +38,7 @@
 
 static NSNotificationCenter * __nonnull _localCenter;
 static NSArray * __nonnull _defaultSpeeds;
-static CGFloat _textNumbers[2] = { 1.0, 1.0 };
+static CGFloat _textNumbers[2] = { 5.0, 5.0 };
 
 + (void)initialize {
     _localCenter = [[NSNotificationCenter alloc] init];

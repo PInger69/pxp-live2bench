@@ -20,7 +20,7 @@
 
 @implementation PxpVideoBar
 {
-    NSTimer * __nonnull _timer;
+    CADisplayLink * __nonnull _displayLink;
     
     TagView * __nonnull _tagView;
     UILabel * __nonnull _tagLabel;
@@ -80,7 +80,9 @@
     _playRateObserverContext = &_playRateObserverContext;
     _telestrationObserverContext = &_telestrationObserverContext;
     
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerAction:) userInfo:nil repeats:YES];
+    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction:)];
+    _displayLink.frameInterval = 60;
+    [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     
     self.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
 }
@@ -102,7 +104,7 @@
 }
 
 - (void)dealloc {
-    [_timer invalidate];
+    [_displayLink invalidate];
     [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
 }
 
@@ -298,12 +300,8 @@
 
 #pragma mark - Private Methods
 
-- (void)timerAction:(NSTimer *)timer {
-    if (!self.hidden) {
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            [_tagView setNeedsDisplay];
-        });
-    }
+- (void)displayLinkAction:(CADisplayLink *)displayLink {
+    [_tagView setNeedsDisplay];
 }
 
 - (NSTimeInterval)durationOfVideoPlayer {
