@@ -58,7 +58,8 @@
 -(void)buttonSelected:(id)sender
 {
     self.selected = !self.selected;
-    [_ownDelegate onButtonSelected:self];
+
+    [_ownDelegate onUserInput:self];
 }
 
 

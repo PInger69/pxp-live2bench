@@ -11,9 +11,9 @@
 #import "PxpFilterUserButtons.h"
 #import "PxpFilterRatingView.h"
 #import "PxpFilterToggleButton.h"
+#import "PxpFilterModuleDelegate.h"
 
-
-@interface PxpFilterMyClipTabViewController : PxpFilterTabController
+@interface PxpFilterMyClipTabViewController : PxpFilterTabController <PxpFilterModuleDelegate>
 
 @property (readonly, strong, nonatomic, nullable) UIImage                   * tabImage;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonScrollView  * eventScrollView;

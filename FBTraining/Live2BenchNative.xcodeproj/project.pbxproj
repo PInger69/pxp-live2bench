@@ -773,6 +773,7 @@
 		D72B833417CFDBAE0035A1C4 /* EulaString.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = EulaString.txt; path = Live2BenchNative/EulaString.txt; sourceTree = SOURCE_ROOT; };
 		D72CC2891AFA858100E26B60 /* RatingOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatingOutput.m; sourceTree = "<group>"; };
 		D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RatingOutput.h; sourceTree = "<group>"; };
+		D72F8F611B827ED5002FA447 /* PxpFilterModuleDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterModuleDelegate.h; sourceTree = "<group>"; };
 		D72FA56A180ECDAE009ACA87 /* BookmarkFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkFilterViewController.h; sourceTree = "<group>"; };
 		D72FA56B180ECDAE009ACA87 /* BookmarkFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkFilterViewController.m; sourceTree = "<group>"; };
 		D7341A831B73C01D005156E9 /* PxpFilterFootballTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFilterFootballTabViewController.h; sourceTree = "<group>"; };
@@ -2124,6 +2125,7 @@
 				D7D2F6A21B7CE1FE00DC0DC5 /* PxpFilterButtonGroupController.h */,
 				D7D2F6A31B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m */,
 				D7D2F6A51B7CE67B00DC0DC5 /* PxpFilterButtonGroupControllerDelegate.h */,
+				D72F8F611B827ED5002FA447 /* PxpFilterModuleDelegate.h */,
 				D7341A8E1B7530FC005156E9 /* PxpFilterUserInputScrollView.h */,
 				D7341A911B753A6A005156E9 /* PxpFilterUserInputView.h */,
 				D7341A921B753A6A005156E9 /* PxpFilterUserInputView.m */,

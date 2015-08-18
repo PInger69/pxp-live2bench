@@ -170,7 +170,7 @@ static void * eventContext      = &eventContext;
     }];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -415,6 +415,16 @@ static void * eventContext      = &eventContext;
         [_teamPick dismissPopoverAnimated:NO];
         _teamPick = nil;
     }
+    
+    [_leftArrow removeFromSuperview];
+    _leftArrow = nil;
+    [_rightArrow removeFromSuperview];
+    _rightArrow = nil;
+    [_playerDrawerLeft.view removeFromSuperview];
+    _playerDrawerLeft = nil;
+    [_playerDrawerRight.view removeFromSuperview];
+    _playerDrawerRight = nil;
+    
     
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
         [self onEventChange];

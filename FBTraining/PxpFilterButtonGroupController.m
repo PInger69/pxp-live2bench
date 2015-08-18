@@ -42,6 +42,7 @@
         b.selected = NO;
     }
     [_userSelected removeAllObjects];
+
 }
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter{
@@ -49,16 +50,38 @@
     [tagsToFilter filterUsingPredicate:_combo];
 }
 
-#pragma mark - PxpFilterButtonGroupControllerDelegate Methods
--(void)onButtonSelected:(UIButton*)button
-{
 
+
+
+
+#pragma mark - PxpFilterModuleDelegate Methods
+//-(void)onButtonSelected:(UIButton*)button
+//{
+//
+//    NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
+//    //button.selected            = !button.selected;
+//    
+//    for (PxpFilterButton * b in _buttons) {
+//        if(b.selected == YES){
+//              [toCombo addObject:b.ownPredicate];
+//            [_userSelected addObject:b];
+//        } else {
+//            [_userSelected removeObject:b];
+//        }
+//    }
+//    
+//    _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+//    [_parentFilter refresh];
+//}
+
+-(void)onUserInput:(id)inputObject
+{
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
     //button.selected            = !button.selected;
     
     for (PxpFilterButton * b in _buttons) {
         if(b.selected == YES){
-              [toCombo addObject:b.ownPredicate];
+            [toCombo addObject:b.ownPredicate];
             [_userSelected addObject:b];
         } else {
             [_userSelected removeObject:b];
@@ -67,6 +90,8 @@
     
     _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     [_parentFilter refresh];
+
 }
+
 
 @end
