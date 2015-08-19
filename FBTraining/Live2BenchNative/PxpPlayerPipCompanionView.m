@@ -69,8 +69,9 @@
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _pipPlayerObserverContext) {
-        [self.player reload];
-        [_pipView.player reload];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.player reload];
+        });
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -92,6 +93,15 @@
     [super setPlayer:player];
     
     [player.context muteAllButPlayer:player];
+}
+
+- (void)setHidden:(BOOL)hidden {
+    [super setHidden:hidden];
+    
+    if (hidden) {
+        self.pipView.hidden = YES;
+        self.pipView.player = nil;
+    }
 }
 
 #pragma mark - Gesture Recognizers

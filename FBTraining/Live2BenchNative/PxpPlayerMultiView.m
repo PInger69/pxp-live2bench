@@ -133,7 +133,15 @@
             [self.context.mainPlayer sync];
             
             [self.delegate playerView:self changedFullViewStatus:self.fullView];
-            [self.context reload];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                for (PxpPlayer *p in self.context.players) {
+                    if (p != player) {
+                        [p reload];
+                    }
+                }
+            });
+            
         } else if (playerView.player && !self.companionView.player) {
             
             PxpPlayer *player = playerView.player;

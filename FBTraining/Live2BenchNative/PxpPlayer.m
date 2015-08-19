@@ -222,17 +222,22 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)setLive:(BOOL)live {
     if (_live != live) {
-        _live = live;
+        for (PxpPlayer *player in self.contextPlayers) {
+            [player willChangeValueForKey:@"live"];
+            player->_live = live;
+            [player didChangeValueForKey:@"live"];
+            
+            // there cannot be motion if the player is not live
+            if (!live) {
+                [player willChangeValueForKey:@"motion"];
+                player->_motion = NO;
+                [player didChangeValueForKey:@"motion"];
+            }
+        }
 
         if (live) {
             [self goToLive];
-        } else {
-            // there cannot be motion if the player is not live
-            [self willChangeValueForKey:@"motion"];
-            _motion = NO;
-            [self didChangeValueForKey:@"motion"];
         }
-        
     }
 }
 
@@ -466,11 +471,6 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handler];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (tried < total) {
-                [self cancelPendingSeeks];
-            }
-        });
     } else {
         
         if (CMTIME_IS_INDEFINITE(time)) {
@@ -478,14 +478,29 @@ static CMClockRef _pxpPlayerMasterClock;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^() {
+            
+            __block BOOL seek = YES;
+            
+            void (^handle)(BOOL) = ^(BOOL complete) {
+                seek = NO;
+                completionHandler(complete);
+            };
+            
             [self.currentItem cancelPendingSeeks];
             if (self.status != AVPlayerStatusReadyToPlay || CMTIME_IS_INVALID(time)) {
-                completionHandler(NO);
+                handle(NO);
             } else if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
-                [super seekToTime:time completionHandler:completionHandler];
+                [super seekToTime:time completionHandler:handle];
             } else {
-                [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+                [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handle];
             }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (seek) {
+                    [self.currentItem cancelPendingSeeks];
+                }
+            });
+            
         });
         
     }
@@ -561,9 +576,16 @@ static CMClockRef _pxpPlayerMasterClock;
     
     // we only care about motion if the player is live
     if (self.live) {
-        [self willChangeValueForKey:@"motion"];
-        _motion = [note.userInfo[@"alarms"] containsObject:self.name];
-        [self didChangeValueForKey:@"motion"];
+        NSArray *alarms = note.userInfo[@"alarms"];
+        BOOL motion = [alarms containsObject:self.name];
+        if (_motion != motion) {
+            [self willChangeValueForKey:@"motion"];
+            _motion = motion;
+            [self didChangeValueForKey:@"motion"];
+            
+            NSLog(@"%s", _motion ? "motion started!" : "motion ended");
+        }
+        
     }
 }
 
@@ -650,7 +672,7 @@ static CMClockRef _pxpPlayerMasterClock;
             // invalidate the range
             self.range = kCMTimeRangeInvalid;
             
-            [self seekToTime:kCMTimePositiveInfinity multi:YES toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
+            [self seekToTime:CMTimeSubtract(self.duration, CMTimeMake(1, 1)) multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
                 
                 [self play];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -769,16 +791,6 @@ static CMClockRef _pxpPlayerMasterClock;
                     
                     [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
                         
-                        // ensure no players get stuck
-                        for (PxpPlayer *player in self.contextPlayers) {
-                            if (player.rate == 0.0) {
-                                [player setRate:self.playRate multi:NO];
-                            }
-                        }
-                        
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            self.syncing = NO;
-                        });
                         
                     }];
                     
@@ -792,6 +804,10 @@ static CMClockRef _pxpPlayerMasterClock;
                      */
                 }
             }
+               
+               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                   self.syncing = NO;
+               });
         }
     }
 }

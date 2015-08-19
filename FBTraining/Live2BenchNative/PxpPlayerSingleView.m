@@ -138,7 +138,7 @@
     [self addObserver:self forKeyPath:@"player.name" options:0 context:_nameContext];
     
     [self addObserver:self forKeyPath:@"player.failed" options:0 context:_failedObserverContext];
-    //[self addObserver:self forKeyPath:@"player.motion" options:0 context:_motionObserverContext];
+    [self addObserver:self forKeyPath:@"player.motion" options:0 context:_motionObserverContext];
     
     [self addObserver:self forKeyPath:@"player.currentItem.seekableTimeRanges" options:0 context:_currentItemDurationObserverContext];
     
@@ -171,7 +171,7 @@
     [self removeObserver:self forKeyPath:@"player.name" context:_nameContext];
     
     [self removeObserver:self forKeyPath:@"player.failed" context:_failedObserverContext];
-    //[self removeObserver:self forKeyPath:@"player.motion" context:_motionObserverContext];
+    [self removeObserver:self forKeyPath:@"player.motion" context:_motionObserverContext];
     
     [self removeObserver:self forKeyPath:@"player.currentItem.seekableTimeRanges" context:_currentItemDurationObserverContext];
 }
