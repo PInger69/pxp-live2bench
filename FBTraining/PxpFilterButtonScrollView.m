@@ -200,7 +200,7 @@
     if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
         rowCount   = (NSUInteger)self.frame.size.height / (_buttonSize.height+_buttonMargin.height);
     } else {
-        rowCount   = (NSUInteger)self.frame.size.height / (_buttonSize.width+_buttonMargin.width);
+        rowCount   = (NSUInteger)self.frame.size.width / (_buttonSize.width+_buttonMargin.width);
     }
     
     for (NSUInteger k = 0; k < _buttonList.count; k++ ) {

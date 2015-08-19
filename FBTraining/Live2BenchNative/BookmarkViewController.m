@@ -425,44 +425,6 @@ int viewWillAppearCalled;
 - (void)slideFilterBox
 {
     
-//    if(!blurView)
-//    {
-//        blurView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,0.0f,self.view.frame.size.width,self.view.frame.size.height)];
-//        blurView.backgroundColor = [UIColor colorWithRed:0.f
-//                                                   green:0.f
-//                                                    blue:0.f
-//                                                   alpha:0.7f];
-//        UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFilterToolbox)];
-//        [blurView addGestureRecognizer:tapRec];
-//        
-//        blurView.hidden = YES;
-//        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.allClips];
-//    }
-//    [self.view insertSubview:blurView aboveSubview:newVideoControlBar.view];
-//    [self.view insertSubview:_filterToolBoxView.view aboveSubview:blurView];
-//    
-//    blurView.hidden = NO;
-//    [_filterToolBoxView open:YES]; // Slide filter open
-//    
-//    componentFilter.rawTagArray = self.allClips;
-//    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
-//    
-//    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-//    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
-//    componentFilter.finishedSwipe = TRUE;
-//    
-//    [self.view addSubview:componentFilter.view];
-//    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
-//    [componentFilter setOrigin:CGPointMake(60, 190)];
-//    [componentFilter close:NO];
-//    [componentFilter viewDidAppear:TRUE];
-//    
-//    
-//    [componentFilter open:YES];
-    
-
-
-    
     if (_pxpFilterTab.isViewLoaded)
     {
         _pxpFilterTab.view.frame =  CGRectMake(0, 0, _pxpFilterTab.preferredContentSize.width,_pxpFilterTab.preferredContentSize.height);
@@ -479,10 +441,6 @@ int viewWillAppearCalled;
    [_pxpFilter filterTags:[self.allClips copy]];
     
 
-    Clip * c = self.allClips[0];
-    
-    
-    
     
 }
 
@@ -989,6 +947,26 @@ int viewWillAppearCalled;
 }
 
 
+#pragma mark - DeletableTableViewControllerDelegate Methods
+
+-(void)tableView:(DeletableTableViewController *)tableView indexesToBeDeleted:(NSArray *)toBeDeleted
+{
+
+    for (NSIndexPath *cellIndexPath in toBeDeleted) {
+        Clip * aClip = [_tagsToDisplay objectAtIndex:cellIndexPath.row];
+        
+        
+        if ([self.allClips containsObject:aClip]) {
+            [self.allClips removeObject:aClip];
+        }
+        
+    }
+    
+    
+
+
+
+}
 
 #pragma mark -
 -(void)didReceiveMemoryWarning{

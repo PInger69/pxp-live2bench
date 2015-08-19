@@ -163,7 +163,7 @@
                 self.liveEvent = nil;
             }
            if (self.primaryEncoder) [self.primaryEncoder removeFromPrimary];
-            [self.primaryEncoder setEvent:nil];
+            //[self.primaryEncoder setEvent:nil];
             self.primaryEncoder = nil;
         } else {
             if (event.isBuilt){

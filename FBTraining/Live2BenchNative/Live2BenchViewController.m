@@ -153,7 +153,7 @@ static void * eventContext      = &eventContext;
     _userCenter             = mainappDelegate.userCenter;
     needDelete = true;
 
-    eventStopped = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    //eventStopped = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     
     
     // observers //@"currentEventType"
@@ -183,7 +183,7 @@ static void * eventContext      = &eventContext;
     }];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -429,6 +429,16 @@ static void * eventContext      = &eventContext;
         _teamPick = nil;
     }
     
+    [_leftArrow removeFromSuperview];
+    _leftArrow = nil;
+    [_rightArrow removeFromSuperview];
+    _rightArrow = nil;
+    [_playerDrawerLeft.view removeFromSuperview];
+    _playerDrawerLeft = nil;
+    [_playerDrawerRight.view removeFromSuperview];
+    _playerDrawerRight = nil;
+    
+    
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
         [self onEventChange];
         return;
@@ -448,7 +458,7 @@ static void * eventContext      = &eventContext;
         _currentEvent = nil;
         //[self addBottomViewController];
         [UserCenter getInstance].taggingTeam = nil;
-        [eventStopped showView];
+        [_bottomViewController clear];
 
     }
     

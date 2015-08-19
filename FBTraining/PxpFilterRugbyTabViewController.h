@@ -14,8 +14,9 @@
 #import "PxpFilterUserButtons.h"
 #import "PxpFilterButton.h"
 
-@interface PxpFilterRugbyTabViewController : PxpFilterTabController
+@interface PxpFilterRugbyTabViewController : PxpFilterTabController <PxpFilterModuleDelegate>
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButtonScrollView *tagNameScrollView;
+@property (strong, nonatomic,nullable) IBOutlet PxpFilterButtonScrollView *playersScrollView;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterRangeSliderView *sliderView;
 
 @property (strong, nonatomic,nullable) IBOutlet UILabel *totalTagLabel;

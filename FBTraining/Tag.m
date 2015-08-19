@@ -164,14 +164,19 @@ static NSMutableDictionary * openDurationTagsWithID;
     }
     if ([data objectForKey:@"extra"]) {
         
-        NSError *jsonError;
-        NSData *objectData = [[data objectForKey:@"extra"] dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *temp = [NSJSONSerialization JSONObjectWithData:objectData
-                                                             options:NSJSONReadingMutableContainers
-                                                               error:&jsonError];
+        if (![[data objectForKey:@"extra"] isKindOfClass:[NSDictionary class]]) {
+            NSError *jsonError;
+            NSData *objectData = [[data objectForKey:@"extra"] dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *temp = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                 options:NSJSONReadingMutableContainers
+                                                                   error:&jsonError];
+            [dict addEntriesFromDictionary:temp];
+        } else {
         
-
-        [dict addEntriesFromDictionary:temp];
+            [dict addEntriesFromDictionary:[data objectForKey:@"extra"]];
+        }
+        
+ 
     }
     return [dict copy];
 }

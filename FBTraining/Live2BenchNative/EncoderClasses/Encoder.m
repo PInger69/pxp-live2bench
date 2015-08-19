@@ -450,6 +450,11 @@
         return;
     }*/
     
+    BOOL eventStopped = false;
+    if (!event && _event && _event.live) {
+        eventStopped = true;
+    }
+    
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];

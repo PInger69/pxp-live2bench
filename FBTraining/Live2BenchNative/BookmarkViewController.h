@@ -16,6 +16,8 @@
 //#import <Social/Social.h>
 //#import <Accounts/Accounts.h>
 #import "BookmarkFilterViewController.h"
+#import "DeletableTableViewController.h"
+
 #import "CustomButton.h"
 #import "AMBlurView.h"
 #import "BorderButton.h"
@@ -26,7 +28,7 @@
 #import "TabView.h"
 
 @class TeleViewController, BookmarkFilterViewController, GDFileUploader, DPBFileUploader;
-@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate,PxpFilterDelegate >
+@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate,PxpFilterDelegate ,DeletableTableViewControllerDelegate>
 {
 
     NSIndexPath                  * wasPlayingIndexPath;
