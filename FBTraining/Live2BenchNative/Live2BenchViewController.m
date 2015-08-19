@@ -146,7 +146,7 @@ static void * eventContext      = &eventContext;
     _userCenter             = mainappDelegate.userCenter;
     needDelete = true;
 
-    eventStopped = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    //eventStopped = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     
     
     // observers //@"currentEventType"
@@ -445,7 +445,7 @@ static void * eventContext      = &eventContext;
         _currentEvent = nil;
         //[self addBottomViewController];
         [UserCenter getInstance].taggingTeam = nil;
-        [eventStopped showView];
+        [_bottomViewController clear];
 
     }
     

@@ -162,7 +162,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
  *  Notifications
  */
 
-
+#define NOTIF_LOST_WIFI                     @"NOTIF_LOST_WIFI"
 #define NOTIF_PRIMARY_ENCODER_CHANGE        @"NOTIF_PRIMARY_ENCODER_CHANGE"
 #define NOTIF_DELETE_TAG                    @"NOTIF_DELETE_TAG"
 
