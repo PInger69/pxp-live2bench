@@ -83,6 +83,8 @@
     [_playerView addGestureRecognizer:_fullscreenGestureRecognizer];
     
     [self addChildViewController:_telestrationViewController];
+    
+    self.view.clipsToBounds = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

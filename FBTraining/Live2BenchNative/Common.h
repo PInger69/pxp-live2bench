@@ -139,9 +139,10 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 /**
  *  Graphics Commons
  */
-#define PRIMARY_APP_COLOR   [UIColor blueColor]
-#define SECONDARY_APP_COLOR [UIColor blueColor]
-#define TERTIARY_APP_COLOR  [UIColor blueColor]
+
+#define PRIMARY_APP_COLOR   [UIColor magentaColor]
+#define SECONDARY_APP_COLOR [UIColor magentaColor]
+#define TERTIARY_APP_COLOR  [UIColor magentaColor]
 
 #define DEBUG_MODE                          1
 

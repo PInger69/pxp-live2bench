@@ -87,11 +87,17 @@ static CMClockRef _pxpPlayerMasterClock;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(motionObserved:) name:NOTIF_MOTION_ALARM object:nil];
     
+    if (self.currentItem) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
+    }
+    
     __block PxpPlayer *player = self;
     
     _syncBlock = ^(CMTime time) {
         [player sync:time];
     };
+    
+    
 }
 
 - (nonnull instancetype)initWithPlayerItem:(AVPlayerItem *)item {
@@ -124,6 +130,12 @@ static CMClockRef _pxpPlayerMasterClock;
     [self removeObserver:self forKeyPath:@"currentItem.seekableTimeRanges" context:_currentItemObserverContext];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_MOTION_ALARM object:nil];
+    
+    if (self.currentItem) {
+        
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
     
     [self.syncTimer invalidate];
 }
@@ -184,7 +196,9 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
     dispatch_async(dispatch_get_main_queue(), ^() {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
         [super replaceCurrentItemWithPlayerItem:item];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
     });
 }
 
@@ -810,6 +824,12 @@ static CMClockRef _pxpPlayerMasterClock;
                });
         }
     }
+}
+
+- (void)didPlayToEndTimeNotification:(NSNotification *)notification {
+    [self seekToTime:kCMTimeZero multi:NO toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
+        [self setRate:_playRate multi:NO];
+    }];
 }
 
 #pragma mark - PxpTimeProvider

@@ -25,8 +25,10 @@
     _gridView.delegate = self;
     _companionView.delegate = self;
     
+    _gridView.hidden = YES;
+    
     _companionView.tapToAdvanceEnabled = NO;
-    _companionView.hidden = YES;
+    _companionView.hidden = NO;
     
     [_companionView addGestureRecognizer:[self createFocusGestureRecognizer]];
     

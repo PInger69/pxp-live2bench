@@ -33,14 +33,15 @@
 - (void)setClip:(nullable Clip *)clip {
     _clip = clip;
     
-    [self setPlayerCount:clip.videosBySrcKey.allKeys.count];
+    NSDictionary *videos = clip.videosBySrcKey;
+    NSArray *sources = videos.allKeys;
+    
+    [self setPlayerCount:sources.count];
     
     // load clips
     for (NSUInteger i = 0; i < self.players.count; i++) {
-        NSString *src = clip.videosBySrcKey.allKeys[i];
-        PxpPlayer *player = self.players[i];
-        
-        player.feed = [[Feed alloc] initWithURLString:clip.videosBySrcKey[src] quality:0];
+        [self.players[i] setFeed:[[Feed alloc] initWithFileURL:videos[sources[i]]]];
+        [self.players[i] setName:sources[i]];
     }
     
     // default sync parameters

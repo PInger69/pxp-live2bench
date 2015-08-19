@@ -193,7 +193,7 @@
     } else if (context == _currentItemDurationObserverContext) {
         if (self.player.currentItem.seekableTimeRanges.count) {
             [self.activityIndicator stopAnimating];
-        } else {
+        } else if (self.player.currentItem) {
             [self.activityIndicator startAnimating];
         }
     }

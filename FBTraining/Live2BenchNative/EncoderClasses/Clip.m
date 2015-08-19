@@ -11,6 +11,9 @@
 
 
 @implementation Clip
+{
+    NSDictionary * _videosBySrcKey;
+}
 
 /**
  *  This is used when making a new plist from scatch
@@ -110,17 +113,6 @@
         NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
         NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
         
-        for (NSString * k  in vidkeys) {
-
-            NSString * check = [path stringByAppendingPathComponent:_videosBySrcKey[k]];
-            if ( ![[NSFileManager defaultManager] fileExistsAtPath:check] ){
-                [_videosBySrcKey removeObjectForKey:k];
-                modFlag = YES;
-            }
-        }
-        
-       
-        
         if (modFlag) [_localRawData writeToFile:_path atomically:YES];
         //if (modFlag) [_rawData writeToFile:self.path atomically:YES];
     }
@@ -205,8 +197,6 @@
         NSString *scrKeyFromFileName = [theFileName substringWithRange:searchRange];
 
      //   NSString * scrKeyFromFileName   = [theFileName substringWithRange:needleRange];
-        
-        [_videosBySrcKey setObject:theFileName forKey:scrKeyFromFileName];
 
     
     
@@ -267,6 +257,33 @@
 - (NSString *)globalID {
 //    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
     return [NSString stringWithFormat:@"%@_%@", self.event.name, _clipId];
+}
+
+- (nonnull NSDictionary *)sourcesForVideoPaths:(NSArray *)paths {
+    NSMutableDictionary *sources = [NSMutableDictionary dictionary];
+    
+    for (NSString *path in self.videoFiles) {
+        
+        const char *s = path.UTF8String;
+        unsigned long a = 0, b = 0;
+        
+        const char *c = s;
+        while (*c && *(c - 1) != '+') a++, b++, c++;
+        while (*c && strcmp(c, "hq.mp4")) b++, c++;
+        
+        char *source = calloc(b - a, sizeof(char));
+        for (unsigned long i = 0; i < b - a; i++) source[i] = s[a + i];
+        
+        sources[[NSString stringWithUTF8String:source]] = path;
+        
+        free(source);
+    }
+    
+    return sources;
+}
+
+- (nonnull NSDictionary *)videosBySrcKey {
+    return [self sourcesForVideoPaths:self.videoFiles];
 }
 
 
