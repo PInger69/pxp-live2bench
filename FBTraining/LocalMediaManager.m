@@ -491,6 +491,7 @@ static LocalMediaManager * instance;
         //clipData[@"event"] = encoderEvent;
         Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: clipData];
         [buildClip addSourceToClip:@{@"fileNames": @[aName]}];
+
         [_clips setObject:buildClip forKey:buildClip.globalID];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SAVED object:buildClip];

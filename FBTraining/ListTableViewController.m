@@ -208,6 +208,7 @@
         
         NSArray *keys = [[NSMutableArray arrayWithArray:[tag.event.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
         NSString *key = keys[indexPath.row - firstIndexPath.row];
+        
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithTag:tag source:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
         
         
@@ -225,7 +226,7 @@
                 weakerCell.downloadButton.progress = progress;
                 [weakerCell.downloadButton setNeedsDisplay];
             }];
-        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:key]){
+        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:([key isEqualToString:@"onlySource"])?nil:key]){
             collapsableCell.downloadButton.downloadComplete = YES;
             collapsableCell.downloadButton.progress = 1;
         }

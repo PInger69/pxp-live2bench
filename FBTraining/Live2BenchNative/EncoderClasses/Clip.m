@@ -82,11 +82,11 @@
         _rating             = [data[@"rating"] intValue];
         _comment            = data[@"comment"];
         _path               = [data objectForKey:@"plistPath"];
-        //_path               = [_rawData objectForKey:@"plistName"];
+
         _videosBySrcKey     = ([data objectForKey:@"fileNamesByKey"])?[data objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
         _localRawData[@"plistPath"] = _path;
         _localRawData[@"fileNamesByKey"] = _videosBySrcKey;
-        _localRawData[@"fileNames"] = data[@"fileNames"];
+        if (data[@"fileNames"]) _localRawData[@"fileNames"] = data[@"fileNames"];
         _eventName = data[@"event"];
         _localRawData[@"event"] = _eventName;
         //_videosBySrcKey     = ([_rawData objectForKey:@"fileNamesByKey"])?[_rawData objectForKey:@"fileNamesByKey"]:[NSMutableDictionary new];
@@ -232,7 +232,9 @@
 {
     
     [_localRawData setObject:  [NSNumber numberWithInteger:CFAbsoluteTimeGetCurrent()]   forKey:@"id"]  ;
-    _clipId = self.ID;
+//    _clipId = self.ID;
+    _clipId = _localRawData[@"id"];
+    
     //[NSString stringWithFormat:@"%d",[[_rawData objectForKey:@"id"] intValue]];
     [self write];
 }
@@ -266,7 +268,7 @@
 
 - (NSString *)globalID {
 //    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
-    return [NSString stringWithFormat:@"%@_%@", self.event.name, _clipId];
+    return [NSString stringWithFormat:@"%@_%@", _eventName, _clipId];
 }
 
 

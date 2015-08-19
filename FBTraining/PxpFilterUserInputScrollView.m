@@ -162,6 +162,7 @@
 }
 
 -(void)deleteButtonPressed:(id)sender{
+
     NSDictionary *target = nil;
     for(NSDictionary *dict in filterOptionList){
         if(dict[@"DeleteButton"] == (UIButton *)sender){
@@ -170,6 +171,7 @@
         }
     }
     if(target)[self removeOption:target];
+    [self deselect];
 }
 
 

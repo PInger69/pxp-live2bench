@@ -229,6 +229,10 @@
         }
         
         [self.setOfDeletingCells removeAllObjects];
+        if (_delegate && [_delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
+        
+            [_delegate tableView:self indexesToBeDeleted:indexPathsArray];
+        }
         [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
         [self.tableView reloadData];
         
