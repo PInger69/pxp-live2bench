@@ -244,7 +244,7 @@ int viewWillAppearCalled;
     
     
     testFullScreen = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    //    [self.view addSubview:testFullScreen.view];
+    _tableViewController.delegate = self;
     
     const CGFloat width = COMMENTBOX_WIDTH, height = width / (16.0 / 9.0);
     

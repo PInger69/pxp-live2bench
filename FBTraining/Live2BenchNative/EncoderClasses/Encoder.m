@@ -462,7 +462,7 @@
     
     _eventContext.event = event;
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":eventType}];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":eventType,@"eventStopped":[NSNumber numberWithBool:eventStopped]}];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];
 }
 
