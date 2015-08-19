@@ -13,6 +13,7 @@
                 <outlet property="half2" destination="f1Y-X4-Y6I" id="utv-BW-qDv"/>
                 <outlet property="halfExtra" destination="p3f-XB-2Zz" id="WKd-nM-V0m"/>
                 <outlet property="halfPS" destination="wcS-uJ-ipV" id="jUE-pS-IIv"/>
+                <outlet property="playersScrollView" destination="ecD-Gl-kjH" id="h2z-Vr-Rl5"/>
                 <outlet property="preFilterSwitch" destination="x0g-on-1T4" id="MX1-fS-iba"/>
                 <outlet property="sliderView" destination="G4k-Oh-8ot" id="pmb-Sv-5cM"/>
                 <outlet property="tagNameScrollView" destination="M8L-yY-T46" id="Tm3-Rj-65w"/>
@@ -217,6 +218,22 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Zone" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ys2-2F-Le1">
                             <rect key="frame" x="58" y="8" width="113" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0AV-gz-NEg">
+                    <rect key="frame" x="323" y="54" width="229" height="183"/>
+                    <subviews>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ecD-Gl-kjH" customClass="PxpFilterButtonScrollView">
+                            <rect key="frame" x="8" y="34" width="213" height="141"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </scrollView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Players" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qBM-Ii-5O8">
+                            <rect key="frame" x="86" y="8" width="57" height="18"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>

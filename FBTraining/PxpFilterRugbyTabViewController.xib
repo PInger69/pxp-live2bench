@@ -12,6 +12,7 @@
                 <outlet property="half1" destination="D8u-Fy-fn1" id="qGW-fN-V1c"/>
                 <outlet property="half2" destination="CpO-zs-Sh8" id="aSt-wU-srn"/>
                 <outlet property="halfExtra" destination="Ook-eE-DtT" id="HNN-S6-uzJ"/>
+                <outlet property="playersScrollView" destination="B7V-JH-zrb" id="vvA-qe-vYN"/>
                 <outlet property="preFilterSwitch" destination="QnH-kW-pXa" id="6ft-r7-rQh"/>
                 <outlet property="sliderView" destination="P2p-1M-T0w" id="VaG-KT-R46"/>
                 <outlet property="tagNameScrollView" destination="3MP-aY-juU" id="rmh-6M-36m"/>
@@ -191,10 +192,26 @@
                     </subviews>
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ep3-0j-hC8">
+                    <rect key="frame" x="323" y="57" width="229" height="354"/>
+                    <subviews>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B7V-JH-zrb" customClass="PxpFilterButtonScrollView">
+                            <rect key="frame" x="8" y="34" width="213" height="312"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </scrollView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Players" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IMN-7i-Qsg">
+                            <rect key="frame" x="86" y="8" width="57" height="18"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.81961703299999999" green="0.81959247589999995" blue="0.81960642340000001" alpha="1" colorSpace="calibratedRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="834" y="-47.5"/>
+            <point key="canvasLocation" x="828" y="-49.5"/>
         </view>
     </objects>
     <resources>

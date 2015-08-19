@@ -13,9 +13,10 @@
 #import "PxpFilterToggleButton.h"
 #import "PxpFilterUserButtons.h"
 
-@interface PxpFilterSoccerTabViewController : PxpFilterTabController
+@interface PxpFilterSoccerTabViewController : PxpFilterTabController <PxpFilterModuleDelegate>
 
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterButtonScrollView *tagNameScrollView;
+@property (strong, nonatomic,nullable) IBOutlet PxpFilterButtonScrollView *playersScrollView;
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterRangeSliderView *sliderView;
 
 @property (strong, nonatomic,nullable) IBOutlet PxpFilterUserButtons *userButton;

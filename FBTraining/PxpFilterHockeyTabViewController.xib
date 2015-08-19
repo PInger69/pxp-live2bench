@@ -279,11 +279,11 @@
                     <rect key="frame" x="305" y="53" width="247" height="147"/>
                     <subviews>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Ej-4P-rRo" customClass="PxpFilterButtonScrollView">
-                            <rect key="frame" x="8" y="26" width="231" height="113"/>
+                            <rect key="frame" x="8" y="34" width="231" height="105"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </scrollView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Players" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9xp-Ti-XsT">
-                            <rect key="frame" x="95" y="0.0" width="57" height="18"/>
+                            <rect key="frame" x="95" y="8" width="57" height="18"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
