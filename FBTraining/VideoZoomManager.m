@@ -474,8 +474,6 @@
     
     float relativeMultiplierHeight = self.secondLayer.frame.size.height / self.videoLayer.frame.size.height;
     float relativeMultiplierWidth = self.secondLayer.frame.size.width / self.videoLayer.frame.size.width;
-    PXPLog(@"The relativeMultiplier for the secondLayer is %f", relativeMultiplier);
-
 
     if (newRect.origin.x > 0) {
         newRect.origin.x = 0;
