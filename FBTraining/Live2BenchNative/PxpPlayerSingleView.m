@@ -216,6 +216,8 @@
     [self.scrollView addSubview:self.avPlayerView];
      */
     self.avPlayerView.layer.player = player;
+    
+    [player reload];
 }
 
 - (BOOL)fullView {

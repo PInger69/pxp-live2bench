@@ -121,7 +121,7 @@ static void * eventContext      = &eventContext;
     [super viewDidLoad];
     CGRect screenBounds;
     screenBounds = CGRectMake(0, 0, 1024, 768);
-    self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:screenBounds];
+    //self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:screenBounds];
     self.videoPlayer.view.frame                              = screenBounds;
     self.videoPlayer.view.bounds                             = screenBounds;
     self.videoPlayer.playBackView.frame                       = screenBounds;

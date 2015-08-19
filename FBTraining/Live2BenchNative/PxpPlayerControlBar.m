@@ -139,6 +139,8 @@
     _rateObserverContext = &_rateObserverContext;
     
     [self addObserver:self forKeyPath:@"player.rate" options:0 context:_rateObserverContext];
+    
+    self.backgroundColor = [UIColor clearColor];
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame {
@@ -215,7 +217,7 @@
 - (void)tintColorDidChange {
     [super tintColorDidChange];
     
-    self.backgroundColor = CMTIMERANGE_IS_VALID(self.player.range) ? [self.tintColor colorWithAlphaComponent:0.5] : [UIColor clearColor];
+    self.container.backgroundColor = CMTIMERANGE_IS_VALID(self.player.range) ? [self.tintColor colorWithAlphaComponent:0.5] : [UIColor clearColor];
 }
 
 #pragma mark - Slider Actions
@@ -276,7 +278,7 @@
 
 - (void)update:(CMTime)time {
     
-    self.backgroundColor = CMTIMERANGE_IS_VALID(self.player.range) ? [self.tintColor colorWithAlphaComponent:0.5] : [UIColor clearColor];
+    self.container.backgroundColor = CMTIMERANGE_IS_VALID(self.player.range) ? [self.tintColor colorWithAlphaComponent:0.5] : [UIColor clearColor];
     
     if (self.player.live) {
         _liveLight.hidden = NO;

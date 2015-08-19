@@ -682,6 +682,10 @@ static CMClockRef _pxpPlayerMasterClock;
 /// Synchronizes all other players to the player
 - (void)sync:(CMTime)currentTime {
     
+    if (CMTIMERANGE_IS_VALID(self.range)) {
+        return;
+    }
+    
     static CMTime smartSync;
     if (!CMTIME_IS_NUMERIC(smartSync)) {
         smartSync = kCMTimeZero;
@@ -755,13 +759,14 @@ static CMClockRef _pxpPlayerMasterClock;
             
             self.syncs++;
            } */ else {
+               
             NSLog(@"Syncing (Adaptive)");
             
             self.syncing = YES;
             for (PxpPlayer *player in self.contextPlayers) {
                 if (player != self) {
                     
-                    /*
+                    
                     [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
                         
                         // ensure no players get stuck
@@ -776,14 +781,15 @@ static CMClockRef _pxpPlayerMasterClock;
                         });
                         
                     }];
-                     */
                     
+                    /*
                     [player seekToTime:currentTime multi:NO toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
                     
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             self.syncing = NO;
                         });
                     }];
+                     */
                 }
             }
         }

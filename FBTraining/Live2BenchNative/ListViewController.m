@@ -112,7 +112,7 @@
         CGFloat playerWidth = 530 + 10;
         CGFloat playerHeight = playerWidth / (16.0 / 9.0);
 
-        self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
+        //self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
         self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
 
         //[self.view addSubview:self.videoPlayer.view];
