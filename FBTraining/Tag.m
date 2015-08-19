@@ -162,8 +162,16 @@ static NSMutableDictionary * openDurationTagsWithID;
     if ([data objectForKey:@"line"]) {
         [dict setObject:[data objectForKey:@"line"] forKey:@"line"];
     }
-    if ([[data objectForKey:@"extra"] isKindOfClass:[NSDictionary class]]) {
-        [dict addEntriesFromDictionary:[data objectForKey:@"extra"]];
+    if ([data objectForKey:@"extra"]) {
+        
+        NSError *jsonError;
+        NSData *objectData = [[data objectForKey:@"extra"] dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *temp = [NSJSONSerialization JSONObjectWithData:objectData
+                                                             options:NSJSONReadingMutableContainers
+                                                               error:&jsonError];
+        
+
+        [dict addEntriesFromDictionary:temp];
     }
     return [dict copy];
 }

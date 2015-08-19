@@ -321,6 +321,7 @@
 
 - (void)cancelRange:(PxpCancelButton *)cancelButton {
     self.player.range = kCMTimeRangeInvalid;
+    [self update:self.player.currentTime];
 }
 
 #pragma mark - PxpPlayPauseButtonDelegate

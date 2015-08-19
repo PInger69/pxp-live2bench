@@ -3346,6 +3346,7 @@
 				D78093C21B6ACA25006488A9 /* PxpFilterDefaultTabViewController.m in Sources */,
 				D78093C11B6ACA25006488A9 /* PxpFilterTabController.m in Sources */,
 				AE683C531B7148DA00458F80 /* PxpFullscreenViewController.m in Sources */,
+				D7D2F6A81B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m in Sources */,
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
 				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,

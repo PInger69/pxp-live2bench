@@ -362,6 +362,26 @@
     [_playerViewController viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
     [self.view bringSubviewToFront:_fullscreenViewController.view];
+    
+    // Set up filter for this Tab
+    _pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
+    _pxpFilter.delegate = self;
+    [_pxpFilter removeAllPredicates];
+    
+    
+    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                   ]];
+    
+    [_pxpFilter addPredicates:@[ignoreThese]];
+
+
 }
 
 -(void)getPrevTag
