@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 /**
- * @breif Gesture Recognizer that detected a three finger pinch.
+ * @breif A Gesture Recognizer that can detect a three finger pinch.
  * @author Nicholas Cvitak
  */
 @interface NCTriPinchGestureRecognizer : UIGestureRecognizer
