@@ -58,11 +58,11 @@
     
     UILabel *_playCallLabel;
     UIPickerView *_playCallPickerView;
-    NSArray *playCallData;
+    //NSArray *playCallData;
     
     UILabel *_playCallOppLabel;
     UIPickerView *_playCallOppPickerView;
-    NSArray *playCallOppData;
+    //NSArray *playCallOppData;
     
     UILabel *_sTLabel;
     UIPickerView *_sTPickerView;
@@ -273,7 +273,7 @@
         [_playCallPickerView selectRow:55 inComponent:0 animated:YES];
         [_offLayoutView addSubview:_playCallPickerView];
         
-        playCallData = [self addArrayValueForPickerViews:@"play call"];
+        _playCallData = [[NSMutableArray alloc]initWithArray:@[]];
         
         
         // Set Up PlayCall Opp
@@ -297,7 +297,7 @@
         [_playCallOppPickerView selectRow:55 inComponent:0 animated:YES];
         [_offLayoutView addSubview:_playCallOppPickerView];
         
-        playCallOppData = [self addArrayValueForPickerViews:@"play call opp"];
+        _playCallOppData = [[NSMutableArray alloc]initWithArray:@[]];
         
         // Set Up Special Teams
         _sTLabel = [[UILabel alloc]initWithFrame:CGRectMake(-20 , 0, 70, 30)];
@@ -553,6 +553,7 @@
 -(void)setMode:(FootballModes)mode
 {
     startTime = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
+    
     if (((_currentMode == FootballDisable || _currentMode == FootballDefenseSend) && mode == FootballOffenseStart) || ((_currentMode == FootballDisable || _currentMode == FootballOffenseSend) && mode == FootballDefenseStart)) {
         // Setting Buttons To Correct Position
         CustomButton *downButton = arrayOfDownButtons[0];
@@ -605,6 +606,16 @@
         [_gainPickerView selectRow:55 inComponent:0 animated:true];
         [self unSelectButtons:arrayOfTypeButtons];
     }
+    
+    [_playCallData removeAllObjects];
+    [_playCallPickerView reloadComponent:0];
+    [_playCallOppData removeAllObjects];
+    [_playCallOppPickerView reloadComponent:0];
+    [_seriesPickerView reloadComponent:0];
+    [_distancePickerView reloadComponent:0];
+    [_gainPickerView reloadComponent:0];
+    
+    
     _currentMode = mode;
 }
 
@@ -791,8 +802,6 @@
         
     }else if([type isEqualToString:@"special team"]){
         array = [[NSMutableArray alloc]initWithArray:@[@"Kick-off",@"Kick Ret",@"Punt",@"Punt Ret",@"Field G", @"Field G.R.",@"XPT"]];
-    }else if ([type isEqualToString:@"play call"] || [type isEqualToString:@"play call opp"]){
-        array = [[NSMutableArray alloc]initWithArray:@[@" "]];
     }
     return [array copy];
 }
@@ -804,9 +813,9 @@
     }else if ([pickerView isEqual:_sTPickerView]){
         return [stData count];
     }else if ([pickerView isEqual:_playCallOppPickerView]){
-        return [playCallOppData count];
+        return [_playCallOppData count];
     }else if ([pickerView isEqual:_playCallPickerView]){
-        return [playCallData count];
+        return [_playCallData count];
     }else if ([pickerView isEqual:_gainPickerView]){
         return [gainData count];
     }else if ([pickerView isEqual:_distancePickerView]){
@@ -822,9 +831,9 @@
     }else if ([pickerView isEqual:_sTPickerView]){
         return [stData objectAtIndex:row];
     }else if ([pickerView isEqual:_playCallOppPickerView]){
-        return [playCallOppData objectAtIndex:row];
+        return [_playCallOppData objectAtIndex:row];
     }else if ([pickerView isEqual:_playCallPickerView]){
-        return [playCallData objectAtIndex:row];
+        return [_playCallData objectAtIndex:row];
     }else if ([pickerView isEqual:_gainPickerView]){
         return [gainData objectAtIndex:row];
     }else if ([pickerView isEqual:_distancePickerView]){
@@ -833,7 +842,69 @@
     return @" ";
 }
 
+-(void)pickerView:(nonnull UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    [pickerView reloadComponent:0];
+}
 
+-(UIView*)pickerView:(nonnull UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view{
+    UILabel *customView = (id)view;
+    if (!customView) {
+        customView= [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [pickerView rowSizeForComponent:component].width, [pickerView rowSizeForComponent:component].height)];
+    }
+    
+    NSString *title;
+    NSInteger selectedRow = 0;
+    if ([pickerView isEqual:_seriesPickerView]) {
+        title = [seriesData objectAtIndex:row];
+        selectedRow = [_seriesPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_sTPickerView]){
+        title = [stData objectAtIndex:row];
+        selectedRow = [_sTPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_playCallOppPickerView]){
+        title = [_playCallOppData objectAtIndex:row];
+        selectedRow = [_playCallOppPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_playCallPickerView]){
+        title = [_playCallData objectAtIndex:row];
+        selectedRow = [_playCallPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_gainPickerView]){
+        title = [gainData objectAtIndex:row];
+        selectedRow = [_gainPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_distancePickerView]){
+        title = [distanceData objectAtIndex:row];
+        selectedRow = [_distancePickerView selectedRowInComponent:0];
+    }
+    
+    [customView setText:title];
+    customView.backgroundColor = [UIColor clearColor];
+    customView.textAlignment = NSTextAlignmentCenter;
+    
+    if (![pickerView isEqual:_playCallPickerView] && ![pickerView isEqual:_playCallOppPickerView] && row == selectedRow) {
+        customView.font = [UIFont boldSystemFontOfSize:32.f];
+        customView.textColor = PRIMARY_APP_COLOR;
+    }else if (![pickerView isEqual:_playCallPickerView] && ![pickerView isEqual:_playCallOppPickerView]){
+        customView.font = [UIFont boldSystemFontOfSize:20.f];
+        customView.textColor = [UIColor grayColor];
+    }else if (row == selectedRow){
+        customView.adjustsFontSizeToFitWidth = true;
+        customView.textColor = PRIMARY_APP_COLOR;
+    }else{
+        customView.adjustsFontSizeToFitWidth = true;
+        customView.textColor = [UIColor grayColor];
+    }
+    
+    return customView;
+
+}
+
+-(void)addData:(NSString*)type name:(NSString*)name{
+    if ([type isEqualToString:@"left"]) {
+        [_playCallData addObject:name];
+        [_playCallPickerView reloadComponent:0];
+    }else if ([type isEqualToString:@"right"]){
+        [_playCallOppData addObject:name];
+        [_playCallOppPickerView reloadComponent:0];
+    }
+}
 #pragma mark - Tag methods
 
 -(void)sendTag:(id)sender{
@@ -849,6 +920,16 @@
     NSString *series = [seriesData objectAtIndex:[_seriesPickerView selectedRowInComponent:0]];
     NSString *distance = [distanceData objectAtIndex:[_distancePickerView selectedRowInComponent:0]];
     NSString *gain = [gainData objectAtIndex:[_gainPickerView selectedRowInComponent:0]];
+    
+    NSString *playCall = @" ";
+    if (_playCallData.count > 0) {
+        playCall = [_playCallData objectAtIndex:[_playCallPickerView selectedRowInComponent:0]];
+    }
+    
+    NSString *playCallOpp = @" ";
+    if (_playCallOppData.count > 0) {
+        playCallOpp = [_playCallOppData objectAtIndex:[_playCallOppPickerView selectedRowInComponent:0]];
+    }
    
     NSString *name;
     NSString *line;
@@ -865,7 +946,7 @@
         name = [NSString stringWithFormat:@"ST: %@",[stData objectAtIndex:[_sTPickerView selectedRowInComponent:0]]];
     }
     
-    NSDictionary *extra = @{@"type":type,@"series":series,@"distance":distance,@"field":field,@"gain":gain,@"spoption":specialTeam};
+    NSDictionary *extra = @{@"type":type,@"series":series,@"distance":distance,@"field":field,@"gain":gain,@"spoption":specialTeam,@"playCall":playCall,@"playCallOpp":playCallOpp};
     NSDictionary *dict = @{@"period":[self currentPeriod],@"duration":duration,@"name":name,@"extra":extra,@"time":startTime,@"line":line,@"starttime":startTime,@"type":[NSNumber numberWithInteger:TagTypeFootballDownTags]};
     [super postTag:dict];
     

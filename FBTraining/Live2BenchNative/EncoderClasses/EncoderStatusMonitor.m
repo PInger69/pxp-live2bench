@@ -172,7 +172,7 @@
                                                        object:nil
                                                      userInfo:[SpinnerView message:@"Checking for WiFi..." progress:0 animated:YES]];
     BOOL hasWifi = [Utility hasInternet];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
     //[Utility hasWiFi];
     if (!hasWifi) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LOST_WIFI object:nil];
