@@ -766,7 +766,7 @@ static void * encoderTagContext = &encoderTagContext;
                 NSDictionary *feeds = selectedCell.data.event.feeds;
                 Feed *feed = feeds[pick] ? feeds[pick] : feeds.allValues.firstObject;
                 
-                PXPLog(@"You Picked a feed: %@",pick);
+
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

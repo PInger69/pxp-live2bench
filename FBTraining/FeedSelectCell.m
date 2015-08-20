@@ -118,6 +118,9 @@
 }
 
 - (void)downloadButtonPressed:(id)sender {
+    DownloadButton * button = (DownloadButton *) sender;
+    button.isPressed = YES;
+    [button setEnabled:NO];
     if (self.downloadButtonBlock) {
         self.downloadButtonBlock();
     }
