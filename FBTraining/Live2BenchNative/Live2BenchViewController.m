@@ -487,6 +487,24 @@ static void * eventContext      = &eventContext;
 -(void)onTagChanged:(NSNotification *)note
 {
     _bottomViewController.currentEvent = _currentEvent;
+    
+    if ([_bottomViewController isKindOfClass:[FootballBottomViewController class]]) {
+        Tag *tag = [note.userInfo[@"tags"] firstObject];
+        if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration) {
+            
+            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+                SideTagButton *button = evaluatedObject;
+                return ([button.titleLabel.text isEqualToString:tag.name]);
+            }];
+            
+            if ([_tagButtonController.tagButtonsLeft filteredArrayUsingPredicate:predicate].count > 0) {
+                [_bottomViewController addData:@"left" name:tag.name];
+            }else if ([_tagButtonController.tagButtonRight filteredArrayUsingPredicate:predicate].count > 0){
+                [_bottomViewController addData:@"right" name:tag.name];
+
+            }
+        }
+    }
 }
 
 -(void)liveEventStopped:(NSNotification *)note

@@ -394,6 +394,10 @@
     }
 }
 
+#pragma mark - Methods That Needs To Be Here
+-(void)addData:(NSString *)type name:(NSString *)name{
+    
+}
 
 
 @end
