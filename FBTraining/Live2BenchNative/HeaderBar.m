@@ -63,19 +63,19 @@
 {
     self.backgroundColor = [UIColor lightGrayColor];
     
-    [self addSubview:[self makeLabel:NSLocalizedString(@"Information", nil)  xPosition:5]];
-    [self addSubview:[self makeLabel:NSLocalizedString(@"Date", nil)  xPosition:555]];
-    [self addSubview:[self makeLabel:NSLocalizedString(@"Tag Time", nil)  xPosition:690]];
-    [self addSubview:[self makeLabel:NSLocalizedString(@"Name", nil)   xPosition:795]];
-    [self addSubview:[self makeLabel:NSLocalizedString(@"Rating", nil)   xPosition:920]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Information", nil)  xPosition:18]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Date", nil)  xPosition:564]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Tag Time", nil)  xPosition:700]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Name", nil)   xPosition:810]];
+    [self addSubview:[self makeLabel:NSLocalizedString(@"Rating", nil)   xPosition:924]];
     
     float sbh       = 18.0f;
     float sbhSize   = 12.0f;
     
-    dateArrow = [[SortArrow alloc]initWithFrame:CGRectMake(550+40,sbh,sbhSize,sbhSize)];
-    timeArrow = [[SortArrow alloc]initWithFrame:CGRectMake(690+72,sbh,sbhSize,sbhSize)];
-    nameArrow = [[SortArrow alloc]initWithFrame:CGRectMake(795+50,sbh,sbhSize,sbhSize)];
-    ratingArrow = [[SortArrow alloc] initWithFrame:CGRectMake(975, sbh, sbhSize, sbhSize)];
+    dateArrow = [[SortArrow alloc]initWithFrame:CGRectMake(550+54,sbh,sbhSize,sbhSize)];
+    timeArrow = [[SortArrow alloc]initWithFrame:CGRectMake(690+82,sbh,sbhSize,sbhSize)];
+    nameArrow = [[SortArrow alloc]initWithFrame:CGRectMake(795+64,sbh,sbhSize,sbhSize)];
+    ratingArrow = [[SortArrow alloc] initWithFrame:CGRectMake(978, sbh, sbhSize, sbhSize)];
     
     
     

@@ -113,7 +113,7 @@
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hTw-ex-grn">
-                    <rect key="frame" x="724" y="239" width="76" height="97"/>
+                    <rect key="frame" x="723" y="239" width="79" height="97"/>
                     <subviews>
                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="zEv-Te-Pkq">
                             <rect key="frame" x="14" y="40" width="51" height="31"/>
@@ -128,7 +128,7 @@
                     <color key="backgroundColor" red="0.76122152809999999" green="0.76116991040000004" blue="0.76120007040000004" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="639-r9-eOp">
-                    <rect key="frame" x="640" y="239" width="82" height="97"/>
+                    <rect key="frame" x="639" y="239" width="82" height="97"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmj-q5-t57" customClass="PxpFilterToggleButton">
                             <rect key="frame" x="6" y="31" width="64" height="58"/>

@@ -24,7 +24,7 @@
 @class EncoderManager;
 @class UserCenter;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate,UIAlertViewDelegate>
 {
     IBOutlet UIWindow   * window;
     NSString            * relinkUserId; // TODO move out

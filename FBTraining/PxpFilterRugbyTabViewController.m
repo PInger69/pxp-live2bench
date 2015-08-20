@@ -70,6 +70,23 @@
     _halfExtra.ownPredicate = halfExtraPredicate;
 }
 
+-(void)onUserInput:(id)inputObject{
+    PxpFilterButtonScrollView * sender = (PxpFilterButtonScrollView *)inputObject;
+    
+    if (sender == _playersScrollView) {
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+            Tag * tag = (Tag *)evaluatedObject;
+            for (UIButton * button in sender.userSelected) {
+                if ([tag.players containsObject:button.titleLabel.text]){
+                    return YES;
+                }
+            }
+            return NO;
+        }];
+    }
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self buttonPredicate];
@@ -81,12 +98,19 @@
                                                           _favoriteButton,
                                                           _userButton,
                                                           _telestrationButton,
-                                                          groupViews[0]
+                                                          groupViews[0],
+                                                          _playersScrollView
                                                           ]];
     
     
     _tagNameScrollView.sortByPropertyKey = @"name";
     _tagNameScrollView.buttonSize = CGSizeMake(130, 30);
+    
+    _playersScrollView.sortByPropertyKey      = @"players";
+    _playersScrollView.displayAllTagIfAllFilterOn = NO;
+    _playersScrollView.style                  = PxpFilterButtonScrollViewStylePortrate;
+    _playersScrollView.buttonSize             = CGSizeMake(40, 40);
+    _playersScrollView.delegate               = self;
     
     _preFilterSwitch.onTintColor            = PRIMARY_APP_COLOR;
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;
@@ -121,6 +145,7 @@
     
     NSArray                 * rawTags       = self.pxpFilter.unfilteredTags;
     NSMutableSet            * tempSet       = [[NSMutableSet alloc]init];
+    NSMutableSet            * tempPlayerSet = [[NSMutableSet alloc]init];
     NSMutableDictionary     * userDatadict  = [[NSMutableDictionary alloc]init];
     NSInteger               latestTagTime = 0;
     
@@ -139,6 +164,11 @@
         // build time
         NSInteger checkTime = tag.time;
         if (checkTime > latestTagTime) latestTagTime = checkTime;
+        
+        // build players
+        if (tag.players){
+            [tempPlayerSet addObjectsFromArray:tag.players];
+        }
     }
     
     
@@ -152,7 +182,11 @@
     }
     _prefilterTagNames = [temp allObjects];
     
+    NSArray * playerList = [[tempPlayerSet allObjects] sortedArrayUsingComparator:^(id obj1, id obj2) {
+        return (NSComparisonResult) [obj1 integerValue] - [obj2 integerValue];
+    }];
     
+    [_playersScrollView buildButtonsWith:playerList];
     
     [_tagNameScrollView buildButtonsWith:([_preFilterSwitch isOn])?_prefilterTagNames :[tempSet allObjects]];
     [_sliderView setEndTime:latestTagTime];

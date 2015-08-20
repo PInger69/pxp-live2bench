@@ -834,6 +834,8 @@
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
 
+//    _tagsToDisplay SORT
+    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
     [_tableViewController reloadData];
 }
 
@@ -842,6 +844,10 @@
     [filter filterTags:self.allTags];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    
+//    _tagsToDisplay SORT
+    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
+    
     [_tableViewController reloadData];
 }
 
