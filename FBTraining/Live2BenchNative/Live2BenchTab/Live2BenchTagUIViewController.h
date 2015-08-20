@@ -19,11 +19,14 @@
 
 @interface Live2BenchTagUIViewController : UIViewController
 {
-    NSMutableArray          * tagButtonsLeft;
-    NSMutableArray          * tagButtonsRight;
+    //NSMutableArray          * tagButtonsLeft;
+    //NSMutableArray          * tagButtonsRight;
     NSInteger               * tagCount;
     NSMutableDictionary     * buttons;
 }
+
+@property (strong,nonatomic) NSMutableArray                     *tagButtonsLeft;
+@property (strong,nonatomic) NSMutableArray                     *tagButtonRight;
 
 @property (assign,nonatomic) Event                              *currentEvent;
 @property (assign,nonatomic) BOOL                               enabled;

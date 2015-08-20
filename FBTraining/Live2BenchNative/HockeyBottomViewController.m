@@ -838,6 +838,9 @@
     
 }
 
+-(void)addData:(NSString *)type name:(NSString *)name{
+    
+}
 
 //-(void)OffenseSwipe
 

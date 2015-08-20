@@ -193,8 +193,8 @@
     self = [super init];
     if (self) {
 
-        tagButtonsLeft      = [[NSMutableArray alloc]init];
-        tagButtonsRight     = [[NSMutableArray alloc]init];
+        _tagButtonsLeft      = [[NSMutableArray alloc]init];
+        _tagButtonRight     = [[NSMutableArray alloc]init];
         buttons             = [[NSMutableDictionary alloc]init];
         placementView       = view;
         tagCount            = 0;
@@ -203,8 +203,8 @@
         _gap                = 2;
         _enabled            = NO;
         _state              = STATE_SMALLSCREEN;
-        _leftTray           = [[Tray alloc]initWithSide:@"left" buttonList:tagButtonsLeft];
-        _rightTray          = [[Tray alloc]initWithSide:@"right" buttonList:tagButtonsRight];
+        _leftTray           = [[Tray alloc]initWithSide:@"left" buttonList:_tagButtonsLeft];
+        _rightTray          = [[Tray alloc]initWithSide:@"right" buttonList:_tagButtonRight];
         self.buttonStateMode    = SideTagButtonModeDisable;
     }
 
@@ -267,12 +267,12 @@
     [_leftTray setFrame:CGRectMake(0,
                                    _topOffset,
                                    _buttonSize.width,
-                                   CGRectGetMaxY(((UIButton*)[tagButtonsLeft lastObject]).frame ))];
+                                   CGRectGetMaxY(((UIButton*)[_tagButtonsLeft lastObject]).frame ))];
     
     [_rightTray setFrame:CGRectMake(1024 - _buttonSize.width,
                                     _topOffset,
                                     _buttonSize.width,
-                                    CGRectGetMaxY(((UIButton*)[tagButtonsRight lastObject]).frame ))];
+                                    CGRectGetMaxY(((UIButton*)[_tagButtonRight lastObject]).frame ))];
     
     [placementView addSubview:_leftTray];
     [placementView addSubview:_rightTray];
@@ -282,7 +282,7 @@
 
 -(void)addActionToAllTagButtons:(SEL)sel addTarget:(id)target forControlEvents:(UIControlEvents)controlEvent
 {
-    for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
+    for (NSMutableArray * list in @[_tagButtonsLeft,_tagButtonRight]) {
         for (BorderButton * btn in list) {
             [btn addTarget:target action:sel forControlEvents:controlEvent];
         }
@@ -293,7 +293,7 @@
 -(void)clear
 {
     tagCount = 0;
-    for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
+    for (NSMutableArray * list in @[_tagButtonsLeft,_tagButtonRight]) {
         for (BorderButton * btn in list) {
             [btn removeFromSuperview];
         }
@@ -372,12 +372,12 @@
         [btn setAccessibilityValue:@"left"];
         
         [btn setFrame:CGRectMake(0,
-                                 ( [tagButtonsLeft count] * (_buttonSize.height + _gap) ) + 0,
+                                 ( [_tagButtonsLeft count] * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
         
-        [tagButtonsLeft addObject:btn];
+        [_tagButtonsLeft addObject:btn];
         [_leftTray addSubview:btn];
         // TODO DEPREICATED START
         //        if (![[Globals instance].LEFT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
@@ -391,11 +391,11 @@
         [btn setAccessibilityValue:@"right"];
         //        self.view.bounds.size.width - _buttonSize.width
         [btn setFrame:CGRectMake(0,
-                                 ( [tagButtonsRight count] * (_buttonSize.height + _gap) ) + 0,
+                                 ( [_tagButtonRight count] * (_buttonSize.height + _gap) ) + 0,
                                  _buttonSize.width,
                                  _buttonSize.height) ];
         
-        [tagButtonsRight addObject:btn];
+        [_tagButtonRight addObject:btn];
         [_rightTray addSubview:btn];
         // TODO DEPREICATED START
         //        if (![[Globals instance].RIGHT_TAG_BUTTONS_NAME containsObject:[dict objectForKey:@"name"]]) {
@@ -511,7 +511,7 @@
     }
     
     
-    for (NSMutableArray * list in @[tagButtonsLeft,tagButtonsRight]) {
+    for (NSMutableArray * list in @[_tagButtonsLeft,_tagButtonRight]) {
         for (SideTagButton * btn in list) {
             [btn setMode:mode];
         }
@@ -587,7 +587,7 @@
     _currentEvent = event;
     NSMutableArray *eventTags = event.tags;
     
-    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
     
 
     for (SideTagButton * btn1 in tempList) {
@@ -628,7 +628,7 @@
 // diable user interaction for all the side button until we receive the open duration tag from the server
 -(void)disEnableButton
 {
-    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
     for (SideTagButton * btn1 in tempList){
         if (btn1.mode == SideTagButtonModeToggle) {
             btn1.userInteractionEnabled = false;
@@ -640,7 +640,7 @@
 // enable all the buttons again
 -(void)enableButton:(NSNotification*)note
 {
-     NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+     NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
     for (SideTagButton * btn1 in tempList){
         if (btn1.mode == SideTagButtonModeToggle) {
             btn1.userInteractionEnabled = true;
@@ -662,7 +662,7 @@
 
 -(void)closeAllOpenTagButtons
 {
-    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
     for (SideTagButton * btn1 in tempList){
         if (btn1.isOpen) {
             [btn1 sendActionsForControlEvents:UIControlEventTouchUpInside];
@@ -672,7 +672,7 @@
 }
 
 -(void)setButtonColor:(BOOL)fullScreen{
-    NSArray * tempList = [tagButtonsLeft arrayByAddingObjectsFromArray:tagButtonsRight];
+    NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
     for (SideTagButton *btn1 in tempList) {
         [btn1 setColor:fullScreen];
     }

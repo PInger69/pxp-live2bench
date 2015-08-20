@@ -432,6 +432,9 @@
 
 // Depricated
 +(BOOL)hasInternet{
+
+    //Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:@"www.google.com"];
+    
     SCNetworkReachabilityFlags flags;
     BOOL receivedFlags;
     
