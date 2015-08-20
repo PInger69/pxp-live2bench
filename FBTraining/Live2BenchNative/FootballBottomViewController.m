@@ -372,8 +372,10 @@
         }
         
         [button setFrame:frame];
-        [button setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        [button setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+        //[button setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
+        //[button setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+        [button setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [button setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [button setTitle:titleArray[i] forState:UIControlStateNormal];
         [button.titleLabel setTextAlignment:NSTextAlignmentCenter];
         [button.titleLabel setFont:[UIFont boldSystemFontOfSize:28.0f]];
