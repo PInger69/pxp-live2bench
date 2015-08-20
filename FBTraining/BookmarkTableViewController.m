@@ -97,7 +97,7 @@
     {
         selectedCell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, selectedCell.frame.size.width, selectedCell.frame.size.height)];
         [selectedCell.translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-        [selectedCell.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
+        [selectedCell.translucentEditingView setBackgroundColor: PRIMARY_APP_COLOR];
         [selectedCell.translucentEditingView setAlpha:0.3];
         [selectedCell.translucentEditingView setUserInteractionEnabled:FALSE];
         [selectedCell addSubview:selectedCell.translucentEditingView];

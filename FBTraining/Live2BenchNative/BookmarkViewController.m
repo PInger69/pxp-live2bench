@@ -171,13 +171,15 @@ int viewWillAppearCalled;
 
         
         // single cam (take first video for now)
+        /*
         NSString *clipVideoPath = [clipToPlay.videoFiles firstObject];
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:clipVideoPath]) {
             [self.videoPlayer playFeed: [[Feed alloc]initWithFileURL:clipVideoPath]];
         }
+         */
         
-        _clipContext.clip = clipToPlay;
+        _clipContext = [PxpClipContext contextWithClip:clipToPlay];
         _playerViewController.playerView.context = _clipContext;
         
     }];

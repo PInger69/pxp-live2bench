@@ -629,7 +629,6 @@ static CMClockRef _pxpPlayerMasterClock;
         tried++;
         complete += ready ? 1 : 0;
         
-        NSLog(@"tried: %lu, total: %lu", (unsigned long)tried, (unsigned long)total);
         if (tried >= total) {
             [loadAction runWithSuccess:complete >= total];
         }

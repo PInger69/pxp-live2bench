@@ -72,9 +72,6 @@
     _playerView.frame = _playerContainer.bounds;
     _telestrationViewController.view.frame = _playerContainer.bounds;
     
-    _playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
     [_playerContainer addSubview:_playerView];
     [_playerContainer addSubview:_telestrationViewController.view];
     
@@ -98,6 +95,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    _playerView.frame = _playerContainer.bounds;
+    _telestrationViewController.view.frame = _playerContainer.bounds;
+}
+
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     if (context == _playerObserverContext) {
         _controlBar.player = _playerView.player;
@@ -116,6 +120,7 @@
             _telestrationViewController.telestration = nil;
         }
     } else if (context == _telestrationObserverContext) {
+        _telestrationViewController.view.hidden = !_telestrationViewController.telestration;
         _playerView.lockFullView = _telestrationViewController.telestration;
         
         if (_telestrationViewController.telestration.isStill && _playerView.player.rate) {

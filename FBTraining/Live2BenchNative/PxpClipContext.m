@@ -40,8 +40,11 @@
     
     // load clips
     for (NSUInteger i = 0; i < self.players.count; i++) {
-        [self.players[i] setFeed:[[Feed alloc] initWithFileURL:videos[sources[i]]]];
-        [self.players[i] setName:sources[i]];
+        PxpPlayer *player = self.players[i];
+        NSString *source = sources[i];
+        
+        player.feed = [[Feed alloc] initWithFileURL:videos[source]];
+        player.name = source;
     }
     
     // default sync parameters
