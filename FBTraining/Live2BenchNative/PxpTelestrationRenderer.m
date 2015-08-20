@@ -8,47 +8,59 @@
 
 #import "PxpTelestrationRenderer.h"
 
-#define RENDER_GRANULARITY 16
+/// The number of samples used to calculate the approximate tangent vector of the arrow.
+#define ARROW_TANGENT_SAMPLES 4
+
+/// Makes a vector from point a to point b.
+static CGVector CGVectorMakeWithPoints(const CGPoint a, const CGPoint b)
+{
+    return CGVectorMake(b.x - a.x, b.y - a.y);
+}
+
+/// Multiplies a vector by a scalar and returns the result.
+static CGVector CGVectorMultiplyByScalar(const CGVector x, const CGFloat c)
+{
+    return CGVectorMake(c * x.dx, c * x.dy);
+}
+
+/// Adds two vectors together and returns the result.
+static CGVector CGVectorAdd(const CGVector x, const CGVector y)
+{
+    return CGVectorMake(x.dx + y.dx, x.dy + y.dy);
+}
 
 @interface PxpTelestrationRenderer ()
 
-@property (strong, nonatomic, nullable) PxpTelestrationPoint *cachedPoint;
-@property (assign, nonatomic) NSUInteger cachedIndex;
 @property (readonly, assign, nonatomic) NSTimeInterval currentTime;
 
 @end
 
 @implementation PxpTelestrationRenderer
-{
-    CGLayerRef __nullable _layer;
-    CGLayerRef __nullable _cache;
+
+/// The path of the arrow to be drawn.
+static UIBezierPath *__nonnull _arrow;
+
++ (void)initialize {
+    
+    // create the arrow.
+    _arrow = [UIBezierPath bezierPath];
+    [_arrow moveToPoint:CGPointMake(0.0, 0.0)];
+    [_arrow addLineToPoint:CGPointMake(1.0 - cos(1.0), -cos(1.0))];
+    [_arrow addLineToPoint:CGPointMake(2.0 - 2.0 * sin(1.0), 0.0)];
+    [_arrow addLineToPoint:CGPointMake(1.0 - cos(1.0), +cos(1.0))];
+    [_arrow addLineToPoint:CGPointMake(0.0, 0.0)];
 }
 
 - (nonnull instancetype)initWithTelestration:(nullable PxpTelestration *)telestration {
     self = [super init];
     if (self) {
         _telestration = telestration;
-        _layer = nil;
-        _cache = nil;
-        _cachedPoint = nil;
     }
     return self;
 }
 
 - (nonnull instancetype)init {
-    self = [super init];
-    if (self) {
-        _telestration = nil;
-        _layer = nil;
-        _cache = nil;
-        _cachedPoint = nil;
-    }
-    return self;
-}
-
-- (void)dealloc {
-    CGLayerRelease(_layer);
-    CGLayerRelease(_cache);
+    return [self initWithTelestration:nil];
 }
 
 - (void)renderInContext:(CGContextRef)context size:(CGSize)size {
@@ -56,162 +68,129 @@
 }
 
 - (void)renderInContext:(nullable CGContextRef)context size:(CGSize)size atTime:(NSTimeInterval)time {
-    if (!self.telestration) {
-        return;
-    }
-    
-    if (self.telestration.isStill) {
-        time = self.telestration.thumbnailTime;
-    }
-    
-    CGVector scale = self.telestration.size.width && self.telestration.size.height ? CGVectorMake(size.width / self.telestration.size.width, size.height / self.telestration.size.height) : CGVectorMake(1.0, 1.0);
-    
-    CGContextSaveGState(context);
-    
-    CGContextSetBlendMode(context, kCGBlendModeCopy);
-    
-    CGContextSetLineCap(context, kCGLineCapRound);
-    CGContextSetLineJoin(context, kCGLineJoinRound);
-    
-    CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
-    CGContextFillRect(context, CGRectMake(0.0, 0.0, size.width, size.height));
-    
-    CGSize pixelSize = CGSizeMake([UIScreen mainScreen].scale * size.width, [UIScreen mainScreen].scale * size.height);
-    
-    if (!_layer || !CGSizeEqualToSize(CGLayerGetSize(_layer), pixelSize))  {
-        CGLayerRelease(_layer);
-        CGLayerRelease(_cache);
-        _layer = CGLayerCreateWithContext(context, pixelSize, NULL);
-        _cache = CGLayerCreateWithContext(context, pixelSize, NULL);
+    if (self.telestration) {
         
-        self.cachedPoint = nil;
-    }
-    
-    CGContextRef ctx = CGLayerGetContext(_layer);
-    CGContextSaveGState(ctx);
-    
-    CGContextSetBlendMode(ctx, kCGBlendModeCopy);
-    
-    CGContextSetLineCap(ctx, kCGLineCapRound);
-    CGContextSetLineJoin(ctx, kCGLineJoinRound);
-    
-    CGContextScaleCTM(ctx, [UIScreen mainScreen].scale, [UIScreen mainScreen].scale);
-    
-    CGContextSetFillColorWithColor(ctx, [UIColor clearColor].CGColor);
-    CGContextFillRect(ctx, CGRectMake(0.0, 0.0, size.width, size.height));
-    
-    NSArray *actions = self.telestration ? [self.telestration actionStackForTime:time] : @[];
-    
-    PxpTelestrationAction *lastAction = actions.lastObject;
-    BOOL cached = self.cachedPoint && self.cachedIndex < lastAction.points.count && [lastAction.points[self.cachedIndex] isEqual:self.cachedPoint] && self.cachedPoint.displayTime <= time;
-    
-    // draw old image
-    if (cached) {
-        CGContextDrawLayerInRect(ctx, CGRectMake(0.0, 0.0, size.width, size.height), _cache);
-    } else {
-        self.cachedPoint = nil;
-    }
-    
-    CGContextSaveGState(ctx);
-    CGContextScaleCTM(ctx, scale.dx, scale.dy);
-    for (NSUInteger i = 0; i < actions.count; i++) {
-        PxpTelestrationAction *action = actions[i];
-        
-        if (!(action.type & PxpLine)) {
-            UIBezierPath *path = [self pathForAction:action atTime:time];
-            if (path) {
-                CGContextSetStrokeColorWithColor(ctx, action.strokeColor.CGColor);
-                CGContextSetLineWidth(ctx, action.strokeWidth);
-            
-                CGContextBeginPath(ctx);
-                CGContextAddPath(ctx, path.CGPath);
-                CGContextDrawPath(ctx, kCGPathStroke);
-            }
+        // adjust time if needed.
+        if (self.telestration.isStill) {
+            time = self.telestration.thumbnailTime;
         }
-    }
-    CGContextRestoreGState(ctx);
-    
-    
-    CGContextRestoreGState(ctx);
-    
-    CGContextRef bctx = CGLayerGetContext(_cache);
-    CGContextSetBlendMode(bctx, kCGBlendModeCopy);
-    CGContextSetFillColorWithColor(bctx, [UIColor clearColor].CGColor);
-    CGContextFillRect(bctx, CGRectMake(0.0, 0.0, pixelSize.width, pixelSize.height));
-    CGContextDrawLayerInRect(bctx, CGRectMake(0.0, 0.0, pixelSize.width, pixelSize.height), _layer);
-    CGContextDrawLayerInRect(context, CGRectMake(0.0, 0.0, size.width, size.height), _layer);
-    
-    CGContextSaveGState(context);
-    CGContextScaleCTM(context, scale.dx, scale.dy);
-    for (NSUInteger i = 0; i < actions.count; i++) {
-        PxpTelestrationAction *action = actions[i];
         
-        CGContextSetStrokeColorWithColor(context, action.strokeColor.CGColor);
-        CGContextSetFillColorWithColor(context, action.strokeColor.CGColor);
-        CGContextSetLineWidth(context, action.strokeWidth);
+        // get actions for time.
+        NSArray *actions = self.telestration ? [self.telestration actionStackForTime:time] : @[];
         
-        if ((action.type & PxpLine) && [action.points.firstObject displayTime] <= time) {
-            // just draw first to last
-            CGPoint a = [action.points.firstObject position], b = a;
+        // calculate the scaling required to display the telestration in the current context.
+        const CGVector scale = self.telestration.size.width && self.telestration.size.height ? CGVectorMake(size.width / self.telestration.size.width, size.height / self.telestration.size.height) : CGVectorMake(1.0, 1.0);
+        
+        // push main context.
+        CGContextSaveGState(context);
+        
+        // setup main context.
+        CGContextSetBlendMode(context, kCGBlendModeCopy);
+        CGContextSetLineCap(context, kCGLineCapRound);
+        CGContextSetLineJoin(context, kCGLineJoinRound);
+        
+        // clear the drawing area.
+        CGContextClearRect(context, CGRectMake(0.0, 0.0, size.width, size.height));
+        
+        // push draw context.
+        CGContextSaveGState(context);
+        CGContextScaleCTM(context, scale.dx, scale.dy);
+        
+        for (PxpTelestrationAction *action in actions) {
+            const NSArray *points = action.points;
             
-            for (PxpTelestrationPoint *point in action.points.reverseObjectEnumerator) {
-                if (point.displayTime <= time) {
-                    b = point.position;
-                    break;
+            // setup context for action.
+            CGContextSetStrokeColorWithColor(context, action.strokeColor.CGColor);
+            CGContextSetFillColorWithColor(context, action.strokeColor.CGColor);
+            CGContextSetLineWidth(context, action.strokeWidth);
+            
+            if (action.type & PxpLine) {
+                // draw line.
+                
+                CGPoint a = [points.firstObject position], b = a;
+                
+                for (PxpTelestrationPoint *point in points.reverseObjectEnumerator) {
+                    if (point.displayTime <= time) {
+                        b = point.position;
+                        break;
+                    }
                 }
+                
+                CGContextBeginPath(context);
+                CGContextMoveToPoint(context, a.x, a.y);
+                CGContextAddLineToPoint(context, b.x, b.y);
+                CGContextDrawPath(context, kCGPathStroke);
+                
+            } else {
+                // draw curve.
+                
+                CGContextBeginPath(context);
+                for (NSUInteger i = 0; i < points.count && [points[i] displayTime] <= time; i++) {
+                    const PxpTelestrationPoint * point = points[i];
+                    if (i == 0) {
+                        CGContextMoveToPoint(context, point.position.x, point.position.y);
+                    } else {
+                        CGContextAddLineToPoint(context, point.position.x, point.position.y);
+                    }
+                }
+                CGContextDrawPath(context, kCGPathStroke);
             }
             
-            CGContextBeginPath(context);
-            CGContextMoveToPoint(context, a.x, a.y);
-            CGContextAddLineToPoint(context, b.x, b.y);
-            CGContextDrawPath(context, kCGPathStroke);
-        }
-        
-        if (action.type & PxpArrow) {
-            // draw the arrow
-            
-            if (action.points.count > 2 && [action.points.firstObject displayTime] <= time) {
+            if (action.type & PxpArrow) {
+                // draw arrow.
+                
+                // find the index of the end point.
                 NSUInteger i = action.points.count - 1;
                 while (i < action.points.count && [action.points[i] displayTime] > time) {
                     i--;
                 }
                 
-                NSUInteger j = action.type & PxpLine ? 0 : i - 1;
-                j = j > i ? i : j;
-                
-                while (j < action.points.count && j > 0 && CGPointEqualToPoint([action.points[i] position], [action.points[j] position])) {
-                    j--;
+                if (i > 1) {
+                    
+                    // get the end point.
+                    const CGPoint a = [action.points[i] position];
+                    
+                    // calculate the number of tangent samples to use.
+                    const NSUInteger t = MIN(i - 1, ARROW_TANGENT_SAMPLES);
+                    
+                    // calculate the tangent vector.
+                    CGVector tangent = CGVectorMake(0.0, 0.0);
+                    for (NSUInteger j = i - 1; i - 1 - t <= j && j <= i - 1; j--) {
+                        const CGVector v = CGVectorMakeWithPoints([action.points[j] position], [action.points[j + 1] position]);
+                        
+                        tangent = CGVectorAdd(tangent, CGVectorMultiplyByScalar(v, 1.0 / t));
+                    }
+                    
+                    // calculate the tangent angle.
+                    const CGFloat angle = -atan2(tangent.dy, -tangent.dx);
+                    
+                    // push arrow context.
+                    CGContextSaveGState(context);
+                    
+                    // setup arrow context.
+                    CGContextTranslateCTM(context, a.x, a.y);
+                    CGContextScaleCTM(context, 8.0 * action.strokeWidth, 8.0 * action.strokeWidth);
+                    CGContextRotateCTM(context, angle);
+                    CGContextTranslateCTM(context, -action.strokeWidth / 32.0, 0.0);
+                    
+                    // draw arrow.
+                    CGContextBeginPath(context);
+                    CGContextAddPath(context, _arrow.CGPath);
+                    CGContextDrawPath(context, kCGPathFill);
+                    
+                    // pop arrow context.
+                    CGContextRestoreGState(context);
                 }
-                
-                CGPoint a = [action.points[i] position], b = [action.points[j] position];
-                
-                CGVector v = CGVectorMake(b.x - a.x, b.y - a.y);
-                
-                CGFloat angle = atan2(v.dy, v.dx);
-                
-                
-                UIBezierPath *arrow = [self arrow];
-                
-                CGContextSaveGState(context);
-                
-                CGContextTranslateCTM(context, a.x, a.y);
-                CGContextScaleCTM(context, 8.0 * action.strokeWidth, 8.0 * action.strokeWidth);
-                CGContextRotateCTM(context, angle);
-                CGContextTranslateCTM(context, -action.strokeWidth / 32.0, 0.0);
-                
-                CGContextBeginPath(context);
-                CGContextAddPath(context, arrow.CGPath);
-                CGContextDrawPath(context, kCGPathFill);
-                
-                CGContextRestoreGState(context);
             }
             
         }
+        
+        // pop draw context.
+        CGContextRestoreGState(context);
+        
+        // pop main context.
+        CGContextRestoreGState(context);
     }
-    CGContextRestoreGState(context);
-    
-    CGContextRestoreGState(context);
-    self.cachedPoint = [actions.lastObject points].lastObject;
 }
 
 - (nonnull UIImage *)image {
@@ -229,108 +208,5 @@
     return self.timeProvider ? self.timeProvider.currentTimeInSeconds : INFINITY;
 }
 
-#pragma mark - Private Methods
-
-- (nullable UIBezierPath *)pathForAction:(nonnull PxpTelestrationAction *)action atTime:(NSTimeInterval)time {
-    
-    if (action.points.count > 0) {
-        
-        NSArray *points = action.points;
-        
-        if (self.cachedPoint && self.cachedPoint.displayTime <= time) {
-            
-            // find the next index to render that is not cached.
-            NSUInteger a = [action.points indexOfObject:self.cachedPoint inSortedRange:NSMakeRange(0, action.points.count) options:NSBinarySearchingInsertionIndex usingComparator:[PxpTelestrationAction sortMethod]];
-        
-            // make a sub array.
-            a = a >= 5 ? a - 5 : 0;
-            a /= 4;
-            a *= 4;
-            
-            points = [points subarrayWithRange:NSMakeRange(a, action.points.count - a)];
-        }
-        
-        NSUInteger b = [points indexOfObject:[[PxpTelestrationPoint alloc] initWithPosition:CGPointZero displayTime:time] inSortedRange:NSMakeRange(0, points.count) options:NSBinarySearchingInsertionIndex usingComparator:[PxpTelestrationAction sortMethod]];
-        
-        points = [points subarrayWithRange:NSMakeRange(0, b > points.count ? points.count - 1 : b)];
-        
-        if (points.count == 0) {
-            return nil;
-        }
-        
-        UIBezierPath *path = [[UIBezierPath alloc] init];
-        
-        
-        /*
-        if (points.count < 4) {
-            [path moveToPoint:[points[0] position]];
-            
-            for (NSUInteger i = 1; i < points.count; i++) {
-                [path addLineToPoint:[points[i] position]];
-            }
-        }
-        else {
-            [path moveToPoint:[points[0] position]];
-            
-            for (NSUInteger i = 1; i < points.count - 2; i += 2) {
-                CGPoint p0 = [points[i - 1] position];
-                CGPoint p1 = [points[i] position];
-                CGPoint p2 = [points[i + 1] position];
-                CGPoint p3 = [points[i + 2] position];
-                
-                for (NSUInteger j = 1; j < RENDER_GRANULARITY; j++) {
-                    CGFloat t = j * (1.0 / RENDER_GRANULARITY);
-                    CGFloat tt = t * t;
-                    CGFloat ttt = t * t * t;
-                    
-                    CGPoint p;
-                    p.x = 0.5 * (2*p1.x+(p2.x-p0.x)*t + (2*p0.x-5*p1.x+4*p2.x-p3.x)*tt + (3*p1.x-p0.x-3*p2.x+p3.x)*ttt);
-                    p.y = 0.5 * (2*p1.y+(p2.y-p0.y)*t + (2*p0.y-5*p1.y+4*p2.y-p3.y)*tt + (3*p1.y-p0.y-3*p2.y+p3.y)*ttt);
-                    
-                    [path addLineToPoint:p];
-                    
-                }
-                
-                [path addLineToPoint:p2];
-            }
-            
-        }
-        
-        */
-        
-        /*
-        for (NSUInteger i = 0; i < points.count - 4 && points.count > 4; i++) {
-            if (i % 3 == 0) {
-                [path moveToPoint:[points[i] position]];
-                [path addCurveToPoint:[points[i + 3] position] controlPoint1:[points[i + 1] position] controlPoint2:[points[i + 2] position]];
-            }
-        }
-        */
-        
-        
-        [path moveToPoint:[points.firstObject position]];
-        for (NSUInteger i = 1; i < points.count; i++) {
-            [path addLineToPoint:[points[i] position]];
-        }
-        
-        
-        return path;
-    } else {
-        return nil;
-    }
-}
-
-
-- (nonnull UIBezierPath *)arrow {
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    
-    [path moveToPoint:CGPointMake(0.0, 0.0)];
-    [path addLineToPoint:CGPointMake(1.0 - cos(1.0), -cos(1.0))];
-    [path addLineToPoint:CGPointMake(2.0 - 2.0 * sin(1.0), 0.0)];
-    [path addLineToPoint:CGPointMake(1.0 - cos(1.0), +cos(1.0))];
-    [path addLineToPoint:CGPointMake(0.0, 0.0)];
-    
-    return path;
-}
 
 @end

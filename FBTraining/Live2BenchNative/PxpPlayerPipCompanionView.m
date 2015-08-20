@@ -68,7 +68,7 @@
 }
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
-    if (context == _pipPlayerObserverContext) {
+    if (context == _pipPlayerObserverContext && self.player != self.pipView.player) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.player reload];
         });
@@ -129,9 +129,9 @@
         PxpPlayerView *playerView = (PxpPlayerView *)recognizer.view;
         
         if ((playerView == self || playerView == self.pipView) && self.player && self.pipView.player) {
-            PxpPlayer *temp = self.player;
-            self.player = self.pipView.player;
-            self.pipView.player = temp;
+            PxpPlayer *temp = self.pipView.player;
+            self.pipView.player = self.player;
+            self.player = temp;
             
             [self setNeedsDisplay];
             [self.pipView setNeedsDisplay];

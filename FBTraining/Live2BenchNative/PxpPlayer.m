@@ -685,7 +685,7 @@ static CMClockRef _pxpPlayerMasterClock;
             // invalidate the range
             self.range = kCMTimeRangeInvalid;
             
-            [self seekToTime:CMTimeSubtract(self.duration, CMTimeMake(1, 1)) multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
+            [self seekToTime:kCMTimePositiveInfinity multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
                 
                 [self play];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -712,6 +712,22 @@ static CMClockRef _pxpPlayerMasterClock;
         self.live = YES;
     }
     
+}
+
+- (void)haltSync:(CMTime)time {
+    self.syncing = YES;
+    
+    float rate = self.rate;
+    [self pause];
+    [self seekToTime:time multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL seekComplete) {
+        [self prerollAtRate:rate multi:YES completionHandler:^(BOOL prerollComplete) {
+            [self setRate:rate multi:YES];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.syncing = NO;
+            });
+        }];
+    }];
 }
 
 /// Synchronizes all other players to the player
@@ -793,34 +809,25 @@ static CMClockRef _pxpPlayerMasterClock;
             }
             
             self.syncs++;
-           } */ else {
-               
+           } */
+        else {
+            
             NSLog(@"Syncing (Adaptive)");
+            //[self haltSync:currentTime];
             
             self.syncing = YES;
             for (PxpPlayer *player in self.contextPlayers) {
                 if (player != self) {
-                    
-                    
-                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
-                        
-                        
+                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
                     }];
-                    
-                    /*
-                    [player seekToTime:currentTime multi:NO toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
-                    
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            self.syncing = NO;
-                        });
-                    }];
-                     */
                 }
+                
             }
-               
-               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                   self.syncing = NO;
-               });
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.syncing = NO;
+            });
+            
         }
     }
 }

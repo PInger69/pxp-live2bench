@@ -120,7 +120,6 @@
             _telestrationViewController.telestration = nil;
         }
     } else if (context == _telestrationObserverContext) {
-        _telestrationViewController.view.hidden = !_telestrationViewController.telestration;
         _playerView.lockFullView = _telestrationViewController.telestration;
         
         if (_telestrationViewController.telestration.isStill && _playerView.player.rate) {

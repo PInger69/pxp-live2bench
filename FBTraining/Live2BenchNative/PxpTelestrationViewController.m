@@ -226,7 +226,6 @@
 
 - (void)telestrationAction:(UIButton *)button {
     self.telestrationButton.selected = !self.telestrationButton.selected;
-    self.captureArea.captureEnabled = self.telestrationButton.selected;
     [self setTelestrating:self.telestrationButton.selected animated:YES];
 }
 
@@ -258,6 +257,7 @@
     [self willChangeValueForKey:@"telestrating"];
     _telestrating = telestrating;
     
+    self.captureArea.captureEnabled = self.telestrationButton.selected;
     if (telestrating) {
         
         if (!self.activeTelestration) {
