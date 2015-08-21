@@ -96,7 +96,8 @@
         
         _offButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_offButton setFrame:CGRectMake(25, 32, 80, 45)];
-        [_offButton setBackgroundColor:[UIColor grayColor]];
+        [_offButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [_offButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor greenColor]] forState:UIControlStateSelected];
         [_offButton addTarget:self action:@selector(teamButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_offButton setTitle:@"OFFENSE" forState:UIControlStateNormal];
         [_offButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -106,7 +107,8 @@
         
         _defButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_defButton setFrame:CGRectMake(_offButton.frame.origin.x, _offButton.frame.origin.y + _offButton.frame.size.height+11.5, _offButton.frame.size.width, _offButton.frame.size.height)];
-        [_defButton setBackgroundColor:[UIColor grayColor]];
+        [_defButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [_defButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor redColor]] forState:UIControlStateSelected];
         [_defButton addTarget:self action:@selector(teamButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_defButton setTitle:@"DEFENSE" forState:UIControlStateNormal];
         [_defButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -116,7 +118,8 @@
         
         _stButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_stButton setFrame:CGRectMake(_defButton.frame.origin.x, _defButton.frame.origin.y + _defButton.frame.size.height+11.5, _defButton.frame.size.width, _defButton.frame.size.height)];
-        [_stButton setBorderColour:[UIColor grayColor]];
+        [_stButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [_stButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [_stButton addTarget:self action:@selector(specialTeamButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_stButton setTitle:@"ST" forState:UIControlStateNormal];
         [_stButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -326,7 +329,7 @@
         _nextPlayButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_nextPlayButton setFrame:CGRectMake(_playCallOppPickerView.frame.origin.x +_playCallOppPickerView.frame.size.width-55, _playCallOppLabel.frame.origin.y+90,160 , _offButton.frame.size.height)];
         [_nextPlayButton setTitle:@"NEXT PLAY" forState:UIControlStateNormal];
-        [_nextPlayButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
+        [_nextPlayButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
         [_nextPlayButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
         [_nextPlayButton.titleLabel setFont:[UIFont systemFontOfSize:25.0f]];
         _nextPlayButton.transform = CGAffineTransformMakeRotation(3*M_PI/2.0);
@@ -372,8 +375,6 @@
         }
         
         [button setFrame:frame];
-        //[button setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        //[button setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
         [button setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
         [button setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [button setTitle:titleArray[i] forState:UIControlStateNormal];
@@ -409,7 +410,6 @@
 -(void)specialTeamButtonPressed:(id)sender{
     [self revealTeam:@"special"];
     [_stButton setSelected:true];
-    [_stButton setBackgroundColor:PRIMARY_APP_COLOR];
 }
 
 // Down Button Pressed, abondon the current tag
@@ -440,12 +440,10 @@
     if ([offenseOrDefense isEqualToString:@"offense"]) {
         [self unSelectButtons:@[_offButton,_defButton,_stButton]];
         [_offButton setSelected:true];
-        [_offButton setBackgroundColor:[UIColor greenColor]];
         
     }else if ([offenseOrDefense isEqualToString:@"defense"]){
         [self unSelectButtons:@[_offButton,_defButton,_stButton]];
         [_defButton setSelected:true];
-        [_defButton setBackgroundColor:[UIColor redColor]];
     }
 }
 
@@ -481,9 +479,6 @@
 -(void)unSelectButtons:(NSArray*)data{
     for (CustomButton *button in data) {
         [button setSelected:false];
-        if (![data isEqual:arrayOfDownButtons] && ![data isEqual:arrayOfQuarterButtons] && ![data isEqual:arrayOfTypeButtons]) {
-            [button setBackgroundColor:[UIColor grayColor]];
-        }
     }
 }
 
@@ -636,12 +631,10 @@
             // Defense Start Or Offense Start
             if ([sender isEqual:_offButton]) {
                 [_offButton setSelected:true];
-                [_offButton setBackgroundColor:[UIColor greenColor]];
                 start = @"offense";
                 [self setMode:FootballOffenseStart];
             }else if ([sender isEqual:_defButton]){
                 [_defButton setSelected:true];
-                [_defButton setBackgroundColor:[UIColor redColor]];
                 start = @"defense";
                 [self setMode:FootballDefenseStart];
             }
@@ -655,7 +648,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_offButton setSelected:true];
-            [_offButton setBackgroundColor:[UIColor greenColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -666,7 +658,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_offButton setSelected:true];
-            [_offButton setBackgroundColor:[UIColor greenColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -678,12 +669,10 @@
             if (indexOfDistance <= 0) {
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_offButton setSelected:true];
-                [_offButton setBackgroundColor:[UIColor greenColor]];
                 [self assignNewState:@"D1"];
             }else{
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_defButton setSelected:true];
-                [_defButton setBackgroundColor:[UIColor redColor]];
                 [self setMode:FootballDefenseStart];
             }
             break;
@@ -691,7 +680,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_defButton setSelected:true];
-            [_defButton setBackgroundColor:[UIColor redColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -702,7 +690,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_defButton setSelected:true];
-            [_defButton setBackgroundColor:[UIColor redColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -714,12 +701,10 @@
             if (indexOfDistance <= 0) {
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_defButton setSelected:true];
-                [_defButton setBackgroundColor:[UIColor redColor]];
                 [self assignNewState:@"D1"];
             }else{
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_offButton setSelected:true];
-                [_offButton setBackgroundColor:[UIColor greenColor]];
                 [self setMode:FootballOffenseStart];
             }
             break;
