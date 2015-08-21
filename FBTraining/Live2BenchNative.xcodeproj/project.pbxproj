@@ -75,6 +75,13 @@
 		AE8490011B0D083D007A19E8 /* NCRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8490001B0D083D007A19E8 /* NCRecordButton.m */; };
 		AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8750AA1B612EBE0055A7C2 /* TeleSelectTableViewController.m */; };
 		AE8AA8731B629AED002457B0 /* NCGhostView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8AA8721B629AED002457B0 /* NCGhostView.m */; };
+		AE9CA1BF1B875C9800BF1746 /* PXPTIFTelestration.c in Sources */ = {isa = PBXBuildFile; fileRef = AE9CA1BD1B875C9800BF1746 /* PXPTIFTelestration.c */; };
+		AE9CA1C21B876D0000BF1746 /* PXPTIFVersion.c in Sources */ = {isa = PBXBuildFile; fileRef = AE9CA1C01B876D0000BF1746 /* PXPTIFVersion.c */; };
+		AE9CA1C51B876EE300BF1746 /* PXPTIFByteBlock.c in Sources */ = {isa = PBXBuildFile; fileRef = AE9CA1C31B876EE300BF1746 /* PXPTIFByteBlock.c */; };
+		AE9CA1CE1B87771B00BF1746 /* PXPTIFByteBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = AE9CA1CC1B87771B00BF1746 /* PXPTIFByteBuffer.c */; };
+		AE9CA1D41B879DB000BF1746 /* PXPTIFAction.c in Sources */ = {isa = PBXBuildFile; fileRef = AE9CA1D21B879DB000BF1746 /* PXPTIFAction.c */; };
+		AE9CA1DC1B87A04100BF1746 /* PXPTIFColor.c in Sources */ = {isa = PBXBuildFile; fileRef = AE9CA1DA1B87A04100BF1746 /* PXPTIFColor.c */; };
+		AE9CA1DF1B87B09200BF1746 /* PXPTIFIdentifier.c in Sources */ = {isa = PBXBuildFile; fileRef = AE9CA1DD1B87B09200BF1746 /* PXPTIFIdentifier.c */; };
 		AEA25F8C1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F8B1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.m */; };
 		AEA25F901B78F009006C83C3 /* PxpListViewFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F8F1B78F009006C83C3 /* PxpListViewFullscreenViewController.m */; };
 		AEA25F961B78F6E5006C83C3 /* PxpBorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F951B78F6E5006C83C3 /* PxpBorderButton.m */; };
@@ -636,6 +643,21 @@
 		AE8750AC1B612F310055A7C2 /* TagSelectResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagSelectResponder.h; sourceTree = "<group>"; };
 		AE8AA8711B629AED002457B0 /* NCGhostView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCGhostView.h; sourceTree = "<group>"; };
 		AE8AA8721B629AED002457B0 /* NCGhostView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCGhostView.m; sourceTree = "<group>"; };
+		AE9CA1BD1B875C9800BF1746 /* PXPTIFTelestration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFTelestration.c; sourceTree = "<group>"; };
+		AE9CA1BE1B875C9800BF1746 /* PXPTIFTelestration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFTelestration.h; sourceTree = "<group>"; };
+		AE9CA1C01B876D0000BF1746 /* PXPTIFVersion.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFVersion.c; sourceTree = "<group>"; };
+		AE9CA1C11B876D0000BF1746 /* PXPTIFVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFVersion.h; sourceTree = "<group>"; };
+		AE9CA1C31B876EE300BF1746 /* PXPTIFByteBlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFByteBlock.c; sourceTree = "<group>"; };
+		AE9CA1C41B876EE300BF1746 /* PXPTIFByteBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFByteBlock.h; sourceTree = "<group>"; };
+		AE9CA1CC1B87771B00BF1746 /* PXPTIFByteBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFByteBuffer.c; sourceTree = "<group>"; };
+		AE9CA1CD1B87771B00BF1746 /* PXPTIFByteBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFByteBuffer.h; sourceTree = "<group>"; };
+		AE9CA1D01B87903000BF1746 /* PxpTelestrationInterchangeFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTelestrationInterchangeFormat.h; sourceTree = "<group>"; };
+		AE9CA1D21B879DB000BF1746 /* PXPTIFAction.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFAction.c; sourceTree = "<group>"; };
+		AE9CA1D31B879DB000BF1746 /* PXPTIFAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFAction.h; sourceTree = "<group>"; };
+		AE9CA1DA1B87A04100BF1746 /* PXPTIFColor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFColor.c; sourceTree = "<group>"; };
+		AE9CA1DB1B87A04100BF1746 /* PXPTIFColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFColor.h; sourceTree = "<group>"; };
+		AE9CA1DD1B87B09200BF1746 /* PXPTIFIdentifier.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PXPTIFIdentifier.c; sourceTree = "<group>"; };
+		AE9CA1DE1B87B09200BF1746 /* PXPTIFIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PXPTIFIdentifier.h; sourceTree = "<group>"; };
 		AEA25F8A1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpL2BFullscreenViewController.h; sourceTree = "<group>"; };
 		AEA25F8B1B78EB9C006C83C3 /* PxpL2BFullscreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpL2BFullscreenViewController.m; sourceTree = "<group>"; };
 		AEA25F8E1B78F009006C83C3 /* PxpListViewFullscreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpListViewFullscreenViewController.h; sourceTree = "<group>"; };
@@ -1479,6 +1501,44 @@
 			name = RecordButton;
 			sourceTree = "<group>";
 		};
+		AE9CA1BC1B875B9700BF1746 /* PxpTelestrationInterchangeFormat */ = {
+			isa = PBXGroup;
+			children = (
+				AE9CA1D01B87903000BF1746 /* PxpTelestrationInterchangeFormat.h */,
+				AE9CA1D61B879DD700BF1746 /* Public */,
+				AE9CA1D51B879DB700BF1746 /* Internal */,
+			);
+			name = PxpTelestrationInterchangeFormat;
+			sourceTree = "<group>";
+		};
+		AE9CA1D51B879DB700BF1746 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				AE9CA1C41B876EE300BF1746 /* PXPTIFByteBlock.h */,
+				AE9CA1C31B876EE300BF1746 /* PXPTIFByteBlock.c */,
+				AE9CA1CD1B87771B00BF1746 /* PXPTIFByteBuffer.h */,
+				AE9CA1CC1B87771B00BF1746 /* PXPTIFByteBuffer.c */,
+			);
+			name = Internal;
+			sourceTree = "<group>";
+		};
+		AE9CA1D61B879DD700BF1746 /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				AE9CA1C11B876D0000BF1746 /* PXPTIFVersion.h */,
+				AE9CA1C01B876D0000BF1746 /* PXPTIFVersion.c */,
+				AE9CA1DE1B87B09200BF1746 /* PXPTIFIdentifier.h */,
+				AE9CA1DD1B87B09200BF1746 /* PXPTIFIdentifier.c */,
+				AE9CA1BE1B875C9800BF1746 /* PXPTIFTelestration.h */,
+				AE9CA1BD1B875C9800BF1746 /* PXPTIFTelestration.c */,
+				AE9CA1D31B879DB000BF1746 /* PXPTIFAction.h */,
+				AE9CA1D21B879DB000BF1746 /* PXPTIFAction.c */,
+				AE9CA1DB1B87A04100BF1746 /* PXPTIFColor.h */,
+				AE9CA1DA1B87A04100BF1746 /* PXPTIFColor.c */,
+			);
+			name = Public;
+			sourceTree = "<group>";
+		};
 		AEA25F8D1B78EFD5006C83C3 /* ListView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1536,6 +1596,7 @@
 		AED484931B56A22600769EEF /* PxpTelestration */ = {
 			isa = PBXGroup;
 			children = (
+				AE9CA1BC1B875B9700BF1746 /* PxpTelestrationInterchangeFormat */,
 				AED484941B56A23600769EEF /* PxpAddButton.h */,
 				AED484951B56A23600769EEF /* PxpAddButton.m */,
 				AED484961B56A23600769EEF /* PxpArrowButton.h */,
@@ -3294,6 +3355,7 @@
 				AEDD7C981B4AB830003C82F3 /* PxpPlayerLight.m in Sources */,
 				D7A188C51A0BE57600513909 /* BitrateMonitor.m in Sources */,
 				D7A9399216ADA933006CBAB2 /* CustomTabBar.m in Sources */,
+				AE9CA1CE1B87771B00BF1746 /* PXPTIFByteBuffer.c in Sources */,
 				D738306A19911EEC0053F0A1 /* FilterButtonBlockView.m in Sources */,
 				AEDD7C941B4AB830003C82F3 /* PxpGlowButton.m in Sources */,
 				D719869A19C8BA6E00122CAA /* VideoControlBar.m in Sources */,
@@ -3341,6 +3403,7 @@
 				D743D4761B69213000533070 /* PxpFilter.m in Sources */,
 				AED2EBCE1B1DED25008AD159 /* NCPlayerContext.m in Sources */,
 				D72779B11A38DBE30034DD66 /* TagFlagViewController.m in Sources */,
+				AE9CA1C51B876EE300BF1746 /* PXPTIFByteBlock.c in Sources */,
 				D7CCE7E01ABB78AE00D85095 /* VideoZoomManager.m in Sources */,
 				AE7AE3B21B74F4C80021EC03 /* PxpPlayerView.m in Sources */,
 				D78093C21B6ACA25006488A9 /* PxpFilterDefaultTabViewController.m in Sources */,
@@ -3388,7 +3451,9 @@
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
 				AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */,
 				D700F9061B011550008152E8 /* FakeEncoder.m in Sources */,
+				AE9CA1DF1B87B09200BF1746 /* PXPTIFIdentifier.c in Sources */,
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
+				AE9CA1C21B876D0000BF1746 /* PXPTIFVersion.c in Sources */,
 				D7A9F10D1B25EE72005C8B3E /* EncoderCommander.m in Sources */,
 				D79D709219DD8ED2001FBE16 /* ExternalScreenButton.m in Sources */,
 				AED484B41B56A23600769EEF /* PxpColorPicker.m in Sources */,
@@ -3427,12 +3492,14 @@
 				D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */,
 				D7CCE8081AC98B9400D85095 /* VideoTrimItem.m in Sources */,
 				AED484B31B56A23600769EEF /* PxpCircleButton.m in Sources */,
+				AE9CA1DC1B87A04100BF1746 /* PXPTIFColor.c in Sources */,
 				D7341A861B73C01D005156E9 /* PxpFilterFootballTabViewController.m in Sources */,
 				AEA25F991B78FD2A006C83C3 /* PxpBorderLabel.m in Sources */,
 				D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */,
 				AE2DEF461B7E7C9B0012EC36 /* PxpMultiAsset.m in Sources */,
 				AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */,
 				AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */,
+				AE9CA1BF1B875C9800BF1746 /* PXPTIFTelestration.c in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
 				AE2DEF4F1B7E7FD30012EC36 /* PxpAsset+Feed.m in Sources */,
 				D7341A8A1B74E714005156E9 /* PxpFilterButtonView.m in Sources */,
@@ -3462,6 +3529,7 @@
 				AEDD7CA01B4AB8E2003C82F3 /* PxpPlayerSingleView.m in Sources */,
 				D769AB8D19BE5E8400DF68BC /* PxpRangeModifierButton.m in Sources */,
 				D7EF106317B4088A00CD4786 /* AutoScrollLabel.m in Sources */,
+				AE9CA1D41B879DB000BF1746 /* PXPTIFAction.c in Sources */,
 				AE5073AA1AFC1DCE002C361D /* SettingViewController.m in Sources */,
 				D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */,
 				D7D2F6961B791A5500DC0DC5 /* PxpFilterRatingView.m in Sources */,
