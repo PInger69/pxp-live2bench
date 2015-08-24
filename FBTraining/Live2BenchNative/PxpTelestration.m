@@ -40,8 +40,10 @@
             action.strokeColor = [UIColor colorWithRed:color.r / 255.0 green:color.g / 255.0 blue:color.b / 255.0 alpha:color.a / 255.0];
             action.strokeWidth = PXPTIFActionGetWidth(actionData);
             
+            uint64_t n_points = PXPTIFActionGetPointCount(actionData);
+            NSLog(@"n_points: %llu", n_points);
             // get point data.
-            for (uint64_t j = 0; j < PXPTIFActionGetPointCount(actionData); j++) {
+            for (uint64_t j = 0; j < n_points; j++) {
                 [action addPoint:[[PxpTelestrationPoint alloc] initWithPointData:PXPTIFActionGetPoints(actionData)[j]]];
             }
             

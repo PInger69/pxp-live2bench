@@ -730,6 +730,61 @@ static CMClockRef _pxpPlayerMasterClock;
     }];
 }
 
+- (void)adaptiveSync:(CMTime)time {
+    
+    // The number of seconds to seek ahead while playing.
+    static CMTime smartSync;
+    
+    // safe guard.
+    if (!CMTIME_IS_NUMERIC(smartSync)) {
+        smartSync = kCMTimeZero;
+    }
+    
+    // calculate the average time off each player is.
+    NSUInteger n = 0;
+    CMTime average = kCMTimeZero;
+    for (PxpPlayer *player in self.contextPlayers) {
+        if (player != self) {
+            const CMTime difference = CMTimeSubtract(time, player.currentTime);
+            if (CMTIME_IS_NUMERIC(difference)) {
+                average = CMTimeAdd(average, difference);
+                n++;
+            }
+        }
+    }
+    average = CMTimeMultiplyByFloat64(average, n ? 1.0 / n : 1.0);
+    
+    // adjust the smart sync with the average.
+    smartSync = CMTimeMaximum(CMTimeAdd(smartSync, average), kCMTimeZero);
+    
+    // calculate the time to seek to.
+    const CMTime seekTime = CMTimeAdd(time, smartSync);
+    
+    const NSUInteger total = self.contextPlayers.count - 1;
+    __block NSUInteger tried = 0;
+    __block NSUInteger completed = 0;
+    
+    void (^handler)(BOOL) = ^(BOOL complete) {
+        tried++;
+        completed += completed ? 1 : 0;
+        
+        if (tried >= total) {
+            [self setRate:self.rate];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.syncing = NO;
+            });
+        }
+    };
+    
+    self.syncing = YES;
+    for (PxpPlayer *player in self.contextPlayers) {
+        if (player != self) {
+            [player seekToTime:seekTime completionHandler:handler];
+        }
+    }
+}
+
 /// Synchronizes all other players to the player
 - (void)sync:(CMTime)currentTime {
     
@@ -737,34 +792,18 @@ static CMClockRef _pxpPlayerMasterClock;
         return;
     }
     
-    static CMTime smartSync;
-    if (!CMTIME_IS_NUMERIC(smartSync)) {
-        smartSync = kCMTimeZero;
-    }
     
     if (CMTIME_IS_NUMERIC(self.syncThreshold) && !self.prerolling && !self.seeking && !self.syncing && self.rate != 0.0) {
         // calculate time distribution among players
         CMTime distribution = kCMTimeZero;
-        CMTime average = kCMTimeZero;
         for (PxpPlayer *player in self.contextPlayers) {
             if (player != self) {
-                CMTime difference = CMTimeSubtract(currentTime, player.currentTime);
-                
+                const CMTime difference = CMTimeSubtract(currentTime, player.currentTime);
                 distribution = CMTimeMaximum(distribution, CMTimeAbsoluteValue(difference));
-                average = CMTimeAdd(average, CMTIME_IS_NUMERIC(difference) ? difference : kCMTimeZero);
             }
         }
         
         BOOL synced = CMTimeCompare(distribution, self.syncThreshold) <= 0;
-        
-        if (self.contextPlayers.count > 1) {
-            Float64 f = 1.0 / (self.contextPlayers.count - 1);
-            average = CMTimeMultiplyByFloat64(average, f);
-        }
-        
-        if (!synced && CMTimeCompare(CMTimeAbsoluteValue(average), CMTimeMake(10, 1)) < 0) {
-            smartSync = CMTimeMaximum(CMTimeAdd(smartSync, average), kCMTimeZero);
-        }
         
         /*
         NSLog(@"DIST: %f", CMTimeGetSeconds(distribution));
@@ -813,20 +852,7 @@ static CMClockRef _pxpPlayerMasterClock;
         else {
             
             NSLog(@"Syncing (Adaptive)");
-            //[self haltSync:currentTime];
-            
-            self.syncing = YES;
-            for (PxpPlayer *player in self.contextPlayers) {
-                if (player != self) {
-                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
-                    }];
-                }
-                
-            }
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.syncing = NO;
-            });
+            [self adaptiveSync:currentTime];
             
         }
     }
