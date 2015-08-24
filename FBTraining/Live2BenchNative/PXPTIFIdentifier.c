@@ -8,7 +8,7 @@
 
 #include "PXPTIFIdentifier.h"
 
-// DO NOT CHANGE THIS (.PXPTIF)
+// DO NOT CHANGE THIS (".PXPTIF")
 const PXPTIFIdentifier kPXPTIFIdentifierValid = { '.', 'P', 'X', 'P', 'T', 'I', 'F', '\0' };
 
 bool PXPTIFIdentifierValid(PXPTIFIdentifier identifier)

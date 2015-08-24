@@ -12,6 +12,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+/// Data structure used to represent color in a PXPTIF.
 typedef struct PXPTIFColor {
     uint8_t r, g, b, a;
 } PXPTIFColor;

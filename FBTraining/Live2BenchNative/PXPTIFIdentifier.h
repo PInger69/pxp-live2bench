@@ -12,6 +12,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+/// Identifier type for PXPTIF data.
 typedef uint8_t PXPTIFIdentifier[8];
 
 /// the valid identifier for PXPTIF.
