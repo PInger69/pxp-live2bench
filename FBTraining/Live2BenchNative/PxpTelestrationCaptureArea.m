@@ -103,8 +103,11 @@
         // convert the point to the telestration's size.
         const CGPoint position = CGPointMake((teleSize.width / captureSize.width) * location.x, (teleSize.height / captureSize.height) * location.y);
         
+        // clamp the point the telestration's bounds.
+        const CGPoint clamp = CGPointMake(MAX(0, MIN(position.x, teleSize.width)), MAX(0, MIN(position.y, teleSize.height)));
+        
         // add the point to the action.
-        [self.action addPoint:[[PxpTelestrationPoint alloc] initWithPosition:position displayTime:time]];
+        [self.action addPoint:[[PxpTelestrationPoint alloc] initWithPosition:clamp displayTime:time]];
     }
 }
 
