@@ -19,43 +19,54 @@
 @synthesize actionStack = _actionStack;
 
 + (nonnull instancetype)telestrationFromData:(nonnull NSString *)base64 {
+    // decode from base64.
     NSData *data = [[NSData alloc] initWithBase64EncodedString:base64 options:0];
     
-    // try to get data.
+    // try to create a PXPTIF telestration from the data.
     PXPTIFTelestrationRef __nullable telestrationData = PXPTIFTelestrationCreateWithData(data.bytes, data.length);
     if (telestrationData) {
         
-        // get actions
+        // get action count.
         uint64_t n_actions = PXPTIFTelestrationGetActionCount(telestrationData);
         
+        // extract actions.
         NSMutableArray *actions = [NSMutableArray arrayWithCapacity:n_actions];
         for (uint64_t i = 0; i < n_actions; i++) {
+            // create action object.
+            PxpTelestrationAction *action = [[PxpTelestrationAction alloc] init];
+            
             // get action data.
             PXPTIFActionRef __nonnull actionData = PXPTIFTelestrationGetActions(telestrationData)[i];
             
+            // get color.
             PXPTIFColor color = PXPTIFActionGetColor(actionData);
             
-            PxpTelestrationAction *action = [[PxpTelestrationAction alloc] init];
+            // get and assign type.
             action.type = PXPTIFActionGetType(actionData);
+            
+            // assign color as UIColor.
             action.strokeColor = [UIColor colorWithRed:color.r / 255.0 green:color.g / 255.0 blue:color.b / 255.0 alpha:color.a / 255.0];
+            
+            // get and assign stroke width.
             action.strokeWidth = PXPTIFActionGetWidth(actionData);
             
-            uint64_t n_points = PXPTIFActionGetPointCount(actionData);
-            NSLog(@"n_points: %llu", n_points);
-            // get point data.
-            for (uint64_t j = 0; j < n_points; j++) {
+            // get points.
+            for (uint64_t j = 0; j < PXPTIFActionGetPointCount(actionData); j++) {
                 [action addPoint:[[PxpTelestrationPoint alloc] initWithPointData:PXPTIFActionGetPoints(actionData)[j]]];
             }
             
+            // add to actions array.
             [actions addObject:action];
         }
         
+        // create telestration object from data.
         PxpTelestration *telestration = [[self alloc] initWithSize:CGSizeMake(PXPTIFTelestrationGetWidth(telestrationData), PXPTIFTelestrationGetHeight(telestrationData)) actions:actions];
         
+        // get and assign properties.
         telestration.isStill = PXPTIFTelestrationIsStill(telestrationData);
         telestration.sourceName = [NSString stringWithUTF8String:PXPTIFTelestrationGetSourceName(telestrationData)];
         
-        // destroy data.
+        // destroy PXPTIF telestration data.
         PXPTIFTelestrationDestroy(telestrationData);
         
         return telestration;
@@ -123,12 +134,14 @@
         actions[i] = PXPTIFActionCreate(action.type, PXPTIFColorMake(255.0 * r, 255.0 * g, 255.0 * b, 255.0 * a), action.strokeWidth, points, action.points.count);
     }
     
-    
+    // create PXPTIF telestration.
     PXPTIFTelestrationRef __nonnull telestration = PXPTIFTelestrationCreate(self.sourceName.UTF8String ? self.sourceName.UTF8String : "", self.size.width, self.size.height, self.isStill, actions, _actionStack.count);
     
+    // get the PXPTIF data representation.
     uint64_t size;
     void *__nonnull data = PXPTIFTelestrationGenerateDataRepresentation(telestration, &size);
     
+    // base64 encode the data.
     return [[NSData dataWithBytes:data length:size] base64EncodedStringWithOptions:0];
 }
 

@@ -203,18 +203,7 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)timerTick:(NSTimer *)timer {
-    //[self sync:self.currentTime];
-    
-    return;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        //self.syncBlock(self.currentTime);
-        
-        /*
-        [self willChangeValueForKey:@"failed"];
-        _failed = self.currentItem.status == AVPlayerItemStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
-        [self didChangeValueForKey:@"failed"];
-         */
-    });
+    [self sync:self.currentTime];
 }
 
 #pragma mark - Setters / Getters
@@ -343,9 +332,9 @@ static CMClockRef _pxpPlayerMasterClock;
             [player didChangeValueForKey:@"syncInterval"];
         }
         
-        //self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
+        self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
         
-        self.syncObserver = [self addPeriodicTimeObserverForInterval:syncInterval queue:NULL usingBlock:_syncBlock];
+        //self.syncObserver = [self addPeriodicTimeObserverForInterval:syncInterval queue:NULL usingBlock:_syncBlock];
         
     }
 }
@@ -805,16 +794,10 @@ static CMClockRef _pxpPlayerMasterClock;
         
         BOOL synced = CMTimeCompare(distribution, self.syncThreshold) <= 0;
         
-        /*
-        NSLog(@"DIST: %f", CMTimeGetSeconds(distribution));
-        NSLog(@"AVG: %f", CMTimeGetSeconds(average));
-        NSLog(@"SMRT: %f", CMTimeGetSeconds(smartSync));
-         */
-        
         if (self.live) {
+            // we need to sync if the player's are 5 or more seconds behind live.
             synced = synced && CMTimeCompare(self.remainingTime, CMTimeMake(5, 1)) <= 0;
         }
-        
         
         if (synced) {
             // players in sync
@@ -826,31 +809,7 @@ static CMClockRef _pxpPlayerMasterClock;
             NSLog(@"Syncing (Live)");
             [self goToLive];
             
-        }/* else if (self.syncs < MAX_SYNCS && NO) {
-            if (self.live) {
-                NSLog(@"Syncing (Live)");
-                [self goToLive];
-            } else {
-                NSLog(@"Syncing (Freeze)");
-                self.syncing = YES;
-                [self pause];
-                [self seekToTime:currentTime multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete){
-                    [self prerollAtRate:self.playRate completionHandler:^(BOOL complete) {
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            
-                            [self setRate:self.playRate];
-                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                self.syncing = NO;
-                            });
-                        });
-                    }];
-                }];
-            }
-            
-            self.syncs++;
-           } */
-        else {
-            
+        } else {
             NSLog(@"Syncing (Adaptive)");
             [self adaptiveSync:currentTime];
             
