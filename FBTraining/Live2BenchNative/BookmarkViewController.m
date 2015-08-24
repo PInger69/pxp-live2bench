@@ -31,7 +31,7 @@
 #import "ClipDataContentDisplay.h"
 
 #import "PxpFilterMyClipTabViewController.h"
-
+//#import "SpinnerView.h"
 
 #import "LocalMediaManager.h"
 
@@ -487,6 +487,8 @@ int viewWillAppearCalled;
     
     self.tableViewController.tableData = [self filterAndSortClips:_tagsToDisplay];
     [self.tableViewController.tableView reloadData];
+    
+
 }
 
 -(NSMutableArray*)sortArrayFromHeaderBar:(NSMutableArray*)toSort headerBarState:(HBSortType) sortType
@@ -502,10 +504,11 @@ int viewWillAppearCalled;
         
     } else if (sortType & DATE_FIELD) {
         sorter = [NSSortDescriptor
-                  sortDescriptorWithKey:@"event"
+                  sortDescriptorWithKey:@"eventName"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(caseInsensitiveCompare:)];
         
+
     }  else if (sortType & NAME_FIELD) {
         sorter = [NSSortDescriptor
                   sortDescriptorWithKey:@"name"

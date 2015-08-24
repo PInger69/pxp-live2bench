@@ -19,20 +19,6 @@
     return self;
 }
 
-//-(void)drawRect:(CGRect)rect
-//{
-//    CGContextRef ctx = UIGraphicsGetCurrentContext();
-//    
-//    CGContextBeginPath(ctx);
-//    CGContextMoveToPoint   (ctx, CGRectGetMinX(rect), CGRectGetMinY(rect));  // top left
-//    CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect));  // mid right
-//    CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMaxY(rect));  // bottom left
-//    CGContextClosePath(ctx);
-//    
-//    CGContextFillPath(ctx);
-//
-//}
-//
 
 -(void)changeColor:(UIColor*)colorToChange withRect:(CGRect)rect;
 {

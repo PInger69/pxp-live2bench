@@ -9,10 +9,6 @@
 #import "DownloadButton.h"
 
 @implementation DownloadButton
-//{
-//    BOOL downloadCancelled;
-//    BOOL downloadComplete;
-//}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -132,6 +128,8 @@
     }
     
     
+    
+    
     [path fill];
     [path stroke];
     [boxPath stroke];
@@ -173,6 +171,24 @@
         completePath.lineWidth = 2.0;
         [[UIColor greenColor] setStroke];
         [completePath stroke];
+    }
+    
+    if (_isPressed && self.progress==0){
+        
+        UIBezierPath *clockIcon = [UIBezierPath bezierPath];
+        CGPoint pt = CGPointMake(15, 12);
+        [clockIcon addArcWithCenter:pt radius:6 startAngle:0 endAngle:180 clockwise:YES];
+        
+        [clockIcon moveToPoint:CGPointMake(pt.x, pt.y-4)];
+        [clockIcon addLineToPoint:pt];
+        [clockIcon addLineToPoint:CGPointMake(pt.x+2, pt.y)];
+        
+        clockIcon.lineCapStyle = kCGLineCapRound;
+        clockIcon.lineWidth = 1.0;
+        
+        [PRIMARY_APP_COLOR setStroke];
+        [clockIcon stroke];
+
     }
     
     CGContextSaveGState(currentContext);

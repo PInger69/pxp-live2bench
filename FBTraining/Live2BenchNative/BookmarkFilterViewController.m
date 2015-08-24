@@ -305,8 +305,8 @@
         //[eventButton setFrame:CGRectMake((colNum * 83)-60, (rowNum*28)+2, 80, 25)];
         [eventButton setFrame:CGRectMake((colNum * 123)+10, (rowNum*28)-20, 120, 25)];
         //[eventButton setContentEdgeInsets:UIEdgeInsetsMake(3, 3, 3, 3)];
-        [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+        [eventButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [eventButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
         [eventButton setTitle:eventName forState:UIControlStateNormal];
         [eventButton setAccessibilityLabel:@"names"];
@@ -348,8 +348,8 @@
     CustomButton *clearAll = [CustomButton buttonWithType:UIButtonTypeCustom];
     [clearAll setFrame:CGRectMake(numTagsLabel.frame.origin.x - 60.0f, numTagsLabel.frame.origin.y, 60, 25)];
     clearAll.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin;
-    [clearAll setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-    [clearAll setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+    [clearAll setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+    [clearAll setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
     [clearAll setAccessibilityLabel:@"allclear"];
     [clearAll addTarget:self action:@selector(clearAllTags:) forControlEvents:UIControlEventTouchUpInside];
     [clearAll setTitle:NSLocalizedString(@"clear all",nil) forState:UIControlStateNormal];

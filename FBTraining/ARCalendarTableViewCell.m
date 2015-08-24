@@ -41,22 +41,22 @@
     //self.shareButton.frame = CGRectMake(0, 0, 70 , 44);
     
     
-    _dateDescription =    [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin+txtBoxHeight, 120, txtBoxHeight)];
+    _dateDescription =    [[UILabel alloc] initWithFrame:CGRectMake(leftMargin+10, topMargin+txtBoxHeight, 120, txtBoxHeight)];
     [_dateDescription setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     _dateDescription.text   = @"Event start time:";
     
     
-    _leagueDescription =    [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin+txtBoxHeight+txtBoxHeight, 60, txtBoxHeight)];
+    _leagueDescription =    [[UILabel alloc] initWithFrame:CGRectMake(leftMargin+10, topMargin+txtBoxHeight+txtBoxHeight-5, 60, txtBoxHeight)];
     [_leagueDescription setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     _leagueDescription.text   = @"League:";
     
-    self.dateLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+leftMargin, topMargin+txtBoxHeight, 100, txtBoxHeight)];
+    self.dateLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+10+leftMargin, topMargin+txtBoxHeight, 100, txtBoxHeight)];
     [self.dateLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
    
     self.timeLabel =    [[UILabel alloc] initWithFrame:CGRectMake(125+105,      topMargin+txtBoxHeight, 50, txtBoxHeight)];
    [self.timeLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     
-    self.leagueLabel = [[UILabel alloc]initWithFrame:CGRectMake(125+leftMargin, topMargin+txtBoxHeight+txtBoxHeight, 260, txtBoxHeight)];
+    self.leagueLabel = [[UILabel alloc]initWithFrame:CGRectMake(125+10+leftMargin, topMargin+txtBoxHeight+txtBoxHeight-5, 260, txtBoxHeight)];
     [self.leagueLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
     
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin, 380, txtBoxHeight)];

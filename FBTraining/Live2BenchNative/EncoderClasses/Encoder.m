@@ -1229,9 +1229,6 @@
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = CAMERAS_GET;
     encoderConnection.timeStamp             = aTimeStamp;
-    PXPLog(@" ");
-    PXPLog(@"CAMERAS_GET: %@",checkURL);
-    PXPLog(@" ");
 }
 
 
@@ -1636,8 +1633,6 @@
         if ([leaguePool objectForKey:aLeague.name]){
             
             aLeague.name = [NSString stringWithFormat:@"%@ (Duplicate)",aLeague.name];
-            PXPLog(@"Warning Duplicate League: %@",aLeague.name);
-            NSLog(@"Warning Duplicate League: %@",aLeague.name);
         }
         [leaguePool setObject:aLeague forKey:aLeague.name];
 
@@ -1742,23 +1737,6 @@
 {
     
 }
-
-/*-(void)modTagResponce:(NSData *)data
-{
-    
-    NSDictionary    * results =[Utility JSONDatatoDict:data];
-    if([results isKindOfClass:[NSDictionary class]])    {
-        if ([results objectForKey:@"id"]) {
-            //NSString * tagId = [[results objectForKey:@"id"]stringValue];
-            PXPLog(@"Tag Modification succeded: %@", @"");
-
-            //[_event.tags setObject:results forKey:tagId];
-            //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_MODIFIED object:nil userInfo:results];
-        }
-    
-    }
- 
-}*/
 
 //when tags are created or modified on the same ipad that is displaying the change
 -(void)getEventTags:(NSData *)data extraData:(NSDictionary *)extra
@@ -2115,7 +2093,7 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     
     if (results){
-        NSLog( @"The results");
+
         PXPLog(@"The event has been deleted %@" , results);
     }
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_EVENT_COMPLETE object:self];
@@ -2125,7 +2103,7 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     NSArray * list = [results[@"camlist"]allValues];
     _cameraCount = list.count;
-    
+    self.cameraData = results;
     NSMutableArray *camerasAvailableList = [[NSMutableArray alloc]init];
     
     
@@ -2138,9 +2116,9 @@
  //   _cameraCount = [((NSDictionary*)[results objectForKey:@"camlist"]) count];
     
     PXPLog(@"%@ has %@ cameras",self.name ,[NSString stringWithFormat:@"%ld",(long)_cameraCount ]);
-    PXPLog(@"JSON OUTPUT:");
-    PXPLog(@"%@",results);
-    PXPLog(@" ");
+//    PXPLog(@"JSON OUTPUT:");
+//    PXPLog(@"%@",results);
+//    PXPLog(@" ");
 }
 
 
@@ -2194,7 +2172,7 @@
                      error:&error];
         
 
-        PXPLog(@"%@",object);
+
 
         if([object isKindOfClass:[NSDictionary class]])
         {
@@ -2220,11 +2198,9 @@
                     LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
                     if (!homeTeam) {
                             homeTeam     = [LeagueTeam new];
-//                        PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
                     }
                     if (!visitTeam) {
                             visitTeam   = [LeagueTeam new];
-//                        PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
                     }
                     
                     
@@ -2289,7 +2265,7 @@
     NSDictionary * rData = [Utility JSONDatatoDict:data];
     
     if (![rData isKindOfClass:[NSDictionary class]]){
-        PXPLog(@"error parsing json data");
+        PXPLog(@"error parsing json data when looking for Live");
     }
    
     NSArray     * eventsToSearch        = [rData objectForKey:@"events"];
@@ -2307,13 +2283,10 @@
             LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
             if (!homeTeam) {
                 homeTeam     = [LeagueTeam new];
-//                PXPLog(@"homeTeam: %@ is not found in League: %@",value[@"homeTeam"],value[@"league"]);
             }
             if (!visitTeam) {
                 visitTeam   = [LeagueTeam new];
-//                PXPLog(@"visitTeam: %@ is not found in League: %@",value[@"visitTeam"],value[@"league"]);
             }
-            
             
             anEvent.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
             

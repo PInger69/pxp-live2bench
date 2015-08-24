@@ -46,11 +46,11 @@
 }
 
 -(void)downloadButtonPressed: (id) sender{
-    PXPLog(@"DownloadButtonPressed");
+
 }
 
 -(void)openButtonPressed: (id) sender{
-    PXPLog(@"OpenButtonPressed");
+
 }
 
 #pragma mark - Table view data source

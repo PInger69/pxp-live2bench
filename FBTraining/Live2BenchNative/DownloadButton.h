@@ -23,6 +23,7 @@ typedef enum{
 
 @property (assign, nonatomic) BOOL downloadCancelled;
 @property (assign, nonatomic) BOOL downloadComplete;
+@property (assign, nonatomic) BOOL isPressed;
 
 -(void)setState:(DBDownloadState)state;
 

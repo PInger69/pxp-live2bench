@@ -27,6 +27,9 @@
     [self.view insertSubview:blurView belowSubview:self.creditsView];
     
     blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,7 +43,6 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [PxpLog clear];
 }
 
 @end

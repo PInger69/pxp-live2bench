@@ -157,43 +157,35 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)onTagChanged:(NSNotification *)note{
     
     for (Tag *tag in _currentEvent.tags ) {
-        
         if (![self.allTagsArray containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
+                [_pxpFilter addTags:@[tag]];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             }
             [self.allTagsArray insertObject:tag atIndex:0];
         }
-        
-        if(tag.modified && [self.allTagsArray containsObject:tag]){
-            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
-                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            }else if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
-                [self.tagsToDisplay insertObject:tag atIndex:0];
-            }
+        if(tag.modified && [self.allTagsArray containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
+            [self.tagsToDisplay insertObject:tag atIndex:0];
+            [_pxpFilter addTags:@[tag]];
         }
         
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
             [self.tagsToDisplay insertObject:tag atIndex:0];
+            [_pxpFilter addTags:@[tag]];
+            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
         }
-    }
-    
-    Tag *toBeRemoved;
-    for (Tag *tag in self.allTagsArray ){
         
+    }
+    
+    for (Tag *tag in [self.allTagsArray copy]) {
         if (![_currentEvent.tags containsObject:tag]) {
-        toBeRemoved = tag;
+            [self.allTagsArray removeObject:tag];
+            [self.tagsToDisplay removeObject:tag];
+            [_pxpFilter removeTags:@[tag]];
         }
     }
-    if (toBeRemoved) {
-        [self.allTagsArray removeObject:toBeRemoved];
-        [self.tagsToDisplay removeObject:toBeRemoved];
-    }
-
-       
     
-    componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];
 
 }
@@ -647,10 +639,23 @@ static void * encoderTagContext = &encoderTagContext;
         }
         self.isEditing = NO;
         
-    }else{
+    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
         if (buttonIndex == 0)
         {
-            NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
+            Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
+            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                [self.tagsToDisplay removeObject:tag];
+                if (self.editingIndexPath) {
+                    [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+                }
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+                [self removeIndexPathFromDeletion];
+            }else{
+                CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert showView];
+                [self clear];
+            }
+           /* NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
             [self.tagsToDisplay removeObject:tag];
             
             if (self.editingIndexPath) {
@@ -658,13 +663,13 @@ static void * encoderTagContext = &encoderTagContext;
             }
             //[self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
             
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            //NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+           // NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
+            //[[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
             
-            [self removeIndexPathFromDeletion];
+            [self removeIndexPathFromDeletion];*/
             
         }
         else if (buttonIndex == 1)
@@ -673,6 +678,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
         
     }
+    
     [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
     
@@ -766,7 +772,7 @@ static void * encoderTagContext = &encoderTagContext;
                 NSDictionary *feeds = selectedCell.data.event.feeds;
                 Feed *feed = feeds[pick] ? feeds[pick] : feeds.allValues.firstObject;
                 
-                PXPLog(@"You Picked a feed: %@",pick);
+
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

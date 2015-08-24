@@ -216,15 +216,9 @@
             }
             [self.allTags insertObject:tag atIndex:0];
         }
-        if(tag.modified && [self.allTags containsObject:tag]){
-            [self.allTags replaceObjectAtIndex:[self.allTags indexOfObject:tag] withObject:tag];
-            /*if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
-                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            }*/
-            if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
-                [self.tagsToDisplay insertObject:tag atIndex:0];
-                [_pxpFilter addTags:@[tag]];
-            }
+        if(tag.modified && [self.allTags containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
+            [self.tagsToDisplay insertObject:tag atIndex:0];
+            [_pxpFilter addTags:@[tag]];
         }
         
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
@@ -235,19 +229,13 @@
 
     }
     
-    Tag *toBeRemoved;
-    for (Tag *tag in self.allTags ){
-        
+    for (Tag *tag in [self.allTags copy]) {
         if (![_currentEvent.tags containsObject:tag]) {
-            toBeRemoved = tag;
+            [self.allTags removeObject:tag];
+            [self.tagsToDisplay removeObject:tag];
+            [_pxpFilter removeTags:@[tag]];
         }
     }
-    if (toBeRemoved) {
-        [self.allTags removeObject:toBeRemoved];
-        [self.tagsToDisplay removeObject:toBeRemoved];
-        [_pxpFilter removeTags:@[toBeRemoved]];
-    }
-    
 
     [_tableViewController reloadData];
     
@@ -865,6 +853,8 @@
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
 
+//    _tagsToDisplay SORT
+    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
     [_tableViewController reloadData];
 }
 
@@ -873,6 +863,10 @@
     [filter filterTags:self.allTags];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    
+//    _tagsToDisplay SORT
+    _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
+    
     [_tableViewController reloadData];
 }
 
