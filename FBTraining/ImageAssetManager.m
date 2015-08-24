@@ -137,7 +137,7 @@ static ImageAssetManager * instance;
         UIGraphicsEndImageContext();
     }
     
-    [_arrayOfClipImages setObject:receivedImage forKey:[connection.originalRequest.URL absoluteString]];
+    [_arrayOfClipImages setObject:receivedImage ? receivedImage : [UIImage new] forKey:[connection.originalRequest.URL absoluteString]];
     
     [connection.imageViewReference setImage: receivedImage];
     [self.queueOfConnections removeObject:connection];
