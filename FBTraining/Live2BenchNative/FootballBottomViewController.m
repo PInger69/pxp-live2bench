@@ -58,11 +58,11 @@
     
     UILabel *_playCallLabel;
     UIPickerView *_playCallPickerView;
-    NSArray *playCallData;
+    //NSArray *playCallData;
     
     UILabel *_playCallOppLabel;
     UIPickerView *_playCallOppPickerView;
-    NSArray *playCallOppData;
+    //NSArray *playCallOppData;
     
     UILabel *_sTLabel;
     UIPickerView *_sTPickerView;
@@ -96,7 +96,8 @@
         
         _offButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_offButton setFrame:CGRectMake(25, 32, 80, 45)];
-        [_offButton setBackgroundColor:[UIColor grayColor]];
+        [_offButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [_offButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor greenColor]] forState:UIControlStateSelected];
         [_offButton addTarget:self action:@selector(teamButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_offButton setTitle:@"OFFENSE" forState:UIControlStateNormal];
         [_offButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -106,7 +107,8 @@
         
         _defButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_defButton setFrame:CGRectMake(_offButton.frame.origin.x, _offButton.frame.origin.y + _offButton.frame.size.height+11.5, _offButton.frame.size.width, _offButton.frame.size.height)];
-        [_defButton setBackgroundColor:[UIColor grayColor]];
+        [_defButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [_defButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor redColor]] forState:UIControlStateSelected];
         [_defButton addTarget:self action:@selector(teamButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_defButton setTitle:@"DEFENSE" forState:UIControlStateNormal];
         [_defButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -116,7 +118,8 @@
         
         _stButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_stButton setFrame:CGRectMake(_defButton.frame.origin.x, _defButton.frame.origin.y + _defButton.frame.size.height+11.5, _defButton.frame.size.width, _defButton.frame.size.height)];
-        [_stButton setBorderColour:[UIColor grayColor]];
+        [_stButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [_stButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [_stButton addTarget:self action:@selector(specialTeamButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_stButton setTitle:@"ST" forState:UIControlStateNormal];
         [_stButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -273,7 +276,7 @@
         [_playCallPickerView selectRow:55 inComponent:0 animated:YES];
         [_offLayoutView addSubview:_playCallPickerView];
         
-        playCallData = [self addArrayValueForPickerViews:@"play call"];
+        _playCallData = [[NSMutableArray alloc]initWithArray:@[]];
         
         
         // Set Up PlayCall Opp
@@ -297,7 +300,7 @@
         [_playCallOppPickerView selectRow:55 inComponent:0 animated:YES];
         [_offLayoutView addSubview:_playCallOppPickerView];
         
-        playCallOppData = [self addArrayValueForPickerViews:@"play call opp"];
+        _playCallOppData = [[NSMutableArray alloc]initWithArray:@[]];
         
         // Set Up Special Teams
         _sTLabel = [[UILabel alloc]initWithFrame:CGRectMake(-20 , 0, 70, 30)];
@@ -326,7 +329,7 @@
         _nextPlayButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         [_nextPlayButton setFrame:CGRectMake(_playCallOppPickerView.frame.origin.x +_playCallOppPickerView.frame.size.width-55, _playCallOppLabel.frame.origin.y+90,160 , _offButton.frame.size.height)];
         [_nextPlayButton setTitle:@"NEXT PLAY" forState:UIControlStateNormal];
-        [_nextPlayButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
+        [_nextPlayButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
         [_nextPlayButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
         [_nextPlayButton.titleLabel setFont:[UIFont systemFontOfSize:25.0f]];
         _nextPlayButton.transform = CGAffineTransformMakeRotation(3*M_PI/2.0);
@@ -372,8 +375,8 @@
         }
         
         [button setFrame:frame];
-        [button setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        [button setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+        [button setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [button setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [button setTitle:titleArray[i] forState:UIControlStateNormal];
         [button.titleLabel setTextAlignment:NSTextAlignmentCenter];
         [button.titleLabel setFont:[UIFont boldSystemFontOfSize:28.0f]];
@@ -407,7 +410,6 @@
 -(void)specialTeamButtonPressed:(id)sender{
     [self revealTeam:@"special"];
     [_stButton setSelected:true];
-    [_stButton setBackgroundColor:PRIMARY_APP_COLOR];
 }
 
 // Down Button Pressed, abondon the current tag
@@ -438,12 +440,10 @@
     if ([offenseOrDefense isEqualToString:@"offense"]) {
         [self unSelectButtons:@[_offButton,_defButton,_stButton]];
         [_offButton setSelected:true];
-        [_offButton setBackgroundColor:[UIColor greenColor]];
         
     }else if ([offenseOrDefense isEqualToString:@"defense"]){
         [self unSelectButtons:@[_offButton,_defButton,_stButton]];
         [_defButton setSelected:true];
-        [_defButton setBackgroundColor:[UIColor redColor]];
     }
 }
 
@@ -479,9 +479,6 @@
 -(void)unSelectButtons:(NSArray*)data{
     for (CustomButton *button in data) {
         [button setSelected:false];
-        if (![data isEqual:arrayOfDownButtons] && ![data isEqual:arrayOfQuarterButtons] && ![data isEqual:arrayOfTypeButtons]) {
-            [button setBackgroundColor:[UIColor grayColor]];
-        }
     }
 }
 
@@ -553,6 +550,7 @@
 -(void)setMode:(FootballModes)mode
 {
     startTime = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
+    
     if (((_currentMode == FootballDisable || _currentMode == FootballDefenseSend) && mode == FootballOffenseStart) || ((_currentMode == FootballDisable || _currentMode == FootballOffenseSend) && mode == FootballDefenseStart)) {
         // Setting Buttons To Correct Position
         CustomButton *downButton = arrayOfDownButtons[0];
@@ -605,6 +603,16 @@
         [_gainPickerView selectRow:55 inComponent:0 animated:true];
         [self unSelectButtons:arrayOfTypeButtons];
     }
+    
+    [_playCallData removeAllObjects];
+    [_playCallPickerView reloadComponent:0];
+    [_playCallOppData removeAllObjects];
+    [_playCallOppPickerView reloadComponent:0];
+    [_seriesPickerView reloadComponent:0];
+    [_distancePickerView reloadComponent:0];
+    [_gainPickerView reloadComponent:0];
+    
+    
     _currentMode = mode;
 }
 
@@ -623,12 +631,10 @@
             // Defense Start Or Offense Start
             if ([sender isEqual:_offButton]) {
                 [_offButton setSelected:true];
-                [_offButton setBackgroundColor:[UIColor greenColor]];
                 start = @"offense";
                 [self setMode:FootballOffenseStart];
             }else if ([sender isEqual:_defButton]){
                 [_defButton setSelected:true];
-                [_defButton setBackgroundColor:[UIColor redColor]];
                 start = @"defense";
                 [self setMode:FootballDefenseStart];
             }
@@ -642,7 +648,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_offButton setSelected:true];
-            [_offButton setBackgroundColor:[UIColor greenColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -653,7 +658,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_offButton setSelected:true];
-            [_offButton setBackgroundColor:[UIColor greenColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -665,12 +669,10 @@
             if (indexOfDistance <= 0) {
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_offButton setSelected:true];
-                [_offButton setBackgroundColor:[UIColor greenColor]];
                 [self assignNewState:@"D1"];
             }else{
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_defButton setSelected:true];
-                [_defButton setBackgroundColor:[UIColor redColor]];
                 [self setMode:FootballDefenseStart];
             }
             break;
@@ -678,7 +680,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_defButton setSelected:true];
-            [_defButton setBackgroundColor:[UIColor redColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -689,7 +690,6 @@
             [self revealTeam:@"normal"];
             [self unSelectButtons:@[_offButton,_defButton,_stButton]];
             [_defButton setSelected:true];
-            [_defButton setBackgroundColor:[UIColor redColor]];
             if (indexOfDistance <= 0) {
                 [self assignNewState:@"D1"];
             }else{
@@ -701,12 +701,10 @@
             if (indexOfDistance <= 0) {
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_defButton setSelected:true];
-                [_defButton setBackgroundColor:[UIColor redColor]];
                 [self assignNewState:@"D1"];
             }else{
                 [self unSelectButtons:@[_offButton,_defButton,_stButton]];
                 [_offButton setSelected:true];
-                [_offButton setBackgroundColor:[UIColor greenColor]];
                 [self setMode:FootballOffenseStart];
             }
             break;
@@ -791,8 +789,6 @@
         
     }else if([type isEqualToString:@"special team"]){
         array = [[NSMutableArray alloc]initWithArray:@[@"Kick-off",@"Kick Ret",@"Punt",@"Punt Ret",@"Field G", @"Field G.R.",@"XPT"]];
-    }else if ([type isEqualToString:@"play call"] || [type isEqualToString:@"play call opp"]){
-        array = [[NSMutableArray alloc]initWithArray:@[@" "]];
     }
     return [array copy];
 }
@@ -804,9 +800,9 @@
     }else if ([pickerView isEqual:_sTPickerView]){
         return [stData count];
     }else if ([pickerView isEqual:_playCallOppPickerView]){
-        return [playCallOppData count];
+        return [_playCallOppData count];
     }else if ([pickerView isEqual:_playCallPickerView]){
-        return [playCallData count];
+        return [_playCallData count];
     }else if ([pickerView isEqual:_gainPickerView]){
         return [gainData count];
     }else if ([pickerView isEqual:_distancePickerView]){
@@ -822,9 +818,9 @@
     }else if ([pickerView isEqual:_sTPickerView]){
         return [stData objectAtIndex:row];
     }else if ([pickerView isEqual:_playCallOppPickerView]){
-        return [playCallOppData objectAtIndex:row];
+        return [_playCallOppData objectAtIndex:row];
     }else if ([pickerView isEqual:_playCallPickerView]){
-        return [playCallData objectAtIndex:row];
+        return [_playCallData objectAtIndex:row];
     }else if ([pickerView isEqual:_gainPickerView]){
         return [gainData objectAtIndex:row];
     }else if ([pickerView isEqual:_distancePickerView]){
@@ -833,7 +829,69 @@
     return @" ";
 }
 
+-(void)pickerView:(nonnull UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    [pickerView reloadComponent:0];
+}
 
+-(UIView*)pickerView:(nonnull UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(nullable UIView *)view{
+    UILabel *customView = (id)view;
+    if (!customView) {
+        customView= [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [pickerView rowSizeForComponent:component].width, [pickerView rowSizeForComponent:component].height)];
+    }
+    
+    NSString *title;
+    NSInteger selectedRow = 0;
+    if ([pickerView isEqual:_seriesPickerView]) {
+        title = [seriesData objectAtIndex:row];
+        selectedRow = [_seriesPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_sTPickerView]){
+        title = [stData objectAtIndex:row];
+        selectedRow = [_sTPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_playCallOppPickerView]){
+        title = [_playCallOppData objectAtIndex:row];
+        selectedRow = [_playCallOppPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_playCallPickerView]){
+        title = [_playCallData objectAtIndex:row];
+        selectedRow = [_playCallPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_gainPickerView]){
+        title = [gainData objectAtIndex:row];
+        selectedRow = [_gainPickerView selectedRowInComponent:0];
+    }else if ([pickerView isEqual:_distancePickerView]){
+        title = [distanceData objectAtIndex:row];
+        selectedRow = [_distancePickerView selectedRowInComponent:0];
+    }
+    
+    [customView setText:title];
+    customView.backgroundColor = [UIColor clearColor];
+    customView.textAlignment = NSTextAlignmentCenter;
+    
+    if (![pickerView isEqual:_playCallPickerView] && ![pickerView isEqual:_playCallOppPickerView] && row == selectedRow) {
+        customView.font = [UIFont boldSystemFontOfSize:32.f];
+        customView.textColor = PRIMARY_APP_COLOR;
+    }else if (![pickerView isEqual:_playCallPickerView] && ![pickerView isEqual:_playCallOppPickerView]){
+        customView.font = [UIFont boldSystemFontOfSize:20.f];
+        customView.textColor = [UIColor grayColor];
+    }else if (row == selectedRow){
+        customView.adjustsFontSizeToFitWidth = true;
+        customView.textColor = PRIMARY_APP_COLOR;
+    }else{
+        customView.adjustsFontSizeToFitWidth = true;
+        customView.textColor = [UIColor grayColor];
+    }
+    
+    return customView;
+
+}
+
+-(void)addData:(NSString*)type name:(NSString*)name{
+    if ([type isEqualToString:@"left"]) {
+        [_playCallData addObject:name];
+        [_playCallPickerView reloadComponent:0];
+    }else if ([type isEqualToString:@"right"]){
+        [_playCallOppData addObject:name];
+        [_playCallOppPickerView reloadComponent:0];
+    }
+}
 #pragma mark - Tag methods
 
 -(void)sendTag:(id)sender{
@@ -849,6 +907,16 @@
     NSString *series = [seriesData objectAtIndex:[_seriesPickerView selectedRowInComponent:0]];
     NSString *distance = [distanceData objectAtIndex:[_distancePickerView selectedRowInComponent:0]];
     NSString *gain = [gainData objectAtIndex:[_gainPickerView selectedRowInComponent:0]];
+    
+    NSString *playCall = @" ";
+    if (_playCallData.count > 0) {
+        playCall = [_playCallData objectAtIndex:[_playCallPickerView selectedRowInComponent:0]];
+    }
+    
+    NSString *playCallOpp = @" ";
+    if (_playCallOppData.count > 0) {
+        playCallOpp = [_playCallOppData objectAtIndex:[_playCallOppPickerView selectedRowInComponent:0]];
+    }
    
     NSString *name;
     NSString *line;
@@ -865,7 +933,7 @@
         name = [NSString stringWithFormat:@"ST: %@",[stData objectAtIndex:[_sTPickerView selectedRowInComponent:0]]];
     }
     
-    NSDictionary *extra = @{@"type":type,@"series":series,@"distance":distance,@"field":field,@"gain":gain,@"spoption":specialTeam};
+    NSDictionary *extra = @{@"type":type,@"series":series,@"distance":distance,@"field":field,@"gain":gain,@"spoption":specialTeam,@"playCall":playCall,@"playCallOpp":playCallOpp};
     NSDictionary *dict = @{@"period":[self currentPeriod],@"duration":duration,@"name":name,@"extra":extra,@"time":startTime,@"line":line,@"starttime":startTime,@"type":[NSNumber numberWithInteger:TagTypeFootballDownTags]};
     [super postTag:dict];
     

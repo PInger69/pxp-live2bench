@@ -22,6 +22,12 @@
 
 @implementation Utility
 
++(void)initialize
+{
+    // Internet Checking
+//    NSTimer * timem = [NSTime alloc]initWithFireDate:<#(nonnull NSDate *)#> interval:<#(NSTimeInterval)#> target:<#(nonnull id)#> selector:<#(nonnull SEL)#> userInfo:<#(nullable id)#> repeats:<#(BOOL)#>
+
+}
 
 //translate seconds to hh:mm:ss format
 +(NSString*)translateTimeFormat:(float)time{
@@ -423,7 +429,12 @@
     return [eventName substringToIndex:10];
 }
 
+
+// Depricated
 +(BOOL)hasInternet{
+
+    //Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:@"www.google.com"];
+    
     SCNetworkReachabilityFlags flags;
     BOOL receivedFlags;
     
@@ -435,6 +446,30 @@
     
     return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
 
+}
+
+
++(void)hasInternetOnComplete:(void (^)(BOOL succsess))onFinish
+{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        SCNetworkReachabilityFlags flags;
+        BOOL receivedFlags;
+        
+        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
+        receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
+        
+        CFRelease(reachability);
+        BOOL found = (!receivedFlags || flags == 0) ? FALSE : TRUE;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            onFinish(found);
+        });
+    });
+    
+    
+    
+    
+    
 }
 
 ///**

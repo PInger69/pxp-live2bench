@@ -157,43 +157,35 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)onTagChanged:(NSNotification *)note{
     
     for (Tag *tag in _currentEvent.tags ) {
-        
         if (![self.allTagsArray containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
+                [_pxpFilter addTags:@[tag]];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             }
             [self.allTagsArray insertObject:tag atIndex:0];
         }
-        
-        if(tag.modified && [self.allTagsArray containsObject:tag]){
-            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
-                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            }else if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
-                [self.tagsToDisplay insertObject:tag atIndex:0];
-            }
+        if(tag.modified && [self.allTagsArray containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
+            [self.tagsToDisplay insertObject:tag atIndex:0];
+            [_pxpFilter addTags:@[tag]];
         }
         
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
             [self.tagsToDisplay insertObject:tag atIndex:0];
+            [_pxpFilter addTags:@[tag]];
+            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
         }
-    }
-    
-    Tag *toBeRemoved;
-    for (Tag *tag in self.allTagsArray ){
         
+    }
+    
+    for (Tag *tag in [self.allTagsArray copy]) {
         if (![_currentEvent.tags containsObject:tag]) {
-        toBeRemoved = tag;
+            [self.allTagsArray removeObject:tag];
+            [self.tagsToDisplay removeObject:tag];
+            [_pxpFilter removeTags:@[tag]];
         }
     }
-    if (toBeRemoved) {
-        [self.allTagsArray removeObject:toBeRemoved];
-        [self.tagsToDisplay removeObject:toBeRemoved];
-    }
-
-       
     
-    componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];
 
 }
@@ -766,7 +758,7 @@ static void * encoderTagContext = &encoderTagContext;
                 NSDictionary *feeds = selectedCell.data.event.feeds;
                 Feed *feed = feeds[pick] ? feeds[pick] : feeds.allValues.firstObject;
                 
-                PXPLog(@"You Picked a feed: %@",pick);
+
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

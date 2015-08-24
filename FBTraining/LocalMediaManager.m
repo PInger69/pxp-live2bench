@@ -807,11 +807,11 @@ static LocalMediaManager * instance;
     
     if (!homeTeam) {
         homeTeam     = [LeagueTeam new];
-//        PXPLog(@"homeTeam: %@ is not found in League: %@",dict[@"homeTeam"],dict[@"league"]);
+
     }
     if (!visitTeam) {
         visitTeam   = [LeagueTeam new];
-//        PXPLog(@"visitTeam: %@ is not found in League: %@",dict[@"visitTeam"],dict[@"league"]);
+
     }
 
     

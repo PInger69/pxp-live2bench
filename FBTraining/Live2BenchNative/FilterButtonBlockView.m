@@ -180,8 +180,8 @@
 {
     CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
     [eventButton setFrame:frame];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+    [eventButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+    [eventButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
     [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
     [eventButton setTitle:btnTxt forState:UIControlStateNormal];
     [eventButton setAccessibilityLabel:aLabel];
