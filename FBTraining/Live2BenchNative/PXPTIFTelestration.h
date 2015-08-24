@@ -9,8 +9,8 @@
 #ifndef PXPTIF_c
 #define PXPTIF_c
 
-#include <stdio.h>
 #include <inttypes.h>
+#include <stdbool.h>
 
 #include "PXPTIFVersion.h"
 #include "PXPTIFAction.h"
