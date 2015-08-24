@@ -70,7 +70,7 @@ void PXPTIFByteBufferWriteBytes(PXPTIFByteBufferRef __nonnull byteBuffer, const 
         // reallocate if needed.
         if (byteBuffer->position + size > byteBuffer->capacity) {
             while (byteBuffer->position + size > byteBuffer->capacity) byteBuffer->capacity *= 2;
-            realloc(byteBuffer, byteBuffer->capacity);
+            byteBuffer->buffer = realloc(byteBuffer->buffer, byteBuffer->capacity);
         }
         
         // copy the data.

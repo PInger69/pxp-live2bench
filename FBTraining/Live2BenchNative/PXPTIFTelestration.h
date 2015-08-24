@@ -32,4 +32,4 @@ uint64_t PXPTIFTelestrationGetActionCount(PXPTIFTelestrationRef __nonnull telest
 
 
 PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__nullable bytes, uint64_t size);
-void PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, void *__nonnull bytes, uint64_t *__nonnull size);
+void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, uint64_t *__nonnull size);

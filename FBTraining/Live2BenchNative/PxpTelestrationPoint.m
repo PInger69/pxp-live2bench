@@ -12,7 +12,7 @@
 
 @synthesize pointData = _pointData;
 
-- (nonnull instancetype)initWithPointData:(struct PxpTelestrationPointData)pointData {
+- (nonnull instancetype)initWithPointData:(PXPTIFPoint)pointData {
     self = [super init];
     if (self) {
         _pointData = pointData;
@@ -21,12 +21,12 @@
 }
 
 - (nonnull instancetype)initWithPosition:(CGPoint)position displayTime:(NSTimeInterval)displayTime {
-    struct PxpTelestrationPointData data = {
-        (Float64) displayTime,
-        {
-            (UInt32) position.x,
-            (UInt32) position.y,
-        }
+    PXPTIFPoint data = {
+        .time = displayTime,
+        .position = {
+            .x = position.x,
+            .y = position.y,
+        },
     };
     return [self initWithPointData:data];
 }
@@ -39,9 +39,9 @@
     self = [super init];
     if (self) {
         NSUInteger len;
-        struct PxpTelestrationPointData *data = [aDecoder decodeBytesWithReturnedLength:&len];
+        PXPTIFPoint *data = [aDecoder decodeBytesWithReturnedLength:&len];
         
-        if (len >= sizeof(struct PxpTelestrationPointData)) {
+        if (len >= sizeof(PXPTIFPoint)) {
             _pointData = *data;
         } else {
             _pointData.time = 0.0;
@@ -55,7 +55,7 @@
 }
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
-    [aCoder encodeBytes:&_pointData length:sizeof(struct PxpTelestrationPointData)];
+    [aCoder encodeBytes:&_pointData length:sizeof(PXPTIFPoint)];
 }
 
 - (nonnull instancetype)copyWithZone:(nullable NSZone *)zone {

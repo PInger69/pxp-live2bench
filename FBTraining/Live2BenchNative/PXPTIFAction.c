@@ -48,11 +48,36 @@ PXPTIFActionRef __nonnull PXPTIFActionCopy(PXPTIFActionRef __nonnull action)
     copy->n_points = action->n_points;
     
     if (action->points) {
-        memcpy(copy->points, action->points, action->n_points);
+        memcpy(copy->points, action->points, action->n_points * sizeof(struct PXPTIFPoint));
     }
     
     return copy;
 };
+
+uint32_t PXPTIFActionGetType(PXPTIFActionRef __nonnull action)
+{
+    return action->type;
+}
+
+PXPTIFColor PXPTIFActionGetColor(PXPTIFActionRef __nonnull action)
+{
+    return action->color;
+}
+
+float PXPTIFActionGetWidth(PXPTIFActionRef __nonnull action)
+{
+    return action->width;
+}
+
+uint64_t PXPTIFActionGetPointCount(PXPTIFActionRef __nonnull action)
+{
+    return action->n_points;
+}
+
+const PXPTIFPoint *__nullable PXPTIFActionGetPoints(PXPTIFActionRef __nonnull action)
+{
+    return action->points;
+}
 
 uint64_t PXPTIFActionGetSize(PXPTIFActionRef __nonnull action)
 {

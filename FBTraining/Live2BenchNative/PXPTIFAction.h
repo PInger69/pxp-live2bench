@@ -26,6 +26,12 @@ void PXPTIFActionDestroy(PXPTIFActionRef __nonnull action);
 
 PXPTIFActionRef __nonnull PXPTIFActionCopy(PXPTIFActionRef __nonnull action);
 
+uint32_t PXPTIFActionGetType(PXPTIFActionRef __nonnull action);
+PXPTIFColor PXPTIFActionGetColor(PXPTIFActionRef __nonnull action);
+float PXPTIFActionGetWidth(PXPTIFActionRef __nonnull action);
+uint64_t PXPTIFActionGetPointCount(PXPTIFActionRef __nonnull action);
+const PXPTIFPoint *__nullable PXPTIFActionGetPoints(PXPTIFActionRef __nonnull action);
+
 uint64_t PXPTIFActionGetSize(PXPTIFActionRef __nonnull action);
 
 #endif /* PXPTIFAction_c */

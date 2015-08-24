@@ -164,7 +164,7 @@ PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__
     return telestration;
 }
 
-void PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, void *__nonnull bytes, uint64_t *__nonnull size)
+void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, uint64_t *__nonnull size)
 {
     
     // create a byte buffer.
@@ -207,8 +207,11 @@ void PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnul
     
     // pass the data.
     *size = PXPTIFByteBufferGetSize(buffer);
+    void *bytes = malloc(*size);
     memcpy(bytes, PXPTIFByteBufferGetBuffer(buffer), *size);
     
     // destroy the buffer.
     PXPTIFByteBufferDestroy(buffer);
+    
+    return bytes;
 }
