@@ -639,10 +639,23 @@ static void * encoderTagContext = &encoderTagContext;
         }
         self.isEditing = NO;
         
-    }else{
+    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
         if (buttonIndex == 0)
         {
-            NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
+            Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
+            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                [self.tagsToDisplay removeObject:tag];
+                if (self.editingIndexPath) {
+                    [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+                }
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+                [self removeIndexPathFromDeletion];
+            }else{
+                CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert showView];
+                [self clear];
+            }
+           /* NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
             [self.tagsToDisplay removeObject:tag];
             
             if (self.editingIndexPath) {
@@ -650,13 +663,13 @@ static void * encoderTagContext = &encoderTagContext;
             }
             //[self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
             
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            //NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+           // NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
+            //[[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
             
-            [self removeIndexPathFromDeletion];
+            [self removeIndexPathFromDeletion];*/
             
         }
         else if (buttonIndex == 1)
@@ -665,6 +678,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
         
     }
+    
     [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
     
