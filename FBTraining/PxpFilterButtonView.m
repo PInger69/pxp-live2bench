@@ -8,6 +8,7 @@
 
 #import "PxpFilterButtonView.h"
 #import "CustomButton.h"
+#import "PxpFilterToggleButton.h"
 
 @implementation PxpFilterButtonView
 {
@@ -27,6 +28,7 @@
         _buttonList      = [NSMutableArray new];
         buttonPool      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
+        
     }
     return self;
 }
@@ -56,6 +58,15 @@
 
 -(void)buildButtons{    // build buttons with buttonPool
     [self buildButtonsWith:buttonPool];
+}
+
+-(void)grabButton{
+    [_buttonList removeAllObjects];
+    for (NSObject *subView in self.subviews) {
+        if ([subView isKindOfClass:[PxpFilterToggleButton class]]) {
+            [_buttonList addObject:subView];
+        }
+    }
 }
 
 -(void)buildButtonsWith:(NSArray *)buttons  // build buttons with the buttons array
@@ -126,8 +137,8 @@
 {
     CustomButton  *eventButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
     [eventButton setFrame:frame];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-    [eventButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+    [eventButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+    [eventButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
     [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
     [eventButton setTitle:btnTxt forState:UIControlStateNormal];
     [eventButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];

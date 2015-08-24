@@ -155,13 +155,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            symbolName = ""
-            moduleName = "">
-            <Locations>
-            </Locations>
+            filePath = "FBTraining/PxpFilterToggleButton.m"
+            timestampString = "461016882.234176"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "-buttonSelected:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -174,41 +178,41 @@
             timestampString = "459699292.522986"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "677"
-            endingLineNumber = "677"
-            landmarkName = "-OffensePressed:"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "-filterTags:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Encoder.m"
-            timestampString = "459797121.223111"
+            filePath = "FBTraining/PxpFilterRangeSliderView.m"
+            timestampString = "461184974.241858"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "729"
-            endingLineNumber = "729"
-            landmarkName = "-onDownloadClip:"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "-filterTags:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/VideoTrimItem.m"
-            timestampString = "459809982.327996"
+            filePath = "FBTraining/Live2BenchNative/ListViewController.m"
+            timestampString = "461883059.5215"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
-            landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
+            startingLineNumber = "777"
+            endingLineNumber = "777"
+            landmarkName = "-didReceiveMemoryWarning"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -231,7 +235,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/ListViewController.m"
@@ -272,7 +276,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/TabView.m"
@@ -288,7 +292,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/TabView.m"
@@ -339,8 +343,8 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilterTabController.h"
-            timestampString = "460406414.267804"
+            filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
+            timestampString = "461623033.067822"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "14"
@@ -384,47 +388,58 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/ViewController.h"
             timestampString = "460407592.508761"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "11"
-            endingLineNumber = "11">
+            startingLineNumber = "874"
+            endingLineNumber = "874"
+            landmarkName = "-receiveFilteredArrayFromFilter:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilterTabViewController.h"
-            timestampString = "460481593.389871"
+            filePath = "FBTraining/PxpFilterDefaultTabViewController.m"
+            timestampString = "461533690.104746"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "18"
-            endingLineNumber = "18"
-            landmarkName = "rightScrollView"
-            landmarkType = "19">
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilterTabViewController.h"
-            timestampString = "460481593.389871"
+            continueAfterRunningActions = "Yes"
+            filePath = "FBTraining/PxpFilterButtonScrollView.m"
+            timestampString = "461608014.855594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "20"
-            endingLineNumber = "20"
-            landmarkName = "leftScrollView"
-            landmarkType = "19">
+            startingLineNumber = "182"
+            endingLineNumber = "182"
+            landmarkName = "-buildButtonsWith:"
+            landmarkType = "5">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.Log">
+                  <ActionContent
+                     message = "@_sortByPropertyKey@ %H"
+                     conveyanceType = "0">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -446,47 +461,47 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/PxpFilterTabController.m"
             timestampString = "460569188.866269"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "-setPxpFilter:"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "-deselect"
             landmarkType = "5">
             <Locations>
                <Location
-                  shouldBeEnabled = "No"
+                  shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[PxpFilterTabController setPxpFilter:]"
+                  symbolName = "-[PxpFilterUserInputScrollView deselect]"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/mypxpLive2Bench/master/FBTraining/PxpFilterTabController.m"
-                  timestampString = "460656142.001623"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/PxpFilterUserInputScrollView.m"
+                  timestampString = "461883165.427308"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "154">
+                  startingLineNumber = "205"
+                  endingLineNumber = "205"
+                  offsetFromSymbolStart = "64">
                </Location>
                <Location
-                  shouldBeEnabled = "No"
+                  shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[PxpFilterTabController setPxpFilter:]"
+                  symbolName = "-[PxpFilterUserInputScrollView deselect]"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/mypxpLive2Bench/master/FBTraining/PxpFilterTabController.m"
-                  timestampString = "460656142.00175"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/PxpFilterUserInputScrollView.m"
+                  timestampString = "461883165.427521"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "174">
+                  startingLineNumber = "205"
+                  endingLineNumber = "205"
+                  offsetFromSymbolStart = "88">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -561,44 +576,59 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilter.m"
-            timestampString = "460474732.659684"
+            filePath = "FBTraining/ListTableViewController.m"
+            timestampString = "461628689.601638"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "-filterTags:"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
             landmarkType = "5">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[PxpFilter filterTags:]"
+                  symbolName = "-[ListTableViewController tableView:cellForRowAtIndexPath:]"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/mypxpLive2Bench/master/FBTraining/PxpFilter.m"
-                  timestampString = "460486703.874967"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ListTableViewController.m"
+                  timestampString = "461624847.408468"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "39"
-                  endingLineNumber = "39"
-                  offsetFromSymbolStart = "196">
+                  startingLineNumber = "215"
+                  endingLineNumber = "215"
+                  offsetFromSymbolStart = "864">
                </Location>
                <Location
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[PxpFilter filterTags:]"
+                  symbolName = "__Block_byref_object_copy_"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/mypxpLive2Bench/master/FBTraining/PxpFilter.m"
-                  timestampString = "460486703.875183"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ListTableViewController.m"
+                  timestampString = "461624847.408878"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "39"
-                  endingLineNumber = "39"
-                  offsetFromSymbolStart = "210">
+                  startingLineNumber = "215"
+                  endingLineNumber = "215"
+                  offsetFromSymbolStart = "24">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__Block_byref_object_dispose_"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ListTableViewController.m"
+                  timestampString = "461624847.40907"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "215"
+                  endingLineNumber = "215"
+                  offsetFromSymbolStart = "20">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -677,56 +707,56 @@
             timestampString = "460569188.866269"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "-setPxpFilter:"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "-initWithPlistPath:data:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FBTraining/PxpFilter.m"
-            timestampString = "460474861.483633"
+            filePath = "FBTraining/Live2BenchNative/EncoderClasses/Clip.m"
+            timestampString = "461629015.974194"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
-            landmarkName = "-filterTags:"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
+            landmarkName = "-modClipData:"
             landmarkType = "5">
             <Locations>
                <Location
-                  shouldBeEnabled = "No"
+                  shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[PxpFilter filterTags:]"
+                  symbolName = "-[Clip modClipData:]"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/mypxpLive2Bench/master/FBTraining/PxpFilter.m"
-                  timestampString = "460474861.485359"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/EncoderClasses/Clip.m"
+                  timestampString = "461883165.431619"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "39"
-                  endingLineNumber = "39"
-                  offsetFromSymbolStart = "196">
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "140">
                </Location>
                <Location
-                  shouldBeEnabled = "No"
+                  shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "-[PxpFilter filterTags:]"
+                  symbolName = "-[Clip modClipData:]"
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dev/Documents/mypxpLive2Bench/master/FBTraining/PxpFilter.m"
-                  timestampString = "460474861.485528"
+                  urlString = "file:///Users/dev/Documents/NewBuild2/master/FBTraining/Live2BenchNative/EncoderClasses/Clip.m"
+                  timestampString = "461883165.431845"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "39"
-                  endingLineNumber = "39"
-                  offsetFromSymbolStart = "210">
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "156">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -766,7 +796,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/PxpFilterRangeSlider.m"

@@ -1,3 +1,4 @@
+
 //
 //  PxpFilterRangeSlider.m
 //  Live2BenchNative
@@ -32,11 +33,11 @@ BOOL _upperKnobLayerSelected;
 
 
 
-@property (nonatomic) float maximumValue;
-@property (nonatomic) float minimumValue;
-@property (nonatomic) float upperValue;
-@property (nonatomic) float lowerValue;
-@property (nonatomic) Float64 highestOriginalValue;
+@property (nonatomic,assign) float maximumValue;
+@property (nonatomic,assign) float minimumValue;
+@property (nonatomic,assign) float upperValue;
+@property (nonatomic,assign) float lowerValue;
+@property (nonatomic,assign) Float64 highestOriginalValue;
 
 
 - (float) positionForValue:(float)value;
@@ -139,6 +140,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     _highestValue = highestValue;
     _highestOriginalValue = highestValue;
     
+    [self resetKnobs];
     [self setLayerFrames];
 }
 
@@ -156,7 +158,7 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
 -(instancetype)initWithFrame: (CGRect) frame Name: (NSString *)name AccessLable: (NSString *)accessLabel{
     
     self = [self initWithFrame: frame];
-    
+    [self setBackgroundColor:[UIColor clearColor]];
     [self redrawLayers];
     if (self) {
     }
@@ -206,8 +208,8 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
         self.rightLabel = [[UILabel alloc]init];
         self.leftLabel = [[UILabel alloc]init];
         
-        [self.leftLabel setTextColor:[UIColor orangeColor]];
-        [self.rightLabel setTextColor:[UIColor orangeColor]];
+        [self.leftLabel setTextColor:[UIColor whiteColor]];
+        [self.rightLabel setTextColor:[UIColor whiteColor]];
         
         [self.layer addSublayer:self.rightLabel.layer];
         [self.layer addSublayer:self.leftLabel.layer];

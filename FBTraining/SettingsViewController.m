@@ -128,7 +128,7 @@ SVSignalStatus signalStatus;
         __block UILabel * weakHomeLable     =  encoderHomeText;
         __block NSObject <EncoderProtocol> * weakMasterEncoder =  masterEncoder;
         
-        [_encStateLabel setHidden:YES];
+        //[_encStateLabel setHidden:YES];
         // observers
         //        observerForFoundMaster = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_ENCODER_MASTER_FOUND object:nil queue:nil usingBlock:^(NSNotification *note) {
         //            masterEncoder = encoderManager.masterEncoder;
@@ -536,7 +536,8 @@ SVSignalStatus signalStatus;
 {
     masterEncoder = encoderManager.masterEncoder;
     encoderHomeText.text = @"Encoder Home";
-    [_encStateLabel setHidden:NO];
+    [_encStateLabel setText:@"(No Wifi)"];
+    //[_encStateLabel setHidden:NO];
     [encoderHomeText setAlpha:1];
     [masterEncoder addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&masterContext];
     [masterEncoder addObserver:self forKeyPath:@"isAlive" options:NSKeyValueObservingOptionNew context:nil];
@@ -932,6 +933,7 @@ SVSignalStatus signalStatus;
     //encoder state label
     _encStateLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(encHomeButton.frame), 10, encoderHomeLabel.frame.size.width - encHomeButton.frame.size.width , encoderHomeLabel.frame.size.height)];
     [encoderHomeLabel addSubview:_encStateLabel];
+    [_encStateLabel setText:@"(No Wifi)"];
     
     [doNotShowContainer setHidden:TRUE];
     [self updateForStatus];
@@ -1079,7 +1081,7 @@ SVSignalStatus signalStatus;
     if (![Utility hasWiFi]) {
         encoderHomeText.text = @"Encoder is not available.";
         [encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
-        [_encStateLabel setText:@""];
+        [_encStateLabel setText:@"(No Wifi)"];
         [encHomeButton removeFromSuperview];
         [encHomeButton setUserInteractionEnabled:NO];
         [encoderHomeLabel addSubview:encoderHomeText];

@@ -7,9 +7,11 @@
 //
 
 #import "TabView.h"
-#import "PxpFilterDefaultTabViewController.h"
+
 #import "PxpFilterHockeyTabViewController.h"
 #import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
+#import "PxpFilterSoccerTabViewController.h"
 #import "PxpFilterTabController.h"
 
 @interface TabView ()
@@ -20,7 +22,9 @@
 
 
 
-static TabView* sharedFilter;
+static TabView  * sharedFilter;
+static PxpFilterDefaultTabViewController  * sharedDefaultFilterTab;
+static NSString * currentFilterSport;
 
 @implementation TabView
 {
@@ -28,11 +32,70 @@ static TabView* sharedFilter;
     PxpFilterTabController *previousTab;  //The previous tab showed
 }
 
-+(nonnull instancetype)sharedFilterTab
++(PxpFilterDefaultTabViewController*)sharedDefaultFilterTab
 {
-    if (!sharedFilter) sharedFilter = [[TabView alloc]init];
+    if (!sharedFilter) {
+        sharedFilter = [[TabView alloc]init];
+        sharedDefaultFilterTab = [PxpFilterDefaultTabViewController new];
+        [sharedFilter addTab:sharedDefaultFilterTab];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:nil];
+    }
+    
+
+    return sharedDefaultFilterTab;
+}
+
+
+
++(nonnull instancetype)sharedFilterTabBar
+{
+    if (!sharedFilter) {
+        sharedFilter = [[TabView alloc]init];
+        sharedDefaultFilterTab = [PxpFilterDefaultTabViewController new];
+        [sharedFilter addTab:sharedDefaultFilterTab];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:nil];
+    }
     return sharedFilter;
 }
+
++(void)eventChanged:(NSNotification *)note
+{
+    
+    NSString * aSport = note.userInfo[@"eventType"];
+    
+    if ([currentFilterSport isEqualToString:@""]) return;
+    
+    for (PxpFilterTabController *aTab in sharedFilter.tabs) {
+        if (![aTab isKindOfClass:[PxpFilterDefaultTabViewController class]]){
+            [sharedFilter removeTab:aTab];
+        }
+    }
+
+    
+
+    if ([aSport isEqualToString:SPORT_HOCKEY]) {
+        [sharedFilter addTab:[[PxpFilterHockeyTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_FOOTBALL]) {
+        [sharedFilter addTab:[[PxpFilterFootballTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+        
+    } else if ([aSport isEqualToString:SPORT_SOCCER]) {
+        [sharedFilter addTab:[[PxpFilterSoccerTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_BASKETBALL]) {
+        
+    } else if ([aSport isEqualToString:SPORT_LACROSSE]) {
+        
+    } else if ([aSport isEqualToString:SPORT_RUGBY]) {
+        [sharedFilter addTab:[[PxpFilterRugbyTabViewController alloc]init]];
+    } else if ([aSport isEqualToString:SPORT_MEDICAL]) {
+        
+    }
+
+    
+
+    
+}
+
 
 
 - (id)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil {
@@ -40,6 +103,7 @@ static TabView* sharedFilter;
     if (self) {
         _tabs = [NSMutableArray array];
         previousTab=nil;
+        self.preferredContentSize = CGSizeMake(800, 500);        
     }
     return self;
 }
@@ -49,6 +113,7 @@ static TabView* sharedFilter;
     if (self) {
         _tabs = [NSMutableArray arrayWithArray:tabs];
         previousTab=nil;
+        self.preferredContentSize = CGSizeMake(800, 500);
     }
     return self;
 }
@@ -95,14 +160,15 @@ static TabView* sharedFilter;
         NSMutableArray *tabItems = [NSMutableArray arrayWithCapacity:_tabs.count];
         [[UITabBarItem appearance]setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"Arial" size:25.0f], NSFontAttributeName,nil]forState:UIControlStateNormal];
         for (PxpFilterTabController *vc in _tabs) {
-            [vc.tabImage drawInRect:CGRectMake(0, 0, 30, 30)];
+            [vc.tabImage drawInRect:CGRectMake(0,0, 30, 30)];
             UITabBarItem *tabItem = [[UITabBarItem alloc] initWithTitle:vc.title image:vc.tabImage selectedImage:nil];
             
             //position adjustment for tabitem titles and images
             CGSize textSize = [vc.title sizeWithAttributes:@{ NSFontAttributeName : [UIFont fontWithName:@"Arial" size:25.0f] }];
             
-            tabItem.imageInsets = UIEdgeInsetsMake(15, -30-textSize.width/2.0, -15, 30+textSize.width/2.0);
-            tabItem.titlePositionAdjustment = UIOffsetMake(40.0/_tabs.count,0);
+            tabItem.imageInsets = UIEdgeInsetsMake(8, -25-textSize.width/2.0, -8, 25+textSize.width/2.0);
+
+            tabItem.titlePositionAdjustment = UIOffsetMake(40.0/_tabs.count,-4);
             
             [tabItems addObject:tabItem];
         };
@@ -120,6 +186,9 @@ static TabView* sharedFilter;
     [self customizeTabBarAppearance];
     [self updateTabBar];
 }
+
+
+
 
 #pragma mark - Getters / Setters
 

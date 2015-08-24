@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "PxpFilter.h"
 #import "PxpFilterTabController.h"
+#import "PxpFilterDefaultTabViewController.h"
 
 @interface TabView : UIViewController<UITabBarDelegate> {
     UITabBar *_mainTabBar;
 }
 
-+(nonnull instancetype)sharedFilterTab;
-
++(PxpFilterDefaultTabViewController*)sharedDefaultFilterTab;
++(nonnull instancetype)sharedFilterTabBar;
 
 @property (weak, nonatomic, nullable) PxpFilter *pxpFilter;
 
@@ -23,7 +24,7 @@
 
 @property (strong, nonatomic, nullable) NSArray *tabs;
 
-- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
+- (nonnull instancetype)ag:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
 
 - (void)addTab:(nonnull PxpFilterTabController*) newTab;
 

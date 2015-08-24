@@ -47,10 +47,10 @@ typedef NS_OPTIONS (NSInteger,FootballModes){
 
 
 /*@property (nonatomic,strong) UIPickerView *playCallOppPickerView;
-@property (nonatomic,strong) UIPickerView *playCallPickerView;
-@property (nonatomic,strong) NSMutableArray *playCallOppArray;
-@property (nonatomic,strong) NSMutableArray *playCallArray;
-@property (strong, nonatomic) IBOutlet UIView *offLayoutView;
+@property (nonatomic,strong) UIPickerView *playCallPickerView;*/
+@property (nonatomic,strong) NSMutableArray *playCallOppData;
+@property (nonatomic,strong) NSMutableArray *playCallData;
+/*@property (strong, nonatomic) IBOutlet UIView *offLayoutView;
 @property (strong, nonatomic) Live2BenchViewController *live2BenchViewController;
 
 @property (strong, nonatomic) CustomButton *offButton;

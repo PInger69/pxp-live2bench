@@ -139,9 +139,9 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 /**
  *  Graphics Commons
  */
-#define PRIMARY_APP_COLOR   [UIColor orangeColor]
-#define SECONDARY_APP_COLOR [UIColor orangeColor]
-#define TERTIARY_APP_COLOR  [UIColor orangeColor]
+#define PRIMARY_APP_COLOR   [UIColor blueColor]
+#define SECONDARY_APP_COLOR [UIColor colorWithWhite:0.9f alpha:1.0f]
+#define TERTIARY_APP_COLOR  [UIColor blueColor]
 
 #define DEBUG_MODE                          1
 
@@ -162,7 +162,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
  *  Notifications
  */
 
-
+#define NOTIF_LOST_WIFI                     @"NOTIF_LOST_WIFI"
 #define NOTIF_PRIMARY_ENCODER_CHANGE        @"NOTIF_PRIMARY_ENCODER_CHANGE"
 #define NOTIF_DELETE_TAG                    @"NOTIF_DELETE_TAG"
 
@@ -210,7 +210,9 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define UC_REQUEST_EVENT_HIDS               @"UC_REQUEST_EVENT_HIDS"   //@"block":(void(^)(NSArray*pooled))onCompleteGet
 #define UC_REQUEST_USER_INFO                @"UC_REQUEST_USER_INFO"     //@"block":(void(^)(NSDictionary*pooled))onCompleteGet
 
-
+// Filter
+#define NOTIF_DISABLE_TELE_FILTER           @"NOTIF_DISABLE_TELE_FILTER"
+#define NOTIF_ENABLE_TELE_FILTER            @"NOTIF_ENABLE_TELE_FILTER"
 
 // Encoder
 #define NOTIF_TAG_NAMES_FROM_CLOUD          @"tagNamesFromCloud"
@@ -290,13 +292,13 @@ typedef NS_OPTIONS(NSInteger, VideoPlayerCommand) {
  *  Sports
  */
 
-#define SPORT_HOCKEY                @"hockey"
-#define SPORT_FOOTBALL              @"football"
+#define SPORT_HOCKEY                @"Hockey"
+#define SPORT_FOOTBALL              @"Football"
 #define SPORT_FOOTBALL_TRAINING     @"football training"
-#define SPORT_SOCCER                @"soccer"
+#define SPORT_SOCCER                @"Soccer"
 #define SPORT_BASKETBALL            @"basketball"
 #define SPORT_LACROSSE              @"lacrosse"
-#define SPORT_RUGBY                 @"rugby"
+#define SPORT_RUGBY                 @"Rugby"
 #define SPORT_MEDICAL               @"medical"
 #define SPORT_BLANK                 @""
 

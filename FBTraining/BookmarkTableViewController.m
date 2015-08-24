@@ -266,6 +266,10 @@
     if (buttonIndex == YES_BUTTON) {
         NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
         
+        if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
+            [self.delegate tableView:self indexesToBeDeleted:deleteOrderList];
+        }
+        
         for (NSInteger i =[deleteOrderList count]-1; i>=0 ;i--) {
             NSIndexPath *cellIndexPath = deleteOrderList[i];
             [self deleteClipAtIndex:cellIndexPath];
@@ -280,8 +284,8 @@
         [self.tableView reloadData];
     }
     
-    [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
+    [alertView viewFinished];
     [self checkDeleteAllButton]; // hides the delete all button if shown
 }
 

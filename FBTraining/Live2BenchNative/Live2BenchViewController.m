@@ -146,7 +146,7 @@ static void * eventContext      = &eventContext;
     _userCenter             = mainappDelegate.userCenter;
     needDelete = true;
 
-    eventStopped = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    //eventStopped = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     
     
     // observers //@"currentEventType"
@@ -170,7 +170,7 @@ static void * eventContext      = &eventContext;
     }];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
+    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
     
     //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(gotLiveEvent) name: NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -369,14 +369,14 @@ static void * eventContext      = &eventContext;
         _bottomViewController = nil;
     }
     
-    if ([sport isEqualToString:@"Hockey"] && !_bottomViewController && _currentEvent) {
+    if ([sport isEqualToString:SPORT_HOCKEY] && !_bottomViewController && _currentEvent) {
         _bottomViewController = [[HockeyBottomViewController alloc]init];
         [self.view addSubview:_bottomViewController.mainView];
         _bottomViewController.currentEvent = _currentEvent;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         
-    }else if ([sport isEqualToString:@"Soccer"] && !_bottomViewController && _currentEvent){
+    }else if ([sport isEqualToString:SPORT_SOCCER] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[SoccerBottomViewController alloc]init];
         [self.view addSubview:_bottomViewController.mainView];
         _bottomViewController.currentEvent = _currentEvent;
@@ -384,7 +384,7 @@ static void * eventContext      = &eventContext;
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
         [_bottomViewController allToggleOnOpenTags];
-    }else if ([sport isEqualToString:@"Rugby"] && !_bottomViewController && _currentEvent){
+    }else if ([sport isEqualToString:SPORT_RUGBY] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[RugbyBottomViewController alloc]init];
         [self.view addSubview:_bottomViewController.mainView];
         _bottomViewController.currentEvent = _currentEvent;
@@ -392,11 +392,20 @@ static void * eventContext      = &eventContext;
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
         [_bottomViewController allToggleOnOpenTags];
-    }else if ([sport isEqualToString:@"Football"] && !_bottomViewController && _currentEvent){
+    }else if ([sport isEqualToString:SPORT_FOOTBALL] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[FootballBottomViewController alloc]init];
         [self.view addSubview:_bottomViewController.mainView];
         _bottomViewController.currentEvent = _currentEvent;
     }
+}
+
+-(void)checkIpadVersion{
+    BOOL result = [Utility isDeviceSupportedMultiCam:[Utility platformString]];
+    if (!result && [_currentEvent.feeds allValues].count > 1) {
+        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+        [alert showView];
+    }
+    
 }
 
 -(void)eventChanged:(NSNotification*)note
@@ -406,6 +415,16 @@ static void * eventContext      = &eventContext;
         [_teamPick dismissPopoverAnimated:NO];
         _teamPick = nil;
     }
+    
+    [_leftArrow removeFromSuperview];
+    _leftArrow = nil;
+    [_rightArrow removeFromSuperview];
+    _rightArrow = nil;
+    [_playerDrawerLeft.view removeFromSuperview];
+    _playerDrawerLeft = nil;
+    [_playerDrawerRight.view removeFromSuperview];
+    _playerDrawerRight = nil;
+    
     
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
         [self onEventChange];
@@ -424,9 +443,9 @@ static void * eventContext      = &eventContext;
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
-        [self addBottomViewController];
+        //[self addBottomViewController];
         [UserCenter getInstance].taggingTeam = nil;
-        [eventStopped showView];
+        [_bottomViewController clear];
 
     }
     
@@ -445,6 +464,7 @@ static void * eventContext      = &eventContext;
         
         [self addBottomViewController];
         [self addPlayerView];
+        [self checkIpadVersion];
         
     }
     
@@ -454,6 +474,24 @@ static void * eventContext      = &eventContext;
 -(void)onTagChanged:(NSNotification *)note
 {
     _bottomViewController.currentEvent = _currentEvent;
+    
+    if ([_bottomViewController isKindOfClass:[FootballBottomViewController class]]) {
+        Tag *tag = [note.userInfo[@"tags"] firstObject];
+        if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration) {
+            
+            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings){
+                SideTagButton *button = evaluatedObject;
+                return ([button.titleLabel.text isEqualToString:tag.name]);
+            }];
+            
+            if ([_tagButtonController.tagButtonsLeft filteredArrayUsingPredicate:predicate].count > 0) {
+                [_bottomViewController addData:@"left" name:tag.name];
+            }else if ([_tagButtonController.tagButtonRight filteredArrayUsingPredicate:predicate].count > 0){
+                [_bottomViewController addData:@"right" name:tag.name];
+
+            }
+        }
+    }
 }
 
 -(void)liveEventStopped:(NSNotification *)note
@@ -568,6 +606,7 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
+        PXPLog(@"Current event is set to nil");
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
         //[self switchPressed];
         //_tagButtonController.enabled = NO;
@@ -1011,7 +1050,7 @@ static void * eventContext      = &eventContext;
 
 -(void)tagButtonSwiped:(id)sender{
      SideTagButton *button = sender;
-    
+
     if ([button.accessibilityValue isEqualToString:@"left"]) {
         [self.view addSubview:_playerDrawerLeft.view];
         [_leftArrow setFrame:CGRectMake(button.center.x+button.frame.size.width/2, button.center.y+button.frame.size.height/2+77, 15, 15)];

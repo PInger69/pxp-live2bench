@@ -22,6 +22,12 @@
 
 @implementation Utility
 
++(void)initialize
+{
+    // Internet Checking
+//    NSTimer * timem = [NSTime alloc]initWithFireDate:<#(nonnull NSDate *)#> interval:<#(NSTimeInterval)#> target:<#(nonnull id)#> selector:<#(nonnull SEL)#> userInfo:<#(nullable id)#> repeats:<#(BOOL)#>
+
+}
 
 //translate seconds to hh:mm:ss format
 +(NSString*)translateTimeFormat:(float)time{
@@ -376,6 +382,19 @@
     
 }
 
++(BOOL)isDeviceSupportedMultiCam:(NSString *)platform{
+    BOOL result = FALSE;
+    if ([platform containsString:@"iPad"]) {
+        NSArray *words = [platform componentsSeparatedByString:@","];
+        platform = words[0];
+        words = [platform componentsSeparatedByString:@"iPad"];
+        if ([words[1] intValue] >= 4) {
+            result = TRUE;
+        }
+    }
+    return result;
+}
+
 + (NSString *)myWifiName
 {
     CFArrayRef myArray = CNCopySupportedInterfaces();
@@ -410,7 +429,12 @@
     return [eventName substringToIndex:10];
 }
 
+
+// Depricated
 +(BOOL)hasInternet{
+
+    //Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:@"www.google.com"];
+    
     SCNetworkReachabilityFlags flags;
     BOOL receivedFlags;
     
@@ -422,6 +446,30 @@
     
     return  (!receivedFlags || flags == 0) ? FALSE : TRUE;
 
+}
+
+
++(void)hasInternetOnComplete:(void (^)(BOOL succsess))onFinish
+{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        SCNetworkReachabilityFlags flags;
+        BOOL receivedFlags;
+        
+        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
+        receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
+        
+        CFRelease(reachability);
+        BOOL found = (!receivedFlags || flags == 0) ? FALSE : TRUE;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            onFinish(found);
+        });
+    });
+    
+    
+    
+    
+    
 }
 
 ///**
@@ -560,7 +608,66 @@
     //    return [uController hasConnectivity];
 }
 
++(UIImage *)starImageSelected: (BOOL) selected size:(CGSize)size
+{
+    CGSize imageSize = size;
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *starPath = [UIBezierPath bezierPath];
+//    UIBezierPath *outLinePath = [UIBezierPath bezierPath];
+    
+    [starPath moveToPoint:      CGPointMake(imageSize.width*0.175,  imageSize.height)];         // bottom left
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.5,    0)];                        // top
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.825,  imageSize.height)];         // bottom right
+    [starPath addLineToPoint:   CGPointMake(0,                      imageSize.height*0.382)];   //left
+    [starPath addLineToPoint:   CGPointMake(imageSize.width,        imageSize.height*0.382)];   //right
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.175,  imageSize.height)];         // bottom left
+    
+//    
+//    [outLinePath moveToPoint: CGPointMake(17.5/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(50/2, (100 -23.61)/2 )];
+//    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(70/2, 61.8/2)];
+//    [outLinePath addLineToPoint: CGPointMake(100/2, 38.2/2)];
+//    [outLinePath addLineToPoint: CGPointMake(0, 38.2/2)];
+//    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(50/2, 0)];
+//    [outLinePath addLineToPoint: CGPointMake(17.5/2, 100/2)]; // bottom left
+//    
+    
+    if (selected) {
+        [PRIMARY_APP_COLOR setFill];
+        //[PRIMARY_APP_COLOR setStroke];
+    }else{
+        [[UIColor lightGrayColor] setFill];
+        //[[UIColor lightGrayColor] setStroke];
+    }
+    
+    
+//    
+//    outLinePath.lineWidth = 5.0;
+//    [outLinePath stroke];
+    [starPath fill];
+    
+    UIImage *starImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return starImage;
+}
 
++(UIImage*)makeOnePixelUIImageWithColor:(UIColor*)color
+{
+    CGSize pixelSize = CGSizeMake(1, 1);
+
+    UIGraphicsBeginImageContextWithOptions(pixelSize, NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context,(CGRect){CGPointZero, pixelSize});
+    CGContextSaveGState(context);
+    UIImage *pixel = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+  
+    return  pixel;
+}
 
 @end
 

@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "DeletableTableViewCell.h"
+@class DeletableTableViewController;
+@protocol DeletableTableViewControllerDelegate <NSObject>
 
+-(void)tableView:(DeletableTableViewController*)tableView indexesToBeDeleted:(NSArray*)toBeDeleted;
 
+@end
 
 
 @interface DeletableTableViewController : UITableViewController
@@ -22,6 +26,8 @@
 @property (strong, nonatomic) UIButton *shareButton;
 @property (strong, nonatomic) NSString *contextString;
 @property (nonatomic, assign) BOOL swipeableMode;
+
+@property (nonatomic, weak) id <DeletableTableViewControllerDelegate> delegate;
 
 //@property (strong, nonatomic) NSMutableDictionary *dictionaryOfObservers;
 

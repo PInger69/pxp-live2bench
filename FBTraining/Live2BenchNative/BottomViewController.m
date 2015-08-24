@@ -286,8 +286,8 @@
         //left buttons
         CustomButton *leftLineButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
         [leftLineButton setFrame:CGRectMake((i*50)+35, 5, 40, 40)];
-        [leftLineButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        [leftLineButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+        [leftLineButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [leftLineButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [leftLineButton setTitle:[NSString stringWithFormat:@"%d",(i+1)] forState:UIControlStateNormal];
         [leftLineButton addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         [leftLineButton addTarget:self action:@selector(buttonSwiped:) forControlEvents:UIControlEventTouchDragOutside];
@@ -319,8 +319,8 @@
         //right buttons
         CustomButton *rightLineButton = [CustomButton  buttonWithType:UIButtonTypeCustom];
         [rightLineButton setFrame:CGRectMake((i*50)+105, 5, 40, 40)];
-        [rightLineButton setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-        [rightLineButton setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+        [rightLineButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+        [rightLineButton setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [rightLineButton setTitle:[NSString stringWithFormat:@"%d",(i+1)] forState:UIControlStateNormal];
         [rightLineButton addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         [rightLineButton addTarget:self action:@selector(buttonSwiped:) forControlEvents:UIControlEventTouchDragOutside];

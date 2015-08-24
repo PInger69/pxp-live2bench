@@ -194,7 +194,7 @@
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
         [alert addButtonWithTitle: NSLocalizedString(@"Yes", nil)];
         [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
-        [alert show];
+        [alert showView];
         
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -229,6 +229,10 @@
         }
         
         [self.setOfDeletingCells removeAllObjects];
+        if (_delegate && [_delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
+        
+            [_delegate tableView:self indexesToBeDeleted:indexPathsArray];
+        }
         [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
         [self.tableView reloadData];
         

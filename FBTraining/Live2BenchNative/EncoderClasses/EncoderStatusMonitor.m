@@ -13,6 +13,7 @@
 #import "Tag.h"
 #import "EncoderStatusMonitorProtocol.h"
 #import "UserCenter.h"
+#import "SpinnerView.h"
 
 #define SHUTDOWN_RESPONCE   @"shutdown responce"
 #define STATUS              @"status"
@@ -166,6 +167,18 @@
         PXPLog(@"EncoderStatus Error Countdown %i: %@", currentFailCount,failType);
     }
     cumulatedData = nil;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
+                                                       object:nil
+                                                     userInfo:[SpinnerView message:@"Checking for WiFi..." progress:0 animated:YES]];
+    BOOL hasWifi = [Utility hasInternet];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
+    //[Utility hasWiFi];
+    if (!hasWifi) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LOST_WIFI object:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Wifi"}];
+        [self destroy];
+    }
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection

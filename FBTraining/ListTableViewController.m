@@ -170,11 +170,12 @@
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
 
-    tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
+    
 
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
+        tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
         // NSDictionary *urls = tag.thumbnails;
         
         /*FeedSelectCell *collapsableCell;
@@ -207,6 +208,7 @@
         
         NSArray *keys = [[NSMutableArray arrayWithArray:[tag.event.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
         NSString *key = keys[indexPath.row - firstIndexPath.row];
+        
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithTag:tag source:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
         
         
@@ -224,7 +226,7 @@
                 weakerCell.downloadButton.progress = progress;
                 [weakerCell.downloadButton setNeedsDisplay];
             }];
-        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:key]){
+        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:([key isEqualToString:@"onlySource"])?nil:key]){
             collapsableCell.downloadButton.downloadComplete = YES;
             collapsableCell.downloadButton.progress = 1;
         }
@@ -293,6 +295,7 @@
     }
     ListViewCell *cell = (ListViewCell*)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
     [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
+    cell.currentTag = tag;
     
 //    if (!self.downloadEnabled) {
 //        cell.bookmarkButton.enabled = NO;
@@ -354,7 +357,7 @@
         
     }
     
-    ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+    //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     NSString *src = tag.thumbnails.allKeys.firstObject;
     
     if (tag.telestration) {
@@ -376,7 +379,7 @@
         
         PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:src] ? tag.telestration : nil;
         
-        [imageAssetManager imageForURL:url atImageView:cell.tagImage withTelestration:tele];
+        [[ImageAssetManager getInstance] imageForURL:url atImageView:cell.tagImage withTelestration:tele];
     }
     
     
@@ -393,27 +396,27 @@
         }else{
             players = [NSString stringWithFormat:@"%@, %@",players,jersey];
         }
+        [cell.tagPlayersView setHidden:false];
     }
+    [cell.tagPlayersView setContentSize:CGSizeMake(players.length*8, cell.tagPlayersView.frame.size.height)];
     
     
     LeagueTeam *team = [[tag.event.teams allValues]firstObject];
     if ([team.league.sport isEqualToString:@"Rugby"] || [team.league.sport isEqualToString:@"Soccer"]) {
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Half", nil),periodString]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Half", nil),periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else if ([team.league.sport isEqualToString:@"Hockey"]){
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Period", nil),periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else if ([team.league.sport isEqualToString:@"Football"]){
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Quarter", nil),periodString]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@ \n%@: %@", NSLocalizedString(@"Duration", nil),durationString,NSLocalizedString(@"Quarter", nil),periodString? periodString:@""]];
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else{
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
-        [cell.tagPlayersView setHidden:true];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),@" "]];
     }
-    
     
     
     
@@ -472,6 +475,7 @@
     //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
     
     ListViewCell *cell = (ListViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+    cell.currentTag = tag;
     
     if(![indexPath isEqual:self.previouslySelectedIndexPath])
     {

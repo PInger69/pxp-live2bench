@@ -75,9 +75,10 @@
     }
     
     NSInteger filerModCount = [_filterModules count];
-    for (NSInteger i=0; i<filerModCount; i++) {
+    for (NSInteger i = filerModCount-1; i>=0; i--) {
         id <PxpFilterModuleProtocol> filterMod = _filterModules[i];
         [filterMod filterTags:addedTags];
+        NSLog(@"");
     }
     
     

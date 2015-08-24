@@ -49,7 +49,7 @@
     NSString                        * eventType;
     EncoderManager                  * _encoderManager;
     id                              clipViewTagObserver;
-    ImageAssetManager               * _imageAssetManager;
+    //ImageAssetManager               * _imageAssetManager;
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
     UIButton                        *deSelectButton;
@@ -91,7 +91,7 @@ static void * encoderTagContext = &encoderTagContext;
         //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
         
         
-        _imageAssetManager = appDel.imageAssetManager;
+        //_imageAssetManager = appDel.imageAssetManager;
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
         
@@ -157,43 +157,35 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)onTagChanged:(NSNotification *)note{
     
     for (Tag *tag in _currentEvent.tags ) {
-        
         if (![self.allTagsArray containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
+            if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
+                [_pxpFilter addTags:@[tag]];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
             }
             [self.allTagsArray insertObject:tag atIndex:0];
         }
-        
-        if(tag.modified && [self.allTagsArray containsObject:tag]){
-            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
-            if (tag.type == TagTypeNormal || tag.type == TagTypeTele) {
-                [self.tagsToDisplay replaceObjectAtIndex:[self.tagsToDisplay indexOfObject:tag] withObject:tag];
-            }else if (tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]) {
-                [self.tagsToDisplay insertObject:tag atIndex:0];
-            }
+        if(tag.modified && [self.allTagsArray containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
+            [self.tagsToDisplay insertObject:tag atIndex:0];
+            [_pxpFilter addTags:@[tag]];
         }
         
         if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
             [self.tagsToDisplay insertObject:tag atIndex:0];
+            [_pxpFilter addTags:@[tag]];
+            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
         }
-    }
-    
-    Tag *toBeRemoved;
-    for (Tag *tag in self.allTagsArray ){
         
+    }
+    
+    for (Tag *tag in [self.allTagsArray copy]) {
         if (![_currentEvent.tags containsObject:tag]) {
-        toBeRemoved = tag;
+            [self.allTagsArray removeObject:tag];
+            [self.tagsToDisplay removeObject:tag];
+            [_pxpFilter removeTags:@[tag]];
         }
     }
-    if (toBeRemoved) {
-        [self.allTagsArray removeObject:toBeRemoved];
-        [self.tagsToDisplay removeObject:toBeRemoved];
-    }
-
-       
     
-    componentFilter.rawTagArray = self.allTagsArray;
     [_collectionView reloadData];
 
 }
@@ -265,7 +257,24 @@ static void * encoderTagContext = &encoderTagContext;
 
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:true];
+   
+    _pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
+    _pxpFilter.delegate = self;
+    [_pxpFilter removeAllPredicates];
     
+    
+    NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
+                                                                                   ]];
+    
+    [_pxpFilter addPredicates:@[allowThese]];
     
     [_collectionView reloadData];
 
@@ -345,7 +354,7 @@ static void * encoderTagContext = &encoderTagContext;
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
     [self.filterButton setTitle:NSLocalizedString(@"Filter", nil) forState:UIControlStateNormal];
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-    [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
+    [self.filterButton addTarget:self action:@selector(pressFilterButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
     deSelectButton = [[UIButton alloc]initWithFrame:CGRectMake(900, 65, 80, 30)];
@@ -441,36 +450,6 @@ static void * encoderTagContext = &encoderTagContext;
 
 
 #pragma mark - Edge Swipe Buttons Delegate Methods
-- (void)slideFilterBox
-{
-    self.dismissFilterButton = [[UIButton alloc] initWithFrame: self.view.bounds];
-    [self.dismissFilterButton addTarget:self action:@selector(dismissFilter:) forControlEvents:UIControlEventTouchUpInside];
-    self.dismissFilterButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6];
-    [self.view addSubview: self.dismissFilterButton];
-    
-    componentFilter.rawTagArray                 = self.allTagsArray;
-    componentFilter.rangeSlider.highestValue    = [self highestTimeInTags:self.allTagsArray];
-    componentFilter.finishedSwipe               = TRUE;
-    [self.view addSubview:componentFilter.view];
-    [componentFilter setOrigin:CGPointMake(60, 190)];
-    [componentFilter close:NO];
-    [componentFilter viewDidAppear:TRUE];
-    [componentFilter open:YES];
-    
-    if (self.isEditing) {
-        self.isEditing = !self.isEditing;
-        
-        for (thumbnailCell *cell in _collectionView.visibleCells) {
-            [cell setDeletingMode: self.isEditing];
-        }
-        
-        if( !self.isEditing ){
-            [self.setOfSelectedCells removeAllObjects];
-            [self checkDeleteAllButton];
-        }
-        
-    }
-}
 
 -(void)dismissFilter: (UIButton *)dismissButton{
     [componentFilter close:YES];
@@ -597,7 +576,7 @@ static void * encoderTagContext = &encoderTagContext;
         }
         
         PxpTelestration *tele = tagSelect.thumbnails.count <= 1 || [tagSelect.telestration.sourceName isEqualToString:src] ? tagSelect.telestration : nil;
-        [_imageAssetManager imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
+        [[ImageAssetManager getInstance] imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
     }
     
     [cell setDeletingMode: self.isEditing];
@@ -765,7 +744,7 @@ static void * encoderTagContext = &encoderTagContext;
             
             PxpTelestration *tele = listOfScource.count <= 1 || [selectedCell.data.telestration.sourceName isEqualToString:src] ? selectedCell.data.telestration : nil;
             
-            [_imageAssetManager imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
+            [[ImageAssetManager getInstance] imageForURL: tagThumbnails[src] atImageView:imageView withTelestration:tele];
             
             [(UIButton *)sourceSelectPopover.arrayOfButtons[i] addSubview:imageView];
             ++i;
@@ -779,7 +758,7 @@ static void * encoderTagContext = &encoderTagContext;
                 NSDictionary *feeds = selectedCell.data.event.feeds;
                 Feed *feed = feeds[pick] ? feeds[pick] : feeds.allValues.firstObject;
                 
-                PXPLog(@"You Picked a feed: %@",pick);
+
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
                 
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -870,6 +849,7 @@ static void * encoderTagContext = &encoderTagContext;
     if ([self.view window] == nil){
         self.view = nil;
     }
+    [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
 }
 
 - (void)liveEventStopped:(NSNotification *)note {
@@ -896,6 +876,54 @@ static void * encoderTagContext = &encoderTagContext;
     self.isEditing = NO;
     [self.setOfSelectedCells removeAllObjects];
     [self checkDeleteAllButton];
+}
+
+#pragma mark - Filtering Methods
+
+- (void)pressFilterButton
+{
+    
+
+    TabView *popupTabBar = [TabView sharedFilterTabBar];
+    
+    if (popupTabBar.isViewLoaded)
+    {
+        popupTabBar.view.frame =  CGRectMake(0, 0, popupTabBar.preferredContentSize.width,popupTabBar.preferredContentSize.height);
+    }
+    
+    popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
+    popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
+    
+    
+    UIPopoverPresentationController *presentationController = [popupTabBar popoverPresentationController];
+    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
+    presentationController.sourceView               = self.view;
+    presentationController.permittedArrowDirections = 0;
+    
+    [self presentViewController:popupTabBar animated:YES completion:nil];
+    
+    
+    [_pxpFilter filterTags:self.allTagsArray];
+    
+    if (!popupTabBar.pxpFilter)          popupTabBar.pxpFilter = _pxpFilter;
+}
+
+
+// Pxp
+-(void)onFilterComplete:(PxpFilter*)filter
+{
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    
+    [_collectionView reloadData];
+}
+
+-(void)onFilterChange:(PxpFilter *)filter
+{
+    [_pxpFilter filterTags:self.allTagsArray];
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    [_collectionView reloadData];
 }
 
 @end

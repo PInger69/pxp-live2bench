@@ -27,10 +27,10 @@
         unsigned long n;
         _feedName.text = sscanf(name.UTF8String, "s_%lu", &n) == 1 ? [NSString stringWithFormat:@"Cam %lu", n] : name;
         
-        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+        //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
         
         
-        [imageAssetManager imageForURL:url atImageView:self.feedView];
+        [[ImageAssetManager getInstance] imageForURL:url atImageView:self.feedView];
         
         _downloadButton = [[DownloadButton alloc] init];;
         [_downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -75,14 +75,14 @@
         
         UIImage *thumb = [tag thumbnailForSource:source];
         
-        ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
+        //ImageAssetManager *imageAssetManager = [[ImageAssetManager alloc]init];
         
         if (thumb) {
             self.feedView.image = thumb;
         } else {
             PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:source] ? tag.telestration : nil;
             
-            [imageAssetManager imageForURL:tag.thumbnails[source] atImageView:self.feedView withTelestration:tele];
+            [[ImageAssetManager getInstance] imageForURL:tag.thumbnails[source] atImageView:self.feedView withTelestration:tele];
         }
         
         _downloadButton = [[DownloadButton alloc] init];;
@@ -118,6 +118,9 @@
 }
 
 - (void)downloadButtonPressed:(id)sender {
+    DownloadButton * button = (DownloadButton *) sender;
+    button.isPressed = YES;
+    [button setEnabled:NO];
     if (self.downloadButtonBlock) {
         self.downloadButtonBlock();
     }

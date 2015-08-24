@@ -323,6 +323,7 @@
         float playerButtonY = (notSubPlayersCount == (notSubPlayersCount + subPlayers.count)) ? PLAYERBUTTON_Y + 25.0f : PLAYERBUTTON_Y;
         SideTagButton *playerButton = [[SideTagButton alloc]initWithFrame:CGRectMake((playerCount-1)*(buttonWidth+10)+(1024 - notSubPlayersCount*(buttonWidth+10) +10)/2.0, playerButtonY, buttonWidth, PLAYERBUTTON_WIDTH)];
         [playerButton setTitle:jersey forState:UIControlStateNormal];
+        playerButton.titleLabel.adjustsFontSizeToFitWidth = true;
         [playerButton setMode:SideTagButtonModeRegular];
         [playerButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:playerButton];
@@ -341,6 +342,7 @@
     {
         SideTagButton *subsButton = [[SideTagButton alloc]initWithFrame:CGRectMake(((count-1)*(buttonWidth+PADDING))+CGRectGetMaxX(_subLabel.frame), SUBSBUTTON_Y, buttonWidth, PLAYERBUTTON_WIDTH)];
         [subsButton setTitle:jersey forState:UIControlStateNormal];
+        subsButton.titleLabel.adjustsFontSizeToFitWidth = true;
         [subsButton setMode:SideTagButtonModeRegular];
         [subsButton addTarget:self action:@selector(playerButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
         [_cellList addObject:subsButton];
@@ -457,6 +459,11 @@
             }
         }
     }
+}
+
+#pragma mark - Methods That Needs To Be Here
+-(void)addData:(NSString *)type name:(NSString *)name{
+    
 }
 
 //@synthesize live2BenchViewController;

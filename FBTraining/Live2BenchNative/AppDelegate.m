@@ -18,6 +18,7 @@
 #import "SpinnerView.h"
 #import "ToastObserver.h"
 #import "CustomAlertView.h"
+#import "PxpFilterDefaultTabViewController.h"
 
 @implementation AppDelegate
 {
@@ -25,6 +26,8 @@
     RequestUserInfoAction       * requestInfoAction;
     RequestEulaAction           * requestEulaAction;
     ToastObserver               * _toastObserver;
+    
+    BOOL                        lostWifiIsRun;
 }
 
 @synthesize window;
@@ -88,6 +91,8 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutApp:) name:NOTIF_USER_LOGGED_OUT object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(memoryWarning:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostWifi) name:NOTIF_LOST_WIFI object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostEvent:) name:NOTIF_EVENT_CHANGE object:nil];
     
     // action creation
     requestInfoAction = [[RequestUserInfoAction alloc]initWithAppDelegate:self];
@@ -113,6 +118,12 @@
     _toastObserver.parentView = self.window.rootViewController.view;
     
     
+    
+    _sharedFilter       = [[PxpFilter alloc]init];
+    _sharedFilterTab    = [TabView sharedFilterTabBar];
+//    [_sharedFilterTab addTab:[[PxpFilterDefaultTabViewController alloc]init]];
+    
+    [_sharedFilterTab setPxpFilter:_sharedFilter];
     return YES;
 }
 
@@ -137,12 +148,28 @@
     }
 }
 
+-(void)lostWifi{
+    CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"No Wifi" message:@"Wifi is lost. Please check your connection." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert showView];
+    lostWifiIsRun = true;
+    [_encoderManager declareCurrentEvent:nil];
+}
+
+-(void)lostEvent:(NSNotification*)note{
+    BOOL eventStopped = [note.userInfo[@"eventStopped"]boolValue];
+    if (eventStopped && !lostWifiIsRun) {
+        lostWifiIsRun = false;
+        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert showView];
+    }
+}
 
 #pragma mark -
 #pragma mark UIAlertViewDelegate methods
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)index {
+- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)index {
     relinkUserId = nil;
+    [alertView viewFinished];
 }
 
 -(void)applicationDidBecomeActive:(UIApplication *)application

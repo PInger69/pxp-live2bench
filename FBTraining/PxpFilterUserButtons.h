@@ -10,7 +10,7 @@
 #import "PxpFilter.h"
 @interface PxpFilterUserButtons : UIView <PxpFilterModuleProtocol>
 
-
+@property (nonatomic,assign)    BOOL    modified;
 @property (nonatomic,weak)      PxpFilter  * parentFilter;
 
 -(void)filterTags:(NSMutableArray*)tagsToFilter;

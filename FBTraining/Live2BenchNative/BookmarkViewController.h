@@ -16,13 +16,19 @@
 //#import <Social/Social.h>
 //#import <Accounts/Accounts.h>
 #import "BookmarkFilterViewController.h"
+#import "DeletableTableViewController.h"
+
 #import "CustomButton.h"
 #import "AMBlurView.h"
 #import "BorderButton.h"
 #import "TeleViewController.h"
 
+#import "PxpFilter.h"
+#import "PxpFilterDelegate.h"
+#import "TabView.h"
+
 @class TeleViewController, BookmarkFilterViewController, GDFileUploader, DPBFileUploader;
-@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate>
+@interface BookmarkViewController : CustomTabViewController<UITextViewDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate, UIPopoverControllerDelegate,PxpFilterDelegate ,DeletableTableViewControllerDelegate>
 {
 
     NSIndexPath                  * wasPlayingIndexPath;
@@ -53,6 +59,8 @@
 @property (nonatomic,strong)   CustomButton                 * playbackRateForwardButton;
 
 @property (nonatomic)          BOOL                         fullScreenMode;
+@property (nonatomic,strong) PxpFilter                      * pxpFilter;
+@property (nonatomic,strong) TabView                        * pxpFilterTab;
 
 
 -(void)slideFilterBox;

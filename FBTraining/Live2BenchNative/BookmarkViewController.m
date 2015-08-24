@@ -30,6 +30,10 @@
 #import "Clip.h"
 #import "ClipDataContentDisplay.h"
 
+#import "PxpFilterMyClipTabViewController.h"
+//#import "SpinnerView.h"
+
+#import "LocalMediaManager.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -77,6 +81,7 @@
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
     ClipDataContentDisplay              * clipContentDisplay;
+    NSMutableArray                      * _tagsToDisplay;
 }
 
 
@@ -111,6 +116,17 @@ int viewWillAppearCalled;
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"My Clip", nil) imageName:@"myClipTab"];
         externalControlScreen = _appDel.screenController;
+        _pxpFilter              = [[PxpFilter alloc]init];
+        _pxpFilter.delegate     = self;
+        
+        _pxpFilterTab                           = [[TabView alloc]init];
+        _pxpFilterTab.pxpFilter                 = _pxpFilter;
+        _pxpFilterTab.modalPresentationStyle    = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
+
+        [_pxpFilterTab addTab:        [[PxpFilterMyClipTabViewController alloc]init]];
+        
+
+        _tagsToDisplay = [NSMutableArray new];
     }
     return self;
 }
@@ -150,14 +166,12 @@ int viewWillAppearCalled;
         
         [self.allClips removeObjectIdenticalTo:note.userInfo];
         componentFilter.rawTagArray = self.allClips;
-        //[componentFilter refresh];
+
     }];
     
     self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
-    
-    //allTags = [[NSMutableArray alloc]init];
-    
+
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
     _pip.isDragAble  = YES;
     _pip.hidden      = YES;
@@ -207,12 +221,15 @@ int viewWillAppearCalled;
     
     
     testFullScreen = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    //    [self.view addSubview:testFullScreen.view];
+    _tableViewController.delegate = self;
+    
 }
 
 - (void)clipSaved:(NSNotification *)note {
     [self.allClips addObject:note.object];
-    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+//    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+    
+    self.tableViewController.tableData = _tagsToDisplay;
     [self.tableViewController reloadData];
 }
 
@@ -221,30 +238,17 @@ int viewWillAppearCalled;
 {
     
     [super viewWillAppear:animated];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
-//        if(feeds){
-//            self.feeds = feeds;
-//            //            Feed *theFeed = [[feeds allValues] firstObject];
-//            //            [self.videoPlayer playFeed:theFeed];
-//        }
-//        
-//        if(eventTags){
-//            if (self.allClips.count == 0) {
-//                self.allClips = [NSMutableArray arrayWithArray:[eventTags copy]];
-//                _tableViewController.tableData = self.allClips;
-//                [_tableViewController.tableView reloadData];
-//            }
-//        }
-//    }}];
-    //if (self.allClips.count == 0) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REQUEST_CLIPS object:^(NSArray *clips){
-            self.allClips = [NSMutableArray arrayWithArray: clips];
-            
-            self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
-            [self.tableViewController.tableView reloadData];
-        }];
-    //}
+
     
+    self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
+    
+    [_pxpFilter filterTags:self.allClips];
+    
+    self.tableViewController.tableData = _tagsToDisplay;
+//    [self.tableViewController.tableView reloadData];
+    
+
+
     
     //get all the events information which will be used to display home team, visit team
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -292,10 +296,6 @@ int viewWillAppearCalled;
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    //[numTagsLabel setFrame:CGRectMake(self.tableView.frame.origin.x,
-    //                                      CGRectGetMaxY(self.tableView.frame),
-    //                                      self.tableView.frame.size.width,
-    //                                      21.0f)];
     UIEdgeInsets insets = {10, 50, 0, 50};
     [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets)];
 
@@ -384,43 +384,28 @@ int viewWillAppearCalled;
     //    }
 }
 
+#pragma mark - Filter Button Pressed
+
+
 - (void)slideFilterBox
 {
     
-    if(!blurView)
+    if (_pxpFilterTab.isViewLoaded)
     {
-        blurView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,0.0f,self.view.frame.size.width,self.view.frame.size.height)];
-        blurView.backgroundColor = [UIColor colorWithRed:0.f
-                                                   green:0.f
-                                                    blue:0.f
-                                                   alpha:0.7f];
-        UITapGestureRecognizer* tapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissFilterToolbox)];
-        [blurView addGestureRecognizer:tapRec];
-        
-        blurView.hidden = YES;
-        componentFilter = [[TestFilterViewController alloc]initWithTagArray: self.allClips];
+        _pxpFilterTab.view.frame =  CGRectMake(0, 0, _pxpFilterTab.preferredContentSize.width,_pxpFilterTab.preferredContentSize.height);
     }
-    [self.view insertSubview:blurView aboveSubview:newVideoControlBar.view];
-    [self.view insertSubview:_filterToolBoxView.view aboveSubview:blurView];
+ 
+    UIPopoverPresentationController *presentationController = [_pxpFilterTab popoverPresentationController];
+    presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
+    presentationController.sourceView               = self.view;
+    presentationController.permittedArrowDirections = 0;
     
-    blurView.hidden = NO;
-    [_filterToolBoxView open:YES]; // Slide filter open
-    
-    componentFilter.rawTagArray = self.allClips;
-    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
-    
-    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-    //[componentFilter onSwipePerformSelector:@selector(slideFilterBox) addTarget:self];
-    componentFilter.finishedSwipe = TRUE;
-    
-    [self.view addSubview:componentFilter.view];
-    componentFilter.rangeSlider.highestValue = [((UIViewController <PxpVideoPlayerProtocol> *)self.videoPlayer) durationInSeconds];
-    [componentFilter setOrigin:CGPointMake(60, 190)];
-    [componentFilter close:NO];
-    [componentFilter viewDidAppear:TRUE];
+    [self presentViewController:_pxpFilterTab animated:YES completion:nil];
     
     
-    [componentFilter open:YES];
+   [_pxpFilter filterTags:[self.allClips copy]];
+    
+
     
 }
 
@@ -462,8 +447,11 @@ int viewWillAppearCalled;
 #pragma mark - Richard Sort from headder
 -(void)sortFromHeaderBar:(id)sender
 {
-    self.tableViewController.tableData = [self filterAndSortClips:self.allClips];
+    
+    self.tableViewController.tableData = [self filterAndSortClips:_tagsToDisplay];
     [self.tableViewController.tableView reloadData];
+    
+
 }
 
 -(NSMutableArray*)sortArrayFromHeaderBar:(NSMutableArray*)toSort headerBarState:(HBSortType) sortType
@@ -479,10 +467,11 @@ int viewWillAppearCalled;
         
     } else if (sortType & DATE_FIELD) {
         sorter = [NSSortDescriptor
-                  sortDescriptorWithKey:@"event"
+                  sortDescriptorWithKey:@"eventName"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(caseInsensitiveCompare:)];
         
+
     }  else if (sortType & NAME_FIELD) {
         sorter = [NSSortDescriptor
                   sortDescriptorWithKey:@"name"
@@ -510,16 +499,10 @@ int viewWillAppearCalled;
     _filterToolBoxView=nil;
     
     
-    [blurView removeFromSuperview];
-    //blurView=nil;
-    [self dismissFilterToolbox];
-   
+
  
     currentPlayingTag = nil;
-    
-    
 
-    
 }
 
 
@@ -639,8 +622,7 @@ int viewWillAppearCalled;
             [playbackRateForwardLabel setAlpha:1.0f];
         }];
     }
-    //    globals.PLAYBACK_SPEED = 0.0;
-    //    [videoPlayer.avPlayer setRate:globals.PLAYBACK_SPEED];
+
 }
 
 -(void)playbackRateButtonUp:(id)sender
@@ -915,6 +897,46 @@ int viewWillAppearCalled;
     return [self sortArrayFromHeaderBar:clipsToSort headerBarState:headerBar.headerBarSortType];
 }
 
+#pragma mark - PxpFilterDelegate Methods
+-(void)onFilterComplete:(PxpFilter*)filter
+{
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+
+    [_tableViewController reloadData];
+}
+
+-(void)onFilterChange:(PxpFilter *)filter
+{
+    [filter filterTags:self.allClips];
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    [_tableViewController reloadData];
+}
+
+
+#pragma mark - DeletableTableViewControllerDelegate Methods
+
+-(void)tableView:(DeletableTableViewController *)tableView indexesToBeDeleted:(NSArray *)toBeDeleted
+{
+
+    for (NSIndexPath *cellIndexPath in toBeDeleted) {
+        Clip * aClip = [_tagsToDisplay objectAtIndex:cellIndexPath.row];
+        
+        
+        if ([self.allClips containsObject:aClip]) {
+            [self.allClips removeObject:aClip];
+        }
+        
+    }
+    
+    
+
+
+
+}
+
+#pragma mark -
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
 }

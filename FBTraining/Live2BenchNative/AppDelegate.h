@@ -17,12 +17,14 @@
 #import "LoginViewController.h"
 #import "EulaModalViewController.h"
 
+#import "TabView.h"
+#import "PxpFilter.h"
 
 @class CustomTabBar;
 @class EncoderManager;
 @class UserCenter;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate,UIAlertViewDelegate>
 {
     IBOutlet UIWindow   * window;
     NSString            * relinkUserId; // TODO move out
@@ -38,5 +40,7 @@
 @property (strong, nonatomic) LoginViewController       * loginController;
 @property (strong, nonatomic) EulaModalViewController   * eulaViewController;
 @property (strong, nonatomic) ImageAssetManager         * imageAssetManager;
+@property (strong, nonatomic) TabView                   * sharedFilterTab;
+@property (strong, nonatomic) PxpFilter                 * sharedFilter;
 
 @end
