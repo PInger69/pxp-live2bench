@@ -142,7 +142,7 @@ PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__
             PXPTIFByteBufferReadBytes(buffer, &telestration->n_actions, sizeof(uint64_t));
             
             // 5) read actions.
-            telestration->actions = telestration->n_actions ? malloc(sizeof(PXPTIFByteBufferRef)) : NULL;
+            telestration->actions = telestration->n_actions ? malloc(telestration->n_actions * sizeof(PXPTIFActionRef)) : NULL;
             for (uint64_t i = 0; i < telestration->n_actions; i++) {
                 // get action block from buffer.
                 PXPTIFByteBlockRef actionBlock = PXPTIFByteBlockCopyFromBuffer(buffer);

@@ -31,7 +31,7 @@
         NSMutableArray *actions = [NSMutableArray arrayWithCapacity:n_actions];
         for (uint64_t i = 0; i < n_actions; i++) {
             // get action data.
-            PXPTIFActionRef __nonnull  actionData = PXPTIFTelestrationGetActions(telestrationData)[i];
+            PXPTIFActionRef __nonnull actionData = PXPTIFTelestrationGetActions(telestrationData)[i];
             
             PXPTIFColor color = PXPTIFActionGetColor(actionData);
             
