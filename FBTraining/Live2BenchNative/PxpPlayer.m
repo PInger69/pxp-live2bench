@@ -468,7 +468,9 @@ static CMClockRef _pxpPlayerMasterClock;
             
             if (tried >= total) {
                 completionHandler(complete >= total);
-                self.seeking = NO;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    self.seeking = NO;
+                });
             }
         };
         
@@ -585,8 +587,6 @@ static CMClockRef _pxpPlayerMasterClock;
             [self willChangeValueForKey:@"motion"];
             _motion = motion;
             [self didChangeValueForKey:@"motion"];
-            
-            NSLog(@"%s", _motion ? "motion started!" : "motion ended");
         }
         
     }
@@ -745,6 +745,11 @@ static CMClockRef _pxpPlayerMasterClock;
     
     // adjust the smart sync with the average.
     smartSync = CMTimeMaximum(CMTimeAdd(smartSync, average), kCMTimeZero);
+    
+    // reset if we've gone too far.
+    if (CMTimeCompare(smartSync, CMTimeMake(10, 1)) > 0) {
+        smartSync = kCMTimeZero;
+    }
     
     // calculate the time to seek to.
     const CMTime seekTime = CMTimeAdd(time, smartSync);
