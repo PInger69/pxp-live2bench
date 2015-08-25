@@ -29,5 +29,5 @@
 @property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath;
-
+-(void)collaspOpenCell;
 @end
