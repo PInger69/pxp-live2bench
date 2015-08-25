@@ -312,6 +312,8 @@
     
     [self.view addSubview:_videoBar];
     [self.view addSubview:_fullscreenViewController.view];
+    
+    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
 }
 
 -(void)getNextTag
@@ -493,8 +495,6 @@
     
     _videoBar.selectedTag = selectedTag;
     _fullscreenViewController.selectedTag = selectedTag;
-    
-    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
 }
 
 
