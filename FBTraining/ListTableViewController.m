@@ -55,7 +55,7 @@
                 self.deleteButton = [[UIButton alloc] init];
                 self.deleteButton.backgroundColor = [UIColor redColor];
                 [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
-                [self.deleteButton setTitle: @"Delete All" forState: UIControlStateNormal];
+                [self.deleteButton setTitle: @"Delete Selected" forState: UIControlStateNormal];
                 [self.deleteButton.titleLabel setTextColor:[UIColor whiteColor]];
                 [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
                 [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
