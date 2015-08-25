@@ -146,19 +146,22 @@ static UIBezierPath *__nonnull _arrow;
                 }
                 
                 if (i > 1) {
-                    
                     // get the end point.
                     const CGPoint a = [action.points[i] position];
                     
-                    // calculate the number of tangent samples to use.
-                    const NSUInteger t = MIN(i - 1, ARROW_TANGENT_SAMPLES);
-                    
-                    // calculate the tangent vector.
                     CGVector tangent = CGVectorMake(0.0, 0.0);
-                    for (NSUInteger j = i - 1; i - 1 - t <= j && j <= i - 1; j--) {
-                        const CGVector v = CGVectorMakeWithPoints([action.points[j] position], [action.points[j + 1] position]);
+                    if (action.type & PxpLine) {
+                        tangent = CGVectorMakeWithPoints([action.points.firstObject position], a);
+                    } else {
+                        // calculate the number of tangent samples to use.
+                        const NSUInteger t = MIN(i - 1, ARROW_TANGENT_SAMPLES);
                         
-                        tangent = CGVectorAdd(tangent, CGVectorMultiplyByScalar(v, 1.0 / t));
+                        // calculate the tangent vector.
+                        for (NSUInteger j = i - 1; i - 1 - t <= j && j <= i - 1; j--) {
+                            const CGVector v = CGVectorMakeWithPoints([action.points[j] position], [action.points[j + 1] position]);
+                            
+                            tangent = CGVectorAdd(tangent, CGVectorMultiplyByScalar(v, 1.0 / t));
+                        }
                     }
                     
                     // calculate the tangent angle.
