@@ -7,6 +7,7 @@
 //
 
 #import "PxpRangeModifierButton.h"
+#import "UIImage+Blend.h"
 
 @implementation PxpRangeModifierButton
 
@@ -14,8 +15,9 @@ static UIImage * __nullable _extendStartImage;
 static UIImage * __nullable _extendEndImage;
 
 + (void)initialize {
-    _extendStartImage = [UIImage imageNamed:@"extendstartsec"];
-    _extendEndImage = [UIImage imageNamed:@"extendendsec"];
+    
+    _extendStartImage = [[UIImage imageNamed:@"extendstartsec"] imageBlendedWithColor:PRIMARY_APP_COLOR];
+    _extendEndImage = [[UIImage imageNamed:@"extendendsec"] imageBlendedWithColor:PRIMARY_APP_COLOR];
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame end:(BOOL)end {

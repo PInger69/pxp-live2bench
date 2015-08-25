@@ -29,7 +29,7 @@
     //this can take any CGSize
     //it works like the frame.size would in the drawRect: method
     //in the way that it represents the context's size
-    UIGraphicsBeginImageContext(aSize);
+    UIGraphicsBeginImageContextWithOptions(aSize, NO, 0.0);
     
     //this gets the graphic context
     CGContextRef context = UIGraphicsGetCurrentContext();
