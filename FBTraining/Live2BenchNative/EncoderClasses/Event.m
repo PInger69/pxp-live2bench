@@ -102,6 +102,7 @@
         return;
     }
     
+    
     [_tags addObject:newtag];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
                                                         object:self

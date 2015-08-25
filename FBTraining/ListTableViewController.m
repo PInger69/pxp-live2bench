@@ -580,56 +580,48 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
 {
 
     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
-       NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-       NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-
-        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-           [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
-           [indexPathsArray addObject: cellIndexPath];
+        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
+        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+        BOOL needCanNotDeleteTagAlertView = false;
+        
+        for (NSIndexPath *cellIndexPath in [self.setOfDeletingCells copy]) {
+            Tag *tag = self.tableData[cellIndexPath.row];
+            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                [arrayOfTagsToRemove addObject:tag];
+                [indexPathsArray addObject:cellIndexPath];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+            }else{
+                needCanNotDeleteTagAlertView = true;
+            }
         }
-
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
+        
+        for (Tag *tag in arrayOfTagsToRemove) {
             [self.tableData removeObject:tag];
         }
-
-        [self.setOfDeletingCells removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
         
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
-            
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
+        if (needCanNotDeleteTagAlertView) {
+            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert showView];
         }
-
-    }else{
-        if (buttonIndex == 0)
-        {
-            NSDictionary *tag = [self.tableData objectAtIndex: self.editingIndexPath.row];
-            
-            
-            [self.tableData removeObjectAtIndex:self.editingIndexPath.row];
-            [self.setOfDeletingCells removeObject: self.editingIndexPath];
+        
+    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
+        
+        Tag *tag = [self.tableData objectAtIndex:self.editingIndexPath.row];
+        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+            [self.tableData removeObject:tag];
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
-            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
             [self removeIndexPathFromDeletion];
+        }else{
+            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert showView];
         }
-        else if (buttonIndex == 1)
-        {
-            // No, cancel the action to delete tags
-        }
-
     }
     [CustomAlertView removeAlert:alertView];
 
+    [self.setOfDeletingCells removeAllObjects];
+    
     /*if (self.setOfDeletingCells.count < 2){
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
