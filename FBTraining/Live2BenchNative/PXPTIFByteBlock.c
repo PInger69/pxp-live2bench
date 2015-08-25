@@ -13,11 +13,11 @@
 
 struct PXPTIFByteBlock
 {
-    uint64_t size;
+    uint32_t size;
     void *bytes;
 };
 
-PXPTIFByteBlockRef __nonnull PXPTIFByteBlockCreateWithBytes(const void *__nonnull bytes, uint64_t size)
+PXPTIFByteBlockRef __nonnull PXPTIFByteBlockCreateWithBytes(const void *__nonnull bytes, uint32_t size)
 {
     PXPTIFByteBlockRef byteBlock = malloc(sizeof(struct PXPTIFByteBlock));
     byteBlock->size = size;
@@ -36,7 +36,7 @@ void PXPTIFByteBlockDestroy(PXPTIFByteBlockRef __nonnull byteBlock)
     free(byteBlock);
 }
 
-uint64_t PXPTIFByteBlockGetSize(PXPTIFByteBlockRef __nonnull byteBlock)
+uint32_t PXPTIFByteBlockGetSize(PXPTIFByteBlockRef __nonnull byteBlock)
 {
     return byteBlock->size;
 }
@@ -48,7 +48,7 @@ const void *__nonnull PXPTIFByteBlockGetBytes(PXPTIFByteBlockRef __nonnull byteB
 
 PXPTIFByteBlockRef __nonnull PXPTIFByteBlockCreateWithUTF8String(const char *__nonnull string)
 {
-    return PXPTIFByteBlockCreateWithBytes(string, (strlen(string) + 1) * sizeof(char));
+    return PXPTIFByteBlockCreateWithBytes(string, (uint32_t)(strlen(string) + 1) * sizeof(char));
 }
 
 const char *__nonnull PXPTIFByteBlockGetUTF8String(PXPTIFByteBlockRef __nonnull byteBlock)
@@ -58,7 +58,7 @@ const char *__nonnull PXPTIFByteBlockGetUTF8String(PXPTIFByteBlockRef __nonnull 
 
 void PXPTIFByteBlockWriteToBuffer(PXPTIFByteBlockRef __nonnull byteBlock, PXPTIFByteBufferRef __nonnull buffer)
 {
-    PXPTIFByteBufferWriteBytes(buffer, &byteBlock->size, sizeof(uint64_t));
+    PXPTIFByteBufferWriteBytes(buffer, &byteBlock->size, sizeof(uint32_t));
     PXPTIFByteBufferWriteBytes(buffer, byteBlock->bytes, byteBlock->size);
 }
 
@@ -68,7 +68,7 @@ PXPTIFByteBlockRef __nonnull PXPTIFByteBlockCopyFromBuffer(PXPTIFByteBufferRef _
     byteBlock->size = 0;
     
     // get the size.
-    PXPTIFByteBufferReadBytes(buffer, &byteBlock->size, sizeof(uint64_t));
+    PXPTIFByteBufferReadBytes(buffer, &byteBlock->size, sizeof(uint32_t));
     
     // get the bytes.
     if (byteBlock->size) {

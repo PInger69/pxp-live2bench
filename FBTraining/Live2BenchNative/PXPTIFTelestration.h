@@ -10,6 +10,7 @@
 #define PXPTIF_c
 
 #include <inttypes.h>
+#include <stddef.h>
 #include <stdbool.h>
 
 #include "PXPTIFVersion.h"
@@ -21,7 +22,7 @@
 typedef struct PXPTIFTelestration *PXPTIFTelestrationRef;
 
 /// Creates a telestration data structure.
-PXPTIFTelestrationRef __nonnull PXPTIFTelestrationCreate(const char *__nonnull sourceName, uint16_t width, uint16_t height, bool still, const PXPTIFActionRef __nonnull *__nullable actions, uint64_t n_actions);
+PXPTIFTelestrationRef __nonnull PXPTIFTelestrationCreate(const char *__nonnull sourceName, uint16_t width, uint16_t height, bool still, const PXPTIFActionRef __nonnull *__nullable actions, uint32_t n_actions);
 
 /// Destroys a telestration data structure.
 void PXPTIFTelestrationDestroy(PXPTIFTelestrationRef __nonnull telestration);
@@ -42,10 +43,10 @@ bool PXPTIFTelestrationIsStill(PXPTIFTelestrationRef __nonnull telestration);
 const PXPTIFActionRef __nonnull *__nullable PXPTIFTelestrationGetActions(PXPTIFTelestrationRef __nonnull telestration);
 
 /// Gets the number of actions contained within a telestration.
-uint64_t PXPTIFTelestrationGetActionCount(PXPTIFTelestrationRef __nonnull telestration);
+uint32_t PXPTIFTelestrationGetActionCount(PXPTIFTelestrationRef __nonnull telestration);
 
 /// Attemptes to create a telestration from PXPTIF data.
-PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__nullable bytes, uint64_t size);
+PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__nullable bytes, size_t size);
 
 /// Generates PXPTIF data from the telestration.
-void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, uint64_t *__nonnull size);
+void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, size_t *__nonnull size);

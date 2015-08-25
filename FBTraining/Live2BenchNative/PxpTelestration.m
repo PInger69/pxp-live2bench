@@ -27,11 +27,11 @@
     if (telestrationData) {
         
         // get action count.
-        uint64_t n_actions = PXPTIFTelestrationGetActionCount(telestrationData);
+        uint32_t n_actions = PXPTIFTelestrationGetActionCount(telestrationData);
         
         // extract actions.
         NSMutableArray *actions = [NSMutableArray arrayWithCapacity:n_actions];
-        for (uint64_t i = 0; i < n_actions; i++) {
+        for (uint32_t i = 0; i < n_actions; i++) {
             // create action object.
             PxpTelestrationAction *action = [[PxpTelestrationAction alloc] init];
             
@@ -51,7 +51,9 @@
             action.strokeWidth = PXPTIFActionGetWidth(actionData);
             
             // get points.
-            for (uint64_t j = 0; j < PXPTIFActionGetPointCount(actionData); j++) {
+            uint32_t n_points = PXPTIFActionGetPointCount(actionData);
+            
+            for (uint32_t j = 0; j < n_points; j++) {
                 [action addPoint:[[PxpTelestrationPoint alloc] initWithPointData:PXPTIFActionGetPoints(actionData)[j]]];
             }
             
@@ -124,21 +126,21 @@
         // stack allocate points.
         PXPTIFPoint points[action.points.count];
         
-        for (NSUInteger i = 0; i < action.points.count; i++) {
-            points[i] = [action.points[i] pointData];
+        for (NSUInteger j = 0; j < action.points.count; j++) {
+            points[j] = [action.points[j] pointData];
         }
         
         CGFloat r, g, b, a;
         [action.strokeColor getRed:&r green:&g blue:&b alpha:&a];
         
-        actions[i] = PXPTIFActionCreate(action.type, PXPTIFColorMake(255.0 * r, 255.0 * g, 255.0 * b, 255.0 * a), action.strokeWidth, points, action.points.count);
+        actions[i] = PXPTIFActionCreate(action.type, PXPTIFColorMake(255.0 * r, 255.0 * g, 255.0 * b, 255.0 * a), action.strokeWidth, points, (uint32_t) MIN(action.points.count, UINT32_MAX));
     }
     
     // create PXPTIF telestration.
-    PXPTIFTelestrationRef __nonnull telestration = PXPTIFTelestrationCreate(self.sourceName.UTF8String ? self.sourceName.UTF8String : "", self.size.width, self.size.height, self.isStill, actions, _actionStack.count);
+    PXPTIFTelestrationRef __nonnull telestration = PXPTIFTelestrationCreate(self.sourceName.UTF8String ? self.sourceName.UTF8String : "", self.size.width, self.size.height, self.isStill, actions, (uint32_t) MIN(_actionStack.count, UINT32_MAX));
     
     // get the PXPTIF data representation.
-    uint64_t size;
+    size_t size;
     void *__nonnull data = PXPTIFTelestrationGenerateDataRepresentation(telestration, &size);
     
     // base64 encode the data.

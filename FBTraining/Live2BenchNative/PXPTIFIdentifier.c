@@ -7,11 +7,12 @@
 //
 
 #include "PXPTIFIdentifier.h"
+#include <string.h>
 
 // DO NOT CHANGE THIS (".PXPTIF")
 const PXPTIFIdentifier kPXPTIFIdentifierValid = { '.', 'P', 'X', 'P', 'T', 'I', 'F', '\0' };
 
 bool PXPTIFIdentifierValid(PXPTIFIdentifier identifier)
 {
-    return *(uint64_t *)identifier == *(uint64_t *)kPXPTIFIdentifierValid;
+    return memcmp(identifier, kPXPTIFIdentifierValid, 8 * sizeof(uint8_t)) == 0;
 }

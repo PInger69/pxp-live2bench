@@ -24,13 +24,13 @@ struct PXPTIFTelestration {
     PXPTIFByteBlockRef __nonnull sourceName;
     uint16_t width, height;
     uint32_t still;
-    uint64_t n_actions;
+    uint32_t n_actions;
     PXPTIFActionRef __nonnull *__nullable actions;
 };
 
 #pragma mark - Initialization
 
-PXPTIFTelestrationRef __nonnull PXPTIFTelestrationCreate(const char *__nonnull sourceName, uint16_t width, uint16_t height, bool still, const PXPTIFActionRef __nonnull *__nullable actions, uint64_t n_actions)
+PXPTIFTelestrationRef __nonnull PXPTIFTelestrationCreate(const char *__nonnull sourceName, uint16_t width, uint16_t height, bool still, const PXPTIFActionRef __nonnull *__nullable actions, uint32_t n_actions)
 {
     struct PXPTIFTelestration *telestration = malloc(sizeof(struct PXPTIFTelestration));
     
@@ -43,7 +43,7 @@ PXPTIFTelestrationRef __nonnull PXPTIFTelestrationCreate(const char *__nonnull s
         telestration->n_actions = n_actions;
         telestration->actions = malloc(n_actions * sizeof(PXPTIFActionRef));
         
-        for (uint64_t i = 0; i < n_actions; i++) {
+        for (uint32_t i = 0; i < n_actions; i++) {
             telestration->actions[i] = PXPTIFActionCopy(actions[i]);
         }
         
@@ -60,7 +60,7 @@ PXPTIFTelestrationRef __nonnull PXPTIFTelestrationCreate(const char *__nonnull s
 void PXPTIFTelestrationDestroy(PXPTIFTelestrationRef __nonnull telestration)
 {
     PXPTIFByteBlockDestroy(telestration->sourceName);
-    for (uint64_t i = 0; i < telestration->n_actions; i++) {
+    for (uint32_t i = 0; i < telestration->n_actions; i++) {
         PXPTIFActionDestroy(telestration->actions[i]);
     }
     free(telestration->actions);
@@ -94,14 +94,14 @@ const PXPTIFActionRef __nonnull *__nullable PXPTIFTelestrationGetActions(PXPTIFT
     return telestration->actions;
 }
 
-uint64_t PXPTIFTelestrationGetActionCount(PXPTIFTelestrationRef __nonnull telestration)
+uint32_t PXPTIFTelestrationGetActionCount(PXPTIFTelestrationRef __nonnull telestration)
 {
     return telestration->n_actions;
 }
 
 #pragma mark - Serialization
 
-PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__nullable bytes, uint64_t size)
+PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__nullable bytes, size_t size)
 {
     // the telestration to return.
     struct PXPTIFTelestration *telestration = NULL;
@@ -118,6 +118,9 @@ PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__
     // CHECK IDENTIFIER
     PXPTIFIdentifier identifier;
     PXPTIFByteBufferReadBytes(buffer, &identifier, sizeof(PXPTIFIdentifier));
+    
+    
+    
     if (PXPTIFIdentifierValid(identifier)) {
         // allocate telestration.
         telestration = malloc(sizeof(struct PXPTIFTelestration));
@@ -139,16 +142,16 @@ PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__
             PXPTIFByteBufferReadBytes(buffer, &telestration->still, sizeof(uint32_t));
             
             // 4) read number of actions.
-            PXPTIFByteBufferReadBytes(buffer, &telestration->n_actions, sizeof(uint64_t));
+            PXPTIFByteBufferReadBytes(buffer, &telestration->n_actions, sizeof(uint32_t));
             
             // 5) read actions.
             telestration->actions = telestration->n_actions ? malloc(telestration->n_actions * sizeof(PXPTIFActionRef)) : NULL;
-            for (uint64_t i = 0; i < telestration->n_actions; i++) {
+            for (uint32_t i = 0; i < telestration->n_actions; i++) {
                 // get action block from buffer.
                 PXPTIFByteBlockRef actionBlock = PXPTIFByteBlockCopyFromBuffer(buffer);
                 
                 // copy the data.
-                uint64_t size = PXPTIFByteBlockGetSize(actionBlock);
+                uint32_t size = PXPTIFByteBlockGetSize(actionBlock);
                 telestration->actions[i] = malloc(size);
                 memcpy(telestration->actions[i], PXPTIFByteBlockGetBytes(actionBlock), size);
                 
@@ -164,7 +167,7 @@ PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__
     return telestration;
 }
 
-void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, uint64_t *__nonnull size)
+void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, size_t *__nonnull size)
 {
     
     // create a byte buffer.
@@ -191,10 +194,10 @@ void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationR
         PXPTIFByteBufferWriteBytes(buffer, &telestration->still, sizeof(uint32_t));
         
         // 4) write number of actions.
-        PXPTIFByteBufferWriteBytes(buffer, &telestration->n_actions, sizeof(uint64_t));
+        PXPTIFByteBufferWriteBytes(buffer, &telestration->n_actions, sizeof(uint32_t));
         
         // 5) write actions as byte blocks.
-        for (uint64_t i = 0; i < telestration->n_actions; i++) {
+        for (uint32_t i = 0; i < telestration->n_actions; i++) {
             // create a byte block for the action.
             PXPTIFByteBlockRef actionBlock = PXPTIFByteBlockCreateWithBytes(telestration->actions[i], PXPTIFActionGetSize(telestration->actions[i]));
             // write to the buffer.

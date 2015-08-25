@@ -16,13 +16,13 @@
 typedef struct PXPTIFByteBlock *PXPTIFByteBlockRef;
 
 /// Creates a ByteBlock storing a copy of 'bytes' of 'size'.
-PXPTIFByteBlockRef __nonnull PXPTIFByteBlockCreateWithBytes(const void *__nonnull bytes, uint64_t size);
+PXPTIFByteBlockRef __nonnull PXPTIFByteBlockCreateWithBytes(const void *__nonnull bytes, uint32_t size);
 
 /// Destroys a ByteBlock.
 void PXPTIFByteBlockDestroy(PXPTIFByteBlockRef __nonnull byteBlock);
 
 /// Gets the size of bytes contained by the ByteBuffer.
-uint64_t PXPTIFByteBlockGetSize(PXPTIFByteBlockRef __nonnull byteBlock);
+uint32_t PXPTIFByteBlockGetSize(PXPTIFByteBlockRef __nonnull byteBlock);
 
 /// Gets the bytes contained by the ByteBuffer.
 const void *__nonnull PXPTIFByteBlockGetBytes(PXPTIFByteBlockRef __nonnull byteBlock);

@@ -15,9 +15,9 @@
 
 struct PXPTIFByteBuffer
 {
-    uint64_t size;
-    uint64_t position;
-    uint64_t capacity;
+    size_t size;
+    size_t position;
+    size_t capacity;
     void *buffer;
 };
 
@@ -43,7 +43,7 @@ void PXPTIFByteBufferDestroy(PXPTIFByteBufferRef __nonnull byteBuffer)
     free(byteBuffer);
 }
 
-uint64_t PXPTIFByteBufferGetSize(PXPTIFByteBufferRef __nonnull byteBuffer)
+size_t PXPTIFByteBufferGetSize(PXPTIFByteBufferRef __nonnull byteBuffer)
 {
     return byteBuffer->size;
 }
@@ -53,17 +53,17 @@ const void *__nullable PXPTIFByteBufferGetBuffer(PXPTIFByteBufferRef __nonnull b
     return byteBuffer->buffer;
 }
 
-uint64_t PXPTIFByteBufferGetPosition(PXPTIFByteBufferRef __nonnull byteBuffer)
+size_t PXPTIFByteBufferGetPosition(PXPTIFByteBufferRef __nonnull byteBuffer)
 {
     return byteBuffer->position;
 }
 
-uint64_t PXPTIFByteBufferSetPosition(PXPTIFByteBufferRef __nonnull byteBuffer, uint64_t position)
+size_t PXPTIFByteBufferSetPosition(PXPTIFByteBufferRef __nonnull byteBuffer, size_t position)
 {
     return byteBuffer->position = position < byteBuffer->size ? position : byteBuffer->size;
 }
 
-void PXPTIFByteBufferWriteBytes(PXPTIFByteBufferRef __nonnull byteBuffer, const void *__nullable bytes, uint64_t size)
+void PXPTIFByteBufferWriteBytes(PXPTIFByteBufferRef __nonnull byteBuffer, const void *__nullable bytes, size_t size)
 {
     
     if (size > 0) {
@@ -87,7 +87,7 @@ void PXPTIFByteBufferWriteBytes(PXPTIFByteBufferRef __nonnull byteBuffer, const 
     
 }
 
-void PXPTIFByteBufferReadBytes(PXPTIFByteBufferRef __nonnull byteBuffer, void *__nullable bytes, uint64_t size)
+void PXPTIFByteBufferReadBytes(PXPTIFByteBufferRef __nonnull byteBuffer, void *__nullable bytes, size_t size)
 {
     if (size > 0 && bytes) {
         memcpy(bytes, byteBuffer->buffer + byteBuffer->position, size);
