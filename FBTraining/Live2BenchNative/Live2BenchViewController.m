@@ -606,6 +606,7 @@ static void * eventContext      = &eventContext;
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
         [_gotoLiveButton isActive:NO];
+        PXPLog(@"Current event is set to nil");
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
         //[self switchPressed];
         //_tagButtonController.enabled = NO;

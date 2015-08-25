@@ -168,9 +168,9 @@
     }
     cumulatedData = nil;
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
+    /*[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_OPEN_SPINNER
                                                        object:nil
-                                                     userInfo:[SpinnerView message:@"Checking for WiFi..." progress:0 animated:YES]];
+                                                     userInfo:[SpinnerView message:@"Checking for WiFi..." progress:0 animated:YES]];*/
     BOOL hasWifi = [Utility hasInternet];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
     //[Utility hasWiFi];

@@ -193,8 +193,8 @@
     // Filter clear button, this will always sit on top of all tabs but control the active tab unless connected
     clearAll = [CustomButton buttonWithType:UIButtonTypeCustom];
     [clearAll setFrame:CGRectMake(numTagsLabel.frame.origin.x+100, numTagsLabel.frame.origin.y, 60, 25)];
-    [clearAll setBackgroundImage:[UIImage imageNamed:@"line-button-grey.png"] forState:UIControlStateNormal];
-    [clearAll setBackgroundImage:[UIImage imageNamed:@"num-button.png"] forState:UIControlStateSelected];
+    [clearAll setBackgroundImage:[Utility makeOnePixelUIImageWithColor:SECONDARY_APP_COLOR] forState:UIControlStateNormal];
+    [clearAll setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
     [clearAll setAccessibilityLabel:@"allclear"];
     
     [clearAll addTarget:self action:@selector(clearAllTags:) forControlEvents:UIControlEventTouchUpInside];
