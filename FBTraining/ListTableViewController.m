@@ -55,7 +55,7 @@
                 self.deleteButton = [[UIButton alloc] init];
                 self.deleteButton.backgroundColor = [UIColor redColor];
                 [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
-                [self.deleteButton setTitle: @"Delete All" forState: UIControlStateNormal];
+                [self.deleteButton setTitle: @"Delete Selected" forState: UIControlStateNormal];
                 [self.deleteButton.titleLabel setTextColor:[UIColor whiteColor]];
                 [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
                 [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -219,7 +219,12 @@
 
         //NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
         // This is checking if tag is downloaded to the device already
-        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
+        
+        if ([[[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]] isKindOfClass:[NSString class]]) {
+            // This means the place holder is found to set the button to look like its downloaded
+            collapsableCell.downloadButton.isPressed    = YES;
+            collapsableCell.downloadButton.progress     = 0;
+        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
             collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
             __block FeedSelectCell *weakerCell = weakCell;
             [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
@@ -234,8 +239,8 @@
         
         
         collapsableCell.downloadButtonBlock = ^(){
-            //__block DownloadItem *videoItem;
-            
+
+            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
             void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
                 //videoItem = downloadItem;
                  weakCell.downloadButton.downloadItem = downloadItem;
@@ -533,6 +538,19 @@
         self.swipeableMode = YES;
         //self.previouslySelectedIndexPath = indexPath;
 
+    }
+}
+
+
+
+-(void)collaspOpenCell
+{
+    if (self.arrayOfCollapsableIndexPaths.count > 0) {
+        NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+        self.previouslySelectedIndexPath = nil;
+        self.swipeableMode = YES;
     }
 }
 
