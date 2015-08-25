@@ -390,7 +390,7 @@
     [super viewWillAppear:animated];
     
     self.listViewFullScreenViewController.enable = NO;
-    [self.view bringSubviewToFront:_videoBar];
+//    [self.view bringSubviewToFront:_videoBar];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
         if(feeds && !self.feeds){

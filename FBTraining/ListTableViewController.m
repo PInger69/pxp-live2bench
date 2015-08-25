@@ -219,7 +219,12 @@
 
         NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
         // This is checking if tag is downloaded to the device already
-        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
+        
+        if ([[[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]] isKindOfClass:[NSString class]]) {
+            // This means the place holder is found to set the button to look like its downloaded
+            collapsableCell.downloadButton.isPressed    = YES;
+            collapsableCell.downloadButton.progress     = 0;
+        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
             collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
             __block FeedSelectCell *weakerCell = weakCell;
             [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
@@ -234,8 +239,8 @@
         
         
         collapsableCell.downloadButtonBlock = ^(){
-            //__block DownloadItem *videoItem;
-            
+
+            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
             void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
                 //videoItem = downloadItem;
                  weakCell.downloadButton.downloadItem = downloadItem;
@@ -534,6 +539,14 @@
         //self.previouslySelectedIndexPath = indexPath;
 
     }
+}
+
+
+
+-(void)collaspOpenCell
+{
+
+
 }
 
 
