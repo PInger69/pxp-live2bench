@@ -111,7 +111,7 @@
         CMTimeRange oldRange = ![oldValue isEqual: [NSNull null]] ? [oldValue CMTimeRangeValue] : kCMTimeRangeInvalid;
         CMTimeRange newRange = ![newValue isEqual: [NSNull null]] ? [newValue CMTimeRangeValue] : kCMTimeRangeInvalid;
         
-        if (CMTIMERANGE_IS_INVALID(newRange) && !CMTimeRangeEqual(oldRange, newRange)) {
+        if (CMTIMERANGE_IS_INVALID(newRange) && !CMTimeRangeEqual(oldRange, newRange) && !_telestrationViewController.telestrating) {
             _telestrationViewController.telestration = nil;
         }
         
@@ -128,6 +128,10 @@
         } else if (_stillFlag) {
             [_playerView.player play];
             _stillFlag = NO;
+        }
+        
+        if (_telestrationViewController.telestrating) {
+            _playerView.player.range = kCMTimeRangeInvalid;
         }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];

@@ -493,6 +493,8 @@
     
     _videoBar.selectedTag = selectedTag;
     _fullscreenViewController.selectedTag = selectedTag;
+    
+    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
 }
 
 

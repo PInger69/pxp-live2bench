@@ -878,6 +878,8 @@ static void * eventContext      = &eventContext;
     
     _playerViewController.telestrationViewController.stillMode = YES;
     _videoBar.playerViewController = _playerViewController;
+    
+    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
 }
 
 -(void)onOpenTeleView:(TeleViewController *)tvc

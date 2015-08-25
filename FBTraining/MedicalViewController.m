@@ -406,6 +406,8 @@
     //self.forwardSeekButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     
     //self.view.backgroundColor = [UIColor blackColor];
+    
+    _playerViewController.playerView.context = _encoderManager.primaryEncoder.eventContext;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
