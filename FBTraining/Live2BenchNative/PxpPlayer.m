@@ -301,15 +301,13 @@ static CMClockRef _pxpPlayerMasterClock;
                 
             }];
             
-            if (!CMTimeRangeContainsTime(range, self.currentTime)) {
-                float rate = player.rate;
-                [player pause];
-                [player seekToTime:start toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
-                    [player prerollAtRate:rate completionHandler:^(BOOL complete) {
-                        [player setRate:rate];
-                    }];
+            float rate = player.rate;
+            [player pause];
+            [player seekToTime:start toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+                [player prerollAtRate:rate completionHandler:^(BOOL complete) {
+                    [player setRate:rate];
                 }];
-            }
+            }];
             
         }
         
