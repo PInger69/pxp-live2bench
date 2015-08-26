@@ -13,12 +13,16 @@
 
 @implementation ListPopoverControllerWithImages
 -(id)initWithMessage:(NSString*)aMessage buttonListNames:(NSArray*)aListOfNames{
-    self = [super initWithContentViewController:contentVC];
+    //self = [super initWithContentViewController:contentVC];
+    
+    UIViewController *viewController = [[UIViewController alloc] init];
+    self                            = [super initWithContentViewController:viewController];
+
     
     if (self) {
-        
+         contentVC = viewController;
         self.arrayOfButtons = [[NSMutableArray alloc] init];
-        contentVC  = [[UIViewController alloc] init];
+        //contentVC  = [[UIViewController alloc] init];
         self.theScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 30, POP_WIDTH, (BUTTON_HEIGHT*2)+10)];
         //self.theScrollView.contentSize = CGSizeMake(self.theScrollView.frame.size.width, (BUTTON_HEIGHT * 5));
         //contentVC.view = self.theScrollView;

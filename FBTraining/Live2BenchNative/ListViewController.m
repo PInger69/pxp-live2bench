@@ -205,10 +205,10 @@
         if (![_currentEvent.tags containsObject:tag]) {
             [self.allTags removeObject:tag];
             [self.tagsToDisplay removeObject:tag];
+            [_tableViewController collaspOpenCell];
             [_pxpFilter removeTags:@[tag]];
         }
     }
-
     [_tableViewController reloadData];
     
 }
@@ -390,9 +390,8 @@
 
         
         if(eventTags.count > 0 && !self.tagsToDisplay){
-            //self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
+            self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
             self.allTags = [ NSMutableArray arrayWithArray:[eventTags copy]];
-
             [_tableViewController reloadData];
         }
 

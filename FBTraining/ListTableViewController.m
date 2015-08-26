@@ -254,8 +254,9 @@
                 }];
             };
             
-            NSString *src = [NSString stringWithFormat:@"%@hq", key];
+            NSString *src = [NSString stringWithFormat:@"s_%@hq", key];
             
+            src = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
                                                                                                                    @"block": blockName,
                                                                                                                    @"tag": tag,
@@ -545,8 +546,13 @@
 
 -(void)collaspOpenCell
 {
-
-
+    if (self.arrayOfCollapsableIndexPaths.count > 0) {
+        NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+        self.previouslySelectedIndexPath = nil;
+        self.swipeableMode = YES;
+    }
 }
 
 
