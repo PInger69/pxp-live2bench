@@ -91,7 +91,7 @@
     
     UILabel                             *informationLabel;
     ListPopoverController               *_teamPick;
-    ListPopoverController               *_eventPick;
+    ListPopoverController               *_cameraPick;
     TeleViewController                  * telestration;
     //TemporaryButton
 //    UIButton                            *zoomButton;
@@ -414,11 +414,10 @@ static void * eventContext      = &eventContext;
 -(void)checkIpadVersion{
     BOOL result = [Utility isDeviceSupportedMultiCam:[Utility platformString]];
     if (!result && [_currentEvent.feeds allValues].count > 1) {
-        _eventPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"iPad does not support multiple cameras. You need iPadAir or higher. You can only select one of the cameras. Please select the camera you want:", @"Please select the camera you want to play:") buttonListNames:@[]];
-        _eventPick.messageText.font = [UIFont defaultFontOfSize:14.0f];
+        _cameraPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"iPad does not support multiple cameras. You need iPadAir or higher. You can only select one of the cameras. Please select the camera you want:", @"Please select the camera you want to play:") buttonListNames:@[]];
+        _cameraPick.messageText.font = [UIFont defaultFontOfSize:14.0f];
         
         NSMutableDictionary *buttonListNames = [[NSMutableDictionary alloc]init];
-        //NSMutableArray
         for (NSString *feedName in [_currentEvent.feeds allKeys]) {
             if ([feedName isEqualToString:@"s_00"]) {
                 [buttonListNames setObject:@"Cam 0" forKey:feedName];
@@ -429,10 +428,10 @@ static void * eventContext      = &eventContext;
             }
             
         }
-        _eventPick.listOfButtonNames = buttonListNames.allValues;
+        _cameraPick.listOfButtonNames = buttonListNames.allValues;
         
         __block Live2BenchViewController *weakSelf = self;
-        [_eventPick addOnCompletionBlock:^(NSString *pick){
+        [_cameraPick addOnCompletionBlock:^(NSString *pick){
             
             for (NSString *feedDisplayName in buttonListNames.allValues) {
                 if (![feedDisplayName isEqualToString:pick]) {
@@ -442,7 +441,7 @@ static void * eventContext      = &eventContext;
             [weakSelf addFeed];
 
         }];
-        [_eventPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+        [_cameraPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];
         /*CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
         [alert showView];*/
@@ -460,10 +459,10 @@ static void * eventContext      = &eventContext;
         _teamPick = nil;
     }
     
-    if (_eventPick) {
-        [_eventPick clear];
-        [_eventPick dismissPopoverAnimated:NO];
-        _eventPick = nil;
+    if (_cameraPick) {
+        [_cameraPick clear];
+        [_cameraPick dismissPopoverAnimated:NO];
+        _cameraPick = nil;
     }
     
     [_leftArrow removeFromSuperview];
@@ -493,7 +492,7 @@ static void * eventContext      = &eventContext;
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
-        //[self addBottomViewController];
+        [multiButton setHidden:true];
         [UserCenter getInstance].taggingTeam = nil;
         [_bottomViewController clear];
 
@@ -516,9 +515,9 @@ static void * eventContext      = &eventContext;
 }
 
 -(void)addFeed{
-    [_eventPick clear];
-    [_eventPick dismissPopoverAnimated:NO];
-    _eventPick = nil;
+    [_cameraPick clear];
+    [_cameraPick dismissPopoverAnimated:NO];
+    _cameraPick = nil;
     
     [_feedSwitch watchCurrentEvent:_currentEvent];
     if (_currentEvent.live) {
@@ -899,6 +898,7 @@ static void * eventContext      = &eventContext;
     [multiButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [multiButton addTarget:_pipController action:@selector(onButtonPressMulti:) forControlEvents:UIControlEventTouchUpInside];
     multiButton.layer.borderWidth = 1;
+    [multiButton setHidden:true];
     [self.view addSubview:multiButton];
 
     
@@ -1307,7 +1307,7 @@ static void * eventContext      = &eventContext;
 
 -(void) onAppTerminate:(NSNotification *)note{
     //[_tagButtonController closeAllOpenTagButtons];
-    [_bottomViewController closeAllOpenTagButtons];
+    //[_bottomViewController closeAllOpenTagButtons];
 }
 
 - (void)didReceiveMemoryWarning

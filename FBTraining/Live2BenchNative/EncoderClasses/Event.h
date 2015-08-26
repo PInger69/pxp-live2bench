@@ -32,6 +32,7 @@
 @property (nonatomic,strong) NSString       * date;
 @property (nonatomic,strong) NSString       * hid;
 @property (nonatomic,strong) NSMutableDictionary   * feeds;
+@property (nonatomic,strong) NSDictionary   * originalFeeds;
 @property (nonatomic,strong) NSDictionary   * mp4s;
 @property (nonatomic,strong) NSMutableDictionary   * rawData;
 @property (nonatomic,strong) NSMutableArray   * tags;
