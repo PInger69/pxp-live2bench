@@ -772,10 +772,7 @@
     NSString *tagID = tag.ID;
     NSString *ip = self.ipAddress;
     NSString *src = note.userInfo[@"src"];
-    
-    unsigned long n;
-    sscanf(src.UTF8String, "s_%lu", &n);
-    NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
+    NSString *remoteSrc = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
         
         NSString *remotePath;
     if ([self checkEncoderVersion]) {

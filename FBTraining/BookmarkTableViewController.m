@@ -10,6 +10,8 @@
 #import "BookmarkViewcell.h"
 #import "Utility.h"
 #import "Clip.h"
+#import "ListPopoverControllerWithImages.h"
+#import "AVAsset+Image.h"
 
 
 #define YES_BUTTON  0
@@ -19,6 +21,7 @@
 @property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 
+@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSelectPopoverViewController;
 
 @end
 
@@ -27,6 +30,9 @@
 -(instancetype)init{
     self = [super init];
     if (self){
+        _sourceSelectPopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
+        _sourceSelectPopoverViewController.contentViewController.modalInPopover = NO;
+        
         [self.tableView registerClass:[BookmarkViewCell class] forCellReuseIdentifier:@"BookmarkViewCell"];
         
         //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -126,17 +132,8 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
     
-    NSString *path = clip.videoFiles.firstObject ? clip.videoFiles.firstObject : @"";
-    
-    unsigned long srcID;
-    if (sscanf(path.UTF8String, "%*[^+]+%lu.mp4", &srcID) != 1) {
-        srcID = 0;
-    }
-    
-    NSURL *shareUrl = [NSURL fileURLWithPath:path];
-    cell.interactionController = [UIDocumentInteractionController interactionControllerWithURL:shareUrl];
-    cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam %02lu", clip.name, clip.displayTime, srcID];
-    
+    cell.interactionController = [[UIDocumentInteractionController alloc] init];
+
     
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
@@ -145,11 +142,55 @@
     //    [self deleteClip:clip index:[self.tableView indexPathForCell:cell]];
     };
     
+    NSDictionary *clipVideosBySourceKey = clip.videosBySrcKey;
+    
     cell.shareBlock = ^(UITableViewCell *tableViewCell) {
         
         if ([tableViewCell isKindOfClass:[BookmarkViewCell class]]) {
             BookmarkViewCell *cell = (BookmarkViewCell *)tableViewCell;
-            [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+            
+            if (clip.videoFiles.count > 1) {
+                // multiple video files, we need to select a source to share.
+                NSArray *srcNames = [clipVideosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
+                
+                __block UIPopoverController *sourceSelectPopover = _sourceSelectPopoverViewController;
+                
+                [_sourceSelectPopoverViewController setListOfButtonNames:srcNames];
+                
+                for (NSUInteger i = 0; i < srcNames.count; i++) {
+                    UIButton *button = _sourceSelectPopoverViewController.arrayOfButtons[i];
+                    NSString *path = clipVideosBySourceKey[srcNames[i]];
+                    
+                    // get thumbnail image
+                    [button setImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
+                }
+                
+                [_sourceSelectPopoverViewController addOnCompletionBlock:^(NSString *srcID) {
+                    if (srcID) {
+                        [sourceSelectPopover dismissPopoverAnimated:NO];
+                        
+                        NSString *path = clipVideosBySourceKey[srcID];
+                        cell.interactionController.URL = [NSURL fileURLWithPath:path];
+                        cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam: %@", clip.name, clip.displayTime, srcID];
+                        
+                        [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+                    }
+                }];
+                
+                [_sourceSelectPopoverViewController presentPopoverFromRect:cell.shareButton.frame inView:cell.shareButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                
+            } else {
+                // only one clip downloaded, just use the share controller.
+                NSString *srcID = clipVideosBySourceKey.allKeys.firstObject;
+                if (srcID) {
+                    NSString *path = clipVideosBySourceKey[srcID];
+                    
+                    cell.interactionController.URL = [NSURL fileURLWithPath:path];
+                    cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam: %@", clip.name, clip.displayTime, srcID];
+                    
+                    [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+                }
+            }
         }
         
         /*
