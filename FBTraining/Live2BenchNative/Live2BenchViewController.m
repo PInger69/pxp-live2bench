@@ -1304,7 +1304,7 @@ static void * eventContext      = &eventContext;
 }
 
 -(void) onAppTerminate:(NSNotification *)note{
-    [_tagButtonController closeAllOpenTagButtons];
+    //[_tagButtonController closeAllOpenTagButtons];
     [_bottomViewController closeAllOpenTagButtons];
 }
 
