@@ -23,6 +23,7 @@
 @synthesize date        = _date;
 @synthesize hid         = _hid;
 @synthesize feeds       = _feeds;
+@synthesize originalFeeds = _originalFeeds;
 @synthesize mp4s        = _mp4s;
 @synthesize rawData     = _rawData;
 @synthesize deleted     = _deleted;
@@ -53,6 +54,7 @@
         localPath           = path;
         //        _feeds              = [self buildFeeds:_rawData];
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
+        _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:isLocal] copy];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
         _downloadedSources  = [NSMutableArray array]; // depricated
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];

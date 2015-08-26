@@ -598,9 +598,17 @@ static LocalEncoder * instance;
     double tagArePresentCount       = tagArePresent.count + 1;
     newTag.uniqueID                 = tagArePresentCount;
     
+    
+    newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
+    newTag.own                      = YES;
+    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
+    newTag.visitTeam                = self.event.teams[@"visitTeam"];
+    newTag.synced                   = NO;
+    
     if ([[tData objectForKey:@"type"]integerValue] == TagTypeOpenDuration) {
         newTag.startTime = newTag.time;
         newTag.durationID = [tData objectForKey:@"dtagid"];
+        [self.event addTag:newTag extraData:false];
     }else{
         double newStartTime = newTag.time - 10.0;
         if (newStartTime < 0) {
@@ -609,15 +617,10 @@ static LocalEncoder * instance;
             newTag.startTime = newStartTime;
         }
         newTag.duration = 20.0;
+        [self.event addTag:newTag extraData:true];
     }
-    
-    newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
-    newTag.own                      = YES;
-    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
-    newTag.visitTeam                = self.event.teams[@"visitTeam"];
-    newTag.synced                   = NO;
 
-    [self.event addTag:newTag extraData:true];
+   
 
     [self.localTags addObject:newTag];
     
@@ -633,6 +636,7 @@ static LocalEncoder * instance;
             }
         }
     }
+
     
    /* //[self.event.localTags setObject:newTag.makeTagData forKey: [NSString stringWithFormat:@"%lu",(unsigned long)self.event.localTags.count]];
     [self.localTags setObject:[newTag makeTagData] forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
