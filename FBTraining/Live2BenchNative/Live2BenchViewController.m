@@ -79,7 +79,6 @@
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
     id                                  tagsReadyObserver;
-    Event                               * _currentEvent;
     
     // some old stuff
     UILabel                             * durationTagLabel;
@@ -92,6 +91,7 @@
     
     UILabel                             *informationLabel;
     ListPopoverController               *_teamPick;
+    ListPopoverController               *_eventPick;
     TeleViewController                  * telestration;
     //TemporaryButton
 //    UIButton                            *zoomButton;
@@ -416,8 +416,40 @@ static void * eventContext      = &eventContext;
 -(void)checkIpadVersion{
     BOOL result = [Utility isDeviceSupportedMultiCam:[Utility platformString]];
     if (!result && [_currentEvent.feeds allValues].count > 1) {
-        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-        [alert showView];
+        _eventPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"iPad does not support multiple cameras. You need iPadAir or higher. You can only select one of the cameras. Please select the camera you want:", @"Please select the camera you want to play:") buttonListNames:@[]];
+        _eventPick.messageText.font = [UIFont defaultFontOfSize:14.0f];
+        
+        NSMutableDictionary *buttonListNames = [[NSMutableDictionary alloc]init];
+        //NSMutableArray
+        for (NSString *feedName in [_currentEvent.feeds allKeys]) {
+            if ([feedName isEqualToString:@"s_00"]) {
+                [buttonListNames setObject:@"Cam 0" forKey:feedName];
+            }else if([feedName isEqualToString:@"s_01"]){
+                [buttonListNames setObject:@"Cam 1" forKey:feedName];
+            }else{
+                [buttonListNames setObject:feedName forKey:feedName];
+            }
+            
+        }
+        _eventPick.listOfButtonNames = buttonListNames.allValues;
+        
+        __block Live2BenchViewController *weakSelf = self;
+        [_eventPick addOnCompletionBlock:^(NSString *pick){
+            
+            for (NSString *feedDisplayName in buttonListNames.allValues) {
+                if (![feedDisplayName isEqualToString:pick]) {
+                    [weakSelf.currentEvent.feeds removeObjectForKey:[[buttonListNames allKeysForObject:feedDisplayName] firstObject]];
+                }
+            }
+            [weakSelf addFeed];
+
+        }];
+        [_eventPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                   animated:YES];
+        /*CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+        [alert showView];*/
+    }else{
+        [self addFeed];
     }
     
 }
@@ -428,6 +460,12 @@ static void * eventContext      = &eventContext;
         [_teamPick clear];
         [_teamPick dismissPopoverAnimated:NO];
         _teamPick = nil;
+    }
+    
+    if (_eventPick) {
+        [_eventPick clear];
+        [_eventPick dismissPopoverAnimated:NO];
+        _eventPick = nil;
     }
     
     [_leftArrow removeFromSuperview];
@@ -465,24 +503,31 @@ static void * eventContext      = &eventContext;
     
     if ([((id <EncoderProtocol>) note.object) event]) {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+        [self checkIpadVersion];
         [self turnSwitchOn];
-        [_feedSwitch watchCurrentEvent:_currentEvent];
+        
         [_tagButtonController allToggleOnOpenTags:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         [self displayLable];
-        
-        if (_currentEvent.live) {
-            [self gotLiveEvent];
-        }
-        
+
         [self addBottomViewController];
-        [self addPlayerView];
-        [self checkIpadVersion];
-        
     }
     
     [self onEventChange];
+}
+
+-(void)addFeed{
+    [_eventPick clear];
+    [_eventPick dismissPopoverAnimated:NO];
+    _eventPick = nil;
+    
+    [_feedSwitch watchCurrentEvent:_currentEvent];
+    if (_currentEvent.live) {
+        [self gotLiveEvent];
+    }
+    [self addPlayerView];
+    [multiButton setHidden:!([_currentEvent.feeds count]>1)];
 }
 
 -(void)onTagChanged:(NSNotification *)note
@@ -857,7 +902,7 @@ static void * eventContext      = &eventContext;
     [multiButton addTarget:_pipController action:@selector(onButtonPressMulti:) forControlEvents:UIControlEventTouchUpInside];
     multiButton.layer.borderWidth = 1;
     [self.view addSubview:multiButton];
-    [multiButton setHidden:!([_encoderManager.feeds count]>1)];
+
     
     self.playerViewController.view.frame = CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT);
     [self.view addSubview:self.playerViewController.view];
@@ -992,11 +1037,11 @@ static void * eventContext      = &eventContext;
     self.playerViewController.telestrationViewController.telestration = nil;
 }
 
--(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+/*-(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
 //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
     [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
-}
+}*/
 
 /**
  *  This sets the video player and all its pip to live
@@ -1263,7 +1308,7 @@ static void * eventContext      = &eventContext;
 }
 
 -(void) onAppTerminate:(NSNotification *)note{
-    [_tagButtonController closeAllOpenTagButtons];
+    //[_tagButtonController closeAllOpenTagButtons];
     [_bottomViewController closeAllOpenTagButtons];
 }
 

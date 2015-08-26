@@ -31,13 +31,13 @@
         
         _message                    = aMessage;
         _listOfButtonNames          = aListOfNames;
-        messageText                 = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, POP_WIDTH-40, 50)];
-        messageText.lineBreakMode   = NSLineBreakByWordWrapping;
-        messageText.numberOfLines   = 0;
-        messageText.textAlignment   = NSTextAlignmentCenter;
-        messageText.text            = _message;
-        messageText.font            = [UIFont defaultFontOfSize:17.0f];
-        [content addSubview:messageText];
+        _messageText                 = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, POP_WIDTH-40, 50)];
+        _messageText.lineBreakMode   = NSLineBreakByWordWrapping;
+        _messageText.numberOfLines   = 0;
+        _messageText.textAlignment   = NSTextAlignmentCenter;
+        _messageText.text            = _message;
+        _messageText.font            = [UIFont defaultFontOfSize:17.0f];
+        [content addSubview:_messageText];
         
         _animateDismiss             = NO;
         _animatePresent             = NO;
@@ -116,7 +116,7 @@
 {
     [self willChangeValueForKey:@"message"];
     _message                = message;
-    messageText.text        = _message;
+    _messageText.text        = _message;
     [self didChangeValueForKey:@"message"];
 }
 

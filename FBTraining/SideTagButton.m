@@ -32,6 +32,9 @@
         [self setTitleColor:self.tintColor forState:UIControlStateNormal];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateHighlighted];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         
         self.mode = SideTagButtonModeDisable;
@@ -69,12 +72,6 @@
     super.highlighted = highlighted;
     [self setNeedsDisplay];
     
-    if (highlighted) {
-        if (!self.selected) self.backgroundColor = self.tintColor;
-    } else {
-        if (!self.selected) self.backgroundColor = backgroundColor;
-    }
-    
 }
 
 
@@ -82,13 +79,6 @@
 {
     super.selected = selected;
     [self setNeedsDisplay];
-    
-    if (selected) {
-        self.backgroundColor = self.tintColor;
-    } else {
-        self.backgroundColor = backgroundColor;
-    }
-
 }
 
 
@@ -154,11 +144,9 @@
 
 -(void)setColor:(BOOL)fullScreen{
     if (fullScreen) {
-        backgroundColor = [UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3];
-        self.backgroundColor = backgroundColor;
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3]] forState:UIControlStateNormal];
     }else{
-        backgroundColor = [UIColor clearColor];
-        self.backgroundColor = backgroundColor;
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
     }
 }
 
