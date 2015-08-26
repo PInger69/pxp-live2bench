@@ -244,7 +244,7 @@
 
 // Local events have different feed inits
 
--(NSDictionary*)buildFeeds:(NSDictionary*)aDict isLive:(BOOL)isLive isLocal:(BOOL)isLocal
+-(NSMutableDictionary*)buildFeeds:(NSDictionary*)aDict isLive:(BOOL)isLive isLocal:(BOOL)isLocal
 {
     NSString            * toypKey   = (isLive)?@"live_2":@"mp4_2";
     NSMutableDictionary * tempDict  = [[NSMutableDictionary alloc]init];
@@ -297,7 +297,7 @@
         } else {
 //            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
 //            PXPLog(@"   HID: %@",aDict[@"hid"]);
-            return @{};
+            return [[NSMutableDictionary alloc]initWithDictionary:@{}];
         }
         //[tempDict setObject:theFeed forKey:@"s1"];
         if (theFeed != nil) {
@@ -305,7 +305,7 @@
         }
     }
     
-    return [tempDict copy];
+    return tempDict;
 }
 
 -(NSArray*)getTagsByID:(NSString*)tagId

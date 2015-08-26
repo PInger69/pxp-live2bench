@@ -19,6 +19,7 @@
 #import "CustomTabBar.h"
 #import "PxpVideoPlayerProtocol.h"
 #import "TeleViewController.h"
+#import "Event.h"
 
 
 
@@ -49,6 +50,7 @@
 
 @property (nonatomic,strong)    UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 @property (nonatomic,strong)    NSString                                     * currentEventName;
+@property (nonatomic,strong)    Event                                        * currentEvent;
 @property (nonatomic,strong)    UIAlertView
 * videoPlaybackFailedAlertView;
 
