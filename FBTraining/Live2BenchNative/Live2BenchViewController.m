@@ -668,7 +668,7 @@ static void * eventContext      = &eventContext;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
     }
-    [multiButton setHidden:!([_currentEvent.feeds count]>1)];
+    //[multiButton setHidden:!([_currentEvent.feeds count]>1)];
     
     PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
     //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
