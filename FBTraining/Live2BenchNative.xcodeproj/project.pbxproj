@@ -51,11 +51,6 @@
 		AAFCA703195B84DE00D0F0E6 /* trash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAFCA701195B84DE00D0F0E6 /* trash@2x.png */; };
 		AE06A3711B691E02001840D0 /* PxpFullscreenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */; };
 		AE06A3791B696A3A001840D0 /* PxpVideoBar.m in Sources */ = {isa = PBXBuildFile; fileRef = AE06A3781B696A3A001840D0 /* PxpVideoBar.m */; };
-		AE2DEF461B7E7C9B0012EC36 /* PxpMultiAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2DEF451B7E7C9B0012EC36 /* PxpMultiAsset.m */; };
-		AE2DEF4C1B7E7D070012EC36 /* PxpAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2DEF4B1B7E7D070012EC36 /* PxpAsset.m */; };
-		AE2DEF4F1B7E7FD30012EC36 /* PxpAsset+Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2DEF4E1B7E7FD30012EC36 /* PxpAsset+Feed.m */; };
-		AE2DEF521B7E88D70012EC36 /* PxpMultiAsset+Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2DEF511B7E88D70012EC36 /* PxpMultiAsset+Feed.m */; };
-		AE2DEF5A1B7E8F510012EC36 /* PxpAssetContext.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2DEF591B7E8F510012EC36 /* PxpAssetContext.m */; };
 		AE44C3311B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */; };
 		AE5073A81AFC1DCE002C361D /* AlertsSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739D1AFC1DCE002C361D /* AlertsSettingViewController.m */; };
 		AE5073A91AFC1DCE002C361D /* InfoSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE50739F1AFC1DCE002C361D /* InfoSettingViewController.m */; };
@@ -595,16 +590,6 @@
 		AE06A3701B691E02001840D0 /* PxpFullscreenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFullscreenButton.m; sourceTree = "<group>"; };
 		AE06A3771B696A3A001840D0 /* PxpVideoBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpVideoBar.h; sourceTree = "<group>"; };
 		AE06A3781B696A3A001840D0 /* PxpVideoBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpVideoBar.m; sourceTree = "<group>"; };
-		AE2DEF441B7E7C9B0012EC36 /* PxpMultiAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpMultiAsset.h; sourceTree = "<group>"; };
-		AE2DEF451B7E7C9B0012EC36 /* PxpMultiAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpMultiAsset.m; sourceTree = "<group>"; };
-		AE2DEF4A1B7E7D070012EC36 /* PxpAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpAsset.h; sourceTree = "<group>"; };
-		AE2DEF4B1B7E7D070012EC36 /* PxpAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpAsset.m; sourceTree = "<group>"; };
-		AE2DEF4D1B7E7FD30012EC36 /* PxpAsset+Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PxpAsset+Feed.h"; sourceTree = "<group>"; };
-		AE2DEF4E1B7E7FD30012EC36 /* PxpAsset+Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpAsset+Feed.m"; sourceTree = "<group>"; };
-		AE2DEF501B7E88D70012EC36 /* PxpMultiAsset+Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PxpMultiAsset+Feed.h"; sourceTree = "<group>"; };
-		AE2DEF511B7E88D70012EC36 /* PxpMultiAsset+Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpMultiAsset+Feed.m"; sourceTree = "<group>"; };
-		AE2DEF561B7E8BFA0012EC36 /* PxpAssetContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpAssetContext.h; sourceTree = "<group>"; };
-		AE2DEF591B7E8F510012EC36 /* PxpAssetContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpAssetContext.m; sourceTree = "<group>"; };
 		AE44C32F1B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFullscreenGestureRecognizer.h; sourceTree = "<group>"; };
 		AE44C3301B7A300E00B3EBDD /* PxpFullscreenGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpFullscreenGestureRecognizer.m; sourceTree = "<group>"; };
 		AE44C3321B7A374300B3EBDD /* PxpFullscreenResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpFullscreenResponder.h; sourceTree = "<group>"; };
@@ -1564,10 +1549,6 @@
 				AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */,
 				AEA25FA11B790FF1006C83C3 /* PxpPlayer+Feed.h */,
 				AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */,
-				AE2DEF4D1B7E7FD30012EC36 /* PxpAsset+Feed.h */,
-				AE2DEF4E1B7E7FD30012EC36 /* PxpAsset+Feed.m */,
-				AE2DEF501B7E88D70012EC36 /* PxpMultiAsset+Feed.h */,
-				AE2DEF511B7E88D70012EC36 /* PxpMultiAsset+Feed.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1657,12 +1638,6 @@
 				AEDD7C731B4AB717003C82F3 /* PxpLoadAction.h */,
 				AEDD7C741B4AB717003C82F3 /* PxpLoadAction.m */,
 				AEA25F9A1B790A21006C83C3 /* Extensions */,
-				AE2DEF441B7E7C9B0012EC36 /* PxpMultiAsset.h */,
-				AE2DEF451B7E7C9B0012EC36 /* PxpMultiAsset.m */,
-				AE2DEF561B7E8BFA0012EC36 /* PxpAssetContext.h */,
-				AE2DEF591B7E8F510012EC36 /* PxpAssetContext.m */,
-				AE2DEF4A1B7E7D070012EC36 /* PxpAsset.h */,
-				AE2DEF4B1B7E7D070012EC36 /* PxpAsset.m */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -3306,7 +3281,6 @@
 				D767EEF01B72560700DDD815 /* PxpFilterRangeSliderView.m in Sources */,
 				D7C931041B320CB000E725B9 /* ListViewFullScreenViewController.m in Sources */,
 				D7A9395016ADA65E006CBAB2 /* main.m in Sources */,
-				AE2DEF5A1B7E8F510012EC36 /* PxpAssetContext.m in Sources */,
 				D72CC28A1AFA858100E26B60 /* RatingOutput.m in Sources */,
 				D784EF4A1AA4B6230068D260 /* TestFilterViewController.m in Sources */,
 				D7C5F38119BF894A008190CE /* ScreenController.m in Sources */,
@@ -3479,7 +3453,6 @@
 				D7581EF1196454B00029C5DD /* CommentingRatingField.m in Sources */,
 				D74860FF1B5FDE4300CEC9DD /* LeagueTeam.m in Sources */,
 				94F95970192272C100B7D201 /* AVPlayerRewindableItem.m in Sources */,
-				AE2DEF521B7E88D70012EC36 /* PxpMultiAsset+Feed.m in Sources */,
 				D72779931A30F0D50034DD66 /* EncoderTask.m in Sources */,
 				D786C20417ECCD280042DD96 /* DropdownButton.m in Sources */,
 				AE5073AB1AFC1DCE002C361D /* TabsSettingViewController.m in Sources */,
@@ -3510,12 +3483,10 @@
 				D7341A861B73C01D005156E9 /* PxpFilterFootballTabViewController.m in Sources */,
 				AEA25F991B78FD2A006C83C3 /* PxpBorderLabel.m in Sources */,
 				D7AC70EB1A9691A2000E5648 /* ValueBuffer.m in Sources */,
-				AE2DEF461B7E7C9B0012EC36 /* PxpMultiAsset.m in Sources */,
 				AEDD7C7B1B4AB717003C82F3 /* PxpPlayerContext.m in Sources */,
 				AED484B11B56A23600769EEF /* PxpAddButton.m in Sources */,
 				AE9CA1BF1B875C9800BF1746 /* PXPTIFTelestration.c in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
-				AE2DEF4F1B7E7FD30012EC36 /* PxpAsset+Feed.m in Sources */,
 				D7341A8A1B74E714005156E9 /* PxpFilterButtonView.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
 				AE7EDCE71B5806A400998CF6 /* AVAsset+Image.m in Sources */,
@@ -3534,7 +3505,6 @@
 				D799748216F8C37700CAAABB /* playerCell.m in Sources */,
 				D77351351B821DA900DDCA4A /* PxpFilterRugbyTabViewController.m in Sources */,
 				D7EE1E4118244DB800CA36CF /* GraphView.m in Sources */,
-				AE2DEF4C1B7E7D070012EC36 /* PxpAsset.m in Sources */,
 				D7CCE7F41AC1E48500D85095 /* ReusableBottomViewController.m in Sources */,
 				D766F6271ACC8C5E005FC63A /* Event.m in Sources */,
 				D797790B1AEAF26B008A99E0 /* PxpLogViewController.m in Sources */,

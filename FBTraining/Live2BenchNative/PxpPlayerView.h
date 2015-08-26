@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "PxpPlayer.h"
-#import "PxpAssetContext.h"
 
 // Change this to what ever player view your heart desires
 #define PXP_PLAYER_VIEW_DEFAULT_CLASS NSClassFromString(@"PxpPlayerMultiView")
@@ -36,9 +35,6 @@ IB_DESIGNABLE
 
 /// The identifier of the player view.
 @property (copy, nonatomic, nonnull) IBInspectable NSString *identifier;
-
-/// the asset context.
-@property (strong, nonatomic, nonnull) PxpAssetContext *assetContext;
 
 /// The player who's contents should be displayed by the view.
 @property (strong, nonatomic, nullable) PxpPlayer *player;
