@@ -46,6 +46,7 @@
 #import "PxpL2BFullscreenViewController.h"
 #import "PxpListViewFullscreenViewController.h"
 #import "PxpPlayer+Tag.h"
+#import "UIImage+Blend.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -286,7 +287,7 @@ static void * eventContext      = &eventContext;
     
     playerList = [self playerList];
 
-    _leftArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ortrileft.png"]];
+    _leftArrow = [[UIImageView alloc]initWithImage:[[UIImage imageNamed:@"ortrileft.png"] imageBlendedWithColor:PRIMARY_APP_COLOR]];
     [_leftArrow setContentMode:UIViewContentModeScaleAspectFit];
     [_leftArrow setAlpha:1.0f];
     [self.view addSubview:_leftArrow];
@@ -297,7 +298,7 @@ static void * eventContext      = &eventContext;
     [_playerDrawerLeft.view.layer setBorderWidth:1.0f];
     [_playerDrawerLeft.view setBackgroundColor:[UIColor whiteColor]];
     
-    _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ortriright.png"]];
+    _rightArrow = [[UIImageView alloc]initWithImage:[[UIImage imageNamed:@"ortriright.png"] imageBlendedWithColor:PRIMARY_APP_COLOR]];
     [_rightArrow setContentMode:UIViewContentModeScaleAspectFit];
     [_rightArrow setAlpha:1.0f];
     [self.view addSubview:_rightArrow];

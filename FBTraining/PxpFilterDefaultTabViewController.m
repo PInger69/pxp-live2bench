@@ -84,10 +84,10 @@
 
     _telestrationButton.enabled = _isTelestrationActive;
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
-    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
+    [_telestrationButton setBackgroundImage:[[UIImage imageNamed:@"telestrationIconOff"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     
     [_telestrationButton setTitle:@"" forState:UIControlStateSelected];
-    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOn"] forState:UIControlStateSelected];
+    [_telestrationButton setBackgroundImage:[[UIImage imageNamed:@"telestrationIconOn"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
 }
 
 -(void)viewDidAppear:(BOOL)animated

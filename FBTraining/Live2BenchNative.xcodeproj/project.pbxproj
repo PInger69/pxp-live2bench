@@ -89,6 +89,8 @@
 		AEA25F9D1B790A65006C83C3 /* PxpPlayer+Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F9C1B790A65006C83C3 /* PxpPlayer+Tag.m */; };
 		AEA25FA01B790C6E006C83C3 /* PxpPlayerContext+Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */; };
 		AEA25FA31B790FF1006C83C3 /* PxpPlayer+Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */; };
+		AEA7D7511B8DFBE2007C2580 /* ortrileft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA7D74F1B8DFBE2007C2580 /* ortrileft@2x.png */; };
+		AEA7D7521B8DFBE2007C2580 /* ortriright@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA7D7501B8DFBE2007C2580 /* ortriright@2x.png */; };
 		AECB9A6E1B0CC0B3005DDB32 /* DualViewClipTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */; };
 		AECF63151B0BC07F00C98555 /* DualViewTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63141B0BC07F00C98555 /* DualViewTabViewController.m */; };
 		AECF63211B0BD72F00C98555 /* DualViewPeriodTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AECF63201B0BD72F00C98555 /* DualViewPeriodTableViewController.m */; };
@@ -673,6 +675,8 @@
 		AEA25F9F1B790C6E006C83C3 /* PxpPlayerContext+Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpPlayerContext+Tag.m"; sourceTree = "<group>"; };
 		AEA25FA11B790FF1006C83C3 /* PxpPlayer+Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PxpPlayer+Feed.h"; sourceTree = "<group>"; };
 		AEA25FA21B790FF1006C83C3 /* PxpPlayer+Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PxpPlayer+Feed.m"; sourceTree = "<group>"; };
+		AEA7D74F1B8DFBE2007C2580 /* ortrileft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ortrileft@2x.png"; sourceTree = "<group>"; };
+		AEA7D7501B8DFBE2007C2580 /* ortriright@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ortriright@2x.png"; sourceTree = "<group>"; };
 		AECB9A6C1B0CC0B3005DDB32 /* DualViewClipTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewClipTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AECB9A6D1B0CC0B3005DDB32 /* DualViewClipTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DualViewClipTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AECF63131B0BC07F00C98555 /* DualViewTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DualViewTabViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2386,7 +2390,9 @@
 				D7DA9B241B0683390062EAD9 /* ClipDataContentDisplay.h */,
 				D7F2BFB11B39970B00EA8BF0 /* CreditsView.xib */,
 				D7A022391B6A7A6000959EBE /* ortrileft.png */,
+				AEA7D74F1B8DFBE2007C2580 /* ortrileft@2x.png */,
 				D7A0223A1B6A7A6000959EBE /* ortriright.png */,
+				AEA7D7501B8DFBE2007C2580 /* ortriright@2x.png */,
 				D7DA9B251B0683390062EAD9 /* ClipDataContentDisplay.m */,
 				D72CC2891AFA858100E26B60 /* RatingOutput.m */,
 				D72CC28E1AFA8B3D00E26B60 /* RatingOutput.h */,
@@ -3119,6 +3125,7 @@
 				D7F2BFB21B39970B00EA8BF0 /* CreditsView.xib in Resources */,
 				D79F9B7D17F5D5F00081C5E9 /* myplayXplay_tagging@2x.png in Resources */,
 				D79F9B8017F5ED0B0081C5E9 /* myplayXplay_phonecall.png in Resources */,
+				AEA7D7521B8DFBE2007C2580 /* ortriright@2x.png in Resources */,
 				BDD2D2FA17ECDD11004D5D9A /* clip-back-just@2x.png in Resources */,
 				D78F68D318073DC70096C793 /* OrangeSettingsButtonSelect.png in Resources */,
 				BD8C368317F330360094CBAD /* mailselected.png in Resources */,
@@ -3179,6 +3186,7 @@
 				BD9BC32417EB96B3001B67DE /* clip-back@2x.png in Resources */,
 				AE7AE3B71B74FAAA0021EC03 /* PxpPlayerViewController.xib in Resources */,
 				BD8C367F17F32FB80094CBAD /* mail@2x.png in Resources */,
+				AEA7D7511B8DFBE2007C2580 /* ortrileft@2x.png in Resources */,
 				D786C24117F39CA10042DD96 /* youtube@2x.png in Resources */,
 				D7B79CD4182C398400F0876D /* saveToAlbumSelected.png in Resources */,
 				BDD2D30117ECF343004D5D9A /* chevrect.png in Resources */,
