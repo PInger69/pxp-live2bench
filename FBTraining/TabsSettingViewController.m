@@ -49,10 +49,10 @@
                                         @{
                                             @"Name": NSLocalizedString(@"Medical", nil),
                                             @"Identifier":TAB_MEDICAL},
-                                        @{
+                                        /*@{
                                             @"Name": NSLocalizedString(@"Injury", nil),
                                             @"Identifier": TAB_INJURY
-                                            },
+                                            },*/
                                         @{
                                             @"Name": NSLocalizedString(@"Dual View", nil),
                                             @"Identifier": TAB_FOOTBALL_TRAINING
