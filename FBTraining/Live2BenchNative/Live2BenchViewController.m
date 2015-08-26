@@ -885,7 +885,7 @@ static void * eventContext      = &eventContext;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
     
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 64, 38)];
+    //_feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 64, 38)];
     
     //!_pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
@@ -894,7 +894,7 @@ static void * eventContext      = &eventContext;
     [self.view addSubview:_feedSwitch];
     
     // multi button
-    multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];
+    //multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];
     [multiButton setTitle:NSLocalizedString(@"Multi",nil) forState:UIControlStateNormal];
     [multiButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [multiButton addTarget:_pipController action:@selector(onButtonPressMulti:) forControlEvents:UIControlEventTouchUpInside];
