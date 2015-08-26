@@ -13,7 +13,7 @@
 {
     UIViewController    * contentVC;
     UIView              * content;
-    UILabel             * messageText;
+   
     NSMutableArray      * teamButtons;
     NSMutableArray      * onCompletionBlocks;
     
@@ -22,6 +22,7 @@
 @property (nonatomic,assign) BOOL       animatePresent;
 @property (nonatomic,strong) NSString   * message;
 @property (nonatomic,strong) NSArray    * listOfButtonNames;
+@property (nonatomic,strong) UILabel             * messageText;
 
 
 -(id)initWithMessage:(NSString*)aMessage buttonListNames:(NSArray*)aListOfNames;
