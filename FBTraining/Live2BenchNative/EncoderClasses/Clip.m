@@ -267,14 +267,15 @@
     for (NSString *path in self.videoFiles) {
         
         const char *s = path.UTF8String;
-        unsigned long a = 0, b = 0;
+        size_t a = 0, b = 0;
         
         const char *c = s;
         while (*c && *(c - 1) != '+') a++, b++, c++;
         while (*c && strcmp(c, "hq.mp4")) b++, c++;
         
-        char *source = calloc(b - a, sizeof(char));
-        for (unsigned long i = 0; i < b - a; i++) source[i] = s[a + i];
+        const size_t n = b - a;
+        char *source = n ? calloc(n, sizeof(char)) : NULL;
+        for (size_t i = 0; i < n; i++) source[i] = s[a + i];
         
         sources[[NSString stringWithUTF8String:source]] = path;
         

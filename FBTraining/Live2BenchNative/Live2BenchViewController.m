@@ -175,8 +175,6 @@ static void * eventContext      = &eventContext;
         [self addChildViewController:_playerViewController];
         [self addChildViewController:_fullscreenViewController];
     }
-    
-    _telestrationViewController = [[PxpTelestrationViewController alloc] init];
   
     __block Live2BenchViewController * weakSelf = self;
     tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {

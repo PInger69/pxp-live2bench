@@ -792,6 +792,7 @@
 }
 
 -(void)didReceiveMemoryWarning{
+    [super didReceiveMemoryWarning];
     [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
 }
 

@@ -149,6 +149,7 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     self.telestration = nil;
 }
 
