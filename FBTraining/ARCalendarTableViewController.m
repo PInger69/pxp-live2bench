@@ -397,7 +397,7 @@
     
     
     if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) ([localOne.feeds count]), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.originalFeeds, NSLocalizedString(@"Sources", nil)]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) ([localOne.originalFeeds count]), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.originalFeeds, NSLocalizedString(@"Sources", nil)]];
     }
 
     if (event.local) {
@@ -405,7 +405,7 @@
 
     } else {
         if (localOne) {
-            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)([localOne.feeds count]),(unsigned long)event.originalFeeds.count]];
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)([localOne.originalFeeds count]),(unsigned long)event.originalFeeds.count]];
         } else {
             
             [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)event.downloadedSources.count,(unsigned long)event.originalFeeds.count]];
@@ -448,7 +448,7 @@
         alert.type = AlertImportant;
         [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
         [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this Event?",nil)];
-        if ((localCounterpart && [localCounterpart.feeds count] > 0)) {
+        if ((localCounterpart && [localCounterpart.originalFeeds count] > 0)) {
             [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server and local device)",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"Yes(Only local)",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
