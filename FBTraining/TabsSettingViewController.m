@@ -25,7 +25,7 @@
 #define TAB_CLIPVIEW @"ClipView"
 #define TAB_LISTVIEW @"ListView"
 #define TAB_MYCLIP @"MyClip"
-#define TAB_FOOTBALL_TRAINING @"DualView"
+#define TAB_DUALVIEW @"DualView"
 #define TAB_DEBUG @"Debug"
 #define TAB_MEDICAL @"Medical"
 
@@ -55,7 +55,7 @@
                                             },*/
                                         @{
                                             @"Name": NSLocalizedString(@"Dual View", nil),
-                                            @"Identifier": TAB_FOOTBALL_TRAINING
+                                            @"Identifier": TAB_DUALVIEW
                                             },
                                         @{
                                             @"Name": NSLocalizedString(@"Live2Bench", nil),
@@ -90,7 +90,7 @@
         self.settingData[TAB_LISTVIEW] = @YES;
         self.settingData[TAB_MYCLIP] = @YES;
         self.settingData[TAB_DEBUG] = @NO;
-        self.settingData[TAB_FOOTBALL_TRAINING] = @NO;
+        self.settingData[TAB_DUALVIEW] = @NO;
         self.settingData[TAB_MEDICAL] = @NO;
         
         
@@ -103,7 +103,7 @@
                                        TAB_LISTVIEW: [ListViewController class],
                                        TAB_MYCLIP: [BookmarkViewController class],
                                        TAB_DEBUG: [DebuggingTabViewController class],
-                                       TAB_FOOTBALL_TRAINING: [DualViewTabViewController class],
+                                       TAB_DUALVIEW: [DualViewTabViewController class],
                                        };
         self.delegate = self;
         
