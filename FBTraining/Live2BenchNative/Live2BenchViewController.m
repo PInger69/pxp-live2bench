@@ -434,6 +434,8 @@ static void * eventContext      = &eventContext;
                                    animated:YES];
         /*CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
         [alert showView];*/
+    }else{
+        [self addFeed];
     }
     
 }
