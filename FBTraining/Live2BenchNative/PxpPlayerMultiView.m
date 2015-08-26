@@ -122,7 +122,7 @@
         PxpPlayerSingleView *playerView = (PxpPlayerSingleView *)recognizer.view;
         
         
-        if (playerView == self.companionView && self.companionView.player /* && self.context.players.count > 1 */) {
+        if (playerView == self.companionView && self.companionView.player && self.context.players.count > 1) {
             
             PxpPlayer *player = self.companionView.player;
             
