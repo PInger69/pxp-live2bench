@@ -94,11 +94,13 @@
     
     self.thumbColour = [[ClipCornerView alloc] initWithFrame:CGRectMake(self.imageView.frame.size.width-30, 0.0f, 30, 30)];
     [self.thumbColour setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
+    /*
     self.thumbColour.layer.masksToBounds = YES;
     self.thumbColour.layer.cornerRadius = 1; // if you like rounded corners
     self.thumbColour.layer.shadowOffset = CGSizeMake(-1, 0);
     self.thumbColour.layer.shadowRadius = 2;
     self.thumbColour.layer.shadowOpacity = 0.8;
+     */
     [self.imageView addSubview:self.thumbColour];
    
     self.thumbName = [[UILabel alloc] initWithFrame:CGRectMake(self.imageView.frame.origin.x+PADDING, 140.0f, self.imageView.bounds.size.width*3/4, 18.0f)];

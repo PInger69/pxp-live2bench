@@ -338,7 +338,7 @@
     self.playerA.URL = feedA.path;
     self.playerB.URL = feedB.path;
     
-    [self.liveButton isActive:event.live];
+    self.liveButton.enabled = event.live;
     
     if (event.live) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

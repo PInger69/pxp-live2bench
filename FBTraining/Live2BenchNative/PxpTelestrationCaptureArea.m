@@ -27,7 +27,7 @@
     return self;
 }
 
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         _telestration = nil;
@@ -92,14 +92,22 @@
 
 - (void)reportTouch:(nullable UITouch *)touch {
     if (self.telestration && touch) {
+        const CGSize captureSize = self.bounds.size, teleSize = self.telestration.size;
+        
         // get the touch's location in the cature area.
-        CGPoint location = [touch locationInView:self];
+        const CGPoint location = [touch locationInView:self];
         
         // get capture time.
-        NSTimeInterval time = self.timeProvider ? self.timeProvider.currentTimeInSeconds : 0.0;
+        const NSTimeInterval time = self.timeProvider ? self.timeProvider.currentTimeInSeconds : 0.0;
+        
+        // convert the point to the telestration's size.
+        const CGPoint position = CGPointMake((teleSize.width / captureSize.width) * location.x, (teleSize.height / captureSize.height) * location.y);
+        
+        // clamp the point the telestration's bounds.
+        const CGPoint clamp = CGPointMake(MAX(0, MIN(position.x, teleSize.width)), MAX(0, MIN(position.y, teleSize.height)));
         
         // add the point to the action.
-        [self.action addPoint:[[PxpTelestrationPoint alloc] initWithPosition:location displayTime:time]];
+        [self.action addPoint:[[PxpTelestrationPoint alloc] initWithPosition:clamp displayTime:time]];
     }
 }
 

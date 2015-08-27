@@ -13,6 +13,7 @@
 #import "PlayerCollectionViewController.h"
 #import "OverlayViewController.h"
 #import "SideTagButton.h"
+
 #define STATE_FULLSCREEN @"fullscreen"
 #define STATE_SMALLSCREEN @"smallscreen"
 
@@ -38,6 +39,9 @@
 @property (assign,nonatomic) SideTagButtonModes                 buttonStateMode;
 @property (strong,nonatomic) FullScreenViewController           * fullScreenViewController;
 @property (strong,nonatomic) PlayerCollectionViewController     * playerCollectionViewController;         //it will show up when swiping tag button;Its view contains all the player buttons
+
+@property (readonly, strong, nonatomic) UIView *leftTray;
+@property (readonly, strong, nonatomic) UIView *rightTray;
 
 -(id)initWithView:(UIView*)view;
 -(void)inputTagData:(NSArray*)listOfDicts;

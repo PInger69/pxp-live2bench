@@ -24,7 +24,7 @@
     return self;
 }
 
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         _tagNames = @[];
@@ -69,7 +69,7 @@
         NSDictionary *tagDescriptor = sortedTagDescriptors[i];
         NSString *tagName = tagDescriptor[@"name"];
         
-        if (tagName) {
+        if (tagName && ![tagName hasPrefix:@"-"]) {
             [tagNames addObject:tagName];
         }
     }

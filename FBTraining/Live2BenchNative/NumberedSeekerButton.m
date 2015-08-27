@@ -99,7 +99,6 @@ static UIImage * __nonnull _circleArrow;
     
     NSString *txtNum;
     if (textNumber < .25){
-        txtNum = [NSString stringWithFormat:@"%.02f",textNumber];
         txtNum = @"F";
     } else if (textNumber < 1){
         txtNum = [NSString stringWithFormat:@"%.02f",textNumber];
@@ -140,7 +139,7 @@ static UIImage * __nonnull _circleArrow;
     const CGRect labelFrame = w > h ? CGRectMake((w - h) / 2.0, 0.0, h, h) : CGRectMake(0.0, (h - w) / 2.0, w, w);
     
     _numberLabel.frame = labelFrame;
-    _numberLabel.font = [UIFont systemFontOfSize:0.5 * s];
+    _numberLabel.font = [UIFont systemFontOfSize:(1.0 - PHI_INV) * s];
 }
 
 @end

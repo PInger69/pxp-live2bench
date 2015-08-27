@@ -17,6 +17,9 @@
 @end
 
 @implementation PxpPlayerPipCompanionView
+{
+    void * _pipPlayerObserverContext;
+}
 
 - (void)initPipCompanionView {
     _pipView = [[PxpPlayerPipView alloc] init];
@@ -38,6 +41,10 @@
     
     [self addGestureRecognizer:swapGestureRecognizer];
     [_pipView addGestureRecognizer:subPipGestureRecognizer];
+    
+    _pipPlayerObserverContext = &_pipPlayerObserverContext;
+    
+    [_pipView addObserver:self forKeyPath:@"player" options:0 context:_pipPlayerObserverContext];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -56,18 +63,45 @@
     return self;
 }
 
+- (void)dealloc {
+    [_pipView removeObserver:self forKeyPath:@"player" context:_pipPlayerObserverContext];
+}
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
+    if (context == _pipPlayerObserverContext && self.player != self.pipView.player) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.player reload];
+        });
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
 #pragma mark - Overrides
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)setFrame:(CGRect)frame {
+    if (self.frame.size.width && self.frame.size.height) {
+        self.pipView.frame = CGRectMake((frame.size.width / self.frame.size.width) * self.pipView.frame.origin.x, (frame.size.height / self.frame.size.height) * self.pipView.frame.origin.y, frame.size.width / 3.0, frame.size.height / 3.0);
+    } else {
+        self.pipView.frame = CGRectMake(self.pipView.frame.origin.x, self.pipView.frame.origin.y, frame.size.width / 3.0, frame.size.height / 3.0);
+    }
     
-    self.pipView.frame = CGRectMake(self.pipView.frame.origin.x, self.pipView.frame.origin.y, self.bounds.size.width / 3.0, self.bounds.size.height / 3.0);
+    [super setFrame:frame];
 }
 
 - (void)setPlayer:(nullable PxpPlayer *)player {
     [super setPlayer:player];
     
     [player.context muteAllButPlayer:player];
+}
+
+- (void)setHidden:(BOOL)hidden {
+    [super setHidden:hidden];
+    
+    if (hidden) {
+        self.pipView.hidden = YES;
+        self.pipView.player = nil;
+    }
 }
 
 #pragma mark - Gesture Recognizers
@@ -77,13 +111,17 @@
         PxpPlayerView *playerView = (PxpPlayerView *)recognizer.view;
         
         if (playerView == self && playerView.player && !self.pipView.player) {
-            self.pipView.player = playerView.player;
             self.pipView.hidden = NO;
+            self.pipView.player = playerView.player;
         } else if (playerView == self || playerView == self.pipView) {
             self.pipView.hidden = YES;
             self.pipView.player = nil;
+            
+            [self setNeedsDisplay];
+            [self.pipView setNeedsDisplay];
         }
     }
+    
 }
 
 - (void)swapGestureRecognized:(UIGestureRecognizer *)recognizer {
@@ -91,9 +129,12 @@
         PxpPlayerView *playerView = (PxpPlayerView *)recognizer.view;
         
         if ((playerView == self || playerView == self.pipView) && self.player && self.pipView.player) {
-            PxpPlayer *temp = self.player;
-            self.player = self.pipView.player;
-            self.pipView.player = temp;
+            PxpPlayer *temp = self.pipView.player;
+            self.pipView.player = self.player;
+            self.player = temp;
+            
+            [self setNeedsDisplay];
+            [self.pipView setNeedsDisplay];
         }
     }
 }

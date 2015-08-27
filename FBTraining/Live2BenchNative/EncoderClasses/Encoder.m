@@ -376,6 +376,8 @@
 @synthesize isAlive;
 @synthesize allEvents       = _allEvents;
 
+@synthesize eventContext = _eventContext;
+
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
 
@@ -404,6 +406,8 @@
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
         encoderSync             = [[EncoderDataSync alloc]init];
+        
+        _eventContext = [PxpEventContext context];
     }
     return self;
 }
@@ -456,7 +460,9 @@
     [self didChangeValueForKey:@"event"];
     NSString * eventType = (_event)?_event.eventType:@"";
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":eventType}];
+    _eventContext.event = event;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":eventType,@"eventStopped":[NSNumber numberWithBool:eventStopped]}];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];
 }
 
@@ -766,10 +772,7 @@
     NSString *tagID = tag.ID;
     NSString *ip = self.ipAddress;
     NSString *src = note.userInfo[@"src"];
-    
-    unsigned long n;
-    sscanf(src.UTF8String, "s_%lu", &n);
-    NSString *remoteSrc = [NSString stringWithFormat:@"%02luhq", n];
+    NSString *remoteSrc = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
         
         NSString *remotePath;
     if ([self checkEncoderVersion]) {

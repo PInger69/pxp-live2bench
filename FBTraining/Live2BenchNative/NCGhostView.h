@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-/*!
+/**
  * @breif A UIView subclass that passes all touch event to the next object in the responder chain.
  * @author Nicholas Cvitak
  */

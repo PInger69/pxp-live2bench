@@ -38,7 +38,7 @@
 
 static NSNotificationCenter * __nonnull _localCenter;
 static NSArray * __nonnull _defaultSpeeds;
-static CGFloat _textNumbers[2] = { 1.0, 1.0 };
+static CGFloat _textNumbers[2] = { 5.0, 5.0 };
 
 + (void)initialize {
     _localCenter = [[NSNotificationCenter alloc] init];
@@ -67,6 +67,10 @@ static CGFloat _textNumbers[2] = { 1.0, 1.0 };
 
 + (nonnull instancetype)makeFullScreenBackwardAt:(CGPoint)pt {
     return [[self alloc] initWithFrame:CGRectMake(pt.x, pt.y, LARGE_ICON_DIMENSIONS + LARGE_MARGIN, LARGE_ICON_DIMENSIONS + LARGE_MARGIN) backward:YES margin:LARGE_MARGIN / 2.0];
+}
+
+- (nonnull instancetype)initWithBackward:(BOOL)backward {
+    return [self initWithFrame:CGRectZero backward:backward margin:0.0 speeds:_defaultSpeeds];
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame {
@@ -112,8 +116,53 @@ static CGFloat _textNumbers[2] = { 1.0, 1.0 };
     return self;
 }
 
+- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    BOOL backward = [aDecoder decodeObjectForKey:@"backward"];
+    NSArray *speeds = [aDecoder decodeObjectOfClass:[NSArray class] forKey:@"speeds"];
+    CGFloat margin = [aDecoder decodeFloatForKey:@"margin"];
+    BOOL independent = [aDecoder decodeBoolForKey:@"independent"];
+    
+    if (self) {
+        _backward = backward;
+        _speeds = speeds ? speeds : _defaultSpeeds;
+        _margin = margin;
+        _independent = independent;
+        
+        _buttons = [NSMutableArray arrayWithCapacity:_speeds.count];
+        
+        _backPlate = [[UIView alloc] initWithFrame:self.bounds];
+        _backPlate.backgroundColor = [UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3];
+        _backPlate.hidden = YES;
+        
+        _mainButton = [[NumberedSeekerButton alloc] initWithFrame:self.bounds backward:_backward];
+        _mainButton.textNumber = _textNumbers[_backward ? 1 : 0];
+        [_mainButton addTarget:self action:@selector(seekAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPressSeekControl:)];
+        recognizer.minimumPressDuration = 0.5; //seconds
+        [_mainButton addGestureRecognizer:recognizer];
+        
+        [self addSubview:_backPlate];
+        [self addSubview:_mainButton];
+        [self rebuildButtons];
+        
+        [_localCenter addObserver:self selector:@selector(syncTextNumberHandler:) name:NOTIF_SEEK_BUTTON_SYNC_TEXT_NUMBER object:nil];
+    }
+    return self;
+}
+
 - (void)dealloc {
     [_localCenter removeObserver:self];
+}
+
+- (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeBool:_backward forKey:@"backward"];
+    [aCoder encodeObject:_speeds forKey:@"speeds"];
+    [aCoder encodeFloat:_margin forKey:@"margin"];
+    [aCoder encodeBool:_independent forKey:@"independent"];
 }
 
 #pragma mark - Overrides

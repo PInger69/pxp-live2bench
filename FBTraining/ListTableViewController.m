@@ -221,7 +221,7 @@
             tagKeyForSearch = [NSString stringWithFormat:@"%@-%@"]
         }*/
 
-        NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
+        //NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
         // This is checking if tag is downloaded to the device already
         
         if ([[[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]] isKindOfClass:[NSString class]]) {

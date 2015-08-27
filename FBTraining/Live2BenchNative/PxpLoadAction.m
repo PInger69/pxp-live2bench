@@ -26,6 +26,10 @@
     return [[self alloc] initWithTarget:target action:action];
 }
 
++ (nonnull instancetype)loadActionWithLoadActions:(nullable NSArray *)loadActions {
+    return [[self alloc] initWithLoadActions:loadActions];
+}
+
 - (nonnull instancetype)initWithBlock:(void (^)(BOOL))block {
     self = [super init];
     if (self) {
@@ -37,19 +41,18 @@
 }
 
 - (nonnull instancetype)initWithTarget:(nullable id)target action:(nullable SEL)action {
-    self = [super init];
-    if (self) {
-        
-        IMP method = [target methodForSelector:action];
-        void (*f)(id, SEL, id) = (void (*)(id, SEL, id))method;
-        
-        __block PxpLoadAction *loadAction = self;
-        
-        _complete = NO;
-        _success = nil;
-        _block = f ? ^(BOOL success) { f(target, action, loadAction); } : nil;
-    }
-    return self;
+    IMP method = [target methodForSelector:action];
+    void (*f)(id, SEL, id) = (void (*)(id, SEL, id))method;
+    
+    return [self initWithBlock:^(BOOL success) { f(target, action, self); }];
+}
+
+- (nonnull instancetype)initWithLoadActions:(nullable NSArray *)loadActions {
+    return [self initWithBlock:^(BOOL success) {
+        for (PxpLoadAction *loadAction in loadActions) {
+            [loadAction runWithSuccess:success];
+        }
+    }];
 }
 
 - (nonnull instancetype)init {
@@ -61,7 +64,7 @@
 - (void)runWithSuccess:(BOOL)success {
     
     // on the run the action if it has not ran before
-    if (!self.complete) {
+    if (!_complete) {
         
         // update the success property
         [self willChangeValueForKey:@"success"];
@@ -69,8 +72,10 @@
         [self didChangeValueForKey:@"success"];
         
         // run the block
-        if (self.block) {
-            self.block(success);
+        if (_block) {
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                _block(success);
+            });
         }
         
         // signal the completion

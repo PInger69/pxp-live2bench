@@ -62,6 +62,8 @@ static LocalEncoder * instance;
 @synthesize status          = _status;
 @synthesize allEvents       = _allEvents;
 
+@synthesize eventContext = _eventContext;
+
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
 
@@ -88,6 +90,8 @@ static LocalEncoder * instance;
         _localTags                      = [[NSMutableArray alloc] init];
         _modifiedTags                   = [[NSMutableArray alloc] init];
         tagSyncConnections              = [NSMutableArray array];
+        
+        _eventContext = [PxpEventContext context];
         
         closeTags = @{[NSNumber numberWithInteger:TagTypeSoccerZoneStart]:[NSNumber numberWithInteger:TagTypeSoccerZoneStop],[NSNumber numberWithInteger:TagTypeSoccerHalfStart]:[NSNumber numberWithInteger:TagTypeSoccerHalfStop],[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]:[NSNumber numberWithInteger:TagTypeHockeyPeriodStop],[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]:[NSNumber numberWithInteger:TagTypeHockeyStrengthStop],[NSNumber numberWithInteger:TagTypeHockeyStartOLine]:[NSNumber numberWithInteger:TagTypeHockeyStopOLine],[NSNumber numberWithInteger:TagTypeHockeyStartDLine]:[NSNumber numberWithInteger:TagTypeHockeyStopDLine],[NSNumber numberWithInteger:TagTypeFootballQuarterStart]:[NSNumber numberWithInteger:TagTypeFootballQuarterStop]};
         
@@ -1072,7 +1076,8 @@ static LocalEncoder * instance;
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":_event.eventType}];
+    _eventContext.event = event;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
 }
 
 
@@ -1416,9 +1421,6 @@ static LocalEncoder * instance;
 {
     isFinished = NO;
 }
-
-
-
 
 //debugging
 #pragma mark - debugging
