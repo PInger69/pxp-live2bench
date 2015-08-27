@@ -193,6 +193,9 @@ static void * encoderTagContext = &encoderTagContext;
     if (!componentFilter.rawTagArray) {
         self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
     }
+    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
+
     [self.collectionView reloadData];
 
 }
@@ -954,7 +957,8 @@ static void * encoderTagContext = &encoderTagContext;
 {
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-    
+    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
     [_collectionView reloadData];
 }
 
@@ -963,6 +967,10 @@ static void * encoderTagContext = &encoderTagContext;
     [_pxpFilter filterTags:self.allTagsArray];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    
+    
+    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
     [_collectionView reloadData];
 }
 
