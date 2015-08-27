@@ -818,7 +818,8 @@
                                                  @"event": (tag.isLive)?LIVE_EVENT:tag.event,
                                                  @"requesttime":GET_NOW_TIME_STRING,
                                                  @"bookmark":@"1",
-                                                 @"user":[UserCenter getInstance].userHID
+                                                 @"user":[UserCenter getInstance].userHID,
+                                                 @"name":tag.name
                                                 }];
     
     [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
