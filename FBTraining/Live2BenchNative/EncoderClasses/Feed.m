@@ -48,16 +48,18 @@
         _assets = [NSMutableDictionary dictionary];
         for (NSString * k in keys)
         {
-            NSURL *url = [NSURL URLWithString:aDict[k]];
-            
-            if (url) {
-                tempDict[k] = url;
-                _assets[k] = [AVURLAsset URLAssetWithURL:url options:nil];
+            if ([k isEqualToString:@"hq"] || [k isEqualToString:@"lq"]) {
+                NSURL *url = [NSURL URLWithString:aDict[k]];
                 
-                if (defaultURL == nil) {
-                    defaultURL = [tempDict objectForKey:[k lowercaseString]];
-                } else if ([[k lowercaseString] isEqualToString:LOW_QUALITY]) {   // The default is LOW_QUALITY
-                    defaultURL = [tempDict objectForKey:[k lowercaseString]];
+                if (url) {
+                    tempDict[k] = url;
+                    _assets[k] = [AVURLAsset URLAssetWithURL:url options:nil];
+                    
+                    if (defaultURL == nil) {
+                        defaultURL = [tempDict objectForKey:[k lowercaseString]];
+                    } else if ([[k lowercaseString] isEqualToString:LOW_QUALITY]) {   // The default is LOW_QUALITY
+                        defaultURL = [tempDict objectForKey:[k lowercaseString]];
+                    }
                 }
             }
         }
