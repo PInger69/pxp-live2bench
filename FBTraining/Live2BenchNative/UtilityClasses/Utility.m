@@ -347,9 +347,10 @@
 }
 
 +(BOOL)isDeviceSupportedMultiCam:(NSString *)platform{
+    const char *s = platform.UTF8String;
     BOOL result = FALSE;
-
-    if ([platform containsString:@"iPad"]) {
+    
+    if (s && strstr(s, "iPad")) {
         NSArray *words = [platform componentsSeparatedByString:@","];
         platform = words[0];
         words = [platform componentsSeparatedByString:@"iPad"];
