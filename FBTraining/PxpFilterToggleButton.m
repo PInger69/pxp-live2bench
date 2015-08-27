@@ -11,6 +11,8 @@
 
 @implementation PxpFilterToggleButton
 
+@synthesize modified = _modified;
+
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];

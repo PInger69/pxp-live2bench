@@ -459,12 +459,6 @@
     
     NSDictionary *userInfo = [notification.userInfo objectForKey:@"forFeed"];
     
-    float time              = [[userInfo objectForKey:@"time"] floatValue];
-    float dur               = [[userInfo objectForKey:@"duration"] floatValue];
-    CMTime cmtime           = CMTimeMake(time, 1);
-    CMTime cmDur            = CMTimeMake(dur, 1);
-    
-    CMTimeRange timeRange   = CMTimeRangeMake(cmtime, cmDur);
     Feed *feed = [userInfo objectForKey:@"feed"];
     
     selectedTag = userInfo[@"forWhole"];

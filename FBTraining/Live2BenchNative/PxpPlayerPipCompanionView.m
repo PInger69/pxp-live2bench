@@ -90,6 +90,10 @@
 }
 
 - (void)setPlayer:(nullable PxpPlayer *)player {
+    if (self.pipView.player && ![self.context containsPlayer:player]) {
+        self.pipView.player = player;
+    }
+    
     [super setPlayer:player];
     
     [player.context muteAllButPlayer:player];

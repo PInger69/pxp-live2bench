@@ -13,12 +13,12 @@
 @implementation PxpFilterRatingView
 {
     NSInteger           _selectedCount;
-    NSMutableArray      * _starButtons;
+    NSMutableArray      *__nonnull _starButtons;
     UIImage             * _starOnImage;
     UIImage             * _starOffImage;
 }
 
-
+@synthesize modified = _modified;
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
@@ -28,7 +28,7 @@
         self.backgroundColor    = [UIColor clearColor];
         _starOnImage            = [Utility starImageSelected:YES size:CGSizeMake(STAR_SIZE, STAR_SIZE)];
         _starOffImage           = [Utility starImageSelected:NO size:CGSizeMake(STAR_SIZE, STAR_SIZE)];
-        _starButtons            = [NSMutableArray new];
+        _starButtons            = [NSMutableArray array];
     }
     return self;
 }
@@ -47,7 +47,7 @@
         self.backgroundColor    = [UIColor clearColor];
         _starOnImage            = [Utility starImageSelected:YES size:CGSizeMake(STAR_SIZE, STAR_SIZE)];
         _starOffImage           = [Utility starImageSelected:NO  size:CGSizeMake(STAR_SIZE, STAR_SIZE)];
-        _starButtons            = [NSMutableArray new];
+        _starButtons            = [NSMutableArray array];
     }
     return self;
 }

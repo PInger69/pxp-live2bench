@@ -14,10 +14,9 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil tabImage:[UIImage imageNamed:@"filter"]];
     if (self) {
         self.title = @"Default";
-       self.tabImage =  [UIImage imageNamed:@"filter"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
     }
     
