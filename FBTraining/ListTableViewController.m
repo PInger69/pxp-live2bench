@@ -216,6 +216,10 @@
         __block FeedSelectCell *weakCell = collapsableCell;
         collapsableCell.downloadButton.downloadItem = nil;
         
+        /*NSString *tagKeyForSearch;
+        if (tag.event.originalFeeds.count > 1) {
+            tagKeyForSearch = [NSString stringWithFormat:@"%@-%@"]
+        }*/
 
         NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
         // This is checking if tag is downloaded to the device already
@@ -254,9 +258,9 @@
                 }];
             };
             
-            NSString *src = [NSString stringWithFormat:@"s_%@hq", key];
-            
-            src = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
+            //NSString *src = [NSString stringWithFormat:@"s_%@hq", key];
+            NSString *src = [NSString stringWithFormat:@"%@hq", key];
+            //src = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
                                                                                                                    @"block": blockName,
                                                                                                                    @"tag": tag,
@@ -421,7 +425,7 @@
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else{
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),@" "]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
     }
     
     
