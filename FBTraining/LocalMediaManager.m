@@ -428,7 +428,7 @@ static LocalMediaManager * instance;
     if (!localEvent) {
         return  nil;
     }
-    NSDictionary *feeds = localEvent.feeds;
+    NSDictionary *feeds = localEvent.originalFeeds;
     NSArray *keys = [feeds allKeys];
     Feed *foundFeed;
     

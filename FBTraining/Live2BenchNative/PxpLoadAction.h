@@ -28,11 +28,17 @@
 /// Creates a new load action with a selector to be performed when a player finises loading.
 + (nonnull instancetype)loadActionWithTarget:(nullable id)target action:(nullable SEL)action;
 
+/// Creates a new load action to execute multiple loadActions.
++ (nonnull instancetype)loadActionWithLoadActions:(nullable NSArray *)loadActions;
+
 /// Initializes a load action with a block to be executed when a player finishes loading.
 - (nonnull instancetype)initWithBlock:(nullable void(^)(BOOL))block;
 
 /// Initializes a load action with a selector to be performed when a player finises loading.
 - (nonnull instancetype)initWithTarget:(nullable id)target action:(nullable SEL)action;
+
+/// Initializes a load action to execute multiple loadActions.
+- (nonnull instancetype)initWithLoadActions:(nullable NSArray *)loadActions;
 
 #pragma mark - Execution
 

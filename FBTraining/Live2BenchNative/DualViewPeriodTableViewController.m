@@ -128,7 +128,9 @@
 }
 
 - (void)setTagNames:(nonnull NSArray *)tagNames {
-    _tagNames = tagNames;
+    _tagNames = [tagNames filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary * __nullable bindings) {
+        return ![evaluatedObject hasPrefix:@"-"];
+    }]];
     
     for (NSString *tagName in self.tagNames) {
         self.periods[tagName] = [NSMutableArray array];
@@ -160,7 +162,7 @@
         
         BOOL found = NO;
         for (NSUInteger i = 0; !found && i < _tags.count; i++) {
-            if ([_tags[i] uniqueID] == tag.uniqueID) {
+            if (((Tag *)_tags[i]).uniqueID == tag.uniqueID) {
                 _tags[i] = tag;
                 found = YES;
             }
@@ -175,7 +177,7 @@
             NSUInteger index = [tagArray indexOfObject:tag inSortedRange:(NSRange){0, tagArray.count} options:NSBinarySearchingInsertionIndex usingComparator:tagComparator];
             
             // modify the tag if the
-            if (index < tagArray.count && [tagArray[index] uniqueID] == tag.uniqueID) {
+            if (index < tagArray.count && ((Tag *)_tags[index]).uniqueID == tag.uniqueID) {
                 tagArray[index] = tag;
             } else {
                 [tagArray insertObject:tag atIndex:index];

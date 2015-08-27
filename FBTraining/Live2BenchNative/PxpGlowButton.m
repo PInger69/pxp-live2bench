@@ -33,7 +33,7 @@
     UIColor *color = self.highlighted ? self.highlightColor : self.tintColor;
     
     if (color) {
-        self.layer.fillColor = color.CGColor;
+        self.layer.fillColor = self.stroke ? nil : color.CGColor;
         self.layer.strokeColor = color.CGColor;
         self.layer.shadowColor = color.CGColor;
     }
@@ -55,6 +55,17 @@
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    UIColor *color = self.highlighted ? self.highlightColor : self.tintColor;
+    
+    if (color) {
+        self.layer.fillColor = self.stroke ? nil : color.CGColor;
+        self.layer.strokeColor = color.CGColor;
+        self.layer.shadowColor = color.CGColor;
+    }
+}
+
 #pragma mark - Getters / Setters
 
 - (void)setGlowRadius:(CGFloat)glowRadius {
@@ -74,7 +85,7 @@
     UIColor *color = self.highlighted ? self.highlightColor : self.tintColor;
     
     if (color) {
-        self.layer.fillColor = color.CGColor;
+        self.layer.fillColor = self.stroke ? nil : color.CGColor;
         self.layer.strokeColor = color.CGColor;
         self.layer.shadowColor = color.CGColor;
     }
@@ -98,9 +109,11 @@
     // change current layer colors according to state
     UIColor *color = self.highlighted ? self.highlightColor : self.tintColor;
     
-    self.layer.fillColor = color.CGColor;
-    self.layer.strokeColor = color.CGColor;
-    self.layer.shadowColor = color.CGColor;
+    if (color) {
+        self.layer.fillColor = self.stroke ? nil : color.CGColor;
+        self.layer.strokeColor = color.CGColor;
+        self.layer.shadowColor = color.CGColor;
+    }
 }
 
 /*

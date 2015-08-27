@@ -7,6 +7,7 @@
 //
 
 #import "PopoverButton.h"
+#import "UIColor+Highlight.h"
 
 @implementation PopoverButton
 
@@ -16,7 +17,7 @@
     if (self) {
         [self setBackgroundColor:[UIColor clearColor]];
         [self setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor colorWithRed:0.8f green:0.4f blue:0.0f alpha:1.0f] forState:UIControlStateHighlighted];
+        [self setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateHighlighted];
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [self setBackgroundImage:[UIImage imageNamed:@"lightGreySelect"] forState:UIControlStateHighlighted];
         [self setFont:[UIFont defaultFontOfSize:23.0f]];

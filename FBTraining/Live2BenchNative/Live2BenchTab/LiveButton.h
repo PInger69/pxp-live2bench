@@ -6,13 +6,9 @@
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 
-#import "CustomButton.h"
+#import <UIKit/UIKit.h>
 
-@interface LiveButton : CustomButton
+IB_DESIGNABLE
+@interface LiveButton : UIButton
 
-
-//@property (nonatomic,assign) BOOL enabled;
-
--(id)initWithFrame:(CGRect)frame;
--(void)isActive:(BOOL)enabled;
 @end

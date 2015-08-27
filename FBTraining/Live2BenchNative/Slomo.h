@@ -9,7 +9,7 @@
 #import "CustomButton.h"
 
 IBInspectable
-@interface Slomo : CustomButton
+@interface Slomo : UIButton
 
 @property (assign, nonatomic) BOOL slomoOn;
 

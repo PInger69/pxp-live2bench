@@ -35,6 +35,11 @@
 
 #import "LocalMediaManager.h"
 
+#import "PxpPlayerViewController.h"
+#import "PxpFullscreenViewController.h"
+#import "PxpClipContext.h"
+#import "PxpVideoBar.h"
+
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
 #define LABEL_HEIGHT                 40
@@ -51,6 +56,11 @@
 @property (strong, nonatomic) UIButton                      * filterButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
 
+
+@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
+@property (strong, nonatomic, nonnull) PxpFullscreenViewController *fullscreenViewController;
+@property (strong, nonatomic, nonnull) PxpClipContext *clipContext;
+@property (strong, nonatomic, nonnull) PxpVideoBar *videoBar;
 
 @end
 
@@ -82,6 +92,7 @@
     FeedSwitchView                      * _feedSwitch;
     ClipDataContentDisplay              * clipContentDisplay;
     NSMutableArray                      * _tagsToDisplay;
+    
 }
 
 
@@ -127,6 +138,15 @@ int viewWillAppearCalled;
         
 
         _tagsToDisplay = [NSMutableArray new];
+        
+        _playerViewController = [[PxpPlayerViewController alloc] init];
+        _fullscreenViewController = [[PxpFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        
+        [self addChildViewController:_playerViewController];
+        [self addChildViewController:_fullscreenViewController];
+        
+        _clipContext = [PxpClipContext context];
+        _videoBar = [[PxpVideoBar alloc] init];
     }
     return self;
 }
@@ -151,11 +171,16 @@ int viewWillAppearCalled;
 
         
         // single cam (take first video for now)
+        /*
         NSString *clipVideoPath = [clipToPlay.videoFiles firstObject];
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:clipVideoPath]) {
             [self.videoPlayer playFeed: [[Feed alloc]initWithFileURL:clipVideoPath]];
         }
+         */
+        
+        _clipContext = [PxpClipContext contextWithClip:clipToPlay];
+        _playerViewController.playerView.context = _clipContext;
         
     }];
     
@@ -169,7 +194,7 @@ int viewWillAppearCalled;
 
     }];
     
-    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
+    //self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
 
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
@@ -223,6 +248,18 @@ int viewWillAppearCalled;
     testFullScreen = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     _tableViewController.delegate = self;
     
+    const CGFloat width = COMMENTBOX_WIDTH, height = width / (16.0 / 9.0);
+    
+    _playerViewController.view.frame = CGRectMake(0, 768 - height - 44.0, width, height);
+    _playerViewController.telestrationViewController.stillMode = YES;
+    _videoBar.playerViewController = _playerViewController;
+    
+    [self.view addSubview:_playerViewController.view];
+    [self.view addSubview:_videoBar];
+    [self.view addSubview:_fullscreenViewController.view];
+    
+    _videoBar.frame = CGRectMake(0.0, 768 - 44.0, width, 44.0);
+    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)clipSaved:(NSNotification *)note {

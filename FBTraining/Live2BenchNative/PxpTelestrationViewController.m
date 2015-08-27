@@ -37,6 +37,8 @@
 
 @property (assign, nonatomic) BOOL activeTelestration;
 
+@property (assign, nonatomic) BOOL showsClearButton;
+
 @end
 
 @implementation PxpTelestrationViewController
@@ -141,6 +143,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.showsControls = self.showsControls;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.telestration = nil;
+}
+
 #pragma mark - Getters / Setters
 
 - (void)setTelestrating:(BOOL)telestrating {
@@ -187,6 +199,12 @@
     self.clearButton.hidden = !showsClearButton;
 }
 
+- (void)setStillMode:(BOOL)stillMode {
+    _stillMode = stillMode;
+    
+    self.showsClearButton = !stillMode;
+}
+
 #pragma mark - Buttons
 
 - (void)undoAction:(UIButton *)button {
@@ -209,7 +227,6 @@
 
 - (void)telestrationAction:(UIButton *)button {
     self.telestrationButton.selected = !self.telestrationButton.selected;
-    self.captureArea.captureEnabled = self.telestrationButton.selected;
     [self setTelestrating:self.telestrationButton.selected animated:YES];
 }
 
@@ -241,11 +258,17 @@
     [self willChangeValueForKey:@"telestrating"];
     _telestrating = telestrating;
     
+    self.captureArea.captureEnabled = self.telestrationButton.selected;
     if (telestrating) {
         
         if (!self.activeTelestration) {
             self.activeTelestration = YES;
-            self.telestration = [[PxpTelestration alloc] initWithSize:self.view.bounds.size];
+            
+            PxpTelestration *telestration = [[PxpTelestration alloc] initWithSize:CGSizeMake(960, 540)];
+            telestration.isStill = _stillMode;
+            
+            self.telestration = telestration;
+            self.telestration.isStill = self.stillMode;
             [self.delegate telestration:self.telestration didStartInViewController:self];
         }
         
@@ -255,15 +278,15 @@
             [UIView setAnimationDuration:0.2];
         }
         
-        self.undoButton.frame = CGRectMake(20.0f, self.view.bounds.size.height - 100.0f - 44.0f, 45.0f, 65.0f);
-        self.lineButton.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height - 180.0f - 44.0f, 45.0f, 45.0f);
-        self.arrowButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height - 180.0f - 44.0f, 45.0f, 45.0f);
+        self.undoButton.frame = CGRectMake(10.0f, self.view.bounds.size.height - 55.0f - 44.0f, 45.0f, 45.0f);
+        self.clearButton.frame = CGRectMake(10.0f, self.view.bounds.size.height - 120.0f - 44.0f, 45.0f, 45.0f);
         
-        self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height - 130.0f - 44.0f, 110.0f, 110.0f);
-        self.clearButton.frame = CGRectMake(20.0f, self.view.bounds.size.height - 180.0f - 44.0f, 45.0f, 65.0f);
+        self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 120.0f, self.view.bounds.size.height - 120.0f - 44.0f, 110.0f, 110.0f);
         
-        self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, 20.0f, 45.0f, 45.0f);
+        self.lineButton.frame = CGRectMake(self.view.bounds.size.width - 165.0f, self.view.bounds.size.height - 55.0f - 44.0f, 45.0f, 45.0f);
+        self.arrowButton.frame = CGRectMake(self.view.bounds.size.width - 165.0f, self.view.bounds.size.height - 120.0f - 44.0f, 45.0f, 45.0f);
         
+        self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 220.0f, self.view.bounds.size.height - 87.5f - 44.0f, 45.0f, 45.0f);
         self.telestrationButton.selected = YES;
         
         if (animated) {
@@ -275,15 +298,17 @@
             [UIView setAnimationDuration:0.2];
         }
         
-        self.undoButton.frame = CGRectMake(20.0f, self.view.bounds.size.height + 100.0f, 45.0f, 65.0f);
-        self.lineButton.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height + 180.0f, 45.0f, 45.0f);
-        self.arrowButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height + 180.0f, 45.0f, 45.0f);
+        const CGFloat offset = 165.0f;
         
-        self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 130.0f, self.view.bounds.size.height + 130.0f, 110.0f, 110.0f);
-        self.clearButton.frame = CGRectMake(20.0f, self.view.bounds.size.height + 180.0f, 45.0f, 65.0f);
+        self.undoButton.frame = CGRectMake(10.0f - offset, self.view.bounds.size.height - 55.0f - 44.0f, 45.0f, 45.0f);
+        self.clearButton.frame = CGRectMake(10.0f - offset, self.view.bounds.size.height - 120.0f - 44.0f, 45.0f, 45.0f);
         
-        self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 65.0f, self.view.bounds.size.height - 65.0f - 44.0f, 45.0f, 45.0f);
+        self.colorPicker.frame = CGRectMake(self.view.bounds.size.width - 120.0f + offset, self.view.bounds.size.height - 120.0f - 44.0f, 110.0f, 110.0f);
         
+        self.lineButton.frame = CGRectMake(self.view.bounds.size.width - 165.0f + offset, self.view.bounds.size.height - 55.0f - 44.0f, 45.0f, 45.0f);
+        self.arrowButton.frame = CGRectMake(self.view.bounds.size.width - 165.0f + offset, self.view.bounds.size.height - 120.0f - 44.0f, 45.0f, 45.0f);
+        
+        self.telestrationButton.frame = CGRectMake(self.view.bounds.size.width - 220.0f + offset, self.view.bounds.size.height - 87.5f - 44.0f, 45.0f, 45.0f);
         self.telestrationButton.selected = NO;
         
         if (animated) {
@@ -293,6 +318,7 @@
         if (self.activeTelestration) {
             self.activeTelestration = NO;
             [self.delegate telestration:self.telestration didFinishInViewController:self];
+            self.telestration = nil;
         }
         
     }

@@ -809,8 +809,8 @@ static void * encoderTagContext = &encoderTagContext;
                 userInfo[@"duration"] = [NSString stringWithFormat:@"%d", selectedCell.data.duration ];
                 userInfo[@"state"] = [NSNumber numberWithInteger:RJLPS_Play];
                 
-                if (selectedCell.data.telestration) {
-                    userInfo[@"telestration"] = selectedCell.data.telestration;
+                if (selectedCell.data) {
+                    userInfo[@"tag"] = selectedCell.data;
                 }
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
@@ -845,8 +845,8 @@ static void * encoderTagContext = &encoderTagContext;
         userInfo[@"duration"] = [NSString stringWithFormat:@"%d", selectedCell.data.duration ];
         userInfo[@"state"] = [NSNumber numberWithInteger:RJLPS_Play];
         
-        if (selectedCell.data.telestration) {
-            userInfo[@"telestration"] = selectedCell.data.telestration;
+        if (selectedCell.data) {
+            userInfo[@"tag"] = selectedCell.data;
         }
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];

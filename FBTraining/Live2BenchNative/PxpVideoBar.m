@@ -11,13 +11,12 @@
 
 #import "TagView.h"
 #import "UIColor+Highlight.h"
+#import "PxpFullscreenButton.h"
+#import "PxpRangeModifierButton.h"
 
 @interface PxpVideoBar ()<TagViewDataSource>
 
 @end
-
-static UIImage * __nonnull _tagExtendStartImage;
-static UIImage * __nonnull _tagExtendEndImage;
 
 @implementation PxpVideoBar
 {
@@ -26,23 +25,16 @@ static UIImage * __nonnull _tagExtendEndImage;
     TagView * __nonnull _tagView;
     UILabel * __nonnull _tagLabel;
     
-    CustomButton * __nonnull _tagExtendStartButton;
-    CustomButton * __nonnull _tagExtendEndButton;
+    PxpRangeModifierButton * __nonnull _tagExtendStartButton;
+    PxpRangeModifierButton * __nonnull _tagExtendEndButton;
     
-    SeekButton * __nonnull _backwardSeekButton;
-    SeekButton * __nonnull _forwardSeekButton;
-    
-    Slomo * __nonnull _slomoButton;
-    
-    void *_rateObserverContext;
-}
-
-+ (void)initialize {
-    _tagExtendStartImage = [UIImage imageNamed:@"extendstartsec"];
-    _tagExtendEndImage = [UIImage imageNamed:@"extendendsec"];
+    void *_playRateObserverContext;
+    void *_telestrationObserverContext;
 }
 
 - (void)initVideoBar {
+    _enabled = YES;
+    
     _tagView = [[TagView alloc] init];
     _tagView.backgroundColor = [UIColor clearColor];
     _tagView.dataSource = self;
@@ -56,12 +48,10 @@ static UIImage * __nonnull _tagExtendEndImage;
     _tagLabel.textAlignment = NSTextAlignmentCenter;
     _tagLabel.hidden = YES;
     
-    _tagExtendStartButton = [[CustomButton alloc] init];
-    _tagExtendEndButton = [[CustomButton alloc] init];
+    _tagExtendStartButton = [[PxpRangeModifierButton alloc] initWithFrame:CGRectZero end:NO];
+    _tagExtendEndButton = [[PxpRangeModifierButton alloc] initWithFrame:CGRectZero end:YES];
     _tagExtendStartButton.contentMode = UIViewContentModeCenter;
     _tagExtendEndButton.contentMode = UIViewContentModeCenter;
-    [_tagExtendStartButton setImage:_tagExtendStartImage forState:UIControlStateNormal];
-    [_tagExtendEndButton setImage:_tagExtendEndImage forState:UIControlStateNormal];
     [_tagExtendStartButton addTarget:self action:@selector(extendStartAction:) forControlEvents:UIControlEventTouchUpInside];
     [_tagExtendEndButton addTarget:self action:@selector(extendEndAction:) forControlEvents:UIControlEventTouchUpInside];
     _tagExtendStartButton.hidden = YES;
@@ -76,6 +66,8 @@ static UIImage * __nonnull _tagExtendEndImage;
     _slomoButton = [[Slomo alloc] init];
     [_slomoButton addTarget:self action:@selector(slomoAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    _fullscreenButton = [[PxpFullscreenButton alloc] init];
+    
     [self addSubview:_tagView];
     [self addSubview:_tagLabel];
     [self addSubview:_tagExtendStartButton];
@@ -83,12 +75,13 @@ static UIImage * __nonnull _tagExtendEndImage;
     [self addSubview:_backwardSeekButton];
     [self addSubview:_forwardSeekButton];
     [self addSubview:_slomoButton];
+    [self addSubview:_fullscreenButton];
     
-    _rateObserverContext = &_rateObserverContext;
-    [self addObserver:self forKeyPath:@"player.rate" options:0 context:_rateObserverContext];
+    _playRateObserverContext = &_playRateObserverContext;
+    _telestrationObserverContext = &_telestrationObserverContext;
     
     _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkAction:)];
-    _displayLink.frameInterval = 4;
+    _displayLink.frameInterval = 60;
     [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     
     self.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
@@ -112,20 +105,18 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 - (void)dealloc {
     [_displayLink invalidate];
-    [self removeObserver:self forKeyPath:@"player.rate" context:_rateObserverContext];
+    [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
 }
 
 #pragma mark - Overrides
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
-    if (context == _rateObserverContext) {
-        if (_player.rate != 0) {
-            if (_player.rate != 1.0 && !_slomoButton.slomoOn) {
-                _player.rate = 1.0;
-            } else if (_player.rate != 0.5 && _slomoButton.slomoOn) {
-                _player.rate = 0.5;
-            }
+    if (context == _playRateObserverContext) {
+        if (_playerViewController.playerView.player) {
+            _slomoButton.slomoOn = _playerViewController.playerView.player.playRate == 0.5;
         }
+    } else if (context == _telestrationObserverContext) {
+        [self updateUserInterface];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -156,6 +147,7 @@ static UIImage * __nonnull _tagExtendEndImage;
     _forwardSeekButton.margin = h / 16.0;
     
     _slomoButton.frame = CGRectMake(2.0 * h, 0.0, 1.5 * h, h);
+    _fullscreenButton.frame = CGRectMake(w - 2.0 * h - 1.25 * h, 0.0, h, h);
 }
 
 - (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event {
@@ -170,6 +162,25 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 #pragma mark - Getters / Setters
 
+- (void)setPlayerViewController:(PxpPlayerViewController *)playerViewController {
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.rate" context:_playRateObserverContext];
+    [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
+    
+    _playerViewController = playerViewController;
+    
+    [_playerViewController.playerView addObserver:self forKeyPath:@"player.rate" options:0 context:_playRateObserverContext];
+    [_playerViewController.telestrationViewController addObserver:self forKeyPath:@"telestration" options:0 context:_telestrationObserverContext];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    [self updateUserInterface];
+}
+
+- (BOOL)teleIsStill {
+    return _playerViewController.telestrationViewController.telestration.isStill;
+}
+
 - (void)setSelectedTag:(nullable Tag *)selectedTag {
     if (_selectedTag != selectedTag) {
         _selectedTag = selectedTag;
@@ -183,9 +194,8 @@ static UIImage * __nonnull _tagExtendEndImage;
 
 #pragma mark - Actions
 
-- (void)extendStartAction:(CustomButton *)button {
+- (void)extendStartAction:(UIButton *)button {
     if (_selectedTag) {
-        
         if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
             Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
             [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
@@ -195,8 +205,8 @@ static UIImage * __nonnull _tagExtendEndImage;
         float newStartTime = 0;
         float endTime = _selectedTag.startTime + _selectedTag.duration;
             
-        //extend the duration 5 seconds by decreasing the start time 5 seconds
-        newStartTime = _selectedTag.startTime - fabs(_backwardSeekButton.speed);
+        //extend the duration by decreasing the start time 5 seconds
+        newStartTime = _selectedTag.startTime - labs((NSInteger)_backwardSeekButton.speed);
         //if the new start time is smaller than 0, set it to 0
         if (newStartTime <0) {
             newStartTime = 0;
@@ -211,70 +221,51 @@ static UIImage * __nonnull _tagExtendEndImage;
             _selectedTag.duration = newDuration;
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
         }
-        
-        /*_selectedTag.startTime -= fabs(_backwardSeekButton.speed);
-        _selectedTag.duration += fabs(_backwardSeekButton.speed);
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];*/
     }
 }
 
-- (void)extendEndAction:(CustomButton *)button {
+- (void)extendEndAction:(UIButton *)button {
     if (_selectedTag) {
-        _selectedTag.duration += fabs(_forwardSeekButton.speed);
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
-    }
-    
-    
-    if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
-        Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
-        [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
-    }
-    
-    
-    float startTime = _selectedTag.startTime;
-    
-    float endTime = startTime + _selectedTag.duration;
-    
-    //increase end time by 5 seconds
-    endTime = endTime + 5;
-    //if new end time is greater the duration of video, set it to the video's duration
-    if (endTime > [self durationOfVideoPlayer]) {
-        endTime = [self durationOfVideoPlayer];
-    }
-    
-    //get the new duration
-    int newDuration = newDuration = endTime - startTime;
-    if (newDuration > _selectedTag.duration) {
-        _selectedTag.duration = newDuration;
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
-    }
+        if ([[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:_selectedTag scrKey:nil];
+            [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        }
+        
+        
+        float startTime = _selectedTag.startTime;
+        
+        float endTime = startTime + _selectedTag.duration;
+        
+        //increase end time by 5 seconds
+        endTime = endTime + labs((NSInteger)_forwardSeekButton.speed);
+        //if new end time is greater the duration of video, set it to the video's duration
+        if (endTime > [self durationOfVideoPlayer]) {
+            endTime = [self durationOfVideoPlayer];
+        }
+        
+        //get the new duration
+        int newDuration = newDuration = endTime - startTime;
+        if (newDuration > _selectedTag.duration) {
+            _selectedTag.duration = newDuration;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:_selectedTag];
+        }
 
+    }
 }
 
 - (void)seekAction:(SeekButton *)seekButton {
-    CMTime currentTime = _player.currentTime;
-    [_player seekToTime:CMTimeAdd(currentTime, CMTimeMakeWithSeconds(seekButton.speed, currentTime.timescale))];
+    [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(seekButton.speed, 60)];
 }
 
 - (void)slomoAction:(Slomo *)slomoButton {
     slomoButton.slomoOn = !slomoButton.slomoOn;
-    if (_player.rate) {
-        _player.rate = slomoButton.slomoOn ? 0.5 : 1.0;
-    }
+    _playerViewController.playerView.player.playRate = slomoButton.slomoOn ? 0.5 : 1.0;
 }
 
 #pragma mark - TagViewDataSource
 
 - (NSTimeInterval)durationInTagView:(nonnull TagView *)tagView {
-    CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
-    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
-    return isfinite(duration) ? duration : 0.0;
-}
-
--(NSTimeInterval)durationOfVideoPlayer{
-    CMTimeRange range = [_player.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
-    NSTimeInterval duration = CMTimeGetSeconds(CMTimeAdd(range.start, range.duration));
-    return isfinite(duration) ? duration : 0.0;
+    return self.durationOfVideoPlayer;
 }
 
 -(CGFloat)getSeekSpeed:(NSString *)direction{
@@ -299,20 +290,30 @@ static UIImage * __nonnull _tagExtendEndImage;
 }
 
 - (NSTimeInterval)selectedTimeInTagView:(nonnull TagView *)tagView {
-    NSTimeInterval selectedTime = CMTimeGetSeconds(_player.currentTime);
+    NSTimeInterval selectedTime = _playerViewController.currentTimeInSeconds;
     return isfinite(selectedTime) ? selectedTime : 0.0;
 }
 
 - (BOOL)shouldDisplaySelectedTimeInTagView:(nonnull TagView *)tagView {
-    return _event.tags.count && _player;
+    return _event.tags.count && _playerViewController.playerView.player;
 }
 
 #pragma mark - Private Methods
 
 - (void)displayLinkAction:(CADisplayLink *)displayLink {
-    if (!self.hidden) {
-        [_tagView setNeedsDisplay];
-    }
+    [_tagView setNeedsDisplay];
+}
+
+- (NSTimeInterval)durationOfVideoPlayer {
+    NSTimeInterval duration = CMTimeGetSeconds(_playerViewController.playerView.player.duration);
+    return isfinite(duration) ? duration : 0.0;
+}
+
+- (void)updateUserInterface {
+    BOOL enabled = _enabled && !self.teleIsStill;
+    
+    _backwardSeekButton.enabled = enabled;
+    _forwardSeekButton.enabled = enabled;
 }
 
 /*

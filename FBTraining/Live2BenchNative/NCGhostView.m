@@ -10,20 +10,14 @@
 
 @implementation NCGhostView
 
-- (void)touchesBegan:(nonnull NSSet *)touches withEvent:(nullable UIEvent *)event {
-    [self.nextResponder touchesBegan:touches withEvent:event];
-}
-
-- (void)touchesMoved:(nonnull NSSet *)touches withEvent:(nullable UIEvent *)event {
-    [self.nextResponder touchesMoved:touches withEvent:event];
-}
-
-- (void)touchesEnded:(nonnull NSSet *)touches withEvent:(nullable UIEvent *)event {
-    [self.nextResponder touchesCancelled:touches withEvent:event];
-}
-
-- (void)touchesCancelled:(nullable NSSet *)touches withEvent:(nullable UIEvent *)event {
-    [self.nextResponder touchesCancelled:touches withEvent:event];
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event {
+    BOOL pointInside = NO;
+    for (UIView *subview in self.subviews) {
+        if ((pointInside = [subview pointInside:[subview convertPoint:point fromView:self] withEvent:event])) {
+            break;
+        }
+    }
+    return pointInside;
 }
 
 /*

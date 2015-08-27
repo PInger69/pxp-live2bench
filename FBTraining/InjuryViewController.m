@@ -94,7 +94,7 @@ static void * eventContext      = &eventContext;
     _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake((1024 - 130) / 2,PADDING + self.videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
     [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     [_gotoLiveButton setFrame:CGRectMake((1024 - 130) / 2, 700, 130, LITTLE_ICON_DIMENSIONS)];
-    [_gotoLiveButton isActive:NO];
+    _gotoLiveButton.enabled = NO;
     [self.view addSubview:_gotoLiveButton];
     
     self.teleButton = [self _makeTeleButton];
@@ -121,7 +121,7 @@ static void * eventContext      = &eventContext;
     [super viewDidLoad];
     CGRect screenBounds;
     screenBounds = CGRectMake(0, 0, 1024, 768);
-    self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:screenBounds];
+    //self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:screenBounds];
     self.videoPlayer.view.frame                              = screenBounds;
     self.videoPlayer.view.bounds                             = screenBounds;
     self.videoPlayer.playBackView.frame                       = screenBounds;
@@ -227,12 +227,12 @@ static void * eventContext      = &eventContext;
     
     if ([_encoderManager.currentEvent isEqualToString:@"None"]){
         self.videoPlayer.live   = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         //_tagButtonController.enabled = NO;
         
     } else if ([_encoderManager.currentEvent isEqualToString:_encoderManager.liveEventName]){      // LIVE
         self.videoPlayer.live   = YES;
-        [_gotoLiveButton isActive:YES];
+        _gotoLiveButton.enabled = YES;
         //_tagButtonController.enabled = YES;
         if (!self.videoPlayer.feed) {
             [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
@@ -241,11 +241,11 @@ static void * eventContext      = &eventContext;
         
     } else if (_encoderManager.currentEvent == nil) { // CLIPs and playing back old events
         self.videoPlayer.live   = NO;
-        [_gotoLiveButton isActive:NO]; // TODO
+        _gotoLiveButton.enabled = NO; // TODO
         //_tagButtonController.enabled = NO;
     } else { // CLIPs and playing back old events
         self.videoPlayer.live   = NO;
-        [_gotoLiveButton isActive:YES]; // TODO
+        _gotoLiveButton.enabled = YES; // TODO
     }
     
     //[multiButton setHidden:!([_encoderManager.feeds count]>1)];
@@ -255,7 +255,7 @@ static void * eventContext      = &eventContext;
 -(void)gotLiveEvent
 {
     self.videoPlayer.live   = YES;
-    [_gotoLiveButton isActive:YES];
+    _gotoLiveButton.enabled = YES;
     
 }
 

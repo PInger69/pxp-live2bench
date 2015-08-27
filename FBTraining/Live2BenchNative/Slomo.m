@@ -29,6 +29,17 @@ static UIImage * _slowSpeedImage;
     return self;
 }
 
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self setContentMode:UIViewContentModeScaleAspectFit];
+        
+        [self setImage:_normalSpeedImage forState:UIControlStateNormal];
+        [self setImage:_slowSpeedImage forState:UIControlStateSelected];
+    }
+    return self;
+}
+
 #pragma mark - Overrides
 
 - (void)setSelected:(BOOL)selected {

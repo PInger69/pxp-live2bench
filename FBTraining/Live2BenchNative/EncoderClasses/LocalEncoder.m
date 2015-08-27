@@ -62,6 +62,8 @@ static LocalEncoder * instance;
 @synthesize status          = _status;
 @synthesize allEvents       = _allEvents;
 
+@synthesize eventContext = _eventContext;
+
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
 
@@ -88,6 +90,8 @@ static LocalEncoder * instance;
         _localTags                      = [[NSMutableArray alloc] init];
         _modifiedTags                   = [[NSMutableArray alloc] init];
         tagSyncConnections              = [NSMutableArray array];
+        
+        _eventContext = [PxpEventContext context];
         
         closeTags = @{[NSNumber numberWithInteger:TagTypeSoccerZoneStart]:[NSNumber numberWithInteger:TagTypeSoccerZoneStop],[NSNumber numberWithInteger:TagTypeSoccerHalfStart]:[NSNumber numberWithInteger:TagTypeSoccerHalfStop],[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]:[NSNumber numberWithInteger:TagTypeHockeyPeriodStop],[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]:[NSNumber numberWithInteger:TagTypeHockeyStrengthStop],[NSNumber numberWithInteger:TagTypeHockeyStartOLine]:[NSNumber numberWithInteger:TagTypeHockeyStopOLine],[NSNumber numberWithInteger:TagTypeHockeyStartDLine]:[NSNumber numberWithInteger:TagTypeHockeyStopDLine],[NSNumber numberWithInteger:TagTypeFootballQuarterStart]:[NSNumber numberWithInteger:TagTypeFootballQuarterStop]};
         
@@ -598,9 +602,17 @@ static LocalEncoder * instance;
     double tagArePresentCount       = tagArePresent.count + 1;
     newTag.uniqueID                 = tagArePresentCount;
     
+    
+    newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
+    newTag.own                      = YES;
+    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
+    newTag.visitTeam                = self.event.teams[@"visitTeam"];
+    newTag.synced                   = NO;
+    
     if ([[tData objectForKey:@"type"]integerValue] == TagTypeOpenDuration) {
         newTag.startTime = newTag.time;
         newTag.durationID = [tData objectForKey:@"dtagid"];
+        [self.event addTag:newTag extraData:false];
     }else{
         double newStartTime = newTag.time - 10.0;
         if (newStartTime < 0) {
@@ -609,15 +621,10 @@ static LocalEncoder * instance;
             newTag.startTime = newStartTime;
         }
         newTag.duration = 20.0;
+        [self.event addTag:newTag extraData:true];
     }
-    
-    newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
-    newTag.own                      = YES;
-    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
-    newTag.visitTeam                = self.event.teams[@"visitTeam"];
-    newTag.synced                   = NO;
 
-    [self.event addTag:newTag extraData:true];
+   
 
     [self.localTags addObject:newTag];
     
@@ -633,6 +640,7 @@ static LocalEncoder * instance;
             }
         }
     }
+
     
    /* //[self.event.localTags setObject:newTag.makeTagData forKey: [NSString stringWithFormat:@"%lu",(unsigned long)self.event.localTags.count]];
     [self.localTags setObject:[newTag makeTagData] forKey:[NSString stringWithFormat:@"%lu",(unsigned long)self.localTags.count]];
@@ -1068,7 +1076,8 @@ static LocalEncoder * instance;
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":_event.eventType}];
+    _eventContext.event = event;
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self];
 }
 
 
@@ -1412,9 +1421,6 @@ static LocalEncoder * instance;
 {
     isFinished = NO;
 }
-
-
-
 
 //debugging
 #pragma mark - debugging

@@ -188,6 +188,9 @@
 @synthesize fullScreenViewController    = _fullScreenViewController;
 @synthesize buttonStateMode;
 
+@synthesize leftTray = _leftTray;
+@synthesize rightTray = _rightTray;
+
 -(id)initWithView:(UIView*)view
 {
     self = [super init];

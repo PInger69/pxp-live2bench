@@ -28,6 +28,7 @@
 //@property (strong, nonatomic) NSIndexPath *editingIndexPath;
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 @property (strong, nonatomic) ListPopoverController* teamPick;
+@property (strong, nonatomic) ListPopoverController* cameraPick;
 
 @end
 
@@ -222,7 +223,7 @@
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         Event *event = self.tableData[firstIndexPath.row - 1];
         
-        NSDictionary *urls = event.feeds;
+        NSDictionary *urls = event.originalFeeds;
         NSString *key;
         NSString *data;
         Feed *feed;
@@ -266,6 +267,7 @@
             //NSString *visitName = event.teams[@"visitTeam"];
             
             
+            
             if (_teamPick){
                 [_teamPick dismissPopoverAnimated:NO];
                 [_teamPick clear];
@@ -278,14 +280,24 @@
             
             _teamPick.contentViewController.modalInPopover = NO;
             
-            
-            
             [_teamPick addOnCompletionBlock:^(NSString *pick) {
                 
                 [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
-
                 
-                
+                event.feeds = [[NSMutableDictionary alloc]initWithDictionary:event.originalFeeds];
+                if (event.feeds.count > 1) {
+                    for (NSString *feedName in [[event.feeds copy] allKeys]) {
+                        if (![feedName isEqualToString:key]) {
+                            [event.feeds removeObjectForKey:feedName];
+                        }
+                    }
+                }else if (localCounterpart.feeds.count > 1){
+                    for (NSString *feedName in [[localCounterpart.feeds copy] allKeys]) {
+                        if (![feedName isEqualToString:key]) {
+                            [localCounterpart.feeds removeObjectForKey:feedName];
+                        }
+                    }
+                }
                 
                 __block Event * weakEvent = event;
                 
@@ -385,18 +397,18 @@
     
     
     if (localOne) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) ([localOne.feeds count]), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.mp4s.count, NSLocalizedString(@"Sources", nil)]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu %@\n%lu %@", (unsigned long) ([localOne.originalFeeds count]), NSLocalizedString(@"Downloaded", nil), (unsigned long)event.originalFeeds, NSLocalizedString(@"Sources", nil)]];
     }
 
     if (event.local) {
-        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)localOne.downloadedSources.count,(unsigned long)event.mp4s.count]];
+        [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)localOne.downloadedSources.count,(unsigned long)event.originalFeeds.count]];
 
     } else {
         if (localOne) {
-            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)([localOne.feeds count]),(unsigned long)event.mp4s.count]];
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)([localOne.originalFeeds count]),(unsigned long)event.originalFeeds.count]];
         } else {
             
-            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)event.downloadedSources.count,(unsigned long)event.mp4s.count]];
+            [cell.downloadInfoLabel setText:[NSString stringWithFormat:@"%lu Downloaded\n%lu Sources", (unsigned long)event.downloadedSources.count,(unsigned long)event.originalFeeds.count]];
         }
     }
     
@@ -436,7 +448,7 @@
         alert.type = AlertImportant;
         [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
         [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this Event?",nil)];
-        if ((localCounterpart && [localCounterpart.feeds count] > 0)) {
+        if ((localCounterpart && [localCounterpart.originalFeeds count] > 0)) {
             [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server and local device)",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"Yes(Only local)",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
@@ -591,7 +603,7 @@
 //    [lastCell isSelected:NO];
     ARCalendarTableViewCell *currentCell = (ARCalendarTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     [currentCell isSelected:YES];
-    if ([event.feeds allValues].count >= 1) {
+    if ([event.originalFeeds allValues].count >= 1) {
         [self.arrayOfSelectedEvent addObject:event.name];
     }
     
@@ -600,23 +612,23 @@
         NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
-        if ([event.feeds allValues].count > 1) {
+        if ([event.originalFeeds allValues].count > 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
-                for (int i = 0; i < ((NSArray *)[event.feeds allValues]).count ; ++i) {
+                for (int i = 0; i < ((NSArray *)[event.originalFeeds allValues]).count ; ++i) {
                     NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + i + 1 inSection:indexPath.section];
                     [insertionIndexPaths addObject:insertionIndexPath];
                 }
                 
                 self.lastSelectedIndexPath = [NSIndexPath indexPathForRow:indexPath.row -arrayToRemove.count inSection:indexPath.section];
             }else{
-                for (int i = 0; i < ((NSArray *)[event.feeds allValues]).count ; ++i) {
+                for (int i = 0; i < ((NSArray *)[event.originalFeeds allValues]).count ; ++i) {
                     NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row + i+1 inSection:indexPath.section];
                     [insertionIndexPaths addObject:insertionIndexPath];
                 }
                 
                 self.lastSelectedIndexPath = indexPath;
             }
-        } else if ([event.feeds allValues].count == 1) {
+        } else if ([event.originalFeeds allValues].count == 1) {
             if (self.lastSelectedIndexPath.row < indexPath.row && self.lastSelectedIndexPath) {
                 NSIndexPath *insertionIndexPath = [NSIndexPath indexPathForRow:indexPath.row - arrayToRemove.count + 1 inSection:indexPath.section];
                 [insertionIndexPaths addObject:insertionIndexPath];

@@ -20,15 +20,22 @@
 
 @interface PxpTelestrationViewController : UIViewController
 
+/// The telestration view controller's delegate.
 @property (weak, nonatomic, nullable) id<PxpTelestrationViewControllerDelegate> delegate;
+
+/// The telestration view controller's time provider.
 @property (weak, nonatomic, nullable) id<PxpTimeProvider> timeProvider;
 
+/// The telestration managed by the view controller
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
 
+/// Specifies whether or not telestration controls should be visible.
 @property (assign, nonatomic) BOOL showsControls;
 
-@property (assign, nonatomic) BOOL showsClearButton;
-
+/// True if the view controller is currently in a telestration session.
 @property (readonly, assign, nonatomic) BOOL telestrating;
+
+/// Specifies whether or not the telestration controller should generate stills over animations.
+@property (assign, nonatomic) BOOL stillMode;
 
 @end

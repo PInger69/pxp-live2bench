@@ -44,6 +44,7 @@
         NSMutableDictionary * tempDict      = [[NSMutableDictionary alloc]init];
         NSURL               * defaultURL;
         
+        _assetsReady = NO;
         _assets = [NSMutableDictionary dictionary];
         for (NSString * k in keys)
         {
@@ -81,6 +82,7 @@
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         
         _qualities = @{correctedQuality:url};
+        _assetsReady = NO;
         _assets = [NSMutableDictionary dictionaryWithDictionary:@{correctedQuality:asset}];
         
         _urlPath = [_qualities objectForKey:correctedQuality];
@@ -193,6 +195,14 @@
 
 - (nullable AVAsset *)anyAsset {
     return self.assets.allValues.firstObject;
+}
+
+- (nullable NSURL *)lqPath {
+    return _qualities[LOW_QUALITY];
+}
+
+- (nullable NSURL *)hqPath {
+    return _qualities[HIGH_QUALITY];
 }
 
 @end

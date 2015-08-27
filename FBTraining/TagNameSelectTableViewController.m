@@ -69,7 +69,7 @@
         NSDictionary *tagDescriptor = sortedTagDescriptors[i];
         NSString *tagName = tagDescriptor[@"name"];
         
-        if (tagName) {
+        if (tagName && ![tagName hasPrefix:@"-"]) {
             [tagNames addObject:tagName];
         }
     }

@@ -156,8 +156,8 @@
 }
 
 -(void)lostEvent:(NSNotification*)note{
-    BOOL eventStopped = [note.userInfo[@"eventStopped"]boolValue];
-    if (eventStopped && !lostWifiIsRun) {
+   // BOOL eventStopped = [note.userInfo[@"eventStopped"]boolValue];
+    if (!note.userInfo[@"eventType"] && !lostWifiIsRun) {
         lostWifiIsRun = false;
         CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert showView];

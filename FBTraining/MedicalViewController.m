@@ -21,8 +21,11 @@
 #import "PxpTelestrationViewController.h"
 #import "TagNameSelectTableViewController.h"
 #import "TeleSelectTableViewController.h"
+#import "PxpPlayerViewController.h"
+#import "PxpPlayerSwapView.h"
 
 #import "UIColor+Highlight.h"
+#import "PxpPlayer+Tag.h"
 
 #define PADDING                 5
 #define LITTLE_ICON_DIMENSIONS 40
@@ -33,6 +36,7 @@
 @property (copy, nonatomic, nullable) NSString *activeTagName;
 @property (copy, nonatomic, nullable) NSString *durationTagID;
 
+@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 
 @property (strong, nonatomic, nonnull) UIView *container;
@@ -61,6 +65,8 @@
     id <EncoderProtocol>                _observedEncoder;
     Event                               * _currentEvent;
     EncoderManager                      * _encoderManager;
+    
+    void * _playerRateObserverContext;
 }
 
 @synthesize mode = _mode;
@@ -72,6 +78,7 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Medical", nil) imageName:@"live2BenchTab"];
         
+        _playerViewController = [[PxpPlayerViewController alloc] init];
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
         _encoderManager         = mainappDelegate.encoderManager;
@@ -122,9 +129,7 @@
         _liveButton = [[LiveButton alloc] initWithFrame:CGRectMake(liveButtonX,liveButtonY, liveButtonWidth, liveButtonHeight)];
         [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        CGFloat playerWidth = 1024.0, playerHeight = playerWidth / (16.0 / 9.0);
-        CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
-        
+        /*
         self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(0.0, playerY, playerWidth, playerHeight)];
         self.videoPlayer.mute = YES;
         
@@ -151,10 +156,7 @@
         self.videoPlayer.videoControlBar.timeSlider.frame    = [((NSValue *)[fullScreenFramesParts objectForKey:@"slide"]) CGRectValue];
         
         [self.container addSubview:self.videoPlayer.view];
-        
-        [self addChildViewController:_telestrationViewController];
-        [self addChildViewController:_tagNameSelectController];
-        [self addChildViewController:_teleSelectController];
+        */
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onEventChange) name:NOTIF_LIVE_EVENT_FOUND object:nil];
@@ -162,9 +164,11 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
         
-        [self.view addSubview:self.container];
-        
         _teleSelectController.event = _currentEvent;
+        
+        _playerRateObserverContext = &_playerRateObserverContext;
+        
+        [_playerViewController.playerView addObserver:self forKeyPath:@"player.rate" options:0 context:_playerRateObserverContext];
     }
         
     
@@ -175,6 +179,16 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
+    
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.rate" context:_playerRateObserverContext];
+}
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
+    if (context == _playerRateObserverContext) {
+        self.slomoButton.slomoOn = _playerViewController.playerView.player.playRate == 0.5;
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (void)setActiveTagName:(nullable NSString *)activeTagName {
@@ -200,7 +214,7 @@
     NSString *newActiveTagName = nil;
     for (NSDictionary *tagDescriptor in tagDescriptors) {
         NSString *tagName = tagDescriptor[@"name"];
-        if (tagName.length > 0 && ![tagName hasPrefix:@"-"]) {
+        if (tagName.length > 0 && tagName && ![tagName hasPrefix:@"-"]) {
             newActiveTagName = tagName;
             break;
         }
@@ -250,6 +264,7 @@
 
 -(void)eventChanged:(NSNotification*)note
 {
+    id<EncoderProtocol> encoder = note.object;
     if ([[note.object event].name isEqualToString:_currentEvent.name]) {
         [self onEventChange];
         return;
@@ -267,6 +282,7 @@
     }
     
     self.teleSelectController.event = _currentEvent;
+    self.playerViewController.playerView.context = encoder.eventContext;
     
     [self onEventChange];
 }
@@ -301,33 +317,43 @@
     [self.videoPlayer gotolive];
     self.videoPlayer.slowmo = NO;
     self.slomoButton.slomoOn = NO;
+    
+    [self.playerViewController.playerView.player goToLive];
 }
 
 
 - (void)viewDidLoad {
     // Do any additional setup after loading the view.
     [super viewDidLoad];
+    
     self.view.backgroundColor = [UIColor blackColor];
     
     self.bottomBar.backgroundColor = [UIColor blackColor];
     
     const CGFloat playerHeight = self.container.bounds.size.width / (16.0 / 9.0);
+    const CGFloat playerY = self.container.bounds.size.height - playerHeight - BAR_HEIGHT;
     const CGFloat teleSelectY = self.container.bounds.size.height - BAR_HEIGHT - playerHeight;
     
     self.telestrationViewController.view.frame = self.videoPlayer.view.bounds;
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    // we need the control bar to be first responder.
-    [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
-    self.telestrationViewController.timeProvider = self.videoPlayer;
-    self.telestrationViewController.delegate = self;
-    self.telestrationViewController.showsClearButton = YES;
-    self.telestrationViewController.showsControls = YES;
+    
+    self.playerViewController.view.frame = CGRectMake(0.0, playerY, self.container.bounds.size.width, playerHeight);
+    
+    [self.view addSubview:self.container];
+    [self.container addSubview:self.playerViewController.view];
+    
+    // we need the control bar to be first responder.
+    //[self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
+    
+    self.playerViewController.telestrationViewController.delegate = self;
+    self.playerViewController.telestrationViewController.showsControls = YES;
+    self.playerViewController.telestrationViewController.stillMode = NO;
     
     self.tagSelectButton.titleLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
     self.tagSelectButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    [self.tagSelectButton setTitle:@"" forState:UIControlStateNormal];
+    [self.tagSelectButton setTitle:self.activeTagName forState:UIControlStateNormal];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateHighlighted];
     [self.tagSelectButton setTitleColor:PRIMARY_APP_COLOR.highlightedColor forState:UIControlStateSelected];
@@ -348,7 +374,7 @@
     
     self.recordButton.frame = CGRectMake(self.bottomBar.bounds.size.width - self.bottomBar.bounds.size.height, 0.0, self.bottomBar.bounds.size.height, self.bottomBar.bounds.size.height);
     self.recordButton.delegate = self;
-    self.recordButton.timeProvider = self.videoPlayer;
+    self.recordButton.timeProvider = self.playerViewController;
     self.recordButton.displaysTime = NO;
     
     self.durationLabel.font = [UIFont systemFontOfSize:BAR_HEIGHT * PHI_INV];
@@ -380,10 +406,13 @@
     //self.forwardSeekButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     
     //self.view.backgroundColor = [UIColor blackColor];
+    
+    _playerViewController.playerView.context = _encoderManager.primaryEncoder.eventContext;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [_playerViewController viewDidAppear:animated];
     
     self.slomoButton.slomoOn = self.videoPlayer.slowmo;
     [self.view bringSubviewToFront:self.backwardSeekButton];
@@ -419,8 +448,7 @@
         NSTimeInterval clearTime = MAX(self.videoPlayer.currentTimeInSeconds, telestration.startTime + telestration.duration + 1.0);
         [telestration pushAction:[PxpTelestrationAction clearActionAtTime:clearTime]];
         
-        telestration.sourceName = self.videoPlayer.feed.sourceName;
-        telestration.isStill = NO;
+        telestration.sourceName = self.playerViewController.playerView.activePlayerName;
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",telestration.startTime],
@@ -440,12 +468,12 @@
 #pragma mark - Button Actions
 
 - (void)seekButtonAction:(SeekButton *)button {
-    [self.videoPlayer seekBy:button.speed];
+    [_playerViewController.playerView.player seekBy:CMTimeMakeWithSeconds(button.speed, 60)];
 }
 
 - (void)slomoButtonAction:(Slomo *)slomo {
-    self.videoPlayer.slowmo = !self.videoPlayer.slowmo;
-    slomo.slomoOn = self.videoPlayer.slowmo;
+    slomo.slomoOn = !slomo.slomoOn;
+    _playerViewController.playerView.player.playRate = slomo.slomoOn ? 0.5 : 1.0;
 }
 
 - (void)liveButtonAction:(LiveButton *)liveButton {
@@ -463,7 +491,7 @@
 #pragma mark - Record Button Delegate
 
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
-    NSTimeInterval time = self.videoPlayer.currentTimeInSeconds;
+    NSTimeInterval time = self.playerViewController.currentTimeInSeconds;
     
     self.durationTagID = [Tag makeDurationID];
     if (self.durationTagID && self.activeTagName) {
@@ -481,7 +509,7 @@
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
     
-    NSTimeInterval endTime = self.videoPlayer.currentTimeInSeconds;
+    NSTimeInterval endTime = self.playerViewController.currentTimeInSeconds;
     
     if (self.durationTagID) {
         Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
@@ -528,9 +556,10 @@
 #pragma mark -TagSelectResponder
 
 - (void)didSelectTag:(nonnull Tag *)tag source:(nonnull NSString *)source {
-    Feed *feed = tag.event.feeds[source] ? tag.event.feeds[source] : tag.event.feeds.allValues.firstObject;
-    self.telestrationViewController.telestration = tag.telestration;
+    //Feed *feed = tag.event.feeds[source] ? tag.event.feeds[source] : tag.event.feeds.allValues.firstObject;
     
+    
+    /*
     if (tag.telestration.isStill) {
         [self.videoPlayer cancelClip];
         [self.videoPlayer pause];
@@ -538,6 +567,11 @@
     } else {
         [self.videoPlayer playClipWithFeed:feed andTimeRange:CMTimeRangeMake(CMTimeMake(tag.startTime, 1), CMTimeMake(tag.duration, 1))];
     }
+    */
+    
+    [self.playerViewController.playerView switchToContextPlayerNamed:source];
+    self.playerViewController.playerView.player.tag = tag;
+    self.playerViewController.telestrationViewController.telestration = tag.telestration;
     
     [self setShowsTeleSelectMenu:NO animated:YES];
 }
@@ -550,15 +584,13 @@
     self.forwardSeekButton.enabled = NO;
     self.backwardSeekButton.enabled = NO;
     self.liveButton.enabled = NO;
-    self.videoPlayer.videoControlBar.enable = NO;
-    self.telestrationViewController.showsControls = NO;
+    self.playerViewController.enabled = NO;
     
     [self setShowsTagSelectMenu:NO animated:YES];
     [self setShowsTeleSelectMenu:NO animated:YES];
     
     self.durationLabel.textColor = [UIColor whiteColor];
     
-    [self.videoPlayer cancelClip];
 }
 
 - (void)recordingEnded {
@@ -567,8 +599,7 @@
     self.forwardSeekButton.enabled = YES;
     self.backwardSeekButton.enabled = YES;
     self.liveButton.enabled = _currentEvent.live;
-    self.videoPlayer.videoControlBar.enable = YES;
-    self.telestrationViewController.showsControls = YES;
+    self.playerViewController.enabled = YES;
     
     self.durationLabel.textColor = [UIColor lightGrayColor];
 }
