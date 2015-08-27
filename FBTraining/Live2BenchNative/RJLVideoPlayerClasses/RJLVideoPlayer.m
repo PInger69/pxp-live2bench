@@ -1378,7 +1378,9 @@ static void *FeedAliveContext                               = &FeedAliveContext;
                                               otherButtonTitles:nil];
     [alertView show];
     
-    PXPLog(@"VIDEO PLAYER ERROR");
+    PXPLog(@"*** VIDEO PLAYER ERROR");
+    PXPLog(@"%@",error);
+    PXPLog(@"**********");
 }
 
 //translate seconds to hh:mm:ss format
