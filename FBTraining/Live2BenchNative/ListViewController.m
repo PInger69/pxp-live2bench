@@ -18,7 +18,6 @@
 #import "FullScreenViewController.h"
 #import "ListViewFullScreenViewController.h"
 #import "PxpEventContext.h"
-#import "PxpPlayerMultiViewController.h"
 #import "LocalMediaManager.h"
 #import "PxpTelestrationViewController.h"
 #import "PxpListViewFullscreenViewController.h"

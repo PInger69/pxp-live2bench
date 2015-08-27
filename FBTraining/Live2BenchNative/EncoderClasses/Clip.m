@@ -266,20 +266,28 @@
     
     for (NSString *path in self.videoFiles) {
         
+        // I <3 C, so get the UF8 encoded C string.
         const char *s = path.UTF8String;
-        size_t a = 0, b = 0;
         
-        const char *c = s;
-        while (*c && *(c - 1) != '+') a++, b++, c++;
-        while (*c && strcmp(c, "hq.mp4")) b++, c++;
+        // find locations of '+' and "h1.mp4" to grab source from.
+        const char *a = strchr(s, '+');
+        const char *b = a ? strstr(a, "hq.mp4") : NULL;
         
-        const size_t n = b - a;
-        char *source = n ? calloc(n, sizeof(char)) : NULL;
-        for (size_t i = 0; i < n; i++) source[i] = s[a + i];
-        
-        sources[[NSString stringWithUTF8String:source]] = path;
-        
-        free(source);
+        // check that locations exist for both '+' and "hq.mp4".
+        if (a && b) {
+            // calculate length of the string needed from (a + 1) to b. safe to assume a + 1 <= b.
+            size_t n = b - (a + 1);
+            
+            // stack allocate string with NULL character.
+            char source[n + 1];
+            source[n] = '\0';
+            
+            // copy the string from (a + 1) to b.
+            strncpy(source, a + 1, n);
+            
+            // add to dictionary.
+            sources[[NSString stringWithUTF8String:source]] = path;
+        }
     }
     
     return sources;

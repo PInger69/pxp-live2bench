@@ -124,7 +124,6 @@
 		AEDD7CAC1B4AB962003C82F3 /* PxpPlayerPipCompanionView.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7CAB1B4AB962003C82F3 /* PxpPlayerPipCompanionView.m */; };
 		AEDD7CB01B4AB97A003C82F3 /* PxpPlayerGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7CAF1B4AB97A003C82F3 /* PxpPlayerGridView.m */; };
 		AEDD7CB41B4AB98A003C82F3 /* PxpPlayerMultiView.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7CB31B4AB98A003C82F3 /* PxpPlayerMultiView.m */; };
-		AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD7CB61B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m */; };
 		AEE595361B0FA75700DCABE6 /* FeedSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE595351B0FA75700DCABE6 /* FeedSelectionController.m */; };
 		AEE5F8B71B8CFB4100EC2F00 /* UIImage+Blend.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE5F8B61B8CFB4100EC2F00 /* UIImage+Blend.m */; };
 		BD18B6FA17F22A270089873C /* bookmarkedit.png in Resources */ = {isa = PBXBuildFile; fileRef = BD18B6F817F22A270089873C /* bookmarkedit.png */; };
@@ -739,8 +738,6 @@
 		AEDD7CAF1B4AB97A003C82F3 /* PxpPlayerGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PxpPlayerGridView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEDD7CB21B4AB98A003C82F3 /* PxpPlayerMultiView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerMultiView.h; sourceTree = "<group>"; };
 		AEDD7CB31B4AB98A003C82F3 /* PxpPlayerMultiView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PxpPlayerMultiView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		AEDD7CB51B4AB9C4003C82F3 /* PxpPlayerMultiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerMultiViewController.h; sourceTree = "<group>"; };
-		AEDD7CB61B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPlayerMultiViewController.m; sourceTree = "<group>"; };
 		AEE595341B0FA75700DCABE6 /* FeedSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectionController.h; sourceTree = "<group>"; };
 		AEE595351B0FA75700DCABE6 /* FeedSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectionController.m; sourceTree = "<group>"; };
 		AEE5F8B51B8CFB4100EC2F00 /* UIImage+Blend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blend.h"; sourceTree = "<group>"; };
@@ -1759,8 +1756,6 @@
 			children = (
 				AEDD7CB21B4AB98A003C82F3 /* PxpPlayerMultiView.h */,
 				AEDD7CB31B4AB98A003C82F3 /* PxpPlayerMultiView.m */,
-				AEDD7CB51B4AB9C4003C82F3 /* PxpPlayerMultiViewController.h */,
-				AEDD7CB61B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m */,
 			);
 			name = Multi;
 			sourceTree = "<group>";
@@ -3535,7 +3530,6 @@
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
 				D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */,
 				D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */,
-				AEDD7CB71B4AB9C4003C82F3 /* PxpPlayerMultiViewController.m in Sources */,
 				D77351301B7E826800DDCA4A /* PxpFilterSoccerTabViewController.m in Sources */,
 				D7A2E5B219A7EB8C00022795 /* CustomAlertView.m in Sources */,
 				AED484BC1B56A23600769EEF /* PxpTelestrationRenderView.m in Sources */,
