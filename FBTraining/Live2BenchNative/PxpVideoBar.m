@@ -95,7 +95,7 @@
     return self;
 }
 
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self initVideoBar];

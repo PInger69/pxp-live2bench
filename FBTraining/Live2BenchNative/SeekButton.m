@@ -116,7 +116,7 @@ static CGFloat _textNumbers[2] = { 5.0, 5.0 };
     return self;
 }
 
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
     BOOL backward = [aDecoder decodeObjectForKey:@"backward"];
