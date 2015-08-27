@@ -161,7 +161,7 @@
 -(void)buildButtonsWith:(NSArray *)buttonLabels
 {
     
-    
+             NSLog(@"===");
     
     NSMutableDictionary * tempPool          = [NSMutableDictionary new];
     for (NSString * lbl in buttonLabels) {
@@ -202,7 +202,7 @@
     } else {
         rowCount   = (NSUInteger)self.frame.size.width / (_buttonSize.width+_buttonMargin.width);
     }
-    
+        NSLog(@"===");
     for (NSUInteger k = 0; k < _buttonList.count; k++ ) {
         
         CustomButton  *eventButton  = _buttonList[k];
@@ -227,7 +227,7 @@
         
         [self addSubview:eventButton];
     }
-    
+
     
     if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
         [self setContentSize:CGSizeMake((colNum+1)*_buttonSize.width, self.frame.size.height)];
@@ -237,7 +237,7 @@
     
     
     
-    
+
     // this builds the predicates for the buttons
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
     for (CustomButton  *b in _buttonList) {
@@ -247,6 +247,7 @@
             [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, theKey]];
         }
     }
+
        if (!self.delegate) _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     
     self.modified = NO;
