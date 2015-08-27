@@ -269,14 +269,14 @@
         // I <3 C, so get the UF8 encoded C string.
         const char *s = path.UTF8String;
         
-        // find locations of '+' and "h1.mp4" to grab source from.
+        // find locations of '+' and "hq.mp4" to grab source from.
         const char *a = strchr(s, '+');
         const char *b = a ? strstr(a, "hq.mp4") : NULL;
         
         // check that locations exist for both '+' and "hq.mp4".
         if (a && b) {
             // calculate length of the string needed from (a + 1) to b. safe to assume a + 1 <= b.
-            size_t n = b - (a + 1);
+            const size_t n = b - (a + 1);
             
             // stack allocate string with NULL character.
             char source[n + 1];
