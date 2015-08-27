@@ -1308,8 +1308,10 @@ static void * eventContext      = &eventContext;
 }
 
 -(void) onAppTerminate:(NSNotification *)note{
-    //[_tagButtonController closeAllOpenTagButtons];
-    //[_bottomViewController closeAllOpenTagButtons];
+    if(!_currentEvent.live){
+        [_tagButtonController closeAllOpenTagButtons];
+        [_bottomViewController closeAllOpenTagButtons];
+    }
 }
 
 - (void)didReceiveMemoryWarning
