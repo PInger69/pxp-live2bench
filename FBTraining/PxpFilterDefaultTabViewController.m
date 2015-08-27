@@ -167,6 +167,7 @@
 
 - (void) switchToggled:(id)sender {
     [self refreshUI];
+    _leftScrollView.modified = true;
 }
 
 - (void)didReceiveMemoryWarning {
