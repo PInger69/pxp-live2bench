@@ -35,20 +35,9 @@
 
 -(id)initWithAppDelegate:(AppDelegate *) appDel
 {
-    
-    _appDel = appDel;
     self = [super init];
     if (self) {
-        //        [self.view setBackgroundColor:[UIColor grayColor]];
-    }
-    return self;
-}
-
-- (id)init
-{
-    self = [super init];
-    if (self) {
-//        [self.view setBackgroundColor:[UIColor grayColor]];
+        _appDel = appDel;
     }
     return self;
 }
