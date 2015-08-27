@@ -62,7 +62,6 @@
 -(void)disEnableButton;
 //-(void)unHighlightButton:(SideTagButton *)button;
 -(void)closeAllOpenTagButtons;
--(void)setButtonColor:(BOOL)fullScreen;
 -(void)_fullScreen;
 
 @end

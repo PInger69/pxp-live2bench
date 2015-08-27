@@ -17,6 +17,7 @@
 }
 
 @synthesize displayAllTagIfAllFilterOn = _displayAllTagIfAllFilterOn;
+@synthesize modified = _modified;
 
 - (instancetype)init
 {

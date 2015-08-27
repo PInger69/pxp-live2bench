@@ -15,7 +15,6 @@
 
 @interface PxpFilterMyClipTabViewController : PxpFilterTabController <PxpFilterModuleDelegate>
 
-@property (readonly, strong, nonatomic, nullable) UIImage                   * tabImage;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonScrollView  * eventScrollView;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonScrollView  * teamsScrollView;
 @property (strong, nonatomic, nullable) IBOutlet PxpFilterButtonScrollView  * playersScrollView;

@@ -12,12 +12,14 @@
 
 @implementation PxpFilterButtonView
 {
-    NSInteger   selectedCount;
-    NSPredicate * combo;
+    NSInteger   _selectedCount;
+    NSPredicate * _combo;
     NSMutableSet * _userSelected;
-    NSMutableArray * buttonPredicate;
-    NSMutableArray *buttonPool;
+    NSMutableArray * _buttonPredicate;
+    NSMutableArray *_buttonPool;
 }
+
+@synthesize modified = _modified;
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
@@ -26,7 +28,7 @@
         _buttonSize      = CGSizeMake(120, 25);
         _buttonMargin    = CGSizeMake(3, 3);
         _buttonList      = [NSMutableArray new];
-        buttonPool      = [NSMutableArray new];
+        _buttonPool      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
         
     }
@@ -46,18 +48,18 @@
         _buttonSize      = CGSizeMake(120, 25);
         _buttonMargin    = CGSizeMake(3, 3);
         _buttonList      = [NSMutableArray new];
-        buttonPool      = [NSMutableArray new];
+        _buttonPool      = [NSMutableArray new];
         _userSelected    = [NSMutableSet new];
     }
     return self;
 }
 
 -(void)addButtonToPool:(NSDictionary *)dict{    // add a button to buttonPool
-    [buttonPool addObject:dict];
+    [_buttonPool addObject:dict];
 }
 
 -(void)buildButtons{    // build buttons with buttonPool
-    [self buildButtonsWith:buttonPool];
+    [self buildButtonsWith:_buttonPool];
 }
 
 -(void)grabButton{
@@ -159,13 +161,13 @@
     
     CustomButton    * button   = (CustomButton *)sender;
     NSMutableArray  * toCombo  = [[NSMutableArray alloc]init];
-    selectedCount              = 0;
+    _selectedCount              = 0;
     button.selected            = !button.selected;
     
     for (NSDictionary *dict in _buttonList) {
         CustomButton  *b = dict[@"Object"];
         if(b.selected == YES){
-            selectedCount++;
+            _selectedCount++;
             [toCombo addObject:dict[@"Predicate"]];
             [_userSelected addObject:b.titleLabel.text];
         } else {
@@ -173,7 +175,7 @@
         }
     }
     
-    combo = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    _combo = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     [_parentFilter refresh];
 }
 
@@ -183,7 +185,7 @@
         CustomButton  *b = dict[@"Object"];
         b.selected = NO;
     }
-    selectedCount = 0;
+    _selectedCount = 0;
     [_userSelected removeAllObjects];
 }
 
@@ -192,8 +194,8 @@
 // Protocol methods
 -(void)filterTags:(NSMutableArray *)tagsToFilter
 {
-    if (selectedCount == 0 || selectedCount == [_buttonList count]) return; // all or none are selected
-    [tagsToFilter filterUsingPredicate:combo];
+    if (_selectedCount == 0 || _selectedCount == [_buttonList count]) return; // all or none are selected
+    [tagsToFilter filterUsingPredicate:_combo];
 }
 
 -(void)reset{

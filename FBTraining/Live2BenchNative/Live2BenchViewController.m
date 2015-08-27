@@ -772,13 +772,11 @@ static void * eventContext      = &eventContext;
             
             if (pinchGesture.scale >1) {
                 [_bottomViewController.mainView setHidden:true];
-                [_tagButtonController setButtonColor:true];
                 [_pipController.multi fullScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 [telestration forceCloseTele];
                 [_bottomViewController.mainView setHidden:false];
-                [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
                 [_tagButtonController _fullScreen];
                 //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];

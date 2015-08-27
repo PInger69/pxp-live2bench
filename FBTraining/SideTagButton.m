@@ -142,14 +142,6 @@
     _isOpen = isOpen;
 }
 
-/*-(void)setColor:(BOOL)fullScreen{
-    if (fullScreen) {
-        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3]] forState:UIControlStateNormal];
-    }else{
-        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
-    }
-}*/
-
 
 
 
