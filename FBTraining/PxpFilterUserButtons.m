@@ -97,6 +97,8 @@
 {
     CustomButton  *eventButton = [[UserColorButton alloc]initWithFrame:frame btnColor:btnColor accessibilityLabel:aLabel];
     [eventButton addTarget:self action:@selector(cellSelected:) forControlEvents:UIControlEventTouchUpInside];
+    eventButton.layer.cornerRadius = 10.0;
+    eventButton.clipsToBounds = YES;
     [self addSubview:eventButton];
     
     [eventButton setSelected:[_userSelected containsObject:aLabel]];

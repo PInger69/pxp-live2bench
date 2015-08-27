@@ -166,7 +166,7 @@ static AlertType    allowedTypes;
     }
 }
 
-// Actually show the alert on screen (Needed to avoid complecations in other places
+// Actually show the alert on screen (Needed to avoid complecations in other places)
 -(void)actuallyShowView{
     [super show];
 }

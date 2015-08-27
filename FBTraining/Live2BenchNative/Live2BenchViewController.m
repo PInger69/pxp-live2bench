@@ -1324,8 +1324,9 @@ static void * eventContext      = &eventContext;
         
         [self.playerViewController.playerView switchToContextPlayerNamed:feed.sourceName];
         
-        self.playerViewController.playerView.player.tag = tag;
         self.playerViewController.telestrationViewController.telestration = !feed.sourceName || tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
+        self.playerViewController.playerView.player.tag = tag;
+        
         
         
     }

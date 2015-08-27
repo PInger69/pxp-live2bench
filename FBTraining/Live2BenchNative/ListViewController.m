@@ -800,6 +800,7 @@
 
 - (void)pressFilterButton
 {
+    [_tableViewController collaspOpenCell];
     
     [_pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTabBar];
