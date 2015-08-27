@@ -570,8 +570,8 @@
     */
     
     [self.playerViewController.playerView switchToContextPlayerNamed:source];
-    self.playerViewController.playerView.player.tag = tag;
     self.playerViewController.telestrationViewController.telestration = tag.telestration;
+    self.playerViewController.playerView.player.tag = tag;
     
     [self setShowsTeleSelectMenu:NO animated:YES];
 }
