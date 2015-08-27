@@ -100,7 +100,7 @@
     NSArray * buttons = @[self.clearButton,self.upButton,self.downButton,self.camButton,self.encoderButton,self.eventButton];
     CGFloat buttonH = 50;
     CGFloat buttonW = 118;//self.view.bounds.size.width / [buttons count];
-    CGRect r = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+buttonH, self.view.bounds.size.width, self.view.bounds.size.height-buttonH-60);
+    CGRect r = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+buttonH, self.view.bounds.size.width, self.view.bounds.size.height-buttonH-50);
     
     for (NSInteger i=0; i<[buttons count]; i++) {
         CustomButton * b = buttons[i];
@@ -144,19 +144,35 @@
 {
 
     Encoder * enc = (Encoder *)encoderManager.primaryEncoder;
-    if (!enc && enc.cameraData) return;
-    PXPLog(@"%@",enc.cameraData);
+    
+    if (!enc && !enc.cameraData){
+        PXPLog(@"No CameraData Found!");
+    } else {
+        PXPLog(@"%@",enc.cameraData);
+    }
+    
 }
 
 -(void)onEncoder:(id)sender
 {
-    PXPLog(@"%@",encoderManager.primaryEncoder);
+    PXPLog(@"Primary Encoder:");
+    PXPLog(@"  %@",encoderManager.primaryEncoder);
+    PXPLog(@"Authenticated Encoders:");
+    PXPLog(@"  %@",encoderManager.authenticatedEncoders);
+    PXPLog(@"");
     
 }
 
 -(void)onEvent:(id)sender
 {
-    PXPLog(@"%@",encoderManager.primaryEncoder.event);
+    if (!encoderManager.primaryEncoder){
+        PXPLog(@"No current Event because no encoder");
+    } else {
+        PXPLog(@"%@",encoderManager.primaryEncoder.event);
+    }
+    
+    
+
     
 }
 
