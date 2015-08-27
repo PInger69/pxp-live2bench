@@ -97,15 +97,10 @@
 -(void)viewDidLoad
 {
 
-    
-    
-
     NSArray * buttons = @[self.clearButton,self.upButton,self.downButton,self.camButton,self.encoderButton,self.eventButton];
     CGFloat buttonH = 50;
     CGFloat buttonW = 118;//self.view.bounds.size.width / [buttons count];
-    CGRect r = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+buttonH, self.view.bounds.size.width, self.view.bounds.size.height-buttonH);
-    
-    
+    CGRect r = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+buttonH, self.view.bounds.size.width, self.view.bounds.size.height-buttonH-60);
     
     for (NSInteger i=0; i<[buttons count]; i++) {
         CustomButton * b = buttons[i];
@@ -113,15 +108,9 @@
         [self.view addSubview: b];
     }
     
-    
-    
     self.textView.frame = r;
     //self.textView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview: self.textView];
-
-
-    
-   
 
 }
 
