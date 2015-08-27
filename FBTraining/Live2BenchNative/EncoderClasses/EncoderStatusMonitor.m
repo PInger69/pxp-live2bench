@@ -176,6 +176,7 @@
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
     //[Utility hasWiFi];
     if (!hasWifi) {
+        PXPLog(@"hasInternet is false");
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LOST_WIFI object:nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Wifi"}];
         [self destroy];
