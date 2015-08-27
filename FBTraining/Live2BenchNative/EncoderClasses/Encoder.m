@@ -450,11 +450,6 @@
         return;
     }*/
     
-    BOOL eventStopped = false;
-    if (!event && _event && _event.live) {
-        eventStopped = true;
-    }
-    
     [self willChangeValueForKey:@"event"];
     _event      =  event;
     [self didChangeValueForKey:@"event"];
@@ -462,7 +457,7 @@
     
     _eventContext.event = event;
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":eventType,@"eventStopped":[NSNumber numberWithBool:eventStopped]}];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":eventType}];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];
 }
 
@@ -1978,6 +1973,10 @@
         // encoder status changed
         // old encoder status is not live or live event name was set or new encoder status is ready
         
+        if (self.status == ENCODER_STATUS_LIVE && status == ENCODER_STATUS_READY) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
+        }
+        
         self.status           = status; /// maybe make this mod directly
         if (self.status == ENCODER_STATUS_LIVE && self.liveEvent == nil) {
 //            self.isBuild = false; // This is so the encoder manager rebuilds it once
@@ -1992,8 +1991,9 @@
             self.encoderManager.liveEvent = nil;
             self.encoderManager.liveEventName = nil;
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":@""}];
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
+            
         }
+        
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];
     }

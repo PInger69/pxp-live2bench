@@ -208,6 +208,7 @@
 }
 
 - (void) switchToggled:(id)sender {
+    _tagNameScrollView.modified = true;
     [self refreshUI];
 }
 
