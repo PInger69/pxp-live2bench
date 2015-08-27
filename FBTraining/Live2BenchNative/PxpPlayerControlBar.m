@@ -151,7 +151,7 @@
     return self;
 }
 
-- (nonnull instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self initControlBar];
