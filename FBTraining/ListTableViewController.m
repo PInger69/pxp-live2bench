@@ -235,7 +235,8 @@
                 weakerCell.downloadButton.progress = progress;
                 [weakerCell.downloadButton setNeedsDisplay];
             }];
-        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:([key isEqualToString:@"onlySource"])?nil:key]){
+            //[key isEqualToString:@"onlySource"]
+        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:([NSString stringWithFormat:@"%@-%@hq",tag.ID,key ])?nil:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]){
             collapsableCell.downloadButton.downloadComplete = YES;
             collapsableCell.downloadButton.progress = 1;
         }
