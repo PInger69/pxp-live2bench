@@ -10,10 +10,8 @@
 
 #import <CoreMedia/CoreMedia.h>
 #import "PxpLoadAction.h"
-#import "Feed.h"
 
 #define MAX_SYNCS 3
-#define MAX_RELOADS 3
 
 #define NOTIF_MOTION_ALARM                  @"motionAlarm"
 
@@ -46,9 +44,6 @@ static CMClockRef _pxpPlayerMasterClock;
 /// The number of sync attempt that have been made.
 @property (assign, nonatomic) NSUInteger syncs;
 
-/// The number of reloads executed by the player.
-@property (assign, nonatomic) NSUInteger reloads;
-
 @property (copy, nonatomic, nonnull) void(^syncBlock)(CMTime);
 @property (strong, nonatomic, nullable) NSTimer *syncTimer;
 
@@ -79,7 +74,7 @@ static CMClockRef _pxpPlayerMasterClock;
     _playRate = 1.0;
     _range = kCMTimeRangeInvalid;
     _syncs = 0;
-    _reloads = 0;
+    _failed = NO;
     
     _loadActionQueue = [NSMutableArray array];
     _statusObserverContext = &_statusObserverContext;
@@ -91,13 +86,18 @@ static CMClockRef _pxpPlayerMasterClock;
     [self addObserver:self forKeyPath:@"currentItem.seekableTimeRanges" options:0 context:_currentItemObserverContext];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(motionObserved:) name:NOTIF_MOTION_ALARM object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setFeedHandler:) name:NOTIF_PXP_PLAYER_SET_FEED object:nil];
+    
+    if (self.currentItem) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
+    }
     
     __block PxpPlayer *player = self;
     
     _syncBlock = ^(CMTime time) {
         [player sync:time];
     };
+    
+    
 }
 
 - (nonnull instancetype)initWithPlayerItem:(AVPlayerItem *)item {
@@ -130,7 +130,12 @@ static CMClockRef _pxpPlayerMasterClock;
     [self removeObserver:self forKeyPath:@"currentItem.seekableTimeRanges" context:_currentItemObserverContext];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_MOTION_ALARM object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PXP_PLAYER_SET_FEED object:nil];
+    
+    if (self.currentItem) {
+        
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
     
     [self.syncTimer invalidate];
 }
@@ -138,26 +143,31 @@ static CMClockRef _pxpPlayerMasterClock;
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     
     if (context == _statusObserverContext || context == _currentItemObserverContext) {
-        if (self.currentItem.status != AVPlayerItemStatusUnknown) {
+        if (self.status != AVPlayerStatusUnknown) {
             
             if (self.currentItem.status == AVPlayerItemStatusFailed) {
-                NSLog(@"%@", self.currentItem.error);
+                PXPLog(@"%@: %@", self, self.currentItem.error);
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.currentItem.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                
+                [alert show];
+                
             }
             
-            if (self.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-                // run actions
-                for (PxpLoadAction *action in self.loadActionQueue) {
-                    [action runWithSuccess:self.currentItem.status == AVPlayerItemStatusReadyToPlay];
-                }
-                
-                // flush
-                [self.loadActionQueue removeAllObjects];
+            // run actions
+            for (PxpLoadAction *action in self.loadActionQueue) {
+                [action runWithSuccess:self.status == AVPlayerStatusReadyToPlay];
             }
+            
+            // flush
+            [self.loadActionQueue removeAllObjects];
         }
         
+        
         [self willChangeValueForKey:@"failed"];
-        _failed = self.currentItem.status == AVPlayerItemStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
+        _failed = self.status == AVPlayerStatusFailed;
         [self didChangeValueForKey:@"failed"];
+        
         
         
     } else if (context == _rateObserverContext) {
@@ -167,21 +177,19 @@ static CMClockRef _pxpPlayerMasterClock;
     }
 }
 
-- (void)timerTick:(NSTimer *)timer {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.syncBlock(self.currentTime);
-        
-        [self willChangeValueForKey:@"failed"];
-        _failed = self.currentItem.status == AVPlayerItemStatusUnknown || self.currentItem.seekableTimeRanges.firstObject;
-        [self didChangeValueForKey:@"failed"];
+- (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
+        [super replaceCurrentItemWithPlayerItem:item];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
     });
 }
 
-#pragma mark - Setters / Getters
-
-- (void)setName:(nonnull NSString *)name {
-    _name = name;
+- (void)timerTick:(NSTimer *)timer {
+    [self sync:self.currentTime];
 }
+
+#pragma mark - Setters / Getters
 
 - (void)setContext:(nullable PxpPlayerContext *)context {
     if (_context != context) {
@@ -200,26 +208,40 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)setLive:(BOOL)live {
     if (_live != live) {
-        _live = live;
+        for (PxpPlayer *player in self.contextPlayers) {
+            [player willChangeValueForKey:@"live"];
+            player->_live = live;
+            [player didChangeValueForKey:@"live"];
+            
+            // there cannot be motion if the player is not live
+            if (!live) {
+                [player willChangeValueForKey:@"motion"];
+                player->_motion = NO;
+                [player didChangeValueForKey:@"motion"];
+            }
+        }
 
         if (live) {
             [self goToLive];
-        } else {
-            // there cannot be motion if the player is not live
-            [self willChangeValueForKey:@"motion"];
-            _motion = NO;
-            [self didChangeValueForKey:@"motion"];
         }
-        
     }
 }
 
 - (void)setPlayRate:(float)playRate {
+    for (PxpPlayer* player in self.contextPlayers) {
+        [player willChangeValueForKey:@"playRate"];
+        player->_playRate = playRate;
+        [player didChangeValueForKey:@"playRate"];
+    }
     _playRate = playRate;
     
     if (self.playing) {
         self.rate = playRate;
     }
+}
+
+- (BOOL)playing {
+    return self.rate != 0.0;
 }
 
 - (void)setRange:(CMTimeRange)range {
@@ -254,7 +276,7 @@ static CMClockRef _pxpPlayerMasterClock;
                 
                 float rate = player.rate;
                 [player pause];
-                [player seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+                [player seekToTime:start toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
                     [player prerollAtRate:rate completionHandler:^(BOOL complete) {
                         [player setRate:rate];
                     }];
@@ -262,15 +284,13 @@ static CMClockRef _pxpPlayerMasterClock;
                 
             }];
             
-            if (!CMTimeRangeContainsTime(range, self.currentTime)) {
-                float rate = player.rate;
-                [player pause];
-                [player seekToTime:start toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
-                    [player prerollAtRate:rate completionHandler:^(BOOL complete) {
-                        [player setRate:rate];
-                    }];
+            float rate = player.rate;
+            [player pause];
+            [player seekToTime:start toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
+                [player prerollAtRate:rate completionHandler:^(BOOL complete) {
+                    [player setRate:rate];
                 }];
-            }
+            }];
             
         }
         
@@ -295,7 +315,7 @@ static CMClockRef _pxpPlayerMasterClock;
         
         self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
         
-        //self.syncObserver = [self addPeriodicTimeObserverForInterval:syncInterval queue:NULL usingBlock:self.syncBlock];
+        //self.syncObserver = [self addPeriodicTimeObserverForInterval:syncInterval queue:NULL usingBlock:_syncBlock];
         
     }
 }
@@ -309,55 +329,41 @@ static CMClockRef _pxpPlayerMasterClock;
     return duration;
 }
 
-- (nonnull NSArray *)contextPlayers {
-    return self.context ? self.context.players : @[self];
+- (CMTime)remainingTime {
+    return CMTimeSubtract(self.duration, self.currentTime);
 }
 
-- (void)setFeed:(nullable Feed *)feed {
-    _feed = feed;
-    
-    AVAsset *asset = self.quality && feed.assets[self.quality] ? feed.assets[self.quality] : feed.anyAsset;
-    
-    CMTime time = self.currentTime;
-    float rate = self.rate;
-    
-    [super replaceCurrentItemWithPlayerItem:asset ? [AVPlayerItem playerItemWithAsset:asset] : nil];
-    
-    __block PxpPlayer *player = self;
-    [self addLoadAction:[PxpLoadAction loadActionWithBlock:^(BOOL ready) {
-        if (ready) {
-            [player seekToTime:time completionHandler:^(BOOL complete) {
-                [player prerollAtRate:ready completionHandler:^(BOOL complete) {
-                    [player setRate:rate];
-                }];
-            }];
-        }
-    }]];
+- (nonnull NSArray *)contextPlayers {
+    return self.context ? self.context.players : @[self];
 }
 
 #pragma mark - Context Control
 
 - (void)setRate:(float)rate multi:(BOOL)multi {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO];
     } else {
-        [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
-        [super setRate:rate];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
+            [super setRate:rate];
+        });
     }
 }
 
 - (void)setRate:(float)rate multi:(BOOL)multi time:(CMTime)itemTime atHostTime:(CMTime)hostClockTime {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO time:itemTime atHostTime:hostClockTime];
     } else {
-        [super setRate:rate time:itemTime atHostTime:hostClockTime];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super setRate:rate time:itemTime atHostTime:hostClockTime];
+        });
     }
 }
 
 - (void)prerollAtRate:(float)rate multi:(BOOL)multi completionHandler:(nonnull void (^)(BOOL))completionHandler {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    
     if (multi) {
         self.prerolling = YES;
         
@@ -377,24 +383,31 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player prerollAtRate:rate multi:NO completionHandler:handler];
     } else {
-        [super cancelPendingPrerolls];
-        [super prerollAtRate:rate completionHandler:^(BOOL success) {
-            completionHandler(success);
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super cancelPendingPrerolls];
+            if (self.status != AVPlayerStatusReadyToPlay) {
+                completionHandler(NO);
+            } else {
+                [super prerollAtRate:rate completionHandler:completionHandler];
+            }
+        });
+        
     }
 }
 
 - (void)cancelPendingPrerollsMulti:(BOOL)multi {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player cancelPendingPrerollsMulti:NO];
     } else {
-        [super cancelPendingPrerolls];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super cancelPendingPrerolls];
+        });
     }
 }
 
 - (void)seekToDate:(nonnull NSDate *)date multi:(BOOL)multi completionHandler:(nonnull void (^)(BOOL))completionHandler {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
+    if (self.status != AVPlayerStatusReadyToPlay) return;
     if (multi) {
         self.seeking = YES;
         NSUInteger total = self.contextPlayers.count;
@@ -413,14 +426,15 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player seekToDate:date multi:NO completionHandler:handler];
     } else {
-        [super seekToDate:date completionHandler:^(BOOL success) {
-            completionHandler(success);
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            [super seekToDate:date completionHandler:^(BOOL success) {
+                completionHandler(success);
+            }];
+        });
     }
 }
 
 - (void)seekToTime:(CMTime)time multi:(BOOL)multi toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nonnull void (^)(BOOL))completionHandler {
-    if (self.currentItem.status != AVPlayerItemStatusReadyToPlay) return;
     time = [self clampTime:time];
     
     if (multi) {
@@ -435,38 +449,53 @@ static CMClockRef _pxpPlayerMasterClock;
             
             if (tried >= total) {
                 completionHandler(complete >= total);
-                self.seeking = NO;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    self.seeking = NO;
+                });
             }
         };
         
         for (PxpPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handler];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (tried < total) {
-                [self cancelPendingSeeks];
-            }
-        });
     } else {
-        [self.currentItem cancelPendingSeeks];
         
-        if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
-            [super seekToTime:time completionHandler:completionHandler];
-        } else {
-            [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+        if (CMTIME_IS_INDEFINITE(time)) {
+            time = kCMTimePositiveInfinity;
         }
         
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            
+            __block BOOL seek = YES;
+            
+            void (^handle)(BOOL) = ^(BOOL complete) {
+                seek = NO;
+                completionHandler(complete);
+            };
+            
+            [self.currentItem cancelPendingSeeks];
+            if (self.status != AVPlayerStatusReadyToPlay || CMTIME_IS_INVALID(time)) {
+                handle(NO);
+            } else if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
+                [super seekToTime:time completionHandler:handle];
+            } else {
+                [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handle];
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (seek) {
+                    [self.currentItem cancelPendingSeeks];
+                }
+            });
+            
+        });
         
     }
 }
 
 #pragma mark - Overrides
 
-- (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
-    [self willChangeValueForKey:@"feed"];
-    _feed = [item.asset isKindOfClass:[AVURLAsset class]] ? [[Feed alloc] initWithURLString:((AVURLAsset *)item.asset).URL.absoluteString quality:0] : nil;
-    [self didChangeValueForKey:@"feed"];
-    
-    [super replaceCurrentItemWithPlayerItem:item];
+- (nullable NSString *)description {
+    return [NSString stringWithFormat:@"%@(%@)", [super description], self.name];
 }
 
 - (void)play {
@@ -533,18 +562,14 @@ static CMClockRef _pxpPlayerMasterClock;
     
     // we only care about motion if the player is live
     if (self.live) {
-        [self willChangeValueForKey:@"motion"];
-        _motion = [note.userInfo[@"alarms"] containsObject:self.name];
-        [self didChangeValueForKey:@"motion"];
-    }
-}
-
-- (void)setFeedHandler:(NSNotification *)note {
-    NSString *name = note.userInfo[@"name"];
-    Feed *feed = note.userInfo[@"feed"];
-    
-    if ([name isEqualToString:self.name]) {
-        self.feed = feed;
+        NSArray *alarms = note.userInfo[@"alarms"];
+        BOOL motion = [alarms containsObject:self.name];
+        if (_motion != motion) {
+            [self willChangeValueForKey:@"motion"];
+            _motion = motion;
+            [self didChangeValueForKey:@"motion"];
+        }
+        
     }
 }
 
@@ -565,7 +590,7 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)addLoadAction:(nonnull PxpLoadAction *)loadAction {
-    NSUInteger total = self.contextPlayers.count;
+    const NSUInteger total = self.contextPlayers.count;
     
     __block NSUInteger tried = 0;
     __block NSUInteger complete = 0;
@@ -580,10 +605,10 @@ static CMClockRef _pxpPlayerMasterClock;
     };
     
     for (PxpPlayer *player in self.contextPlayers) {
-        if (player.currentItem.status == AVPlayerItemStatusUnknown) {
+        if (player.currentItem.status == AVPlayerStatusUnknown) {
             [player.loadActionQueue addObject:[PxpLoadAction loadActionWithBlock:handler]];
         } else {
-            handler(player.currentItem.status == AVPlayerItemStatusReadyToPlay);
+            handler(player.currentItem.status == AVPlayerStatusReadyToPlay);
         }
     }
 }
@@ -596,27 +621,19 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)reload {
-    // save player state
-    CMTime time = self.currentTime;
-    float rate = self.rate;
+    static BOOL canReload = YES;
     
-    [self pause];
-    
-    // reload the asset
-    [super replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithAsset:self.currentItem.asset]];
-    
-    // resume state
-    __block PxpPlayer *player = self;
-    
-    [self addLoadAction:[PxpLoadAction loadActionWithBlock:^(BOOL ready) {
-        if (ready) {
-            [player seekToTime:time completionHandler:^(BOOL complete) {
-                [player prerollAtRate:ready completionHandler:^(BOOL complete) {
-                    [player setRate:rate];
-                }];
-            }];
-        }
-    }]];
+    if (canReload && self.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+        canReload = NO;
+        
+        AVPlayerItem *item = self.currentItem;
+        [self replaceCurrentItemWithPlayerItem:nil];
+        [self replaceCurrentItemWithPlayerItem:item];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            canReload = YES;
+        });
+    }
 }
 
 #pragma mark - Private Methods
@@ -632,16 +649,20 @@ static CMClockRef _pxpPlayerMasterClock;
 
 /// Makes the player play from live
 - (void)goToLive {
-    
     if (self.live) {
         if (!self.syncing) {
             self.syncing = YES;
             // invalidate the range
             self.range = kCMTimeRangeInvalid;
             
-            
-            [self pause];
-            [self seekToTime:CMTimeSubtract(self.duration, CMTimeMake(2, 1)) multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete){
+            [self seekToTime:kCMTimePositiveInfinity multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
+                
+                [self play];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    self.syncing = NO;
+                });
+                
+                /*
                 [self prerollAtRate:self.playRate completionHandler:^(BOOL complete) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [self setRate:self.playRate];
@@ -650,105 +671,136 @@ static CMClockRef _pxpPlayerMasterClock;
                         });
                     });
                 }];
+                 */
             }];
+            
+            [self willChangeValueForKey:@"live"];
+            _live = YES;
+            [self didChangeValueForKey:@"live"];
         }
-        
-        _live = YES;
+    } else {
+        self.live = YES;
     }
     
 }
 
-/// Synchronizes all other players to the player
-- (void)sync:(CMTime)currentTime {
+- (void)haltSync:(CMTime)time {
+    self.syncing = YES;
     
+    float rate = self.rate;
+    [self pause];
+    [self seekToTime:time multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL seekComplete) {
+        [self prerollAtRate:rate multi:YES completionHandler:^(BOOL prerollComplete) {
+            [self setRate:rate multi:YES];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.syncing = NO;
+            });
+        }];
+    }];
+}
+
+- (void)adaptiveSync:(CMTime)time {
+    
+    // The number of seconds to seek ahead while playing.
     static CMTime smartSync;
+    
+    // safe guard.
     if (!CMTIME_IS_NUMERIC(smartSync)) {
         smartSync = kCMTimeZero;
     }
     
+    // calculate the average time off each player is.
+    NSUInteger n = 0;
+    CMTime average = kCMTimeZero;
+    for (PxpPlayer *player in self.contextPlayers) {
+        if (player != self) {
+            const CMTime difference = CMTimeSubtract(time, player.currentTime);
+            if (CMTIME_IS_NUMERIC(difference)) {
+                average = CMTimeAdd(average, difference);
+                n++;
+            }
+        }
+    }
+    average = CMTimeMultiplyByFloat64(average, n ? 1.0 / n : 1.0);
+    
+    // adjust the smart sync with the average.
+    smartSync = CMTimeMaximum(CMTimeAdd(smartSync, average), kCMTimeZero);
+    
+    // reset if we've gone too far.
+    if (CMTimeCompare(smartSync, CMTimeMake(10, 1)) > 0) {
+        smartSync = kCMTimeZero;
+    }
+    
+    // calculate the time to seek to.
+    const CMTime seekTime = CMTimeAdd(time, smartSync);
+    
+    const NSUInteger total = self.contextPlayers.count - 1;
+    __block NSUInteger tried = 0;
+    __block NSUInteger completed = 0;
+    
+    void (^handler)(BOOL) = ^(BOOL complete) {
+        tried++;
+        completed += completed ? 1 : 0;
+        
+        if (tried >= total) {
+            [self setRate:self.rate];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.syncing = NO;
+            });
+        }
+    };
+    
+    self.syncing = YES;
+    for (PxpPlayer *player in self.contextPlayers) {
+        if (player != self) {
+            [player seekToTime:seekTime completionHandler:handler];
+        }
+    }
+}
+
+/// Synchronizes all other players to the player
+- (void)sync:(CMTime)currentTime {
     if (CMTIME_IS_NUMERIC(self.syncThreshold) && !self.prerolling && !self.seeking && !self.syncing && self.rate != 0.0) {
         // calculate time distribution among players
         CMTime distribution = kCMTimeZero;
-        CMTime average = kCMTimeZero;
         for (PxpPlayer *player in self.contextPlayers) {
             if (player != self) {
-                CMTime difference = CMTimeSubtract(currentTime, player.currentTime);
-                
+                const CMTime difference = CMTimeSubtract(currentTime, player.currentTime);
                 distribution = CMTimeMaximum(distribution, CMTimeAbsoluteValue(difference));
-                average = CMTimeAdd(average, CMTIME_IS_NUMERIC(difference) ? difference : kCMTimeZero);
             }
         }
         
         BOOL synced = CMTimeCompare(distribution, self.syncThreshold) <= 0;
         
-        if (self.contextPlayers.count > 1) {
-            Float64 f = 1.0 / (self.contextPlayers.count - 1);
-            average = CMTimeMultiplyByFloat64(average, f);
+        if (self.live) {
+            // we need to sync if the player's are 5 or more seconds behind live.
+            synced = synced && CMTimeCompare(self.remainingTime, CMTimeMake(5, 1)) <= 0;
         }
-        
-        if (!synced && CMTimeCompare(CMTimeAbsoluteValue(average), CMTimeMake(10, 1)) < 0) {
-            smartSync = CMTimeMaximum(CMTimeAdd(smartSync, average), kCMTimeZero);
-        }
-        
-        /*
-        NSLog(@"DIST: %f", CMTimeGetSeconds(distribution));
-        NSLog(@"AVG: %f", CMTimeGetSeconds(average));
-        NSLog(@"SMRT: %f", CMTimeGetSeconds(smartSync));
-         */
         
         if (synced) {
             // players in sync
             self.syncing = 0;
             self.syncs = 0;
-            NSLog(@"Players SYNCED!");
+            //NSLog(@"Players SYNCED!");
             
-        } /* else if (self.syncs < MAX_SYNCS && NO) {
-            if (self.live) {
-                NSLog(@"Syncing (Live)");
-                [self goToLive];
-            } else {
-                NSLog(@"Syncing (Freeze)");
-                self.syncing = YES;
-                [self pause];
-                [self seekToTime:currentTime multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete){
-                    [self prerollAtRate:self.playRate completionHandler:^(BOOL complete) {
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            
-                            [self setRate:self.playRate];
-                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                self.syncing = NO;
-                            });
-                        });
-                    }];
-                }];
-            }
+        } else if (self.live && CMTIMERANGE_IS_INVALID(self.range)) {
+            NSLog(@"Syncing (Live)");
+            [self goToLive];
             
-            self.syncs++;
-        } */ else {
+        } else {
             NSLog(@"Syncing (Adaptive)");
+            [self adaptiveSync:currentTime];
             
-            self.syncing = YES;
-            for (PxpPlayer *player in self.contextPlayers) {
-                if (player != self) {
-                    
-                    [player seekToTime:CMTimeAdd(currentTime, smartSync) multi:NO toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
-                        
-                        // ensure no players get stuck
-                        for (PxpPlayer *player in self.contextPlayers) {
-                            if (player.rate == 0.0) {
-                                //[player setRate:self.playRate multi:NO];
-                            }
-                        }
-                        
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            self.syncing = NO;
-                        });
-                        
-                    }];
-                }
-            }
         }
     }
+}
+
+- (void)didPlayToEndTimeNotification:(NSNotification *)notification {
+    [self seekToTime:kCMTimeZero multi:NO toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete) {
+        [self setRate:_playRate multi:NO];
+    }];
 }
 
 #pragma mark - PxpTimeProvider

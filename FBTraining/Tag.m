@@ -539,7 +539,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
         
         AVAsset *asset = [AVURLAsset URLAssetWithURL:feed.path options:nil];
-        UIImage *thumb = [asset imageForTime:CMTimeMakeWithSeconds(time, 1)];
+        UIImage *thumb = [asset imageForTime:CMTimeMake(time, 1)];
         
         if (thumb && (self.telestration.sourceName == feed.sourceName || [self.telestration.sourceName isEqualToString:feed.sourceName])) {
             UIGraphicsBeginImageContext(thumb.size);

@@ -55,7 +55,7 @@
                 self.deleteButton = [[UIButton alloc] init];
                 self.deleteButton.backgroundColor = [UIColor redColor];
                 [self.deleteButton addTarget:self action:@selector(deleteAllButtonTarget) forControlEvents:UIControlEventTouchUpInside];
-                [self.deleteButton setTitle: @"Delete All" forState: UIControlStateNormal];
+                [self.deleteButton setTitle: @"Delete Selected" forState: UIControlStateNormal];
                 [self.deleteButton.titleLabel setTextColor:[UIColor whiteColor]];
                 [self.deleteButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
                 [self.deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -216,17 +216,27 @@
         __block FeedSelectCell *weakCell = collapsableCell;
         collapsableCell.downloadButton.downloadItem = nil;
         
+        /*NSString *tagKeyForSearch;
+        if (tag.event.originalFeeds.count > 1) {
+            tagKeyForSearch = [NSString stringWithFormat:@"%@-%@"]
+        }*/
 
-        NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
+        //NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
         // This is checking if tag is downloaded to the device already
-        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
+        
+        if ([[[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]] isKindOfClass:[NSString class]]) {
+            // This means the place holder is found to set the button to look like its downloaded
+            collapsableCell.downloadButton.isPressed    = YES;
+            collapsableCell.downloadButton.progress     = 0;
+        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
             collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
             __block FeedSelectCell *weakerCell = weakCell;
             [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
                 weakerCell.downloadButton.progress = progress;
                 [weakerCell.downloadButton setNeedsDisplay];
             }];
-        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:([key isEqualToString:@"onlySource"])?nil:key]){
+            //[key isEqualToString:@"onlySource"]
+        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:([NSString stringWithFormat:@"%@-%@hq",tag.ID,key ])?nil:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]){
             collapsableCell.downloadButton.downloadComplete = YES;
             collapsableCell.downloadButton.progress = 1;
         }
@@ -234,8 +244,8 @@
         
         
         collapsableCell.downloadButtonBlock = ^(){
-            //__block DownloadItem *videoItem;
-            
+
+            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
             void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
                 //videoItem = downloadItem;
                  weakCell.downloadButton.downloadItem = downloadItem;
@@ -250,7 +260,7 @@
             };
             
             NSString *src = [NSString stringWithFormat:@"%@hq", key];
-            
+            src = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
                                                                                                                    @"block": blockName,
                                                                                                                    @"tag": tag,
@@ -415,7 +425,7 @@
         [cell.playersLabel setText:NSLocalizedString(@"Player(s):", nil)];
         [cell.playersNumberLabel setText:players];
     }else{
-        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),@" "]];
+        [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
     }
     
     
@@ -537,6 +547,19 @@
 }
 
 
+
+-(void)collaspOpenCell
+{
+    if (self.arrayOfCollapsableIndexPaths.count > 0) {
+        NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
+        [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+        self.previouslySelectedIndexPath = nil;
+        self.swipeableMode = YES;
+    }
+}
+
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return NO;
     
@@ -580,56 +603,48 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
 {
 
     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these tags?"] && buttonIndex == 0) {
-       NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-       NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-
-        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-           [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
-           [indexPathsArray addObject: cellIndexPath];
+        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
+        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+        BOOL needCanNotDeleteTagAlertView = false;
+        
+        for (NSIndexPath *cellIndexPath in [self.setOfDeletingCells copy]) {
+            Tag *tag = self.tableData[cellIndexPath.row];
+            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                [arrayOfTagsToRemove addObject:tag];
+                [indexPathsArray addObject:cellIndexPath];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+            }else{
+                needCanNotDeleteTagAlertView = true;
+            }
         }
-
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
+        
+        for (Tag *tag in arrayOfTagsToRemove) {
             [self.tableData removeObject:tag];
         }
-
-        [self.setOfDeletingCells removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
         
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
-            
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
+        if (needCanNotDeleteTagAlertView) {
+            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert showView];
         }
-
-    }else{
-        if (buttonIndex == 0)
-        {
-            NSDictionary *tag = [self.tableData objectAtIndex: self.editingIndexPath.row];
-            
-            
-            [self.tableData removeObjectAtIndex:self.editingIndexPath.row];
-            [self.setOfDeletingCells removeObject: self.editingIndexPath];
+        
+    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
+        
+        Tag *tag = [self.tableData objectAtIndex:self.editingIndexPath.row];
+        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+            [self.tableData removeObject:tag];
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
-            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
             [self removeIndexPathFromDeletion];
+        }else{
+            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert showView];
         }
-        else if (buttonIndex == 1)
-        {
-            // No, cancel the action to delete tags
-        }
-
     }
     [CustomAlertView removeAlert:alertView];
 
+    [self.setOfDeletingCells removeAllObjects];
+    
     /*if (self.setOfDeletingCells.count < 2){
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];

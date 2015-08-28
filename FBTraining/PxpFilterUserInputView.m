@@ -18,6 +18,8 @@
     CGSize scrollViewSize;
 }
 
+@synthesize modified = _modified;
+
 - (void) initUIInfo{
     
     NSInteger width = self.frame.size.width;

@@ -15,9 +15,19 @@
 #import <SystemConfiguration/CaptiveNetwork.h>
 #import "sys/socket.h"
 #import "netinet/in.h"
+#import <ifaddrs.h>
+#import <arpa/inet.h>
+
+
 
 @implementation Utility
 
++(void)initialize
+{
+    // Internet Checking
+//    NSTimer * timem = [NSTime alloc]initWithFireDate:<#(nonnull NSDate *)#> interval:<#(NSTimeInterval)#> target:<#(nonnull id)#> selector:<#(nonnull SEL)#> userInfo:<#(nullable id)#> repeats:<#(BOOL)#>
+
+}
 
 //translate seconds to hh:mm:ss format
 +(NSString*)translateTimeFormat:(float)time{
@@ -28,15 +38,15 @@
     NSString *displayTime;
     if (time < 0) {
         if (dHours > 0) {
-            displayTime = [NSString stringWithFormat:@"-%i:%02i:%02i",dHours, dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"-%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
         }else{
-            displayTime = [NSString stringWithFormat:@"-%02i:%02i", dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"-%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
         }
     }else{
         if (dHours > 0) {
-            displayTime = [NSString stringWithFormat:@"%i:%02i:%02i",dHours, dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"%lu:%02lu:%02lu",(unsigned long)dHours, (unsigned long)dMinutes, (unsigned long)dSeconds];
         }else{
-            displayTime = [NSString stringWithFormat:@"%02i:%02i", dMinutes, dSeconds];
+            displayTime = [NSString stringWithFormat:@"%02lu:%02lu", (unsigned long)dMinutes, (unsigned long)dSeconds];
         }
     }
     return displayTime;
@@ -80,16 +90,20 @@
         NSError *error = nil;
         id object = [NSJSONSerialization
                      JSONObjectWithData:data
-                     options:0
+                     options:NSJSONReadingAllowFragments
                      error:&error];
         
-        if(error) { /* JSON was malformed, act appropriately here */ }
+        if(error) {
+            PXPLog(@"%@ Error! U001",[error.userInfo objectForKey:@"NSLocalizedDescription"]);
+            /* JSON was malformed, act appropriately here */ }
         
         // the originating poster wants to deal with dictionaries;
         // assuming you do too then something like this is the first
         // validation step:
         if([object isKindOfClass:[NSDictionary class]])
         {
+//            NSDictionary *  test = [[NSDictionary alloc]init];
+//            NSString * teste = NSString st
             results = object;
             /* proceed with results as you like; the assignment to
              an explicit NSDictionary * is artificial step to get
@@ -148,6 +162,12 @@
     return newString;
 }
 
++(NSString *)hexStringFromColor:(UIColor *)color
+{
+    CGFloat r = 0.0, g = 0.0, b = 0.0;
+    [color getRed:&r green:&g blue:&b alpha:nil];
+    return [NSString stringWithFormat:@"%02hhX%02hhX%02hhX", (unsigned char) (r * 255), (unsigned char) (g * 255), (unsigned char) (b * 255)];
+}
 
 +(NSString *)stringToSha1:(NSString *)hashkey{
     
@@ -158,7 +178,7 @@
     // This is the destination
     uint8_t digest[CC_SHA1_DIGEST_LENGTH] = {0};
     // This one function does an unkeyed SHA1 hash of your hash data
-    CC_SHA1(keyData.bytes, keyData.length, digest);
+    CC_SHA1(keyData.bytes, (unsigned int) keyData.length, digest);
     
     // Now convert to NSData structure to make it usable again
     NSData *out = [NSData dataWithBytes:digest
@@ -178,7 +198,7 @@
 {
     const char* str = [input UTF8String];
     unsigned char result[CC_SHA256_DIGEST_LENGTH];
-    CC_SHA256(str, strlen(str), result);
+    CC_SHA256(str, (unsigned int) strlen(str), result);
     
     NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
     for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
@@ -191,38 +211,9 @@
 
 +(UIColor*)colorWithHexString:(NSString*)hex
 {
-    NSString *cString = [[hex stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
-    
-    // String should be 6 or 8 characters
-    if ([cString length] < 6) return [UIColor grayColor];
-    
-    // strip 0X if it appears
-    if ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
-    
-    if ([cString length] != 6) return  [UIColor grayColor];
-    
-    // Separate into r, g, b substrings
-    NSRange range;
-    range.location = 0;
-    range.length = 2;
-    NSString *rString = [cString substringWithRange:range];
-    
-    range.location = 2;
-    NSString *gString = [cString substringWithRange:range];
-    
-    range.location = 4;
-    NSString *bString = [cString substringWithRange:range];
-    
-    // Scan values
-    unsigned int r, g, b;
-    [[NSScanner scannerWithString:rString] scanHexInt:&r];
-    [[NSScanner scannerWithString:gString] scanHexInt:&g];
-    [[NSScanner scannerWithString:bString] scanHexInt:&b];
-    
-    return [UIColor colorWithRed:((float) r / 255.0f)
-                           green:((float) g / 255.0f)
-                            blue:((float) b / 255.0f)
-                           alpha:1.0f];
+    unsigned char r = 0, g = 0, b = 0;
+    sscanf(hex.UTF8String, "%02hhx%02hhx%02hhx", &r, &g, &b);
+    return [UIColor colorWithRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:1.0];
 }
 
 +(NSString*)encoderStatusToString:(int)status
@@ -244,39 +235,40 @@
     return result;
 }
 
-//+(NSString*)cmTimeToString:(CMTime)time
-//{
-//    NSString * txt;
-//
-//    return txt;
-//}
-
-+(NSComparisonResult)compareVersion:(NSString *)versionNum1 with:(NSString*)versionNum2
-{
-    //    NSInteger (^cmpGroup)(NSString *grp1,NSString *grp2) = ^NSInteger(NSString *grp1,NSString *grp2) {
-    //
-    //        NSInteger n1 = [string componentsSeparatedByString: @";"]
-    //
-    //        return
-    //    };
-    //
-    //
-    //    return (NSComparisonResult)1;
++(NSComparisonResult)compareVersion: (NSString *)version1 withVersion: (NSString *)version2{
+    NSArray *version1Array = [version1 componentsSeparatedByString:@"."];
+    NSArray *version2Array = [version2 componentsSeparatedByString:@"."];
+    
+    NSUInteger maxCount = MAX(version1Array.count, version2Array.count);
+    
+    for (NSUInteger i = 0; i < maxCount; ++i) {
+        int version1Number = [version1Array[i] intValue];
+        int version2Number = [version1Array[i] intValue];
+        
+        if (version1Number > version2Number) {
+            return NSOrderedDescending;
+        }else if (version1Number < version2Number){
+            return NSOrderedAscending;
+        }
+        
+        if (i == (maxCount - 1)) {
+            return NSOrderedSame;
+        }
+        
+        if (i == (version1Array.count - 1) && !(i == (version2Array.count - 1))) {
+            return NSOrderedAscending;
+        }else if (i == (version2Array.count - 1) && !(i == (version1Array.count - 1))){
+            return NSOrderedDescending;
+        }
+    }
+    
+    return NSOrderedSame;
 }
 
 
 
-/**
- *  This makes a NSDictionary of basic data for taging
- */
-+(NSDictionary*)tagDict
-{}
 
-
-
-
-
-- (NSString *) platformString{
++ (NSString *) platformString{
     
     size_t size;
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
@@ -285,62 +277,135 @@
     NSString *platform = [NSString stringWithUTF8String:machine];
     free(machine);
     
-    if ([platform isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
-    if ([platform isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
-    if ([platform isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
-    if ([platform isEqualToString:@"iPhone3,1"])    return @"iPhone 4";
-    if ([platform isEqualToString:@"iPhone3,3"])    return @"Verizon iPhone 4";
-    if ([platform isEqualToString:@"iPhone4,1"])    return @"iPhone 4S";
-    if ([platform isEqualToString:@"iPod1,1"])      return @"iPod Touch 1G";
-    if ([platform isEqualToString:@"iPod2,1"])      return @"iPod Touch 2G";
-    if ([platform isEqualToString:@"iPod3,1"])      return @"iPod Touch 3G";
-    if ([platform isEqualToString:@"iPod4,1"])      return @"iPod Touch 4G";
-    if ([platform isEqualToString:@"iPad1,1"])      return @"iPad";
-    if ([platform isEqualToString:@"iPad2,1"])      return @"iPad 2 (WiFi)";
-    if ([platform isEqualToString:@"iPad2,2"])      return @"iPad 2 (GSM)";
-    if ([platform isEqualToString:@"iPad2,3"])      return @"iPad 2 (CDMA)";
-    if ([platform isEqualToString:@"i386"])         return @"Simulator";
-    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
+//    if ([platform isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
+//    if ([platform isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
+//    if ([platform isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
+//    if ([platform isEqualToString:@"iPhone3,1"])    return @"iPhone 4";
+//    if ([platform isEqualToString:@"iPhone3,3"])    return @"Verizon iPhone 4";
+//    if ([platform isEqualToString:@"iPhone4,1"])    return @"iPhone 4S";
+//    if ([platform isEqualToString:@"iPod1,1"])      return @"iPod Touch 1G";
+//    if ([platform isEqualToString:@"iPod2,1"])      return @"iPod Touch 2G";
+//    if ([platform isEqualToString:@"iPod3,1"])      return @"iPod Touch 3G";
+//    if ([platform isEqualToString:@"iPod4,1"])      return @"iPod Touch 4G";
+//    if ([platform isEqualToString:@"iPad1,1"])      return @"iPad";
+//    if ([platform isEqualToString:@"iPad2,1"])      return @"iPad 2 (WiFi)";
+//    if ([platform isEqualToString:@"iPad2,2"])      return @"iPad 2 (GSM)";
+//    if ([platform isEqualToString:@"iPad2,3"])      return @"iPad 2 (CDMA)";
+//    if ([platform isEqualToString:@"iPad3,1"])      return @"foobar";
+//    if ([platform isEqualToString:@"i386"])         return @"Simulator";
+//    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
+    
+    
     return platform;
 }
 
-+(NSString*)myWifiName
+
+
+
+
+
++(BOOL)isDeviceBlurSupported:(NSString *)platform{
+  // [Utility isDeviceBlurSupported:[Utility platformString]];
+    
+    BOOL result = FALSE;
+    NSArray *deviceBlurNotSupportedArray = [[NSArray alloc] initWithObjects:
+                                            @"iPad1,1",
+                                            @"iPhone1,1",
+                                            @"iPhone1,2",
+                                            @"iPhone2,1",
+                                            @"iPhone3,1",
+                                            @"iPhone3,2",
+                                            @"iPhone3,3",
+                                            @"iPod1,1",
+                                            @"iPod2,1",
+                                            @"iPod2,2",
+                                            @"iPod3,1",
+                                            @"iPod4,1",
+                                            @"iPad2,1",
+                                            @"iPad2,2",
+                                            @"iPad2,3",
+                                            @"iPad2,4",
+                                            @"iPad3,1",
+                                            @"iPad3,2",
+                                            @"iPad3,3", nil];
+    
+    for(NSString *devicePlatformFromArray in deviceBlurNotSupportedArray){
+        if([platform isEqualToString:devicePlatformFromArray]){
+            result = FALSE;
+            NSLog(@"Blur not supported for Device ID \"%@\"", platform);
+            break;
+            
+        }else{
+            result = TRUE;
+    
+        }
+        
+    }
+    
+    return result;
+    
+}
+
++(BOOL)isDeviceSupportedMultiCam:(NSString *)platform{
+    const char *s = platform.UTF8String;
+    BOOL result = FALSE;
+<<<<<<< HEAD
+
+    if ([platform containsString:@"iPad"]) {
+=======
+    
+    if (s && strstr(s, "iPad")) {
+>>>>>>> da4d78fa4567e177aa5a18245d16043ebd6bf4fe
+        NSArray *words = [platform componentsSeparatedByString:@","];
+        platform = words[0];
+        words = [platform componentsSeparatedByString:@"iPad"];
+        if ([words[1] intValue] >= 4) {
+            result = TRUE;
+        }
+    }
+    return result;
+}
+
++ (NSString *)myWifiName
 {
     CFArrayRef myArray = CNCopySupportedInterfaces();
     // Get the dictionary containing the captive network infomation
-    CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(CFArrayGetValueAtIndex(myArray, 0));
-    //    NSLog(@"Information of the network we're connected to: %@", captiveNtwrkDict);
-    NSDictionary *dict = (__bridge NSDictionary*) captiveNtwrkDict;
-    NSString* ssid = [dict objectForKey:@"SSID"];
-    //    NSLog(@"network name: %@",ssid);
-    return ssid;
+    if (myArray) {
+        CFStringRef inferfaceName = CFArrayGetValueAtIndex(myArray, 0);
+        CFDictionaryRef captiveNtwrkDict = CNCopyCurrentNetworkInfo(inferfaceName);
+        
+        NSString *ssid = nil;
+        
+        if (captiveNtwrkDict) {
+            CFStringRef key = CFSTR("SSID");
+            ssid = (__bridge NSString *) CFDictionaryGetValue(captiveNtwrkDict, key);
+            CFRelease(key);
+            CFRelease(captiveNtwrkDict);
+        }
+        
+        if(!ssid){
+            ssid = @"Unavailable";
+        }
+        
+        CFRelease(myArray);
+        return ssid;
+    }
     
     
+    
+     return @"No Wifi";
 }
 
 +(NSString *) dateFromEvent: (NSString *) eventName{
     return [eventName substringToIndex:10];
 }
 
-<<<<<<< HEAD
-/**
- *  This is a convienience method that makes it easy to fill in the required data need to request an event Download
- *
- *  @param data       Event dict that will be made in to a plist
- *  @param sourceName name of source video that will be downloaded
- *  @param block      this block will send a DownloadItem of the video
- *
- *  @return easy to used data block
- */
-+(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block
-{
-     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:nil userInfo:@{ @"data":data, @"source":sourceName, @"block":block }];
 
-}
-
-
-=======
+// Depricated
 +(BOOL)hasInternet{
+
+    //Reachability *internetReachableFoo = [Reachability reachabilityWithHostname:@"www.google.com"];
+    
     SCNetworkReachabilityFlags flags;
     BOOL receivedFlags;
     
@@ -354,6 +419,226 @@
 
 }
 
->>>>>>> c5ed4195ce151171564b42763a2a75b93a30606b
+
++(void)hasInternetOnComplete:(void (^)(BOOL succsess))onFinish
+{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        SCNetworkReachabilityFlags flags;
+        BOOL receivedFlags;
+        
+        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [@"www.google.com" UTF8String]);
+        receivedFlags = SCNetworkReachabilityGetFlags(reachability, &flags);
+        
+        CFRelease(reachability);
+        BOOL found = (!receivedFlags || flags == 0) ? FALSE : TRUE;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            onFinish(found);
+        });
+    });
+    
+    
+    
+    
+    
+}
+
+///**
+// *  This is a convienience method that makes it easy to fill in the required data need to request an event Download
+// *
+// *  @param data       Event dict that will be made in to a plist
+// *  @param sourceName name of source video that will be downloaded
+// *  @param block      this block will send a DownloadItem of the video
+// *
+// *  @return easy to used data block
+// */
+//+(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block
+//{
+//     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:nil userInfo:@{ @"data":data, @"source":sourceName, @"block":block }];
+//}
+
++(NSString*)removeSubString:(NSString*)substring in:(NSString*)main
+{
+    NSMutableString * temp =     [[NSMutableString alloc]initWithString:main];
+    //[temp deleteCharactersInRange:[main rangeOfString:substring]];
+    return temp;
+}
+
++(UIColor*)darkerColorOf:(UIColor*)color
+{
+    CGFloat r, g, b, a;
+    if ([color getRed:&r green:&g blue:&b alpha:&a])
+        return [UIColor colorWithRed:MAX(r - 0.2, 0.0)
+                               green:MAX(g - 0.2, 0.0)
+                                blue:MAX(b - 0.2, 0.0)
+                               alpha:a];
+    return nil;
+}
+
++(UIColor*)ligherColorOf:(UIColor*)color
+{
+    CGFloat r, g, b, a;
+    if ([color getRed:&r green:&g blue:&b alpha:&a])
+        return [UIColor colorWithRed:MAX(r + 0.5, 0.0)
+                               green:MAX(g + 0.5, 0.0)
+                                blue:MAX(b + 0.5, 0.0)
+                               alpha:a];
+    return nil;
+}
+
+
+
++(NSString *)getIPAddress {
+    NSString *address = @"error";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    // retrieve the current interfaces - returns 0 on success
+    success = getifaddrs(&interfaces);
+    if (success == 0) {
+        // Loop through linked list of interfaces
+        temp_addr = interfaces;
+        while(temp_addr != NULL) {
+            if(temp_addr->ifa_addr->sa_family == AF_INET) {
+                // Check if interface is en0 which is the wired connection on a simulator, en1 - wifi on the simulator, or lo0 - wifi on an iPad
+                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"] ||
+                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en1"] ||
+                   [[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"lo0"]) {
+                    // Get NSString from C String
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                }
+            }
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    // Free memory
+    freeifaddrs(interfaces);
+    return address;
+    
+}
+
+
++(BOOL)hasWiFi
+{
+    struct sockaddr_in zeroAddress;
+    bzero(&zeroAddress, sizeof(zeroAddress));
+    zeroAddress.sin_len = sizeof(zeroAddress);
+    zeroAddress.sin_family = AF_INET;
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)&zeroAddress);
+    if(reachability != NULL) {
+        //NetworkStatus retVal = NotReachable;
+        SCNetworkReachabilityFlags flags;
+        if (SCNetworkReachabilityGetFlags(reachability, &flags)) {
+            if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
+            {
+                // if target host is not reachable
+                CFRelease(reachability);
+                return NO;
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
+            {
+                // if target host is reachable and no connection is required
+                //  then we'll assume (for now) that your on Wi-Fi
+                CFRelease(reachability);
+                return YES;
+            }
+            
+            
+            if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
+                 (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
+            {
+                // ... and the connection is on-demand (or on-traffic) if the
+                //     calling application is using the CFSocketStream or higher APIs
+                
+                if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
+                {
+                    // ... and no [user] intervention is needed
+                    CFRelease(reachability);
+                    return YES;
+                }
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0)
+            {
+                // ... but WWAN connections are OK if the calling application
+                //     is using the CFNetwork (CFSocketStream?) APIs.
+                CFRelease(reachability);
+                return YES;
+            }
+        }
+    }
+    
+    if (reachability) {
+        CFRelease(reachability);
+    }
+    
+    return NO;
+    
+    //    return [uController hasConnectivity];
+}
+
++(UIImage *)starImageSelected: (BOOL) selected size:(CGSize)size
+{
+    CGSize imageSize = size;
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, [UIScreen mainScreen].scale);
+    
+    UIBezierPath *starPath = [UIBezierPath bezierPath];
+//    UIBezierPath *outLinePath = [UIBezierPath bezierPath];
+    
+    [starPath moveToPoint:      CGPointMake(imageSize.width*0.175,  imageSize.height)];         // bottom left
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.5,    0)];                        // top
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.825,  imageSize.height)];         // bottom right
+    [starPath addLineToPoint:   CGPointMake(0,                      imageSize.height*0.382)];   //left
+    [starPath addLineToPoint:   CGPointMake(imageSize.width,        imageSize.height*0.382)];   //right
+    [starPath addLineToPoint:   CGPointMake(imageSize.width*0.175,  imageSize.height)];         // bottom left
+    
+//    
+//    [outLinePath moveToPoint: CGPointMake(17.5/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(50/2, (100 -23.61)/2 )];
+//    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(70/2, 61.8/2)];
+//    [outLinePath addLineToPoint: CGPointMake(100/2, 38.2/2)];
+//    [outLinePath addLineToPoint: CGPointMake(0, 38.2/2)];
+//    [outLinePath addLineToPoint: CGPointMake((50 + 32.5)/2, 100/2)];
+//    [outLinePath addLineToPoint: CGPointMake(50/2, 0)];
+//    [outLinePath addLineToPoint: CGPointMake(17.5/2, 100/2)]; // bottom left
+//    
+    
+    if (selected) {
+        [PRIMARY_APP_COLOR setFill];
+        //[PRIMARY_APP_COLOR setStroke];
+    }else{
+        [[UIColor lightGrayColor] setFill];
+        //[[UIColor lightGrayColor] setStroke];
+    }
+    
+    
+//    
+//    outLinePath.lineWidth = 5.0;
+//    [outLinePath stroke];
+    [starPath fill];
+    
+    UIImage *starImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return starImage;
+}
+
++(UIImage*)makeOnePixelUIImageWithColor:(UIColor*)color
+{
+    CGSize pixelSize = CGSizeMake(1, 1);
+
+    UIGraphicsBeginImageContextWithOptions(pixelSize, NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context,(CGRect){CGPointZero, pixelSize});
+    CGContextSaveGState(context);
+    UIImage *pixel = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+  
+    return  pixel;
+}
+
 @end
 

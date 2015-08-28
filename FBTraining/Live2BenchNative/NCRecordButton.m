@@ -135,49 +135,57 @@
 
 #pragma mark - Start / Stop image generation methods
 
-- (UIImage *)readyToRecordButtonWithSize: (CGSize) buttonSize{
-    UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
-    
-    UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
-    
-    [[UIColor whiteColor] setStroke];
-    [whiteCirclePath stroke];
-    
-    UIBezierPath *innerRedCircle = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - whiteCirclePath.lineWidth - 5 ) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    
-    [[UIColor redColor] setFill];
-    
-    [innerRedCircle fill];
-    
-    
-    UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return recordButtonImage;
+- (UIImage *)readyToRecordButtonWithSize: (CGSize) buttonSize {
+    if (buttonSize.width > 0.0 && buttonSize.height > 0.0) {
+        UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
+        
+        UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
+        whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
+        
+        [[UIColor whiteColor] setStroke];
+        [whiteCirclePath stroke];
+        
+        UIBezierPath *innerRedCircle = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - whiteCirclePath.lineWidth - 5 ) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
+        
+        [[UIColor redColor] setFill];
+        
+        [innerRedCircle fill];
+        
+        
+        UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        return recordButtonImage;
+    } else {
+        return nil;
+    }
 }
 
 - (UIImage *)recordingButtonWithSize: (CGSize) buttonSize{
-    UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
-    
-    UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
-    whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
-    
-    [[UIColor whiteColor] setStroke];
-    [whiteCirclePath stroke];
-    
-    CGRect innerSquareFrame = CGRectMake(buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.height* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.width - 2 * (buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2), buttonSize.height - 2 *( buttonSize.width* 0.149096+ whiteCirclePath.lineWidth/2));
-    UIBezierPath *innerSquarePath = [UIBezierPath bezierPathWithRoundedRect:innerSquareFrame cornerRadius:buttonSize.width / 10 + whiteCirclePath.lineWidth + 2];
-    
-    [[UIColor redColor] setFill];
-    
-    [innerSquarePath fill];
-    
-    
-    UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return recordButtonImage;
+    if (buttonSize.width > 0.0 && buttonSize.height > 0.0) {
+        UIGraphicsBeginImageContextWithOptions(buttonSize, NO, [UIScreen mainScreen].scale);
+        
+        UIBezierPath *whiteCirclePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(buttonSize.width/2, buttonSize.height/2) radius: (buttonSize.width/2 - 5) startAngle:0 endAngle: 2 *M_PI clockwise:NO];
+        whiteCirclePath.lineWidth = (buttonSize.width / 10) /2 ;
+        
+        [[UIColor whiteColor] setStroke];
+        [whiteCirclePath stroke];
+        
+        CGRect innerSquareFrame = CGRectMake(buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.height* 0.149096 + whiteCirclePath.lineWidth/2, buttonSize.width - 2 * (buttonSize.width* 0.149096 + whiteCirclePath.lineWidth/2), buttonSize.height - 2 *( buttonSize.width* 0.149096+ whiteCirclePath.lineWidth/2));
+        UIBezierPath *innerSquarePath = [UIBezierPath bezierPathWithRoundedRect:innerSquareFrame cornerRadius:buttonSize.width / 10 + whiteCirclePath.lineWidth + 2];
+        
+        [[UIColor redColor] setFill];
+        
+        [innerSquarePath fill];
+        
+        
+        UIImage *recordButtonImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        return recordButtonImage;
+    } else {
+        return nil;
+    }
 }
 
 - (void)terminate {

@@ -10,6 +10,8 @@
 #import "BookmarkViewcell.h"
 #import "Utility.h"
 #import "Clip.h"
+#import "ListPopoverControllerWithImages.h"
+#import "AVAsset+Image.h"
 
 
 #define YES_BUTTON  0
@@ -19,6 +21,8 @@
 @property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 
+@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSharePopoverViewController;
+@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSelectPopoverViewController;
 
 @end
 
@@ -27,6 +31,13 @@
 -(instancetype)init{
     self = [super init];
     if (self){
+        
+        _sourceSharePopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
+        _sourceSharePopoverViewController.contentViewController.modalInPopover = NO;
+        
+        _sourceSelectPopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
+        _sourceSelectPopoverViewController.contentViewController.modalInPopover = NO;
+        
         [self.tableView registerClass:[BookmarkViewCell class] forCellReuseIdentifier:@"BookmarkViewCell"];
         
         //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -85,7 +96,35 @@
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:clip];
+    NSDictionary *videosBySourceKey = clip.videosBySrcKey;
+    NSArray *sourceKeys = [videosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
+    
+    if (sourceKeys.count > 1) {
+        // multiple source, display popover.
+        [_sourceSelectPopoverViewController setListOfButtonNames:sourceKeys];
+        
+        for (NSUInteger i = 0; i < sourceKeys.count; i++) {
+            UIButton *button = _sourceSelectPopoverViewController.arrayOfButtons[i];
+            NSString *path = videosBySourceKey[sourceKeys[i]];
+            
+            // get thumbnail image
+            [button setBackgroundImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
+        }
+        
+        [_sourceSelectPopoverViewController addOnCompletionBlock:^(NSString *sourceKey) {
+            if (sourceKey) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{@"clip": clip, @"source": sourceKey }];
+            }
+        }];
+        
+        [_sourceSelectPopoverViewController presentPopoverFromRect:selectedCell.bounds inView:selectedCell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        
+    } else {
+        // single source, just play it.
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{@"clip": clip }];
+    }
+    
+    
 //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
 //                                                                                                                                 @"feed": clip,
 //                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
@@ -97,7 +136,7 @@
     {
         selectedCell.translucentEditingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, selectedCell.frame.size.width, selectedCell.frame.size.height)];
         [selectedCell.translucentEditingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-        [selectedCell.translucentEditingView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:206/255.0f blue:119/255.0f alpha:1.0f]];
+        [selectedCell.translucentEditingView setBackgroundColor: PRIMARY_APP_COLOR];
         [selectedCell.translucentEditingView setAlpha:0.3];
         [selectedCell.translucentEditingView setUserInteractionEnabled:FALSE];
         [selectedCell addSubview:selectedCell.translucentEditingView];
@@ -126,17 +165,8 @@
     [cell.indexNum setText: [NSString stringWithFormat:@"%ld", (long)indexPath.row + 1]];
     cell.rating = clip.rating;
     
-    NSString *path = clip.videoFiles.firstObject ? clip.videoFiles.firstObject : @"";
-    
-    unsigned long srcID;
-    if (sscanf(path.UTF8String, "%*[^+]+%lu.mp4", &srcID) != 1) {
-        srcID = 0;
-    }
-    
-    NSURL *shareUrl = [NSURL fileURLWithPath:path];
-    cell.interactionController = [UIDocumentInteractionController interactionControllerWithURL:shareUrl];
-    cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam %02lu", clip.name, clip.displayTime, srcID];
-    
+    cell.interactionController = [[UIDocumentInteractionController alloc] init];
+
     
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
@@ -145,11 +175,55 @@
     //    [self deleteClip:clip index:[self.tableView indexPathForCell:cell]];
     };
     
+    NSDictionary *clipVideosBySourceKey = clip.videosBySrcKey;
+    
     cell.shareBlock = ^(UITableViewCell *tableViewCell) {
         
         if ([tableViewCell isKindOfClass:[BookmarkViewCell class]]) {
             BookmarkViewCell *cell = (BookmarkViewCell *)tableViewCell;
-            [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+            
+            if (clip.videoFiles.count > 1) {
+                // multiple video files, we need to select a source to share.
+                NSArray *srcNames = [clipVideosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
+                
+                __block UIPopoverController *sourceSelectPopover = _sourceSharePopoverViewController;
+                
+                [_sourceSharePopoverViewController setListOfButtonNames:srcNames];
+                
+                for (NSUInteger i = 0; i < srcNames.count; i++) {
+                    UIButton *button = _sourceSharePopoverViewController.arrayOfButtons[i];
+                    NSString *path = clipVideosBySourceKey[srcNames[i]];
+                    
+                    // get thumbnail image
+                    [button setBackgroundImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
+                }
+                
+                [_sourceSharePopoverViewController addOnCompletionBlock:^(NSString *srcID) {
+                    if (srcID) {
+                        [sourceSelectPopover dismissPopoverAnimated:NO];
+                        
+                        NSString *path = clipVideosBySourceKey[srcID];
+                        cell.interactionController.URL = [NSURL fileURLWithPath:path];
+                        cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam: %@", clip.name, clip.displayTime, srcID];
+                        
+                        [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+                    }
+                }];
+                
+                [_sourceSharePopoverViewController presentPopoverFromRect:cell.shareButton.frame inView:cell.shareButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                
+            } else {
+                // only one clip downloaded, just use the share controller.
+                NSString *srcID = clipVideosBySourceKey.allKeys.firstObject;
+                if (srcID) {
+                    NSString *path = clipVideosBySourceKey[srcID];
+                    
+                    cell.interactionController.URL = [NSURL fileURLWithPath:path];
+                    cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam: %@", clip.name, clip.displayTime, srcID];
+                    
+                    [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
+                }
+            }
         }
         
         /*

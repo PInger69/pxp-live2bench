@@ -11,6 +11,9 @@
 
 
 @implementation Clip
+{
+    NSDictionary * _videosBySrcKey;
+}
 
 /**
  *  This is used when making a new plist from scatch
@@ -104,23 +107,6 @@
             }
         }
         
-        NSArray * vidkeys = [_videosBySrcKey allKeys];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
-        NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
-        
-        for (NSString * k  in vidkeys) {
-
-            NSString * check = [path stringByAppendingPathComponent:_videosBySrcKey[k]];
-            if ( ![[NSFileManager defaultManager] fileExistsAtPath:check] ){
-                [_videosBySrcKey removeObjectForKey:k];
-                modFlag = YES;
-            }
-        }
-        
-       
-        
         if (modFlag) [_localRawData writeToFile:_path atomically:YES];
         //if (modFlag) [_rawData writeToFile:self.path atomically:YES];
     }
@@ -192,24 +178,6 @@
     
     }
     
-    
-        NSString * theFileName          = [[aDict objectForKey:@"fileNames"] firstObject];
-        
-        NSRange startRange = [theFileName rangeOfString:@"+"];
-        NSRange endRange = [theFileName rangeOfString:@".mp4"];
-        
-        NSRange searchRange = NSMakeRange(startRange.location+1, (endRange.location-1) - startRange.location);
-        
-//        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=\+).+?(?=\.mp4)" options:0 error:nil];
-//        NSRange needleRange = [regex rangeOfFirstMatchInString:theFileName options:NSMatchingAnchored range:NSMakeRange(0, theFileName.length)];
-        NSString *scrKeyFromFileName = [theFileName substringWithRange:searchRange];
-
-     //   NSString * scrKeyFromFileName   = [theFileName substringWithRange:needleRange];
-        
-        [_videosBySrcKey setObject:theFileName forKey:scrKeyFromFileName];
-
-    
-    
     NSMutableArray * list       = [NSMutableArray arrayWithArray: mutableDict[@"fileNames"]];
     NSString *aName = [[aDict objectForKey:@"fileNames"] firstObject];
     [list addObject: aName];
@@ -269,6 +237,42 @@
 - (NSString *)globalID {
 //    return [NSString stringWithFormat:@"%@_%@", _rawData[@"event"], _rawData[@"id"]];
     return [NSString stringWithFormat:@"%@_%@", _eventName, _clipId];
+}
+
+- (nonnull NSDictionary *)sourcesForVideoPaths:(NSArray *)paths {
+    NSMutableDictionary *sources = [NSMutableDictionary dictionary];
+    
+    for (NSString *path in self.videoFiles) {
+        
+        // I <3 C, so get the UF8 encoded C string.
+        const char *s = path.UTF8String;
+        
+        // find locations of '+' and "hq.mp4" to grab source from.
+        const char *a = strchr(s, '+');
+        const char *b = a ? strstr(a, "hq.mp4") : NULL;
+        
+        // check that locations exist for both '+' and "hq.mp4".
+        if (a && b) {
+            // calculate length of the string needed from (a + 1) to b. safe to assume a + 1 <= b.
+            const size_t n = b - (a + 1);
+            
+            // stack allocate string with NULL character.
+            char source[n + 1];
+            source[n] = '\0';
+            
+            // copy the string from (a + 1) to b.
+            strncpy(source, a + 1, n);
+            
+            // add to dictionary.
+            sources[[NSString stringWithUTF8String:source]] = path;
+        }
+    }
+    
+    return sources;
+}
+
+- (nonnull NSDictionary *)videosBySrcKey {
+    return [self sourcesForVideoPaths:self.videoFiles];
 }
 
 

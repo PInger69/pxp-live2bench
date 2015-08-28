@@ -39,7 +39,14 @@
 #import "TeamPlayer.h"
 #import "ContentViewController.h"
 
+#import "PxpPlayerViewController.h"
+#import "PxpPlayerMultiView.h"
+#import "PxpEventContext.h"
 #import "PxpVideoBar.h"
+#import "PxpL2BFullscreenViewController.h"
+#import "PxpListViewFullscreenViewController.h"
+#import "PxpPlayer+Tag.h"
+#import "UIImage+Blend.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -54,6 +61,8 @@
 @interface Live2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider>
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
+@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
+@property (strong, nonatomic, nonnull) PxpL2BFullscreenViewController *fullscreenViewController;
 
 @end
 
@@ -65,18 +74,15 @@
     NSString                            * _eventType;                   // Sport or medical
     LiveButton                          * _gotoLiveButton;              // live button
     Live2BenchTagUIViewController       * _tagButtonController;         // side tags
-    L2BFullScreenViewController         * _fullscreenViewController;    // fullscreen class to manage all actions in full
     //ReusableBottomViewController        * _theBottomViewController;
     PipViewController                   * _pipController;
     Pip                                 * _pip;
     FeedSwitchView                      * _feedSwitch;
     id                                  tagsReadyObserver;
-    Event                               * _currentEvent;
     
     // some old stuff
     UILabel                             * durationTagLabel;
     UIButton                            * multiButton;
-    UIPinchGestureRecognizer            * pinchGesture;
     UISwipeGestureRecognizer            * swipeGesture;
     UISwipeGestureRecognizer            * swipeLeftGesture;
     UISwipeGestureRecognizer            * swipeRightGesture;
@@ -84,6 +90,7 @@
     
     UILabel                             *informationLabel;
     ListPopoverController               *_teamPick;
+    ListPopoverController               *_cameraPick;
     TeleViewController                  * telestration;
     //TemporaryButton
 //    UIButton                            *zoomButton;
@@ -158,11 +165,15 @@ static void * eventContext      = &eventContext;
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
+        
+        _playerViewController = [[PxpPlayerViewController alloc] init];
+        _fullscreenViewController = [[PxpL2BFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        
         _videoBar = [[PxpVideoBar alloc] init];
+        
+        [self addChildViewController:_playerViewController];
+        [self addChildViewController:_fullscreenViewController];
     }
-    
-    _telestrationViewController = [[PxpTelestrationViewController alloc] init];
-    [self addChildViewController:_telestrationViewController];
   
     __block Live2BenchViewController * weakSelf = self;
     tagsReadyObserver = [[NSNotificationCenter defaultCenter]addObserverForName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -273,7 +284,7 @@ static void * eventContext      = &eventContext;
     
     playerList = [self playerList];
 
-    _leftArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ortrileft.png"]];
+    _leftArrow = [[UIImageView alloc]initWithImage:[[UIImage imageNamed:@"ortrileft.png"] imageBlendedWithColor:PRIMARY_APP_COLOR]];
     [_leftArrow setContentMode:UIViewContentModeScaleAspectFit];
     [_leftArrow setAlpha:1.0f];
     [self.view addSubview:_leftArrow];
@@ -284,7 +295,7 @@ static void * eventContext      = &eventContext;
     [_playerDrawerLeft.view.layer setBorderWidth:1.0f];
     [_playerDrawerLeft.view setBackgroundColor:[UIColor whiteColor]];
     
-    _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ortriright.png"]];
+    _rightArrow = [[UIImageView alloc]initWithImage:[[UIImage imageNamed:@"ortriright.png"] imageBlendedWithColor:PRIMARY_APP_COLOR]];
     [_rightArrow setContentMode:UIViewContentModeScaleAspectFit];
     [_rightArrow setAlpha:1.0f];
     [self.view addSubview:_rightArrow];
@@ -371,39 +382,74 @@ static void * eventContext      = &eventContext;
     
     if ([sport isEqualToString:SPORT_HOCKEY] && !_bottomViewController && _currentEvent) {
         _bottomViewController = [[HockeyBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         
     }else if ([sport isEqualToString:SPORT_SOCCER] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[SoccerBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
         [_bottomViewController allToggleOnOpenTags];
     }else if ([sport isEqualToString:SPORT_RUGBY] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[RugbyBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
         [_bottomViewController allToggleOnOpenTags];
     }else if ([sport isEqualToString:SPORT_FOOTBALL] && !_bottomViewController && _currentEvent){
         _bottomViewController = [[FootballBottomViewController alloc]init];
-        [self.view addSubview:_bottomViewController.mainView];
+        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
     }
 }
 
 -(void)checkIpadVersion{
     BOOL result = [Utility isDeviceSupportedMultiCam:[Utility platformString]];
     if (!result && [_currentEvent.feeds allValues].count > 1) {
-        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-        [alert showView];
+        _cameraPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"iPad does not support multiple cameras. You need iPadAir or higher. You can only select one of the cameras. Please select the camera you want:", @"Please select the camera you want to play:") buttonListNames:@[]];
+        _cameraPick.messageText.font = [UIFont defaultFontOfSize:14.0f];
+        
+        NSMutableDictionary *buttonListNames = [[NSMutableDictionary alloc]init];
+        for (NSString *feedName in [_currentEvent.feeds allKeys]) {
+            if ([feedName isEqualToString:@"s_00"]) {
+                [buttonListNames setObject:@"Cam 0" forKey:feedName];
+            }else if([feedName isEqualToString:@"s_01"]){
+                [buttonListNames setObject:@"Cam 1" forKey:feedName];
+            }else{
+                [buttonListNames setObject:feedName forKey:feedName];
+            }
+            
+        }
+        _cameraPick.listOfButtonNames = buttonListNames.allValues;
+        
+        __block Live2BenchViewController *weakSelf = self;
+        [_cameraPick addOnCompletionBlock:^(NSString *pick){
+            
+            for (NSString *feedDisplayName in buttonListNames.allValues) {
+                if (![feedDisplayName isEqualToString:pick]) {
+                    [weakSelf.currentEvent.feeds removeObjectForKey:[[buttonListNames allKeysForObject:feedDisplayName] firstObject]];
+                }
+            }
+            [weakSelf addFeed];
+
+        }];
+        [_cameraPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
+                                   animated:YES];
+        /*CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+        [alert showView];*/
+    }else{
+        [self addFeed];
     }
     
 }
@@ -414,6 +460,12 @@ static void * eventContext      = &eventContext;
         [_teamPick clear];
         [_teamPick dismissPopoverAnimated:NO];
         _teamPick = nil;
+    }
+    
+    if (_cameraPick) {
+        [_cameraPick clear];
+        [_cameraPick dismissPopoverAnimated:NO];
+        _cameraPick = nil;
     }
     
     [_leftArrow removeFromSuperview];
@@ -443,7 +495,7 @@ static void * eventContext      = &eventContext;
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
-        //[self addBottomViewController];
+        [multiButton setHidden:true];
         [UserCenter getInstance].taggingTeam = nil;
         [_bottomViewController clear];
 
@@ -451,24 +503,37 @@ static void * eventContext      = &eventContext;
     
     if ([((id <EncoderProtocol>) note.object) event]) {
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
+        [self checkIpadVersion];
         [self turnSwitchOn];
-        [_feedSwitch watchCurrentEvent:_currentEvent];
+        
         [_tagButtonController allToggleOnOpenTags:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         [self displayLable];
         
-        if (_currentEvent.live) {
-            [self gotLiveEvent];
-        }
-        
+        PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
+        //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
+        _playerViewController.playerView.context = context;
+        _videoBar.event = _currentEvent;
+        _fullscreenViewController.playerViewController.playerView.context = context;
+
         [self addBottomViewController];
-        [self addPlayerView];
-        [self checkIpadVersion];
-        
     }
     
     [self onEventChange];
+}
+
+-(void)addFeed{
+    [_cameraPick clear];
+    [_cameraPick dismissPopoverAnimated:NO];
+    _cameraPick = nil;
+    
+    [_feedSwitch watchCurrentEvent:_currentEvent];
+    if (_currentEvent.live) {
+        [self gotLiveEvent];
+    }
+    [self addPlayerView];
+    [multiButton setHidden:!([_currentEvent.feeds count]>1)];
 }
 
 -(void)onTagChanged:(NSNotification *)note
@@ -523,11 +588,11 @@ static void * eventContext      = &eventContext;
 }
 
 -(void)swipeLeftNoticed:(UISwipeGestureRecognizer *)swipeLeftRecognizer{
-    [self.videoPlayer seekBy:[_videoBar getSeekSpeed:@"backward"]];
+    [self.videoPlayer seekBy:_videoBar.backwardSeekButton.speed];
 }
 
 -(void)swipeRightNoticed:(UISwipeGestureRecognizer *)swipeRightRecognizer{
-    [self.videoPlayer seekBy:[_videoBar getSeekSpeed:@"forward"]];
+    [self.videoPlayer seekBy:_videoBar.forwardSeekButton.speed];
 }
 
 #pragma mark - Tap Gesture Recognizer methods
@@ -588,33 +653,31 @@ static void * eventContext      = &eventContext;
 -(void)onEventChange
 {
     if (_appDel.encoderManager.liveEvent != nil){
-        [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
         //self.videoPlayer.live = YES;
-        [_gotoLiveButton isActive:YES];
+        _gotoLiveButton.enabled = YES;
+        _fullscreenViewController.liveButton.enabled = YES;
         [self switchPressed];
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         //_tagButtonController.enabled = YES;
     }else if (_currentEvent != nil){
-        [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
+        _fullscreenViewController.liveButton.enabled = NO;
         //[_tagButtonController setButtonState:SideTagButtonModeRegular];
         [self switchPressed];
         //_tagButtonController.enabled = YES;
     }
     else if (_currentEvent == nil){
-        [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
-        PXPLog(@"Current event is set to nil");
+        _gotoLiveButton.enabled = NO;
+        _fullscreenViewController.liveButton.enabled = NO;
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
         //[self switchPressed];
         //_tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
     }
-    [multiButton setHidden:!([_currentEvent.feeds count]>1)];
-    _videoBar.event = _currentEvent;
+    //[multiButton setHidden:!([_currentEvent.feeds count]>1)];
 }
 
 
@@ -635,7 +698,7 @@ static void * eventContext      = &eventContext;
     if (_encoderManager.masterEncoder.liveEvent != nil){
         [_videoBarViewController setBarMode:L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode:L2B_FULLSCREEN_MODE_LIVE];
-        [_gotoLiveButton isActive:YES];
+        _gotoLiveButton.enabled = YES;
         _tagButtonController.enabled = YES;
     }
     else if (eventOnPrimaryEncoder.event != nil){
@@ -643,21 +706,21 @@ static void * eventContext      = &eventContext;
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         _tagButtonController.enabled = YES;
     }
     else if(_encoderManager.masterEncoder.event != nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_LIVE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_EVENT];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         _tagButtonController.enabled = YES;
     }
     else if (eventOnPrimaryEncoder.event == nil  && _encoderManager.masterEncoder.liveEvent == nil){
         [_videoBarViewController setBarMode: L2B_VIDEO_BAR_MODE_DISABLE];
         [_fullscreenViewController setMode: L2B_FULLSCREEN_MODE_DISABLE];
         self.videoPlayer.live = NO;
-        [_gotoLiveButton isActive:NO];
+        _gotoLiveButton.enabled = NO;
         _tagButtonController.enabled = NO;
         [self.videoPlayer clear];
         [informationLabel setText:@""];
@@ -697,42 +760,6 @@ static void * eventContext      = &eventContext;
 
 
 #pragma mark -
-#pragma mark Gesture
-
-//this method will be triggered if user pinches the video view. Based on the pinch velocity, will enter full screen or back to normal screen
-- (void)handlePinchGuesture:(UIGestureRecognizer *)recognizer{
-    
-    if((pinchGesture.velocity > 0.5 || pinchGesture.velocity < -0.5) && pinchGesture.numberOfTouches == 2){
-        if (CGRectContainsPoint(self.view.bounds, [pinchGesture locationInView:self.view]))
-        {
-            
-            if (pinchGesture.scale >1) {
-                _fullscreenViewController.enable = YES;
-                [_bottomViewController.mainView setHidden:true];
-                [_tagButtonController setButtonColor:true];
-                [_pipController.multi fullScreen];
-                //_tagButtonController.fullScreenViewController = _fullscreenViewController;
-                [self.view bringSubviewToFront:_fullscreenViewController.view];
-                [_tagButtonController _fullScreen];
-                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
-            }else if (pinchGesture.scale < 1){
-                [telestration forceCloseTele];
-                _fullscreenViewController.enable = NO;
-                [_bottomViewController.mainView setHidden:false];
-                [_tagButtonController setButtonColor:false];
-                [_pipController.multi normalScreen];
-                [self.view bringSubviewToFront:_videoBar];
-                [_tagButtonController _fullScreen];
-                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
-            }
-        }
-        return;
-    }
-    
-}
-
-
-#pragma mark -
 #pragma mark Normal Methods
 
 - (void)viewDidLoad
@@ -768,7 +795,7 @@ static void * eventContext      = &eventContext;
     }];
     
     
-    self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    //! self.videoPlayer = [[RJLVideoPlayer alloc] initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
     //bottomViewController.videoPlayer = self.videoPlayer;
     /*! Disabled For Demo
     telestration = [[TeleViewController alloc]initWithController:self.videoPlayer];
@@ -781,13 +808,7 @@ static void * eventContext      = &eventContext;
     [self.videoPlayer.view insertSubview:self.telestrationViewController.view belowSubview:self.videoPlayer.videoControlBar];
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.telestrationViewController.showsControls = NO;
-    self.telestrationViewController.showsClearButton = NO;
-    self.telestrationViewController.delegate = self;
-    self.telestrationViewController.timeProvider = self;
-    
-    pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
-    [self.view addGestureRecognizer:pinchGesture];
+    self.playerViewController.telestrationViewController.delegate = self;
     
     swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
     swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
@@ -808,14 +829,17 @@ static void * eventContext      = &eventContext;
     
     // Richard
     
+    //!_videoBarViewController = [[L2BVideoBarViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    //_videoBarViewController.tagMarkerController.arrayOfAllTags =
+    //![self.view addSubview:_videoBarViewController.view];
 
-    _fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    _fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
-    [_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
+    //!_fullscreenViewController = [[L2BFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    //_fullscreenViewController.context = STRING_LIVE2BENCH_CONTEXT;
+    //[_fullscreenViewController.continuePlay     addTarget:self action:@selector(continuePlay)   forControlEvents:UIControlEventTouchUpInside];
+    //[_fullscreenViewController.liveButton       addTarget:self action:@selector(goToLive)       forControlEvents:UIControlEventTouchUpInside];
 //    [_fullscreenViewController.teleButton       addTarget:self action:@selector(initTele:)      forControlEvents:UIControlEventTouchUpInside];
-    _fullscreenViewController.teleViewController =telestration;
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_fullscreenViewController.teleViewController =telestration;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
 
     self.videoPlayer.playerContext = STRING_LIVE2BENCH_CONTEXT;
     
@@ -830,68 +854,53 @@ static void * eventContext      = &eventContext;
     _pip.dragBounds  = self.videoPlayer.view.frame;
     [self.videoPlayer.view addSubview:_pip];
     
-    _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 64, 38)];
+    //_feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(156+100, 59, 64, 38)];
     
-    _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
+    //!_pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch encoderManager:_encoderManager];
     _pipController.context = STRING_LIVE2BENCH_CONTEXT;
     [_pipController addPip:_pip];
     [_pipController viewDidLoad];
     [self.view addSubview:_feedSwitch];
     
     // multi button
-    multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];
+    //multiButton =[[UIButton alloc]initWithFrame:CGRectMake(156, 59, 100, 38)];
     [multiButton setTitle:NSLocalizedString(@"Multi",nil) forState:UIControlStateNormal];
     [multiButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [multiButton addTarget:_pipController action:@selector(onButtonPressMulti:) forControlEvents:UIControlEventTouchUpInside];
     multiButton.layer.borderWidth = 1;
+    [multiButton setHidden:true];
     [self.view addSubview:multiButton];
-    [multiButton setHidden:!([_encoderManager.feeds count]>1)];
+
     
-    _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.videoPlayer.view.frame.origin.x+32,PADDING + self.videoPlayer.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
+    self.playerViewController.view.frame = CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT);
+    [self.view addSubview:self.playerViewController.view];
+    
+    _gotoLiveButton = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.playerViewController.view.frame.origin.x+32,PADDING + self.playerViewController.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
     [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_gotoLiveButton];
-        [_gotoLiveButton isActive:NO];
+    _gotoLiveButton.enabled = NO;
    //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(masterLost:)               name:NOTIF_ENCODER_MASTER_HAS_FALLEN object:nil];
     
-    
-    ((RJLVideoPlayer *)self.videoPlayer).zoomManager.viewsToAvoid = _pipController.pips;
-    
-    _videoBar.frame = CGRectMake(_videoPlayer.view.frame.origin.x, _videoPlayer.view.frame.origin.y + _videoPlayer.view.frame.size.height, _videoPlayer.view.frame.size.width, 40.0);
+    _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     [self.view addSubview:_videoBar];
     
+    [self.view addSubview:_fullscreenViewController.view];
     
-//    zoomButton = [[UIButton alloc]initWithFrame:CGRectMake(50, 600, 100, 50)];
-//    [zoomButton addTarget:self action:@selector(zoomPressed) forControlEvents:UIControlEventTouchUpInside];
-//    zoomButton.backgroundColor = [UIColor redColor];
-//    [self.view addSubview: zoomButton];
-//    
-//    unZoomButton = [[UIButton alloc]initWithFrame:CGRectMake(250, 600, 100, 50)];
-//    [unZoomButton addTarget:self action:@selector(unZoomPressed) forControlEvents:UIControlEventTouchUpInside];
-//    unZoomButton.backgroundColor = [UIColor blueColor];
-//    [self.view addSubview: unZoomButton];
+    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
+    
+    _playerViewController.telestrationViewController.stillMode = YES;
+    _videoBar.playerViewController = _playerViewController;
+    
+    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
 }
-
-//-(void) zoomPressed{
-//    [_externalControlScreen returnVideoToPreviousViewFromExternal];
-//    //RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
-//    //[videoPlayer zoomIntoView: CGRectMake(20, 30, 300, 300)];
-//}
-//
-//-(void) unZoomPressed{
-//    [_externalControlScreen moveVideoToExternalDisplay: self.videoPlayer];
-////    RJLVideoPlayer *videoPlayer = (RJLVideoPlayer *)self.videoPlayer;
-////    [videoPlayer zoomIntoView: CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-//}
-
-
-
 
 -(void)onOpenTeleView:(TeleViewController *)tvc
 {
     [self.videoPlayer pause];
     self.videoPlayer.videoControlBar.hidden = YES;
-    [_fullscreenViewController setMode:L2BFullScreenModeTele];
+    //[_fullscreenViewController setMode:L2BFullScreenModeTele];
 }
 
 
@@ -901,7 +910,7 @@ static void * eventContext      = &eventContext;
     
     [self.videoPlayer play];
     self.videoPlayer.videoControlBar.hidden = NO;
-    [_fullscreenViewController setMode:_fullscreenViewController.prevMode];
+    //[_fullscreenViewController setMode:_fullscreenViewController.prevMode];
     
 }
 
@@ -932,7 +941,7 @@ static void * eventContext      = &eventContext;
     [super viewWillAppear:animated];
 
   
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
     
     if (!self.videoPlayer.feed && _encoderManager.currentEvent != nil) {
      [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
@@ -950,7 +959,7 @@ static void * eventContext      = &eventContext;
          [self.view addSubview:self.videoPlayer.view];
          
          //[self.videoPlayer play];
-         [self.view addSubview:_fullscreenViewController.view];
+         //[self.view addSubview:_fullscreenViewController.view];
 //         //add swipe gesture: swipe left: seek back ; swipe right: seek forward
 //         UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
 //         [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
@@ -965,18 +974,22 @@ static void * eventContext      = &eventContext;
     //[self createTagButtons]; // temp place
     
     
-    _bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
+    //!_bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
     [_bottomViewController update];
     // just to update UI
     
-    _videoBar.player = self.videoPlayer.avPlayer;
+    [self.view bringSubviewToFront:_bottomViewController.mainView];
     [self.view bringSubviewToFront:_videoBar];
+    [self.view bringSubviewToFront:_fullscreenViewController.view];
+    [self.view bringSubviewToFront:_tagButtonController.leftTray];
+    [self.view bringSubviewToFront:_tagButtonController.rightTray];
 }
 
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [_playerViewController viewDidAppear:animated];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:nil];
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_FEED_HAVE_CHANGED object:nil];
     self.videoPlayer.mute = NO;
@@ -987,16 +1000,16 @@ static void * eventContext      = &eventContext;
     [super viewWillDisappear:animated];
     
     [CustomAlertView removeAll];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
+    //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":self.videoPlayer.playerContext,@"animated":[NSNumber numberWithBool:NO]}];
     self.videoPlayer.mute = YES;
-    self.telestrationViewController.telestration = nil;
+    self.playerViewController.telestrationViewController.telestration = nil;
 }
 
--(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+/*-(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
 //    [globals.ARRAY_OF_POPUP_ALERT_VIEWS removeObject:alertView];
     [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
-}
+}*/
 
 /**
  *  This sets the video player and all its pip to live
@@ -1008,6 +1021,9 @@ static void * eventContext      = &eventContext;
     self.videoPlayer.live = YES;
     if (_currentEvent.live) {
         [_pipController pipsAndVideoPlayerToLive:self.videoPlayer.feed];
+        
+        [self.playerViewController.playerView.player goToLive];
+        
         return;
     }
     
@@ -1044,7 +1060,7 @@ static void * eventContext      = &eventContext;
 //    } else {
 //        [_tagButtonController addActionToAllTagButtons:@selector(showPlayerCollection:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 //    }
-    _tagButtonController.fullScreenViewController = _fullscreenViewController;
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
     [self viewWillAppear:true];
 }
 
@@ -1077,7 +1093,8 @@ static void * eventContext      = &eventContext;
 {
     SideTagButton *button = (SideTagButton*)sender;
     
-    float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
+    //!float currentTime = CMTimeGetSeconds(self.videoPlayer.playerItem.currentTime);// start time minus? //videoPlayer.vie - videoPlayer.startTime
+    NSTimeInterval currentTime = self.currentTimeInSeconds;
     
     NSArray *players;
     if (_playerDrawerLeft.view.superview == self.view) {
@@ -1259,8 +1276,10 @@ static void * eventContext      = &eventContext;
 }
 
 -(void) onAppTerminate:(NSNotification *)note{
-    [_tagButtonController closeAllOpenTagButtons];
-    [_bottomViewController closeAllOpenTagButtons];
+    if(!_currentEvent.live){
+        [_tagButtonController closeAllOpenTagButtons];
+        [_bottomViewController closeAllOpenTagButtons];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -1272,12 +1291,16 @@ static void * eventContext      = &eventContext;
 - (void)clipViewPlayFeedNotification:(NSNotification *)note {
     if ([note.userInfo[@"context"] isEqualToString: STRING_LIVE2BENCH_CONTEXT]) {
         Feed *feed = note.userInfo[@"feed"];
-        PxpTelestration *tele = note.userInfo[@"telestration"];
+        Tag *tag = note.userInfo[@"tag"];
+        PxpTelestration *tele = tag.telestration;
         
-        self.telestrationViewController.telestration = tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
-        if (tele.isStill) {
-            [self.videoPlayer pause];
-        }
+        [self.playerViewController.playerView switchToContextPlayerNamed:feed.sourceName];
+        
+        self.playerViewController.telestrationViewController.telestration = !feed.sourceName || tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
+        self.playerViewController.playerView.player.tag = tag;
+        
+        
+        
     }
 }
 
@@ -1289,8 +1312,8 @@ static void * eventContext      = &eventContext;
 - (void)telestration:(nonnull PxpTelestration *)tele didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
     if (tele.actionStack.count) {
-        tele.isStill = YES;
-        tele.sourceName = self.videoPlayer.feed.sourceName;
+        tele.sourceName = self.playerViewController.playerView.activePlayerName;
+        
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
                                                                                                                @"time": [NSString stringWithFormat:@"%f",tele.startTime],
@@ -1301,15 +1324,14 @@ static void * eventContext      = &eventContext;
                                                                                                                }];
     }
     
-    self.telestrationViewController.telestration = [[PxpTelestration alloc] initWithSize:self.telestrationViewController.view.bounds.size];
-    
     self.videoPlayer.videoControlBar.enable = YES;
 }
 
 - (NSTimeInterval)currentTimeInSeconds {
-    return CMTimeGetSeconds(self.videoPlayer.avPlayer.currentTime);
+    return self.playerViewController.playerView.player.currentTimeInSeconds;
 }
 
+/*
 - (void)setVideoPlayer:(UIViewController<PxpVideoPlayerProtocol> *)videoPlayer {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:videoPlayer];
     
@@ -1317,6 +1339,7 @@ static void * eventContext      = &eventContext;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipCanceledHandler:) name:NOTIF_CLIP_CANCELED object:videoPlayer];
 }
+*/
 
 - (void)clipCanceledHandler:(NSNotification *)note {
     self.telestrationViewController.telestration = nil;

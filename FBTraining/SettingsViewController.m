@@ -121,7 +121,9 @@ SVSignalStatus signalStatus;
         _leaguePick              = [[TablePopoverController alloc]init];
         
         encoderHomeText         = [CustomLabel labelWithStyle:CLStyleOrange];
+        [encoderHomeText setFrame:CGRectMake(0.0f, 5.0f, 140, 45)];
         encoderHomeText.text    = @"Encoder is not available.";
+        encoderHomeText.adjustsFontSizeToFitWidth = true;
         
 //        __block SettingsViewController * weakSelf = self;
         __block UILabel * weakStateLable    =  _encStateLabel;
@@ -1080,6 +1082,7 @@ SVSignalStatus signalStatus;
     
     if (![Utility hasWiFi]) {
         encoderHomeText.text = @"Encoder is not available.";
+        encoderHomeText.adjustsFontSizeToFitWidth = true;
         [encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
         [_encStateLabel setText:@"(No Wifi)"];
         [encHomeButton removeFromSuperview];

@@ -8,7 +8,9 @@
 
 #import "PxpClipContext.h"
 
+#import "PxpPlayer+Feed.h"
 #import "Clip.h"
+#import "Feed.h"
 
 @implementation PxpClipContext
 
@@ -31,14 +33,18 @@
 - (void)setClip:(nullable Clip *)clip {
     _clip = clip;
     
-    [self setPlayerCount:clip.videoFiles.count];
+    NSDictionary *videos = clip.videosBySrcKey;
+    NSArray *sources = videos.allKeys;
+    
+    [self setPlayerCount:sources.count];
     
     // load clips
     for (NSUInteger i = 0; i < self.players.count; i++) {
         PxpPlayer *player = self.players[i];
+        NSString *source = sources[i];
         
-        player.name = [NSString stringWithFormat:@"%02lu", (unsigned long) i];
-        [player replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:[NSURL URLWithString:clip.videoFiles[i]]]];
+        player.feed = [[Feed alloc] initWithFileURL:videos[source]];
+        player.name = source;
     }
     
     // default sync parameters

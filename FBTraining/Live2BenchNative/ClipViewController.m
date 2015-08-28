@@ -156,7 +156,7 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)onTagChanged:(NSNotification *)note{
     
-    for (Tag *tag in _currentEvent.tags ) {
+    /*for (Tag *tag in _currentEvent.tags ) {
         if (![self.allTagsArray containsObject:tag]) {
             if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
                 [self.tagsToDisplay insertObject:tag atIndex:0];
@@ -186,7 +186,17 @@ static void * encoderTagContext = &encoderTagContext;
         }
     }
     
-    [_collectionView reloadData];
+    [_collectionView reloadData];*/
+    
+    self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
+    self.tagsToDisplay =[ NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
+    if (!componentFilter.rawTagArray) {
+        self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
+    }
+    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
+
+    [self.collectionView reloadData];
 
 }
 
@@ -609,8 +619,34 @@ static void * encoderTagContext = &encoderTagContext;
      if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
         NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+        BOOL needCanNotDeleteTagAlertView = false;
+         
+        for (NSIndexPath *cellIndexPath in [self.setOfSelectedCells copy]) {
+            Tag *tag = self.tagsToDisplay[cellIndexPath.row];
+            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                [arrayOfTagsToRemove addObject:tag];
+                [indexPathsArray addObject:cellIndexPath];
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+            }else{
+                needCanNotDeleteTagAlertView = true;
+            }
+        }
+         
+         for (Tag *tag in arrayOfTagsToRemove) {
+             [self.tagsToDisplay removeObject:tag];
+             [self.allTagsArray removeObject: tag];
+         }
+         [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
+         [self.setOfSelectedCells removeAllObjects];
+         
+        if (needCanNotDeleteTagAlertView) {
+             CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+             [alert showView];
+         }
+         [self deselectAllCell];
+
         
-        for (NSIndexPath *cellIndexPath in self.setOfSelectedCells) {
+        /*for (NSIndexPath *cellIndexPath in self.setOfSelectedCells) {
             [arrayOfTagsToRemove addObject:self.tagsToDisplay[cellIndexPath.row]];
             [indexPathsArray addObject: cellIndexPath];
         }
@@ -627,9 +663,9 @@ static void * encoderTagContext = &encoderTagContext;
             //            [self.tagsToDisplay removeObject:tag];
             //            [self.allTagsArray removeObject: tag];
             
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            //NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+            //NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
+            //[[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
         }
@@ -637,12 +673,25 @@ static void * encoderTagContext = &encoderTagContext;
         for (thumbnailCell *cell in self.collectionView.visibleCells) {
             [cell setDeletingMode: NO];
         }
-        self.isEditing = NO;
+        self.isEditing = NO;*/
         
-    }else{
-        if (buttonIndex == 0)
-        {
-            NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
+    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
+
+        Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
+        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+            [self.tagsToDisplay removeObject:tag];
+            if (self.editingIndexPath) {
+                [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+            }
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+            [self removeIndexPathFromDeletion];
+        }else{
+            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert showView];
+        }
+        [self deselectAllCell];
+
+           /* NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
             [self.tagsToDisplay removeObject:tag];
             
             if (self.editingIndexPath) {
@@ -650,21 +699,16 @@ static void * encoderTagContext = &encoderTagContext;
             }
             //[self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
             
-            /*NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];*/
+            //NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
+           // NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
+            //[[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
             
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
             
-            [self removeIndexPathFromDeletion];
-            
-        }
-        else if (buttonIndex == 1)
-        {
-            // No, cancel the action to delete tags
-        }
+            [self removeIndexPathFromDeletion];*/
         
     }
+    
     [alertView viewFinished];
     [CustomAlertView removeAlert:alertView];
     
@@ -768,15 +812,14 @@ static void * encoderTagContext = &encoderTagContext;
                 userInfo[@"duration"] = [NSString stringWithFormat:@"%d", selectedCell.data.duration ];
                 userInfo[@"state"] = [NSNumber numberWithInteger:RJLPS_Play];
                 
-                if (selectedCell.data.telestration) {
-                    userInfo[@"telestration"] = selectedCell.data.telestration;
+                if (selectedCell.data) {
+                    userInfo[@"tag"] = selectedCell.data;
                 }
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
             }];
-            
+        
             [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
-            
             
 //        } else {
 //            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
@@ -805,8 +848,8 @@ static void * encoderTagContext = &encoderTagContext;
         userInfo[@"duration"] = [NSString stringWithFormat:@"%d", selectedCell.data.duration ];
         userInfo[@"state"] = [NSNumber numberWithInteger:RJLPS_Play];
         
-        if (selectedCell.data.telestration) {
-            userInfo[@"telestration"] = selectedCell.data.telestration;
+        if (selectedCell.data) {
+            userInfo[@"tag"] = selectedCell.data;
         }
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:userInfo];
@@ -914,7 +957,8 @@ static void * encoderTagContext = &encoderTagContext;
 {
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-    
+    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
     [_collectionView reloadData];
 }
 
@@ -923,6 +967,10 @@ static void * encoderTagContext = &encoderTagContext;
     [_pxpFilter filterTags:self.allTagsArray];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    
+    
+    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
     [_collectionView reloadData];
 }
 

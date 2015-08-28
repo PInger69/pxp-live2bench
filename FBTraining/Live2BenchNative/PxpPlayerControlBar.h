@@ -17,7 +17,10 @@
  */
 IB_DESIGNABLE @interface PxpPlayerControlBar : UIView
 
-/// The player to be controlled
+/// The player to be controlled.
 @property (weak, nonatomic, nullable) PxpPlayer *player;
+
+/// The enabled state of the control bar.
+@property (assign, nonatomic) BOOL enabled;
 
 @end

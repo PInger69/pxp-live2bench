@@ -32,6 +32,10 @@ IB_DESIGNABLE
 + (nonnull instancetype)makeFullScreenForwardAt:(CGPoint)pt;
 + (nonnull instancetype)makeFullScreenBackwardAt:(CGPoint)pt;
 
++ (CGFloat)sharedForwardSpeed;
++ (CGFloat)sharedBackwardSpeed;
+
+- (nonnull instancetype)initWithBackward:(BOOL)backward;
 - (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward;
 - (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward margin:(CGFloat)margin;
 - (nonnull instancetype)initWithFrame:(CGRect)frame backward:(BOOL)backward margin:(CGFloat)margin speeds:(nonnull NSArray *)speeds;

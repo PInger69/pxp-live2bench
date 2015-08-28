@@ -9,18 +9,27 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-#import "PxpTimeProvider.h"
+#import "PxpPlayerViewController.h"
 #import "SeekButton.h"
 #import "Slomo.h"
+#import "PxpFullscreenButton.h"
 #import "Event.h"
 
 IB_DESIGNABLE
 @interface PxpVideoBar : UIView
 
-@property (weak, nonatomic, nullable) AVPlayer *player;
+@property (weak, nonatomic, nullable) PxpPlayerViewController *playerViewController;
 @property (weak, nonatomic, nullable) Event *event;
 
 @property (strong, nonatomic, nullable) Tag *selectedTag;
 -(CGFloat)getSeekSpeed:(nonnull NSString *)direction;
+
+@property (readonly, strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
+@property (readonly, strong, nonatomic, nonnull) SeekButton *forwardSeekButton;
+
+@property (readonly, strong, nonatomic, nonnull) Slomo *slomoButton;
+@property (readonly, strong, nonatomic, nonnull) PxpFullscreenButton *fullscreenButton;
+
+@property (assign, nonatomic) BOOL enabled;
 
 @end

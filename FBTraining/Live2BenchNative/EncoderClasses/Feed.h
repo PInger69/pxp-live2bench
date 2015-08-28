@@ -44,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, strong, nonatomic, nullable) AVAsset *hqAsset;
 @property (readonly, strong, nonatomic, nullable) AVAsset *anyAsset;
 
+@property (readonly, assign, nonatomic) BOOL assetsReady;
+
 NS_ASSUME_NONNULL_END
 
 
@@ -51,6 +53,8 @@ NS_ASSUME_NONNULL_END
 -(nonnull instancetype)initWithURLString:(nonnull NSString *)aPath quality:(int)qlty;
 -(nonnull instancetype) initWithFileURL: (nonnull NSString *) fileURL;
 -(nullable NSURL *)path;
+-(nullable NSURL *)hqPath;
+-(nullable NSURL *)lqPath;
 
 
 

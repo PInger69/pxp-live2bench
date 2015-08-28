@@ -13,25 +13,29 @@
 
 @implementation ListPopoverControllerWithImages
 -(id)initWithMessage:(NSString*)aMessage buttonListNames:(NSArray*)aListOfNames{
-    self = [super initWithContentViewController:contentVC];
+    //self = [super initWithContentViewController:contentVC];
+    
+    UIViewController *viewController = [[UIViewController alloc] init];
+    self                            = [super initWithContentViewController:viewController];
+
     
     if (self) {
-        
+         contentVC = viewController;
         self.arrayOfButtons = [[NSMutableArray alloc] init];
-        contentVC  = [[UIViewController alloc] init];
+        //contentVC  = [[UIViewController alloc] init];
         self.theScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 30, POP_WIDTH, (BUTTON_HEIGHT*2)+10)];
         //self.theScrollView.contentSize = CGSizeMake(self.theScrollView.frame.size.width, (BUTTON_HEIGHT * 5));
         //contentVC.view = self.theScrollView;
         
         self.message                    = aMessage;
         self.listOfButtonNames          = aListOfNames;
-        messageText                 = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, POP_WIDTH-40, 20)];
-        messageText.lineBreakMode   = NSLineBreakByWordWrapping;
-        messageText.numberOfLines   = 0;
-        messageText.textAlignment   = NSTextAlignmentCenter;
-        messageText.text            = self.message;
-        messageText.font            = [UIFont defaultFontOfSize:17.0f];
-        [contentVC.view addSubview:messageText];
+        self.messageText                = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, POP_WIDTH-40, 20)];
+        self.messageText.lineBreakMode   = NSLineBreakByWordWrapping;
+        self.messageText.numberOfLines   = 0;
+        self.messageText.textAlignment   = NSTextAlignmentCenter;
+        self.messageText.text            = self.message;
+        self.messageText.font            = [UIFont defaultFontOfSize:17.0f];
+        [contentVC.view addSubview:self.messageText];
         
         self.animateDismiss             = NO;
         self.animatePresent             = NO;
@@ -65,6 +69,10 @@
     [button setAccessibilityLabel:[NSString stringWithFormat: @"%d",aIndex]];
     [button addTarget:self action:@selector(onSelectAListItem:) forControlEvents:UIControlEventTouchUpInside];
     
+    button.titleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    button.titleLabel.layer.shadowRadius = 2.0;
+    button.titleLabel.layer.shadowOpacity = 0.5;
+    button.titleLabel.layer.shadowOffset = CGSizeZero;
     
     // if you want line breaks
     CGFloat borderWidth = .5;
@@ -83,7 +91,7 @@
 
 -(void)setListOfButtonNames:(NSArray *)aListOfButtonNames
 {
-    
+    [self clear];
     NSArray * listOfButtonNames = [aListOfButtonNames sortedArrayUsingSelector:@selector(compare:)];
     
     [self willChangeValueForKey:@"listOfButtonNames"];
@@ -100,6 +108,9 @@
 -(void)clear
 {
     for (PopoverButton *button in teamButtons) {
+        [button removeFromSuperview];
+    }
+    for (UIButton *button in _arrayOfButtons) {
         [button removeFromSuperview];
     }
     

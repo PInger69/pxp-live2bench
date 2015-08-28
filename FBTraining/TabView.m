@@ -45,8 +45,6 @@ static NSString * currentFilterSport;
     return sharedDefaultFilterTab;
 }
 
-
-
 +(nonnull instancetype)sharedFilterTabBar
 {
     if (!sharedFilter) {

@@ -29,11 +29,12 @@
 #import "FeedSwitchView.h"
 #import "Clip.h"
 #import "ClipDataContentDisplay.h"
-
 #import "PxpFilterMyClipTabViewController.h"
-//#import "SpinnerView.h"
-
 #import "LocalMediaManager.h"
+#import "PxpPlayerViewController.h"
+#import "PxpFullscreenViewController.h"
+#import "PxpClipContext.h"
+#import "PxpVideoBar.h"
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
@@ -50,7 +51,10 @@
 @property (strong, nonatomic) NSDictionary                  * feeds;
 @property (strong, nonatomic) UIButton                      * filterButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
-
+@property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
+@property (strong, nonatomic, nonnull) PxpFullscreenViewController *fullscreenViewController;
+@property (strong, nonatomic, nonnull) PxpClipContext *clipContext;
+@property (strong, nonatomic, nonnull) PxpVideoBar *videoBar;
 
 @end
 
@@ -82,6 +86,7 @@
     FeedSwitchView                      * _feedSwitch;
     ClipDataContentDisplay              * clipContentDisplay;
     NSMutableArray                      * _tagsToDisplay;
+    
 }
 
 
@@ -90,7 +95,6 @@
 @synthesize progressBarIndex;
 @synthesize allEvents;
 @synthesize videoPlayer;
-@synthesize teleButton;
 @synthesize teleViewController;
 @synthesize playbackRateBackButton;
 @synthesize playbackRateForwardButton;
@@ -127,6 +131,15 @@ int viewWillAppearCalled;
         
 
         _tagsToDisplay = [NSMutableArray new];
+        
+        _playerViewController = [[PxpPlayerViewController alloc] init];
+        _fullscreenViewController = [[PxpFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        
+        [self addChildViewController:_playerViewController];
+        [self addChildViewController:_fullscreenViewController];
+        
+        _clipContext = [PxpClipContext context];
+        _videoBar = [[PxpVideoBar alloc] init];
     }
     return self;
 }
@@ -138,7 +151,8 @@ int viewWillAppearCalled;
     
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_CLIP_SELECTED object:nil queue:nil usingBlock:^(NSNotification *note) {
         
-        Clip *clipToPlay = note.object;
+        Clip *clipToPlay = note.userInfo[@"clip"];
+        NSString *source = note.userInfo[@"source"];
         __block BookmarkViewController *weakSelf = self;
         
         [clipContentDisplay displayClip:clipToPlay];
@@ -148,14 +162,8 @@ int viewWillAppearCalled;
             clipToPlay.comment = [tagData objectForKey:@"comment"];
             [weakSelf.tableViewController reloadData];
         };
-
-        
-        // single cam (take first video for now)
-        NSString *clipVideoPath = [clipToPlay.videoFiles firstObject];
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath:clipVideoPath]) {
-            [self.videoPlayer playFeed: [[Feed alloc]initWithFileURL:clipVideoPath]];
-        }
+        _clipContext = [PxpClipContext contextWithClip:clipToPlay];
+        _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
         
     }];
     
@@ -168,8 +176,6 @@ int viewWillAppearCalled;
         componentFilter.rawTagArray = self.allClips;
 
     }];
-    
-    self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT , COMMENTBOX_WIDTH, SMALL_MEDIA_PLAYER_HEIGHT)];
     self.videoPlayer.playerContext = STRING_MYCLIP_CONTEXT;
 
     _pip            = [[Pip alloc]initWithFrame:CGRectMake(50, 50, 200, 150)];
@@ -180,7 +186,7 @@ int viewWillAppearCalled;
     [self.videoPlayer.view addSubview:_pip];
     
     _feedSwitch     = [[FeedSwitchView alloc]initWithFrame:CGRectMake(1, 768 - SMALL_MEDIA_PLAYER_HEIGHT - 73, COMMENTBOX_WIDTH, 40)];
-//    
+   
     _pipController  = [[PipViewController alloc]initWithVideoPlayer:self.videoPlayer f:_feedSwitch];
     _pipController.context = STRING_MYCLIP_CONTEXT;
     [_pipController addPip:_pip];
@@ -223,6 +229,18 @@ int viewWillAppearCalled;
     testFullScreen = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     _tableViewController.delegate = self;
     
+    const CGFloat width = COMMENTBOX_WIDTH, height = width / (16.0 / 9.0);
+    
+    _playerViewController.view.frame = CGRectMake(0, 768 - height - 44.0, width, height);
+    _playerViewController.telestrationViewController.stillMode = YES;
+    _videoBar.playerViewController = _playerViewController;
+    
+    [self.view addSubview:_playerViewController.view];
+    [self.view addSubview:_videoBar];
+    [self.view addSubview:_fullscreenViewController.view];
+    
+    _videoBar.frame = CGRectMake(0.0, 768 - 44.0, width, 44.0);
+    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)clipSaved:(NSNotification *)note {
@@ -231,6 +249,8 @@ int viewWillAppearCalled;
     
     self.tableViewController.tableData = _tagsToDisplay;
     [self.tableViewController reloadData];
+    
+    [numTagsLabel setText:[NSString stringWithFormat:@"Tag Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }
 
 
@@ -246,6 +266,8 @@ int viewWillAppearCalled;
     
     self.tableViewController.tableData = _tagsToDisplay;
 //    [self.tableViewController.tableView reloadData];
+    CGRect tableRect = self.tableViewController.view.frame;
+    numTagsLabel.frame = CGRectMake(tableRect.origin.x, CGRectGetMaxY(tableRect), tableRect.size.width, 18);
     
 
 
@@ -287,7 +309,7 @@ int viewWillAppearCalled;
     [self.videoPlayer pause];
     
     [newVideoControlBar viewDidAppear:NO];
-    
+    [numTagsLabel setText:[NSString stringWithFormat:@"Tag Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }
 
 
@@ -326,12 +348,12 @@ int viewWillAppearCalled;
         [self.tableViewController.view setFrame:CGRectMake(divider + 5.0f,
                                                            CGRectGetMaxY(headerBar.frame),
                                                            self.view.bounds.size.width - COMMENTBOX_WIDTH - 30.0f,
-                                                           self.view.bounds.size.height - CGRectGetMaxY(headerBar.frame) - 50.0f)];
+                                                           self.view.bounds.size.height - CGRectGetMaxY(headerBar.frame) - 50.0f-18.0f)];
     } else {
         [self.tableViewController.view setFrame:CGRectMake(divider + 5.0f,
                                                            CGRectGetMaxY(headerBar.frame),
                                                            self.view.bounds.size.height - COMMENTBOX_WIDTH - 30.0f,
-                                                           self.view.bounds.size.width - CGRectGetMaxY(headerBar.frame) - 50.0f)];
+                                                           self.view.bounds.size.width - CGRectGetMaxY(headerBar.frame) - 50.0f-18.0f)];
     }
     
     
@@ -339,26 +361,13 @@ int viewWillAppearCalled;
     [self addChildViewController: self.tableViewController];
     [self.view addSubview: self.tableViewController.view];
     
-    
-    self.tableActionButton = [BorderButton buttonWithType:UIButtonTypeCustom];
-    //    [self.tableActionButton setFrame:CGRectMake(kiPadWidthLandscape - 100, 60, 80, 30)];
-    self.tableActionButton.titleLabel.font = [UIFont defaultFontOfSize:18];
-    [self.tableActionButton setTitle:@"" forState:UIControlStateNormal];
-    [self.tableActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.tableActionButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    [self.tableActionButton setBackgroundImage:[UIImage imageNamed:@"tab-bar.png"] forState:UIControlStateHighlighted];
-    [self.tableActionButton setHidden:NO];
-    [self.tableActionButton addTarget:self action:@selector(actionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview: self.tableActionButton];
-    
     self.filterButton = [[UIButton alloc] initWithFrame:CGRectMake(950, 710, 74, 58)];
     [self.filterButton setTitle:NSLocalizedString(@"Filter",nil) forState:UIControlStateNormal];
     [self.filterButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
-    /////////////////////////////////////////////////////////////////
+
 }
 
 
@@ -370,19 +379,6 @@ int viewWillAppearCalled;
     return [self.allClips objectAtIndex:indexPath.row];
 }
 
-#pragma mark - Triple Swipe Table Methods
-
-- (void)actionButtonPressed: (UIButton*)button
-{
-    //    if(self.tableView.selectionType == JPTripleSwipeCellSelectionLeft)
-    //    {
-    //        [self shareTagsReorderTable:button];
-    //    }
-    //    else if(self.tableView.selectionType == JPTripleSwipeCellSelectionRight)
-    //    {
-    //        [self deleteCells];
-    //    }
-}
 
 #pragma mark - Filter Button Pressed
 
@@ -470,8 +466,6 @@ int viewWillAppearCalled;
                   sortDescriptorWithKey:@"eventName"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(caseInsensitiveCompare:)];
-        
-
     }  else if (sortType & NAME_FIELD) {
         sorter = [NSSortDescriptor
                   sortDescriptorWithKey:@"name"
@@ -497,32 +491,17 @@ int viewWillAppearCalled;
     //we will remove the filtertoolbox to deallocate mem -- makes sure app does not freeze up
     [_filterToolBoxView.view removeFromSuperview];
     _filterToolBoxView=nil;
-    
-    
-
- 
     currentPlayingTag = nil;
-
 }
 
 
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    //make sure the movieplayer is stoped before going to otherviews, otherwise the app will crash
     [self.videoPlayer pause];
 }
 
 
--(void)willExitFullscreen
-{
-    [self removeAllFullScreenSubviews];
-}
-
--(void)didExitFullscreen
-{
-    [self.view bringSubviewToFront: blurView];
-}
 
 
 #pragma mark - Play Rate Controlls
@@ -807,7 +786,6 @@ int viewWillAppearCalled;
     
     if ([[currentPlayingTag objectForKey:@"type"]intValue] != 4) {
         //show telestration button
-        [self showTeleButton];
         [self showPlaybackRateControls];
     }
     
@@ -832,28 +810,11 @@ int viewWillAppearCalled;
 
 }
 
--(void)showTeleButton
-{
-    if (teleButton) {
-        [teleButton removeFromSuperview];
-        teleButton = nil;
-    }
-    teleButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-    [teleButton setFrame:CGRectMake(939.0f, 585.0f, 64.0f, 64.0f)];
-    [teleButton setContentMode:UIViewContentModeScaleAspectFill];
-    [teleButton setImage:[UIImage imageNamed:@"teleButton"] forState:UIControlStateNormal];
-    [teleButton setImage:[UIImage imageNamed:@"teleButtonSelect"] forState:UIControlStateHighlighted];
-    //teleButton.transform=CGAffineTransformMakeRotation(M_PI/2);
-    [teleButton addTarget:self action:@selector(initTele:) forControlEvents:UIControlEventTouchUpInside];
-    //need to be modified later
-    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:teleButton];
-}
-
 
 -(void)removeAllFullScreenSubviews
 {
     
-    [teleButton removeFromSuperview];
+
     [playbackRateBackButton removeFromSuperview];
     [playbackRateBackLabel removeFromSuperview];
     [playbackRateBackGuide removeFromSuperview];
@@ -902,7 +863,6 @@ int viewWillAppearCalled;
 {
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
-
     [_tableViewController reloadData];
 }
 
@@ -919,28 +879,19 @@ int viewWillAppearCalled;
 
 -(void)tableView:(DeletableTableViewController *)tableView indexesToBeDeleted:(NSArray *)toBeDeleted
 {
-
     for (NSIndexPath *cellIndexPath in toBeDeleted) {
         Clip * aClip = [_tagsToDisplay objectAtIndex:cellIndexPath.row];
-        
-        
         if ([self.allClips containsObject:aClip]) {
             [self.allClips removeObject:aClip];
         }
         
     }
-    
-    
-
-
-
 }
 
 #pragma mark -
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
 }
-
 
 @end
 

@@ -7,27 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
-/*!
- * @breif The C data structure used to store a point in a binary format.
- * @author Nicholas Cvitak
- */
-struct PxpTelestrationPointData {
-    Float64 time;
-    struct {
-        UInt32 x, y;
-    } position;
-};
+#import "PxpTelestrationInterchangeFormat.h"
 
 /*!
  * @breif An object used to represent a draw point in a telestration, along with the time that it should be presented.
  * @author Nicholas Cvitak
  */
 @interface PxpTelestrationPoint : NSObject<NSCoding, NSCopying>
-{
-    @public
-    struct PxpTelestrationPointData _pointData;
-}
 
 /// The time that the point should be displayed in an animation. (read-only)
 @property (readonly, assign, nonatomic) NSTimeInterval displayTime;
@@ -36,10 +22,10 @@ struct PxpTelestrationPointData {
 @property (readonly, assign, nonatomic) CGPoint position;
 
 /// The data structure representation of the point. (read-only)
-@property (readonly, assign, nonatomic) struct PxpTelestrationPointData pointData;
+@property (readonly, assign, nonatomic) PXPTIFPoint pointData;
 
 /// Initializes a point with it's C data structure.
-- (nonnull instancetype)initWithPointData:(struct PxpTelestrationPointData)pointData;
+- (nonnull instancetype)initWithPointData:(PXPTIFPoint)pointData;
 
 /// Initializes a point with a position and display time.
 - (nonnull instancetype)initWithPosition:(CGPoint)position displayTime:(NSTimeInterval)displayTime;

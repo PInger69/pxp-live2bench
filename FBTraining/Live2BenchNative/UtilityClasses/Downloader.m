@@ -148,6 +148,12 @@ static void *  downLoaderContext = &downLoaderContext;
     [_queue removeObject:item];
     if (item.key)[_keyedDownloadItems removeObjectForKey:item.key];
     isDownloading = NO;
+    
+    if (_queue.count > 0) {
+        [self process];
+    }else{
+        isDownloading = NO;
+    }
 }
 
 -(void)process

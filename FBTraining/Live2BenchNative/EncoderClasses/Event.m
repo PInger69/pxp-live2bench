@@ -23,6 +23,7 @@
 @synthesize date        = _date;
 @synthesize hid         = _hid;
 @synthesize feeds       = _feeds;
+@synthesize originalFeeds = _originalFeeds;
 @synthesize mp4s        = _mp4s;
 @synthesize rawData     = _rawData;
 @synthesize deleted     = _deleted;
@@ -53,6 +54,7 @@
         localPath           = path;
         //        _feeds              = [self buildFeeds:_rawData];
         _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
+        _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:isLocal] copy];
         _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
         _downloadedSources  = [NSMutableArray array]; // depricated
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
@@ -101,6 +103,7 @@
     if ((newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine && newtag.type != TagTypeSoccerZoneStop) {
         return;
     }
+    
     
     [_tags addObject:newtag];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
@@ -243,7 +246,7 @@
 
 // Local events have different feed inits
 
--(NSDictionary*)buildFeeds:(NSDictionary*)aDict isLive:(BOOL)isLive isLocal:(BOOL)isLocal
+-(NSMutableDictionary*)buildFeeds:(NSDictionary*)aDict isLive:(BOOL)isLive isLocal:(BOOL)isLocal
 {
     NSString            * toypKey   = (isLive)?@"live_2":@"mp4_2";
     NSMutableDictionary * tempDict  = [[NSMutableDictionary alloc]init];
@@ -296,7 +299,7 @@
         } else {
 //            PXPLog(@"Event Warning: No Feeds on Encoder for Event");
 //            PXPLog(@"   HID: %@",aDict[@"hid"]);
-            return @{};
+            return [[NSMutableDictionary alloc]initWithDictionary:@{}];
         }
         //[tempDict setObject:theFeed forKey:@"s1"];
         if (theFeed != nil) {
@@ -304,7 +307,7 @@
         }
     }
     
-    return [tempDict copy];
+    return tempDict;
 }
 
 -(NSArray*)getTagsByID:(NSString*)tagId
@@ -403,8 +406,9 @@
 -(void)buildFeeds
 {
     NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:[self buildFeeds:_rawData isLive:_live isLocal:YES]];
-    [temp addEntriesFromDictionary:_feeds];
+    [temp addEntriesFromDictionary:_originalFeeds];
     _feeds = [temp copy];
+    _originalFeeds = [temp copy];
 }
 
 // this builds

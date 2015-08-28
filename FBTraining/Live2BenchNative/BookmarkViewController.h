@@ -47,13 +47,11 @@
 }
 
 @property (nonatomic, strong)  NSMutableArray               * allClips;
-@property (nonatomic,strong)   BorderButton                 * tableActionButton;
 @property (nonatomic,strong) UIViewController <PxpVideoPlayerProtocol>    * videoPlayer;
 @property (nonatomic,strong)   NSMutableDictionary          * selectedTag;
 @property (nonatomic,strong)   UIPopoverController          * popoverController;
 @property (nonatomic)          int                          progressBarIndex;
 @property (nonatomic,strong)   NSMutableDictionary          * allEvents;
-@property (nonatomic,strong)   CustomButton                 * teleButton;
 @property (nonatomic,strong)   TeleViewController           * teleViewController;
 @property (nonatomic,strong)   CustomButton                 * playbackRateBackButton;
 @property (nonatomic,strong)   CustomButton                 * playbackRateForwardButton;
@@ -67,7 +65,5 @@
 -(void)dismissFilterToolbox;
 -(void)createAllFullScreenSubviews;
 -(void)removeAllFullScreenSubviews;
-
--(void)showTeleButton;
 
 @end

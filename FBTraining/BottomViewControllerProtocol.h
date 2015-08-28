@@ -24,6 +24,6 @@
 -(void)clear;
 -(nonnull NSString *)currentPeriod;
 -(void)allToggleOnOpenTags;
--(void)addData:(NSString*)type name:(NSString*)name;
+-(void)addData:(nonnull NSString *)type name:(nonnull NSString*)name;
 
 @end

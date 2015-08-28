@@ -12,10 +12,6 @@
 #import "PxpLoadAction.h"
 #import "PxpTimeProvider.h"
 
-#define NOTIF_PXP_PLAYER_SET_FEED @"PxpPlayerSetFeed"
-
-@class Feed;
-
 /**
  * @breif A video player optimized for live video, synchronization, and looping.
  * @author Nicholas Cvitak
@@ -28,8 +24,8 @@
 /// The name of the player.
 @property (copy, nonatomic, nonnull) NSString *name;
 
-/// The live playback status of the player.
-@property (assign, nonatomic) BOOL live;
+/// The live playback status of the player. (read-only)
+@property (readonly, assign, nonatomic) BOOL live;
 
 /// The playing status of the player. (read-only)
 @property (readonly, assign, nonatomic) BOOL playing;
@@ -49,17 +45,14 @@
 /// The duration of the player's item. (read-only)
 @property (readonly, assign, nonatomic) CMTime duration;
 
+/// The time remaining till the end of the stream.
+@property (readonly, assign, nonatomic) CMTime remainingTime;
+
 /// The failed status of the player. (read-only)
 @property (readonly, assign, nonatomic) BOOL failed;
 
 /// The motion status of the player's feed. (read-only)
 @property (readonly, assign, nonatomic) BOOL motion;
-
-/// The current feed of the player.
-@property (strong, nonatomic, nullable) Feed *feed;
-
-/// The preferred feed quality of the player.
-@property (copy, nonatomic, nullable) NSString *quality;
 
 /// Seeks forward or backward releative to the current time.
 - (void)seekBy:(CMTime)time;
@@ -78,5 +71,8 @@
 
 /// Reloads the player's currentItem.
 - (void)reload;
+
+/// Brings the player to Live.
+- (void)goToLive;
 
 @end

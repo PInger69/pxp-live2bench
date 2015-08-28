@@ -129,7 +129,7 @@
     _playersScrollView.displayAllTagIfAllFilterOn = NO;
     _playersScrollView.style                  = PxpFilterButtonScrollViewStylePortrate;
     _playersScrollView.buttonSize             = CGSizeMake(40, 40);
-    _playersScrollView.delegate               = self;
+    _playersScrollView.filterModuleDelegate   = self;
     
     _preFilterSwitch.onTintColor            = PRIMARY_APP_COLOR;
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;
@@ -147,9 +147,9 @@
         return (t.type == TagTypeTele);
     }]];
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];
-    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOff"] forState:UIControlStateNormal];
+    [_telestrationButton setBackgroundImage:[[UIImage imageNamed:@"telestrationIconOff"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [_telestrationButton setTitle:@"" forState:UIControlStateSelected];
-    [_telestrationButton setBackgroundImage:[UIImage imageNamed:@"telestrationIconOn"] forState:UIControlStateSelected];
+    [_telestrationButton setBackgroundImage:[[UIImage imageNamed:@"telestrationIconOn"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -232,6 +232,7 @@
 }
 
 - (void) switchToggled:(id)sender {
+    _tagNameScrollView.modified = true;
     [self refreshUI];
 }
 
