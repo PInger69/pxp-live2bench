@@ -764,7 +764,8 @@
     
     // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
     
-    NSString *tagID = tag.ID;
+    //NSString *tagID = tag.ID;
+    NSString *tagID = results[@"id"];
     NSString *ip = self.ipAddress;
     NSString *src = note.userInfo[@"src"];
     NSString *remoteSrc = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
