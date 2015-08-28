@@ -27,14 +27,14 @@
 
         [self setBackgroundColor:[UIColor clearColor]];
         //[[self layer] setBorderColor:self.tintColor.CGColor];
-        [[self layer] setBorderWidth:1.0f];
+        [self.layer setBorderWidth:1.0f];
         [self setContentEdgeInsets:UIEdgeInsetsMake(3, 5, 3, 5)];
         [self setTitleColor:self.tintColor forState:UIControlStateNormal];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateSelected];
         [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR] forState:UIControlStateHighlighted];
-        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3]] forState:UIControlStateNormal];
+        [self setBackgroundImage:[Utility makeOnePixelUIImageWithColor:[[UIColor lightGrayColor] colorWithAlphaComponent:0.25]] forState:UIControlStateNormal];
         [self.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
         
         self.mode = SideTagButtonModeDisable;

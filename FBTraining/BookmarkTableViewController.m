@@ -21,6 +21,7 @@
 @property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
 
+@property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSharePopoverViewController;
 @property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSelectPopoverViewController;
 
 @end
@@ -30,6 +31,10 @@
 -(instancetype)init{
     self = [super init];
     if (self){
+        
+        _sourceSharePopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
+        _sourceSharePopoverViewController.contentViewController.modalInPopover = NO;
+        
         _sourceSelectPopoverViewController = [[ListPopoverControllerWithImages alloc] initWithMessage:@"Select Source:" buttonListNames:@[]];
         _sourceSelectPopoverViewController.contentViewController.modalInPopover = NO;
         
@@ -91,7 +96,35 @@
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:clip];
+    NSDictionary *videosBySourceKey = clip.videosBySrcKey;
+    NSArray *sourceKeys = [videosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
+    
+    if (sourceKeys.count > 1) {
+        // multiple source, display popover.
+        [_sourceSelectPopoverViewController setListOfButtonNames:sourceKeys];
+        
+        for (NSUInteger i = 0; i < sourceKeys.count; i++) {
+            UIButton *button = _sourceSelectPopoverViewController.arrayOfButtons[i];
+            NSString *path = videosBySourceKey[sourceKeys[i]];
+            
+            // get thumbnail image
+            [button setBackgroundImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
+        }
+        
+        [_sourceSelectPopoverViewController addOnCompletionBlock:^(NSString *sourceKey) {
+            if (sourceKey) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{@"clip": clip, @"source": sourceKey }];
+            }
+        }];
+        
+        [_sourceSelectPopoverViewController presentPopoverFromRect:selectedCell.bounds inView:selectedCell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        
+    } else {
+        // single source, just play it.
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{@"clip": clip }];
+    }
+    
+    
 //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED_IN_MYCLIP object:nil userInfo:@{@"forFeed":@{@"context":STRING_MYCLIP_CONTEXT,
 //                                                                                                                                 @"feed": clip,
 //                                                                                                                                 @"time":[clip.rawData objectForKey:@"starttime"],
@@ -153,19 +186,19 @@
                 // multiple video files, we need to select a source to share.
                 NSArray *srcNames = [clipVideosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
                 
-                __block UIPopoverController *sourceSelectPopover = _sourceSelectPopoverViewController;
+                __block UIPopoverController *sourceSelectPopover = _sourceSharePopoverViewController;
                 
-                [_sourceSelectPopoverViewController setListOfButtonNames:srcNames];
+                [_sourceSharePopoverViewController setListOfButtonNames:srcNames];
                 
                 for (NSUInteger i = 0; i < srcNames.count; i++) {
-                    UIButton *button = _sourceSelectPopoverViewController.arrayOfButtons[i];
+                    UIButton *button = _sourceSharePopoverViewController.arrayOfButtons[i];
                     NSString *path = clipVideosBySourceKey[srcNames[i]];
                     
                     // get thumbnail image
-                    [button setImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
+                    [button setBackgroundImage:[[AVAsset assetWithURL:[NSURL fileURLWithPath:path]] imageForTime:kCMTimeZero] forState:UIControlStateNormal];
                 }
                 
-                [_sourceSelectPopoverViewController addOnCompletionBlock:^(NSString *srcID) {
+                [_sourceSharePopoverViewController addOnCompletionBlock:^(NSString *srcID) {
                     if (srcID) {
                         [sourceSelectPopover dismissPopoverAnimated:NO];
                         
@@ -177,7 +210,7 @@
                     }
                 }];
                 
-                [_sourceSelectPopoverViewController presentPopoverFromRect:cell.shareButton.frame inView:cell.shareButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                [_sourceSharePopoverViewController presentPopoverFromRect:cell.shareButton.frame inView:cell.shareButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 
             } else {
                 // only one clip downloaded, just use the share controller.
