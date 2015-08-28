@@ -50,6 +50,7 @@
 @property (strong, nonatomic) BookmarkTableViewController   * tableViewController;
 @property (strong, nonatomic) NSDictionary                  * feeds;
 @property (strong, nonatomic) UIButton                      * filterButton;
+@property (strong, nonatomic) UIButton                      * userSortButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
 @property (strong, nonatomic, nonnull) PxpFullscreenViewController *fullscreenViewController;
@@ -86,7 +87,7 @@
     FeedSwitchView                      * _feedSwitch;
     ClipDataContentDisplay              * clipContentDisplay;
     NSMutableArray                      * _tagsToDisplay;
-    
+    BOOL                                _userSort;
 }
 
 
@@ -138,8 +139,8 @@ int viewWillAppearCalled;
         [self addChildViewController:_playerViewController];
         [self addChildViewController:_fullscreenViewController];
         
-        _clipContext = [PxpClipContext context];
-        _videoBar = [[PxpVideoBar alloc] init];
+        _clipContext    = [PxpClipContext context];
+        _videoBar       = [[PxpVideoBar alloc] init];
     }
     return self;
 }
@@ -265,7 +266,7 @@ int viewWillAppearCalled;
     [_pxpFilter filterTags:self.allClips];
     
     self.tableViewController.tableData = _tagsToDisplay;
-//    [self.tableViewController.tableView reloadData];
+
     CGRect tableRect = self.tableViewController.view.frame;
     numTagsLabel.frame = CGRectMake(tableRect.origin.x, CGRectGetMaxY(tableRect), tableRect.size.width, 18);
     
@@ -367,6 +368,11 @@ int viewWillAppearCalled;
     [self.filterButton addTarget:self action:@selector(slideFilterBox) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview: self.filterButton];
     
+    self.userSortButton = [[UIButton alloc] initWithFrame:CGRectMake(800, 710,100, 58)];
+    [self.userSortButton setTitle:@"User Sort" forState:UIControlStateNormal];
+    [self.userSortButton setTitleColor:PRIMARY_APP_COLOR forState:UIControlStateNormal];
+    [self.userSortButton addTarget:self action:@selector(useCustomSort:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview: self.userSortButton];
 
 }
 
@@ -786,7 +792,6 @@ int viewWillAppearCalled;
     
     if ([[currentPlayingTag objectForKey:@"type"]intValue] != 4) {
         //show telestration button
-        [self showTeleButton];
         [self showPlaybackRateControls];
     }
     
@@ -848,7 +853,12 @@ int viewWillAppearCalled;
     return fileName;
 }
 
+-(void)useCustomSort:(id)sender
+{
+    [self.tableViewController setEditing:YES animated:YES];
 
+
+}
 
 -(NSMutableArray *)filterAndSortClips:(NSArray *)clips {
     NSMutableArray *clipsToSort = [NSMutableArray arrayWithArray:clips];

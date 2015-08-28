@@ -40,6 +40,14 @@ static NSNotificationCenter * __nonnull _localCenter;
 static NSArray * __nonnull _defaultSpeeds;
 static CGFloat _textNumbers[2] = { 5.0, 5.0 };
 
++ (CGFloat)sharedForwardSpeed {
+    return _textNumbers[0];
+}
+
++ (CGFloat)sharedBackwardSpeed {
+    return _textNumbers[1];
+}
+
 + (void)initialize {
     _localCenter = [[NSNotificationCenter alloc] init];
     _defaultSpeeds                = @[ // in seconds

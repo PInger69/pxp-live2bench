@@ -8,6 +8,7 @@
 
 #import "PxpPlayerViewController.h"
 #import "PxpPlayerControlBar.h"
+#import "SeekButton.h"
 
 @interface PxpPlayerViewController () <PxpPlayerViewDelegate>
 
@@ -17,6 +18,9 @@
 {
     IBOutlet UIView * __nonnull _playerContainer;
     IBOutlet PxpPlayerControlBar * __nonnull _controlBar;
+    
+    UISwipeGestureRecognizer *__nonnull _seekForwardGestureRecognizer;
+    UISwipeGestureRecognizer *__nonnull _seekBackwardGestureRecognizer;
     
     void * _playerObserverContext;
     void * _playerRangeObserverContext;
@@ -38,6 +42,12 @@
         _telestrationViewController.timeProvider = self;
         
         _fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];
+        
+        _seekForwardGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(seekForwardGesture:)];
+        _seekBackwardGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(seekBackwardGesture:)];
+        
+        _seekForwardGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        _seekBackwardGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
         
         _playerObserverContext = &_playerObserverContext;
         _playerRangeObserverContext = &_playerRangeObserverContext;
@@ -78,6 +88,9 @@
     _controlBar.player = _playerView.player;
     
     [_playerView addGestureRecognizer:_fullscreenGestureRecognizer];
+    
+    [_playerView addGestureRecognizer:_seekForwardGestureRecognizer];
+    [_playerView addGestureRecognizer:_seekBackwardGestureRecognizer];
     
     [self addChildViewController:_telestrationViewController];
     
@@ -149,6 +162,16 @@
     
     _telestrationViewController.view.hidden = !_playerView.fullView || !_enabled;
     _controlBar.enabled = enabled;
+}
+
+#pragma mark - Gesture Recognizers
+
+- (void)seekForwardGesture:(UISwipeGestureRecognizer *)recognizer {
+    [_playerView.player seekBy:CMTimeMakeWithSeconds([SeekButton sharedForwardSpeed], 600)];
+}
+
+- (void)seekBackwardGesture:(UISwipeGestureRecognizer *)recognizer {
+    [_playerView.player seekBy:CMTimeMakeWithSeconds(-[SeekButton sharedBackwardSpeed], 600)];
 }
 
 #pragma mark - PxpPlayerViewDelegate
