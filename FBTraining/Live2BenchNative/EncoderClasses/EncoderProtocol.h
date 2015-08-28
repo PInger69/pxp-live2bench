@@ -80,6 +80,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 @property (nonatomic,strong)    Event                * liveEvent;
 @property (nonatomic,strong)    NSDictionary         * encoderTeams; // all teams on encoder
 @property (nonatomic,strong)    NSDictionary         * encoderLeagues;
+-(void)resetEventAfterRemovingFeed:(Event *)event;
 -(void)clearQueueAndCurrent;
 -(void) writeToPlist;
 

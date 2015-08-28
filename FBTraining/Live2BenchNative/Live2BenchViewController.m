@@ -511,19 +511,13 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         [self displayLable];
         
-        PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
-        //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
-        _playerViewController.playerView.context = context;
-        _videoBar.event = _currentEvent;
-        _fullscreenViewController.playerViewController.playerView.context = context;
-
-        [self addBottomViewController];
     }
     
     [self onEventChange];
 }
 
 -(void)addFeed{
+    [_encoderManager.primaryEncoder resetEventAfterRemovingFeed:_currentEvent];
     [_cameraPick clear];
     [_cameraPick dismissPopoverAnimated:NO];
     _cameraPick = nil;
@@ -532,6 +526,16 @@ static void * eventContext      = &eventContext;
     if (_currentEvent.live) {
         [self gotLiveEvent];
     }
+    
+    PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
+    //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
+    _playerViewController.playerView.context = context;
+    _videoBar.event = _currentEvent;
+    _fullscreenViewController.playerViewController.playerView.context = context;
+    
+    [self addBottomViewController];
+
+    
     [self addPlayerView];
     [multiButton setHidden:!([_currentEvent.feeds count]>1)];
 }
