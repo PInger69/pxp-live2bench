@@ -11,7 +11,7 @@
 #include <set>
 
 struct rgbaColor {
-    CGFloat r, g, b, a;
+    uint8_t r, g, b, a;
 };
 
 inline bool operator<(const rgbaColor& l, const rgbaColor& r)
@@ -93,17 +93,14 @@ inline bool operator<(const rgbaColor& l, const rgbaColor& r)
             NSInteger tagX = pixelWidth * (tag.time) / duration - self.tagWidth / 2.0;
             
             // default tag color (black).
-            rgbaColor c = { 0.0, 0.0, 0.0, 1.0};
+            rgbaColor c = { 0, 0, 0, 255};
             
             // get color string.
             const char *s = tag.colour.UTF8String;
             
             // attempt to parse string to color.
-            uint8_t r, g, b;
-            if (s && sscanf(s, "%02hhx%02hhx%02hhx", &r, &g, &b) == 3) {
-                c.r = r / 255.0;
-                c.g = g / 255.0;
-                c.b = b / 255.0;
+            if (s) {
+                sscanf(s, "%02hhx%02hhx%02hhx%02hhx", &c.r, &c.g, &c.b, &c.a);
             };
             
             // update the draw info.
@@ -127,7 +124,7 @@ inline bool operator<(const rgbaColor& l, const rgbaColor& r)
                 
                 NSUInteger i = 0;
                 for (std::set<rgbaColor>::iterator it = color_comps.begin(); it != color_comps.end(); it++) {
-                    CGContextSetRGBFillColor(context, it->r, it->g, it->b, it->a);
+                    CGContextSetRGBFillColor(context, it->r / 255.0, it->g / 255.0, it->b / 255.0, it->a / 255.0);
                     CGContextFillRect(context, CGRectMake(x, i * tagHeight, 1, tagHeight));
                     i++;
                 }
