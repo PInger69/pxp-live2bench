@@ -786,7 +786,6 @@ int viewWillAppearCalled;
     
     if ([[currentPlayingTag objectForKey:@"type"]intValue] != 4) {
         //show telestration button
-        [self showTeleButton];
         [self showPlaybackRateControls];
     }
     
