@@ -9,17 +9,17 @@
 #import "L2BVideoBarViewController.h"
 #import "VideoBarContainerView.h"
 
-#import "TagView.h"
+#import "PxpTagDisplayBar.h"
 #import "Event.h"
 
 #define BAR_HEIGHT      40
 #define LABEL_WIDTH     150
 #define LITTLE_ICON_DIMENSIONS 40
 
-@interface L2BVideoBarViewController () <TagViewDataSource>
+@interface L2BVideoBarViewController () <PxpTagDisplayBarDataSource>
 
 @property (strong, nonatomic, nonnull) NSMutableArray *arrayOfAllTags;
-@property (strong, nonatomic, nonnull) TagView *tagView;
+@property (strong, nonatomic, nonnull) PxpTagDisplayBar *tagDisplayBar;
 @property (strong, nonatomic, nonnull) NSTimer *tagViewRefreshTimer;
 
 @end
@@ -34,7 +34,7 @@
 @synthesize videoPlayer                 = _videoPlayer;
 
 @synthesize arrayOfAllTags = _arrayOfAllTags;
-@synthesize tagView = _tagView;
+@synthesize tagDisplayBar = _tagView;
 
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer
 {
@@ -53,10 +53,10 @@
         
         
         self.arrayOfAllTags = [NSMutableArray array];
-        self.tagView = [[TagView alloc] init];
-        self.tagView.backgroundColor = [UIColor clearColor];
-        self.tagView.dataSource = self;
-        [background addSubview:self.tagView];
+        self.tagDisplayBar = [[PxpTagDisplayBar alloc] init];
+        self.tagDisplayBar.backgroundColor = [UIColor clearColor];
+        self.tagDisplayBar.dataSource = self;
+        [background addSubview:self.tagDisplayBar];
          
         
         // frame does nothign now
@@ -140,7 +140,7 @@
         
         /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_CHANGE object:nil queue:nil usingBlock:^(NSNotification *note){
             [self.arrayOfAllTags addObjectsFromArray:eventTags];
-            [self.tagView setNeedsDisplay];
+            [self.tagDisplayBar setNeedsDisplay];
         }];*/
         
        //[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -150,7 +150,7 @@
                     
                     dispatch_async(dispatch_get_main_queue(), ^(){
                         [self.arrayOfAllTags addObjectsFromArray:eventTags];
-                        [self.tagView setNeedsDisplay];
+                        [self.tagDisplayBar setNeedsDisplay];
                     });
                     
                 }
@@ -161,7 +161,7 @@
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update) name:NOTIF_EVENT_CHANGE object:nil];
         
-        self.tagViewRefreshTimer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(updateTagView:) userInfo:nil repeats:YES];
+        self.tagViewRefreshTimer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(updatePxpTagDisplayBar:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:self.tagViewRefreshTimer forMode:NSDefaultRunLoopMode];
     }
     return self;
@@ -189,7 +189,7 @@
     }
     
     
-    [self.tagView setNeedsDisplay];
+    [self.tagDisplayBar setNeedsDisplay];
 }
 
 
@@ -200,8 +200,8 @@
     [self.tagViewRefreshTimer invalidate];
 }
 
-- (void)updateTagView:(NSTimer *)timer {
-    [self.tagView setNeedsDisplay];
+- (void)updatePxpTagDisplayBar:(NSTimer *)timer {
+    [self.tagDisplayBar setNeedsDisplay];
 }
 
 /*- (void)tagReceived:(NSNotification *)note {
@@ -209,7 +209,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^(){
             [self.arrayOfAllTags addObject:note.object];
-            [self.tagView setNeedsDisplay];
+            [self.tagDisplayBar setNeedsDisplay];
         });
          
     }
@@ -351,7 +351,7 @@
                                                  LITTLE_ICON_DIMENSIONS-5,
                                                  LITTLE_ICON_DIMENSIONS-10)];
     
-    [self.tagView setFrame:CGRectMake(130, 0, background.frame.size.width - 240, background.frame.size.height)];
+    [self.tagDisplayBar setFrame:CGRectMake(130, 0, background.frame.size.width - 240, background.frame.size.height)];
     
     //    for (UIView * item in activeElements){
 //        [item setHidden:NO];
@@ -372,7 +372,7 @@
 -(void)update
 {
     [self.arrayOfAllTags removeAllObjects];
-    [self.tagView setNeedsDisplay];
+    [self.tagDisplayBar setNeedsDisplay];
 
 }
 
@@ -447,21 +447,21 @@
     return 0;
 }
 
-#pragma mark - TagViewDataSource
+#pragma mark - PxpTagDisplayBarDataSource
 
-- (NSTimeInterval)durationInTagView:(nonnull TagView *)tagView {
+- (NSTimeInterval)durationInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     return _videoPlayer.durationInSeconds;
 }
 
-- (nonnull NSArray *)tagsInTagView:(nonnull TagView *)tagView {
+- (nonnull NSArray *)tagsInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     return self.arrayOfAllTags;
 }
 
-- (NSTimeInterval)selectedTimeInTagView:(nonnull TagView *)tagView {
+- (NSTimeInterval)selectedTimeInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     return _videoPlayer.currentTimeInSeconds;
 }
 
-- (BOOL)shouldDisplaySelectedTimeInTagView:(nonnull TagView *)tagView {
+- (BOOL)shouldDisplaySelectedTimeInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     return YES;
 }
 

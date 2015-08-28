@@ -61,7 +61,7 @@
 		AE683C531B7148DA00458F80 /* PxpFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE683C511B7148DA00458F80 /* PxpFullscreenViewController.m */; };
 		AE70C2111B5FF141008A9203 /* TagNameSelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2101B5FF141008A9203 /* TagNameSelectTableViewController.m */; };
 		AE70C2171B600395008A9203 /* UIColor+Highlight.m in Sources */ = {isa = PBXBuildFile; fileRef = AE70C2161B600395008A9203 /* UIColor+Highlight.m */; };
-		AE76FFC41B01065B0089F53F /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* TagView.m */; };
+		AE76FFC41B01065B0089F53F /* PxpTagDisplayBar.mm in Sources */ = {isa = PBXBuildFile; fileRef = AE76FFC11B01065B0089F53F /* PxpTagDisplayBar.mm */; };
 		AE7AE3B21B74F4C80021EC03 /* PxpPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B11B74F4C80021EC03 /* PxpPlayerView.m */; };
 		AE7AE3B61B74FAAA0021EC03 /* PxpPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE7AE3B41B74FAAA0021EC03 /* PxpPlayerViewController.m */; };
 		AE7AE3B71B74FAAA0021EC03 /* PxpPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE7AE3B51B74FAAA0021EC03 /* PxpPlayerViewController.xib */; };
@@ -611,8 +611,8 @@
 		AE70C2121B5FF27C008A9203 /* TagNameSelectResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagNameSelectResponder.h; sourceTree = "<group>"; };
 		AE70C2151B600395008A9203 /* UIColor+Highlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Highlight.h"; sourceTree = "<group>"; };
 		AE70C2161B600395008A9203 /* UIColor+Highlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Highlight.m"; sourceTree = "<group>"; };
-		AE76FFC01B01065B0089F53F /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
-		AE76FFC11B01065B0089F53F /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
+		AE76FFC01B01065B0089F53F /* PxpTagDisplayBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpTagDisplayBar.h; sourceTree = "<group>"; };
+		AE76FFC11B01065B0089F53F /* PxpTagDisplayBar.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PxpTagDisplayBar.mm; sourceTree = "<group>"; };
 		AE7AE3B01B74F4C80021EC03 /* PxpPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerView.h; sourceTree = "<group>"; };
 		AE7AE3B11B74F4C80021EC03 /* PxpPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PxpPlayerView.m; sourceTree = "<group>"; };
 		AE7AE3B31B74FAAA0021EC03 /* PxpPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PxpPlayerViewController.h; sourceTree = "<group>"; };
@@ -1463,13 +1463,13 @@
 			name = PxpFullscreen;
 			sourceTree = "<group>";
 		};
-		AE76FFBF1B01063F0089F53F /* TagView */ = {
+		AE76FFBF1B01063F0089F53F /* PxpTagDisplayBar */ = {
 			isa = PBXGroup;
 			children = (
-				AE76FFC01B01065B0089F53F /* TagView.h */,
-				AE76FFC11B01065B0089F53F /* TagView.m */,
+				AE76FFC01B01065B0089F53F /* PxpTagDisplayBar.h */,
+				AE76FFC11B01065B0089F53F /* PxpTagDisplayBar.mm */,
 			);
-			name = TagView;
+			name = PxpTagDisplayBar;
 			sourceTree = "<group>";
 		};
 		AE7AE3AC1B74EC8C0021EC03 /* L2B */ = {
@@ -2482,7 +2482,7 @@
 				D7A188C11A013E2D00513909 /* PipViewController.m */,
 				D79BC1D719E836F800ECD8DB /* DebuggingTabViewController.h */,
 				D79BC1D819E836F800ECD8DB /* DebuggingTabViewController.m */,
-				AE76FFBF1B01063F0089F53F /* TagView */,
+				AE76FFBF1B01063F0089F53F /* PxpTagDisplayBar */,
 				D7CF390819DF213F0013E46B /* UtilityClasses */,
 				D79D709019DD8ED2001FBE16 /* ExternalScreenButton.h */,
 				D79D709119DD8ED2001FBE16 /* ExternalScreenButton.m */,
@@ -3358,7 +3358,7 @@
 				D74860FC1B5FDD3300CEC9DD /* TeamPlayer.m in Sources */,
 				D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */,
 				D784EF471AA4B3090068D260 /* ARCalendarTableViewController.m in Sources */,
-				AE76FFC41B01065B0089F53F /* TagView.m in Sources */,
+				AE76FFC41B01065B0089F53F /* PxpTagDisplayBar.mm in Sources */,
 				D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */,
 				D7E4AC7616B3225B00129222 /* TagMarker.m in Sources */,
 				D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */,

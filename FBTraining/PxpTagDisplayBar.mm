@@ -1,21 +1,32 @@
 //
-//  TagView.m
+//  PxpTagDisplayBar.m
 //  TagRenderer
 //
 //  Created by Nico Cvitak on 2015-05-08.
 //  Copyright (c) 2015 Nicholas Cvitak. All rights reserved.
 //
 
-#import "TagView.h"
+#import "PxpTagDisplayBar.h"
+#include <vector>
+#include <set>
 
-@interface TagView ()
+struct rgbaColor {
+    uint8_t r, g, b, a;
+};
+
+inline bool operator<(const rgbaColor& l, const rgbaColor& r)
+{
+    return memcmp(&l, &r, sizeof(rgbaColor)) < 0;
+}
+
+@interface PxpTagDisplayBar ()
 
 @property (readonly, strong, nonatomic, nonnull) UIColor *selectionStrokeColor;
 @property (readonly, strong, nonatomic, nonnull) UIColor *selectionFillColor;
 
 @end
 
-@implementation TagView
+@implementation PxpTagDisplayBar
 
 @synthesize dataSource = _dataSource;
 @synthesize tagAlpha = _tagAlpha;
@@ -65,37 +76,40 @@
     if (self.dataSource) {
         
         // get width of pixels to draw
-        NSUInteger pixelWidth = rect.size.width;
+        const NSUInteger pixelWidth = rect.size.width;
         
         // obtain data source information
-        NSArray *tags = [self.dataSource tagsInTagView:self];
-        NSTimeInterval duration = [self.dataSource durationInTagView:self];
-        NSTimeInterval selectedTime = [self.dataSource selectedTimeInTagView:self];
-        BOOL shouldDisplaySelectedTime = [self.dataSource shouldDisplaySelectedTimeInTagView:self];
+        NSArray *tags = [self.dataSource tagsInPxpTagDisplayBar:self];
+        NSTimeInterval duration = [self.dataSource durationInPxpTagDisplayBar:self];
+        NSTimeInterval selectedTime = [self.dataSource selectedTimeInPxpTagDisplayBar:self];
+        BOOL shouldDisplaySelectedTime = [self.dataSource shouldDisplaySelectedTimeInPxpTagDisplayBar:self];
         
-        // set up draw info
-        NSMutableArray *drawInfo = [NSMutableArray arrayWithCapacity:pixelWidth];
-        for (NSUInteger x = 0; x < pixelWidth; x++) {
-            [drawInfo insertObject:[NSMutableSet set] atIndex:x];
-        }
+        // set up draw info.
+        std::vector<std::set<rgbaColor>> drawInfo = std::vector<std::set<rgbaColor>>(pixelWidth);
         
         // populate draw info
         for (Tag *tag in tags) {
             // calculate tag dimensions
             NSInteger tagX = pixelWidth * (tag.time) / duration - self.tagWidth / 2.0;
             
+            // default tag color (black).
+            rgbaColor c = { 0, 0, 0, 255};
             
+            // get color string.
+            const char *s = tag.colour.UTF8String;
+            
+            // attempt to parse string to color.
+            if (s) {
+                sscanf(s, "%02hhx%02hhx%02hhx%02hhx", &c.r, &c.g, &c.b, &c.a);
+            };
+            
+            // update the draw info.
             for (NSInteger i = 0; i < self.tagWidth; i++) {
-                
                 // only insert tag if it will fit in the frame
-                NSInteger x = tagX + i;
+                const NSInteger x = tagX + i;
                 if (0 <= x && x < pixelWidth) {
-                    
-                    // we only need to store the color information
-                    NSMutableSet *colorSet = drawInfo[x];
-                    
                     // add color to set
-                    [colorSet addObject:tag.colour ? tag.colour : @"000000"];
+                    drawInfo[x].insert(c);
                 }
             }
             
@@ -103,22 +117,18 @@
         
         // draw tags
         for (NSUInteger x = 0; x < pixelWidth; x++) {
-            NSSet *tagColors = drawInfo[x];
-            NSUInteger nTags = tagColors.count;
-            CGFloat tagHeight = ceil(rect.size.height / nTags);
-            
-            
-            NSUInteger i = 0;
-            for (NSString *hex in tagColors) {
+            const std::set<rgbaColor> &color_comps = drawInfo[x];
+            if (color_comps.size()) {
+                CGFloat tagHeight = ceil(rect.size.height / color_comps.size());
                 
-                // get tag color and apply alpha
-                UIColor *color = [[Utility colorWithHexString:hex] colorWithAlphaComponent:self.tagAlpha];
                 
-                CGContextSetFillColorWithColor(context, color.CGColor);
-                CGContextFillRect(context, CGRectMake(x, i * tagHeight, 1, tagHeight));
-                i++;
+                NSUInteger i = 0;
+                for (std::set<rgbaColor>::iterator it = color_comps.begin(); it != color_comps.end(); it++) {
+                    CGContextSetRGBFillColor(context, it->r / 255.0, it->g / 255.0, it->b / 255.0, it->a / 255.0);
+                    CGContextFillRect(context, CGRectMake(x, i * tagHeight, 1, tagHeight));
+                    i++;
+                }
             }
-            
         }
         
         // only draw selection if we need to
