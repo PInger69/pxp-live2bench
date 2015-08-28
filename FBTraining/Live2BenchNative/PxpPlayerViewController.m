@@ -167,11 +167,15 @@
 #pragma mark - Gesture Recognizers
 
 - (void)seekForwardGesture:(UISwipeGestureRecognizer *)recognizer {
-    [_playerView.player seekBy:CMTimeMakeWithSeconds([SeekButton sharedForwardSpeed], 600)];
+    if (_enabled) {
+        [_playerView.player seekBy:CMTimeMakeWithSeconds([SeekButton sharedForwardSpeed], 600)];
+    }
 }
 
 - (void)seekBackwardGesture:(UISwipeGestureRecognizer *)recognizer {
-    [_playerView.player seekBy:CMTimeMakeWithSeconds(-[SeekButton sharedBackwardSpeed], 600)];
+    if (_enabled) {
+        [_playerView.player seekBy:CMTimeMakeWithSeconds(-[SeekButton sharedBackwardSpeed], 600)];
+    }
 }
 
 #pragma mark - PxpPlayerViewDelegate

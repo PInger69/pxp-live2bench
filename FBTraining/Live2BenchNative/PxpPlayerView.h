@@ -31,6 +31,7 @@
 IB_DESIGNABLE
 @interface PxpPlayerView : UIView
 
+/// The delegate of the player view.
 @property (weak, nonatomic, nullable) id<PxpPlayerViewDelegate> delegate;
 
 /// The identifier of the player view.
