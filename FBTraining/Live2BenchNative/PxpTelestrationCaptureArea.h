@@ -22,14 +22,16 @@
 
 @interface PxpTelestrationCaptureArea : UIView
 
+/// The capture area's time provider.
 @property (weak, nonatomic, nullable) id<PxpTimeProvider> timeProvider;
+
+/// The capture area's delegate.
 @property (weak, nonatomic, nullable) id<PxpTelestrationCaptureAreaDelegate> delegate;
 
+/// Sets whether or not the capture area is enabled.
 @property (assign, nonatomic) BOOL captureEnabled;
 
+/// Binds a telestration for capturing data.
 - (void)bindTelestration:(nullable PxpTelestration *)telestration;
-
-- (void)pushAction;
-- (void)popAction;
 
 @end
