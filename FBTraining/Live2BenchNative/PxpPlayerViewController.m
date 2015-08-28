@@ -158,6 +158,7 @@
     
     if (!enabled) {
         _telestrationViewController.telestration = nil;
+        _playerView.player.range = kCMTimeRangeInvalid;
     }
     
     _telestrationViewController.view.hidden = !_playerView.fullView || !_enabled;
