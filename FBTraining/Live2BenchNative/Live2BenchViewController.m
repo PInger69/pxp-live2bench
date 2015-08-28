@@ -83,7 +83,6 @@
     // some old stuff
     UILabel                             * durationTagLabel;
     UIButton                            * multiButton;
-    UIPinchGestureRecognizer            * pinchGesture;
     UISwipeGestureRecognizer            * swipeGesture;
     UISwipeGestureRecognizer            * swipeLeftGesture;
     UISwipeGestureRecognizer            * swipeRightGesture;
@@ -761,34 +760,6 @@ static void * eventContext      = &eventContext;
 
 
 #pragma mark -
-#pragma mark Gesture
-
-//this method will be triggered if user pinches the video view. Based on the pinch velocity, will enter full screen or back to normal screen
-- (void)handlePinchGuesture:(UIGestureRecognizer *)recognizer{
-    
-    if((pinchGesture.velocity > 0.5 || pinchGesture.velocity < -0.5) && pinchGesture.numberOfTouches == 2){
-        if (CGRectContainsPoint(self.view.bounds, [pinchGesture locationInView:self.view]))
-        {
-            
-            if (pinchGesture.scale >1) {
-                [_bottomViewController.mainView setHidden:true];
-                [_pipController.multi fullScreen];
-//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
-            }else if (pinchGesture.scale < 1){
-                [telestration forceCloseTele];
-                [_bottomViewController.mainView setHidden:false];
-                [_pipController.multi normalScreen];
-                [_tagButtonController _fullScreen];
-                //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
-            }
-        }
-        return;
-    }
-    
-}
-
-
-#pragma mark -
 #pragma mark Normal Methods
 
 - (void)viewDidLoad
@@ -838,9 +809,6 @@ static void * eventContext      = &eventContext;
     
     self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.playerViewController.telestrationViewController.delegate = self;
-    
-    //pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
-    //[self.view addGestureRecognizer:pinchGesture];
     
     swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeNoticed:)];
     swipeGesture.direction = UISwipeGestureRecognizerDirectionUp;
