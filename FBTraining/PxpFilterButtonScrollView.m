@@ -17,7 +17,7 @@
     NSInteger   selectedCount;
     NSPredicate * combo;
 //    NSMutableSet * _userSelected;
-    NSMutableDictionary * _cashedButtons;
+    NSMutableDictionary * _cachedButtons;
     UIImage * _buttonHighlightPixel;
     UIImage * _buttonNormalPixel;
 }
@@ -33,7 +33,7 @@
         _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
         _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
         _style                  = PxpFilterButtonScrollViewStyleLandscape;
-        _cashedButtons          = [NSMutableDictionary new];
+        _cachedButtons          = [NSMutableDictionary new];
         
         [self setScrollEnabled:YES];
     }
@@ -57,7 +57,7 @@
         _buttonHighlightPixel   = [Utility makeOnePixelUIImageWithColor:PRIMARY_APP_COLOR];
         _buttonNormalPixel      = [Utility makeOnePixelUIImageWithColor:[UIColor lightGrayColor]];
         _style                  = PxpFilterButtonScrollViewStyleLandscape;
-        _cashedButtons          = [NSMutableDictionary new];
+        _cachedButtons          = [NSMutableDictionary new];
         [self setScrollEnabled:YES];
     }
     return self;
@@ -73,7 +73,7 @@
     for (NSDictionary * buttonData in buttonDataList) {
         NSString * txt  = buttonData[@"text"];
         NSString * accV = buttonData[@"accessValue"];
-        if( ![_cashedButtons objectForKey:txt]){
+        if( ![_cachedButtons objectForKey:txt]){
             CustomButton  *eventButton = [self buildButton:CGRectZero btnText:txt btnValue:accV];
             
             [tempPool setObject:eventButton forKey:txt];
@@ -82,7 +82,7 @@
     }
     if (!self.modified) return ; // no changes ignore
     
-    _cashedButtons = tempPool;
+    _cachedButtons = tempPool;
     
     // Remove all buttons if modified
     for (CustomButton * buttonObj in _buttonList) {
@@ -92,7 +92,7 @@
     
     // make a new list of buttons and sort if needed
     
-    _buttonList = [NSMutableArray arrayWithArray:[_cashedButtons allValues]];
+    _buttonList = [NSMutableArray arrayWithArray:[_cachedButtons allValues]];
     
     
     NSUInteger colNum = 0;
@@ -149,7 +149,7 @@
             [toCombo addObject:[NSPredicate predicateWithFormat:@"%K == %@",_sortByPropertyKey, theKey]];
         }
     }
-    if (!self.delegate)_predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    if (!self.filterModuleDelegate)_predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
 
     self.modified = NO;
 }
@@ -161,19 +161,17 @@
 -(void)buildButtonsWith:(NSArray *)buttonLabels
 {
     
-             NSLog(@"===");
-    
     NSMutableDictionary * tempPool          = [NSMutableDictionary new];
     for (NSString * lbl in buttonLabels) {
         NSString * txt  = lbl;
         NSString * accV = lbl;
-        if( ![_cashedButtons objectForKey:txt]){
+        if( ![_cachedButtons objectForKey:txt]){
             CustomButton  *eventButton = [self buildButton:CGRectZero btnText:txt btnValue:accV];
             
             [tempPool setObject:eventButton forKey:txt];
             self.modified = YES;
         } else {
-            [tempPool setObject:[_cashedButtons objectForKey:txt] forKey:txt];
+            [tempPool setObject:[_cachedButtons objectForKey:txt] forKey:txt];
         
         }
     }
@@ -181,7 +179,7 @@
     if (!self.modified) return ; // no changes ignore
     
 
-    _cashedButtons = tempPool;
+    _cachedButtons = tempPool;
     
     // Remove all buttons if modified
     for (CustomButton * buttonObj in _buttonList) {
@@ -191,7 +189,7 @@
     
     // make a new list of buttons and sort if needed
     
-    _buttonList = [NSMutableArray arrayWithArray:[_cashedButtons allValues]];
+    _buttonList = [NSMutableArray arrayWithArray:[_cachedButtons allValues]];
     
     
     NSUInteger colNum = 0;
@@ -203,7 +201,6 @@
     } else {
         rowCount   = (NSUInteger)self.frame.size.width / (_buttonSize.width+_buttonMargin.width);
     }
-        NSLog(@"===");
     for (NSUInteger k = 0; k < _buttonList.count; k++ ) {
         
         CustomButton  *eventButton  = _buttonList[k];
@@ -249,7 +246,7 @@
         }
     }
 
-       if (!self.delegate) _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+       if (!self.filterModuleDelegate) _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     
     self.modified = NO;
 
@@ -373,8 +370,8 @@
         }
     }
     
-    if (self.delegate) {
-        [self.delegate onUserInput:self];
+    if (self.filterModuleDelegate) {
+        [self.filterModuleDelegate onUserInput:self];
     } else {
         _predicate           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     }

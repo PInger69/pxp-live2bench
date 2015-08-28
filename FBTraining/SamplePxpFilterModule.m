@@ -11,9 +11,12 @@
 
 @implementation SamplePxpFilterModule
 {
-    NSPredicate * combo;
-
+    NSPredicate *__nullable _combo;
 }
+
+@synthesize modified = _modified;
+@synthesize parentFilter = _parentFilter;
+
 - (instancetype)initWithArray:(NSArray*)args
 {
     self = [super init];
@@ -25,17 +28,21 @@
             [toCombo addObject:[NSPredicate predicateWithFormat:@"name != %@", t]];
         }
         
-        combo = [NSCompoundPredicate andPredicateWithSubpredicates:toCombo];
+        _combo = [NSCompoundPredicate andPredicateWithSubpredicates:toCombo];
     }
     return self;
 }
 
--(void)filterTags:(NSMutableArray *)tagsToFilter
+- (void)filterTags:(NSMutableArray *)tagsToFilter
 {
     
-    [tagsToFilter filterUsingPredicate:combo];
+    [tagsToFilter filterUsingPredicate:_combo];
 
 
+}
+
+- (void)reset {
+    
 }
 
 @end

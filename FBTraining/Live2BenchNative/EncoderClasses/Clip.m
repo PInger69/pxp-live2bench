@@ -107,12 +107,6 @@
             }
         }
         
-        NSArray * vidkeys = [_videosBySrcKey allKeys];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *dataPath = [documentsDirectory stringByAppendingPathComponent: @"/bookmark"];
-        NSString *path = [dataPath stringByAppendingPathComponent: @"/bookmarkvideo"];
-        
         if (modFlag) [_localRawData writeToFile:_path atomically:YES];
         //if (modFlag) [_rawData writeToFile:self.path atomically:YES];
     }
@@ -183,22 +177,6 @@
         _videosBySrcKey = [NSMutableDictionary dictionaryWithDictionary:[mutableDict objectForKey:@"fileNamesByKey"]];
     
     }
-    
-    
-        NSString * theFileName          = [[aDict objectForKey:@"fileNames"] firstObject];
-        
-        NSRange startRange = [theFileName rangeOfString:@"+"];
-        NSRange endRange = [theFileName rangeOfString:@".mp4"];
-        
-        NSRange searchRange = NSMakeRange(startRange.location+1, (endRange.location-1) - startRange.location);
-        
-//        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=\+).+?(?=\.mp4)" options:0 error:nil];
-//        NSRange needleRange = [regex rangeOfFirstMatchInString:theFileName options:NSMatchingAnchored range:NSMakeRange(0, theFileName.length)];
-        NSString *scrKeyFromFileName = [theFileName substringWithRange:searchRange];
-
-     //   NSString * scrKeyFromFileName   = [theFileName substringWithRange:needleRange];
-
-    
     
     NSMutableArray * list       = [NSMutableArray arrayWithArray: mutableDict[@"fileNames"]];
     NSString *aName = [[aDict objectForKey:@"fileNames"] firstObject];

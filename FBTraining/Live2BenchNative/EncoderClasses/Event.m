@@ -406,8 +406,9 @@
 -(void)buildFeeds
 {
     NSMutableDictionary * temp = [NSMutableDictionary dictionaryWithDictionary:[self buildFeeds:_rawData isLive:_live isLocal:YES]];
-    [temp addEntriesFromDictionary:_feeds];
+    [temp addEntriesFromDictionary:_originalFeeds];
     _feeds = [temp copy];
+    _originalFeeds = [temp copy];
 }
 
 // this builds

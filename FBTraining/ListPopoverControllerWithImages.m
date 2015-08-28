@@ -69,6 +69,10 @@
     [button setAccessibilityLabel:[NSString stringWithFormat: @"%d",aIndex]];
     [button addTarget:self action:@selector(onSelectAListItem:) forControlEvents:UIControlEventTouchUpInside];
     
+    button.titleLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    button.titleLabel.layer.shadowRadius = 2.0;
+    button.titleLabel.layer.shadowOpacity = 0.5;
+    button.titleLabel.layer.shadowOffset = CGSizeZero;
     
     // if you want line breaks
     CGFloat borderWidth = .5;
@@ -87,7 +91,7 @@
 
 -(void)setListOfButtonNames:(NSArray *)aListOfButtonNames
 {
-    
+    [self clear];
     NSArray * listOfButtonNames = [aListOfButtonNames sortedArrayUsingSelector:@selector(compare:)];
     
     [self willChangeValueForKey:@"listOfButtonNames"];
@@ -104,6 +108,9 @@
 -(void)clear
 {
     for (PopoverButton *button in teamButtons) {
+        [button removeFromSuperview];
+    }
+    for (UIButton *button in _arrayOfButtons) {
         [button removeFromSuperview];
     }
     

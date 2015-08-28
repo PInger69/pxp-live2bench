@@ -36,7 +36,7 @@
     
     //_bottomViewController = bottomViewController;
     _cellList =  [[NSMutableArray alloc]init];
-    _playerList = playerList;
+    _playerList = [playerList sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"doubleValue" ascending:YES]]];
     [self createCells:_playerList];
     
 
@@ -44,18 +44,7 @@
 }
 
 -(id)initWithPlayerList:(NSArray*)playerList{
-    self = [super init];
-    
-    _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-    [_scrollView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    _scrollView.showsVerticalScrollIndicator = true;
-    [self.view addSubview:_scrollView];
-    
-    _cellList = [[NSMutableArray alloc]init];
-    _playerList = playerList;
-    [self createCells:playerList];
-    
-    return self;
+    return [self initWithFrame:CGRectZero playerList:playerList];
 }
 
 -(void)assignFrame:(CGRect)frame{

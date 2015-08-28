@@ -14,10 +14,9 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil tabImage:[UIImage imageNamed:@"filter"]];
     if (self) {
         self.title = @"Default";
-       self.tabImage =  [UIImage imageNamed:@"filter"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UIUpdate:) name:NOTIF_FILTER_TAG_CHANGE object:nil];
     }
     
@@ -53,17 +52,17 @@
     _teamsScrollView.sortByPropertyKey        = @"teams";
     _teamsScrollView.style                    = PxpFilterButtonScrollViewStylePortrate;
     _teamsScrollView.buttonSize               = CGSizeMake(_teamsScrollView.frame.size.width, 40);
-    _teamsScrollView.delegate                 = self;
+    _teamsScrollView.filterModuleDelegate                 = self;
     
     _playersScrollView.sortByPropertyKey      = @"players";
     _playersScrollView.displayAllTagIfAllFilterOn = NO;
     _playersScrollView.style                  = PxpFilterButtonScrollViewStylePortrate;
     _playersScrollView.buttonSize             = CGSizeMake(40, 40);
-    _playersScrollView.delegate               = self;
+    _playersScrollView.filterModuleDelegate               = self;
     
     _dateScrollView.sortByPropertyKey       = @"date";
     _dateScrollView.buttonSize              = CGSizeMake(_dateScrollView.frame.size.width, 40);
-    _dateScrollView.delegate                = self;
+    _dateScrollView.filterModuleDelegate                = self;
 
   [_ratingButtons buildButtons];// Has to be what was selected last
 

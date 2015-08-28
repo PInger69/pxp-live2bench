@@ -110,7 +110,7 @@
     _playersScrollView.displayAllTagIfAllFilterOn = NO;
     _playersScrollView.style                  = PxpFilterButtonScrollViewStylePortrate;
     _playersScrollView.buttonSize             = CGSizeMake(40, 40);
-    _playersScrollView.delegate               = self;
+    _playersScrollView.filterModuleDelegate   = self;
     
     _preFilterSwitch.onTintColor            = PRIMARY_APP_COLOR;
     _preFilterSwitch.tintColor              = PRIMARY_APP_COLOR;

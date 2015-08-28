@@ -17,6 +17,7 @@
 }
 
 @synthesize displayAllTagIfAllFilterOn = _displayAllTagIfAllFilterOn;
+@synthesize modified = _modified;
 
 - (instancetype)init
 {
@@ -30,7 +31,7 @@
 
 -(void)addButtonToGroup:(PxpFilterButton*)button
 {
-    button.ownDelegate = self;
+    button.filterModuleDelegate = self;
     [_buttons addObject:button];
 }
 

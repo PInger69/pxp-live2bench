@@ -151,7 +151,8 @@ int viewWillAppearCalled;
     
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_CLIP_SELECTED object:nil queue:nil usingBlock:^(NSNotification *note) {
         
-        Clip *clipToPlay = note.object;
+        Clip *clipToPlay = note.userInfo[@"clip"];
+        NSString *source = note.userInfo[@"source"];
         __block BookmarkViewController *weakSelf = self;
         
         [clipContentDisplay displayClip:clipToPlay];
@@ -162,7 +163,7 @@ int viewWillAppearCalled;
             [weakSelf.tableViewController reloadData];
         };
         _clipContext = [PxpClipContext contextWithClip:clipToPlay];
-        _playerViewController.playerView.context = _clipContext;
+        _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
         
     }];
     

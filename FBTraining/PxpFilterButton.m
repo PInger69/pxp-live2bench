@@ -59,7 +59,7 @@
 {
     self.selected = !self.selected;
 
-    [_ownDelegate onUserInput:self];
+    [_filterModuleDelegate onUserInput:self];
 }
 
 

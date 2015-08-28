@@ -15,7 +15,7 @@
     UITabBar *_mainTabBar;
 }
 
-+(PxpFilterDefaultTabViewController*)sharedDefaultFilterTab;
++(nonnull PxpFilterDefaultTabViewController *)sharedDefaultFilterTab;
 +(nonnull instancetype)sharedFilterTabBar;
 
 @property (weak, nonatomic, nullable) PxpFilter *pxpFilter;
@@ -24,7 +24,7 @@
 
 @property (strong, nonatomic, nullable) NSArray *tabs;
 
-- (nonnull instancetype)ag:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil tabs:(nullable NSArray *)tabs;
 
 - (void)addTab:(nonnull PxpFilterTabController*) newTab;
 

@@ -11,6 +11,6 @@
 
 @interface PxpFilterButton : UIButton
 @property (strong,nonatomic,nullable)NSPredicate *ownPredicate;
-@property (weak,nonatomic)id<PxpFilterModuleDelegate> ownDelegate;
+@property (weak,nonatomic)id<PxpFilterModuleDelegate> filterModuleDelegate;
 
 @end

@@ -674,13 +674,4 @@
 
 }
 
--(void)setButtonColor:(BOOL)fullScreen{
-    NSArray * tempList = [_tagButtonsLeft arrayByAddingObjectsFromArray:_tagButtonRight];
-    for (SideTagButton *btn1 in tempList) {
-        [btn1 setColor:fullScreen];
-    }
-}
-
-
-
 @end

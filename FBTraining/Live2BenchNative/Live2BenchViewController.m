@@ -385,6 +385,7 @@ static void * eventContext      = &eventContext;
         _bottomViewController = [[HockeyBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         
@@ -392,6 +393,7 @@ static void * eventContext      = &eventContext;
         _bottomViewController = [[SoccerBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
@@ -400,6 +402,7 @@ static void * eventContext      = &eventContext;
         _bottomViewController = [[RugbyBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
         [_bottomViewController update];
         [_bottomViewController postTagsAtBeginning];
         [self switchPressed];
@@ -408,6 +411,7 @@ static void * eventContext      = &eventContext;
         _bottomViewController = [[FootballBottomViewController alloc]init];
         [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
         _bottomViewController.currentEvent = _currentEvent;
+        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
     }
 }
 
@@ -507,6 +511,12 @@ static void * eventContext      = &eventContext;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
         [self displayLable];
+        
+        PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
+        //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
+        _playerViewController.playerView.context = context;
+        _videoBar.event = _currentEvent;
+        _fullscreenViewController.playerViewController.playerView.context = context;
 
         [self addBottomViewController];
     }
@@ -669,12 +679,6 @@ static void * eventContext      = &eventContext;
         [informationLabel setText:@""];
     }
     //[multiButton setHidden:!([_currentEvent.feeds count]>1)];
-    
-    PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
-    //PxpPlayerContext *context = [PxpEventContext contextWithEvent:_currentEvent];
-    _playerViewController.playerView.context = context;
-    _videoBar.event = _currentEvent;
-    _fullscreenViewController.playerViewController.playerView.context = context;
 }
 
 
@@ -768,13 +772,11 @@ static void * eventContext      = &eventContext;
             
             if (pinchGesture.scale >1) {
                 [_bottomViewController.mainView setHidden:true];
-                [_tagButtonController setButtonColor:true];
                 [_pipController.multi fullScreen];
 //                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_FULLSCREEN object:self userInfo:@{@"context":_context,@"animated":[NSNumber numberWithBool:YES]}];
             }else if (pinchGesture.scale < 1){
                 [telestration forceCloseTele];
                 [_bottomViewController.mainView setHidden:false];
-                [_tagButtonController setButtonColor:false];
                 [_pipController.multi normalScreen];
                 [_tagButtonController _fullScreen];
                 //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SMALLSCREEN object:self userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,@"animated":[NSNumber numberWithBool:YES]}];
@@ -1306,8 +1308,10 @@ static void * eventContext      = &eventContext;
 }
 
 -(void) onAppTerminate:(NSNotification *)note{
-    //[_tagButtonController closeAllOpenTagButtons];
-    //[_bottomViewController closeAllOpenTagButtons];
+    if(!_currentEvent.live){
+        [_tagButtonController closeAllOpenTagButtons];
+        [_bottomViewController closeAllOpenTagButtons];
+    }
 }
 
 - (void)didReceiveMemoryWarning
