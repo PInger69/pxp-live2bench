@@ -764,7 +764,8 @@
     
     // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
     
-    NSString *tagID = tag.ID;
+    //NSString *tagID = tag.ID;
+    NSString *tagID = results[@"id"];
     NSString *ip = self.ipAddress;
     NSString *src = note.userInfo[@"src"];
     NSString *remoteSrc = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
@@ -819,7 +820,9 @@
     
     [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
     
-    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME];
+    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME onComplete:^{
+        NSLog(@"DOWNLOADLJSDFLKSJDFLKJSDFLKJDLFKJ");
+    }];
     
     [encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
     //[encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
@@ -1458,6 +1461,7 @@
     if (self.delegate) {
         [self.delegate onSuccess:self];
     }
+    if (currentCommand.onComplete)currentCommand.onComplete();
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
 }

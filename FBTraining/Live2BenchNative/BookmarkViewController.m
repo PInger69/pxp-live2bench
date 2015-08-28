@@ -855,10 +855,14 @@ int viewWillAppearCalled;
 
 -(void)useCustomSort:(id)sender
 {
-    [self.tableViewController setEditing:YES animated:YES];
+    [self.tableViewController setEditing:YES];
 
 
 }
+
+
+
+
 
 -(NSMutableArray *)filterAndSortClips:(NSArray *)clips {
     NSMutableArray *clipsToSort = [NSMutableArray arrayWithArray:clips];
