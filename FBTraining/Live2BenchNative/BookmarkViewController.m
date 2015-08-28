@@ -250,7 +250,7 @@ int viewWillAppearCalled;
     self.tableViewController.tableData = _tagsToDisplay;
     [self.tableViewController reloadData];
     
-    [numTagsLabel setText:[NSString stringWithFormat:@"Tag Total: %lu",(unsigned long)[_tagsToDisplay count]]];
+    [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }
 
 
@@ -309,7 +309,7 @@ int viewWillAppearCalled;
     [self.videoPlayer pause];
     
     [newVideoControlBar viewDidAppear:NO];
-    [numTagsLabel setText:[NSString stringWithFormat:@"Tag Total: %lu",(unsigned long)[_tagsToDisplay count]]];
+    [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }
 
 
@@ -865,6 +865,7 @@ int viewWillAppearCalled;
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     [_tableViewController reloadData];
+    [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }
 
 -(void)onFilterChange:(PxpFilter *)filter
@@ -873,6 +874,8 @@ int viewWillAppearCalled;
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     [_tableViewController reloadData];
+    [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
+    
 }
 
 
