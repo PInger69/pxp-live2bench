@@ -19,6 +19,7 @@ IB_DESIGNABLE @interface PxpGlowButton : UIButton
 /// The glow radius of the button
 @property (assign, nonatomic) IBInspectable CGFloat glowRadius;
 
+/// Decides whether or not the button is stroked instead of filled.
 @property (assign, nonatomic) BOOL stroke;
 
 @end

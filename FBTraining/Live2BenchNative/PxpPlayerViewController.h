@@ -23,6 +23,7 @@
 /// The fullscreen gesture recognizer.
 @property (readonly, strong, nonatomic, nonnull) PxpFullscreenGestureRecognizer *fullscreenGestureRecognizer;
 
+/// The enabled state of the views managed by the view controller.
 @property (assign, nonatomic) BOOL enabled;
 
 /// Initializes a player view controller with a specific player view subclass.

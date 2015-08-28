@@ -11,7 +11,10 @@
 
 @interface PxpTelestrationRenderView : UIView
 
+/// The render view's time provider.
 @property (weak, nonatomic, nullable) id<PxpTimeProvider> timeProvider;
+
+/// The telestration rendered in the render view.
 @property (strong, nonatomic, nullable) PxpTelestration *telestration;
 
 @end

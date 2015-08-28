@@ -66,6 +66,4 @@
 -(void)createAllFullScreenSubviews;
 -(void)removeAllFullScreenSubviews;
 
--(void)showTeleButton;
-
 @end

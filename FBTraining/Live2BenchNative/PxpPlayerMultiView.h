@@ -17,7 +17,10 @@
  */
 @interface PxpPlayerMultiView : PxpPlayerView
 
+/// The multi view's grid view.
 @property (readonly, strong, nonatomic, nonnull) PxpPlayerGridView *gridView;
+
+/// The multu view's pip companion view.
 @property (readonly, nonatomic, nonnull) PxpPlayerPipCompanionView *companionView;
 
 @end
