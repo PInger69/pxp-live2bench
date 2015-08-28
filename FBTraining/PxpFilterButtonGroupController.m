@@ -31,7 +31,7 @@
 
 -(void)addButtonToGroup:(PxpFilterButton*)button
 {
-    button.ownDelegate = self;
+    button.filterModuleDelegate = self;
     [_buttons addObject:button];
 }
 

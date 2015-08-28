@@ -17,7 +17,7 @@ typedef NS_ENUM (NSInteger,PxpFilterButtonScrollViewStyle){
 
 
 
-@interface PxpFilterButtonScrollView : UIScrollView <UIScrollViewDelegate,PxpFilterModuleProtocol>
+@interface PxpFilterButtonScrollView : UIScrollView <PxpFilterModuleProtocol>
 
 
 @property (nonatomic,strong) NSString           * sortByPropertyKey;
@@ -29,7 +29,7 @@ typedef NS_ENUM (NSInteger,PxpFilterButtonScrollViewStyle){
 @property (nonatomic,strong) NSPredicate        * predicate;
 @property (nonatomic,assign) BOOL displayAllTagIfAllFilterOn;
 
-@property (nonatomic,weak) id <PxpFilterModuleDelegate> delegate;
+@property (nonatomic,weak) id <PxpFilterModuleDelegate> filterModuleDelegate;
 
 // Protocol
 @property (nonatomic,assign)    BOOL        modified;
