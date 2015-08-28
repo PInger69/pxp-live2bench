@@ -7,6 +7,17 @@
 //
 
 #import "TagView.h"
+#include <vector>
+#include <set>
+
+struct color_comp {
+    CGFloat r, g, b, a;
+};
+
+inline bool operator<(const color_comp& l, const color_comp& r)
+{
+    return memcmp(&l, &r, sizeof(color_comp)) < 0;
+}
 
 @interface TagView ()
 
@@ -65,7 +76,7 @@
     if (self.dataSource) {
         
         // get width of pixels to draw
-        NSUInteger pixelWidth = rect.size.width;
+        const NSUInteger pixelWidth = rect.size.width;
         
         // obtain data source information
         NSArray *tags = [self.dataSource tagsInTagView:self];
@@ -73,29 +84,31 @@
         NSTimeInterval selectedTime = [self.dataSource selectedTimeInTagView:self];
         BOOL shouldDisplaySelectedTime = [self.dataSource shouldDisplaySelectedTimeInTagView:self];
         
-        // set up draw info
-        NSMutableArray *drawInfo = [NSMutableArray arrayWithCapacity:pixelWidth];
-        for (NSUInteger x = 0; x < pixelWidth; x++) {
-            [drawInfo insertObject:[NSMutableSet set] atIndex:x];
-        }
+        // set up draw info.
+        std::vector<std::set<color_comp>> drawInfo = std::vector<std::set<color_comp>>(pixelWidth);
         
         // populate draw info
         for (Tag *tag in tags) {
             // calculate tag dimensions
             NSInteger tagX = pixelWidth * (tag.time) / duration - self.tagWidth / 2.0;
             
-            
             for (NSInteger i = 0; i < self.tagWidth; i++) {
                 
                 // only insert tag if it will fit in the frame
                 NSInteger x = tagX + i;
                 if (0 <= x && x < pixelWidth) {
-                    
-                    // we only need to store the color information
-                    NSMutableSet *colorSet = drawInfo[x];
-                    
                     // add color to set
-                    [colorSet addObject:tag.colour ? tag.colour : @"000000"];
+                    
+                    color_comp c = { 0.0, 0.0, 0.0, 1.0};
+                    
+                    const char *s = tag.colour.UTF8String;
+                    uint8_t r, g, b;
+                    if (s && sscanf(s, "%02hhx%02hhx%02hhx", &r, &g, &b) == 3) {
+                        c.r = r / 255.0;
+                        c.g = g / 255.0;
+                        c.b = b / 255.0;
+                    };
+                    drawInfo[x].insert(c);
                 }
             }
             
@@ -103,22 +116,18 @@
         
         // draw tags
         for (NSUInteger x = 0; x < pixelWidth; x++) {
-            NSSet *tagColors = drawInfo[x];
-            NSUInteger nTags = tagColors.count;
-            CGFloat tagHeight = ceil(rect.size.height / nTags);
-            
-            
-            NSUInteger i = 0;
-            for (NSString *hex in tagColors) {
+            const std::set<color_comp> &color_comps = drawInfo[x];
+            if (color_comps.size()) {
+                CGFloat tagHeight = ceil(rect.size.height / color_comps.size());
                 
-                // get tag color and apply alpha
-                UIColor *color = [[Utility colorWithHexString:hex] colorWithAlphaComponent:self.tagAlpha];
                 
-                CGContextSetFillColorWithColor(context, color.CGColor);
-                CGContextFillRect(context, CGRectMake(x, i * tagHeight, 1, tagHeight));
-                i++;
+                NSUInteger i = 0;
+                for (std::set<color_comp>::iterator it = color_comps.begin(); it != color_comps.end(); it++) {
+                    CGContextSetRGBFillColor(context, it->r, it->g, it->b, it->a);
+                    CGContextFillRect(context, CGRectMake(x, i * tagHeight, 1, tagHeight));
+                    i++;
+                }
             }
-            
         }
         
         // only draw selection if we need to
