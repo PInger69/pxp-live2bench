@@ -1146,27 +1146,14 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
-                                      @"srcValue"       : tData[@"srcValue"]
+                                      @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
                                       }];
     
-    //f ([tData objectForKey:@"url"]) {
-        [tData removeObjectForKey:@"url"];
-    //}
-    
-    //if ([tData objectForKey:@"ulr_2"]) {
-        [tData removeObjectForKey:@"url_2"];
-    //}
-    
-    // this is temp
-    /*if (((TagType)[tData[@"type"]integerValue]) == TagTypeCloseDuration && [tData objectForKey:@"closetime"]){
-        double openTime                 = [tData[@"starttime"]doubleValue];
-        double closeTime                = [tData[@"closetime"]doubleValue];
-        tData[@"duration"]       = [NSNumber numberWithDouble:(closeTime-openTime)];
-        
-        [tData removeObjectForKey:@"closetime"];
-    }*/
-    
+    if ( tData[@"srcValue"] ){ // This is used when downloading a clip
+        [tData addEntriesFromDictionary:@{@"srcValue"       : tData[@"srcValue"]}];
+    }
+    [tData removeObjectForKey:@"url"];
+    [tData removeObjectForKey:@"url_2"];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
