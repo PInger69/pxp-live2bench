@@ -855,8 +855,10 @@ int viewWillAppearCalled;
 
 -(void)useCustomSort:(id)sender
 {
-    [self.tableViewController setEditing:YES];
-
+    if(self.tableViewController.editing == NO)
+        [self.tableViewController setEditing:YES];
+    else
+        [self.tableViewController setEditing:NO];
 
 }
 
