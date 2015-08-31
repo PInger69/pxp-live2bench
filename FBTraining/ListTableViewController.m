@@ -259,9 +259,8 @@
                 }];
             };
             
-            //NSString *src = [NSString stringWithFormat:@"s_%@hq", key];
             NSString *src = [NSString stringWithFormat:@"%@hq", key];
-            //src = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
+            src = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
                                                                                                                    @"block": blockName,
                                                                                                                    @"tag": tag,

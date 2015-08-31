@@ -9,12 +9,12 @@
 #import "PxpVideoBar.h"
 #import "LocalMediaManager.h"
 
-#import "TagView.h"
+#import "PxpTagDisplayBar.h"
 #import "UIColor+Highlight.h"
 #import "PxpFullscreenButton.h"
 #import "PxpRangeModifierButton.h"
 
-@interface PxpVideoBar ()<TagViewDataSource>
+@interface PxpVideoBar ()<PxpTagDisplayBarDataSource>
 
 @end
 
@@ -22,7 +22,7 @@
 {
     CADisplayLink * __nonnull _displayLink;
     
-    TagView * __nonnull _tagView;
+    PxpTagDisplayBar * __nonnull _tagView;
     UILabel * __nonnull _tagLabel;
     
     PxpRangeModifierButton * __nonnull _tagExtendStartButton;
@@ -35,7 +35,7 @@
 - (void)initVideoBar {
     _enabled = YES;
     
-    _tagView = [[TagView alloc] init];
+    _tagView = [[PxpTagDisplayBar alloc] init];
     _tagView.backgroundColor = [UIColor clearColor];
     _tagView.dataSource = self;
     _tagLabel = [[UILabel alloc] init];
@@ -262,9 +262,9 @@
     _playerViewController.playerView.player.playRate = slomoButton.slomoOn ? 0.5 : 1.0;
 }
 
-#pragma mark - TagViewDataSource
+#pragma mark - PxpTagDisplayBarDataSource
 
-- (NSTimeInterval)durationInTagView:(nonnull TagView *)tagView {
+- (NSTimeInterval)durationInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     return self.durationOfVideoPlayer;
 }
 
@@ -277,7 +277,7 @@
     return 0;
 }
 
-- (nonnull NSArray *)tagsInTagView:(nonnull TagView *)tagView {
+- (nonnull NSArray *)tagsInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     NSMutableArray *arrayOfTagsToDisplay = [[NSMutableArray alloc]init];
     for (Tag *tag in _event.tags ) {
         if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) {
@@ -289,12 +289,12 @@
     //return _event.tags && _player ? _event.tags : @[];
 }
 
-- (NSTimeInterval)selectedTimeInTagView:(nonnull TagView *)tagView {
+- (NSTimeInterval)selectedTimeInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     NSTimeInterval selectedTime = _playerViewController.currentTimeInSeconds;
     return isfinite(selectedTime) ? selectedTime : 0.0;
 }
 
-- (BOOL)shouldDisplaySelectedTimeInTagView:(nonnull TagView *)tagView {
+- (BOOL)shouldDisplaySelectedTimeInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     return _event.tags.count && _playerViewController.playerView.player;
 }
 

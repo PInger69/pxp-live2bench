@@ -762,12 +762,6 @@ static CMClockRef _pxpPlayerMasterClock;
 
 /// Synchronizes all other players to the player
 - (void)sync:(CMTime)currentTime {
-    
-    if (CMTIMERANGE_IS_VALID(self.range)) {
-        return;
-    }
-    
-    
     if (CMTIME_IS_NUMERIC(self.syncThreshold) && !self.prerolling && !self.seeking && !self.syncing && self.rate != 0.0) {
         // calculate time distribution among players
         CMTime distribution = kCMTimeZero;

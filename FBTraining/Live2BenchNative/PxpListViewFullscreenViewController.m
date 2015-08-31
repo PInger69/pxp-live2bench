@@ -42,6 +42,7 @@
     
     _currentTagLabel.enabled = NO;
     _currentTagLabel.hidden = YES;
+    _currentTagLabel.font = [UIFont systemFontOfSize:22.0 weight:1.0];
     _startRangeModifierButton.hidden = YES;
     _endRangeModifierButton.hidden = YES;
     _previousTagButton.hidden = YES;
@@ -66,7 +67,7 @@
     _startRangeModifierButton.frame = CGRectMake(margin, margin, modifierWidth, modifierHeight);
     _endRangeModifierButton.frame = CGRectMake(width - modifierWidth - margin, margin, modifierWidth, modifierHeight);
     
-    const CGFloat currentTagWidth = 150.0, currentTagHeight = 30.0;
+    const CGFloat currentTagWidth = 150.0, currentTagHeight = 44.0;
     const CGFloat currentTagX = (width - currentTagWidth) / 2.0, currentTagY = (height - currentTagHeight) / 2.0;
     
     _currentTagLabel.frame = CGRectMake(currentTagX, currentTagY, currentTagWidth, currentTagHeight);

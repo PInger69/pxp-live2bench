@@ -339,6 +339,7 @@
     BOOL isAuthenticate;
     BOOL isVersion;
     EncoderDataSync             * encoderSync;
+    void            (^_onCompleteDownloadClip)(NSArray*pooled);
 }
 
 @synthesize justStarted = _justStarted;
@@ -408,6 +409,7 @@
         encoderSync             = [[EncoderDataSync alloc]init];
         
         _eventContext = [PxpEventContext context];
+        
     }
     return self;
 }
@@ -747,64 +749,70 @@
     __block void(^dItemBlock)(DownloadItem*) = note.userInfo[@"block"];
 
     // This gets run when the server responds
-    void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
     
-    NSData          * data                  = pooledResponces[0];
-    NSDictionary    * results               = [Utility JSONDatatoDict: data];
-    NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
-    if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
-    // if in the data success is 0 then there is an error!
-
-    // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
-//    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
-    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",results[@"event"],results[@"id"], srcID];
-    
-
-    // http://10.93.63.226/events/live/video/01hq_vid_10.mp4
-    
-    // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
-    
-    //NSString *tagID = tag.ID;
-    NSString *tagID = results[@"id"];
-    NSString *ip = self.ipAddress;
-    NSString *src = note.userInfo[@"src"];
-    NSString *remoteSrc = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
-        
-        NSString *remotePath;
-    if ([self checkEncoderVersion]) {
-        remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/vid_%@.mp4", ip, tagID];
-    }else{
-        remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
-    }
-        
-    //NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
-    
-
-
-    // END SERVER IS DUMB
-    
-    //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
-    NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
-    DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tagID,src ]];
-    dItemBlock(dli);
-    
-    
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
-    // is the object what we ware downloading
-        if (note.object == dli) {
-         NSLog(@"Download Complete");
-    
-         // we must now forge the results
+    if (!_onCompleteDownloadClip) {
+        _onCompleteDownloadClip = ^void (NSArray*pooledResponces) {
+            //void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
             
-            //[[LocalEncoder getInstance] saveClip:videoName withData:results];
-          [[LocalMediaManager getInstance] saveClip:videoName withData:results];
-          //[_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
-          }
-     }];
-    };
+            NSData          * data                  = pooledResponces[0];
+            NSDictionary    * results               = [Utility JSONDatatoDict: data];
+            NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+            NSString *src = srcID;
+            if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
+            // if in the data success is 0 then there is an error!
+            
+            // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
+            //    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
+            NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",results[@"event"],results[@"id"], src];
+            
+            
+            // http://10.93.63.226/events/live/video/01hq_vid_10.mp4
+            
+            // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
+            
+            //NSString *tagID = tag.ID;
+            NSString *tagID = results[@"id"];
+            NSString *ip = self.ipAddress;
+            NSString *remoteSrc = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
+            
+            NSString *remotePath;
+            if ([self checkEncoderVersion]) {
+                remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/vid_%@.mp4", ip, tagID];
+            }else{
+                remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+            }
+            
+            //NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+            
+            
+            
+            // END SERVER IS DUMB
+            
+            //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
+            NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
+            DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tagID,src ]];
+            dItemBlock(dli);
+            
+            
+            
+
+            
+            [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
+                // is the object what we ware downloading
+                if (note.object == dli) {
+                    NSLog(@"Download Complete");
+                    
+                    // we must now forge the results
+                    
+                    //[[LocalEncoder getInstance] saveClip:videoName withData:results];
+                    [[LocalMediaManager getInstance] saveClip:videoName withData:results];
+                    //[_localEncoder saveClip:videoName withData:results]; // this is the data used to make the plist
+                }
+            }];
+        };
+
+    }
+    
     
     
     
@@ -815,7 +823,8 @@
                                                  @"requesttime":GET_NOW_TIME_STRING,
                                                  @"bookmark":@"1",
                                                  @"user":[UserCenter getInstance].userHID,
-                                                 @"name":tag.name
+                                                 @"name":tag.name,
+                                                 @"srcValue":srcID
                                                 }];
     
     [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
@@ -824,7 +833,8 @@
         NSLog(@"DOWNLOADLJSDFLKSJDFLKJSDFLKJDLFKJ");
     }];
     
-    [encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
+    [encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:_onCompleteDownloadClip];
+    //[encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
     //[encoderSync syncAll:@[_primaryEncoder] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
     
     PXPLog(@"Downloading Clip!");
@@ -1123,7 +1133,8 @@
     //over write name and add request time
     [tData addEntriesFromDictionary:@{
                                       @"name"           : encodedName,
-                                      @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
+                                      @"requestime"    : [NSString stringWithFormat:@"%f",CACurrentMediaTime()],
+                                      @"srcValue"       : tData[@"srcValue"]
                                       }];
     
     //f ([tData objectForKey:@"url"]) {
