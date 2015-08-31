@@ -463,6 +463,11 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];
 }
 
+-(void)resetEventAfterRemovingFeed:(Event *)event{
+    _event = event;
+     _eventContext.event = event;
+}
+
 -(Event*)event
 {
     return _event;
@@ -757,7 +762,15 @@
             NSData          * data                  = pooledResponces[0];
             NSDictionary    * results               = [Utility JSONDatatoDict: data];
             NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
-            NSString *src = srcID;
+            
+            NSString * sidx = results[@"requrl"];
+            NSRange  d =  [sidx rangeOfString:@"sidx\":\""];
+            d = NSMakeRange(0, d.length+d.location);
+            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
+            d =  [sidx rangeOfString:@"\""];
+            d = NSMakeRange( d.location,[sidx length]-d.location);
+            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
+            NSString *src = sidx;
             if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
             // if in the data success is 0 then there is an error!
             

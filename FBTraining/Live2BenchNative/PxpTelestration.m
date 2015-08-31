@@ -141,10 +141,10 @@
     
     // get the PXPTIF data representation.
     size_t size;
-    void *__nonnull data = PXPTIFTelestrationGenerateDataRepresentation(telestration, &size);
+    void *__nonnull data = PXPTIFTelestrationCreateDataRepresentation(telestration, &size);
     
     // base64 encode the data.
-    return [[NSData dataWithBytes:data length:size] base64EncodedStringWithOptions:0];
+    return [[NSData dataWithBytesNoCopy:data length:size freeWhenDone:YES] base64EncodedStringWithOptions:0];
 }
 
 - (NSTimeInterval)startTime {

@@ -167,7 +167,7 @@ PXPTIFTelestrationRef __nullable PXPTIFTelestrationCreateWithData(const void *__
     return telestration;
 }
 
-void *__nonnull PXPTIFTelestrationGenerateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, size_t *__nonnull size)
+void *__nonnull PXPTIFTelestrationCreateDataRepresentation(PXPTIFTelestrationRef __nonnull telestration, size_t *__nonnull size)
 {
     
     // create a byte buffer.
