@@ -463,6 +463,11 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_event];
 }
 
+-(void)resetEventAfterRemovingFeed:(Event *)event{
+    _event = event;
+     _eventContext.event = event;
+}
+
 -(Event*)event
 {
     return _event;
@@ -757,7 +762,15 @@
             NSData          * data                  = pooledResponces[0];
             NSDictionary    * results               = [Utility JSONDatatoDict: data];
             NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
-            NSString *src = srcID;
+            
+            NSString * sidx = results[@"requrl"];
+            NSRange  d =  [sidx rangeOfString:@"sidx\":\""];
+            d = NSMakeRange(0, d.length+d.location);
+            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
+            d =  [sidx rangeOfString:@"\""];
+            d = NSMakeRange( d.location,[sidx length]-d.location);
+            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
+            NSString *src = sidx;
             if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
             // if in the data success is 0 then there is an error!
             
@@ -795,7 +808,7 @@
             
             
             
-            
+
             
             [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
                 // is the object what we ware downloading
@@ -829,7 +842,9 @@
     
     [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
     
-    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME];
+    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME onComplete:^{
+        NSLog(@"DOWNLOADLJSDFLKSJDFLKJSDFLKJDLFKJ");
+    }];
     
     [encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:_onCompleteDownloadClip];
     //[encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:onCompleteGet];
@@ -1470,6 +1485,7 @@
     if (self.delegate) {
         [self.delegate onSuccess:self];
     }
+    if (currentCommand.onComplete)currentCommand.onComplete();
     [self removeFromQueue:currentCommand];
     [self runNextCommand];
 }

@@ -141,7 +141,7 @@
 -(void)removeFromQueue:(EncoderTask *)obj;
 -(void)addToQueue:(EncoderTask *)obj;
 -(EncoderTask *)getNextInQueue;
-
+-(void)resetEventAfterRemovingFeed:(Event *)event;
 /**
  *  removes all observers and checker and release memory if possible
  */
