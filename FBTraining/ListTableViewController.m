@@ -223,8 +223,10 @@
 
         //NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
         // This is checking if tag is downloaded to the device already
+        NSString * tagKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
         
-        if ([[[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]] isKindOfClass:[NSString class]]) {
+        
+        if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] != nil &&   [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] isKindOfClass:[NSString class]]) {
             // This means the place holder is found to set the button to look like its downloaded
             collapsableCell.downloadButton.isPressed    = YES;
             collapsableCell.downloadButton.progress     = 0;
@@ -242,10 +244,14 @@
         }
 
         
-        
+        // When the download button is pressed
         collapsableCell.downloadButtonBlock = ^(){
 
-            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
+            // this will at a place holder for the downloader so the clock will show up r 3ems anight away
+            NSString * placeHolderKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+            [[Downloader defaultDownloader].keyedDownloadItems setObject:@"placeHolder" forKey:placeHolderKey];
+            
+            // this takes the download item and attaches it to the cell
             void(^blockName)(DownloadItem * downloadItem ) = ^(DownloadItem *downloadItem){
                 //videoItem = downloadItem;
                  weakCell.downloadButton.downloadItem = downloadItem;
@@ -259,8 +265,6 @@
                 }];
             };
             
-            //NSString *src = [NSString stringWithFormat:@"%@hq", key];
-           // src = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
             NSString *src = [NSString stringWithFormat:@"%@hq", key];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_CLIP object:nil userInfo:@{
                                                                                                                    @"block": blockName,

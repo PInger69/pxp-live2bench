@@ -72,7 +72,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 -(Event*)getEventByName:(NSString*)eventName;
 
 @optional
--(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp onComplete:(void (^)())onComplete;
+-(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp onComplete:(void(^)(NSDictionary*userInfo))onComplete;
 @property (nonatomic, copy) void(^onComplete)();
 @property (nonatomic,readonly)    NSString             * version;
 @property (nonatomic,assign)    double               bitrate;
