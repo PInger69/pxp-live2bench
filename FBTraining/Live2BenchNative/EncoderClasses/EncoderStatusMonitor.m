@@ -221,7 +221,7 @@
     connectType                         = aType;
     
     // debugging
-    if ([connectType isEqualToString:@"SYNC_ME"]) {
+    if ([connectType isEqualToString:@"SYNC_ME"] && [UserCenter getInstance].userHID) {
        
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithDictionary:@{
                                                                                      @"user"         : [UserCenter getInstance].userHID,

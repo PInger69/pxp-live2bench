@@ -199,8 +199,8 @@
         _selectedTag = selectedTag;
         _tagView.hidden = selectedTag;
         _tagLabel.hidden = !selectedTag;
-        //_tagExtendStartButton.hidden = !selectedTag;
-        //_tagExtendEndButton.hidden = !selectedTag;
+        _tagExtendStartButton.hidden = !selectedTag;
+        _tagExtendEndButton.hidden = !selectedTag;
         _tagLabel.text = selectedTag.name;
     }
 }

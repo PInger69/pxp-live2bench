@@ -81,7 +81,8 @@
         
         //show the buttons and setup the selector
         //[_videoBar showPlayNextPreButton];
-        [_videoBar showExtendButton];
+        //
+        //[_videoBar showExtendButton];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
