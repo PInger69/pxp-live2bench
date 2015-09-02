@@ -10,6 +10,7 @@
 #import "PxpVideoPlayerProtocol.h"
 #import "Slomo.h"
 #import "SeekButton.h"
+#import "BorderButton.h"
 #import "VideoBarContainerView.h"
 @interface VideoBarMyClipViewController : UIViewController
 {
@@ -25,5 +26,8 @@
 -(id)initWithVideoPlayer:(UIViewController <PxpVideoPlayerProtocol>*)vidPlayer;
 
 -(void)setTagName:(NSString*)name;
+
+@property UIButton * playNextButton;
+@property UIButton * playPreButton;
 
 @end

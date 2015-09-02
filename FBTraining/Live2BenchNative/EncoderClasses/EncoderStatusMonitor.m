@@ -172,14 +172,22 @@
                                                        object:nil
                                                      userInfo:[SpinnerView message:@"Checking for WiFi..." progress:0 animated:YES]];
     */
-    BOOL hasWifi = [Utility hasInternet];
+    BOOL hasWifi = [Utility hasWiFi];
+    
     //[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CLOSE_SPINNER object:nil];
     //[Utility hasWiFi];
     if (!hasWifi) {
-        PXPLog(@"hasInternet is false");
+        /*PXPLog(@"hasWifi is false");
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LOST_WIFI object:nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Wifi"}];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Wifi"}];*/
         [self destroy];
+    }else{
+        
+        /*[[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Encoder"}];
+        BOOL hasInternet = [Utility hasInternet];
+        if (!hasInternet){
+            
+        }*/
     }
 }
 

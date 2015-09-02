@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PxpPlayerViewController.h"
 #import "SeekButton.h"
+#import "PxpBorderButton.h"
 #import "Slomo.h"
 #import "PxpFullscreenButton.h"
 #import "PxpFullscreenResponder.h"
