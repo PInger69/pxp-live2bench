@@ -230,7 +230,7 @@
             // This means the place holder is found to set the button to look like its downloaded
             collapsableCell.downloadButton.isPressed    = YES;
             collapsableCell.downloadButton.progress     = 0;
-        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]) {
+        } else if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey]) {
             collapsableCell.downloadButton.downloadItem = [[Downloader defaultDownloader].keyedDownloadItems objectForKey:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]];
             __block FeedSelectCell *weakerCell = weakCell;
             [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
@@ -238,9 +238,9 @@
                 [weakerCell.downloadButton setNeedsDisplay];
             }];
             //[key isEqualToString:@"onlySource"]
-        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:([NSString stringWithFormat:@"%@-%@hq",tag.ID,key ])?nil:[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]]){
+        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:(tagKey)?nil:tagKey]){
             collapsableCell.downloadButton.downloadComplete = YES;
-            collapsableCell.downloadButton.progress = 1;
+            collapsableCell.downloadButton.progress         = 1;
         }
 
         

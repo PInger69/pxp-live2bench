@@ -748,7 +748,7 @@
     
     Tag *tag                                    = note.userInfo[@"tag"];
     NSString * srcID                            = note.userInfo[@"src"];
-    NSString * key                              = note.userInfo[@"key"];
+//    NSString * key                              = note.userInfo[@"key"];
     __block void(^dItemBlock)(DownloadItem*)    = note.userInfo[@"block"];
 
     
@@ -761,8 +761,8 @@
                                               @"bookmark":@"1",
                                               @"user":[UserCenter getInstance].userHID,
                                               @"name":tag.name,
-                                              @"srcValue":srcID, // used by encoder to locate and cut clip
-                                              @"key":key
+                                              @"srcValue":srcID // used by encoder to locate and cut clip
+//                                              ,@"dlkey":key
                                               }];
     
     [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
@@ -2457,7 +2457,7 @@
     }
     
     NSString        * pth   = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
-    NSString        * dlKey = [NSString stringWithFormat:@"%@-%@",tagID,downloaderRefKey ];
+    NSString        * dlKey = [NSString stringWithFormat:@"%@-%@hq",tagID,downloaderRefKey ];
     DownloadItem    * dli   = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo key:dlKey];
 
     
