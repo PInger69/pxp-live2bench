@@ -461,6 +461,9 @@
 		D7B79CD5182C398400F0876D /* saveToAlbumSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CD3182C398400F0876D /* saveToAlbumSelected@2x.png */; };
 		D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */; };
 		D7B7C4DB1AD6CDF800A5DEC3 /* FeedSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */; };
+		D7B95BC21B9627940042A613 /* ProtoTypeEncoderTaskQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC11B9627930042A613 /* ProtoTypeEncoderTaskQueue.m */; settings = {ASSET_TAGS = (); }; };
+		D7B95BC51B9627B90042A613 /* ProtoTypeEncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC41B9627B90042A613 /* ProtoTypeEncoderTask.m */; settings = {ASSET_TAGS = (); }; };
+		D7B95BC81B96281C0042A613 /* ProtoTypeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC71B96281C0042A613 /* ProtoTypeEncoder.m */; settings = {ASSET_TAGS = (); }; };
 		D7BA253C1B58081200DECA65 /* painting.png in Resources */ = {isa = PBXBuildFile; fileRef = D7BA253B1B58081200DECA65 /* painting.png */; };
 		D7BA25421B5848D600DECA65 /* AbstractBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */; };
 		D7C5F38119BF894A008190CE /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5F38019BF894A008190CE /* ScreenController.m */; };
@@ -1267,6 +1270,12 @@
 		D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryViewController.m; sourceTree = "<group>"; };
 		D7B7C4D91AD6CDF800A5DEC3 /* FeedSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedSelectCell.h; sourceTree = "<group>"; };
 		D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedSelectCell.m; sourceTree = "<group>"; };
+		D7B95BC01B9627930042A613 /* ProtoTypeEncoderTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtoTypeEncoderTaskQueue.h; sourceTree = "<group>"; };
+		D7B95BC11B9627930042A613 /* ProtoTypeEncoderTaskQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoderTaskQueue.m; sourceTree = "<group>"; };
+		D7B95BC31B9627B90042A613 /* ProtoTypeEncoderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtoTypeEncoderTask.h; sourceTree = "<group>"; };
+		D7B95BC41B9627B90042A613 /* ProtoTypeEncoderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoderTask.m; sourceTree = "<group>"; };
+		D7B95BC61B96281C0042A613 /* ProtoTypeEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProtoTypeEncoder.h; sourceTree = "<group>"; };
+		D7B95BC71B96281C0042A613 /* ProtoTypeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProtoTypeEncoder.m; sourceTree = "<group>"; };
 		D7BA253B1B58081200DECA65 /* painting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = painting.png; sourceTree = "<group>"; };
 		D7BA25401B5848D600DECA65 /* AbstractBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractBottomViewController.h; sourceTree = "<group>"; };
 		D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractBottomViewController.m; sourceTree = "<group>"; };
@@ -2551,6 +2560,7 @@
 				D7A9394A16ADA65E006CBAB2 /* Supporting Files */,
 				D7EE84D419F19EBC00DEC82B /* EncoderClasses */,
 				AE8AA8711B629AED002457B0 /* NCGhostView.h */,
+				D7B95BBF1B9627330042A613 /* ProtoTypeEncoder */,
 				AE8AA8721B629AED002457B0 /* NCGhostView.m */,
 				AE7DCBD41B726E5100BEE2EE /* NCTriPinchGestureRecognizer.h */,
 				AE7DCBD51B726E5100BEE2EE /* NCTriPinchGestureRecognizer.m */,
@@ -2784,6 +2794,19 @@
 			name = VideoPlayer;
 			path = "/Users/dev/code/pxp-live2BenchNative/Live2BenchNative";
 			sourceTree = "<absolute>";
+		};
+		D7B95BBF1B9627330042A613 /* ProtoTypeEncoder */ = {
+			isa = PBXGroup;
+			children = (
+				D7B95BC01B9627930042A613 /* ProtoTypeEncoderTaskQueue.h */,
+				D7B95BC11B9627930042A613 /* ProtoTypeEncoderTaskQueue.m */,
+				D7B95BC31B9627B90042A613 /* ProtoTypeEncoderTask.h */,
+				D7B95BC41B9627B90042A613 /* ProtoTypeEncoderTask.m */,
+				D7B95BC61B96281C0042A613 /* ProtoTypeEncoder.h */,
+				D7B95BC71B96281C0042A613 /* ProtoTypeEncoder.m */,
+			);
+			name = ProtoTypeEncoder;
+			sourceTree = "<group>";
 		};
 		D7C624E4180EDBB000C2DDD7 /* OBSlider *3P */ = {
 			isa = PBXGroup;
@@ -3395,7 +3418,9 @@
 				D7D2F6A81B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m in Sources */,
 				D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */,
 				D7652C511B39C40A006B46E3 /* SideTagButton.m in Sources */,
+				D7B95BC81B96281C0042A613 /* ProtoTypeEncoder.m in Sources */,
 				D75042AE19F9640C00D9851D /* CheckEncoderShutdown.m in Sources */,
+				D7B95BC51B9627B90042A613 /* ProtoTypeEncoderTask.m in Sources */,
 				D743D4791B6950EE00533070 /* SamplePxpFilterModule.m in Sources */,
 				AA83596E19B115D2009B3ABC /* ExportPlayersSync.m in Sources */,
 				D72779A51A32605B0034DD66 /* BottomViewControllerBase.m in Sources */,
@@ -3497,6 +3522,7 @@
 				D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */,
 				D719869719C8B83900122CAA /* VideoControlBarSlider.m in Sources */,
 				D7383052198A981A0053F0A1 /* AbstractFilterViewController.m in Sources */,
+				D7B95BC21B9627940042A613 /* ProtoTypeEncoderTaskQueue.m in Sources */,
 				D799748216F8C37700CAAABB /* playerCell.m in Sources */,
 				D77351351B821DA900DDCA4A /* PxpFilterRugbyTabViewController.m in Sources */,
 				D7EE1E4118244DB800CA36CF /* GraphView.m in Sources */,
