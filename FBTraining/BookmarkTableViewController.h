@@ -11,5 +11,7 @@
 
 @interface BookmarkTableViewController : DeletableTableViewController
 
+-(BOOL) playNext;
+-(BOOL) playPrevious;
 
 @end

@@ -30,4 +30,8 @@
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath;
 -(void)collaspOpenCell;
+
+-(BOOL)playNext;
+-(BOOL)playPrevious;
+
 @end

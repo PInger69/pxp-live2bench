@@ -33,12 +33,14 @@
         background.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
         [container addSubview:background];
         
+        
+        
         forwardButton   = [self makeSeekButton:SEEK_DIRECTION_RIGHT];
-        [container addTouchableSubview:forwardButton];
+        //[container addTouchableSubview:forwardButton];
         [forwardButton onPressSeekPerformSelector:  @selector(seekWithSeekerButton:) addTarget:videoPlayer];
         
         backwardButton  = [self makeSeekButton:SEEK_DIRECTION_LEFT];
-        [container addTouchableSubview:backwardButton];
+        //[container addTouchableSubview:backwardButton];
         [backwardButton onPressSeekPerformSelector: @selector(seekWithSeekerButton:) addTarget:videoPlayer];
         
         slomoButton     = [self makeSlomo];
@@ -47,10 +49,30 @@
         
         tagLabel        = [self makeTagLabel];
         [container addSubview:tagLabel];
-        activeElements = @[forwardButton,backwardButton,tagLabel,slomoButton];
+        
+        self.playNextButton = [[UIButton alloc]init];
+        self.playPreButton = [[UIButton alloc]init];
+        
+        [self.playNextButton setImage:[UIImage imageNamed:@"playbackRateButtonBack"] forState:UIControlStateNormal];
+        [self.playNextButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateHighlighted];
+        [self.playNextButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateSelected];
+        
+        [self.playPreButton setImage:[UIImage imageNamed:@"playbackRateButtonBack"] forState:UIControlStateNormal];
+        [self.playPreButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateHighlighted];
+        [self.playPreButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateSelected];
+        
+        [container addTouchableSubview:self.playNextButton];
+        [container addTouchableSubview:self.playPreButton];
+        
+        activeElements = @[forwardButton,backwardButton,tagLabel,slomoButton,self.playNextButton,self.playPreButton];
+        
+        
+        
     }
     return self;
 }
+
+
 
 -(void)toggleSlowmo:(id)sender
 {
@@ -141,6 +163,16 @@
                                          backwardButton.frame.origin.y,
                                          backwardButton.frame.size.width,
                                          backwardButton.frame.size.height)];
+    
+    [self.playPreButton setFrame:CGRectMake(self.view.frame.size.width - (forwardButton.frame.size.width),
+                                       self.playPreButton.frame.origin.y,
+                                       self.playPreButton.frame.size.width,
+                                       self.playPreButton.frame.size.height)];
+    
+    [self.playNextButton     setFrame:CGRectMake(0,
+                                            self.playNextButton.frame.origin.y,
+                                            self.playNextButton.frame.size.width,
+                                            self.playNextButton.frame.size.height)];
     
     [self.view.superview insertSubview:self.view aboveSubview:videoPlayer.view];
     

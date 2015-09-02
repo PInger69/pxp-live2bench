@@ -25,8 +25,6 @@
     PxpTagDisplayBar * __nonnull _tagView;
     UILabel * __nonnull _tagLabel;
     
-    PxpRangeModifierButton * __nonnull _tagExtendStartButton;
-    PxpRangeModifierButton * __nonnull _tagExtendEndButton;
     
     void *_playRateObserverContext;
     void *_telestrationObserverContext;
@@ -68,6 +66,11 @@
     
     _fullscreenButton = [[PxpFullscreenButton alloc] init];
     
+    /*_playNextButton = [[PxpPlayJumpButton alloc] init];
+    _playPreButton = [[PxpPlayJumpButton alloc] init];
+    _playNextButton.hidden = YES;
+    _playPreButton.hidden = YES;*/
+    
     [self addSubview:_tagView];
     [self addSubview:_tagLabel];
     [self addSubview:_tagExtendStartButton];
@@ -76,6 +79,8 @@
     [self addSubview:_forwardSeekButton];
     [self addSubview:_slomoButton];
     [self addSubview:_fullscreenButton];
+    //[self addSubview:_playNextButton];
+    //[self addSubview:_playPreButton];
     
     _playRateObserverContext = &_playRateObserverContext;
     _telestrationObserverContext = &_telestrationObserverContext;
@@ -135,7 +140,7 @@
     const CGFloat w = self.bounds.size.width, h = self.bounds.size.height;
     const CGFloat lh = (h-10);
     _tagView.frame = CGRectMake(3.5 * h, 0.0, w - 7.0 * h, h);
-    _tagLabel.frame = CGRectMake((w - 5.0 * lh) / 2.0, 5.0, 5.0 * lh, lh);
+    _tagLabel.frame = CGRectMake((w - 4.0 * lh) / 2.0 , 5.0, 4.0 * lh, lh);
     _tagLabel.font = [UIFont systemFontOfSize:PHI_INV * lh];
     
     _tagExtendStartButton.frame = CGRectMake(0.0, 0.0, h, h);
@@ -148,6 +153,9 @@
     
     _slomoButton.frame = CGRectMake(2.0 * h, 0.0, 1.5 * h, h);
     _fullscreenButton.frame = CGRectMake(w - 2.0 * h - 1.25 * h, 0.0, h, h);
+    
+    //_playNextButton.frame = CGRectMake(w - 4.5 * h, 0.0, h, h);
+    //_playPreButton.frame = CGRectMake(3.5 * h , 0.0, h, h);
 }
 
 - (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event {
@@ -179,6 +187,11 @@
 
 - (BOOL)teleIsStill {
     return _playerViewController.telestrationViewController.telestration.isStill;
+}
+
+- (void)showExtendButton{
+    _tagExtendStartButton.hidden = NO;
+    _tagExtendEndButton.hidden = NO;
 }
 
 - (void)setSelectedTag:(nullable Tag *)selectedTag {

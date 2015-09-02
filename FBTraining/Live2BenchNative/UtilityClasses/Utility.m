@@ -17,16 +17,18 @@
 #import "netinet/in.h"
 #import <ifaddrs.h>
 #import <arpa/inet.h>
-
+#import "InternetMonitor.h"
 
 
 @implementation Utility
+
+static InternetMonitor* internetMonitor;
 
 +(void)initialize
 {
     // Internet Checking
 //    NSTimer * timem = [NSTime alloc]initWithFireDate:<#(nonnull NSDate *)#> interval:<#(NSTimeInterval)#> target:<#(nonnull id)#> selector:<#(nonnull SEL)#> userInfo:<#(nullable id)#> repeats:<#(BOOL)#>
-
+    internetMonitor = [[InternetMonitor alloc]init];
 }
 
 //translate seconds to hh:mm:ss format

@@ -14,6 +14,7 @@
 #import "Slomo.h"
 #import "PxpFullscreenButton.h"
 #import "Event.h"
+#import "PxpRangeModifierButton.h"
 
 IB_DESIGNABLE
 @interface PxpVideoBar : UIView
@@ -27,9 +28,14 @@ IB_DESIGNABLE
 @property (readonly, strong, nonatomic, nonnull) SeekButton *backwardSeekButton;
 @property (readonly, strong, nonatomic, nonnull) SeekButton *forwardSeekButton;
 
+@property (readonly, strong, nonatomic, nonnull) PxpRangeModifierButton *tagExtendStartButton;
+@property (readonly, strong, nonatomic, nonnull) PxpRangeModifierButton *tagExtendEndButton;
+
 @property (readonly, strong, nonatomic, nonnull) Slomo *slomoButton;
 @property (readonly, strong, nonatomic, nonnull) PxpFullscreenButton *fullscreenButton;
 
 @property (assign, nonatomic) BOOL enabled;
+
+- (void)showExtendButton; // show extend start/end buttons
 
 @end

@@ -176,8 +176,8 @@
     alert.type = AlertImportant;
     [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these", nil), [self.contextString lowercaseString]]];
     [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle: NSLocalizedString(@"Yes(From server and local device)", nil)];
-    [alert addButtonWithTitle: NSLocalizedString(@"Yes(Only local)", nil)];
+    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from both server and ipad", nil)];
+    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from ipad", nil)];
     [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
     [alert showView];
 }

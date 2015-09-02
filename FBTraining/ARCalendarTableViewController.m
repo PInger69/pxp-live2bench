@@ -449,11 +449,11 @@
         [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
         [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this Event?",nil)];
         if ((localCounterpart && [localCounterpart.originalFeeds count] > 0)) {
-            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server and local device)",nil)];
-            [alert addButtonWithTitle:NSLocalizedString(@"Yes(Only local)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes, delete from server and ipad",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes, delete from ipad only",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         } else {
-            [alert addButtonWithTitle:NSLocalizedString(@"Yes(From server)",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes, delete from  server",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         }
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method

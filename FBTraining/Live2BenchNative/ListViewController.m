@@ -78,6 +78,12 @@
         _videoBar = [[PxpVideoBar alloc] init];
         _fullscreenViewController = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
 
+        
+        //show the buttons and setup the selector
+        //[_videoBar showPlayNextPreButton];
+        //
+        //[_videoBar showExtendButton];
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         
@@ -285,7 +291,8 @@
     
     [_fullscreenViewController.nextTagButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.previousTagButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
-    
+    //[_videoBar.playNextButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
+    //[_videoBar.playPreButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
     
     self.pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer: self.pinchGesture];
@@ -581,6 +588,16 @@
     }
     [_tableViewController reloadData];
     
+}
+
+//next/previous clip
+
+-(void)playNextClipButtonUp:(id)sender{
+    [_tableViewController playNext];
+}
+
+-(void)playPreviousClipButtonUp:(id)sender{
+    [_tableViewController playPrevious];
 }
 
 //save the rating info
