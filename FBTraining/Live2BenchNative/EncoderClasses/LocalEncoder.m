@@ -1438,5 +1438,9 @@ static LocalEncoder * instance;
     return self.allEvents[eventName];
 }
 
+-(void)resetEventAfterRemovingFeed:(Event *)event{
+//    _event = event;
+//    _eventContext.event = event;
+}
 
 @end

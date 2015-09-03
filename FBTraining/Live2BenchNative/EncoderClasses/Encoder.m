@@ -1166,7 +1166,7 @@
         // test
         NSString * src =    [tData[@"srcValue"] stringByReplacingOccurrencesOfString:@"s_" withString:@""];
         
-        [tData addEntriesFromDictionary:@{@"srcValue"       : src}];
+        [tData addEntriesFromDictionary:@{@"srcValue"       : tData[@"srcValue"]}];
         [tData addEntriesFromDictionary:@{@"sidx"           : src}];
     }
     [tData removeObjectForKey:@"url"];
@@ -2445,7 +2445,7 @@
     NSString *tagID             = results[@"id"];
     NSString *ip                = self.ipAddress;
     NSString *remoteSrc         = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
-    NSString *downloaderRefKey  =  results[@"key"]; // this is used for the downloader and the localmedia manager
+    NSString *downloaderRefKey  =  results[@"srcValue"]; // this is used for the downloader and the localmedia manager
     
     
     
@@ -2457,7 +2457,7 @@
     }
     
     NSString        * pth   = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
-    NSString        * dlKey = [NSString stringWithFormat:@"%@-%@hq",tagID,downloaderRefKey ];
+    NSString        * dlKey = [NSString stringWithFormat:@"%@-%@",tagID,downloaderRefKey ];
     DownloadItem    * dli   = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo key:dlKey];
 
     

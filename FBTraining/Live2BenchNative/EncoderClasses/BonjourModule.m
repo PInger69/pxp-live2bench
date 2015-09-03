@@ -48,6 +48,7 @@
 //---services removed from the network---
 -(void)netServiceBrowser:(NSNetServiceBrowser *)aBrowser didRemoveService:(NSNetService *)aService moreComing:(BOOL)more {
     [services removeObject:aService];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_WIFI_CHANGED object:self];
 }
 
 //---resolve the IP address of a service---
@@ -60,6 +61,8 @@
 //---managed to resolve---
 -(void)netServiceDidResolveAddress:(NSNetService *)service {
     if (!self.searching)return;
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_WIFI_CHANGED object:self];
     
     NSString *name          = nil;
     NSData *address         = nil;

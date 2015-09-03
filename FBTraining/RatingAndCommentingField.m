@@ -28,7 +28,7 @@
     if (self) {
         [self.view setFrame:frame];
         self.data = data;
-        self.ratingScale = [[RatingInput alloc] initWithFrame:CGRectMake(15, 48, 300, 50)];
+        self.ratingScale = [[RatingInput alloc] initWithFrame:CGRectMake(15, 48, 300, 20)];
         self.ratingScale.rating = [data[@"rating"] integerValue];
 //        self.ratingScale.enabled = NO;
         [self.ratingScale onPressRatePerformSelector:@selector(sendRatingNew:) addTarget:self];

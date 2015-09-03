@@ -321,8 +321,9 @@ SVSignalStatus signalStatus;
     //init subviews
     [self setupView];
     
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateForStatus) name:@"updatedEncoderStatus" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateWifiStatus) name:NOTIF_WIFI_CHANGED object:nil];
 
     [appVersionLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
 
@@ -947,6 +948,11 @@ SVSignalStatus signalStatus;
     }
 }
 
+- (void)updateWifiStatus{
+    
+    wifi.text =[NSString stringWithFormat: @"%@: %@", NSLocalizedString(@"Wi-Fi", nil), [Utility myWifiName] ];
+}
+
 - (void)updateForStatus
 {
     [self setButtonImagesAndLabels];
@@ -1091,7 +1097,8 @@ SVSignalStatus signalStatus;
         
         //        encHomeButton.alpha = 0;
     }else{
-        
+        if([_encStateLabel.text  isEqual: @"(No Wifi)"])
+            [_encStateLabel setText:@"(No Encoder)"];
         [encoderHomeText removeFromSuperview];
         [encoderHomeLabel addSubview:encHomeButton];
         [encHomeButton setUserInteractionEnabled:YES];

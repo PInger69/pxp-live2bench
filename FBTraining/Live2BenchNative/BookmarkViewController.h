@@ -23,6 +23,8 @@
 #import "BorderButton.h"
 #import "TeleViewController.h"
 
+#import "PxpMyClipViewFullscreenViewController.h"
+
 #import "PxpFilter.h"
 #import "PxpFilterDelegate.h"
 #import "TabView.h"
@@ -55,6 +57,8 @@
 @property (nonatomic,strong)   TeleViewController           * teleViewController;
 @property (nonatomic,strong)   CustomButton                 * playbackRateBackButton;
 @property (nonatomic,strong)   CustomButton                 * playbackRateForwardButton;
+@property (nonatomic,strong)   CustomButton                 * playNextClipButton;
+@property (nonatomic,strong)   CustomButton                 * playPreviousClipButton;
 
 @property (nonatomic)          BOOL                         fullScreenMode;
 @property (nonatomic,strong) PxpFilter                      * pxpFilter;

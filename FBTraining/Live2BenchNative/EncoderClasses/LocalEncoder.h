@@ -69,5 +69,6 @@
 
 -(void)start;
 -(void)checkEncoder;
+-(void)resetEventAfterRemovingFeed:(Event *)event;
 
 @end

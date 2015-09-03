@@ -327,6 +327,30 @@
     return YES;
 }
 
+
+// next/previous playing
+- (BOOL)playNext{
+    NSIndexPath *path = self.selectedPath;
+    NSInteger row = path.row;
+    row ++;
+    if(row >= self.tableData.count) row = 0;
+    NSIndexPath *newPath = [NSIndexPath indexPathForRow:row inSection:0];
+    [self tableView:self.tableView didSelectRowAtIndexPath:newPath];
+    [self setSelectedPath:newPath];
+    return YES;
+}
+
+- (BOOL)playPrevious{
+    NSIndexPath *path = self.selectedPath;
+    NSInteger row = path.row;
+    row --;
+    if(row < 0) row = self.tableData.count - 1;
+    NSIndexPath *newPath = [NSIndexPath indexPathForRow:row inSection:0];
+    [self tableView:self.tableView didSelectRowAtIndexPath:newPath];
+    [self setSelectedPath:newPath];
+    return YES;
+}
+
 #pragma mark - Deletion Methods
 -(void)deleteAllButtonTarget{
     CustomAlertView *alert = [[CustomAlertView alloc] init];

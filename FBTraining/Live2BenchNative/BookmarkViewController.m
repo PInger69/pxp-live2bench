@@ -53,7 +53,7 @@
 @property (strong, nonatomic) UIButton                      * userSortButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
-@property (strong, nonatomic, nonnull) PxpFullscreenViewController *fullscreenViewController;
+@property (strong, nonatomic, nonnull) PxpMyClipViewFullscreenViewController *fullscreenViewController;
 @property (strong, nonatomic, nonnull) PxpClipContext *clipContext;
 @property (strong, nonatomic, nonnull) PxpVideoBar *videoBar;
 
@@ -99,6 +99,8 @@
 @synthesize teleViewController;
 @synthesize playbackRateBackButton;
 @synthesize playbackRateForwardButton;
+@synthesize playNextClipButton;
+@synthesize playPreviousClipButton;
 @synthesize fullScreenMode;
 
 //back from fullscreen, the viewwillappear function will be called twice.will change the value of fullscreenmode when the viewwillappear function was called the second time(viewWillAppearCalled = 2)
@@ -134,7 +136,10 @@ int viewWillAppearCalled;
         _tagsToDisplay = [NSMutableArray new];
         
         _playerViewController = [[PxpPlayerViewController alloc] init];
-        _fullscreenViewController = [[PxpFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        _fullscreenViewController = [[PxpMyClipViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        
+        [_fullscreenViewController.nextTagButton addTarget:self action:@selector(playNextClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];
+        [_fullscreenViewController.previousTagButton addTarget:self action:@selector(playPreviousClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];
         
         [self addChildViewController:_playerViewController];
         [self addChildViewController:_fullscreenViewController];
@@ -165,7 +170,8 @@ int viewWillAppearCalled;
         };
         _clipContext = [PxpClipContext contextWithClip:clipToPlay];
         _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
-        
+        [_videoBar setSelectedTag:clipToPlay];
+        [_fullscreenViewController setSelectedTag:clipToPlay];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REMOVE_INFORMATION object:nil queue:nil usingBlock:^(NSNotification *note){
@@ -223,11 +229,13 @@ int viewWillAppearCalled;
     
     [self.view addSubview:numTagsLabel];
     
-    newVideoControlBar = [[VideoBarMyClipViewController alloc]initWithVideoPlayer:videoPlayer];
+    /*newVideoControlBar = [[VideoBarMyClipViewController alloc]initWithVideoPlayer:videoPlayer];
     [self.view addSubview:newVideoControlBar.view];
+    [newVideoControlBar.playNextButton addTarget: self action:@selector(playNextClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];
+    [newVideoControlBar.playPreButton addTarget: self action:@selector(playPreviousClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];*/
     
     
-    testFullScreen = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+    //testFullScreen = [[FullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     _tableViewController.delegate = self;
     
     const CGFloat width = COMMENTBOX_WIDTH, height = width / (16.0 / 9.0);
@@ -240,8 +248,15 @@ int viewWillAppearCalled;
     [self.view addSubview:_videoBar];
     [self.view addSubview:_fullscreenViewController.view];
     
+    
     _videoBar.frame = CGRectMake(0.0, 768 - 44.0, width, 44.0);
     [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    //show the buttons and setup the selector
+    /*[self.videoBar showPlayNextPreButton];
+    [_videoBar.playNextButton addTarget:self action:@selector(playNextClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.playPreButton addTarget:self action:@selector(playPreviousClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];*/
 }
 
 - (void)clipSaved:(NSNotification *)note {
@@ -530,6 +545,37 @@ int viewWillAppearCalled;
         playbackRateForwardLabel = nil;
     }
     
+    if (playNextClipButton){
+        [playNextClipButton removeFromSuperview];
+        playNextClipButton = nil;
+    }
+    
+    if (playPreviousClipButton){
+        [playPreviousClipButton removeFromSuperview];
+        playPreviousClipButton = nil;
+    }
+    
+    //play next/previous clip controlls
+    playNextClipButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+    [playNextClipButton setFrame:CGRectMake(80, 585, 70.0f, 70.0f)];
+    [playNextClipButton setContentMode:UIViewContentModeScaleAspectFit];
+    [playNextClipButton setTag:0];
+    [playNextClipButton setImage:[UIImage imageNamed:@"playbackRateButtonBack"] forState:UIControlStateNormal];
+    [playNextClipButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateHighlighted];
+    [playNextClipButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateSelected];
+    [playNextClipButton addTarget:self action:@selector(playNextClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];
+    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:playNextClipButton];
+    
+    playPreviousClipButton = [CustomButton buttonWithType:UIButtonTypeCustom];
+    [playPreviousClipButton setFrame:CGRectMake(80, 585, 70.0f, 70.0f)];
+    [playPreviousClipButton setContentMode:UIViewContentModeScaleAspectFit];
+    [playPreviousClipButton setTag:0];
+    [playPreviousClipButton setImage:[UIImage imageNamed:@"playbackRateButtonBack"] forState:UIControlStateNormal];
+    [playPreviousClipButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateHighlighted];
+    [playPreviousClipButton setImage:[UIImage imageNamed:@"playbackRateButtonBackSelected"] forState:UIControlStateSelected];
+    [playPreviousClipButton addTarget:self action:@selector(playPreviousClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];
+    [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:playPreviousClipButton];
+    
     //Playback rate controls
     playbackRateBackButton = [CustomButton buttonWithType:UIButtonTypeCustom];
     [playbackRateBackButton setFrame:CGRectMake(165, 585, 70.0f, 70.0f)];
@@ -588,6 +634,18 @@ int viewWillAppearCalled;
     [playbackRateForwardLabel setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.2f]];
     [playbackRateForwardLabel setAlpha:0.0f];
     [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:playbackRateForwardLabel];
+}
+
+-(void)updateSelectedTagToVideoBar{
+    _videoBar.selectedTag = self.tableViewController.tableData[self.tableViewController.selectedPath.row];
+}
+
+-(void)playNextClipButtonUp:(id)sender{
+    [self.tableViewController playNext];
+}
+
+-(void)playPreviousClipButtonUp:(id)sender{
+    [self.tableViewController playPrevious];
 }
 
 -(void)playbackRateButtonDown:(id)sender
@@ -820,7 +878,9 @@ int viewWillAppearCalled;
 -(void)removeAllFullScreenSubviews
 {
     
-
+    [playNextClipButton removeFromSuperview];
+    [playPreviousClipButton removeFromSuperview];
+    //
     [playbackRateBackButton removeFromSuperview];
     [playbackRateBackLabel removeFromSuperview];
     [playbackRateBackGuide removeFromSuperview];

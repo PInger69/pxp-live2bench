@@ -40,6 +40,7 @@
 
 +(UIImage *)starImageSelected: (BOOL) selected size:(CGSize)size;
 +(UIImage*)makeOnePixelUIImageWithColor:(UIColor*)color;
+
 @end
 
 
