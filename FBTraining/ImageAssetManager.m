@@ -8,12 +8,17 @@
 //
 
 #import "ImageAssetManager.h"
+#import "ActionList.h"
+#import "ThumbnailDownloader.h"
 
 // PRIVATE CLASS
 @interface NSURLImageConnection : NSURLConnection
 @property (weak, nonatomic) UIImageView *imageViewReference;
 @property (strong, nonatomic) NSMutableData *imageData;
 @property (strong, nonatomic) PxpTelestration *telestration;
+
+
+
 @end
 @implementation NSURLImageConnection
 
@@ -24,7 +29,7 @@
 @interface ImageAssetManager () <NSURLConnectionDelegate>
 
 @property NSMutableArray *queueOfConnections;
-
+@property ActionList     *thumbnailActionList;
 
 @end
 
@@ -45,12 +50,33 @@ static ImageAssetManager * instance;
     if(self){
         self.timeOutInterval = (NSTimeInterval)10.0;
         instance = self;
-        _arrayOfClipImages = [[NSMutableDictionary alloc]init];
+        _arrayOfClipImages      = [[NSMutableDictionary alloc]init];
+        _thumbnailActionList    = [[ActionList alloc]init];
     }
     return self;
 }
 
-- (void)imageForURL:(NSString *)imageURLString atImageView:(UIImageView *)viewReference {
+-(void)thumbnailsPreload:(NSArray*)list
+{
+    for (NSString * itemUrl in list) {
+        
+        [_thumbnailActionList addItem:[[ThumbnailDownloader alloc]initImageAssetManager:self url:itemUrl]];
+    }
+    if (!_thumbnailActionList.running)[_thumbnailActionList start];
+}
+
+-(void)thumbnailsLoadedToView:(UIImageView*)imageView imageURL:(NSString*)aImageUrl
+{
+    [_thumbnailActionList addItem:[[ThumbnailDownloader alloc]initImageAssetManager:self url:aImageUrl imageView:imageView ]];
+
+    if (!_thumbnailActionList.running){
+     [_thumbnailActionList start];   
+    }
+}
+
+
+
+-(void)imageForURL:(NSString *)imageURLString atImageView:(UIImageView *)viewReference {
     [self imageForURL:imageURLString atImageView:viewReference withTelestration:nil];
 }
 
@@ -97,6 +123,7 @@ static ImageAssetManager * instance;
        // [imageConnection start];
         
         [imageConnection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+      
         [imageConnection start];
 
         
@@ -121,7 +148,7 @@ static ImageAssetManager * instance;
 - (void)connectionDidFinishLoading:(NSURLImageConnection *)connection {
     UIImage *receivedImage = [UIImage imageWithData:connection.imageData];
     //[connection.imageViewReference stopAnimating];
-    
+
     if (connection.telestration) {
         CGFloat ratio = receivedImage.size.width / receivedImage.size.height;
         CGSize bounds = connection.imageViewReference.bounds.size;
@@ -139,8 +166,13 @@ static ImageAssetManager * instance;
     
     if (receivedImage) {
         [_arrayOfClipImages setObject:receivedImage forKey:[connection.originalRequest.URL absoluteString]];
+
         
-        [connection.imageViewReference setImage: receivedImage];
+
+            [connection.imageViewReference setImage: receivedImage];
+
+        
+
     }
     
     [self.queueOfConnections removeObject:connection];
@@ -151,7 +183,9 @@ static ImageAssetManager * instance;
     //NSLog(@"the error is received");
     //NSLog(@"%@",error.userInfo);
     //[connection.imageViewReference stopAnimating];
-    connection.imageViewReference.image = [UIImage imageNamed:@"imageNotAvailable.png"];
+
+        connection.imageViewReference.image = [UIImage imageNamed:@"imageNotAvailable.png"];
+
     [self.queueOfConnections removeObject:connection];
 }
 

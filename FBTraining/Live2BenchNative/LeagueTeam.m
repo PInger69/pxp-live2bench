@@ -44,7 +44,7 @@
 {
     NSDictionary * dict = @{
                             @"extra"    : _extra,
-                            @"hid"      : _hid,
+                            @"hid"      : _hid?_hid:@"",
                             @"league"   : (_league)?_league.hid:@"",
                             @"name"     : _name,
                             @"sport"    : _sport,

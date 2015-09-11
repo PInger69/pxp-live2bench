@@ -520,12 +520,14 @@ static NSMutableDictionary * openDurationTagsWithID;
 }
 
 - (nullable UIImage *)thumbnailForSource:(nullable NSString *)source {
+    NSLog(@"Getting Thumb");
     if (_cachedThumbnail) {
+        NSLog(@"Thumb made");
         return _cachedThumbnail;
     }
-    
+        NSLog(@"checking feed");
     Feed *feed = source && self.event.feeds[source] ? self.event.feeds[source] : self.event.feeds.allValues.firstObject;
-    
+        NSLog(@" feed checked");
     if (!source && self.telestration) {
         for (NSString *k in self.event.feeds.keyEnumerator) {
             if ([self.telestration.sourceName isEqualToString:k]) {
@@ -534,7 +536,7 @@ static NSMutableDictionary * openDurationTagsWithID;
             }
         }
     }
-    
+    NSLog(@" feed path");
     if (feed.path) {
         NSTimeInterval time = self.telestration ? self.telestration.thumbnailTime : self.time;
         
@@ -552,7 +554,7 @@ static NSMutableDictionary * openDurationTagsWithID;
         }
         _cachedThumbnail = thumb;
     }
-    
+    NSLog(@"thumb done");
     return _cachedThumbnail;
 }
 

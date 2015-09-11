@@ -13,6 +13,7 @@
 #import "Tag.h"
 #import "LeagueTeam.h"
 #import "TeamPlayer.h"
+#import "ImageAssetManager.h"
 
 #define LOCAL_PLIST  @"EventsHid.plist"
 #define VIDEO_EXT    @"mp4"
@@ -23,6 +24,7 @@ static LocalMediaManager * instance;
     NSString        * _localDocsPListPath;
     NSMutableArray  * _bookmarkPlistNames;
     NSComparisonResult(^plistSort)(id obj1, id obj2);
+    NSArray * (^grabAllThumbNamesFromEvent)(Event * input);
 }
 
 +(instancetype)getInstance
@@ -46,6 +48,13 @@ static LocalMediaManager * instance;
         _clips                          = [[NSMutableDictionary alloc]init];
         _allEvents                      = [[NSMutableDictionary alloc] init];
         
+        grabAllThumbNamesFromEvent = ^NSArray *(Event *input) {
+            NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+            for (Tag * item in input.tags) {
+                [collection addObjectsFromArray:[item.thumbnails allValues]];
+            }
+            return [collection copy];
+        };
         
         // build folder structue if not there
         
@@ -109,6 +118,25 @@ static LocalMediaManager * instance;
                 
                 if ([dict objectForKey:@"savedTeamData"]){
                    anEvent.teams =  [self parsedTeamData:dict];
+                }
+                
+                // Local event cache thumb
+                NSArray *components = @[_localPath, @"events", anEvent.datapath, @"thumbnails"];
+                NSString * thumbFolder =[NSString pathWithComponents:components];
+             
+                BOOL isDir;
+                BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:thumbFolder isDirectory:&isDir];
+                
+                if (fileExists) {
+                    // get all images from the folder
+                    NSArray * thumbNails = grabAllThumbNamesFromEvent(anEvent);
+                    for (NSString * orgFilePathName in thumbNails) {
+                        // all thumbs were saved on the device by the real file name but will be keyed by the download path
+                        NSString    * imageLocation =  [thumbFolder stringByAppendingPathComponent:[orgFilePathName lastPathComponent]];
+                        UIImage     * thmb          = [UIImage imageWithContentsOfFile:imageLocation];
+                        if (thmb) [[ImageAssetManager getInstance].arrayOfClipImages setObject:thmb forKey:orgFilePathName];
+                    }
+
                 }
                 
                     NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"local":anEvent}];
@@ -536,13 +564,22 @@ static LocalMediaManager * instance;
     
     // This gets the path and makes a DIR if its not there
     NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.datapath];
+   
+    
+    
     BOOL isDir = NO;
     [[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:&isDir];
     
     
     if ( !isDir){
         [[NSFileManager defaultManager] createDirectoryAtPath:aPath withIntermediateDirectories:YES attributes:nil error:NULL];
+        [[NSFileManager defaultManager] createDirectoryAtPath:[aPath stringByAppendingPathComponent:@"thumbnails"] withIntermediateDirectories:YES attributes:nil error:NULL];
     }
+    
+    
+    
+    
+    
     NSString * plistNamePath = [[[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.datapath]stringByAppendingPathExtension:@"plist"];
     
     //[aEvent.tags writeToFile:plistNamePath atomically:YES];
@@ -593,18 +630,29 @@ static LocalMediaManager * instance;
         
         LeagueTeam * team =  (LeagueTeam *) [encoderEvent.teams objectForKey:key];
 
-        [teamSaveData[@"leagues"] setObject:[team.league asDictionary]  forKey:team.league.hid]; // i know that this will get overwriten for each team because they are both in the same league
+        if (team.league){
+            [teamSaveData[@"leagues"] setObject:[team.league asDictionary]  forKey:team.league.hid]; // i know that this will get overwriten for each team because they are both in the same league
+        }else {
+            NSLog(@"Warning Corrupted Event leagues");
+        }
         
-        [teamSaveData[@"teams"] setObject:[team asDictionary]  forKey:team.hid];
-        
+        if (team.hid){
+            [teamSaveData[@"teams"] setObject:[team asDictionary]  forKey:team.hid];
+        }else {
+            NSLog(@"Warning Corrupted Event Team");
+        }
         
         NSMutableArray * playerPool = [NSMutableArray new];
         NSArray * playersInTeam     = [team.players allValues];
         for (TeamPlayer* player in playersInTeam) {
             [playerPool addObject:[player asDictionary]];
         }
-        [teamSaveData[@"teamsetup"] setObject:playerPool  forKey:team.hid];
-        
+        if (team.hid){
+            [teamSaveData[@"teamsetup"] setObject:playerPool  forKey:team.hid];
+        } else {
+            NSLog(@"Warning Corrupted Event Team");
+        }
+            
          NSLog(@"%@ Teams have %lu",team.name,(unsigned long)[team.players count]);
     }
     

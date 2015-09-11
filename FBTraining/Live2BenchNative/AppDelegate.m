@@ -93,6 +93,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(memoryWarning:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostWifi) name:NOTIF_LOST_WIFI object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostEvent:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+
     
     // action creation
     requestInfoAction = [[RequestUserInfoAction alloc]initWithAppDelegate:self];
@@ -362,6 +363,7 @@
 
     
 }
+
 
 -(void)memoryWarning:(NSNotification*)note
 {

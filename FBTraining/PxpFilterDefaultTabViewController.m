@@ -93,7 +93,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self refreshUI];
+//    [self refreshUI];
 }
 
 - (void)show{
@@ -107,14 +107,12 @@
 
 -(void)refreshUI
 {
-    NSLog(@"1");
+
     NSArray                 * rawTags       = self.pxpFilter.unfilteredTags;
     NSMutableSet            * tempSet       = [[NSMutableSet alloc]init];
     NSMutableDictionary     * userDatadict  = [[NSMutableDictionary alloc]init];
     NSInteger               latestTagTime = 0;
     
-    
-    NSLog(@"11");
     for (Tag * tag in rawTags) {
         
         // build tag names
@@ -130,7 +128,6 @@
         if (checkTime > latestTagTime) latestTagTime = checkTime;
     }
 
-    NSLog(@"12");
     
     // This is so that if  user changes that it reflects
         NSMutableSet * temp = [NSMutableSet new];
@@ -142,19 +139,15 @@
         }
         _prefilterTagNames = [temp allObjects];
 
-    NSLog(@"13");
-
     [_leftScrollView buildButtonsWith:([_preFilterSwitch isOn])?_prefilterTagNames :[tempSet allObjects]];
     [_sliderView setEndTime:latestTagTime];
     [_ratingButtons buildButtons];// Has to be what was selected last
     [_userButtons buildButtonsWith:[userDatadict allValues]];
-    NSLog(@"14");
     // Do any additional setup after loading the view from its nib
     _filteredTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.filteredTags.count];
     _totalTagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)self.pxpFilter.unfilteredTags.count];
-    NSLog(@"2");
     [self.pxpFilter refresh];
-        NSLog(@"3");
+
 }
 
 

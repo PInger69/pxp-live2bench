@@ -37,6 +37,8 @@
     CheckWiFiAction             * checkWiFiAction;
     CheckForACloudAction        * checkForACloudAction;
     CheckMasterEncoderAction    * checkMasterEncoderAction;
+    
+    NSArray * (^grabAllThumbNamesFromEvent)(Event * input);
 }
 
 @synthesize bonjourModule;
@@ -82,6 +84,17 @@
         checkWiFiAction             = [[CheckWiFiAction alloc]initWithEncoderManager:self];
         checkForACloudAction        = [[CheckForACloudAction alloc]initWithEncoderManager:self];
         checkMasterEncoderAction    = [[CheckMasterEncoderAction alloc]initWithEncoderManager:self];
+        
+        
+        grabAllThumbNamesFromEvent = ^NSArray *(Event *input) {
+            NSMutableArray  * collection    = [[NSMutableArray alloc]init];
+            for (Tag * item in input.tags) {
+                [collection addObjectsFromArray:[item.thumbnails allValues]];
+            }
+            return [collection copy];
+        };
+
+        
         
         // This will look for the external encoder if no other normal encoders are found
         [self performSelector:@selector(makeCoachExternal) withObject:nil afterDelay:40];
@@ -179,6 +192,11 @@
 
 
             }
+            
+            // Pool all thumb nails
+            [[ImageAssetManager getInstance]thumbnailsPreload:grabAllThumbNamesFromEvent(event)];
+            
+            
         }
 
         
@@ -418,10 +436,30 @@
         __block Event * weakLocalEvent  = [_localMediaManager getEventByName:weakEvent.name];
         NSString * savedFileName        = [encoderSource lastPathComponent];
         NSString * downloaderKey        = [NSString stringWithFormat:@"%@_%@",theEvent.name,source ];
+        
+        
+        NSArray * thmbs = grabAllThumbNamesFromEvent(weakEvent);
+        for (NSString * item in thmbs) {
+            NSString * fileName = [item lastPathComponent];
+
+            NSString * thbPath = [videoFolderPath stringByAppendingPathComponent:@"thumbnails"];
+            thbPath = [thbPath stringByAppendingPathComponent:fileName];
+//            DownloadItem * thumbItem =
+            (void)[Downloader downloadURL:item to:thbPath type:DownloadItem_TypeImage];
+
+//            [thumbItem setOnComplete:^{
+//                NSLog(@"Item downloaded");
+//            }];
+        }
+        
         DownloadItem * item =         [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:downloaderKey];
         [item setOnComplete:^{
             [weakLocalEvent buildFeeds];
         }];
+        
+
+        
+        
     } else {
         PXPLog(@"Event Download Failed... Event was not built... please build");
     }

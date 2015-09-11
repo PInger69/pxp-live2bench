@@ -19,13 +19,11 @@
 - (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
     self = [super initWithPlayerViewController:playerViewController];
     if (self) {
-        _startRangeModifierButton = [[PxpRangeModifierButton alloc] initWithEnd:NO];
-        _endRangeModifierButton = [[PxpRangeModifierButton alloc] initWithEnd:YES];
-        
-        _currentTagLabel = [[PxpBorderLabel alloc] init];
-        
-        _previousTagButton = [[PxpBorderButton alloc] init];
-        _nextTagButton = [[PxpBorderButton alloc] init];
+        _startRangeModifierButton   = [[PxpRangeModifierButton alloc] initWithEnd:NO];
+        _endRangeModifierButton     = [[PxpRangeModifierButton alloc] initWithEnd:YES];
+        _currentTagLabel            = [[PxpBorderLabel alloc] init];
+        _previousTagButton          = [[PxpBorderButton alloc] init];
+        _nextTagButton              = [[PxpBorderButton alloc] init];
     }
     return self;
 }

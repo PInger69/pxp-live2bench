@@ -266,6 +266,7 @@
 
 - (void)viewDidLoad
 {
+    NSLog(@"List View Load");
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -280,7 +281,7 @@
 
     _playerViewController.telestrationViewController.showsControls = NO;
 
-    
+        NSLog(@"LV1");
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
 
@@ -307,7 +308,7 @@
     
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.showsControls = NO;
-    
+            NSLog(@"LV2");
     _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     //_videoBar.player = _videoPlayer.avPlayer;
     
@@ -320,6 +321,7 @@
     [self.view addSubview:_fullscreenViewController.view];
     
     _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
+    NSLog(@"List View done Load");
 }
 
 -(void)getNextTag
@@ -354,6 +356,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    NSLog(@"viewDidAppear");
     [super viewDidAppear:animated];
     [_playerViewController viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
@@ -365,19 +368,33 @@
     [_pxpFilter removeAllPredicates];
     
     
-    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
-                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                                                                   ]];
+//    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+//                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
+//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+//                                                                                   ]];
+//    
+//    [_pxpFilter addPredicates:@[ignoreThese]];
     
-    [_pxpFilter addPredicates:@[ignoreThese]];
+    
+    NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                  [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                  ]];
+    
+    [_pxpFilter addPredicates:@[allowThese]];
 
-
+    NSLog(@"viewDidAppear done");
 }
 
 -(void)getPrevTag
@@ -411,6 +428,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+        NSLog(@"viewWillAppear");
     [super viewWillAppear:animated];
     
     _fullscreenViewController.fullscreen = NO;
@@ -447,7 +465,7 @@
     
     self.videoPlayer.mute = NO;
     
-    
+            NSLog(@"viewWillAppear done");
 }
 
 
@@ -754,15 +772,7 @@
 }
 
 
-/*- (void)setTagsToDisplay:(NSMutableArray *)tagsToDisplay {
-    NSMutableArray *tags = [NSMutableArray array];
-    for (Tag *tag in tagsToDisplay) {
-//        if (tag.type == TagTypeNormal) {
-            [tags addObject:tag];
-//        }
-    }
-    _tagsToDisplay = tags;
-}*/
+
 
 #pragma mark - Sorting Methods
 
@@ -813,28 +823,13 @@
 {
     [_tableViewController collaspOpenCell];
     
-    [_pxpFilter filterTags:[self.allTags copy]];
+//    [_pxpFilter filterTags:[self.allTags copy]];
     TabView *popupTabBar = [TabView sharedFilterTabBar];
     
     
     // setFilter to this view. This is the default filtering for ListView
     // what ever is added to these predicates will be ignored in the filters raw tags
     _pxpFilter.delegate = self;
-    [_pxpFilter removeAllPredicates];
-
-    
-    NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
-                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                                                                   ]];
-
-    [_pxpFilter addPredicates:@[allowThese]];
     
     if (popupTabBar.isViewLoaded)
     {

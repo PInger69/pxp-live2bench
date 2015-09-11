@@ -100,12 +100,15 @@
         NSMutableArray * listOfVideos = [NSMutableArray arrayWithArray:[self videoFiles]];
         BOOL modFlag = NO;
          // this checks to see if the clip is are on the device if not then remove from Dict
-        for (NSString * videoPathsToCheck  in listOfVideos) {
+        for (NSInteger i = [listOfVideos count]-1;i>=0;i--) {
+            NSString * videoPathsToCheck = listOfVideos[i];
             if ( ![[NSFileManager defaultManager] fileExistsAtPath:videoPathsToCheck] ){
                 [listOfVideos removeObject:videoPathsToCheck];
                 modFlag = YES;
             }
+        
         }
+
         
         if (modFlag) [_localRawData writeToFile:_path atomically:YES];
         //if (modFlag) [_rawData writeToFile:self.path atomically:YES];

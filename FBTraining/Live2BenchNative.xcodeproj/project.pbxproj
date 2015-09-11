@@ -499,6 +499,7 @@
 		D7D2F6AA1B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F6A91B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib */; };
 		D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D43F6D1B5D4A56007B188D /* FeedInspector.m */; };
 		D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D86CD416B2D84500F48523 /* ContentViewController.m */; };
+		D7D9DCC31BA0CC0600D04CE0 /* ThumbnailDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */; settings = {ASSET_TAGS = (); }; };
 		D7DA233016B713FA00143102 /* BG.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA232F16B713FA00143102 /* BG.png */; };
 		D7DA233F16B717D600143102 /* graph.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA233D16B717D600143102 /* graph.png */; };
 		D7DA234016B717D600143102 /* graph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA233E16B717D600143102 /* graph@2x.png */; };
@@ -1337,6 +1338,8 @@
 		D7D43F6D1B5D4A56007B188D /* FeedInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedInspector.m; path = Live2BenchNative/UtilityClasses/FeedInspector.m; sourceTree = "<group>"; };
 		D7D86CD316B2D84400F48523 /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
 		D7D86CD416B2D84500F48523 /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
+		D7D9DCC11BA0CC0500D04CE0 /* ThumbnailDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailDownloader.h; sourceTree = "<group>"; };
+		D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailDownloader.m; sourceTree = "<group>"; };
 		D7DA232F16B713FA00143102 /* BG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BG.png; sourceTree = "<group>"; };
 		D7DA233D16B717D600143102 /* graph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = graph.png; sourceTree = "<group>"; };
 		D7DA233E16B717D600143102 /* graph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "graph@2x.png"; sourceTree = "<group>"; };
@@ -2291,6 +2294,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D7D9DCC11BA0CC0500D04CE0 /* ThumbnailDownloader.h */,
+				D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */,
 				D798850B1B9745BD000F8667 /* InternetMonitor.h */,
 				D798850C1B9745BD000F8667 /* InternetMonitor.m */,
 				D77351311B821C9D00DDCA4A /* PxpFilterRugbyTabViewController.xib */,
@@ -3394,6 +3399,7 @@
 				AE76FFC41B01065B0089F53F /* PxpTagDisplayBar.mm in Sources */,
 				D784EF3B1AA4B0570068D260 /* CKCalendarView.m in Sources */,
 				D7E4AC7616B3225B00129222 /* TagMarker.m in Sources */,
+				D7D9DCC31BA0CC0600D04CE0 /* ThumbnailDownloader.m in Sources */,
 				D737F5B617F0DFC40053081F /* CalendarViewController.m in Sources */,
 				D7EE84D319F19E0900DEC82B /* Encoder.m in Sources */,
 				AED2EBCD1B1DED25008AD159 /* NCPlayer.m in Sources */,

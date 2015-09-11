@@ -414,6 +414,8 @@ static void * eventContext      = &eventContext;
 }
 
 -(void)checkIpadVersion{
+
+    
     BOOL result = [Utility isDeviceSupportedMultiCam:[Utility platformString]];
     if (!result && [_currentEvent.feeds allValues].count > 1) {
         _cameraPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"iPad does not support multiple cameras. You need iPadAir or higher. You can only select one of the cameras. Please select the camera you want:", @"Please select the camera you want to play:") buttonListNames:@[]];
@@ -1302,7 +1304,7 @@ static void * eventContext      = &eventContext;
         self.playerViewController.telestrationViewController.telestration = !feed.sourceName || tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
         self.playerViewController.playerView.player.tag = tag;
         
-        
+        [self.fullscreenViewController usingTag:tag];
         
     }
 }

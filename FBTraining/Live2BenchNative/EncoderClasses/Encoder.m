@@ -19,7 +19,7 @@
 #import "LeagueTeam.h"
 #import "TeamPlayer.h"
 #import "DownloadItem.h"
-
+#import "ImageAssetManager.h"
 
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
@@ -1904,6 +1904,15 @@
                 [localEvent addTag:localTag extraData:false];
                 [localEvent.parentEncoder writeToPlist];
             }
+            
+            
+            // Download Thumbnail for new tags
+
+            [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
+
+            
+            
+            
         }
     }
 }

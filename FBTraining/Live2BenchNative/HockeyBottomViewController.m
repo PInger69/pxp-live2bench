@@ -56,7 +56,8 @@
     
     
     NSMutableArray *currentlyPostingTags;
-   
+    NSDictionary * periodDict;
+    NSDictionary * periodDictRev;
 }
 
 @synthesize currentEvent = _currentEvent;
@@ -148,6 +149,23 @@
     self = [super init];
     
     if (self) {
+        periodDict = @{
+                       @"1":@"0",
+                       @"2":@"1",
+                       @"3":@"2",
+                       @"OT":@"3",
+                       @"PS":@"4"
+                       };
+        
+        periodDictRev = @{
+                          @"0":@"1",
+                          @"1":@"2",
+                          @"2":@"3",
+                          @"3":@"OT",
+                          @"4":@"PS"
+                          };
+        
+        periodValueArray = @[@"1",@"2",@"3",@"OT",@"PS"];// check if this is still used
         
         self.view.frame = CGRectMake(0, 540, self.view.frame.size.width, self.view.frame.size.height);
         tintColor = PRIMARY_APP_COLOR;
@@ -166,7 +184,7 @@
         _periodLabel.frame = CGRectMake(0.0f, 10.0f, 80.0f, 30.0f);
         [_periodLabel setText:@"Period"];
         
-        periodValueArray = @[@"1",@"2",@"3",@"OT",@"PS"];
+        
         _periodSegmentedControl = [[UISegmentedControl alloc] initWithItems:periodValueArray];
         [_periodSegmentedControl setFrame:CGRectMake(_periodLabel.frame.origin.x, CGRectGetMaxY(_periodLabel.frame) + 5.0f, _periodSegmentedControl.numberOfSegments*50.0f, 30.0f)];
         [_periodSegmentedControl setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
@@ -534,12 +552,14 @@
             startTime = array[i][@"time"];
             if ( [time floatValue] >= [startTime floatValue] ) {
                 NSString *name = array[i][@"name"];
+                
+                
                 return name;
             }
         }
         
     }
-    return @"1";
+    return @"0";
 }
 
 // when the encoder respond back and now have the just made tag,remove it from currentlyPostingTags array
@@ -569,25 +589,26 @@
     float time = CMTimeGetSeconds(_videoPlayer.currentTime);
     NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
     
+    if (periodDict[name]) {
+        name = periodDict[name];
+    }
+    
     NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart],@"time":[NSString stringWithFormat:@"%f",time]};
     [currentlyPostingTags addObject:@{@"name":name,@"time":[NSNumber numberWithFloat:time],@"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]}];
     [super postTag:tagDic];
     
-    
-    /*if ([self checkTags:name]) {
-        Tag *tag = [self checkTags:name];
-        tag.time = time;
-        [super modifyTag:tag];
-    }else{
-         NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeHockeyPeriodStart],@"time":[NSString stringWithFormat:@"%f",time]};
-        [super postTag:tagDic];
-    }*/
 }
 
 // Actually update the period segment
 -(void)updatePeriodSegment{
     NSString *name = [self currentPeriod];
     NSInteger index = [periodValueArray indexOfObject:name];
+    index =[periodDictRev[name] integerValue];
+    
+    index = [name integerValue];
+    
+    
+   
     _periodSegmentedControl.selectedSegmentIndex = index;
 }
 

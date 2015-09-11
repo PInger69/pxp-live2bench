@@ -100,16 +100,11 @@
          stream          = [[NSOutputStream alloc] initToFileAtPath:path append:YES];
         [stream open];
     
-    } else if (downloadType == DownloadItem_TypePlist) {
+    } else if (downloadType == DownloadItem_TypePlist || downloadType == DownloadItem_TypeImage) {
         _data           = [[NSMutableData alloc]init];
     
     }
     
-    
-    
-
-    
-
 
     startTime       = CACurrentMediaTime();
 }
@@ -132,7 +127,7 @@
         if (left) {
             PXPLog(@"stream error: %@", [stream streamError]);
         }
-    } else if (downloadType == DownloadItem_TypePlist) {
+    } else if (downloadType == DownloadItem_TypePlist || downloadType == DownloadItem_TypeImage) {
         [_data appendData:data];
         
     }
@@ -167,6 +162,12 @@
     
     if (downloadType == DownloadItem_TypePlist) {
         [self parseAndSavePlistTo:path data:_data];
+    } else if (downloadType == DownloadItem_TypeImage) {
+
+        UIImage * image = [UIImage imageWithData: _data];
+        
+        NSData * binaryImageData = UIImageJPEGRepresentation(image, 0.8);
+        [binaryImageData writeToFile:path atomically:YES];
     }
     
     self.status     = DownloadItemStatusComplete;

@@ -22,7 +22,8 @@ typedef NS_OPTIONS(NSInteger, DownloadItemStatus) {
 
 typedef NS_OPTIONS(NSInteger, DownloadType) {
     DownloadItem_TypePlist      = 1<<1,
-    DownloadItem_TypeVideo      = 1<<2
+    DownloadItem_TypeVideo      = 1<<2,
+    DownloadItem_TypeImage      = 1<<3
 };
 
 @class DownloadItem;

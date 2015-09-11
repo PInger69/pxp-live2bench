@@ -13,7 +13,6 @@
 #import "ListPopoverControllerWithImages.h"
 #import "EncoderManager.h"
 #import "ImageAssetManager.h"
-#import "TestFilterViewController.h"
 #import "Tag.h"
 #import "RatingOutput.h"
 
@@ -43,7 +42,6 @@
 
 @implementation ClipViewController
 {
-    TestFilterViewController    * componentFilter;
     BreadCrumbsViewController       * breadCrumbVC;
     ListPopoverControllerWithImages * sourceSelectPopover;
     NSString                        * eventType;
@@ -155,44 +153,15 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 -(void)onTagChanged:(NSNotification *)note{
-    
-    /*for (Tag *tag in _currentEvent.tags ) {
-        if (![self.allTagsArray containsObject:tag]) {
-            if (tag.type == TagTypeNormal || tag.type == TagTypeCloseDuration || tag.type == TagTypeFootballDownTags) {
-                [self.tagsToDisplay insertObject:tag atIndex:0];
-                [_pxpFilter addTags:@[tag]];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
-            }
-            [self.allTagsArray insertObject:tag atIndex:0];
-        }
-        if(tag.modified && [self.allTagsArray containsObject:tag] && tag.type == TagTypeCloseDuration && ![self.tagsToDisplay containsObject:tag]){
-            [self.tagsToDisplay insertObject:tag atIndex:0];
-            [_pxpFilter addTags:@[tag]];
-        }
-        
-        if ((tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) && ![self.tagsToDisplay containsObject:tag]) {
-            [self.tagsToDisplay insertObject:tag atIndex:0];
-            [_pxpFilter addTags:@[tag]];
-            [self.allTagsArray replaceObjectAtIndex:[self.allTagsArray indexOfObject:tag] withObject:tag];
-        }
-        
-    }
-    
-    for (Tag *tag in [self.allTagsArray copy]) {
-        if (![_currentEvent.tags containsObject:tag]) {
-            [self.allTagsArray removeObject:tag];
-            [self.tagsToDisplay removeObject:tag];
-            [_pxpFilter removeTags:@[tag]];
-        }
-    }
-    
-    [_collectionView reloadData];*/
-    
+
     self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
     self.tagsToDisplay =[ NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
-    if (!componentFilter.rawTagArray) {
-        self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
-    }
+
+    
+    [_pxpFilter filterTags:self.allTagsArray];
+    [_tagsToDisplay removeAllObjects];
+    [_tagsToDisplay addObjectsFromArray:self.pxpFilter.filteredTags];
+    
     NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
     _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
 
@@ -201,55 +170,11 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 
-
-/*-(void)deleteTag: (NSNotification *)note{
-    
-    for (Tag *tag in self.allTagsArray  ) {
-        if (![_currentEvent.tags containsObject:tag]) {
-            [self.allTagsArray removeObject:tag];
-            [self.tagsToDisplay removeObject:tag];
-        }
-    }
-    componentFilter.rawTagArray = self.allTagsArray;
-    [_collectionView reloadData];
-}*/
-
-/*-(void) deleteTag: (NSNotification *)note{
-    [self.allTagsArray removeObject: note.object];
-    [self.tagsToDisplay removeObject: note.object];
-    componentFilter.rawTagArray = self.allTagsArray;
-    [_collectionView reloadData];
-}*/
-
 -(void)clear{
     [self.tagsToDisplay removeAllObjects];
     [self.allTagsArray removeAllObjects];
     [_collectionView reloadData];
 }
-
-
-// If the filter is actie then filter other wize just display all the tags
-/*-(void)clipViewTagReceived
-{
-    for (Tag *tag in _currentEvent.tags ) {
-        if (![self.allTagsArray containsObject:tag]) {
-            [self.allTagsArray insertObject:tag atIndex:0];
-            [self.tagsToDisplay insertObject:tag atIndex:0];
-        }
-    }
-    componentFilter.rawTagArray = self.allTagsArray;
-    [_collectionView reloadData];
-}*/
-/*-(void)clipViewTagReceived:(NSNotification*)note
-{
-    if (note.object) {
-        [self.allTagsArray insertObject:note.object atIndex:0];
-        [self.tagsToDisplay insertObject:note.object atIndex:0];
-     //   [componentFilter refresh];
-       [_collectionView reloadData];
-    }
-    
-}*/
 
 
 
@@ -374,11 +299,6 @@ static void * encoderTagContext = &encoderTagContext;
     [deSelectButton addTarget:self action:@selector(deselectAllCell) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:deSelectButton];
     
-    componentFilter = [TestFilterViewController commonFilter];
-    [componentFilter onSelectPerformSelector:@selector(receiveFilteredArrayFromFilter:) addTarget:self];
-    [self.view addSubview:componentFilter.view];
-    [componentFilter setOrigin:CGPointMake(60, 190)];
-    [componentFilter close:NO];
 
 }
 
@@ -420,9 +340,6 @@ static void * encoderTagContext = &encoderTagContext;
         if(eventTags.count > 0 && !self.tagsToDisplay){
             self.allTagsArray = [NSMutableArray arrayWithArray:[eventTags copy]];
             self.tagsToDisplay =[ NSMutableArray arrayWithArray:[eventTags copy]];
-            if (!componentFilter.rawTagArray) {
-                self.tagsToDisplay = [NSMutableArray arrayWithArray:componentFilter.processedList];
-            }
             [self.collectionView reloadData];
         }
     }}];
@@ -437,18 +354,6 @@ static void * encoderTagContext = &encoderTagContext;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:self userInfo:@{@"context":@"ListView Tab"}];
 }
 
-//-(NSMutableArray *)filterAndSortTags:(NSArray *)tags {
-//    NSMutableArray *tagsToSort = [NSMutableArray arrayWithArray:tags];
-//    
-//    if (componentFilter) {
-//        componentFilter.rawTagArray = tagsToSort;
-//        tagsToSort = [NSMutableArray arrayWithArray:componentFilter.processedList];
-//    }
-//    
-//    return [self sortArrayFromHeaderBar:tagsToSort headerBarState:headerBar.headerBarSortType];
-//}
-
-
 -(void)receiveFilteredArrayFromFilter:(id)filter
 {
     AbstractFilterViewController * checkFilter = (AbstractFilterViewController *)filter;
@@ -456,14 +361,6 @@ static void * encoderTagContext = &encoderTagContext;
     self.tagsToDisplay = [filteredArray mutableCopy];
     [self.collectionView reloadData];
     [breadCrumbVC inputList: [checkFilter.tabManager invokedComponentNames]];
-}
-
-
-#pragma mark - Edge Swipe Buttons Delegate Methods
-
--(void)dismissFilter: (UIButton *)dismissButton{
-    [componentFilter close:YES];
-    [dismissButton removeFromSuperview];
 }
 
 
@@ -524,7 +421,6 @@ static void * encoderTagContext = &encoderTagContext;
 {
     [super viewDidDisappear:animated];
     
-    [componentFilter close:YES];
     [self.dismissFilterButton removeFromSuperview];
     
     if (self.isEditing) {
@@ -568,26 +464,39 @@ static void * encoderTagContext = &encoderTagContext;
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    UIImage *thumb = [tagSelect thumbnailForSource:nil];
     
-    if (thumb) {
-        cell.imageView.image = thumb;
+    
+    NSString *url = [[tagSelect.thumbnails allValues]firstObject];
+    
+    cell.imageView.image = [UIImage imageNamed:@"live.png"];
+    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
     } else {
-        NSString *src = tagSelect.thumbnails.allKeys.firstObject;
-        
-        // get the key of the source with the telestration
-        if (tagSelect.telestration) {
-            for (NSString* k in tagSelect.thumbnails.keyEnumerator) {
-                if ([tagSelect.telestration.sourceName isEqualToString:k]) {
-                    src = k;
-                    break;
-                }
-            }
-        }
-        
-        PxpTelestration *tele = tagSelect.thumbnails.count <= 1 || [tagSelect.telestration.sourceName isEqualToString:src] ? tagSelect.telestration : nil;
-        [[ImageAssetManager getInstance] imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
+        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
     }
+
+    
+    
+//    UIImage *thumb = [tagSelect thumbnailForSource:nil];
+//    
+//    if (thumb) {
+//        cell.imageView.image = thumb;
+//    } else {
+//        NSString *src = tagSelect.thumbnails.allKeys.firstObject;
+//        
+//        // get the key of the source with the telestration
+//        if (tagSelect.telestration) {
+//            for (NSString* k in tagSelect.thumbnails.keyEnumerator) {
+//                if ([tagSelect.telestration.sourceName isEqualToString:k]) {
+//                    src = k;
+//                    break;
+//                }
+//            }
+//        }
+//        
+//        PxpTelestration *tele = tagSelect.thumbnails.count <= 1 || [tagSelect.telestration.sourceName isEqualToString:src] ? tagSelect.telestration : nil;
+//        [[ImageAssetManager getInstance] imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
+//    }
     
     [cell setDeletingMode: self.isEditing];
     
@@ -645,36 +554,7 @@ static void * encoderTagContext = &encoderTagContext;
          }
          [self deselectAllCell];
 
-        
-        /*for (NSIndexPath *cellIndexPath in self.setOfSelectedCells) {
-            [arrayOfTagsToRemove addObject:self.tagsToDisplay[cellIndexPath.row]];
-            [indexPathsArray addObject: cellIndexPath];
-        }
-        
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
-            [self.tagsToDisplay removeObject:tag];
-            [self.allTagsArray removeObject: tag];
-        }
-        
-        [self.setOfSelectedCells removeAllObjects];
-        [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
-        
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
-            //            [self.tagsToDisplay removeObject:tag];
-            //            [self.allTagsArray removeObject: tag];
-            
-            //NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-            //NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            //[[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
-            
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-        }
-        
-        for (thumbnailCell *cell in self.collectionView.visibleCells) {
-            [cell setDeletingMode: NO];
-        }
-        self.isEditing = NO;*/
-        
+
     }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
 
         Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
@@ -691,21 +571,6 @@ static void * encoderTagContext = &encoderTagContext;
         }
         [self deselectAllCell];
 
-           /* NSDictionary *tag = [self.tagsToDisplay objectAtIndex: self.editingIndexPath.row];
-            [self.tagsToDisplay removeObject:tag];
-            
-            if (self.editingIndexPath) {
-                [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
-            }
-            //[self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
-            
-            //NSString *notificationName = [NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString];
-           // NSNotification *deleteNotification =[NSNotification notificationWithName: notificationName object:tag userInfo:tag];
-            //[[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
-            
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-            
-            [self removeIndexPathFromDeletion];*/
         
     }
     
@@ -721,16 +586,7 @@ static void * encoderTagContext = &encoderTagContext;
     if (self.editingIndexPath) {
         [self.setOfSelectedCells removeObject:self.editingIndexPath];
     }
-   // [self.setOfSelectedCells removeObject:self.editingIndexPath];
-    
-    //    if ([self.selectedPath isEqual:self.editingIndexPath]) {
-    //        self.selectedPath = nil;x
-    //    }
-    //    if (self.selectedPath && self.selectedPath.row > self.editingIndexPath.row) {
-    //        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:self.selectedPath.row - 1 inSection: self.selectedPath.section];
-    //        self.selectedPath = newIndexPath;
-    //    }
-    
+
     for (NSIndexPath *indexPath in self.setOfSelectedCells) {
         if (indexPath.row > self.editingIndexPath.row) {
             NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection: indexPath.section];
@@ -821,16 +677,6 @@ static void * encoderTagContext = &encoderTagContext;
         
             [sourceSelectPopover presentPopoverFromRect: CGRectMake(selectedCell.frame.size.width /2, 0, 0, 50) inView:selectedCell.contentView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
             
-//        } else {
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SELECT_TAB object:nil userInfo:@{@"tabName":@"Live2Bench"}];
-//            
-//            NSString * key =        listOfScource[0];
-//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SET_PLAYER_FEED object:nil userInfo:@{@"context":STRING_LIVE2BENCH_CONTEXT,
-//                                                                                                                  @"feed":key,
-//                                                                                                                  @"time":[NSString stringWithFormat:@"%f", selectedCell.data.startTime ],
-//                                                                                                                  @"duration":[NSString stringWithFormat:@"%d", selectedCell.data.duration],
-//                                                                                                                  @"state":[NSNumber numberWithInteger:RJLPS_Play]}];
-//        }
         
         
     } else {

@@ -34,6 +34,7 @@
 
 -(void)filterTags:(NSArray*)tags
 {
+
     [_rawTagsPool removeAllObjects];
     [_rawTagsPool addObjectsFromArray:tags];
     
@@ -183,12 +184,10 @@
 
 -(void)filteringComplete
 {
-
     if (_delegate){
         [_delegate onFilterComplete:self];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_FILTER_TAG_CHANGE  object:self];
-    
 }
 
 

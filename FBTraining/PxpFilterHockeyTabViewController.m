@@ -90,16 +90,27 @@
 }
 
 -(void)buttonPredicate{
+    
+    _period1.accessibilityLabel = @"0";
     NSPredicate *period1Predicate = [NSPredicate predicateWithFormat:@"period == %@", _period1.accessibilityLabel? _period1.accessibilityLabel:_period1.titleLabel.text];
     _period1.ownPredicate = period1Predicate;
+    
+    _period2.accessibilityLabel = @"1";
     NSPredicate *period2Predicate = [NSPredicate predicateWithFormat:@"period == %@", _period2.accessibilityLabel? _period2.accessibilityLabel:_period2.titleLabel.text];
     _period2.ownPredicate = period2Predicate;
+    
+    _period3.accessibilityLabel = @"2";
     NSPredicate *period3Predicate = [NSPredicate predicateWithFormat:@"period == %@", _period3.accessibilityLabel? _period3.accessibilityLabel:_period3.titleLabel.text];
     _period3.ownPredicate = period3Predicate;
+    
+    _periodOT.accessibilityLabel = @"3";
     NSPredicate *periodOTPredicate = [NSPredicate predicateWithFormat:@"period == %@", _periodOT.accessibilityLabel? _periodOT.accessibilityLabel:_periodOT.titleLabel.text];
     _periodOT.ownPredicate = periodOTPredicate;
+    
+    _periodPS.accessibilityLabel = @"4";
     NSPredicate *periodPSPredicate = [NSPredicate predicateWithFormat:@"period == %@", _periodPS.accessibilityLabel? _periodPS.accessibilityLabel:_periodPS.titleLabel.text];
     _periodPS.ownPredicate = periodPSPredicate;
+    
     
     NSPredicate *getAllStrengthTagsPredicate = [NSPredicate predicateWithFormat:@"type = %ld",TagTypeHockeyStrengthStop];
     _getAllStrengthTags.ownPredicate = getAllStrengthTagsPredicate;

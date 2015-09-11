@@ -18,7 +18,7 @@ static void * actionContext = &actionContext;
 {
     NSMutableArray * _alist;
     void(^finishList)(void);
-    BOOL _running;
+
     NSDictionary * currentActionItem;
 }
 
@@ -97,6 +97,8 @@ static void * actionContext = &actionContext;
     if (![_alist count]){
         if (finishList) finishList();
         _running = NO;
+        id <ActionListItem> item         = [currentActionItem objectForKey:ACTION_ITEM];
+        [((NSObject*)item) removeObserver:self forKeyPath:NSStringFromSelector(@selector(isFinished)) context:&actionContext];
     } else {
         [self next];
     }

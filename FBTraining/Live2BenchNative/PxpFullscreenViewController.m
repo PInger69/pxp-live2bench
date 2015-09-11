@@ -184,10 +184,10 @@
     if (self.view.hidden == fullscreen) {
         
         if (!fullscreen) {
-            self.bottomBar.hidden = YES;
-            self.topBar.hidden = YES;
-            self.forwardSeekButton.hidden = YES;
-            self.backwardSeekButton.hidden = YES;
+            self.bottomBar.hidden           = YES;
+            self.topBar.hidden              = YES;
+            self.forwardSeekButton.hidden   = YES;
+            self.backwardSeekButton.hidden  = YES;
         } else  {
             _targetView = _playerViewController.view.superview;
             _targetIndex = [_targetView.subviews indexOfObject:_playerViewController.view];

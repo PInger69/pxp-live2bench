@@ -19,6 +19,7 @@
  *  Note: does not items currently being processed... they will finish
  */
 @property (nonatomic,assign) BOOL paused;
+@property (nonatomic,assign) BOOL running;
 
 /**
  *  Runs the List

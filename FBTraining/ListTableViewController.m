@@ -33,7 +33,10 @@
 @end
 
 @implementation ListTableViewController
+{
+    dispatch_queue_t imageLoadQueue;
 
+}
 
 
 -(instancetype)init{
@@ -167,45 +170,15 @@
 //}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
-
-    
 
     
     if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]) {
         NSIndexPath *firstIndexPath = [self.arrayOfCollapsableIndexPaths firstObject];
         tag = self.tableData[(firstDownloadCellPath ? firstDownloadCellPath.row - 1:0)];
-        // NSDictionary *urls = tag.thumbnails;
-        
-        /*FeedSelectCell *collapsableCell;
-        NSString *key;
-        if (urls) {
-            NSArray *keys = [[NSMutableArray arrayWithArray:[urls allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-            key = keys[indexPath.row - firstIndexPath.row];
-            collapsableCell = [[FeedSelectCell alloc] initWithImageData: urls[key] andName:key];
-        }else{
-            key = @"s_00";
-            collapsableCell = [[FeedSelectCell alloc] initWithImageData:nil andName:key];
-        }*/
-    
-        /*if (tag.thumbnails.count == 0) {
-            NSMutableDictionary *urlsDic = [[NSMutableDictionary alloc]init];
-            NSArray * keys = [tag.event.feeds allKeys];
-            for(NSString *key in keys) {
-                //NSString *url = [[tag.event.feeds objectForKey:key] objectForKey:@"High Quaility"];
-                //[urls setObject:url forKey:key];
-                [urlsDic setObject:@"" forKey:key];
-            }
-            urls = [urlsDic copy];
-        }else{
-            urls = tag.thumbnails;
-        }
-        
-        NSArray *keys = [[NSMutableArray arrayWithArray:[urls allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-        
-        NSString *key = keys[indexPath.row - firstIndexPath.row];*/
-        
+       
         NSArray *keys = [[NSMutableArray arrayWithArray:[tag.event.feeds allKeys]] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
         NSString *key = keys[indexPath.row - firstIndexPath.row];
         
@@ -216,12 +189,6 @@
         __block FeedSelectCell *weakCell = collapsableCell;
         collapsableCell.downloadButton.downloadItem = nil;
         
-        /*NSString *tagKeyForSearch;
-        if (tag.event.originalFeeds.count > 1) {
-            tagKeyForSearch = [NSString stringWithFormat:@"%@-%@"]
-        }*/
-
-        //NSLog(@"%@",[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ]);
         // This is checking if tag is downloaded to the device already
         NSString * tagKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
         
@@ -312,18 +279,6 @@
     [cell setFrame: CGRectMake(0, 0, TABLE_WIDTH, TABLE_HEIGHT)];
     cell.currentTag = tag;
     
-//    if (!self.downloadEnabled) {
-//        cell.bookmarkButton.enabled = NO;
-//    } else {
-//        cell.bookmarkButton.enabled = YES;
-//    }
-//
-//    if (self.downloading) {
-//        cell.swipeRecognizerLeft.enabled = NO;
-//    } else {
-//      cell.swipeRecognizerLeft.enabled = YES;
-//    }
-    
     cell.swipeRecognizerLeft.enabled = self.swipeableMode;
     cell.swipeRecognizerRight.enabled = self.swipeableMode;
     
@@ -356,9 +311,7 @@
     //This is the condition where a cell that is selected is reused
     [cell.translucentEditingView removeFromSuperview];
     cell.translucentEditingView = nil;
-    //[cell.myContentView setBackgroundColor:[UIColor whiteColor]];
-    //[cell setBackgroundColor:[UIColor whiteColor]];
-    
+
     // This condition is if the user is scrolling up and down and the
     // cell is selected
     if ([self.previouslySelectedIndexPath isEqual:indexPath]) {
@@ -383,19 +336,45 @@
             }
         }
     }
-    
+
     NSString *url = tag.thumbnails[src];
     
-    UIImage *thumb = [tag thumbnailForSource:nil];
+    cell.tagImage.image = [UIImage imageNamed:@"live.png"];
+    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+        cell.tagImage.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+    } else {
+        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
+    }
     
-    if (thumb) {
+    
+   /*
+    UIImage *thumb;
+//    thumb = [tag thumbnailForSource:nil];
+    [[ImageAssetManager getInstance] imageForURL:url atImageView:cell.tagImage];
+    thumb = cell.tagImage.image;
+    
+    if (thumb && thumb.scale > 1) {
+        thumb = [tag thumbnailForSource:nil];
+    } else if (thumb && thumb.scale == 1) {
         cell.tagImage.image = thumb;
+
     } else {
         
         PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:src] ? tag.telestration : nil;
         
         [[ImageAssetManager getInstance] imageForURL:url atImageView:cell.tagImage withTelestration:tele];
+        thumb = cell.tagImage.image;
     }
+    */
+    
+    
+
+
+
+    
+
+    
+    
     
     
     [cell.tagname setText:[tag.name stringByRemovingPercentEncoding]];
@@ -452,7 +431,6 @@
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
     
     [cell removeGestureRecognizer:cell.swipeRecognizerRight];
-    
     return cell;
 }
 

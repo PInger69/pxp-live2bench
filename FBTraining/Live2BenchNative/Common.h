@@ -170,7 +170,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define NOTIF_DELETE_EVENT_COMPLETE         @"NOTIF_DELETE_EVENT_COMPLETE"
 
-
+#define NOTIF_PLAYER_BAR_CANCEL             @"NOTIF_PLAYER_BAR_CANCEL"
 
 
 #define NOTIF_UPDATE_MEMORY                 @"update memory"
