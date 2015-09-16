@@ -83,7 +83,7 @@
 
 @property (nonatomic,assign)    BOOL            isMaster;
 @property (nonatomic,assign)    NSInteger       cameraCount;
-@property (nonatomic,assign)    NSDictionary    * cameraData;
+@property (nonatomic,strong)    NSDictionary    * cameraData;
 //@property (nonatomic,strong)    NSMutableDictionary     * eventTagsDict; // keys are event names
 
 

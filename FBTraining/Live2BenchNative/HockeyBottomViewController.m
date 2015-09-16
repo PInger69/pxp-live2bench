@@ -604,11 +604,7 @@
     NSString *name = [self currentPeriod];
     NSInteger index = [periodValueArray indexOfObject:name];
     index =[periodDictRev[name] integerValue];
-    
     index = [name integerValue];
-    
-    
-   
     _periodSegmentedControl.selectedSegmentIndex = index;
 }
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 @class AppDelegate;
 
-@interface PxpLogViewController : UIViewController
+@interface PxpLogViewController : UIViewController <UITextViewDelegate>
 
 -(instancetype) initWithAppDelegate: (AppDelegate *) appDel;
 

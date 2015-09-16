@@ -95,59 +95,15 @@
 }
 
 -(NSArray *) arrayOfAllEventsSorted{
-    NSMutableArray *sortedArray = [NSMutableArray array];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"yyyy-MM-dd";
-    
-    for (Event *event in self.arrayOfAllData) {
-        NSArray *bothStrings = [event.date componentsSeparatedByString:@" "];
-        NSDate *date = [formatter dateFromString:bothStrings[0]];
-        
-        if (!sortedArray.count) {
-            [sortedArray addObject:event];
-            continue;
-        }
-        
-        for (int i = 0; i < sortedArray.count; ++i) {
-            Event *temp = sortedArray[i];
-            NSArray *bothStringsOfSortedEvent = [temp.date componentsSeparatedByString:@" "];
-            NSDate *dateOfSortedEvent = [formatter dateFromString:bothStringsOfSortedEvent[0]];
-            
-            if ([date compare: dateOfSortedEvent] == NSOrderedAscending) {
-                [sortedArray insertObject:event atIndex:i];
-                break;
-            }else if ([date compare: dateOfSortedEvent] == NSOrderedSame){
-                
-                NSArray *timeStrings = [bothStrings[1] componentsSeparatedByString:@":"];
-                NSArray *timeStringsForSortedEvent = [bothStringsOfSortedEvent[1] componentsSeparatedByString:@":"];
-                
-                int eventHour = [timeStrings[0] intValue];
-                int sortedHour = [timeStringsForSortedEvent[0] intValue];
-                
-                int eventMin = [timeStrings[0] intValue];
-                int sortedMin = [timeStringsForSortedEvent[0] intValue];
-                
-                if (eventHour < sortedHour) {
-                    [sortedArray insertObject:event atIndex:i];
-                    break;
-                }else if (eventMin < sortedMin){
-                    [sortedArray insertObject:event atIndex:i];
-                    break;
-                }
-                
-            }else if (([date compare: dateOfSortedEvent] == NSOrderedDescending && i == sortedArray.count-1 )){
-                [sortedArray addObject:event];
-                break;
-            }
-        }
-    }
-    
-    NSMutableArray *newestFirstSortedArray = [NSMutableArray array];
-    for (Event *event in sortedArray) {
-        [newestFirstSortedArray insertObject:event atIndex:0];
-    }
-    
-    return newestFirstSortedArray;
+
+    __block NSDateFormatter *theformatter = [[NSDateFormatter alloc] init];
+    theformatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSArray * theSortedArray = [self.arrayOfAllData sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        NSDate *date1 = [theformatter dateFromString:((Event*)obj1).date];
+        NSDate *date2 = [theformatter dateFromString:((Event*)obj2).date];
+        return [date2 compare:date1];
+    }];
+    return theSortedArray;
 }
 
 - (void)filterArray:(NSNotification *)note

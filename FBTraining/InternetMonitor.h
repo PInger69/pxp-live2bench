@@ -10,7 +10,7 @@
 
 @interface InternetMonitor : NSObject
 
-@property BOOL hasWifi;
-@property BOOL hasInternet;
+@property (atomic,assign) BOOL hasWifi;
+@property (atomic,assign) BOOL hasInternet;
 
 @end

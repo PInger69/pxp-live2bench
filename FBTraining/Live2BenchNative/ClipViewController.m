@@ -155,7 +155,7 @@ static void * encoderTagContext = &encoderTagContext;
 -(void)onTagChanged:(NSNotification *)note{
 
     self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
-    self.tagsToDisplay =[ NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
+//    self.tagsToDisplay =[ NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
 
     
     [_pxpFilter filterTags:self.allTagsArray];
@@ -198,12 +198,17 @@ static void * encoderTagContext = &encoderTagContext;
     [_pxpFilter removeAllPredicates];
     
     
+    Profession * profession = [ProfessionMap data][SPORT_HOCKEY];// should be the events sport // 
+
+
+    
+    
+    
     NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
                                                                                    [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
+                                                                                   ,profession.filterPredicate
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]

@@ -1509,7 +1509,9 @@
     PXPLog(@"  connection type: %@ ",trim(connection.connectionType));
     PXPLog(@"  url: %@ ",[[connection originalRequest]URL]);
     PXPLog(@"  reason: %@ ",failType);
-    
+    if ([connection.connectionType isEqualToString: AUTHENTICATE] || [connection.connectionType isEqualToString: VERSION]){
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_CONNECTION_ERROR object:self userInfo:@{@"error":@"fail"}];//
+    }
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_FINISH object:self userInfo:nil];//
     isSuccess   = NO;
     isFinished  = YES;
@@ -1885,6 +1887,12 @@
 
 -(void)onNewTags:(NSDictionary*)data
 {
+    if ([data objectForKey:@"success"] != nil && [[data objectForKey:@"success"]integerValue] != 1){
+        PXPLog(@"Encoder Error! on New Tag - msg: %@",[data objectForKey:@"msg"]);
+        return;
+    }
+    
+    
     if ([data objectForKey:@"id"]) {
         
         if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
@@ -1910,7 +1918,7 @@
 
             [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
 
-            
+
             
             
         }

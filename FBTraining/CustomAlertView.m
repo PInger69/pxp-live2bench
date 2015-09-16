@@ -10,8 +10,8 @@
 #import "AlertsSettingViewController.h"
 
 static NSMutableArray * alertPool;
-static NSMutableArray *_currentViews;
-
+static NSMutableArray * _currentViews;
+static NSMutableArray * _supressedTitles;
 
 
 @implementation CustomAlertView
@@ -23,7 +23,7 @@ static AlertType    allowedTypes;
     if (alertPool) return;
     alertPool           = [[NSMutableArray alloc]init];
     _currentViews       = [[NSMutableArray alloc]init];
-    
+    _supressedTitles    = [[NSMutableArray alloc]init];
     // all enabled by default
     allowedTypes = AlertImportant | AlertNotification | AlertEncoder | AlertDevice | AlertIndecisive;
     
@@ -31,6 +31,12 @@ static AlertType    allowedTypes;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{}];
     
+}
+
++(NSMutableArray*)supressedTitles
+{
+
+    return _supressedTitles;
 }
 
 + (void)alertsSettingChanged:(NSNotification *)note {
@@ -141,7 +147,7 @@ static AlertType    allowedTypes;
 
 -(BOOL)display
 {
-    if (allowedTypes & self.type) {
+    if ((allowedTypes & self.type) && ![_supressedTitles containsObject:self.title]) {
         //[super show];
         [self showView];
         return YES;

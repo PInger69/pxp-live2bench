@@ -21,6 +21,7 @@
 #import "ToastObserverSettingViewController.h"
 #import "AlertsSettingViewController.h"
 #import "TabsSettingViewController.h"
+#import "PreferencesViewController.h"
 
 @interface SettingsPageViewController () //<SettingsTableDelegate>
 
@@ -77,15 +78,15 @@ NS_OPTIONS(NSInteger, style){
         [self setMainSectionTab:NSLocalizedString(@"Settings",nil)  imageName:@"settingsButton"];
         
         // Initialize Custom View Controllers
-        SettingsViewController *encoderControlsViewController = [[SettingsViewController alloc] initWithAppDelegate:appDel];
-        LogoViewController *welcomeViewController = [[LogoViewController alloc] initWithAppDelegate:appDel];
-        BitRateViewController *bitRateViewController = [[BitRateViewController alloc] initWithAppDelegate:appDel];
-        
-        ToastObserverSettingViewController *toastObserverSettingViewController = [[ToastObserverSettingViewController alloc] initWithAppDelegate:appDel];
-        AlertsSettingViewController *alertsSettingViewController = [[AlertsSettingViewController alloc] initWithAppDelegate:appDel];
-        InfoSettingViewController *informationSettingViewController = [[InfoSettingViewController alloc] initWithAppDelegate:appDel];
-        TabsSettingViewController *tabsSettingViewController = [[TabsSettingViewController alloc] initWithAppDelegate:appDel];
-        CreditsViewController *creditsViewController = [[CreditsViewController alloc] initWithAppDelegate:appDel];
+        SettingsViewController *encoderControlsViewController                   = [[SettingsViewController alloc] initWithAppDelegate:appDel];
+        LogoViewController *welcomeViewController                               = [[LogoViewController alloc] initWithAppDelegate:appDel];
+        BitRateViewController *bitRateViewController                            = [[BitRateViewController alloc] initWithAppDelegate:appDel];
+        PreferencesViewController * preferencesViewController                   = [[PreferencesViewController alloc]initWithAppDelegate:appDel];
+        ToastObserverSettingViewController *toastObserverSettingViewController  = [[ToastObserverSettingViewController alloc] initWithAppDelegate:appDel];
+        AlertsSettingViewController *alertsSettingViewController                = [[AlertsSettingViewController alloc] initWithAppDelegate:appDel];
+        InfoSettingViewController *informationSettingViewController             = [[InfoSettingViewController alloc] initWithAppDelegate:appDel];
+        TabsSettingViewController *tabsSettingViewController                    = [[TabsSettingViewController alloc] initWithAppDelegate:appDel];
+        CreditsViewController *creditsViewController                            = [[CreditsViewController alloc] initWithAppDelegate:appDel];
         
         // Setting Definitions to be loaded
         //  Name: the display name of the setting
@@ -100,6 +101,10 @@ NS_OPTIONS(NSInteger, style){
                                     @{
                                         @"Name": NSLocalizedString(@"Welcome", nil),
                                         @"ViewController": welcomeViewController
+                                        },
+                                    @{
+                                        @"Name": NSLocalizedString(@"Preferences", nil),
+                                        @"ViewController": preferencesViewController
                                         },
                                     @{
                                         @"Name": NSLocalizedString(@"Bit Rate", nil),

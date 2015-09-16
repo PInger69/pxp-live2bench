@@ -38,6 +38,8 @@ typedef NS_OPTIONS (NSInteger,AlertType){
 +(void)removeAlert:(UIAlertView*)alert;
 +(BOOL)alertMessageExists:(NSString*)alertMsg;
 +(void)removeAlertWithMessage:(NSString*)message;
++(NSMutableArray*)supressedTitles;
+
 
 -(CustomAlertView*)alertType:(AlertType)type;
 -(BOOL)display;

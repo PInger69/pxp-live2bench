@@ -316,6 +316,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
     } else if (!registerEncoder.authenticated) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_CONNECTION_ERROR object:registerEncoder];
         [registerEncoder destroy];
     }
 
@@ -345,7 +346,8 @@
     if (_authenticatedEncoders.count == 0) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Encoder"}];
         CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"No Encoder" message:@"No Encoder is connected" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert showView];
+        [alert display];
+
     }
 
 }

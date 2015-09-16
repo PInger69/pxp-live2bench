@@ -30,7 +30,15 @@
 
 -(void)checkInternet{
     
-    BOOL newHasInternet = [Utility hasInternet];
+//    BOOL newHasInternet = [Utility hasInternet];
+    
+    __block InternetMonitor * weakself = self;
+    [Utility hasInternetOnComplete:^(BOOL succsess) {
+        weakself.hasInternet = succsess;
+        
+        
+    }];
+    
     BOOL newHasWifi = [Utility hasWiFi];
     
     if(newHasWifi != hasWifi && !newHasWifi){
@@ -40,7 +48,7 @@
         
     }
     
-    hasInternet = newHasInternet;
+
     hasWifi = newHasWifi;
     
 }

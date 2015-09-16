@@ -172,7 +172,7 @@
 -(void)onTagChanged:(Event *)currentEvent{
     
     for (Tag *tag in currentEvent.tags ) {
-        if (![self.arrayOfAllTags containsObject:tag] && (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration)) {
+        if (![self.arrayOfAllTags containsObject:tag] && (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeCloseDurationOLD)) {
             [self.arrayOfAllTags insertObject:tag atIndex:0];
         }
     }

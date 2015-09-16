@@ -292,8 +292,28 @@
 
 - (nonnull NSArray *)tagsInPxpTagDisplayBar:(nonnull PxpTagDisplayBar *)tagDisplayBar {
     NSMutableArray *arrayOfTagsToDisplay = [[NSMutableArray alloc]init];
+    
+
+    
     for (Tag *tag in _event.tags ) {
-        if (tag.type == TagTypeNormal || tag.type == TagTypeTele || tag.type == TagTypeCloseDuration || tag.type == TagTypeHockeyStrengthStop || tag.type == TagTypeHockeyStopOLine || tag.type == TagTypeHockeyStopDLine || tag.type == TagTypeSoccerZoneStop) {
+        if (tag.type == TagTypeNormal
+            || tag.type == TagTypeTele
+            || tag.type == TagTypeCloseDuration
+            || tag.type == TagTypeCloseDurationOLD
+            || tag.type == TagTypeHockeyStrengthStop
+            || tag.type == TagTypeHockeyStopOLine
+            || tag.type == TagTypeHockeyStopDLine
+            || tag.type == TagTypeSoccerZoneStop
+            || tag.type == TagTypeHockeyStartOLine
+            || tag.type == TagTypeHockeyStartDLine
+            || tag.type == TagTypeHockeyPeriodStart
+            || tag.type == TagTypeHockeyPeriodStop
+            || tag.type == TagTypeHockeyOppOLineStart
+            || tag.type == TagTypeHockeyOppOLineStop
+            || tag.type == TagTypeHockeyOppDLineStart
+            || tag.type == TagTypeHockeyOppDLineStop
+            || tag.type == TagTypeHockeyStrengthStart
+            ) {
             [arrayOfTagsToDisplay insertObject:tag atIndex:0];
         }
     }

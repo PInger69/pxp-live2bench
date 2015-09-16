@@ -89,6 +89,14 @@
 
     UIImage *receivedImage = [UIImage imageWithData:mData];
     
+    if (!receivedImage){
+        
+        self.isSuccess  = NO;
+        self.isFinished = YES;
+        PXPLog(@"Warning! Thumbnail Not Found! URL: %@",thumbURL);
+        return;
+    }
+    
     [_iam.arrayOfClipImages setObject:receivedImage forKey:thumbURL];
 
     if (_imageview && _imageview.window)_imageview.image = receivedImage;

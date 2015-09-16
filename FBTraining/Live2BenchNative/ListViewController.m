@@ -367,26 +367,13 @@
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
     
-    
-//    NSPredicate *ignoreThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
-//                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-//                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-//                                                                                   ]];
-//    
-//    [_pxpFilter addPredicates:@[ignoreThese]];
-    
+    Profession * profession = [ProfessionMap data][SPORT_HOCKEY];
     
     NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopDLine]
+                                                                                  ,profession.filterPredicate
                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]

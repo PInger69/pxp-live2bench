@@ -48,8 +48,8 @@ typedef NS_ENUM (NSInteger,TagType){
     TagTypeDeleted                 = 3,
     TagTypeTele                    = 4,
     //TagTypeStrength                = 10,
-   // TagTypeOpenDuration            = 99,
-    //TagTypeCloseDuration           = 100,
+//    TagTypeOpenDuration            = 99,
+    TagTypeCloseDurationOLD           = 100,
     
     TagTypeHockeyStartOLine        = 1,
     TagTypeHockeyStopOLine         = 2,

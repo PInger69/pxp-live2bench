@@ -39,6 +39,8 @@
         self.textView.backgroundColor   = [UIColor blackColor];
         self.textView.font              = [UIFont fontWithName:@"Courier" size:18.0];
         self.textView.editable          = NO;
+        self.textView.delegate          = self;
+        [self.textView setSelectable:YES];
         [self.textView setTextColor:[UIColor greenColor]];
         [[PxpLog getInstance] addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
         
@@ -138,6 +140,32 @@
         }
 
     }
+}
+
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    if (action == @selector(selectAll:))
+        return YES;
+    
+    if (action == @selector(select:))
+        return YES;
+    
+    if (action == @selector(cut:))
+        return NO;
+    
+    if (action == @selector(copy:))
+        return YES;
+    
+    if (action == @selector(paste:))
+        return NO;
+    return [super canPerformAction:action withSender:sender];
+
+
+}
+
+-(void)selectAll:(id)sender
+{
+    [self.textView selectAll:sender];
 }
 
 -(void)onCams:(id)sender

@@ -53,7 +53,15 @@
                 
                 if (url) {
                     tempDict[k] = url;
+                    
                     _assets[k] = [AVURLAsset URLAssetWithURL:url options:nil];
+                    
+                    // Richard
+//                    NSArray *requestedKeys = @[@"playable"];
+//                    [_assets[k] loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
+//                        
+//                    }];
+                    // End Richard
                     
                     if (defaultURL == nil) {
                         defaultURL = [tempDict objectForKey:[k lowercaseString]];
@@ -81,7 +89,15 @@
         if (qlty<=0) correctedQuality = LOW_QUALITY;
         
         NSURL *url = [NSURL URLWithString:aPath];
+        PXPLog(@"%@",url);
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+        // Richard
+//        NSArray *requestedKeys = @[@"playable"];
+//        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
+//            
+//        }];
+        // End Richard
+        
         
         _qualities = @{correctedQuality:url};
         _assetsReady = NO;
@@ -102,7 +118,48 @@
         NSURL *url = [NSURL fileURLWithPath: fileURL];
         
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+ 
+        __block NSError *error = nil;
+        // Richard
+//        NSArray *requestedKeys = @[@"playable",@"duration"];
+//        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
+//            
+//            
+//            AVKeyValueStatus playableStatus = [asset statusOfValueForKey:@"playable" error:&error];
+//            switch (playableStatus) {
+//                case AVKeyValueStatusLoaded:
+//                    //go on
+//                    break;
+//                default:
+//                    return;
+//            }
+//            
+//            AVKeyValueStatus durationStatus = [asset statusOfValueForKey:@"duration" error:&error];
+//            switch (durationStatus) {
+//                case AVKeyValueStatusLoaded:
+//
+//                   
+//                    break;
+//                default:
+//                    return;
+//            }
+//             Float64 ttt=  CMTimeGetSeconds(asset.duration);
+//            
+//            NSLog(@"");
+//        }];
         
+        /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
+//        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
+//         ^{
+//             dispatch_async( dispatch_get_main_queue(),
+//                            ^{
+//                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
+//                                [self prepareToPlayAsset:asset withKeys:requestedKeys];
+//                                
+//                            });
+//         }];
+        
+        // End Richard
         _qualities = @{HIGH_QUALITY: url};
         _assets = [NSMutableDictionary dictionaryWithDictionary:@{HIGH_QUALITY: asset}];
         _urlPath = [_qualities objectForKey: HIGH_QUALITY];

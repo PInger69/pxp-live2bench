@@ -88,6 +88,8 @@
 -(void)registerEncoder:(NSString*)name ip:(NSString*)ip;
 -(void)onRegisterEncoderCompleted:(Encoder*)registerEncoder; 
 
+-(void)unRegisterEncoder:(Encoder *) aEncoder;
+
 -(void)declareCurrentEvent:(Event*)event;
 
 -(void)makeFakeEncoder; // debug

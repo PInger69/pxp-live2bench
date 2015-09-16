@@ -147,7 +147,8 @@ static CMClockRef _pxpPlayerMasterClock;
             
             if (self.currentItem.status == AVPlayerItemStatusFailed) {
                 PXPLog(@"%@: %@", self, self.currentItem.error);
-                
+                PXPLog(@"-----");
+                NSLog(@"%@: %@", self, self.currentItem.error);
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.currentItem.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 
                 [alert show];

@@ -60,6 +60,7 @@
 
 //---managed to resolve---
 -(void)netServiceDidResolveAddress:(NSNetService *)service {
+
     if (!self.searching)return;
     
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_WIFI_CHANGED object:self];
@@ -73,6 +74,7 @@
     NSString *deviceIP      = [Utility getIPAddress];
     
     NSArray *parseLocalIP   = [[NSArray alloc]initWithArray:[deviceIP componentsSeparatedByString:@"."]]; //split the local ip of the device into an array of each number -- used to compare to remote ip(test if on the same network
+//    return;
     
     for(int i=0;i < [[service addresses] count]; i++ )
     {
