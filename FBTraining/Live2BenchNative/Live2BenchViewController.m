@@ -738,7 +738,7 @@ static void * eventContext      = &eventContext;
 -(void)gotLiveEvent
 {
     Feed *info = [_currentEvent.feeds allValues] [0];
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{@"feed":info ,  @"command": [NSNumber numberWithInt:VideoPlayerCommandPlayFeed], @"context":STRING_LIVE2BENCH_CONTEXT}];
     
     LeagueTeam *homeTeam = [_currentEvent.teams objectForKey:@"homeTeam"];
     LeagueTeam *awayTeam = [_currentEvent.teams objectForKey:@"visitTeam"];
@@ -760,7 +760,7 @@ static void * eventContext      = &eventContext;
                                animated:YES];
     
     self.videoPlayer.live = YES;
-    [_pipController pipsAndVideoPlayerToLive:info];
+//    [_pipController pipsAndVideoPlayerToLive:info];
 }
 
 

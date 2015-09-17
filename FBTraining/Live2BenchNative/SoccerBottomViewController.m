@@ -317,6 +317,18 @@
     //get all the non sub players count which will be used to center all the player buttons
     int notSubPlayersCount = (int)regularPlayers.count;
     float buttonWidth = 800/(notSubPlayersCount+5);
+
+    
+    regularPlayers =   [regularPlayers sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        if ([obj1 intValue]==[obj2 intValue])
+            return NSOrderedSame;
+        
+        else if ([obj1 intValue]<[obj2 intValue])
+            return NSOrderedAscending;
+        else
+            return NSOrderedDescending;
+        
+    }];
     
     for(NSString *jersey in regularPlayers)
     {

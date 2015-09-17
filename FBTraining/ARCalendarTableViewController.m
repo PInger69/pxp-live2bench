@@ -98,11 +98,18 @@
 
     __block NSDateFormatter *theformatter = [[NSDateFormatter alloc] init];
     theformatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    NSArray * theSortedArray = [self.arrayOfAllData sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+
+    NSArray * theSortedArray = [self.arrayOfAllData sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSDate *date1 = [theformatter dateFromString:((Event*)obj1).date];
         NSDate *date2 = [theformatter dateFromString:((Event*)obj2).date];
         return [date2 compare:date1];
     }];
+// for beta
+//    NSArray * theSortedArray = [self.arrayOfAllData sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+//        NSDate *date1 = [theformatter dateFromString:((Event*)obj1).date];
+//        NSDate *date2 = [theformatter dateFromString:((Event*)obj2).date];
+//        return [date2 compare:date1];
+//    }];
     return theSortedArray;
 }
 

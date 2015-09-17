@@ -146,6 +146,11 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 
 #define DEBUG_MODE                          1
 
+// Beta to non-Beta
+
+//#define PRED_BLK_ARG_evaluatedObject_bindings  ^BOOL(id evaluatedObject, NSDictionary *bindings)
+//#define PRED_BLK_ARG_evaluatedObject_bindings  ^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings)
+
 
 
 

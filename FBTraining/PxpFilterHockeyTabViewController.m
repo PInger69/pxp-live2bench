@@ -271,7 +271,7 @@
     PxpFilterButtonScrollView * sender = (PxpFilterButtonScrollView *)inputObject;
     
     if (sender == _playersScrollView) {
-        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             Tag * tag = (Tag *)evaluatedObject;
             for (UIButton * button in sender.userSelected) {
                 if ([tag.players containsObject:button.titleLabel.text]){
@@ -320,7 +320,7 @@
     _favoriteButton.filterPropertyValue     = @"1";
     
     _telestrationButton.titleLabel.text     = @"";
-    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         Tag * t =   (Tag *) evaluatedObject;
         return (t.type == TagTypeTele);
     }]];

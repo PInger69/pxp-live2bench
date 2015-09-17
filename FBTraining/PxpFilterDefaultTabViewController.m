@@ -77,10 +77,16 @@
     _favoriteButton.filterPropertyValue     = @"1";
     
     _telestrationButton.titleLabel.text     = @"";
-    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+    
+    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         Tag * t =   (Tag *) evaluatedObject;
         return (t.type == TagTypeTele);
     }]];
+    
+//    [ _telestrationButton setPredicateToUse:[NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+//        Tag * t =   (Tag *) evaluatedObject;
+//        return (t.type == TagTypeTele);
+//    }]];
 
     _telestrationButton.enabled = _isTelestrationActive;
     [_telestrationButton setTitle:@"" forState:UIControlStateNormal];

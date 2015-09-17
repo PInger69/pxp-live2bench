@@ -116,6 +116,7 @@
 
 - (void)dealloc
 {
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_REQUEST_SETTINGS object:nil];
 }
 

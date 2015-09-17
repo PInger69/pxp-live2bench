@@ -195,8 +195,8 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 }
 
 -(void)toggleTabs:(NSNotification *)note {
-    NSArray *tabsName = note.userInfo[@"TabsName"];
-    NSArray *tabs = note.userInfo[@"Tabs"];
+    NSArray *tabsName   = note.userInfo[@"TabsName"];
+    NSArray *tabs       = note.userInfo[@"Tabs"];
     
     // If there is tab that is not already visible, add it
     for (NSString *name in tabsName) {

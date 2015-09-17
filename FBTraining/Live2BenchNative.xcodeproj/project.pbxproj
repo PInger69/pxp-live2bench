@@ -371,8 +371,8 @@
 		D797CCF7170DB9D300A6E62B /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D797CCF6170DB9D300A6E62B /* Accounts.framework */; };
 		D797CCFA170DD8D400A6E62B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D797CCF8170DD8D400A6E62B /* logo.png */; };
 		D797CCFB170DD8D400A6E62B /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D797CCF9170DD8D400A6E62B /* logo@2x.png */; };
-		D79885091B97352A000F8667 /* PxpMyClipViewFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D79885081B97352A000F8667 /* PxpMyClipViewFullscreenViewController.m */; settings = {ASSET_TAGS = (); }; };
-		D798850D1B9745BD000F8667 /* InternetMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D798850C1B9745BD000F8667 /* InternetMonitor.m */; settings = {ASSET_TAGS = (); }; };
+		D79885091B97352A000F8667 /* PxpMyClipViewFullscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D79885081B97352A000F8667 /* PxpMyClipViewFullscreenViewController.m */; };
+		D798850D1B9745BD000F8667 /* InternetMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D798850C1B9745BD000F8667 /* InternetMonitor.m */; };
 		D799748216F8C37700CAAABB /* playerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D799748116F8C37700CAAABB /* playerCell.m */; };
 		D79BC1D919E836F800ECD8DB /* DebuggingTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D79BC1D819E836F800ECD8DB /* DebuggingTabViewController.m */; };
 		D79BC1DC19E8720100ECD8DB /* Pip.m in Sources */ = {isa = PBXBuildFile; fileRef = D79BC1DB19E8720100ECD8DB /* Pip.m */; };
@@ -463,9 +463,9 @@
 		D7B79CD5182C398400F0876D /* saveToAlbumSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7B79CD3182C398400F0876D /* saveToAlbumSelected@2x.png */; };
 		D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4D51AD32BDD00A5DEC3 /* InjuryViewController.m */; };
 		D7B7C4DB1AD6CDF800A5DEC3 /* FeedSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B7C4DA1AD6CDF800A5DEC3 /* FeedSelectCell.m */; };
-		D7B95BC21B9627940042A613 /* ProtoTypeEncoderTaskQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC11B9627930042A613 /* ProtoTypeEncoderTaskQueue.m */; settings = {ASSET_TAGS = (); }; };
-		D7B95BC51B9627B90042A613 /* ProtoTypeEncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC41B9627B90042A613 /* ProtoTypeEncoderTask.m */; settings = {ASSET_TAGS = (); }; };
-		D7B95BC81B96281C0042A613 /* ProtoTypeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC71B96281C0042A613 /* ProtoTypeEncoder.m */; settings = {ASSET_TAGS = (); }; };
+		D7B95BC21B9627940042A613 /* ProtoTypeEncoderTaskQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC11B9627930042A613 /* ProtoTypeEncoderTaskQueue.m */; };
+		D7B95BC51B9627B90042A613 /* ProtoTypeEncoderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC41B9627B90042A613 /* ProtoTypeEncoderTask.m */; };
+		D7B95BC81B96281C0042A613 /* ProtoTypeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B95BC71B96281C0042A613 /* ProtoTypeEncoder.m */; };
 		D7BA253C1B58081200DECA65 /* painting.png in Resources */ = {isa = PBXBuildFile; fileRef = D7BA253B1B58081200DECA65 /* painting.png */; };
 		D7BA25421B5848D600DECA65 /* AbstractBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7BA25411B5848D600DECA65 /* AbstractBottomViewController.m */; };
 		D7C5F38119BF894A008190CE /* ScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C5F38019BF894A008190CE /* ScreenController.m */; };
@@ -499,7 +499,7 @@
 		D7D2F6AA1B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F6A91B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib */; };
 		D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D43F6D1B5D4A56007B188D /* FeedInspector.m */; };
 		D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D86CD416B2D84500F48523 /* ContentViewController.m */; };
-		D7D9DCC31BA0CC0600D04CE0 /* ThumbnailDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */; settings = {ASSET_TAGS = (); }; };
+		D7D9DCC31BA0CC0600D04CE0 /* ThumbnailDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */; };
 		D7DA233016B713FA00143102 /* BG.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA232F16B713FA00143102 /* BG.png */; };
 		D7DA233F16B717D600143102 /* graph.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA233D16B717D600143102 /* graph.png */; };
 		D7DA234016B717D600143102 /* graph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA233E16B717D600143102 /* graph@2x.png */; };
@@ -513,9 +513,9 @@
 		D7DB754817EA0EFC009C402F /* gotolive.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DB754617EA0EFC009C402F /* gotolive.png */; };
 		D7DB754F17EA6068009C402F /* UIFont+Default.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB754E17EA6068009C402F /* UIFont+Default.m */; };
 		D7DB755317EA690F009C402F /* LoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB755217EA690F009C402F /* LoginTextField.m */; };
-		D7DEF2791BA7494D0037D848 /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DEF2781BA7494D0037D848 /* PreferencesViewController.m */; settings = {ASSET_TAGS = (); }; };
-		D7DEF27B1BA755BE0037D848 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7DEF27A1BA755BE0037D848 /* PreferencesView.xib */; settings = {ASSET_TAGS = (); }; };
-		D7DEF27E1BA883E40037D848 /* ProfessionMap.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DEF27D1BA883E40037D848 /* ProfessionMap.m */; settings = {ASSET_TAGS = (); }; };
+		D7DEF2791BA7494D0037D848 /* PreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DEF2781BA7494D0037D848 /* PreferencesViewController.m */; };
+		D7DEF27B1BA755BE0037D848 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7DEF27A1BA755BE0037D848 /* PreferencesView.xib */; };
+		D7DEF27E1BA883E40037D848 /* ProfessionMap.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DEF27D1BA883E40037D848 /* ProfessionMap.m */; };
 		D7DFD4A71827FA5F00D98BE7 /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DFD4A51827FA5F00D98BE7 /* appicon.png */; };
 		D7DFD4A81827FA5F00D98BE7 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DFD4A61827FA5F00D98BE7 /* appicon@2x.png */; };
 		D7E4AC7616B3225B00129222 /* TagMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E4AC7516B3225B00129222 /* TagMarker.m */; };

@@ -135,7 +135,8 @@
     PxpFilterButtonScrollView * sender = (PxpFilterButtonScrollView *)inputObject;
     
     if (sender == _playersScrollView) {
-        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+        //^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings)
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings)  {
                 Clip * c = (Clip *)evaluatedObject;
                 for (UIButton * button in sender.userSelected) {
                     if ([c.players containsObject:button.titleLabel.text]){
@@ -145,7 +146,8 @@
                 return NO;
             }];
     } else if (sender == _teamsScrollView) {
-        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+                //^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings)
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings)  {
             Clip * c = (Clip *)evaluatedObject;
             NSString * teamVS = [NSString stringWithFormat:@"%@ VS %@",c.homeTeam,c.visitTeam];
             for (UIButton * button in sender.userSelected) {
@@ -157,7 +159,8 @@
         }];
     
     } else if (sender == _dateScrollView) {
-        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings) {
+                //^BOOL(id  __nonnull evaluatedObject, NSDictionary<NSString *,id> * __nullable bindings)
+        sender.predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             Clip * c = (Clip *)evaluatedObject;
             NSString * clipDate = [Utility dateFromEvent: c.eventName];
             
