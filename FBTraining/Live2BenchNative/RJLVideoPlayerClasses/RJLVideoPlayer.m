@@ -739,6 +739,7 @@ static void *FeedAliveContext                               = &FeedAliveContext;
 
         };
     } else {
+
         [self.avPlayer setRate:self.slowmo ? SLOWMO_SPEED : 1.0];
         [freezeMonitor start];
         self.status                                 = _status | RJLPS_Play;

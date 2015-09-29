@@ -174,10 +174,24 @@
     Encoder * enc = (Encoder *)encoderManager.primaryEncoder;
     
     if (!enc && !enc.cameraData){
-        PXPLog(@"No CameraData Found!");
+        PXPLog(@"No primaryEncoder Found");
+        PXPLog(@"   Check if an Event is playing");        
     } else {
         PXPLog(@"%@",enc.cameraData);
     }
+    
+    if ( [encoderManager.authenticatedEncoders count] && !enc){
+        PXPLog(@"Displaying other cam data found on network...");
+        for (Encoder * encItem in encoderManager.authenticatedEncoders) {
+            PXPLog(@"%@",encItem.cameraData);
+        }
+    
+    }
+    
+    
+    
+  
+
     
 }
 

@@ -11,6 +11,8 @@
 @implementation PxpPlayer (Feed)
 
 - (void)setFeed:(nullable Feed *)feed {
+
+    
     [self replaceCurrentItemWithPlayerItem:feed.path ? [AVPlayerItem playerItemWithURL:feed.path] : nil];
 }
 

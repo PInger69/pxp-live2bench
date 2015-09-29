@@ -146,9 +146,11 @@ static CMClockRef _pxpPlayerMasterClock;
         if (self.status != AVPlayerStatusUnknown) {
             
             if (self.currentItem.status == AVPlayerItemStatusFailed) {
-                PXPLog(@"%@: %@", self, self.currentItem.error);
+                AVPlayerItem * playerItem  = self.currentItem;
+                
+                PXPLog(@"%@: %@", self, playerItem.error);
                 PXPLog(@"-----");
-                NSLog(@"%@: %@", self, self.currentItem.error);
+                NSLog(@"%@: %@", self, playerItem.error);
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.currentItem.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 
                 [alert show];
@@ -162,6 +164,11 @@ static CMClockRef _pxpPlayerMasterClock;
             
             // flush
             [self.loadActionQueue removeAllObjects];
+        } else if (self.status == AVPlayerStatusUnknown) {
+        
+            PXPLog(@"%@: %@", self, self.currentItem.error);
+            PXPLog(@"-----");
+            NSLog(@"%@: %@", self, self.currentItem.error);
         }
         
         
@@ -181,7 +188,7 @@ static CMClockRef _pxpPlayerMasterClock;
 - (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
     dispatch_async(dispatch_get_main_queue(), ^() {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
-        [super replaceCurrentItemWithPlayerItem:item];
+            [super replaceCurrentItemWithPlayerItem:item];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
     });
 }

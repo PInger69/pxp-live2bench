@@ -96,7 +96,11 @@ static InternetMonitor* internetMonitor;
                      error:&error];
         
         if(error) {
-            PXPLog(@"%@ Error! U001",[error.userInfo objectForKey:@"NSLocalizedDescription"]);
+
+            NSString * description  = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
+            NSString * reason       = [error.userInfo objectForKey:NSLocalizedFailureReasonErrorKey];
+            
+            PXPLog(@"%@ Error! U001  %@",description,reason);
             /* JSON was malformed, act appropriately here */ }
         
         // the originating poster wants to deal with dictionaries;
