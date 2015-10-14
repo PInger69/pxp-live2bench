@@ -498,6 +498,7 @@
 		D7D2F6A81B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D2F6A71B7E5C2100DC0DC5 /* PxpFilterMyClipTabViewController.m */; };
 		D7D2F6AA1B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7D2F6A91B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib */; };
 		D7D43F6E1B5D4A56007B188D /* FeedInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D43F6D1B5D4A56007B188D /* FeedInspector.m */; };
+		D7D47E531BCD5B12005BC1EC /* EncoderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D47E521BCD5B11005BC1EC /* EncoderOperation.m */; settings = {ASSET_TAGS = (); }; };
 		D7D86CD616B2D84600F48523 /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D86CD416B2D84500F48523 /* ContentViewController.m */; };
 		D7D9DCC31BA0CC0600D04CE0 /* ThumbnailDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D7D9DCC21BA0CC0500D04CE0 /* ThumbnailDownloader.m */; };
 		D7DA233016B713FA00143102 /* BG.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DA232F16B713FA00143102 /* BG.png */; };
@@ -1339,6 +1340,8 @@
 		D7D2F6A91B7E5DA200DC0DC5 /* PxpFilterMyClipTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PxpFilterMyClipTabViewController.xib; sourceTree = "<group>"; };
 		D7D43F6C1B5D4A56007B188D /* FeedInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeedInspector.h; path = Live2BenchNative/UtilityClasses/FeedInspector.h; sourceTree = "<group>"; };
 		D7D43F6D1B5D4A56007B188D /* FeedInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedInspector.m; path = Live2BenchNative/UtilityClasses/FeedInspector.m; sourceTree = "<group>"; };
+		D7D47E511BCD5B11005BC1EC /* EncoderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncoderOperation.h; sourceTree = "<group>"; };
+		D7D47E521BCD5B11005BC1EC /* EncoderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncoderOperation.m; sourceTree = "<group>"; };
 		D7D86CD316B2D84400F48523 /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
 		D7D86CD416B2D84500F48523 /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
 		D7D9DCC11BA0CC0500D04CE0 /* ThumbnailDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailDownloader.h; sourceTree = "<group>"; };
@@ -2576,6 +2579,7 @@
 		D7A9394916ADA65E006CBAB2 /* Live2BenchNative */ = {
 			isa = PBXGroup;
 			children = (
+				D7D47E501BCD5A1A005BC1EC /* EncoderOperations */,
 				AE683C4C1B71029100458F80 /* PxpFullscreen */,
 				AED484931B56A22600769EEF /* PxpTelestration */,
 				AEDD7C721B4AB6CF003C82F3 /* PxpPlayer */,
@@ -2877,6 +2881,15 @@
 				D72920231B41ADC3004F01DA /* ActionListItem.h */,
 			);
 			name = UtilityClasses;
+			sourceTree = "<group>";
+		};
+		D7D47E501BCD5A1A005BC1EC /* EncoderOperations */ = {
+			isa = PBXGroup;
+			children = (
+				D7D47E511BCD5B11005BC1EC /* EncoderOperation.h */,
+				D7D47E521BCD5B11005BC1EC /* EncoderOperation.m */,
+			);
+			name = EncoderOperations;
 			sourceTree = "<group>";
 		};
 		D7DB74EB17E79A13009C402F /* Eula */ = {
@@ -3315,6 +3328,7 @@
 				D78536371B7CE2C700A53CA8 /* PxpFilterButton.m in Sources */,
 				BD1AEF8C17F0B14E00BD59A9 /* OBSlider.m in Sources */,
 				D79350EA1AD459C500D1751F /* DownloadEventItem.m in Sources */,
+				D7D47E531BCD5B12005BC1EC /* EncoderOperation.m in Sources */,
 				D738304D198A94D60053F0A1 /* FilterScrollView.m in Sources */,
 				D738305E198AEC610053F0A1 /* BreadCrumbsViewController.m in Sources */,
 				AEDD7C951B4AB830003C82F3 /* PxpPlayerControlBar.m in Sources */,

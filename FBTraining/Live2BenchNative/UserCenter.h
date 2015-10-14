@@ -41,6 +41,12 @@
 @property (nonatomic,strong) NSString               * accountInfoPath;
 @property (nonatomic,strong) NSString               * localPath;
 
+
+// Preferences
+@property (nonatomic,assign) NSInteger              * preferenceLiveBuffer;
+
+
+
 +(instancetype)getInstance;
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;

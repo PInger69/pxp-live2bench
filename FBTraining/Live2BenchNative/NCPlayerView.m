@@ -211,10 +211,13 @@
     if (context == _rateObserverContext) {
         
         // update tool bar items
+
         if (self.player.rate != 0.0 && self.toolBarItems[0] != self.pauseButton) {
+//        if (((self.player.rate-PAUSE_RATE)> PAUSE_RATE ) && self.toolBarItems[0] != self.pauseButton) {
             self.toolBarItems[0] = self.pauseButton;
             self.toolBar.items = self.toolBarItems;
         } else if (self.player.rate == 0.0 && self.toolBarItems[0] != self.playButton) {
+//        } else if (((self.player.rate-PAUSE_RATE)< PAUSE_RATE ) && self.toolBarItems[0] != self.playButton) {
             self.toolBarItems[0] = self.playButton;
             self.toolBar.items = self.toolBarItems;
         }

@@ -40,6 +40,10 @@
             for (NSString *name in event.feeds.keyEnumerator) {
                 feeds[name] = event.feeds[name];
             }
+        } else if (!event.live && !event.local) {
+        
+            feeds = [event.feeds mutableCopy];
+            
         } else { // use mp4 from encoder
             for (NSString *name in event.mp4s.keyEnumerator) {
                 
@@ -70,8 +74,8 @@
     
     if (event) {
         // default sync parameters
-        self.mainPlayer.syncThreshold = CMTimeMake(1, 1);
-        self.mainPlayer.syncInterval = CMTimeMake(5, 1);
+        self.mainPlayer.syncThreshold = CMTimeMake(5, NSEC_PER_SEC);// was 1 before not 5
+        self.mainPlayer.syncInterval = CMTimeMake(30, NSEC_PER_SEC); // was 5 before not 30
         
         [self.mainPlayer addLoadAction:[PxpLoadAction loadActionWithTarget:self action:@selector(loadComplete:)]];
     }

@@ -66,6 +66,9 @@
 
 - (void)goToAllEvents:(NSNotification *)note
 {
+    
+//    self.
+    
     [self.calendar selectDate:nil makeVisible:YES];
     [self calendar:self.calendar didSelectDate:nil];
     self.calendar.isAllEventsMode = YES;
@@ -74,6 +77,9 @@
 
 - (void)goToLatestEvent:(NSNotification *)note
 {
+    
+
+    
     self.calendar.isAllEventsMode = NO;
     NSMutableArray *arrayOfDate = [NSMutableArray array];
     for (NSString *dateString in self.dateArray) {

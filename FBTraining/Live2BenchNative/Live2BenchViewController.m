@@ -899,6 +899,9 @@ static void * eventContext      = &eventContext;
     _videoBar.playerViewController = _playerViewController;
     
     _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
+    
+    
+
 }
 
 -(void)onOpenTeleView:(TeleViewController *)tvc
@@ -942,52 +945,54 @@ static void * eventContext      = &eventContext;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-
     [super viewWillAppear:animated];
 
-  
-    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
-    
-    if (!self.videoPlayer.feed && _encoderManager.currentEvent != nil) {
-     [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
-    }
-    
-    
 
-//    [currentEventTitle setNeedsDisplay];
     
-    
-    // maybe this should be part of the videoplayer
-     if(!(self.videoPlayer.view.superview == self.view))
-     {
-         [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
-         [self.view addSubview:self.videoPlayer.view];
-         
-         //[self.videoPlayer play];
-         //[self.view addSubview:_fullscreenViewController.view];
-//         //add swipe gesture: swipe left: seek back ; swipe right: seek forward
-//         UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
-//         [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
-////         [self.videoPlayer.view addGestureRecognizer:recognizer];
-//         
-//         recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
-//         [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
-////         [self.videoPlayer.view addGestureRecognizer:recognizer];
-         
-     }
-
-    //[self createTagButtons]; // temp place
-    
-    
-    //!_bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
     [_bottomViewController update];
-    // just to update UI
-    
     [self.view bringSubviewToFront:_bottomViewController.mainView];
     [self.view bringSubviewToFront:_videoBar];
     [self.view bringSubviewToFront:_fullscreenViewController.view];
     [self.view bringSubviewToFront:_tagButtonController.leftTray];
     [self.view bringSubviewToFront:_tagButtonController.rightTray];
+    
+    
+    //_tagButtonController.fullScreenViewController = _fullscreenViewController;
+    
+    //    if (!self.videoPlayer.feed && _encoderManager.currentEvent != nil) {
+    //     [self.videoPlayer playFeed:_feedSwitch.primaryFeed];
+    //    }
+    //
+    
+    
+    //    [currentEventTitle setNeedsDisplay];
+    
+    
+    // maybe this should be part of the videoplayer
+    //     if(!(self.videoPlayer.view.superview == self.view))
+    //     {
+    //         [self.videoPlayer.view setFrame:CGRectMake((self.view.bounds.size.width - MEDIA_PLAYER_WIDTH)/2, 100.0f, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    //         [self.view addSubview:self.videoPlayer.view];
+    //
+    //         //[self.videoPlayer play];
+    //         //[self.view addSubview:_fullscreenViewController.view];
+    ////         //add swipe gesture: swipe left: seek back ; swipe right: seek forward
+    ////         UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
+    ////         [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+    //////         [self.videoPlayer.view addGestureRecognizer:recognizer];
+    ////
+    ////         recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(detectSwipe:)];
+    ////         [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+    //////         [self.videoPlayer.view addGestureRecognizer:recognizer];
+    //
+    //     }
+    
+    //[self createTagButtons]; // temp place
+    
+    
+    //!_bottomViewController.videoPlayer = ((id <PxpVideoPlayerProtocol>)self.videoPlayer).avPlayer;
+    
+    // just to update UI
 }
 
 

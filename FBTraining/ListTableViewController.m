@@ -190,7 +190,9 @@
         collapsableCell.downloadButton.downloadItem = nil;
         
         // This is checking if tag is downloaded to the device already
-        NSString * tagKey = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+        NSString * tagKey;
+//        tagKey  = [NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
+        tagKey = key;//[NSString stringWithFormat:@"%@-%@hq",tag.ID,key ];
         
         
         if ([[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] != nil &&   [[[Downloader defaultDownloader].keyedDownloadItems objectForKey:tagKey] isKindOfClass:[NSString class]]) {
@@ -205,7 +207,7 @@
                 [weakerCell.downloadButton setNeedsDisplay];
             }];
             //[key isEqualToString:@"onlySource"]
-        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:(tagKey)?nil:tagKey]){
+        } else if ([[LocalMediaManager getInstance]getClipByTag:tag scrKey:(tagKey)?tagKey:nil]){
             collapsableCell.downloadButton.downloadComplete = YES;
             collapsableCell.downloadButton.progress         = 1;
         }
@@ -614,7 +616,8 @@ willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
     }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
         
         Tag *tag = [self.tableData objectAtIndex:self.editingIndexPath.row];
-        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]) {
+//        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
             [self.tableData removeObject:tag];
             [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];

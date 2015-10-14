@@ -8,7 +8,7 @@
 
 #import "NCPlayer.h"
 
-#define DEFAULT_SYNC_THRESHOLD 0.333
+#define DEFAULT_SYNC_THRESHOLD 3.333
 #define DEFAULT_MAX_SYNCS 3
 #define DEFAULT_SYNC_WAIT_TIME 5
 
@@ -239,6 +239,10 @@
     if (self.rate != 0.0) {
         self.rate = slomo ? 0.5 : 1.0;
     }
+
+//    if ((self.rate-PAUSE_RATE)> PAUSE_RATE ) {
+//        self.rate = slomo ? 0.5 : 1.0;
+//    }
 }
 
 #pragma mark - Public Methods
@@ -444,6 +448,11 @@
 
 - (void)play {
     [self setRate:self.slomo ? 0.5 : 1.0];
+}
+
+- (void)pause
+{
+     [self setRate:0.0];
 }
 
 - (void)setRate:(float)rate {

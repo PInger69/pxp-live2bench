@@ -372,8 +372,9 @@
     self.resumeTime = self.mainPlayer.currentTime;
     
     // pause the player
-    [self.playerA pause];
-    
+    if (self.playerA.rate > 0.0001){
+        [self.playerA pause];
+    }
     // we're nice and mute when no one is listening
     self.mainPlayer.muted = YES;
     

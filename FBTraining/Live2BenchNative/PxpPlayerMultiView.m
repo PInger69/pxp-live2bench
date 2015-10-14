@@ -145,7 +145,7 @@
         } else if (playerView.player && !self.companionView.player) {
             
             PxpPlayer *player = playerView.player;
-            
+
             self.gridView.player = nil;
             self.gridView.hidden = YES;
             

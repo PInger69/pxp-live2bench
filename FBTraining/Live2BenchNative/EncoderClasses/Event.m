@@ -248,7 +248,16 @@
 
 -(NSMutableDictionary*)buildFeeds:(NSDictionary*)aDict isLive:(BOOL)isLive isLocal:(BOOL)isLocal
 {
-    NSString            * toypKey   = (isLive)?@"live_2":@"mp4_2";
+    NSString            * toypKey;//   = (isLive)?@"live_2":@"mp4_2"
+    if (isLive) { // the Event is Live
+        toypKey     = @"live_2";
+    } else if (!isLive && isLocal) { // is not live event and its on the ipad
+        toypKey     = @"mp4_2";
+    } else if (!isLive && !isLocal) { // it is not live and not on the iPad but is sitting on the encoder
+        toypKey     = @"vid_2";
+    }
+    
+    
     NSMutableDictionary * tempDict  = [[NSMutableDictionary alloc]init];
     
     // this is a check for the new encoder vs the old
@@ -258,26 +267,24 @@
         //for (id key in aDict[toypKey])
         for (int i = 0; i < vidDict.count; i++)
         {
-            //NSDictionary * vidDict      = aDict[toypKey];
-            NSDictionary * qualities    = [vidDict objectForKey:keys[i]];
-            NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
-            NSString *filePath = [[[localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.name] stringByAppendingPathComponent:name];
-            
-            Feed * createdFeed = (isLocal)? [[Feed alloc]initWithFileURL:filePath] : [[Feed alloc] initWithURLDict:qualities];
-            
+            Feed * createdFeed;
+        
+            // This picks out local to non local
+            if (isLocal) {
+                NSString *name = [NSString stringWithFormat:@"main_0%ihq.mp4",i];
+                NSString *filePath = [[[localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:self.name] stringByAppendingPathComponent:name];
+                createdFeed = [[Feed alloc]initWithFileURL:filePath];
+                createdFeed.type = FEED_TYPE_LOCAL;
+            } else {
+                NSDictionary * qualities    = [vidDict objectForKey:keys[i]];
+                createdFeed = [[Feed alloc] initWithURLDict:qualities];
+                createdFeed.type = (self.live)? FEED_TYPE_LIVE: FEED_TYPE_ENCODER;
+            }
+
+            // if feed is okay then add it to the array
             if (createdFeed != nil) {
                 createdFeed.sourceName = keys[i];
-                if (self.live){
-                    createdFeed.type = FEED_TYPE_LIVE;
-                } else if (self.local) {
-                    createdFeed.type = FEED_TYPE_LOCAL;
-                } else {
-                    createdFeed.type = FEED_TYPE_ENCODER;
-                }
-                
-                
                 [tempDict setObject:createdFeed forKey:keys[i]];
-
             }
             
         }
@@ -327,6 +334,9 @@
  *
  *  @return key
  */
+
+
+// IS THIS DEPRICATED????
 -(NSDictionary*)buildFeeds:(NSDictionary*)aDict
 {
     

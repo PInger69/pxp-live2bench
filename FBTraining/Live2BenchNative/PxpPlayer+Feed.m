@@ -12,8 +12,11 @@
 
 - (void)setFeed:(nullable Feed *)feed {
 
-    
-    [self replaceCurrentItemWithPlayerItem:feed.path ? [AVPlayerItem playerItemWithURL:feed.path] : nil];
+
+    AVPlayerItem * playerItem = [AVPlayerItem playerItemWithURL:feed.path];
+//    playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
+    [self replaceCurrentItemWithPlayerItem:feed.path ? playerItem : nil];
+//    [self seekToTime:CMTimeMake(0, 1)];
 }
 
 @end

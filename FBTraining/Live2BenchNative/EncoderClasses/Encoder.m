@@ -344,7 +344,12 @@
     BOOL isVersion;
     EncoderDataSync             * encoderSync;
     void            (^_onCompleteDownloadClip)(NSArray*pooled);
+
+    NSOperationQueue * operationQueue; // new
 }
+
+
+
 
 @synthesize justStarted = _justStarted;
 @synthesize pressingStart = _pressingStart;
@@ -411,9 +416,10 @@
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
         encoderSync             = [[EncoderDataSync alloc]init];
+
+        _eventContext   = [PxpEventContext context];
         
-        _eventContext = [PxpEventContext context];
-        
+        _operationQueue = [NSOperationQueue mainQueue];
     }
     return self;
 }
@@ -756,7 +762,7 @@
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                             @{
                                               @"id": tag.ID,
-                                              @"event": (tag.isLive)?LIVE_EVENT:tag.event,
+                                              @"event": (tag.isLive)?LIVE_EVENT:tag.event.name,
                                               @"requesttime":GET_NOW_TIME_STRING,
                                               @"bookmark":@"1",
                                               @"user":[UserCenter getInstance].userHID,
@@ -1646,8 +1652,8 @@
         PXPLog(@"  reason: %@",results[@"msg"]);
     }
     
-    NSLog(@" ");
-    NSLog(@"Building Leagues ===============================");
+//    NSLog(@" ");
+//    NSLog(@"Building Leagues ===============================");
     // building leagues
     NSMutableDictionary * leaguePool        = [[NSMutableDictionary alloc]init]; // this is the final
     NSMutableDictionary * leagueTempHIDPool = [[NSMutableDictionary alloc]init];
@@ -1670,10 +1676,10 @@
         [leagueTempHIDPool setObject:aLeague forKey:aLeague.hid];
     }
     
-    NSLog(@"Leagues =============================== %lu = %lu ",(unsigned long)[leaguePool count] , (unsigned long)[leagueTempHIDPool count]);
-    NSLog(@" ");
-    NSLog(@"Building Teams ===============================");
-    // Build Teams
+//    NSLog(@"Leagues =============================== %lu = %lu ",(unsigned long)[leaguePool count] , (unsigned long)[leagueTempHIDPool count]);
+//    NSLog(@" ");
+//    NSLog(@"Building Teams ===============================");
+//    // Build Teams
     NSMutableDictionary * teamTempHIDPool = [[NSMutableDictionary alloc]init];
     NSArray             * rawTeams          = [[results objectForKey:@"teams"]allValues];
 
@@ -1699,7 +1705,7 @@
 //            [leagueTempHIDPool setObject:owningLeague forKey:lHID];
 //            [leaguePool setObject:owningLeague forKey:owningLeague.name];
 //            NSLog(@"Team has no League, making a League: %@",lTeam.name);
-              NSLog(@"Team has no League: %@",lTeam.name);
+//              NSLog(@"Team has no League: %@",lTeam.name);
         }
         
         
@@ -1707,9 +1713,9 @@
         [teamTempHIDPool setObject:lTeam forKey:lTeam.hid];
     }
     
-    NSLog(@"Teams =============================== %lu = %lu ",(unsigned long)[rawTeams count] , (unsigned long)[teamTempHIDPool count]);
-    NSLog(@" ");
-    NSLog(@"Building Players ===============================");
+//    NSLog(@"Teams =============================== %lu = %lu ",(unsigned long)[rawTeams count] , (unsigned long)[teamTempHIDPool count]);
+//    NSLog(@" ");
+//    NSLog(@"Building Players ===============================");
     // build players
     
     NSArray             * rawTeamSetup          = [[results objectForKey:@"teamsetup"]allValues];
@@ -1756,7 +1762,7 @@
         }
 //           NSLog(@"%@ \tTeams have %lu players",owningTeam.name,(unsigned long)[owningTeam.players count]);
     }
-    NSLog(@"players =============================== %lu",(long)playerCount);
+//    NSLog(@"players =============================== %lu",(long)playerCount);
     
     self.encoderLeagues = [leaguePool copy];
     
@@ -1957,6 +1963,15 @@
             }
         }
     }
+    
+    if ([tData objectForKey:@"success"] != nil && [[tData objectForKey:@"success"]integerValue] == 0) {
+
+        PXPLog(@"!Encoder Issue:");
+        PXPLog(@"   msg:    %@",tData[@"msg"]);
+        PXPLog(@"   requrl: %@",tData[@"requrl"]);
+    }
+    
+    
 }
 
 
@@ -2262,20 +2277,28 @@
                     if (anEvent.live){ // live event FOUND!
                         _liveEvent = anEvent;
                         
-                        [pool setObject:anEvent forKey:anEvent.name];
-                        [pool setObject:anEvent forKey:LIVE_EVENT];
-                        
-                        NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
-                        [_allEvents setObject:eventFinal forKey:anEvent.name];
-                        [_allEvents setObject:eventFinal forKey:LIVE_EVENT];
-                        
-                        //self.allEvents      = [pool copy];
-                        //if (_status == ENCODER_STATUS_LIVE) {
+                        if ([_allEvents objectForKey:anEvent.name]){
+                            NSLog(@" *** Is already on encoder %@",anEvent.name);
+                        } else {
+                            [pool setObject:anEvent forKey:anEvent.name];
+                            [pool setObject:anEvent forKey:LIVE_EVENT];
+                            
+                            NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
+                            [_allEvents setObject:eventFinal forKey:anEvent.name];
+                            [_allEvents setObject:eventFinal forKey:LIVE_EVENT];
+                            
+                            //self.allEvents      = [pool copy];
+                            //if (_status == ENCODER_STATUS_LIVE) {
                             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_FOUND object:self];
-                        //}
-                        
+                            //}
+                        }
                     }else{
-                        [pool setObject:anEvent forKey:anEvent.name];
+                        if ([_allEvents objectForKey:anEvent.name]){
+                            NSLog(@" *** Is already on encoder %@",anEvent.name);
+                        } else {
+                            [pool setObject:anEvent forKey:anEvent.name];
+                        }
+                        
                     }
                     
                     if ([[anEvent.rawData objectForKey:@"deleted"] intValue] == 1) {

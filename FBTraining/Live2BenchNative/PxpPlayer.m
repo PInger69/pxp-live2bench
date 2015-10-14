@@ -7,13 +7,15 @@
 //
 
 #import "PxpPlayer.h"
-
+#import "UserCenter.h"
 #import <CoreMedia/CoreMedia.h>
 #import "PxpLoadAction.h"
 
 #define MAX_SYNCS 3
-
+#define LIVE_BUFFER 5
 #define NOTIF_MOTION_ALARM                  @"motionAlarm"
+
+
 
 /// The clock used to keep all PxpPlayers in sync.
 static CMClockRef _pxpPlayerMasterClock;
@@ -97,7 +99,7 @@ static CMClockRef _pxpPlayerMasterClock;
         [player sync:time];
     };
     
-    
+    self.allowsExternalPlayback = NO;
 }
 
 - (nonnull instancetype)initWithPlayerItem:(AVPlayerItem *)item {
@@ -150,11 +152,16 @@ static CMClockRef _pxpPlayerMasterClock;
                 
                 PXPLog(@"%@: %@", self, playerItem.error);
                 PXPLog(@"-----");
+                NSLog(@"FAIL FAIL");
                 NSLog(@"%@: %@", self, playerItem.error);
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.currentItem.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 
                 [alert show];
                 
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PXP_PLAYER_ERROR object:self userInfo:@{
+                                                                                                                        @"rate": [NSNumber numberWithFloat:self.rate]
+                                                                                                                        
+                                                                                                                        }];
             }
             
             // run actions
@@ -352,10 +359,14 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO];
     } else {
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
-            [super setRate:rate];
-        });
+
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
+                [super setRate:rate];
+            });
+
+        
+        
     }
 }
 
@@ -503,11 +514,18 @@ static CMClockRef _pxpPlayerMasterClock;
 #pragma mark - Overrides
 
 - (nullable NSString *)description {
-    return [NSString stringWithFormat:@"%@(%@)", [super description], self.name];
+    return [NSString stringWithFormat:@"%@(%@) rate:%f", [super description], self.name,self.rate];
 }
 
 - (void)play {
     [self setRate:self.playRate];
+
+}
+
+- (void)pause
+{
+    [super pause];
+//    [self setRate:0.0];
 }
 
 - (void)setRate:(float)rate {
@@ -635,12 +653,28 @@ static CMClockRef _pxpPlayerMasterClock;
         canReload = NO;
         
         AVPlayerItem *item = self.currentItem;
-        [self replaceCurrentItemWithPlayerItem:nil];
-        [self replaceCurrentItemWithPlayerItem:item];
+
+//        [self replaceCurrentItemWithPlayerItem:nil];
+//        [self replaceCurrentItemWithPlayerItem:item];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             canReload = YES;
         });
+    } else if (canReload && self.currentItem.status == AVPlayerItemStatusFailed && self.live) {
+        NSLog(@"Reload Failed... making new player item");
+        canReload = NO;
+        
+        AVPlayerItem *item  = self.currentItem;
+        AVURLAsset * ass    = (AVURLAsset*)item.asset;
+
+        [self replaceCurrentItemWithPlayerItem:nil];
+        [self replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:ass.URL]];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            canReload = YES;
+        });
+        
+        
     }
 }
 
@@ -663,25 +697,39 @@ static CMClockRef _pxpPlayerMasterClock;
             // invalidate the range
             self.range = kCMTimeRangeInvalid;
             
-            [self seekToTime:kCMTimePositiveInfinity multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
+            if ([UserCenter getInstance].preferenceLiveBuffer){ // If the user has added buffer time, use the time from the player context
+                CMTime liveMinusBuffer = [self.context bufferedLiveTime];
                 
-                [self play];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    self.syncing = NO;
-                });
-                
-                /*
-                [self prerollAtRate:self.playRate completionHandler:^(BOOL complete) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [self setRate:self.playRate];
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                            self.syncing = NO;
-                        });
+                [self seekToTime:liveMinusBuffer multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
+                    [self play];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        self.syncing = NO;
                     });
                 }];
-                 */
-            }];
+                
+                
+            } else {
             
+                
+                [self seekToTime:kCMTimePositiveInfinity multi:YES toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL complete){
+                    
+                    [self play];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        self.syncing = NO;
+                    });
+                    
+                    /*
+                    [self prerollAtRate:self.playRate completionHandler:^(BOOL complete) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [self setRate:self.playRate];
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                self.syncing = NO;
+                            });
+                        });
+                    }];
+                     */
+                }];
+            }
             [self willChangeValueForKey:@"live"];
             _live = YES;
             [self didChangeValueForKey:@"live"];
@@ -784,7 +832,7 @@ static CMClockRef _pxpPlayerMasterClock;
         
         if (self.live) {
             // we need to sync if the player's are 5 or more seconds behind live.
-            synced = synced && CMTimeCompare(self.remainingTime, CMTimeMake(5, 1)) <= 0;
+            synced = synced && CMTimeCompare(self.remainingTime, CMTimeMake(LIVE_BUFFER, 1)) <= 0;
         }
         
         if (synced) {
@@ -794,13 +842,18 @@ static CMClockRef _pxpPlayerMasterClock;
             //NSLog(@"Players SYNCED!");
             
         } else if (self.live && CMTIMERANGE_IS_INVALID(self.range)) {
-            NSLog(@"Syncing (Live)");
-            [self goToLive];
+            NSLog(@"Syncing (Live) %ld - %@",(long)self.currentItem.status,self.name);
+            AVPlayerItem * item = self.currentItem;
+//            [self goToLive];
+            
+            NSLog(@"Syncing (Live) disabled");
             
         } else {
-            NSLog(@"Syncing (Adaptive)");
-            [self adaptiveSync:currentTime];
+            NSLog(@"Syncing (Adaptive) %ld",(long)self.currentItem.status);
+//            [self adaptiveSync:currentTime];
             
+            
+            NSLog(@"Syncing (Adaptive) disabled");
         }
     }
 }

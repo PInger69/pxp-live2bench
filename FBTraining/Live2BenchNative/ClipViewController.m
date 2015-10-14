@@ -563,7 +563,8 @@ static void * encoderTagContext = &encoderTagContext;
     }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
 
         Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
-        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]) {
+//        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
             [self.tagsToDisplay removeObject:tag];
             if (self.editingIndexPath) {
                 [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];

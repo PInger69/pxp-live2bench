@@ -96,6 +96,8 @@
 @property (nonatomic,assign)    BOOL            justStarted;
 @property (nonatomic,assign)    BOOL            pressingStart;
 
+
+@property (nonatomic,strong)    NSOperationQueue * operationQueue;
 /**
  *  This will create and instance of an endcoder at inputted ip
  *

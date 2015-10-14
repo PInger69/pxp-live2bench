@@ -33,6 +33,7 @@
     CKViewController                * calendarViewController;
     ARCalendarTableViewController   * tableViewController;
     NSString                        * localPath;
+    id                              calObserver;
 }
 
 -(id)initWithAppDelegate:(AppDelegate *) appDel
@@ -44,7 +45,7 @@
         localPath = _appDel.userCenter.localPath;
         memoryBar = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENTS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
+        calObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENTS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             NSMutableArray *temp = [[NSMutableArray alloc] init];
             if (_appDel.encoderManager.masterEncoder) {
                 [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];

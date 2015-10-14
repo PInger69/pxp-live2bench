@@ -445,6 +445,11 @@ static LocalMediaManager * instance;
     // Now search the clip if it has the source
     if ([foundClip.videosBySrcKey objectForKey:[NSString stringWithFormat:@"%@hq", scrKey]]) {
         return foundClip;
+    } else if ([foundClip.videosBySrcKey objectForKey:[NSString stringWithFormat:@"s_%@", scrKey]]) {
+        return foundClip;
+        
+    } else if ([foundClip.videosBySrcKey objectForKey:[scrKey stringByReplacingOccurrencesOfString:@"s_" withString:@""]]) {
+        return foundClip;
     }
     
     return nil;

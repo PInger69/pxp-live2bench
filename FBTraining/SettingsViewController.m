@@ -87,7 +87,7 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     NSArray                * leagueNames;
     //    id                     observerForFoundMaster;
     id                     observerForLostMaster;
-    UITapGestureRecognizer *tapBehindGesture;
+//    UITapGestureRecognizer *tapBehindGesture;
     
     NSString                * _homeTeam;
     NSString                * _awayTeam;
@@ -338,14 +338,14 @@ SVSignalStatus signalStatus;
     
     [super viewDidAppear:animated];
     
-    if(!tapBehindGesture) {
-        tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
-        tapBehindGesture.delegate = self;
-        [tapBehindGesture setNumberOfTapsRequired:1];
-        [tapBehindGesture setCancelsTouchesInView:NO]; //So the user can still interact with controls in the modal view
-    }
-    
-    [self.view.window addGestureRecognizer:tapBehindGesture];
+//    if(!tapBehindGesture) {
+//        tapBehindGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBehindDetected:)];
+//        tapBehindGesture.delegate = self;
+//        [tapBehindGesture setNumberOfTapsRequired:1];
+//        [tapBehindGesture setCancelsTouchesInView:NO]; //So the user can still interact with controls in the modal view
+//    }
+//    
+//    [self.view.window addGestureRecognizer:tapBehindGesture];
     
 }
 
@@ -378,6 +378,7 @@ SVSignalStatus signalStatus;
     //teamNames   = grabNames(encoderManager.masterEncoder.teams);
     //leagueNames = grabNames(encoderManager.masterEncoder.league);
     
+    [self showInformation];
     
 }
 
@@ -426,7 +427,7 @@ SVSignalStatus signalStatus;
 {
     if (dismissEnabled){
         [self dismissViewControllerAnimated:YES completion:nil];
-        [self.view.window removeGestureRecognizer:tapBehindGesture];
+//        [self.view.window removeGestureRecognizer:tapBehindGesture];
     }
 }
 
@@ -936,7 +937,7 @@ SVSignalStatus signalStatus;
     //encoder state label
     _encStateLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(encHomeButton.frame), 10, encoderHomeLabel.frame.size.width - encHomeButton.frame.size.width , encoderHomeLabel.frame.size.height)];
     [encoderHomeLabel addSubview:_encStateLabel];
-    [_encStateLabel setText:@"(No Wifi)"];
+    [_encStateLabel setText:@"( No Wifi )"];
     
     [doNotShowContainer setHidden:TRUE];
     [self updateForStatus];
@@ -1090,15 +1091,15 @@ SVSignalStatus signalStatus;
         encoderHomeText.text = @"Encoder is not available.";
         encoderHomeText.adjustsFontSizeToFitWidth = true;
         [encHomeButton setTitle:@"Encoder is not available" forState:UIControlStateSelected];
-        [_encStateLabel setText:@"(No Wifi)"];
+        [_encStateLabel setText:@"( No Wifi )"];
         [encHomeButton removeFromSuperview];
         [encHomeButton setUserInteractionEnabled:NO];
         [encoderHomeLabel addSubview:encoderHomeText];
         
         //        encHomeButton.alpha = 0;
     }else{
-        if([_encStateLabel.text  isEqual: @"(No Wifi)"])
-            [_encStateLabel setText:@"(No Encoder)"];
+        if([_encStateLabel.text  isEqual: @"( No Wifi )"])
+            [_encStateLabel setText:@"( No Encoder )"];
         [encoderHomeText removeFromSuperview];
         [encoderHomeLabel addSubview:encHomeButton];
         [encHomeButton setUserInteractionEnabled:YES];
@@ -1137,10 +1138,24 @@ SVSignalStatus signalStatus;
 
 -(void) showInformation
 {
-    if (encoderManager.currentEventData) {
-        [selectHomeTeam setTitle:encoderManager.currentEventData[@"homeTeam"] forState:UIControlStateNormal];
-        [selectAwayTeam setTitle:encoderManager.currentEventData[@"visitTeam"] forState:UIControlStateNormal];
-        [selectLeague setTitle:encoderManager.currentEventData[@"league"] forState:UIControlStateNormal];
+    if (encoderManager.masterEncoder && encoderManager.masterEncoder.liveEvent) {
+        Event * liveE = encoderManager.masterEncoder.liveEvent;
+        //        liveE.teams
+        LeagueTeam * away = liveE.teams[@"visitTeam"];
+        LeagueTeam * home = liveE.teams[@"homeTeam"];
+        
+        [selectHomeTeam setTitle:home.name forState:UIControlStateNormal];
+        [selectAwayTeam setTitle:away.name forState:UIControlStateNormal];
+        [selectLeague setTitle:home.league.name forState:UIControlStateNormal];
+
+        if (away.league==nil ||home.league) {
+            PXPLog(@"=============================================");
+            PXPLog(@"         TEAMS DO NOT MATCH LEAGUE !!!");
+            PXPLog(@"         Bottom View will be disabled");
+            PXPLog(@"                      and ");
+            PXPLog(@"                other functions");
+            PXPLog(@"=============================================");
+        }
     }
 }
 

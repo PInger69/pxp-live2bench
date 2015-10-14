@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PreferencesViewController">
             <connections>
                 <outlet property="connectButton" destination="RwY-XV-ZSp" id="8tk-Dp-Zb9"/>
+                <outlet property="liveBuffer" destination="BuT-Ln-2yG" id="VsJ-xr-8Sm"/>
                 <outlet property="urlInputTextArea" destination="KUm-Sf-gwV" id="Hxq-XV-fiI"/>
                 <outlet property="view" destination="9ap-Zy-gak" id="Lx9-US-2v7"/>
             </connections>
@@ -38,9 +39,23 @@
                     <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="highlightedColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                 </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Live Feed Buffer" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IlZ-JZ-frE">
+                    <rect key="frame" x="17" y="136" width="356" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="BuT-Ln-2yG">
+                    <rect key="frame" x="17" y="165" width="356" height="29"/>
+                    <segments>
+                        <segment title="None"/>
+                        <segment title="Three Seconds"/>
+                        <segment title="Five Seconds"/>
+                    </segments>
+                </segmentedControl>
             </subviews>
             <color key="backgroundColor" red="0.8789028525352478" green="0.87884300947189331" blue="0.87887799739837646" alpha="1" colorSpace="calibratedRGB"/>
-            <point key="canvasLocation" x="200" y="270"/>
+            <point key="canvasLocation" x="217" y="280"/>
         </view>
     </objects>
 </document>

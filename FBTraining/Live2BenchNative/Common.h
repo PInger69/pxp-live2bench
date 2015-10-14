@@ -168,6 +168,9 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
  *  Notifications
  */
 
+#define NOTIF_PXP_PLAYER_ERROR              @"NOTIF_PXP_PLAYER_ERROR"
+#define NOTIF_PXP_PLAYER_RESTART            @"NOTIF_PXP_PLAYER_RESTART"
+
 #define NOTIF_LOST_WIFI                     @"NOTIF_LOST_WIFI"
 #define NOTIF_WIFI_CHANGED                  @"NOTIF_WIFI_CHANGED"
 #define NOTIF_PRIMARY_ENCODER_CHANGE        @"NOTIF_PRIMARY_ENCODER_CHANGE"

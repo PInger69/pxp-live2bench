@@ -11,10 +11,13 @@
 
 @interface PreferencesViewController : SettingViewController <UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UIButton       * connectButton;
-@property (weak, nonatomic) IBOutlet UITextField    * urlInputTextArea;
+@property (weak, nonatomic) IBOutlet UIButton               * connectButton;
+@property (weak, nonatomic) IBOutlet UITextField            * urlInputTextArea;
+@property (weak, nonatomic) IBOutlet UISegmentedControl     * liveBuffer;
 
 
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel;
+
+
 
 @end

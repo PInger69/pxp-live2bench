@@ -52,6 +52,8 @@
         if (players) {
             [self addPlayers:players];
         }
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetingPlayer:) name:NOTIF_PXP_PLAYER_ERROR object:nil];
     }
     return self;
 }
@@ -163,6 +165,67 @@
 
 - (NSTimeInterval)currentTimeInSeconds {
     return CMTimeGetSeconds(self.mainPlayer.currentTime);
+}
+
+-(CMTime)bufferedLiveTime
+{
+
+    CMTime tt = kCMTimePositiveInfinity;
+    
+    for (PxpPlayer * aPlayer in _players) {
+       
+        AVPlayerItem * it = aPlayer.currentItem;
+
+       
+        
+        CMTime duration = it.duration;
+        
+        if (it.seekableTimeRanges.count > 0) {
+            CMTimeRange seekableRange = [it.seekableTimeRanges.firstObject CMTimeRangeValue];
+            duration = CMTimeAdd(seekableRange.start, seekableRange.duration);
+        }
+        
+        
+        
+        if (CMTimeCompare(duration, tt) < 0)
+        {
+            tt = duration;
+            NSLog(@"set = %f", CMTimeGetSeconds(tt));
+        }
+    }
+
+    tt = CMTimeSubtract(tt, CMTimeMake([UserCenter getInstance].preferenceLiveBuffer, 1));
+
+    
+    return tt;
+}
+
+-(void)resetingPlayer:(NSNotification*)note
+{
+    PXPLog(@"Player has reset!!!!");
+    
+    PxpPlayer * erroredPlayer   = (PxpPlayer *)note.object;
+    PxpPlayer * createdPlayer   = [[PxpPlayer alloc] init];
+    CMTime playerTimeOfError    = erroredPlayer.currentTime;
+    AVAsset *currentPlayerAsset = erroredPlayer.currentItem.asset;
+
+    if ([currentPlayerAsset isKindOfClass:AVURLAsset.class]){
+        NSURL * url = [(AVURLAsset *)currentPlayerAsset URL];
+        [createdPlayer replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:url]];
+    }
+
+    
+    
+    [self removePlayer:erroredPlayer];
+    [self addPlayer:createdPlayer];
+    [createdPlayer seekToTime:playerTimeOfError];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PXP_PLAYER_RESTART object:createdPlayer];
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_PXP_PLAYER_ERROR object:nil];
 }
 
 @end

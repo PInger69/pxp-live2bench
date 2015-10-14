@@ -39,7 +39,7 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.connectButton addTarget:self action:@selector(onConnect:) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self.liveBuffer addTarget:self action:@selector(pickLiveBuffer:) forControlEvents:UIControlEventValueChanged];
     self.urlInputTextArea.delegate = self;
 }
 
@@ -129,6 +129,33 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
     [self onConnect:nil];
     return YES;
 }
+
+
+// preference
+-(void)pickLiveBuffer:(id)sender
+{
+    UISegmentedControl * segmenter = sender;
+
+    
+    
+    switch (segmenter.selectedSegmentIndex) {
+        case 1:
+            [UserCenter getInstance].preferenceLiveBuffer = 3;
+            break;
+        case 2:
+            [UserCenter getInstance].preferenceLiveBuffer = 5;
+            break;
+        case 0:
+        default:
+            [UserCenter getInstance].preferenceLiveBuffer = 0;
+            break;
+    }
+    
+    
+
+
+}
+
 
 
 - (void)didReceiveMemoryWarning {

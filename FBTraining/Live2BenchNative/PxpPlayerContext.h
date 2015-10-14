@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "PxpTimeProvider.h"
+#import "UserCenter.h"
+#import <AVFoundation/AVFoundation.h>
 
 @class PxpPlayer;
 
@@ -75,4 +77,6 @@
 /// Returns the first player in the context named 'name'.
 - (nullable PxpPlayer *)playerForName:(nonnull NSString *)name;
 
+//. Returns a time that live time minus the buffer Time
+-(CMTime)bufferedLiveTime;
 @end

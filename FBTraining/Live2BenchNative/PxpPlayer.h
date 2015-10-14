@@ -12,6 +12,11 @@
 #import "PxpLoadAction.h"
 #import "PxpTimeProvider.h"
 
+#define PAUSE_RATE                      0
+
+// this is so you can use  < for checking if its paused
+#define PAUSE_THRESH                          0.0001
+
 /**
  * @breif A video player optimized for live video, synchronization, and looping.
  * @author Nicholas Cvitak

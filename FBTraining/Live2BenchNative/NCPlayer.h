@@ -9,7 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "NCPlayerContext.h"
-
+#define PAUSE_RATE                          0.0000001
 @interface NCPlayer : AVPlayer
 
 @property (weak, nonatomic, nullable) NCPlayerContext *context;

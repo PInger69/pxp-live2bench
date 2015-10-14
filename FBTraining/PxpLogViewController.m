@@ -102,7 +102,7 @@
     NSArray * buttons = @[self.clearButton,self.upButton,self.downButton,self.camButton,self.encoderButton,self.eventButton];
     CGFloat buttonH = 50;
     CGFloat buttonW = 118;//self.view.bounds.size.width / [buttons count];
-    CGRect r = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+buttonH, self.view.bounds.size.width, self.view.bounds.size.height-buttonH-50);
+    CGRect r = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+buttonH, 705, self.view.bounds.size.height-buttonH-50);
     
     for (NSInteger i=0; i<[buttons count]; i++) {
         CustomButton * b = buttons[i];
@@ -211,6 +211,18 @@
         PXPLog(@"No current Event because no encoder");
     } else {
         PXPLog(@"%@",encoderManager.primaryEncoder.event);
+        
+        NSMutableDictionary * theFeeds = encoderManager.primaryEncoder.event.feeds;
+        for (NSString * key in [theFeeds allKeys]) {
+            Feed * afeed = theFeeds[key];
+            PXPLog(@"  Feed: %@",key);
+            PXPLog(@"    HQ: %@",[afeed.hqPath absoluteString]);
+            PXPLog(@"    LQ: %@",[afeed.lqPath absoluteString]);
+        }
+        
+        PXPLog(@" <Raw Event Data!!> (/min/ajax/getpastevents for just current event)");
+        PXPLog(@" %@",        encoderManager.primaryEncoder.event.rawData);
+        PXPLog(@" </Raw Event Data!!>");
     }
     
     
