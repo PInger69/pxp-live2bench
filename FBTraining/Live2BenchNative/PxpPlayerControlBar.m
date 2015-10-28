@@ -91,8 +91,8 @@
     
     _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(49.5, 0, 55, _container.bounds.size.height)];
     _leftLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
-    _leftLabel.font = [UIFont systemFontOfSize:18.0];
-    _leftLabel.adjustsFontSizeToFitWidth = YES;
+    _leftLabel.font = [UIFont systemFontOfSize:12.0];
+    _leftLabel.adjustsFontSizeToFitWidth = NO;
     _leftLabel.textAlignment = NSTextAlignmentCenter;
     _leftLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
     _leftLabel.text = @"00:00:00";
@@ -104,8 +104,8 @@
     
     _rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(_container.bounds.size.width - 49.5 - 55, 0, 55, _container.bounds.size.height)];
     _rightLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
-    _rightLabel.font = [UIFont systemFontOfSize:18.0];
-    _rightLabel.adjustsFontSizeToFitWidth = YES;
+    _rightLabel.font = [UIFont systemFontOfSize:12.0];
+    _rightLabel.adjustsFontSizeToFitWidth = NO;
     _rightLabel.textAlignment = NSTextAlignmentCenter;
     _rightLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
     _rightLabel.text = @"00:00:00";
@@ -166,7 +166,8 @@
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary *)change context:(nullable void *)context {
     
     if (context == _rateObserverContext) {
-        self.playPauseButton.paused = self.player.rate == 0.0;
+//        self.playPauseButton.paused = self.player.rate == 0.0;
+        self.playPauseButton.paused = [self.player isPaused];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -238,6 +239,16 @@
     if (CMTIME_IS_NUMERIC(time)) {
         [self.player seekToTime:time];
     }
+    
+    // update time
+    // calculate time elapsed and remaining
+    NSTimeInterval elapsed = MAX(0, CMTimeGetSeconds(self.player.live ? self.player.duration : CMTimeSubtract(time, range.start)));
+    NSTimeInterval remaining = MAX(0, CMTimeGetSeconds(CMTimeSubtract(range.duration, CMTimeSubtract(time, range.start))));
+    
+    // update text labels
+    self.leftLabel.text = [self stringForSeconds:isfinite(elapsed) ? elapsed : 0.0];
+    self.rightLabel.text = self.player.live ? NSLocalizedString(@"LIVE", nil) : [self stringForSeconds:isfinite(remaining) ? remaining : 0.0];
+    
 }
 
 - (void)seekDidEnd:(nonnull UISlider *)slider {

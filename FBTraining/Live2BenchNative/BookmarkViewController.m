@@ -959,18 +959,33 @@ int viewWillAppearCalled;
 
 -(void)tableView:(DeletableTableViewController *)tableView indexesToBeDeleted:(NSArray *)toBeDeleted
 {
+ 
+    
+
     for (NSIndexPath *cellIndexPath in toBeDeleted) {
+        
         Clip * aClip = [_tagsToDisplay objectAtIndex:cellIndexPath.row];
+        
+        if (aClip ==_clipContext.clip){ /// if selected and deleted clear UI
+            [_clipContext.mainPlayer pause];
+            [_clipContext.mainPlayer replaceCurrentItemWithPlayerItem:nil];
+            [clipContentDisplay displayClip:nil];
+        }
+        
+        
         if ([self.allClips containsObject:aClip]) {
             [self.allClips removeObject:aClip];
         }
         
     }
+    
+   [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[self.allClips count]]];
 }
 
 #pragma mark -
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
 }
 
 @end

@@ -72,6 +72,9 @@
 
 
 #pragma mark - Encoder Manager Methods
+
++(EncoderManager*)getInstance;
+
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath;
 
 // depricated

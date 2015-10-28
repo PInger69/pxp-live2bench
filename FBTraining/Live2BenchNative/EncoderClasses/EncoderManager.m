@@ -53,6 +53,7 @@
 @synthesize localMediaManager       = _localMediaManager;
 @synthesize primaryEncoder          = _primaryEncoder;
 
+static EncoderManager * instance;
 #pragma mark - Encoder Manager Methods
 
 -(id)initWithLocalDocPath:(NSString*)aLocalDocsPath
@@ -99,7 +100,20 @@
         // This will look for the external encoder if no other normal encoders are found
         [self performSelector:@selector(makeCoachExternal) withObject:nil afterDelay:40];
     }
+    
+    if (!instance){
+        instance = self;
+    }
+    
     return self;
+}
+
+
+// Quick singleton of first created EncoderManager
++(EncoderManager*)getInstance
+{
+
+    return instance;
 }
 
 
@@ -212,7 +226,7 @@
  */
 -(void)registerEncoder:(NSString*)name ip:(NSString*)ip
 {
-    if ([dictOfEncoders objectForKey:name] == nil) {
+    if ([dictOfEncoders objectForKey:name] == nil || [((Encoder*)[dictOfEncoders objectForKey:name]).name isEqualToString:@"trashed"]) {
         Encoder * newEncoder        = [[Encoder alloc]initWithIP:ip];
         newEncoder.encoderManager   = self;
         newEncoder.name             = name;

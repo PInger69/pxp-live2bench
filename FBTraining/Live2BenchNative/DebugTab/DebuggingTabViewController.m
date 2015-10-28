@@ -26,8 +26,8 @@
 //    PxpPlayer                   * player;
 //    Pip                         * pip;
     UIView                      * playArea;
-    AVPlayer    * pl;
-    AVPlayerLayer      * avPlayerLayer;
+    AVPlayer                    * pl;
+    AVPlayerLayer               * avPlayerLayer;
 //    RJLVideoPlayer              * rjlPlayer;
     
     UIButton                    * playBtn;
@@ -35,6 +35,7 @@
     UIButton                    * pauseBtn;
     UIButton                    * switchBtn;
     UILabel                     * label;
+    NSMutableArray              * buttList;
 }
 @end
 
@@ -70,7 +71,7 @@ static void *  debugContext = &debugContext;
         [self.view setBackgroundColor:[UIColor lightGrayColor]];
         
 //        pip = [[Pip alloc]initWithFrame:CGRectMake(100,100,800,400)];
-        
+        buttList= [@[] mutableCopy];
   
         
     }
@@ -87,9 +88,25 @@ static void *  debugContext = &debugContext;
     
 }
 
+-(void)tryAndMessUpFeeds
+{
+    Event           * pEvent =     EM.primaryEncoder.event;
+    PxpEventContext * eCon = EM.primaryEncoder.eventContext;
+    PxpPlayer       * firstPlayer = eCon.players[0];
+
+    AVPlayerItem * pi = [AVPlayerItem playerItemWithURL: [NSURL URLWithString:@"http://walterebert.com/playground/video/hls/sintel-trailer.m3u8"]];
+    [firstPlayer replaceCurrentItemWithPlayerItem:pi];
+
+    
+}
+
+
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+  
+    [self tryAndMessUpFeeds];
+      return;
     // build View
 //    
 //    UIView             * xxxplayerView;
@@ -134,7 +151,7 @@ static void *  debugContext = &debugContext;
 
     
     
-    pick = 4;
+    pick = 1;
     url         = paths[pick];
     
     
@@ -185,11 +202,50 @@ static void *  debugContext = &debugContext;
      [self.view addSubview:label];
     
     [label setText:[url absoluteString]];
+
+    
+    
+    for (UIButton * b in buttList) {
+        [b removeFromSuperview];
+    }
+    [buttList removeAllObjects];
+    
+    
+    CGFloat xxx = 10;
+    CGFloat yyy = 600;
+    CGFloat hhh = 40;
+    CGFloat www = 900;
+    CGFloat ccc = 0;
+    if (EM.primaryEncoder.event){
+        Event * debugz = EM.primaryEncoder.event;
+        for (Feed * fee in [debugz.feeds allValues]) {
+            
+            for (NSURL * pth in fee.allPaths) {
+                UIButton * bb = [[UIButton alloc]initWithFrame:CGRectMake(xxx, yyy+(ccc * (hhh+5)), www, hhh)];
+                bb.titleLabel.adjustsFontSizeToFitWidth = YES;
+                [bb addTarget:self action:@selector(checkVideo:) forControlEvents:UIControlEventTouchUpInside];
+                [bb setTitle:[pth absoluteString] forState:UIControlStateNormal];
+                bb.layer.borderWidth = 1;
+                [buttList addObject:bb];
+                [self.view addSubview:bb];
+                ccc++;
+            }
+        }
+    
+    }
+    
+    
+    
 }
 
 
 
+-(void)checkVideo:(id)sender
+{
+    UIButton* butt = sender;
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: butt.titleLabel.text ]];
 
+}
 
 
 
@@ -201,12 +257,12 @@ static void *  debugContext = &debugContext;
 //        [pl setRate:1];
     }
     else if (sender == seekBtn) {
-        [pl seekToTime:CMTimeMakeWithSeconds(60*21, NSEC_PER_SEC)];
+        [pl seekToTime:CMTimeMakeWithSeconds(30, NSEC_PER_SEC)];
 
     }
     else if (sender == pauseBtn) {
          [pl pause];
-//        [pl setRate:0];
+        [pl setRate:0];
 //        [pl setRate:0.0000001];
     }
     else if (sender == switchBtn) {
@@ -247,6 +303,7 @@ static void *  debugContext = &debugContext;
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
     if ([self.view window] == nil) self.view = nil;
     
 }

@@ -89,6 +89,7 @@
 }
 
 - (void)listGestureRecognized:(UIGestureRecognizer *)recognizer {
+    if (self.popoverController.isPopoverVisible) return;
     self.popoverController.popoverContentSize = CGSizeMake(ROW_WIDTH, MIN(self.player.context.players.count * ROW_HEIGHT, 4 * ROW_HEIGHT));
     
     CGPoint loc = [recognizer locationInView:self];

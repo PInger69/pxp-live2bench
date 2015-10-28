@@ -46,7 +46,7 @@
     APP_WIDTH   = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width;
     
     // This manages the thumbnails in the app
-
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
     
     
     ///In order for crashlytics to work, we have to initialise it with the secret app key we get during sign up

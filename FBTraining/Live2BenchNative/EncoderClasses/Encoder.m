@@ -50,6 +50,8 @@
     NSNumber        * _timeStamp;
     BOOL            _earlyBirdMode;
     
+
+    
 }
 
 @synthesize complete = _complete;
@@ -341,11 +343,11 @@
     // Ready Flags
     BOOL isTeamsGet;
     BOOL isAuthenticate;
-    BOOL isVersion;
     EncoderDataSync             * encoderSync;
     void            (^_onCompleteDownloadClip)(NSArray*pooled);
-
+    
     NSOperationQueue * operationQueue; // new
+    
 }
 
 
@@ -408,7 +410,6 @@
         _isMaster       = NO;
         isTeamsGet      = NO;
         isAuthenticate  = NO;
-        isVersion       = NO;
         _isBuild        = NO;
         _isReady         = NO;
         isAlive         = YES;
@@ -416,7 +417,7 @@
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
         encoderSync             = [[EncoderDataSync alloc]init];
-
+   
         _eventContext   = [PxpEventContext context];
         
         _operationQueue = [NSOperationQueue mainQueue];
@@ -432,6 +433,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDownloadClip:)   name:NOTIF_EM_DOWNLOAD_CLIP     object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTelePost:)       name:NOTIF_CREATE_TELE_TAG      object:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ondeleteEvent:)      name:NOTIF_DELETE_EVENT_SERVER  object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetPlayerContext:) name:NOTIF_PXP_PLAYER_ERROR object:nil];
     return self;
 }
 
@@ -444,7 +446,20 @@
     self.event = nil;
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_DELETE_EVENT_SERVER     object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_CREATE_TELE_TAG         object:nil];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_PXP_PLAYER_ERROR object:nil];
     return self;
+}
+
+
+// this is for quick fixes
+
+
+-(void)resetPlayerContext:(NSNotification*)note
+{
+
+    PXPLog(@"Context has reset!!!!");
+    self.event = self.event;
+
 }
 
 
@@ -757,7 +772,7 @@
 //    NSString * key                              = note.userInfo[@"key"];
     __block void(^dItemBlock)(DownloadItem*)    = note.userInfo[@"block"];
 
-    
+
     
     NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
                                             @{
@@ -775,8 +790,8 @@
     
     
     
-    
-    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME onComplete:^(NSDictionary *userInfo) {
+    PXPLog(@"Download Command Queued, waiting for encoder responce....");
+    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:60 tagData:sumRequestData timeStamp:GET_NOW_TIME onComplete:^(NSDictionary *userInfo) {
         DownloadItem* dlitem = userInfo[@"downloadItem"];
         dItemBlock(dlitem);
     }];
@@ -1633,8 +1648,7 @@
         version = (NSString *)[results objectForKey:@"version"] ;
         PXPLog(@"%@ is version %@",self.name ,version);
     }
-    
-    isVersion = YES;
+
 }
 
 
@@ -2486,14 +2500,14 @@
     NSString *ip                = self.ipAddress;
     NSString *remoteSrc         = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
     NSString *downloaderRefKey  =  results[@"srcValue"]; // this is used for the downloader and the localmedia manager
-    
+    NSString * eventName        = (self.event.live)?LIVE_EVENT:results[@"event"] ;
     
     
     NSString *remotePath;
     if ([self checkEncoderVersion]) {
-        remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/vid_%@.mp4", ip, tagID];
+        remotePath = [NSString stringWithFormat:@"http://%@/events/%@/video/vid_%@.mp4", ip,eventName, tagID];
     }else{
-        remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
+        remotePath = [NSString stringWithFormat:@"http://%@/events/%@/video/%@_vid_%@.mp4", ip,eventName, remoteSrc, tagID];
     }
     
     NSString        * pth   = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];

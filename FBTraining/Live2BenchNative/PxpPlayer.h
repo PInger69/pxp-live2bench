@@ -12,7 +12,7 @@
 #import "PxpLoadAction.h"
 #import "PxpTimeProvider.h"
 
-#define PAUSE_RATE                      0
+#define PAUSE_RATE                      0.00001
 
 // this is so you can use  < for checking if its paused
 #define PAUSE_THRESH                          0.0001
@@ -79,5 +79,7 @@
 
 /// Brings the player to Live.
 - (void)goToLive;
+
+-(BOOL)isPaused;
 
 @end

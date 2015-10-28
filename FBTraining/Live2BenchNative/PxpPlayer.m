@@ -150,11 +150,21 @@ static CMClockRef _pxpPlayerMasterClock;
             if (self.currentItem.status == AVPlayerItemStatusFailed) {
                 AVPlayerItem * playerItem  = self.currentItem;
                 
-                PXPLog(@"%@: %@", self, playerItem.error);
-                PXPLog(@"-----");
+//                PXPLog(@"%@: %@", self, playerItem.error);
+//                PXPLog(@"-----");
                 NSLog(@"FAIL FAIL");
                 NSLog(@"%@: %@", self, playerItem.error);
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:self.currentItem.error.localizedDescription delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                
+                PXPLog(@"");
+                PXPLog(@"<!!! AVPlayerItem Error !!!>");
+                PXPLog(@"%@",self.name);
+                PXPLog(@"%@",self.currentItem.error.localizedDescription);
+                PXPLog(@"</!!! AVPlayerItem Error !!!>");
+                PXPLog(@"");
+                
+                NSString * tempErr = @"Stream connection interrupted";//self.currentItem.error.localizedDescription
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:tempErr delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                 
                 [alert show];
                 
@@ -173,9 +183,9 @@ static CMClockRef _pxpPlayerMasterClock;
             [self.loadActionQueue removeAllObjects];
         } else if (self.status == AVPlayerStatusUnknown) {
         
-            PXPLog(@"%@: %@", self, self.currentItem.error);
-            PXPLog(@"-----");
-            NSLog(@"%@: %@", self, self.currentItem.error);
+//            PXPLog(@"%@: %@", self, self.currentItem.error);
+//            PXPLog(@"-----");
+//            NSLog(@"%@: %@", self, self.currentItem.error);
         }
         
         
@@ -193,15 +203,15 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)replaceCurrentItemWithPlayerItem:(nullable AVPlayerItem *)item {
-    dispatch_async(dispatch_get_main_queue(), ^() {
+//    dispatch_async(dispatch_get_main_queue(), ^() {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
             [super replaceCurrentItemWithPlayerItem:item];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:item];
-    });
+//    });
 }
 
 - (void)timerTick:(NSTimer *)timer {
-    [self sync:self.currentTime];
+//    [self sync:self.currentTime];
 }
 
 #pragma mark - Setters / Getters
@@ -257,6 +267,11 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (BOOL)playing {
     return self.rate != 0.0;
+}
+
+-(BOOL)isPaused
+{
+    return (self.rate < 0.01);
 }
 
 - (void)setRange:(CMTimeRange)range {
@@ -337,6 +352,15 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (CMTime)duration {
     CMTime duration = self.currentItem.duration;
+    
+    if (!CMTimeCompare(duration, kCMTimeIndefinite) ){
+        
+        AVPlayerItem * item = self.currentItem;
+        AVAsset * ass = item.asset;
+        NSInteger somethign1 = item.seekableTimeRanges.count;
+        NSInteger somethign2 = item.loadedTimeRanges.count;
+    }
+    
     if (self.currentItem.seekableTimeRanges.count > 0) {
         CMTimeRange seekableRange = [self.currentItem.seekableTimeRanges.firstObject CMTimeRangeValue];
         duration = CMTimeAdd(seekableRange.start, seekableRange.duration);
@@ -360,10 +384,10 @@ static CMClockRef _pxpPlayerMasterClock;
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO];
     } else {
 
-            dispatch_async(dispatch_get_main_queue(), ^() {
+//            dispatch_async(dispatch_get_main_queue(), ^() {
                 [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
                 [super setRate:rate];
-            });
+//            });
 
         
         
@@ -375,9 +399,9 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO time:itemTime atHostTime:hostClockTime];
     } else {
-        dispatch_async(dispatch_get_main_queue(), ^() {
+//        dispatch_async(dispatch_get_main_queue(), ^() {
             [super setRate:rate time:itemTime atHostTime:hostClockTime];
-        });
+//        });
     }
 }
 
@@ -402,14 +426,14 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player prerollAtRate:rate multi:NO completionHandler:handler];
     } else {
-        dispatch_async(dispatch_get_main_queue(), ^() {
+//        dispatch_async(dispatch_get_main_queue(), ^() {
             [super cancelPendingPrerolls];
             if (self.status != AVPlayerStatusReadyToPlay) {
                 completionHandler(NO);
             } else {
                 [super prerollAtRate:rate completionHandler:completionHandler];
             }
-        });
+//        });
         
     }
 }
@@ -419,9 +443,9 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player cancelPendingPrerollsMulti:NO];
     } else {
-        dispatch_async(dispatch_get_main_queue(), ^() {
+//        dispatch_async(dispatch_get_main_queue(), ^() {
             [super cancelPendingPrerolls];
-        });
+//        });
     }
 }
 
@@ -445,11 +469,11 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player seekToDate:date multi:NO completionHandler:handler];
     } else {
-        dispatch_async(dispatch_get_main_queue(), ^() {
+//        dispatch_async(dispatch_get_main_queue(), ^() {
             [super seekToDate:date completionHandler:^(BOOL success) {
                 completionHandler(success);
             }];
-        });
+//        });
     }
 }
 
@@ -482,8 +506,8 @@ static CMClockRef _pxpPlayerMasterClock;
             time = kCMTimePositiveInfinity;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            
+//        dispatch_async(dispatch_get_main_queue(), ^() {
+        
             __block BOOL seek = YES;
             
             void (^handle)(BOOL) = ^(BOOL complete) {
@@ -506,7 +530,7 @@ static CMClockRef _pxpPlayerMasterClock;
                 }
             });
             
-        });
+//        });
         
     }
 }
@@ -518,14 +542,38 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)play {
-    [self setRate:self.playRate];
+    
+    CMTime duration = self.currentItem.duration;
+    
+    if (!CMTimeCompare(duration, kCMTimeIndefinite) ){
+        float r =         self.playRate;
+        BOOL wasLive = self.live;
+        [self setRate:0.0];
+        [self setRate:r];
+        [self seekToTime:self.currentTime];
+        
+        self.live = wasLive;
+        self.muted = NO;
+    } else {
+        [self setRate:self.playRate];
+    }
+    
 
 }
 
 - (void)pause
 {
-    [super pause];
-//    [self setRate:0.0];
+    
+    CMTime duration = self.currentItem.duration;
+    
+    if (!CMTimeCompare(duration, kCMTimeIndefinite) ){
+        [self setRate:PAUSE_RATE];
+        self.muted = YES;
+    } else {
+       [self setRate:0.0];
+    }
+    
+
 }
 
 - (void)setRate:(float)rate {
@@ -540,7 +588,8 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)prerollAtRate:(float)rate completionHandler:( void (^)(BOOL))completionHandler {
     if (!completionHandler) completionHandler = ^(BOOL complete) {};
-    if (rate != 0.0) {
+//    if (rate != 0.0) {
+ if (![self isPaused]) {
         [self prerollAtRate:rate multi:YES completionHandler:completionHandler];
     } else {
         completionHandler(YES);

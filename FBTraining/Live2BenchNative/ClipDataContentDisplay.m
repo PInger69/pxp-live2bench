@@ -121,6 +121,7 @@ typedef enum : NSUInteger {
     NSString *homeTeam;
     NSString *visitTeam;
     NSString *leagueName;
+    
     if (teamInfo){
         homeTeam = [teamInfo objectForKey:@"homeTeam"];
         visitTeam = [teamInfo objectForKey:@"visitTeam"];

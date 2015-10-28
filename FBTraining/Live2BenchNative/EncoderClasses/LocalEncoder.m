@@ -605,8 +605,8 @@ static LocalEncoder * instance;
     
     newTag.displayTime              = [Utility translateTimeFormat: newTag.time];
     newTag.own                      = YES;
-    newTag.homeTeam                 = self.event.teams[@"homeTeam"];
-    newTag.visitTeam                = self.event.teams[@"visitTeam"];
+    newTag.homeTeam                 = ((LeagueTeam*)self.event.teams[@"homeTeam"]).name;
+    newTag.visitTeam                = ((LeagueTeam*)self.event.teams[@"visitTeam"]).name;
     newTag.synced                   = NO;
     
     if ([[tData objectForKey:@"type"]integerValue] == TagTypeOpenDuration) {

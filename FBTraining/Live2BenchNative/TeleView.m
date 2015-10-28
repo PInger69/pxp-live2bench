@@ -600,6 +600,7 @@ BOOL touchEnded = NO;
 
 - (void) didReceiveMemoryWarning{
     [self.arrayOfUndos removeAllObjects];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
 }
 
 @end

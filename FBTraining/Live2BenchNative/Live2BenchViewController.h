@@ -41,7 +41,7 @@
     UIImageView                              * leftArrow;                              //used with playercollectionviewcontroller when swiping the tag buttons in the left side of the screen
     UIImageView                              * rightArrow;                             //used with playercollectionviewcontroller when swiping the tag buttons in the right side of the screen
     UIAlertView                              * videoPlaybackFailedAlertView;           // used to alert video playback failed
-    TagMarker                                * tagMarker;                              //object indicates the tag position in the total time duration
+//    TagMarker                                * tagMarker;                              //object indicates the tag position in the total time duration
     OverlayViewController                    * _overlayLeftViewController;             //uiviewcontroller for left event buttons in fullscreen
     OverlayViewController                    * _overlayRightViewController;            //uiviewcontroller for right event buttons in fullscreen
 

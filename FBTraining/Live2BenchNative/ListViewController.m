@@ -800,6 +800,7 @@
 
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
     [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
 }
 

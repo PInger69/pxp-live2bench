@@ -40,7 +40,8 @@
     
     _currentTagLabel.enabled = NO;
     _currentTagLabel.hidden = YES;
-    _currentTagLabel.font = [UIFont systemFontOfSize:22.0 weight:1.0];
+
+    _currentTagLabel.font = (SYSTEM_VERSION_LESS_THAN(@"8.0"))?[UIFont fontWithName:@"HelveticaNeue-Light" size:22]:[UIFont systemFontOfSize:22.0 weight:1.0];
     _startRangeModifierButton.hidden = YES;
     _endRangeModifierButton.hidden = YES;
     _previousTagButton.hidden = YES;
@@ -78,6 +79,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
     // Dispose of any resources that can be recreated.
 }
 

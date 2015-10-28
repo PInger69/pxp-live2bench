@@ -105,6 +105,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
     // Dispose of any resources that can be recreated.
 }
 
@@ -129,13 +130,14 @@
         }
         
     } else if (context == _playerRateObserverContext) {
-        if (_telestrationViewController.telestration.isStill && _playerView.player.rate != 0) {
+//        if (_telestrationViewController.telestration.isStill && _playerView.player.rate != 0) {
+        if (_telestrationViewController.telestration.isStill && ![_playerView.player isPaused]) {
             _telestrationViewController.telestration = nil;
         }
     } else if (context == _telestrationObserverContext) {
         _playerView.lockFullView = _telestrationViewController.telestration;
-        
-        if (_telestrationViewController.telestration.isStill && _playerView.player.rate != 0 ) {
+//        if (_telestrationViewController.telestration.isStill && _playerView.player.rate != 0 ) {
+        if (_telestrationViewController.telestration.isStill && ![_playerView.player isPaused] ) {
             _stillFlag = YES;
             [_playerView.player pause];
         } else if (_stillFlag) {

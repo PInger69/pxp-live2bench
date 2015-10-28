@@ -67,9 +67,9 @@
 }
 
 @property (nonatomic,readonly)  BOOL            authenticated;
-
+@property (nonatomic,strong)    PxpEventContext * eventContext;
 @property (nonatomic,strong)    NSString        * name;
-@property (nonatomic,readonly)  NSString        * version;
+@property (nonatomic,strong)  NSString        * version;
 @property (nonatomic,strong)    NSString        * ipAddress;
 @property (nonatomic,strong)    NSString        * customerID;
 @property (nonatomic,strong)    NSString        * URL;

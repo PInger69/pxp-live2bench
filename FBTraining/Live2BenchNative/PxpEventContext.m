@@ -22,6 +22,7 @@
     self = [super init];
     if (self) {
         self.event = event;
+        PXPLog(@"Event Context Created!");
     }
     return self;
 }
@@ -63,11 +64,24 @@
     
     // update the player data
     for (NSUInteger i = 0; i < self.players.count; i++) {
-        PxpPlayer *player = self.players[i];
-        NSString *name = feeds.allKeys[i];
-        
+        __block PxpPlayer   * player    = self.players[i];
+        NSString    * name      = feeds.allKeys[i];
+        Feed        * afeed     = feeds[name];
         player.name = name;
-        player.feed = feeds[name];
+        player.feed = afeed;
+        if ([afeed.type isEqualToString:FEED_TYPE_ENCODER]){ // finished m3u8 files always start at the end of the file not the start so seek to the start and play
+            
+           PxpLoadAction* action =  [PxpLoadAction loadActionWithBlock:^(BOOL value) {
+               [player seekToTime:kCMTimeZero completionHandler:^(BOOL finished) {
+                   [player play];
+               }];
+
+           }];
+            
+            [player addLoadAction:action];
+        }
+        
+        
     }
     
     [self sortPlayers];

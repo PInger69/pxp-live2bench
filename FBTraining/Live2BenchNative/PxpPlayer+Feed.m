@@ -14,6 +14,11 @@
 
 
     AVPlayerItem * playerItem = [AVPlayerItem playerItemWithURL:feed.path];
+    
+//    AVPlayerItem * playerItem = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:@"www.google.com"]];
+    
+    
+    
 //    playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
     [self replaceCurrentItemWithPlayerItem:feed.path ? playerItem : nil];
 //    [self seekToTime:CMTimeMake(0, 1)];

@@ -53,7 +53,7 @@
             [self addPlayers:players];
         }
         
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(resetingPlayer:) name:NOTIF_PXP_PLAYER_ERROR object:nil];
+
     }
     return self;
 }
@@ -200,32 +200,11 @@
     return tt;
 }
 
--(void)resetingPlayer:(NSNotification*)note
-{
-    PXPLog(@"Player has reset!!!!");
-    
-    PxpPlayer * erroredPlayer   = (PxpPlayer *)note.object;
-    PxpPlayer * createdPlayer   = [[PxpPlayer alloc] init];
-    CMTime playerTimeOfError    = erroredPlayer.currentTime;
-    AVAsset *currentPlayerAsset = erroredPlayer.currentItem.asset;
 
-    if ([currentPlayerAsset isKindOfClass:AVURLAsset.class]){
-        NSURL * url = [(AVURLAsset *)currentPlayerAsset URL];
-        [createdPlayer replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:url]];
-    }
-
-    
-    
-    [self removePlayer:erroredPlayer];
-    [self addPlayer:createdPlayer];
-    [createdPlayer seekToTime:playerTimeOfError];
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PXP_PLAYER_RESTART object:createdPlayer];
-}
 
 -(void)dealloc
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_PXP_PLAYER_ERROR object:nil];
+
 }
 
 @end

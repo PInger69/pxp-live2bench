@@ -25,6 +25,8 @@
 
 @property (nonatomic, strong) NSMutableArray  *allEvents;
 
+
+
 @end
 
 @implementation CalendarViewController
@@ -44,7 +46,6 @@
         [self setMainSectionTab:NSLocalizedString(@"Calendar",nil) imageName:@"calendarTab"];
         localPath = _appDel.userCenter.localPath;
         memoryBar = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
-        
         calObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENTS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
             NSMutableArray *temp = [[NSMutableArray alloc] init];
             if (_appDel.encoderManager.masterEncoder) {
@@ -195,6 +196,26 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"fastPick" object:self userInfo:@{@"date" : [NSDate date]}];
 }
 
+-(void)refresh {
+    //Start the HUD here
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        //Run your loop here
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            //stop your HUD here
+            //This is run on the main thread
+            
+            
+        });
+    });
+
+}
+
+
+
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
 }
@@ -203,6 +224,7 @@
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
 }
 
 @end

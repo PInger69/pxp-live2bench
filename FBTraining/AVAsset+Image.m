@@ -12,12 +12,22 @@
 
 - (nullable UIImage *)imageForTime:(CMTime)time {
     NSError *error;
+
+    AVAsset * copyAsset = [self copy];
+    // for some starange reason if you call .metadata on the av asset before it goes in to AVAssetImageGenerator it will no error out
     
-    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:self];
+    
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:copyAsset];
+    
+//    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:self]; 
     
     CGImageRef imageRef = [generator copyCGImageAtTime:time actualTime:NULL error:&error];
     UIImage *image = [UIImage imageWithCGImage:imageRef];
     CGImageRelease(imageRef);
+    
+    if (error) {
+    
+    }
     
     return image && !error ? image : nil;
 }

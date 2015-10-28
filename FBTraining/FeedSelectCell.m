@@ -99,7 +99,7 @@
         [self.contentView addSubview: self.feedName];
         [self.contentView addSubview:self.feedView];
         
-        if (tag.type != TagTypeTele) {
+        if (tag.type != TagTypeTele && tag.duration != 0) {
             [self.downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             [self.contentView addSubview: self.downloadButton];
         }

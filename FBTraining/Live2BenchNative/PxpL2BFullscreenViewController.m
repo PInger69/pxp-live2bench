@@ -9,7 +9,7 @@
 #import "PxpL2BFullscreenViewController.h"
 #import "Clip.h"
 #import "LocalMediaManager.h"
-
+#import "EncoderManager.h"
 
 @interface PxpL2BFullscreenViewController ()
 
@@ -35,7 +35,7 @@
     
     [self.bottomBar addSubview:_liveButton];
     
-    [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//    [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     _liveButton.enabled = NO;
     
     
@@ -85,6 +85,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    PXPLog(@"*** didReceiveMemoryWarning ***");
     // Dispose of any resources that can be recreated.
 }
 
@@ -112,9 +113,16 @@
 
 #pragma mark - Actions
 
-- (void)liveButtonAction:(LiveButton *)sender {
-    [self.playerViewController.playerView.player goToLive];
-}
+// This control should have been only on the live2Bench Action is added in there
+//- (void)liveButtonAction:(LiveButton *)sender {
+//    PXPLog(@"Pressed Live Button in full screen");
+//
+//    [self.playerViewController.playerView.player goToLive];
+//    
+//    
+//    [[EncoderManager getInstance] declareCurrentEvent:[EncoderManager getInstance].liveEvent];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:[EncoderManager getInstance].liveEvent];
+//}
 
 - (void)extendStartAction:(UIButton *)button {
     if (_selectedTag) {
