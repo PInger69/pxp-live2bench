@@ -38,6 +38,8 @@
 
 
 
+// this method will be called in the ListTableViewController
+-(void)onTagHasBeenHighlighted:(Tag*)tag;
 
 
 

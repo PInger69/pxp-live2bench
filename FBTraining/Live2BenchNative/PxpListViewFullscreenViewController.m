@@ -24,6 +24,7 @@
         _currentTagLabel            = [[PxpBorderLabel alloc] init];
         _previousTagButton          = [[PxpBorderButton alloc] init];
         _nextTagButton              = [[PxpBorderButton alloc] init];
+        _liveButton                 = [[LiveButton alloc] init];
     }
     return self;
 }
@@ -37,11 +38,12 @@
     [self.bottomBar addSubview:_currentTagLabel];
     [self.bottomBar addSubview:_previousTagButton];
     [self.bottomBar addSubview:_nextTagButton];
-    
+    [self.bottomBar addSubview:_liveButton];
     _currentTagLabel.enabled = NO;
     _currentTagLabel.hidden = YES;
 
-    _currentTagLabel.font = (SYSTEM_VERSION_LESS_THAN(@"8.0"))?[UIFont fontWithName:@"HelveticaNeue-Light" size:22]:[UIFont systemFontOfSize:22.0 weight:1.0];
+    _currentTagLabel.font = (SYSTEM_VERSION_LESS_THAN(@"8.0"))?[UIFont fontWithName:@"HelveticaNeue-Light" size:22]:[UIFont systemFontOfSize:20.0];
+    
     _startRangeModifierButton.hidden = YES;
     _endRangeModifierButton.hidden = YES;
     _previousTagButton.hidden = YES;
@@ -52,7 +54,19 @@
     
     [_startRangeModifierButton addTarget:self action:@selector(extendStartAction:) forControlEvents:UIControlEventTouchUpInside];
     [_endRangeModifierButton addTarget:self action:@selector(extendEndAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_liveButton addTarget:self action:@selector(liveButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_PLAYER_BAR_CANCEL object:nil];
+}
+
+- (void)liveButtonPress:(UIButton *)button
+{
     
+}
+
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_PLAYER_BAR_CANCEL object:nil];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -75,11 +89,21 @@
     
     _previousTagButton.frame = CGRectMake(4.0 * height + margin, margin, tagCycleWidth, tagCycleHeight);
     _nextTagButton.frame = CGRectMake(width - 4.0 * height - margin - tagCycleWidth, margin, tagCycleWidth, tagCycleHeight);
+    
+    const CGFloat buttonSize = self.bottomBar.bounds.size.height;
+    const CGFloat buttonHeight = buttonSize-10;
+    _liveButton.frame = CGRectMake(self.fullscreenButton.frame.origin.x - 0.5 * buttonSize, margin, 100.0, tagCycleHeight);
+
+    self.slomoButton.frame      = CGRectMake(2.5 * buttonHeight,       margin+6,         1.5 * buttonHeight - 2.0 * margin,      buttonHeight - 2.0 * margin);
+    self.slomoButton.layer.borderWidth = 1;
+    self.slomoButton.layer.borderColor = PRIMARY_APP_COLOR.CGColor;
+    self.fullscreenButton.frame = CGRectMake(CGRectGetMinX(self.forwardSeekButton.frame)-margin -(buttonHeight - 2.0 * margin),        margin+6,         buttonHeight - 2.0 * margin,    buttonHeight - 2.0 * margin);
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -163,6 +187,17 @@
 
 - (NSTimeInterval)durationOfVideoPlayer {
     return CMTimeGetSeconds(self.playerViewController.playerView.player.duration);
+}
+// returns the ui of full screen to non tag playing style
+-(void)clear
+{
+    _selectedTag = nil;
+    _currentTagLabel.text = @"";
+    _currentTagLabel.hidden = YES;
+    _startRangeModifierButton.hidden = YES;
+    _endRangeModifierButton.hidden = YES;
+    _previousTagButton.hidden = YES;
+    _nextTagButton.hidden = YES;
 }
 
 /*

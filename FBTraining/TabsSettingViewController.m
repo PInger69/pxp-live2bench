@@ -17,6 +17,7 @@
 #import "DebuggingTabViewController.h"
 #import "DualViewTabViewController.h"
 #import "MedicalViewController.h"
+#import "AnalyzeTabViewController.h"
 
 // Tab setting identifiers
 #define TAB_CALENDAR @"Calendar"
@@ -26,9 +27,10 @@
 #define TAB_LISTVIEW @"ListView"
 #define TAB_MYCLIP @"MyClip"
 #define TAB_DUALVIEW @"DualView"
+
 #define TAB_DEBUG @"Debug"
 #define TAB_MEDICAL @"Medical"
-
+#define TAB_ANALYZE @"Analyze"
 @interface TabsSettingViewController () <ToggleSettingViewControllerDelegate>
 
 @property (strong, nonatomic, nonnull) NSDictionary *tabClassForIdentifier;
@@ -39,8 +41,8 @@
 
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel
-                                 name:NSLocalizedString(@"Tabs", nil)
-                           identifier:@"Tabs"
+                                 name:NSLocalizedString(@"Main Tabs", nil)
+                           identifier:@"Main Tabs"
                               toggles:@[
                                         @{
                                             @"Name": NSLocalizedString(@"Calendar", nil),
@@ -73,6 +75,10 @@
                                             @"Name": NSLocalizedString(@"My Clip", nil),
                                             @"Identifier": TAB_MYCLIP
                                             },
+                                        @{
+                                            @"Name": NSLocalizedString(@"Analyze", nil),
+                                            @"Identifier": TAB_ANALYZE
+                                            },
 #if DEBUG_MODE == 1
                                         @{
                                             @"Name": NSLocalizedString(@"Debug", nil),
@@ -92,6 +98,7 @@
         self.settingData[TAB_DEBUG] = @NO;
         self.settingData[TAB_DUALVIEW] = @NO;
         self.settingData[TAB_MEDICAL] = @NO;
+        self.settingData[TAB_ANALYZE] = @NO;
         
         
         self.tabClassForIdentifier = @{
@@ -104,6 +111,7 @@
                                        TAB_MYCLIP: [BookmarkViewController class],
                                        TAB_DEBUG: [DebuggingTabViewController class],
                                        TAB_DUALVIEW: [DualViewTabViewController class],
+                                       TAB_ANALYZE: [AnalyzeTabViewController class],
                                        };
         self.delegate = self;
         
@@ -145,7 +153,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 

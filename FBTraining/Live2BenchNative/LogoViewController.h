@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "CustomTabViewController.h"
 #import "EulaModalViewController.h"
-#import "SettingsViewController.h"
+#import "EncoderControlsViewController.h"
 #import "IconButton.h"
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
 @class EulaModalViewController;
-@class SettingsViewController;
+@class EncoderControlsViewController;
 
 @interface LogoViewController : CustomTabViewController<MFMailComposeViewControllerDelegate,UIGestureRecognizerDelegate,UITabBarDelegate>{
     
@@ -24,7 +24,7 @@
     NSFileManager *fileManager;
     NSString *handleLogoPagePath;
     EulaModalViewController *eulaModalViewController;
-    SettingsViewController  *settingsViewController;
+    EncoderControlsViewController  *settingsViewController;
     MFMailComposeViewController *mailController;
     
     UIBarButtonItem *hardwareTab;

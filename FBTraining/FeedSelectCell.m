@@ -19,8 +19,14 @@
 - (nonnull instancetype)initWithImageData:(nullable NSString *)url andName: (nullable NSString *)name{
     self = [super init];
     if (self) {
-        _feedName = [[UILabel alloc] init];
-        _feedView = [[UIImageView alloc] init];
+        _dowdloadSize   = [[UILabel alloc] init];
+        [_dowdloadSize setFont:[UIFont fontWithName:@"HelveticaNeue" size:12]];
+        
+        _feedName       = [[UILabel alloc] init];
+        _feedView       = [[UIImageView alloc] init];
+
+        _dowdloadSize.textAlignment = NSTextAlignmentRight;
+        _dowdloadSize.text = @"";
         
         _dicKey = name ? name : @"";
         
@@ -45,6 +51,7 @@
         [self.contentView setBackgroundColor:[UIColor colorWithRed:0.955 green:0.955 blue:0.955 alpha:0.8]];
         
         [self.contentView addSubview: self.feedName];
+        [self.contentView addSubview: self.dowdloadSize];
         [self.contentView addSubview:self.feedView];
         [self.contentView addSubview: self.downloadButton];
         [self.contentView addSubview:self.playButton];
@@ -58,9 +65,14 @@
 - (nonnull instancetype)initWithTag:(nonnull Tag *)tag source:(nullable NSString *)source {
     self = [super init];
     if (self) {
+        _dowdloadSize   = [[UILabel alloc] init];
+        [_dowdloadSize setFont:[UIFont fontWithName:@"HelveticaNeue" size:12]];
+        
         _feedName = [[UILabel alloc] init];
         _feedView = [[UIImageView alloc] init];
         
+        _dowdloadSize.textAlignment = NSTextAlignmentRight;
+        _dowdloadSize.text = @"";
         if (!source) {
             source = tag.event.feeds.allKeys.firstObject;
         }
@@ -95,9 +107,10 @@
         [self.playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.playButton setShowsTouchWhenHighlighted: YES];
         [self.contentView setBackgroundColor:[UIColor colorWithRed:0.955 green:0.955 blue:0.955 alpha:0.8]];
-        
+
+        [self.contentView addSubview: self.dowdloadSize];
         [self.contentView addSubview: self.feedName];
-        [self.contentView addSubview:self.feedView];
+        [self.contentView addSubview: self.feedView];
         
         if (tag.type != TagTypeTele && tag.duration != 0) {
             [self.downloadButton addTarget:self action:@selector(downloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -134,10 +147,11 @@
 
 - (void)positionWithFrame:(CGRect)frame {
     
-    [_feedView setFrame:CGRectMake(44, 0, (16.0 / 9.0) * frame.size.height, frame.size.height)];
-    [_feedName setFrame:CGRectMake(_feedView.frame.origin.x + _feedView.frame.size.width + 10, 0, 100, frame.size.height)];
-    [_downloadButton setFrame:CGRectMake(276, (frame.size.height - 34) / 2.0, 34, 34)];
-    [_playButton setFrame:CGRectMake(CGRectGetMaxX(_downloadButton.frame) + 60, (frame.size.height - 30) / 2.0, 30, 30)];
+    [_feedView          setFrame:CGRectMake(44, 0, (16.0 / 9.0) * frame.size.height, frame.size.height)];
+    [_feedName          setFrame:CGRectMake(_feedView.frame.origin.x + _feedView.frame.size.width + 10, 0, 100, frame.size.height)];
+    [_dowdloadSize      setFrame:CGRectMake(CGRectGetMaxX(frame) - 230, 0, 100, frame.size.height)];
+    [_downloadButton    setFrame:CGRectMake(CGRectGetMaxX(frame) - 120, (frame.size.height - 34) / 2.0, 34, 34)];
+    [_playButton        setFrame:CGRectMake(CGRectGetMaxX(frame) - 60, (frame.size.height - 30) / 2.0, 30, 30)];
 }
 
 

@@ -13,7 +13,7 @@
 - (void)setFeed:(nullable Feed *)feed {
 
 
-    AVPlayerItem * playerItem = [AVPlayerItem playerItemWithURL:feed.path];
+    AVPlayerItem * playerItem = [AVPlayerItem playerItemWithURL:feed.hqPath];
     
 //    AVPlayerItem * playerItem = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:@"www.google.com"]];
     

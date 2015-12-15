@@ -17,8 +17,17 @@
 //#import "Feed.h"
 //#import "RJLVideoPlayer.h"
 
+#import "RicoPlayer.h"
+#import "RicoPlayerViewController.h"
+#import "RicoOperations.h"
+#import "EncoderOperation.h"
+#import "RicoPlayerControlBar.h"
+#import "RicoZoomContainer.h"
+#import "RicoJogDial.h"
 
-@interface DebuggingTabViewController ()
+#import "AnalyzeLoader.h"
+
+@interface DebuggingTabViewController () <RicoJogDialJogDialDelegate,AnalyzeLoaderDelegate>
 {
 
     EncoderManager              * EM;
@@ -28,16 +37,29 @@
     UIView                      * playArea;
     AVPlayer                    * pl;
     AVPlayerLayer               * avPlayerLayer;
-//    RJLVideoPlayer              * rjlPlayer;
+
     
-    UIButton                    * playBtn;
-    UIButton                    * seekBtn;
+    UIButton                    * stepForward;
+    UIButton                    * stepBackward;
     UIButton                    * pauseBtn;
     UIButton                    * switchBtn;
     UILabel                     * label;
     NSMutableArray              * buttList;
+    NSInteger                   speedBuilder;
+    NSInteger                   holdAmount;
+    
+       RicoPlayerControlBar        * controlBar;
+    BOOL                        isHeld;
 }
+
+@property (nonatomic,strong)  RicoPlayerViewController    * playerViewController;
+
+
 @end
+
+
+
+
 
 static void *  debugContext = &debugContext;
 
@@ -68,11 +90,7 @@ static void *  debugContext = &debugContext;
         UC = _appDel.userCenter;
         EM = _appDel.encoderManager;
         [self setMainSectionTab:@"Debug" imageName:@""];
-        [self.view setBackgroundColor:[UIColor lightGrayColor]];
         
-//        pip = [[Pip alloc]initWithFrame:CGRectMake(100,100,800,400)];
-        buttList= [@[] mutableCopy];
-  
         
     }
     
@@ -83,209 +101,239 @@ static void *  debugContext = &debugContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-//    rjlPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(100,200,800,400)];
-    
-}
-
--(void)tryAndMessUpFeeds
-{
-    Event           * pEvent =     EM.primaryEncoder.event;
-    PxpEventContext * eCon = EM.primaryEncoder.eventContext;
-    PxpPlayer       * firstPlayer = eCon.players[0];
-
-    AVPlayerItem * pi = [AVPlayerItem playerItemWithURL: [NSURL URLWithString:@"http://walterebert.com/playground/video/hls/sintel-trailer.m3u8"]];
-    [firstPlayer replaceCurrentItemWithPlayerItem:pi];
-
-    
-}
-
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
+    self.playerViewController = [RicoPlayerViewController new];
   
-    [self tryAndMessUpFeeds];
-      return;
-    // build View
+    controlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(50,350,  900, 50)];
+    [controlBar setGestureEnabled:YES];
+    
+    
+   [self.view setBackgroundColor:[UIColor lightGrayColor]];
+    
+    Encoder * pEncoder = (Encoder *)EM.primaryEncoder;
+    
+//    NSInteger iii = 0;
+//
+//    NSLog(@"");
+//    Tag * tag = pEncoder.event.tags[iii] ;
 //    
-//    UIView             * xxxplayerView;
-//    NSURL              * xxxurl;
-//    AVPlayerItem       * xxxplayeritem;
-//    AVPlayer           * xxxplayer;
-//    AVPlayerLayer      * xxxavPlayerLayer;
-//    
-//    
-//    xxxplayerView       = [[UIView alloc]initWithFrame:CGRectMake(0, 40, 800, 400)];
-//    xxxurl             = [NSURL URLWithString:@"http://192.168.2.119/events/live/video/list_00lq.m3u8"];
-//   xxxplayeritem      = [[AVPlayerItem alloc] initWithURL:xxxurl];
-//   xxxplayer          = [AVPlayer playerWithPlayerItem:xxxplayeritem];
-//   xxxavPlayerLayer   = [AVPlayerLayer playerLayerWithPlayer:xxxplayer];
-//    
-//    xxxplayerView.layer.borderWidth  = 1;
-//    xxxavPlayerLayer.frame                  = CGRectMake(0,0,800,400);
-//// 
-////    
-//    [xxxplayerView.layer addSublayer:xxxavPlayerLayer ];
-//    [self.view addSubview:xxxplayerView];
-////   
-//    [xxxplayer play];
-////    
-//   return;
-    
-    
-    playArea = [[UIView alloc]initWithFrame:CGRectMake(100,100,800,400)];
-
-    
-     paths = @[
-                        [NSURL URLWithString:@"http://walterebert.com/playground/video/hls/sintel-trailer.m3u8"],
-                        [NSURL URLWithString:@"http://192.168.2.119/events/live/video/list_00lq.m3u8"],
-                        [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"],
-                        [NSURL URLWithString:@"http://192.168.8.114/events/2015-10-14_09-20-22_8b0077f142d12ba23325ad4dd7ea03c2e64976b0_local/video/list_00hq.m3u8"],
-                        [NSURL URLWithString:@"http://192.168.8.114/events/2015-10-14_09-20-22_8b0077f142d12ba23325ad4dd7ea03c2e64976b0_local/video/list_00lq.m3u8"],
-                        
-                        ];
-    
-    
-
-
-    
-    
-    pick = 1;
-    url         = paths[pick];
-    
-    
-    NSLog(@"playing in Debugger: %@",[url absoluteString]);
-   AVPlayerItem * item = [[AVPlayerItem alloc]initWithURL:url];
-//    item.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
-    pl                  = [[AVPlayer alloc]initWithPlayerItem:item];
-
-    avPlayerLayer       = [AVPlayerLayer playerLayerWithPlayer:pl];
-    avPlayerLayer.frame =CGRectMake(0,0,800,400);
-   
-    [playArea.layer addSublayer:avPlayerLayer];
-    playArea.layer.borderWidth = 1;
-
-    [self.view addSubview:playArea];
-    
-    
-    
-    
-
-    CGFloat yy = 500;
-    CGFloat ww = 100;
-    CGFloat hh = 50;
-    
-    playBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, yy, ww, hh)];
-    [playBtn addTarget:self action:@selector(buttonPress:) forControlEvents:UIControlEventTouchUpInside];
-    [playBtn setTitle:@"play" forState:UIControlStateNormal];
-    
-    seekBtn = [[UIButton alloc]initWithFrame:CGRectMake(ww+10, yy, ww, hh)];
-    [seekBtn addTarget:self action:@selector(buttonPress:) forControlEvents:UIControlEventTouchUpInside];
-    [seekBtn setTitle:@"seek to 30" forState:UIControlStateNormal];
-    
-    pauseBtn = [[UIButton alloc]initWithFrame:CGRectMake((ww*2)+10, yy, ww, hh)];
-    [pauseBtn addTarget:self action:@selector(buttonPress:) forControlEvents:UIControlEventTouchUpInside];
-    [pauseBtn setTitle:@"pause" forState:UIControlStateNormal];
-    
-    switchBtn = [[UIButton alloc]initWithFrame:CGRectMake((ww*3)+10, yy, ww, hh)];
-    [switchBtn addTarget:self action:@selector(buttonPress:) forControlEvents:UIControlEventTouchUpInside];
-    [switchBtn setTitle:@"Switch" forState:UIControlStateNormal];
-    
-    [self.view addSubview:playBtn];
-    [self.view addSubview:seekBtn];
-    [self.view addSubview:pauseBtn];
-    [self.view addSubview:switchBtn];
-    
-    
-    label = [[UILabel alloc]initWithFrame:CGRectMake(50, yy+hh+10, 1000, hh)];
-     [self.view addSubview:label];
-    
-    [label setText:[url absoluteString]];
-
-    
-    
-    for (UIButton * b in buttList) {
-        [b removeFromSuperview];
-    }
-    [buttList removeAllObjects];
-    
-    
-    CGFloat xxx = 10;
-    CGFloat yyy = 600;
-    CGFloat hhh = 40;
-    CGFloat www = 900;
-    CGFloat ccc = 0;
-    if (EM.primaryEncoder.event){
-        Event * debugz = EM.primaryEncoder.event;
-        for (Feed * fee in [debugz.feeds allValues]) {
-            
-            for (NSURL * pth in fee.allPaths) {
-                UIButton * bb = [[UIButton alloc]initWithFrame:CGRectMake(xxx, yyy+(ccc * (hhh+5)), www, hhh)];
-                bb.titleLabel.adjustsFontSizeToFitWidth = YES;
-                [bb addTarget:self action:@selector(checkVideo:) forControlEvents:UIControlEventTouchUpInside];
-                [bb setTitle:[pth absoluteString] forState:UIControlStateNormal];
-                bb.layer.borderWidth = 1;
-                [buttList addObject:bb];
-                [self.view addSubview:bb];
-                ccc++;
-            }
-        }
-    
-    }
-    
-    
-    
+//    AnalyzeLoader * testLoader = [[AnalyzeLoader alloc]initWithTag:tag];
+//    testLoader.delegate = self;
+//    [testLoader start];
 }
 
 
-
--(void)checkVideo:(id)sender
+-(void)onCompletion:(AnalyzeLoader*)analyzeLoader finalClip:(Clip*)clip
 {
-    UIButton* butt = sender;
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: butt.titleLabel.text ]];
 
+    NSLog(@"Delegate complete");
+
+    
+    NSArray * playersTemp = [self.playerViewController.players allValues];
+    NSArray * keys = [clip.videosBySrcKey allKeys];
+    
+    
+    for (NSInteger i = 0; i<[keys count]; i++) {
+        
+        RicoPlayer * _pl = playersTemp[i];
+        
+        _pl.feed =  [[Feed alloc]initWithFileURL:clip.videosBySrcKey[keys[i]]];
+    }
+    
+    
+    
+   
+    
+    
 }
-
 
 
 
 -(void)buttonPress:(id)sender
 {
-    if (sender == playBtn) {
-       [pl play];
-//        [pl setRate:1];
-    }
-    else if (sender == seekBtn) {
-        [pl seekToTime:CMTimeMakeWithSeconds(30, NSEC_PER_SEC)];
+//    UIButton * button = sender;
+//    
+//    if (button.tag == 2) {
+//        [playerViewController stepByCount:1];
+//    } else {
+//        [playerViewController stepByCount:-1];
+//        
+//    }
+    
+}
 
+-(void)buttonHold:(id)sender
+{
+    UIButton * button = sender;
+    isHeld = YES;
+    NSTimer * timer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(updateMethod:) userInfo:@{@"button":button} repeats:YES];
+    [timer fire];
+}
+
+-(void)buttonRelease:(id)sender
+{
+        isHeld = NO;
+    
+//    UIButton * button = sender;
+//    
+//    if (button.tag == 2) {
+//        [playerViewController stepByCount:1];
+//    } else {
+//        [playerViewController stepByCount:-1];
+//        
+//    }
+    
+    
+    speedBuilder = 0;
+    holdAmount = 0;
+}
+
+- (void) updateMethod:(NSTimer*) timer
+{
+    
+  
+    UIButton * button = timer.userInfo[@"button"];
+
+    if (!isHeld) {
+        [timer invalidate];
+        return;
     }
-    else if (sender == pauseBtn) {
-         [pl pause];
-        [pl setRate:0];
-//        [pl setRate:0.0000001];
+    holdAmount++;
+    
+    if (button.tag == 2) {
+        NSLog(@"---");
+        [self.playerViewController stepByCount:(1+speedBuilder)];
+    NSLog(@"---");
+    } else {
+        [self.playerViewController stepByCount:-(1+speedBuilder)];
+        
     }
-    else if (sender == switchBtn) {
-        pick = (pick)?0:1;
-        url         = paths[pick];
-     
-        AVPlayerItem * item = [[AVPlayerItem alloc]initWithURL:url];
-        [pl replaceCurrentItemWithPlayerItem:item];
-        [label setText:[url absoluteString]];
+
+    if(!(holdAmount% 5)){
+        speedBuilder++;
     }
 
 }
 
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    
+    
+    Event * testEvent = [LocalMediaManager getInstance].allEvents[@"2015-11-20_18-58-40_351eb7bdbc945bc04a5a21390970ccc9eca4b6b1_local"][@"local"];
+    
+    Feed * feed = [[testEvent.feeds allValues]firstObject];
+    NSString * aUrl = [feed.path absoluteString];
+    [super viewDidAppear:animated];
+    NSArray * listOurl = @[
+                           
+                           aUrl
+                           ,aUrl
+                           ,aUrl
+                           ,aUrl
+                           
+//                           @"http://192.168.2.122/events/live/video/list_00hq.m3u8"
+//                           ,@"http://192.168.2.122/events/live/video/list_00hq.m3u8"
+//                           ,@"http://192.168.2.122/events/live/video/list_00hq.m3u8"
+//                           ,@"http://192.168.2.122/events/live/video/list_00hq.m3u8"
+                           //                           ,
+                           //                           @"http://walterebert.com/playground/video/hls/sintel-trailer1.m3u8",
+                           //                           @"http://walterebert.com/playground/video/hls/sintel-trailer.m3u8",
+                           //                           @"http://walterebert.com/playground/video/hls/sintel-trailer.m3u8",
+                           //                           @"http://walterebert.com/playground/video/hls/sintel-trailer.m3u8"
+                           ];
+    
+    for (int i =0, r =0, c = 0; i < [listOurl count];  i++,  c = (r==1)? c+1: c , r = (r == 1)? 0 : r+1       ) {
+        
+        RicoPlayer*   ricoPlayer = [[RicoPlayer alloc]initWithFrame:CGRectMake(0,
+                                                                               0,
+                                                                               self.view.frame.size.width/2 ,
+                                                                               self.view.frame.size.height/2)];
+        
+        [self.playerViewController addPlayers:ricoPlayer];
+        ricoPlayer.looping          = YES;
+        ricoPlayer.syncronized      = YES;
+        ricoPlayer.feed             =  [[Feed alloc]initWithURLString:listOurl[i] quality:0];
+        ricoPlayer.name             =[ NSString stringWithFormat:@"Player %d",i];
+        [ricoPlayer.debugOutput setHidden:NO];
+        //        [ricoPlayer pause];
+        [[ricoPlayer seekToTime:CMTimeMake(1, 1) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil] addDependency:ricoPlayer.isReadyOperation];
+        //        [ricoPlayer play];
+        
+        RicoZoomContainer * zoomContainer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2*c,
+                                                                                               self.view.frame.size.height/2*r,
+                                                                                               self.view.frame.size.width/2 ,
+                                                                                               self.view.frame.size.height/2)];
+        
+        [self.view addSubview:zoomContainer];
+        [zoomContainer addToContainer:ricoPlayer];// temp
+        [zoomContainer addSubview:ricoPlayer];
+    }
+    
+    
+    [self.playerViewController play];
+    
+    controlBar.delegate = self.playerViewController;
+    self.playerViewController.playerControlBar       = controlBar;
+    [self.view addSubview:controlBar];
+    
+    
+    // temp buttons
+    
+    
+    stepBackward = [UIButton new];
+    stepBackward.tag = 1;
+    stepBackward.titleLabel.text = @"B";
+    [stepBackward addTarget:self action:@selector(buttonPress:) forControlEvents:UIControlEventTouchUpInside];
+    [stepBackward addTarget:self action:@selector(buttonHold:) forControlEvents:UIControlEventTouchDown];
+    [stepBackward addTarget:self action:@selector(buttonRelease:) forControlEvents:UIControlEventTouchUpInside];
+    [stepBackward addTarget:self action:@selector(buttonRelease:) forControlEvents:UIControlEventTouchUpOutside];
+    [stepBackward setBackgroundColor:[UIColor grayColor]];
+   
+    [stepBackward setFrame:CGRectMake(CGRectGetMinX(controlBar.frame)-50, CGRectGetMinY(controlBar.frame), 50, 50)];
+    [self.view addSubview:stepBackward];
+    
+    stepForward = [UIButton new];
+    stepForward.tag = 2;
+    stepForward.titleLabel.text = @"F";
+    [stepForward addTarget:self action:@selector(buttonPress:) forControlEvents:UIControlEventTouchUpInside];
+    [stepForward addTarget:self action:@selector(buttonHold:) forControlEvents:UIControlEventTouchDown];
+    [stepForward addTarget:self action:@selector(buttonRelease:) forControlEvents:UIControlEventTouchUpInside];
+    [stepForward addTarget:self action:@selector(buttonRelease:) forControlEvents:UIControlEventTouchUpOutside];
+    
+    [stepForward setBackgroundColor:[UIColor grayColor]];
+
+    [stepForward setFrame:CGRectMake(CGRectGetMaxX(controlBar.frame), CGRectGetMinY(controlBar.frame), 50, 50)];
+    [self.view addSubview:stepForward];
+    
+    RicoJogDial * dial =  [[RicoJogDial alloc]initWithFrame:CGRectMake(CGRectGetMidX(controlBar.frame)-150,CGRectGetMinY(controlBar.frame)-80, 300,80)];
+    [self.view addSubview:dial];
+    dial.sensitivity = 0.8;
+    
+    dial.delegate = self;
+}
 
 
+-(void)onMovement:(RicoJogDial *)dial value:(CGFloat)value
+{
+    static NSInteger i = 0;
+    NSInteger stepAmount = 1;
+    CGFloat absVal = fabs(value);
+    if ( absVal > 3000) {
+        stepAmount = 9;
+    } else if ( absVal > 2000) {
+        stepAmount = 3;
+    }
+    
+    
+    if (value>0) {
+        [self.playerViewController stepByCount:stepAmount];
+    } else {
+        i++;
+        if (i%2 )[self.playerViewController stepByCount:-stepAmount*2];
+        
+    }
 
-
-
-
-
-
-
+}
 
 
 
@@ -296,14 +344,13 @@ static void *  debugContext = &debugContext;
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    
 }
 
 - (void)didReceiveMemoryWarning
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     if ([self.view window] == nil) self.view = nil;
     
 }

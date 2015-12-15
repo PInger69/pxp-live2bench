@@ -614,7 +614,7 @@ static void * vpFrameContext   = &vpFrameContext;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 

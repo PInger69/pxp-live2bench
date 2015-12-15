@@ -21,7 +21,8 @@
 
 #import "ListPopoverController.h"
 #import "FakeEncoder.h"
-#import "SettingsViewController.h"
+//#import "EncoderControlsViewController.h"
+#import "ImageAssetManager.h"
 //#define GET_NOW_TIME        [NSNumber numberWithDouble:CACurrentMediaTime()]
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
@@ -67,7 +68,7 @@ static EncoderManager * instance;
         bonjourModule                   = [[BonjourModule alloc]initWithDelegate:self];
         _cloudEncoder                   = [[CloudEncoder alloc]initWithIP:[Utility getIPAddress]];  // started in searchForEncoders
         _localEncoder                   = [[LocalEncoder alloc]initWithDocsPath:aLocalDocsPath];
-        _localEncoder.encoderManager    = self;
+        _localEncoder.encoderManager    = self;// depricated
         _localMediaManager              = [[LocalMediaManager alloc]initWithDocsPath:aLocalDocsPath];
         _searchForEncoders              = NO;
         _hasLive                        = NO; // default before checking
@@ -112,7 +113,6 @@ static EncoderManager * instance;
 // Quick singleton of first created EncoderManager
 +(EncoderManager*)getInstance
 {
-
     return instance;
 }
 
@@ -181,19 +181,32 @@ static EncoderManager * instance;
 // This method switches encoders if need then changes the event. It will also build event if it has not been built
 -(void)declareCurrentEvent:(Event*)event
 {
-  
+    
+    // if the event is current event then it needs to be closed to save space
+    // This will convert all tags to dicts on the event and remove tag observers
+    if ([self.primaryEncoder event] != event && event != nil) {
+        [[self.primaryEncoder event] closeEvent];
+        [[ImageAssetManager getInstance]thumbnailsUnload:grabAllThumbNamesFromEvent([self.primaryEncoder event])];
+    }
+    
+    
         [self.primaryEncoder event].primary = false;
         if (event == nil) {
             
             
             if ([[self.primaryEncoder event].name isEqualToString:self.liveEvent.name]) {
+
+                [[self.primaryEncoder event] closeEvent];
+                
                 self.liveEvent = nil;
             }
-           if (self.primaryEncoder) [self.primaryEncoder removeFromPrimary];
-            //[self.primaryEncoder setEvent:nil];
+            if (self.primaryEncoder) [self.primaryEncoder removeFromPrimary];
             self.primaryEncoder = nil;
         } else {
+            
             if (event.isBuilt){
+    
+                if(!event.open)[event openEvent];
                 self.primaryEncoder = event.parentEncoder;
                 event.primary = true;
                 [self.primaryEncoder setEvent:event];
@@ -445,7 +458,8 @@ static EncoderManager * instance;
     NSMutableDictionary * eventDic         = [self.masterEncoder.allEvents objectForKey:theEvent.name];
     
     if (theEvent.isBuilt){
-        
+        PXPLog(@"Event Download started!");
+        NSLog(@"Event Download started!");
         __block Event * weakEvent = theEvent;
 
         NSString * videoFolderPath      = [_localMediaManager saveEvent:eventDic]; // This makes a plist for the event and a location to save the video
@@ -477,7 +491,7 @@ static EncoderManager * instance;
         
         
     } else {
-        PXPLog(@"Event Download Failed... Event was not built... please build");
+        PXPLog(@"Event Download Failed... Event was not built... please try again later");
     }
 }
 
@@ -663,7 +677,7 @@ static EncoderManager * instance;
  */
 -(void)makeCoachExternal
 {
-    if ([_authenticatedEncoders count] == 1 && self.hasMAX && [[UserCenter getInstance].customerEmail isEqualToString:@"coach"] && self.masterEncoder == nil){
+    if ([_authenticatedEncoders count] == 0 && self.hasMAX && [[UserCenter getInstance].customerEmail isEqualToString:@"coach"] && self.masterEncoder == nil){
         [self registerEncoder:@"External Encoder" ip:@"avocatec.org:8888"];
     }
 }

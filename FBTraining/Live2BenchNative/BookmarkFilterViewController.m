@@ -572,7 +572,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     if ([self.view window] == nil) self.view = nil;
     // Dispose of any resources that can be recreated.
 }

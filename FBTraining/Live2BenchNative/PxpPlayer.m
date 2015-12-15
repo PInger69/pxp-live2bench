@@ -11,6 +11,8 @@
 #import <CoreMedia/CoreMedia.h>
 #import "PxpLoadAction.h"
 
+#import "PxpReadyPlayerItemOperation.h"
+
 #define MAX_SYNCS 3
 #define LIVE_BUFFER 5
 #define NOTIF_MOTION_ALARM                  @"motionAlarm"
@@ -162,11 +164,11 @@ static CMClockRef _pxpPlayerMasterClock;
                 PXPLog(@"</!!! AVPlayerItem Error !!!>");
                 PXPLog(@"");
                 
-                NSString * tempErr = @"Stream connection interrupted";//self.currentItem.error.localizedDescription
-                
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:tempErr delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                
-                [alert show];
+//                NSString * tempErr = @"Stream connection interrupted";//self.currentItem.error.localizedDescription
+//                
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.name message:tempErr delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+//                
+//                [alert show];
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PXP_PLAYER_ERROR object:self userInfo:@{
                                                                                                                         @"rate": [NSNumber numberWithFloat:self.rate]
@@ -212,6 +214,20 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (void)timerTick:(NSTimer *)timer {
 //    [self sync:self.currentTime];
+    
+    if (!self.live) {
+        if (self.currentItem) {
+           CMTime lastTime = [self.currentItem.seekableTimeRanges.lastObject CMTimeRangeValue].duration;
+           CMTime nowTime  = self.currentItem.currentTime;
+          
+            if ( CMTimeCompare(nowTime, lastTime) >0) {
+                NSLog(@"Now time %f",                CMTimeGetSeconds(nowTime));
+                NSLog(@"last time %f",                CMTimeGetSeconds(lastTime));
+                [[NSNotificationCenter defaultCenter]postNotificationName:AVPlayerItemDidPlayToEndTimeNotification object:self.currentItem];
+            }
+            
+        }
+    }
 }
 
 #pragma mark - Setters / Getters
@@ -344,7 +360,7 @@ static CMClockRef _pxpPlayerMasterClock;
         }
         
         self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
-        
+
         //self.syncObserver = [self addPeriodicTimeObserverForInterval:syncInterval queue:NULL usingBlock:_syncBlock];
         
     }
@@ -383,14 +399,8 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player setRate:rate multi:NO];
     } else {
-
-//            dispatch_async(dispatch_get_main_queue(), ^() {
-                [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
-                [super setRate:rate];
-//            });
-
-        
-        
+        [super setRate:rate time:kCMTimeInvalid atHostTime:CMClockGetTime(_pxpPlayerMasterClock)];
+        [super setRate:rate];
     }
 }
 
@@ -426,15 +436,12 @@ static CMClockRef _pxpPlayerMasterClock;
         
         for (PxpPlayer *player in self.contextPlayers) [player prerollAtRate:rate multi:NO completionHandler:handler];
     } else {
-//        dispatch_async(dispatch_get_main_queue(), ^() {
             [super cancelPendingPrerolls];
             if (self.status != AVPlayerStatusReadyToPlay) {
                 completionHandler(NO);
             } else {
                 [super prerollAtRate:rate completionHandler:completionHandler];
             }
-//        });
-        
     }
 }
 
@@ -443,9 +450,7 @@ static CMClockRef _pxpPlayerMasterClock;
     if (multi) {
         for (PxpPlayer *player in self.contextPlayers) [player cancelPendingPrerollsMulti:NO];
     } else {
-//        dispatch_async(dispatch_get_main_queue(), ^() {
             [super cancelPendingPrerolls];
-//        });
     }
 }
 
@@ -478,7 +483,9 @@ static CMClockRef _pxpPlayerMasterClock;
 }
 
 - (void)seekToTime:(CMTime)time multi:(BOOL)multi toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nonnull void (^)(BOOL))completionHandler {
-    time = [self clampTime:time];
+    
+    CMTime clampedTime = [self clampTime:time];
+//    time = [self clampTime:time];
     
     if (multi) {
         self.seeking = YES;
@@ -498,15 +505,15 @@ static CMClockRef _pxpPlayerMasterClock;
             }
         };
         
-        for (PxpPlayer *player in self.contextPlayers) [player seekToTime:time multi:NO toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handler];
+        for (PxpPlayer *player in self.contextPlayers) [player seekToTime:clampedTime multi:NO toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handler];
         
     } else {
         
-        if (CMTIME_IS_INDEFINITE(time)) {
-            time = kCMTimePositiveInfinity;
+        if (CMTIME_IS_INDEFINITE(clampedTime)) {
+            clampedTime = kCMTimePositiveInfinity;
         }
         
-//        dispatch_async(dispatch_get_main_queue(), ^() {
+        dispatch_async(dispatch_get_main_queue(), ^() {
         
             __block BOOL seek = YES;
             
@@ -519,9 +526,9 @@ static CMClockRef _pxpPlayerMasterClock;
             if (self.status != AVPlayerStatusReadyToPlay || CMTIME_IS_INVALID(time)) {
                 handle(NO);
             } else if (CMTimeCompare(toleranceBefore, kCMTimePositiveInfinity) == 0 && CMTimeCompare(toleranceAfter, kCMTimePositiveInfinity) == 0) {
-                [super seekToTime:time completionHandler:handle];
+                [super seekToTime:clampedTime completionHandler:handle];
             } else {
-                [super seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handle];
+                [super seekToTime:clampedTime toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:handle];
             }
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -530,7 +537,7 @@ static CMClockRef _pxpPlayerMasterClock;
                 }
             });
             
-//        });
+        });
         
     }
 }
@@ -546,33 +553,49 @@ static CMClockRef _pxpPlayerMasterClock;
     CMTime duration = self.currentItem.duration;
     
     if (!CMTimeCompare(duration, kCMTimeIndefinite) ){
+        
+        if (self.currentItem.status == AVPlayerItemStatusUnknown) {
+            [self addLoadAction: [PxpLoadAction loadActionWithBlock:^(BOOL b) {
+                [self play];
+            }]];
+            return;
+        }
         float r =         self.playRate;
         BOOL wasLive = self.live;
         [self setRate:0.0];
         [self setRate:r];
-        [self seekToTime:self.currentTime];
-        
+        NSLog(@"seconds     = %f", CMTimeGetSeconds(self.currentItem.currentTime));
+        NSLog(@"dur seconds = %f", CMTimeGetSeconds(self.currentItem.duration));
+//        [self seekToTime:kCMTimeZero];
+        [self seekToTime:self.currentItem.currentTime];
         self.live = wasLive;
         self.muted = NO;
     } else {
         [self setRate:self.playRate];
     }
-    
+//   [self setRate:self.playRate];
 
+    [self.syncTimer fire];
+    
+    // Class testing
+//    PxpReadyPlayerItemOperation * test = [[PxpReadyPlayerItemOperation alloc]initWithPlayerItem:self.currentItem];
+//    [test setCompletionBlock:^{
+//        NSLog(@"FINISH");
+//    }];
+//    
+//    [[NSOperationQueue mainQueue]addOperation:test];
 }
 
 - (void)pause
 {
     
-    CMTime duration = self.currentItem.duration;
-    
-    if (!CMTimeCompare(duration, kCMTimeIndefinite) ){
-        [self setRate:PAUSE_RATE];
-        self.muted = YES;
-    } else {
-       [self setRate:0.0];
-    }
-    
+//    CMTime duration = self.currentItem.duration;
+//    if (!CMTimeCompare(duration, kCMTimeIndefinite) ){
+//        [self setRate:PAUSE_RATE];
+//        self.muted = YES;
+//    } else {
+        [self setRate:0.0];
+//    }
 
 }
 
@@ -651,11 +674,15 @@ static CMClockRef _pxpPlayerMasterClock;
 #pragma mark - Public Methods
 
 - (void)seekBy:(CMTime)time {
-    [self seekToTime:CMTimeAdd(self.currentTime, time) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    
+    NSLog(@"Now time %f",                CMTimeGetSeconds(self.currentItem.currentTime));
+    NSLog(@"last time %f",                CMTimeGetSeconds(time));
+    NSLog(@"total time %f",                CMTimeGetSeconds(CMTimeAdd(self.currentItem.currentTime, time)));
+    [self seekToTime:CMTimeAdd(self.currentItem.currentTime, time) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 - (void)seekBy:(CMTime)time completionHandler:(nullable void (^)(BOOL finished))completionHandler {
-    [self seekToTime:CMTimeAdd(self.currentTime, time) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completionHandler];
+    [self seekToTime:CMTimeAdd(self.currentItem.currentTime, time) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:completionHandler];
 }
 
 - (void)cancelPendingSeeks {
@@ -741,6 +768,24 @@ static CMClockRef _pxpPlayerMasterClock;
 /// Makes the player play from live
 - (void)goToLive {
     if (self.live) {
+        if (self.currentItem.status == AVPlayerItemStatusUnknown){
+            
+            NSBlockOperation * whenAble = [NSBlockOperation blockOperationWithBlock:^{
+                NSInteger c =0;
+                while ((self.currentItem.status != AVPlayerItemStatusReadyToPlay)) {
+                    [NSThread sleepForTimeInterval:0.01f];
+                    
+                    if (c++ >1000 || self.currentItem.status == AVPlayerItemStatusFailed) {
+                        return;
+                    }
+                }
+                [self goToLive];
+            }];
+            NSOperationQueue * q = [NSOperationQueue new];
+            [q addOperation:whenAble];
+            return;
+        }
+        
         if (!self.syncing) {
             self.syncing = YES;
             // invalidate the range
@@ -917,6 +962,10 @@ static CMClockRef _pxpPlayerMasterClock;
 
 - (NSTimeInterval)currentTimeInSeconds {
     return CMTimeGetSeconds(self.currentTime);
+}
+
+- (NSTimeInterval)currentItemTimeInSeconds {
+    return CMTimeGetSeconds(self.currentItem.currentTime);
 }
 
 @end

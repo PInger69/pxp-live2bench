@@ -300,19 +300,19 @@
             || tag.type == TagTypeTele
             || tag.type == TagTypeCloseDuration
             || tag.type == TagTypeCloseDurationOLD
-            || tag.type == TagTypeHockeyStrengthStop
-            || tag.type == TagTypeHockeyStopOLine
-            || tag.type == TagTypeHockeyStopDLine
-            || tag.type == TagTypeSoccerZoneStop
-            || tag.type == TagTypeHockeyStartOLine
-            || tag.type == TagTypeHockeyStartDLine
-            || tag.type == TagTypeHockeyPeriodStart
-            || tag.type == TagTypeHockeyPeriodStop
-            || tag.type == TagTypeHockeyOppOLineStart
-            || tag.type == TagTypeHockeyOppOLineStop
-            || tag.type == TagTypeHockeyOppDLineStart
-            || tag.type == TagTypeHockeyOppDLineStop
-            || tag.type == TagTypeHockeyStrengthStart
+//            || tag.type == TagTypeHockeyStrengthStop
+//            || tag.type == TagTypeHockeyStopOLine
+//            || tag.type == TagTypeHockeyStopDLine
+//            || tag.type == TagTypeSoccerZoneStop
+//            || tag.type == TagTypeHockeyStartOLine
+//            || tag.type == TagTypeHockeyStartDLine
+//            || tag.type == TagTypeHockeyPeriodStart
+//            || tag.type == TagTypeHockeyPeriodStop
+//            || tag.type == TagTypeHockeyOppOLineStart
+//            || tag.type == TagTypeHockeyOppOLineStop
+//            || tag.type == TagTypeHockeyOppDLineStart
+//            || tag.type == TagTypeHockeyOppDLineStop
+//            || tag.type == TagTypeHockeyStrengthStart
             ) {
             [arrayOfTagsToDisplay insertObject:tag atIndex:0];
         }
@@ -347,6 +347,17 @@
     
     _backwardSeekButton.enabled = enabled;
     _forwardSeekButton.enabled = enabled;
+}
+
+-(void)clear
+{
+        _selectedTag = nil;
+        _tagView.hidden = YES;
+        _tagLabel.hidden = YES;
+        _tagExtendStartButton.hidden = YES;
+        _tagExtendEndButton.hidden = YES;
+        _tagLabel.text = @"";
+   
 }
 
 /*

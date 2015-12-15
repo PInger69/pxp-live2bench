@@ -308,7 +308,12 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 
 
 
-
+-(void)didReceiveMemoryWarning {
+    PXPLog(@"*********************************");
+    PXPLog(@"**** didReceiveMemoryWarning ****");
+    PXPLog(@"*********************************");
+    [super didReceiveMemoryWarning];
+}
 
 @end
 

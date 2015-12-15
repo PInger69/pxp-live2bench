@@ -226,7 +226,7 @@ static void * actionContext = &actionContext;
     if (paused == _paused) return;
     [self willChangeValueForKey:@"paused"];
     _paused = paused;
-    [self didChangeValueForKey:@"paused"];
+    [self willChangeValueForKey:@"paused"];
     
     if (!_paused && [_alist count]){
         [self next];

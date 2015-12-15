@@ -67,7 +67,7 @@ static InternetMonitor* internetMonitor;
 }
 
 
-
+// Depricated
 +(NSString*)dictToJSON:(NSDictionary*)dict
 {
     NSError *error;
@@ -84,12 +84,39 @@ static InternetMonitor* internetMonitor;
     return jsonString;
 }
 
++(NSString*)dictToJSON:(NSDictionary*)dict error:(NSError **)aError;
+{
+    
+
+    NSMutableDictionary *mutableDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mutableDict options:0 error:aError];
+    NSString *jsonString;
+    if (jsonData) {
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    } else {
+        NSLog(@"JSON Error: converting Dict to JSON");
+        *aError = [NSError errorWithDomain:@"Json Error" code:-0 userInfo:@{}];
+    }
+    
+    return jsonString;
+}
+
+
+
+
+// Depricated
 +(NSDictionary*)JSONDatatoDict:(NSData*)data
 {
     NSDictionary *results;
+//    if (!data) return @{};
     if(NSClassFromString(@"NSJSONSerialization"))
     {
         NSError *error = nil;
+        if (!data) {
+             PXPLog(@"%@ Error! U002  %@",@"nil Data sent to NSJSONSerialization return empty Dict",@"bad connection");
+            return @{};
+        }
         id object = [NSJSONSerialization
                      JSONObjectWithData:data
                      options:NSJSONReadingAllowFragments
@@ -110,6 +137,60 @@ static InternetMonitor* internetMonitor;
         {
 //            NSDictionary *  test = [[NSDictionary alloc]init];
 //            NSString * teste = NSString st
+            results = object;
+            /* proceed with results as you like; the assignment to
+             an explicit NSDictionary * is artificial step to get
+             compile-time checking from here on down (and better autocompletion
+             when editing). You could have just made object an NSDictionary *
+             in the first place but stylistically you might prefer to keep
+             the question of type open until it's confirmed */
+        }
+        else
+        {
+            /* there's no guarantee that the outermost object in a JSON
+             packet will be a dictionary; if we get here then it wasn't,
+             so 'object' shouldn't be treated as an NSDictionary; probably
+             you need to report a suitable error condition */
+        }
+    }
+    else
+    {
+        // the user is using iOS 4; we'll need to use a third-party solution.
+        // If you don't intend to support iOS 4 then get rid of this entire
+        // conditional and just jump straight to
+        // NSError *error = nil;
+        // [NSJSONSerialization JSONObjectWithData:...
+    }
+    return results;
+}
+
+
++(NSDictionary*)JSONDatatoDict:(NSData*)data error:(NSError **)aError
+{
+    NSDictionary *results;
+    if(NSClassFromString(@"NSJSONSerialization"))
+    {
+        
+        id object = [NSJSONSerialization
+                     JSONObjectWithData:data
+                     options:NSJSONReadingAllowFragments
+                     error:aError];
+        
+        if(aError) {
+//            NSError * e = &aError;
+//            NSString * description  = [e.userInfo objectForKey:NSLocalizedDescriptionKey];
+//            NSString * reason       = [e.userInfo objectForKey:NSLocalizedFailureReasonErrorKey];
+            
+            PXPLog(@" Error! U001  JSONDatatoDict:data:error:");
+            /* JSON was malformed, act appropriately here */ }
+        
+        // the originating poster wants to deal with dictionaries;
+        // assuming you do too then something like this is the first
+        // validation step:
+        if([object isKindOfClass:[NSDictionary class]])
+        {
+            //            NSDictionary *  test = [[NSDictionary alloc]init];
+            //            NSString * teste = NSString st
             results = object;
             /* proceed with results as you like; the assignment to
              an explicit NSDictionary * is artificial step to get
@@ -447,19 +528,7 @@ static InternetMonitor* internetMonitor;
     
 }
 
-///**
-// *  This is a convienience method that makes it easy to fill in the required data need to request an event Download
-// *
-// *  @param data       Event dict that will be made in to a plist
-// *  @param sourceName name of source video that will be downloaded
-// *  @param block      this block will send a DownloadItem of the video
-// *
-// *  @return easy to used data block
-// */
-//+(void)downloadEvent:(NSDictionary*)data sourceName:(NSString*)sourceName returnBlock:(void (^)(DownloadItem*item))block
-//{
-//     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EM_DOWNLOAD_EVENT object:nil userInfo:@{ @"data":data, @"source":sourceName, @"block":block }];
-//}
+
 
 +(NSString*)removeSubString:(NSString*)substring in:(NSString*)main
 {
@@ -642,6 +711,30 @@ static InternetMonitor* internetMonitor;
     UIGraphicsEndImageContext();
   
     return  pixel;
+}
+
++(NSString*)downloadByteToStringHuman:(long long)byte
+{
+
+    NSString * readable;
+    double mb = (double) byte;
+    
+
+    
+
+    
+    for (NSString *x in @[@"b",@"KB",@"MB",@"GB",@"TB",@"PB",@"EB",@"ZB",@"YB"]){
+        if (byte < 1024)
+        {
+            mb = (double) byte;    
+//            return readable =  [NSString stringWithFormat:@"%llu %@" , byte, x ];
+             return readable =  [NSString stringWithFormat:@"%.2f %@" , mb, x ];
+
+        }
+        byte = byte >> 10;
+       
+    }
+    return @"";
 }
 
 @end

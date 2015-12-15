@@ -26,20 +26,20 @@
 @interface Event : NSObject
 
 
-@property (nonatomic,strong) NSString       * name;
-@property (nonatomic,strong) NSString       * eventType;
-@property (nonatomic,strong) NSString       * datapath;
-@property (nonatomic,strong) NSString       * date;
-@property (nonatomic,strong) NSString       * hid;
-@property (nonatomic,strong) NSMutableDictionary   * feeds;
-@property (nonatomic,strong) NSDictionary   * originalFeeds;
-@property (nonatomic,strong) NSDictionary   * mp4s;
-@property (nonatomic,strong) NSMutableDictionary   * rawData;
-@property (nonatomic,strong) NSMutableArray   * tags;
-@property (nonatomic,assign) BOOL           deleted;
-@property (nonatomic,assign) BOOL           local;
-@property (nonatomic,assign) BOOL           live;
-@property (nonatomic,assign) BOOL           primary;
+@property (nonatomic,strong) NSString               * name;
+@property (nonatomic,strong) NSString               * eventType;
+@property (nonatomic,strong) NSString               * datapath;
+@property (nonatomic,strong) NSString               * date;
+@property (nonatomic,strong) NSString               * hid;
+@property (nonatomic,strong) NSMutableDictionary    * feeds;
+@property (nonatomic,strong) NSDictionary           * originalFeeds;
+@property (nonatomic,strong) NSDictionary           * mp4s;
+@property (nonatomic,strong) NSMutableDictionary    * rawData;
+@property (nonatomic,strong) NSMutableArray         * tags;
+@property (nonatomic,assign) BOOL                   deleted;
+@property (nonatomic,assign) BOOL                   local;
+@property (nonatomic,assign) BOOL                   live;
+@property (nonatomic,assign) BOOL                   primary;
 
 @property (nonatomic, strong) NSMutableDictionary  * downloadingItemsDictionary;
 
@@ -48,19 +48,22 @@
 
 @property (nonatomic,strong) NSMutableArray        * downloadedSources; // this is a list of strings of videos that are on the device
 
-@property (nonatomic,weak)  id <EventDelegate>  delegate;
+@property (nonatomic,weak)  id <EventDelegate>      delegate;
 
+@property (nonatomic,strong) NSDictionary           * teams;
+@property (nonatomic,strong) id <EncoderProtocol>   parentEncoder;
+@property (nonatomic,assign) BOOL                   isBuilt;
+@property (nonatomic, copy)  void(^onComplete)();
 
-@property (nonatomic,strong) NSDictionary        * teams;
-
-@property (nonatomic,strong) id <EncoderProtocol> parentEncoder;
-
-@property (nonatomic,assign) BOOL               isBuilt;
-@property (nonatomic, copy) void(^onComplete)();
+@property (nonatomic,assign,readonly) BOOL                   open;
 
 
 
 -(instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path;
+- (instancetype)initWithDict:(NSDictionary*)data localPath:(NSString *)path;
+-(void)openEvent;
+-(void)closeEvent;
+
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost;
 -(void)addAllTags:(NSDictionary *)allTagData;
 -(void)modifyTag:(NSDictionary *)modifiedData;

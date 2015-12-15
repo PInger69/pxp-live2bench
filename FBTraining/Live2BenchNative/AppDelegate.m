@@ -49,6 +49,8 @@
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
     
+
+    
     ///In order for crashlytics to work, we have to initialise it with the secret app key we get during sign up
     //we can also startwithapikey with a delay if we need to (not necessary)
     [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
@@ -118,12 +120,8 @@
     _toastObserver = [[ToastObserver alloc]init];
     _toastObserver.parentView = self.window.rootViewController.view;
     
-    
-    
     _sharedFilter       = [[PxpFilter alloc]init];
     _sharedFilterTab    = [TabView sharedFilterTabBar];
-//    [_sharedFilterTab addTab:[[PxpFilterDefaultTabViewController alloc]init]];
-    
     [_sharedFilterTab setPxpFilter:_sharedFilter];
     return YES;
 }
@@ -133,6 +131,11 @@
 {
     if ([[note.userInfo objectForKey:@"success"]boolValue]){
 
+        // when log out it will clear our all encoders
+        for (Encoder * enc in _encoderManager.authenticatedEncoders) {
+            [_encoderManager unRegisterEncoder:enc];
+        }
+        
         _loginController        = [[LoginViewController alloc]init];
         _eulaViewController     = [[EulaModalViewController alloc]init];
         [_actionList clear];
@@ -311,7 +314,7 @@
                                                          userInfo:[SpinnerView message:@"Checking for WiFi..." progress:.1 animated:YES]];
     } onItemFinish:^(BOOL succsess) {
         PXPLog(@"WIFI Checking...");
-        PXPLog(succsess?@"   SUCCSESS":@"   FAIL");
+        PXPLog(succsess?@"   SUCCESS":@"   FAIL");
     }];
 
     //Check Cloud
@@ -321,7 +324,7 @@
                                                          userInfo:[SpinnerView message:@"Checking for Cloud..." progress:.2 animated:YES]];
     } onItemFinish:^(BOOL succsess) {
         PXPLog(@"Cloud Connection Checking...");
-        PXPLog(succsess?@"   SUCCSESS":@"   FAIL");
+        PXPLog(succsess?@"   SUCCESS":@"   FAIL");
         if (!succsess)PXPLog(@"   NO INTERNET FOUND!");
         weakSelf.loginController.hasInternet = succsess;
     }];
@@ -333,8 +336,8 @@
                                                          userInfo:[SpinnerView message:@"Checking user credentials..." progress:.3 animated:YES]];
         
     } onItemFinish:^(BOOL succsess) {
-        PXPLog(@"User Plist Checking...");
-        PXPLog(succsess?@"   SUCCSESS":@"   FAIL");
+        PXPLog(@"User credentials on device Checking...");
+        PXPLog(succsess?@"   SUCCESS":@"   FAIL");
         
         if(succsess){ // get the ID from the userCenter and sets it to the Manager so it can look for encoders
 //            weakEM.customerID = weakSelf.userCenter.customerID;
@@ -343,9 +346,13 @@
             // add to action list success list bransh
             
         } else {
+            PXPLog(@"User credentials on cloud Checking...");
+
+            
             [weakAList addItem:weakReq];
             [weakAList addItem:weakEula onItemFinish:^(BOOL succsess) {
                 if (succsess){
+                    PXPLog(succsess?@"   SUCCESS":@"   FAIL");
                     weakSelf.userCenter.isEULA = YES;
                     [weakSelf.userCenter writeAccountInfoToPlist];
 //                    weakEM.customerID = weakSelf.userCenter.customerID;

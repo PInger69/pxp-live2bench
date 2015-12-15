@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:FBTraining/BookmarkDataSource.h">
+   </FileRef>
+   <FileRef
+      location = "group:FBTraining/BookmarkDataSource.m">
+   </FileRef>
+   <FileRef
       location = "group:FBTraining/Live2BenchNative.xcodeproj">
    </FileRef>
 </Workspace>

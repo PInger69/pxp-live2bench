@@ -29,6 +29,7 @@
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
 @property (strong, nonatomic) ListPopoverController* teamPick;
 @property (strong, nonatomic) ListPopoverController* cameraPick;
+@property (strong, nonatomic) NSMutableDictionary *downloadSizeDict;
 
 @end
 
@@ -47,7 +48,8 @@
         self.newFrame = CGRectMake(568, 708, 370, 60);
         //The context string is used to determine in which tableViewController you delete a cell
         self.contextString = @"Event";
-        self.arrayOfSelectedEvent = [NSMutableArray array];
+        self.arrayOfSelectedEvent   = [NSMutableArray array];
+        self.downloadSizeDict       = [NSMutableDictionary new];
     }
     return self;
 }
@@ -62,9 +64,10 @@
     }];
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -114,6 +117,19 @@
     return theSortedArray;
 }
 
+-(NSArray *) sortedByDate:(NSMutableArray*)list{
+    
+    __block NSDateFormatter *theformatter = [[NSDateFormatter alloc] init];
+    theformatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    
+    NSArray * theSortedArray = [list sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSDate *date1 = [theformatter dateFromString:((Event*)obj1).date];
+        NSDate *date2 = [theformatter dateFromString:((Event*)obj2).date];
+        return [date2 compare:date1];
+    }];
+    return theSortedArray;
+}
+
 - (void)filterArray:(NSNotification *)note
 {
     NSMutableArray *eventsOfTheDay = [NSMutableArray array];
@@ -134,6 +150,7 @@
     [self.arrayOfCollapsableIndexPaths removeAllObjects];
     self.lastSelectedIndexPath = nil;
     [self checkDeleteAllButton];
+    self.tableData = [[self sortedByDate:self.tableData]mutableCopy];
     [self.tableView reloadData];
 }
 
@@ -202,6 +219,50 @@
         collapsableCell.event = event;
         collapsableCell.downloadButton.enabled = YES;
         NSString *name = event.name;
+        
+        collapsableCell.dowdloadSize.text = collapsableCell.event.mp4s[key][@"vidsize_hq"];
+        
+        if (!self.downloadSizeDict[data]) {
+            
+            NSURL * aUrl = [NSURL URLWithString:collapsableCell.event.mp4s[key][@"hq"]];
+            
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aUrl];
+            [request setHTTPMethod:@"HEAD"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            
+            [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data,
+                                                                      NSURLResponse * _Nullable response,
+                                                                      NSError * _Nullable error) {
+                
+                unsigned long long size = [response expectedContentLength];
+                
+                double mb;
+                
+                if(size >0){
+                    mb = size/1000000.0f;
+                    
+                    NSString * theFileSize = (mb < 5000)?[NSString stringWithFormat:@"%.2f MB",mb]:@"5+ GB";
+
+
+//                    theFileSize = [Utility downloadByteToStringHuman:size];
+                    
+                    [self.downloadSizeDict setObject:theFileSize forKey:[aUrl absoluteString]];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        collapsableCell.dowdloadSize.text = theFileSize;
+                    });
+                }
+            }]resume];
+            
+            
+
+            
+        } else {
+            collapsableCell.dowdloadSize.text = self.downloadSizeDict[data];
+        }
+        
+        
         
         Event *localCounterpart = [[LocalMediaManager getInstance] getEventByName:name];
         
@@ -417,7 +478,7 @@
             [alert addButtonWithTitle:NSLocalizedString(@"Yes, delete from ipad only",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         } else {
-            [alert addButtonWithTitle:NSLocalizedString(@"Yes, delete from  server",nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Yes, delete from server",nil)];
             [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
         }
         [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
@@ -427,6 +488,8 @@
 
 - (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    [self.tableView beginUpdates];
+    
     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these events?"] && (buttonIndex == 0 || buttonIndex == 1)) {
         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
         NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
@@ -445,8 +508,9 @@
         if (buttonIndex == 0) {
             [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
             [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
+            [self.tableView beginUpdates];
             [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-            
+            [self.tableView endUpdates];
             
             for (Event *eventToDelete in arrayOfTagsToRemove) {
                 [eventToDelete destroy];
@@ -463,6 +527,7 @@
         if (alertView.numberOfButtons == 3) {
             if (buttonIndex == 2) {
                 [alertView viewFinished];
+                [self.tableView endUpdates];
                 return;
             }
             Event *eventToRemove = self.tableData[self.editingIndexPath.row];
@@ -500,6 +565,7 @@
                 [self removeIndexPathFromDeletion];
             } else {
                 [alertView viewFinished];
+                [self.tableView endUpdates];
                 return;
             }
         }
@@ -508,6 +574,7 @@
     [CustomAlertView removeAlert:alertView];
     [alertView viewFinished];
     [self checkDeleteAllButton];
+    [self.tableView endUpdates];
 }
 
 
@@ -608,20 +675,24 @@
             self.lastSelectedIndexPath = nil;
             [self.arrayOfSelectedEvent removeObject:event.name];
             [self.arrayOfCollapsableIndexPaths removeAllObjects];
+            [self.tableView beginUpdates];
             [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
+            [self.tableView endUpdates];
             self.swipeableMode = YES;
             return;
         }
         
-        
+        [self.tableView beginUpdates];
         [self.arrayOfCollapsableIndexPaths removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
         self.swipeableMode = NO;
         [self.arrayOfCollapsableIndexPaths addObjectsFromArray: insertionIndexPaths];
         [self.tableView insertRowsAtIndexPaths: insertionIndexPaths withRowAnimation:UITableViewRowAnimationRight];
         [self.tableView scrollToRowAtIndexPath:self.lastSelectedIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        [self.tableView endUpdates];
     }else{
-        //[currentCell isSelected: NO];
+        
+        [self.tableView beginUpdates];
         NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         [self.arrayOfCollapsableIndexPaths removeAllObjects];
         [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
@@ -629,6 +700,7 @@
         self.lastSelectedIndexPath = nil;
         [self.tableView reloadRowsAtIndexPaths:@[temp] withRowAnimation:NO];
         self.swipeableMode = YES;
+        [self.tableView endUpdates];
     }
     
     

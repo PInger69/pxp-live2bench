@@ -11,6 +11,7 @@
 #import "PxpBorderLabel.h"
 #import "PxpBorderButton.h"
 #import "Tag.h"
+#import "LiveButton.h"
 
 @interface PxpListViewFullscreenViewController : PxpFullscreenViewController
 
@@ -23,5 +24,7 @@
 
 @property (readonly, strong, nonatomic, nonnull) PxpBorderButton *previousTagButton;
 @property (readonly, strong, nonatomic, nonnull) PxpBorderButton *nextTagButton;
+
+@property (readonly, strong, nonatomic, nonnull) LiveButton *liveButton;
 
 @end

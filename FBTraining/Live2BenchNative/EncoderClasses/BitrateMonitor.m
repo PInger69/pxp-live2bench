@@ -97,18 +97,19 @@ static void * bitrateContext         = &bitrateContext;
     if (context == bitrateContext){
 
         double val = ( (Encoder*) object).bitrate;
-        [self setBackgroundColorBasedOnRate:val];
-        [nameLabelValue setText: [NSString stringWithFormat:@"%@ %@",encoder.name,(encoder.encoderManager.masterEncoder==encoder)?@"(Master)":@""]];
-        [nameLabelValue sizeToFit];
-        [statusLabelValue setText:[NSString stringWithFormat:@"%@", encoder.statusAsString]];
-        [statusLabelValue sizeToFit];
-        [rateLabelValue setText:[NSString stringWithFormat:@"%0.4f", val]];
-        [rateLabelValue sizeToFit];
-        [camerasLabelValue setText:[NSString stringWithFormat:@"%ld", (long)encoder.cameraCount]];
-        [camerasLabelValue sizeToFit];
-        [encoderVersionLableValue setText:[NSString stringWithFormat:@"%@",encoder.version ]];
-        [encoderVersionLableValue sizeToFit];
-        
+         dispatch_async(dispatch_get_main_queue(), ^{
+            [self setBackgroundColorBasedOnRate:val];
+            [nameLabelValue setText: [NSString stringWithFormat:@"%@ %@",encoder.name,(encoder.encoderManager.masterEncoder==encoder)?@"(Master)":@""]];
+            [nameLabelValue sizeToFit];
+            [statusLabelValue setText:[NSString stringWithFormat:@"%@", encoder.statusAsString]];
+            [statusLabelValue sizeToFit];
+            [rateLabelValue setText:[NSString stringWithFormat:@"%0.4f", val]];
+            [rateLabelValue sizeToFit];
+            [camerasLabelValue setText:[NSString stringWithFormat:@"%ld", (long)encoder.cameraCount]];
+            [camerasLabelValue sizeToFit];
+            [encoderVersionLableValue setText:[NSString stringWithFormat:@"%@",encoder.version ]];
+            [encoderVersionLableValue sizeToFit];
+          });
     }
 }
 

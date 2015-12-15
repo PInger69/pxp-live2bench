@@ -716,7 +716,7 @@ CGPoint midPoint(CGPoint p1, CGPoint p2)
 {
      [super didReceiveMemoryWarning];
     [self.teleView didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
 }
 
 

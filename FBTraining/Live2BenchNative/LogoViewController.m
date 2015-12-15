@@ -57,7 +57,7 @@ EncoderManager      * encoderManager;
     if (self) {
         encoderManager = _appDel.encoderManager;
         [self setMainSectionTab:NSLocalizedString(@"Welcome",nil)  imageName:@"logoTab"];
-        settingsViewController = [[SettingsViewController alloc]initWithAppDelegate:appDel];
+        settingsViewController = [[EncoderControlsViewController alloc]initWithAppDelegate:appDel];
     }
     return self;
     
@@ -351,7 +351,7 @@ EncoderManager      * encoderManager;
     
     // TODO Move up to view did load
     if (!settingsViewController) {
-        settingsViewController = [[SettingsViewController alloc]initWithAppDelegate:_appDel];
+        settingsViewController = [[EncoderControlsViewController alloc]initWithAppDelegate:_appDel];
     }
     
     [settingsTab setImage:[UIImage imageNamed:@"settingsButtonSelect"]];
@@ -416,7 +416,7 @@ EncoderManager      * encoderManager;
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     
 }
 

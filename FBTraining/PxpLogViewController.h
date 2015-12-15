@@ -11,6 +11,11 @@
 
 @interface PxpLogViewController : UIViewController <UITextViewDelegate>
 
+
+
+
+
+
 -(instancetype) initWithAppDelegate: (AppDelegate *) appDel;
 
 @end

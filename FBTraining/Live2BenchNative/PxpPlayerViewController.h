@@ -29,4 +29,6 @@
 /// Initializes a player view controller with a specific player view subclass.
 - (nonnull instancetype)initWithPlayerViewClass:(nullable Class)playerViewClass;
 
+-(void)zeroControlBarTimes;
+
 @end

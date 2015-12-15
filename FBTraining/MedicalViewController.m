@@ -78,14 +78,14 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Medical", nil) imageName:@"live2BenchTab"];
         
-        _playerViewController = [[PxpPlayerViewController alloc] init];
+        _playerViewController       = [[PxpPlayerViewController alloc] init];
         
         _telestrationViewController = [[PxpTelestrationViewController alloc] init];
-        _encoderManager         = mainappDelegate.encoderManager;
-        _currentEvent = _encoderManager.primaryEncoder.event;
+        _encoderManager             = mainappDelegate.encoderManager;
+        _currentEvent               = _encoderManager.primaryEncoder.event;
         
-        _tagNameSelectController = [[TagNameSelectTableViewController alloc] init];
-        _teleSelectController = [[TeleSelectTableViewController alloc] init];
+        _tagNameSelectController    = [[TagNameSelectTableViewController alloc] init];
+        _teleSelectController       = [[TeleSelectTableViewController alloc] init];
         
         _container = [[UIView alloc] initWithFrame:CGRectMake(0.0, 55.0, 1024.0, 768.0 - 55.0)];
         
@@ -252,7 +252,7 @@
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_TAB_CREATED object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_CHANGE object:_observedEncoder];
-    
+
     if (note.object == nil) {
         _observedEncoder = nil;
         return;
@@ -270,6 +270,8 @@
         return;
     }
     
+    self.liveButton.enabled = _currentEvent.live;
+    
     if (_currentEvent.live && _encoderManager.liveEvent) {
         _currentEvent = nil;
         
@@ -277,6 +279,7 @@
         _currentEvent = [((id <EncoderProtocol>) note.object) event];//[_appDel.encoderManager.primaryEncoder event];
         [self.videoPlayer playFeed:[[_currentEvent.feeds allValues] firstObject]];
         if (_currentEvent.live) {
+            
             [self.videoPlayer gotolive];
         }
     }
@@ -429,7 +432,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 

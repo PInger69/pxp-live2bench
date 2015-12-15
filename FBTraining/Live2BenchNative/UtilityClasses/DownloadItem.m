@@ -187,11 +187,11 @@
     
     
     NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
-    PXPLog(@"######################################################");
+    PXPLog(LOG_HASH);
     PXPLog(@"Clip/Event Download FAILED!");
     PXPLog(@"  url: %@ ",url);
     PXPLog(@"  reason: %@ ",failType);
-    PXPLog(@"######################################################");
+    PXPLog(LOG_HASH);
     
     if (stream) [stream close];
     // delete file if partly downloaded

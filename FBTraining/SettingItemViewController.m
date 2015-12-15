@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "SettingViewController.h"
+#import "SettingItemViewController.h"
 
-@interface SettingViewController ()
+@interface SettingItemViewController ()
 
 @end
 
-@implementation SettingViewController
+@implementation SettingItemViewController
 
 @synthesize name = _name;
 @synthesize identifier = _identifier;
@@ -51,7 +51,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 

@@ -195,12 +195,19 @@
     NSUInteger colNum = 0;
     NSUInteger rowNum = 0;
     NSUInteger rowCount;
-    
+
+    CGFloat fw;
+    CGFloat bm;
     if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
-        rowCount   = (NSUInteger)self.frame.size.height / (_buttonSize.height+_buttonMargin.height);
+        fw = self.frame.size.height;
+        bm = _buttonSize.height+_buttonMargin.height;
     } else {
-        rowCount   = (NSUInteger)self.frame.size.width / (_buttonSize.width+_buttonMargin.width);
+        fw = self.frame.size.width;
+        bm = _buttonSize.width+_buttonMargin.width;
     }
+    
+    rowCount   = (NSUInteger)((fw + bm-1)/bm);// just rounding up to a whole one
+    
     for (NSUInteger k = 0; k < _buttonList.count; k++ ) {
         
         CustomButton  *eventButton  = _buttonList[k];
@@ -220,6 +227,7 @@
             if (++colNum ==rowCount){
                 colNum = 0;
                 rowNum++;
+
             }
         }
         

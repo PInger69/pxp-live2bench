@@ -25,7 +25,8 @@
 
 
 @property (nonatomic,weak)      id <PxpFilterDelegate>  delegate;
-@property (nonatomic,strong)    NSMutableArray          * filtersOwnPredicates;
+@property (nonatomic,strong)    NSMutableArray          * filtersOwnPredicates; // this will filtered out before processing
+@property (nonatomic,strong)    NSMutableArray          * ghostPredicates;      // these will be filtered out after processing this will affect count
 @property (nonatomic,strong)    NSMutableArray          * filterModules;
 
 @property (nonatomic,strong)    NSArray                 * filteredTags;     // This is all tags after user has filtered

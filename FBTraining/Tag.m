@@ -558,6 +558,15 @@ static NSMutableDictionary * openDurationTagsWithID;
     return _cachedThumbnail;
 }
 
+
+
+// duration tags dont start at startTime they start at time
+-(double)startTime
+{
+    return (self.type != TagTypeCloseDuration && self.type != TagTypeOpenDuration )?_startTime:_time;
+}
+
+
 - (void)memoryWarningHandler:(NSNotification *)note {
     _cachedThumbnail = nil;
 }

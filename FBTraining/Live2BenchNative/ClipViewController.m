@@ -197,25 +197,30 @@ static void * encoderTagContext = &encoderTagContext;
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
     
+    if (_currentEvent) {
     
-    Profession * profession = [ProfessionMap data][SPORT_HOCKEY];// should be the events sport // 
+    
+    
+    
+        Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
 
-
     
     
-    
-    NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
-                                                                                   [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
-                                                                                   ,profession.filterPredicate
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
-                                                                                   ]];
-    
-    [_pxpFilter addPredicates:@[allowThese]];
-    
+        
+        NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                       [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
+    //                                                                                   ,profession.filterPredicate
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
+                                                                                       ]];
+        
+        [_pxpFilter addPredicates:@[allowThese]];
+ 
+            
+    }
     [_collectionView reloadData];
 
 }
@@ -450,7 +455,8 @@ static void * encoderTagContext = &encoderTagContext;
 //create le thumbnail cell
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    NSLog(@"<***>");
+
     // Get the data from the array
     Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
@@ -472,36 +478,45 @@ static void * encoderTagContext = &encoderTagContext;
     
     
     NSString *url = [[tagSelect.thumbnails allValues]firstObject];
+//        NSLog(@"<*>");
+//    cell.imageView.image = [tagSelect thumbnailForSource:@"onlySource"];
+//        NSLog(@"<*>");
+    ///
+    __block UIImage * weakThumb;
     
-    cell.imageView.image = [UIImage imageNamed:@"live.png"];
-    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-    } else {
-        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-    }
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        //Background Thread
 
+        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
+//            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+        } else {
+            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
+        }
+        
+        if (!weakThumb) {
+            weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+
+            cell.imageView.image = weakThumb;
+            if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
+        });
+    });
+    
+    ///
     
     
-//    UIImage *thumb = [tagSelect thumbnailForSource:nil];
-//    
-//    if (thumb) {
-//        cell.imageView.image = thumb;
+//    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+//        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
 //    } else {
-//        NSString *src = tagSelect.thumbnails.allKeys.firstObject;
-//        
-//        // get the key of the source with the telestration
-//        if (tagSelect.telestration) {
-//            for (NSString* k in tagSelect.thumbnails.keyEnumerator) {
-//                if ([tagSelect.telestration.sourceName isEqualToString:k]) {
-//                    src = k;
-//                    break;
-//                }
-//            }
-//        }
-//        
-//        PxpTelestration *tele = tagSelect.thumbnails.count <= 1 || [tagSelect.telestration.sourceName isEqualToString:src] ? tagSelect.telestration : nil;
-//        [[ImageAssetManager getInstance] imageForURL: tagSelect.thumbnails[src] atImageView: cell.imageView withTelestration:tele];
+//        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
 //    }
+//
+//    if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
+//    
+
     
     [cell setDeletingMode: self.isEditing];
     
@@ -509,7 +524,7 @@ static void * encoderTagContext = &encoderTagContext;
         cell.checkmarkOverlay.hidden = NO;
         cell.translucentEditingView.hidden = NO;
     }
-    
+        NSLog(@"</***>");
     return cell;
 }
 
@@ -741,7 +756,7 @@ static void * encoderTagContext = &encoderTagContext;
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     if ([self.view window] == nil){
         self.view = nil;
     }

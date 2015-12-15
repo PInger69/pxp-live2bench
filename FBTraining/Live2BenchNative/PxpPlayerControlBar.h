@@ -24,5 +24,7 @@ IB_DESIGNABLE @interface PxpPlayerControlBar : UIView
 
 /// The enabled state of the control bar.
 @property (assign, nonatomic) BOOL enabled;
+-(void)clear;
+
 
 @end

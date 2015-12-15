@@ -173,6 +173,14 @@ static void *  downLoaderContext = &downLoaderContext;
         isDownloading = NO;
         [self removeFromQueue: [_queue lastObject]];
         PXPLog(@"Device needs more space");
+        dispatch_async(dispatch_get_main_queue(), ^{
+        CustomAlertView *alert = [[[CustomAlertView alloc]initWithTitle:@"Insufficient space"
+                                                               message:@"Please clear up some space and try again."
+                                                              delegate:nil
+                                                     cancelButtonTitle:@"OK"
+                                                     otherButtonTitles:nil, nil] showView];
+
+        });
         return;
     }
     

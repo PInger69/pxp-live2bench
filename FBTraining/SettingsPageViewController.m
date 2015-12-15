@@ -9,7 +9,7 @@
 
 #import "SettingsPageViewController.h"
 #import "SettingsTableViewController.h"
-#import "SettingsViewController.h"
+#import "EncoderControlsViewController.h"
 #import "AccountsViewController.h"
 #import "UserCenter.h"
 #import "LogoViewController.h"
@@ -22,6 +22,8 @@
 #import "AlertsSettingViewController.h"
 #import "TabsSettingViewController.h"
 #import "PreferencesViewController.h"
+#import "SideTagSettingsViewController.h"
+#import "FeedMappingViewController.h"
 
 @interface SettingsPageViewController () //<SettingsTableDelegate>
 
@@ -78,7 +80,7 @@ NS_OPTIONS(NSInteger, style){
         [self setMainSectionTab:NSLocalizedString(@"Settings",nil)  imageName:@"settingsButton"];
         
         // Initialize Custom View Controllers
-        SettingsViewController *encoderControlsViewController                   = [[SettingsViewController alloc] initWithAppDelegate:appDel];
+        EncoderControlsViewController *encoderControlsViewController                   = [[EncoderControlsViewController alloc] initWithAppDelegate:appDel];
         LogoViewController *welcomeViewController                               = [[LogoViewController alloc] initWithAppDelegate:appDel];
         BitRateViewController *bitRateViewController                            = [[BitRateViewController alloc] initWithAppDelegate:appDel];
         PreferencesViewController * preferencesViewController                   = [[PreferencesViewController alloc]initWithAppDelegate:appDel];
@@ -86,7 +88,9 @@ NS_OPTIONS(NSInteger, style){
         AlertsSettingViewController *alertsSettingViewController                = [[AlertsSettingViewController alloc] initWithAppDelegate:appDel];
         InfoSettingViewController *informationSettingViewController             = [[InfoSettingViewController alloc] initWithAppDelegate:appDel];
         TabsSettingViewController *tabsSettingViewController                    = [[TabsSettingViewController alloc] initWithAppDelegate:appDel];
+        SideTagSettingsViewController * tagSetSettingViewController                = [[SideTagSettingsViewController alloc] initWithAppDelegate:appDel name:@"Tag Set" identifier:@"Tag Set"];
         CreditsViewController *creditsViewController                            = [[CreditsViewController alloc] initWithAppDelegate:appDel];
+        FeedMappingViewController *feedMappingViewController                            = [[FeedMappingViewController alloc] initWithAppDelegate:appDel name:@"Feed Map" identifier:@"Feed Map"];
         
         // Setting Definitions to be loaded
         //  Name: the display name of the setting
@@ -135,9 +139,21 @@ NS_OPTIONS(NSInteger, style){
                                         @"Identifier": tabsSettingViewController.identifier
                                         },
                                     @{
+                                        @"Name": tagSetSettingViewController.name,
+                                        @"ViewController": tagSetSettingViewController,
+                                        @"Identifier": tagSetSettingViewController.identifier
+                                        },
+                                    
+                                    @{
                                         @"Name": NSLocalizedString(@"Log", nil),
                                         @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
                                         },
+                                    @{
+                                        @"Name": feedMappingViewController.name,
+                                        @"ViewController": feedMappingViewController,
+                                        @"Identifier": feedMappingViewController.identifier
+                                    },
+
                                     @{
                                         @"Name": creditsViewController.name,
                                         @"ViewController": creditsViewController,
@@ -152,8 +168,8 @@ NS_OPTIONS(NSInteger, style){
         
         // Load defaults from setting view controllers
         for (NSDictionary *settingDefinition in self.settingDefinitions) {
-            if ([settingDefinition[@"ViewController"] isKindOfClass:[SettingViewController class]]) {
-                SettingViewController *vc = settingDefinition[@"ViewController"];
+            if ([settingDefinition[@"ViewController"] isKindOfClass:[SettingItemViewController class]]) {
+                SettingItemViewController *vc = settingDefinition[@"ViewController"];
                 self.settingsDictionary[vc.identifier] = vc.settingData;
             }
         }
@@ -267,7 +283,7 @@ NS_OPTIONS(NSInteger, style){
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 

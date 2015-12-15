@@ -109,7 +109,8 @@ static LocalMediaManager * instance;
                 }
                 
                 
-                Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
+//                Event * anEvent = [[Event alloc]initWithDict:dict isLocal:YES andlocalPath:self.localPath];
+                Event * anEvent = [[Event alloc]initWithDict:dict localPath:self.localPath];
                 anEvent.parentEncoder       = [LocalEncoder getInstance];
                     anEvent.local               = YES;
                     anEvent.isBuilt             = YES;
@@ -158,12 +159,13 @@ static LocalMediaManager * instance;
             }
         }
             
-            
+        // WTF what the heck is this man....
+        // pulling in all pdfs and just loading them blindly when you have missing keys...
         NSEnumerator *localEnumerator  = [localTempPool objectEnumerator];
         id localValue;
         while ((localValue = [localEnumerator nextObject])) {
             NSDictionary *localTagDic = localValue;
-            if ([localTagDic objectForKey:@"emailAddress"] == nil) {
+            if ([localTagDic objectForKey:@"emailAddress"] == nil && [localTagDic objectForKey:@"savedTeamData"] == nil ) {
                     [self assignLocalTags:localTagDic];
                 }
                 //NSMutableDictionary *finalLocalTags = [[NSMutableDictionary alloc]initWithDictionary:localTagDic];
@@ -273,8 +275,10 @@ static LocalMediaManager * instance;
             
             if ([[tagToBeAdded objectForKey:@"type"] integerValue] == TagTypeDeleted) {
                 Event *event = [self getEventByName:tagToBeAdded[@"event"]];
-                Tag *deletedTag = [[Tag alloc]initWithData:tagToBeAdded event:event];
-                [[LocalEncoder getInstance].modifiedTags addObject:deletedTag];
+                if (event){
+                    Tag *deletedTag = [[Tag alloc]initWithData:tagToBeAdded event:event];
+                    [[LocalEncoder getInstance].modifiedTags addObject:deletedTag];
+                }
             }
 
         }
@@ -408,6 +412,10 @@ static LocalMediaManager * instance;
     return (Event*)filtered[0];
 }
 
+
+
+
+
 /*
  *  This will return the clip if found on the device.
  *  The acts as tool to check if a specific exist on the device
@@ -504,31 +512,25 @@ static LocalMediaManager * instance;
 {
     
     // check the device if the clip is there.. if not then make a new clip from and make get an Id
-    NSString *event = tagData[@"event"];
-    NSString *globalID = [NSString stringWithFormat:@"%@_%@", event, tagData[@"id"]];
+    NSString *event     = tagData[@"event"];
+    NSString *globalID  = [NSString stringWithFormat:@"%@_%@", event, tagData[@"id"]];
+    Clip * aClip;
     
     if ([_clips objectForKey:globalID]) { // if there is a plist there already then just mod the data
-        Clip * selectedClip = _clips[globalID];
-        
-        [selectedClip addSourceToClip:@{@"fileNames": @[aName]}];
-        //  return [[VideoTrimItem alloc] init];
+        aClip = _clips[globalID];
     } else { // there is no plist for this clip... make a new plist
         
         [self scanForBookmarks];
-        NSString *bookmarkPlistPath = [NSString stringWithFormat:@"%@/bookmark/%@.plist",_localPath, globalID];
-        
-        NSMutableDictionary *clipData = [NSMutableDictionary dictionaryWithDictionary:tagData];
-        clipData[@"plistPath"] = bookmarkPlistPath;
-        
-        //Event *encoderEvent = [[LocalEncoder getInstance] searchEventByName:event];
-        //clipData[@"event"] = encoderEvent;
-        Clip * buildClip = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: clipData];
-        [buildClip addSourceToClip:@{@"fileNames": @[aName]}];
-
-        [_clips setObject:buildClip forKey:buildClip.globalID];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SAVED object:buildClip];
-        
+        NSString *bookmarkPlistPath     = [NSString stringWithFormat:@"%@/bookmark/%@.plist",_localPath, globalID];
+        NSMutableDictionary *clipData   = [NSMutableDictionary dictionaryWithDictionary:tagData];
+        clipData[@"plistPath"]          = bookmarkPlistPath;
+        aClip                           = [[Clip alloc]initWithPlistPath:bookmarkPlistPath data: clipData];
+        [_clips setObject:aClip forKey:aClip.globalID];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SAVED object:aClip];
+    }
+    
+    if (aName) {
+          [aClip addSourceToClip:@{@"fileNames": @[aName]}];
     }
     
     
@@ -621,7 +623,7 @@ static LocalMediaManager * instance;
     //localEvent.tags = encoderEvent.tags;
     //localEvent.isBuilt = true;
     
-    [encoderEvent.teams allKeys];
+//    [encoderEvent.teams allKeys];
     
 
     // This is all the pooled data from the team data added to the savePlist
@@ -782,7 +784,13 @@ static LocalMediaManager * instance;
 // This is basically the same as in the Encoder class. One day I would like to make one or two classes that focus on parsing
 -(NSDictionary*)parsedTeamData:(NSDictionary*)mainDict
 {
-    NSDictionary *dict = [mainDict objectForKey:@"savedTeamData"];
+    NSDictionary *dict;
+    if ([mainDict objectForKey:@"savedTeamData"]) {
+        dict = [mainDict objectForKey:@"savedTeamData"]; // this is run when building a local event
+    } else {
+        dict = mainDict; // this is build when saved
+    }
+    
     NSMutableDictionary * leaguePool        = [[NSMutableDictionary alloc]init]; // this is the final
     NSMutableDictionary * leagueTempHIDPool = [[NSMutableDictionary alloc]init];
     NSArray * rawleagues = [[dict objectForKey:@"leagues"]allValues];

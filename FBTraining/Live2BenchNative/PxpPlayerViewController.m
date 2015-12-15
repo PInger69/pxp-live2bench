@@ -105,7 +105,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -139,7 +139,9 @@
 //        if (_telestrationViewController.telestration.isStill && _playerView.player.rate != 0 ) {
         if (_telestrationViewController.telestration.isStill && ![_playerView.player isPaused] ) {
             _stillFlag = YES;
-            [_playerView.player pause];
+
+            [_playerView.player setRate:0.0];
+//            [_playerView.player pause];
         } else if (_stillFlag) {
             [_playerView.player play];
             _stillFlag = NO;
@@ -192,7 +194,10 @@
 - (NSTimeInterval)currentTimeInSeconds {
     return _playerView.player.currentTimeInSeconds;
 }
-
+-(void)zeroControlBarTimes
+{
+    [_controlBar clear];
+}
 
 
 @end

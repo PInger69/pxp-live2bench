@@ -31,6 +31,17 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.borderWidth = borderWidth;
+
+
+        self.layer.borderColor      = [UIColor darkGrayColor].CGColor;
+        self.layer.borderWidth      = 1;
+        self.layer.cornerRadius     = 5;
+//        self.layer.backgroundColor  = [UIColor colorWithWhite:1.0f alpha:0.9f].CGColor;
+        self.textColor = [UIColor darkGrayColor];
+
+      
+        
+        
         self.textAlignment = NSTextAlignmentCenter;
         self.adjustsFontSizeToFitWidth = YES;
         [self updateColors];

@@ -14,7 +14,7 @@
 
 @interface PxpLog : NSObject
 
-@property (nonatomic,strong) NSMutableString * text;
+@property (atomic,strong) NSMutableString * text;
 
 +(void)log:(NSString*)log,...;
 +(instancetype)getInstance;

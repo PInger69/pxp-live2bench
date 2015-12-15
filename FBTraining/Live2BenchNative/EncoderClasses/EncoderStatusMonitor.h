@@ -34,7 +34,11 @@
 //
 //};
 
-
+typedef NS_ENUM (NSInteger, EncoderMonitor){
+    EncoderMonitorStatus,
+    EncoderMonitorSyncMe
+    
+};
 
 @interface EncoderStatusMonitor : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 

@@ -12,6 +12,7 @@
 #import "EncoderTask.h" // Depricated
 #import "Event.h"
 #import "ActionListItem.h"
+#import "EncoderParseProtocol.h"
 
 
 @class EncoderManager;
@@ -66,7 +67,7 @@
     NSDictionary            * rawEncoderData; // Data from getpastevents
 }
 
-@property (nonatomic,readonly)  BOOL            authenticated;
+@property (nonatomic,assign )  BOOL            authenticated;
 @property (nonatomic,strong)    PxpEventContext * eventContext;
 @property (nonatomic,strong)    NSString        * name;
 @property (nonatomic,strong)  NSString        * version;
@@ -97,7 +98,9 @@
 @property (nonatomic,assign)    BOOL            pressingStart;
 
 
-@property (nonatomic,strong)    NSOperationQueue * operationQueue;
+
+@property (nonatomic,strong)    id <EncoderParseProtocol> parseModule;
+
 /**
  *  This will create and instance of an endcoder at inputted ip
  *
@@ -160,6 +163,8 @@
 //Methods for Local Encoder to update its tags
 //-(void)makeTag:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp;
 
+-(void)runOperation:(EncoderOperation*)operation;
+-(Tag*)onNewTagsEO:(NSDictionary*)data;
 
 
 @end

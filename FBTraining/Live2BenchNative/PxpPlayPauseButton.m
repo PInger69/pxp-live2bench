@@ -29,6 +29,9 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self initCommon];
+        
+        self.layer.borderWidth = 1;
+        self.layer.borderColor = [[UIColor redColor]CGColor];
     }
     return self;
 }

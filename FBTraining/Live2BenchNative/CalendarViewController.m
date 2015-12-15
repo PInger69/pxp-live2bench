@@ -15,6 +15,7 @@
 #import "UserCenter.h"
 #import "Utility.h"
 #import "LocalMediaManager.h"
+#import "EncoderOperation.h"
 
 @interface CalendarViewController ()
 
@@ -35,7 +36,6 @@
     CKViewController                * calendarViewController;
     ARCalendarTableViewController   * tableViewController;
     NSString                        * localPath;
-    id                              calObserver;
 }
 
 -(id)initWithAppDelegate:(AppDelegate *) appDel
@@ -45,28 +45,6 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Calendar",nil) imageName:@"calendarTab"];
         localPath = _appDel.userCenter.localPath;
-        memoryBar = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
-        calObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENTS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
-            NSMutableArray *temp = [[NSMutableArray alloc] init];
-            if (_appDel.encoderManager.masterEncoder) {
-                [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];
-            } else {
-                [temp addObjectsFromArray:[[[[LocalMediaManager getInstance]allEvents] allValues] mutableCopy]];
-//                [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
-            }
-            NSMutableArray *liveEvents = [NSMutableArray array];
-            for (Event *event in temp) {
-                if (event.live) {
-                    [liveEvents addObject:event];
-                }
-            }
-            [temp removeObjectsInArray:liveEvents];
-            
-            tableViewController.arrayOfAllData = [temp mutableCopy];
-            calendarViewController.arrayOfAllData = tableViewController.arrayOfAllData;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-
-        }];
     }
     return self;
 }
@@ -75,11 +53,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    tableViewController      = [[ARCalendarTableViewController alloc]init];
+
+    tableViewController                     = [[ARCalendarTableViewController alloc]init];
+    tableViewController.localPath           = localPath;
+    tableViewController.encoderManager      = _appDel.encoderManager;
     [tableViewController.view setFrame:CGRectMake(502, 110, 518, 650)];
     [tableViewController.tableView setAutoresizingMask:UIViewAutoresizingNone];
-    tableViewController.localPath = localPath;
+
     
     calendarViewController                      = [[CKViewController alloc] init];
     [calendarViewController setFrame: CGRectMake(5, 110, 485, 400)];
@@ -129,23 +109,91 @@
     self.allEventsButton.showsTouchWhenHighlighted = YES;
     [self.view addSubview:self.allEventsButton];
     
+    memoryBar                               = [[MemoryBar alloc]initWithFrame:CGRectMake(720, 75, 290, 25)];
     [self.view addSubview:memoryBar];
     
+    [self refresh];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(encoderCountChange:) name:NOTIF_ENCODER_COUNT_CHANGE object:nil];
+}
+
+// This will update the all when ever an event
+-(void)encoderCountChange:(NSNotification*)note
+{
+    NSBlockOperation * completeBlock = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self refresh];
+        });
+    }];
     
-    /*NSMutableArray *temp = [[NSMutableArray alloc] init];
-    if (_appDel.encoderManager.masterEncoder) {
-        [temp addObjectsFromArray:[[_appDel.encoderManager.masterEncoder.allEvents allValues] mutableCopy]];
-    } else {
-          [temp addObjectsFromArray:[[[[LocalMediaManager getInstance]allEvents] allValues] mutableCopy]];
-//        [temp addObjectsFromArray:[[_appDel.encoderManager.localEncoder.allEvents allValues] mutableCopy]];
+    for (Encoder * enc in [[EncoderManager getInstance]authenticatedEncoders]) {
+        EncoderOperation * updateEncodersEventsFromServer =     [[EncoderOperationGetPastEvents alloc]initEncoder:enc data:nil];
+        [completeBlock addDependency:updateEncodersEventsFromServer];
+        [enc runOperation:updateEncodersEventsFromServer];
     }
-    NSMutableArray *liveEvents = [NSMutableArray array];
-    for (Event *event in temp) {
-        if (event.live) {
-            [liveEvents addObject:event];
-        }
+    [[NSOperationQueue mainQueue] addOperation:completeBlock];
+
+}
+
+- (void)goToLatestEvent:(id)sender
+{
+    UIButton * button = sender;
+    [button setEnabled:NO];
+    NSBlockOperation * completeBlock = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self refresh];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"goToLatestEvent" object:self];
+            [button setEnabled:YES];
+        });
+    }];
+    
+    for (Encoder * enc in [[EncoderManager getInstance]authenticatedEncoders]) {
+        EncoderOperation * updateEncodersEventsFromServer =     [[EncoderOperationGetPastEvents alloc]initEncoder:enc data:nil];
+        [completeBlock addDependency:updateEncodersEventsFromServer];
+        [enc runOperation:updateEncodersEventsFromServer];
     }
-    [temp removeObjectsInArray:liveEvents];*/
+    [[NSOperationQueue mainQueue] addOperation:completeBlock];
+
+
+}
+
+
+-(void) goToAllEvents: (id) sender{
+    UIButton * button = sender;
+    [button setEnabled:NO];
+    NSBlockOperation * completeBlock = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self refresh];
+            [tableViewController showAllData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"goToAllEvents" object:self];
+            [button setEnabled:YES];
+        });
+    }];
+    
+    for (Encoder * enc in [[EncoderManager getInstance]authenticatedEncoders]) {
+        EncoderOperation * updateEncodersEventsFromServer =     [[EncoderOperationGetPastEvents alloc]initEncoder:enc data:nil];
+        [completeBlock addDependency:updateEncodersEventsFromServer];
+        [enc runOperation:updateEncodersEventsFromServer];
+    }
+    [[NSOperationQueue mainQueue] addOperation:completeBlock];
+}
+
+- (void)datePicked:(NSNotification *)note
+{
+    [self.datePicker setDate:note.userInfo[@"date"] animated:YES];
+}
+
+- (void)fastPick:(UIDatePicker *)sender
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"fastPick" object:self userInfo:@{@"date" : sender.date}];
+}
+
+- (void)goBackToday:(UIButton *)sender
+{
+    [self.datePicker setDate:[NSDate date] animated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"fastPick" object:self userInfo:@{@"date" : [NSDate date]}];
+}
+
+-(void)refresh {
     
     NSMutableArray  *temp = [[NSMutableArray alloc] init];
     if (_appDel.encoderManager.masterEncoder) {
@@ -167,53 +215,7 @@
     
     tableViewController.arrayOfAllData      = [temp mutableCopy];
     calendarViewController.arrayOfAllData   = tableViewController.arrayOfAllData;
-    tableViewController.encoderManager      = _appDel.encoderManager;
 }
-
-- (void)goToLatestEvent:(id)sender
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"goToLatestEvent" object:self];
-}
-
--(void) goToAllEvents: (id) sender{
-    [tableViewController showAllData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"goToAllEvents" object:self];
-}
-
-- (void)datePicked:(NSNotification *)note
-{
-    [self.datePicker setDate:note.userInfo[@"date"] animated:YES];
-}
-
-- (void)fastPick:(UIDatePicker *)sender
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"fastPick" object:self userInfo:@{@"date" : sender.date}];
-}
-
-- (void)goBackToday:(UIButton *)sender
-{
-    [self.datePicker setDate:[NSDate date] animated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"fastPick" object:self userInfo:@{@"date" : [NSDate date]}];
-}
-
--(void)refresh {
-    //Start the HUD here
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        //Run your loop here
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            //stop your HUD here
-            //This is run on the main thread
-            
-            
-        });
-    });
-
-}
-
-
 
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -224,7 +226,7 @@
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_RECEIVE_MEMORY_WARNING object:self userInfo:nil];
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
 }
 
 @end

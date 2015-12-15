@@ -21,8 +21,8 @@
 
 @interface Profession : NSObject
 
-@property (nonatomic,strong) NSPredicate * filterPredicate;
-@property (nonatomic,strong) NSPredicate * visiblePredicate;
+@property (nonatomic,strong) NSPredicate * filterPredicate;  // This is for tags that will be used in the filtering process
+@property (nonatomic,strong) NSPredicate * invisiblePredicate; // Tags that were used in the process but should not be displayed in counts or in filters
 
 
 

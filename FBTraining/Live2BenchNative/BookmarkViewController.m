@@ -154,25 +154,28 @@ int viewWillAppearCalled;
 {
     [super viewDidLoad];
    
-    
-    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_CLIP_SELECTED object:nil queue:nil usingBlock:^(NSNotification *note) {
-        
-        Clip *clipToPlay = note.userInfo[@"clip"];
-        NSString *source = note.userInfo[@"source"];
-        __block BookmarkViewController *weakSelf = self;
-        
-        [clipContentDisplay displayClip:clipToPlay];
-        clipContentDisplay.enable = YES;
-        clipContentDisplay.ratingAndCommentingView.tagUpdate = ^(NSDictionary *tagData){
-            clipToPlay.rating = [[tagData objectForKey:@"rating"] intValue];
-            clipToPlay.comment = [tagData objectForKey:@"comment"];
-            [weakSelf.tableViewController reloadData];
-        };
-        _clipContext = [PxpClipContext contextWithClip:clipToPlay];
-        _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
-        [_videoBar setSelectedTag:clipToPlay];
-        [_fullscreenViewController setSelectedTag:clipToPlay];
-    }];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSelectedToPlay:) name:NOTIF_CLIP_SELECTED object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_CLIP_SELECTED object:nil queue:nil usingBlock:^(NSNotification *note) {
+//        
+//        Clip *clipToPlay = note.userInfo[@"clip"];
+//        NSString *source = note.userInfo[@"source"];
+//        __block BookmarkViewController *weakSelf = self;
+//        
+//        [clipContentDisplay displayClip:clipToPlay];
+//        clipContentDisplay.enable = YES;
+//        clipContentDisplay.ratingAndCommentingView.tagUpdate = ^(NSDictionary *tagData){
+//            clipToPlay.rating = [[tagData objectForKey:@"rating"] intValue];
+//            clipToPlay.comment = [tagData objectForKey:@"comment"];
+//            [weakSelf.tableViewController reloadData];
+//        };
+//        _clipContext = [PxpClipContext contextWithClip:clipToPlay];
+//     
+//        _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
+//        [_playerViewController zeroControlBarTimes];
+//        [_videoBar setSelectedTag:clipToPlay];
+//        
+//        [_fullscreenViewController setSelectedTag:clipToPlay];
+//    }];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_REMOVE_INFORMATION object:nil queue:nil usingBlock:^(NSNotification *note){
         [clipContentDisplay displayClip:nil];
@@ -258,6 +261,33 @@ int viewWillAppearCalled;
     [_videoBar.playNextButton addTarget:self action:@selector(playNextClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];
     [_videoBar.playPreButton addTarget:self action:@selector(playPreviousClipButtonUp:) forControlEvents:UIControlEventTouchUpInside];*/
 }
+
+
+-(void)clipSelectedToPlay:(NSNotification*)note
+{
+
+
+    Clip *clipToPlay = note.userInfo[@"clip"];
+    NSString *source = note.userInfo[@"source"];
+    __block BookmarkViewController *weakSelf = self;
+    
+    [clipContentDisplay displayClip:clipToPlay];
+    clipContentDisplay.enable = YES;
+    clipContentDisplay.ratingAndCommentingView.tagUpdate = ^(NSDictionary *tagData){
+        clipToPlay.rating = [[tagData objectForKey:@"rating"] intValue];
+        clipToPlay.comment = [tagData objectForKey:@"comment"];
+        [weakSelf.tableViewController reloadData];
+    };
+    _clipContext = [PxpClipContext contextWithClip:clipToPlay];
+    
+    _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
+    [_playerViewController zeroControlBarTimes];
+    [_videoBar setSelectedTag:clipToPlay];
+    
+    [_fullscreenViewController setSelectedTag:clipToPlay];
+
+}
+
 
 - (void)clipSaved:(NSNotification *)note {
     [self.allClips addObject:note.object];
@@ -483,10 +513,16 @@ int viewWillAppearCalled;
                   selector:@selector(compare:)];
         
     } else if (sortType & DATE_FIELD) {
-        sorter = [NSSortDescriptor
+        
+        NSSortDescriptor *sorter1 = [NSSortDescriptor
+                                     sortDescriptorWithKey:@"displayTime"
+                                     ascending:(sortType & ASCEND)?YES:NO
+                                     selector:@selector(compare:)];
+        NSSortDescriptor *sorter2 =[NSSortDescriptor
                   sortDescriptorWithKey:@"eventName"
                   ascending:(sortType & ASCEND)?YES:NO
                   selector:@selector(caseInsensitiveCompare:)];
+        return [NSMutableArray arrayWithArray:[toSort sortedArrayUsingDescriptors:@[sorter2,sorter1]]];
     }  else if (sortType & NAME_FIELD) {
         sorter = [NSSortDescriptor
                   sortDescriptorWithKey:@"name"
@@ -503,23 +539,12 @@ int viewWillAppearCalled;
 }
 
 
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    //pause video and remove the time observer
-    [videoPlayer pause];
-    
-    //we will remove the filtertoolbox to deallocate mem -- makes sure app does not freeze up
-    [_filterToolBoxView.view removeFromSuperview];
-    _filterToolBoxView=nil;
-    currentPlayingTag = nil;
-}
-
 
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.videoPlayer pause];
+ 
+     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{}];
 }
 
 
@@ -985,7 +1010,7 @@ int viewWillAppearCalled;
 #pragma mark -
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
 }
 
 @end

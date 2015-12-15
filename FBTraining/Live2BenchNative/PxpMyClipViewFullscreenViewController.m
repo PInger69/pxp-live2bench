@@ -36,7 +36,9 @@
     
     _currentTagLabel.enabled = NO;
     _currentTagLabel.hidden = YES;
-    _currentTagLabel.font = [UIFont systemFontOfSize:22.0 weight:1.0];    _previousTagButton.hidden = YES;
+//    _currentTagLabel.font = [UIFont systemFontOfSize:20.0 weight:1.0];
+    _currentTagLabel.font = [UIFont systemFontOfSize:PHI_INV*_currentTagLabel.frame.size.height];
+    _previousTagButton.hidden = YES;
     _nextTagButton.hidden = YES;
     
     [_previousTagButton setTitle:NSLocalizedString(@"PREVIOUS", nil) forState:UIControlStateNormal];
@@ -66,7 +68,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 

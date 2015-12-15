@@ -15,7 +15,7 @@
 
 @interface PxpLogViewController ()
 
-@property (nonatomic, strong) UITextView *textView;
+@property (atomic, strong) UITextView *textView;
 @property (nonatomic,strong)  CustomButton * clearButton;
 @property (nonatomic,strong)  CustomButton * upButton;
 @property (nonatomic,strong)  CustomButton * downButton;
@@ -96,6 +96,8 @@
 }
 
 
+
+
 -(void)viewDidLoad
 {
 
@@ -116,7 +118,17 @@
 
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.textView setText: [PxpLog getInstance].text];
+}
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.textView setText: @""];
+}
 
 -(void)onClear:(id)sender
 {
@@ -207,21 +219,36 @@
 
 -(void)onEvent:(id)sender
 {
+    Event * evt;
     if (!encoderManager.primaryEncoder){
         PXPLog(@"No current Event because no encoder");
     } else {
-        PXPLog(@"%@",encoderManager.primaryEncoder.event);
         
-        NSMutableDictionary * theFeeds = encoderManager.primaryEncoder.event.feeds;
+        evt = encoderManager.primaryEncoder.event;
+        PXPLog(@"%@",evt);
+        
+        NSMutableDictionary * theFeeds = evt.feeds;
         for (NSString * key in [theFeeds allKeys]) {
             Feed * afeed = theFeeds[key];
             PXPLog(@"  Feed: %@",key);
             PXPLog(@"    HQ: %@",[afeed.hqPath absoluteString]);
             PXPLog(@"    LQ: %@",[afeed.lqPath absoluteString]);
         }
+
+        PXPLog(@" Sport - %@",evt.eventType);
         
+
+        LeagueTeam * ht = evt.teams[kHomeTeam];
+        LeagueTeam * at = evt.teams[kAwayTeam];
+        PXPLog(@"   Home Team: %@",ht.name);
+        PXPLog(@"   Teams League: %@",ht.league.name);
+        PXPLog(@" ");
+        PXPLog(@"   Away Team: %@",at.name);
+        PXPLog(@"   Teams League: %@",at.league.name);
+        PXPLog(@" ");
+        PXPLog(@" ");
         PXPLog(@" <Raw Event Data!!> (/min/ajax/getpastevents for just current event)");
-        PXPLog(@" %@",        encoderManager.primaryEncoder.event.rawData);
+        PXPLog(@" %@",        evt.rawData);
         PXPLog(@" </Raw Event Data!!>");
     }
     
@@ -231,10 +258,13 @@
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    [self.textView setText: [PxpLog getInstance].text];
-    if(self.textView.text.length > 0 ) {
+   
+      dispatch_async(dispatch_get_main_queue(), ^{
+          if (self.textView.window)[self.textView setText: [PxpLog getInstance].text];
+      });
+//    if(self.textView.text.length > 0 ) {
 //        NSRange bottom = NSMakeRange(self.textView.text.length -1, 1);
 //        [self.textView scrollRangeToVisible:bottom];
-    }
+//    }
 }
 @end

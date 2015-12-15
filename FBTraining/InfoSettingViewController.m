@@ -54,7 +54,9 @@
         
         SwipeableTableViewCell *appVersion = cells[0];
         appVersion.myTextLabel.text = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"App Version", nil)];
-        [appVersion.functionalButton setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] forState:UIControlStateNormal];
+        NSString * theAppVersion = [NSString stringWithFormat:@"%@ (%@)",[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
+                                [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]] ;
+        [appVersion.functionalButton setTitle:theAppVersion forState:UIControlStateNormal];
         
         self.appVersionCell = appVersion;
         
@@ -112,7 +114,15 @@
 
 - (void)login:(NSNotification *)note {
     self.userCell.myTextLabel.text = [NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"User", nil), self.userCenter.customerEmail];
-    [self.colorCell.functionalButton setBackgroundColor:self.userCenter.customerColor];
+
+    
+    UIButton *colorButton = [[UIButton alloc]initWithFrame:CGRectMake(self.colorCell.frame.size.width+230, 5, 120, self.colorCell.frame.size.height-10)];
+    [colorButton setBackgroundColor:[UserCenter getInstance].customerColor];
+    colorButton.layer.cornerRadius = 10.0;
+    colorButton.clipsToBounds = YES;
+    [self.colorCell addSubview:colorButton];
+    
+    
 }
 
 - (void)logout {
@@ -145,7 +155,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -199,6 +209,12 @@
 - (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Yes"]) {
         //logout the user
+        
+        for (UIView * btn in [self.colorCell.functionalButton subviews]) {
+            if ([btn isKindOfClass:[UIButton class]]) [btn removeFromSuperview];
+        }
+        
+        [self.colorCell.functionalButton setBackgroundColor:[UIColor whiteColor]];
         [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
     }
     [alertView viewFinished];

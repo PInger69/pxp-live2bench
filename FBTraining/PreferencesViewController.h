@@ -7,9 +7,9 @@
 //
 
 
-#import "SettingViewController.h"
+#import "SettingItemViewController.h"
 
-@interface PreferencesViewController : SettingViewController <UITextFieldDelegate>
+@interface PreferencesViewController : SettingItemViewController <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton               * connectButton;
 @property (weak, nonatomic) IBOutlet UITextField            * urlInputTextArea;

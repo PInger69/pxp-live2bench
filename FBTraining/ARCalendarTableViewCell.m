@@ -67,26 +67,6 @@
     self.downloadInfoLabel.numberOfLines = 2;
     self.downloadInfoLabel.lineBreakMode = NSLineBreakByClipping;
 
-//    self.downloadInfoLabel.layer.borderWidth = 1;
-//    self.dateLabel.layer.borderWidth = 1;
-//    self.timeLabel.layer.borderWidth = 1;
-//    self.titleLabel.layer.borderWidth = 1;
-
-//    self.playButton = [CustomButton buttonWithType:UIButtonTypeCustom];
-//    [self.playButton setFrame:CGRectMake(460, 15, 30,30)];
-//    //don't set tag to 0, by default, uiview's tag is 0
-//    [self.playButton setTag:101];
-//    [self.playButton setEnabled:YES];
-//    [self.playButton setPlayButton];
-//    [self.playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-//    //[self.playButton setShowsTouchWhenHighlighted: YES];
-//    
-//    self.downloadButton = [DownloadButton buttonWithType:UIButtonTypeCustom];
-//    [self.downloadButton setAutoresizingMask:UIViewAutoresizingNone];
-//    [self.downloadButton setFrame:CGRectMake(400, 15, 30,35)];
-//    [self.downloadButton setTag:98];
-//    [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-
     [self.myContentView addSubview: self.downloadInfoLabel];
     [self.myContentView addSubview: self.dateLabel];
     [self.myContentView addSubview: self.timeLabel];

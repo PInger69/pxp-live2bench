@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "SettingViewController.h"
+#import "SettingItemViewController.h"
 
-@interface InfoSettingViewController : SettingViewController
+@interface InfoSettingViewController : SettingItemViewController
 
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel;
 

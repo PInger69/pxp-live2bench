@@ -11,8 +11,12 @@
 @interface Utility : NSObject
 +(NSString*)translateTimeFormat:(float)time;
 +(NSString*)encodeSpecialCharacters:(NSString*)inputString;
+
 +(NSString*)dictToJSON:(NSDictionary*)dict;
++(NSString*)dictToJSON:(NSDictionary*)dict error:(NSError **)aError;
 +(NSDictionary*)JSONDatatoDict:(NSData*)data;
++(NSDictionary*)JSONDatatoDict:(NSData*)data error:(NSError **)aError;
+
 +(float)sumOfVersion:(NSString*)version;
 +(NSString *)stringFromHexString:(NSString *)hexString;
 +(NSString *)stringToSha1:(NSString *)hashkey;
@@ -40,6 +44,9 @@
 
 +(UIImage *)starImageSelected: (BOOL) selected size:(CGSize)size;
 +(UIImage*)makeOnePixelUIImageWithColor:(UIColor*)color;
+
+
++(NSString*)downloadByteToStringHuman:(long long)byte;
 
 @end
 

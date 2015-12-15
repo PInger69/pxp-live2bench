@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) BOOL          isLive;
 @property (strong, nonatomic) NSString      *name;
 @property (assign, nonatomic) BOOL          own;
-@property (assign, nonatomic) NSInteger           rating;
+@property (assign, nonatomic) NSInteger     rating;
 @property (strong, nonatomic) NSString      *requestURL;
 @property (assign, nonatomic) double        startTime;
 @property (assign, nonatomic) double        time;
@@ -117,7 +117,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) BOOL          modified;
 @property (assign, nonatomic) BOOL          coachPick;
 @property (strong, nonatomic) NSDictionary  *feeds;
-//@property (strong, nonatomic) NSString *requestTime;
 @property (strong, nonatomic) NSString      *durationID;
 @property (assign, nonatomic) NSString      *period;
 @property (strong,nonatomic) NSArray        *players;

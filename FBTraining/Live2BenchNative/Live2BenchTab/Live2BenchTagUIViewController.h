@@ -29,7 +29,7 @@
 @property (strong,nonatomic) NSMutableArray                     *tagButtonsLeft;
 @property (strong,nonatomic) NSMutableArray                     *tagButtonRight;
 
-@property (assign,nonatomic) Event                              *currentEvent;
+@property (weak,nonatomic) Event                              *currentEvent;
 @property (assign,nonatomic) BOOL                               enabled;
 @property (assign,nonatomic) BOOL                               hidden;
 @property (assign,nonatomic) CGSize                             buttonSize;

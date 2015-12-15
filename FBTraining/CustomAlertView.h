@@ -44,6 +44,6 @@ typedef NS_OPTIONS (NSInteger,AlertType){
 -(CustomAlertView*)alertType:(AlertType)type;
 -(BOOL)display;
 
--(void)showView;
+-(CustomAlertView*)showView;
 -(void)viewFinished;
 @end

@@ -20,6 +20,7 @@
 #import "TeamPlayer.h"
 #import "DownloadItem.h"
 #import "ImageAssetManager.h"
+#import "ParseModuleDefault.h"
 
 #define trimSrc(s)  [Utility removeSubString:@"s_" in:(s)]
 
@@ -416,11 +417,10 @@
         _cameraCount    = 0;
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
-        encoderSync             = [[EncoderDataSync alloc]init];
+        encoderSync     = [[EncoderDataSync alloc]init];
    
         _eventContext   = [PxpEventContext context];
-        
-        _operationQueue = [NSOperationQueue mainQueue];
+        _parseModule    = [ParseModuleDefault new];
     }
     return self;
 }
@@ -745,7 +745,7 @@
                                        }];
     
     
-    //[dict addEntriesFromDictionary:[tagToDelete makeTagData]];
+
     
     [self issueCommand:MODIFY_TAG priority:10 timeoutInSec:5 tagData:dict timeStamp:GET_NOW_TIME];
 }
@@ -788,103 +788,11 @@
     
     [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
     
-    
-    
     PXPLog(@"Download Command Queued, waiting for encoder responce....");
     [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:60 tagData:sumRequestData timeStamp:GET_NOW_TIME onComplete:^(NSDictionary *userInfo) {
         DownloadItem* dlitem = userInfo[@"downloadItem"];
         dItemBlock(dlitem);
     }];
-    
-    return;
-    
-//    if (!_onCompleteDownloadClip) {
-//        _onCompleteDownloadClip = ^void (NSArray*pooledResponces) {
-//            //void(^onCompleteGet)(NSArray *) = ^void (NSArray*pooledResponces) {
-//            
-//            NSData          * data                  = pooledResponces[0];
-//            NSDictionary    * results               = [Utility JSONDatatoDict: data];
-//            NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
-//            
-//            NSString * sidx = results[@"requrl"];
-//            NSRange  d =  [sidx rangeOfString:@"sidx\":\""];
-//            d = NSMakeRange(0, d.length+d.location);
-//            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
-//            d =  [sidx rangeOfString:@"\""];
-//            d = NSMakeRange( d.location,[sidx length]-d.location);
-//            sidx =  [sidx stringByReplacingCharactersInRange:d withString:@""];
-//            NSString *src = sidx;
-//            if (!urlForImageOnServer) PXPLog(@"Warning: vidurl not found on Encoder");
-//            // if in the data success is 0 then there is an error!
-//            
-//            // we add "+srcID" so we can grab the srcID from the file name by scanning up to the '+'
-//            //    NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%02lu.mp4",results[@"event"],results[@"id"], srcID];
-//            NSString * videoName = [NSString stringWithFormat:@"%@_vid_%@+%@.mp4",results[@"event"],results[@"id"], src];
-//            
-//            
-//            // BEGIN SERVER IS DUMB (Fake the URL of the saved video, because encoder pretty much always give back s_01)
-//            
-//            //NSString *tagID = tag.ID;
-//            NSString *tagID = results[@"id"];
-//            NSString *ip = self.ipAddress;
-//            NSString *remoteSrc = [src stringByReplacingOccurrencesOfString:@"s_" withString:@""];
-//            
-//            NSString *remotePath;
-//            if ([self checkEncoderVersion]) {
-//                remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/vid_%@.mp4", ip, tagID];
-//            }else{
-//                remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
-//            }
-//            
-//            //NSString *remotePath = [NSString stringWithFormat:@"http://%@/events/live/video/%@_vid_%@.mp4", ip, remoteSrc, tagID];
-//            
-//            
-//            
-//            // END SERVER IS DUMB
-//            
-//            //NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalEncoder getInstance] bookmarkedVideosPath],videoName];
-//            NSString * pth = [NSString stringWithFormat:@"%@/%@",[[LocalMediaManager getInstance] bookmarkedVideosPath] ,videoName];
-//            DownloadItem * dli = [Downloader downloadURL:remotePath to:pth type:DownloadItem_TypeVideo key:[NSString stringWithFormat:@"%@-%@",tagID,src ]];
-//            dItemBlock(dli);
-//            
-//            
-//            
-//
-//            
-//            [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_DOWNLOAD_COMPLETE object:nil queue:nil usingBlock:^(NSNotification *note) {
-//                // is the object what we ware downloading
-//                if (note.object == dli) {
-//                    NSLog(@"Download Complete");
-//                    [[LocalMediaManager getInstance] saveClip:videoName withData:results];
-//                }
-//            }];
-//        };
-//
-//    }
-//    
-//    
-//    
-//    
-//    NSMutableDictionary * sumRequestData = [NSMutableDictionary dictionaryWithDictionary:
-//                                                @{
-//                                                 @"id": tag.ID,
-//                                                 @"event": (tag.isLive)?LIVE_EVENT:tag.event,
-//                                                 @"requesttime":GET_NOW_TIME_STRING,
-//                                                 @"bookmark":@"1",
-//                                                 @"user":[UserCenter getInstance].userHID,
-//                                                 @"name":tag.name,
-//                                                 @"srcValue":srcID
-//                                                }];
-//    
-//    [sumRequestData addEntriesFromDictionary:@{@"sidx":trimSrc(note.userInfo[@"src"])}];
-//    
-//    [self issueCommand:MODIFY_TAG priority:1 timeoutInSec:30 tagData:sumRequestData timeStamp:GET_NOW_TIME onComplete:^(NSDictionary *userInfo) {
-//        
-//    }];
-//    [encoderSync syncAll:@[self] name:NOTIF_ENCODER_CONNECTION_FINISH timeStamp:GET_NOW_TIME onFinish:_onCompleteDownloadClip];
-//    
-//    PXPLog(@"Downloading Clip!");
-    
 
 }
 
@@ -1125,15 +1033,7 @@
                                       @"requesttime"    : GET_NOW_TIME_STRING
                                       }];
     
-    /*NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset/%@",self.ipAddress,jsonString] ];
-    urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
-    encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
-    encoderConnection.connectionType        = MAKE_TELE_TAG;
-    encoderConnection.timeStamp             = aTimeStamp;*/
-    //NSDictionary *teleData = [tData objectForKey:@"telestration"];
-    //NSData *final = [NSKeyedArchiver archivedDataWithRootObject:teleData];
-    //[tData removeObjectForKey:@"telestration"];
+
     NSString *jsonString                    = [Utility dictToJSON:tData];
     jsonString = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
      NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress]  ];
@@ -1195,7 +1095,11 @@
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
-    PXPLogAjax(@"http://%@/min/ajax/tagmod/%@",self.ipAddress,tData);
+    if ( tData[@"srcValue"] ) {
+        PXPLog(@"Download clip Request");
+        PXPLog(@"http://%@/min/ajax/tagmod/%@",self.ipAddress,tData);
+
+    }
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = MODIFY_TAG;
@@ -1406,11 +1310,6 @@
 // Connections // Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections// Connections
 #pragma mark - Connections
 
-//-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-//{
-//    
-//}
-
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
@@ -1601,11 +1500,11 @@
             
             if (!_authenticated){
                 PXPLog(@"");
-                PXPLog(@"##############################################################");
+                PXPLog(LOG_HASH);
                 PXPLog(@"Warning: User Failed to authenticate to Encoder %@",self.name);
                 PXPLog(@"  ID:     @%",[UserCenter getInstance].customerID);
                 PXPLog(@"  E-mail: @%",[UserCenter getInstance].customerEmail);
-                PXPLog(@"##############################################################");
+                PXPLog(LOG_HASH);
                 PXPLog(@"");                
             }
         }
@@ -1646,7 +1545,8 @@
     NSDictionary    * results =[Utility JSONDatatoDict:data];
     if([results isKindOfClass:[NSDictionary class]]){
         version = (NSString *)[results objectForKey:@"version"] ;
-        PXPLog(@"%@ is version %@",self.name ,version);
+        PXPLog(@"    version - %@",version);
+        PXPLog(@"**************************");
     }
 
 }
@@ -1784,10 +1684,10 @@
     isTeamsGet = YES;
 }
 
--(void)checkTag:(NSData *)data
-{
-    
-}
+//-(void)checkTag:(NSData *)data
+//{
+//    
+//}
 
 //when tags are created or modified on the same ipad that is displaying the change
 -(void)getEventTags:(NSData *)data extraData:(NSDictionary *)extra
@@ -1801,6 +1701,11 @@
     if([results isKindOfClass:[NSDictionary class]])    {
         if ([type isEqualToString:MODIFY_TAG]) {
             if (results){
+                
+                PXPLog(@"Download MODIFY_TAG Responce");
+                PXPLog(@"%@",results);
+
+                
                 [self onModifyTags:results];
             }
         }
@@ -1872,39 +1777,12 @@
             }
         }
             
-        
-        /*if ([self.allEvents objectForKey:[data objectForKey:@"event"]]){
-            Event * checkEvent = [self.allEvents objectForKey:[data objectForKey:@"event"]]; // get event by name
-            NSArray * eventTags = [checkEvent.tags copy];
-            
-            NSString * tagId = [[data objectForKey:@"id"]stringValue];// [NSString stringWithFormat:@"%ld",[[data objectForKey:@"id"]integerValue] ];
-            NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-                Tag * obj = evaluatedObject;
-                return [obj.ID isEqualToString:tagId];
-            }];
-            
-            NSArray *filteredArray = [eventTags filteredArrayUsingPredicate:pred];
-            Tag *tagToBeModded = [filteredArray firstObject];
-            
-            if ( ((TagType)[data[@"type"]integerValue]) == TagTypeOpenDuration) {
-                NSMutableDictionary * dictToChange = [[NSMutableDictionary alloc]initWithDictionary:data];
-                double openTime                 = tagToBeModded.time;
-                double closeTime                = [dictToChange[@"time"]doubleValue];
-                dictToChange[@"duration"]       = [NSNumber numberWithDouble:(closeTime - openTime )];
-                dictToChange[@"time"]           = [NSNumber numberWithDouble:openTime];
-                
-                [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
-            } else {
-                [tagToBeModded replaceDataWithDictionary:data];
-            
-            }
-         
 
-            [checkEvent modifyTag:tagToBeModded];
-        }*/
     }
 }
 
+
+// Depricated
 -(void)onNewTags:(NSDictionary*)data
 {
     if ([data objectForKey:@"success"] != nil && [[data objectForKey:@"success"]integerValue] != 1){
@@ -1944,6 +1822,51 @@
         }
     }
 }
+
+// new for Encoder Operation
+-(Tag*)onNewTagsEO:(NSDictionary*)data
+{
+    if ([data objectForKey:@"success"] != nil && [[data objectForKey:@"success"]integerValue] != 1){
+        PXPLog(@"Encoder Error! on New Tag - msg: %@",[data objectForKey:@"msg"]);
+        return nil;
+    }
+    
+    
+    if ([data objectForKey:@"id"]) {
+        
+        if ([_allEvents objectForKey:[data objectForKey:@"event"]]){
+            NSMutableDictionary *checkEventDic = [_allEvents objectForKey:[data objectForKey:@"event"]];
+            Event * encoderEvent = [checkEventDic objectForKey:@"non-local"];
+            Event * localEvent = [checkEventDic objectForKey:@"local"];
+            Tag *newTag = [[Tag alloc] initWithData: data event:encoderEvent];
+            
+            if (self.event == encoderEvent) {
+                [encoderEvent addTag:newTag extraData:true];
+            }else{
+                [encoderEvent addTag:newTag extraData:false];
+            }
+            
+            if (localEvent && newTag.type != TagTypeOpenDuration) {
+                Tag *localTag = [[Tag alloc] initWithData:data event:localEvent];
+                [localEvent addTag:localTag extraData:false];
+                [localEvent.parentEncoder writeToPlist];
+            }
+            
+            
+            // Download Thumbnail for new tags
+            
+            [[ImageAssetManager getInstance]thumbnailsPreload:[newTag.thumbnails allValues]];
+            
+            
+            
+            return newTag;
+        }
+    }
+    
+    
+    return nil;
+}
+
 
 -(void)onTeleTags:(NSDictionary*)data
 {
@@ -2068,14 +1991,21 @@
                 //[self stopResponce:nil];
                 //self.liveEvent = nil;
                 [self.encoderManager declareCurrentEvent:nil];
+
+
             };
+            [self.allEvents removeObjectForKey:LIVE_EVENT];
+            if (self.liveEvent) [self.allEvents removeObjectForKey:self.liveEvent.name];
             self.liveEvent = nil;
             self.encoderManager.liveEvent = nil;
             self.encoderManager.liveEventName = nil;
+
+
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":@""}];
-            
+//            [[[CustomAlertView alloc]initWithTitle:@"Encoder" message:@"Event has been stopped" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil]showView];
+        } else if (self.status == ENCODER_STATUS_PAUSED) {
+            [[[CustomAlertView alloc]initWithTitle:@"Encoder" message:@"Event has been paused" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil]showView];
         }
-        
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];
     }
@@ -2273,9 +2203,9 @@
                     anEvent.parentEncoder = self;
                     
                     // populating teams based off data
-                    League      * league        = [self.encoderLeagues objectForKey:value[@"league"]];
-                    LeagueTeam  * homeTeam      = [league.teams objectForKey:value[@"homeTeam"]];
-                    LeagueTeam  * visitTeam     = [league.teams objectForKey:value[@"visitTeam"]];
+                    League      * league        = [self.encoderLeagues objectForKey:value[kLeague]];
+                    LeagueTeam  * homeTeam      = [league.teams objectForKey:value[kHomeTeam]];
+                    LeagueTeam  * visitTeam     = [league.teams objectForKey:value[kAwayTeam]];
                     if (!homeTeam) {
                             homeTeam     = [LeagueTeam new];
                     }
@@ -2284,7 +2214,7 @@
                     }
                     
                     
-                    anEvent.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
+                    anEvent.teams = @{kHomeTeam:homeTeam,kAwayTeam:visitTeam};
 
                     
                     
@@ -2377,7 +2307,7 @@
             }
             
             anEvent.teams = @{@"homeTeam":homeTeam,@"visitTeam":visitTeam};
-            
+
             _liveEvent = anEvent;
             NSMutableDictionary *eventFinal = [[NSMutableDictionary alloc]initWithDictionary:@{@"non-local":anEvent}];
             [_allEvents setObject:eventFinal forKey:anEvent.name];
@@ -2475,11 +2405,15 @@
 
 -(void)tagPrepared:(EncoderTask*)task responceData:(NSData*) data
 {
-    
-    NSDictionary    * results               = [Utility JSONDatatoDict:data];
+       NSDictionary    * results               = [Utility JSONDatatoDict:data];
     // break up the the data to make a good url
     NSString        * urlForImageOnServer   = (NSString *)[results objectForKey:@"vidurl"];;
+    PXPLog(LOG_HASH);
+    PXPLog(@"%@",results);
     
+    PXPLog(LOG_HASH);
+    
+
     
     // this part can be replaced with a regex
     NSString * sidx     = results[@"requrl"];
@@ -2576,6 +2510,15 @@
     // IMPLEMENT ME!
 }
 
+
+#pragma mark - New Encoder Structure
+
+// this adds the operation to the operation Queue
+// The reason for not sending it directly is there is other encoders that will not react to operaions the same way
+-(void)runOperation:(EncoderOperation*)operation
+{
+    [[NSOperationQueue mainQueue] addOperation:(NSOperation *)operation];
+}
 
 
 

@@ -103,7 +103,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -184,7 +184,7 @@
         NSString *key = keys[indexPath.row - firstIndexPath.row];
         
         FeedSelectCell *collapsableCell = [[FeedSelectCell alloc] initWithTag:tag source:key];//[tag[@"url_2"] allValues][indexPath.row - firstIndexPath.row]];
-        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:tag];
         
 
         __block FeedSelectCell *weakCell = collapsableCell;
@@ -342,39 +342,47 @@
 
     NSString *url = tag.thumbnails[src];
     
-    cell.tagImage.image = [UIImage imageNamed:@"live.png"];
+//    cell.tagImage.image = [tag thumbnailForSource:@"onlySource"];
+//    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+//        cell.tagImage.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+//    } else {
+//        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
+//    }
+//    
+//    if (!cell.tagImage.image)    cell.tagImage.image = [UIImage imageNamed:@"live.png"];
+//    
+
+    
     if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
         cell.tagImage.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
     } else {
         [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
     }
+    __block UIImage * weakThumb;
     
     
-   /*
-    UIImage *thumb;
-//    thumb = [tag thumbnailForSource:nil];
-    [[ImageAssetManager getInstance] imageForURL:url atImageView:cell.tagImage];
-    thumb = cell.tagImage.image;
-    
-    if (thumb && thumb.scale > 1) {
-        thumb = [tag thumbnailForSource:nil];
-    } else if (thumb && thumb.scale == 1) {
-        cell.tagImage.image = thumb;
-
-    } else {
+//
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        //Background Thread
         
-        PxpTelestration *tele = tag.thumbnails.count <= 1 || [tag.telestration.sourceName isEqualToString:src] ? tag.telestration : nil;
+        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
+            //            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+        } else {
+            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.tagImage imageURL:url];
+        }
         
-        [[ImageAssetManager getInstance] imageForURL:url atImageView:cell.tagImage withTelestration:tele];
-        thumb = cell.tagImage.image;
-    }
-    */
-    
-    
-
-
-
-    
+        if (!weakThumb) {
+            weakThumb = [tag thumbnailForSource:@"onlySource"];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            
+            cell.tagImage.image = weakThumb;
+            if (!cell.tagImage.image) cell.tagImage.image = [UIImage imageNamed:@"live.png"];
+        });
+    });
+//
 
     
     
@@ -415,13 +423,7 @@
         [cell.tagInfoText setText:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Duration", nil),durationString]];
     }
     
-    
-    
-    //[cell.playersLabel setText:[NSString stringWithFormat:@"%@: %@",NSLocalizedString(@"Player(s):", nil),players]];
-    
-    
-    //[cell.playersNumberLabel setBackgroundColor:[UIColor greenColor]];
-    
+
     [cell.tagtime setText: tag.displayTime];
     
     
@@ -429,7 +431,6 @@
     cell.ratingscale.rating = tag.rating;
     
 
-    
     UIColor *thumbColour = [Utility colorWithHexString:tag.colour];
     [cell.tagcolor changeColor:thumbColour withRect:cell.tagcolor.frame];
     
@@ -439,6 +440,7 @@
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath
 {
+    [tableView beginUpdates];
     Tag *tag;
     NSIndexPath *firstDownloadCellPath = [self.arrayOfCollapsableIndexPaths firstObject];
     
@@ -453,6 +455,7 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_TAG object:tag];
     if (self.setOfDeletingCells.count ) {
+         [tableView endUpdates];
         return;
     }else if ([self.arrayOfCollapsableIndexPaths containsObject: indexPath]){
        // FeedSelectCell *cell = (FeedSelectCell*)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -463,7 +466,7 @@
 //                                                                                                                                                                                                                                                                                                @"comment": tag.comment,
 //                                                                                                                                                                                                                                                                                   @"forWhole":tag
 //                                                                                                                                        }}];
-
+         [tableView endUpdates];
         return;
     }
     
@@ -483,6 +486,7 @@
         
         NSArray *arrayToRemove = [self.arrayOfCollapsableIndexPaths copy];
         [self.arrayOfCollapsableIndexPaths removeAllObjects];
+        
         [self.tableView deleteRowsAtIndexPaths: arrayToRemove withRowAnimation:UITableViewRowAnimationRight];
         
         NSMutableArray *insertionIndexPaths = [NSMutableArray array];
@@ -530,6 +534,8 @@
         //self.previouslySelectedIndexPath = indexPath;
 
     }
+    
+    [tableView endUpdates];
 }
 
 

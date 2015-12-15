@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SideTagSettingsViewController">
+            <connections>
+                <outlet property="addRemoveControl" destination="MlE-zH-Mhd" id="4gV-a5-jNl"/>
+                <outlet property="buttonPlaceHolder1" destination="VEJ-oS-VZs" id="ugb-0l-vaY"/>
+                <outlet property="buttonPlaceHolder10" destination="Wba-6n-Tsy" id="tae-ug-6h1"/>
+                <outlet property="buttonPlaceHolder11" destination="OEf-Xs-gja" id="FS2-gl-Ec6"/>
+                <outlet property="buttonPlaceHolder12" destination="WZH-SG-tjI" id="a9n-9h-qCQ"/>
+                <outlet property="buttonPlaceHolder13" destination="VfT-M9-a6v" id="6ri-gR-xen"/>
+                <outlet property="buttonPlaceHolder14" destination="Wf4-qF-8Ys" id="htp-NG-SUC"/>
+                <outlet property="buttonPlaceHolder15" destination="mPQ-AW-bXr" id="700-Z6-38m"/>
+                <outlet property="buttonPlaceHolder16" destination="dmm-yc-6xK" id="ud2-W8-ebQ"/>
+                <outlet property="buttonPlaceHolder17" destination="REr-Kn-1C3" id="aUI-j8-FCP"/>
+                <outlet property="buttonPlaceHolder18" destination="9Bf-7M-gL4" id="ygG-Qe-CAT"/>
+                <outlet property="buttonPlaceHolder19" destination="gAi-tF-EEH" id="CxU-xl-Pzb"/>
+                <outlet property="buttonPlaceHolder2" destination="8YW-rM-z0y" id="V9I-Ya-KL0"/>
+                <outlet property="buttonPlaceHolder20" destination="rFV-v6-gng" id="TQd-3Y-JCR"/>
+                <outlet property="buttonPlaceHolder21" destination="kCN-MC-5Tv" id="hAy-TY-VHd"/>
+                <outlet property="buttonPlaceHolder22" destination="HAK-qS-hzI" id="L9D-jD-bUi"/>
+                <outlet property="buttonPlaceHolder23" destination="Q5g-yU-q4G" id="BCx-Pq-6Th"/>
+                <outlet property="buttonPlaceHolder24" destination="kTl-eK-Mzr" id="vlW-sb-gHk"/>
+                <outlet property="buttonPlaceHolder3" destination="fy3-PL-vCN" id="Wzv-5m-Txh"/>
+                <outlet property="buttonPlaceHolder4" destination="SPT-8p-1IG" id="Fdd-zy-qzD"/>
+                <outlet property="buttonPlaceHolder5" destination="65Q-xg-fQB" id="Nfj-0H-6NC"/>
+                <outlet property="buttonPlaceHolder6" destination="v3p-nq-oQV" id="1Rn-Hi-XAW"/>
+                <outlet property="buttonPlaceHolder7" destination="Dgs-Hz-E9a" id="n6m-PD-FAd"/>
+                <outlet property="buttonPlaceHolder8" destination="Zxp-uc-VRQ" id="KCy-yJ-Oh9"/>
+                <outlet property="buttonPlaceHolder9" destination="hct-1h-FLl" id="Okt-g3-X4P"/>
+                <outlet property="tagSetPicker" destination="Xif-ft-b8K" id="2Ni-K9-meB"/>
+                <outlet property="view" destination="iN0-l3-epB" id="MeD-Mo-JR8"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="693" height="723"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Current Tag Set:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ja1-oq-B7l">
+                    <rect key="frame" x="39" y="60" width="126" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xif-ft-b8K">
+                    <rect key="frame" x="186" y="37" width="360" height="68"/>
+                </pickerView>
+                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="MlE-zH-Mhd">
+                    <rect key="frame" x="570" y="56" width="94" height="29"/>
+                    <connections>
+                        <action selector="changeValue:" destination="-1" eventType="valueChanged" id="vU7-qb-NDi"/>
+                    </connections>
+                </stepper>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notice: Any custom created tag set only save to this device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lCp-95-b1i">
+                    <rect key="frame" x="18" y="688" width="452" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VEJ-oS-VZs">
+                    <rect key="frame" x="18" y="114" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8YW-rM-z0y">
+                    <rect key="frame" x="18" y="160" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fy3-PL-vCN">
+                    <rect key="frame" x="18" y="207" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SPT-8p-1IG">
+                    <rect key="frame" x="18" y="254" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="65Q-xg-fQB">
+                    <rect key="frame" x="18" y="301" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v3p-nq-oQV">
+                    <rect key="frame" x="18" y="348" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dgs-Hz-E9a">
+                    <rect key="frame" x="18" y="395" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zxp-uc-VRQ">
+                    <rect key="frame" x="18" y="442" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hct-1h-FLl">
+                    <rect key="frame" x="18" y="489" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wba-6n-Tsy">
+                    <rect key="frame" x="18" y="536" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OEf-Xs-gja">
+                    <rect key="frame" x="18" y="583" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WZH-SG-tjI">
+                    <rect key="frame" x="18" y="630" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VfT-M9-a6v">
+                    <rect key="frame" x="383" y="114" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wf4-qF-8Ys">
+                    <rect key="frame" x="383" y="160" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mPQ-AW-bXr">
+                    <rect key="frame" x="383" y="207" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmm-yc-6xK">
+                    <rect key="frame" x="383" y="254" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="REr-Kn-1C3">
+                    <rect key="frame" x="383" y="301" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Bf-7M-gL4">
+                    <rect key="frame" x="383" y="348" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gAi-tF-EEH">
+                    <rect key="frame" x="383" y="395" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rFV-v6-gng">
+                    <rect key="frame" x="383" y="442" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kCN-MC-5Tv">
+                    <rect key="frame" x="383" y="489" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HAK-qS-hzI">
+                    <rect key="frame" x="383" y="536" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q5g-yU-q4G">
+                    <rect key="frame" x="383" y="583" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kTl-eK-Mzr">
+                    <rect key="frame" x="383" y="630" width="193" height="34"/>
+                    <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tag Set Builder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pr4-SD-fHE">
+                    <rect key="frame" x="308" y="8" width="116" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="353.5" y="250.5"/>
+        </view>
+    </objects>
+</document>

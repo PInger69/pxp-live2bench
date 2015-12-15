@@ -13,11 +13,36 @@
 
 
 typedef NS_ENUM (NSInteger, ParseMode){
-    ParseModeVersionCheck
+
+    ParseModeNone,
+    
+    // Master
+    ParseModeStart,
+    ParseModeStop,
+    ParseModePause,
+    ParseModeResume,
+
+    ParseModeVersionCheck,
+    ParseModeAuthentication,
+    
+    ParseModeGetTeams,
+    ParseModeGetEventTags,
+    ParseModeGetPastEvents,
+    ParseModeDeleteEvent,
+    ParseModeGetCameras,
+    
+    ParseModeTagSet,
+    ParseModeTagMod,
+    ParseModeTagMakeMP4,
+    
+    
+    // Status monitor
+    ParseModeSyncMe,
+    ParseModeEncoderStatus
 };
 
 
 
--(void)parse:(NSData*)data mode:(ParseMode)mode for:(Encoder*)encoder;
+-(NSDictionary *)parse:(NSData*)data mode:(ParseMode)mode for:(Encoder*)encoder;
 
 @end

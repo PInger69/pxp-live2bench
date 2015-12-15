@@ -25,7 +25,7 @@
         _filterModules          = [[NSMutableArray alloc]init];
         _filtersOwnPredicates   = [[NSMutableArray alloc]init];
         _unfilteredTagsSet      = [[NSMutableSet alloc]init];
-        _filtersOwnPredicates   = [[NSMutableArray alloc]init];
+        _ghostPredicates   = [[NSMutableArray alloc]init];
         _rawTagsPool            = [[NSMutableArray alloc]init];
     }
     return self;
@@ -79,7 +79,6 @@
     for (NSInteger i = filerModCount-1; i>=0; i--) {
         id <PxpFilterModuleProtocol> filterMod = _filterModules[i];
         [filterMod filterTags:addedTags];
-        NSLog(@"");
     }
     
     
@@ -193,14 +192,18 @@
 
 #pragma mark - Getters
 
+// Main output 
 -(NSArray*)filteredTags
 {
+    // anything that matches ghost pred then remove
     return [_filteredTagsPool copy];
 }
 
 
 -(NSArray*)unfilteredTags
 {
+    // anything that matches ghost pred then remove
+    
     return [_unfilteredTagsSet allObjects];
 }
 

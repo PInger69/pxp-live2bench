@@ -65,6 +65,14 @@ static ImageAssetManager * instance;
     if (!_thumbnailActionList.running)[_thumbnailActionList start];
 }
 
+-(void)thumbnailsUnload:(NSArray*)list
+{
+    for (NSString * itemUrl in list) {
+        [_arrayOfClipImages delete:itemUrl];
+    }
+}
+
+
 -(void)thumbnailsLoadedToView:(UIImageView*)imageView imageURL:(NSString*)aImageUrl
 {
     [_thumbnailActionList addItem:[[ThumbnailDownloader alloc]initImageAssetManager:self url:aImageUrl imageView:imageView ]];

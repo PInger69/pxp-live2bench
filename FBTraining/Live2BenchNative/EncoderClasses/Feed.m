@@ -78,6 +78,8 @@
     return self;
 }
 
+
+// Is this an issue
 -(id)initWithURLString:(NSString *)aPath quality:(int)qlty
 {
     self = [super init];
@@ -89,7 +91,7 @@
         if (qlty<=0) correctedQuality = LOW_QUALITY;
         
         NSURL *url = [NSURL URLWithString:aPath];
-        PXPLog(@"%@",url);
+
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         // Richard
 //        NSArray *requestedKeys = @[@"playable"];
@@ -261,7 +263,9 @@
 }
 
 - (nullable NSURL *)hqPath {
-    return _qualities[HIGH_QUALITY];
+    
+    
+    return (_qualities[HIGH_QUALITY])?_qualities[HIGH_QUALITY]:_qualities[LOW_QUALITY];
 }
 
 @end

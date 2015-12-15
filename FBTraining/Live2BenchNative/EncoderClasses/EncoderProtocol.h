@@ -31,6 +31,7 @@
 
 @class Event;
 @class EncoderManager;
+@class EncoderOperation;
 
 typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
     ENCODER_STATUS_UNKNOWN        = 0,
@@ -84,6 +85,7 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 -(void)clearQueueAndCurrent;
 -(void) writeToPlist;
 
-
+// This adds a layer of abstarction so we let the encoder it self manage the operaions
+-(void)runOperation:(EncoderOperation*)operation;
 
 @end

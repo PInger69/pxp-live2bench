@@ -16,7 +16,7 @@
 #import "Feed.h"
 #import "RJLVideoPlayer.h"
 #import "FullScreenViewController.h"
-#import "ListViewFullScreenViewController.h"
+//#import "ListViewFullScreenViewController.h"
 #import "PxpEventContext.h"
 #import "LocalMediaManager.h"
 #import "PxpTelestrationViewController.h"
@@ -42,7 +42,7 @@
 
 @property (strong, nonatomic, nonnull)      PxpPlayerViewController *playerViewController;
 @property (strong, nonatomic)               UIPinchGestureRecognizer *pinchGesture;
-@property (strong, nonatomic)               ListViewFullScreenViewController *listViewFullScreenViewController;
+//@property (strong, nonatomic)               ListViewFullScreenViewController *listViewFullScreenViewController;
 
 @property (strong, nonatomic)               UIButton *filterButton;
 
@@ -86,7 +86,7 @@
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
-        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagHasBeenHighlighted:) name:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:nil];
         self.allTags = [[NSMutableArray alloc]init];
         self.tagsToDisplay = [[NSMutableArray alloc]init];
         _tableViewController = [[ListTableViewController alloc]init];
@@ -94,7 +94,7 @@
         [self addChildViewController:_tableViewController];
         //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
- 
+
         
         
         /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
@@ -118,7 +118,7 @@
         CGFloat playerHeight = playerWidth / (16.0 / 9.0);
 
         //self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
-        self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
+//        self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
 
         //[self.view addSubview:self.videoPlayer.view];
         
@@ -152,6 +152,9 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_CLIP_CANCELED object:self.videoPlayer];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PLAYER_BAR_CANCEL object:nil];
 }
 
 -(void)addEventObserver:(NSNotification *)note
@@ -242,7 +245,13 @@
             [_pxpFilter removeTags:@[tag]];
         }
     }
-    [_tableViewController reloadData];
+    
+    // yes this is silly when tag mod is called list view refreshes but when downloading at clip it counts at a tag mod
+    // but it should not be updated because it needs to see the button that called it so updating will clear it out
+    
+    if (![note.name isEqualToString:NOTIF_TAG_MODIFIED]){
+        [_tableViewController reloadData];
+    }
     
 }
 
@@ -270,6 +279,7 @@
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeCurrentPlayingClip:) name:NOTIF_PLAYER_BAR_CANCEL object:nil];
 
     [self setupView];
 
@@ -281,14 +291,14 @@
 
     _playerViewController.telestrationViewController.showsControls = NO;
 
-        NSLog(@"LV1");
+
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
 
     self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
     
     [self.view addSubview:self.videoPlayer.view];
-    self.listViewFullScreenViewController = [[ListViewFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
+//    self.listViewFullScreenViewController = [[ListViewFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
     
     [_fullscreenViewController.nextTagButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.previousTagButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
@@ -308,12 +318,11 @@
     
     self.telestrationViewController.timeProvider = self.videoPlayer;
     self.telestrationViewController.showsControls = NO;
-            NSLog(@"LV2");
     _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
     //_videoBar.player = _videoPlayer.avPlayer;
     
     _videoBar.playerViewController = _playerViewController;
-    
+    [_videoBar clear]; // just to unify the view
     [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
     
@@ -348,11 +357,11 @@
     
     
     [commentingField clear];
-    commentingField.text                = selectedTag.comment;
-    commentingField.ratingScale.rating  = selectedTag.rating;
+    commentingField.text                    = selectedTag.comment;
+    commentingField.ratingScale.rating      = selectedTag.rating;
     
-    _videoBar.selectedTag = selectedTag;
-    _fullscreenViewController.selectedTag = selectedTag;
+    _videoBar.selectedTag                   = selectedTag;
+    _fullscreenViewController.selectedTag   = selectedTag;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -452,9 +461,8 @@
     
     self.videoPlayer.mute = NO;
     
-            NSLog(@"viewWillAppear done");
+    NSLog(@"viewWillAppear done");
 }
-
 
 
 
@@ -545,6 +553,21 @@
 }
 
 
+#pragma mark - ListTableViewController coupled method
+-(void)onTagHasBeenHighlighted:(NSNotification*)note;
+{
+    
+    Tag* theTag = note.object;
+    if (selectedTag == theTag) return;
+    
+    [commentingField clear];
+    selectedTag                         = theTag;
+    commentingField.enabled             = YES;
+    commentingField.text                = selectedTag.comment;
+    commentingField.ratingScale.rating  = selectedTag.rating;
+    
+}
+
 #pragma mark -
 //initialize the controls for list view
 -(void)setupView
@@ -597,13 +620,13 @@
 
 //next/previous clip
 
--(void)playNextClipButtonUp:(id)sender{
-    [_tableViewController playNext];
-}
-
--(void)playPreviousClipButtonUp:(id)sender{
-    [_tableViewController playPrevious];
-}
+//-(void)playNextClipButtonUp:(id)sender{
+//    [_tableViewController playNext];
+//}
+//
+//-(void)playPreviousClipButtonUp:(id)sender{
+//    [_tableViewController playPrevious];
+//}
 
 //save the rating info
 -(void)sendRating:(id)sender
@@ -800,7 +823,7 @@
 
 -(void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     [[ImageAssetManager getInstance].arrayOfClipImages removeAllObjects];
 }
 
@@ -842,6 +865,11 @@
 
 }
 
+-(void)closeCurrentPlayingClip:(NSNotification*)note
+{
+    [_videoBar clear]; // this removes the tag data and controlls to extend from the light grey bar
+}
+
 
 // Pxp
 -(void)onFilterComplete:(PxpFilter*)filter
@@ -849,7 +877,6 @@
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
 
-//    _tagsToDisplay SORT
     _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
     [_tableViewController reloadData];
 }
@@ -860,9 +887,7 @@
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     
-//    _tagsToDisplay SORT
     _tableViewController.tableData = [self sortArrayFromHeaderBar:self.tagsToDisplay headerBarState:headerBar.headerBarSortType];
-    
     [_tableViewController reloadData];
 }
 

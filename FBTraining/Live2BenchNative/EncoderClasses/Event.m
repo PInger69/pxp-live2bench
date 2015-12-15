@@ -37,12 +37,14 @@
 
 @synthesize delegate = _delegate;
 
+//Depricated
 - (instancetype)initWithDict:(NSDictionary*)data  isLocal:(BOOL)isLocal andlocalPath:(NSString *)path
 {
     self = [super init];
     if (self) {
-        NSMutableDictionary *dataFinal = [[NSMutableDictionary alloc]initWithDictionary:data];
-        _rawData            = dataFinal;
+
+        _open               = NO;
+        _rawData            = [[NSMutableDictionary alloc]initWithDictionary:data];
         _live               = (_rawData[@"live"] || _rawData[@"live_2"])? YES:NO;
         _primary            = false;
         _name               = [_rawData objectForKey:@"name"];
@@ -50,29 +52,92 @@
         _eventType          = [_rawData objectForKey:@"sport"];
         _datapath           = [_rawData objectForKey:@"datapath"];
         _date               = [_rawData objectForKey:@"date"];
+        _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
         _mp4s               = [self buildMP4s:_rawData];
         localPath           = path;
-        //        _feeds              = [self buildFeeds:_rawData];
-        _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
-        _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:isLocal] copy];
-        _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
         _downloadedSources  = [NSMutableArray array]; // depricated
         _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
+        
+        
+        _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:isLocal];
+        _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:isLocal] copy];
         _tags               = [self buildTags:_rawData];
-
-//        _teams              = [[NSMutableDictionary alloc]init];
-//        if ([_rawData objectForKey:@"homeTeam"]) [_teams setValue:[_rawData objectForKey:@"homeTeam"] forKey:@"homeTeam"];
-//        if ([_rawData objectForKey:@"visitTeam"]) [_teams setValue:[_rawData objectForKey:@"visitTeam"] forKey:@"visitTeam"];
     }
-    [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_EVENT_DOWNLOADED object:nil queue:nil usingBlock:^(NSNotification *note){
-        NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
-        if (key.count > 0) {
-            [self.downloadingItemsDictionary removeObjectForKey:key[0]];
-            [self.downloadedSources addObject:[(NSString *)key[0] lastPathComponent]];
-        }
-    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDownloaded:) name:NOTIF_EVENT_DOWNLOADED object:nil];
     return self;
 }
+
+
+- (instancetype)initWithDict:(NSDictionary*)data localPath:(NSString *)path
+{
+    self = [super init];
+    if (self) {
+        
+        _open               = NO;
+        _rawData            = [[NSMutableDictionary alloc]initWithDictionary:data];
+        _live               = (_rawData[@"live"] || _rawData[@"live_2"])? YES:NO;
+        _primary            = false;
+        _name               = [_rawData objectForKey:@"name"];
+        _hid                = [_rawData objectForKey:@"hid"];
+        _eventType          = [_rawData objectForKey:@"sport"];
+        _datapath           = [_rawData objectForKey:@"datapath"];
+        _date               = [_rawData objectForKey:@"date"];
+        _deleted            = [[_rawData objectForKey:@"deleted"]boolValue];
+        _mp4s               = [self buildMP4s:_rawData];
+        localPath           = path;
+        _downloadedSources  = [NSMutableArray array]; // depricated
+        _downloadingItemsDictionary = [[NSMutableDictionary alloc] init];
+        
+        _feeds              = [self buildFeeds:_rawData isLive:_live isLocal:path != nil];
+        _originalFeeds      = [[self buildFeeds:_rawData isLive:_live isLocal:path!= nil] copy];
+
+        
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDownloaded:) name:NOTIF_EVENT_DOWNLOADED object:nil];
+    return self;
+}
+
+
+
+-(void)openEvent
+{
+    if (!_open){
+       _tags = [self buildTags:_rawData];
+       _open = YES;
+    }
+}
+
+-(void)closeEvent
+{
+    if (_open){
+        _open = NO;
+        
+        NSMutableDictionary * tagToRaw = [NSMutableDictionary new];
+        // convert tags to rawdata
+        for (Tag* t in _tags) {
+            tagToRaw[t.ID] = [t makeTagData];
+        }
+        _rawData[@"tags"]   = [tagToRaw copy];
+        _tags               = nil;
+    }
+}
+
+
+
+
+-(void)eventDownloaded:(NSNotification*)note
+{
+    NSArray *key = [self.downloadingItemsDictionary allKeysForObject:note.userInfo[@"Finish"]];
+    if (key.count > 0) {
+        [self.downloadingItemsDictionary removeObjectForKey:key[0]];
+        [self.downloadedSources addObject:[(NSString *)key[0] lastPathComponent]];
+    }
+
+}
+
+
 
 -(void)setPrimary:(BOOL)primary{
     _primary = primary;
@@ -82,25 +147,28 @@
 {
     NSMutableArray *tagsReceived = [NSMutableArray array];
     
-     NSArray *tagArray = [allTagData allValues];
-     for (NSDictionary *newTagDic in tagArray) {
-         Tag *newTag = [[Tag alloc] initWithData: newTagDic event:self];
-         [_tags addObject:newTag];
-         [tagsReceived addObject:newTag];
-     }
+//     NSArray *tagArray = [allTagData allValues];
+//     for (NSDictionary *newTagDic in tagArray) {
+//         Tag *newTag = [[Tag alloc] initWithData: newTagDic event:self];
+//         [_tags addObject:newTag];
+//         [tagsReceived addObject:newTag];
+//     }
+    _rawData[@"tags"]   = [allTagData copy];
+    
      self.isBuilt = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_TAG_RECEIVED
                                                         object:self
                                                       userInfo:@{
                                                                  @"tags": tagsReceived
                                                                  }];
+    
 }
 
 
 
 -(void)addTag:(Tag *)newtag extraData:(BOOL)notifPost
 {
-    if ((newtag.type == TagTypeDeleted || [_tags containsObject:newtag]) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine && newtag.type != TagTypeSoccerZoneStop) {
+    if ((newtag.type == TagTypeDeleted ) && newtag.type != TagTypeHockeyStrengthStop && newtag.type != TagTypeHockeyStopOLine && newtag.type != TagTypeHockeyStopDLine && newtag.type != TagTypeSoccerZoneStop) {
         return;
     }
     
@@ -186,21 +254,21 @@
 
 -(NSDictionary*)rawData
 {
-    if (_tags != nil && _tags.count != 0) {
-        NSMutableDictionary * newRawData    = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
-        NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
-        
-        for (Tag *tag in _tags) {
-            [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];
-        }
-        
-        [newRawData setObject:tagsToBeAdded forKey:@"tags"];
-        return [newRawData copy];
-   }
-    
-    if ([_rawData objectForKey:@"tags"]) {
-        [_rawData removeObjectForKey:@"tags"];
-    }
+//    if (_tags != nil && _tags.count != 0) {
+//        NSMutableDictionary * newRawData    = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
+//        NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
+//        
+//        for (Tag *tag in _tags) {
+//            [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];
+//        }
+//        
+//        [newRawData setObject:tagsToBeAdded forKey:@"tags"];
+//        return [newRawData copy];
+//   }
+//    
+//    if ([_rawData objectForKey:@"tags"]) {
+//        [_rawData removeObjectForKey:@"tags"];
+//    }
     return _rawData;
  
 }
@@ -219,8 +287,6 @@
         NSDictionary *tagToBeAdded = aDict[@"tags"];
         NSArray *tagArray = [tagToBeAdded allValues];
        
-        
-        
         for (NSDictionary *tagDic in tagArray) {
             Tag *tag = [[Tag alloc]initWithData:tagDic event:self];
             if (tag.type !=  TagTypeDeleted ) {
@@ -464,11 +530,21 @@
 
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@"Event Name: %@ \n Local: %@\n IsBuilt: %@ Live: %@", _name,(_local)?@"YES":@"NO",(_isBuilt)?@"YES":@"NO",(self.live)?@"YES":@"NO"];
+    NSString * txt = [NSString stringWithFormat:@"Event Name: %@ \n Local: %@\n IsBuilt: %@ Live: %@ isDel:%@ open:%@",
+                      _name,(_local)?@"YES":@"NO",
+                      (_isBuilt)?@"YES":@"NO",
+                      (self.live)?@"YES":@"NO",
+                      self.deleted?@"YES":@"NO",
+                      self.open?@"YES":@"NO"
+                      ];
     
     return txt;
 }
 
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_EVENT_DOWNLOADED object:nil];
+}
 
 @end
 

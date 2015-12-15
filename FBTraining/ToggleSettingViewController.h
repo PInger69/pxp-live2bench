@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#import "SettingViewController.h"
+#import "SettingItemViewController.h"
 
 @protocol ToggleSettingViewControllerDelegate <NSObject>
 
@@ -14,7 +14,7 @@
 
 @end
 
-@interface ToggleSettingViewController : SettingViewController
+@interface ToggleSettingViewController : SettingItemViewController
 
 @property (readonly, nonatomic, nonnull) NSArray *toggles;
 @property (weak, nonatomic, nullable) id<ToggleSettingViewControllerDelegate> delegate;

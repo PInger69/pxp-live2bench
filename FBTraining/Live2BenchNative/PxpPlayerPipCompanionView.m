@@ -143,6 +143,22 @@
     }
 }
 
+
+-(void)enablePip:(BOOL)enable
+{
+        if (self.player && !self.pipView.player && enable) {
+            self.pipView.hidden = NO;
+            self.pipView.player = self.player;
+        } else if (!enable && !self.pipView.hidden)  {
+            self.pipView.hidden = YES;
+            self.pipView.player = nil;
+            
+            [self setNeedsDisplay];
+            [self.pipView setNeedsDisplay];
+        }
+
+}
+
 #pragma mark - Private Methods
 
 - (nonnull UIGestureRecognizer *)createPipGestureRecognizer {

@@ -20,7 +20,7 @@
 @interface BookmarkTableViewController ()
 @property (strong, nonatomic) UIPopoverController *sharePop;
 @property (strong, nonatomic) NSIndexPath *sharingIndexPath;
-
+@property (strong, nonatomic) NSMutableArray   *sharingIndexPaths;
 @property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSharePopoverViewController;
 @property (strong, nonatomic, nonnull) ListPopoverControllerWithImages *sourceSelectPopoverViewController;
 
@@ -41,13 +41,14 @@
         [self.tableView registerClass:[BookmarkViewCell class] forCellReuseIdentifier:@"BookmarkViewCell"];
         
         //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-        
+        self.sharingIndexPaths = [NSMutableArray new];        
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -58,7 +59,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -96,7 +97,7 @@
     
     BookmarkViewCell *selectedCell = (BookmarkViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     Clip *clip = [self.tableData objectAtIndex:indexPath.row];
-    
+
     NSDictionary *videosBySourceKey = clip.videosBySrcKey;
     NSArray *sourceKeys = [videosBySourceKey.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
     
@@ -168,17 +169,80 @@
     
     cell.interactionController = [[UIDocumentInteractionController alloc] init];
 
-    
     cell.deleteBlock = ^(UITableViewCell *cell){
         NSIndexPath *aIndexPath = [self.tableView indexPathForCell:cell];
         [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:aIndexPath];
-        //[clip destroy];
-    //    [self deleteClip:clip index:[self.tableView indexPathForCell:cell]];
     };
+    
+    
     
     NSDictionary *clipVideosBySourceKey = clip.videosBySrcKey;
     
     cell.shareBlock = ^(UITableViewCell *tableViewCell) {
+        
+        ////////////////////////////////////////////////////////////
+        NSMutableArray  * clipsToShare      = [NSMutableArray new];
+        NSString        * subjectLine       = @"Live2Bench Clips";
+        NSArray         * clipsBeingShared  = [self.setOfSharingCells allObjects];
+        
+        NSMutableString * text = [NSMutableString new];
+        
+        for (NSIndexPath * index in clipsBeingShared) {
+            Clip *aClip = [self.tableData objectAtIndex:index.row];
+    
+            [text appendString:@"<html><body>"];
+            [text appendString:[NSString stringWithFormat:@"<b>%@</b><br/>",aClip.name]];
+            [text appendString:[NSString stringWithFormat:@"<b>File Name:</b> %@<br/>",[aClip.videoFiles[0] lastPathComponent]]];
+       
+            if (aClip.rating) {
+                
+                [text appendString:[NSString stringWithFormat:@"<b>Rating:</b> "]];
+                
+                
+                
+                for (NSInteger i = 0; i < aClip.rating; i++) {
+                    [text appendString:@"*"];
+                }
+                
+                [text appendString:@"<br/>"];
+
+            }
+            if (![aClip.comment isEqualToString:@""]) [text appendString:[NSString stringWithFormat:@"<b>Comment:</b> %@<br/>",aClip.comment]];
+            
+            [text appendString:@"---<br/>"];
+            
+            
+            [clipsToShare addObject:text];
+        }
+        [text appendString:@"</body></html>"];
+        
+        // Add all clips
+        
+        for (NSIndexPath * index2 in clipsBeingShared) {
+            Clip *aClip2 = [self.tableData objectAtIndex:index2.row];
+            [clipsToShare addObject:[NSURL fileURLWithPath:aClip2.videoFiles[0]]];
+        }
+
+        ////////////////////////////////////////////////////////////
+     
+        
+        
+//        MailClipsActivity * mca = [MailClipsActivity new];
+        
+        UIActivityViewController * activityVC = [[UIActivityViewController alloc]initWithActivityItems:clipsToShare applicationActivities:nil];
+        [activityVC setValue:subjectLine forKey:@"subject"];
+
+        UIPopoverController * pop = [[UIPopoverController alloc] initWithContentViewController:activityVC];
+        
+        CGRect rect = [[UIScreen mainScreen] bounds];
+        
+        [pop
+         presentPopoverFromRect:rect inView:self.view
+         permittedArrowDirections:0
+         animated:YES];
+        
+        return;
+        
         
         if ([tableViewCell isKindOfClass:[BookmarkViewCell class]]) {
             BookmarkViewCell *cell = (BookmarkViewCell *)tableViewCell;
@@ -221,22 +285,13 @@
                     
                     cell.interactionController.URL = [NSURL fileURLWithPath:path];
                     cell.interactionController.name = [NSString stringWithFormat:@"%@ %@ Cam: %@", clip.name, clip.displayTime, srcID];
-                    
+                    cell.interactionController.annotation = @{@"content":@"Stuff"};
                     [cell.interactionController presentOptionsMenuFromRect:cell.shareButton.frame inView:cell.shareButton animated:YES];
                 }
             }
         }
         
-        /*
-        self.sharingIndexPath = indexPath;
-        ShareOptionsViewController *shareOptions = [[ShareOptionsViewController alloc] initWithArray: [[SocialSharingManager commonManager] arrayOfSocialOptions] andIcons:[[SocialSharingManager commonManager] arrayOfIcons] andSelectedIcons: [[SocialSharingManager commonManager] arrayOfSelectedIcons]];
-        [shareOptions setOnSelectTarget: self andSelector:@selector(shareWithOption:)];
-        UIPopoverController *sharePop = [[UIPopoverController alloc] initWithContentViewController:shareOptions];
-        sharePop.popoverContentSize = CGSizeMake(280, 180);
-        BookmarkViewCell *cellCasted = (BookmarkViewCell *)cell;
-        [sharePop presentPopoverFromRect: cellCasted.shareButton.frame inView: cell permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-        self.sharePop = sharePop;
-         */
+        
         
     };
     
@@ -266,13 +321,6 @@
     } else {
         [cell setCellAccordingToState:cellStateNormal];
     }
-    
-    //cell.editingAccessoryType = UI
-    //cell.deleteButton.hidden = YES;
-    //cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    // Configure the cell...
-    
-    //self.tableView.editing = YES;
     
     return cell;
 }
@@ -380,8 +428,12 @@
                 self.selectedPath = nil;
             }
         }
-
+        
+        
+        [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:[self.setOfDeletingCells allObjects] withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
+        [self.tableView endUpdates];
+        
         [self.setOfDeletingCells removeAllObjects];
         [self.tableView reloadData];
     }
@@ -392,6 +444,11 @@
 }
 
 
+-(void)removeDeleteSelection
+{
+
+}
+
 
 // let the local encoder destroy the clips, this class does not need to have blood on its hands
 -(void)deleteClipAtIndex:(NSIndexPath*)indexPth
@@ -400,6 +457,7 @@
     [self.tableData removeObject:clipToDelete];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_CLIPS  object:clipToDelete userInfo:nil];
 }
+
 
 /*
  #pragma mark - Navigation

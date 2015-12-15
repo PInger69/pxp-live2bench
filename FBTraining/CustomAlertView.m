@@ -163,13 +163,15 @@ static AlertType    allowedTypes;
 }
 
 // Add new alert view to alert view arrays
--(void)showView{
+-(CustomAlertView*)showView{
     if (![_currentViews containsObject:self]) {
         [_currentViews addObject:self];
         if (_currentViews.count == 1) {
             [self actuallyShowView];
+            return self;
         }
     }
+    return nil;
 }
 
 // Actually show the alert on screen (Needed to avoid complecations in other places)

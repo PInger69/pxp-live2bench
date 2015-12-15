@@ -6,10 +6,10 @@
 //  Copyright © 2015 DEV. All rights reserved.
 //
 
-#import "SettingViewController.h"
+#import "SettingItemViewController.h"
 
 
-@interface CreditsViewController : SettingViewController
+@interface CreditsViewController : SettingItemViewController
 
 @property (weak, nonatomic) IBOutlet UIView *creditsView;
 

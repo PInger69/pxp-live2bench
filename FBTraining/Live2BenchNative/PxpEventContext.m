@@ -22,7 +22,6 @@
     self = [super init];
     if (self) {
         self.event = event;
-        PXPLog(@"Event Context Created!");
     }
     return self;
 }

@@ -18,7 +18,7 @@
 
 
 #define GET_NOW_TIME [ NSNumber numberWithDouble:CACurrentMediaTime()]
-
+#define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 // const
 #define LIVE_EVENT                          @"live"
 
@@ -41,6 +41,7 @@
 #define NOTIF_EVENTS_ARE_READY              @"NOTIF_EVENTS_ARE_READY"
 #define NOTIF_TAGS_ARE_READY                @"NOTIF_TAGS_ARE_READY"
 #define NOTIF_LIST_VIEW_TAG                 @"21"
+#define NOTIF_LIST_VIEW_TAG_HIGHLIGHTED     @"NOTIF_LIST_VIEW_TAG_HIGHLIGHTED"
 #define NOTIF_MODIFY_TAG                    @"NOTIF_MODIFY_TAG"
 #define NOTIF_CREATE_TELE_TAG               @"TELE_TAG"
 #define NOTIF_EVENT_FEEDS_READY             @"EVENT_FEEDS_READY"
@@ -65,6 +66,11 @@
 #define NOTIF_FILTER_TAG_CHANGE             @"NOTIF_FILTER_TAG_CHANGE"
 #define NOTIF_FILTER_SLIDER_CHANGE          @"NOTIF_FILTER_SLIDER_CHANGE"
 
+// Log Comments
+
+#define LOG_HASH                            @"######################################################"
+
+
 //TypeDef for ToastObserver
 typedef NS_OPTIONS (NSInteger, toastType) {
     ARNone = 0,
@@ -79,7 +85,16 @@ static float APP_WIDTH      = 0;
 static float APP_HEIGHT     = 0;
 
 
+// Keys
+static NSString *kAwayTeam = @"visitTeam";
+static NSString *kHomeTeam = @"homeTeam";
+static NSString *kLeague = @"league";
+
+
 //encoder state
+
+
+
 
 //mac is just turned on
 static NSString *encStateInitializing = @"initializing";

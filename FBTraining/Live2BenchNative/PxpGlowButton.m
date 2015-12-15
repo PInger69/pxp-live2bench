@@ -37,6 +37,8 @@
         self.layer.strokeColor = color.CGColor;
         self.layer.shadowColor = color.CGColor;
     }
+    
+    
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame {

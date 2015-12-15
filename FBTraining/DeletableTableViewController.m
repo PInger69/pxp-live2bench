@@ -46,11 +46,11 @@
         self.setOfSharingCells = [[NSMutableSet alloc] init];
         //self.dictionaryOfObservers = [[NSMutableDictionary alloc] init];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addDeletionCell:) name:@"AddDeletionCell" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDeletionCell:) name:@"RemoveDeletionCell" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addDeletionCell:)     name:@"AddDeletionCell"     object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeDeletionCell:)  name:@"RemoveDeletionCell"  object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addSharingCell:) name:@"AddSharingCell" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSharingCell:) name:@"RemoveSharingCell" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addSharingCell:)      name:@"AddSharingCell"      object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeSharingCell:)   name:@"RemoveSharingCell"   object:nil];
         
         self.swipeableMode = YES;
     }
@@ -62,8 +62,10 @@
     _swipeableMode = swipeableMode;
     
     for (DeletableTableViewCell *cell in self.tableView.visibleCells){
-        cell.swipeRecognizerRight.enabled = swipeableMode;
-        cell.swipeRecognizerLeft.enabled = swipeableMode;
+        if ([cell isKindOfClass:[DeletableTableViewCell class]]){
+            cell.swipeRecognizerRight.enabled = swipeableMode;
+            cell.swipeRecognizerLeft.enabled = swipeableMode;
+        }
     }
     
 }
@@ -324,7 +326,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 

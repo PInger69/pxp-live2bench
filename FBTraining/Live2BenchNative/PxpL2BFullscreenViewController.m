@@ -35,7 +35,7 @@
     
     [self.bottomBar addSubview:_liveButton];
     
-//    [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+   [_liveButton addTarget:self action:@selector(liveButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     _liveButton.enabled = NO;
     
     
@@ -85,7 +85,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -114,7 +114,14 @@
 #pragma mark - Actions
 
 // This control should have been only on the live2Bench Action is added in there
-//- (void)liveButtonAction:(LiveButton *)sender {
+// this is just full screen clean up when pressed
+- (void)liveButtonAction:(LiveButton *)sender {
+    
+    _startRangeModifierButton.hidden    = YES;
+    _endRangeModifierButton.hidden      = YES;
+    _currentTagLabel.hidden             = YES;
+    _currentTagLabel.text               = @"";
+    _selectedTag                        = nil;
 //    PXPLog(@"Pressed Live Button in full screen");
 //
 //    [self.playerViewController.playerView.player goToLive];
@@ -122,7 +129,7 @@
 //    
 //    [[EncoderManager getInstance] declareCurrentEvent:[EncoderManager getInstance].liveEvent];
 //    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:[EncoderManager getInstance].liveEvent];
-//}
+}
 
 - (void)extendStartAction:(UIButton *)button {
     if (_selectedTag) {

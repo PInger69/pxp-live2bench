@@ -9,9 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "EncoderParseProtocol.h"
 #import "Encoder.h"
+#import "Event.h"
+#import "League.h"
+#import "LeagueTeam.h"
+#import "TeamPlayer.h"
+#import "LocalMediaManager.h"
+#import "EncoderProtocol.h"
+
 @interface ParseModuleDefault : NSObject <EncoderParseProtocol>
-
-
 
 
 

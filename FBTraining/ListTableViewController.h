@@ -11,6 +11,7 @@
 #import "DeletableTableViewController.h"
 #import "Tag.h"
 
+
 #define BUTTON_HEIGHT   125
 #define POP_WIDTH       200
 
@@ -24,10 +25,13 @@
 
 @interface ListTableViewController : DeletableTableViewController
 
-//@property (strong, nonatomic) NSMutableArray *tagsToDisplay;
+
 @property (assign, nonatomic) BOOL isEditable;
 @property (strong, nonatomic) NSIndexPath *previouslySelectedIndexPath;
 @property (strong, nonatomic) NSMutableArray *arrayOfCollapsableIndexPaths;
+
+
+
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath;
 -(void)collaspOpenCell;
 

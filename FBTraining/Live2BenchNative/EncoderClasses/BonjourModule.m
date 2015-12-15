@@ -146,14 +146,14 @@
             searchingTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(searchPing) userInfo:nil repeats:YES];
         }
         [searchingTimer fire];
-        PXPLog(@"BonjourModule: ON");
+        PXPLog(@"Search for Encoders on the network...");
     } else{
         if (searchingTimer) {
             [searchingTimer invalidate];
             searchingTimer = nil;
         }
         [serviceBrowser stop];
-        PXPLog(@"BonjourModule: OFF");
+        PXPLog(@"Search for Encoders disabled!");
     }
     [self willChangeValueForKey:@"searchForEncoders"];
     _searching = searching;
@@ -175,11 +175,11 @@
 
 -(void)reset
 {
-    if (!serviceBrowser){
+//    if (!serviceBrowser){
         serviceBrowser          = [NSNetServiceBrowser new] ;
         serviceBrowser.delegate = self;
         [serviceBrowser searchForServicesOfType:@"_pxp._udp" inDomain:@""];
-    }
+//    }
 }
 
 -(void)clear

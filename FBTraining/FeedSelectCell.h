@@ -16,6 +16,7 @@
 
 @property (readonly, strong, nonatomic, nonnull) UIImageView *feedView;
 @property (readonly, strong, nonatomic, nonnull) UILabel *feedName;
+@property (readonly, strong, nonatomic, nonnull) UILabel *dowdloadSize;
 @property (strong, nonatomic, nonnull) NSString *dicKey;
 
 @property (readonly, strong, nonatomic, nonnull) DownloadButton *downloadButton;

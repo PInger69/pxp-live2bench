@@ -30,16 +30,16 @@
 - (nonnull instancetype)initWithPlayerViewController:(nonnull PxpPlayerViewController *)playerViewController {
     self = [super init];
     if (self) {
-        _contentView = [[UIView alloc] init];
-        _playerContainer = [[UIView alloc] init];
-        _topBar = [[UIView alloc] init];
-        _bottomBar = [[UIView alloc] init];
+        _contentView        = [[UIView alloc] init];
+        _playerContainer    = [[UIView alloc] init];
+        _topBar             = [[UIView alloc] init];
+        _bottomBar          = [[UIView alloc] init];
         
         _backwardSeekButton = [[SeekButton alloc] initWithBackward:YES];
-        _forwardSeekButton = [[SeekButton alloc] initWithBackward:NO];
+        _forwardSeekButton  = [[SeekButton alloc] initWithBackward:NO];
         
-        _slomoButton = [[Slomo alloc] init];
-        _fullscreenButton = [[PxpFullscreenButton alloc] init];
+        _slomoButton        = [[Slomo alloc] init];
+        _fullscreenButton   = [[PxpFullscreenButton alloc] init];
         _fullscreenButton.isFullscreen = YES;
         
         _playRateObserverContext = &_playRateObserverContext;
@@ -51,8 +51,9 @@
 }
 
 - (void)dealloc {
-    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.playRate" context:_telestrationObserverContext];
+    [_playerViewController.playerView removeObserver:self forKeyPath:@"player.playRate" context:_playRateObserverContext];
     [_playerViewController.telestrationViewController removeObserver:self forKeyPath:@"telestration" context:_telestrationObserverContext];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NOTIF_PLAYER_BAR_CANCEL object:nil];
 }
 
 - (void)viewDidLoad {
@@ -69,16 +70,16 @@
     [_bottomBar addSubview:_slomoButton];
     [_bottomBar addSubview:_fullscreenButton];
     
-    [_backwardSeekButton addTarget:self action:@selector(backwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_forwardSeekButton addTarget:self action:@selector(forwardSeekAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_slomoButton addTarget:self action:@selector(slomoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenButton addTarget:self action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [_backwardSeekButton addTarget: self action:@selector(backwardSeekAction:)          forControlEvents:UIControlEventTouchUpInside];
+    [_forwardSeekButton addTarget:  self action:@selector(forwardSeekAction:)           forControlEvents:UIControlEventTouchUpInside];
+    [_slomoButton addTarget:        self action:@selector(slomoButtonAction:)           forControlEvents:UIControlEventTouchUpInside];
+    [_fullscreenButton addTarget:   self action:@selector(fullscreenResponseHandler:)   forControlEvents:UIControlEventTouchUpInside];
     
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor       = [UIColor blackColor];
     _playerContainer.backgroundColor = [UIColor darkGrayColor];
     
     [_playerViewController.fullscreenGestureRecognizer addTarget:self action:@selector(fullscreenResponseHandler:)];
-    
+
     self.fullscreen = NO;
 }
 
@@ -109,8 +110,8 @@
     // seek buttons
     const CGFloat seekButtonY = playerY + playerHeight;
     
-    _backwardSeekButton.frame = CGRectMake(1.5 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
-    _forwardSeekButton.frame = CGRectMake(contentWidth - buttonHeight - 1.5 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
+    _backwardSeekButton.frame = CGRectMake(1.0 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
+    _forwardSeekButton.frame = CGRectMake(contentWidth - buttonHeight - 1.0 * buttonHeight, seekButtonY, buttonHeight, buttonHeight);
     
     // bottom bar buttons
     const CGFloat margin = 8.0;
@@ -121,7 +122,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    PXPLog(@"*** didReceiveMemoryWarning ***");
+    
     // Dispose of any resources that can be recreated.
 }
 
@@ -135,6 +136,8 @@
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
+
+
 
 #pragma mark - Getters / Setters
 

@@ -94,7 +94,7 @@
 @property (nonatomic)           id                  target;
 @property (nonatomic,assign)    int                 priority;
 @property (nonatomic,assign)    float               timeOut;
-@property (nonatomic,strong)    NSMutableDictionary * tagData;
+//@property (nonatomic,strong)    NSMutableDictionary * tagData;
 //@property (nonatomic)           void                * context;
 @property (nonatomic)           NSNumber            * timeStamp;
 
@@ -166,7 +166,8 @@ static UserCenter * instance;
         {
             rawResponce     = [[NSMutableDictionary alloc] initWithContentsOfFile: _accountInfoPath];
             [self updateCustomerInfoWith:rawResponce];
-            _tagNames       = [self convertToL2BReadable: rawResponce key:@"tagnames"];
+            _tagNames           = [self convertToL2BReadable: rawResponce key:@"tagnames"];
+            _defaultTagNames    = [_tagNames copy];
         }
         
         

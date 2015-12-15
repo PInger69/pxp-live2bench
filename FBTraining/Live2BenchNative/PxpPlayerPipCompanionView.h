@@ -14,4 +14,8 @@
  */
 @interface PxpPlayerPipCompanionView : PxpPlayerSwapView
 
+
+
+-(void)enablePip:(BOOL)enable;
+
 @end

@@ -61,8 +61,9 @@
     _playersScrollView.filterModuleDelegate               = self;
     
     _dateScrollView.sortByPropertyKey       = @"date";
+    _dateScrollView.style                   = PxpFilterButtonScrollViewStylePortrate;    
     _dateScrollView.buttonSize              = CGSizeMake(_dateScrollView.frame.size.width, 40);
-    _dateScrollView.filterModuleDelegate                = self;
+    _dateScrollView.filterModuleDelegate    = self;
 
   [_ratingButtons buildButtons];// Has to be what was selected last
 

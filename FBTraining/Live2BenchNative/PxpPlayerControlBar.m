@@ -360,6 +360,13 @@
     }
 }
 
+-(void)clear
+{
+    self.player.range = kCMTimeRangeInvalid;
+    [self update:self.player.currentTime];
+    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:self.player];
+}
+
 
 @end
 

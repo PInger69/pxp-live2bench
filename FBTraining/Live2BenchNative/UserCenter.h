@@ -21,7 +21,8 @@
 
 }
 
-@property (nonatomic,strong) NSMutableArray         * tagNames;
+@property (nonatomic,strong) NSMutableArray           * tagNames;
+@property (nonatomic,strong,readonly) NSMutableArray  * defaultTagNames;
 //@property (nonatomic,strong) NSString               * userPick;// team pic
 @property (nonatomic,strong) LeagueTeam               * taggingTeam;
 

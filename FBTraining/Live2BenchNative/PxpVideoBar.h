@@ -37,5 +37,5 @@ IB_DESIGNABLE
 @property (assign, nonatomic) BOOL enabled;
 
 - (void)showExtendButton; // show extend start/end buttons
-
+-(void)clear;
 @end
