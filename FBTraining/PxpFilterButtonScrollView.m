@@ -206,7 +206,7 @@
         bm = _buttonSize.width+_buttonMargin.width;
     }
     
-    rowCount   = (NSUInteger)((fw + bm-1)/bm);// just rounding up to a whole one
+    rowCount   = (NSUInteger)(((fw + bm-1)/bm)-1);// just rounding up to a whole one
     
     for (NSUInteger k = 0; k < _buttonList.count; k++ ) {
         

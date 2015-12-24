@@ -126,6 +126,7 @@
     
     
     if (error) {
+        self.error = error;
          NSLog(@"Error %@",error);
     }
     
@@ -133,26 +134,6 @@
     [self parseDataToEncoder:self.cumulatedData];
     [self setExecuting:NO];
     [self setFinished:YES];
-    
-//    dispatch_queue_t parseQuene = dispatch_queue_create("Parse Queue", NULL);
-//    dispatch_async(parseQuene, ^{
-//        // parse jason data
-//        NSLog(@"parse");
-//        
-//        
-//        
-//        
-//        
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            NSLog(@"finish");
-//            [self setExecuting:NO];
-//            [self setFinished:YES];
-//            
-//        });
-//    });
-//    
-//    
 }
 
 
@@ -392,11 +373,16 @@
 }
 @end
 
+
+
+
+
+
 @implementation EncoderOperationMakeTag
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
 
-
+    self.timeout = 60;
 
 //    NSString *period = [aData objectForKey:@"period"];
     
@@ -420,7 +406,9 @@
     NSString    * jsonString                    = [Utility dictToJSON:tagData];
     
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.encoder.ipAddress, jsonString ]];
-    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    NSURLRequest * req = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+    return req;
 }
 
 -(void)parseDataToEncoder:(NSData*)data

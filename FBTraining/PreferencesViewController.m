@@ -67,11 +67,12 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
 -(void)startConnection
 {
     // Remove all Encoder and start connection
-    [[CustomAlertView supressedTitles]addObject:@"No Encoder"]; // this suppresses the no encoder pop up
+    [[CustomAlertControllerQueue getInstance].suppressedTitles addObject:@"No Encoder"];// this suppresses the no encoder pop up
     for (Encoder * encoder in self.encoderManager.authenticatedEncoders) {
         [self.encoderManager unRegisterEncoder:encoder];
     }
-    [[CustomAlertView supressedTitles]removeObject:@"No Encoder"];
+    [[CustomAlertControllerQueue getInstance].suppressedTitles removeObject:@"No Encoder"];
+
     
     self.encoderManager.bonjourModule.searching = NO;
     self.connectionStatus = ConnectionStatusConnecting;
@@ -105,11 +106,11 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
 
 -(void)cancelConnection
 {
-    [[CustomAlertView supressedTitles]addObject:@"No Encoder"]; // this suppresses the no encoder pop up
+    [[CustomAlertControllerQueue getInstance].suppressedTitles addObject:@"No Encoder"];// this suppresses the no encoder pop up
     for (Encoder * encoder in self.encoderManager.authenticatedEncoders) {
         [self.encoderManager unRegisterEncoder:encoder];
     }
-    [[CustomAlertView supressedTitles]removeObject:@"No Encoder"];
+    [[CustomAlertControllerQueue getInstance].suppressedTitles removeObject:@"No Encoder"];
     [self.connectButton setTitle:@"Disconnected" forState:UIControlStateNormal];
     self.connectionStatus = ConnectionStatusIdle;
     self.encoderManager.bonjourModule.searching = YES;

@@ -38,6 +38,9 @@ static NSString * currentFilterSport;
         sharedFilter = [[TabView alloc]init];
         sharedDefaultFilterTab = [PxpFilterDefaultTabViewController new];
         [sharedFilter addTab:sharedDefaultFilterTab];
+        
+
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(eventChanged:) name:NOTIF_EVENT_CHANGE object:nil];
     }
     

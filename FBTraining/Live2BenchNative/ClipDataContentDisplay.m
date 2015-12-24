@@ -108,6 +108,7 @@ typedef enum : NSUInteger {
         [self addText: [NSString stringWithFormat:@"\n%@:\t", NSLocalizedString(@"Visit Team", nil)]   style:Disabled];          [self addText: @" " style:Normal];
         [self addText: [NSString stringWithFormat:@"\n%@:\t", NSLocalizedString(@"Tag Name", nil)]     style:Disabled];          [self addText: @" " style:Normal];
         [self addText: [NSString stringWithFormat:@"\n%@:\t\t", NSLocalizedString(@"Tag Time", nil)]   style:Disabled];          [self addText: @" " style:Normal];
+        [tagDetailsView setAttributedText:contentText];
         return;
     }
     

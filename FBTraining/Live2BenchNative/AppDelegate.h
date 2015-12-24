@@ -27,8 +27,6 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate,UIAlertViewDelegate>
 {
     IBOutlet UIWindow   * window;
-    NSString            * relinkUserId; // TODO move out
-
 }
 
 @property (strong, nonatomic) UIWindow                  * window;

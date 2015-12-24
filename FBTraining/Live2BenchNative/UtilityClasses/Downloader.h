@@ -7,14 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CustomAlertView.h"
 #import "DownloadItem.h"
 #import "VideoTrimItem.h"
+#import "CustomAlertControllerQueue.h"
 
 @interface Downloader : NSObject
 
-
-@property (strong,nonatomic) CustomAlertView        * IOAlertView;             // No space on device
+@property (strong,nonatomic) UIAlertController      * alert;
 @property (strong,nonatomic) NSMutableArray         * queue;
 @property (assign,nonatomic) BOOL                   pause;
 @property (strong,nonatomic) NSMutableDictionary    * keyedDownloadItems;

@@ -88,7 +88,7 @@
 //    [defaults synchronize];
 //    return;
     // check to see if there is used data
-    if ([defaults objectForKey:[UserCenter getInstance].customerEmail]){
+    if ([UserCenter getInstance].customerEmail && [defaults objectForKey:[UserCenter getInstance].customerEmail]){
         NSDictionary * customersTagSetData = [defaults objectForKey:[UserCenter getInstance].customerEmail];
         self.currentTagSetName = customersTagSetData[@"currentTagSetName"];
         

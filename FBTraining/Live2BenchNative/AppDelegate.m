@@ -17,7 +17,7 @@
 #import "AppDelegateActionPack.h"
 #import "SpinnerView.h"
 #import "ToastObserver.h"
-#import "CustomAlertView.h"
+#import "CustomAlertControllerQueue.h"
 #import "PxpFilterDefaultTabViewController.h"
 
 @implementation AppDelegate
@@ -48,8 +48,7 @@
     // This manages the thumbnails in the app
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
-    
-
+    // This reads the
     
     ///In order for crashlytics to work, we have to initialise it with the secret app key we get during sign up
     //we can also startwithapikey with a delay if we need to (not necessary)
@@ -91,10 +90,10 @@
     self.window.tintColor           = PRIMARY_APP_COLOR;
     [self.window makeKeyAndVisible];
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutApp:) name:NOTIF_USER_LOGGED_OUT object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(memoryWarning:) name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostWifi) name:NOTIF_LOST_WIFI object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostEvent:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(logoutApp:)        name:NOTIF_USER_LOGGED_OUT object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(memoryWarning:)    name:NOTIF_RECEIVE_MEMORY_WARNING object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostWifi)          name:NOTIF_LOST_WIFI object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lostEvent:)        name:NOTIF_LIVE_EVENT_STOPPED object:nil];
 
     
     // action creation
@@ -113,7 +112,7 @@
 
     }];
     
-    [CustomAlertView staticInit];
+
     
     [_actionList start];
     
@@ -155,8 +154,22 @@
 -(void)lostWifi{
     NSString *string = [NSString stringWithFormat:@"encoder count:%lu",(unsigned long)_encoderManager.authenticatedEncoders.count];
     PXPLog(string);
-    CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"No Wifi" message:@"Wifi is lost. Please check your connection." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert showView];
+  
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
+                                                                    message:@"Wifi is lost. Please check your connection."
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    // build NO button
+    UIAlertAction* cancelButtons = [UIAlertAction
+                                    actionWithTitle:@"OK"
+                                    style:UIAlertActionStyleCancel
+                                    handler:^(UIAlertAction * action)
+                                    {
+                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                    }];
+    [alert addAction:cancelButtons];
+    
+    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+    
     lostWifiIsRun = true;
     [_encoderManager declareCurrentEvent:nil];
 }
@@ -164,25 +177,29 @@
 -(void)lostEvent:(NSNotification*)note{
     if (!lostWifiIsRun) {
         lostWifiIsRun = false;
-        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Event Stopped" message:@"Live Event is stopped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert showView];
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
+                                                                        message:@"Live Event is stopped"
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        // build NO button
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"OK"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:cancelButtons];
+        
+        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+     
     }
 }
 
 #pragma mark -
-#pragma mark UIAlertViewDelegate methods
-
-- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)index {
-    relinkUserId = nil;
-    [alertView viewFinished];
-}
 
 -(void)applicationDidBecomeActive:(UIApplication *)application
 {
-//    if (globals.CURRENT_APP_STATE != apstNotInited)
-//    {
-//        globals.CURRENT_APP_STATE = apstReactiveCheck;
-//    }
+
 
 }
 
@@ -206,75 +223,12 @@
 
 - (void)applicationDidEnterForeground:(UIApplication *)application
 {
-    // check for login and eula
-
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    // check for login and eula
-//    NSString *path = [globals.LOCAL_DOCS_PATH stringByAppendingPathComponent:@"accountInformation.plist"];
-//
-//    if ([fileManager fileExistsAtPath: path])
-//    {
-//        globals.IS_LOGGED_IN=TRUE;
-//        //set eula boolean value depending on whether or not user has accepted -- from the users info
-//        globals.IS_EULA = [globals.ACCOUNT_INFO objectForKey:@"eula"];
-//    }
-
-//    [self.lVController refreshUI];
    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-//    if(!globals.HAS_MIN || (globals.HAS_MIN && !globals.eventExistsOnServer)){
-//        [uController writeTagsToPlist];
-//    }
-//    if (globals.HAS_MIN) {
-//        NSMutableArray *unfinishedTagArray;
-//        
-//        //tags in current event haven't processed yet (in globals.BOOKMARK_QUEUE)
-//        if (globals.BOOKMARK_QUEUE.count > 0) {
-//            for(NSDictionary *dict in globals.BOOKMARK_QUEUE){
-//                if (!unfinishedTagArray) {
-//                    unfinishedTagArray = [NSMutableArray arrayWithObject:[dict objectForKey:@"tag"]];
-//                }else{
-//                    [unfinishedTagArray addObject:[dict objectForKey:@"tag"]];
-//                }
-//            }
-//        }
-//        
-//        //tag videos haven't been converted by AV Foundation (in globals.TAGS_DOWNLOADED_FROM_SERVER)
-//        if (globals.TAGS_DOWNLOADED_FROM_SERVER.count > 0) {
-//            for(NSDictionary *dict in globals.TAGS_DOWNLOADED_FROM_SERVER){
-//                if (!unfinishedTagArray) {
-//                    unfinishedTagArray = [NSMutableArray arrayWithObject:[dict objectForKey:@"tag"]];
-//                }else{
-//                    [unfinishedTagArray addObject:[dict objectForKey:@"tag"]];
-//                }
-//            }
-//        }
-//        
-//        //tags not sucessfully processed (lobals.BOOKMARK_TAGS_UNFINISHED) from the past
-//        if (globals.BOOKMARK_TAGS_UNFINISHED.count > 0) {
-//            for(NSDictionary *dict in globals.BOOKMARK_TAGS_UNFINISHED){
-//                if (!unfinishedTagArray) {
-//                    unfinishedTagArray = [NSMutableArray arrayWithObject:dict];
-//                }else{
-//                    [unfinishedTagArray addObject:dict];
-//                }
-//            }
-//        }
-//        
-//        if(![[NSFileManager defaultManager]fileExistsAtPath:globals.BOOKMARK_QUEUE_PATH]){
-//            [[NSFileManager defaultManager]createFileAtPath:globals.BOOKMARK_QUEUE_PATH contents:nil attributes:nil];
-//        }
-//        [unfinishedTagArray writeToFile:globals.BOOKMARK_QUEUE_PATH atomically:YES];
-//    }
-//   
-    //make sure live folder is cleared when close the app
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"]]) {
-//        [[NSFileManager defaultManager]removeItemAtPath:[globals.EVENTS_PATH stringByAppendingPathComponent:@"live"] error:nil];
-//    }
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+
 }
 
 - (UIWindow*)window {

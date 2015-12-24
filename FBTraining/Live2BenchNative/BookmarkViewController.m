@@ -14,7 +14,6 @@
 #import "CommentingRatingField.h"
 #import "RatingInput.h"
 #import "MyClipFilterViewController.h"
-#import "CustomAlertView.h"
 #import "VideoBarMyClipViewController.h"
 #import "FullVideoBarMyClipViewController.h"
 #import "TagPopOverContent.h"
@@ -268,6 +267,7 @@ int viewWillAppearCalled;
 
 
     Clip *clipToPlay = note.userInfo[@"clip"];
+    self.currentClip = clipToPlay;
     NSString *source = note.userInfo[@"source"];
     __block BookmarkViewController *weakSelf = self;
     
@@ -283,7 +283,8 @@ int viewWillAppearCalled;
     _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
     [_playerViewController zeroControlBarTimes];
     [_videoBar setSelectedTag:clipToPlay];
-    
+    [_videoBar.tagExtendEndButton setHidden:YES];
+    [_videoBar.tagExtendStartButton setHidden:YES];
     [_fullscreenViewController setSelectedTag:clipToPlay];
 
 }
@@ -354,7 +355,7 @@ int viewWillAppearCalled;
 
     [self.videoPlayer pause];
     
-    [newVideoControlBar viewDidAppear:NO];
+//    [newVideoControlBar viewDidAppear:NO];
     [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }
 
@@ -994,15 +995,25 @@ int viewWillAppearCalled;
         if (aClip ==_clipContext.clip){ /// if selected and deleted clear UI
             [_clipContext.mainPlayer pause];
             [_clipContext.mainPlayer replaceCurrentItemWithPlayerItem:nil];
+
             [clipContentDisplay displayClip:nil];
+
+            [_playerViewController zeroControlBarTimes];
+            [_videoBar clear];
         }
-        
+
         
         if ([self.allClips containsObject:aClip]) {
             [self.allClips removeObject:aClip];
         }
+    
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_CLIPS  object:aClip userInfo:nil];
+
         
     }
+    
+    
+    
     
    [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[self.allClips count]]];
 }

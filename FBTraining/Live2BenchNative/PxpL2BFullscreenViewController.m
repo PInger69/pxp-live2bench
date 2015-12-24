@@ -74,12 +74,20 @@
 
 -(void)usingTag:(Tag*)aTag
 {
+    if (!aTag) {
+        _startRangeModifierButton.hidden    = YES;
+        _endRangeModifierButton.hidden      = YES;
+        _currentTagLabel.hidden             = YES;
+        _currentTagLabel.text               = @"";
+        _selectedTag                        = nil;
+    } else {
+        _startRangeModifierButton.hidden    = NO;
+        _endRangeModifierButton.hidden      = NO;
+        _currentTagLabel.hidden             = NO;
+        _currentTagLabel.text               = aTag.name;
+        _selectedTag                        = aTag;
+    }
 
-    _startRangeModifierButton.hidden    = NO;
-    _endRangeModifierButton.hidden      = NO;
-    _currentTagLabel.hidden             = NO;
-    _currentTagLabel.text               = aTag.name;
-    _selectedTag                        = aTag;
 }
 
 

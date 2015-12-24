@@ -106,13 +106,30 @@ static void *  downLoaderContext = &downLoaderContext;
         _pause                  = NO;
         isDownloading           = NO;
         
-        _IOAlertView            = [[CustomAlertView alloc]init];
-        _IOAlertView.type = AlertNotification;
+//        _IOAlertView            = [[CustomAlertView alloc]init];
+//        _IOAlertView.type = AlertNotification;
+//        
+//        [_IOAlertView setTitle:@"myplayXplay"];
+//        [_IOAlertView setMessage:@"There isn't enough space on the device."];
+//        [_IOAlertView addButtonWithTitle:@"Ok"];
+//        [_IOAlertView setDelegate:self];
         
-        [_IOAlertView setTitle:@"myplayXplay"];
-        [_IOAlertView setMessage:@"There isn't enough space on the device."];
-        [_IOAlertView addButtonWithTitle:@"Ok"];
-        [_IOAlertView setDelegate:self];
+
+        
+        _alert = [UIAlertController alertControllerWithTitle:@"Insufficient space"
+                                                                        message:@"Please clear up some space and try again."
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        // build NO button
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"Ok"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:_alert animated:YES completion:nil];
+                                        }];
+        [_alert addAction:cancelButtons];
+        
+        
     }
     return self;
 }
@@ -164,23 +181,33 @@ static void *  downLoaderContext = &downLoaderContext;
     // check again for space, if none... pause and show an alert if it has one
     if (![Downloader deviceHasFreeSpace]) {
         self.pause = NO;
-        if (_IOAlertView) {
-            if (![_IOAlertView display]) {
-                [_IOAlertView display];
-                [CustomAlertView removeAlert:_IOAlertView];
-            }
+        
+        
+        if (![[CustomAlertControllerQueue getInstance].alertQueue containsObject:_alert]){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[CustomAlertControllerQueue getInstance] presentViewController:_alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+            });
         }
+        
+        
+        
+//        if (_IOAlertView) {
+//            if (![_IOAlertView display]) {
+//                [_IOAlertView display];
+//                [CustomAlertView removeAlert:_IOAlertView];
+//            }
+//        }
         isDownloading = NO;
         [self removeFromQueue: [_queue lastObject]];
         PXPLog(@"Device needs more space");
-        dispatch_async(dispatch_get_main_queue(), ^{
-        CustomAlertView *alert = [[[CustomAlertView alloc]initWithTitle:@"Insufficient space"
-                                                               message:@"Please clear up some space and try again."
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"OK"
-                                                     otherButtonTitles:nil, nil] showView];
-
-        });
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//        CustomAlertView *alert = [[[CustomAlertView alloc]initWithTitle:@"Insufficient space"
+//                                                               message:@"Please clear up some space and try again."
+//                                                              delegate:nil
+//                                                     cancelButtonTitle:@"OK"
+//                                                     otherButtonTitles:nil, nil] showView];
+//
+//        });
         return;
     }
     
@@ -200,11 +227,11 @@ static void *  downLoaderContext = &downLoaderContext;
     
     switch (cItem.status) {
         case DownloadItemStatusIOError:
-            if (_IOAlertView) {
-                if (![_IOAlertView display]) {
-                    [CustomAlertView removeAlert:_IOAlertView];
-                }
-            };
+//            if (_IOAlertView) {
+//                if (![_IOAlertView display]) {
+//                    [CustomAlertView removeAlert:_IOAlertView];
+//                }
+//            };
             self.pause = YES;
             break;
         case DownloadItemStatusComplete:
@@ -215,20 +242,29 @@ static void *  downLoaderContext = &downLoaderContext;
             break;
         case DownloadItemStatusError:
             {
-                [_IOAlertView setTitle:@"myplayXplay"];
                 NSString * msg;
                 if (cItem.name) {
                     msg = [NSString stringWithFormat:@"Can't download the event/clip %@", cItem.name];
                 } else {
                     msg = [NSString stringWithFormat:@"Can't download the event/clip"];
                 }
+
                 
-                [_IOAlertView setMessage:msg];
-                //[_IOAlertView addButtonWithTitle:@"Ok"];
-                [_IOAlertView setDelegate:self];
-                if (![_IOAlertView display]) {
-                    [CustomAlertView removeAlert:_IOAlertView];
-                }
+                
+                UIAlertController * clipAlert = [UIAlertController alertControllerWithTitle:@"myplayXplay"
+                                                             message:msg
+                                                      preferredStyle:UIAlertControllerStyleAlert];
+                // build NO button
+                UIAlertAction* cancelButtons = [UIAlertAction
+                                                actionWithTitle:@"Ok"
+                                                style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction * action)
+                                                {
+                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:_alert animated:YES completion:nil];
+                                                }];
+                [clipAlert addAction:cancelButtons];
+                [[CustomAlertControllerQueue getInstance]presentViewController:clipAlert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+                
                 [self removeFromQueue:cItem];
                 [self process];
             }
@@ -263,13 +299,6 @@ static void *  downLoaderContext = &downLoaderContext;
 -(BOOL)pause
 {
     return _pause;
-}
-
-
-- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    [alertView viewFinished];
-    [CustomAlertView removeAlert:_IOAlertView];
 }
 
 @end

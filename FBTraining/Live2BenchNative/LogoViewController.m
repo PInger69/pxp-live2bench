@@ -8,9 +8,11 @@
 
 #import "LogoViewController.h"
 #import "UserSettings.h"
-#import "CustomAlertView.h"
 #import "ScreenController.h"
 #import "EncoderManager.h"
+#import "CustomAlertControllerQueue.h"
+
+
 #define LABEL_X              22
 #define LABEL_Y             100
 #define LABEL_WIDTH         300
@@ -408,8 +410,7 @@ EncoderManager      * encoderManager;
     {
         [self hideSettings];
     }
-    
-    [CustomAlertView removeAll];
+    [[CustomAlertControllerQueue getInstance].alertQueue removeAllObjects];
 }
 
 - (void)didReceiveMemoryWarning

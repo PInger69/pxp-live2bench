@@ -12,7 +12,7 @@
 #import "Clip.h"
 #import "ListPopoverControllerWithImages.h"
 #import "AVAsset+Image.h"
-
+#import "CustomAlertControllerQueue.h"
 
 #define YES_BUTTON  0
 #define NO_BUTTON   1
@@ -402,18 +402,55 @@
 
 #pragma mark - Deletion Methods
 -(void)deleteAllButtonTarget{
-    CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]];
-    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert showView];
-}
+    
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+message:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okayButton = [UIAlertAction
+                                actionWithTitle:@"Yes"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action)
+                                {
+                                    NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
+                                    
+                                    if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
+                                        [self.delegate tableView:self indexesToBeDeleted:deleteOrderList];
+                                    }
+                                    
+                                    for (NSInteger i =[deleteOrderList count]-1; i>=0 ;i--) {
+                                        NSIndexPath *cellIndexPath = deleteOrderList[i];
+                                        [self deleteClipAtIndex:cellIndexPath];
+                                        if (cellIndexPath == self.selectedPath) { // this clears the display data on BookmarkViewController
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
+                                            self.selectedPath = nil;
+                                        }
+                                    }
+                                    [self.tableView beginUpdates];
+                                    [self.tableView deleteRowsAtIndexPaths:deleteOrderList withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
+                                    [self.tableView endUpdates];
+                                    [self.setOfDeletingCells removeAllObjects];
+                                    
+                                    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                     [self checkDeleteAllButton];
+                                }];
 
-- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == YES_BUTTON) {
+    UIAlertAction* cancelButtons = [UIAlertAction
+                                actionWithTitle:@"No"
+                                style:UIAlertActionStyleCancel
+                                handler:^(UIAlertAction * action)
+                                {
+                                    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                }];
+
+    
+    [alert addAction:okayButton];
+    [alert addAction:cancelButtons];
+    
+    
+    BOOL isAllowed = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    if (!isAllowed) {
         NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
@@ -428,20 +465,53 @@
                 self.selectedPath = nil;
             }
         }
-        
-        
         [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:[self.setOfDeletingCells allObjects] withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
+        [self.tableView deleteRowsAtIndexPaths:deleteOrderList withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
         [self.tableView endUpdates];
-        
         [self.setOfDeletingCells removeAllObjects];
-        [self.tableView reloadData];
     }
     
-    [CustomAlertView removeAlert:alertView];
-    [alertView viewFinished];
-    [self checkDeleteAllButton]; // hides the delete all button if shown
+//    CustomAlertView *alert = [[CustomAlertView alloc] init];
+//    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+//    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these",nil), [self.contextString lowercaseString]]];
+//    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+//    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+//    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
+//    [alert showView];
 }
+
+//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    if (buttonIndex == YES_BUTTON) {
+//        NSArray *deleteOrderList = [[self.setOfDeletingCells allObjects] sortedArrayUsingSelector:@selector(compare:)];
+//        
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
+//            [self.delegate tableView:self indexesToBeDeleted:deleteOrderList];
+//        }
+//        
+//        for (NSInteger i =[deleteOrderList count]-1; i>=0 ;i--) {
+//            NSIndexPath *cellIndexPath = deleteOrderList[i];
+//            [self deleteClipAtIndex:cellIndexPath];
+//            if (cellIndexPath == self.selectedPath) { // this clears the display data on BookmarkViewController
+//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
+//                self.selectedPath = nil;
+//            }
+//        }
+//        
+//        
+//        [self.tableView beginUpdates];
+//        [self.tableView deleteRowsAtIndexPaths:deleteOrderList withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
+////        [self.tableView deleteRowsAtIndexPaths:[self.setOfDeletingCells allObjects] withRowAnimation:UITableViewRowAnimationLeft];//UITableViewRowAnimationFade
+//        [self.tableView endUpdates];
+//        
+//        [self.setOfDeletingCells removeAllObjects];
+////        [self.tableView reloadData];
+//    }
+//    
+////    [CustomAlertView removeAlert:alertView];
+////    [alertView viewFinished];
+//    [self checkDeleteAllButton]; // hides the delete all button if shown
+//}
 
 
 -(void)removeDeleteSelection

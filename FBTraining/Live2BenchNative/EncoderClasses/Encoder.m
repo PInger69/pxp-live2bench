@@ -1322,12 +1322,6 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_CONNECTION_PROGRESS object:self userInfo:nil];
 }
 
--(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    [alertView viewFinished];
-}
-
-
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
 
@@ -1349,8 +1343,22 @@
         NSDictionary    * results =[Utility JSONDatatoDict:finishedData];
         if ([results[@"success"]intValue] == 0) {
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:self];
-            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Start Event" message:results[@"msg"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert showView];
+            
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Can't Start Event"
+                                                                            message:results[@"msg"]
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build NO button
+            UIAlertAction* cancelButtons = [UIAlertAction
+                                            actionWithTitle:OK_BUTTON_TXT
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                            }];
+            [alert addAction:cancelButtons];
+            
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+            
         }
         [self startResponce:    finishedData];
     } else if ([connectionType isEqualToString: PAUSE_EVENT]) {
@@ -2002,9 +2010,23 @@
 
 
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_EVENT_CHANGE object:self userInfo:@{@"eventType":@""}];
-//            [[[CustomAlertView alloc]initWithTitle:@"Encoder" message:@"Event has been stopped" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil]showView];
+
         } else if (self.status == ENCODER_STATUS_PAUSED) {
-            [[[CustomAlertView alloc]initWithTitle:@"Encoder" message:@"Event has been paused" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil]showView];
+            
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Encoder"
+                                                                            message:@"Event has been paused"
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build NO button
+            UIAlertAction* cancelButtons = [UIAlertAction
+                                            actionWithTitle:OK_BUTTON_TXT
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                            }];
+            [alert addAction:cancelButtons];
+            
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
         }
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_STAT object:self];

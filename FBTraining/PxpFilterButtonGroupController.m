@@ -88,8 +88,8 @@
             [_userSelected removeObject:b];
         }
     }
-    
-    _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
+    _combo           = [NSCompoundPredicate andPredicateWithSubpredicates:toCombo];
+//    _combo           = [NSCompoundPredicate orPredicateWithSubpredicates:toCombo];
     [_parentFilter refresh];
 
 }

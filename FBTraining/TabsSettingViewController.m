@@ -31,6 +31,13 @@
 #define TAB_DEBUG @"Debug"
 #define TAB_MEDICAL @"Medical"
 #define TAB_ANALYZE @"Analyze"
+
+
+
+#define TAB_VISIBLE(v) [[[PxpPreference dictionary] objectForKey:@"Tabs"][v][@"Visible"] boolValue]
+#define TAB_ACTIVE(v) [[[PxpPreference dictionary] objectForKey:@"Tabs"][v][@"Active"] boolValue]
+
+
 @interface TabsSettingViewController () <ToggleSettingViewControllerDelegate>
 
 @property (strong, nonatomic, nonnull) NSDictionary *tabClassForIdentifier;
@@ -40,79 +47,90 @@
 @implementation TabsSettingViewController
 
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel {
+   
+    
+    // this adds the toggles to the table
+    NSMutableArray      * toggles = [NSMutableArray new];
+    NSMutableDictionary * tabClassForIdentifierTemp = [NSMutableDictionary new];
+    
+    // This will add the toggles based on whe the PxpPreference plist is set to checking the Tabs > Active
+    
+    if (TAB_VISIBLE(@"Calendar"))   {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"Calendar", nil),   @"Identifier": TAB_CALENDAR}];
+        [tabClassForIdentifierTemp setObject:[CalendarViewController class] forKey:TAB_CALENDAR];
+    }
+    if (TAB_VISIBLE(@"Medical"))    {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"Medical", nil),    @"Identifier":TAB_MEDICAL}];
+        [tabClassForIdentifierTemp setObject:[MedicalViewController class] forKey:TAB_MEDICAL];
+    }
+    if (TAB_VISIBLE(@"DuelView"))   {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"Dual View", nil),  @"Identifier": TAB_DUALVIEW }];
+        [tabClassForIdentifierTemp setObject:[DualViewTabViewController class] forKey:TAB_DUALVIEW];
+    }
+    if (TAB_VISIBLE(@"Live2Bench")) {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"Live2Bench", nil), @"Identifier": TAB_LIVE2BENCH }];
+        [tabClassForIdentifierTemp setObject:[Live2BenchViewController class] forKey:TAB_LIVE2BENCH];
+    }
+    if (TAB_VISIBLE(@"ClipView"))   {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"Clip View", nil),  @"Identifier": TAB_CLIPVIEW }];
+        [tabClassForIdentifierTemp setObject:[ClipViewController class] forKey:TAB_CLIPVIEW];
+    }
+    if (TAB_VISIBLE(@"ListView"))   {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"List View", nil),  @"Identifier": TAB_LISTVIEW }];
+        [tabClassForIdentifierTemp setObject:[ListViewController class] forKey:TAB_LISTVIEW];
+    }
+    if (TAB_VISIBLE(@"MyClip"))     {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"My Clip", nil),    @"Identifier": TAB_MYCLIP }];
+        [tabClassForIdentifierTemp setObject:[BookmarkViewController class] forKey:TAB_MYCLIP];
+    }
+    if (TAB_VISIBLE(@"Analyze"))    {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"Analyze", nil),    @"Identifier": TAB_ANALYZE }];
+        [tabClassForIdentifierTemp setObject:[AnalyzeTabViewController class] forKey:TAB_ANALYZE];
+    }
+    if (TAB_VISIBLE(@"Debug"))      {
+        [toggles addObject:@{@"Name": NSLocalizedString(@"Debug", nil),      @"Identifier": TAB_DEBUG }];
+        [tabClassForIdentifierTemp setObject:[DebuggingTabViewController class] forKey:TAB_DEBUG];
+    }
+    
+//    if (TAB_VISIBLE(@""))   {
+//        [toggles addObject:@{@"Name": NSLocalizedString(@"Injury", nil),     @"Identifier": TAB_INJURY }];
+//         [tabClassForIdentifierTemp setObject:[InjuryViewController class] TAB_INJURY];
+//    }
     self = [super initWithAppDelegate:appDel
                                  name:NSLocalizedString(@"Main Tabs", nil)
                            identifier:@"Main Tabs"
-                              toggles:@[
-                                        @{
-                                            @"Name": NSLocalizedString(@"Calendar", nil),
-                                            @"Identifier": TAB_CALENDAR
-                                            },
-                                        @{
-                                            @"Name": NSLocalizedString(@"Medical", nil),
-                                            @"Identifier":TAB_MEDICAL},
-                                        /*@{
-                                            @"Name": NSLocalizedString(@"Injury", nil),
-                                            @"Identifier": TAB_INJURY
-                                            },*/
-                                        @{
-                                            @"Name": NSLocalizedString(@"Dual View", nil),
-                                            @"Identifier": TAB_DUALVIEW
-                                            },
-                                        @{
-                                            @"Name": NSLocalizedString(@"Live2Bench", nil),
-                                            @"Identifier": TAB_LIVE2BENCH
-                                            },
-                                        @{
-                                            @"Name": NSLocalizedString(@"Clip View", nil),
-                                            @"Identifier": TAB_CLIPVIEW
-                                            },
-                                        @{
-                                            @"Name": NSLocalizedString(@"List View", nil),
-                                            @"Identifier": TAB_LISTVIEW
-                                            },
-                                        @{
-                                            @"Name": NSLocalizedString(@"My Clip", nil),
-                                            @"Identifier": TAB_MYCLIP
-                                            },
-                                        @{
-                                            @"Name": NSLocalizedString(@"Analyze", nil),
-                                            @"Identifier": TAB_ANALYZE
-                                            },
-#if DEBUG_MODE == 1
-                                        @{
-                                            @"Name": NSLocalizedString(@"Debug", nil),
-                                            @"Identifier": TAB_DEBUG
-                                            }
-                                        
-#endif
-                                        ]];
-            
+                              toggles:[toggles copy]];
+    
     if (self) {
-        self.settingData[TAB_CALENDAR] = @YES;
-        self.settingData[TAB_INJURY] = @NO;
-        self.settingData[TAB_LIVE2BENCH] = @YES;
-        self.settingData[TAB_CLIPVIEW] = @YES;
-        self.settingData[TAB_LISTVIEW] = @YES;
-        self.settingData[TAB_MYCLIP] = @YES;
-        self.settingData[TAB_DEBUG] = @NO;
-        self.settingData[TAB_DUALVIEW] = @NO;
-        self.settingData[TAB_MEDICAL] = @NO;
-        self.settingData[TAB_ANALYZE] = @NO;
+        // These only take effect on app installs, these are the default visibility if the user has not selected anything
+        // once the user makes a tab selection these are reundant
+        self.settingData[TAB_CALENDAR]      = @(TAB_ACTIVE(@"Calendar"));
+        self.settingData[TAB_LIVE2BENCH]    = @(TAB_ACTIVE(@"Live2Bench"));
+        self.settingData[TAB_CLIPVIEW]      = @(TAB_ACTIVE(@"ClipView"));;
+        self.settingData[TAB_LISTVIEW]      = @(TAB_ACTIVE(@"ListView"));
+        self.settingData[TAB_MYCLIP]        = @(TAB_ACTIVE(@"MyClip"));
+        self.settingData[TAB_DEBUG]         = @(TAB_ACTIVE(@"Debug"));
+        self.settingData[TAB_DUALVIEW]      = @(TAB_ACTIVE(@"DuelView"));
+        self.settingData[TAB_MEDICAL]       = @(TAB_ACTIVE(@"Medical"));
+        self.settingData[TAB_ANALYZE]       = @(TAB_ACTIVE(@"Analyze"));
+//        self.settingData[TAB_INJURY]        = @(TAB_ACTIVE(@"Calendar"));
+
         
+//        self.tabClassForIdentifier = @{
+//                                       TAB_CALENDAR: [CalendarViewController class],
+//                                       TAB_MEDICAL: [MedicalViewController class],
+//                                       TAB_INJURY: [InjuryViewController class],
+//                                       TAB_LIVE2BENCH: [Live2BenchViewController class],
+//                                       TAB_CLIPVIEW: [ClipViewController class],
+//                                       TAB_LISTVIEW: [ListViewController class],
+//                                       TAB_MYCLIP: [BookmarkViewController class],
+//                                       TAB_DEBUG: [DebuggingTabViewController class],
+//                                       TAB_DUALVIEW: [DualViewTabViewController class],
+//                                       TAB_ANALYZE: [AnalyzeTabViewController class],
+//                                       };
         
-        self.tabClassForIdentifier = @{
-                                       TAB_CALENDAR: [CalendarViewController class],
-                                       TAB_MEDICAL: [MedicalViewController class],
-                                       TAB_INJURY: [InjuryViewController class],
-                                       TAB_LIVE2BENCH: [Live2BenchViewController class],
-                                       TAB_CLIPVIEW: [ClipViewController class],
-                                       TAB_LISTVIEW: [ListViewController class],
-                                       TAB_MYCLIP: [BookmarkViewController class],
-                                       TAB_DEBUG: [DebuggingTabViewController class],
-                                       TAB_DUALVIEW: [DualViewTabViewController class],
-                                       TAB_ANALYZE: [AnalyzeTabViewController class],
-                                       };
+        self.tabClassForIdentifier = [tabClassForIdentifierTemp copy];
+        
         self.delegate = self;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsRequest:) name:NOTIF_REQUEST_SETTINGS object:nil];

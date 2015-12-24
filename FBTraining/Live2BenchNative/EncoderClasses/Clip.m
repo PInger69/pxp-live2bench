@@ -26,6 +26,7 @@
 
 //@synthesize rating = _rating;
 @synthesize comment = _comment;
+@synthesize path    = _path;
 -(instancetype)initWithPlistPath:(NSString*)aPath data:(NSDictionary*)data
 {
     self = [super initWithData:data event:nil];
@@ -152,6 +153,7 @@
     NSMutableDictionary *rawData = [[NSMutableDictionary alloc]initWithDictionary:self.rawData];
     [rawData addEntriesFromDictionary:self.localRawData];
     [rawData writeToFile: self.path atomically:YES];
+    NSLog(@"Write file to: %@",self.path);
 }
 
 
@@ -213,10 +215,29 @@
 
 -(void)destroy
 {
-    BOOL plistDestroyed = [[NSFileManager defaultManager] removeItemAtPath:self.path error:nil];
     
+    NSError * plistError;
+    
+    BOOL isAFile = [[NSFileManager defaultManager] fileExistsAtPath:self.path];
+    
+    if(isAFile) {
+    
+        NSLog(@"Found File");
+    
+    } else {
+        NSLog(@"NO FIle");
+    }
+    
+    
+    
+    BOOL plistDestroyed = [[NSFileManager defaultManager] removeItemAtPath:self.path error:&plistError];
+    NSLog(@"Path : %@",self.path);
     if (plistDestroyed) {
         NSLog(@"The plist has been destroyed");
+    } else {
+        if (plistError){
+            NSLog(@"Error in destroying plist %@",plistError);
+        }
     }
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -276,6 +297,17 @@
 
 - (nonnull NSDictionary *)videosBySrcKey {
     return [self sourcesForVideoPaths:self.videoFiles];
+}
+
+
+-(NSString*)path
+{
+    return _path;
+}
+
+-(void)setPath:(NSString *)path
+{
+    _path = path;
 }
 
 

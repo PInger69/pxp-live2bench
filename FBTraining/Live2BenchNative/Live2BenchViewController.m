@@ -17,7 +17,6 @@
 // UI
 #import "Live2BenchTagUIViewController.h"
 #import "LiveButton.h"
-#import "CustomAlertView.h"
 #import "ListPopoverController.h"
 #import "ContentViewController.h"
 
@@ -48,6 +47,7 @@
 
 #import "EncoderOperation.h"
 #import "AnalyzeTabViewController.h"
+#import "CustomAlertControllerQueue.h"
 
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
@@ -186,7 +186,7 @@ static void * eventContext      = &eventContext;
     UIButton * analiyzeButton = [[UIButton alloc]initWithFrame:CGRectMake(10,500, 50, 50)];
     analiyzeButton.layer.borderWidth = 1;
     [analiyzeButton addTarget:self action:@selector(onAnalyze:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:analiyzeButton];
+    if(DEBUG_MODE)[self.view addSubview:analiyzeButton];
 }
 
 
@@ -238,7 +238,7 @@ static void * eventContext      = &eventContext;
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [CustomAlertView removeAll];
+    [[CustomAlertControllerQueue getInstance].alertQueue removeAllObjects];
     self.playerViewController.telestrationViewController.telestration = nil;
 }
 
@@ -385,8 +385,7 @@ static void * eventContext      = &eventContext;
         }];
         [_cameraPick presentPopoverCenteredIn:[UIApplication sharedApplication].keyWindow.rootViewController.view
                                    animated:YES];
-        /*CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Multiple Cameras not Supported" message:@"iPad does not support multiple cameras. You need iPadAir or higher." delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-        [alert showView];*/
+
     }else{
         [self addFeed];
     }
@@ -517,6 +516,8 @@ static void * eventContext      = &eventContext;
 
 -(void)onEventChange
 {
+    [_fullscreenViewController usingTag:nil];
+    
     if (_appDel.encoderManager.liveEvent != nil){
         _gotoLiveButton.enabled = YES;
         _fullscreenViewController.liveButton.enabled = YES;

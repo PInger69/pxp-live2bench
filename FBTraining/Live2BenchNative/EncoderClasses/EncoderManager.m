@@ -255,23 +255,25 @@ static EncoderManager * instance;
     }
 }
 
-- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    [alertView viewFinished];
-}
 
 // once the encoder is registered completed you can do what you want with it
 -(void)onRegisterEncoderCompleted:(Encoder*)registerEncoder
 {
     if (!registerEncoder.authenticated){
-        CustomAlertView *alert = [[CustomAlertView alloc] init];
-        alert.type = AlertImportant;
-        NSString * msg = [NSString stringWithFormat:@"You don’t have the credentials to use encoder %@",registerEncoder.name];
-        [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-        [alert setMessage:NSLocalizedString(msg,nil)];
-        [alert addButtonWithTitle:NSLocalizedString(@"Ok",nil)];
-        [alert setDelegate:self];
-        [alert showView];
-    
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                                                                        message:[NSString stringWithFormat:@"You don’t have the credentials to use encoder %@",registerEncoder.name]
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        // build NO button
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"Ok"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:cancelButtons];
+        
+        [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
     }
     
     if (registerEncoder.authenticated  && ![_authenticatedEncoders containsObject:registerEncoder]) {
@@ -371,10 +373,20 @@ static EncoderManager * instance;
     [dictOfEncoders removeObjectForKey:aEncoder.name];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
     if (_authenticatedEncoders.count == 0) {
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"No Encoder"
+                                                                        message:@"No Encoder is connected"
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        // build NO button
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:OK_BUTTON_TXT
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:cancelButtons];
+        [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Encoder"}];
-        CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"No Encoder" message:@"No Encoder is connected" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert display];
-
     }
 
 }

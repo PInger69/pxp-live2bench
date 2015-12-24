@@ -12,7 +12,6 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import "Common.h"
-    #import "CustomAlertView.h"
     #import "PxpLog.h"
     #import "ProfessionMap.h"
 #endif

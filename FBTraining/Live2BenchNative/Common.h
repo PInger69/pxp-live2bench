@@ -6,8 +6,17 @@
 //  Copyright (c) 2014 DEV. All rights reserved.
 //
 #import "Utility.h"
+#import "PxpPreference.h"
 #ifndef Live2BenchNative_Common_h
 #define Live2BenchNative_Common_h
+
+// PxpPreferecne Short cuts
+#define DEBUG_MODE       [[[PxpPreference dictionary] objectForKey:@"DebugMode"] boolValue]
+
+#define ANALYZE_DEFAULT  [[[PxpPreference dictionary] objectForKey:@"Tabs"][@"Analyze"] boolValue]
+
+
+#define ROOT_VIEW_CONTROLLER [[[[UIApplication sharedApplication]delegate] window] rootViewController]
 
 // Version check tools
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
@@ -21,6 +30,7 @@
 #define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 // const
 #define LIVE_EVENT                          @"live"
+#define OK_BUTTON_TXT                       @"Ok"
 
 //BEN AND SAGAR STUFF BEGINNING
 #define NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW  @"setPlayerFeedInListView"
@@ -159,7 +169,7 @@ static NSString *encStatePrepareToStream = @"preparing to stream";
 #define SECONDARY_APP_COLOR [UIColor colorWithWhite: 0.85 alpha:1.0]
 #define TERTIARY_APP_COLOR  [UIColor magentaColor]
 
-#define DEBUG_MODE                          1
+static NSString *alertMessageTitle = @"myplayXplay";
 
 // Beta to non-Beta
 

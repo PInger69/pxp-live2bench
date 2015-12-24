@@ -201,10 +201,13 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)setFeed:(Feed *)feed
 {
-    
     // Clear all Queued operations
     [self.operationQueue cancelAllOperations];
-
+    if (_avPlayer){
+        [self.avPlayer pause];
+        [self.avPlayer.currentItem cancelPendingSeeks];
+        [self.avPlayer.currentItem.asset cancelLoading];
+    }
     // if there was a feed before remove the observer for it
     if (_feed) {
         [_feed removeObserver:self forKeyPath:NSStringFromSelector(@selector(quality)) context:&feedContext];
@@ -224,12 +227,10 @@ static NSInteger playerCounter = 0; // count the number of players created and g
             [self removePlayerTimeObserver];
             [_avPlayer.currentItem removeObserver:self forKeyPath:NSStringFromSelector(@selector(status)) context:&itemContext];
             [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
-             _avPlayer               = nil;
+            _avPlayer               = nil;
         }
         return;
     }
-    
-    
     
     
     if (_avPlayer) {
@@ -243,31 +244,37 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     
     _avPlayer               = nil;
     _avPlayer               = [AVPlayer playerWithPlayerItem:[[AVPlayerItem alloc] initWithURL:[_feed path]]];
-
     
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
+    //
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayToEndTimeNotification:) name:AVPlayerItemDidPlayToEndTimeNotification object:_avPlayer.currentItem];
     [_avPlayer.currentItem addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:0 context:&itemContext];
     
-    if (_avPlayerLayer)[_avPlayerLayer removeFromSuperlayer];
+    
+    if (_avPlayerLayer){
+        [_avPlayerLayer removeFromSuperlayer];
+        _avPlayerLayer = nil;
+    }
+    
     _avPlayerLayer          = [AVPlayerLayer playerLayerWithPlayer:_avPlayer];
     _avPlayerLayer.frame    = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     [self.layer addSublayer:_avPlayerLayer];
-
+    //
     self.isReadyOperation = [[RicoReadyPlayerItemOperation alloc]initWithPlayerItem:_avPlayer.currentItem];
-
-    __block RicoPlayer * weakSelf = self;
+    
+    __weak RicoPlayer * weakSelf = self;
     [self.isReadyOperation setCompletionBlock:^{
         NSLog(@"Player Item is now ready");
         [weakSelf addPeriodicTimeObserver];
     }];
     [self.operationQueue addOperations:@[self.isReadyOperation] waitUntilFinished:NO];
-//    [self.operationQueue addOperation:self.isReadyOperation ];
+    //    [self.operationQueue addOperation:self.isReadyOperation ];
     
-    	dispatch_async(dispatch_get_main_queue(),^ {
-            [_debugOutput setFrame:CGRectMake(0, 60, self.frame.size.width, 80)];
-            [weakSelf addSubview:_debugOutput];
-            [weakSelf updateDebugOutput];
-        });
+    dispatch_async(dispatch_get_main_queue(),^ {
+        [_debugOutput setFrame:CGRectMake(0, 60, self.frame.size.width, 80)];
+        [weakSelf addSubview:_debugOutput];
+        [weakSelf updateDebugOutput];
+    });
+    
     
     
 }
@@ -446,18 +453,18 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 //    self.avPlayerLayer      = nil;
 //    
 //    
-////    if (self.periodicObserver)
-////    {
-//        [self.avPlayer removeTimeObserver:self.periodicObserver];
-//        self.periodicObserver = nil;
-////    }
+    if (self.periodicObserver)
+    {
+        [self.avPlayer removeTimeObserver:self.periodicObserver];
+        self.periodicObserver = nil;
+    }
 }
 
 
 -(void)dealloc
 {
 
-    NSLog(@"dealloc");
+    NSLog(@"Rico dealloc");
 }
 
 

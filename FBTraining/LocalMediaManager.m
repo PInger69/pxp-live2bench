@@ -315,6 +315,7 @@ static LocalMediaManager * instance;
 */
 -(void)scanForBookmarks
 {
+    
     [_bookmarkPlistNames removeAllObjects];
         
     //    NSString * bookmarkPath     = [NSString stringWithFormat:@"%@/bookmark",_localPath];
@@ -339,7 +340,7 @@ static LocalMediaManager * instance;
             [_bookmarkPlistNames addObject:filename]; // add names to clean list
             NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithContentsOfFile:[bookmarkPath stringByAppendingPathComponent:filename]];
             Clip * clipFromPlist = [[Clip alloc]initWithDict:dict];
-            clipFromPlist.path = filename;
+//            clipFromPlist.path = filename;
             [_clips setObject:clipFromPlist forKey:clipFromPlist.globalID];
         }
     }];
@@ -520,7 +521,7 @@ static LocalMediaManager * instance;
         aClip = _clips[globalID];
     } else { // there is no plist for this clip... make a new plist
         
-        [self scanForBookmarks];
+//        [self scanForBookmarks];
         NSString *bookmarkPlistPath     = [NSString stringWithFormat:@"%@/bookmark/%@.plist",_localPath, globalID];
         NSMutableDictionary *clipData   = [NSMutableDictionary dictionaryWithDictionary:tagData];
         clipData[@"plistPath"]          = bookmarkPlistPath;

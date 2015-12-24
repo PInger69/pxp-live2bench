@@ -17,7 +17,7 @@
 #import "RatingOutput.h"
 
 #import "AVAsset+Image.h"
-
+#import "CustomAlertControllerQueue.h"
 
 #define CELLS_ON_SCREEN         12
 #define TOTAL_WIDTH             1024
@@ -197,12 +197,19 @@ static void * encoderTagContext = &encoderTagContext;
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
     
+    
+    Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+    if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate]){
+        [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
+    }
+    
+    
     if (_currentEvent) {
     
     
     
     
-        Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+        
 
     
     
@@ -211,7 +218,7 @@ static void * encoderTagContext = &encoderTagContext;
                                                                                        [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
                                                                                        ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
                                                                                        ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
-    //                                                                                   ,profession.filterPredicate
+                                                                                       ,profession.filterPredicate
                                                                                        ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
                                                                                        ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
                                                                                        ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
@@ -219,7 +226,11 @@ static void * encoderTagContext = &encoderTagContext;
         
         [_pxpFilter addPredicates:@[allowThese]];
  
-            
+        
+
+        
+        
+
     }
     [_collectionView reloadData];
 
@@ -313,14 +324,79 @@ static void * encoderTagContext = &encoderTagContext;
 }
 
 -(void)deleteAllButtonTarget{
-    CustomAlertView *alert = [[CustomAlertView alloc] init];
-    alert.type = AlertImportant;
-    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete all these clips?",nil)];
-    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert showView];
+//    CustomAlertView *alert = [[CustomAlertView alloc] init];
+//    alert.type = AlertImportant;
+//    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+//    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete all these clips?",nil)];
+//    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+//    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+//    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
+//    [alert showView];
+    
+    
+    
+    // Build Alert
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                                                                    message:@"Are you sure you want to delete all these tags?"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction * deleteButtons = [UIAlertAction actionWithTitle:@"Yes"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * action)
+                                     {
+                                         ////
+                                         NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
+                                         NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+                                         BOOL needCanNotDeleteTagAlertView = false;
+                                         
+                                         for (NSIndexPath *cellIndexPath in [self.setOfSelectedCells copy]) {
+                                             Tag *tag = self.tagsToDisplay[cellIndexPath.row];
+                                             if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+                                                 [arrayOfTagsToRemove addObject:tag];
+                                                 [indexPathsArray addObject:cellIndexPath];
+                                                 [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+                                             }else{
+                                                 needCanNotDeleteTagAlertView = true;
+                                             }
+                                         }
+                                         
+                                         for (Tag *tag in arrayOfTagsToRemove) {
+                                             [self.tagsToDisplay removeObject:tag];
+                                             [self.allTagsArray removeObject: tag];
+                                         }
+                                         [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
+                                         [self.setOfSelectedCells removeAllObjects];
+                                  
+                                         [self deselectAllCell];
+
+                                         ////
+                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                     }];
+    
+    
+    
+    UIAlertAction * cancelButtons = [UIAlertAction actionWithTitle:@"No"
+                                                             style:UIAlertActionStyleCancel
+                                                           handler:^(UIAlertAction * action)
+                                     {
+                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                     }];
+    
+    [alert addAction:deleteButtons];
+    [alert addAction:cancelButtons];
+    
+    BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    if (!isIndecisive) {
+        
+        
+        
+        [self checkDeleteAllButton];
+    }
+
+    
+    
 }
 
 
@@ -397,18 +473,18 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)deleteCells
 {
-    if (!arrayToBeDeleted || !arrayToBeDeleted.count) {
-        return;
-    }
-    
-    CustomAlertView *alert = [[CustomAlertView alloc] init];
-    alert.tag = kDeleteAlertTag;
-    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete these tags?",nil)];
-    [alert setDelegate:self];
-    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert showView];
+//    if (!arrayToBeDeleted || !arrayToBeDeleted.count) {
+//        return;
+//    }
+//    
+//    CustomAlertView *alert = [[CustomAlertView alloc] init];
+//    alert.tag = kDeleteAlertTag;
+//    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
+//    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete these tags?",nil)];
+//    [alert setDelegate:self];
+//    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
+//    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
+//    [alert showView];
     
 }
 
@@ -455,10 +531,12 @@ static void * encoderTagContext = &encoderTagContext;
 //create le thumbnail cell
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"<***>");
+
 
     // Get the data from the array
     Tag *tagSelect = [self.tagsToDisplay objectAtIndex:[indexPath indexAtPosition:1]];
+    
+    
     thumbnailCell *cell = (thumbnailCell*)[cv dequeueReusableCellWithReuseIdentifier:@"thumbnailCell" forIndexPath:indexPath];
     cell.backgroundView = nil;
     cell.data           = tagSelect;
@@ -475,6 +553,9 @@ static void * encoderTagContext = &encoderTagContext;
     cell.checkmarkOverlay.hidden = YES;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
+    // This is used for customizing the cell based off the sport
+    Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+    profession.onClipViewCellStyle(cell,tagSelect);
     
     
     NSString *url = [[tagSelect.thumbnails allValues]firstObject];
@@ -524,7 +605,7 @@ static void * encoderTagContext = &encoderTagContext;
         cell.checkmarkOverlay.hidden = NO;
         cell.translucentEditingView.hidden = NO;
     }
-        NSLog(@"</***>");
+
     return cell;
 }
 
@@ -533,74 +614,135 @@ static void * encoderTagContext = &encoderTagContext;
     thumbnailCell *cell = (thumbnailCell *)sender.superview;
     NSIndexPath *pathToDelete = [_collectionView indexPathForCell: cell];
     self.editingIndexPath = pathToDelete;
-    CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle:NSLocalizedString(@"myplayXplay",nil)];
-    [alert setMessage:NSLocalizedString(@"Are you sure you want to delete this tag?",nil)];
-    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle:NSLocalizedString(@"Yes",nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"No",nil)];
-    [alert showView];
     
+    Tag *tag        = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
+    BOOL isYourTag  = [tag.user isEqualToString:[UserCenter getInstance].userHID];
+
+    if (!isYourTag) {
+        UIAlertController * cantAlert = [UIAlertController alertControllerWithTitle:@"myplayXplay"
+                                                                            message:@"You can't delete someone else's tag"
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"Ok"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:cantAlert animated:YES completion:nil];
+                                        }];
+
+        [cantAlert addAction:cancelButtons];
+        [[CustomAlertControllerQueue getInstance]presentViewController:cantAlert inController:self animated:YES style:AlertImportant completion:nil];
+        return;
+    }
+
+    
+    
+    
+    // Build Alert
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                                                                    message:@"Are you sure you want to delete this tag?"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction * deleteButtons = [UIAlertAction actionWithTitle:@"Yes"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * action)
+                                     {
+                                         Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
+                                         
+                                         [self.tagsToDisplay removeObject:tag];
+                                         if (self.editingIndexPath) {
+                                             [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+                                         }
+                                         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+                                         [self removeIndexPathFromDeletion];
+                                         [self deselectAllCell];
+                                         [self checkDeleteAllButton];
+                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                     }];
+    
+    
+    
+    UIAlertAction * cancelButtons = [UIAlertAction actionWithTitle:@"No"
+                                                             style:UIAlertActionStyleCancel
+                                                           handler:^(UIAlertAction * action)
+                                     {
+                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                     }];
+    
+    [alert addAction:deleteButtons];
+    [alert addAction:cancelButtons];
+    
+    
+    
+    
+    
+    BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    if (!isIndecisive) {
+        
+        
+        
+        [self checkDeleteAllButton];
+    }
 }
 
-- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
-        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-        BOOL needCanNotDeleteTagAlertView = false;
-         
-        for (NSIndexPath *cellIndexPath in [self.setOfSelectedCells copy]) {
-            Tag *tag = self.tagsToDisplay[cellIndexPath.row];
-            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
-                [arrayOfTagsToRemove addObject:tag];
-                [indexPathsArray addObject:cellIndexPath];
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-            }else{
-                needCanNotDeleteTagAlertView = true;
-            }
-        }
-         
-         for (Tag *tag in arrayOfTagsToRemove) {
-             [self.tagsToDisplay removeObject:tag];
-             [self.allTagsArray removeObject: tag];
-         }
-         [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
-         [self.setOfSelectedCells removeAllObjects];
-         
-        if (needCanNotDeleteTagAlertView) {
-             CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-             [alert showView];
-         }
-         [self deselectAllCell];
-
-
-    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
-
-        Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
-        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]) {
-//        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
-            [self.tagsToDisplay removeObject:tag];
-            if (self.editingIndexPath) {
-                [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
-            }
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
-            [self removeIndexPathFromDeletion];
-        }else{
-            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert showView];
-        }
-        [self deselectAllCell];
-
-        
-    }
-    
-    [alertView viewFinished];
-    [CustomAlertView removeAlert:alertView];
-    
-    [self checkDeleteAllButton];
-
-   }
+//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//     if ([alertView.message isEqualToString:@"Are you sure you want to delete all these clips?"] && buttonIndex == 0) {
+//        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
+//        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+//        BOOL needCanNotDeleteTagAlertView = false;
+//         
+//        for (NSIndexPath *cellIndexPath in [self.setOfSelectedCells copy]) {
+//            Tag *tag = self.tagsToDisplay[cellIndexPath.row];
+//            if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+//                [arrayOfTagsToRemove addObject:tag];
+//                [indexPathsArray addObject:cellIndexPath];
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+//            }else{
+//                needCanNotDeleteTagAlertView = true;
+//            }
+//        }
+//         
+//         for (Tag *tag in arrayOfTagsToRemove) {
+//             [self.tagsToDisplay removeObject:tag];
+//             [self.allTagsArray removeObject: tag];
+//         }
+//         [self.collectionView deleteItemsAtIndexPaths: indexPathsArray];
+//         [self.setOfSelectedCells removeAllObjects];
+//         
+//        if (needCanNotDeleteTagAlertView) {
+//             CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"All of your tags are deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//             [alert showView];
+//         }
+//         [self deselectAllCell];
+//
+//
+//    }else if([alertView.message isEqualToString:@"Are you sure you want to delete this tag?"] && buttonIndex == 0){
+//
+//        Tag *tag = [self.tagsToDisplay objectAtIndex:self.editingIndexPath.row];
+//        if ([tag.user isEqualToString:[UserCenter getInstance].userHID]) {
+////        if ([tag.deviceID isEqualToString:[[[UIDevice currentDevice] identifierForVendor]UUIDString]]) {
+//            [self.tagsToDisplay removeObject:tag];
+//            if (self.editingIndexPath) {
+//                [self.collectionView deleteItemsAtIndexPaths:@[self.editingIndexPath]];
+//            }
+//            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
+//            [self removeIndexPathFromDeletion];
+//        }else{
+//            CustomAlertView *alert = [[CustomAlertView alloc]initWithTitle:@"Can't Delete Tag" message:@"You can't delete someone else's tag" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//            [alert showView];
+//        }
+//        [self deselectAllCell];
+//
+//        
+//    }
+//
+//    [alertView viewFinished];
+//    [CustomAlertView removeAlert:alertView];
+//    [self checkDeleteAllButton];
+//}
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];

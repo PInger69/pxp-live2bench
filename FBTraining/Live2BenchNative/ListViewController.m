@@ -74,9 +74,9 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
         
-        _playerViewController = [[PxpPlayerViewController alloc] init];
-        _videoBar = [[PxpVideoBar alloc] init];
-        _fullscreenViewController = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        _playerViewController       = [[PxpPlayerViewController alloc] init];
+        _videoBar                   = [[PxpVideoBar alloc] init];
+        _fullscreenViewController   = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
 
         
         //show the buttons and setup the selector
@@ -376,20 +376,26 @@
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
     
-    Profession * profession = [ProfessionMap data][SPORT_HOCKEY];
+//    Profession * profession = [ProfessionMap data][SPORT_HOCKEY];
     
-    NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
-                                                                                  [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                                                                  ,profession.filterPredicate
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-                                                                                  ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                                                                  ]];
-    
-    [_pxpFilter addPredicates:@[allowThese]];
-
+    Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+    if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate]){
+        [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
+    }
+    if (_currentEvent) {
+        NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
+                                                                                      [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
+                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                                                                      ,profession.filterPredicate
+                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballQuarterStop]
+                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                      ]];
+        
+        [_pxpFilter addPredicates:@[allowThese]];
+    }
+    [_tableViewController reloadData];
     NSLog(@"viewDidAppear done");
 }
 

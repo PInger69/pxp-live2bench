@@ -363,7 +363,10 @@
 -(void)clear
 {
     self.player.range = kCMTimeRangeInvalid;
-    [self update:self.player.currentTime];
+//    [self update:self.player.currentTime];
+    self.leftLabel.text = [self stringForSeconds:0.0];
+    self.rightLabel.text =[self stringForSeconds:0.0];
+    
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PLAYER_BAR_CANCEL object:self.player];
 }
 

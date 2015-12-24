@@ -7,6 +7,7 @@
 //
 
 #import "InfoSettingViewController.h"
+#import "CustomAlertControllerQueue.h"
 
 @interface InfoSettingViewController () <SwipeableCellDelegate, UITableViewDataSource, UIAlertViewDelegate>
 
@@ -127,25 +128,64 @@
 
 - (void)logout {
     BOOL hasInternet = [Utility hasInternet];
+    UIAlertController * alert;
+    
     if (!hasInternet) {
-        CustomAlertView *errorView;
-        errorView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"Please connect to the internet to log out."
-                     delegate: self
-                     cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [errorView showView];
+        
+        
+        alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
+                                                                        message:@"Please connect to the internet to log out."
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"OK"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:cancelButtons];
+        
+        
     }else{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
-        CustomAlertView *alertView;
-        alertView = [[CustomAlertView alloc]
-                     initWithTitle: @"myplayXplay"
-                     message: @"If you log out, you need internet to log in. Are you sure you want to log out?"
-                     delegate: self
-                     cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
-        alertView.accessibilityValue = @"appLogOut";
-        [alertView showView];
+        alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
+                                                    message:@"If you log out, you need internet to log in. Are you sure you want to log out?"
+                                             preferredStyle:UIAlertControllerStyleAlert];
+        
+        
+        // build YES button
+        UIAlertAction* yesButtons = [UIAlertAction
+                                        actionWithTitle:@"Ok"
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            for (UIView * btn in [self.colorCell.functionalButton subviews]) {
+                                                if ([btn isKindOfClass:[UIButton class]]) [btn removeFromSuperview];
+                                            }
+                                            
+                                            [self.colorCell.functionalButton setBackgroundColor:[UIColor whiteColor]];
+                                            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
+
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:yesButtons];
+        
+        
+        // build NO button
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"No"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:cancelButtons];
+        
     }
+    
+    
+     [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
 }
 
 - (void)viewDidLoad {
@@ -205,22 +245,6 @@
 }
 
 #pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Yes"]) {
-        //logout the user
-        
-        for (UIView * btn in [self.colorCell.functionalButton subviews]) {
-            if ([btn isKindOfClass:[UIButton class]]) [btn removeFromSuperview];
-        }
-        
-        [self.colorCell.functionalButton setBackgroundColor:[UIColor whiteColor]];
-        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
-    }
-    [alertView viewFinished];
-    [CustomAlertView removeAlert:alertView];
-}
-
 /*
 #pragma mark - Navigation
 

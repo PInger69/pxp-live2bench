@@ -115,7 +115,8 @@
     [self.thumbPeriod setTextColor:[UIColor darkGrayColor]];
     [self.thumbPeriod setBackgroundColor:[UIColor clearColor]];
     [self.thumbPeriod setFont:[UIFont systemFontOfSize:17.0f]];
-//    [self addSubview:self.thumbPeriod];
+    [self.thumbPeriod setHidden:YES];
+    [self addSubview:self.thumbPeriod];
     
     self.thumbDur = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.thumbName.frame)-(7*PADDING), self.thumbName.frame.origin.y, self.imageView.bounds.size.width/3 + 2*PADDING, 18.0f)];
     [self.thumbDur setText:@"s"];

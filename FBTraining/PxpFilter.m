@@ -196,15 +196,18 @@
 -(NSArray*)filteredTags
 {
     // anything that matches ghost pred then remove
-    return [_filteredTagsPool copy];
+    NSArray * tags = [_filteredTagsPool filteredArrayUsingPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:_ghostPredicates]];
+    
+    return tags;
 }
 
 
 -(NSArray*)unfilteredTags
 {
     // anything that matches ghost pred then remove
+    NSArray * tags = [[_unfilteredTagsSet allObjects] filteredArrayUsingPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:_ghostPredicates]];
     
-    return [_unfilteredTagsSet allObjects];
+    return tags;
 }
 
 

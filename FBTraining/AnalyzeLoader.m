@@ -86,6 +86,10 @@
     
 
     [self.operationQueue addOperation:syncer];
+    if(!self.currentTag){
+    
+    }
+    
     
      [[LocalMediaManager getInstance]saveClip:nil withData:self.currentTag.rawData];
 }

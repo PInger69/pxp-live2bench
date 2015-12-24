@@ -176,8 +176,32 @@ static AlertType    allowedTypes;
 
 // Actually show the alert on screen (Needed to avoid complecations in other places)
 -(void)actuallyShowView{
-    [super show];
+  
+    NSLog(@"Is Depricated %s",__FUNCTION__);
+
+    if (![_currentViews containsObject:self]) {
+        [_currentViews addObject:self];
+        if (_currentViews.count == 1) {
+//            [self actuallyShowView];
+  [super show]; 
+        }
+    }
 }
+
+
+-(void)show
+{
+    
+    if (![_currentViews containsObject:self]) {
+        [_currentViews addObject:self];
+        if (_currentViews.count == 1) {
+            [super show];
+            
+        }
+    }
+
+}
+
 
 // The current alert is now done, so remove it from the alert view arrays, and if there is any more alert views in the array, display it
 -(void)viewFinished{
@@ -188,5 +212,18 @@ static AlertType    allowedTypes;
     }
 }
 
+-(void)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated
+{
+    
+    
+    [super dismissWithClickedButtonIndex:buttonIndex animated:animated];
+    
+//    if (_currentViews indexOfObject:<#(nonnull id)#>)[_currentViews removeObjectAtIndex:0] ;
+    if (_currentViews.count != 0) {
+        CustomAlertView *toBeDisplayer = [_currentViews objectAtIndex:0];
+        [toBeDisplayer actuallyShowView];
+    }
+    
+}
 
 @end

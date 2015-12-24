@@ -97,69 +97,149 @@ NS_OPTIONS(NSInteger, style){
         //  ViewContoller?: a custom view controller to load when the setting is clicked
         //  Identifier?: identifier of the setting data to loaded, or passed into the view controller
         
-        self.settingDefinitions = @[
-                                    @{
-                                        @"Name": NSLocalizedString(@"Encoder Controls", nil),
-                                        @"ViewController": encoderControlsViewController
-                                        },
-                                    @{
-                                        @"Name": NSLocalizedString(@"Welcome", nil),
-                                        @"ViewController": welcomeViewController
-                                        },
-                                    @{
-                                        @"Name": NSLocalizedString(@"Preferences", nil),
-                                        @"ViewController": preferencesViewController
-                                        },
-                                    @{
-                                        @"Name": NSLocalizedString(@"Bit Rate", nil),
-                                        @"ViewController": bitRateViewController
-                                        },
-                                    @{
-                                        @"Name": NSLocalizedString(@"Screen Mirroring", nil),
-                                        @"Identifier": @"ScreenMirroring"
-                                        },
-                                    @{
-                                        @"Name": toastObserverSettingViewController.name,
-                                        @"ViewController": toastObserverSettingViewController,
-                                        @"Identifier": toastObserverSettingViewController.identifier
-                                        },
-                                    @{
-                                        @"Name": alertsSettingViewController.name,
-                                        @"ViewController": alertsSettingViewController,
-                                        @"Identifier": alertsSettingViewController.identifier
-                                        },
-                                    @{
-                                        @"Name": informationSettingViewController.name,
-                                        @"ViewController": informationSettingViewController,
-                                        @"Identifier": informationSettingViewController.identifier
-                                        },
-                                    @{
-                                        @"Name": tabsSettingViewController.name,
-                                        @"ViewController": tabsSettingViewController,
-                                        @"Identifier": tabsSettingViewController.identifier
-                                        },
-                                    @{
-                                        @"Name": tagSetSettingViewController.name,
-                                        @"ViewController": tagSetSettingViewController,
-                                        @"Identifier": tagSetSettingViewController.identifier
-                                        },
-                                    
-                                    @{
-                                        @"Name": NSLocalizedString(@"Log", nil),
-                                        @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
-                                        },
-                                    @{
-                                        @"Name": feedMappingViewController.name,
-                                        @"ViewController": feedMappingViewController,
-                                        @"Identifier": feedMappingViewController.identifier
-                                    },
+        
+        NSMutableArray * tempDefinitions = [NSMutableArray new];
+        
+        // just to cut down some typing
+        NSDictionary * setPref = [[PxpPreference dictionary] objectForKey:@"SettingsItems"];
 
-                                    @{
-                                        @"Name": creditsViewController.name,
-                                        @"ViewController": creditsViewController,
-                                        @"Identifier": creditsViewController.identifier
-                                        },
-                                    ];
+        
+    
+        if ([setPref[@"EncoderControls"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": NSLocalizedString(@"Encoder Controls", nil),
+                                           @"ViewController": encoderControlsViewController
+                                           }];
+        if ([setPref[@"Welcome"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": NSLocalizedString(@"Welcome", nil),
+                                           @"ViewController": welcomeViewController
+                                           }];
+        if ([setPref[@"Preference"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": NSLocalizedString(@"Preferences", nil),
+                                           @"ViewController": preferencesViewController
+                                           }];
+        if ([setPref[@"BitRate"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": NSLocalizedString(@"Bit Rate", nil),
+                                           @"ViewController": bitRateViewController
+                                           }];
+        if ([setPref[@"ScreenMirroring"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": NSLocalizedString(@"Screen Mirroring", nil),
+                                           @"Identifier": @"ScreenMirroring"
+                                           }];
+        if ([setPref[@"ToastObserver"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": toastObserverSettingViewController.name,
+                                           @"ViewController": toastObserverSettingViewController,
+                                           @"Identifier": toastObserverSettingViewController.identifier
+                                           }];
+        if ([setPref[@"Alerts"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": alertsSettingViewController.name,
+                                           @"ViewController": alertsSettingViewController,
+                                           @"Identifier": alertsSettingViewController.identifier
+                                           }];
+        if ([setPref[@"Information"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": informationSettingViewController.name,
+                                           @"ViewController": informationSettingViewController,
+                                           @"Identifier": informationSettingViewController.identifier
+                                           }];
+        if ([setPref[@"MainTabs"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": tabsSettingViewController.name,
+                                           @"ViewController": tabsSettingViewController,
+                                           @"Identifier": tabsSettingViewController.identifier
+                                           }];
+        if ([setPref[@"TagSets"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": tagSetSettingViewController.name,
+                                           @"ViewController": tagSetSettingViewController,
+                                           @"Identifier": tagSetSettingViewController.identifier
+                                           }];
+        
+        if ([setPref[@"Log"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": NSLocalizedString(@"Log", nil),
+                                           @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
+                                           }];
+        if ([setPref[@"FeedMap"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": feedMappingViewController.name,
+                                           @"ViewController": feedMappingViewController,
+                                           @"Identifier": feedMappingViewController.identifier
+                                           }];
+        
+        if ([setPref[@"Credits"] boolValue]) [tempDefinitions addObject:@{
+                                           @"Name": creditsViewController.name,
+                                           @"ViewController": creditsViewController,
+                                           @"Identifier": creditsViewController.identifier
+                                           }];
+        
+        
+        
+        
+        self.settingDefinitions = [tempDefinitions copy];
+        
+        
+//        = @[
+//                                    @{
+//                                        @"Name": NSLocalizedString(@"Encoder Controls", nil),
+//                                        @"ViewController": encoderControlsViewController
+//                                        },
+//                                    @{
+//                                        @"Name": NSLocalizedString(@"Welcome", nil),
+//                                        @"ViewController": welcomeViewController
+//                                        },
+//                                    @{
+//                                        @"Name": NSLocalizedString(@"Preferences", nil),
+//                                        @"ViewController": preferencesViewController
+//                                        },
+//                                    @{
+//                                        @"Name": NSLocalizedString(@"Bit Rate", nil),
+//                                        @"ViewController": bitRateViewController
+//                                        },
+//                                    @{
+//                                        @"Name": NSLocalizedString(@"Screen Mirroring", nil),
+//                                        @"Identifier": @"ScreenMirroring"
+//                                        },
+//                                    @{
+//                                        @"Name": toastObserverSettingViewController.name,
+//                                        @"ViewController": toastObserverSettingViewController,
+//                                        @"Identifier": toastObserverSettingViewController.identifier
+//                                        },
+//                                    @{
+//                                        @"Name": alertsSettingViewController.name,
+//                                        @"ViewController": alertsSettingViewController,
+//                                        @"Identifier": alertsSettingViewController.identifier
+//                                        },
+//                                    @{
+//                                        @"Name": informationSettingViewController.name,
+//                                        @"ViewController": informationSettingViewController,
+//                                        @"Identifier": informationSettingViewController.identifier
+//                                        },
+//                                    @{
+//                                        @"Name": tabsSettingViewController.name,
+//                                        @"ViewController": tabsSettingViewController,
+//                                        @"Identifier": tabsSettingViewController.identifier
+//                                        },
+//                                    @{
+//                                        @"Name": tagSetSettingViewController.name,
+//                                        @"ViewController": tagSetSettingViewController,
+//                                        @"Identifier": tagSetSettingViewController.identifier
+//                                        },
+//                                    
+//                                    @{
+//                                        @"Name": NSLocalizedString(@"Log", nil),
+//                                        @"ViewController": [[PxpLogViewController alloc] initWithAppDelegate:appDel]
+//                                        },
+////                                    @{
+////                                        @"Name": feedMappingViewController.name,
+////                                        @"ViewController": feedMappingViewController,
+////                                        @"Identifier": feedMappingViewController.identifier
+////                                    },
+//
+//                                    @{
+//                                        @"Name": creditsViewController.name,
+//                                        @"ViewController": creditsViewController,
+//                                        @"Identifier": creditsViewController.identifier
+//                                        },
+//                                    ];
+//        
+//        
+        
+        
         
         self.settingsDictionary = [NSMutableDictionary dictionary];
         

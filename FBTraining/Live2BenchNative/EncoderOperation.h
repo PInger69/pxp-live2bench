@@ -30,7 +30,7 @@
 @property (nonatomic,strong)    NSURLRequest   * request;
 @property (copy, nonatomic)     void(^onRequestComplete)(NSData*,EncoderOperation*);
 @property (nonatomic,strong)    NSDictionary    * userInfo; // this is for data or classes that need to be sent back to the operaion
-
+@property (nonatomic,strong)    NSError         * error;
 
 -(instancetype)initEncoder:(Encoder*)aEncoder data:(NSDictionary*)aData;
 

@@ -50,11 +50,11 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
     BUTTON_STATE                        = START_HIDDEN | STOP_HIDDEN | PAUSE_HIDDEN | RESUME_HIDDEN | SHUTDOWN_HIDDEN
 };
 
-@property (strong, nonatomic, nonnull) CustomAlertView *pauseAlertView;
-@property (strong, nonatomic, nonnull) CustomAlertView *stopAlertView;
-@property (strong, nonatomic, nonnull) CustomAlertView *shutdownAlertView;
-@property (strong, nonatomic, nonnull) CustomAlertView *startAlertView;
-@property (strong, nonatomic, nonnull) CustomAlertView *noTeamAlertView;
+//@property (strong, nonatomic, nonnull) CustomAlertView *pauseAlertView;
+//@property (strong, nonatomic, nonnull) CustomAlertView *stopAlertView;
+//@property (strong, nonatomic, nonnull) CustomAlertView *shutdownAlertView;
+//@property (strong, nonatomic, nonnull) CustomAlertView *startAlertView;
+//@property (strong, nonatomic, nonnull) CustomAlertView *noTeamAlertView;
 
 #define DEFAULT_LEAGUE @"League"
 #define DEFAULT_HOME_TEAM @"Home Team"
@@ -130,18 +130,17 @@ SVSignalStatus signalStatus;
         _homeTeam            = DEFAULT_HOME_TEAM;
         _awayTeam            = DEFAULT_AWAY_TEAM;
         
-        self.pauseAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Pause Event", nil) message:NSLocalizedString(@"Are you sure you want to pause the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
-        self.pauseAlertView.type = AlertIndecisive;
+//        self.pauseAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Pause Event", nil) message:NSLocalizedString(@"Are you sure you want to pause the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
+//        self.pauseAlertView.type = AlertIndecisive;
         
-        self.stopAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Stop Event", nil) message:NSLocalizedString(@"Are you sure you want to stop the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
-        self.stopAlertView.type = AlertIndecisive;
+//        self.stopAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Stop Event", nil) message:NSLocalizedString(@"Are you sure you want to stop the event?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
+//        self.stopAlertView.type = AlertIndecisive;
+//        
+//        self.shutdownAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Shutdown Encoder", nil) message:NSLocalizedString(@"Are you sure you want to shutdown the encoder?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
+//        self.shutdownAlertView.type = AlertIndecisive;
         
-        self.shutdownAlertView = [[CustomAlertView alloc] initWithTitle:NSLocalizedString(@"Shutdown Encoder", nil) message:NSLocalizedString(@"Are you sure you want to shutdown the encoder?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", nil) otherButtonTitles:NSLocalizedString(@"Cancel", nil), nil];
-        self.shutdownAlertView.type = AlertIndecisive;
-        
-        self.startAlertView = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"myplayXplay", nil) message:@"Please select Home team, Away team and League to start the encoder" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        self.startAlertView = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"myplayXplay", nil) message:@"Please select Home team, Away team and League to start the encoder" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 
-        self.noTeamAlertView = [[CustomAlertView alloc]initWithTitle:NSLocalizedString(@"No Team", nil) message:NSLocalizedString(@"There is no team for this league", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         
     }
     return self;
@@ -367,7 +366,23 @@ SVSignalStatus signalStatus;
     if(!(ahomeTeam && aawayTeam && aleague))//only allow user to start enc if they have selected all three, home team, away team, league
     {
         if (masterEncoder.status == ENCODER_STATUS_READY || masterEncoder.status == ENCODER_STATUS_STOP){
-            [self.startAlertView showView];
+
+            // Build the alert
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay", nil)
+                                                                            message:@"Please select Home team, Away team and League to start the encoder"
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+            // build ok button
+            UIAlertAction* okButtons = [UIAlertAction
+                                        actionWithTitle:@"Ok"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+            [alert addAction:okButtons];
+            
+            [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertImportant completion:nil];
+
             return;
         }
     }
@@ -391,18 +406,125 @@ SVSignalStatus signalStatus;
 
 
 - (void)shutdownEnc:(id)sender {
-    EncoderOperation * operation = [[EncoderOperationShutdown alloc]initEncoder:encoderManager.masterEncoder data:nil];
-    [encoderManager.masterEncoder runOperation:operation];
+    
+    // Build the alert
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Shutdown Encoder"
+                                                                    message:@"Are you sure you want to shutdown the encoder?"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    // build YES button
+    UIAlertAction* yesButtons = [UIAlertAction
+                                 actionWithTitle:@"Yes"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     EncoderOperation * operation = [[EncoderOperationShutdown alloc]initEncoder:encoderManager.masterEncoder data:nil];
+                                     [encoderManager.masterEncoder runOperation:operation];
+                                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"shutdown"  : [NSNumber numberWithBool:YES]}];
+                                     [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                 }];
+    [alert addAction:yesButtons];
+    
+    // build NO button
+    UIAlertAction* noButtons = [UIAlertAction
+                                actionWithTitle:@"No"
+                                style:UIAlertActionStyleCancel
+                                handler:^(UIAlertAction * action)
+                                {
+                                    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                }];
+    [alert addAction:noButtons];
+    
+    // this check to see if the alert was successful if indisisive
+    BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    // if your decisive
+    if (!isIndecisive){
+        EncoderOperation * operation = [[EncoderOperationShutdown alloc]initEncoder:encoderManager.masterEncoder data:nil];
+        [encoderManager.masterEncoder runOperation:operation];
+    }
+
+    
+    
 }
 
 - (void)pauseEnc:(id)sender {
-    EncoderOperation * operation = [[EncoderOperationPause alloc]initEncoder:encoderManager.masterEncoder data:nil];
-    [encoderManager.masterEncoder runOperation:operation];
+    
+    // Build the alert
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Pause Event"
+                                                                    message:@"Are you sure you want to pause the event?"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    // build YES button
+    UIAlertAction* yesButtons = [UIAlertAction
+                                 actionWithTitle:@"Yes"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     EncoderOperation * operation = [[EncoderOperationPause alloc]initEncoder:encoderManager.masterEncoder data:nil];
+                                     [encoderManager.masterEncoder runOperation:operation];
+                                     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
+                                     [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                 }];
+    [alert addAction:yesButtons];
+    
+    // build NO button
+    UIAlertAction* noButtons = [UIAlertAction
+                                actionWithTitle:@"No"
+                                style:UIAlertActionStyleCancel
+                                handler:^(UIAlertAction * action)
+                                {
+                                    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                }];
+    [alert addAction:noButtons];
+    
+    // this check to see if the alert was successful if indisisive
+    BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    // if your decisive
+    if (!isIndecisive){
+        EncoderOperation * operation = [[EncoderOperationPause alloc]initEncoder:encoderManager.masterEncoder data:nil];
+        [encoderManager.masterEncoder runOperation:operation];
+    }
 }
 
 - (void)stopEnc:(id)sender {
-    EncoderOperation * operation = [[EncoderOperationStop alloc]initEncoder:encoderManager.masterEncoder data:nil];
-    [encoderManager.masterEncoder runOperation:operation];
+    
+    // Build the alert
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Stop Event"
+                                                                    message:@"Are you sure you want to stop the event?"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    // build YES button
+    UIAlertAction* yesButtons = [UIAlertAction
+                                    actionWithTitle:@"Yes"
+                                    style:UIAlertActionStyleDefault
+                                    handler:^(UIAlertAction * action)
+                                    {
+                                        EncoderOperation * operation = [[EncoderOperationStop alloc]initEncoder:encoderManager.masterEncoder data:nil];
+                                        [encoderManager.masterEncoder runOperation:operation];
+                                        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop"  : [NSNumber numberWithBool:YES]}];
+                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                    }];
+    [alert addAction:yesButtons];
+    
+    // build NO button
+    UIAlertAction* noButtons = [UIAlertAction
+                                    actionWithTitle:@"No"
+                                    style:UIAlertActionStyleCancel
+                                    handler:^(UIAlertAction * action)
+                                    {
+                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                    }];
+    [alert addAction:noButtons];
+    
+    // this check to see if the alert was successful if indisisive
+    BOOL isIndecisive = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    // if your decisive
+    if (!isIndecisive){
+        EncoderOperation * operation = [[EncoderOperationStop alloc]initEncoder:encoderManager.masterEncoder data:nil];
+        [encoderManager.masterEncoder runOperation:operation];
+    }
+    
+
 }
 
 
@@ -479,7 +601,27 @@ SVSignalStatus signalStatus;
 {
     League *league = [encoderManager.masterEncoder.encoderLeagues objectForKey:_leagueName];
     if ([league.teams allValues].count == 0) {
-        [self.noTeamAlertView showView];
+
+        // Build the alert
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Team", nil)
+                                                                        message:NSLocalizedString(@"There is no team for this league", nil)
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+
+        
+        // build NO button
+        UIAlertAction* noButtons = [UIAlertAction
+                                    actionWithTitle:@"Ok"
+                                    style:UIAlertActionStyleCancel
+                                    handler:^(UIAlertAction * action)
+                                    {
+                                        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                    }];
+        [alert addAction:noButtons];
+        
+        // this check to see if the alert was successful if indisisive
+        [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertImportant completion:nil];
+        
+
     }
 
     [selectHomeTeam setTitle:DEFAULT_HOME_TEAM forState:UIControlStateNormal];
@@ -632,25 +774,6 @@ SVSignalStatus signalStatus;
     }
 }
 
--(void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    [alertView viewFinished];
-    if (buttonIndex == 0) {
-        if (alertView == self.pauseAlertView) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"pause"  : [NSNumber numberWithBool:YES]}];
-            //[self.pauseAlertView viewFinished];
-        } else if (alertView == self.stopAlertView) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"stop"  : [NSNumber numberWithBool:YES]}];
-            //[self.stopAlertView viewFinished];
-        } else if (alertView == self.shutdownAlertView) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MASTER_COMMAND object:self userInfo:@{@"shutdown"  : [NSNumber numberWithBool:YES]}];
-            //[self.shutdownAlertView viewFinished];
-        } else if (alertView == self.startAlertView){
-            //[self.startAlertView viewFinished];
-        }
-    }
-}
-
 
 -(void) showInformation
 {
@@ -688,15 +811,15 @@ SVSignalStatus signalStatus;
     [stopButton setEnabled:      (state & STOP_ENABLE)!=0];
     [stopButton setAlpha:        (state & STOP_ENABLE)?1.0f:0.6f];
     
-//    [pauseButton setHidden:      (state & PAUSE_HIDDEN)!=0];
-//    [pauseButton setEnabled:     (state & PAUSE_ENABLE)!=0];
-//    [pauseButton setAlpha:       (state & PAUSE_ENABLE)?1.0f:0.6f];
-    [pauseButton setHidden:      YES];
+    [pauseButton setHidden:      (state & PAUSE_HIDDEN)!=0];
+    [pauseButton setEnabled:     (state & PAUSE_ENABLE)!=0];
+    [pauseButton setAlpha:       (state & PAUSE_ENABLE)?1.0f:0.6f];
+//    [pauseButton setHidden:      YES];
     
-//    [resumeButton setHidden:     (state & RESUME_HIDDEN)!=0];
-//    [resumeButton setEnabled:    (state & RESUME_ENABLE)!=0];
-//    [resumeButton setAlpha:      (state & RESUME_ENABLE)?1.0f:0.6f];
-    [resumeButton setHidden:     YES];
+    [resumeButton setHidden:     (state & RESUME_HIDDEN)!=0];
+    [resumeButton setEnabled:    (state & RESUME_ENABLE)!=0];
+    [resumeButton setAlpha:      (state & RESUME_ENABLE)?1.0f:0.6f];
+//    [resumeButton setHidden:     YES];
     
     [shutdownButton setHidden:   (state & SHUTDOWN_HIDDEN)!=0];
     [shutdownButton setEnabled:  (state & SHUTDOWN_ENABLE)!=0];

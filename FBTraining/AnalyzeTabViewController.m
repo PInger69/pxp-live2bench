@@ -63,6 +63,8 @@ static NSMutableArray * analyzedClips;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onProcessTag:) name:AnalyzeWillProcessTagNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onPlayClip:)   name:AnalyzeWillPlayClipNotification object:nil];
 
+
+      
         
     }
     

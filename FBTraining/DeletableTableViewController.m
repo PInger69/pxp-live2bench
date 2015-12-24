@@ -7,6 +7,8 @@
 //
 
 #import "DeletableTableViewController.h"
+#import "CustomAlertControllerQueue.h"
+
 
 @interface DeletableTableViewController ()
 
@@ -85,14 +87,7 @@
         [UIView commitAnimations];
     }
     
-    //    if ([self.contextString isEqualToString:@"TAG"]) {
-    //        if (self.setOfDeletingCells.count >= 1) {
-    //            if (self.downloadEnabled) {
-    //                self.downloadEnabled = NO;
-    //                [self reloadData];
-    //            }
-    //        }
-    //    }
+
 }
 
 -(void)removeDeletionCell: (NSNotification *) aNotification{
@@ -173,15 +168,15 @@
 }
 
 -(void)deleteAllButtonTarget{
-    CustomAlertView *alert = [[CustomAlertView alloc] init];
-    [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
-    alert.type = AlertImportant;
-    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these", nil), [self.contextString lowercaseString]]];
-    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from both server and ipad", nil)];
-    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from ipad", nil)];
-    [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
-    [alert showView];
+//    CustomAlertView *alert = [[CustomAlertView alloc] init];
+//    [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
+//    alert.type = AlertImportant;
+//    [alert setMessage:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete all these", nil), [self.contextString lowercaseString]]];
+//    [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+//    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from both server and ipad", nil)];
+//    [alert addButtonWithTitle: NSLocalizedString(@"Yes, delete from ipad", nil)];
+//    [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
+//    [alert showView];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -189,93 +184,158 @@
         // Delete the row from the data source
         self.editingIndexPath = indexPath;
         
-        CustomAlertView *alert = [[CustomAlertView alloc] init];
-        alert.type = AlertImportant;
-        [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
-        [alert setMessage:[NSString stringWithFormat:@"%@ %@?", NSLocalizedString(@"Are you sure you want to delete this", nil), [self.contextString lowercaseString]]];
-        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
-        [alert addButtonWithTitle: NSLocalizedString(@"Yes", nil)];
-        [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
-        [alert showView];
         
+        
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"myplayXplay",nil)
+                                                                        message:[NSString stringWithFormat:@"%@ %@s?", NSLocalizedString(@"Are you sure you want to delete this",nil), [self.contextString lowercaseString]]
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* okayButton = [UIAlertAction
+                                     actionWithTitle:@"Yes"
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action)
+                                     {
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         NSInteger row = self.editingIndexPath.row;
+                                         
+                                         
+                                         NSDictionary *tagToRemove = self.tableData[row];
+                                         
+                                         [self.setOfDeletingCells removeAllObjects];
+                                         if (_delegate && [_delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
+                                             
+                                             [_delegate tableView:self indexesToBeDeleted:@[self.editingIndexPath]];
+                                         }
+                                         
+
+                                         
+                                         [self.tableData removeObject:tagToRemove];
+                                         [self removeIndexPathFromDeletion];
+                                         [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                                         [self.tableView reloadData];
+                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                             [self checkDeleteAllButton];
+                                     }];
+        
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"No"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        
+        
+        [alert addAction:okayButton];
+        [alert addAction:cancelButtons];
+        
+        
+        BOOL isAllowed = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+        if (!isAllowed) {
+            NSDictionary *tagToRemove = self.tableData[self.editingIndexPath.row];
+            [self.tableData removeObject:tagToRemove];
+            [self removeIndexPathFromDeletion];
+            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadData];
+                [self checkDeleteAllButton];
+
+        }
+        
+        
+//        
+//        CustomAlertView *alert = [[CustomAlertView alloc] init];
+//        alert.type = AlertImportant;
+//        [alert setTitle: NSLocalizedString(@"myplayXplay", nil)];
+//        [alert setMessage:[NSString stringWithFormat:@"%@ %@?", NSLocalizedString(@"Are you sure you want to delete this", nil), [self.contextString lowercaseString]]];
+//        [alert setDelegate:self]; //set delegate to self so we can catch the response in a delegate method
+//        [alert addButtonWithTitle: NSLocalizedString(@"Yes", nil)];
+//        [alert addButtonWithTitle: NSLocalizedString(@"No", nil)];
+//        [alert showView];
+//        
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         //Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
 
-- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    
-    if ([alertView.message isEqualToString:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]] && buttonIndex == 0) {
-        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-        
-        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-            [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
-            [indexPathsArray addObject: cellIndexPath];
-        }
-        
-        for (NSIndexPath *path in self.setOfDeletingCells) {
-            if ([path isEqual:self.selectedPath]) {
-                //NSDictionary *tag = self.tableData[self.selectedPath.row];
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
-                self.selectedPath = nil;
-            }
-        }
-        
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
-            [self.tableData removeObject:tag];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
-        }
-        
-        [self.setOfDeletingCells removeAllObjects];
-        if (_delegate && [_delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
-        
-            [_delegate tableView:self indexesToBeDeleted:indexPathsArray];
-        }
-        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-        [self.tableView reloadData];
-        
-        /*
-        for (NSDictionary *tag in arrayOfTagsToRemove) {
-            //[self.tableData removeObject:tag];
-            //[[NSNotificationCenter defaultCenter] post]
-            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
-        }
-         */
-        
-    }else{
-        if (buttonIndex == 0)
-        {
-            NSDictionary *tagToRemove = self.tableData[self.editingIndexPath.row];
-            [self.tableData removeObject:tagToRemove];
-            
-            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tagToRemove];
-            
-            [self removeIndexPathFromDeletion];
-            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [self.tableView reloadData];
-            
-            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:tagToRemove userInfo:tagToRemove];
-        }
-        else if (buttonIndex == 1)
-        {
-            // No, cancel the action to delete tags
-        }
-        
-    }
-    [alertView viewFinished];
-    [CustomAlertView removeAlert:alertView];
-    
-    [self checkDeleteAllButton];
-    //[self.tableView reloadData];
-}
+//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    
+//    if ([alertView.message isEqualToString:[NSString stringWithFormat:@"Are you sure you want to delete all these %@s?", [self.contextString lowercaseString]]] && buttonIndex == 0) {
+//        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
+//        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+//        
+//        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
+//            [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
+//            [indexPathsArray addObject: cellIndexPath];
+//        }
+//        
+//        for (NSIndexPath *path in self.setOfDeletingCells) {
+//            if ([path isEqual:self.selectedPath]) {
+//                //NSDictionary *tag = self.tableData[self.selectedPath.row];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:nil];
+//                self.selectedPath = nil;
+//            }
+//        }
+//        
+//        for (NSDictionary *tag in arrayOfTagsToRemove) {
+//            [self.tableData removeObject:tag];
+//            //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_DELETE_TAG object:tag];
+//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
+//        }
+//        
+//        [self.setOfDeletingCells removeAllObjects];
+//        if (_delegate && [_delegate respondsToSelector:@selector(tableView:indexesToBeDeleted:)]) {
+//        
+//            [_delegate tableView:self indexesToBeDeleted:indexPathsArray];
+//        }
+//        [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
+//        [self.tableView reloadData];
+//        
+//        /*
+//        for (NSDictionary *tag in arrayOfTagsToRemove) {
+//            //[self.tableData removeObject:tag];
+//            //[[NSNotificationCenter defaultCenter] post]
+//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tag];
+//        }
+//         */
+//        
+//    }else{
+//        if (buttonIndex == 0)
+//        {
+//            NSDictionary *tagToRemove = self.tableData[self.editingIndexPath.row];
+//            [self.tableData removeObject:tagToRemove];
+//            
+//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:nil userInfo:tagToRemove];
+//            
+//            [self removeIndexPathFromDeletion];
+//            [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            [self.tableView reloadData];
+//            
+//            //[[NSNotificationCenter defaultCenter] postNotificationName:[NSString stringWithFormat:@"NOTIF_DELETE_%@", self.contextString]  object:tagToRemove userInfo:tagToRemove];
+//        }
+//        else if (buttonIndex == 1)
+//        {
+//            // No, cancel the action to delete tags
+//        }
+//        
+//    }
+//    [alertView viewFinished];
+//    [CustomAlertView removeAlert:alertView];
+//    
+//    [self checkDeleteAllButton];
+//    //[self.tableView reloadData];
+//}
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *newIndexPathSet = [[NSMutableSet alloc]init];
-    [self.setOfDeletingCells removeObject:self.editingIndexPath];
+//    [self.setOfDeletingCells removeObject:self.editingIndexPath];
     if ([self.selectedPath isEqual:self.editingIndexPath]) {
         //NSDictionary *tag = self.tableData[self.selectedPath.row];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_REMOVE_INFORMATION object:self];
