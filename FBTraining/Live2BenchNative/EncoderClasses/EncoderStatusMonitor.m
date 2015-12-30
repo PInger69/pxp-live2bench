@@ -97,7 +97,7 @@
 {
     if (currentFailCount--<=0)  {
         [checkedEncoder onEncoderMasterFallen:error];
-        
+        PXPLog(@"EncoderStatus Shutdown Monitor");
     } else {
         NSString * failType = [error.userInfo objectForKey:@"NSLocalizedDescription"];
         PXPLog(@"EncoderStatus Error Countdown %i: %@", currentFailCount,failType);
@@ -151,10 +151,11 @@
         statusSync                          = YES;
         if (error){
             [self onError:error];
+        } else {
+            [checkedEncoder onBitrate:startRequestTime];
+            [self statusResponse:data];
+            currentFailCount    = maxFailCount;
         }
-         [checkedEncoder onBitrate:startRequestTime];
-         [self statusResponse:data];
-
     }];
     [dataT resume];
 }
@@ -185,9 +186,11 @@
         statusSync                          = YES;
         if (error){
             [self onError:error];
+        } else {
+            [checkedEncoder onTagsChange:data];
+            currentFailCount    = maxFailCount;
         }
-        [checkedEncoder onTagsChange:data];
-
+    
     }];
     [dataT resume];
 

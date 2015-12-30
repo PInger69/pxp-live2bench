@@ -298,14 +298,22 @@
     [self.view addSubview:self.forwardSeekButton];
     [self.view addSubview:self.backSeekButton];
     
-    self.topViewFeedSelectionController.view.frame = CGRectMake(self.topPlayerView.frame.size.width - 128, 0, 128, self.bottomPlayerView.frame.size.height);
-    self.bottomViewFeedSelectionController.view.frame = CGRectMake(self.bottomPlayerView.frame.size.width - 128, 0, 128, self.bottomPlayerView.frame.size.height - PLAYHEAD_HEIGHT);
+//    self.topViewFeedSelectionController.view.frame = CGRectMake(self.topPlayerView.frame.size.width - 128, 0, 128, self.bottomPlayerView.frame.size.height);
+//    self.bottomViewFeedSelectionController.view.frame = CGRectMake(self.bottomPlayerView.frame.size.width - 128, 0, 128, self.bottomPlayerView.frame.size.height - PLAYHEAD_HEIGHT);
+    self.topViewFeedSelectionController.view.frame = CGRectMake(self.topPlayerView.frame.origin.x - 128, CGRectGetMinY(self.topPlayerView.frame), 128, self.topPlayerView.frame.size.height);
+    self.bottomViewFeedSelectionController.view.frame = CGRectMake(self.bottomPlayerView.frame.origin.x - 128, CGRectGetMinY(self.bottomPlayerView.frame), 128, self.bottomPlayerView.frame.size.height - PLAYHEAD_HEIGHT);
+    [self.view addSubview:self.topViewFeedSelectionController.view];
+    [self.view addSubview:self.bottomViewFeedSelectionController.view];
     
-    [self.topPlayerView addSubview:self.topViewFeedSelectionController.view];
-    [self.bottomPlayerView addSubview:self.bottomViewFeedSelectionController.view];
+//    [self.topPlayerView addSubview:self.topViewFeedSelectionController.view];
+//    [self.bottomPlayerView addSubview:self.bottomViewFeedSelectionController.view];
     
     [self.topPlayerView addGestureRecognizer:self.topPlayerFullscreenRecognizer];
     [self.bottomPlayerView addGestureRecognizer:self.bottomPlayerFullscreenRecognizer];
+    
+    
+    [self.topViewFeedSelectionController    present:YES];
+    [self.bottomViewFeedSelectionController present:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -468,13 +476,13 @@
         if (animated) {
             [UIView animateWithDuration:ANIMATION_DURATION
                              animations:^() {
-                                 self.topPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
-                                 self.bottomPlayerView.alpha = 0.0;
-                                 self.view.backgroundColor = [UIColor blackColor];
+                                 self.topPlayerView.frame       = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+                                 self.bottomPlayerView.alpha    = 0.0;
+                                 self.view.backgroundColor      = [UIColor blackColor];
                              }
                              completion:^(BOOL finished) {
                                  self.topPlayerView.showsControlBar = YES;
-                                 self.bottomPlayerView.hidden = YES;
+                                 self.bottomPlayerView.hidden       = YES;
                              }];
         } else {
             self.topPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
@@ -655,7 +663,7 @@
         }];
     }
     
-    [feedSelectionController dismiss:YES];
+//    [feedSelectionController dismiss:YES];
 }
 
 #pragma mark - NCRecordButtonDelegate

@@ -199,30 +199,31 @@ static void * encoderTagContext = &encoderTagContext;
     
     
     Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
-    if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate]){
+   if (_currentEvent) {
+    if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
         [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
     }
     
     
-    if (_currentEvent) {
     
     
     
+       NSMutableArray * filters = [NSMutableArray new];
+       
     
-        
+       [filters addObjectsFromArray:@[
+                                     [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
+                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
+                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
+                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
+                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                     ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
+                                     ]];
 
+       if (profession && profession.filterPredicate )[filters addObject:profession.filterPredicate];
     
-    
-        
-        NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:@[
-                                                                                       [NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeNormal]
-                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDuration]
-                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeCloseDurationOLD]
-                                                                                       ,profession.filterPredicate
-                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeFootballDownTags]
-                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
-                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeTele ]
-                                                                                       ]];
+       
+        NSPredicate *allowThese = [NSCompoundPredicate orPredicateWithSubpredicates:filters];
         
         [_pxpFilter addPredicates:@[allowThese]];
  

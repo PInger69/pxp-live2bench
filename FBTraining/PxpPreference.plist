@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>DebugMode</key>
-	<true/>
+	<false/>
 	<key>SettingsItems</key>
 	<dict>
 		<key>EncoderControls</key>
@@ -59,7 +59,7 @@
 		<key>DuelView</key>
 		<dict>
 			<key>Active</key>
-			<false/>
+			<true/>
 			<key>Visible</key>
 			<true/>
 		</dict>

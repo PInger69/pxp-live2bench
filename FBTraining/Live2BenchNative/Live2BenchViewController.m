@@ -60,6 +60,7 @@
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController    * telestrationViewController;
 @property (strong, nonatomic, nonnull) PxpPlayerViewController          * playerViewController;
 @property (strong, nonatomic, nonnull) PxpL2BFullscreenViewController   * fullscreenViewController;
+@property (strong, nonatomic, nonnull) NSMutableArray                   * sourceButtons;
 
 @end
 
@@ -131,7 +132,7 @@ static void * eventContext      = &eventContext;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:)             name:NOTIF_PRIMARY_ENCODER_CHANGE   object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:)            name:NOTIF_TAB_CREATED              object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewPlayFeedNotification:) name:NOTIF_SET_PLAYER_FEED          object:nil];
-    
+    _sourceButtons = [NSMutableArray new];
     return self;
 }
 
@@ -187,7 +188,21 @@ static void * eventContext      = &eventContext;
     analiyzeButton.layer.borderWidth = 1;
     [analiyzeButton addTarget:self action:@selector(onAnalyze:) forControlEvents:UIControlEventTouchUpInside];
     if(DEBUG_MODE)[self.view addSubview:analiyzeButton];
+    
+
+    [self buildSourceButtons];
+    
+//    UIButton * scrButton = [[UIButton alloc]initWithFrame:CGRectMake(155, 55, 44, 44)];
+//    [scrButton addTarget:self action:@selector(onPressSourceButton:) forControlEvents:UIControlEventTouchUpInside];
+//    scrButton.tag = 1;
+//    [_sourceButtons addObject:scrButton];
+//    scrButton.layer.borderWidth = 1;
+//    scrButton.layer.cornerRadius = 22;
+//    [self.view addSubview:scrButton];
+    
 }
+
+
 
 
 -(void)onAnalyze:(id)sender
@@ -533,7 +548,72 @@ static void * eventContext      = &eventContext;
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
         [informationLabel setText:@""];
     }
+    
+    [self buildSourceButtons];
 }
+
+-(void)buildSourceButtons
+{
+    
+    
+    
+    for (UIButton * b in _sourceButtons) {
+        [b removeFromSuperview];
+    }
+    [_sourceButtons removeAllObjects];
+    
+    
+    
+    CGFloat w = 22;
+    
+    NSInteger c = [((Encoder*)_encoderManager.primaryEncoder).event.feeds count];
+    
+    
+    if (c <=1) return ;
+    
+    for (NSInteger i =0; i<c; i++) {
+        UIButton * scrButton = [[UIButton alloc]initWithFrame:CGRectMake(155+((w+16)*i), 55+(w/2), w, w)];
+        [scrButton addTarget:self action:@selector(onPressSourceButton:) forControlEvents:UIControlEventTouchUpInside];
+        scrButton.tag = i;
+        [_sourceButtons addObject:scrButton];
+        
+        scrButton.layer.cornerRadius = (w/2);
+        if (i) {
+            [scrButton setBackgroundColor:[UIColor lightGrayColor]] ;
+        } else {
+            [scrButton setBackgroundColor:PRIMARY_APP_COLOR] ;
+        }
+//        
+//        CALayer *sublayer = [CALayer layer];
+//        sublayer.backgroundColor = [UIColor redColor].CGColor;
+//        sublayer.frame = CGRectMake(0,0, w*2, w*2);
+//        [scrButton.layer addSublayer:sublayer];
+//        
+//        
+        
+            scrButton.layoutMargins = UIEdgeInsetsMake(-15, -15, -15, -15);
+        [self.view addSubview:scrButton];
+    }
+   
+
+    
+
+}
+
+
+-(void)onPressSourceButton:(id)sender
+{
+    for (UIButton * b in _sourceButtons) {
+        [b setBackgroundColor:[UIColor lightGrayColor]] ;
+    }
+    UIButton * button = sender;
+    [button setBackgroundColor:PRIMARY_APP_COLOR] ;
+
+
+    self.playerViewController.playerView.player = self.playerViewController.playerView.context.players[button.tag];
+//    self.playerViewController
+}
+
 #pragma mark -
 #pragma mark PxpTimeProvider Protocol Methods
 

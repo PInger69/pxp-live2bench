@@ -72,9 +72,55 @@ static NSDictionary * _professionMapData;
     dict[SPORT_HOCKEY] =  hockey;
   
 
-    _professionMapData = [dict copy];
+    
+    // Build Soccer
+    
+    Profession * soccer = [Profession new];
+
+    soccer.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStart]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStart]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                   ]];
+    
+    
+    soccer.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    
+    
+    
+    
+    // this is for extra styling for
+    [soccer setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:NO];
+        
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Period: %d",[tagForData.period intValue]+1];
+        
+        
+        
+    }];
+    
+    [soccer setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    
+    
+    dict[SPORT_SOCCER] =  soccer;
     
 
+    
+    
+    
+    
+    
+    
+    _professionMapData = [dict copy];
+
+    
+    
+    
+    
+    
 }
 
 +(NSDictionary*)data
