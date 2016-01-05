@@ -12,7 +12,7 @@
 #import "TagSetEditPopUpViewController.h"
 #import "UserCenter.h"
 
-#define DEFAULT_TAG_SET @"Default"
+#define DEFAULT_TAG_SET @"Default (non editable)"
 
 
 @interface SideTagSettingsViewController () <UIPickerViewDataSource,UIPickerViewDelegate,UIPopoverControllerDelegate,TagSetEditDelegate>
@@ -91,6 +91,9 @@
     if ([UserCenter getInstance].customerEmail && [defaults objectForKey:[UserCenter getInstance].customerEmail]){
         NSDictionary * customersTagSetData = [defaults objectForKey:[UserCenter getInstance].customerEmail];
         self.currentTagSetName = customersTagSetData[@"currentTagSetName"];
+        if (![self.listTagSetName containsObject:self.currentTagSetName]) {
+            self.currentTagSetName = DEFAULT_TAG_SET;
+        }
         
         NSArray * tagSetNames = [customersTagSetData[@"tagSets"] allKeys];
         
@@ -111,12 +114,16 @@
         
     } else {
         // make user data becuase it does not have any
-        
+        if (![UserCenter getInstance].customerEmail) {
+            [UserCenter getInstance].customerEmail = @"none";
+        }
         [defaults setObject:@{@"currentTagSetName":DEFAULT_TAG_SET,@"tagSets":@{}} forKey:[UserCenter getInstance].customerEmail];
         [defaults synchronize];
     }
 
+    if ([self.listTagSetName containsObject:self.currentTagSetName]) {
     [self.tagSetPicker selectRow: [self.listTagSetName indexOfObject:self.currentTagSetName] inComponent:0 animated:NO];
+    }
 }
 
 -(NSArray*)replacePlaceHolders:(NSArray*)list
@@ -128,6 +135,9 @@
         
         SideTagEditButtonDisplayView * display =  [[SideTagEditButtonDisplayView alloc]initWithFrame:holder.frame];
         [display.button addTarget:self action:@selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+        display.button.tag  = i;
+        display.order = [NSNumber numberWithInteger:i];
+        display.position = (holder.frame.origin.x > 100)?@"right":@"left";
         [holder removeFromSuperview];
         [self.view addSubview:display];
         createdList[i] = display;
@@ -149,7 +159,15 @@
     }
     
     for (NSInteger i = 0; i<[tags count]; i++) {
-        SideTagEditButtonDisplayView * display = self.tagSetButtons[i];
+//        if ([tags count] >= 24)break;
+        NSInteger order = [tags[i][@"order"]integerValue];
+        NSString * pos  = tags[i][@"position"];
+        
+        if (order < 12 && [pos isEqualToString:@"right"]){
+            order += 12;
+        }
+        
+        SideTagEditButtonDisplayView * display = self.tagSetButtons[order];
 
 //        if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
 //            display.enabled = NO;
@@ -166,8 +184,12 @@
         }
         
     }
-   
-    self.tagSetData = [tags mutableCopy];  // Saves Data
+    if (!tags.count){
+        self.tagSetData = [NSMutableArray new];
+    } else {
+        self.tagSetData = [tags mutableCopy];  // Saves Data
+    }
+    
 }
 
 
@@ -176,14 +198,103 @@
     
     
     UIButton    * button = sender;
-    SideTagEditButtonDisplayView * display = button.superview;
+    SideTagEditButtonDisplayView * display = self.tagSetButtons[button.tag];
+    display.selected = YES;
     
-    self.editTagPopup = [PopUpTagSetButtonEditViewController new];
-    self.editTagPopup.contentViewController.modalInPopover = NO;
-    self.editTagPopup.delegate = self;
+    // show pop up and add tagset on complete
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:@"Name Tag"
+                                  message:@"Set the name of the tag"
+                                  preferredStyle:UIAlertControllerStyleAlert];
     
-//    [self.editTagPopup presentPopoverFromBarButtonItem:button permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
-    [self.editTagPopup presentPopoverFromRect: display.frame inView:display permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+    
+    
+
+    
+    UIAlertAction* yesButton = [UIAlertAction
+                                actionWithTitle:@"Set"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action)
+                                {
+                                    //Handel your yes please button action here
+                                    
+                                    NSString * nameNew = ((UITextField *)alert.textFields[0]).text;
+                                    
+                                    display.typeLabel.text      = @"Normal";
+                                    display.typeLabel.textColor = [UIColor blackColor];
+                                    display.name                = nameNew;
+                                    display.selected            = NO;
+                                    
+                                    for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
+                                        if (i == display.button.tag) {
+                                            self.tagSetData[i] = [display data];
+                                            [self onButtonEditComplete];
+                                            return;
+                                        }
+                                    }
+                                    
+                                    [self.tagSetData addObject:[display data]];
+                                    [self onButtonEditComplete];
+//                                    [alert dismissViewControllerAnimated:YES completion:nil];
+                                    
+                                }];
+    UIAlertAction* noneButton = [UIAlertAction
+                                actionWithTitle:@"None"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action)
+                                {
+                                    display.typeLabel.text = @"None";
+                                    display.typeLabel.textColor = [UIColor grayColor];
+                                    display.name                = @"";
+                                    display.selected = NO;
+                                    for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
+                                        
+                                        NSInteger order = [self.tagSetData[i][@"order"]integerValue];
+                                        
+                                        if (order == display.button.tag) {
+                                            [self.tagSetData removeObjectAtIndex:i];
+                                            [self onButtonEditComplete];
+                                            return;
+                                        }
+                                    }
+
+                                    [self onButtonEditComplete];
+                                }];
+    UIAlertAction* noButton = [UIAlertAction
+                               actionWithTitle:@"Cancel"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action)
+                               {
+                                   
+            display.selected = NO;
+                                   [alert dismissViewControllerAnimated:YES completion:nil];
+                                   
+                               }];
+    
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        textField.
+    }];
+    
+
+    
+    
+    [alert addAction:yesButton];
+    [alert addAction:noneButton];
+    [alert addAction:noButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+    
+    
+    
+    
+//    self.editTagPopup = [PopUpTagSetButtonEditViewController new];
+//    self.editTagPopup.contentViewController.modalInPopover = NO;
+//    self.editTagPopup.delegate = self;
+//    
+////    [self.editTagPopup presentPopoverFromBarButtonItem:button permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+//    [self.editTagPopup presentPopoverFromRect: display.frame inView:display permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
     
     
 //    PopUpTagSetButtonEditViewController *controller = [PopUpTagSetButtonEditViewController new];
@@ -208,7 +319,13 @@
 
 -(void)onButtonEditComplete
 {
-
+    NSUserDefaults      * defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary * userDefaults = [[defaults objectForKey:[UserCenter getInstance].customerEmail]mutableCopy];
+    userDefaults[@"currentTagSetName"] = self.currentTagSetName;
+    userDefaults[@"tagSets"] =  [userDefaults[@"tagSets"] mutableCopy];
+    userDefaults[@"tagSets"][self.currentTagSetName] = self.tagSetData;
+    [defaults setObject:userDefaults forKey:[UserCenter getInstance].customerEmail];
+    [defaults synchronize];
 
 }
 
@@ -236,6 +353,8 @@
     [self.tagSetPicker reloadAllComponents];
 //    self.tagSetPicker set
     [self.tagSetPicker selectRow:[self.listTagSetName count]-1 inComponent:0 animated:YES];
+    self.currentTagSetName = nil;
+    [self pickerView:self.tagSetPicker didSelectRow:[self.listTagSetName indexOfObject:name] inComponent:0];
     
     //save te set
 }
@@ -248,21 +367,22 @@
     NSMutableDictionary * userTagSets = [customersTagSetData[@"tagSets"] mutableCopy];
     
 
-    [customersTagSetData setObject:self.currentTagSetName forKey:@"currentTagSetName"];
+    [customersTagSetData setObject:DEFAULT_TAG_SET forKey:@"currentTagSetName"];
     
-    [userTagSets removeObjectForKey:self.currentTagSetName];
+    [userTagSets removeObjectForKey:name];
     [customersTagSetData setObject:userTagSets forKey:@"tagSets"];
     
     [defaults setObject:customersTagSetData forKey:[UserCenter getInstance].customerEmail];
     [defaults synchronize];
     
-    [self.listTagSetName removeObject:self.currentTagSetName];
+    [self.listTagSetName removeObject:name];
     [self.tagSetPicker reloadAllComponents];
-    self.currentTagSetName = @"";
+    self.currentTagSetName = name;
+    
+    self.currentTagSetName = nil;
+    
+    [self pickerView:self.tagSetPicker didSelectRow:0 inComponent:0];
     [self.tagSetPicker selectRow:[self.listTagSetName indexOfObject:DEFAULT_TAG_SET] inComponent:0 animated:YES];
-    
-    [self pickerView:self.tagSetPicker didSelectRow:[self.listTagSetName indexOfObject:self.currentTagSetName] inComponent:0];
-    
 
 
 }
@@ -291,6 +411,8 @@
 {
     if ( [self.listTagSetName[row] isEqualToString:self.currentTagSetName]) return ;
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
     self.currentTagSetName = self.listTagSetName[row];
     
     if ( [self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
@@ -299,13 +421,17 @@
         [self setUpButtons:[UserCenter getInstance].defaultTagNames];
     } else {
         
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
         NSDictionary * customersTagSetData = [defaults objectForKey:[UserCenter getInstance].customerEmail];
         [self setUpButtons:customersTagSetData[@"tagSets"][self.listTagSetName[row]]];
     }
     
-    // update ui with selected tag set tags
-    
+
+    NSMutableDictionary * userDefaults = [[defaults objectForKey:[UserCenter getInstance].customerEmail]mutableCopy];
+    userDefaults[@"currentTagSetName"] = self.currentTagSetName;
+
+    [defaults setObject:userDefaults forKey:[UserCenter getInstance].customerEmail];
+    [defaults synchronize];
 
 }
 
@@ -315,17 +441,41 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    // post tag set update
-//    
-    // save last Selection
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary * userDefaults = [[defaults objectForKey:[UserCenter getInstance].customerEmail]mutableCopy];
-    userDefaults[@"currentTagSetName"] = self.currentTagSetName;
-    [defaults setObject:userDefaults forKey:[UserCenter getInstance].customerEmail];
-    [defaults synchronize];
 
-    // update Live2Bench
-    [UserCenter getInstance].tagNames = self.tagSetData;
+    NSMutableArray * temp   = [NSMutableArray new];
+    
+    for (NSInteger k=0; k<24; k++) {
+        NSString * pos = (k<12)?@"left":@"right";
+        [temp addObject:@{@"name":@"--", @"order":[NSNumber numberWithInteger:k],@"position":pos}];
+    }
+    
+    
+    NSMutableSet * indexes  = [NSMutableSet new];
+    
+    for (NSDictionary * dict in self.tagSetData) {
+        NSInteger * n = [dict[@"order"]integerValue];
+        
+        
+        [indexes addObject:[NSNumber numberWithInteger:n]];
+    }
+    
+    
+    
+    for (NSInteger i=0; i<[self.tagSetData count]; i++) {
+        
+        NSDictionary * tagSet = self.tagSetData[i];
+        NSInteger order = [tagSet[@"order"]integerValue];
+        temp[order] = tagSet;
+    }
+    
+    
+    
+    
+    
+    
+    
+//    [UserCenter getInstance].tagNames = self.tagSetData;
+    [UserCenter getInstance].tagNames = temp;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
 }
 

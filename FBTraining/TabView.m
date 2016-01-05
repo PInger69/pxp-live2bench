@@ -66,6 +66,7 @@ static NSString * currentFilterSport;
     
     if ([currentFilterSport isEqualToString:@""]) return;
     
+    // remove all sport tabs
     for (PxpFilterTabController *aTab in sharedFilter.tabs) {
         if (![aTab isKindOfClass:[PxpFilterDefaultTabViewController class]]){
             [sharedFilter removeTab:aTab];
@@ -73,24 +74,35 @@ static NSString * currentFilterSport;
     }
 
     
-
-    if ([aSport isEqualToString:SPORT_HOCKEY]) {
-        [sharedFilter addTab:[[PxpFilterHockeyTabViewController alloc]init]];
-    } else if ([aSport isEqualToString:SPORT_FOOTBALL]) {
-        [sharedFilter addTab:[[PxpFilterFootballTabViewController alloc]init]];
-    } else if ([aSport isEqualToString:SPORT_FOOTBALL_TRAINING]) {
-        
-    } else if ([aSport isEqualToString:SPORT_SOCCER]) {
-        [sharedFilter addTab:[[PxpFilterSoccerTabViewController alloc]init]];
-    } else if ([aSport isEqualToString:SPORT_BASKETBALL]) {
-        
-    } else if ([aSport isEqualToString:SPORT_LACROSSE]) {
-        
-    } else if ([aSport isEqualToString:SPORT_RUGBY]) {
-        [sharedFilter addTab:[[PxpFilterRugbyTabViewController alloc]init]];
-    } else if ([aSport isEqualToString:SPORT_MEDICAL]) {
-        
+    
+//  new
+    Profession * profession = [ProfessionMap getProfession:aSport];
+    if (profession.filterTabClass != nil){
+         [sharedFilter addTab:[[profession.filterTabClass alloc]init]];
     }
+    return;
+//  end new
+    
+    
+    
+//
+//    if ([aSport isEqualToString:SPORT_HOCKEY]) {
+//        [sharedFilter addTab:[[PxpFilterHockeyTabViewController alloc]init]];
+//    } else if ([aSport isEqualToString:SPORT_FOOTBALL]) {
+//        [sharedFilter addTab:[[PxpFilterFootballTabViewController alloc]init]];
+//    } else if ([aSport isEqualToString:SPORT_FOOTBALL_TRAINING]) {
+//        
+//    } else if ([aSport isEqualToString:SPORT_SOCCER]) {
+//        [sharedFilter addTab:[[PxpFilterSoccerTabViewController alloc]init]];
+//    } else if ([aSport isEqualToString:SPORT_BASKETBALL]) {
+//        
+//    } else if ([aSport isEqualToString:SPORT_LACROSSE]) {
+//        
+//    } else if ([aSport isEqualToString:SPORT_RUGBY]) {
+//        [sharedFilter addTab:[[PxpFilterRugbyTabViewController alloc]init]];
+//    } else if ([aSport isEqualToString:SPORT_MEDICAL]) {
+//        
+//    }
 
     
 

@@ -16,12 +16,15 @@
 @property (strong, nonatomic, nullable)    AVPlayer *videoPlayer;
 @property (strong,nonatomic,nullable)      UIView  *mainView;
 
-@optional
 -(void)update;
+-(void)clear;
+
+@optional
+
 -(void)postTagsAtBeginning;
 -(void)setIsDurationVariable:(SideTagButtonModes)buttonMode;
 -(void)closeAllOpenTagButtons;
--(void)clear;
+
 -(nonnull NSString *)currentPeriod;
 -(void)allToggleOnOpenTags;
 -(void)addData:(nonnull NSString *)type name:(nonnull NSString*)name;

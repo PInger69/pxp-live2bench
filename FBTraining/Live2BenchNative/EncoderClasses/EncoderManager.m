@@ -372,7 +372,8 @@ static EncoderManager * instance;
     [_authenticatedEncoders removeObject:aEncoder];
     [dictOfEncoders removeObjectForKey:aEncoder.name];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENCODER_COUNT_CHANGE object:self];
-    if (_authenticatedEncoders.count == 0) {
+    if (_authenticatedEncoders.count == 0 ) {
+        
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"No Encoder"
                                                                         message:@"No Encoder is connected"
                                                                  preferredStyle:UIAlertControllerStyleAlert];
@@ -385,7 +386,10 @@ static EncoderManager * instance;
                                             [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
                                         }];
         [alert addAction:cancelButtons];
-        [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+        
+        if ([UserCenter getInstance].customerEmail){
+            [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+        }
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:nil userInfo:@{@"text":@"No Encoder"}];
     }
 

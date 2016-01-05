@@ -236,7 +236,9 @@ static void * eventContext      = &eventContext;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [_bottomViewController update];
+    if ([_bottomViewController respondsToSelector:@selector(update)]) {
+        [_bottomViewController update];
+    }
     [self.view bringSubviewToFront:_bottomViewController.mainView];
     [self.view bringSubviewToFront:_videoBar];
     [self.view bringSubviewToFront:_fullscreenViewController.view];
@@ -332,38 +334,61 @@ static void * eventContext      = &eventContext;
         _bottomViewController = nil;
     }
     
-    if ([sport isEqualToString:SPORT_HOCKEY] && !_bottomViewController && _currentEvent) {
-        _bottomViewController = [[HockeyBottomViewController alloc]init];
-        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-        _bottomViewController.currentEvent = _currentEvent;
-        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
+    
+//     new
+    Profession * profession = [ProfessionMap getProfession:sport];
+    _bottomViewController = [[profession.bottomViewControllerClass alloc]init];
+    [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
+    _bottomViewController.currentEvent  = _currentEvent;
+    _bottomViewController.videoPlayer   = _playerViewController.playerView.player;
+    if ([_bottomViewController respondsToSelector:@selector(update)]) {
         [_bottomViewController update];
-        [_bottomViewController postTagsAtBeginning];
-        
-    }else if ([sport isEqualToString:SPORT_SOCCER] && !_bottomViewController && _currentEvent){
-        _bottomViewController = [[SoccerBottomViewController alloc]init];
-        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-        _bottomViewController.currentEvent = _currentEvent;
-        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
-        [_bottomViewController update];
-        [_bottomViewController postTagsAtBeginning];
-        [self switchPressed];
-        [_bottomViewController allToggleOnOpenTags];
-    }else if ([sport isEqualToString:SPORT_RUGBY] && !_bottomViewController && _currentEvent){
-        _bottomViewController = [[RugbyBottomViewController alloc]init];
-        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-        _bottomViewController.currentEvent = _currentEvent;
-        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
-        [_bottomViewController update];
-        [_bottomViewController postTagsAtBeginning];
-        [self switchPressed];
-        [_bottomViewController allToggleOnOpenTags];
-    }else if ([sport isEqualToString:SPORT_FOOTBALL] && !_bottomViewController && _currentEvent){
-        _bottomViewController = [[FootballBottomViewController alloc]init];
-        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-        _bottomViewController.currentEvent = _currentEvent;
-        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
     }
+    if ([_bottomViewController respondsToSelector:@selector(postTagsAtBeginning)]) {
+         [_bottomViewController postTagsAtBeginning];
+    }
+    if ([_bottomViewController respondsToSelector:@selector(allToggleOnOpenTags)]) {
+           [_bottomViewController allToggleOnOpenTags];
+    }
+    
+    [self switchPressed];
+ 
+    return;
+//     end new
+    
+    
+//    if ([sport isEqualToString:SPORT_HOCKEY] && !_bottomViewController && _currentEvent) {
+//        _bottomViewController = [[HockeyBottomViewController alloc]init];
+//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
+//        _bottomViewController.currentEvent = _currentEvent;
+//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
+//        [_bottomViewController update];
+//        [_bottomViewController postTagsAtBeginning];
+//        
+//    }else if ([sport isEqualToString:SPORT_SOCCER] && !_bottomViewController && _currentEvent){
+//        _bottomViewController = [[SoccerBottomViewController alloc]init];
+//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
+//        _bottomViewController.currentEvent = _currentEvent;
+//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
+//        [_bottomViewController update];
+//        [_bottomViewController postTagsAtBeginning];
+//        [self switchPressed];
+//        [_bottomViewController allToggleOnOpenTags];
+//    }else if ([sport isEqualToString:SPORT_RUGBY] && !_bottomViewController && _currentEvent){
+//        _bottomViewController = [[RugbyBottomViewController alloc]init];
+//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
+//        _bottomViewController.currentEvent = _currentEvent;
+//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
+//        [_bottomViewController update];
+//        [_bottomViewController postTagsAtBeginning];
+//        [self switchPressed];
+//        [_bottomViewController allToggleOnOpenTags];
+//    }else if ([sport isEqualToString:SPORT_FOOTBALL] && !_bottomViewController && _currentEvent){
+//        _bottomViewController = [[FootballBottomViewController alloc]init];
+//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
+//        _bottomViewController.currentEvent = _currentEvent;
+//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
+//    }
 }
 
 -(void)checkIpadVersion{
@@ -443,7 +468,9 @@ static void * eventContext      = &eventContext;
 
     if (!_currentEvent.live) {
         [_tagButtonController closeAllOpenTagButtons];
-        [_bottomViewController closeAllOpenTagButtons];
+        if ([_bottomViewController respondsToSelector:@selector(closeAllOpenTagButtons)]){
+            [_bottomViewController closeAllOpenTagButtons];
+        }
     }
     
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
@@ -730,6 +757,13 @@ static void * eventContext      = &eventContext;
     [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSelected:) addTarget:self forControlEvents:UIControlEventTouchUpInside];
     [_tagButtonController addActionToAllTagButtons:@selector(tagButtonSwiped:) addTarget:self forControlEvents:UIControlEventTouchDragOutside];
 
+    if (_currentEvent) {
+        if (durationSwitch.on == true ) {
+            [_tagButtonController setButtonState:SideTagButtonModeToggle];
+        }else if(durationSwitch.on == false){
+            [_tagButtonController setButtonState:SideTagButtonModeRegular];
+        }
+    }
 
 }
 
@@ -850,10 +884,14 @@ static void * eventContext      = &eventContext;
 {
     if (durationSwitch.on == true &&_currentEvent) {
         [_tagButtonController setButtonState:SideTagButtonModeToggle];
-        [_bottomViewController setIsDurationVariable:SideTagButtonModeToggle];
+        if([_bottomViewController respondsToSelector:@selector(setIsDurationVariable:)]){
+            [_bottomViewController setIsDurationVariable:SideTagButtonModeToggle];
+        }
     }else if(durationSwitch.on == false &&_currentEvent){
         [_tagButtonController setButtonState:SideTagButtonModeRegular];
-        [_bottomViewController setIsDurationVariable:SideTagButtonModeRegular];
+        if([_bottomViewController respondsToSelector:@selector(setIsDurationVariable:)]){
+            [_bottomViewController setIsDurationVariable:SideTagButtonModeRegular];
+        }
     }
 }
 

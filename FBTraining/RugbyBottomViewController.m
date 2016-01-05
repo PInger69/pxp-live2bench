@@ -194,6 +194,12 @@
     [currentlyPostingTags removeObject:toBeRemoved];
 }
 
+-(void)clear
+{
+
+    [self clearCurrentlyPostingTags];
+}
+
 -(void)setCurrentEvent:(Event * __nullable)currentEvent{
     _currentEvent = currentEvent;
     [self enableButton];

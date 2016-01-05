@@ -219,12 +219,12 @@
         
         
         if (self.style ==PxpFilterButtonScrollViewStyleLandscape){
-            if (++rowNum ==rowCount){
+            if (++rowNum >=rowCount){
                 rowNum = 0;
                 colNum++;
             }
         } else {
-            if (++colNum ==rowCount){
+            if (++colNum >=rowCount){
                 colNum = 0;
                 rowNum++;
 

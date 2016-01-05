@@ -572,7 +572,7 @@
     [cell removeGestureRecognizer:cell.swipeRecognizerRight];
     
     // This is used for customizing the cell based off the sport
-//    Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+//    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
 //    profession.onListViewCellStyle(cell,tag);
     
     return cell;

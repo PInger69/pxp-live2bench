@@ -25,7 +25,7 @@
 		<key>MainTabs</key>
 		<true/>
 		<key>TagSets</key>
-		<false/>
+		<true/>
 		<key>Log</key>
 		<true/>
 		<key>FeedMap</key>

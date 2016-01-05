@@ -17,6 +17,10 @@
 
 @implementation SideTagEditButtonDisplayView
 @synthesize enabled = _enabled;
+@synthesize position = _position;
+@synthesize order = _order;
+
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -62,6 +66,11 @@
     self.enabled = YES;
 }
 
+-(NSDictionary*)data
+{
+
+    return @{@"name":self.name,@"order":self.order,@"position":self.position};
+}
 
 -(void)type:(NSString*)aType
 {
@@ -102,6 +111,38 @@
        self.button.layer.borderColor = [UIColor lightGrayColor].CGColor;
     }
     
+}
+
+
+-(void)setName:(NSString *)name
+{
+    self.button.titleLabel.text = name;
+    [self.button setTitle:name forState:UIControlStateNormal];
+}
+
+-(NSString*)name
+{
+    return self.button.titleLabel.text;
+}
+
+-(void)setPosition:(NSString *)position
+{
+    _position = position;
+}
+
+-(NSString*)position
+{
+    return _position;
+}
+
+-(void)setOrder:(NSNumber *)order
+{
+    _order = order;
+}
+
+-(NSNumber*)order
+{
+    return _order;
 }
 
 

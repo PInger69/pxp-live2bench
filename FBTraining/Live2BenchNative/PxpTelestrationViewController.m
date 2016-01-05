@@ -105,11 +105,11 @@
     self.telestrating = NO;
     self.telestration = nil;
     
-    [self.undoButton addTarget:self action:@selector(undoAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.lineButton addTarget:self action:@selector(lineAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.arrowButton addTarget:self action:@selector(arrowAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.clearButton addTarget:self action:@selector(clearAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.telestrationButton addTarget:self action:@selector(telestrationAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.undoButton            addTarget:self action:@selector(undoAction:)            forControlEvents:UIControlEventTouchUpInside];
+    [self.lineButton            addTarget:self action:@selector(lineAction:)            forControlEvents:UIControlEventTouchUpInside];
+    [self.arrowButton           addTarget:self action:@selector(arrowAction:)           forControlEvents:UIControlEventTouchUpInside];
+    [self.clearButton           addTarget:self action:@selector(clearAction:)           forControlEvents:UIControlEventTouchUpInside];
+    [self.telestrationButton    addTarget:self action:@selector(telestrationAction:)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.renderView];
     [self.view addSubview:self.captureArea];

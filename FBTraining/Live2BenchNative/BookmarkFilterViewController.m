@@ -109,7 +109,7 @@
     [bookMarkFilterTitleButton setBackgroundImage:[UIImage imageNamed:@"myclipfilter"] forState:UIControlStateNormal];
     [bookMarkFilterTitleButton setFrame:CGRectMake(bgview.bounds.size.width - 200.0f, 10.0f, 180.0f, 44.0f)];
     [bookMarkFilterTitleButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleBottomMargin];
-    [bookMarkFilterTitleButton addTarget:self action:@selector(swipeFilter:) forControlEvents:UIControlEventTouchDragInside];
+//    [bookMarkFilterTitleButton addTarget:self action:@selector(swipeFilter:) forControlEvents:UIControlEventTouchDragInside];
     [bookMarkFilterTitleButton addTarget:self action:@selector(finishedSwipe:) forControlEvents:UIControlEventTouchUpInside];
     [bookMarkFilterTitleButton addTarget:self action:@selector(finishedSwipeOutside:) forControlEvents:UIControlEventTouchUpOutside];
     [self.view addSubview:bookMarkFilterTitleButton];
@@ -498,7 +498,7 @@
 }
 
 - (IBAction)swipeFilter:(id)sender {
-    [[superArgs objectForKey:@"controller"] slideFilterBox];
+//    [[superArgs objectForKey:@"controller"] slideFilterBox];
 }
 
 //create tags for dates that games were played in the format yyyy-mm-dd
@@ -560,7 +560,7 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self.bookmarkViewController dismissFilterToolbox];
+//    [self.bookmarkViewController dismissFilterToolbox];
     
 }
 

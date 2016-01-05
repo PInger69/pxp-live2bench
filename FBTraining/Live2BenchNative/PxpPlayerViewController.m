@@ -38,21 +38,21 @@
         _playerView = [playerViewClass isSubclassOfClass:[PxpPlayerView class]] ? [[playerViewClass alloc] init] : [[PXP_PLAYER_VIEW_DEFAULT_CLASS alloc] init];
         _playerView.delegate = self;
         
-        _telestrationViewController = [[PxpTelestrationViewController alloc] init];
+        _telestrationViewController     = [[PxpTelestrationViewController alloc] init];
         _telestrationViewController.timeProvider = self;
         
-        _fullscreenGestureRecognizer = [[PxpFullscreenGestureRecognizer alloc] init];
+        _fullscreenGestureRecognizer    = [[PxpFullscreenGestureRecognizer alloc] init];
         
-        _seekForwardGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(seekForwardGesture:)];
-        _seekBackwardGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(seekBackwardGesture:)];
+        _seekForwardGestureRecognizer   = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(seekForwardGesture:)];
+        _seekBackwardGestureRecognizer  = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(seekBackwardGesture:)];
         
         _seekForwardGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
         _seekBackwardGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
         
-        _playerObserverContext = &_playerObserverContext;
-        _playerRangeObserverContext = &_playerRangeObserverContext;
-        _playerRateObserverContext = &_playerRateObserverContext;
-        _telestrationObserverContext = &_telestrationObserverContext;
+        _playerObserverContext          = &_playerObserverContext;
+        _playerRangeObserverContext     = &_playerRangeObserverContext;
+        _playerRateObserverContext      = &_playerRateObserverContext;
+        _telestrationObserverContext    = &_telestrationObserverContext;
         
         _stillFlag = NO;
         

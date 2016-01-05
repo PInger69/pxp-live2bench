@@ -415,16 +415,18 @@
 
 - (void)updateSideTags {
     // sort them the way the user wanted them
-    NSArray *sortedTagDescriptors = [_appDel.userCenter.tagNames sortedArrayUsingDescriptors:@[
-                                                                                               [NSSortDescriptor sortDescriptorWithKey:@"position" ascending:YES],
-                                                                                               [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES]]];
-    
-    NSMutableArray *tagNames = [NSMutableArray array];
-    for (NSDictionary *tagDescriptor in sortedTagDescriptors) {
-        [tagNames addObject:tagDescriptor[@"name"]];
-    }
-    
-    self.periodTableViewController.tagNames = tagNames;
+    NSLog(@"not working %s",__FUNCTION__);
+
+//    NSArray *sortedTagDescriptors = [_appDel.userCenter.tagNames sortedArrayUsingDescriptors:@[
+//                                                                                               [NSSortDescriptor sortDescriptorWithKey:@"position" ascending:YES],
+//                                                                                               [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES]]];
+//    
+//    NSMutableArray *tagNames = [NSMutableArray array];
+//    for (NSDictionary *tagDescriptor in sortedTagDescriptors) {
+//        [tagNames addObject:tagDescriptor[@"name"]];
+//    }
+//    
+//    self.periodTableViewController.tagNames = tagNames;
     
     // random tags
     /*

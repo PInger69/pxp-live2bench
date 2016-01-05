@@ -156,7 +156,7 @@
         
         // build YES button
         UIAlertAction* yesButtons = [UIAlertAction
-                                        actionWithTitle:@"Ok"
+                                        actionWithTitle:@"Yes"
                                         style:UIAlertActionStyleDefault
                                         handler:^(UIAlertAction * action)
                                         {
@@ -165,9 +165,13 @@
                                             }
                                             
                                             [self.colorCell.functionalButton setBackgroundColor:[UIColor whiteColor]];
-                                            [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
+                                           
+                                            
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:^{
 
-                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                                 [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
+
+                                            }];
                                         }];
         [alert addAction:yesButtons];
         
@@ -184,8 +188,24 @@
         
     }
     
+   
     
-     [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+    BOOL isAllowed = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    if (!isAllowed) {
+        for (UIView * btn in [self.colorCell.functionalButton subviews]) {
+            if ([btn isKindOfClass:[UIButton class]]) [btn removeFromSuperview];
+        }
+        
+        [self.colorCell.functionalButton setBackgroundColor:[UIColor whiteColor]];
+        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
+    }
+
+    
+    
+    
+    
+    
 }
 
 - (void)viewDidLoad {

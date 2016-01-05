@@ -12,6 +12,20 @@
 #import "ListViewCell.h"
 #import "thumbnailCell.h"
 
+// BottomViewControllers
+#import "HockeyBottomViewController.h"
+#import "SoccerBottomViewController.h"
+#import "RugbyBottomViewController.h"
+#import "FootballBottomViewController.h"
+#import "FootballTrainingBottomViewController.h"
+
+// FilterTabControllers
+#import "PxpFilterHockeyTabViewController.h"
+#import "PxpFilterFootballTabViewController.h"
+#import "PxpFilterRugbyTabViewController.h"
+#import "PxpFilterSoccerTabViewController.h"
+
+
 @implementation ProfessionMap
 
 static NSDictionary * _professionMapData;
@@ -19,7 +33,35 @@ static NSDictionary * _professionMapData;
 {
     NSMutableDictionary  * dict = [NSMutableDictionary new];
     
-     // Build Hockey
+    dict[SPORT_HOCKEY]                  =  [ProfessionMap buildHockey];
+    dict[SPORT_SOCCER]                  =  [ProfessionMap buildSoccer];
+    dict[SPORT_FOOTBALL]                =  [ProfessionMap buildFootball];
+    dict[SPORT_RUGBY]                   =  [ProfessionMap buildRugby];
+    dict[SPORT_CRICKET]                 =  [ProfessionMap buildCricket];
+    dict[SPORT_FOOTBALL_TRAINING]       =  [ProfessionMap buildFootballTraining];
+    dict[SPORT_BLANK]       =  [ProfessionMap buildBlank];
+    _professionMapData      = [dict copy];
+
+}
+
++(NSDictionary*)data
+{
+    return _professionMapData;
+}
+
++(Profession*)getProfession:(NSString*)professionName
+{
+    if (![_professionMapData objectForKey:professionName]) {
+        return (Profession*) _professionMapData[SPORT_BLANK];
+    }
+
+    return (Profession*) _professionMapData[professionName];
+}
+
+
++(Profession*)buildHockey
+{
+
     Profession * hockey = [Profession new];
     hockey.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStartOLine]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStopOLine]
@@ -36,19 +78,20 @@ static NSDictionary * _professionMapData;
     
     
     hockey.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[
-                                                                                      [NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStartOLine]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStopOLine]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStartDLine]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStopDLine]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyPeriodStart]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyPeriodStop]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppOLineStart]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppOLineStop]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppDLineStart]
-                                                                                      ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppDLineStop]
-//                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStart]
-//                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
-                                                                                    ]];
+                                                                                       [NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStartOLine]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStopOLine]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStartDLine]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyStopDLine]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyPeriodStart]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyPeriodStop]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppOLineStart]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppOLineStop]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppDLineStart]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type != %ld", (long)TagTypeHockeyOppDLineStop]
+                                                                                        ,[NSPredicate predicateWithFormat:@"duration != 0"]
+                                                                                       //                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStart]
+                                                                                       //                                                                                      ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeHockeyStrengthStop]
+                                                                                       ]];
     
     
     
@@ -58,7 +101,7 @@ static NSDictionary * _professionMapData;
         [cellToStyle.thumbPeriod setHidden:NO];
         
         cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Period: %d",[tagForData.period intValue]+1];
-
+        
         
         
     }];
@@ -67,16 +110,17 @@ static NSDictionary * _professionMapData;
         
     }];
     
+    hockey.bottomViewControllerClass    = [HockeyBottomViewController class];
+    hockey.filterTabClass               = [PxpFilterHockeyTabViewController class];
     
-    
-    dict[SPORT_HOCKEY] =  hockey;
-  
+    return hockey;
+}
 
-    
-    // Build Soccer
-    
++(Profession*)buildSoccer
+{
+
     Profession * soccer = [Profession new];
-
+    
     soccer.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStart]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStop]
                                                                                    ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStart]
@@ -84,7 +128,9 @@ static NSDictionary * _professionMapData;
                                                                                    ]];
     
     
-    soccer.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    soccer.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[
+                                                                                       [NSPredicate predicateWithFormat:@"duration != 0"]
+                                                                                       ]];
     
     
     
@@ -93,7 +139,7 @@ static NSDictionary * _professionMapData;
     [soccer setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
         [cellToStyle.thumbPeriod setHidden:NO];
         
-        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Period: %d",[tagForData.period intValue]+1];
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
         
         
         
@@ -102,35 +148,168 @@ static NSDictionary * _professionMapData;
     [soccer setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
         
     }];
-    
-    
-    
-    dict[SPORT_SOCCER] =  soccer;
-    
 
+    // set BottomviewController
+    soccer.bottomViewControllerClass = [SoccerBottomViewController class];
     
+    // set filter for list and clip view
+    soccer.filterTabClass            = [PxpFilterSoccerTabViewController class];
     
-    
-    
-    
-    
-    _professionMapData = [dict copy];
-
-    
-    
-    
-    
-    
+    return soccer;
 }
 
-+(NSDictionary*)data
++(Profession*)buildFootball
 {
-    return _professionMapData;
+    
+    Profession * profession         = [Profession new];
+    
+    profession.filterPredicate      =  [NSCompoundPredicate orPredicateWithSubpredicates:@[]];
+    
+    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    
+    // this is for extra styling for
+    [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:NO];
+        
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Quarter: %d",[tagForData.period intValue]+1];
+        
+    }];
+    
+    [profession setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    profession.bottomViewControllerClass    = [FootballBottomViewController class];
+    profession.filterTabClass               = [PxpFilterFootballTabViewController class];
+    
+    
+    return profession;
 }
 
++(Profession*)buildRugby
+{
+    
+    Profession * profession         = [Profession new];
+    
+    profession.filterPredicate      = [NSCompoundPredicate orPredicateWithSubpredicates:@[]];
+    
+    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    
+    // this is for extra styling for
+    [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:NO];
+        
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
+        
+    }];
+    
+    [profession setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    profession.bottomViewControllerClass    = [RugbyBottomViewController class];
+    profession.filterTabClass               = [PxpFilterRugbyTabViewController class];
+    
+    
+    
+    return profession;
+}
 
++(Profession*)buildFootballTraining
+{
+    
+    Profession * profession = [Profession new];
+    
+    profession.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStart]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStop]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStart]
+                                                                                       ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                       ]];
+    
+    
+    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    
+    
+    
+    
+    // this is for extra styling for
+    [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:NO];
+        
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
+        
+        
+        
+    }];
+    
+    [profession setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    profession.bottomViewControllerClass    = [FootballTrainingBottomViewController class];
+    profession.filterTabClass               = nil;
+    return profession;
+}
 
++(Profession*)buildCricket
+{
+    
+    Profession * profession = [Profession new];
+    
+    profession.filterPredicate  =  [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStart]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerHalfStop]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStart]
+                                                                                   ,[NSPredicate predicateWithFormat:@"type = %ld", (long)TagTypeSoccerZoneStop]
+                                                                                   ]];
+    
+    
+    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    
+    
+    
+    
+    // this is for extra styling for
+    [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:NO];
+        
+        cellToStyle.thumbPeriod.text = [NSString stringWithFormat:@"Half: %d",[tagForData.period intValue]+1];
+        
+        
+        
+    }];
+    
+    [profession setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    profession.bottomViewControllerClass    = [SoccerBottomViewController class];
+    profession.filterTabClass               = nil;
+    return profession;
+}
 
++(Profession*)buildBlank
+{
+    
+    Profession * profession         = [Profession new];
+    
+    profession.filterPredicate      = [NSCompoundPredicate orPredicateWithSubpredicates:@[]];
+    
+    profession.invisiblePredicate   = [NSCompoundPredicate andPredicateWithSubpredicates:@[]];
+    
+    // this is for extra styling for
+    [profession setOnClipViewCellStyle:^(thumbnailCell * cellToStyle, Tag * tagForData) {
+        [cellToStyle.thumbPeriod setHidden:YES];
+    }];
+    
+    [profession setOnListViewCellStyle:^(ListViewCell * cellToStyle, Tag * tagForData) {
+        
+    }];
+    
+    profession.bottomViewControllerClass    = nil;
+    profession.filterTabClass               = nil;
+    
+    return profession;
+}
 
 @end
 

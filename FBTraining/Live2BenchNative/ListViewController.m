@@ -376,9 +376,9 @@
     _pxpFilter.delegate = self;
     [_pxpFilter removeAllPredicates];
     
-//    Profession * profession = [ProfessionMap data][SPORT_HOCKEY];
+
     
-    Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
     if (_currentEvent) {
     if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
         [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];

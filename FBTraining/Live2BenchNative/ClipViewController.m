@@ -198,7 +198,7 @@ static void * encoderTagContext = &encoderTagContext;
     [_pxpFilter removeAllPredicates];
     
     
-    Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
    if (_currentEvent) {
     if (![_pxpFilter.ghostPredicates containsObject:profession.invisiblePredicate] && profession.invisiblePredicate){
         [_pxpFilter.ghostPredicates addObject:profession.invisiblePredicate];
@@ -555,7 +555,8 @@ static void * encoderTagContext = &encoderTagContext;
     [cell.thumbDeleteButton addTarget:self action:@selector(cellDeleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     // This is used for customizing the cell based off the sport
-    Profession * profession = [ProfessionMap data][_currentEvent.eventType];// should be the events sport //
+    
+    Profession * profession = [ProfessionMap getProfession:_currentEvent.eventType];// should be the events sport //
     profession.onClipViewCellStyle(cell,tagSelect);
     
     
