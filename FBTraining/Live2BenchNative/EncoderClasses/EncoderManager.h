@@ -70,6 +70,8 @@
 @property (nonatomic,strong)            CloudEncoder            * cloudEncoder;  // 
 @property (nonatomic,strong)            id <EncoderProtocol>    primaryEncoder;
 
+@property (nonatomic,strong)            Encoder                 * deviceEncoder;
+
 
 #pragma mark - Encoder Manager Methods
 

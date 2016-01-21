@@ -13,7 +13,7 @@
 
 
 @property (strong, nonatomic, nonnull) UIScrollView *scrollView;
-@property (strong, nonatomic, nonnull) UIView *view;
+
 @property (strong, nonatomic, nonnull) UILabel *zoomLabel;
 
 //@property (strong, nonatomic, nonnull) UIVisualEffectView *blurView;
@@ -118,6 +118,14 @@
     }
     self.view = view;
     [self addSubview:self.view];
+}
+
+-(void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    if (self.view) {
+        [self.view setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+    }
 }
 
 

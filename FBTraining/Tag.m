@@ -506,9 +506,19 @@ static NSMutableDictionary * openDurationTagsWithID;
     Tag *comparingTag;
     if ([object isKindOfClass:[Tag class]]) {
         comparingTag = (Tag *) object;
+        
+        BOOL check = (comparingTag.uniqueID == self.uniqueID);
+        
+        return check;
     }
-    return (comparingTag.uniqueID == self.uniqueID);
+    return NO;
 }
+
+- (NSUInteger)hash
+{
+    return self.uniqueID; //Must be a unique unsigned integer
+}
+
 
 -(NSString *)description{
     return [NSString stringWithFormat:@"name: %@, type: %@,displayTime: %@, thumbnails: %@  feeds: %@", self.name,[NSString stringWithFormat:@"%ld",(long)self.type],self.displayTime, self.thumbnails, self.feeds];
@@ -570,5 +580,8 @@ static NSMutableDictionary * openDurationTagsWithID;
 - (void)memoryWarningHandler:(NSNotification *)note {
     _cachedThumbnail = nil;
 }
+
+
+
 
 @end

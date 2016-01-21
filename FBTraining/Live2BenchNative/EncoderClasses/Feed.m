@@ -198,7 +198,7 @@
 -(void)setQuality:(int)aQuality
 {
     if (aQuality == _quality) return;
-    aQuality = MIN(0, MAX(aQuality, 1));
+    aQuality = aQuality;
     [self willChangeValueForKey:@"quality"];
 //    CMTime time = avPlayer.currentTime;
     if (aQuality == 1 && self.hasHighQuality){

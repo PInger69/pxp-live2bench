@@ -19,6 +19,7 @@
 #import <arpa/inet.h>
 #import "InternetMonitor.h"
 
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @implementation Utility
 

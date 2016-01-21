@@ -72,6 +72,9 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
+    
+    const CGFloat alignCenter  = 35;
+    
     const CGFloat width = self.bottomBar.bounds.size.width, height = self.bottomBar.bounds.size.height;
     
     const CGFloat margin = 8.0;
@@ -87,12 +90,17 @@
     
     const CGFloat tagCycleHeight = height - 2.0 * margin, tagCycleWidth = 2.0 * height - 2.0 * margin;
     
-    _previousTagButton.frame = CGRectMake(4.0 * height + margin, margin, tagCycleWidth, tagCycleHeight);
-    _nextTagButton.frame = CGRectMake(width - 4.0 * height - margin - tagCycleWidth, margin, tagCycleWidth, tagCycleHeight);
+    _previousTagButton.frame    = CGRectMake(0, 0, tagCycleWidth, tagCycleHeight);
+    _previousTagButton.center   = CGPointMake(CGRectGetMaxX(_currentTagLabel.frame)- 224,alignCenter);
+    
+    _nextTagButton.frame        = CGRectMake(0, 0, tagCycleWidth, tagCycleHeight);
+    _nextTagButton.center       = CGPointMake(CGRectGetMinX(_currentTagLabel.frame)+224,alignCenter);
+    
     
     const CGFloat buttonSize = self.bottomBar.bounds.size.height;
     const CGFloat buttonHeight = buttonSize-10;
-    _liveButton.frame = CGRectMake(self.fullscreenButton.frame.origin.x - 0.5 * buttonSize, margin, 100.0, tagCycleHeight);
+    
+    _liveButton.frame = CGRectMake(CGRectGetMaxX(_nextTagButton.frame)+margin, margin, 100.0, tagCycleHeight);
 
     self.slomoButton.frame      = CGRectMake(2.5 * buttonHeight,       margin+6,         1.5 * buttonHeight - 2.0 * margin,      buttonHeight - 2.0 * margin);
     self.slomoButton.layer.borderWidth = 1;

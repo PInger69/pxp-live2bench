@@ -155,7 +155,7 @@ static CMClockRef _pxpPlayerMasterClock;
 //                PXPLog(@"%@: %@", self, playerItem.error);
 //                PXPLog(@"-----");
                 NSLog(@"FAIL FAIL");
-                NSLog(@"%@: %@", self, playerItem.error);
+//                NSLog(@"%@: %@", self, playerItem.error);
                 
                 PXPLog(@"");
                 PXPLog(@"<!!! AVPlayerItem Error !!!>");
@@ -170,10 +170,10 @@ static CMClockRef _pxpPlayerMasterClock;
 //                
 //                [alert show];
                 
-                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PXP_PLAYER_ERROR object:self userInfo:@{
-                                                                                                                        @"rate": [NSNumber numberWithFloat:self.rate]
-                                                                                                                        
-                                                                                                                        }];
+//                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PXP_PLAYER_ERROR object:self userInfo:@{
+//                                                                                                                        @"rate": [NSNumber numberWithFloat:self.rate]
+//                                                                                                                        
+//                                                                                                                        }];
             }
             
             // run actions
@@ -544,9 +544,10 @@ static CMClockRef _pxpPlayerMasterClock;
 
 #pragma mark - Overrides
 
-- (nullable NSString *)description {
-    return [NSString stringWithFormat:@"%@(%@) rate:%f", [super description], self.name,self.rate];
-}
+//- (nullable NSString *)description {
+//    
+//    return [NSString stringWithFormat:@"%@(%@) rate:%f", [super description], self.name,self.rate];
+//}
 
 - (void)play {
     

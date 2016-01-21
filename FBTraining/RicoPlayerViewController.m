@@ -52,14 +52,12 @@ static CMClockRef _masterClock;
 
 -(void)addPlayers:(RicoPlayer *)aPlayer
 {
-
     self.players[aPlayer.name] = aPlayer;
     [self.depedencyPlayers addObject:aPlayer];
     aPlayer.delegate = self;
-//    aPlayer.avPlayer.masterClock = _masterClock;
+    aPlayer.avPlayer.masterClock = _masterClock;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onPlayerFail:) name:RicoPlayerDidPlayerItemFailNotification object:aPlayer];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onSyncReady:)  name:RicoPlayerWillWaitForSynchronizationNotification object:aPlayer];
-    
 }
 
 -(void)removePlayers:(RicoPlayer *)aPlayer
@@ -79,6 +77,11 @@ static CMClockRef _masterClock;
    __weak RicoPlayer * aPlayer = note.object;
     [self.depedencyPlayers removeObject:aPlayer]; // the player is unreliable
     [self onSyncReady:nil];// this is if a player fails while a sync is happening
+}
+
+-(void)onReset:(RicoPlayer *)player playerItemOperation:(NSOperation *)playerItemOperation
+{
+
 
 }
 
@@ -131,9 +134,6 @@ static CMClockRef _masterClock;
 -(void)play
 {
 
-
-    
-    
     for (RicoPlayer * player in [self.players allValues]) {
         if (player.syncronized) {
             if (!self.syncBlock) {
@@ -145,14 +145,36 @@ static CMClockRef _masterClock;
         }
     }
     
-    if (self.syncBlock) {
+    if (self.syncBlock && !self.syncBlock.isFinished && !self.syncBlock.isExecuting  ) {
+        NSLog(@"Queue %@",self.operationQueue);
         [self.operationQueue addOperation:self.syncBlock];
     }
-
-
-
-
 }
+
+
+-(void)playTag:(Tag*)tag
+{
+    CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.time, 1), CMTimeMakeWithSeconds(tag.duration, 1));
+
+    for (RicoPlayer * player in [self.players allValues]) {
+        player.range = range;
+    }
+    [self.playerControlBar setRange:range];
+    
+}
+
+
+-(void)live
+{
+    for (RicoPlayer * player in [self.players allValues]) {
+        [[player seekToTime:[player duration] toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] addDependency:[player play]];
+    }
+    if (self.playerControlBar) {
+        self.playerControlBar.state = RicoPlayerStateLive;
+    }
+}
+
+
 #pragma mark - RicoPlayerObserverDelegate Method
 
 -(void)tick:(RicoPlayer*)player
@@ -184,7 +206,8 @@ static CMClockRef _masterClock;
     self.playerControlBar.delegateUpdateEnabled = NO;
     for (RicoPlayer * dplayers in self.depedencyPlayers) {
         [dplayers.operationQueue cancelAllOperations];
-        (void)[dplayers pause];
+        [dplayers.avPlayer pause];// Bypass is playing flag
+//        (void)[dplayers pause];
     }
 }
 
@@ -193,15 +216,22 @@ static CMClockRef _masterClock;
     
     // get any player
     RicoPlayer * primaryPLayer = [[self.depedencyPlayers allObjects]firstObject];
+    CMTimeRange range;
+
+    if (CMTIMERANGE_IS_VALID(primaryPLayer.range)){
+        range = primaryPLayer.range;
+    } else {
+        range = CMTimeRangeMake(kCMTimeZero, primaryPLayer.duration);
+    }
     
-    // calculate range
-    CMTimeRange range = CMTimeRangeMake(kCMTimeZero, primaryPLayer.duration);
+  
     
     // calculate time to seek to
     CMTime time = CMTimeAdd(range.start, CMTimeMultiplyByFloat64(range.duration, slider.value));
     
     // update UI
-    [self.playerControlBar update:time duration:primaryPLayer.duration];
+     [self.playerControlBar update:time duration:range.duration];
+//    [self.playerControlBar update:time duration:primaryPLayer.duration];
     
     // cancel any seeking and start a new seek
     for (RicoPlayer * dplayers in self.depedencyPlayers) {
@@ -215,8 +245,13 @@ static CMClockRef _masterClock;
     
     RicoPlayer * primaryPLayer = [[self.depedencyPlayers allObjects]firstObject];
     
-    // calculate range
-    CMTimeRange range = CMTimeRangeMake(kCMTimeZero, primaryPLayer.duration);
+    CMTimeRange range;
+    
+    if (CMTIMERANGE_IS_VALID(primaryPLayer.range)){
+        range = primaryPLayer.range;
+    } else {
+        range = CMTimeRangeMake(kCMTimeZero, primaryPLayer.duration);
+    }
     
     // calculate time to seek to
     CMTime time = CMTimeAdd(range.start, CMTimeMultiplyByFloat64(range.duration, slider.value));
@@ -232,40 +267,55 @@ static CMClockRef _masterClock;
         [p.avPlayer.currentItem cancelPendingSeeks];
         [p.operationQueue cancelAllOperations];
   
+        
+     
+        
         NSOperation * seeking = [p seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-            
+            RicoPlayer * pp = p;
+            NSLog(@"                               Player %@ Time %f  %@",pp.name,CMTimeGetSeconds(pp.currentTime),pp.avPlayer.masterClock );
         }];
         
         [self.syncBlock addDependency:seeking]; // the syncBlock will only clear when all seeking is done
         
-        NSOperation * playing = [p play];
-        [playing addDependency:self.syncBlock]; // the play will only play when the synblock is gone
         
+        if ( p.isPlaying) {
+            NSOperation * playing = [p play];
+            [playing setCompletionBlock:^{
+                RicoPlayer * pp = p;
+                NSLog(@"                               Player %@ Time %f  %@",pp.name,CMTimeGetSeconds(pp.currentTime),pp.avPlayer.masterClock );
+            }];
+            [playing addDependency:self.syncBlock]; // the play will only play when the synblock is gone
+        }
         __block RicoPlayerViewController * weakSelf = self;
         
         [self.syncBlock setCompletionBlock:^{
             weakSelf.playerControlBar.delegateUpdateEnabled = YES;
              NSLog(@"delegateUpdateEnabled");
         }];
-
+        
     }
+//    [self.operationQueue addOperation:self.syncBlock];
 
 }
 
 
 
-
+-(void)seekToTime:(CMTime)seekTime toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void(^)(BOOL finished))completionHandler
+{
+    for (RicoPlayer * dplayers in self.depedencyPlayers) {
+        [dplayers seekToTime:seekTime toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:completionHandler];
+    }
+}
 
 
 -(void)playPausePressed:(RicoPlayerControlBar *)playerControlBar didChangeToPaused:(BOOL)paused
 {
-    
     for (RicoPlayer * dplayers in self.depedencyPlayers) {
         if (paused) {
             [dplayers pause];
             NSLog(@" pause");
         } else {
-             [dplayers play];
+            [dplayers play];
             NSLog(@"play ");
         }
     }
@@ -286,8 +336,25 @@ static CMClockRef _masterClock;
 
 -(void)cancelPressed:(RicoPlayerControlBar *)playerControlBar
 {
-    
+    for (RicoPlayer * player in [self.players allValues]) {
+        player.range = kCMTimeRangeInvalid;
+    }
+    playerControlBar.range = kCMTimeRangeInvalid;
 
+}
+
+-(void)setSlomo:(BOOL)slomo
+{
+    for (RicoPlayer * dplayers in self.depedencyPlayers) {
+        dplayers.slomo = slomo;
+    }
+    _slomo = slomo;
+}
+
+
+-(RicoPlayer*)primaryPlayers
+{
+    return [[self.depedencyPlayers allObjects]firstObject];
 }
 
 
@@ -295,15 +362,5 @@ static CMClockRef _masterClock;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

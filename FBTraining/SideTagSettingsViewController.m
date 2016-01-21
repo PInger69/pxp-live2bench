@@ -15,7 +15,7 @@
 #define DEFAULT_TAG_SET @"Default (non editable)"
 
 
-@interface SideTagSettingsViewController () <UIPickerViewDataSource,UIPickerViewDelegate,UIPopoverControllerDelegate,TagSetEditDelegate>
+@interface SideTagSettingsViewController () <UIPickerViewDataSource,UIPickerViewDelegate,UIPopoverControllerDelegate>
 
 @property (nonatomic,strong) NSString * currentTagSetName;
 
@@ -165,8 +165,9 @@
         
         if (order < 12 && [pos isEqualToString:@"right"]){
             order += 12;
+           // tags[i][@"order"] = [NSNumber numberWithInteger:order];
         }
-        
+
         SideTagEditButtonDisplayView * display = self.tagSetButtons[order];
 
 //        if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
@@ -219,6 +220,26 @@
                                     //Handel your yes please button action here
                                     
                                     NSString * nameNew = ((UITextField *)alert.textFields[0]).text;
+                                    
+                                    if ([nameNew isEqualToString:@""] ||[nameNew isEqualToString:@" "]) {
+                                        display.typeLabel.text = @"None";
+                                        display.typeLabel.textColor = [UIColor grayColor];
+                                        display.name                = @"";
+                                        display.selected = NO;
+                                        for (NSInteger i= 0; i<[self.tagSetData count];i++ ) {
+                                            
+                                            NSInteger order = [self.tagSetData[i][@"order"]integerValue];
+                                            
+                                            if (order == display.button.tag) {
+                                                [self.tagSetData removeObjectAtIndex:i];
+                                                [self onButtonEditComplete];
+                                                return;
+                                            }
+                                        }
+                                        
+                                        [self onButtonEditComplete];
+                                        return;
+                                    }
                                     
                                     display.typeLabel.text      = @"Normal";
                                     display.typeLabel.textColor = [UIColor blackColor];
@@ -472,10 +493,14 @@
     
     
     
+    if ([self.currentTagSetName isEqualToString:DEFAULT_TAG_SET]) {
+        [UserCenter getInstance].tagNames = [UserCenter getInstance].defaultTagNames;
+    } else {
+        [UserCenter getInstance].tagNames = temp;
+    }
     
+
     
-//    [UserCenter getInstance].tagNames = self.tagSetData;
-    [UserCenter getInstance].tagNames = temp;
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
 }
 

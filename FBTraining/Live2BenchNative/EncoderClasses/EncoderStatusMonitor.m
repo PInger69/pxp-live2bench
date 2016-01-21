@@ -1,3 +1,4 @@
+
 //
 //  EncoderStatusMonitor.m
 //  Live2BenchNative
@@ -13,6 +14,7 @@
 #import "Tag.h"
 #import "EncoderStatusMonitorProtocol.h"
 #import "UserCenter.h"
+#import "PxpURLProtocol.h"
 
 #define SHUTDOWN_RESPONCE   @"shutdown responce"
 #define STATUS              @"status"
@@ -57,6 +59,7 @@
 
 
 @synthesize isLookingForMaster = _isLookingForMaster;
+@synthesize urlProtocol = _urlProtocol;
 
 -(id)initWithDelegate:(id<EncoderStatusMonitorProtocol>)delegate
 {
@@ -70,15 +73,16 @@
                                 [NSNumber numberWithInteger:EncoderMonitorStatus],
                                 [NSNumber numberWithInteger:EncoderMonitorSyncMe]
                                 ];
-        
+        _urlProtocol        = @"http";
         maxFailCount        = 10; // 3 tries   0 index
         currentFailCount    = maxFailCount;
 
-        sessionConfig        = [NSURLSessionConfiguration defaultSessionConfiguration];
+        sessionConfig                                   = [NSURLSessionConfiguration defaultSessionConfiguration];
         sessionConfig.allowsCellularAccess              = NO;
         sessionConfig.timeoutIntervalForRequest         = 10;
         sessionConfig.timeoutIntervalForResource        = 10;
         sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
+        sessionConfig.protocolClasses = @[[PxpURLProtocol class]];
         
         statusSync          = YES; // to make sure that Sync never runs more then once
         timeout             = 10 ;
@@ -138,8 +142,9 @@
 {
     if (!statusSync)return;
     
-    NSURLRequest * _urlRequest                          = [NSURLRequest requestWithURL: [ NSURL URLWithString: [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress] ]
-                                                                           cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:timeout];
+    NSString * statusPath = [NSString stringWithFormat:@"%@://%@/min/ajax/encoderstatjson/",_urlProtocol,ipAddress];
+    NSURLRequest * _urlRequest                          = [NSURLRequest requestWithURL: [ NSURL URLWithString:  statusPath]
+                                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:timeout];
 
     connectType                         = STATUS;
     startRequestTime                    = [NSDate date];
@@ -172,7 +177,11 @@
                                                                                  }];
     
     NSString *jsonString = [Utility dictToJSON:dict];
-    NSString * syncPath = [NSString stringWithFormat:@"http://%@/min/ajax/syncme/%@", ipAddress, jsonString];
+    NSString * syncPath = [NSString stringWithFormat:@"%@://%@/min/ajax/syncme/%@",_urlProtocol, ipAddress, jsonString];
+    
+    
+    
+    
 
     NSURLRequest * _urlRequest          = [NSURLRequest requestWithURL: [ NSURL URLWithString: syncPath ] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:timeout];
     connectType                         = SYNC_ME;
@@ -193,8 +202,6 @@
     
     }];
     [dataT resume];
-
-    
 }
 
 
@@ -268,7 +275,7 @@
 
 -(void)checking
 {
-    NSURL * checkURL            = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encoderstatjson/",ipAddress]  ];
+    NSURL * checkURL            = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encoderstatjson/",_urlProtocol,ipAddress]  ];
     NSURLRequest * urlRequestShutdown  = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:1];
     connectType                 = SHUTDOWN_RESPONCE;
     

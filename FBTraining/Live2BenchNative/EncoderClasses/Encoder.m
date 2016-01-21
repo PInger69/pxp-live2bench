@@ -390,7 +390,7 @@
 @synthesize allEvents       = _allEvents;
 
 @synthesize eventContext = _eventContext;
-
+@synthesize urlProtocol = _urlProtocol;
 // ActionListItems
 @synthesize delegate,isFinished,isSuccess;
 
@@ -414,6 +414,7 @@
         _isBuild        = NO;
         _isReady         = NO;
         isAlive         = YES;
+        _urlProtocol    = (YES)?@"http":@"device";
         _cameraCount    = 0;
         _status         = ENCODER_STATUS_INIT;
         _justStarted    = true;
@@ -950,8 +951,8 @@
     
     NSString * json = [Utility dictToJSON:@{@"id":customerID}];
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/auth/%@",self.ipAddress,json]  ];
-    PXPLogAjax(@"http://%@/min/ajax/auth/%@",self.ipAddress,@{@"id":customerID});
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/auth/%@",self.urlProtocol,self.ipAddress,json]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/auth/%@",self.urlProtocol,self.ipAddress,@{@"id":customerID});
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = AUTHENTICATE;
@@ -962,7 +963,7 @@
 
 -(void)buildEncoder:(NSMutableDictionary *)data timeStamp:(NSNumber *)aTimeStamp
 {
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/getpastevents",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -972,7 +973,7 @@
 
 -(void)requestVersion:(NSMutableDictionary *)data timeStamp:(NSNumber *)aTimeStamp
 {
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/version",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/version",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -982,7 +983,7 @@
 
 -(void)shutdown:(NSMutableDictionary *)data timeStamp:(NSNumber *)aTimeStamp
 {
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encshutdown",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encshutdown",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -1003,8 +1004,8 @@
                                     }];
   
     NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.ipAddress,jsonString]  ];
-    PXPLogAjax(@"http://%@/min/ajax/tagset/%@",self.ipAddress,tData);
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagset/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/tagset/%@",self.urlProtocol,self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = MAKE_TAG;
@@ -1036,7 +1037,7 @@
 
     NSString *jsonString                    = [Utility dictToJSON:tData];
     jsonString = [jsonString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teleset",self.ipAddress]  ];
+     NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/teleset",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
     NSMutableURLRequest *someUrlRequest     = [NSMutableURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     [someUrlRequest setHTTPMethod:@"POST"];
@@ -1094,10 +1095,10 @@
     [tData removeObjectForKey:@"url_2"];
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.ipAddress,jsonString]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagmod/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
     if ( tData[@"srcValue"] ) {
         PXPLog(@"Download clip Request");
-        PXPLog(@"http://%@/min/ajax/tagmod/%@",self.ipAddress,tData);
+        PXPLog(@"%@://%@/min/ajax/tagmod/%@",self.urlProtocol,self.ipAddress,tData);
 
     }
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
@@ -1109,8 +1110,8 @@
 -(void)deleteEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp{
     
    // NSString *jsonString                    = [Utility dictToJSON:tData];
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/evtdelete/?name=%@&event=%@",self.ipAddress,[tData objectForKey:@"name"],[tData objectForKey:@"hid"]]  ];
-    PXPLogAjax(@"http://%@/min/ajax/evtdelete/?name=%@&event=%@",self.ipAddress,[tData objectForKey:@"name"],[tData objectForKey:@"hid"]);
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/evtdelete/?name=%@&event=%@",self.urlProtocol,self.ipAddress,[tData objectForKey:@"name"],[tData objectForKey:@"hid"]]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/evtdelete/?name=%@&event=%@",self.urlProtocol,self.ipAddress,[tData objectForKey:@"name"],[tData objectForKey:@"hid"]);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = DELETE_EVENT;
@@ -1130,8 +1131,8 @@
         jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/sumget/%@",self.ipAddress,jsonString]  ];
-    PXPLogAjax(@"http://%@/min/ajax/sumget/%@",self.ipAddress,tData);
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/sumget/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/sumget/%@",self.urlProtocol,self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = SUMMARY_GET;
@@ -1150,8 +1151,8 @@
         jsonString = [jsonString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/sumset/%@",self.ipAddress,jsonString]  ];
-    PXPLogAjax(@"http://%@/min/ajax/sumset/%@",self.ipAddress,tData);
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/sumset/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/sumset/%@",self.urlProtocol,self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = SUMMARY_PUT;
@@ -1161,7 +1162,7 @@
 -(void)teamsGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
  
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/teamsget",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/teamsget",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -1172,7 +1173,7 @@
 -(void)camerasGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getcameras",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/getcameras",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -1186,8 +1187,8 @@
 
     NSString *jsonString                    = [Utility dictToJSON:tData];
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/gametags/%@",self.ipAddress,jsonString]  ];
-    PXPLogAjax(@"http://%@/min/ajax/gametags/%@",self.ipAddress,tData);
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/gametags/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/gametags/%@",self.urlProtocol,self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
@@ -1201,8 +1202,8 @@
     
     NSString *jsonString                    = [Utility dictToJSON:tData];
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/gametags/%@",self.ipAddress,jsonString]  ];
-    PXPLogAjax(@"http://%@/min/ajax/gametags/%@",self.ipAddress,tData);
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/gametags/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/gametags/%@",self.urlProtocol,self.ipAddress,tData);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = EVENT_GET_TAGS;
@@ -1214,7 +1215,7 @@
 -(void)liveEventGet:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/getpastevents",self.urlProtocol,self.ipAddress]  ];
     PXPLogAjax(checkURL.absoluteString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -1240,8 +1241,8 @@
     }
     
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encstop/%@",self.ipAddress,jsonString]  ];
-    PXPLogAjax(@"http://%@/min/ajax/encstop/%@",self.ipAddress,jsonString);
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encstop/%@",self.urlProtocol,self.ipAddress,jsonString]  ];
+    PXPLogAjax(@"%@://%@/min/ajax/encstop/%@",self.urlProtocol,self.ipAddress,jsonString);
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     encoderConnection.connectionType        = STOP_EVENT;
@@ -1253,7 +1254,7 @@
 -(void)pauseEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encpause/",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encpause/",self.urlProtocol,self.ipAddress]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     PXPLogAjax(checkURL.absoluteString);
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -1264,7 +1265,7 @@
 -(void)resumeEvent:(NSMutableDictionary *)tData timeStamp:(NSNumber *)aTimeStamp
 {
     
-    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encresume/",self.ipAddress]  ];
+    NSURL * checkURL                        = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encresume/",self.urlProtocol,self.ipAddress]  ];
     urlRequest                              = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:currentCommand.timeOut];
     PXPLogAjax(checkURL.absoluteString);
     encoderConnection                       = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
@@ -1284,7 +1285,8 @@
     NSString * awayTeam = [tData objectForKey:@"awayTeam"];
     NSString * league   = [tData objectForKey:@"league"];
     
-    NSString *unencoded = [NSString stringWithFormat:@"http://%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",
+    NSString *unencoded = [NSString stringWithFormat:@"%@://%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",
+                           self.urlProtocol,
                            self.ipAddress,
                            homeTeam,
                            awayTeam,
@@ -1395,7 +1397,10 @@
     
     if (isAuthenticate && 1 && _isBuild && isTeamsGet && !_isReady){
         _isReady         = YES;
-        if (!statusMonitor) statusMonitor   = [[EncoderStatusMonitor alloc]initWithDelegate:self];
+        if (!statusMonitor) {
+            statusMonitor   = [[EncoderStatusMonitor alloc]initWithDelegate:self];
+            statusMonitor.urlProtocol = self.urlProtocol;
+        }
 //        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_THIS_ENCODER_IS_READY object:self];
         [self.encoderManager onRegisterEncoderCompleted:self];
     }
@@ -2210,7 +2215,7 @@
         {
             rawEncoderData                  = object;
             
-            NSArray         * events        = [rawEncoderData objectForKey:@"events"];
+            NSArray              * events   = [rawEncoderData objectForKey:@"events"];
             NSMutableDictionary  * pool     = [[NSMutableDictionary alloc]init];
             
             @try {

@@ -221,6 +221,11 @@ NS_OPTIONS(NSInteger, style){
     
     // New Will Select
     NSDictionary *settingDefinition = self.settingDefinitions[indexPath.row];
+    
+    if (_selectDelegate){
+        [_selectDelegate selectedSettingDefinition:settingDefinition];
+    }
+    
     return settingDefinition[@"ViewController"] ? indexPath : nil;
     
     

@@ -37,6 +37,8 @@
     CustomLabel *encoderHomeText;
 }
 
+@property (nonatomic,strong) UIButton * makeLocalEventButton;
+
 
 -(id)initWithAppDelegate:(AppDelegate*)appDel;
 -(void)changeStatusString:(NSString*)statusString;

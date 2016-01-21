@@ -25,7 +25,7 @@
 #import "SideTagSettingsViewController.h"
 #import "FeedMappingViewController.h"
 
-@interface SettingsPageViewController () //<SettingsTableDelegate>
+@interface SettingsPageViewController () <SettingsTableViewControllerSelectDelegate>
 
 @property (strong, nonatomic) NSArray *defaultSettings;
 
@@ -167,7 +167,10 @@ NS_OPTIONS(NSInteger, style){
                                            @"Identifier": creditsViewController.identifier
                                            }];
         
-        
+        [tempDefinitions addObject:@{
+                                     @"Name": @"Logout",
+                                     @"Identifier": @"Logout"
+                                     }];
         
         
         self.settingDefinitions = [tempDefinitions copy];
@@ -289,6 +292,7 @@ NS_OPTIONS(NSInteger, style){
         self.settingsTable = [[SettingsTableViewController alloc] initWithSettingDefinitions:self.settingDefinitions settings:self.settingsDictionary];
         self.settingsTable.dataArray = self.settingsArray;
         self.settingsTable.splitViewController = self.splitViewController;
+        self.settingsTable.selectDelegate = self;
         
         [self.splitViewController setViewControllers: @[self.settingsTable, [UIViewController new]]];
         [self.splitViewController.view setFrame:CGRectMake(0, 55, self.view.frame.size.width, self.view.frame.size.height - 55)];
@@ -366,6 +370,87 @@ NS_OPTIONS(NSInteger, style){
     
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - OnSelectNonViewController
+-(void)selectedSettingDefinition:(NSDictionary*)definition
+{
+    if (definition[@"Name"] && [definition[@"Name"] isEqualToString:@"Logout"]) {
+        [self logout];
+    }
+    
+    
+}
+
+
+- (void)logout {
+    BOOL hasInternet = [Utility hasInternet];
+    UIAlertController * alert;
+    
+    if (!hasInternet || !self.encoderManager.hasMAX) {
+        
+        
+        alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
+                                                    message:@"Please connect to the internet to log out."
+                                             preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"OK"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:cancelButtons];
+        
+        
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"hideSettings" object:self];
+        alert = [UIAlertController alertControllerWithTitle:alertMessageTitle
+                                                    message:@"If you log out, you need internet to log in. Are you sure you want to log out?"
+                                             preferredStyle:UIAlertControllerStyleAlert];
+        
+        
+        // build YES button
+        UIAlertAction* yesButtons = [UIAlertAction
+                                     actionWithTitle:@"Yes"
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction * action)
+                                     {
+                                         [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:^{
+                                             [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
+                                         }];
+                                     }];
+        [alert addAction:yesButtons];
+        
+        
+        // build NO button
+        UIAlertAction* cancelButtons = [UIAlertAction
+                                        actionWithTitle:@"No"
+                                        style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                        }];
+        [alert addAction:cancelButtons];
+        
+    }
+    
+    
+    
+    BOOL isAllowed = [[CustomAlertControllerQueue getInstance]presentViewController:alert inController:self animated:YES style:AlertIndecisive completion:nil];
+    
+    if (!isAllowed) {
+        [[NSNotificationCenter defaultCenter] postNotificationName: NOTIF_LOGOUT_USER object:nil];
+    }
+    
+    
+    
+    
+    
+    
+}
+
 
 
 /*

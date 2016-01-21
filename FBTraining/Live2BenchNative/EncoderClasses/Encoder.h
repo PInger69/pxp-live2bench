@@ -97,6 +97,7 @@
 @property (nonatomic,assign)    BOOL            justStarted;
 @property (nonatomic,assign)    BOOL            pressingStart;
 
+@property (nonatomic,strong)    NSString        *urlProtocol;//http
 
 
 @property (nonatomic,strong)    id <EncoderParseProtocol> parseModule;

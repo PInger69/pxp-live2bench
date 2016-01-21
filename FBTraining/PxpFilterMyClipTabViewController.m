@@ -111,9 +111,29 @@
     
     [_teamsScrollView buildButtonsWith:[[tempTeamSet allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
   
+    
+
+//    NSSortDescriptor *sorter2 =[NSSortDescriptor
+//                                sortDescriptorWithKey:@"eventName"
+//                                ascending:YES
+//                                selector:@selector(caseInsensitiveCompare:)];
+//    
+//    
+//    sorter2 = NSSortDescriptor so
+//
+//    
+//    return [NSMutableArray arrayWithArray:[toSort sortedArrayUsingDescriptors:@[sorter2,sorter1]]];
+    
+//    NSArray * sortedList = [[tempDateSet allObjects] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]re;
+//    NSArray * sortedList = [[tempDateSet allObjects] sortedArrayUsingDescriptors:@[sorter2]];
+//    [_dateScrollView buildButtonsWith:sortedList];
+    
+
     [_dateScrollView buildButtonsWith:[[tempDateSet allObjects]sortedArrayUsingComparator:^(id obj1, id obj2) {
-        return (NSComparisonResult) [obj1 integerValue] - [obj2 integerValue];
+        return (NSComparisonResult) [obj2 integerValue] - [obj1 integerValue];
     }]];
+    
+    
 
     NSArray * playerList = [[tempPlayerSet allObjects] sortedArrayUsingComparator:^(id obj1, id obj2) {
         return (NSComparisonResult) [obj1 integerValue] - [obj2 integerValue];

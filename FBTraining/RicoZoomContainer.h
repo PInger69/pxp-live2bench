@@ -25,6 +25,7 @@
 @property (assign, nonatomic) BOOL zoomEnabled;
 
 
+@property (strong, nonatomic, nonnull) UIView *view;
 
 -(void)addToContainer:( UIView*_Nonnull)view;
 

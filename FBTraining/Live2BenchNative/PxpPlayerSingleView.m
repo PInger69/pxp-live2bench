@@ -101,7 +101,7 @@
     _failedLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
     _failedLabel.textAlignment = NSTextAlignmentCenter;
     _failedLabel.adjustsFontSizeToFitWidth = YES;
-    _failedLabel.text = @"☠";
+    _failedLabel.text = @"";//@"☠";
     
     _zoomEnabled = YES;
     
@@ -120,7 +120,15 @@
     [_blurView.contentView addSubview:_vibrancyView];
     [_vibrancyView.contentView addSubview:_failedLabel];
     
-    [self addSubview:_nameLabel];
+    //
+    NSDictionary * setPref = [[PxpPreference dictionary] objectForKey:@"SettingsItems"];
+    
+    
+    
+    if ([setPref[@"DebugMode"] boolValue])   [self addSubview:_nameLabel];
+    
+    
+  
     [self addSubview:_zoomLabel];
     [self addSubview:_activityIndicator];
     

@@ -352,43 +352,6 @@ static void * eventContext      = &eventContext;
     }
     
     [self switchPressed];
- 
-    return;
-//     end new
-    
-    
-//    if ([sport isEqualToString:SPORT_HOCKEY] && !_bottomViewController && _currentEvent) {
-//        _bottomViewController = [[HockeyBottomViewController alloc]init];
-//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-//        _bottomViewController.currentEvent = _currentEvent;
-//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
-//        [_bottomViewController update];
-//        [_bottomViewController postTagsAtBeginning];
-//        
-//    }else if ([sport isEqualToString:SPORT_SOCCER] && !_bottomViewController && _currentEvent){
-//        _bottomViewController = [[SoccerBottomViewController alloc]init];
-//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-//        _bottomViewController.currentEvent = _currentEvent;
-//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
-//        [_bottomViewController update];
-//        [_bottomViewController postTagsAtBeginning];
-//        [self switchPressed];
-//        [_bottomViewController allToggleOnOpenTags];
-//    }else if ([sport isEqualToString:SPORT_RUGBY] && !_bottomViewController && _currentEvent){
-//        _bottomViewController = [[RugbyBottomViewController alloc]init];
-//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-//        _bottomViewController.currentEvent = _currentEvent;
-//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
-//        [_bottomViewController update];
-//        [_bottomViewController postTagsAtBeginning];
-//        [self switchPressed];
-//        [_bottomViewController allToggleOnOpenTags];
-//    }else if ([sport isEqualToString:SPORT_FOOTBALL] && !_bottomViewController && _currentEvent){
-//        _bottomViewController = [[FootballBottomViewController alloc]init];
-//        [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
-//        _bottomViewController.currentEvent = _currentEvent;
-//        _bottomViewController.videoPlayer = _playerViewController.playerView.player;
-//    }
 }
 
 -(void)checkIpadVersion{
@@ -599,12 +562,12 @@ static void * eventContext      = &eventContext;
     if (c <=1) return ;
     
     for (NSInteger i =0; i<c; i++) {
-        UIButton * scrButton = [[UIButton alloc]initWithFrame:CGRectMake(155+((w+16)*i), 55+(w/2), w, w)];
+        UIButton * scrButton = [[UIButton alloc]initWithFrame:CGRectMake(155+((w+20)*i), 55+(w/2), w+10, w)];
         [scrButton addTarget:self action:@selector(onPressSourceButton:) forControlEvents:UIControlEventTouchUpInside];
         scrButton.tag = i;
         [_sourceButtons addObject:scrButton];
         
-        scrButton.layer.cornerRadius = (w/2);
+        scrButton.layer.cornerRadius = 3;
         if (i) {
             [scrButton setBackgroundColor:[UIColor lightGrayColor]] ;
         } else {
@@ -617,8 +580,8 @@ static void * eventContext      = &eventContext;
 //        [scrButton.layer addSublayer:sublayer];
 //        
 //        
-        
-            scrButton.layoutMargins = UIEdgeInsetsMake(-15, -15, -15, -15);
+//        CGFloat inset = -1;
+//            scrButton.layoutMargins = UIEdgeInsetsMake(inset, inset, inset, inset);
         [self.view addSubview:scrButton];
     }
    

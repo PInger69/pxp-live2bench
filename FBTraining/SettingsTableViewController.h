@@ -9,6 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "SwipeableTableViewCell.h"
 
+
+@protocol SettingsTableViewControllerSelectDelegate <NSObject>
+
+-(void)selectedSettingDefinition:(NSDictionary*)definition;
+
+@end
+
+
+
+
 @class DetailViewController;
 
 @interface SettingsTableViewController : UITableViewController
@@ -17,6 +27,8 @@
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) UISplitViewController *splitViewController;
 @property (nonatomic, weak) UINavigationController *navigationController;
+
+@property (nonatomic, weak) id<SettingsTableViewControllerSelectDelegate> selectDelegate;
 
 - (instancetype)initWithSettingDefinitions:(NSArray *)definitions settings:(NSMutableDictionary *)settings;
 

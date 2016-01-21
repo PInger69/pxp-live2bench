@@ -103,6 +103,7 @@
     [_slider addTarget:self action:@selector(seekDidEnd:) forControlEvents:UIControlEventTouchCancel | UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     _slider.minimumValue = 0.0;
     _slider.maximumValue = 1.0;
+
     
     _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(49.5, 0, 55, _container.bounds.size.height)];
     _leftLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight;
@@ -152,6 +153,7 @@
     self.playPauseButton.center     = CGPointMake(22.0, 0.5 * self.container.bounds.size.height);
     self.liveLight.center           = CGPointMake(self.container.bounds.size.width - 22.0, 0.5 * self.container.bounds.size.height);
     self.rangeCancelButton.center   = CGPointMake(self.container.bounds.size.width - 22.0, 0.5 * self.container.bounds.size.height);
+
 }
 
 
@@ -179,7 +181,7 @@
     }
     
     
-    if (!self.seek) {
+    if (!self.seek && self.state != RicoPlayerStateLive) {
         // if the player is live make the user think they are 100% live
         CGFloat percent = ceil(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))) / ceil(CMTimeGetSeconds(timeRange.duration));
         [self.slider setValue:isfinite(percent) ? percent : 0.0 animated:YES];
@@ -226,6 +228,7 @@
     switch (state) {
         case RicoPlayerStateDisabled:
             self.container.backgroundColor = [UIColor clearColor];
+            self.playPauseButton.enabled = NO;
             break;
         case RicoPlayerStateNormal:
             _liveLight.hidden           = YES;
@@ -235,27 +238,28 @@
         case RicoPlayerStateLive:
             _liveLight.hidden           = NO;
             _rangeCancelButton.hidden   = YES;
+            _playPauseButton.paused     = NO;
             self.rightLabel.text = NSLocalizedString(@"LIVE", nil);
             [self.slider setValue:1.0];
             self.container.backgroundColor = [UIColor clearColor];
             break;
         case RicoPlayerStateRange:
-            _liveLight.hidden           = YES;
-            _rangeCancelButton.hidden   = NO;
-            self.container.backgroundColor = [self.tintColor colorWithAlphaComponent:0.5];
-            
+            _liveLight.hidden               = YES;
+            _rangeCancelButton.hidden       = NO;
+            self.container.backgroundColor  = [self.tintColor colorWithAlphaComponent:0.5];
             
             break;
             
         default:
             break;
     }
-
+    [self.slider setNeedsDisplay];
     _state = state;
 }
 
 -(void)setRange:(CMTimeRange)range
 {
+    
     [self willChangeValueForKey:NSStringFromSelector(@selector(range))];
     _range = range;
     [self didChangeValueForKey:NSStringFromSelector(@selector(range))];
@@ -271,6 +275,7 @@
     _enabled = enabled;
     self.slider.enabled = enabled;
     self.playPauseButton.enabled = enabled;
+    self.playPauseButton.alpha = (enabled)?1.0:0.5;
     self.state = RicoPlayerStateDisabled;
 }
 
@@ -334,7 +339,11 @@
 - (void)seekDidBegin:(nonnull UISlider *)slider {
 //    NSLog(@"%s",__FUNCTION__);
     self.scrubbing = YES;
-    self.state = RicoPlayerStateNormal;
+    
+    if (self.state == RicoPlayerStateLive) {
+        self.state = RicoPlayerStateNormal;
+    }
+
     
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(startScrubbing:)]) {

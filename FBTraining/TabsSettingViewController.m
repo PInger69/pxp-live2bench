@@ -18,6 +18,7 @@
 #import "DualViewTabViewController.h"
 #import "MedicalViewController.h"
 #import "AnalyzeTabViewController.h"
+#import "RicoDualViewTabViewController.h"
 
 // Tab setting identifiers
 #define TAB_CALENDAR @"Calendar"
@@ -92,6 +93,9 @@
         [tabClassForIdentifierTemp setObject:[DebuggingTabViewController class] forKey:TAB_DEBUG];
     }
     
+    [toggles addObject:@{@"Name": @"RicoDualView",      @"Identifier": @"RicoDualView" }];
+    [tabClassForIdentifierTemp setObject:[RicoDualViewTabViewController class] forKey:@"RicoDualView"];
+    
 //    if (TAB_VISIBLE(@""))   {
 //        [toggles addObject:@{@"Name": NSLocalizedString(@"Injury", nil),     @"Identifier": TAB_INJURY }];
 //         [tabClassForIdentifierTemp setObject:[InjuryViewController class] TAB_INJURY];
@@ -113,6 +117,9 @@
         self.settingData[TAB_DUALVIEW]      = @(TAB_ACTIVE(@"DuelView"));
         self.settingData[TAB_MEDICAL]       = @(TAB_ACTIVE(@"Medical"));
         self.settingData[TAB_ANALYZE]       = @(TAB_ACTIVE(@"Analyze"));
+        
+        self.settingData[@"RicoDualView"]       = @YES;
+        
 //        self.settingData[TAB_INJURY]        = @(TAB_ACTIVE(@"Calendar"));
 
         

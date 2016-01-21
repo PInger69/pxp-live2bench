@@ -62,7 +62,8 @@
     
     
 
-    self.button.layer.borderWidth = 1;
+    self.button.layer.borderWidth   = 1;
+    self.button.layer.cornerRadius  = 5;
     self.enabled = YES;
 }
 

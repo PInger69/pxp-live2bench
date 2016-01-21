@@ -161,6 +161,12 @@
     
     if (tag.type != TagTypeDeleted && tag.type != TagTypeOpenDuration) {
         
+        if (self.periods[tag.name] && [self.periods[tag.name]containsObject:tag]) {
+        
+            return ;
+        }
+        
+        
         BOOL found = NO;
         for (NSUInteger i = 0; !found && i < _tags.count; i++) {
             if (((Tag *)_tags[i]).uniqueID == tag.uniqueID) {

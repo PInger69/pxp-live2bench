@@ -8,6 +8,7 @@
 
 #import "EncoderOperation.h"
 #import "Tag.h"
+#import "PxpURLProtocol.h"
 #define EO_DEFAULT_TIMEOUT 5
 
 @implementation EncoderOperation
@@ -62,6 +63,7 @@
     sessionConfig.timeoutIntervalForRequest         = 10;
     sessionConfig.timeoutIntervalForResource        = 10;
     sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
+    sessionConfig.protocolClasses                   = @[[PxpURLProtocol class]];
     
     self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:nil];
     [[self.session dataTaskWithRequest:self.request]resume];
@@ -93,7 +95,7 @@
 // The is meant to overriden
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
-    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encresume/",self.encoder.ipAddress]  ];
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encresume/",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
     return   [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5];
 
 }
@@ -154,7 +156,7 @@
 @implementation EncoderOperationGetVersion
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
-    NSURL * checkURL = [NSURL URLWithString: [NSString stringWithFormat:@"http://%@/min/ajax/version",self.encoder.ipAddress]  ];
+    NSURL * checkURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@://%@/min/ajax/version",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:DEFAULT_TIMEOUT];
 }
 
@@ -170,14 +172,15 @@
 @implementation EncoderOperationGetPastEvents
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
-    NSURL * checkURL = [NSURL URLWithString: [NSString stringWithFormat:@"http://%@/min/ajax/getpastevents",self.encoder.ipAddress]  ];
+    NSURL * checkURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@://%@/min/ajax/getpastevents",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
 }
 
 -(void)parseDataToEncoder:(NSData*)data
 {
-    [super parseDataToEncoder:data];
+
     [self.encoder.parseModule parse:data mode:ParseModeGetPastEvents for:self.encoder];
+        [super parseDataToEncoder:data];
 }
 
 @end
@@ -189,7 +192,8 @@
 
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
-    NSURL * checkURL =[NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/evtdelete/?name=%@&event=%@",
+    NSURL * checkURL =[NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/evtdelete/?name=%@&event=%@",
+                                               self.encoder.urlProtocol,
                                                self.encoder.ipAddress,
                                                [aData objectForKey:@"name"],
                                                [aData objectForKey:@"hid"]]  ];
@@ -217,7 +221,8 @@
     NSString * awayTeam = [aData objectForKey:@"awayTeam"];
     NSString * league   = [aData objectForKey:@"league"];
     
-    NSString *unencoded = [NSString stringWithFormat:@"http://%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",
+    NSString *unencoded = [NSString stringWithFormat:@"%@://%@/min/ajax/encstart/?hmteam=%@&vsteam=%@&league=%@&time=%@&quality=%@",
+                           self.encoder.urlProtocol,
                            self.encoder.ipAddress,
                            homeTeam,
                            awayTeam,
@@ -249,7 +254,7 @@
     
     NSError     * error;
     NSString    * jsonData = [Utility dictToJSON:@{@"requesttime":self.timeStamp}];
-    NSURL       * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encstop/%@",self.encoder.ipAddress,jsonData]  ];
+    NSURL       * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encstop/%@",self.encoder.urlProtocol,self.encoder.ipAddress,jsonData]  ];
     
     if (error) {
         PXPLog(@"Error converting data to stop event");
@@ -273,7 +278,7 @@
 @implementation EncoderOperationPause
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
-    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encpause/",self.encoder.ipAddress]  ];
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encpause/",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
 
 }
@@ -293,7 +298,7 @@
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
     
-    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encresume/",self.encoder.ipAddress]  ];
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encresume/",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
 
 }
@@ -312,7 +317,7 @@
 @implementation EncoderOperationShutdown
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
-    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/encshutdown",self.encoder.ipAddress]  ];
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/encshutdown",self.encoder.urlProtocol,self.encoder.ipAddress]  ];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
 }
 
@@ -336,7 +341,7 @@
     }
     
     
-    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.encoder.ipAddress, jsonData ]];
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagmod/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonData ]];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
     
 }
@@ -361,7 +366,7 @@
     }
     
     
-    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagmod/%@",self.encoder.ipAddress, jsonData ]];
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagmod/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonData ]];
     return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
     
 }
@@ -405,7 +410,7 @@
     
     NSString    * jsonString                    = [Utility dictToJSON:tagData];
     
-    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"http://%@/min/ajax/tagset/%@",self.encoder.ipAddress, jsonString ]];
+    NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagset/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonString ]];
     NSURLRequest * req = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
     
     return req;

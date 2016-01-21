@@ -490,12 +490,9 @@ static EncoderManager * instance;
 
             NSString * thbPath = [videoFolderPath stringByAppendingPathComponent:@"thumbnails"];
             thbPath = [thbPath stringByAppendingPathComponent:fileName];
-//            DownloadItem * thumbItem =
+
             (void)[Downloader downloadURL:item to:thbPath type:DownloadItem_TypeImage];
 
-//            [thumbItem setOnComplete:^{
-//                NSLog(@"Item downloaded");
-//            }];
         }
         
         DownloadItem * item =         [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:savedFileName] type:DownloadItem_TypeVideo key:downloaderKey];
@@ -696,6 +693,11 @@ static EncoderManager * instance;
     if ([_authenticatedEncoders count] == 0 && self.hasMAX && [[UserCenter getInstance].customerEmail isEqualToString:@"coach"] && self.masterEncoder == nil){
         [self registerEncoder:@"External Encoder" ip:@"avocatec.org:8888"];
     }
+    
+    
+    
+
+    
 }
 
 // does not work

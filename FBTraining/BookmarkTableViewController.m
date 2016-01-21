@@ -187,27 +187,57 @@
         
         NSMutableString * text = [NSMutableString new];
         
+//        for (NSIndexPath * index in clipsBeingShared) {
+//            Clip *aClip = [self.tableData objectAtIndex:index.row];
+//    
+//            [text appendString:@"<html><body>"];
+//            [text appendString:[NSString stringWithFormat:@"<b>%@</b><br/>",aClip.name]];
+//            [text appendString:[NSString stringWithFormat:@"<b>File Name:</b> %@<br/>",[aClip.videoFiles[0] lastPathComponent]]];
+//       
+//            if (aClip.rating) {
+//                
+//                [text appendString:[NSString stringWithFormat:@"<b>Rating:</b> "]];
+//                
+//                
+//                
+//                for (NSInteger i = 0; i < aClip.rating; i++) {
+//                    [text appendString:@"*"];
+//                }
+//                
+//                [text appendString:@"<br/>"];
+//
+//            }
+//            if (![aClip.comment isEqualToString:@""]) [text appendString:[NSString stringWithFormat:@"<b>Comment:</b> %@<br/>",aClip.comment]];
+//            
+//            [text appendString:@"---<br/>"];
+//            
+//            
+//            
+//        }
+//        [text appendString:@"</body></html>"];
+//        [clipsToShare addObject:text];
+
+///////////
+        
         for (NSIndexPath * index in clipsBeingShared) {
             Clip *aClip = [self.tableData objectAtIndex:index.row];
-    
+            
             [text appendString:@"<html><body>"];
-            [text appendString:[NSString stringWithFormat:@"<b>%@</b><br/>",aClip.name]];
-            [text appendString:[NSString stringWithFormat:@"<b>File Name:</b> %@<br/>",[aClip.videoFiles[0] lastPathComponent]]];
-       
+            [text appendString:[NSString stringWithFormat:@"%@<br/>",aClip.name]];
+            [text appendString:[NSString stringWithFormat:@"File Name: %@<br/>",[aClip.videoFiles[0] lastPathComponent]]];
+            
             if (aClip.rating) {
                 
-                [text appendString:[NSString stringWithFormat:@"<b>Rating:</b> "]];
-                
-                
+                [text appendString:[NSString stringWithFormat:@"Rating: "]];
                 
                 for (NSInteger i = 0; i < aClip.rating; i++) {
                     [text appendString:@"*"];
                 }
                 
                 [text appendString:@"<br/>"];
-
+                
             }
-            if (![aClip.comment isEqualToString:@""]) [text appendString:[NSString stringWithFormat:@"<b>Comment:</b> %@<br/>",aClip.comment]];
+            if (![aClip.comment isEqualToString:@""]) [text appendString:[NSString stringWithFormat:@"Comment: %@<br/>",aClip.comment]];
             
             [text appendString:@"---<br/>"];
             
@@ -215,6 +245,9 @@
             [clipsToShare addObject:text];
         }
         [text appendString:@"</body></html>"];
+        
+
+        
         
         // Add all clips
         

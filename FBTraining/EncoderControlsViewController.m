@@ -13,6 +13,8 @@
 #import "TablePopoverController.h"
 #import "LeagueTeam.h"
 #import "League.h"
+#import "DeviceEncoderSource.h"
+#import "LocalMediaManager.h"
 
 @interface EncoderControlsViewController ()
 
@@ -56,9 +58,9 @@ typedef NS_OPTIONS(NSInteger, EventButtonControlStates) {
 //@property (strong, nonatomic, nonnull) CustomAlertView *startAlertView;
 //@property (strong, nonatomic, nonnull) CustomAlertView *noTeamAlertView;
 
-#define DEFAULT_LEAGUE @"League"
-#define DEFAULT_HOME_TEAM @"Home Team"
-#define DEFAULT_AWAY_TEAM @"Away Team"
+#define DEFAULT_LEAGUE @"Select a League"
+#define DEFAULT_HOME_TEAM @"Select a Home Team"
+#define DEFAULT_AWAY_TEAM @"Select a Away Team"
 
 @end
 
@@ -148,24 +150,61 @@ SVSignalStatus signalStatus;
 
 - (void)setupView
 {
+    
+
+    
     [self.view setFrame:CGRectMake(0, 0, 350.0f, 768.0f)];
     [self.view setBackgroundColor:[UIColor whiteColor]];
+    
+    CGFloat margin = 20;
+    CGFloat yOffset = 140;
+    CGFloat bWidth = 660;
+    
+    
+    UILabel * leagueLabel = [[UILabel alloc]initWithFrame:CGRectMake(margin, yOffset, bWidth, 35.0f)];
+    leagueLabel.text = @"League:";
+//    leagueLabel.layer.borderWidth =1;
+    
+    
+    UILabel * homeLabel = [[UILabel alloc]initWithFrame:CGRectMake(margin, yOffset+100, bWidth, 35.0f)];
+    homeLabel.text = @"Home Team:";
+//    homeLabel.layer.borderWidth =1;
+    
+    UILabel * awayLabel = [[UILabel alloc]initWithFrame:CGRectMake(margin, yOffset+200, bWidth, 35.0f)];
+    awayLabel.text = @"Away Team:";
+//    awayLabel.layer.borderWidth =1;
+    
+    [self.view  addSubview:leagueLabel];
+    [self.view  addSubview:homeLabel];
+    [self.view  addSubview:awayLabel];
+    
+    
+    
+    
     
     wifi = [[UILabel alloc]initWithFrame:CGRectMake(20.0f, 86.0f, 300.0f, 23.0f)];
     wifi.text =[NSString stringWithFormat: @"%@: %@", NSLocalizedString(@"Wi-Fi", nil), [Utility myWifiName] ];
     [self.view  addSubview:wifi];
+
+    selectLeagueContainer = [[UIView alloc] initWithFrame:CGRectMake(margin, CGRectGetMaxY(leagueLabel.frame), bWidth, 55.0f)];
+//    selectLeagueContainer.autoresizingMask      = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    selectLeagueContainer.layer.cornerRadius    = 5;
+    selectLeagueContainer.layer.masksToBounds   = YES;
     
-    selectLeagueContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 140.0f, self.view.bounds.size.width, 55.0f)];
-    selectLeagueContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.view  addSubview:selectLeagueContainer];
     
-    selectHomeContainer = [[UIView alloc] initWithFrame:CGRectMake(selectLeagueContainer.frame.origin.x, CGRectGetMaxY(selectLeagueContainer.frame), selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
-    selectHomeContainer.autoresizingMask = selectLeagueContainer.autoresizingMask;
+    selectHomeContainer = [[UIView alloc] initWithFrame:CGRectMake(margin, CGRectGetMaxY(homeLabel.frame), selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
+//    selectHomeContainer.autoresizingMask = selectLeagueContainer.autoresizingMask;
+    selectHomeContainer.layer.cornerRadius    = 5;
+    selectHomeContainer.layer.masksToBounds   = YES;
     [self.view  addSubview:selectHomeContainer];
     
-    selectAwayContainer = [[UIView alloc] initWithFrame:CGRectMake(selectLeagueContainer.frame.origin.x, CGRectGetMaxY(selectHomeContainer.frame), selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
-    selectAwayContainer.autoresizingMask = selectLeagueContainer.autoresizingMask;
+    selectAwayContainer = [[UIView alloc] initWithFrame:CGRectMake(margin, CGRectGetMaxY(awayLabel.frame), selectLeagueContainer.bounds.size.width, selectLeagueContainer.bounds.size.height)];
+//    selectAwayContainer.autoresizingMask = selectLeagueContainer.autoresizingMask;
+    selectAwayContainer.layer.cornerRadius    = 5;
+    selectAwayContainer.layer.masksToBounds   = YES;
     [self.view  addSubview:selectAwayContainer];
+    
     
     firstEncButton = [[UIView alloc] initWithFrame:CGRectMake(80.0f, CGRectGetMaxY(selectAwayContainer.frame) + 80.0f, 150.0f, 150.0f)];
     firstEncButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -179,6 +218,11 @@ SVSignalStatus signalStatus;
     encoderHomeLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.view  addSubview:encoderHomeLabel];
     
+    
+    self.makeLocalEventButton = [[UIButton alloc]initWithFrame:CGRectMake(500, 10, 100, 100)];
+    [self.makeLocalEventButton addTarget:self action:@selector(buildStandAloneEvent) forControlEvents:UIControlEventTouchUpInside];
+    self.makeLocalEventButton.layer.borderWidth = 1;
+    [self.view  addSubview:self.makeLocalEventButton];
 }
 
 - (void)viewDidLoad
@@ -527,6 +571,46 @@ SVSignalStatus signalStatus;
 
 }
 
+#pragma mark - Standalone Event
+-(void)buildStandAloneEvent
+{
+    Encoder * deviceEncoder     = [[Encoder alloc]initWithIP:@""];
+    deviceEncoder.urlProtocol   = @"device";
+    deviceEncoder.name          = @"Device Encoder";
+    
+    EncoderOperation * version      = [[EncoderOperationGetVersion alloc]initEncoder:deviceEncoder data:@{}];
+    EncoderOperation * getAllEvents = [[EncoderOperationGetPastEvents alloc]initEncoder:deviceEncoder data:@{}];
+    
+    [version setOnRequestComplete:^(NSData *n, EncoderOperation *nn) {
+        NSLog(@"version done");
+    }];
+    
+    
+    [getAllEvents setOnRequestComplete:^(NSData *n, EncoderOperation *nn) {
+        
+        Event * createdEvent            = [[nn.encoder.allEvents allValues]firstObject];
+        
+        NSString * videoFolderPath      = [[LocalMediaManager getInstance] saveEvent: [NSMutableDictionary dictionaryWithDictionary:@{@"local":createdEvent, @"non-local":createdEvent}] ];
+
+//        NSString * savedFileName        = [encoderSource lastPathComponent];
+//        NSString * downloaderKey        = [NSString stringWithFormat:@"%@_%@",theEvent.name,source ];
+
+        
+        
+
+
+        
+//        DownloadItem * item =         [Downloader downloadURL:encoderSource to:[videoFolderPath stringByAppendingPathComponent:@""] type:DownloadItem_TypeVideo key:downloaderKey];
+        
+        NSLog(@"all events DONE %@",videoFolderPath);
+    }];
+    [getAllEvents addDependency:version];
+    
+    [deviceEncoder runOperation:version];
+    [deviceEncoder runOperation:getAllEvents];
+ 
+    NSLog(@"Press Standalone");
+}
 
 #pragma mark -
 
@@ -787,13 +871,9 @@ SVSignalStatus signalStatus;
         [selectAwayTeam setTitle:away.name forState:UIControlStateNormal];
         [selectLeague setTitle:home.league.name forState:UIControlStateNormal];
 
-        if (away.league==nil ||home.league) {
-            PXPLog(@"=============================================");
-            PXPLog(@"         TEAMS DO NOT MATCH LEAGUE !!!");
-            PXPLog(@"         Bottom View will be disabled");
-            PXPLog(@"                      and ");
-            PXPLog(@"                other functions");
-            PXPLog(@"=============================================");
+        if (!away.league || !home.league) {
+            PXPLog(@"No bottomViewController for ");
+
         }
     }
 }

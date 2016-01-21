@@ -58,7 +58,7 @@
 @synthesize tagsToDisplay=_tagsToDisplay;
 
 
-static const NSInteger kDeleteAlertTag = 423;
+//static const NSInteger kDeleteAlertTag = 423;
 static void * encoderTagContext = &encoderTagContext;
 
 - (id)init //controller:(Live2BenchViewController *)lbv
@@ -68,7 +68,6 @@ static void * encoderTagContext = &encoderTagContext;
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
         _encoderManager = _appDel.encoderManager;
-    
     }
     return self;
 }
@@ -81,33 +80,10 @@ static void * encoderTagContext = &encoderTagContext;
         [self setMainSectionTab:NSLocalizedString(@"Clip View", nil) imageName:@"clipTab"];
         _encoderManager = _appDel.encoderManager;
         
-        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-        
-        
-        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewTagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
-        //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clear) name:NOTIF_EVENT_CHANGE object:nil];
-        
-        
-        //_imageAssetManager = appDel.imageAssetManager;
+
         self.setOfSelectedCells = [[NSMutableSet alloc] init];
         self.contextString = @"TAG";
-        
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_TAG" object:nil];
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteTag:) name:@"NOTIF_DELETE_SYNCED_TAG" object:nil];
-        
-        /*[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
-                    self.tagsToDisplay  = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                    self.allTagsArray   = [NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                    [_collectionView reloadData];
-            }
-            if (!componentFilter.rawTagArray) {
-                componentFilter.rawTagArray = self.tagsToDisplay;
-            };
-        }];*/
-            
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liveEventStopped:) name:NOTIF_LIVE_EVENT_STOPPED object:nil];
         
         self.allTagsArray   = [NSMutableArray array];
         self.tagsToDisplay  = [NSMutableArray array];
@@ -565,28 +541,52 @@ static void * encoderTagContext = &encoderTagContext;
 //    cell.imageView.image = [tagSelect thumbnailForSource:@"onlySource"];
 //        NSLog(@"<*>");
     ///
-    __block UIImage * weakThumb;
     
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        //Background Thread
+    UIImage * thumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
+    if (!thumb) {
+        cell.imageView.image = [UIImage imageNamed:@"live.png"];
+//        __block UIImage * weakThumb;
+        
+//        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+            //Background Thread
 
-        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
-            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-//            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
-        } else {
             [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-        }
-        
-        if (!weakThumb) {
-            weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void){
-
-            cell.imageView.image = weakThumb;
-            if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
-        });
-    });
+//            if (!weakThumb) {
+//                weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
+//            }
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^(void){
+//                cell.imageView.image = weakThumb;
+//
+//            });
+//        });
+    
+    } else {
+        cell.imageView.image = thumb;
+    }
+    
+//    __block UIImage * weakThumb;
+//    
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//        //Background Thread
+//
+//        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+//            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
+////            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+//        } else {
+//            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
+//        }
+//        
+//        if (!weakThumb) {
+//            weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
+//        }
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^(void){
+//
+//            cell.imageView.image = weakThumb;
+//            if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
+//        });
+//    });
     
     ///
     
@@ -938,7 +938,6 @@ static void * encoderTagContext = &encoderTagContext;
 - (void)pressFilterButton
 {
     
-
     TabView *popupTabBar = [TabView sharedFilterTabBar];
     
     if (popupTabBar.isViewLoaded)
@@ -949,14 +948,12 @@ static void * encoderTagContext = &encoderTagContext;
     popupTabBar.modalPresentationStyle  = UIModalPresentationPopover; // Might have to make it custom if we want the fade darker
     popupTabBar.preferredContentSize    = popupTabBar.view.bounds.size;
     
-    
     UIPopoverPresentationController *presentationController = [popupTabBar popoverPresentationController];
     presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
     presentationController.sourceView               = self.view;
     presentationController.permittedArrowDirections = 0;
     
     [self presentViewController:popupTabBar animated:YES completion:nil];
-    
     
     [_pxpFilter filterTags:self.allTagsArray];
     
@@ -970,7 +967,23 @@ static void * encoderTagContext = &encoderTagContext;
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
-    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
+    
+//    for (Tag*t in  _tagsToDisplay) {
+//        NSLog(@"%@",t.ID);
+//    }
+    
+    // quick unique check
+    NSMutableSet * uniqueList = [NSMutableSet new];
+    [uniqueList addObjectsFromArray:_tagsToDisplay];
+    NSArray * uTags = [uniqueList allObjects];
+    
+    
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[uTags sortedArrayUsingDescriptors:@[sorter]]];
+    
+//    for (Tag*tt in  _tagsToDisplay) {
+//                NSLog(@"%@",tt.ID);
+//    }
+    
     [_collectionView reloadData];
 }
 
@@ -980,9 +993,13 @@ static void * encoderTagContext = &encoderTagContext;
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     
+        // quick unique check
+    NSMutableSet * uniqueList = [NSMutableSet new];
+    [uniqueList addObjectsFromArray:_tagsToDisplay];
+    NSArray * uTags = [uniqueList allObjects];
     
     NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
-    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
+    _tagsToDisplay = [NSMutableArray arrayWithArray:[uTags sortedArrayUsingDescriptors:@[sorter]]];
     [_collectionView reloadData];
 }
 

@@ -239,7 +239,7 @@
             
             [tagToBeModded replaceDataWithDictionary:[dictToChange copy]];
             tagToBeModded.modified = true;
-                
+//            tagToBeModded.type
             [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TOAST object:nil   userInfo:@{
                                                                                                               @"msg":tagToBeModded.name,
                                                                                                               @"colour":tagToBeModded.colour,

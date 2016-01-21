@@ -13,7 +13,7 @@
 
 
 @property (nonatomic,weak) ImageAssetManager   * iam;
-@property (nonatomic,weak)  UIImageView         * imageview;
+
 
 
 
@@ -48,6 +48,7 @@
         thumbURL    = aUrl;
         _iam         = aIAM;
         _imageview   = aImageview;
+        
     }
     return self;
 }
@@ -99,7 +100,9 @@
     
     [_iam.arrayOfClipImages setObject:receivedImage forKey:thumbURL];
 
-    if (_imageview && _imageview.window)_imageview.image = receivedImage;
+    if (_imageview){ // && _imageview.window
+     _imageview.image = receivedImage;
+    }
     self.isSuccess  = YES;
     self.isFinished = YES;
 
@@ -110,6 +113,9 @@
     self.isFinished = YES;
     
 }
+
+
+
 
 
 @end

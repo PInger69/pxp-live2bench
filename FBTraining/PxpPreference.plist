@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>DebugMode</key>
-	<false/>
+	<true/>
 	<key>SettingsItems</key>
 	<dict>
 		<key>EncoderControls</key>

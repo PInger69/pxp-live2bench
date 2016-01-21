@@ -138,7 +138,15 @@
     _videoBar.frame = CGRectMake(0.0, 768 - 44.0, width, 44.0);
     [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
 
+    self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
+//    [_pxpFilter filterTags:self.allClips];
+
+
+
 }
+
+
+
 
 // Selected clip to play
 -(void)clipSelectedToPlay:(NSNotification*)note
@@ -175,9 +183,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
+//    self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
     [_pxpFilter filterTags:self.allClips];
+        _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
     self.tableViewController.tableData = _tagsToDisplay;
+
     CGRect tableRect = self.tableViewController.view.frame;
     numTagsLabel.frame = CGRectMake(tableRect.origin.x, CGRectGetMaxY(tableRect), tableRect.size.width, 18);
     [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
@@ -188,6 +198,10 @@
     [super viewDidLayoutSubviews];
     UIEdgeInsets insets = {10, 50, 0, 50};
     [numTagsLabel drawTextInRect:UIEdgeInsetsInsetRect(numTagsLabel.frame, insets)];
+      [_pxpFilter filterTags:self.allClips];
+   _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
+    self.tableViewController.tableData = _tagsToDisplay;
+    [self.tableViewController.tableView reloadData];
 }
 
 
@@ -260,8 +274,9 @@
     presentationController.sourceRect               = [[UIScreen mainScreen] bounds];
     presentationController.sourceView               = self.view;
     presentationController.permittedArrowDirections = 0;
+//    [_pxpFilter filterTags:[self.allClips copy]];
     [self presentViewController:_pxpFilterTab animated:YES completion:nil];
-    [_pxpFilter filterTags:[self.allClips copy]];
+
 }
 
 
@@ -336,6 +351,7 @@
 {
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
     [_tableViewController reloadData];
     [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }
@@ -345,6 +361,8 @@
     [filter filterTags:self.allClips];
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
+    _tagsToDisplay = [self filterAndSortClips:_tagsToDisplay];
+    self.tableViewController.tableData = _tagsToDisplay;
     [_tableViewController reloadData];
     [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[_tagsToDisplay count]]];
 }

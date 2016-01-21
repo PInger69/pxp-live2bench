@@ -10,7 +10,7 @@
 
 #import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
-
+#import "PxpURLProtocol.h"
 #import "EncoderClasses/EncoderManager.h"
 #import "UserCenter.h"
 #import "UtilityClasses/ActionList.h"
@@ -19,6 +19,8 @@
 #import "ToastObserver.h"
 #import "CustomAlertControllerQueue.h"
 #import "PxpFilterDefaultTabViewController.h"
+#import "DeviceAssetLibrary.h"
+
 
 @implementation AppDelegate
 {
@@ -41,7 +43,12 @@
 //this loads first when you launch the app
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
+    //
+    [DeviceAssetLibrary getInstance];
+    
+    // This is for the standalone build
+    [NSURLProtocol registerClass:[PxpURLProtocol class]];
+    
     APP_HEIGHT  = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.width  : [[UIScreen mainScreen] bounds].size.height;
     APP_WIDTH   = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width;
     
@@ -190,8 +197,7 @@
                                         }];
         [alert addAction:cancelButtons];
         
-        [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-     
+        [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:self.tabBarController animated:YES style:AlertImportant completion:nil];     
     }
 }
 

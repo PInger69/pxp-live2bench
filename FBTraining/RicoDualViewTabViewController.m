@@ -1,18 +1,18 @@
 //
-//  DualViewTabViewController.m
+//  RicoDualViewTabViewController.m
 //  Live2BenchNative
 //
-//  Created by Nico Cvitak on 2015-05-19.
-//  Copyright (c) 2015 DEV. All rights reserved.
+//  Created by dev on 2016-01-15.
+//  Copyright © 2016 DEV. All rights reserved.
 //
 
-#import "DualViewTabViewController.h"
+#import "RicoDualViewTabViewController.h"
 
 #import "DualViewPeriodTableViewController.h"
 #import "NCRecordButton.h"
 #import "UserCenter.h"
-#import "EncoderClasses/EncoderProtocol.h"
-#import "EncoderClasses/EncoderManager.h"
+#import "EncoderProtocol.h"
+#import "EncoderManager.h"
 #import "RJLVideoPlayer.h"
 #import "PipViewController.h"
 #import "FeedSelectionController.h"
@@ -21,35 +21,49 @@
 
 #import "NCPlayerView.h"
 
+#import "RicoPlayer.h"
+#import "RicoPlayerControlBar.h"
+#import "RicoPlayerViewController.h"
+#import "RicoZoomContainer.h"
+
+#import "DebugOutput.h"
+
 #define BOTTOM_BAR_HEIGHT 70
 #define PLAYHEAD_HEIGHT 44
 #define PINCH_VELOCITY 1
 #define ANIMATION_DURATION 0.25
 
-@interface DualViewTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, DualViewTagControllerDelegate>{
+
+
+
+@interface RicoDualViewTabViewController () <NCRecordButtonDelegate, FeedSelectionControllerDelegate, DualViewTagControllerDelegate>{
     Event                           * _currentEvent;
     id <EncoderProtocol>                _observedEncoder;
 }
 
-// BEGIN NC PLAYER
 
-@property (strong, nonatomic, nonnull) NCPlayerContext *playerContext;
 
-@property (strong, nonatomic, nonnull) NCPlayer *playerA;
-@property (strong, nonatomic, nonnull) NCPlayer *playerB;
+@property (nonatomic,strong) RicoPlayer                 * topPlayer;
+@property (nonatomic,strong) RicoPlayer                 * bottomPlayer;
+@property (nonatomic,strong) RicoPlayer                 * ricoMain;
+@property (nonatomic,strong) RicoPlayerControlBar       * playerControls;
+@property (nonatomic,strong) RicoPlayerViewController   * playerViewController;
 
-@property (weak, nonatomic, nullable) NCPlayer *mainPlayer;
+@property (nonatomic,strong) RicoZoomContainer          * topZoomContainer;
+@property (nonatomic,strong) RicoZoomContainer          * bottomZoomContainer;
 
-@property (strong, nonatomic, nonnull) NCPlayerView *topPlayerView;
-@property (strong, nonatomic, nonnull) NCPlayerView *bottomPlayerView;
-@property (strong, nonatomic, nonnull) NCPlayerView *fullscreenPlayerView;
+@property (weak, nonatomic) UIView                      * fullscreenView;
 
-// END NC PLAYER
+
+
 
 @property (strong, nonatomic, nonnull) DualViewPeriodTableViewController *periodTableViewController;
 
-@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *topPlayerFullscreenRecognizer;
-@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *bottomPlayerFullscreenRecognizer;
+@property (strong, nonatomic, nonnull) UITapGestureRecognizer *topPlayerFullscreenRecognizer;
+@property (strong, nonatomic, nonnull) UITapGestureRecognizer *bottomPlayerFullscreenRecognizer;
+
+//@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *topPlayerFullscreenRecognizer;
+//@property (strong, nonatomic, nonnull) UIPinchGestureRecognizer *bottomPlayerFullscreenRecognizer;
 
 @property (strong, nonatomic, nonnull) UIView *bottomBarView;
 @property (strong, nonatomic, nonnull) NCRecordButton *recordButton;
@@ -69,7 +83,7 @@
 @property (assign, nonatomic) NSTimeInterval startTime;
 
 @property (assign, nonatomic) CGRect fullscreenInitialRect;
-@property (weak, nonatomic, nullable) NCPlayerView *fullscreenView;
+//@property (weak, nonatomic, nullable) NCPlayerView *fullscreenView;
 
 @property (assign, nonatomic) BOOL recording;
 @property (copy, nonatomic, nullable) NSString *durationTagID;
@@ -79,12 +93,12 @@
 
 @end
 
-@implementation DualViewTabViewController
+@implementation RicoDualViewTabViewController
 
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"Dual View", nil) imageName:@"live2BenchTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Rico View", nil) imageName:@"live2BenchTab"];
         
         self.periodTableViewController = [[DualViewPeriodTableViewController alloc] init];
         self.periodTableViewController.delegate = self;
@@ -111,41 +125,46 @@
         [self addChildViewController:self.topViewFeedSelectionController];
         [self addChildViewController:self.bottomViewFeedSelectionController];
         
-        self.topPlayerFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(topFullscreen:)];
-        self.bottomPlayerFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(bottomFullscreen:)];
+//        self.topPlayerFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(topFullscreen:)];
+//        self.bottomPlayerFullscreenRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(bottomFullscreen:)];
+
+        self.topPlayerFullscreenRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(topFullscreen:)];
+        self.topPlayerFullscreenRecognizer.numberOfTapsRequired = 2;
+        self.bottomPlayerFullscreenRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bottomFullscreen:)];
+        self.bottomPlayerFullscreenRecognizer.numberOfTapsRequired = 2;
+        
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sideTagsReady:) name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagsReady:) name:NOTIF_TAGS_ARE_READY object:nil];
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagReceived:) name:NOTIF_TAG_RECEIVED object:nil];
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedsReady:) name:NOTIF_EVENT_FEEDS_READY object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabJustBeingAdded:) name:NOTIF_TAB_CREATED object:nil];
         
-        // BEGIN NC PLAYER
         
-        self.playerContext = [[NCPlayerContext alloc] init];
+        // BEGIN RICO PLAYER
+        self.topPlayer              = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
+        self.topPlayer.name         = @"topPlayer";
+        self.topPlayer.isPlaying    = YES;
         
-        self.playerA = [[NCPlayer alloc] init];
-        self.playerB = [[NCPlayer alloc] init];
+        self.bottomPlayer           = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
+        self.bottomPlayer.name      = @"bottomPlayer";
+        self.bottomPlayer.isPlaying = YES;
+        self.playerControls         = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(200,200,400,40)];
+     
         
-        self.playerA.context = self.playerContext;
-        self.playerB.context = self.playerContext;
+        self.playerViewController                   = [RicoPlayerViewController new];
+        self.playerViewController.playerControlBar  = self.playerControls;
+        [self.playerViewController addPlayers:self.topPlayer];
+        [self.playerViewController addPlayers:self.bottomPlayer];
         
-        self.playerA.muted = YES;
-        self.playerB.muted = YES;
+        self.topZoomContainer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(1024 - playerWidth, 55, playerWidth, playerHeight)];
+        self.topZoomContainer.zoomEnabled = YES;
+        self.bottomZoomContainer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(1024 - playerWidth, 55 + playerHeight, playerWidth, playerHeight)];
+        self.bottomZoomContainer.zoomEnabled = YES;
         
-        self.mainPlayer = self.playerA;
-        self.mainPlayer.syncInterval = CMTimeMakeWithSeconds(1.0, NSEC_PER_SEC);
+           self.playerControls.frame   = CGRectMake(0, CGRectGetMaxY(self.bottomZoomContainer.frame)-44,1024,44);
+        // END RICO PLAYER
         
-        self.topPlayerView = [[NCPlayerView alloc] initWithFrame:CGRectMake(1024 - playerWidth, 55, playerWidth, playerHeight)];
-        self.bottomPlayerView = [[NCPlayerView alloc] initWithFrame:CGRectMake(1024 - playerWidth, 55 + playerHeight, playerWidth, playerHeight)];
-        
-        self.topPlayerView.showsControlBar = NO;
-        
-        self.topPlayerView.player = self.playerB;
-        self.bottomPlayerView.player = self.playerA;
-        
-        // END NC PLAYER
         
         _resumeTime = kCMTimeInvalid;
         _resumeRate = 1.0;
@@ -192,6 +211,33 @@
         _currentEvent = [((id <EncoderProtocol>) note.object) event];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_RECEIVED object:_currentEvent];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagChanged:) name:NOTIF_TAG_MODIFIED object:_currentEvent];
+        self.feeds = [[NSMutableArray arrayWithArray:[_currentEvent.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
+        
+        self.topViewFeedSelectionController.feeds = self.feeds;
+        self.bottomViewFeedSelectionController.feeds = self.feeds;
+        
+        Feed *feedA = self.feeds.count > 0 ? self.feeds[0] : nil;
+        Feed *feedB = self.feeds.count > 1 ? self.feeds[1]: feedA;
+        
+        self.liveButton.enabled = YES;
+        
+
+        if (_currentEvent.live) {
+
+            NSBlockOperation * syncer = [NSBlockOperation blockOperationWithBlock:^{
+                            [self.playerViewController live];
+            }];
+
+            [syncer addDependency:[self.topPlayer loadFeed:feedA]];
+            [syncer addDependency: [self.bottomPlayer loadFeed:feedB]];
+            [self.playerViewController.operationQueue addOperation:syncer];
+
+        } else {
+            [self.playerViewController play];
+            [self.topPlayer loadFeed:feedA];
+            [self.bottomPlayer loadFeed:feedB];
+        }
+
     }
 }
 
@@ -228,7 +274,6 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_SIDE_TAGS_READY_FOR_L2B object:nil];
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAGS_ARE_READY object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_TAG_RECEIVED object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_EVENT_FEEDS_READY object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
@@ -237,7 +282,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    
     self.periodTableViewController.view.frame = CGRectMake(0, 55, 320, 768 - 55 - BOTTOM_BAR_HEIGHT - PLAYHEAD_HEIGHT);
     
     self.bottomBarView.frame = CGRectMake(0, self.view.bounds.size.height - BOTTOM_BAR_HEIGHT - PLAYHEAD_HEIGHT, self.view.bounds.size.width, BOTTOM_BAR_HEIGHT + PLAYHEAD_HEIGHT);
@@ -280,47 +325,62 @@
     [self.backSeekButton onPressSeekPerformSelector:@selector(seekPressed:) addTarget:self];
     
     [self.view addSubview:self.bottomBarView];
-    //[self.view addSubview:pipContainer];
-    //[self.view addSubview:playerContainer];
-    
-    //[self.view addSubview:self.fullscreenPlayer.view];
-    
+
     // BEGIN NC PLAYER
+        // END NC PLAYER
     
-    [self.view addSubview:self.topPlayerView];
-    [self.view addSubview:self.bottomPlayerView];
-    [self.view addSubview:self.fullscreenPlayerView];
     
-    // END NC PLAYER
+    // RICO PLAYER
+    
+    [self.view addSubview:self.topZoomContainer];
+    [self.view addSubview:self.bottomZoomContainer];
+    [self.topZoomContainer addToContainer:self.topPlayer];
+    [self.bottomZoomContainer addToContainer:self.bottomPlayer];
+    
+
+    self.topPlayer.syncronized = YES;
+
+    self.bottomPlayer.syncronized = YES;
+    self.playerControls.delegate = self.playerViewController;
+
+    [self.topZoomContainer addGestureRecognizer:self.topPlayerFullscreenRecognizer];
+    [self.bottomZoomContainer addGestureRecognizer:self.bottomPlayerFullscreenRecognizer];
+    // RICO PLAYER
+    
+    
     
     [self.view addSubview:self.periodTableViewController.view];
     
     [self.view addSubview:self.forwardSeekButton];
     [self.view addSubview:self.backSeekButton];
     
-//    self.topViewFeedSelectionController.view.frame = CGRectMake(self.topPlayerView.frame.size.width - 128, 0, 128, self.bottomPlayerView.frame.size.height);
-//    self.bottomViewFeedSelectionController.view.frame = CGRectMake(self.bottomPlayerView.frame.size.width - 128, 0, 128, self.bottomPlayerView.frame.size.height - PLAYHEAD_HEIGHT);
-    self.topViewFeedSelectionController.view.frame = CGRectMake(self.topPlayerView.frame.origin.x - 128, CGRectGetMinY(self.topPlayerView.frame), 128, self.topPlayerView.frame.size.height);
-    self.bottomViewFeedSelectionController.view.frame = CGRectMake(self.bottomPlayerView.frame.origin.x - 128, CGRectGetMinY(self.bottomPlayerView.frame), 128, self.bottomPlayerView.frame.size.height - PLAYHEAD_HEIGHT);
+    UIView * tempView1 = self.topZoomContainer;
+    UIView * tempView2 = self.bottomZoomContainer;
+    
+    self.topViewFeedSelectionController.view.frame = CGRectMake(tempView1.frame.origin.x - 128, CGRectGetMinY(tempView1.frame), 128, tempView1.frame.size.height);
+    self.bottomViewFeedSelectionController.view.frame = CGRectMake(tempView2.frame.origin.x - 128, CGRectGetMinY(tempView2.frame), 128, tempView2.frame.size.height - PLAYHEAD_HEIGHT);
     [self.view addSubview:self.topViewFeedSelectionController.view];
     [self.view addSubview:self.bottomViewFeedSelectionController.view];
     
-//    [self.topPlayerView addSubview:self.topViewFeedSelectionController.view];
-//    [self.bottomPlayerView addSubview:self.bottomViewFeedSelectionController.view];
-    
-    [self.topPlayerView addGestureRecognizer:self.topPlayerFullscreenRecognizer];
-    [self.bottomPlayerView addGestureRecognizer:self.bottomPlayerFullscreenRecognizer];
+//    [self.topPlayer addGestureRecognizer:self.topPlayerFullscreenRecognizer];
+//    [self.bottomPlayer addGestureRecognizer:self.bottomPlayerFullscreenRecognizer];
     
     
     [self.topViewFeedSelectionController    present:YES];
     [self.bottomViewFeedSelectionController present:YES];
+    
+
+//    [self.view addSubview:[DebugOutput getInstance]];
+//    [DebugOutput getInstance].frame = CGRectMake(10, 60, 400, 200);
+
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     [self updateSideTags];
-    
+
     self.timeLabel.text = @"00:00:00";
     
     Event *event = [_appDel.encoderManager.primaryEncoder event];
@@ -328,65 +388,28 @@
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
     self.periodTableViewController.tags = [NSMutableArray arrayWithArray:_appDel.encoderManager.primaryEncoder.event.tags];
     
-    NSLog(@"%@", self.feeds);
     self.topViewFeedSelectionController.feeds = self.feeds;
     self.bottomViewFeedSelectionController.feeds = self.feeds;
-    
-    //[self.splitPlayer playFeed:self.feeds.count > 0 ? self.feeds[0] : nil];
-    //[self.pipView playWithFeed:self.feeds.count > 1 ? self.feeds[1] : self.splitPlayer.feed];
-    //[self.pipViewController syncToPlayer];
-    
-    //self.splitPlayer.mute = NO;
-    
-    Feed *feedA = self.feeds.count > 0 ? self.feeds[0] : nil;
-    Feed *feedB = self.feeds.count > 1 ? self.feeds[1]: feedA;
-    
-    NSLog(@"\t%@\n\t%@", feedA.path, feedB.path);
-    
-    self.playerA.URL = feedA.path;
-    self.playerB.URL = feedB.path;
-    
-    self.liveButton.enabled = event.live;
-    
-    if (event.live) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (self.mainPlayer.status == AVPlayerStatusReadyToPlay) {
-                if (CMTIME_IS_INVALID(self.resumeTime)) {
-                    [self.mainPlayer play];
-                } else {
-                    [self.mainPlayer setRate:self.resumeRate atTime:self.resumeTime];
-                }
-            }
-        });
-    } else {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (self.mainPlayer.status == AVPlayerStatusReadyToPlay) [self.mainPlayer setRate:self.resumeRate atTime:CMTIME_IS_INVALID(self.resumeTime) ? kCMTimeZero : self.resumeTime];
-        });
-    }
-    
-    // tell other players to STFU and hope they will
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_COMMAND_VIDEO_PLAYER object:nil userInfo:@{ @"command":[NSNumber numberWithInt:VideoPlayerCommandMute]}];
-    
-    self.mainPlayer.muted = NO;
-    
+
     [self.periodTableViewController setHidden:NO animated:YES];
-    self.timeLabel.textColor = [UIColor lightGrayColor];
+    [self.view addSubview: self.playerControls];
+ 
 }
+
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//   [self.playerControls setNeedsDisplay]; // sometimes the bar does not refresh when it appears
+//}
+
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    self.resumeRate = self.mainPlayer.rate;
-    self.resumeTime = self.mainPlayer.currentTime;
-    
-    // pause the player
-    if (self.playerA.rate > 0.0001){
-        [self.playerA pause];
-    }
-    // we're nice and mute when no one is listening
-    self.mainPlayer.muted = YES;
-    
-    // terminate the recording
+//    self.resumeRate = self.mainPlayer.rate;
+//    self.resumeTime = self.mainPlayer.currentTime;
+//    
+     // terminate the recording
     [self.recordButton terminate];
     
     self.recording = NO;
@@ -395,8 +418,6 @@
     self.forwardSeekButton.enabled = YES;
     self.slomoButton.enabled = YES;
     self.liveButton.hidden = NO;
-    self.topPlayerView.enabled = YES;
-    self.bottomPlayerView.enabled = YES;
     
     [self.periodTableViewController setHidden:YES animated:NO];
 }
@@ -407,15 +428,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setMainPlayer:(nullable NCPlayer *)mainPlayer {
-    _mainPlayer.muted = YES;
-    _mainPlayer = mainPlayer;
-    _mainPlayer.muted = NO;
-}
+
 
 - (void)updateSideTags {
     // sort them the way the user wanted them
-//    NSLog(@"not working %s",__FUNCTION__);
 
     NSArray *sortedTagDescriptors = [_appDel.userCenter.tagNames sortedArrayUsingDescriptors:@[
                                                                                                [NSSortDescriptor sortDescriptorWithKey:@"position" ascending:YES],
@@ -427,20 +443,7 @@
     }
     
     self.periodTableViewController.tagNames = tagNames;
-    
-//     random tags
-    /*
-     for (NSUInteger i = 0; i < 64; i++) {
-     NSString *name = tagNames[(NSUInteger)(drand48() * (tagNames.count))];
-     if (![name isEqualToString:@"--"]) {
-     Tag *tag = [[Tag alloc] init];
-     tag.time = drand48();
-     tag.name = name;
-     
-     [self.periodTableViewController addTag:tag];
-     }
-     }
-     */
+
 }
 
 - (void)sideTagsReady:(NSNotification *)note {
@@ -470,149 +473,245 @@
 
 #pragma mark - Fullscreen Methods
 
-- (void)setTopFullscreen:(BOOL)fullscreen animated:(BOOL)animated {
+- (void)setFullscreen:(BOOL)fullscreen toFullScreen:(UIView *)toFullScreen toHide:(UIView *)toHide animated:(BOOL)animated {
+
+   
+    
     if (fullscreen && !self.fullscreenView) {
-        self.fullscreenView = self.topPlayerView;
-        self.fullscreenInitialRect = self.topPlayerView.frame;
+        self.fullscreenView = toFullScreen;
+        self.fullscreenInitialRect = toFullScreen.frame;
+        
         
         if (animated) {
             [UIView animateWithDuration:ANIMATION_DURATION
                              animations:^() {
-                                 self.topPlayerView.frame       = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
-                                 self.bottomPlayerView.alpha    = 0.0;
-                                 self.view.backgroundColor      = [UIColor blackColor];
+                                 toFullScreen.frame  = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+                                 toHide.alpha          = 0.0;
+                                 self.view.backgroundColor  = [UIColor blackColor];
                              }
                              completion:^(BOOL finished) {
-                                 self.topPlayerView.showsControlBar = YES;
-                                 self.bottomPlayerView.hidden       = YES;
+                                 //                                 self.topPlayerView.showsControlBar = YES;
+                                 toHide.hidden       = YES;
+                                 [self.bottomViewFeedSelectionController dismiss:YES];
+                                 [self.topViewFeedSelectionController dismiss:YES];
                              }];
         } else {
-            self.topPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
-            self.topPlayerView.showsControlBar = YES;
-            self.bottomPlayerView.alpha = 0.0;
-            self.bottomPlayerView.hidden = YES;
+            toFullScreen.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+            //            self.topPlayerView.showsControlBar = YES;
+            toHide.alpha = 0.0;
+            toHide.hidden = YES;
             self.view.backgroundColor = [UIColor blackColor];
         }
-    } else if (!fullscreen && self.fullscreenView == self.topPlayerView) {
+    } else if (!fullscreen && self.fullscreenView) {
         
         self.fullscreenView = nil;
-        
-        self.topPlayerView.showsControlBar = NO;
-        self.bottomPlayerView.hidden = NO;
+//        otherPlayer = self.bottomPlayer;
+        //        self.bottomPlayer.showsControlBar = NO;
+        toHide.hidden = NO;
         
         if (animated) {
             
             [UIView animateWithDuration:ANIMATION_DURATION
                              animations:^() {
-                                 self.topPlayerView.frame = self.fullscreenInitialRect;
-                                 self.bottomPlayerView.alpha = 1.0;
+                                 toFullScreen.frame = self.fullscreenInitialRect;
+                                 toHide.alpha = 1.0;
                                  self.view.backgroundColor = [UIColor whiteColor];
                              }
                              completion:^(BOOL finished) {
-                                 self.topPlayerView.showsControlBar = NO;
-                                 self.bottomPlayerView.hidden = NO;
+                                 //                                 self.topPlayerView.showsControlBar = NO;
+                                 toHide.hidden = NO;
+                                 [self.bottomViewFeedSelectionController present:YES];
+                                 [self.topViewFeedSelectionController present:YES];
                              }];
         } else {
-            self.bottomPlayerView.alpha = 1.0;
-            self.topPlayerView.frame = self.fullscreenInitialRect;
+            toHide.alpha = 1.0;
+            toFullScreen.frame = self.fullscreenInitialRect;
+            self.view.backgroundColor = [UIColor whiteColor];
+        }
+    }
+
+
+}
+
+
+- (void)setTopFullscreen:(BOOL)fullscreen animated:(BOOL)animated {
+    RicoPlayer * otherPlayer;
+    if (fullscreen && !self.fullscreenView) {
+        self.fullscreenView = self.topPlayer;
+        otherPlayer = self.bottomPlayer;
+        self.fullscreenInitialRect = self.topPlayer.frame;
+        
+        if (animated) {
+            [UIView animateWithDuration:ANIMATION_DURATION
+                             animations:^() {
+                                 self.fullscreenView.frame  = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+                                 otherPlayer.alpha          = 0.0;
+                                 self.view.backgroundColor  = [UIColor blackColor];
+                             }
+                             completion:^(BOOL finished) {
+//                                 self.topPlayerView.showsControlBar = YES;
+                                 otherPlayer.hidden       = YES;
+                             }];
+        } else {
+            self.fullscreenView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+//            self.topPlayerView.showsControlBar = YES;
+            otherPlayer.alpha = 0.0;
+            otherPlayer.hidden = YES;
+            self.view.backgroundColor = [UIColor blackColor];
+        }
+    } else if (!fullscreen && self.fullscreenView == self.topPlayer) {
+        
+        self.fullscreenView = nil;
+        otherPlayer = self.bottomPlayer;
+//        self.bottomPlayer.showsControlBar = NO;
+        otherPlayer.hidden = NO;
+        
+        if (animated) {
+            
+            [UIView animateWithDuration:ANIMATION_DURATION
+                             animations:^() {
+                                 self.topPlayer.frame = self.fullscreenInitialRect;
+                                 otherPlayer.alpha = 1.0;
+                                 self.view.backgroundColor = [UIColor whiteColor];
+                             }
+                             completion:^(BOOL finished) {
+//                                 self.topPlayerView.showsControlBar = NO;
+                                 otherPlayer.hidden = NO;
+                             }];
+        } else {
+            otherPlayer.alpha = 1.0;
+            self.topPlayer.frame = self.fullscreenInitialRect;
             self.view.backgroundColor = [UIColor whiteColor];
         }
     }
 }
 
 - (void)setBottomFullscreen:(BOOL)fullscreen animated:(BOOL)animated {
-    if (fullscreen && !self.fullscreenView) {
-        self.fullscreenView = self.bottomPlayerView;
-        self.fullscreenInitialRect = self.bottomPlayerView.frame;
-        
-        if (animated) {
-            [UIView animateWithDuration:ANIMATION_DURATION
-                             animations:^() {
-                                 self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
-                                 self.topPlayerView.alpha = 0.0;
-                                 self.view.backgroundColor = [UIColor blackColor];
-                             }
-                             completion:^(BOOL finished) {
-                                 self.topPlayerView.hidden = YES;
-                             }];
-        } else {
-            self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
-            self.bottomPlayerView.showsControlBar = YES;
-            self.topPlayerView.alpha = 0.0;
-            self.topPlayerView.hidden = YES;
-            self.view.backgroundColor = [UIColor blackColor];
-        }
-    } else if (!fullscreen && self.fullscreenView == self.bottomPlayerView) {
-        
-        self.fullscreenView = nil;
-        
-        self.topPlayerView.hidden = NO;
-        
-        if (animated) {
-            
-            [UIView animateWithDuration:ANIMATION_DURATION
-                             animations:^() {
-                                 self.bottomPlayerView.frame = self.fullscreenInitialRect;
-                                 self.topPlayerView.alpha = 1.0;
-                                 self.view.backgroundColor = [UIColor whiteColor];
-                             }
-                             completion:^(BOOL finished) {
-                                 self.topPlayerView.hidden = NO;
-                             }];
-        } else {
-            self.bottomPlayerView.frame = self.fullscreenInitialRect;
-            self.topPlayerView.alpha = 1.0;
-            self.view.backgroundColor = [UIColor whiteColor];
-        }
-    }
+//    if (fullscreen && !self.fullscreenView) {
+//        self.fullscreenView = self.bottomPlayerView;
+//        self.fullscreenInitialRect = self.bottomPlayerView.frame;
+//        
+//        if (animated) {
+//            [UIView animateWithDuration:ANIMATION_DURATION
+//                             animations:^() {
+//                                 self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+//                                 self.topPlayerView.alpha = 0.0;
+//                                 self.view.backgroundColor = [UIColor blackColor];
+//                             }
+//                             completion:^(BOOL finished) {
+//                                 self.topPlayerView.hidden = YES;
+//                             }];
+//        } else {
+//            self.bottomPlayerView.frame = CGRectMake(0, 55, 1024, 768 - 55 - BOTTOM_BAR_HEIGHT);
+//            self.bottomPlayerView.showsControlBar = YES;
+//            self.topPlayerView.alpha = 0.0;
+//            self.topPlayerView.hidden = YES;
+//            self.view.backgroundColor = [UIColor blackColor];
+//        }
+//    } else if (!fullscreen && self.fullscreenView == self.bottomPlayerView) {
+//        
+//        self.fullscreenView = nil;
+//        
+//        self.topPlayerView.hidden = NO;
+//        
+//        if (animated) {
+//            
+//            [UIView animateWithDuration:ANIMATION_DURATION
+//                             animations:^() {
+//                                 self.bottomPlayerView.frame = self.fullscreenInitialRect;
+//                                 self.topPlayerView.alpha = 1.0;
+//                                 self.view.backgroundColor = [UIColor whiteColor];
+//                             }
+//                             completion:^(BOOL finished) {
+//                                 self.topPlayerView.hidden = NO;
+//                             }];
+//        } else {
+//            self.bottomPlayerView.frame = self.fullscreenInitialRect;
+//            self.topPlayerView.alpha = 1.0;
+//            self.view.backgroundColor = [UIColor whiteColor];
+//        }
+//    }
 }
 
 #pragma mark - Gesture Recognizers
 
-- (void)topFullscreen:(UIPinchGestureRecognizer *)recognizer {
-    if (recognizer.velocity > PINCH_VELOCITY) {
-        [self setTopFullscreen:YES animated:YES];
-    } else if (recognizer.velocity < -PINCH_VELOCITY) {
-        [self setTopFullscreen:NO animated:YES];
+//- (void)topFullscreen:(UIPinchGestureRecognizer *)recognizer {
+//    if (recognizer.velocity > PINCH_VELOCITY) {
+//        [self setFullscreen:YES toFullScreen:self.topPlayer toHide:self.bottomPlayer animated:YES];
+//    } else if (recognizer.velocity < -PINCH_VELOCITY) {
+//        [self setFullscreen:NO toFullScreen:self.topPlayer toHide:self.bottomPlayer animated:YES];
+//    }
+//}
+//
+//- (void)bottomFullscreen:(UIPinchGestureRecognizer *)recognizer {
+//    if (recognizer.velocity > PINCH_VELOCITY) {
+//        [self setFullscreen:YES toFullScreen:self.bottomPlayer toHide:self.topPlayer animated:YES];
+//    } else if (recognizer.velocity < -PINCH_VELOCITY) {
+//        [self setFullscreen:NO toFullScreen:self.bottomPlayer toHide:self.topPlayer animated:YES];
+//    }
+//}
+
+- (void)topFullscreen:(UITapGestureRecognizer *)recognizer {
+    self.topZoomContainer.zoomEnabled = false;
+    self.topZoomContainer.zoomEnabled = true;
+    if (!self.fullscreenView) {
+        [self setFullscreen:YES toFullScreen:self.topZoomContainer toHide:self.bottomZoomContainer animated:YES];
+    } else {
+        [self setFullscreen:NO toFullScreen:self.topZoomContainer toHide:self.bottomZoomContainer animated:YES];
+
     }
+
 }
 
-- (void)bottomFullscreen:(UIPinchGestureRecognizer *)recognizer {
-    if (recognizer.velocity > PINCH_VELOCITY) {
-        [self setBottomFullscreen:YES animated:YES];
-    } else if (recognizer.velocity < -PINCH_VELOCITY) {
-        [self setBottomFullscreen:NO animated:YES];
+- (void)bottomFullscreen:(UITapGestureRecognizer *)recognizer {
+    self.bottomZoomContainer.zoomEnabled = false;
+    self.bottomZoomContainer.zoomEnabled = true;
+
+    if (!self.fullscreenView) {
+        [self setFullscreen:YES toFullScreen:self.bottomZoomContainer toHide:self.topZoomContainer animated:YES];
+    }else {
+        [self setFullscreen:NO toFullScreen:self.bottomZoomContainer toHide:self.topZoomContainer animated:YES];
     }
+    
 }
+
 
 #pragma mark - Actions
 
 - (void)liveButtonPressed:(LiveButton *)sender {
-    
-    // disable slomo
+        [self.playerViewController cancelPressed:self.playerControls];    
     self.slomoButton.slomoOn = NO;
-    self.mainPlayer.slomo = NO;
-    
-    // invalidate the loop range
-    self.mainPlayer.loopRange = kCMTimeRangeInvalid;
-    
-    CMTime time = self.mainPlayer.duration;
-    
-    if (CMTIME_IS_NUMERIC(time)) {
-        [self.mainPlayer pause];
-        [self.mainPlayer seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL complete) {
-            [self.mainPlayer prerollAndPlayAtRate:1.0];
-        }];
+    if (_currentEvent.live){
+        self.playerViewController.slomo = NO;
+        self.playerControls.state = RicoPlayerStateLive;
+        [self.playerViewController seekToTime: kCMTimePositiveInfinity //self.playerControls.range.duration
+                              toleranceBefore:kCMTimeZero
+                               toleranceAfter:kCMTimePositiveInfinity
+                            completionHandler:nil];
+        
+        [self.playerViewController play];
+       
+    } else {
+        [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
     }
+    
+
 }
 
 - (void)seekPressed:(SeekButton *)sender {
-    [self.mainPlayer seekBy:CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC)];
+//    [self.mainPlayer seekBy:CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC)];
+    
+    CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
+    CMTime  cTime = self.playerViewController.primaryPlayers.currentTime;
+    self.playerControls.state = RicoPlayerStateNormal;
+    [self.playerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
 }
 
 - (void)slomoPressed:(Slomo *)slomo {
     slomo.slomoOn = !slomo.slomoOn;
-    self.mainPlayer.slomo = slomo.slomoOn;
+    self.playerControls.state = RicoPlayerStateNormal;
+    self.playerViewController.slomo = slomo.slomoOn;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -629,66 +728,68 @@
 }
 
 - (void)clipController:(nonnull DualViewClipTableViewController *)clipController didSelectTagClip:(nonnull Tag *)tag {
-    CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.time, 1), CMTimeMakeWithSeconds(tag.duration, 1));
+
     
-    self.mainPlayer.loopRange = range;
-    //[self.currentPlayer playClipWithFeed:self.currentPlayer.feed andTimeRange:range];
+//    self.mainPlayer.loopRange = range;
+    [self.playerViewController playTag:tag];
+    
 }
 
 #pragma mark - FeedSelectionControllerDelegate
 
 - (void)feedSelectionController:(nonnull FeedSelectionController *)feedSelectionController didSelectFeed:(nonnull Feed *)feed {
+//    self.playerViewController
+    
+    
+    // cancel if your playing a tag
+    [self.playerViewController cancelPressed:self.playerControls];
+    
+    RicoPlayer * aplayer;
+    
     if (feedSelectionController == self.topViewFeedSelectionController) {
-        //[self.pipView playWithFeed:feed];
-        
-        __weak NCPlayer *player = self.topPlayerView.player;
-        
-        float rate = player.rate;
-        CMTime time = player.currentTime;
-        
-        [player setURL:feed.path];
-        [player addReadyToPlayObserver:^(BOOL ready) {
-            [player setRate:rate atTime:time];
-        }];
-        
+        aplayer = self.topPlayer;
     } else if (feedSelectionController == self.bottomViewFeedSelectionController) {
-        //[self.splitPlayer playFeed:feed];
-        
-        __weak NCPlayer *player = self.bottomPlayerView.player;
-        
-        float rate = player.rate;
-        CMTime time = player.currentTime;
-        
-        [player setURL:feed.path];
-        [player addReadyToPlayObserver:^(BOOL ready) {
-            [player setRate:rate atTime:time];
-        }];
+        aplayer = self.bottomPlayer;
     }
     
-//    [feedSelectionController dismiss:YES];
+    CMTime time = aplayer.currentTime;
+
+//    aplayer.feed = feed;
+//    [aplayer loadFeed:feed];
+//    [[aplayer loadFeed:feed] setCompletionBlock:^{
+//        NSLog(@"PRessessssssssssss");
+//    }];
+    [aplayer loadFeed:feed];
+
+    [aplayer seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
+    
+    
+    if (aplayer.isPlaying) {
+        [aplayer play];
+    }
+    
+
 }
 
 #pragma mark - NCRecordButtonDelegate
 
 - (void)recordingDidStartInRecordButton:(nonnull NCRecordButton *)recordButton {
-    // invalidate the loop range
-    self.mainPlayer.loopRange = kCMTimeRangeInvalid;
-    
-    self.recording = YES;
-    self.startTime = CMTimeGetSeconds(self.mainPlayer.currentTime);
-    
-    self.backSeekButton.enabled = NO;
-    self.forwardSeekButton.enabled = NO;
-    self.slomoButton.enabled = NO;
-    self.liveButton.hidden = YES;
-    self.topPlayerView.enabled = NO;
-    self.bottomPlayerView.enabled = NO;
+    self.recording                      = YES;
+    self.startTime                      = CMTimeGetSeconds(self.playerViewController.primaryPlayers.currentTime);
+    self.backSeekButton.enabled         = NO;
+    self.forwardSeekButton.enabled      = NO;
+    self.slomoButton.enabled            = NO;
+    self.liveButton.hidden              = YES;
+    self.playerControls.enabled         = NO;
     [self.periodTableViewController setHidden:YES animated:YES];
+
+    [self.bottomViewFeedSelectionController dismiss:YES];
+    [self.topViewFeedSelectionController dismiss:YES];
     
     self.timeLabel.textColor = [UIColor whiteColor];
-    
+
     self.durationTagID = [Tag makeDurationID];
-    
+//
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
                                                                                                       @"name":self.activeTagName,
                                                                                                       @"time":[NSString stringWithFormat:@"%f", self.startTime],
@@ -700,21 +801,24 @@
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {
     self.recording = NO;
-    
     self.backSeekButton.enabled = YES;
     self.forwardSeekButton.enabled = YES;
     self.slomoButton.enabled = YES;
     self.liveButton.hidden = NO;
-    self.topPlayerView.enabled = YES;
-    self.bottomPlayerView.enabled = YES;
+    self.playerControls.enabled         = YES;
     [self.periodTableViewController setHidden:NO animated:YES];
     
-    NSTimeInterval endTime = CMTimeGetSeconds(self.mainPlayer.currentTime);
+    if (!self.fullscreenView){
+        [self.bottomViewFeedSelectionController present:YES];
+        [self.topViewFeedSelectionController present:YES];
+    }
     
+    NSTimeInterval endTime = CMTimeGetSeconds(self.playerViewController.primaryPlayers.currentTime);
+
     Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
-    
+
     NSMutableDictionary * tagData   = [NSMutableDictionary dictionaryWithDictionary:[tag makeTagData]];
-    
+
     [tagData setValue:[NSString stringWithFormat:@"%f", endTime] forKey:@"closetime"];
     [tagData setValue:[NSNumber numberWithInteger:TagTypeCloseDuration] forKey:@"type"];
     [tagData setValue:self.durationTagID forKey:@"dtagid"];
@@ -732,10 +836,12 @@
     self.forwardSeekButton.enabled = YES;
     self.slomoButton.enabled = YES;
     self.liveButton.hidden = NO;
-    self.topPlayerView.enabled = YES;
-    self.bottomPlayerView.enabled = YES;
+    self.playerControls.enabled         = YES;
     [self.periodTableViewController setHidden:NO animated:YES];
-    
+    if (!self.fullscreenView){
+        [self.bottomViewFeedSelectionController present:YES];
+        [self.topViewFeedSelectionController present:YES];
+    }
     Tag *tag = [Tag getOpenTagByDurationId:self.durationTagID];
     if (tag) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_DELETE_TAG object:tag];
@@ -747,9 +853,10 @@
 }
 
 - (void)recordingTimeDidUpdateInRecordButton:(nonnull NCRecordButton *)recordButton {
-    
+//    
     if (self.recording) {
-        NSTimeInterval clipDuration = CMTimeGetSeconds(self.mainPlayer.currentTime) - self.startTime;
+        
+        NSTimeInterval clipDuration = CMTimeGetSeconds(self.playerViewController.primaryPlayers.currentTime) - self.startTime;
         
         self.timeLabel.text = [self recordingTimeStringForSeconds:clipDuration];
     } else {
@@ -770,14 +877,7 @@
     return [NSString stringWithFormat:@"%02lu:%02lu:%02lu",(unsigned long) hour, (unsigned long) minute, (unsigned long)second];
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
+

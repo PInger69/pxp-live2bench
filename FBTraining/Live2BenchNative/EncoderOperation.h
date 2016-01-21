@@ -20,7 +20,7 @@
 
 #pragma mark - EncoderOperation Methods
 
-@property (nonatomic,weak)      Encoder         * encoder;
+@property (nonatomic,strong)      Encoder         * encoder;
 @property (nonatomic,assign)    ParseMode       parseMode;
 
 @property (nonatomic,strong)    NSURLSession    * session;

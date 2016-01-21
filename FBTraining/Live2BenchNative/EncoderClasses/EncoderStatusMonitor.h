@@ -43,6 +43,7 @@ typedef NS_ENUM (NSInteger, EncoderMonitor){
 @interface EncoderStatusMonitor : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 
 @property (nonatomic,assign)    BOOL    isLookingForMaster;
+@property (nonatomic,strong)    NSString        *urlProtocol;//http
 
 -(id)initWithDelegate:( id <EncoderStatusMonitorProtocol> )delegate;
 -(void)startShutdownChecker:(void(^)(void))onShutdown;

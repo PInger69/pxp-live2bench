@@ -568,7 +568,7 @@ static LocalMediaManager * instance;
  */
 -(NSString*)saveEvent:(NSMutableDictionary*)eventDic
 {
-    Event *encoderEvent = eventDic[@"non-local"];
+    Event *encoderEvent =   (Event *) eventDic[@"non-local"];
     
     // This gets the path and makes a DIR if its not there
     NSString * aPath = [[_localPath stringByAppendingPathComponent:@"events"] stringByAppendingPathComponent:encoderEvent.datapath];

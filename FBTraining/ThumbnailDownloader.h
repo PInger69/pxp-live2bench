@@ -17,6 +17,7 @@
 @property (nonatomic,assign) BOOL isSuccess;
 @property (nonatomic,weak)  id <ActionListItemDelegate>  delegate;
 @property (nonatomic,weak)  ActionList      * listItemOwner;
+@property (atomic,strong)  UIImageView         * imageview;
 
 -(void)start;
 -(instancetype)initImageAssetManager:(ImageAssetManager*)aIAM url:(NSString*)aUrl;

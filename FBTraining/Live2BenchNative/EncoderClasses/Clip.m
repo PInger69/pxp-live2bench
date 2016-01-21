@@ -311,5 +311,14 @@
 }
 
 
+- (BOOL)isEqual:(id)object {
+    BOOL check = [object isKindOfClass:[Clip class]] &&
+    [self.clipId isEqualToString:[(Clip *)object clipId]] &&
+    [self.name isEqualToString:[(Clip *)object name]]    ;
+    
+    return check;
+}
+
+
 @end
 

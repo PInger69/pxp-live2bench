@@ -34,8 +34,11 @@
     NSLog(@"sync running") ;
     if ([self isCancelled]) {
         [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
         finished = YES;
+        executing = NO;
         [self didChangeValueForKey:@"isFinished"];
+        [self didChangeValueForKey:@"isExecuting"];
         return;
     }
 
@@ -52,12 +55,23 @@
     [self willChangeValueForKey:@"isFinished"];
     [self willChangeValueForKey:@"isExecuting"];
     finished = YES;
-    executing = YES;
+    executing = NO;
     [self didChangeValueForKey:@"isExecuting"];
     [self didChangeValueForKey:@"isFinished"];
 }
 
-
+//-(void)cancel
+//{
+//
+//
+//    [self willChangeValueForKey:@"isFinished"];
+//    [self willChangeValueForKey:@"isExecuting"];
+//    finished    = YES;
+//    executing   = NO;
+//    [self didChangeValueForKey:@"isExecuting"];
+//    [self didChangeValueForKey:@"isFinished"];
+//        [super cancel];
+//}
 
 -(BOOL)isConcurrent
 {
@@ -74,7 +88,10 @@
     return finished;
 }
 
-
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"%@  Finished:%@  executing: %@  canceled: %@",[self class],(self.isFinished)?@"yes":@"no",(self.executing)?@"yes":@"no",(self.cancelled)?@"yes":@"no"];
+}
 
 @end
 
@@ -91,8 +108,10 @@
     self = [super init];
     if (self) {
         self.observedItem       = playerItem;
+        [self.observedItem addObserver:self forKeyPath:@"status" options:0 context:NULL];
         executing               = NO;
         finished                = NO;
+        
     }
     return self;
 }
@@ -104,17 +123,20 @@
         
         self.observedItem       = nil;
         [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
         finished = YES;
+        executing = NO;
         [self didChangeValueForKey:@"isFinished"];
+        [self didChangeValueForKey:@"isExecuting"];
+       
         return;
-    
     }
 
     [self willChangeValueForKey:@"isExecuting"];
     executing = YES;
     [self didChangeValueForKey:@"isExecuting"];
     
-    [self.observedItem addObserver:self forKeyPath:@"status" options:0 context:NULL];
+
     
 
 }
@@ -123,35 +145,48 @@
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
     AVPlayerItem * item = object;
+    
+    if ([self isCancelled] ||item.status == AVPlayerItemStatusUnknown ){
+        return;
+    }
+    
     switch (item.status) {
         case AVPlayerItemStatusReadyToPlay:
             self.success = YES;
-            [self.observedItem removeObserver:self forKeyPath:@"status"];
-            self.observedItem = nil;
-            [self willChangeValueForKey:@"isFinished"];
-            finished = YES;
-            [self didChangeValueForKey:@"isFinished"];
-            [self willChangeValueForKey:@"isExecuting"];
-            executing = NO;
-            [self didChangeValueForKey:@"isExecuting"];
 //            if (self.delegate) [self.delegate onPlayerOperationItemReady:self];
             break;
         case AVPlayerItemStatusFailed:
             self.success = NO;
-            [self.observedItem removeObserver:self forKeyPath:@"status"];
-            self.observedItem = nil;
-
-            [self willChangeValueForKey:@"isFinished"];
-            finished = YES;
-            [self didChangeValueForKey:@"isFinished"];
-            [self willChangeValueForKey:@"isExecuting"];
-            executing = NO;
-            [self didChangeValueForKey:@"isExecuting"];
 //            if (self.delegate) [self.delegate onPlayerOperationItemFail:self];
             break;
         default:
             break;
     }
+    
+    [self willChangeValueForKey:@"isExecuting"];
+    [self willChangeValueForKey:@"isFinished"];
+    finished = YES;
+    executing = NO;
+    [self didChangeValueForKey:@"isExecuting"];
+    [self didChangeValueForKey:@"isFinished"];
+    
+}
+
+-(void)cancel
+{
+
+    [super cancel];
+//    if (self.observedItem && executing) {
+//        [self.observedItem removeObserver:self forKeyPath:@"status"];
+//        self.observedItem = nil;
+//    }
+    [self willChangeValueForKey:@"isFinished"];
+    [self willChangeValueForKey:@"isExecuting"];
+    finished    = YES;
+    executing   = NO;
+    [self didChangeValueForKey:@"isExecuting"];
+    [self didChangeValueForKey:@"isFinished"];
+
 }
 
 -(BOOL)isConcurrent
@@ -175,6 +210,12 @@
         [self.observedItem removeObserver:self forKeyPath:@"status"];
     }
 }
+
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"%@  Finished:%@  executing: %@  canceled: %@",[self class],(self.isFinished)?@"yes":@"no",(self.executing)?@"yes":@"no",(self.cancelled)?@"yes":@"no"];
+}
+
 
 @end
 
@@ -230,7 +271,7 @@
         self.toleranceBefore    = tBefore;
         self.toleranceAfter     = tAfter;
         executing               = NO;
-        finished                = NO;;
+        finished                = NO;
     }
     return self;
 }
@@ -238,29 +279,45 @@
 
 -(void)start
 {
+    
+    if ([self isCancelled]) {
+        [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
+        finished = YES;
+        executing = NO;
+        [self didChangeValueForKey:@"isFinished"];
+        [self didChangeValueForKey:@"isExecuting"];
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isExecuting"];
+    executing = YES;
+    [self didChangeValueForKey:@"isExecuting"];
+    
+    
     self.dynamicIsExecuting = YES;
-    NSLog(@"Run RicoSeekOperation");
     __block RicoSeekOperation* weakself = self;
     
-    __block AVPlayer * avp = self.player;
-    __block AVPlayerItem * avi = self.player.currentItem;
+    __block AVPlayer        * avp = self.player;
+    __block AVPlayerItem    * avi = self.player.currentItem;
+    
+    [avp cancelPendingPrerolls];
+    [avi cancelPendingSeeks];
     
     [self.player seekToTime:self.seekToTime toleranceBefore:self.toleranceBefore toleranceAfter:self.toleranceAfter completionHandler:^(BOOL afinished) {
         weakself.success = afinished;
         if (weakself.completionHandler != nil) {
             weakself.completionHandler(finished);
+            
         }
-        NSLog(@"%@ %f  %@" ,self.player ,CMTimeGetSeconds(avi.currentTime), (afinished)?@"Pass":@"FAIL");
-        avp;
-        avi;
-        
+//        NSLog(@"%@ %f  %@" ,self.player ,CMTimeGetSeconds(avi.currentTime), (afinished)?@"Pass":@"FAIL");
         [weakself willChangeValueForKey:@"isFinished"];
         [weakself willChangeValueForKey:@"isExecuting"];
         finished = YES;
-        executing = YES;
+        executing = NO;
         [weakself didChangeValueForKey:@"isExecuting"];
         [weakself didChangeValueForKey:@"isFinished"];
-        NSLog(@"Seeking Complete");
+        NSLog(@"Seeking Complete %@",(afinished)?@"PASS":@"FAIL");
     }];
 
 }
@@ -278,6 +335,11 @@
 -(BOOL)isFinished
 {
     return finished;
+}
+
+-(NSString*)description
+{
+    return [NSString stringWithFormat:@"%@  Finished:%@  executing: %@  canceled: %@",[self class],(self.isFinished)?@"yes":@"no",(self.executing)?@"yes":@"no",(self.cancelled)?@"yes":@"no"];
 }
 
 @end
