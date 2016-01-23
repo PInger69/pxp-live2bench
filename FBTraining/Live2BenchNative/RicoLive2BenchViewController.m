@@ -1,13 +1,13 @@
 
 //
-//  Live2BenchViewController.m
+//  RicoLive2BenchViewController.m
 //  Live2BenchNative
 //
 //  Created by DEV on 2013-01-21.
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
-#import "Live2BenchViewController.h"
+#import "RicoLive2BenchViewController.h"
 #import <UIKit/UIKit.h>
 
 // Singletons
@@ -49,23 +49,39 @@
 #import "AnalyzeTabViewController.h"
 #import "CustomAlertControllerQueue.h"
 
+
+#import "RicoPlayer.h"
+#import "RicoPlayerControlBar.h"
+#import "RicoPlayerViewController.h"
+#import "RicoZoomContainer.h"
+
+
 #define MEDIA_PLAYER_WIDTH    712
 #define MEDIA_PLAYER_HEIGHT   400
 #define LITTLE_ICON_DIMENSIONS 40
 #define PADDING                 5
 
 
-@interface Live2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider>
+@interface RicoLive2BenchViewController () <PxpTelestrationViewControllerDelegate, PxpTimeProvider>
 
-@property (strong, nonatomic, nonnull) PxpTelestrationViewController    * telestrationViewController;
-@property (strong, nonatomic, nonnull) PxpPlayerViewController          * playerViewController;
-@property (strong, nonatomic, nonnull) PxpL2BFullscreenViewController   * fullscreenViewController;
+//@property (strong, nonatomic, nonnull) PxpTelestrationViewController    * telestrationViewController;
+//@property (strong, nonatomic, nonnull) PxpPlayerViewController          * playerViewController;
+//@property (strong, nonatomic, nonnull) PxpL2BFullscreenViewController   * fullscreenViewController;
 @property (strong, nonatomic, nonnull) NSMutableArray                   * sourceButtons;
+
+
+@property (strong, nonatomic, nonnull) RicoPlayer                       * ricoPlayer;
+@property (strong, nonatomic, nonnull) RicoPlayerControlBar             * ricoPlayerControlBar;
+@property (strong, nonatomic, nonnull) RicoPlayerViewController         * ricoPlayerViewController;
+@property (strong, nonatomic, nonnull) RicoZoomContainer                * ricoZoomContainer;
+
+
+
 
 @end
 
 
-@implementation Live2BenchViewController{
+@implementation RicoLive2BenchViewController{
     ScreenController                    * _externalControlScreen;       // this is for attacked screens
     EncoderManager                      * _encoderManager;              // where all vids/feeds coming from
     UserCenter                          * _userCenter;                  // any userdata from plists
@@ -96,7 +112,7 @@ static void * eventContext      = &eventContext;
 {
     self = [super init];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"Live2Bench",nil) imageName:@"live2BenchTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Rico L2B",nil) imageName:@"live2BenchTab"];
     }
     return self;
 }
@@ -117,12 +133,12 @@ static void * eventContext      = &eventContext;
 
     self = [super initWithAppDelegate:mainappDelegate];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"Live2Bench", nil) imageName:@"live2BenchTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Rico L2B", nil) imageName:@"live2BenchTab"];
         
-        _playerViewController           = [[PxpPlayerViewController alloc] init];
+//        _playerViewController           = [[PxpPlayerViewController alloc] init];
 
-        _fullscreenViewController       = [[PxpL2BFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
-        [_fullscreenViewController.liveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
+//        _fullscreenViewController       = [[PxpL2BFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+//        [_fullscreenViewController.liveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     }
   
     // Observers
@@ -131,7 +147,7 @@ static void * eventContext      = &eventContext;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(createTagButtons)              name:NOTIF_SIDE_TAGS_READY_FOR_L2B  object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:)             name:NOTIF_PRIMARY_ENCODER_CHANGE   object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tabJustBeingAdded:)            name:NOTIF_TAB_CREATED              object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewPlayFeedNotification:) name:NOTIF_SET_PLAYER_FEED          object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipViewPlayFeedNotification:) name:NOTIF_SET_PLAYER_FEED          object:nil];
     _sourceButtons = [NSMutableArray new];
     return self;
 }
@@ -141,8 +157,8 @@ static void * eventContext      = &eventContext;
 {
     [super viewDidLoad];
     
-    [self addChildViewController:_playerViewController];
-    [self addChildViewController:_fullscreenViewController];
+//    [self addChildViewController:_playerViewController];
+//    [self addChildViewController:_fullscreenViewController];
     
     informationLabel = [[UILabel alloc] initWithFrame:CGRectMake(156, 50, MEDIA_PLAYER_WIDTH, 50)];
     [informationLabel setTextAlignment:NSTextAlignmentRight];
@@ -160,34 +176,34 @@ static void * eventContext      = &eventContext;
     [durationLabel setText:@"Duration"];
     [self.view addSubview:durationLabel];
     
-    self.playerViewController.telestrationViewController.delegate = self;
-    self.playerViewController.view.frame = CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT);
-    [self.view addSubview:self.playerViewController.view];
+//    self.playerViewController.telestrationViewController.delegate = self;
+//    self.playerViewController.view.frame = CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT);
+//    [self.view addSubview:self.playerViewController.view];
     
-    _gotoLiveButton         = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +self.playerViewController.view.frame.origin.x+32,PADDING + self.playerViewController.view.frame.size.height + 95, 130, LITTLE_ICON_DIMENSIONS)];
+    _gotoLiveButton         = [[LiveButton alloc]initWithFrame:CGRectMake(MEDIA_PLAYER_WIDTH +156+32,PADDING + MEDIA_PLAYER_HEIGHT + 95, 130, LITTLE_ICON_DIMENSIONS)];
     _gotoLiveButton.enabled = NO;
     [_gotoLiveButton addTarget:self action:@selector(goToLive) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_gotoLiveButton]; // redundant?
 
     _videoBar       = [[PxpVideoBar alloc] init];
-    _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
-    [self.view addSubview:_videoBar]; // redundant?
+    _videoBar.frame = CGRectMake(+156, 100 + MEDIA_PLAYER_HEIGHT, MEDIA_PLAYER_WIDTH, 40.0);
+    [self.view addSubview:_videoBar];
     
-    [self.view addSubview:_fullscreenViewController.view]; // redundant?
+    [_videoBar.backwardSeekButton addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.forwardSeekButton  addTarget:self action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
-    _videoBar.playerViewController = _playerViewController;
+    [_videoBar.slomoButton removeTarget:_videoBar action:@selector(slomoAction:)  forControlEvents:UIControlEventTouchUpInside];
+    [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
+//    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+//    _videoBar.playerViewController = _playerViewController;
     
-    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
-    _playerViewController.telestrationViewController.stillMode  = YES;
-    _playerViewController.playerView.context                    = _appDel.encoderManager.primaryEncoder.eventContext;
+//    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
+//    _playerViewController.telestrationViewController.stillMode  = YES;
+//    _playerViewController.playerView.context                    = _appDel.encoderManager.primaryEncoder.eventContext;
     
     
     
-    UIButton * analiyzeButton = [[UIButton alloc]initWithFrame:CGRectMake(10,500, 50, 50)];
-    analiyzeButton.layer.borderWidth = 1;
-    [analiyzeButton addTarget:self action:@selector(onAnalyze:) forControlEvents:UIControlEventTouchUpInside];
-   // if(DEBUG_MODE)[self.view addSubview:analiyzeButton];
+
     
 
     [self buildSourceButtons];
@@ -200,38 +216,28 @@ static void * eventContext      = &eventContext;
 //    scrButton.layer.cornerRadius = 22;
 //    [self.view addSubview:scrButton];
     
-}
+    // Rico
+    
+    self.ricoPlayer                 = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    self.ricoZoomContainer          = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(156, 100, MEDIA_PLAYER_WIDTH, MEDIA_PLAYER_HEIGHT)];
+    self.ricoPlayerControlBar       = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(156,CGRectGetMaxY(self.ricoZoomContainer.frame)-40, self.ricoZoomContainer.frame.size.width, 40.0)];
+    self.ricoPlayerViewController   = [RicoPlayerViewController new];
+    self.ricoPlayerViewController.playerControlBar  = self.ricoPlayerControlBar;
+    self.ricoPlayerControlBar.delegate              = self.ricoPlayerViewController;
+    self.ricoZoomContainer.zoomEnabled              = YES;
+    [self.ricoPlayerViewController addPlayers:self.ricoPlayer];
+    [self.view addSubview:self.ricoZoomContainer];
 
+    [self.ricoZoomContainer addToContainer:self.ricoPlayer];
+    [self.view addSubview:self.ricoPlayerControlBar];
 
-
-
--(void)onAnalyze:(id)sender
-{
 
     
-    NSTimeInterval currentTime = self.playerViewController.playerView.player.currentTimeInSeconds;//self.currentTimeInSeconds;
-    NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                     @"event"         : (self.currentEvent.live)?LIVE_EVENT:self.currentEvent.name,
-                                                                                     @"name":@"Analyze",
-                                                                                     @"time":[NSString stringWithFormat:@"%f",currentTime]
-                                                                                     }];
-
-    Encoder* enc =   (Encoder*)_encoderManager.primaryEncoder;
     
-    if (!_encoderManager.primaryEncoder){
-        NSLog(@"Primary encoder lost");
-    }
-    EncoderOperation * makeTag = [[EncoderOperationMakeTag alloc]initEncoder:enc data:userInfo];
-    [makeTag setOnRequestComplete:^(NSData *data ,EncoderOperation* op) {
-        Tag * atag= op.userInfo[@"tag"];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter]postNotificationName:AnalyzeWillProcessTagNotification object:atag];
-        });
-        
-    }];
-    [enc runOperation:makeTag];
     
 }
+
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -240,8 +246,10 @@ static void * eventContext      = &eventContext;
         [_bottomViewController update];
     }
     [self.view bringSubviewToFront:_bottomViewController.mainView];
+
+    [self.view bringSubviewToFront:self.ricoZoomContainer];
+    [self.view bringSubviewToFront:self.ricoPlayerControlBar];
     [self.view bringSubviewToFront:_videoBar];
-    [self.view bringSubviewToFront:_fullscreenViewController.view];
     [self.view bringSubviewToFront:_tagButtonController.leftTray];
     [self.view bringSubviewToFront:_tagButtonController.rightTray];
 }
@@ -249,14 +257,14 @@ static void * eventContext      = &eventContext;
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [_playerViewController viewDidAppear:animated];
+//    [_playerViewController viewDidAppear:animated];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [[CustomAlertControllerQueue getInstance].alertQueue removeAllObjects];
-    self.playerViewController.telestrationViewController.telestration = nil;
+//    self.playerViewController.telestrationViewController.telestration = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -338,9 +346,9 @@ static void * eventContext      = &eventContext;
 //     new
     Profession * profession = [ProfessionMap getProfession:sport];
     _bottomViewController = [[profession.bottomViewControllerClass alloc]init];
-    [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
+    [self.view insertSubview:_bottomViewController.mainView belowSubview:self.ricoZoomContainer];
     _bottomViewController.currentEvent  = _currentEvent;
-    _bottomViewController.videoPlayer   = _playerViewController.playerView.player;
+    _bottomViewController.videoPlayer   = self.ricoPlayer.avPlayer;
     if ([_bottomViewController respondsToSelector:@selector(update)]) {
         [_bottomViewController update];
     }
@@ -375,7 +383,7 @@ static void * eventContext      = &eventContext;
         }
         _cameraPick.listOfButtonNames = buttonListNames.allValues;
         
-        __block Live2BenchViewController *weakSelf = self;
+        __block RicoLive2BenchViewController *weakSelf = self;
         [_cameraPick addOnCompletionBlock:^(NSString *pick){
             
             for (NSString *feedDisplayName in buttonListNames.allValues) {
@@ -454,6 +462,15 @@ static void * eventContext      = &eventContext;
         [self displayLable];
     }
     
+    [self.ricoPlayer loadFeed:[_currentEvent.feeds allValues][0]];
+
+    if (_currentEvent.live){
+        [self.ricoPlayerViewController live];
+    } else {
+        [self.ricoPlayerViewController play];
+
+    }
+
     [self onEventChange];
 }
 
@@ -467,10 +484,8 @@ static void * eventContext      = &eventContext;
         [self gotLiveEvent];
     }
     
-    PxpPlayerContext *context = _encoderManager.primaryEncoder.eventContext;
-    _playerViewController.playerView.context = context;
     _videoBar.event = _currentEvent;
-    _fullscreenViewController.playerViewController.playerView.context = context;
+//    _fullscreenViewController.playerViewController.playerView.context = context;
     
     [self addBottomViewController];
     [self addPlayerView];
@@ -521,20 +536,20 @@ static void * eventContext      = &eventContext;
 
 -(void)onEventChange
 {
-    [_fullscreenViewController usingTag:nil];
+//    [_fullscreenViewController usingTag:nil];
     
     if (_appDel.encoderManager.liveEvent != nil){
         _gotoLiveButton.enabled = YES;
-        _fullscreenViewController.liveButton.enabled = YES;
+//        _fullscreenViewController.liveButton.enabled = YES;
         [self switchPressed];
     }else if (_currentEvent != nil){
         _gotoLiveButton.enabled = NO;
-        _fullscreenViewController.liveButton.enabled = NO;
+//        _fullscreenViewController.liveButton.enabled = NO;
         [self switchPressed];
     }
     else if (_currentEvent == nil){
         _gotoLiveButton.enabled = NO;
-        _fullscreenViewController.liveButton.enabled = NO;
+//        _fullscreenViewController.liveButton.enabled = NO;
         [_tagButtonController setButtonState:SideTagButtonModeDisable];
         [informationLabel setText:@""];
     }
@@ -593,22 +608,44 @@ static void * eventContext      = &eventContext;
 
 -(void)onPressSourceButton:(id)sender
 {
+    
+    self.ricoZoomContainer.zoomEnabled = !self.ricoZoomContainer.zoomEnabled;
+    self.ricoZoomContainer.zoomEnabled = !self.ricoZoomContainer.zoomEnabled;
+    
     for (UIButton * b in _sourceButtons) {
         [b setBackgroundColor:[UIColor lightGrayColor]] ;
     }
     UIButton * button = sender;
     [button setBackgroundColor:PRIMARY_APP_COLOR] ;
 
+    [self.ricoPlayerViewController cancelPressed:self.ricoPlayerControlBar];
+    
+    RicoPlayer * aplayer = self.ricoPlayer;
 
-    self.playerViewController.playerView.player = self.playerViewController.playerView.context.players[button.tag];
-//    self.playerViewController
+    CMTime time = aplayer.currentTime;
+
+    [aplayer loadFeed:[self.currentEvent.feeds allValues][button.tag]];
+    
+    [aplayer seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
+    
+    
+    if (aplayer.isPlaying) {
+        [aplayer play];
+    }
+    
+
+    
+    
+    
 }
 
 #pragma mark -
 #pragma mark PxpTimeProvider Protocol Methods
 
-- (NSTimeInterval)currentTimeInSeconds {
-    return self.playerViewController.playerView.player.currentTimeInSeconds;
+- (NSTimeInterval)currentTimeInSeconds
+{
+    
+    return CMTimeGetSeconds(self.ricoPlayerViewController.primaryPlayers.currentTime);
 }
 
 #pragma mark -
@@ -623,7 +660,7 @@ static void * eventContext      = &eventContext;
     
     _teamPick = [[ListPopoverController alloc] initWithMessage:NSLocalizedString(@"Please select the team you want to tag:", @"dev comment - asking user to pick a team") buttonListNames:@[[[team allKeys]firstObject], [[team allKeys]lastObject]]];
     
-    __block Live2BenchViewController *weakSelf = self;
+    __block RicoLive2BenchViewController *weakSelf = self;
     [_teamPick addOnCompletionBlock:^(NSString *pick){
         
         [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
@@ -689,8 +726,8 @@ static void * eventContext      = &eventContext;
     PXPLog(@"Pressed Live Button");
 
     if (_currentEvent.live) {
+        [self.ricoPlayerViewController live];
 
-        [self.playerViewController.playerView.player goToLive];
         return;
     }
     
@@ -758,8 +795,8 @@ static void * eventContext      = &eventContext;
 -(void)tagButtonSelected:(id)sender
 {
     SideTagButton *button = (SideTagButton*)sender;
-    
-    NSTimeInterval currentTime = self.playerViewController.playerView.player.currentTimeInSeconds;//self.currentTimeInSeconds;
+
+    NSTimeInterval currentTime =     CMTimeGetSeconds(self.ricoPlayerViewController.primaryPlayers.currentTime);
     
     NSArray *players;
     if (_playerDrawerLeft.view.superview == self.view) {
@@ -886,16 +923,16 @@ static void * eventContext      = &eventContext;
         Tag *tag                = note.userInfo[@"tag"];
         PxpTelestration *tele   = tag.telestration;
         
-        [self.playerViewController.playerView switchToContextPlayerNamed:feed.sourceName];
+//        [self.playerViewController.playerView switchToContextPlayerNamed:feed.sourceName];
         
-        if ([self.playerViewController.playerView isKindOfClass:[PxpPlayerMultiView class]]){
-            [((PxpPlayerMultiView*)self.playerViewController.playerView).companionView enablePip:NO];
-        }
+//        if ([self.playerViewController.playerView isKindOfClass:[PxpPlayerMultiView class]]){
+//            [((PxpPlayerMultiView*)self.playerViewController.playerView).companionView enablePip:NO];
+//        }
         
-        self.playerViewController.telestrationViewController.telestration = !feed.sourceName || tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
-        self.playerViewController.playerView.player.tag = tag;
+//        self.playerViewController.telestrationViewController.telestration = !feed.sourceName || tele.sourceName == feed.sourceName || [tele.sourceName isEqualToString:feed.sourceName] ? tele : nil;
+//        self.playerViewController.playerView.player.tag = tag;
         
-        [self.fullscreenViewController usingTag:tag];
+//        [self.fullscreenViewController usingTag:tag];
         
     }
 }
@@ -907,7 +944,7 @@ static void * eventContext      = &eventContext;
 - (void)telestration:(nonnull PxpTelestration *)tele didFinishInViewController:(nonnull PxpTelestrationViewController *)viewController {
     
     if (tele.actionStack.count) {
-        tele.sourceName = self.playerViewController.playerView.activePlayerName;
+//        tele.sourceName = self.playerViewController.playerView.activePlayerName;
         
         
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_CREATE_TELE_TAG object:self userInfo:@{
@@ -922,6 +959,22 @@ static void * eventContext      = &eventContext;
 
 }
 
+
+#pragma mark - tempButton press methods
+- (void)seekPressed:(SeekButton *)sender {
+    //    [self.mainPlayer seekBy:CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC)];
+    
+    CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
+    CMTime  cTime = self.ricoPlayerViewController.primaryPlayers.currentTime;
+    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
+}
+
+- (void)slomoPressed:(Slomo *)slomo {
+    slomo.slomoOn = !slomo.slomoOn;
+    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    self.ricoPlayerViewController.slomo = slomo.slomoOn;
+}
 
 @end
 

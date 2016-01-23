@@ -167,7 +167,9 @@ static CMClockRef _masterClock;
 -(void)live
 {
     for (RicoPlayer * player in [self.players allValues]) {
-        [[player seekToTime:[player duration] toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] addDependency:[player play]];
+         [[player seekToTime:kCMTimePositiveInfinity toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
+             
+         }] addDependency:[player play]];
     }
     if (self.playerControlBar) {
         self.playerControlBar.state = RicoPlayerStateLive;
@@ -260,6 +262,29 @@ static CMClockRef _masterClock;
     
     
     [self.operationQueue cancelAllOperations]; // cancel any prvious seeks
+    
+    
+    if ([playerList count]== 1){
+        RicoPlayer * p = playerList[0];
+        [p.avPlayer.currentItem cancelPendingSeeks];
+        [p.operationQueue cancelAllOperations];
+        
+        NSOperation * seeking = [p seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+            RicoPlayer * pp = p;
+            NSLog(@"                               Player %@ Time %f  %@",pp.name,CMTimeGetSeconds(pp.currentTime),pp.avPlayer.masterClock );
+        }];
+        
+        if ( p.isPlaying) {
+            NSOperation * playing = [p play];
+            [playing setCompletionBlock:^{
+                RicoPlayer * pp = p;
+                NSLog(@"                               Player %@ Time %f  %@",pp.name,CMTimeGetSeconds(pp.currentTime),pp.avPlayer.masterClock );
+            }];
+         
+        }
+        return ;
+    }
+//
     self.syncBlock = [RicoSyncOperation new];
     
     for (NSInteger i = 0; i<[playerList count]; i++) {
@@ -362,5 +387,20 @@ static CMClockRef _masterClock;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+-(void)setFrame:(CGRect)frame
+{
+    for (RicoPlayer * player in [self.players allValues]) {
+        player.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    }
+    self.view.frame = frame;
+}
+
+-(CGRect)frame
+{
+    return self.view.frame;
+}
+
+
 
 @end

@@ -94,9 +94,9 @@
 		<key>Debug</key>
 		<dict>
 			<key>Active</key>
-			<true/>
+			<false/>
 			<key>Visible</key>
-			<true/>
+			<false/>
 		</dict>
 	</dict>
 </dict>

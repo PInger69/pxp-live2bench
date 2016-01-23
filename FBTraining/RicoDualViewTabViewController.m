@@ -218,7 +218,8 @@
         
         Feed *feedA = self.feeds.count > 0 ? self.feeds[0] : nil;
         Feed *feedB = self.feeds.count > 1 ? self.feeds[1]: feedA;
-        
+            [feedA setQuality:1];
+            [feedB setQuality:1];
         self.liveButton.enabled = YES;
         
 
@@ -696,6 +697,7 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
     }
     
+    self.timeLabel.text = @"00:00:00";
 
 }
 

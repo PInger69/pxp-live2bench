@@ -19,6 +19,7 @@
 @property (nonatomic, strong) RicoPlayerControlBar  * playerControlBar;
 @property (nonatomic, assign) BOOL                  syncronizePlayers;
 @property (nonatomic, assign) BOOL                  slomo;
+@property (nonatomic, assign) CGRect                frame;
 
 -(void)addPlayers:(RicoPlayer *)aPlayer;
 -(void)removePlayers:(RicoPlayer *)aPlayer;

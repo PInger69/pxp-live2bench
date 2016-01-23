@@ -343,7 +343,7 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)setFeed:(Feed *)feed
 {
-    [feed setQuality:1];
+//    [feed setQuality:0];
     
     
     // clear player

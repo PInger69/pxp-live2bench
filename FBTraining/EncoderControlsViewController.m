@@ -222,7 +222,7 @@ SVSignalStatus signalStatus;
     self.makeLocalEventButton = [[UIButton alloc]initWithFrame:CGRectMake(500, 10, 100, 100)];
     [self.makeLocalEventButton addTarget:self action:@selector(buildStandAloneEvent) forControlEvents:UIControlEventTouchUpInside];
     self.makeLocalEventButton.layer.borderWidth = 1;
-    [self.view  addSubview:self.makeLocalEventButton];
+//    [self.view  addSubview:self.makeLocalEventButton];
 }
 
 - (void)viewDidLoad

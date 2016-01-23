@@ -165,6 +165,8 @@
 		D700801B19DF2456000144CF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D700801A19DF2456000144CF /* Utility.m */; };
 		D700F9061B011550008152E8 /* FakeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D700F9051B011550008152E8 /* FakeEncoder.m */; };
 		D706AC961B2735610091C02C /* CameraDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = D706AC951B2735610091C02C /* CameraDetails.m */; };
+		D70A66871C5284D4003CA163 /* RicoFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66861C5284D3003CA163 /* RicoFullScreenViewController.m */; };
+		D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66881C52C5C7003CA163 /* RicoLive2BenchViewController.m */; };
 		D70E21661B434E2600F6C1D5 /* BonjourModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D70E21651B434E2600F6C1D5 /* BonjourModule.m */; };
 		D70FBA3C17FE0DFA00B606CF /* EulaModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD9BC31317EB4855001B67DE /* EulaModalViewController.m */; };
 		D70FBA3F17FE0E3600B606CF /* PlayerCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70FBA3E17FE0E3600B606CF /* PlayerCollectionViewController.m */; };
@@ -836,6 +838,10 @@
 		D700F9051B011550008152E8 /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FakeEncoder.m; path = Live2BenchNative/EncoderClasses/FakeEncoder.m; sourceTree = "<group>"; };
 		D706AC941B2730980091C02C /* CameraDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraDetails.h; sourceTree = "<group>"; };
 		D706AC951B2735610091C02C /* CameraDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraDetails.m; sourceTree = "<group>"; };
+		D70A66851C5284D2003CA163 /* RicoFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoFullScreenViewController.h; sourceTree = "<group>"; };
+		D70A66861C5284D3003CA163 /* RicoFullScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoFullScreenViewController.m; sourceTree = "<group>"; };
+		D70A66881C52C5C7003CA163 /* RicoLive2BenchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoLive2BenchViewController.m; sourceTree = "<group>"; };
+		D70A668A1C52C665003CA163 /* RicoLive2BenchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoLive2BenchViewController.h; sourceTree = "<group>"; };
 		D70E21641B434E2600F6C1D5 /* BonjourModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourModule.h; path = Live2BenchNative/EncoderClasses/BonjourModule.h; sourceTree = "<group>"; };
 		D70E21651B434E2600F6C1D5 /* BonjourModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourModule.m; path = Live2BenchNative/EncoderClasses/BonjourModule.m; sourceTree = "<group>"; };
 		D70F5CEA1B3DFEEE004353FD /* Live2BenchNative copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Live2BenchNative copy-Info.plist"; path = "/Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative copy-Info.plist"; sourceTree = "<absolute>"; };
@@ -2028,7 +2034,9 @@
 				D732ABE616BD941800E73657 /* TagMarker */,
 				D7A677DA17CB1B2E00EC20D1 /* PlayerCollectionViewController */,
 				D7A9395B16ADA65E006CBAB2 /* Live2BenchViewController.h */,
+				D70A668A1C52C665003CA163 /* RicoLive2BenchViewController.h */,
 				D7A9395C16ADA65E006CBAB2 /* Live2BenchViewController.m */,
+				D70A66881C52C5C7003CA163 /* RicoLive2BenchViewController.m */,
 			);
 			name = Live2BenchViewController;
 			sourceTree = "<group>";
@@ -2585,6 +2593,8 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D70A66851C5284D2003CA163 /* RicoFullScreenViewController.h */,
+				D70A66861C5284D3003CA163 /* RicoFullScreenViewController.m */,
 				D7F144411C4E89B00000E415 /* DebugOutput.h */,
 				D7F144421C4E89B00000E415 /* DebugOutput.m */,
 				D7242FAD1C494D9A00CDA9C9 /* RicoDualViewTabViewController.h */,
@@ -3769,9 +3779,11 @@
 				D784EF3C1AA4B0570068D260 /* CKViewController.m in Sources */,
 				AEA25FA01B790C6E006C83C3 /* PxpPlayerContext+Tag.m in Sources */,
 				94B9A516192521CD0009547B /* SnapshotView.m in Sources */,
+				D70A66871C5284D4003CA163 /* RicoFullScreenViewController.m in Sources */,
 				D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */,
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
 				D7A2E5BD19AE39F900022795 /* ToggleButton.m in Sources */,
+				D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */,
 				D743D47C1B6962BD00533070 /* TempPxpFilterTabUI.m in Sources */,
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
 				AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */,

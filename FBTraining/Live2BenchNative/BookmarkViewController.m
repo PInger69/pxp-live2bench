@@ -22,6 +22,14 @@
 #import "PxpClipContext.h"
 #import "PxpVideoBar.h"
 
+
+#import "RicoPlayer.h"
+#import "RicoPlayerControlBar.h"
+#import "RicoPlayerViewController.h"
+#import "RicoZoomContainer.h"
+#import "RicoFullScreenViewController.h"
+
+
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
 #define TOTAL_WIDTH                1024
 #define LABEL_HEIGHT                 40
@@ -30,7 +38,7 @@
 #define COMMENTBOX_HEIGHT           200
 #define COMMENTBOX_WIDTH            530//560
 
-@interface BookmarkViewController ()
+@interface BookmarkViewController () <RicoFullScreenDelegate>
 
 @property (strong, nonatomic) Clip                          * currentClip;
 @property (strong, nonatomic) BookmarkTableViewController   * tableViewController;
@@ -39,9 +47,16 @@
 @property (strong, nonatomic) UIButton                      * userSortButton;
 @property (strong, nonatomic) NSDictionary                  * selectedData;
 @property (strong, nonatomic, nonnull) PxpPlayerViewController *playerViewController;
-@property (strong, nonatomic, nonnull) PxpMyClipViewFullscreenViewController *fullscreenViewController;
+//@property (strong, nonatomic, nonnull) PxpMyClipViewFullscreenViewController *fullscreenViewController;
 @property (strong, nonatomic, nonnull) PxpClipContext *clipContext;
 @property (strong, nonatomic, nonnull) PxpVideoBar *videoBar;
+
+@property (strong, nonatomic) RicoPlayer                  * ricoPlayer;
+@property (strong, nonatomic) RicoPlayerControlBar        * ricoPlayerControlBar;
+@property (strong, nonatomic) RicoPlayerViewController    * ricoPlayerController;
+@property (strong, nonatomic) RicoZoomContainer           * ricoZoomer;
+
+@property (strong, nonatomic, nonnull) RicoFullScreenViewController *fullscreenViewController;
 
 @end
 
@@ -82,13 +97,17 @@
         _tagsToDisplay                          = [NSMutableArray new];
         
         _playerViewController                   = [[PxpPlayerViewController alloc] init];
-        _fullscreenViewController               = [[PxpMyClipViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
+        self.ricoPlayerController               = [RicoPlayerViewController new];
+        _fullscreenViewController               = [[RicoFullScreenViewController alloc] initWithPlayerViewController:self.ricoPlayerController];
+        _fullscreenViewController.delegate      = self;
+//        _fullscreenViewController               = [[PxpMyClipViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
        
         [self addChildViewController:_playerViewController];
         [self addChildViewController:_fullscreenViewController];
         
         _clipContext    = [PxpClipContext context];
         _videoBar       = [[PxpVideoBar alloc] init];
+        
     }
     return self;
 }
@@ -107,8 +126,8 @@
     }];
     
     [self setupView];
-    [_fullscreenViewController.nextTagButton        addTarget:self.tableViewController action:@selector(playNext) forControlEvents:UIControlEventTouchUpInside];
-    [_fullscreenViewController.previousTagButton    addTarget:self.tableViewController action:@selector(playPrevious) forControlEvents:UIControlEventTouchUpInside];
+//    [_fullscreenViewController.nextTagButton        addTarget:self.tableViewController action:@selector(playNext) forControlEvents:UIControlEventTouchUpInside];
+//    [_fullscreenViewController.previousTagButton    addTarget:self.tableViewController action:@selector(playPrevious) forControlEvents:UIControlEventTouchUpInside];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSaved:) name:NOTIF_CLIP_SAVED object:nil];
   
@@ -131,7 +150,31 @@
     _playerViewController.telestrationViewController.stillMode = YES;
     _videoBar.playerViewController = _playerViewController;
     
-    [self.view addSubview:_playerViewController.view];
+    // Rico Player
+    
+    
+    self.ricoPlayer = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, width, height)];
+//    [self.view addSubview:self.ricoPlayer];
+    self.ricoPlayer.looping = YES;
+    self.ricoPlayerControlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(0.0, 768 - 88.0, width, 44.0)];
+    [self.view addSubview:self.ricoPlayerControlBar];
+//     self.ricoPlayer addSubview:
+
+//    [self.ricoPlayerController addPlayers:self.ricoPlayer];
+    self.ricoPlayerController.playerControlBar = self.ricoPlayerControlBar;
+    self.ricoPlayerControlBar.delegate = self.ricoPlayerController;
+    self.ricoPlayerController.view = [[UIView alloc]initWithFrame:CGRectMake(0, 768 - height - 88.0, width, height)];
+    [self.ricoPlayerController.view addSubview:self.ricoPlayer];
+    [self.view addSubview:self.ricoPlayerController.view];
+    
+
+    
+//    [self addChildViewController:_fullscreenViewController];
+    // end player
+    
+    
+//    [self.view addSubview:_playerViewController.view];
+
     [self.view addSubview:_videoBar];
     [self.view addSubview:_fullscreenViewController.view];
     
@@ -139,7 +182,7 @@
     [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
 
     self.allClips = [NSMutableArray arrayWithArray:[[LocalMediaManager getInstance].clips allValues]];
-//    [_pxpFilter filterTags:self.allClips];
+
 
 
 
@@ -170,7 +213,44 @@
     [_videoBar setSelectedTag:clipToPlay];
     [_videoBar.tagExtendEndButton setHidden:YES];
     [_videoBar.tagExtendStartButton setHidden:YES];
-    [_fullscreenViewController setSelectedTag:clipToPlay];
+//    [_fullscreenViewController setSelectedTag:clipToPlay];
+    
+    ///////////////////////////////////
+    
+
+//    return;
+    NSDictionary *videos = clipToPlay.videosBySrcKey;
+    NSArray *sources = videos.allKeys;
+    Feed * feed;
+    // load clips
+//    for (NSUInteger i = 0; i < self.players.count; i++) {
+//        PxpPlayer *player = self.players[i];
+//        NSString *source = sources[i];
+//
+    
+    
+    
+    
+    
+    if (videos.allKeys.count > 0) {
+        NSString * akey;
+        
+        if (videos.allKeys.count == 1) {
+            akey = videos.allKeys[0];
+            feed = [[Feed alloc] initWithFileURL:videos[akey]];
+            [self.ricoPlayer loadFeed:feed];
+            [self.ricoPlayerController play];
+        } else if ([videos.allKeys containsObject:source]) {
+            akey = videos[akey];
+            feed = [[Feed alloc] initWithFileURL:videos[akey]];
+            [self.ricoPlayer loadFeed:feed];
+            [self.ricoPlayerController play];
+        }
+        
+    }
+    
+
+    
 }
 
 - (void)clipSaved:(NSNotification *)note {
@@ -389,6 +469,22 @@
 
    [numTagsLabel setText:[NSString stringWithFormat:@"Clip Total: %lu",(unsigned long)[self.allClips count]]];
 }
+
+#pragma mark - RicoFullScreenDelegate Methods
+
+-(void)onFullScreenLeave:(RicoFullScreenViewController *)fullscreenController
+{
+
+}
+
+-(void)onFullScreenShow:(RicoFullScreenViewController *)fullscreenController
+{
+
+
+
+}
+
+
 
 #pragma mark -
 -(void)didReceiveMemoryWarning{

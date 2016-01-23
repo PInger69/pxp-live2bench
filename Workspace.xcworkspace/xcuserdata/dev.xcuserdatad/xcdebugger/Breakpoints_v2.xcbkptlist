@@ -2625,7 +2625,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ARCalendarTableViewController.m"
-                  timestampString = "475097528.78148"
+                  timestampString = "475204160.400816"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "728"
@@ -2640,7 +2640,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ARCalendarTableViewController.m"
-                  timestampString = "475097528.781704"
+                  timestampString = "475204160.401082"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
@@ -2655,7 +2655,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ARCalendarTableViewController.m"
-                  timestampString = "475097528.782086"
+                  timestampString = "475204160.401472"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
@@ -2688,7 +2688,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ARCalendarTableViewController.m"
-                  timestampString = "475097528.784486"
+                  timestampString = "475204160.403435"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "741"
@@ -2703,7 +2703,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/ARCalendarTableViewController.m"
-                  timestampString = "475097528.784785"
+                  timestampString = "475204160.403746"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "741"
@@ -2768,7 +2768,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/EncoderClasses/EncoderStatusMonitor.m"
-                  timestampString = "475097528.787563"
+                  timestampString = "475204160.406276"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "291"
@@ -2783,7 +2783,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/EncoderClasses/EncoderStatusMonitor.m"
-                  timestampString = "475097528.787811"
+                  timestampString = "475204160.406602"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "291"
@@ -2928,7 +2928,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/InfoSettingViewController.m"
-                  timestampString = "475097528.794433"
+                  timestampString = "475204160.411874"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "196"
@@ -2943,7 +2943,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/InfoSettingViewController.m"
-                  timestampString = "475097528.794715"
+                  timestampString = "475204160.412117"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "196"
@@ -2976,11 +2976,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
-            timestampString = "473802127.452537"
+            timestampString = "475177738.62519"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
+            startingLineNumber = "412"
+            endingLineNumber = "412"
             landmarkName = "-receiveFilteredArrayFromFilter:"
             landmarkType = "5">
          </BreakpointContent>
@@ -3024,11 +3024,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
-            timestampString = "473797898.839238"
+            timestampString = "475177738.62519"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
+            startingLineNumber = "268"
+            endingLineNumber = "268"
             landmarkName = "-viewWillAppear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -3095,7 +3095,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/PxpFilterMyClipTabViewController.m"
-                  timestampString = "475097528.800801"
+                  timestampString = "475204160.417271"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "132"
@@ -3110,7 +3110,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/PxpFilterMyClipTabViewController.m"
-                  timestampString = "475097528.801853"
+                  timestampString = "475204160.417554"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "132"
@@ -3151,7 +3151,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/PxpFilterMyClipTabViewController.m"
-                  timestampString = "475097528.804714"
+                  timestampString = "475204160.418954"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "138"
@@ -3166,7 +3166,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/PxpFilterMyClipTabViewController.m"
-                  timestampString = "475097528.805019"
+                  timestampString = "475204160.419215"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "138"
@@ -3199,7 +3199,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/PxpFilterMyClipTabViewController.m"
-                  timestampString = "475097528.80685"
+                  timestampString = "475204160.420846"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "138"
@@ -3214,7 +3214,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/PxpFilterMyClipTabViewController.m"
-                  timestampString = "475097528.807142"
+                  timestampString = "475204160.421079"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "138"
@@ -3247,7 +3247,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/Live2BenchTab/L2BVideoBarViewController.m"
-                  timestampString = "475097528.809159"
+                  timestampString = "475204160.422565"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "174"
@@ -3262,7 +3262,7 @@
                   moduleName = "Live2BenchNative"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/Live2BenchTab/L2BVideoBarViewController.m"
-                  timestampString = "475097528.809444"
+                  timestampString = "475204160.422818"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "174"
@@ -4471,11 +4471,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "475093986.476914"
+            timestampString = "475185071.210763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "480"
-            endingLineNumber = "480"
+            startingLineNumber = "481"
+            endingLineNumber = "481"
             landmarkName = "-setFullscreen:toFullScreen:toHide:animated:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4509,22 +4509,6 @@
             startingLineNumber = "496"
             endingLineNumber = "496"
             landmarkName = "-onPlayerOperationItemFail:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FBTraining/RicoPlayer.m"
-            timestampString = "475090208.238246"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "387"
-            endingLineNumber = "387"
-            landmarkName = "-didPlayToEndTimeNotification:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4631,11 +4615,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "475093986.476914"
+            timestampString = "475185071.210763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "590"
-            endingLineNumber = "590"
+            startingLineNumber = "591"
+            endingLineNumber = "591"
             landmarkName = "-setBottomFullscreen:animated:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4647,11 +4631,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "475093986.476914"
+            timestampString = "475185071.210763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "538"
-            endingLineNumber = "538"
+            startingLineNumber = "539"
+            endingLineNumber = "539"
             landmarkName = "-setTopFullscreen:animated:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4663,11 +4647,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "475093986.476914"
+            timestampString = "475185071.210763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "465"
-            endingLineNumber = "465"
+            startingLineNumber = "466"
+            endingLineNumber = "466"
             landmarkName = "-feedsReady:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4679,11 +4663,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoDualViewTabViewController.m"
-            timestampString = "475093986.476914"
+            timestampString = "475185071.210763"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "459"
-            endingLineNumber = "459"
+            startingLineNumber = "460"
+            endingLineNumber = "460"
             landmarkName = "-tagReceived:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4784,11 +4768,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoPlayerViewController.m"
-            timestampString = "475088322.540632"
+            timestampString = "475201557.559099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
             landmarkName = "-updateScrubbing:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4800,11 +4784,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FBTraining/RicoPlayerViewController.m"
-            timestampString = "475088322.540632"
+            timestampString = "475201557.559099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
             landmarkName = "-finishScrubbing:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4968,6 +4952,278 @@
             endingLineNumber = "1078"
             landmarkName = "-modifyTag:timeStamp:"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
+            timestampString = "475177738.62519"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
+            landmarkName = "-clipSelectedToPlay:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
+            timestampString = "475177738.62519"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
+            landmarkName = "-clipSelectedToPlay:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/BookmarkViewController.m"
+            timestampString = "475177738.62519"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "-clipSelectedToPlay:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoFullScreenViewController.m"
+            timestampString = "475179997.288671"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
+            landmarkName = "-setFullscreen:animated:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoPlayerViewController.m"
+            timestampString = "475201557.559099"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "393"
+            endingLineNumber = "393"
+            landmarkName = "-setFrame:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[RicoPlayerViewController setFrame:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/RicoPlayerViewController.m"
+                  timestampString = "475204160.455204"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "393"
+                  endingLineNumber = "393"
+                  offsetFromSymbolStart = "84">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[RicoPlayerViewController setFrame:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/RicoPlayerViewController.m"
+                  timestampString = "475204160.455581"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "393"
+                  endingLineNumber = "393"
+                  offsetFromSymbolStart = "108">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoFullScreenViewController.m"
+            timestampString = "475179997.288671"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
+            landmarkName = "-setFullscreen:animated:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+            timestampString = "475200986.301934"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "615"
+            endingLineNumber = "615"
+            landmarkName = "-onPressSourceButton:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[RicoLive2BenchViewController onPressSourceButton:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+                  timestampString = "475194214.916318"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "610"
+                  endingLineNumber = "610"
+                  offsetFromSymbolStart = "92">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[RicoLive2BenchViewController onPressSourceButton:]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+                  timestampString = "475194214.916667"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "610"
+                  endingLineNumber = "610"
+                  offsetFromSymbolStart = "112">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoPlayerViewController.m"
+            timestampString = "475201557.559099"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
+            landmarkName = "-finishScrubbing:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoPlayerViewController.m"
+            timestampString = "475201557.559099"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "273"
+            endingLineNumber = "273"
+            landmarkName = "-finishScrubbing:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/Live2BenchNative/RicoLive2BenchViewController.m"
+            timestampString = "475200986.301934"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "974"
+            endingLineNumber = "974"
+            landmarkName = "-slomoPressed:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FBTraining/RicoPlayerViewController.m"
+            timestampString = "475201523.528045"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "-live"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[RicoPlayerViewController live]"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/RicoPlayerViewController.m"
+                  timestampString = "475204160.460261"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "516">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__32-[RicoPlayerViewController live]_block_invoke"
+                  moduleName = "Live2BenchNative"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dev/Documents/pxp-live2bench/FBTraining/RicoPlayerViewController.m"
+                  timestampString = "475204160.460575"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "16">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
