@@ -221,7 +221,10 @@
         collapsableCell.downloadButton.enabled = YES;
         NSString *name = event.name;
         
-        collapsableCell.dowdloadSize.text = collapsableCell.event.mp4s[key][@"vidsize_hq"];
+        
+//        if (![collapsableCell.event.mp4s[key] isKindOfClass:[NSString class]]){
+            collapsableCell.dowdloadSize.text = collapsableCell.event.mp4s[key][@"vidsize_hq"];
+//        }
         
         if (!self.downloadSizeDict[data]) {
             

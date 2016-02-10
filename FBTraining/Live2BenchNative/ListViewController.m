@@ -14,7 +14,7 @@
 #import "VideoBarListViewController.h"
 #import "FeedSwitchView.h"
 #import "Feed.h"
-#import "RJLVideoPlayer.h"
+
 #import "FullScreenViewController.h"
 //#import "ListViewFullScreenViewController.h"
 #import "PxpEventContext.h"
@@ -38,7 +38,16 @@
 #import "PxpFilterRugbyTabViewController.h"
 
 
-@interface ListViewController ()
+
+#import "RicoPlayer.h"
+#import "RicoZoomContainer.h"
+#import "RicoPlayerViewController.h"
+#import "RicoPlayerControlBar.h"
+#import "RicoVideoBar.h"
+#import "RicoBaseFullScreenViewController.h"
+#import "RicoFullScreenControlBar.h"
+
+@interface ListViewController () <RicoBaseFullScreenDelegate>
 
 @property (strong, nonatomic, nonnull)      PxpPlayerViewController *playerViewController;
 @property (strong, nonatomic)               UIPinchGestureRecognizer *pinchGesture;
@@ -48,6 +57,18 @@
 
 @property (strong, nonatomic, nonnull) PxpTelestrationViewController *telestrationViewController;
 @property (strong, nonatomic, nonnull) PxpListViewFullscreenViewController *fullscreenViewController;
+
+
+
+@property (strong, nonatomic, nonnull) RicoPlayer               * mainPlayer;
+@property (strong, nonatomic, nonnull) RicoVideoBar             * videoBar;
+@property (strong, nonatomic, nonnull) RicoZoomContainer        * ricoZoomContainer;
+@property (strong, nonatomic, nonnull) RicoPlayerViewController * ricoPlayerViewController;
+@property (strong, nonatomic, nonnull) RicoPlayerControlBar     * ricoPlayerControlBar;
+@property (strong, nonatomic, nonnull) RicoBaseFullScreenViewController     * ricoFullscreenViewController;
+@property (strong, nonatomic, nonnull) RicoFullScreenControlBar         * ricoFullScreenControlBar;
+
+
 
 @end
 
@@ -62,8 +83,6 @@
     // for debug
     SamplePxpFilterModule       * sample;
     PxpFilterButtonScrollView * test;
-    
-    PxpVideoBar *_videoBar;
 }
 
 @synthesize selectedCellRows;
@@ -74,16 +93,17 @@
     if (self) {
         [self setMainSectionTab:NSLocalizedString(@"List View", nil) imageName:@"listTab"];
         
-        _playerViewController       = [[PxpPlayerViewController alloc] init];
-        _videoBar                   = [[PxpVideoBar alloc] init];
+//        _playerViewController       = [[PxpPlayerViewController alloc] init];
+        _videoBar                   = [[RicoVideoBar alloc] init];
+        
+        
+        [_videoBar.forwardSeekButton addTarget:self  action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [_videoBar.backwardSeekButton addTarget:self  action:@selector(seekPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
         _fullscreenViewController   = [[PxpListViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
 
-        
-        //show the buttons and setup the selector
-        //[_videoBar showPlayNextPreButton];
-        //
-        //[_videoBar showExtendButton];
-        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(feedSelected:) name:NOTIF_SET_PLAYER_FEED_IN_LIST_VIEW object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onTagHasBeenHighlighted:) name:NOTIF_LIST_VIEW_TAG_HIGHLIGHTED object:nil];
@@ -95,38 +115,15 @@
         //_tableViewController.listViewControllerView = self.view;
         _tableViewController.tableData = self.tagsToDisplay;
 
-        
-        
-        /*[[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_TAGS_ARE_READY object:nil queue:nil usingBlock:^(NSNotification *note) {
-            NSLog(@"READY!");
-            
-            if (appDel.encoderManager.primaryEncoder == appDel.encoderManager.masterEncoder) {
-                self.allTags = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                    self.tagsToDisplay = [ NSMutableArray arrayWithArray:[appDel.encoderManager.eventTags allValues]];
-                    _tableViewController.tableData = self.tagsToDisplay;
-                    //_tableViewController.tableData = [self filterAndSortTags:self.tagsToDisplay];
-                    [_tableViewController reloadData];
-            }
-            if (!componentFilter.rawTagArray) {
-                componentFilter.rawTagArray = self.tagsToDisplay;
-            };
-        }];*/
-        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addEventObserver:) name:NOTIF_PRIMARY_ENCODER_CHANGE object:nil];
         
-        CGFloat playerWidth = 530 + 10;
-        CGFloat playerHeight = playerWidth / (16.0 / 9.0);
-
-        //self.videoPlayer = [[RJLVideoPlayer alloc]initWithFrame:CGRectMake(0.0, 55.0, playerWidth , playerHeight )];
-//        self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
-
-        //[self.view addSubview:self.videoPlayer.view];
-        
-        
-        self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
-        [self.view addSubview:self.playerViewController.view];
-        
-        
+//        CGFloat playerWidth = 530 + 10;
+//        CGFloat playerHeight = playerWidth / (16.0 / 9.0);
+//       
+//        self.playerViewController.view.frame = CGRectMake(0.0, 55.0, playerWidth , playerHeight);
+////        [self.view addSubview:self.playerViewController.view];
+//        
+//        
         
         [[NSNotificationCenter defaultCenter] addObserverForName:NOTIF_LIST_VIEW_TAG object:nil queue:nil usingBlock:^(NSNotification *note) {
             if (!selectedTag) {
@@ -280,8 +277,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeCurrentPlayingClip:) name:NOTIF_PLAYER_BAR_CANCEL object:nil];
-
-    [self setupView];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(clipCancelNotification:)       name:NOTIF_PLAYER_BAR_CANCEL          object:nil];
+    [self setupView];// set up filter and commenting
 
      _tableViewController.tableView.delaysContentTouches = NO;
     
@@ -289,47 +286,89 @@
     [headerBar onTapPerformSelector:@selector(sortFromHeaderBar:) addTarget:self];
     [self.view addSubview:headerBar];
 
-    _playerViewController.telestrationViewController.showsControls = NO;
+//    _playerViewController.telestrationViewController.showsControls = NO;
 
 
     
 #pragma mark- VIDEO PLAYER INITIALIZATION HERE
 
-    self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
+//    self.videoPlayer.playerContext = STRING_LISTVIEW_CONTEXT;
     
-    [self.view addSubview:self.videoPlayer.view];
-//    self.listViewFullScreenViewController = [[ListViewFullScreenViewController alloc]initWithVideoPlayer:self.videoPlayer];
-    
+//    [self.view addSubview:self.videoPlayer.view];
+   
     [_fullscreenViewController.nextTagButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
     [_fullscreenViewController.previousTagButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
-    //[_videoBar.playNextButton addTarget:self action:@selector(getNextTag) forControlEvents:UIControlEventTouchUpInside];
-    //[_videoBar.playPreButton addTarget:self action:@selector(getPrevTag) forControlEvents:UIControlEventTouchUpInside];
-    
+   
     self.pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(handlePinchGuesture:)];
     [self.view addGestureRecognizer: self.pinchGesture];
 
     _tableViewController.tableData = self.tagsToDisplay;
     
-    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0);
+//    self.telestrationViewController.view.frame = CGRectMake(0.0, 0.0, self.videoPlayer.view.bounds.size.width, self.videoPlayer.view.bounds.size.height - 44.0);
     
-    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
+//    [self.videoPlayer.view addSubview:self.telestrationViewController.view];
     
-    self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.telestrationViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    self.telestrationViewController.timeProvider = self.videoPlayer;
-    self.telestrationViewController.showsControls = NO;
-    _videoBar.frame = CGRectMake(_playerViewController.view.frame.origin.x, _playerViewController.view.frame.origin.y + _playerViewController.view.frame.size.height, _playerViewController.view.frame.size.width, 40.0);
+//    self.telestrationViewController.timeProvider = self.videoPlayer;
+//    self.telestrationViewController.showsControls = NO;
     //_videoBar.player = _videoPlayer.avPlayer;
     
-    _videoBar.playerViewController = _playerViewController;
-    [_videoBar clear]; // just to unify the view
-    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
-    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
+//    _videoBar.playerViewController = _playerViewController;
+
+//    [_videoBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+//    [_playerViewController.fullscreenGestureRecognizer addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:)];
     
     [self.view addSubview:_videoBar];
-    [self.view addSubview:_fullscreenViewController.view];
+//    [self.view addSubview:_fullscreenViewController.view];
     
-    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
+//    _playerViewController.playerView.context = _appDel.encoderManager.primaryEncoder.eventContext;
+    
+    // Rico Classes build
+    
+    CGFloat playerWidth = 530 + 10;
+    CGFloat playerHeight = playerWidth / (16.0 / 9.0);
+    
+    self.mainPlayer             = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
+    self.ricoZoomContainer      = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(0, 55.0, playerWidth, playerHeight)];
+    [self.ricoZoomContainer addToContainer:self.mainPlayer];
+    [self.view addSubview:self.ricoZoomContainer];
+    
+    self.ricoPlayerViewController = [RicoPlayerViewController new];
+    [self.ricoPlayerViewController addPlayers:self.mainPlayer];
+    
+    
+
+    self.ricoPlayerControlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.ricoZoomContainer.frame)-40, playerWidth, 40.0)];
+    [self.view addSubview:self.ricoPlayerControlBar];
+    
+    self.ricoPlayerControlBar.delegate = self.ricoPlayerViewController;
+    self.ricoPlayerViewController.playerControlBar = self.ricoPlayerControlBar;
+
+    _videoBar.frame = CGRectMake(CGRectGetMinX(self.ricoZoomContainer.frame), CGRectGetMaxY(self.ricoZoomContainer.frame), playerWidth, 40.0);
+    [_videoBar clear]; // just to unify the view
+
+    
+    self.ricoFullscreenViewController = [[RicoBaseFullScreenViewController alloc]initWithView:self.ricoZoomContainer];
+    self.ricoFullscreenViewController.delegate = self;
+    [_videoBar.fullscreenButton addTarget:self.ricoFullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [self addChildViewController:self.ricoFullscreenViewController];
+    [self.view addSubview:self.ricoFullscreenViewController.view];
+    
+    
+    self.ricoFullScreenControlBar = [[RicoFullScreenControlBar alloc]init];
+    
+    
+    [self.ricoFullScreenControlBar.backwardSeekButton addTarget: self action:@selector(seekPressed:)        forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.forwardSeekButton addTarget:  self action:@selector(seekPressed:)        forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.slomoButton addTarget:        self action:@selector(slomoPressed:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.liveButton addTarget:         self action:@selector(goToLive)            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.ricoFullScreenControlBar.fullscreenButton addTarget:self.ricoFullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.ricoFullscreenViewController.bottomBar addSubview:self.ricoFullScreenControlBar];
+
+    
     NSLog(@"List View done Load");
 }
 
@@ -367,9 +406,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     NSLog(@"viewDidAppear");
     [super viewDidAppear:animated];
-    [_playerViewController viewDidAppear:animated];
+//    [_playerViewController viewDidAppear:animated];
     [self.view bringSubviewToFront:_videoBar];
-    [self.view bringSubviewToFront:_fullscreenViewController.view];
+//    [self.view bringSubviewToFront:_fullscreenViewController.view];
     
     // Set up filter for this Tab
     _pxpFilter = [TabView sharedFilterTabBar].pxpFilter;
@@ -407,7 +446,21 @@
         [_pxpFilter addPredicates:@[allowThese]];
     }
     [_tableViewController reloadData];
+    
+    
+    
+    [self.view bringSubviewToFront:self.ricoFullscreenViewController.view];
+    
+
     NSLog(@"viewDidAppear done");
+}
+
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    self.ricoFullscreenViewController.fullscreen = NO;
+    self.mainPlayer.feed=nil;
 }
 
 -(void)getPrevTag
@@ -444,7 +497,7 @@
         NSLog(@"viewWillAppear");
     [super viewWillAppear:animated];
     
-    _fullscreenViewController.fullscreen = NO;
+//    _fullscreenViewController.fullscreen = NO;
     [self.view bringSubviewToFront:_videoBar];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_LIST_VIEW_CONTROLLER_FEED object:nil userInfo:@{@"block" : ^(NSDictionary *feeds, NSArray *eventTags){
@@ -479,6 +532,11 @@
     self.videoPlayer.mute = NO;
     
     NSLog(@"viewWillAppear done");
+    
+    
+
+
+    
 }
 
 
@@ -499,12 +557,20 @@
     Feed *feed = [userInfo objectForKey:@"feed"];
     
     selectedTag = userInfo[@"forWhole"];
-    
- 
+    if (self.mainPlayer.feed != feed){
+        [self.mainPlayer loadFeed:feed];
+        self.mainPlayer.name = feed.sourceName;
+    }
+
+    [self.ricoPlayerViewController playTag:selectedTag];
+    [self.ricoPlayerViewController play];
+//    [self.mainPlayer seekToTime:CMTimeMakeWithSeconds([userInfo[@"time"]floatValue], 1) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimeZero completionHandler:nil];
+//    [self.mainPlayer play];
+//    self.mainPlayer.range = CMTimeRangeMake(CMTimeMakeWithSeconds([userInfo[@"time"]floatValue], 1), CMTimeMakeWithSeconds([userInfo[@"duration"]floatValue], 1));
     //[self.videoPlayer playClipWithFeed:feed andTimeRange:timeRange];
     
     // only show the telestration on the correct source.
-    self.telestrationViewController.telestration = selectedTag.telestration.sourceName == feed.sourceName || [selectedTag.telestration.sourceName isEqualToString:feed.sourceName] ? selectedTag.telestration : nil;;
+//    self.telestrationViewController.telestration = selectedTag.telestration.sourceName == feed.sourceName || [selectedTag.telestration.sourceName isEqualToString:feed.sourceName] ? selectedTag.telestration : nil;;
     
     [commentingField clear];
     commentingField.enabled             = YES;
@@ -513,18 +579,21 @@
     
     // find the first player with the source name we are looking for
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", userInfo[@"name"]];
-    PxpPlayer *player = [_playerViewController.playerView.context.players filteredArrayUsingPredicate:predicate].firstObject;
+//    PxpPlayer *player = [_playerViewController.playerView.context.players filteredArrayUsingPredicate:predicate].firstObject;
     
     // put the player in focus.
-    if (player) {
-        self.playerViewController.playerView.player = player;
-    }
+//    if (player) {
+//        self.playerViewController.playerView.player = player;
+//    }
     
     // update the loop range.
-    _playerViewController.playerView.player.tag = selectedTag;
+//    _playerViewController.playerView.player.tag = selectedTag;
     
-    _videoBar.selectedTag = selectedTag;
-    _fullscreenViewController.selectedTag = selectedTag;
+//    _videoBar.selectedTag = selectedTag;
+//    _fullscreenViewController.selectedTag = selectedTag;
+    self.ricoFullScreenControlBar.controlBar.range = self.ricoPlayerControlBar.range;
+    self.ricoFullScreenControlBar.mode = RicoFullScreenModeList;
+    self.ricoFullScreenControlBar.currentTagLabel.text =selectedTag.name;
 }
 
 
@@ -569,6 +638,23 @@
                      }];
 }
 
+#pragma mark -
+#pragma mark RicoBaseFullScreen Protocol Methods
+
+-(void)onFullScreenShow:(RicoBaseFullScreenViewController*)fullscreenController
+{
+    self.ricoPlayerViewController.playerControlBar              = self.ricoFullScreenControlBar.controlBar;
+    self.ricoFullScreenControlBar.controlBar.delegate           = self.ricoPlayerViewController;
+}
+
+-(void)onFullScreenLeave:(RicoBaseFullScreenViewController*)fullscreenController
+{
+    self.ricoPlayerViewController.playerControlBar  = self.ricoPlayerControlBar;
+    self.ricoPlayerControlBar.delegate              = self.ricoPlayerViewController;
+}
+
+
+
 
 #pragma mark - ListTableViewController coupled method
 -(void)onTagHasBeenHighlighted:(NSNotification*)note;
@@ -585,7 +671,33 @@
     
 }
 
+#pragma mark - Video Bar Methods
+
+- (void)seekPressed:(SeekButton *)sender {
+    CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
+    CMTime  cTime = self.ricoPlayerViewController.primaryPlayers.currentTime;
+//    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+   
+    
+    // so you get seek past bounds
+    if (CMTIMERANGE_IS_VALID(self.ricoPlayerViewController.primaryPlayers.range) &&
+       CMTimeRangeContainsTime(self.ricoPlayerViewController.primaryPlayers.range,CMTimeAdd(cTime, sTime))) {
+        
+          [self.ricoPlayerViewController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
+    }
+    
+  
+}
+
+- (void)slomoPressed:(Slomo *)slomo {
+    slomo.slomoOn = !slomo.slomoOn;
+//    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    self.ricoPlayerViewController.slomo = slomo.slomoOn;
+}
+
+
 #pragma mark -
+
 //initialize the controls for list view
 -(void)setupView
 {
@@ -765,6 +877,8 @@
 {
     [super viewWillDisappear:animated];
     self.videoPlayer.mute = YES;
+    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+    [self.ricoPlayerControlBar clear];
     [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_ENABLE_TELE_FILTER object:self];
 }
 
@@ -926,5 +1040,13 @@
         return nil;
     }
 }
+
+
+-(void)clipCancelNotification:(NSNotification *)note {
+    self.ricoFullScreenControlBar.mode = RicoFullScreenModeListNonTag;
+    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+}
+
+
 
 @end

@@ -16,7 +16,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.contentMode = UIViewContentModeRedraw;
-    }
+           }
     return self;
 }
 

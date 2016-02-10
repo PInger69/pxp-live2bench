@@ -105,9 +105,11 @@
         [self addChildViewController:_playerViewController];
         [self addChildViewController:_fullscreenViewController];
         
-        _clipContext    = [PxpClipContext context];
         _videoBar       = [[PxpVideoBar alloc] init];
         
+        [_videoBar.forwardSeekButton    addTarget:self action:@selector(onSeekButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+        [_videoBar.backwardSeekButton   addTarget:self action:@selector(onSeekButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+        [_videoBar.slomoButton addTarget:self action:@selector(slomoPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -158,16 +160,22 @@
     self.ricoPlayer.looping = YES;
     self.ricoPlayerControlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(0.0, 768 - 88.0, width, 44.0)];
     [self.view addSubview:self.ricoPlayerControlBar];
-//     self.ricoPlayer addSubview:
-
-//    [self.ricoPlayerController addPlayers:self.ricoPlayer];
     self.ricoPlayerController.playerControlBar = self.ricoPlayerControlBar;
     self.ricoPlayerControlBar.delegate = self.ricoPlayerController;
     self.ricoPlayerController.view = [[UIView alloc]initWithFrame:CGRectMake(0, 768 - height - 88.0, width, height)];
-    [self.ricoPlayerController.view addSubview:self.ricoPlayer];
-    [self.view addSubview:self.ricoPlayerController.view];
     
-
+    
+//    self.ricoZoomer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(0, 0, width, height)];
+    
+//    [self.ricoZoomer addToContainer:self.ricoPlayer];
+    
+        [self.ricoPlayerController.view addSubview:self.ricoPlayer];
+    
+//    [self.ricoPlayerController.view addSubview:self.ricoZoomer];
+    
+    [self.view addSubview:self.ricoPlayerController.view];
+    [self.ricoPlayerController addPlayers:self.ricoPlayer];
+    self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
     
 //    [self addChildViewController:_fullscreenViewController];
     // end player
@@ -190,7 +198,7 @@
 
 
 
-
+#pragma mark - playing a clip when selected
 // Selected clip to play
 -(void)clipSelectedToPlay:(NSNotification*)note
 {
@@ -206,9 +214,7 @@
         clipToPlay.comment = [tagData objectForKey:@"comment"];
         [weakSelf.tableViewController reloadData];
     };
-    _clipContext = [PxpClipContext contextWithClip:clipToPlay];
-    
-    _playerViewController.playerView.player = source ? [_clipContext playerForName:source] : _clipContext.mainPlayer;
+
     [_playerViewController zeroControlBarTimes];
     [_videoBar setSelectedTag:clipToPlay];
     [_videoBar.tagExtendEndButton setHidden:YES];
@@ -220,37 +226,24 @@
 
 //    return;
     NSDictionary *videos = clipToPlay.videosBySrcKey;
-    NSArray *sources = videos.allKeys;
+//    NSArray *sources = videos.allKeys;
     Feed * feed;
-    // load clips
-//    for (NSUInteger i = 0; i < self.players.count; i++) {
-//        PxpPlayer *player = self.players[i];
-//        NSString *source = sources[i];
-//
-    
-    
-    
-    
-    
     if (videos.allKeys.count > 0) {
         NSString * akey;
-        
         if (videos.allKeys.count == 1) {
             akey = videos.allKeys[0];
             feed = [[Feed alloc] initWithFileURL:videos[akey]];
             [self.ricoPlayer loadFeed:feed];
             [self.ricoPlayerController play];
         } else if ([videos.allKeys containsObject:source]) {
-            akey = videos[akey];
-            feed = [[Feed alloc] initWithFileURL:videos[akey]];
+            //akey = videos[source];
+            feed = [[Feed alloc] initWithFileURL:videos[source]];
             [self.ricoPlayer loadFeed:feed];
             [self.ricoPlayerController play];
         }
         
     }
-    
-
-    
+ 
 }
 
 - (void)clipSaved:(NSNotification *)note {
@@ -288,6 +281,8 @@
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_CLIP_SELECTED object:nil userInfo:@{}];
+    self.ricoPlayer.feed = nil;
+    [self.ricoPlayerControlBar clear];
 }
 
 //initialize comment box and if one tag is selected, the tag details will show in the box too
@@ -358,6 +353,22 @@
     [self presentViewController:_pxpFilterTab animated:YES completion:nil];
 
 }
+
+#pragma mark - Extra VideoControls Pressed
+
+-(void)onSeekButtonPress:(SeekButton *)sender
+{
+    CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
+    CMTime  cTime = self.ricoPlayerController.primaryPlayers.currentTime;
+    [self.ricoPlayerController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
+}
+
+- (void)slomoPressed:(Slomo *)slomo {
+//    slomo.slomoOn = !slomo.slomoOn;
+    self.ricoPlayerController.slomo = slomo.slomoOn;
+}
+
+
 
 
 #pragma mark - Richard Sort from headder

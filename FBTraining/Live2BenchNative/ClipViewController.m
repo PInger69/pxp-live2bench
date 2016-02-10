@@ -537,33 +537,65 @@ static void * encoderTagContext = &encoderTagContext;
     
     
     NSString *url = [[tagSelect.thumbnails allValues]firstObject];
-//        NSLog(@"<*>");
-//    cell.imageView.image = [tagSelect thumbnailForSource:@"onlySource"];
-//        NSLog(@"<*>");
-    ///
     
-    UIImage * thumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
-    if (!thumb) {
-        cell.imageView.image = [UIImage imageNamed:@"live.png"];
-//        __block UIImage * weakThumb;
-        
-//        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-            //Background Thread
 
-            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
-//            if (!weakThumb) {
-//                weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
-//            }
-//            
-//            dispatch_async(dispatch_get_main_queue(), ^(void){
-//                cell.imageView.image = weakThumb;
-//
-//            });
-//        });
-    
+    if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+        cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
     } else {
-        cell.imageView.image = thumb;
+        [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
     }
+    
+     __block UIImage * weakThumb;
+    
+    //
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        //Background Thread
+        
+        if ([ImageAssetManager getInstance].arrayOfClipImages[url]){
+            weakThumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
+            //            cell.imageView.image = [ImageAssetManager getInstance].arrayOfClipImages[url];
+        } else {
+            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
+        }
+        
+        if (!weakThumb) {
+            weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            
+            cell.imageView.image = weakThumb;
+            if (!cell.imageView.image) cell.imageView.image = [UIImage imageNamed:@"live.png"];
+        });
+    });
+    //
+
+    
+//    UIImage * thumb = [ImageAssetManager getInstance].arrayOfClipImages[url];
+    
+    
+    
+//    if (!thumb) {
+//        cell.imageView.image = [UIImage imageNamed:@"live.png"];
+////        __block UIImage * weakThumb;
+//        
+////        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//            //Background Thread
+//
+//            [[ImageAssetManager getInstance]thumbnailsLoadedToView:cell.imageView imageURL:url];
+////            if (!weakThumb) {
+////                weakThumb = [tagSelect thumbnailForSource:@"onlySource"];
+////            }
+////            
+////            dispatch_async(dispatch_get_main_queue(), ^(void){
+////                cell.imageView.image = weakThumb;
+////
+////            });
+////        });
+//    
+//    } else {
+//        cell.imageView.image = thumb;
+//    }
     
 //    __block UIImage * weakThumb;
 //    
@@ -815,6 +847,7 @@ static void * encoderTagContext = &encoderTagContext;
             ++i;
         }
         
+
         
         //if ( [tagSelect count] >1 ){
             [sourceSelectPopover addOnCompletionBlock:^(NSString *pick) {

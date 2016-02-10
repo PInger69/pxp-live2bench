@@ -16,6 +16,9 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl     * liveBuffer;
 
 
+
+@property (weak, nonatomic) IBOutlet UISegmentedControl     * modeSegment;
+
 - (nonnull instancetype)initWithAppDelegate:(nonnull AppDelegate *)appDel;
 
 

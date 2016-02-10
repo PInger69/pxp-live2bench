@@ -198,6 +198,7 @@
 {
 
     [self clearCurrentlyPostingTags];
+    [super clear];    
 }
 
 -(void)setCurrentEvent:(Event * __nullable)currentEvent{

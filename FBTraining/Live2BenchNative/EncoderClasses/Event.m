@@ -265,18 +265,18 @@
 
 -(NSDictionary*)rawData
 {
-//    if (_tags != nil && _tags.count != 0) {
-//        NSMutableDictionary * newRawData    = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
-//        NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
-//        
-//        for (Tag *tag in _tags) {
-//            [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];
-//        }
-//        
-//        [newRawData setObject:tagsToBeAdded forKey:@"tags"];
-//        return [newRawData copy];
-//   }
-//    
+    if (_tags != nil && _tags.count != 0) {
+        NSMutableDictionary * newRawData    = [[NSMutableDictionary alloc]initWithDictionary:_rawData];
+        NSMutableDictionary * tagsToBeAdded = [[NSMutableDictionary alloc]init];
+        
+        for (Tag *tag in _tags) {
+            [tagsToBeAdded setObject:[tag makeTagData] forKey:tag.ID];
+        }
+        
+        [newRawData setObject:tagsToBeAdded forKey:@"tags"];
+        return [newRawData copy];
+   }
+    
 //    if ([_rawData objectForKey:@"tags"]) {
 //        [_rawData removeObjectForKey:@"tags"];
 //    }
@@ -313,11 +313,58 @@
     NSMutableDictionary * tempDict = [[NSMutableDictionary alloc]init];
     
     if ([aDict objectForKey:@"mp4_2"]) {
-        tempDict = [aDict objectForKey:@"mp4_2"];
+        
+        NSMutableDictionary * mp4Dict = [aDict objectForKey:@"mp4_2"];
+        
+        if ([[[mp4Dict allValues]firstObject] isKindOfClass:[NSString class]]) {
+        
+            NSArray * keys = [mp4Dict allKeys];
+            
+            for (NSString * key in keys) {
+                NSString * fileName = mp4Dict[key];
+                
+                
+                mp4Dict[key] =   @{
+                                   @"hq" : fileName,
+                                   @"lq" : @"",
+                                   @"vidsize_hq" : @"",
+                                   @"vidsize_lq" : @"",
+                                   @"vq" : @"lq"
+                                   };
+                
+
+                
+            }
+            
+        
+        }
+        
+        
+        tempDict = mp4Dict;
+        
+        
+        
     } else if ([aDict objectForKey:@"mp4"]) {
-        NSDictionary *dic = @{@"hq":[aDict objectForKey:@"mp4"]};
+        NSMutableDictionary *dic = [@{
+                                      @"hq" : [aDict objectForKey:@"mp4"],
+                                      @"lq" : @"",
+                                      @"vidsize_hq" : ([aDict objectForKey:@"vid_size"])?[aDict objectForKey:@"vid_size"]:@"",
+                                      @"vidsize_lq" : @"",
+                                      @"vq" : @"lq"
+                                      } mutableCopy];
+        
+        
+        
+        
+        if ([aDict objectForKey:@"vid_size"]){
+            [dic setObject:[aDict objectForKey:@"vid_size"] forKey:@"vidsize_hq"];
+        }
+        
         [tempDict setObject:dic forKey:@"onlySource"];
     }
+    
+    
+    
     return [tempDict copy];
 }
 

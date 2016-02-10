@@ -25,6 +25,8 @@
 #import "RicoPlayerControlBar.h"
 #import "RicoPlayerViewController.h"
 #import "RicoZoomContainer.h"
+#import "RicoPlayerPool.h"
+#import "RicoView.h"
 
 #import "DebugOutput.h"
 
@@ -43,6 +45,8 @@
 
 
 
+@property (nonatomic,strong) RicoView                 * topShowArea;
+@property (nonatomic,strong) RicoPlayer                 * bottomShowArea;
 @property (nonatomic,strong) RicoPlayer                 * topPlayer;
 @property (nonatomic,strong) RicoPlayer                 * bottomPlayer;
 @property (nonatomic,strong) RicoPlayer                 * ricoMain;
@@ -98,7 +102,7 @@
 - (instancetype)initWithAppDelegate:(AppDelegate *)appDel {
     self = [super initWithAppDelegate:appDel];
     if (self) {
-        [self setMainSectionTab:NSLocalizedString(@"Rico View", nil) imageName:@"live2BenchTab"];
+        [self setMainSectionTab:NSLocalizedString(@"Dual View", nil) imageName:@"live2BenchTab"];
         
         self.periodTableViewController = [[DualViewPeriodTableViewController alloc] init];
         self.periodTableViewController.delegate = self;
@@ -151,11 +155,19 @@
         self.bottomPlayer.isPlaying = YES;
         self.playerControls         = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(200,200,400,40)];
      
+        self.topShowArea            = [[RicoView alloc]initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
+        [self.topShowArea setBackgroundColor:[UIColor blackColor]];
+        self.bottomShowArea         = [[RicoPlayer alloc]initWithFrame:CGRectMake(0, 0, playerWidth, playerHeight)];
+        [self.bottomShowArea setBackgroundColor:[UIColor blackColor]];
         
-        self.playerViewController                   = [RicoPlayerViewController new];
+        
+//        self.playerViewController                   = [RicoPlayerViewController new];
+        self.playerViewController                   = [RicoPlayerPool instance].defaultController;
+        
         self.playerViewController.playerControlBar  = self.playerControls;
-        [self.playerViewController addPlayers:self.topPlayer];
-        [self.playerViewController addPlayers:self.bottomPlayer];
+        self.playerControls.state = RicoPlayerStateNormal;
+//        [self.playerViewController addPlayers:self.topPlayer];
+//        [self.playerViewController addPlayers:self.bottomPlayer];
         
         self.topZoomContainer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(1024 - playerWidth, 55, playerWidth, playerHeight)];
         self.topZoomContainer.zoomEnabled = YES;
@@ -205,6 +217,9 @@
         //[self.periodTableViewController ];
     }
     
+ 
+    
+    
     if (_currentEvent.live && _appDel.encoderManager.liveEvent == nil) {
         _currentEvent = nil;
     }else{
@@ -220,7 +235,8 @@
         Feed *feedB = self.feeds.count > 1 ? self.feeds[1]: feedA;
             [feedA setQuality:1];
             [feedB setQuality:1];
-        self.liveButton.enabled = YES;
+        
+        self.liveButton.enabled = (_appDel.encoderManager.liveEvent)?YES:NO;
         
 
         if (_currentEvent.live) {
@@ -229,14 +245,15 @@
                             [self.playerViewController live];
             }];
 
-            [syncer addDependency:[self.topPlayer loadFeed:feedA]];
-            [syncer addDependency: [self.bottomPlayer loadFeed:feedB]];
+//            [syncer addDependency:[self.topPlayer loadFeed:feedA]];
+//            [syncer addDependency: [self.bottomPlayer loadFeed:feedB]];
             [self.playerViewController.operationQueue addOperation:syncer];
 
         } else {
+
+//            [self.topPlayer loadFeed:feedA];
+//            [self.bottomPlayer loadFeed:feedB];
             [self.playerViewController play];
-            [self.topPlayer loadFeed:feedA];
-            [self.bottomPlayer loadFeed:feedB];
         }
 
     }
@@ -335,9 +352,10 @@
     
     [self.view addSubview:self.topZoomContainer];
     [self.view addSubview:self.bottomZoomContainer];
-    [self.topZoomContainer addToContainer:self.topPlayer];
-    [self.bottomZoomContainer addToContainer:self.bottomPlayer];
-    
+    [self.topZoomContainer addToContainer:      self.topShowArea   ];
+    [self.bottomZoomContainer addToContainer:   self.bottomShowArea ];
+//    [self.topZoomContainer addToContainer:self.topPlayer];
+//    [self.bottomZoomContainer addToContainer:self.bottomPlayer];
 
     self.topPlayer.syncronized = YES;
 
@@ -352,8 +370,7 @@
     
     [self.view addSubview:self.periodTableViewController.view];
     
-    [self.view addSubview:self.forwardSeekButton];
-    [self.view addSubview:self.backSeekButton];
+
     
     UIView * tempView1 = self.topZoomContainer;
     UIView * tempView2 = self.bottomZoomContainer;
@@ -373,7 +390,8 @@
 
 //    [self.view addSubview:[DebugOutput getInstance]];
 //    [DebugOutput getInstance].frame = CGRectMake(10, 60, 400, 200);
-
+    [self.view addSubview:self.forwardSeekButton];
+    [self.view addSubview:self.backSeekButton];
     
 }
 
@@ -394,7 +412,63 @@
 
     [self.periodTableViewController setHidden:NO animated:YES];
     [self.view addSubview: self.playerControls];
- 
+    [self.view addSubview:self.forwardSeekButton];
+    [self.view addSubview:self.backSeekButton];
+    
+    if (self.playerViewController.playerControlBar) {
+        self.playerControls.state = self.playerViewController.playerControlBar.state;
+    }
+    
+    self.playerViewController.playerControlBar  = self.playerControls;
+    self.playerControls.delegate              = self.playerViewController;
+//    self.playerViewController.syncronizePlayers = YES;
+    
+
+    
+//    NSArray * oldPLayers = [self.playerViewController.players allValues];
+//
+//     for (RicoPlayer * pp in oldPLayers) {
+//         [self.playerViewController removePlayers:pp];
+//     }
+//
+    
+    
+    // Getting user preferences
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString * mode =  [defaults objectForKey:@"mode"];
+    
+    
+
+    /////
+    
+     if ([mode isEqualToString:@"streamOp"]) {
+   
+         if ([[RicoPlayerPool instance].pooledPlayers count]) {
+             
+             RicoPlayer * fPlayer = [RicoPlayerPool instance].pooledPlayers[0];
+             self.topShowArea.player = fPlayer.avPlayer;
+             self.bottomShowArea.player = fPlayer.avPlayer;
+         }
+         
+          [self.playerViewController addPlayers:    self.bottomShowArea];
+    } else {
+     
+        
+               if ([[RicoPlayerPool instance].pooledPlayers count]) {
+                   
+                   RicoPlayer * fPlayer = [RicoPlayerPool instance].pooledPlayers[0];
+                   
+                   self.topShowArea.player = fPlayer.avPlayer;
+                   self.bottomShowArea.player = fPlayer.avPlayer;
+                   
+                   if ([[RicoPlayerPool instance].pooledPlayers count] >1){
+                       RicoPlayer * nPlayer = [RicoPlayerPool instance].pooledPlayers[1];
+                       self.bottomShowArea.player = nPlayer.avPlayer;
+                   }
+               }
+
+     
+     }
 }
 
 //-(void)viewDidAppear:(BOOL)animated
@@ -421,6 +495,11 @@
     self.liveButton.hidden = NO;
     
     [self.periodTableViewController setHidden:YES animated:NO];
+    
+    [self.playerViewController removePlayers:self.bottomShowArea];
+    
+
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -685,13 +764,15 @@
     if (_currentEvent.live){
         self.playerViewController.slomo = NO;
         self.playerControls.state = RicoPlayerStateLive;
-        [self.playerViewController seekToTime: kCMTimePositiveInfinity //self.playerControls.range.duration
-                              toleranceBefore:kCMTimeZero
-                               toleranceAfter:kCMTimePositiveInfinity
-                            completionHandler:nil];
-        
-        [self.playerViewController play];
+//        [self.playerViewController seekToTime: kCMTimePositiveInfinity //self.playerControls.range.duration
+//                              toleranceBefore:kCMTimeZero
+//                               toleranceAfter:kCMTimePositiveInfinity
+//                            completionHandler:nil];
+//        
+//        [self.playerViewController play];
        
+        [self.playerViewController live];
+        
     } else {
         [_appDel.encoderManager declareCurrentEvent:_appDel.encoderManager.liveEvent];
         [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_RECEIVED object:_appDel.encoderManager.liveEvent];
@@ -740,36 +821,123 @@
 #pragma mark - FeedSelectionControllerDelegate
 
 - (void)feedSelectionController:(nonnull FeedSelectionController *)feedSelectionController didSelectFeed:(nonnull Feed *)feed {
-//    self.playerViewController
-    
-    
-    // cancel if your playing a tag
+
+    BOOL wasLive = (self.playerControls.state == RicoPlayerStateLive);
     [self.playerViewController cancelPressed:self.playerControls];
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString * mode =  [defaults objectForKey:@"mode"];
+    
+
+    
     
     RicoPlayer * aplayer;
     
-    if (feedSelectionController == self.topViewFeedSelectionController) {
-        aplayer = self.topPlayer;
-    } else if (feedSelectionController == self.bottomViewFeedSelectionController) {
-        aplayer = self.bottomPlayer;
+    for (RicoPlayer * p in [RicoPlayerPool instance].pooledPlayers) {
+        if (p.feed == feed) {
+            aplayer = p;
+        }
     }
     
-    CMTime time = aplayer.currentTime;
+    if (!aplayer && ![mode isEqualToString:@"streamOp"]) return;
+    
+        if (feedSelectionController == self.topViewFeedSelectionController) {
+            if ([mode isEqualToString:@"streamOp"]) {
+                
+                RicoPlayer * onlySingletionPlayer = [RicoPlayerPool instance].pooledPlayers[0];
+                feed.quality    = 1;
+                CMTime time     = onlySingletionPlayer.currentTime;
+                
+                NSOperation * loadOp = [onlySingletionPlayer loadFeed:feed];
+                NSOperation * seekOp = [onlySingletionPlayer seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
+               
+                
+                [seekOp addDependency:loadOp];
+                if (onlySingletionPlayer.isPlaying) {
+                     NSOperation * playOp = [onlySingletionPlayer play] ;
+                    [playOp addDependency:seekOp];
+                }
+                
+                [onlySingletionPlayer.linkedRenderViews removeAllObjects];
+                [self.topShowArea setRicoPlayer:onlySingletionPlayer];
+                
+            } else {
+                [aplayer.linkedRenderViews removeAllObjects];
+                [self.topShowArea setRicoPlayer:aplayer];
+            }
+            
+//            self.topShowArea.player = aplayer.avPlayer;
+        
+        } else if (feedSelectionController == self.bottomViewFeedSelectionController) {
+           
+            if ([mode isEqualToString:@"streamOp"]) {
+              
+                
+                
+                RicoPlayer * mainPlayer = [RicoPlayerPool instance].pooledPlayers[0];
+                feed.quality    = 1;
+                CMTime time     = mainPlayer.currentTime;
+                
+                if (mainPlayer.feed == feed) {
+                    [self.bottomShowArea loadFeed:nil];
+                    [self.bottomShowArea setRicoPlayer:mainPlayer];
+                
+                } else {
+                    NSOperation * loadOp = [self.bottomShowArea loadFeed:feed];
+                    NSOperation * seekOp = [self.bottomShowArea seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
+                    
+                    
+                    [seekOp addDependency:loadOp];
+                    if (mainPlayer.isPlaying) {
+                        NSOperation * playOp = [self.bottomShowArea play] ;
+                        [playOp addDependency:seekOp];
+                    }
+
+                
+                }
+
+            } else {
+                [aplayer.linkedRenderViews removeAllObjects];
+                [self.bottomShowArea setRicoPlayer:aplayer];
+            }
+            
+            
+            
+//            self.bottomShowArea.player = aplayer.avPlayer;
+        }
+    
+    
+    
+    
+//    RicoPlayer * aplayer;
+//    
+//    if (feedSelectionController == self.topViewFeedSelectionController) {
+//        aplayer = self.topPlayer;
+//    } else if (feedSelectionController == self.bottomViewFeedSelectionController) {
+//        aplayer = self.bottomPlayer;
+//    }
+//    
+//    CMTime time = aplayer.currentTime;
 
 //    aplayer.feed = feed;
 //    [aplayer loadFeed:feed];
 //    [[aplayer loadFeed:feed] setCompletionBlock:^{
 //        NSLog(@"PRessessssssssssss");
 //    }];
-    [aplayer loadFeed:feed];
+//    [aplayer loadFeed:feed];
 
-    [aplayer seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
+//    [aplayer seekToTime:time toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil] ;
     
     
-    if (aplayer.isPlaying) {
-        [aplayer play];
+//    if (aplayer.isPlaying) {
+//        [aplayer play];
+//    }
+
+    if (wasLive){
+     self.playerControls.state = RicoPlayerStateLive;
     }
-    
+
 
 }
 

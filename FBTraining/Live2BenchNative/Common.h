@@ -76,6 +76,10 @@
 #define NOTIF_FILTER_TAG_CHANGE             @"NOTIF_FILTER_TAG_CHANGE"
 #define NOTIF_FILTER_SLIDER_CHANGE          @"NOTIF_FILTER_SLIDER_CHANGE"
 
+
+#define NOTIF_PREFERENCE_FEED_MODE          @"NOTIF_PREFERENCE_FEED_MODE"
+
+
 // Log Comments
 
 #define LOG_HASH                            @"######################################################"

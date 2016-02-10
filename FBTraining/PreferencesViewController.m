@@ -40,7 +40,35 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
     [super viewDidLoad];
     [self.connectButton addTarget:self action:@selector(onConnect:) forControlEvents:UIControlEventTouchUpInside];
     [self.liveBuffer addTarget:self action:@selector(pickLiveBuffer:) forControlEvents:UIControlEventValueChanged];
+    [self.modeSegment addTarget:self action:@selector(onModeSwitch:) forControlEvents:UIControlEventValueChanged];
+    
     self.urlInputTextArea.delegate = self;
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    
+    NSString * mode =  [defaults objectForKey:@"mode"];
+    if (mode) {
+        if ([mode isEqualToString:@"hq"]) {
+            self.modeSegment.selectedSegmentIndex =1;
+        } else if ([mode isEqualToString:@"streamOp"]) {
+            self.modeSegment.selectedSegmentIndex =2;
+        } else if ([mode isEqualToString:@"proxy"]) {
+            self.modeSegment.selectedSegmentIndex =0;
+        }
+        
+    } else {
+        self.modeSegment.selectedSegmentIndex =0;
+        [defaults setObject:@"proxy" forKey:@"mode"];
+        [defaults synchronize];
+    }
+    
+    // get user defaults
+    
+    
+    
+    
 }
 
 -(void)onConnect:(id)sender
@@ -157,6 +185,62 @@ typedef NS_ENUM (NSInteger,ConnectionStatus){
 
 }
 
+-(void)onModeSwitch:(id)sender
+{
+    UISegmentedControl * segmenter = sender;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+ 
+    switch (segmenter.selectedSegmentIndex) {
+        case 0:
+                [defaults setObject:@"proxy" forKey:@"mode"];
+            break;
+        case 1:
+                [defaults setObject:@"hq" forKey:@"mode"];
+            break;
+        case 2:
+        default:
+                [defaults setObject:@"streamOp" forKey:@"mode"];
+            break;
+    }
+
+     [defaults synchronize];
+    
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_PREFERENCE_FEED_MODE object:nil];
+    
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:@"Pxp Preferences"
+                                  message:@"After making a mode change please restart app"
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    
+
+    UIAlertAction* okButton = [UIAlertAction
+                               actionWithTitle:@"Ok"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action)
+                               {
+                                [alert dismissViewControllerAnimated:YES completion:nil];
+                                   
+                               }];
+    
+    
+
+    
+    
+    
+    [alert addAction:okButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
 
 
 - (void)didReceiveMemoryWarning {

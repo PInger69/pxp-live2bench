@@ -27,7 +27,7 @@
 {
 //    NSError *error = nil;
     NSDictionary    * results =[Utility JSONDatatoDict:data];
-    if ([results[@"success"]intValue] == 0) {
+    if (results[@"success"] && [results[@"success"]intValue] == 0) {
         PXPLog(@"Encoder Error! - JSON returned from server but success was 0");
         PXPLog(@"  reason: %@",results[@"msg"]);
     }

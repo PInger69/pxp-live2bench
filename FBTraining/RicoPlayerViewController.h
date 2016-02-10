@@ -25,6 +25,7 @@
 -(void)removePlayers:(RicoPlayer *)aPlayer;
 
 -(void)play;
+-(void)playAtStartWhenReady;
 -(void)playTag:(Tag*)tag;
 -(void)live;
 -(void)seekToTime:(CMTime)seekTime toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(void(^)(BOOL finished))completionHandler;

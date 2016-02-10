@@ -119,6 +119,8 @@
         }
         [defaults setObject:@{@"currentTagSetName":DEFAULT_TAG_SET,@"tagSets":@{}} forKey:[UserCenter getInstance].customerEmail];
         [defaults synchronize];
+        
+        
     }
 
     if ([self.listTagSetName containsObject:self.currentTagSetName]) {

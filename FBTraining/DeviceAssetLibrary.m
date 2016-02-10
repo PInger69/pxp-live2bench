@@ -101,6 +101,11 @@ static DeviceAssetLibrary * _instance;
 
 -(void)buildCaching
 {
+    // this is just a temp fix some crash issue
+    if (YES) {
+        return;
+    }
+    
     PHCachingImageManager   * cachingImageManager   = [[PHCachingImageManager alloc] init];
     PHFetchOptions          * options               = [[PHFetchOptions alloc] init];
     options.predicate                               = [NSPredicate predicateWithFormat:@"mediaType = %i",PHAssetMediaTypeVideo ];

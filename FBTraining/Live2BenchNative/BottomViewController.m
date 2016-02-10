@@ -632,7 +632,7 @@
 //                else
 //            {
 //
-//                NSAssert( FALSE, @"Failed to create directory maybe out of disk space?");
+//                NSAssert( FALSE, @"Failed to create directory maybe out of device space?");
 //            }
 //            
 //            //add image to directory

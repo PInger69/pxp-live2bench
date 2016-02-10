@@ -84,7 +84,7 @@ static LocalEncoder * instance;
         _localTags                      = [[NSMutableArray alloc] init];
         _modifiedTags                   = [[NSMutableArray alloc] init];
         tagSyncConnections              = [NSMutableArray array];
-        _eventContext                   = [PxpEventContext context];
+//        _eventContext                   = [PxpEventContext context];
         
         closeTags = @{[NSNumber numberWithInteger:TagTypeSoccerZoneStart]:[NSNumber numberWithInteger:TagTypeSoccerZoneStop],[NSNumber numberWithInteger:TagTypeSoccerHalfStart]:[NSNumber numberWithInteger:TagTypeSoccerHalfStop],[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]:[NSNumber numberWithInteger:TagTypeHockeyPeriodStop],[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]:[NSNumber numberWithInteger:TagTypeHockeyStrengthStop],[NSNumber numberWithInteger:TagTypeHockeyStartOLine]:[NSNumber numberWithInteger:TagTypeHockeyStopOLine],[NSNumber numberWithInteger:TagTypeHockeyStartDLine]:[NSNumber numberWithInteger:TagTypeHockeyStopDLine],[NSNumber numberWithInteger:TagTypeFootballQuarterStart]:[NSNumber numberWithInteger:TagTypeFootballQuarterStop]};
         
@@ -168,7 +168,12 @@ static LocalEncoder * instance;
     }
     
     NSString * localplistNamePath = [[_localPath stringByAppendingPathComponent:@"localTags"] stringByAppendingPathExtension:@"plist"];
-    [data writeToFile:localplistNamePath atomically:YES];
+//    [data writeToFile:localplistNamePath atomically:YES];
+    
+    if (![data writeToFile:localplistNamePath atomically:YES]) {
+        NSLog(@"error writing tag");
+    }
+    
     
 // modified tags that weren't made locally write to plist
     [data removeAllObjects];
@@ -184,7 +189,11 @@ static LocalEncoder * instance;
     
     NSString * modifiedplistNamePath = [[_localPath stringByAppendingPathComponent:@"modifiedTags"] stringByAppendingPathExtension:@"plist"];
     [data setObject:@"true" forKey:@"modifiedTags"];
-    [data writeToFile:modifiedplistNamePath atomically:YES];
+//    [data writeToFile:modifiedplistNamePath atomically:YES];
+   
+    if (![data writeToFile:modifiedplistNamePath atomically:YES]) {
+        NSLog(@"error writing tag");
+    }
 }
 
 

@@ -98,6 +98,8 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     NSLog(@"The view will dissappear");
@@ -364,7 +366,10 @@
                 [weakCell.downloadButton.downloadItem addOnProgressBlock:^(float progress, NSInteger kbps) {
                     dispatch_async(dispatch_get_main_queue(), ^(){
                         weakerCell.downloadButton.progress = progress;
-                        weakerCell.downloadButton.downloadComplete = progress == 1.0;
+                        if (progress >= 1.0) {
+                            weakerCell.downloadButton.downloadComplete = 1.0;
+                        }
+                        
                         [weakerCell.downloadButton setNeedsDisplay];
                     });
                 }];

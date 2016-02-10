@@ -68,11 +68,12 @@
     }
     if (TAB_VISIBLE(@"DuelView"))   {
         [toggles addObject:@{@"Name": NSLocalizedString(@"Dual View", nil),  @"Identifier": TAB_DUALVIEW }];
-        [tabClassForIdentifierTemp setObject:[DualViewTabViewController class] forKey:TAB_DUALVIEW];
+//        [tabClassForIdentifierTemp setObject:[DualViewTabViewController class] forKey:TAB_DUALVIEW];
+        [tabClassForIdentifierTemp setObject:[RicoDualViewTabViewController class] forKey:TAB_DUALVIEW];
     }
     if (TAB_VISIBLE(@"Live2Bench")) {
         [toggles addObject:@{@"Name": NSLocalizedString(@"Live2Bench", nil), @"Identifier": TAB_LIVE2BENCH }];
-        [tabClassForIdentifierTemp setObject:[Live2BenchViewController class] forKey:TAB_LIVE2BENCH];
+        [tabClassForIdentifierTemp setObject:[RicoLive2BenchViewController class] forKey:TAB_LIVE2BENCH];
     }
     if (TAB_VISIBLE(@"ClipView"))   {
         [toggles addObject:@{@"Name": NSLocalizedString(@"Clip View", nil),  @"Identifier": TAB_CLIPVIEW }];
@@ -95,11 +96,11 @@
         [tabClassForIdentifierTemp setObject:[DebuggingTabViewController class] forKey:TAB_DEBUG];
     }
     
-    [toggles addObject:@{@"Name": @"RicoDualView",      @"Identifier": @"RicoDualView" }];
-    [tabClassForIdentifierTemp setObject:[RicoDualViewTabViewController class] forKey:@"RicoDualView"];
+//    [toggles addObject:@{@"Name": @"RicoDualView",      @"Identifier": @"RicoDualView" }];
+//    [tabClassForIdentifierTemp setObject:[RicoDualViewTabViewController class] forKey:@"RicoDualView"];
     
-    [toggles addObject:@{@"Name": @"RicoL2B",      @"Identifier": @"RicoL2B" }];
-    [tabClassForIdentifierTemp setObject:[RicoLive2BenchViewController class] forKey:@"RicoL2B"];
+//    [toggles addObject:@{@"Name": @"RicoL2B",      @"Identifier": @"RicoL2B" }];
+//    [tabClassForIdentifierTemp setObject:[RicoLive2BenchViewController class] forKey:@"RicoL2B"];
     
 //    if (TAB_VISIBLE(@""))   {
 //        [toggles addObject:@{@"Name": NSLocalizedString(@"Injury", nil),     @"Identifier": TAB_INJURY }];
@@ -123,8 +124,8 @@
         self.settingData[TAB_MEDICAL]       = @(TAB_ACTIVE(@"Medical"));
         self.settingData[TAB_ANALYZE]       = @(TAB_ACTIVE(@"Analyze"));
         
-        self.settingData[@"RicoDualView"]       = @YES;
-        self.settingData[@"RicoL2B"]        = @YES;
+//        self.settingData[@"RicoDualView"]       = @YES;
+//        self.settingData[@"RicoL2B"]        = @YES;
         
 //        self.settingData[TAB_INJURY]        = @(TAB_ACTIVE(@"Calendar"));
 

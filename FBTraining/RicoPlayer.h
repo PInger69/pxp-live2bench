@@ -13,6 +13,8 @@
 #import "PxpReadyPlayerItemOperation.h"
 #import "RicoPreRollOperation.h"
 #import "RicoOperations.h"
+#import "RicoView.h"
+
 
 #define RICO_PLAYER_ITEM_ERROR @"playerItemFail"
 #define RICO_SLOMO_RATE 0.5
@@ -29,7 +31,7 @@
 
 
 
-@interface RicoPlayer : UIView <RicoPlayerItemOperationDelegate>
+@interface RicoPlayer : RicoView <RicoPlayerItemOperationDelegate>
 
 extern NSString * const RicoPlayerWillWaitForSynchronizationNotification;
 extern NSString * const RicoPlayerDidPlayerItemFailNotification;
@@ -54,6 +56,10 @@ extern NSString * const RicoPlayerDidPlayerItemFailNotification;
 
 @property (nonatomic, assign)           CMTimeRange         range;
 
+
+@property (nonatomic, strong)           NSMutableArray      * linkedRenderViews;
+
+
 -(instancetype)initWithFrame:(CGRect)frame;
 
 -(NSOperation*)play;
@@ -68,6 +74,8 @@ extern NSString * const RicoPlayerDidPlayerItemFailNotification;
 
 -(void)reset;
 
+// This just relinks the player with views
+-(void)refresh;
 
 
 @end

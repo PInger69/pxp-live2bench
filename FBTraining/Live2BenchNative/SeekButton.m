@@ -104,7 +104,8 @@ static CGFloat _textNumbers[2] = { 5.0, 5.0 };
         _buttons = [NSMutableArray arrayWithCapacity:_speeds.count];
         
         _backPlate = [[UIView alloc] initWithFrame:self.bounds];
-        _backPlate.backgroundColor = [UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.3];
+        _backPlate.backgroundColor = [UIColor colorWithRed:(0/255.0) green:(0/255.0) blue:(0/255.0) alpha:0.7];
+//        _backPlate.backgroundColor = [UIColor colorWithRed:(195/255.0) green:(207/255.0) blue:(216/255.0) alpha:0.5];
         _backPlate.hidden = YES;
         
         _mainButton = [[NumberedSeekerButton alloc] initWithFrame:self.bounds backward:_backward];
@@ -289,6 +290,7 @@ static CGFloat _textNumbers[2] = { 5.0, 5.0 };
     if (_seekingTarget && _onSeekSelector) {
         [_seekingTarget performSelector:_onSeekSelector withObject:self];
     }
+    self.showsSeekControlView = NO;
 }
 
 - (void)hideSeekControlViewAction:(NumberedSeekerButton *)button {

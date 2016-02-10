@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PreferencesViewController">
             <connections>
                 <outlet property="connectButton" destination="RwY-XV-ZSp" id="8tk-Dp-Zb9"/>
                 <outlet property="liveBuffer" destination="BuT-Ln-2yG" id="VsJ-xr-8Sm"/>
+                <outlet property="modeSegment" destination="gF5-wC-7Hl" id="hZS-lY-q39"/>
                 <outlet property="urlInputTextArea" destination="KUm-Sf-gwV" id="Hxq-XV-fiI"/>
                 <outlet property="view" destination="9ap-Zy-gak" id="Lx9-US-2v7"/>
             </connections>
@@ -53,15 +54,27 @@
                         <segment title="Five Seconds"/>
                     </segments>
                 </segmentedControl>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Player Sync" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tM8-PQ-C89">
-                    <rect key="frame" x="17" y="214" width="356" height="21"/>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gF5-wC-7Hl">
+                    <rect key="frame" x="17" y="255" width="356" height="29"/>
+                    <segments>
+                        <segment title="Proxy Mode"/>
+                        <segment title="HQ Mode"/>
+                        <segment title="Stream Optimized"/>
+                    </segments>
+                </segmentedControl>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Video Modes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T98-fh-bci">
+                    <rect key="frame" x="17" y="226" width="356" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LSy-UK-ddB">
-                    <rect key="frame" x="17" y="243" width="51" height="31"/>
-                </switch>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BlC-Zj-daE">
+                    <rect key="frame" x="17" y="291" width="356" height="75"/>
+                    <string key="text">Note: Proxy Mode pulls all LQ Streams, HQ Mode pulls all HQ Streams and Stream Optimize only pulls HQ streams when needed (Delayed feed switching). It is recommended that you restart the app after changing this setting.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="highlightedColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="0.8789028525352478" green="0.87884300947189331" blue="0.87887799739837646" alpha="1" colorSpace="calibratedRGB"/>
             <point key="canvasLocation" x="217" y="280"/>

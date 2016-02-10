@@ -420,7 +420,7 @@
         _justStarted    = true;
         encoderSync     = [[EncoderDataSync alloc]init];
    
-        _eventContext   = [PxpEventContext context];
+//        _eventContext   = [PxpEventContext context];
         _parseModule    = [ParseModuleDefault new];
     }
     return self;
