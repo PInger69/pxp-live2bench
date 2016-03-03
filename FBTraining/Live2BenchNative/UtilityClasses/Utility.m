@@ -104,6 +104,16 @@ static InternetMonitor* internetMonitor;
 }
 
 
++(NSDictionary*)URLJSONStringDict:(NSString*)data
+{
+
+    NSString * temp =     [data stringByRemovingPercentEncoding];
+    NSData * webData = [temp dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary * dict = [Utility JSONDatatoDict:webData];
+    return dict;
+
+}
+
 
 
 // Depricated

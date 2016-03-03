@@ -10,8 +10,11 @@
 #import "RicoPlayer.h"
 #import "RicoPlayerControlBar.h"
 #import "Tag.h"
+#import "BottomViewTimeProviderDelegate.h"
 
-@interface RicoPlayerViewController : UIViewController <RicoPlayerControlBarDelegate, RicoPlayerObserverDelegate>
+
+
+@interface RicoPlayerViewController : UIViewController <RicoPlayerControlBarDelegate, RicoPlayerObserverDelegate,BottomViewTimeProviderDelegate>
 
 @property (nonatomic, strong) NSOperationQueue      * operationQueue;
 @property (nonatomic, strong) NSMutableDictionary   * players;
@@ -20,6 +23,8 @@
 @property (nonatomic, assign) BOOL                  syncronizePlayers;
 @property (nonatomic, assign) BOOL                  slomo;
 @property (nonatomic, assign) CGRect                frame;
+
+@property (nonatomic, strong)           UITextView          * debugOutput;
 
 -(void)addPlayers:(RicoPlayer *)aPlayer;
 -(void)removePlayers:(RicoPlayer *)aPlayer;

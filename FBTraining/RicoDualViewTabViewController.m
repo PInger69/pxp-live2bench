@@ -29,6 +29,7 @@
 #import "RicoView.h"
 
 #import "DebugOutput.h"
+#import "EncoderOperation.h"
 
 #define BOTTOM_BAR_HEIGHT 70
 #define PLAYHEAD_HEIGHT 44
@@ -401,7 +402,7 @@
     [self updateSideTags];
 
     self.timeLabel.text = @"00:00:00";
-    
+
     Event *event = [_appDel.encoderManager.primaryEncoder event];
     
     self.feeds = [[NSMutableArray arrayWithArray:[event.feeds allValues]] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sourceName" ascending:YES]]];
@@ -960,13 +961,22 @@
 
     self.durationTagID = [Tag makeDurationID];
 //
-    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
-                                                                                                      @"name":self.activeTagName,
-                                                                                                      @"time":[NSString stringWithFormat:@"%f", self.startTime],
-                                                                                                      @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
-                                                                                                      @"dtagid": self.durationTagID
-                                                                                                      }];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_TAG_POSTED object:self userInfo:@{
+//                                                                                                      @"name":self.activeTagName,
+//                                                                                                      @"time":[NSString stringWithFormat:@"%f", self.startTime],
+//                                                                                                      @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+//                                                                                                      @"dtagid": self.durationTagID
+//                                                                                                      }];
     
+    Encoder * eventEncoder = (Encoder *)_currentEvent.parentEncoder;
+    EncoderOperation * postTagOperation = [[EncoderOperationMakeTag alloc]initEncoder:eventEncoder data:@{
+                                                                                                          @"name":self.activeTagName,
+                                                                                                          @"time":[NSString stringWithFormat:@"%f", self.startTime],
+                                                                                                          @"type":[NSNumber numberWithInteger:TagTypeOpenDuration],
+                                                                                                          @"dtagid": self.durationTagID
+                                                                                                          }];
+    [eventEncoder runOperation:postTagOperation];
+
 }
 
 - (void)recordingDidFinishInRecordButton:(nonnull NCRecordButton *)recordButton withDuration:(NSTimeInterval)duration {

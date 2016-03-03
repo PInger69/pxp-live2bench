@@ -46,6 +46,7 @@
 #import "RicoVideoBar.h"
 #import "RicoBaseFullScreenViewController.h"
 #import "RicoFullScreenControlBar.h"
+#import "EncoderOperation.h"
 
 @interface ListViewController () <RicoBaseFullScreenDelegate>
 
@@ -341,7 +342,7 @@
 
     self.ricoPlayerControlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.ricoZoomContainer.frame)-40, playerWidth, 40.0)];
     [self.view addSubview:self.ricoPlayerControlBar];
-    
+    self.ricoPlayerControlBar.gestureEnabled = YES;
     self.ricoPlayerControlBar.delegate = self.ricoPlayerViewController;
     self.ricoPlayerViewController.playerControlBar = self.ricoPlayerControlBar;
 
@@ -363,6 +364,9 @@
     [self.ricoFullScreenControlBar.forwardSeekButton addTarget:  self action:@selector(seekPressed:)        forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.slomoButton addTarget:        self action:@selector(slomoPressed:)       forControlEvents:UIControlEventTouchUpInside];
     [self.ricoFullScreenControlBar.liveButton addTarget:         self action:@selector(goToLive)            forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.startRangeModifierButton     addTarget:self action:@selector(extendStartAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.endRangeModifierButton       addTarget:self action:@selector(extendEndAction:) forControlEvents:UIControlEventTouchUpInside];
+    
     
     [self.ricoFullScreenControlBar.fullscreenButton addTarget:self.ricoFullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -1045,6 +1049,75 @@
 -(void)clipCancelNotification:(NSNotification *)note {
     self.ricoFullScreenControlBar.mode = RicoFullScreenModeListNonTag;
     self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
+}
+
+
+
+- (void)extendStartAction:(UIButton *)button {
+    if (selectedTag) {
+        [_tableViewController reloadData];
+        if ([[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil];
+            [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        }
+        
+        
+        float newStartTime = 0;
+        float endTime = selectedTag.startTime + selectedTag.duration;
+        
+        //extend the duration by decreasing the start time 5 seconds
+        newStartTime = selectedTag.startTime - 5;
+        //if the new start time is smaller than 0, set it to 0
+        if (newStartTime <0) {
+            newStartTime = 0;
+        }
+        
+        //set the new duration to tag end time minus new start time
+        int newDuration = endTime - newStartTime;
+        
+        selectedTag.startTime = newStartTime;
+        
+        if (newDuration > selectedTag.duration) {
+            selectedTag.duration = newDuration;
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:selectedTag];
+        }
+    }
+}
+
+- (void)extendEndAction:(UIButton *)button {
+    if (selectedTag) {
+        [_tableViewController reloadData];
+        if ([[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil]){
+            Clip * clipToSeverFromEvent = [[LocalMediaManager getInstance]getClipByTag:selectedTag scrKey:nil];
+            [[LocalMediaManager getInstance] breakTagLink:clipToSeverFromEvent];
+        }
+        
+        float startTime = selectedTag.startTime;
+        
+        float endTime = startTime + selectedTag.duration;
+        
+        //increase end time by 5 seconds
+        endTime = endTime + 5;
+        //if new end time is greater the duration of video, set it to the video's duration
+        
+        RicoPlayer * mainPlayer =         self.ricoPlayerViewController.primaryPlayers;
+        
+        if (endTime > CMTimeGetSeconds(mainPlayer.duration)) {
+            endTime = CMTimeGetSeconds(mainPlayer.duration);
+        }
+        
+        //get the new duration
+        int newDuration = newDuration = endTime - startTime;
+        if (newDuration > selectedTag.duration) {
+            selectedTag.duration = newDuration;
+            id<EncoderProtocol> encoder;
+            EncoderOperation * tagMod = [[EncoderOperationModTag alloc]initEncoder:encoder data:@{} tag:selectedTag];
+            [encoder runOperation:tagMod];
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_MODIFY_TAG object:selectedTag];
+        }
+        
+    }
 }
 
 

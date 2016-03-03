@@ -9,6 +9,7 @@
 #import "Encoder.h" // what ever is taken from this needs to be moved to the protocol
 #import "EncoderProtocol.h"
 #import "ActionListItem.h"
+#import "EncoderOperation.h"
 
 @class Event;
 @class Clip;
@@ -34,8 +35,8 @@
 @property (nonatomic, strong)   NSString                *localPath;
 
 
-
-
+@property (nonatomic,strong)    NSString        *urlProtocol;//http
+@property (nonatomic,strong)    NSString        * ipAddress;
 
 -(id)initWithDocsPath:(NSString*)aDocsPath;
 

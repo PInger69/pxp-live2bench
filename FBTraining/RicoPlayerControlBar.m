@@ -8,10 +8,8 @@
 
 #import "RicoPlayerControlBar.h"
 
-#import "PxpPlayerControlSlider.h"
-#import "PxpPlayerLight.h"
-#import "PxpPlayPauseButton.h"
-#import "PxpCancelButton.h"
+
+
 
 
 
@@ -19,14 +17,14 @@
 
 @property (strong, nonatomic, nullable) NSNumber *seek; // the number is the orginal playback rate
 
-@property (readonly, strong, nonatomic, nonnull) PxpPlayPauseButton *playPauseButton;
+
 
 @property (strong, nonatomic, nonnull) UIView *container;
 @property (strong, nonatomic, nonnull) UIView *blurContainer;
 
 @property (strong, nonatomic, nonnull) UIView *blurView;
 
-@property (strong, nonatomic, nonnull) PxpPlayerControlSlider *slider;
+
 @property (strong, nonatomic, nonnull) UILabel *leftLabel;
 @property (strong, nonatomic, nonnull) UILabel *rightLabel;
 
@@ -134,15 +132,19 @@
     [self addSubview:_container];
     [_container addSubview:_blurContainer];
     [_blurContainer addSubview:_blurView];
-    [_container addSubview:_slider];
+
     [_container addSubview:_playPauseButton];
     [_container addSubview:_liveLight];
     [_container addSubview:_rangeCancelButton];
     [_container addSubview:_leftLabel];
     [_container addSubview:_rightLabel];
-    
+    [_container addSubview:_slider];
+
+
     self.clipsToBounds = YES;
     self.backgroundColor = [UIColor clearColor];
+    self.gestureEnabled = YES;
+    [self clear];
 }
 
 
@@ -168,26 +170,28 @@
 
 - (void)update:(CMTime)time duration:(CMTime)duration
 {
-  
+
+        
+        
+
     CMTimeRange timeRange = (self.state == RicoPlayerStateRange)? self.range : CMTimeRangeMake(kCMTimeZero, duration);
   
     NSTimeInterval elapsed = MAX(0, CMTimeGetSeconds((self.state == RicoPlayerStateLive) ? duration : CMTimeSubtract(time, timeRange.start)));
     NSTimeInterval remaining = MAX(0, CMTimeGetSeconds(CMTimeSubtract(timeRange.duration, CMTimeSubtract(time, timeRange.start))));
-    
-    self.leftLabel.text = [self stringForSeconds:isfinite(elapsed) ? elapsed : 0.0];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.leftLabel.text = [self stringForSeconds:isfinite(elapsed) ? elapsed : 0.0];
 
-    if (self.state != RicoPlayerStateLive) {
-        self.rightLabel.text = [self stringForSeconds:isfinite(remaining) ? remaining : 0.0];
-    }
-    
-    
-    if (!self.seek && self.state != RicoPlayerStateLive) {
-        // if the player is live make the user think they are 100% live
-        CGFloat percent = ceil(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))) / ceil(CMTimeGetSeconds(timeRange.duration));
-        [self.slider setValue:isfinite(percent) ? percent : 0.0 animated:YES];
-    }
-    
-
+        if (self.state != RicoPlayerStateLive) {
+            self.rightLabel.text = [self stringForSeconds:isfinite(remaining) ? remaining : 0.0];
+        }
+        
+        
+        if (!self.seek && self.state != RicoPlayerStateLive) {
+            // if the player is live make the user think they are 100% live
+            CGFloat percent = ceil(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))) / ceil(CMTimeGetSeconds(timeRange.duration));
+            [self.slider setValue:isfinite(percent) ? percent : 0.0 animated:YES];
+        }
+    });
 }
 
 
@@ -204,20 +208,20 @@
     NSTimeInterval remaining = MAX(0, CMTimeGetSeconds(CMTimeSubtract(timeRange.duration, CMTimeSubtract(time, timeRange.start))));
     
     
-    
-    self.leftLabel.text = [self stringForSeconds:isfinite(elapsed) ? elapsed : 0.0];
-    
-    if (self.state != RicoPlayerStateLive) {
-        self.rightLabel.text = [self stringForSeconds:isfinite(remaining) ? remaining : 0.0];
-    }
-    
-    
-    if (!self.seek) {
-        // if the player is live make the user think they are 100% live
-        CGFloat percent = ceil(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))) / ceil(CMTimeGetSeconds(timeRange.duration));
-        [self.slider setValue:isfinite(percent) ? percent : 0.0 animated:YES];
-    }
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.leftLabel.text = [self stringForSeconds:isfinite(elapsed) ? elapsed : 0.0];
+        
+        if (self.state != RicoPlayerStateLive) {
+            self.rightLabel.text = [self stringForSeconds:isfinite(remaining) ? remaining : 0.0];
+        }
+        
+        
+        if (!self.seek) {
+            // if the player is live make the user think they are 100% live
+            CGFloat percent = ceil(CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))) / ceil(CMTimeGetSeconds(timeRange.duration));
+            [self.slider setValue:isfinite(percent) ? percent : 0.0 animated:YES];
+        }
+     });
     
 }
 
@@ -225,27 +229,40 @@
 
 -(void)setState:(RicoPlayerState)state
 {
+    float f             =     self.slider.value; // this is to force a refresh
+    self.slider.value   = -0.01;
+    self.slider.value   = f;
+    
+    // setNeedsDisplay does not refresh the sliders view on some
+    // iPads. It seems to not refresh when you set it to the same value
+    
+
+    self.container.backgroundColor = [UIColor clearColor];
     switch (state) {
         case RicoPlayerStateDisabled:
-            self.container.backgroundColor = [UIColor clearColor];
+            
             self.playPauseButton.enabled = NO;
+
             break;
         case RicoPlayerStateNormal:
             _liveLight.hidden           = YES;
             _rangeCancelButton.hidden   = YES;
-            self.container.backgroundColor = [UIColor clearColor];
+            self.playPauseButton.enabled = YES;
             break;
         case RicoPlayerStateLive:
             _liveLight.hidden           = NO;
             _rangeCancelButton.hidden   = YES;
             _playPauseButton.paused     = NO;
+            self.playPauseButton.enabled = YES;
             self.rightLabel.text = NSLocalizedString(@"LIVE", nil);
-            [self.slider setValue:1.0];
-            self.container.backgroundColor = [UIColor clearColor];
+            self.slider.value = 1.0f;
+            [self.rightLabel setNeedsDisplay];
+
             break;
         case RicoPlayerStateRange:
             _liveLight.hidden               = YES;
             _rangeCancelButton.hidden       = NO;
+            self.playPauseButton.enabled = YES;
             self.container.backgroundColor  = [self.tintColor colorWithAlphaComponent:0.5];
             
             break;

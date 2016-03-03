@@ -39,6 +39,7 @@
         self.scrubbingSpeeds = [self defaultScrubbingSpeeds];
         self.scrubbingSpeedChangePositions = [self defaultScrubbingSpeedChangePositions];
         self.scrubbingSpeed = [[self.scrubbingSpeeds objectAtIndex:0] floatValue];
+        
     }
     return self;
 }
@@ -201,5 +202,7 @@
             [NSNumber numberWithFloat:400.0f],
             nil];
 }
+
+
 
 @end

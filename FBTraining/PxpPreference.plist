@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>DebugMode</key>
-	<false/>
+	<true/>
 	<key>SettingsItems</key>
 	<dict>
 		<key>EncoderControls</key>
@@ -29,7 +29,7 @@
 		<key>Log</key>
 		<true/>
 		<key>FeedMap</key>
-		<false/>
+		<true/>
 		<key>Credits</key>
 		<true/>
 	</dict>
@@ -94,9 +94,9 @@
 		<key>Debug</key>
 		<dict>
 			<key>Active</key>
-			<false/>
+			<true/>
 			<key>Visible</key>
-			<false/>
+			<true/>
 		</dict>
 	</dict>
 </dict>

@@ -9,7 +9,9 @@
 #import "EncoderOperation.h"
 #import "Tag.h"
 #import "PxpURLProtocol.h"
+#import "MockURLProtocol.h"
 #define EO_DEFAULT_TIMEOUT 5
+#define GET_NOW_TIME_STRING [NSString stringWithFormat:@"%f",CACurrentMediaTime()]
 
 @implementation EncoderOperation
 {
@@ -20,6 +22,21 @@
 
 
 #pragma NSOperation Abstract Methods
+
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _isExecuting               = NO;
+        _isFinished                = NO;
+        
+    }
+    return self;
+}
+
+
+
 -(BOOL)isConcurrent
 {
     return YES;
@@ -52,18 +69,20 @@
 
 -(void)start
 {
-    if (![self isCancelled]) {
-        [self setFinished:NO];
-        [self setExecuting:YES];
+    if ([self isCancelled]) {
+        [self setFinished:YES];
+
     }
-    _isFinished = NO;
+    [self setExecuting:YES];
     
     NSURLSessionConfiguration *sessionConfig        = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfig.allowsCellularAccess              = NO;
     sessionConfig.timeoutIntervalForRequest         = 10;
     sessionConfig.timeoutIntervalForResource        = 10;
     sessionConfig.HTTPMaximumConnectionsPerHost     = 1;
-    sessionConfig.protocolClasses                   = @[[PxpURLProtocol class]];
+    sessionConfig.protocolClasses                   = @[[PxpURLProtocol class],
+                                                        [MockURLProtocol class]
+                                                        ];
     
     self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:nil];
     [[self.session dataTaskWithRequest:self.request]resume];
@@ -73,19 +92,20 @@
 - (void)cancel
 {
     [super cancel];
-    if ([self isExecuting]) {
+//    if ([self isExecuting]) {
         [self setExecuting:NO];
         [self setFinished:YES];
-    }
+//    }
 }
 
 #pragma EncoderOperation Abstract Methods
 
-- (instancetype)initEncoder:(Encoder*)aEncoder data:(NSDictionary*)aData
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData
 {
     self = [super init];
     if (self) {
-        self.encoder    = aEncoder;
+        self.argData    = aData;
+        self.encoder    = (Encoder*)aEncoder;
         self.timeStamp  = [NSNumber numberWithDouble:CACurrentMediaTime()];
         self.request    = [self buildRequest:aData]; // this build request is overrided
     }
@@ -104,8 +124,18 @@
 -(void)parseDataToEncoder:(NSData*)data
 {
     if (self.onRequestComplete) {
-        self.onRequestComplete(data,self);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.onRequestComplete(data,self);
+        });
     }
+    
+    NSDictionary * checkIfFail = [Utility JSONDatatoDict:data];
+    if ([checkIfFail[@"success"]intValue] == 0) {
+        self.success = NO;
+    } else {
+        self.success = YES;
+    }
+    
 }
 
 
@@ -126,14 +156,15 @@
 {
     NSLog(@"Connection finished");
     
-    
+
     if (error) {
         self.error = error;
          NSLog(@"Error %@",error);
+        self.success = NO;
     }
     
-    
     [self parseDataToEncoder:self.cumulatedData];
+
     [self setExecuting:NO];
     [self setFinished:YES];
 }
@@ -167,6 +198,37 @@
 }
 
 @end
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@implementation EncoderOperationAuthenticate
+
+-(instancetype)initEncoder:(id<EncoderProtocol>)aEncoder customerID:(NSString *)customerID
+{
+    self = [super initEncoder:aEncoder data:@{@"id":customerID}];
+    if (self) {
+
+    }
+    return self;
+}
+
+
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    
+    NSString * json = [Utility dictToJSON:aData];
+    NSURL * checkURL = [NSURL URLWithString: [NSString stringWithFormat:@"%@://%@/min/ajax/auth/%@",self.encoder.urlProtocol,self.encoder.ipAddress,json]  ];
+    return [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:DEFAULT_TIMEOUT];
+}
+
+-(void)parseDataToEncoder:(NSData*)data
+{
+    [super parseDataToEncoder:data];
+    [self.encoder.parseModule parse:data mode:ParseModeVersionCheck for:self.encoder];
+}
+
+@end
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @implementation EncoderOperationGetPastEvents
@@ -330,6 +392,18 @@
 
 
 @implementation EncoderOperationModTag
+
+
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag
+{
+    self = [super initEncoder:aEncoder data:aData];
+    if (self) {
+        self.tag = tag;
+    }
+    return self;
+}
+
+
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
     NSError     * error;
@@ -381,37 +455,49 @@
 
 
 
-
+#pragma mark - Make Tag
 
 @implementation EncoderOperationMakeTag
 -(NSURLRequest*)buildRequest:(NSDictionary*)aData
 {
 
     self.timeout = 60;
-
 //    NSString *period = [aData objectForKey:@"period"];
+
+//    NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+
+    
+    
+    //over write name and add request time
+
+    
     
     // This is the starndard info that is collected from the encoder
-    NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
-                                     @{
-//                                       @"event"         : eventNm,
-                                       @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
-                                       @"user"          : [UserCenter getInstance].userHID,
-                                       @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
-                                       
-                                       }];
-
+    NSMutableDictionary * tagData = [NSMutableDictionary new];
+    [tagData addEntriesFromDictionary:aData];
+    [tagData addEntriesFromDictionary:@{
+                                        //                                       @"time"          : [aData objectForKey:@"time"],
+                                        @"event"         : (self.encoder.event.live)?LIVE_EVENT:self.encoder.event.name,
+                                        @"name"          : [Utility encodeSpecialCharacters:[aData objectForKey:@"name"]],
+                                        @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                        @"user"          : [UserCenter getInstance].userHID,
+                                        @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+                                        @"requesttime"   : GET_NOW_TIME_STRING
+                                        }];
+ 
     
 //    if (period) {
 //        [tagData setValue:period forKey:@"period"];
 //    }
-//    
-    [tagData addEntriesFromDictionary:aData];
-    
-    NSString    * jsonString                    = [Utility dictToJSON:tagData];
+//
+       NSString    * jsonString                    = [Utility dictToJSON:tagData];
     
     NSURL * checkURL = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/tagset/%@",self.encoder.urlProtocol,self.encoder.ipAddress, jsonString ]];
     NSURLRequest * req = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+    
+
+    NSDictionary * dict = [Utility URLJSONStringDict:[[[req URL]absoluteString]lastPathComponent]];
     
     return req;
 }
@@ -430,3 +516,31 @@
     
 }
 @end
+
+
+
+
+#pragma mark - Camera Data
+
+@implementation EncoderOperationCameraData
+-(NSURLRequest*)buildRequest:(NSDictionary*)aData
+{
+    self.timeout = 60;
+
+    NSURL * checkURL    = [NSURL URLWithString:   [NSString stringWithFormat:@"%@://%@/min/ajax/getcameras",self.encoder.urlProtocol,self.encoder.ipAddress] ];
+    NSURLRequest * req  = [NSURLRequest requestWithURL:checkURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:(self.timeout)?self.timeout:EO_DEFAULT_TIMEOUT];
+    
+
+    return req;
+}
+
+-(void)parseDataToEncoder:(NSData*)data
+{
+    NSDictionary    * results =[Utility JSONDatatoDict:data];
+    NSArray * list = [results[@"camlist"]allValues];
+    self.encoder.cameraCount = list.count;
+    self.encoder.cameraData = results;
+    [super parseDataToEncoder:data];
+}
+@end
+

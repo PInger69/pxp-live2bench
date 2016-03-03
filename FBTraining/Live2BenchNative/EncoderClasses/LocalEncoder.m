@@ -53,6 +53,7 @@ static LocalEncoder * instance;
     NSMutableArray  * tagSyncConnections;
     NSURLDataConnection *encoderConnection;
     NSDictionary    * closeTags;
+    NSOperationQueue * operationQueue; // new
 }
 
 @synthesize name            = _name;
@@ -85,7 +86,8 @@ static LocalEncoder * instance;
         _modifiedTags                   = [[NSMutableArray alloc] init];
         tagSyncConnections              = [NSMutableArray array];
 //        _eventContext                   = [PxpEventContext context];
-        
+        _urlProtocol                    = @"local";
+        _ipAddress                      = @"ip";
         closeTags = @{[NSNumber numberWithInteger:TagTypeSoccerZoneStart]:[NSNumber numberWithInteger:TagTypeSoccerZoneStop],[NSNumber numberWithInteger:TagTypeSoccerHalfStart]:[NSNumber numberWithInteger:TagTypeSoccerHalfStop],[NSNumber numberWithInteger:TagTypeHockeyPeriodStart]:[NSNumber numberWithInteger:TagTypeHockeyPeriodStop],[NSNumber numberWithInteger:TagTypeHockeyStrengthStart]:[NSNumber numberWithInteger:TagTypeHockeyStrengthStop],[NSNumber numberWithInteger:TagTypeHockeyStartOLine]:[NSNumber numberWithInteger:TagTypeHockeyStopOLine],[NSNumber numberWithInteger:TagTypeHockeyStartDLine]:[NSNumber numberWithInteger:TagTypeHockeyStopDLine],[NSNumber numberWithInteger:TagTypeFootballQuarterStart]:[NSNumber numberWithInteger:TagTypeFootballQuarterStop]};
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkEncoder) name:NOTIF_EM_FOUND_MASTER object:nil];
@@ -719,5 +721,95 @@ static LocalEncoder * instance;
 //    _event = event;
 //    _eventContext.event = event;
 }
+
+
+-(void)runOperation:(EncoderOperation *)operation
+{
+    
+    
+    
+    
+    
+
+    
+    
+    if ([operation isKindOfClass:[EncoderOperationMakeTag class]]) { // NOTIF_TAG_POSTED
+        NSMutableDictionary * data   = [NSMutableDictionary dictionaryWithDictionary:operation.argData];
+        
+        NSString *tagTime = [data objectForKey:@"time"];// just to make sure they are added
+        NSString *tagName = [data objectForKey:@"name"];// just to make sure they are added
+        
+        // This is the starndard info that is collected from the encoder
+        NSMutableDictionary * tagData = [NSMutableDictionary dictionaryWithDictionary:
+                                         @{
+                                           @"event"         : self.event.name,
+                                           @"colour"        : [Utility hexStringFromColor: [UserCenter getInstance].customerColor],
+                                           @"user"          : [UserCenter getInstance].userHID,
+                                           @"time"          : tagTime,
+                                           @"name"          : tagName,
+                                           @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString]
+                                           
+                                           }];
+        
+        [tagData addEntriesFromDictionary:data];
+        
+        if ([[data objectForKey:@"type"] integerValue] == TagTypeOpenDuration) {
+            [tagData addEntriesFromDictionary:@{ @"type": [data objectForKey:@"type"]}];
+        }
+
+        [self makeTag:tagData  timeStamp: GET_NOW_TIME];
+    } else if ([operation isKindOfClass:[EncoderOperationModTag class]]) { // NOTIF_MODIFY_TAG
+        
+        NSMutableDictionary * dict;
+        
+        if (operation.argData) {
+            
+            dict = [NSMutableDictionary dictionaryWithDictionary:operation.argData];
+            
+            ///@"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
+            
+            
+            if ([self.event.name isEqualToString:dict[@"event"]] && self.event.live) {
+                dict[@"event"] = LIVE_EVENT;
+            }
+            
+        } else {
+//            Tag *tagToModify = note.object;
+//            dict = [NSMutableDictionary dictionaryWithDictionary:
+//                    @{
+//                      @"displaytime"   : tagToModify.displayTime,
+//                      @"deviceid"      : [[[UIDevice currentDevice] identifierForVendor]UUIDString],
+//                      @"colour"        : tagToModify.colour,
+//                      @"event"         : (tagToModify.isLive)?LIVE_EVENT:tagToModify.event.name, // LIVE_EVENT == @"live"
+//                      @"id"            : tagToModify.ID,
+//                      @"requesttime"   : GET_NOW_TIME_STRING,
+//                      @"name"          : tagToModify.name,
+//                      @"user"          : tagToModify.user
+//                      }];
+//            
+//            
+//            [dict addEntriesFromDictionary: [tagToModify modifiedData]];
+//            
+//            if (tagToModify.isLive) {
+//                [dict setObject:LIVE_EVENT forKey:@"event"];
+//            }
+        }
+        
+        
+        [self modTag:dict];
+    }
+//    else if ([operation isKindOfClass:[EncoderOperation class]]) { // NOTIF_DELETE_TAG
+//        
+//    } else if ([operation isKindOfClass:[EncoderOperation class]]) { // NOTIF_EM_DOWNLOAD_CLIP
+//        
+//    } else if ([operation isKindOfClass:[EncoderOperation class]]) { // NOTIF_CREATE_TELE_TAG
+//        
+//    }
+    
+    
+    
+    [operation cancel];
+}
+
 
 @end

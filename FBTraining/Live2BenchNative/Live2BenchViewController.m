@@ -340,7 +340,7 @@ static void * eventContext      = &eventContext;
     _bottomViewController = [[profession.bottomViewControllerClass alloc]init];
     [self.view insertSubview:_bottomViewController.mainView belowSubview:_fullscreenViewController.view];
     _bottomViewController.currentEvent  = _currentEvent;
-    _bottomViewController.videoPlayer   = _playerViewController.playerView.player;
+
     if ([_bottomViewController respondsToSelector:@selector(update)]) {
         [_bottomViewController update];
     }

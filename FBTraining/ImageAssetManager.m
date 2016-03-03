@@ -9,7 +9,8 @@
 
 #import "ImageAssetManager.h"
 #import "ActionList.h"
-#import "ThumbnailDownloader.h"
+#import "DownloadThumbnailOperation.h"
+
 
 // PRIVATE CLASS
 @interface NSURLImageConnection : NSURLConnection
@@ -59,10 +60,10 @@ static ImageAssetManager * instance;
 -(void)thumbnailsPreload:(NSArray*)list
 {
     for (NSString * itemUrl in list) {
-        
-        [_thumbnailActionList addItem:[[ThumbnailDownloader alloc]initImageAssetManager:self url:itemUrl]];
+        DownloadThumbnailOperation * downloadThumb = [[DownloadThumbnailOperation alloc]initImageAssetManager:self url:itemUrl];
+        [[NSOperationQueue mainQueue] addOperation:downloadThumb];
     }
-    if (!_thumbnailActionList.running)[_thumbnailActionList start];
+
 }
 
 -(void)thumbnailsUnload:(NSArray*)list
@@ -73,13 +74,16 @@ static ImageAssetManager * instance;
 }
 
 
+-(void)thumbnailsUnloadAll
+{
+    [_arrayOfClipImages removeAllObjects];
+}
+
+
 -(void)thumbnailsLoadedToView:(UIImageView*)imageView imageURL:(NSString*)aImageUrl
 {
-    [_thumbnailActionList addItem:[[ThumbnailDownloader alloc]initImageAssetManager:self url:aImageUrl imageView:imageView ]];
-
-    if (!_thumbnailActionList.running){
-     [_thumbnailActionList start];   
-    }
+    DownloadThumbnailOperation * downloadThumb = [[DownloadThumbnailOperation alloc]initImageAssetManager:self url:aImageUrl imageView:imageView];
+    [[NSOperationQueue mainQueue] addOperation:downloadThumb];
 }
 
 

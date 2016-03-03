@@ -11,11 +11,6 @@
 #import "DebuggingTabViewController.h"
 #import "EncoderManager.h"
 #import "UserCenter.h"
-//#import "Encoder.h"
-//#import "PxpPlayer.h"
-//#import "Pip.h"
-//#import "Feed.h"
-//#import "RJLVideoPlayer.h"
 
 #import "RicoPlayer.h"
 #import "RicoPlayerViewController.h"
@@ -28,7 +23,10 @@
 
 #import "AnalyzeLoader.h"
 
-@interface DebuggingTabViewController () <RicoJogDialJogDialDelegate,AnalyzeLoaderDelegate>
+#import "UIDrawer.h"
+
+
+@interface DebuggingTabViewController () <RicoJogDialJogDialDelegate,AnalyzeLoaderDelegate,UIDrawerDelegate>
 {
 
     EncoderManager              * EM;
@@ -73,6 +71,10 @@ static void *  debugContext = &debugContext;
     NSArray * paths;
     AVURLAsset *asset;
     NSInteger  pick;
+    
+    
+    UIDrawer * drawer;
+    
 }
 /**
  *  New init method
@@ -100,27 +102,65 @@ static void *  debugContext = &debugContext;
     
 }
 
+
+-(void)willOpen:(UIDrawer*)drawer
+{
+    NSLog(@"%s",__FUNCTION__);
+
+}
+
+-(void)willClose:(UIDrawer*)drawer
+{
+    NSLog(@"%s",__FUNCTION__);
+
+}
+
+-(void)didOpen:(UIDrawer*)drawer
+{
+    NSLog(@"%s",__FUNCTION__);
+
+}
+-(void)didClose:(UIDrawer*)drawer
+{
+    NSLog(@"%s",__FUNCTION__);
+
+}
+
+-(void)openD
+{
+        [drawer open:YES];
+
+}
+
+
+-(void)closeD
+{
+    
+      [drawer close:YES];
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.playerViewController = [RicoPlayerViewController new];
-  
-    controlBar = [[RicoPlayerControlBar alloc]initWithFrame:CGRectMake(50,350,  900, 50)];
-    [controlBar setGestureEnabled:YES];
-    
-    
+
    [self.view setBackgroundColor:[UIColor lightGrayColor]];
+    drawer = [[UIDrawer alloc]initWithFrame:CGRectMake(100, 100, 500, 100)];
+    [self.view addSubview:drawer];
+    drawer.layer.borderWidth = 1;
+    [drawer.contentArea setBackgroundColor:[UIColor redColor]];
+    drawer.openStyle = UIDrawerRight;
+    UIButton * openButton = [[UIButton alloc]initWithFrame:CGRectMake(100, 300, 50, 50)];
+    UIButton * closeButton = [[UIButton alloc]initWithFrame:CGRectMake(100, 400, 50, 50)];
+    [openButton setBackgroundColor:[UIColor greenColor]];
+        [closeButton setBackgroundColor:[UIColor redColor]];
+    [openButton addTarget:self action:@selector(openD) forControlEvents:UIControlEventTouchUpInside];
+    [closeButton addTarget:self action:@selector(closeD) forControlEvents:UIControlEventTouchUpInside];
     
-    Encoder * pEncoder = (Encoder *)EM.primaryEncoder;
+    [self.view addSubview:openButton];
+    [self.view addSubview:closeButton];
+    drawer.delegate = self;
     
-//    NSInteger iii = 0;
-//
-//    NSLog(@"");
-//    Tag * tag = pEncoder.event.tags[iii] ;
-//    
-//    AnalyzeLoader * testLoader = [[AnalyzeLoader alloc]initWithTag:tag];
-//    testLoader.delegate = self;
-//    [testLoader start];
 }
 
 
@@ -219,6 +259,9 @@ static void *  debugContext = &debugContext;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    
+  
+    
     
     CustomAlertControllerQueue * queue =  [CustomAlertControllerQueue getInstance];
     
@@ -397,7 +440,9 @@ static void *  debugContext = &debugContext;
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+
     [super viewDidDisappear:animated];
+    
 }
 
 - (void)didReceiveMemoryWarning

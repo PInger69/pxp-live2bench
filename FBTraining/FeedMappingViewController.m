@@ -7,7 +7,7 @@
 //
 
 #import "FeedMappingViewController.h"
-
+#import "RicoPlayer.h"
 @interface FeedMappingViewController ()
 
 @end
@@ -16,7 +16,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+//    RicoPlayer * player =  [[RicoPlayer alloc]initWithFrame:CGRectMake(60, 100, 500, 300)];
+//    [self.view addSubview:player];
+//    
+//    
+//    NSArray * list = @[
+//                       @"rtsp://192.168.1.121/media/video1"
+//                       @"rtsp://192.168.1.118:8700/pxpstr",
+//                       ];
+//    
+//    Feed * aFeed = [[Feed alloc]initWithURLString:list[0] quality:0];
+//    [player loadFeed:aFeed];
+    
 }
 
 - (void)didReceiveMemoryWarning {

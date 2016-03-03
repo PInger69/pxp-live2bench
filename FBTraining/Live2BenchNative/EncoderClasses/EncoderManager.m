@@ -182,13 +182,20 @@ static EncoderManager * instance;
 -(void)declareCurrentEvent:(Event*)event
 {
     
+    
+
+    
     // if the event is current event then it needs to be closed to save space
     // This will convert all tags to dicts on the event and remove tag observers
-    if ([self.primaryEncoder event] != event && event != nil) {
+    if (([self.primaryEncoder event] != event && event != nil)|| event == nil) {
         [[self.primaryEncoder event] closeEvent];
-        [[ImageAssetManager getInstance]thumbnailsUnload:grabAllThumbNamesFromEvent([self.primaryEncoder event])];
+        
+        // This needs to be fixed
+//        [[ImageAssetManager getInstance]thumbnailsUnload:grabAllThumbNamesFromEvent([self.primaryEncoder event])];
+        
+        // just remove all thumbs instead
+        [[ImageAssetManager getInstance]thumbnailsUnloadAll];
     }
-    
     
         [self.primaryEncoder event].primary = false;
         if (event == nil) {

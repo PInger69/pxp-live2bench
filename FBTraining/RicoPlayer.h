@@ -31,6 +31,9 @@
 
 
 
+
+
+
 @interface RicoPlayer : RicoView <RicoPlayerItemOperationDelegate>
 
 extern NSString * const RicoPlayerWillWaitForSynchronizationNotification;
@@ -55,7 +58,7 @@ extern NSString * const RicoPlayerDidPlayerItemFailNotification;
 @property (nonatomic, assign)            BOOL                isPlaying;
 
 @property (nonatomic, assign)           CMTimeRange         range;
-
+@property (nonatomic, assign)           CMTime              offsetTime;// this will offset all seektimes and 
 
 @property (nonatomic, strong)           NSMutableArray      * linkedRenderViews;
 

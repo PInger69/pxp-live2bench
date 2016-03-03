@@ -7,10 +7,11 @@
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
 
-
-#import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
+#import "AppDelegate.h"
+
 #import "PxpURLProtocol.h"
+#import "MockURLProtocol.h"
 #import "EncoderClasses/EncoderManager.h"
 #import "UserCenter.h"
 #import "UtilityClasses/ActionList.h"
@@ -43,11 +44,15 @@
 //this loads first when you launch the app
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
+    [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
+    
     //
     [DeviceAssetLibrary getInstance];
     
     // This is for the standalone build
     [NSURLProtocol registerClass:[PxpURLProtocol class]];
+    [NSURLProtocol registerClass:[MockURLProtocol class]];
     
     APP_HEIGHT  = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.width  : [[UIScreen mainScreen] bounds].size.height;
     APP_WIDTH   = (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))?[[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width;
@@ -59,7 +64,8 @@
     
     ///In order for crashlytics to work, we have to initialise it with the secret app key we get during sign up
     //we can also startwithapikey with a delay if we need to (not necessary)
-    [Crashlytics startWithAPIKey:@"cd63aefd0fa9df5e632e5dc77360ecaae90108a1"];
+
+
     
     NSArray     * kpaths    = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString    * kdocumentsDirectory = [kpaths objectAtIndex:0];
@@ -129,6 +135,9 @@
     _sharedFilter       = [[PxpFilter alloc]init];
     _sharedFilterTab    = [TabView sharedFilterTabBar];
     [_sharedFilterTab setPxpFilter:_sharedFilter];
+    
+
+    
     return YES;
 }
 

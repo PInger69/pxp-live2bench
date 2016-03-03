@@ -61,7 +61,7 @@
 }
 
 @synthesize currentEvent = _currentEvent;
-@synthesize videoPlayer = _videoPlayer;
+
 @synthesize mainView  = _mainView;
 
 
@@ -300,6 +300,13 @@
     return self;
 }
 
+
+-(void)viewDidLoad
+{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(update) name:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:nil];
+    
+    [super viewDidLoad];
+}
 #pragma mark - Helper Methods
 
 //Populate Offense and Defense Line
@@ -451,19 +458,16 @@
     [self updateStrengthSegment];
     [self updateOffenseButtons];
     [self updateDefenseButtons];
-    
-    __block HockeyBottomViewController *weakSelf = self;
-    periodBoundaryObserver = [_videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
-        [weakSelf updatePeriodSegment];
-        [weakSelf updateStrengthSegment];
-        [weakSelf updateOffenseButtons];
-        [weakSelf updateDefenseButtons];
-    }];
 }
 
 // get Current Period
 -(NSString *)currentPeriod{
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(cTime)];
     NSArray *array = [self getTags:TagTypeHockeyPeriodStart secondType:TagTypeHockeyPeriodStop];
     
     if (array.count > 0) {
@@ -508,7 +512,12 @@
 // Post period tag
 -(void)periodSegmentValueChanged:(UISegmentedControl *)segment
 {
-    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    
+    float time = CMTimeGetSeconds(cTime);
     NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
     
     if (periodDict[name]) {
@@ -536,7 +545,11 @@
 // Post Tag when Strength Segment pressed
 -(void)segmentValueChanged:(UISegmentedControl *)segment
 {
-    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    float time = CMTimeGetSeconds(cTime);
     
     NSInteger homeIndex = _homeSegControl.selectedSegmentIndex;
     NSInteger awayIndex = _awaySegControl.selectedSegmentIndex;
@@ -573,7 +586,13 @@
 // Actually Update the strengths' segment
 -(void)updateStrengthSegment{
     
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+
+    
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(cTime)];
     NSArray *array = [self getTags:TagTypeHockeyStrengthStart secondType:TagTypeHockeyStrengthStop];
     
     if (array.count > 0) {
@@ -599,7 +618,13 @@
 // Post an Offense Tag
 -(void)OffensePressed:(id)sender
 {
-    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
+    
+    
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    float time = CMTimeGetSeconds(cTime);
     CustomButton *button = (CustomButton*)sender;
     
     [_leftArrow setHidden:true];
@@ -628,8 +653,13 @@
     if (stopUpdateOffense == true) {
         return;
     }
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+  
     
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(cTime)];
     NSArray *array = [self getTags:TagTypeHockeyStartOLine secondType:TagTypeHockeyStopOLine];
     
     if (array.count > 0) {
@@ -691,7 +721,11 @@
 // Post an Defense Tag
 -(void)DefensePressed:(id)sender
 {
-    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    float time = CMTimeGetSeconds(cTime);
     CustomButton *button = (CustomButton*)sender;
     
     [_playerDrawerRight.view setHidden:true];
@@ -719,8 +753,12 @@
     if (stopUpdateDefense == true) {
         return;
     }
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
     
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(cTime)];
     NSArray *array = [self getTags:TagTypeHockeyStartDLine secondType:TagTypeHockeyStopDLine];
     
     if (array.count > 0) {
@@ -788,6 +826,12 @@
 
 -(void)addData:(NSString *)type name:(NSString *)name{
     
+}
+
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 

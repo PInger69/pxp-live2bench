@@ -44,7 +44,7 @@
         _playRateObserverContext = &_playRateObserverContext;
         _telestrationObserverContext = &_telestrationObserverContext;
         _controlBar = [[RicoPlayerControlBar alloc]init];
-        
+        _controlBar.gestureEnabled = YES;
         _playerViewController = playerViewController;
     }
     return self;

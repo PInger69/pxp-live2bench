@@ -35,6 +35,8 @@
 }
 
 
+
+// no parse for getCam
 -(NSDictionary *)parse:(NSData*)data mode:(ParseMode)mode for:(Encoder*)encoder
 {
     NSDictionary * parsedData   = [self jsonToDict:data];

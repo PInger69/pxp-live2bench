@@ -13,7 +13,6 @@
 @protocol BottomViewControllerProtocol <NSObject>
 
 @property (nonatomic,strong,nullable)       Event *currentEvent;
-@property (strong, nonatomic, nullable)    AVPlayer *videoPlayer;
 @property (strong,nonatomic,nullable)      UIView  *mainView;
 
 -(void)update;

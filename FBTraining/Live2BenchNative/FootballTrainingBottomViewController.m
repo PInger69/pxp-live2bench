@@ -11,30 +11,6 @@
 #import "CustomLabel.h"
 #define kDEFAULT_NUM_OF_GROUPS 6
 
-/*NSMutableDictionary *offenseGroupDictionary;
-NSMutableDictionary *defenseGroupDictionary;
-NSMutableDictionary *otherGroupDictionary;
-NSMutableDictionary *playersDictionary;
-NSDictionary *currentPeriodTag;
-NSMutableArray *offenseGroupButtons;
-NSMutableArray *defenseGroupButtons;
-NSMutableArray *playersButtons;
-BorderlessButton *offenseGroupButton;
-BorderlessButton *defenseGroupButton;
-BorderlessButton *otherGroupButton;
-CustomLabel *disabledLabel;
-UIView *playerView;
-
-float buttonWidth;
-float buttonHeight;
-float spacing;
-int numOfRows;
-
-
-NSString *offenseGroupTagID;
-NSString *defenseGroupTagID;
-NSString *otherGroupTagID;
-NSMutableData *responseData;*/
 
 @interface FootballTrainingBottomViewController ()
 
@@ -46,27 +22,11 @@ NSMutableData *responseData;*/
 }
 
 @synthesize currentEvent = _currentEvent;
-@synthesize videoPlayer = _videoPlayer;
 @synthesize mainView = _mainView;
-//@synthesize currentOffenseGroup;
-//@synthesize currentDefenseGroup;
-//@synthesize currentOtherGroup;
-//@synthesize currentGroupPlayers;
+
 
 #pragma mark - Init and View Setup
 
-/*- (id)initWithController:(Live2BenchViewController *)l2b
-{
-    self = [super init];
-    if (self) {
-//        globals = [Globals instance];
-        self.live2BenchViewController = l2b;
-        currentGroupPlayers = [[NSMutableArray alloc] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewElements) name:NOTIF_UPDATED_THUMBNAILS object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViewElementsForNotification:) name:NOTIF_DURATION_TAG object:nil];
-    }
-    return self;
-}*/
 
 -(id)init{
     self = [super init];
@@ -96,7 +56,31 @@ NSMutableData *responseData;*/
     }
     return self;
 }
+- (void)viewDidLoad
+{
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(update) name:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:nil];
+    [super viewDidLoad];
+    
+//    [self setupView];
+//    [self createPlayersDictionaryWithTeamSetup];
+//    [self updateViewElements];
+}
 
+
+
+
+#pragma  mark - BottomViewControllerProtocol methods
+-(void)update
+{
+
+
+}
+
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
 /*- (void)viewDidLoad
 {
     [super viewDidLoad];

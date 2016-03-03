@@ -296,7 +296,7 @@
     
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.
+        textField.text = @"Enter some name";
     }];
     
 

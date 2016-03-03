@@ -27,7 +27,10 @@
 #import "RicoPlayerControlBar.h"
 #import "RicoPlayerViewController.h"
 #import "RicoZoomContainer.h"
-#import "RicoFullScreenViewController.h"
+
+#import "RicoBaseFullScreenViewController.h"
+#import "RicoFullScreenControlBar.h"
+
 
 
 #define SMALL_MEDIA_PLAYER_HEIGHT   340
@@ -38,7 +41,7 @@
 #define COMMENTBOX_HEIGHT           200
 #define COMMENTBOX_WIDTH            530//560
 
-@interface BookmarkViewController () <RicoFullScreenDelegate>
+@interface BookmarkViewController () <RicoBaseFullScreenDelegate>
 
 @property (strong, nonatomic) Clip                          * currentClip;
 @property (strong, nonatomic) BookmarkTableViewController   * tableViewController;
@@ -55,8 +58,9 @@
 @property (strong, nonatomic) RicoPlayerControlBar        * ricoPlayerControlBar;
 @property (strong, nonatomic) RicoPlayerViewController    * ricoPlayerController;
 @property (strong, nonatomic) RicoZoomContainer           * ricoZoomer;
+@property (strong, nonatomic) RicoFullScreenControlBar    * ricoFullScreenControlBar;
 
-@property (strong, nonatomic, nonnull) RicoFullScreenViewController *fullscreenViewController;
+@property (strong, nonatomic, nonnull) RicoBaseFullScreenViewController *fullscreenViewController;
 
 @end
 
@@ -98,12 +102,12 @@
         
         _playerViewController                   = [[PxpPlayerViewController alloc] init];
         self.ricoPlayerController               = [RicoPlayerViewController new];
-        _fullscreenViewController               = [[RicoFullScreenViewController alloc] initWithPlayerViewController:self.ricoPlayerController];
-        _fullscreenViewController.delegate      = self;
 //        _fullscreenViewController               = [[PxpMyClipViewFullscreenViewController alloc] initWithPlayerViewController:_playerViewController];
        
+        
+        
         [self addChildViewController:_playerViewController];
-        [self addChildViewController:_fullscreenViewController];
+//        [self addChildViewController:_fullscreenViewController];
         
         _videoBar       = [[PxpVideoBar alloc] init];
         
@@ -128,9 +132,7 @@
     }];
     
     [self setupView];
-//    [_fullscreenViewController.nextTagButton        addTarget:self.tableViewController action:@selector(playNext) forControlEvents:UIControlEventTouchUpInside];
-//    [_fullscreenViewController.previousTagButton    addTarget:self.tableViewController action:@selector(playPrevious) forControlEvents:UIControlEventTouchUpInside];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clipSaved:) name:NOTIF_CLIP_SAVED object:nil];
   
     // This is for the tag count
@@ -165,24 +167,34 @@
     self.ricoPlayerController.view = [[UIView alloc]initWithFrame:CGRectMake(0, 768 - height - 88.0, width, height)];
     
     
-//    self.ricoZoomer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(0, 0, width, height)];
+    self.ricoZoomer = [[RicoZoomContainer alloc]initWithFrame:CGRectMake(0, 768 - height - 88.0, width, height)];
     
-//    [self.ricoZoomer addToContainer:self.ricoPlayer];
+    [self.ricoZoomer addToContainer:self.ricoPlayer];
+
+    [self.view addSubview:self.ricoZoomer];
     
-        [self.ricoPlayerController.view addSubview:self.ricoPlayer];
-    
-//    [self.ricoPlayerController.view addSubview:self.ricoZoomer];
-    
-    [self.view addSubview:self.ricoPlayerController.view];
+
     [self.ricoPlayerController addPlayers:self.ricoPlayer];
     self.ricoPlayerControlBar.state = RicoPlayerStateNormal;
     
-//    [self addChildViewController:_fullscreenViewController];
-    // end player
-    
-    
-//    [self.view addSubview:_playerViewController.view];
 
+    _fullscreenViewController               = [[RicoBaseFullScreenViewController alloc] initWithView:self.ricoZoomer];
+    _fullscreenViewController.delegate      = self;
+
+    _ricoFullScreenControlBar               = [[RicoFullScreenControlBar alloc]init];
+    [_fullscreenViewController.bottomBar addSubview:_ricoFullScreenControlBar];
+    
+    
+    
+    [self.ricoFullScreenControlBar.backwardSeekButton addTarget: self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.forwardSeekButton addTarget:  self action:@selector(onSeekButtonPress:)        forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.slomoButton addTarget:        self action:@selector(slomoPressed:)       forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.fullscreenButton addTarget:_fullscreenViewController action:@selector(fullscreenResponseHandler:) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.nextTagButton        addTarget:self.tableViewController action:@selector(playNext) forControlEvents:UIControlEventTouchUpInside];
+    [self.ricoFullScreenControlBar.previousTagButton    addTarget:self.tableViewController action:@selector(playPrevious) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    self.ricoFullScreenControlBar.mode = RicoFullScreenModeBookmark;
     [self.view addSubview:_videoBar];
     [self.view addSubview:_fullscreenViewController.view];
     
@@ -206,6 +218,8 @@
     self.currentClip = clipToPlay;
     NSString *source = note.userInfo[@"source"];
     __block BookmarkViewController *weakSelf = self;
+    
+    self.ricoFullScreenControlBar.currentTagLabel.text = clipToPlay.name;
     
     [clipContentDisplay displayClip:clipToPlay];
     clipContentDisplay.enable = YES;
@@ -360,11 +374,16 @@
 {
     CMTime  sTime = CMTimeMakeWithSeconds(sender.speed, NSEC_PER_SEC);
     CMTime  cTime = self.ricoPlayerController.primaryPlayers.currentTime;
-    [self.ricoPlayerController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
+    
+    if (sender.speed < 0.2 && sender.speed > -0.2) {
+        [self.ricoPlayerController stepByCount:(sender.speed>0)?1:-1];
+    } else {
+        [self.ricoPlayerController seekToTime:CMTimeAdd(cTime, sTime) toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
+    }
 }
 
 - (void)slomoPressed:(Slomo *)slomo {
-//    slomo.slomoOn = !slomo.slomoOn;
+    slomo.slomoOn = !slomo.slomoOn;
     self.ricoPlayerController.slomo = slomo.slomoOn;
 }
 
@@ -483,17 +502,19 @@
 
 #pragma mark - RicoFullScreenDelegate Methods
 
--(void)onFullScreenLeave:(RicoFullScreenViewController *)fullscreenController
+-(void)onFullScreenLeave:(RicoBaseFullScreenViewController *)fullscreenController
 {
+        self.ricoPlayerController.playerControlBar     = self.ricoPlayerControlBar;
+        self.ricoPlayerControlBar.delegate             = self.ricoPlayerController;
+}
+
+-(void)onFullScreenShow:(RicoBaseFullScreenViewController *)fullscreenController
+{
+    self.ricoPlayerController.playerControlBar = self.ricoFullScreenControlBar.controlBar;
+    self.ricoFullScreenControlBar.controlBar.delegate = self.ricoPlayerController;
 
 }
 
--(void)onFullScreenShow:(RicoFullScreenViewController *)fullscreenController
-{
-
-
-
-}
 
 
 

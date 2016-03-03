@@ -164,6 +164,7 @@
 		BDF9C2E01836D87100F6661E /* dropboxico@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BDF9C2DE1836D87100F6661E /* dropboxico@2x.png */; };
 		D700801B19DF2456000144CF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = D700801A19DF2456000144CF /* Utility.m */; };
 		D700F9061B011550008152E8 /* FakeEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D700F9051B011550008152E8 /* FakeEncoder.m */; };
+		D705569D1C77819B00948E2C /* ButtonMultiScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = D705569C1C77819900948E2C /* ButtonMultiScreen.m */; };
 		D706AC961B2735610091C02C /* CameraDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = D706AC951B2735610091C02C /* CameraDetails.m */; };
 		D70A66871C5284D4003CA163 /* RicoFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66861C5284D3003CA163 /* RicoFullScreenViewController.m */; };
 		D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70A66881C52C5C7003CA163 /* RicoLive2BenchViewController.m */; };
@@ -252,6 +253,7 @@
 		D75042B119FA967000D9851D /* EncoderStatusMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D75042B019FA966F00D9851D /* EncoderStatusMonitor.m */; };
 		D7541D391C69504A0069233F /* RicoPlayerGroupContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D381C69504A0069233F /* RicoPlayerGroupContainer.m */; };
 		D7541D3C1C6959A60069233F /* RicoFullScreenControlBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D3B1C6959A60069233F /* RicoFullScreenControlBar.m */; };
+		D7541D3F1C6BC9C00069233F /* BooleanOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7541D3E1C6BC9C00069233F /* BooleanOperation.m */; };
 		D7581EDF196342A50029C5DD /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7581EDE196342A50029C5DD /* Crashlytics.framework */; };
 		D7581EE519634B6D0029C5DD /* NumberedSeekerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */; };
 		D7581EE619634B6D0029C5DD /* SeekButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581EE419634B6D0029C5DD /* SeekButton.m */; };
@@ -267,6 +269,8 @@
 		D7581F3A196461ED0029C5DD /* ExternalShareUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581F18196461ED0029C5DD /* ExternalShareUtils.m */; };
 		D7581F3E196461ED0029C5DD /* HeaderBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D7581F1D196461ED0029C5DD /* HeaderBar.m */; };
 		D75C464F1A9E54AE001BD50B /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D75C464E1A9E54AD001BD50B /* Downloader.m */; };
+		D75CA3231C84BB9C0002E273 /* UIDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = D75CA3221C84BB9C0002E273 /* UIDrawer.m */; };
+		D75CA3261C87A22A0002E273 /* UINotchDisplay.mm in Sources */ = {isa = PBXBuildFile; fileRef = D75CA3251C87A2270002E273 /* UINotchDisplay.mm */; };
 		D75CD0A917CBF25500DD24E8 /* HockeyBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D75CD0A717CBF25500DD24E8 /* HockeyBottomViewController.m */; };
 		D75CD0AE17CBF26700DD24E8 /* SoccerBottomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D75CD0AC17CBF26700DD24E8 /* SoccerBottomViewController.m */; };
 		D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */ = {isa = PBXBuildFile; fileRef = D75ED4FC1ACC4707003AF856 /* LiveLight.m */; };
@@ -572,9 +576,12 @@
 		D7F24FD31C6937CC0012E6CB /* RicoBaseFullScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F24FD21C6937CC0012E6CB /* RicoBaseFullScreenViewController.m */; };
 		D7F2BFB01B38A7AF00EA8BF0 /* CreditsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F2BFAF1B38A7AF00EA8BF0 /* CreditsViewController.m */; };
 		D7F2BFB21B39970B00EA8BF0 /* CreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D7F2BFB11B39970B00EA8BF0 /* CreditsView.xib */; };
+		D7F443761C73BD83007F6924 /* MockURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F443751C73BD83007F6924 /* MockURLProtocol.m */; };
+		D7F443791C74D13F007F6924 /* MockEncoderSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F443781C74D13F007F6924 /* MockEncoderSource.m */; };
 		D7F6973B1811C7E8003EDDDB /* ListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F697381811C7E8003EDDDB /* ListViewCell.m */; };
 		D7F6973C1811C7E8003EDDDB /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6973A1811C7E8003EDDDB /* ListViewController.m */; };
 		D7F6A1911ADFF7F1000B97DA /* ClipControlBarSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6A1901ADFF7F1000B97DA /* ClipControlBarSlider.m */; };
+		D7F9966E1C7F706600CD528A /* DownloadThumbnailOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F9966D1C7F706500CD528A /* DownloadThumbnailOperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -843,6 +850,8 @@
 		D700801919DF2456000144CF /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utility.h; path = Live2BenchNative/UtilityClasses/Utility.h; sourceTree = "<group>"; };
 		D700801A19DF2456000144CF /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utility.m; path = Live2BenchNative/UtilityClasses/Utility.m; sourceTree = "<group>"; };
 		D700F9051B011550008152E8 /* FakeEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FakeEncoder.m; path = Live2BenchNative/EncoderClasses/FakeEncoder.m; sourceTree = "<group>"; };
+		D705569B1C77819900948E2C /* ButtonMultiScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonMultiScreen.h; sourceTree = "<group>"; };
+		D705569C1C77819900948E2C /* ButtonMultiScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonMultiScreen.m; sourceTree = "<group>"; };
 		D706AC941B2730980091C02C /* CameraDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraDetails.h; sourceTree = "<group>"; };
 		D706AC951B2735610091C02C /* CameraDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraDetails.m; sourceTree = "<group>"; };
 		D70A66851C5284D2003CA163 /* RicoFullScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoFullScreenViewController.h; sourceTree = "<group>"; };
@@ -1016,6 +1025,8 @@
 		D7541D381C69504A0069233F /* RicoPlayerGroupContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoPlayerGroupContainer.m; sourceTree = "<group>"; };
 		D7541D3A1C6959A60069233F /* RicoFullScreenControlBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RicoFullScreenControlBar.h; sourceTree = "<group>"; };
 		D7541D3B1C6959A60069233F /* RicoFullScreenControlBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RicoFullScreenControlBar.m; sourceTree = "<group>"; };
+		D7541D3D1C6BC9BF0069233F /* BooleanOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BooleanOperation.h; sourceTree = "<group>"; };
+		D7541D3E1C6BC9C00069233F /* BooleanOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BooleanOperation.m; sourceTree = "<group>"; };
 		D7581EDE196342A50029C5DD /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		D7581EE119634B6D0029C5DD /* NumberedSeekerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberedSeekerButton.h; sourceTree = "<group>"; };
 		D7581EE219634B6D0029C5DD /* NumberedSeekerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumberedSeekerButton.m; sourceTree = "<group>"; };
@@ -1044,6 +1055,10 @@
 		D7581F1D196461ED0029C5DD /* HeaderBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderBar.m; sourceTree = "<group>"; };
 		D75C464D1A9E54AD001BD50B /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Downloader.h; path = Live2BenchNative/UtilityClasses/Downloader.h; sourceTree = "<group>"; };
 		D75C464E1A9E54AD001BD50B /* Downloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Downloader.m; path = Live2BenchNative/UtilityClasses/Downloader.m; sourceTree = "<group>"; };
+		D75CA3211C84BB9C0002E273 /* UIDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDrawer.h; sourceTree = "<group>"; };
+		D75CA3221C84BB9C0002E273 /* UIDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDrawer.m; sourceTree = "<group>"; };
+		D75CA3241C87A2270002E273 /* UINotchDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINotchDisplay.h; sourceTree = "<group>"; };
+		D75CA3251C87A2270002E273 /* UINotchDisplay.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UINotchDisplay.mm; sourceTree = "<group>"; };
 		D75CD0A617CBF25500DD24E8 /* HockeyBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HockeyBottomViewController.h; sourceTree = "<group>"; };
 		D75CD0A717CBF25500DD24E8 /* HockeyBottomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HockeyBottomViewController.m; sourceTree = "<group>"; };
 		D75CD0AB17CBF26700DD24E8 /* SoccerBottomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoccerBottomViewController.h; sourceTree = "<group>"; };
@@ -1517,12 +1532,19 @@
 		D7F2BFAE1B38A79200EA8BF0 /* CreditsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreditsViewController.h; sourceTree = "<group>"; };
 		D7F2BFAF1B38A7AF00EA8BF0 /* CreditsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditsViewController.m; sourceTree = "<group>"; };
 		D7F2BFB11B39970B00EA8BF0 /* CreditsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreditsView.xib; sourceTree = "<group>"; };
+		D7F443741C73BD83007F6924 /* MockURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockURLProtocol.h; sourceTree = "<group>"; };
+		D7F443751C73BD83007F6924 /* MockURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockURLProtocol.m; sourceTree = "<group>"; };
+		D7F443771C74D13F007F6924 /* MockEncoderSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockEncoderSource.h; sourceTree = "<group>"; };
+		D7F443781C74D13F007F6924 /* MockEncoderSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockEncoderSource.m; sourceTree = "<group>"; };
 		D7F697371811C7E8003EDDDB /* ListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewCell.h; sourceTree = "<group>"; };
 		D7F697381811C7E8003EDDDB /* ListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewCell.m; sourceTree = "<group>"; };
 		D7F697391811C7E8003EDDDB /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
 		D7F6973A1811C7E8003EDDDB /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
 		D7F6A18F1ADFF7F1000B97DA /* ClipControlBarSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipControlBarSlider.h; sourceTree = "<group>"; };
 		D7F6A1901ADFF7F1000B97DA /* ClipControlBarSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipControlBarSlider.m; sourceTree = "<group>"; };
+		D7F9966B1C7E24AE00CD528A /* BottomViewTimeProviderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomViewTimeProviderDelegate.h; sourceTree = "<group>"; };
+		D7F9966C1C7F706500CD528A /* DownloadThumbnailOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadThumbnailOperation.h; sourceTree = "<group>"; };
+		D7F9966D1C7F706500CD528A /* DownloadThumbnailOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadThumbnailOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2012,6 +2034,10 @@
 				D72FC9401C441BB6007C15FF /* DeviceEncoderSource.m */,
 				D72FC9421C4431C4007C15FF /* PxpURLResponse.h */,
 				D72FC9431C4431C4007C15FF /* PxpURLResponse.m */,
+				D7F443741C73BD83007F6924 /* MockURLProtocol.h */,
+				D7F443751C73BD83007F6924 /* MockURLProtocol.m */,
+				D7F443771C74D13F007F6924 /* MockEncoderSource.h */,
+				D7F443781C74D13F007F6924 /* MockEncoderSource.m */,
 			);
 			name = NSURLProtocol;
 			sourceTree = "<group>";
@@ -2616,6 +2642,16 @@
 		D7A9393416ADA65D006CBAB2 = {
 			isa = PBXGroup;
 			children = (
+				D75CA3241C87A2270002E273 /* UINotchDisplay.h */,
+				D75CA3251C87A2270002E273 /* UINotchDisplay.mm */,
+				D75CA3211C84BB9C0002E273 /* UIDrawer.h */,
+				D75CA3221C84BB9C0002E273 /* UIDrawer.m */,
+				D7F9966C1C7F706500CD528A /* DownloadThumbnailOperation.h */,
+				D7F9966D1C7F706500CD528A /* DownloadThumbnailOperation.m */,
+				D705569B1C77819900948E2C /* ButtonMultiScreen.h */,
+				D705569C1C77819900948E2C /* ButtonMultiScreen.m */,
+				D7541D3D1C6BC9BF0069233F /* BooleanOperation.h */,
+				D7541D3E1C6BC9C00069233F /* BooleanOperation.m */,
 				D7541D3A1C6959A60069233F /* RicoFullScreenControlBar.h */,
 				D7541D3B1C6959A60069233F /* RicoFullScreenControlBar.m */,
 				D7541D371C69504A0069233F /* RicoPlayerGroupContainer.h */,
@@ -2638,6 +2674,7 @@
 				D7872A2F1C2857F000C151D3 /* CustomAlertControllerQueue.h */,
 				D7872A301C2857F000C151D3 /* CustomAlertControllerQueue.m */,
 				D78126F51C209950008B8B16 /* PxpPreference.plist */,
+				D7F9966B1C7E24AE00CD528A /* BottomViewTimeProviderDelegate.h */,
 				D78126FA1C209FF2008B8B16 /* PxpPreference.h */,
 				D78126FB1C209FF2008B8B16 /* PxpPreference.m */,
 				D72FC9451C4561D5007C15FF /* DeviceAssetLibrary.h */,
@@ -3597,7 +3634,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "./Crashlytics.framework/run cd63aefd0fa9df5e632e5dc77360ecaae90108a1";
 		};
 		D7A9397216ADA65E006CBAB2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3822,10 +3859,12 @@
 				D72FA56C180ECDAE009ACA87 /* BookmarkFilterViewController.m in Sources */,
 				D7581F2A196461ED0029C5DD /* DragContext.m in Sources */,
 				D7A2E5BD19AE39F900022795 /* ToggleButton.m in Sources */,
+				D7F443791C74D13F007F6924 /* MockEncoderSource.m in Sources */,
 				D70A66891C52C5C7003CA163 /* RicoLive2BenchViewController.m in Sources */,
 				D743D47C1B6962BD00533070 /* TempPxpFilterTabUI.m in Sources */,
 				D7A391851A6EA23E00BFD353 /* MultiPip.m in Sources */,
 				AE8750AB1B612EBE0055A7C2 /* TeleSelectTableViewController.m in Sources */,
+				D7F9966E1C7F706600CD528A /* DownloadThumbnailOperation.m in Sources */,
 				D700F9061B011550008152E8 /* FakeEncoder.m in Sources */,
 				AE9CA1DF1B87B09200BF1746 /* PXPTIFIdentifier.c in Sources */,
 				D7581F23196461ED0029C5DD /* BottomViewController.m in Sources */,
@@ -3838,6 +3877,7 @@
 				D706AC961B2735610091C02C /* CameraDetails.m in Sources */,
 				D79BC1DC19E8720100ECD8DB /* Pip.m in Sources */,
 				D738307B199580DD0053F0A1 /* FilterProcessorFBTforPlayers.m in Sources */,
+				D7F443761C73BD83007F6924 /* MockURLProtocol.m in Sources */,
 				D760737319D4A513000E35C2 /* FullScreenViewController.m in Sources */,
 				D7581EF1196454B00029C5DD /* CommentingRatingField.m in Sources */,
 				D74860FF1B5FDE4300CEC9DD /* LeagueTeam.m in Sources */,
@@ -3865,6 +3905,7 @@
 				D7D2F6991B7A780500DC0DC5 /* PxpFilterToggleButton.m in Sources */,
 				D7A7B61816D3C852000D3A84 /* TeleViewController.m in Sources */,
 				D73CDBF01AAF283C002D682D /* AccountsViewController.m in Sources */,
+				D75CA3231C84BB9C0002E273 /* UIDrawer.m in Sources */,
 				BD9BC31117EB480A001B67DE /* SpinnerView.m in Sources */,
 				D75ED4FD1ACC4707003AF856 /* LiveLight.m in Sources */,
 				D7872A311C2857F000C151D3 /* CustomAlertControllerQueue.m in Sources */,
@@ -3884,6 +3925,7 @@
 				D7DA051E1C0DEE95009F0B87 /* RicoOperations.m in Sources */,
 				AE9CA1BF1B875C9800BF1746 /* PXPTIFTelestration.c in Sources */,
 				D7383056198A991A0053F0A1 /* FBTFilterViewController.m in Sources */,
+				D75CA3261C87A22A0002E273 /* UINotchDisplay.mm in Sources */,
 				D7341A8A1B74E714005156E9 /* PxpFilterButtonView.m in Sources */,
 				D7E0EDB91BFE20CD003F4F94 /* PxpReadyPlayerItemOperation.m in Sources */,
 				D749B76A1A800AE800258D63 /* RJLFreezeCounter.m in Sources */,
@@ -3937,6 +3979,7 @@
 				D749B7A81A82842200258D63 /* RJLVideoPlayerResponder.m in Sources */,
 				D784EF441AA4B0570068D260 /* ListTableViewController.m in Sources */,
 				D7383081199E63DB0053F0A1 /* UserColorButton.m in Sources */,
+				D7541D3F1C6BC9C00069233F /* BooleanOperation.m in Sources */,
 				D7D2F6A41B7CE1FF00DC0DC5 /* PxpFilterButtonGroupController.m in Sources */,
 				D7493D4D1B7282710081075C /* PxpFilterUserButtons.m in Sources */,
 				D72DAF491BDE9F0100A97824 /* ParseModuleDefault.m in Sources */,
@@ -3951,6 +3994,7 @@
 				D7B7C4D61AD32BDD00A5DEC3 /* InjuryViewController.m in Sources */,
 				D74861021B5FE59400CEC9DD /* League.m in Sources */,
 				D767EF121B72AF8E00DDD815 /* PxpFilterHockeyTabViewController.m in Sources */,
+				D705569D1C77819B00948E2C /* ButtonMultiScreen.m in Sources */,
 				D76B6DDB1A8AC13000601BAF /* ListPopoverControllerWithImages.m in Sources */,
 				D70FBA4C17FF7A1E00B606CF /* DownloadButton.m in Sources */,
 				D7383075199416D40053F0A1 /* FilterComponentAbstract.m in Sources */,
@@ -4097,7 +4141,7 @@
 					"-all_load",
 					"-Objc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avocatec.pxpArmBand;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
@@ -4137,7 +4181,7 @@
 					"-all_load",
 					"-Objc",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.avocatec.pxpArmBand;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;

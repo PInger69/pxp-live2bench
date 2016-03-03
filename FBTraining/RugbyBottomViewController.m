@@ -44,7 +44,6 @@
 }
 
 @synthesize currentEvent = _currentEvent;
-@synthesize videoPlayer = _videoPlayer;
 @synthesize mainView = _mainView;
 
 -(id)init{
@@ -93,6 +92,14 @@
         [self createPlayerButton];
     }
     return self;
+}
+
+
+-(void)viewDidLoad
+{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updatePeriodSegment) name:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:nil];
+    
+    [super viewDidLoad];
 }
 
 #pragma mark - Helper Methods
@@ -153,15 +160,24 @@
 -(void)update{
     [self updatePeriodSegment];
     
-    __block RugbyBottomViewController *weakSelf = self;
-    periodBoundaryObserver = [_videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
-        [weakSelf updatePeriodSegment];
-    }];
+    
+    
+//    __block RugbyBottomViewController *weakSelf = self;
+//    periodBoundaryObserver = [_videoPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time){
+//        [weakSelf updatePeriodSegment];
+//    }];
 }
 
 // get Current Period
 -(NSString *)currentPeriod{
-    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(_videoPlayer.currentTime)];
+    
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    
+    
+    NSNumber *time = [NSNumber numberWithFloat:CMTimeGetSeconds(cTime)];
     NSArray *array = [self getTags:TagTypeSoccerHalfStart secondType:TagTypeSoccerHalfStop];
     
     if (array.count > 0) {
@@ -211,7 +227,13 @@
 #pragma mark - Half Tags Related Methods
 // Post half tag
 -(void)halfValueChanged:(UISegmentedControl *)segment{
-    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
+    
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    
+    float time = CMTimeGetSeconds(cTime);
     NSString *name = [periodValueArray objectAtIndex:_periodSegmentedControl.selectedSegmentIndex];
     
     NSDictionary *tagDic = @{@"name":name,@"period":name, @"type":[NSNumber numberWithInteger:TagTypeSoccerHalfStart],@"time":[NSString stringWithFormat:@"%f",time]};
@@ -294,7 +316,14 @@
 
 // post tag(regular or duration) when player button is pressed
 -(void)playerButtonSelected:(id)sender{
-    float time = CMTimeGetSeconds(_videoPlayer.currentTime);
+    
+    CMTime cTime = kCMTimeZero;
+    if (self.delegate) {
+        cTime = self.delegate.currentTime;
+    }
+    
+    
+    float time = CMTimeGetSeconds(cTime);
     
     SideTagButton *button = sender;
     NSString *name = [NSString stringWithFormat:@"Pl. %@",button.titleLabel.text];
@@ -406,5 +435,8 @@
     
 }
 
-
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
 @end

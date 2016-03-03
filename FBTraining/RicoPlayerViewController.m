@@ -37,6 +37,15 @@ static CMClockRef _masterClock;
         self.operationQueue     = [NSOperationQueue new];
         self.operationQueue.maxConcurrentOperationCount = 1;
         self.syncronizePlayers  = YES;
+        
+        _debugOutput = [[UITextView alloc]initWithFrame:CGRectZero];
+//        [_debugOutput setHidden:YES];
+        [_debugOutput setText:@"*"];
+        [_debugOutput setSelectable:NO];
+        [_debugOutput setFont:[UIFont fontWithName:@"Courier" size:12.0]];
+        [_debugOutput setTextColor:[UIColor whiteColor]];
+        [_debugOutput setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.5]];
+
     }
     return self;
 }
@@ -154,7 +163,7 @@ static CMClockRef _masterClock;
 
 -(void)playTag:(Tag*)tag
 {
-    CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.time, 1), CMTimeMakeWithSeconds(tag.duration, 1));
+    CMTimeRange range = CMTimeRangeMake(CMTimeMakeWithSeconds(tag.startTime, 1), CMTimeMakeWithSeconds(tag.duration, 1));
 
     for (RicoPlayer * player in [self.players allValues]) {
         player.range = range;
@@ -163,40 +172,25 @@ static CMClockRef _masterClock;
     
 }
 
-
+/*
+ If player controller is set to synic it will sync to slowest player
+ 
+ 
+ */
 -(void)live
 {
-    
-    CMTime shortestDuration = kCMTimePositiveInfinity;
-   
-     for (RicoPlayer * p in [self.players allValues]) {
-         if (CMTimeCompare(p.duration, shortestDuration)== -1) {
-             shortestDuration = p.duration;
-             
-         }
-     }
-    
+    CMTime liveTime = kCMTimePositiveInfinity;
+
+    if (self.syncronizePlayers) {
+        // Get shortest time
+        for (RicoPlayer * p in [self.players allValues]) {
+            if (CMTimeCompare(p.duration, liveTime)== -1) {
+                liveTime = p.duration;
+            }
+        }
+    }
     
     for (RicoPlayer * player in [self.players allValues]) {
-        
-//        if (player.operationQueue.operationCount){
-//            NSOperation * oop = player.operationQueue.operations[0];
-//            
-//            
-//        }
-        
-        
-        CMTime liveTime = kCMTimePositiveInfinity;
-        
-//        if (CMTIME_IS_VALID(player.duration) && CMTimeCompare(player.duration, kCMTimeZero)!=0) {
-//             CMTime dur  = player.duration;
-//            liveTime = CMTimeSubtract( shortestDuration, CMTimeMakeWithSeconds(2, 1));
-//        }
-
-        if (player.isReadyOperation && !player.isReadyOperation.isFinished) {
-        
-        
-        }
         
         
         NSOperation * seekOp  = [player seekToTime:liveTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:nil];
@@ -206,14 +200,9 @@ static CMClockRef _masterClock;
         if (readyOp) [seekOp addDependency:readyOp];
         [playOp addDependency:seekOp];
         
-//         [[player seekToTime:liveTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimePositiveInfinity completionHandler:^(BOOL finished) {
-//             
-//         }] addDependency:];
-        
-//        [player.avPlayer play];
-//        [player.avPlayer seekToTime:liveTime];
-        
     }
+    
+
     if (self.playerControlBar) {
         self.playerControlBar.state = RicoPlayerStateLive;
     }
@@ -259,15 +248,42 @@ static CMClockRef _masterClock;
     
     if (primaryPLayer == player ) {
       
-        // calculate range
-//        CMTimeRange range = CMTimeRangeMake(kCMTimeZero, primaryPLayer.duration);
-        
-        // calculate time to seek to
-//        CMTime time = primaryPLayer.currentTime;
-        
-        [self.playerControlBar update:primaryPLayer.currentTime duration:primaryPLayer.duration];
 
+        [self.playerControlBar update:primaryPLayer.currentTime duration:primaryPLayer.duration];
+        [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_RICO_PLAYER_VIEW_CONTROLLER_UPDATE object:self];
     }
+    if (_debugOutput.superview){
+        NSMutableString * output = [NSMutableString new];
+        
+
+        
+        for (RicoPlayer * player in [self.players allValues]) {
+            if ([player.debugValues count]==0) continue;
+            
+            NSMutableString * outputpart = [NSMutableString new];
+            
+            NSString *nameColumn = [[NSString stringWithFormat:@"%@", player.name] stringByPaddingToLength:10 withString:@" " startingAtIndex:0];
+            [outputpart appendString:nameColumn];
+     
+            NSString *CTColumn = [[NSString stringWithFormat:@"%@", player.debugValues[@"now"]] stringByPaddingToLength:17 withString:@" " startingAtIndex:0];
+            [outputpart appendString:CTColumn];
+
+            
+            NSString *DTColumn = [[NSString stringWithFormat:@"%@",  player.debugValues[@"dur"]] stringByPaddingToLength:17 withString:@" " startingAtIndex:0];
+            [outputpart appendString:DTColumn];
+
+            NSString *STColumn = [[NSString stringWithFormat:@"%@",  player.debugValues[@"itemStatus"]] stringByPaddingToLength:34 withString:@" " startingAtIndex:0];
+           [outputpart appendString:STColumn];
+
+            [output appendString:outputpart];
+            [output appendString:@"\n"];
+            
+        }
+        
+        _debugOutput.text = output;
+        
+    }
+    
 }
 
 
@@ -419,7 +435,6 @@ static CMClockRef _masterClock;
     }
 }
 
-
 -(void)playPausePressed:(RicoPlayerControlBar *)playerControlBar didChangeToPaused:(BOOL)paused
 {
     for (RicoPlayer * dplayers in self.depedencyPlayers) {
@@ -433,7 +448,7 @@ static CMClockRef _masterClock;
     }
 }
 
-
+// this only works for downloaded MP4
 - (void)stepByCount:(NSInteger)stepCount
 {
 //    NSLog(@"%s this only works for downloaded MP4",__FUNCTION__);
@@ -489,5 +504,19 @@ static CMClockRef _masterClock;
 }
 
 
+
+
+#pragma - mark BottomViewTimeProviderDelegate
+
+//-(void)setCurrentTime:(CMTime)currentTime
+//{
+//
+//}
+
+-(CMTime)currentTime
+{
+    RicoPlayer * player = [[self.depedencyPlayers allObjects]firstObject];
+    return player.currentTime;
+}
 
 @end

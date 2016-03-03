@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
 
-#define BUTTON_HEIGHT   125
-#define POP_WIDTH       200
+#define BUTTON_HEIGHT   200
+#define POP_WIDTH       300
 
 #import "ListPopoverControllerWithImages.h"
 

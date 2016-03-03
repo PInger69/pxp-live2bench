@@ -11,7 +11,7 @@
 @implementation PxpPlayPauseButton
 
 - (void)initCommon {
-    _paused = YES;
+    _paused = NO;
     
     // add target to toggle between states
     [self addTarget:self action:@selector(touchUpInside:) forControlEvents:UIControlEventTouchUpInside];
@@ -69,7 +69,7 @@
 - (void)updateLayer {
     if (!self.paused) {
         // draw pause button
-        
+
         // calculate key points
         CGFloat height = MIN(self.frame.size.width, self.frame.size.height);
         CGFloat width = height * cos(0.5);

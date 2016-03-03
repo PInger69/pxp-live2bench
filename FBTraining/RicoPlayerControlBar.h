@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "PxpPlayerControlSlider.h"
+#import "PxpPlayerLight.h"
+#import "PxpPlayPauseButton.h"
+#import "PxpCancelButton.h"
 
 typedef NS_ENUM (NSInteger, RicoPlayerState){
     RicoPlayerStateLive,           // Live means that the bar will not update the position of the head and endtime is fixed to live
@@ -40,9 +44,9 @@ typedef NS_ENUM (NSInteger, RicoPlayerState){
 @interface RicoPlayerControlBar : UIView
 
 @property (nonatomic,weak) id<RicoPlayerControlBarDelegate> delegate;
-
+@property (readonly, strong, nonatomic, nonnull) PxpPlayPauseButton *playPauseButton;
 @property (assign, nonatomic) RicoPlayerState state;
-
+@property (strong, nonatomic, nonnull) PxpPlayerControlSlider *slider;
 @property (assign, nonatomic) BOOL enabled;
 @property (assign, nonatomic) BOOL scrubbing;
 @property (assign, nonatomic) BOOL gestureEnabled;

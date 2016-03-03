@@ -8,6 +8,31 @@
 
 #import "RicoBaseFullScreenViewController.h"
 
+
+@interface Zone : UIView
+@end
+
+@implementation Zone
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (!self.clipsToBounds && !self.hidden && self.alpha > 0) {
+        for (UIView *subview in self.subviews.reverseObjectEnumerator) {
+            CGPoint subPoint = [subview convertPoint:point fromView:self];
+            UIView *result = [subview hitTest:subPoint withEvent:event];
+            if (result != nil) {
+                return result;
+            }
+        }
+    }
+    
+    return [super hitTest:point withEvent:event];;
+}
+
+@end
+
+
+
+
 @implementation RicoBaseFullScreenViewController
 {
     UIView * __nonnull _playerContainer;
@@ -23,10 +48,10 @@
 {
     self = [super init];
     if (self) {
-        _contentView        = [[UIView alloc] init];
-        _playerContainer    = [[UIView alloc] init];
-        _topBar             = [[UIView alloc] init];
-        _bottomBar          = [[UIView alloc] init];
+        _contentView        = [[Zone alloc] init];
+        _playerContainer    = [[Zone alloc] init];
+        _topBar             = [[Zone alloc] init];
+        _bottomBar          = [[Zone alloc] init];
         _movingView         = view;
         _animated           = YES;
     }
@@ -176,5 +201,6 @@
 - (BOOL)hidden {
     return self.view.hidden;
 }
+
 
 @end

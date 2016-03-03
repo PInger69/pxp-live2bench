@@ -5,7 +5,7 @@
 //  Created by DEV on 2013-03-08.
 //  Copyright (c) 2013 DEV. All rights reserved.
 //
-
+#import <Crashlytics/Crashlytics.h>
 #import "EncoderControlsViewController.h"
 #import "EncoderManager.h"
 #import "Encoder.h"
@@ -219,10 +219,11 @@ SVSignalStatus signalStatus;
     [self.view  addSubview:encoderHomeLabel];
     
     
-    self.makeLocalEventButton = [[UIButton alloc]initWithFrame:CGRectMake(500, 10, 100, 100)];
+    self.makeLocalEventButton = [[UIButton alloc]initWithFrame:CGRectMake(500, 10, 200, 80)];
     [self.makeLocalEventButton addTarget:self action:@selector(buildStandAloneEvent) forControlEvents:UIControlEventTouchUpInside];
+    [self.makeLocalEventButton setTitle:@"Build Stand Alone Event" forState:UIControlStateNormal];
     self.makeLocalEventButton.layer.borderWidth = 1;
-//    [self.view  addSubview:self.makeLocalEventButton];
+    if (DEBUG_MODE)[self.view  addSubview:self.makeLocalEventButton];
 }
 
 - (void)viewDidLoad
@@ -432,13 +433,46 @@ SVSignalStatus signalStatus;
     }
     
     if ([buttonTitle isEqualToString:@"Start"]) {
+        
+        // build operation
         EncoderOperation * startEvent = [[EncoderOperationStart alloc]initEncoder:encoderManager.masterEncoder data:@{@"start"  : [NSNumber numberWithBool:YES],
                                                                                                                       @"homeTeam"   : ahomeTeam,
                                                                                                                       @"awayTeam"   : aawayTeam,
                                                                                                                       @"league" : aleague
                                                                                                                       }];
         
+        
+        
+        
+        
+        [startEvent setOnRequestComplete:^(NSData * data, EncoderOperation * op) {
+            NSDictionary * results = [Utility JSONDatatoDict:data];
+            if ([results[@"success"]intValue] == 0) {
+                [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_STATUS_LABEL_CHANGED object:self];
+                
+                UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Can't Start Event"
+                                                                                message:results[@"msg"]
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+                
+                // build NO button
+                UIAlertAction* cancelButtons = [UIAlertAction
+                                                actionWithTitle:OK_BUTTON_TXT
+                                                style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction * action)
+                                                {
+                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
+                                                }];
+                [alert addAction:cancelButtons];
+
+                
+                 [[CustomAlertControllerQueue getInstance] presentViewController:alert inController:ROOT_VIEW_CONTROLLER animated:YES style:AlertImportant completion:nil];
+            }
+        }];
+        
         [encoderManager.masterEncoder runOperation:startEvent];
+        
+        
+        // change UI
         [self eventControlsState:EventButtonControlStatesStart];
     } else { // resume video
         
@@ -574,8 +608,10 @@ SVSignalStatus signalStatus;
 #pragma mark - Standalone Event
 -(void)buildStandAloneEvent
 {
+    
+    [[Crashlytics sharedInstance] crash];
     Encoder * deviceEncoder     = [[Encoder alloc]initWithIP:@""];
-    deviceEncoder.urlProtocol   = @"device";
+    deviceEncoder.urlProtocol   = @"mockup"; // @"device"; //
     deviceEncoder.name          = @"Device Encoder";
     
     EncoderOperation * version      = [[EncoderOperationGetVersion alloc]initEncoder:deviceEncoder data:@{}];

@@ -17,6 +17,7 @@
     NSArray * _listObject;
     NSArray * _listNonTagObject;
     NSArray * _eventObject;
+    NSArray * _bookmarkObject;
 }
 
 @synthesize mode = _mode;
@@ -38,17 +39,18 @@
         _currentTagLabel            = [[PxpBorderLabel alloc] init];
 
         
+        _previousTagButton          = [[PxpBorderButton alloc] init];
+        _nextTagButton              = [[PxpBorderButton alloc] init];
+        
+        _previousTagButton.frame    = CGRectMake(0, 0, 150, 44);
+        _nextTagButton.frame        = CGRectMake(0, 0, 150, 44);
         
         
-        
-        
-        
-        
-
+        CGFloat rmSize = 60.0;
         
         _liveButton.frame                   = CGRectMake(0,0, 130.0, 30.0);
-        _startRangeModifierButton.frame     = CGRectMake(0,0, 44.0, 44.0);
-        _endRangeModifierButton.frame       = CGRectMake(0,0, 44.0, 44.0);
+        _startRangeModifierButton.frame     = CGRectMake(0,0, rmSize, rmSize);
+        _endRangeModifierButton.frame       = CGRectMake(0,0, rmSize, rmSize);
         _currentTagLabel.frame              = CGRectMake(0,0, 150.0, 44.0);
 
         
@@ -87,16 +89,20 @@
         CGFloat minx = CGRectGetMinX(contentRect);
         CGFloat midx = CGRectGetMidX(contentRect);
         
-        _backwardSeekButton.center  = CGPointMake(maxx*0.1, alignY);
-        _forwardSeekButton.center   = CGPointMake(maxx*0.9, alignY);
-        _slomoButton.center         = CGPointMake(maxx*0.2, alignY);
-        _fullscreenButton.center    = CGPointMake(maxx*0.8, alignY);
+        _backwardSeekButton.center  = CGPointMake(maxx*0.16, alignY);
+        _forwardSeekButton.center   = CGPointMake(maxx*0.84, alignY);
+        _slomoButton.center         = CGPointMake(maxx*0.22, alignY);
+        _fullscreenButton.center    = CGPointMake(maxx*0.78, alignY);
         
-        _startRangeModifierButton.center       = CGPointMake(maxx*0.96, alignY);
-        _endRangeModifierButton.center         = CGPointMake(maxx*0.04, alignY);
+        _startRangeModifierButton.center       = CGPointMake(maxx*0.05, alignY);
+        _endRangeModifierButton.center         = CGPointMake(maxx*0.95, alignY);
         _currentTagLabel.center                = CGPointMake(midx, alignY);
         _liveButton.center                     = CGPointMake(maxx*0.67, alignY);
         
+        _previousTagButton.center    = CGPointMake(maxx*0.33, alignY);
+        _nextTagButton.center        = CGPointMake(maxx*0.67, alignY);
+        [_previousTagButton setTitle:NSLocalizedString(@"PREVIOUS", nil) forState:UIControlStateNormal];
+        [_nextTagButton setTitle:NSLocalizedString(@"NEXT", nil) forState:UIControlStateNormal];
         // bottom bar buttons
       
 
@@ -112,15 +118,17 @@
         [self addSubview:_endRangeModifierButton];
         [self addSubview:_currentTagLabel];
       
-        
+        [self addSubview:_previousTagButton];
+        [self addSubview:_nextTagButton];
 
         _liveObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton];
         _eventObject      = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton];
         _clipObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel];
-        _allObjects       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel];
+        _allObjects       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _liveButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel,_previousTagButton,_nextTagButton];
         _disabledObject   = @[_controlBar, _fullscreenButton];
-        _listObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _currentTagLabel];
+        _listObject       = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton, _startRangeModifierButton, _endRangeModifierButton, _currentTagLabel];
         _listNonTagObject = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton];
+        _bookmarkObject   = @[_controlBar, _backwardSeekButton, _forwardSeekButton, _slomoButton, _fullscreenButton,_previousTagButton,_nextTagButton,_currentTagLabel];
         self.mode = RicoFullScreenModeDisable;
     }
     return self;
@@ -144,7 +152,10 @@
             _controlBar.state = RicoPlayerStateNormal;
             obj = _eventObject;
             break;
-            
+        case RicoFullScreenModeBookmark:
+            _controlBar.state = RicoPlayerStateNormal;
+            obj = _bookmarkObject;
+            break;
         case RicoFullScreenModeClip:
             _controlBar.state = RicoPlayerStateRange;
             obj = _clipObject;
@@ -177,6 +188,25 @@
 {
     return _mode;
 }
+
+
+
+//
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (!self.clipsToBounds && !self.hidden && self.alpha > 0) {
+        for (UIView *subview in self.subviews.reverseObjectEnumerator) {
+            CGPoint subPoint = [subview convertPoint:point fromView:self];
+            UIView *result = [subview hitTest:subPoint withEvent:event];
+            if (result != nil) {
+                return result;
+            }
+        }
+    }
+    
+    return [super hitTest:point withEvent:event];;
+}
+
 
 
 @end

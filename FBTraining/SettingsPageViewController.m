@@ -25,6 +25,7 @@
 #import "SideTagSettingsViewController.h"
 #import "FeedMappingViewController.h"
 
+
 @interface SettingsPageViewController () <SettingsTableViewControllerSelectDelegate>
 
 @property (strong, nonatomic) NSArray *defaultSettings;
@@ -91,6 +92,8 @@ NS_OPTIONS(NSInteger, style){
         SideTagSettingsViewController * tagSetSettingViewController                = [[SideTagSettingsViewController alloc] initWithAppDelegate:appDel name:@"Tag Set" identifier:@"Tag Set"];
         CreditsViewController *creditsViewController                            = [[CreditsViewController alloc] initWithAppDelegate:appDel];
         FeedMappingViewController *feedMappingViewController                            = [[FeedMappingViewController alloc] initWithAppDelegate:appDel name:@"Feed Map" identifier:@"Feed Map"];
+        
+        
         
         // Setting Definitions to be loaded
         //  Name: the display name of the setting

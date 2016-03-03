@@ -15,8 +15,8 @@
 +(instancetype)instance;
 
 
-@property(nonatomic,strong) NSMutableArray              * pooledPlayers;
-@property(nonatomic,strong) RicoPlayerViewController    * defaultController;
+@property(atomic,strong) NSMutableArray              * pooledPlayers;
+@property(atomic,strong) RicoPlayerViewController    * defaultController;
 
 
 

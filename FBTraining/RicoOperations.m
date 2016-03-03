@@ -344,12 +344,7 @@
 
 
 
--(void)main
-{
 
-
-
-}
 
 
 /*
@@ -413,6 +408,7 @@
  }
 
  */
+
 
 -(BOOL)isConcurrent
 {

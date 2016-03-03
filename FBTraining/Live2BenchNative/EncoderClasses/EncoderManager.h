@@ -42,24 +42,24 @@
 
 //@property (nonatomic,assign)            BOOL                    hasInternet;
 //@property (nonatomic,assign)            BOOL                    hasWiFi; // Toggled by checkForWiFiAction
-@property (nonatomic,assign)            BOOL                    hasMAX;
-@property (nonatomic,assign)            BOOL                    searchForEncoders;
-@property (nonatomic,assign)            BOOL                    hasLive; // all the Encoders status checkers will effect this if non have live or if one has
-@property (nonatomic,strong)            NSString                * liveEventName;
-@property (nonatomic,strong)            NSMutableDictionary     * feeds; // this is an array of Dicts @{ @"feedPath": @"???", @"feedName":@"???" }
-@property (nonatomic,strong)            NSMutableArray          * allEvents;
-@property (nonatomic,strong)            NSMutableArray          * allEventData;
-@property (nonatomic,strong)            NSMutableArray          * authenticatedEncoders;
-@property (nonatomic,strong)            NSString                * currentEvent;
-@property (nonatomic,strong)            NSMutableArray          * currentEventTags;
-@property (nonatomic,strong,readonly)   NSString                * currentEventType; // like sport or medical
-@property (nonatomic,strong,readonly)   NSDictionary            * currentEventData; // like sport or medical
-@property (nonatomic,strong)            NSMutableDictionary     * openDurationTags;
-@property (nonatomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
+@property (atomic,assign)            BOOL                    hasMAX;
+@property (atomic,assign)            BOOL                    searchForEncoders;
+@property (atomic,assign)            BOOL                    hasLive; // all the Encoders status checkers will effect this if non have live or if one has
+@property (atomic,strong)            NSString                * liveEventName;
+@property (atomic,strong)            NSMutableDictionary     * feeds; // this is an array of Dicts @{ @"feedPath": @"???", @"feedName":@"???" }
+@property (atomic,strong)            NSMutableArray          * allEvents;
+@property (atomic,strong)            NSMutableArray          * allEventData;
+@property (atomic,strong)            NSMutableArray          * authenticatedEncoders;
+@property (atomic,strong)            NSString                * currentEvent;
+@property (atomic,strong)            NSMutableArray          * currentEventTags;
+@property (atomic,strong,readonly)   NSString                * currentEventType; // like sport or medical
+@property (atomic,strong,readonly)   NSDictionary            * currentEventData; // like sport or medical
+@property (atomic,strong)            NSMutableDictionary     * openDurationTags;
+@property (atomic,strong)            NSMutableDictionary     * eventTags; // keys are event names
 
 
 
-@property (nonatomic,weak)              Event                   * liveEvent;
+@property (atomic,weak)              Event                   * liveEvent;
 
 
 // important encoders

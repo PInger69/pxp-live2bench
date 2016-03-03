@@ -16,7 +16,7 @@
 +(NSString*)dictToJSON:(NSDictionary*)dict error:(NSError **)aError;
 +(NSDictionary*)JSONDatatoDict:(NSData*)data;
 +(NSDictionary*)JSONDatatoDict:(NSData*)data error:(NSError **)aError;
-
++(NSDictionary*)URLJSONStringDict:(NSString*)data;
 +(float)sumOfVersion:(NSString*)version;
 +(NSString *)stringFromHexString:(NSString *)hexString;
 +(NSString *)stringToSha1:(NSString *)hashkey;

@@ -298,7 +298,7 @@ typedef NS_OPTIONS(NSInteger, PXPTabs) {
 //tab bar button is clicked
 - (void)buttonClicked:(id)sender
 {
-    NSInteger tagNum = [sender tag];
+    NSInteger tagNum = [(UIButton*)sender tag];
     //    if (self.selectedIndex != tagNum){
     //        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_SWITCH_MAIN_TAB object:self];
     //    }

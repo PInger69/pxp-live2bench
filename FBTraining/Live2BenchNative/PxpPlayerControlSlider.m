@@ -42,12 +42,14 @@
     if (self.tintColor) {
         self.layer.shadowColor = self.tintColor.CGColor;
     }
+
 }
 
 - (void)setGlowRadius:(CGFloat)glowRadius {
     [self willChangeValueForKey:@"glowRadius"];
     self.layer.shadowRadius = glowRadius;
     [self didChangeValueForKey:@"glowRadius"];
+
 }
 
 - (CGFloat)glowRadius {

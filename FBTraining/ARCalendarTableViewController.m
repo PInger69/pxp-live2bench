@@ -313,13 +313,13 @@
                 
                 [UserCenter getInstance].taggingTeam = [team objectForKey:pick];
                 
-                event.feeds = [[NSMutableDictionary alloc]initWithDictionary:event.originalFeeds];
+//                event.feeds = [[NSMutableDictionary alloc]initWithDictionary:event.originalFeeds];
                 if (event.feeds.count > 1) {
-                    for (NSString *feedName in [[event.feeds copy] allKeys]) {
-                        if (![feedName isEqualToString:key]) {
-                            [event.feeds removeObjectForKey:feedName];
-                        }
-                    }
+//                    for (NSString *feedName in [[event.feeds copy] allKeys]) {
+//                        if (![feedName isEqualToString:key]) {
+//                            [event.feeds removeObjectForKey:feedName];
+//                        }
+//                    }
                 }else if (localCounterpart.feeds.count > 1){
                     for (NSString *feedName in [[localCounterpart.feeds copy] allKeys]) {
                         if (![feedName isEqualToString:key]) {
@@ -528,21 +528,21 @@
                                              [self.tableView beginUpdates];
                                              
                                              NSMutableArray *indexPathsArray     = [[NSMutableArray alloc]init];
-                                             NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
+                                             NSMutableArray *arrayOfEventsToRemove = [[NSMutableArray alloc]init];
                                              
                                              // This deletes local event
                                              for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-                                                 [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
+                                                 [arrayOfEventsToRemove addObject:self.tableData[cellIndexPath.row]];
                                                  [indexPathsArray addObject: cellIndexPath];
                                              }
                                              
                                              // mods the data
-                                             [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
-                                             [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
+                                             [self.tableData removeObjectsInArray: arrayOfEventsToRemove];
+                                             [self.arrayOfAllData removeObjectsInArray: arrayOfEventsToRemove];
                                              [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
                                              
                                              // destroy off the server
-                                             for (Event *eventToDelete in arrayOfTagsToRemove) {
+                                             for (Event *eventToDelete in arrayOfEventsToRemove) {
                                                  [eventToDelete destroy];
                                              }
                                              
@@ -690,43 +690,34 @@
                                                style:UIAlertActionStyleDefault
                                                handler:^(UIAlertAction * action)
                                                {
+                                                   
                                                    [self.tableView beginUpdates];
                                                    
-                                                   NSMutableArray * indexDeletePool = [NSMutableArray new];
+                                                   NSMutableArray *indexPathsArray     = [[NSMutableArray alloc]init];
+                                                   NSMutableArray *arrayOfEventsToRemove = [[NSMutableArray alloc]init];
                                                    
-                                                   
+                                                   // This deletes local event
                                                    for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-                                                       Event * theEvent               = self.tableData[cellIndexPath.row];
-                                                       Event * nonLocalEvent          = (theEvent.local)? nil : theEvent;
-                                                       Event * localCounterPartEvent  = (theEvent.local)? theEvent : [[LocalMediaManager getInstance] getEventByName:theEvent.name];
-                                                       
-//                                                       [[LocalMediaManager getInstance] deleteEvent:localCounterPartEvent];
-//                                                       localCounterPartEvent = nil;
-                                                       // if there is no local and non local event remove the cell
-                                                       if (nonLocalEvent == nil && localCounterPartEvent == nil) {
-                                                           [indexDeletePool addObject:cellIndexPath];
-                                                       }
+                                                       [arrayOfEventsToRemove addObject:self.tableData[cellIndexPath.row]];
+                                                       [indexPathsArray addObject: cellIndexPath];
                                                    }
                                                    
-                                                   
                                                    // mods the data
-                                                   [self.tableData removeObjectsInArray:      indexDeletePool];
-                                                   [self.arrayOfAllData removeObjectsInArray: indexDeletePool];
-                                                   [self.tableView deleteRowsAtIndexPaths:    indexDeletePool withRowAnimation:UITableViewRowAnimationLeft];
+                                                   [self.tableData removeObjectsInArray: arrayOfEventsToRemove];
+                                                   [self.arrayOfAllData removeObjectsInArray: arrayOfEventsToRemove];
+                                                   [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
                                                    
+                                                   // destroy off the server
+                                                   for (Event *eventToDelete in arrayOfEventsToRemove) {
+                                                       [eventToDelete destroy];
+                                                   }
                                                    
-                                                   // removes the cell
-                                                   self.setOfDeletingCells = [NSMutableSet setWithArray:indexDeletePool] ;
+                                                   [self.setOfDeletingCells removeAllObjects];
+                                                   
                                                    [self checkDeleteAllButton];
-                                                   [self.setOfDeletingCells removeAllObjects]; // this just clears out all the selected cells to deleate
-                                                   
-                                                   [self.tableView reloadData];
-                                                   [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-                                                   
-                                                   
                                                    [self.tableView endUpdates];
                                                    [[CustomAlertControllerQueue getInstance] dismissViewController:alert animated:YES completion:nil];
-                                                   
+                                                   [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
                                                    
                                                }];
     
@@ -805,87 +796,6 @@
     
     
 }
-
-//- (void)alertView:(CustomAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    [self.tableView beginUpdates];
-//    
-//    if ([alertView.message isEqualToString:@"Are you sure you want to delete all these events?"] && (buttonIndex == 0 || buttonIndex == 1)) {
-//        NSMutableArray *indexPathsArray = [[NSMutableArray alloc]init];
-//        NSMutableArray *arrayOfTagsToRemove = [[NSMutableArray alloc]init];
-//        
-//        for (NSIndexPath *cellIndexPath in self.setOfDeletingCells) {
-//            [arrayOfTagsToRemove addObject:self.tableData[cellIndexPath.row]];
-//            [indexPathsArray addObject: cellIndexPath];
-//            Event *eventToDelete = self.tableData[cellIndexPath.row];
-//            [eventToDelete.downloadedSources removeAllObjects];
-//            [[LocalMediaManager getInstance] deleteEvent:[[LocalMediaManager getInstance]getEventByName:eventToDelete.name]];
-//
-//        }
-//        if (buttonIndex == 0) {
-//            [self.tableData removeObjectsInArray: arrayOfTagsToRemove];
-//            [self.arrayOfAllData removeObjectsInArray: arrayOfTagsToRemove];
-//            [self.tableView beginUpdates];
-//            [self.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationLeft];
-//            [self.tableView endUpdates];
-//            
-//            for (Event *eventToDelete in arrayOfTagsToRemove) {
-//                [eventToDelete destroy];
-//            }
-//        }
-//        
-//        [self.setOfDeletingCells removeAllObjects];
-//        if (buttonIndex == 1) {
-//            [self.tableView reloadData];
-//        }
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-//    } else{
-//        if (alertView.numberOfButtons == 3) {
-//            if (buttonIndex == 2) {
-//                [self.tableView endUpdates];
-//                return;
-//            }
-//            Event *eventToRemove = self.tableData[self.editingIndexPath.row];
-//            
-//            if (buttonIndex == 0) {
-//                [eventToRemove destroy];
-//                [self.arrayOfAllData removeObject:eventToRemove];
-//                [self.tableData removeObject: eventToRemove];
-//                [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-//                [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-//            }
-//
-//            [[LocalMediaManager getInstance]deleteEvent:[[LocalMediaManager getInstance]getEventByName:eventToRemove.name]];
-//            [eventToRemove.downloadedSources removeAllObjects];
-//            [self removeIndexPathFromDeletion];
-//            
-//            if (buttonIndex == 1) {
-//                [self.tableView reloadData];
-//            }
-//        } else {
-//            if (buttonIndex == 0) {
-//                Event *eventToRemove = self.tableData[self.editingIndexPath.row];
-//                [eventToRemove destroy];
-//                [self removeIndexPathFromDeletion];
-//                [self.arrayOfAllData removeObject:eventToRemove];
-//                [self.tableData removeObject: eventToRemove];
-//                [self.tableView cellForRowAtIndexPath:self.editingIndexPath];
-//                [self.tableView deleteRowsAtIndexPaths:@[self.editingIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-//                [[NSNotificationCenter defaultCenter] postNotificationName:@"calendarNeedsLayout" object:nil];
-//                [self removeIndexPathFromDeletion];
-//            } else {
-//
-//                [self.tableView endUpdates];
-//                return;
-//            }
-//        }
-//    }
-//    
-//
-//    [self checkDeleteAllButton];
-//    [self.tableView endUpdates];
-//}
-
 
 -(void)removeIndexPathFromDeletion{
     NSMutableSet *indexPathsToRemove = [[NSMutableSet alloc]init];

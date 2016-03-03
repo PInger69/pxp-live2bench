@@ -23,8 +23,8 @@
 #define TOTAL_WIDTH             1024
 #define TOTAL_HEIGHT            600
 
-#define BUTTON_HEIGHT           125
-#define POP_WIDTH               200
+#define BUTTON_HEIGHT           200
+#define POP_WIDTH               300
 
 @interface ClipViewController ()
 
@@ -130,19 +130,20 @@ static void * encoderTagContext = &encoderTagContext;
 
 -(void)onTagChanged:(NSNotification *)note{
 
-    self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
-//    self.tagsToDisplay =[ NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.allTagsArray = [NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
+    //    self.tagsToDisplay =[ NSMutableArray arrayWithArray:[_currentEvent.tags copy]];
 
-    
-    [_pxpFilter filterTags:self.allTagsArray];
-    [_tagsToDisplay removeAllObjects];
-    [_tagsToDisplay addObjectsFromArray:self.pxpFilter.filteredTags];
-    
-    NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
-    _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
+        
+        [_pxpFilter filterTags:self.allTagsArray];
+        [_tagsToDisplay removeAllObjects];
+        [_tagsToDisplay addObjectsFromArray:self.pxpFilter.filteredTags];
+        
+        NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];
+        _tagsToDisplay = [NSMutableArray arrayWithArray:[_tagsToDisplay sortedArrayUsingDescriptors:@[sorter]]];
 
-    [self.collectionView reloadData];
-
+        [self.collectionView reloadData];
+    });
 }
 
 
@@ -997,6 +998,11 @@ static void * encoderTagContext = &encoderTagContext;
 // Pxp
 -(void)onFilterComplete:(PxpFilter*)filter
 {
+    if (!filter || !filter.filteredTags ) {
+        
+        return ;
+    }
+    
     [_tagsToDisplay removeAllObjects];
     [_tagsToDisplay addObjectsFromArray:filter.filteredTags];
     NSSortDescriptor *sorter = [NSSortDescriptor sortDescriptorWithKey:@"displayTime" ascending:NO selector:@selector(compare:)];

@@ -10,14 +10,8 @@
 #define MAX_ZOOM_SCALE 16.0
 
 @interface RicoZoomContainer () <UIScrollViewDelegate>
-
-
-@property (strong, nonatomic, nonnull) UIScrollView *scrollView;
-
 @property (strong, nonatomic, nonnull) UILabel *zoomLabel;
 
-//@property (strong, nonatomic, nonnull) UIVisualEffectView *blurView;
-//@property (strong, nonatomic, nonnull) UIVisualEffectView *vibrancyView;
 
 @end
 
@@ -126,6 +120,9 @@
     if (self.view) {
         [self.view setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
     }
+    
+    self.contentSize =frame.size;
+    
 }
 
 

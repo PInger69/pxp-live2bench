@@ -18,6 +18,8 @@
 @property (strong, nonatomic, nullable) id periodicObserver;
 @property (strong, nonatomic, nullable) id rangeObserver;
 @property (strong, nonatomic, nonnull) UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) NSMapTable * observerMap;
+
 
 @end
 
@@ -69,6 +71,9 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         _activityIndicator.color = PRIMARY_APP_COLOR;
         _activityIndicator.hidesWhenStopped = YES;
         _activityIndicator.frame = self.bounds;
+        
+        _observerMap    = [NSMapTable strongToStrongObjectsMapTable];
+        _offsetTime     = kCMTimeZero;
     }
     return self;
 }
@@ -98,6 +103,9 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         _activityIndicator.frame = self.bounds;
 
         self.debugValues = [NSMutableDictionary new];
+        
+        _observerMap = [NSMapTable strongToStrongObjectsMapTable];
+        _offsetTime     = kCMTimeZero;
     }
     return self;
 }
@@ -137,8 +145,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
         }
         self.debugValues[@"itemStatus"] = message;
         self.debugValues[@"rate"]       = [NSString stringWithFormat:@"%f",self.avPlayer.rate];
-        self.debugValues[@"now"]        = [NSString stringWithFormat:@"Current Time  = %f", CMTimeGetSeconds(self.avPlayer.currentTime)];
-        self.debugValues[@"dur"]        = [NSString stringWithFormat:@"Duration Time = %f", CMTimeGetSeconds(self.duration)];
+        self.debugValues[@"now"]        = [NSString stringWithFormat:@"CT: %f", CMTimeGetSeconds(self.avPlayer.currentTime)];
+        self.debugValues[@"dur"]        = [NSString stringWithFormat:@"DT: %f", CMTimeGetSeconds(self.duration)];
 
         [self updateDebugOutput];
         
@@ -169,6 +177,8 @@ static NSInteger playerCounter = 0; // count the number of players created and g
                 
                 CMTime seekTime = weakSelf.avPlayer.currentTime;
                 
+                
+//                [weakSelf.avPlayer seekToTime:seekTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:nil];
                 [weakSelf.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
                     NSLog(@"PLAY SEEK %@",(finished)?@"pass":@"fail");
 
@@ -217,7 +227,9 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(NSOperation*)seekToTime:(CMTime)time toleranceBefore:(CMTime)toleranceBefore toleranceAfter:(CMTime)toleranceAfter completionHandler:(nullable void (^)(BOOL finished))completionHandler
 {
-    NSOperation * seeker = [[RicoSeekOperation alloc]initWithAVPlayer:_avPlayer seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
+    CMTime timeWithOffset = CMTimeAdd(time, self.offsetTime);
+    
+    NSOperation * seeker = [[RicoSeekOperation alloc]initWithAVPlayer:_avPlayer seekToTime:timeWithOffset toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter];
 //    seeker.completionBlock = completionHandler;
     if (self.syncronized) {
           __weak RicoPlayer * weakSelf = self;
@@ -464,12 +476,13 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 {
     if (self.looping){
         
-        
+
         
         (void)[self pause];
-   
+        CMTime timeWithOffset = CMTimeAdd(kCMTimeZero, self.offsetTime);
+        
         [self.operationQueue addOperationWithBlock:^{
-            [_avPlayer seekToTime:kCMTimeZero completionHandler:^(BOOL finished) {
+            [_avPlayer seekToTime:timeWithOffset completionHandler:^(BOOL finished) {
                 [_avPlayer play];
             }];
         }];
@@ -540,12 +553,14 @@ static NSInteger playerCounter = 0; // count the number of players created and g
 
 -(void)removePlayerTimeObserver
 {
-    if (self.periodicObserver)
+    id pObserver = [self.observerMap objectForKey:self.avPlayer];
+    
+    if (pObserver)
     {
-//        dispatch_async(dispatch_get_main_queue(),^{
-            [self.avPlayer removeTimeObserver:self.periodicObserver];
+            [self.avPlayer removeTimeObserver:pObserver];
             self.periodicObserver = nil;
-//        });
+        
+        [self.observerMap removeObjectForKey:self.avPlayer];
     }
 }
 
@@ -555,22 +570,44 @@ static NSInteger playerCounter = 0; // count the number of players created and g
     double                      interval        = 0.5f;
     __weak RicoPlayer          * weakSelf      = self;
 
-//    dispatch_async(dispatch_get_main_queue(),^{
-        self.periodicObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
-                                                                   queue:NULL
-                                                              usingBlock:^(CMTime time)
-                        {
+    id pObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
+                                                               queue:NULL
+                                                          usingBlock:^(CMTime time)
+                    {
+                        
+                        weakSelf.debugValues[@"rate"] = [NSString stringWithFormat:@"%f",weakSelf.avPlayer.rate];
+                        weakSelf.debugValues[@"now"] = [NSString stringWithFormat:@"CT: %f", CMTimeGetSeconds(weakSelf.avPlayer.currentTime)];
+                        weakSelf.debugValues[@"dur"] = [NSString stringWithFormat:@"DT: %f", CMTimeGetSeconds(weakSelf.duration)];
+                        weakSelf.debugValues[@"op"] = [NSString stringWithFormat:@"OpC: %lu", (unsigned long)weakSelf.operationQueue.operationCount];
+                        [weakSelf updateDebugOutput];
+                        if (weakSelf.delegate) {
+                            [weakSelf.delegate tick:weakSelf];
+                        }
+                    }];
 
-                            weakSelf.debugValues[@"rate"] = [NSString stringWithFormat:@"%f",weakSelf.avPlayer.rate];
-                            weakSelf.debugValues[@"now"] = [NSString stringWithFormat:@"Current Time  = %f", CMTimeGetSeconds(weakSelf.avPlayer.currentTime)];
-                            weakSelf.debugValues[@"dur"] = [NSString stringWithFormat:@"Duration Time = %f", CMTimeGetSeconds(weakSelf.duration)];
-                            weakSelf.debugValues[@"op"] = [NSString stringWithFormat:@"Operation Count = %lu", (unsigned long)weakSelf.operationQueue.operationCount];
-                            [weakSelf updateDebugOutput];
-                            if (weakSelf.delegate) {
-                                [weakSelf.delegate tick:weakSelf];
-                            }
-                        }];
+    
+    [self.observerMap setObject:pObserver forKey:self.avPlayer];
+    
+//    dispatch_async(dispatch_get_main_queue(),^{
+//        self.periodicObserver = [self.avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
+//                                                                   queue:NULL
+//                                                              usingBlock:^(CMTime time)
+//                        {
+//
+//                            weakSelf.debugValues[@"rate"] = [NSString stringWithFormat:@"%f",weakSelf.avPlayer.rate];
+//                            weakSelf.debugValues[@"now"] = [NSString stringWithFormat:@"Current Time  = %f", CMTimeGetSeconds(weakSelf.avPlayer.currentTime)];
+//                            weakSelf.debugValues[@"dur"] = [NSString stringWithFormat:@"Duration Time = %f", CMTimeGetSeconds(weakSelf.duration)];
+//                            weakSelf.debugValues[@"op"] = [NSString stringWithFormat:@"Operation Count = %lu", (unsigned long)weakSelf.operationQueue.operationCount];
+//                            [weakSelf updateDebugOutput];
+//                            if (weakSelf.delegate) {
+//                                [weakSelf.delegate tick:weakSelf];
+//                            }
+//                        }];
 //    });
+    
+    
+    
+    
 }
 
 #pragma mark - RicoPlayerItemOperationDelegate Methods

@@ -72,6 +72,10 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 
 -(Event*)getEventByName:(NSString*)eventName;
 
+// This adds a layer of abstarction so we let the encoder it self manage the operaions
+-(void)runOperation:(EncoderOperation*)operation;
+
+
 @optional
 -(void)issueCommand:(NSString *)methodName priority:(int)priority timeoutInSec:(float)time tagData:(NSMutableDictionary*)tData  timeStamp:(NSNumber *)aTimeStamp onComplete:(void(^)(NSDictionary*userInfo))onComplete;
 @property (nonatomic, copy) void(^onComplete)();
@@ -85,7 +89,5 @@ typedef NS_OPTIONS(NSInteger, EncoderStatus)  {
 -(void)clearQueueAndCurrent;
 -(void) writeToPlist;
 
-// This adds a layer of abstarction so we let the encoder it self manage the operaions
--(void)runOperation:(EncoderOperation*)operation;
 
 @end

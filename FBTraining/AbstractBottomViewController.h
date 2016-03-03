@@ -10,7 +10,15 @@
 #import <AVFoundation/AVPlayer.h>
 #import "Event.h"
 #import "SideTagButton.h"
+#import "BottomViewTimeProviderDelegate.h"
+
+
+
+
 @interface AbstractBottomViewController : UIViewController
+
+
+@property (nonatomic,weak) id <BottomViewTimeProviderDelegate> delegate;
 
 //@property (strong, nonatomic, nullable)    AVPlayer *videoPlayer;
 //@property (strong, nonatomic, nullable)    Event *currentEvent;

@@ -2003,6 +2003,8 @@
             if (self.liveEvent == self.event) {
                 //[self stopResponce:nil];
                 //self.liveEvent = nil;
+                
+                if (self.status == ENCODER_STATUS_STOP) [[NSNotificationCenter defaultCenter]postNotificationName:NOTIF_LIVE_EVENT_STOPPED object:self];
                 [self.encoderManager declareCurrentEvent:nil];
 
 
@@ -2499,7 +2501,7 @@
 // This will show name and status
 -(NSString*)description
 {
-    NSString * txt = [NSString stringWithFormat:@" %@(%@): %ld - %@   - %@",self.name,version,(long)self.status,self.event.name,self.event.eventType  ];
+    NSString * txt = [NSString stringWithFormat:@" %@(%@)<%@>: %ld - %@   - %@",self.name,_urlProtocol,version,(long)self.status,self.event.name,self.event.eventType  ];
     return txt;
 }
 

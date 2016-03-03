@@ -21,30 +21,30 @@
 
 }
 
-@property (nonatomic,strong) NSMutableArray           * tagNames;
-@property (nonatomic,strong,readonly) NSMutableArray  * defaultTagNames;
-//@property (nonatomic,strong) NSString               * userPick;// team pic
-@property (nonatomic,strong) LeagueTeam               * taggingTeam;
+@property (atomic,strong) NSMutableArray           * tagNames;
+@property (atomic,strong,readonly) NSMutableArray  * defaultTagNames;
+//@property (atomic,strong) NSString               * userPick;// team pic
+@property (atomic,strong) LeagueTeam               * taggingTeam;
 
-@property (nonatomic,strong) NSMutableDictionary    * currentEventThumbnails;
-@property (nonatomic,assign) BOOL                   isLoggedIn;
-@property (nonatomic,assign) BOOL                   isEULA;
+@property (atomic,strong) NSMutableDictionary    * currentEventThumbnails;
+@property (atomic,assign) BOOL                   isLoggedIn;
+@property (atomic,assign) BOOL                   isEULA;
 
-@property (nonatomic,strong) NSString               * customerID;
-@property (nonatomic,strong) NSString               * customerAuthorization;
-@property (nonatomic,strong) NSString               * customerEmail;
-@property (nonatomic,strong) NSString               * userHID;
-@property (nonatomic,strong) UIColor                * customerColor;
+@property (atomic,strong) NSString               * customerID;
+@property (atomic,strong) NSString               * customerAuthorization;
+@property (atomic,strong) NSString               * customerEmail;
+@property (atomic,strong) NSString               * userHID;
+@property (atomic,strong) UIColor                * customerColor;
 
 
 //Paths
 
-@property (nonatomic,strong) NSString               * accountInfoPath;
-@property (nonatomic,strong) NSString               * localPath;
+@property (atomic,strong) NSString               * accountInfoPath;
+@property (atomic,strong) NSString               * localPath;
 
 
 // Preferences
-@property (nonatomic,assign) NSInteger              * preferenceLiveBuffer;
+@property (atomic,assign) NSInteger              * preferenceLiveBuffer;
 
 
 

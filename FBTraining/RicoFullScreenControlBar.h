@@ -17,12 +17,15 @@
 #import "PxpRangeModifierButton.h"
 #import "PxpBorderLabel.h"
 #import "LiveButton.h"
+#import "PxpBorderButton.h"
+
 
 typedef NS_OPTIONS (NSInteger,RicoFullScreenModes){
     
     RicoFullScreenModeDisable,
     RicoFullScreenModeLive,
     RicoFullScreenModeClip,
+    RicoFullScreenModeBookmark,
     RicoFullScreenModeTele,
     RicoFullScreenModeDemo,
     RicoFullScreenModeList,
@@ -55,7 +58,8 @@ typedef NS_OPTIONS (NSInteger,RicoFullScreenModes){
 @property (readonly, strong, nonatomic, nonnull) PxpRangeModifierButton *startRangeModifierButton;
 @property (readonly, strong, nonatomic, nonnull) PxpRangeModifierButton *endRangeModifierButton;
 @property (readonly, strong, nonatomic, nonnull) PxpBorderLabel *currentTagLabel;
-
+@property (readonly, strong, nonatomic, nonnull) PxpBorderButton *previousTagButton;
+@property (readonly, strong, nonatomic, nonnull) PxpBorderButton *nextTagButton;
 
 
 

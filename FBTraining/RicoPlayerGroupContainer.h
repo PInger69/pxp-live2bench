@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface RicoPlayerGroupContainer : UIView
+@property (nonatomic,assign) BOOL gridMode;
 
 @end

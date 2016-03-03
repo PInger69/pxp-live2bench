@@ -9,13 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "EncoderParseProtocol.h"
 #import "Encoder.h" // this should be a Protocol
+#import "BooleanOperation.h"
 
-@interface EncoderOperation : NSOperation <NSURLSessionDelegate,NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
+@interface EncoderOperation : BooleanOperation <NSURLSessionDelegate,NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
 
 
 #pragma mark - NSOperation Methods
 @property(readonly, getter=isFinished)      BOOL finished;
-@property(readonly, getter=isAsynchronous)  BOOL asynchronous;
+//@property(readonly, getter=isAsynchronous)  BOOL asynchronous;
 @property(readonly, getter=isExecuting)     BOOL executing;
 
 #pragma mark - EncoderOperation Methods
@@ -31,8 +32,9 @@
 @property (copy, nonatomic)     void(^onRequestComplete)(NSData*,EncoderOperation*);
 @property (nonatomic,strong)    NSDictionary    * userInfo; // this is for data or classes that need to be sent back to the operaion
 @property (nonatomic,strong)    NSError         * error;
+@property (nonatomic,strong)    NSDictionary    * argData;
 
--(instancetype)initEncoder:(Encoder*)aEncoder data:(NSDictionary*)aData;
+-(instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData;
 
 @end
 
@@ -59,6 +61,10 @@
 @interface EncoderOperationGetVersion : EncoderOperation
 @end
 
+@interface EncoderOperationAuthenticate : EncoderOperation
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder customerID:(NSString*)customerID;
+@end
+
 @interface EncoderOperationGetPastEvents : EncoderOperation
 @end
 
@@ -67,6 +73,8 @@
 @end
 
 @interface EncoderOperationModTag : EncoderOperation
+@property (nonatomic,weak) Tag * tag;
+- (instancetype)initEncoder:(id <EncoderProtocol>)aEncoder data:(NSDictionary*)aData tag:(Tag*)tag;
 @end
 
 @interface EncoderOperationMakeMP4fromTag : EncoderOperation
@@ -74,3 +82,9 @@
 
 @interface EncoderOperationMakeTag : EncoderOperation
 @end
+
+@interface EncoderOperationCameraData : EncoderOperation
+@end
+
+
+

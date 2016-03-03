@@ -5,11 +5,14 @@
 //  Created by dev on 2015-04-24.
 //  Copyright (c) 2015 DEV. All rights reserved.
 //
+
+#import <Crashlytics/Crashlytics.h>
 #import "AppDelegate.h"
 #import "PxpLogViewController.h"
 #import "PxpLog.h"
 #import "CustomButton.h"
 #import "EncoderManager.h"
+#import "RicoPlayerPool.h"
 //#import "EncoderProtocol.h"
 
 
@@ -22,7 +25,7 @@
 @property (nonatomic,strong)  CustomButton * camButton;
 @property (nonatomic,strong)  CustomButton * encoderButton;
 @property (nonatomic,strong)  CustomButton * eventButton;
-
+@property (nonatomic,strong)  CustomButton * crashButton;
 
 @end
 
@@ -87,6 +90,12 @@
         [self.eventButton setTitle:@"Event" forState:UIControlStateNormal];
         [self.eventButton addTarget:self action:@selector(onEvent:) forControlEvents:UIControlEventTouchUpInside];
 
+        self.crashButton = [[CustomButton alloc]init];
+        self.crashButton.layer.borderWidth = 1;
+        self.crashButton.layer.borderColor = [[UIColor grayColor]CGColor];
+        [self.crashButton setBackgroundColor:[UIColor lightGrayColor]];
+        [self.crashButton setTitle:@"Crash" forState:UIControlStateNormal];
+        [self.crashButton addTarget:self action:@selector(onCrashTop:) forControlEvents:UIControlEventTouchUpInside];
 
 
         encoderManager = appDel.encoderManager;
@@ -101,9 +110,9 @@
 -(void)viewDidLoad
 {
 
-    NSArray * buttons = @[self.clearButton,self.upButton,self.downButton,self.camButton,self.encoderButton,self.eventButton];
+    NSArray * buttons = @[self.clearButton,self.upButton,self.downButton,self.camButton,self.encoderButton,self.eventButton,self.crashButton];
     CGFloat buttonH = 50;
-    CGFloat buttonW = 118;//self.view.bounds.size.width / [buttons count];
+    CGFloat buttonW = 100;//self.view.bounds.size.width / [buttons count];
     CGRect r = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+buttonH, 705, self.view.bounds.size.height-buttonH-50);
     
     for (NSInteger i=0; i<[buttons count]; i++) {
@@ -128,6 +137,17 @@
 {
     [super viewDidDisappear:animated];
     [self.textView setText: @""];
+}
+
+
+-(void)onCrash:(id)sender
+{
+ [[Crashlytics sharedInstance] crash];
+}
+
+-(void)onCrashTop:(id)sender
+{
+    [[Crashlytics sharedInstance] crash];
 }
 
 -(void)onClear:(id)sender
@@ -185,12 +205,31 @@
 
     Encoder * enc = (Encoder *)encoderManager.primaryEncoder;
     
-    if (!enc && !enc.cameraData){
-        PXPLog(@"No primaryEncoder Found");
-        PXPLog(@"   Check if an Event is playing");        
+    if (enc) {
+        EncoderOperation * camOp = [[EncoderOperationCameraData alloc]initEncoder:enc data:nil];
+        
+        [enc runOperation:camOp];
+        __weak Encoder * weakEncoder = enc;
+        [camOp setCompletionBlock:^{
+            if (!weakEncoder.cameraData){
+                PXPLog(@"No primaryEncoder Found");
+                PXPLog(@"   Check if an Event is playing");
+            } else {
+                PXPLog(@"%@",weakEncoder.cameraData);
+            }
+            
+        }];
+        
     } else {
-        PXPLog(@"%@",enc.cameraData);
+    
+        PXPLog(@"No primaryEncoder Found");
+        PXPLog(@"   Check if an Event is playing");
+    
     }
+    
+    
+    
+
     
     if ( [encoderManager.authenticatedEncoders count] && !enc){
         PXPLog(@"Displaying other cam data found on network...");
@@ -200,7 +239,15 @@
     
     }
     
-    
+//    if ([RicoPlayerPool instance]) {
+//         PXPLog(@"#### <Pooled Players> ####");
+//        PXPLog(@"");
+//        for (RicoPlayer * rp in [RicoPlayerPool instance].pooledPlayers) {
+//            PXPLog(@"%@: cTime: %f  dTime: %f",rp.name,CMTimeGetSeconds(rp.currentTime),CMTimeGetSeconds(rp.duration));
+//        }
+//        PXPLog(@"");
+//         PXPLog(@"#### </Pooled Players> ####");
+//    }
     
   
 

@@ -58,32 +58,36 @@ static DeviceAssetLibrary * _instance;
             
             fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %i",PHAssetMediaTypeVideo ];
             
-            PHFetchResult * assetsInCollection = [PHAsset fetchAssetsInAssetCollection:assetCollection options:fetchOptions];
-            
-            if ([assetsInCollection count]) {
-                
-                for (PHAsset * phAssetObj in assetsInCollection) {
-//                    PHImageRequestID * req =
-                    (void)[ manager requestAVAssetForVideo:phAssetObj options:0 resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
-                        NSString * fileName = [[(AVURLAsset *)asset URL] lastPathComponent];
-                        @try {
-                            [self.contentDictionary setObject:@{@"path":[(AVURLAsset *)asset URL]} forKey:fileName];
-                        }
-                        @catch (NSException *exception) {
-                            NSLog(@"%@", exception.reason);
-                        }
-                        @finally {
-//                            NSLog(@"Char at index %d cannot be found", index);
-//                            NSLog(@"Max index is: %d", [test length]-1);
-                        }
-                        
-                        NSLog(@"%@",self.contentDictionary);
-                    }];
-                }
-                
-           
-
-            }
+//            PHFetchResult * assetsInCollection = [PHAsset fetchAssetsInAssetCollection:assetCollection options:fetchOptions];
+//            
+//            if ([assetsInCollection count]) {
+//                
+//                for (PHAsset * phAssetObj in assetsInCollection) {
+////                    PHImageRequestID * req =
+//                    (void)[ manager requestAVAssetForVideo:phAssetObj options:0 resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+//                        NSString * fileName = [[(AVURLAsset *)asset URL] lastPathComponent];
+//                        @try {
+//                            
+//                            // <This is to prevent  malloc: *** error for object 0x146740300: pointer being freed was not allocated>
+//                            [self.contentDictionary removeObjectForKey:fileName];
+//                            // </>
+//                            [self.contentDictionary setObject:@{@"path":[(AVURLAsset *)asset URL]} forKey:fileName];
+//                        }
+//                        @catch (NSException *exception) {
+//                            NSLog(@"%@", exception.reason);
+//                        }
+//                        @finally {
+////                            NSLog(@"Char at index %d cannot be found", index);
+////                            NSLog(@"Max index is: %d", [test length]-1);
+//                        }
+//                        
+//                        NSLog(@"%@",self.contentDictionary);
+//                    }];
+//                }
+//                
+//           
+//
+//            }
 
 
         }
